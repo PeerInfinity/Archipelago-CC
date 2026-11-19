@@ -453,8 +453,7 @@ export class MessageHandler {
       if (!otherPlayersName) {
         log('info', `[MessageHandler] Using game name from stateManager: ${loadedGame}`);
         this._warnOnSeedMismatch(data.seed_name);
-        this._sendConnect(loadedGame, { fromLoadedRules: true });
-        return;
+        return this._connectWithLoadedRules(loadedGame, data.seed_name, roomInfoSeq);
       }
       this._printToConsole(
         `The loaded rules are for ${otherPlayersName}, not ${this.clientSlotName}; looking for this slot's rules…`,
@@ -467,6 +466,40 @@ export class MessageHandler {
       );
     }
     return this._connectWithoutRules(data, roomGames, roomInfoSeq);
+  }
+
+  /**
+   * Connect with the rules already loaded. When they are this room's exact seed and their
+   * goal is one this client reports (_preparePresetGoal; ⚖ Robert 2026-11-19: any document
+   * with the exact seed), a marked copy is loaded first: the loaded document is unmarked,
+   * and its goal may already be auto-collected. Nothing is lost by the reload: Connected
+   * replaces the checked locations and the inventory anyway. A document that already is the
+   * goal record's (a same-seed reconnect) is kept as it is.
+   */
+  async _connectWithLoadedRules(game, roomSeedName, roomInfoSeq) {
+    const raw = getLastRawJsonData?.();
+    const doc = raw?.rawJsonData;
+    const player = raw?.selectedPlayerInfo?.playerId;
+    if (doc && player !== undefined && player !== null && this._upstreamGoal?.doc !== doc
+      && isSameSeed(doc.seed_name, roomSeedName) && doc.world?.[String(player)]?.game === game) {
+      this._upstreamGoal = null;
+      const copy = structuredClone(doc);
+      const goal = this._preparePresetGoal(copy, player, game, roomSeedName);
+      if (goal) {
+        const source = raw.source ?? `rules:${roomSeedName}:P${player}`;
+        const loaded = await this._loadRulesDocument(copy, player, source, raw.selectedPlayerInfo ?? undefined);
+        if (roomInfoSeq !== this._roomInfoSeq) return;
+        if (loaded) {
+          this._upstreamGoal = { goal, doc: copy, slot: String(player), seedName: String(roomSeedName) };
+        } else {
+          this._printToConsole(
+            `Could not reload the ${game} rules with their goal marked; this client won't tell the server when ${game} is finished.`,
+            'warning'
+          );
+        }
+      }
+    }
+    this._sendConnect(game, { fromLoadedRules: true });
   }
 
   /**

@@ -19,7 +19,7 @@ const connectionMock = vi.hoisted(() => ({
 }));
 vi.mock('./apClient.js', () => ({ default: connectionMock }));
 
-const smState = vi.hoisted(() => ({ reachability: {}, raw: null }));
+const smState = vi.hoisted(() => ({ reachability: {}, raw: null, info: null, source: null }));
 vi.mock('../../stateManager/index.js', () => {
   const proxy = {
     pingWorker: async () => true,
@@ -32,7 +32,8 @@ vi.mock('../../stateManager/index.js', () => {
     applyRuntimeStateData: () => {},
   };
   return {
-    getLastRawJsonData: () => (smState.raw ? { rawJsonData: smState.raw } : null),
+    getLastRawJsonData: () =>
+      (smState.raw ? { rawJsonData: smState.raw, selectedPlayerInfo: smState.info, source: smState.source } : null),
     stateManagerProxySingleton: proxy,
   };
 });
@@ -114,13 +115,17 @@ beforeEach(() => {
   connectionMock.send.mockClear();
   smState.reachability = { [GOAL]: 'reachable', 'Bottom Left Chest': 'checked', 'Top Middle Chest': 'checked' };
   smState.raw = null;
+  smState.info = null;
+  smState.source = null;
   busEvents = [];
   served = JSON.stringify(presetDoc());
   loadedDocs = [];
   globalThis.fetch = vi.fn(async () => ({ ok: true, json: async () => JSON.parse(served) }));
   // The load the Presets panel does: the state manager keeps the published object (getLastRawJsonData).
-  messageHandler._loadRulesDocument = vi.fn(async (doc) => {
+  messageHandler._loadRulesDocument = vi.fn(async (doc, playerId, source, playerInfo) => {
     smState.raw = doc;
+    smState.info = { playerId: String(playerId), playerName: `Player${playerId}`, ...(playerInfo || {}) };
+    smState.source = source;
     loadedDocs.push(doc);
     return true;
   });
@@ -252,17 +257,119 @@ describe('no record', () => {
     expect(messageHandler._upstreamGoal).toBeNull();
   });
 
-  it('the loaded rules\' seed differs from the room\'s (warning-but-allowed): no record', async () => {
-    smState.raw = presetDoc({ seed: '99' });
-    messageHandler._upstreamGoal = null;
-    messageHandler.getClientGameName = () => 'APQuest';
-    try {
-      await messageHandler._connectForRoom({ seed_name: SEED }, ['APQuest'], messageHandler._roomInfoSeq);
-    } finally {
-      delete messageHandler.getClientGameName;
-    }
+  it('the loaded rules\' seed differs from the room\'s (warning-but-allowed): no record, no reload', async () => {
+    const doc = loadAsPanel(presetDoc({ seed: '99' }));
+    await connectWithLoaded();
     expect(frames('Connect')).toHaveLength(1);
+    expect(messageHandler._loadRulesDocument).not.toHaveBeenCalled();
     expect(messageHandler._upstreamGoal).toBeNull();
-    expect(goalLocation(smState.raw).event_kind).toBeUndefined();
+    expect(goalLocation(doc).event_kind).toBeUndefined();
+  });
+});
+
+/** A document loaded before connecting (the Presets panel, the boot preset, a file). */
+const loadAsPanel = (doc, player = SLOT) => {
+  smState.raw = doc;
+  smState.info = { playerId: String(player), playerName: 'Quester' };
+  smState.source = `./presets/multiworld/AP_${doc.seed_name}/AP_${doc.seed_name}_P${player}_rules.json`;
+  return doc;
+};
+/** RoomInfo with these rules loaded: _connectForRoom's loaded-rules branch. */
+const connectWithLoaded = async (roomSeed = SEED) => {
+  messageHandler.roomInfo = { seed_name: roomSeed };
+  messageHandler.getClientGameName = () => 'APQuest';
+  try {
+    await messageHandler._connectForRoom({ seed_name: roomSeed }, ['APQuest'], messageHandler._roomInfoSeq);
+  } finally {
+    delete messageHandler.getClientGameName;
+  }
+};
+
+describe('rules already loaded at the room\'s exact seed (⚖ Robert 2026-11-19: any document with the exact seed)', () => {
+  it('a marked COPY is loaded before Connect (same source and player); the loaded object is not mutated', async () => {
+    const original = loadAsPanel(presetDoc());
+    const source = smState.source;
+    await connectWithLoaded();
+    expect(messageHandler._loadRulesDocument).toHaveBeenCalledTimes(1);
+    const [copy, player, usedSource, info] = messageHandler._loadRulesDocument.mock.calls[0];
+    expect(copy).not.toBe(original);
+    expect([player, usedSource, info?.playerName]).toEqual(['2', source, 'Quester']);
+    expect(goalLocation(copy).event_kind).toBe(GOAL_EVENT_KIND);
+    expect(goalLocation(original).event_kind).toBeUndefined();
+    expect(messageHandler._upstreamGoal).toMatchObject({ doc: copy, slot: '2', seedName: SEED });
+    expect(frames('Connect')).toHaveLength(1);
+  });
+
+  it('the click reports once; nothing before it', async () => {
+    loadAsPanel(presetDoc());
+    await connectWithLoaded();
+    messageHandler._reportGoalIfMet();
+    expect(goalFrames()).toEqual([]);
+    await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
+    await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
+    expect(goalFrames()).toEqual([{ cmd: 'StatusUpdate', status: 30 }]);
+  });
+
+  it('a same-seed reconnect keeps the marked document and its record (no second reload), and does not re-report', async () => {
+    loadAsPanel(presetDoc());
+    await connectWithLoaded();
+    await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
+    const record = messageHandler._upstreamGoal;
+    connectionMock.send.mockClear();
+    newConnection();
+    await connectWithLoaded();
+    expect(messageHandler._loadRulesDocument).toHaveBeenCalledTimes(1);
+    expect(messageHandler._upstreamGoal).toBe(record);
+    messageHandler._reportGoalIfMet();
+    expect(goalFrames()).toEqual([]);
+  });
+
+  it('slot 1: the same', async () => {
+    messageHandler.clientSlot = 1;
+    messageHandler.slotInfo = { 1: { name: 'Quester', game: 'APQuest' } };
+    loadAsPanel(presetDoc({ slot: 1 }), 1);
+    await connectWithLoaded();
+    await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
+    expect(goalFrames()).toHaveLength(1);
+  });
+
+  it.each([
+    ['a world_generator world', { options: { use_canonical_options: true } }],
+    ['a proof world', { slotData: { proof_structure: {} } }],
+  ])('%s: no reload, no record', async (_l, over) => {
+    loadAsPanel(presetDoc(over));
+    await connectWithLoaded();
+    expect(messageHandler._loadRulesDocument).not.toHaveBeenCalled();
+    expect(messageHandler._upstreamGoal).toBeNull();
+    expect(frames('Connect')).toHaveLength(1);
+  });
+
+  it('a goal that can\'t be derived: no reload, one console line', async () => {
+    const doc = presetDoc();
+    doc.game_info[String(SLOT)].completion_condition = { type: 'constant', value: true };
+    loadAsPanel(doc);
+    await connectWithLoaded();
+    expect(messageHandler._loadRulesDocument).not.toHaveBeenCalled();
+    expect(consoleLines()).toContain(
+      "This client won't tell the server when APQuest is finished (its goal rule is a constant). Its own game client reports the goal."
+    );
+  });
+
+  it('the reload fails: a warning, no record, still connects', async () => {
+    loadAsPanel(presetDoc());
+    messageHandler._loadRulesDocument = vi.fn(async () => false);
+    await connectWithLoaded();
+    expect(messageHandler._upstreamGoal).toBeNull();
+    expect(consoleLines().some((l) => l.startsWith('Could not reload the APQuest rules'))).toBe(true);
+    expect(frames('Connect')).toHaveLength(1);
+  });
+
+  it('a seedless document: no record', async () => {
+    const doc = presetDoc();
+    delete doc.seed_name;
+    loadAsPanel(doc);
+    await connectWithLoaded();
+    expect(messageHandler._loadRulesDocument).not.toHaveBeenCalled();
+    expect(messageHandler._upstreamGoal).toBeNull();
   });
 });
