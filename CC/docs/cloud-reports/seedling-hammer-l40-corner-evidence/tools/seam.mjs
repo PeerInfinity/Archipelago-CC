@@ -1,7 +1,7 @@
 // L40-CORNER: one committed L40 request re-stamped to an arrival clock, solved by the worker's dispatch (`solveAnytime`,
 // the request's own budgets, or --budget=<work>) at the switches the process env sets (SEEDLING_*=1 on, =0 off); the plan
 // replayed on a fresh run and its hits counted.
-//   node seam.mjs --fx=flag12-L39|flag12-L43|chest-L39 --seam=<clock> [--budget=<work>]   → one JSON line
+//   node seam.mjs --fx=flag12-L39|flag12-L43|chest-L39 --seam=<clock> [--budget=<work>] [--plan=<out.json>]   → one JSON line
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join } from 'node:path';
@@ -44,6 +44,9 @@ if (ans.ok) {
         hits: run.playerHits.slice(h0).map((h) => `${h.t}:${h.id}`), deaths: run.playerDeaths.length,
         end: [run.level, +run.state.x.toFixed(2), +run.state.y.toFixed(2)],
         clears: (run.ledger('earnedClears') ?? []).map((c) => `${c.level}:${c.tag}`).sort() });
+    // --plan=<out.json>: the plan in legwitness.mjs's `--plan` format (its staging is the request's, the seam re-stamped)
+    if (arg('plan')) (await import('node:fs')).writeFileSync(arg('plan'), JSON.stringify({ staging: tape.staging,
+        keys: ans.plan.solution.map((k) => [...k]), equipsAt: [...(ans.plan.equipsAt ?? [])] }));
 } else {
     r.kind = ans.kind ?? null; r.code = ans.code ?? null;
     r.message = String(ans.message ?? '').slice(0, 2400);

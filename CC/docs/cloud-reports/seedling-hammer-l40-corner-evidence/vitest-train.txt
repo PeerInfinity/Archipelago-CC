@@ -1,0 +1,13 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/hammerL40Corner.train.test.js (3 tests) 345657ms
+     ✓ ⛓ OFF at clock 5241 the press kill of spinner@816,848 refuses: the corner after the landing at t1360  47983ms
+     ✓ ⛓⛓ PRESS_ESCAPE_SHIELD_CLAIM ON solves 5241 and 5242 hitless, flag 12 earned  128954ms
+     ✓ ⛓⛓ SHOVED_BODY_LOOKAHEAD ON solves 5225 (spinner@880,848's refusal) hitless, flag 12 earned  168718ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  21:40:05
+   Duration  349.10s (transform 2.54s, setup 260ms, import 3.00s, tests 345.66s, environment 0ms)
+

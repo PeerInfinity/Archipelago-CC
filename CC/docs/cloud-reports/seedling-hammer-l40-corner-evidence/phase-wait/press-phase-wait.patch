@@ -1,0 +1,339 @@
+diff --git a/frontend/modules/seedlingDemo/hammerPressPhaseWait.test.js b/frontend/modules/seedlingDemo/hammerPressPhaseWait.test.js
+new file mode 100644
+index 0000000000..2a7d83ca1d
+--- /dev/null
++++ b/frontend/modules/seedlingDemo/hammerPressPhaseWait.test.js
+@@ -0,0 +1,99 @@
++/**
++ * hammerPressPhaseWait — SEEDLING HAMMER-PHASE L40-CORNER: `PRESS_PHASE_WAIT` (OFF), a press kill refused at one
++ * arrival phase redone after standing still 1 … period − 1 ticks (`pressPhaseWait.js`).
++ *
++ * The synthetic phases are `r9-solve-18`'s committed staging with `seam.time` moved to each residue of the hammer's
++ * period (`sweep-seedling-l18-residues.mjs`, `fidelityF1c.test.js`'s `shiftTo`), asked with `HAMMER_ESCAPE` OFF, the
++ * switch that today hides every L18 corner (all 45 residues solve with it ON). Measured at the slice's base
++ * (`--no-escape`): residues 4, 14, 44 refuse `HAMMER_SAFETY` and 38, 40, 41 `STRIKE_BOUND_EXHAUSTED`; with the wait ON
++ * all 45 solve, 0 hits, and the 39 that solved OFF solve with the same keys (digest-identical). The rows below hold the
++ * two cheap `HAMMER_SAFETY` residues and one residue that solves OFF; the L40 witnesses are measured in the report.
++ *
++ * ── THE MUTATION LIST (run during development, each row's catcher named) ──
++ *   m1 the wait never stands (w forced 0)         -> the "refuses OFF, plans ON" row red (the redo is the refused kill)
++ *   m2 the hit audit off (a hit redo adopted)       -> not caught here (no L18 redo takes a hit); the L40 sweep's hit
++ *                                                     column is its catcher (report § 4)
++ *   m3 the switch read as ON by default             -> the default row red
++ */
++import { describe, expect, it } from 'vitest';
++
++import { loadTape } from './fixtures/index.js';
++import { atlasLevelSource } from './levelSource.js';
++import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
++import { HAMMER_SAFETY, withHammerEscape } from './solverBot.js';
++import { twoPassSolve } from './twoPassSolve.js';
++import { SPINNER } from './spinner.js';
++import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
++import {
++    PRESS_PHASE_WAIT, PRESS_PHASE_WAIT_COUNTS, PRESS_PHASE_WAIT_DEFAULT, pressPhaseWaitSentence, pressPhaseWaits,
++    resetPressPhaseWaitCounts, withPressPhaseWait,
++} from './pressPhaseWait.js';
++
++const NAME = 'r9-solve-18';
++const TAPE = loadTape(NAME);
++const STAGING = stagingFromTape(TAPE);
++const PERIOD = SPINNER.hammerPeriod;
++const RESIDUE = ((STAGING.seam.time % PERIOD) + PERIOD) % PERIOD;
++const shiftTo = (r) => ((((r - RESIDUE) % PERIOD) + PERIOD) % PERIOD) - PERIOD;
++const TELEPORTER = { x: 176, y: 112 };
++
++/** `twoPassSolve` exactly as `fidelityF1c.test.js` calls it, at a residue, with `HAMMER_ESCAPE` OFF. */
++async function solveAt(residue) {
++    const seam = { ...STAGING.seam, time: STAGING.seam.time + shiftTo(residue) };
++    const makeRun = (persistence) => createRunForStaging(
++        { ...STAGING, seam, persistence, equips: [] }, atlasLevelSource());
++    const r = await withHammerEscape(false, () => twoPassSolve({
++        makeRun,
++        goals: [{ kind: 'reach-exit', exit: TELEPORTER }],
++        name: NAME,
++        boot: STAGING.boot,
++        persistence: STAGING.persistence.filter((c) => c.at === undefined),
++        gameTick: async () => { throw new Error('no game oracle here'); },
++    }));
++    const run = createRunForStaging({ ...STAGING, seam, persistence: r.persistence, equips: [] }, atlasLevelSource());
++    for (const held of r.out.perTick) run.advance(held);
++    return { r, run, keys: JSON.stringify(r.out.perTick.map((k) => [...k].sort())) };
++}
++
++const refusalOf = async (fn) => {
++    try { await fn(); } catch (e) { return e; }
++    return null;
++};
++
++describe('hammer-phase L40-CORNER — PRESS_PHASE_WAIT (a refused press kill asked again at the next arrival phases)', () => {
++    it('ships OFF, is a solver-env name, and its waits are 1 … period − 1 of the hammer model', () => {
++        expect(PRESS_PHASE_WAIT_DEFAULT).toBe(false);
++        expect(PRESS_PHASE_WAIT.enabled).toBe(false);
++        expect(SOLVER_ENV_NAMES).toContain('SEEDLING_PRESS_PHASE_WAIT');
++        expect(pressPhaseWaits(PERIOD)).toEqual(Array.from({ length: PERIOD - 1 }, (_, i) => i + 1));
++        expect(pressPhaseWaits(1)).toEqual([]);
++        expect(pressPhaseWaits(Number.NaN)).toEqual([]);
++        expect(pressPhaseWaitSentence({ t: 7, lastWait: 44, period: 45, tries: 44, hitRedos: 1, stoppedBy: null }))
++            .toMatch(/PRESS_PHASE_WAIT.*t7.*1\.\.44 of the hammer's 45-tick period.*44 redo\(s\), 1 with a hit/);
++    });
++
++    it('⛓⛓ refuses OFF and plans ON, hitless, at the residues where the kill met the hammer cornered (14, 44)', async () => {
++        for (const residue of [14, 44]) {
++            const off = await refusalOf(() => solveAt(residue));
++            expect(off?.code, `residue ${residue} OFF`).toBe(HAMMER_SAFETY);
++            expect(off.message).toMatch(/There is no step out\./);
++            resetPressPhaseWaitCounts();
++            const on = await withPressPhaseWait(true, () => solveAt(residue));
++            expect(on.run.playerHits, `residue ${residue} ON`).toEqual([]);
++            expect(on.run.transitions.map((x) => x.to_level)).toEqual([TAPE.boot.level + 1]);
++            expect(PRESS_PHASE_WAIT_COUNTS.solved).toBeGreaterThan(0);
++            const row = PRESS_PHASE_WAIT_COUNTS.rows.find((x) => x.verdict === 'solved');
++            expect(row.wait).toBeGreaterThanOrEqual(1);
++            expect(row.wait).toBeLessThan(PERIOD);
++        }
++    }, 300_000);
++
++    it('⛓ a residue that solves OFF is never answered ON: the same keys, no wait asked (the chain residue 12)', async () => {
++        const off = await solveAt(12);
++        resetPressPhaseWaitCounts();
++        const on = await withPressPhaseWait(true, () => solveAt(12));
++        expect(on.keys).toBe(off.keys);
++        expect(PRESS_PHASE_WAIT_COUNTS.asked).toBe(0);
++        expect(on.run.playerHits).toEqual([]);
++    }, 300_000);
++});
+diff --git a/frontend/modules/seedlingDemo/pressPhaseWait.js b/frontend/modules/seedlingDemo/pressPhaseWait.js
+new file mode 100644
+index 0000000000..77ea181bc1
+--- /dev/null
++++ b/frontend/modules/seedlingDemo/pressPhaseWait.js
+@@ -0,0 +1,72 @@
++/**
++ * ⛓⛓⛓ SEEDLING HAMMER-PHASE L40-CORNER — **A PRESS KILL REFUSED AT ONE ARRIVAL PHASE IS ASKED AGAIN AT THE NEXT ONES**
++ * (`PRESS_PHASE_WAIT`, OFF).
++ *
++ * Measured (`CC/docs/cloud-reports/seedling-hammer-l40-corner.md` § 3): a press kill of a spinner refuses or plans by the
++ * ARRIVAL PHASE alone. The same request, re-stamped to neighbouring arrival clocks (`staging.seam.time`), refuses at
++ * some and plans hitless at the others: the kill met the hammer at a phase from which every key set lands on a body's
++ * 7x7 rect or on the 13 px line (*"There is no step out."*, `HAMMER_SAFETY`), and one or two ticks later it would not
++ * have. The press kill's search has no such option: its key sets are this tick's, its stall (`HAMMER_PHASE_RUNG`) is
++ * an approach-preview's, and a corner that forms after a press LANDS (the knockback is player-coupled) is outside both.
++ *
++ * ⇒ ON (a segment that can rewind): a press kill that refuses with one of `FIGHT_FALLBACK_CODES`, after every fallback
++ * the defaults already run, is rewound to its first tick; the player STANDS STILL for `w` ticks (each tick asked of the
++ * guard's own landing test, `landsClearOfHammers`, and hit-free), the kill's admission is asked again on that run, and
++ * the kill is redone. `w` runs 1 … period − 1, the period read off the hammer model (`SPINNER.hammerPeriod`: a hold of
++ * `period` ticks is phase 0 again). The FIRST redo that kills with NO player hit since the kill's first tick is
++ * adopted; a redo that kills with a hit is undone and the next `w` is asked (⚖ no-hit logic). None ⇒ the original
++ * refusal stands, its words unchanged plus one sentence. ⛔ A kill that does not refuse never reaches the wait, so
++ * every success OFF and ON is byte-identical; OFF nothing here is read.
++ *
++ * Any spinner body qualifies: no level, coordinate or body id is read. It runs where the press kill runs — the solve
++ * WORKER (and node); the page's main thread never reaches it. `SEEDLING_PRESS_PHASE_WAIT=1` turns it on in a node
++ * process or, through `solverEnvChannel`, in the page's worker; `withPressPhaseWait(enabled, fn)` is for a row.
++ */
++export const PRESS_PHASE_WAIT = { enabled: globalThis.process?.env?.SEEDLING_PRESS_PHASE_WAIT === '1' };
++export const PRESS_PHASE_WAIT_DEFAULT = false;
++
++/**
++ * The switch's instrument, read by nothing that decides: `asked` refusals the wait answered; `solved` / `refused` its
++ * outcomes; `tries` redos run; `hitRedos` redos that killed with a hit (undone); `standBlocked` waits cut because
++ * standing still was not clear; `rows` one per answered refusal.
++ */
++export const PRESS_PHASE_WAIT_COUNTS = { asked: 0, solved: 0, refused: 0, tries: 0, hitRedos: 0, standBlocked: 0, rows: [] };
++export function resetPressPhaseWaitCounts() {
++    for (const k of Object.keys(PRESS_PHASE_WAIT_COUNTS)) PRESS_PHASE_WAIT_COUNTS[k] = k === 'rows' ? [] : 0;
++}
++
++/** A measurement hook, read by nothing that decides: `sink({t, w, outcome, ms})` once per wait asked. */
++export const PRESS_PHASE_WAIT_TRACE = { sink: null };
++
++/** Run `fn` with `PRESS_PHASE_WAIT` set to `enabled`, restoring the previous value. */
++export function withPressPhaseWait(enabled, fn) {
++    const was = PRESS_PHASE_WAIT.enabled;
++    PRESS_PHASE_WAIT.enabled = enabled === true;
++    const restore = () => { PRESS_PHASE_WAIT.enabled = was; };
++    try {
++        const out = fn();
++        if (out && typeof out.then === 'function') return out.finally(restore);
++        restore();
++        return out;
++    } catch (e) {
++        restore();
++        throw e;
++    }
++}
++
++/**
++ * The waits to ask, in order: 1 … period − 1 (a wait of `period` is the refused phase again). A period that is not a
++ * positive integer asks nothing.
++ */
++export function pressPhaseWaits(period) {
++    if (!Number.isInteger(period) || period < 2) return [];
++    return Array.from({ length: period - 1 }, (_, i) => i + 1);
++}
++
++/** The sentence a wait that found no kill appends to the refusal that stands. */
++export function pressPhaseWaitSentence(row) {
++    const why = row.stoppedBy ? ` It stopped at w=${row.lastWait}: ${row.stoppedBy}.` : '';
++    return `The phase wait (\`PRESS_PHASE_WAIT\`) rewound to the kill's first tick (t${row.t}) and redid the kill after `
++        + `standing still 1..${row.lastWait} of the hammer's ${row.period}-tick period; no redo killed hitless `
++        + `(${row.tries} redo(s), ${row.hitRedos} with a hit).${why}`;
++}
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index cf2c32dd7b..17f6e0b8ff 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -204,6 +204,7 @@ import { SPEAR_ARM_COUNTS, spearArmSlot, spearStrikeGeometry } from './spearArm.
+ import { STAGED_HUNT_SCAN_MEMO_COUNTS, newStagedHuntScanMemo, stagedScanEntry } from './stagedHuntScanMemo.js';
+ import { OPP_PRESS_FALLBACK, OPP_PRESS_FALLBACK_COUNTS, oppPressFallbackSentence } from './oppPressFallback.js';
+ import { auditOppFallbackRedo, oppFallbackHitsAudits, oppFallbackHitsSentence, playerHitsSince } from './oppFallbackHits.js';
++import { PRESS_PHASE_WAIT, PRESS_PHASE_WAIT_COUNTS, PRESS_PHASE_WAIT_TRACE, pressPhaseWaitSentence, pressPhaseWaits } from './pressPhaseWait.js';
+ import {
+     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
+     AXE_UPDATE_OFFSET, axeVisitClock, phaseBeamTowerAt, phaseHazardCanReach, phaseHazardHit,
+@@ -20985,6 +20986,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
+         const t = perTick.length;
+         REWIND_PROBE.sink({ t, kind: 'kill-start', live: run, rewound: () => ctx.rewind.replay(t) });
+     }
++    // ⛓ hammer-phase L40-CORNER (`PRESS_PHASE_WAIT`, OFF ⇒ not reached): a refused kill redone after a still wait
++    if (PRESS_PHASE_WAIT.enabled && ctx.rewind) return execKillByPressPhaseWait(run, perTick, resolved, ctx);
+     // ⛓ hammer-phase L40-FLIP-BUILD (`OPP_PRESS_FALLBACK`): OPP's refused kill redone once with OPP off (`oppPressFallback.js`)
+     if (OPP_PRESS_FALLBACK.enabled && OPPORTUNISTIC_STRIKE.enabled && ctx.rewind) {
+         return execKillByPressOppFallback(run, perTick, resolved, ctx);
+@@ -20992,6 +20995,121 @@ function execKillByPress(run, perTick, resolved, ctx) {
+     return execKillByPressFightFallback(run, perTick, resolved, ctx);
+ }
+ 
++/** The press kill as the defaults drive it, fallbacks included: `execKillByPress` below its own phase-wait branch. */
++function execKillByPressDefault(run, perTick, resolved, ctx) {
++    if (OPP_PRESS_FALLBACK.enabled && OPPORTUNISTIC_STRIKE.enabled && ctx.rewind) {
++        return execKillByPressOppFallback(run, perTick, resolved, ctx);
++    }
++    return execKillByPressFightFallback(run, perTick, resolved, ctx);
++}
++
++/**
++ * ⛓⛓ hammer-phase L40-CORNER — `PRESS_PHASE_WAIT` (see `pressPhaseWait.js`). The kill runs as the defaults drive it;
++ * only a refusal with a `FIGHT_FALLBACK_CODES` code is answered. For each wait `w` (1 … the hammer period − 1) the
++ * segment is rewound to the kill's first tick, the player stands still `w` ticks (every tick clear by the guard's own
++ * `landsClearOfHammers`, and hit-free), the order's admission is asked again on that run (as the fallbacks ask it),
++ * and the kill is redone. The first redo that kills with no player hit since the kill's first clock is adopted. A
++ * stand that is not clear at tick `i` cuts every longer wait (the stand only gets longer). A tripped deadline stops it.
++ * None ⇒ undone, and the original refusal is thrown plus one sentence.
++ */
++function execKillByPressPhaseWait(run, perTick, resolved, ctx) {
++    const t0 = perTick.length;
++    try {
++        return execKillByPressDefault(run, perTick, resolved, ctx);
++    } catch (e) {
++        if (!(e instanceof SolverBotError) || !FIGHT_FALLBACK_CODES.includes(e.code) || e.pressPhaseWait) throw e;
++        if (activeDeadline !== null && activeDeadline.tripped.size > 0) throw e;
++        PRESS_PHASE_WAIT_COUNTS.asked += 1;
++        const NO_KEYS = new Set();
++        const admission = PRESS_ADMISSIONS.get(resolved.plans) ?? null;
++        const row = { t: t0, refused: e.code, period: SPINNER.hammerPeriod, bodies: resolved.plans.map((p) => p.id),
++            tries: 0, hitRedos: 0, lastWait: 0, stoppedBy: null };
++        for (const w of pressPhaseWaits(SPINNER.hammerPeriod)) {
++            if (activeDeadline !== null && activeDeadline.tripped.size > 0) {
++                row.stoppedBy = 'the caller\'s deadline tripped';
++                break;
++            }
++            row.lastWait = w;
++            const tw = PRESS_PHASE_WAIT_TRACE.sink ? performance.now() : 0;
++            const told = (outcome) => PRESS_PHASE_WAIT_TRACE.sink?.({ t: t0, w, outcome, ms: performance.now() - tw });
++            const { run: fresh, undo } = ctx.rewind.to(t0);
++            const clock0 = fresh.ticksCompleted;
++            let stand = null;
++            for (let i = 0; i < w && stand === null; i += 1) {
++                if (!landsClearOfHammers(fresh, NO_KEYS)) {
++                    stand = `standing still is not clear of the hammers at wait tick ${i + 1}`;
++                    break;
++                }
++                perTick.push(NO_KEYS);
++                const { transition } = fresh.advance(NO_KEYS);
++                if (transition) stand = `the run crossed to level ${transition.to_level} while standing still`;
++                else if (playerHitsSince(fresh, clock0).length > 0) stand = `the player was hit standing still at wait tick ${i + 1}`;
++            }
++            if (stand !== null) {
++                undo();
++                told('stand-blocked');
++                PRESS_PHASE_WAIT_COUNTS.standBlocked += 1;
++                row.stoppedBy = stand;
++                break;
++            }
++            row.tries += 1;
++            PRESS_PHASE_WAIT_COUNTS.tries += 1;
++            try {
++                const press = admission === null ? null : derivePressKill(fresh, admission.bodies, admission.contacts);
++                const again = press?.first ? { ...resolved, first: press.first, plans: press.plans } : resolved;
++                const record = execKillByPressDefault(fresh, perTick, again, ctx);
++                const hits = playerHitsSince(ctx.rewind.replay(perTick.length), clock0);
++                if (hits.length > 0) {
++                    undo();
++                    told('hit');
++                    row.hitRedos += 1;
++                    PRESS_PHASE_WAIT_COUNTS.hitRedos += 1;
++                    continue;
++                }
++                row.verdict = 'solved';
++                row.wait = w;
++                row.ticks = perTick.length - t0;
++                told('killed');
++                PRESS_PHASE_WAIT_COUNTS.solved += 1;
++                PRESS_PHASE_WAIT_COUNTS.rows.push({ ...row });
++                ctx.rewind.note({ ...row, how: 'phase-wait' });
++                return { ...record, pressPhaseWait: row };
++            } catch (e2) {
++                // ⛓ the kill completed and its lock tail raised the declaration: adopted when hitless, the throw goes on
++                if (e2 instanceof PendingDeclaration || e2?.undeclaredKillLock) {
++                    const hits = playerHitsSince(ctx.rewind.replay(perTick.length), clock0);
++                    if (hits.length === 0) {
++                        row.verdict = 'solved';
++                        row.wait = w;
++                        row.ticks = perTick.length - t0;
++                        row.raised = e2?.undeclaredKillLock ? 'undeclaredKillLock' : e2.name;
++                        PRESS_PHASE_WAIT_COUNTS.solved += 1;
++                        PRESS_PHASE_WAIT_COUNTS.rows.push({ ...row });
++                        ctx.rewind.note({ ...row, how: 'phase-wait' });
++                        throw e2;
++                    }
++                    row.hitRedos += 1;
++                    PRESS_PHASE_WAIT_COUNTS.hitRedos += 1;
++                    undo();
++                    continue;
++                }
++                undo();
++                told(`refused:${e2?.code ?? e2?.name ?? 'Error'}`);
++                // ⛔ only the solver's own refusals are a phase's verdict; anything else is a defect and goes on
++                if (!(e2 instanceof SolverBotError) && !(e2 instanceof SolverRefusal)) throw e2;
++            }
++        }
++        row.verdict = 'refused';
++        PRESS_PHASE_WAIT_COUNTS.refused += 1;
++        PRESS_PHASE_WAIT_COUNTS.rows.push({ ...row });
++        const out = new SolverBotError(`${e.message} ${pressPhaseWaitSentence(row)}`,
++            { code: e.code, boundTicks: e.boundTicks });
++        for (const k of ['fightFallback', 'oppPressFallback']) if (e[k]) out[k] = e[k];
++        out.pressPhaseWait = row;
++        throw out;
++    }
++}
++
+ /**
+  * ⛓ hammer-phase L40-FLIP-BUILD — `OPP_PRESS_FALLBACK` (see `oppPressFallback.js`). The kill runs as it does under
+  * `OPPORTUNISTIC_STRIKE`; only a refusal with a `FIGHT_FALLBACK_CODES` code is rewound to the kill's first tick and the
+diff --git a/frontend/modules/seedlingDemo/solverEnvChannel.js b/frontend/modules/seedlingDemo/solverEnvChannel.js
+index c53649fe23..526a32e76e 100644
+--- a/frontend/modules/seedlingDemo/solverEnvChannel.js
++++ b/frontend/modules/seedlingDemo/solverEnvChannel.js
+@@ -85,7 +85,7 @@ export const SOLVER_ENV_NAMES = Object.freeze([
+     'SEEDLING_PICKUP_TICK_FREEZE', 'SEEDLING_PIT_TELEPORTER_CROSSING', 'SEEDLING_PIXEL_MASK_SIGHT_LINES', 'SEEDLING_PRESS_ESCAPE_EXACT',
+     'SEEDLING_PRESS_ESCAPE_SHIELD_CLAIM', 'SEEDLING_PRESS_KILL_BOMBS', 'SEEDLING_PRESS_KILL_CHASERS',
+     'SEEDLING_PRESS_KILL_COST', 'SEEDLING_PRESS_KILL_DONE_ON_WALK', 'SEEDLING_PRESS_KILL_REBOOT_GUARD',
+-    'SEEDLING_PRESS_KILL_SHAKE_GUARD', 'SEEDLING_PRESS_NO_FACING', 'SEEDLING_PREVIEW_BEAM_TOWER_DRIFT', 'SEEDLING_PULSER_FORECAST_PULSE',
++    'SEEDLING_PRESS_KILL_SHAKE_GUARD', 'SEEDLING_PRESS_NO_FACING', 'SEEDLING_PRESS_PHASE_WAIT', 'SEEDLING_PREVIEW_BEAM_TOWER_DRIFT', 'SEEDLING_PULSER_FORECAST_PULSE',
+     'SEEDLING_PULSER_PUBLISH_LAG',
+     'SEEDLING_PUNCH_GATE_TIMED', 'SEEDLING_PUSH_SPEAR_DIRECTION', 'SEEDLING_REFUGE_ETA_CUT',
+     'SEEDLING_REMOVED_BODY_BLOCKS', 'SEEDLING_RESTING_HOLDER', 'SEEDLING_ROCKLOCK_KILL', 'SEEDLING_ROCK_GONE_FENCEPOST',
