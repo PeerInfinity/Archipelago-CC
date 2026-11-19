@@ -1,0 +1,118 @@
+{
+ "28": {
+  "families": [
+   "drill@80,96",
+   "drill@128,96"
+  ],
+  "special": [],
+  "npcs": []
+ },
+ "29": {
+  "families": [
+   "turret@80,176",
+   "turret@128,192",
+   "turret@112,240"
+  ],
+  "special": [
+   "bosskey@112,64"
+  ],
+  "npcs": []
+ },
+ "40": {
+  "families": [
+   "iceturret@472,400"
+  ],
+  "special": [
+   "totempart@64,144",
+   "totempart@160,640",
+   "bosskey@656,528"
+  ],
+  "npcs": []
+ },
+ "59": {
+  "families": [
+   "turret@152,64"
+  ],
+  "special": [],
+  "npcs": []
+ },
+ "62": {
+  "families": [
+   "turret@232,248"
+  ],
+  "special": [],
+  "npcs": []
+ },
+ "65": {
+  "families": [
+   "turret@64,112"
+  ],
+  "special": [],
+  "npcs": []
+ },
+ "88": {
+  "families": [
+   "drill@128,160"
+  ],
+  "special": [],
+  "npcs": [
+   "introchar@56,104"
+  ]
+ },
+ "91": {
+  "families": [
+   "drill@64,80"
+  ],
+  "special": [],
+  "npcs": []
+ },
+ "98": {
+  "families": [
+   "iceturret@104,24"
+  ],
+  "special": [],
+  "npcs": []
+ },
+ "103": {
+  "families": [
+   "beamtower@208,248",
+   "beamtower@144,200"
+  ],
+  "special": [],
+  "npcs": [
+   "watcher@120,24"
+  ]
+ },
+ "104": {
+  "families": [
+   "beamtower@16,56"
+  ],
+  "special": [],
+  "npcs": []
+ },
+ "105": {
+  "families": [
+   "beamtower@48,40"
+  ],
+  "special": [],
+  "npcs": []
+ },
+ "107": {
+  "families": [
+   "beamtower@208,120",
+   "beamtower@208,136"
+  ],
+  "special": [],
+  "npcs": []
+ },
+ "108": {
+  "families": [
+   "beamtower@160,56",
+   "beamtower@96,104",
+   "beamtower@160,152",
+   "beamtower@96,200"
+  ],
+  "special": [],
+  "npcs": []
+ }
+}

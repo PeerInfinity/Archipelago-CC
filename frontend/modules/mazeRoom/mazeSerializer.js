@@ -32,6 +32,7 @@ import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import { REQUIRED_ENVELOPE_FIELD, envelopeExitNames } from '../procgenCore/sidecarFields.js';
 import { isConceptRow } from '../procgenCore/concepts.js';
 import { GOAL_ITEM } from '../procgenCore/goalItem.js';
+import { DEFAULT_TERRAIN_PASS, TERRAIN_PASSES } from '../packConcepts/packConcepts.js';
 
 const xy = Object.freeze({ x: Object.freeze({ type: 'integer' }), y: Object.freeze({ type: 'integer' }) });
 const atXY = (extra = {}, required = []) => Object.freeze({
@@ -75,6 +76,40 @@ const LEVEL_WORLD_PROJECTION = '`projectLevelWorld` (`procgenPipeline/regionAtla
  * `rules.schema.json` `presetSidecarEntry.shared_world`). Each is omitted on
  * every other payload, so the corpus they were measured on is unmoved.
  */
+/**
+ * ⛓ CONTENT SETS PASS-1 — **THE LOWERING OF A DECLARED PASSABILITY** (⚖ the user 2026-11-18: "Pack declares, world
+ * copies"). A placed kind's pass is LOWERED by the editor onto the grid when it is placed: `blocked` IS a wall under
+ * the kind, and every other value built so far stands on floor. So in a deserialized world the grid is the bake, and
+ * the payload's `pass` is its written copy: `blocked` on a wall, absent (walkable) on floor.
+ */
+export const BLOCKED_PASS = 'blocked';
+/** The `pass` values a payload may write: every built value but the default, which is never written. */
+export const WRITTEN_TILE_KIND_PASSES = Object.freeze(TERRAIN_PASSES.filter((p) => p !== DEFAULT_TERRAIN_PASS));
+
+/** ⛓ PASS-1 — the baked pass of a placed kind's cell, read off the grid (the lowering above). */
+export function tileKindPassAt(world, x, y) {
+    const tiles = world?.tiles;
+    return tiles && tiles[y * world.width + x] === TILE_WALL ? BLOCKED_PASS : DEFAULT_TERRAIN_PASS;
+}
+
+/**
+ * ⛓ CONTENT SETS TILE-3 — a world's placed tile kinds (`world.tileKinds`, a `Map("x,y" → kind)`) as the payload writes
+ * them: `[{x, y, kind, pass?}]` in row order, or null when there are none. Here, beside the field's declaration, so
+ * the serializer imports nothing of the maze's own (`mazeTileKinds.js` re-exports it).
+ *
+ * ⛓ PASS-1 — `pass` is written ONLY when it is not `walkable` (`tileKindPassAt`), so every TILE-3 payload is
+ * byte-equal.
+ */
+export function tileKindsList(world) {
+    const map = world?.tileKinds;
+    if (!(map instanceof Map) || map.size === 0) return null;
+    return [...map].map(([key, kind]) => {
+        const [x, y] = key.split(',').map(Number);
+        const pass = tileKindPassAt(world, x, y);
+        return pass === DEFAULT_TERRAIN_PASS ? { x, y, kind } : { x, y, kind, pass };
+    }).sort((a, b) => (a.y - b.y) || (a.x - b.x));
+}
+
 /** ⛓ CONTENT SETS S2 — the kinds of thing a maze region may hold (`mazeThings.js`; each a maze content role). */
 export const MAZE_THING_KINDS = Object.freeze(['character', 'object', 'info']);
 
@@ -199,6 +234,28 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
                         additionalProperties: false,
                         properties: Object.freeze({ concept: THING_TEXT, name: THING_TEXT, body: THING_TEXT }),
                     }),
+                }),
+            }),
+        }),
+    }),
+    tileKinds: Object.freeze({
+        type: 'array', required: false,
+        description: 'The region\'s PLACED TILE KINDS (content sets TILE-3): `{x, y, kind, pass?}`, `kind` a pack concept '
+            + 'key whose row declares a tile `base` (`packConcepts.PACK_TILE_BASES`). Each stands on a cell no other '
+            + 'record names. `pass` (content sets PASS-1, ⚖ the user 2026-11-18) is the kind\'s declared passability, '
+            + 'BAKED when it was placed and LOWERED onto the grid: `blocked` stands on a wall cell (the editor wrote it), '
+            + 'and an absent `pass` is `walkable`, on a floor cell. So no rule, location or reachability reader sees the '
+            + 'field itself: they see the wall. Written by the maze editor (`setTileKind`); drawn through the tile '
+            + 'fallback chain. `serializeMazeWorld` OMITS the key when there are none, and `pass` when it is walkable, '
+            + 'so a world without kinds, or with walkable ones only, is byte-equal (`mazeTileKinds.js`).',
+        schema: Object.freeze({
+            items: Object.freeze({
+                type: 'object',
+                required: Object.freeze(['x', 'y', 'kind']),
+                additionalProperties: false,
+                properties: Object.freeze({
+                    ...xy, kind: THING_TEXT,
+                    pass: Object.freeze({ type: 'string', enum: WRITTEN_TILE_KIND_PASSES }),
                 }),
             }),
         }),
@@ -531,6 +588,8 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
         })
         : null;
 
+    const tileKindsOut = tileKindsList(world);
+
     return {
         width: world.width,
         height: world.height,
@@ -545,6 +604,8 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
         ...(hazardsOut ? { hazards: hazardsOut } : {}),
         ...(consumableTilesOut ? { consumableTiles: consumableTilesOut } : {}),
         ...(manaTilesOut ? { manaTiles: manaTilesOut } : {}),
+        // ⛓ TILE-3: the placed tile kinds, omitted when there are none.
+        ...(tileKindsOut ? { tileKinds: tileKindsOut } : {}),
         // A room that says how it is entered keeps saying it (an editor
         // regenerate round-trips it); generation stamps it at compile.
         ...(world.arrival ? { arrival: world.arrival } : {}),

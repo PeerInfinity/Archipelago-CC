@@ -420,10 +420,14 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
     if (!ui) return tc.getOverallResult();
     // A bot step plays at test speed (botTestSpeed.js); the person's saved settings are untouched.
     const restoreSpeed = await startAppBotTestSpeed();
+    let measure = null;
+    let walkOutcome = null;
     try {
         ui.start(tutorial.id);
         // Each step's own time (its action + its done wait), so a doneTimeoutMs margin is measured, not assumed.
         const stepStarts = [];
+        // The walk instrument (below): null, and no await, unless a ?measure* param is set.
+        measure = MEASURE_ACTIVE ? await startMeasureSampler(tutorial, stepStarts, ui) : null;
         const outcome = await walkTutorial(tutorial, {
             onStep: ({ index, step }) => { stepStarts.push({ id: step.id, at: performance.now() }); ui._goTo(index); },
             perform: async () => {
@@ -437,12 +441,15 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
                 const ok = await waitFor(async () => {
                     if (ui.doneSteps.has(step.id) || await step.done(ui.ctx)) return true;
                     failed = step.failed ? (await step.failed(ui.ctx)) || null : null;
+                    // The walk instrument's skip probe (?measureSkipRefusals=N) takes a bot error itself, N times.
+                    if (failed && measure?.skipsLeft?.() > 0 && /Playback Bot says "error/.test(failed)) failed = null;
                     return Boolean(failed);
-                }, step.doneTimeoutMs ?? DEFAULT_DONE_TIMEOUT_MS, 250);
+                }, measureStepTimeout(step.doneTimeoutMs ?? DEFAULT_DONE_TIMEOUT_MS), 250);
                 if (failed) throw new Error(`the app shows it cannot finish: ${failed}`);
                 return Boolean(ok);
             },
         });
+        walkOutcome = outcome;
         if (outcome.end !== 'complete') {
             // What the app showed when the walk ended, so a red row needs no rerun to read.
             const bot = document.querySelector('.playback-bot .playback-bot-status')?.textContent.trim();
@@ -458,6 +465,7 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
         tc.log?.(`${tutorial.id}: ${verdict.message}`);
         tc.reportCondition(`${tutorial.id} — ${verdict.message}`, verdict.ok);
     } finally {
+        measure?.stop(walkOutcome);
         await restoreSpeed();
         // A walk that ended early never reached its own restore step (a feature check's ctx.setSetting).
         try { await ui.ctx.restoreSettings(); } catch (e) { tc.log?.(`could not restore the step settings: ${e.message}`); }
@@ -477,6 +485,113 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
         }
     }
     return tc.getOverallResult();
+}
+
+// ── The walk instrument (whole-game walk measure) ─────────────────────────────
+// INERT unless one of its URL params is set; app.spec.js passes each from a
+// TEST_MEASURE_* env var, and scripts/procgen/walk-seedling-whole-game.mjs sets
+// them (docs: procgen/seedling-bot.md § Running the whole-game walk). With no
+// param set: no sampler, no import, no timer, every timeout and runtime as before.
+//   ?measureStepTimeoutMs=  raises every walk step's done-wait to at least that
+//   ?measureBotStallMs=     lifts botCannotFinish's stall window (procgen.js reads it)
+//   ?measureFlashRuntime=   js|wasm: plain walk rows play under that Flash runtime
+//   ?measureSkipRefusals=N  on a bot error, count the head as seen and play on, N times
+//                           (a probe of what lies past a stop; it fixes nothing)
+// With any of them set, a `[MEASURE tick]` line is logged every 15 s and a
+// `[MEASURE end]` line once, carrying the walk's end and its `why`.
+const MEASURE_PARAMS = (() => {
+    try { return new URLSearchParams(globalThis.location?.search ?? ''); } catch { return new URLSearchParams(); }
+})();
+const MEASURE_STEP_MS = Number(MEASURE_PARAMS.get('measureStepTimeoutMs')) || 0;
+const MEASURE_STALL_MS = Number(MEASURE_PARAMS.get('measureBotStallMs')) || 0;
+const MEASURE_RUNTIME = MEASURE_PARAMS.get('measureFlashRuntime') || null;
+const MEASURE_SKIPS = Number(MEASURE_PARAMS.get('measureSkipRefusals')) || 0;
+const MEASURE_ACTIVE = MEASURE_STEP_MS > 0 || MEASURE_STALL_MS > 0 || MEASURE_SKIPS > 0 || MEASURE_RUNTIME !== null;
+const measureStepTimeout = (ms) => (MEASURE_STEP_MS > 0 ? Math.max(ms, MEASURE_STEP_MS) : ms);
+
+function wasmMemoryBytes() {
+    let best = null;
+    for (const f of document.querySelectorAll('iframe')) {
+        try {
+            const w = f.contentWindow;
+            const n = w?.HEAPU8?.byteLength ?? w?.Module?.HEAPU8?.byteLength ?? w?.wasmMemory?.buffer?.byteLength ?? null;
+            if (Number.isFinite(n)) best = Math.max(best ?? 0, n);
+        } catch { /* cross-origin or torn down */ }
+    }
+    return best;
+}
+
+async function startMeasureSampler(tutorial, stepStarts, ui) {
+    // Imported here, not at the top: an inert run loads nothing it did not load before.
+    const [{ getActivePanel: getActiveBotPanel }, { getActivePanelInstance: getActiveFlashPanel }] = await Promise.all([
+        import('../../playbackBot/index.js'),
+        import('../../flashPanel/index.js'),
+    ]);
+    const t0 = performance.now();
+    let regionChanges = 0;
+    let lastRegion = null;
+    const unsub = eventBus.subscribe('gameState:regionChanged', (d) => {
+        regionChanges += 1;
+        lastRegion = d?.newRegion ?? d?.region ?? d?.to ?? lastRegion;
+    }, 'tests');
+    const botStatusText = () => document.querySelector('.playback-bot .playback-bot-status')?.textContent.trim() ?? null;
+    const sample = (tag, extra = '') => {
+        try {
+            const bot = getActiveBotPanel()?.getBot?.() ?? getActiveBotPanel()?.bot ?? null;
+            const snap = ui.ctx.snapshot();
+            const checked = (snap?.checkedLocations ?? []).length;
+            const fp = getActiveFlashPanel();
+            const mem = wasmMemoryBytes();
+            const heap = performance.memory?.usedJSHeapSize ?? null;
+            const head = bot?._queue?.[bot?._cursor] ?? null;
+            const line = `[MEASURE ${tag}] ${tutorial.id} t=${((performance.now() - t0) / 1000).toFixed(0)}s`
+                + ` step=${stepStarts.at(-1)?.id ?? '?'} checked=${checked}`
+                + ` botQueue=${bot?._queue?.length ?? '?'} botCursor=${bot?._cursor ?? '?'} botChecked=${bot?._checkedSoFar?.size ?? '?'}`
+                + ` botHead=${JSON.stringify(head?.locationName ?? null)}`
+                + ` botRegion=${JSON.stringify(bot?._currentRegion ?? null)} lastRegionEvent=${JSON.stringify(lastRegion)}`
+                + ` regionChanges=${regionChanges} wasmPushes=${fp?.adapter?.invocationPushes ?? '?'} transport=${fp?.transport ?? '?'}`
+                + ` wasmMemMB=${mem == null ? '?' : (mem / 1048576).toFixed(0)} jsHeapMB=${heap == null ? '?' : (heap / 1048576).toFixed(0)}`
+                + ` status=${JSON.stringify(botStatusText())}${extra}`;
+            console.log(line);
+        } catch (e) {
+            console.log(`[MEASURE ${tag}] sampler threw: ${e?.message ?? e}`);
+        }
+    };
+    const timer = setInterval(() => sample('tick'), 15000);
+    // The skip probe: on a bot error, log it, count the refused head as seen and play on from the next entry.
+    // It FIXES nothing; an entry after a skipped item may refuse only because that item was never collected.
+    let skips = 0;
+    let skipping = false;
+    const skipTimer = MEASURE_SKIPS > 0 ? setInterval(async () => {
+        if (skipping || skips >= MEASURE_SKIPS) return;
+        if (!(botStatusText() ?? '').startsWith('error')) return;
+        const bot = getActiveBotPanel()?.getBot?.();
+        const head = bot?._queue?.[bot._cursor];
+        if (!bot || !head) return;
+        skipping = true;
+        skips += 1;
+        sample(`skip ${skips}`);
+        console.log(`[MEASURE skip ${skips}] t=${((performance.now() - t0) / 1000).toFixed(0)}s skipping entry ${bot._cursor + 1}/${bot._queue.length} "${head.locationName}" (sphere ${head.sphereIndex}${head.fractionalIndex != null ? '.' + head.fractionalIndex : ''})`);
+        try {
+            bot.stop();
+            bot._checkedSoFar.add(head.locationName);
+            await bot.play();
+        } catch (e) {
+            console.log(`[MEASURE skip ${skips}] play threw: ${e?.message ?? e}`);
+        } finally {
+            skipping = false;
+        }
+    }, 1000) : null;
+    return {
+        skipsLeft: () => MEASURE_SKIPS - skips,
+        // `outcome` is walkTutorial's: { end: 'complete' } | { end, stepId, why }; null when the walk threw.
+        stop: (outcome) => {
+            clearInterval(timer);
+            if (skipTimer) clearInterval(skipTimer);
+            sample('end', ` walkEnd=${outcome?.end ?? 'threw'} walkStep=${outcome?.stepId ?? '?'} why=${JSON.stringify(outcome?.why ?? null)}`);
+            try { unsub?.(); } catch { /* */ }
+        },
+    };
 }
 
 // The generator games' tutorials switch modules on in the Modules panel and
@@ -584,7 +699,7 @@ for (const { tutorial, id, kind, category } of walkRows) {
                 : tutorial.status === 'terminal' ? `needs a terminal: it must stop at ${terminalStep(tutorial)?.step.id}`
                     : `in progress: firstFailingStep ${tutorial.firstFailingStep ?? 'null'}`}). Reloads the world loaded before.`,
         // Named per row: the registry tells test functions apart by name.
-        testFunction: { [fn]: (tc) => tutorialWalkRow(tc, tutorial) }[fn],
+        testFunction: { [fn]: (tc) => tutorialWalkRow(tc, tutorial, { runtime: MEASURE_RUNTIME }) }[fn],
         category,
         enabled: false,
     });

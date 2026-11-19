@@ -1,0 +1,358 @@
+{
+ "case": "l39",
+ "reboot_why": "an item flag changed",
+ "snaps": [
+  {
+   "label": "tape r5-shaft finished (the three shaft locks held open by the three fire blocks)",
+   "tick": 2766,
+   "run_id": 1,
+   "level": 39,
+   "pos": {
+    "x": 85.5,
+    "y": 42.29
+   },
+   "worldCtor": {
+    "x": 144,
+    "y": 608
+   },
+   "arrival": {
+    "level": 39,
+    "x": 144,
+    "y": 608
+   },
+   "damage": {
+    "hits": 0,
+    "hitsTimer": 0,
+    "directionFace": -1
+   },
+   "deaths": 0,
+   "keys": [],
+   "chasers": [],
+   "locks": [
+    {
+     "id": "wandlock@144,64",
+     "open": true,
+     "alpha": 0
+    },
+    {
+     "id": "wandlock@144,48",
+     "open": true,
+     "alpha": 0
+    },
+    {
+     "id": "wandlock@144,32",
+     "open": true,
+     "alpha": 0
+    },
+    {
+     "id": "cover@144,112",
+     "open": true,
+     "alpha": 0
+    },
+    {
+     "id": "cover@176,144",
+     "open": true,
+     "alpha": 0
+    },
+    {
+     "id": "cover@112,144",
+     "open": true,
+     "alpha": 0
+    },
+    {
+     "id": "wandlock@48,160",
+     "open": false,
+     "alpha": 1
+    }
+   ],
+   "pushedBlocks": [
+    {
+     "id": "pushableblockfire@144,176",
+     "x": 144,
+     "y": 112,
+     "tx": 9,
+     "ty": 7,
+     "removed": false
+    },
+    {
+     "id": "pushableblockfire@208,80",
+     "x": 176,
+     "y": 144,
+     "tx": 11,
+     "ty": 9,
+     "removed": false
+    },
+    {
+     "id": "pushableblockfire@48,176",
+     "x": 112,
+     "y": 144,
+     "tx": 7,
+     "ty": 9,
+     "removed": false
+    }
+   ],
+   "burnedTrees": {},
+   "pressed": [
+    "button@144,112",
+    "button@112,144",
+    "button@176,144"
+   ],
+   "persistence_cleared": [
+    {
+     "level": 39,
+     "tag": 0
+    },
+    {
+     "level": 39,
+     "tag": 1
+    },
+    {
+     "level": 39,
+     "tag": 2
+    },
+    {
+     "level": 39,
+     "tag": 9
+    },
+    {
+     "level": 39,
+     "tag": 10
+    }
+   ]
+  },
+  {
+   "label": "totempart 2 picked up (`hasTotemPartSet(2)`), BEFORE the host echoes the item",
+   "tick": 2796,
+   "run_id": 1,
+   "level": 39,
+   "pos": {
+    "x": 85.5,
+    "y": 42.29
+   },
+   "worldCtor": {
+    "x": 144,
+    "y": 608
+   },
+   "arrival": {
+    "level": 39,
+    "x": 144,
+    "y": 608
+   },
+   "damage": {
+    "hits": 0,
+    "hitsTimer": 0,
+    "directionFace": -1
+   },
+   "deaths": 0,
+   "keys": [],
+   "chasers": [],
+   "locks": [
+    {
+     "id": "wandlock@144,64",
+     "open": true,
+     "alpha": 0
+    },
+    {
+     "id": "wandlock@144,48",
+     "open": true,
+     "alpha": 0
+    },
+    {
+     "id": "wandlock@144,32",
+     "open": true,
+     "alpha": 0
+    },
+    {
+     "id": "cover@144,112",
+     "open": true,
+     "alpha": 0
+    },
+    {
+     "id": "cover@176,144",
+     "open": true,
+     "alpha": 0
+    },
+    {
+     "id": "cover@112,144",
+     "open": true,
+     "alpha": 0
+    },
+    {
+     "id": "wandlock@48,160",
+     "open": false,
+     "alpha": 1
+    }
+   ],
+   "pushedBlocks": [
+    {
+     "id": "pushableblockfire@144,176",
+     "x": 144,
+     "y": 112,
+     "tx": 9,
+     "ty": 7,
+     "removed": false
+    },
+    {
+     "id": "pushableblockfire@208,80",
+     "x": 176,
+     "y": 144,
+     "tx": 11,
+     "ty": 9,
+     "removed": false
+    },
+    {
+     "id": "pushableblockfire@48,176",
+     "x": 112,
+     "y": 144,
+     "tx": 7,
+     "ty": 9,
+     "removed": false
+    }
+   ],
+   "burnedTrees": {},
+   "pressed": [
+    "button@144,112",
+    "button@112,144",
+    "button@176,144"
+   ],
+   "persistence_cleared": [
+    {
+     "level": 39,
+     "tag": 0
+    },
+    {
+     "level": 39,
+     "tag": 1
+    },
+    {
+     "level": 39,
+     "tag": 2
+    },
+    {
+     "level": 39,
+     "tag": 9
+    },
+    {
+     "level": 39,
+     "tag": 10
+    }
+   ]
+  },
+  {
+   "label": "600 ticks after the delivery (the ceremony played; the in-place reboot ran when it ended)",
+   "tick": 3396,
+   "run_id": 2,
+   "level": 39,
+   "pos": {
+    "x": 85.5,
+    "y": 42.29
+   },
+   "worldCtor": {
+    "x": 77.50019232250469,
+    "y": 34.29403071399816
+   },
+   "arrival": {
+    "level": 39,
+    "x": 144,
+    "y": 608
+   },
+   "damage": {
+    "hits": 0,
+    "hitsTimer": 0,
+    "directionFace": -1
+   },
+   "deaths": 0,
+   "keys": [],
+   "chasers": [],
+   "locks": [
+    {
+     "id": "wandlock@144,64",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@144,48",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@144,32",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "cover@144,112",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "cover@176,144",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "cover@112,144",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@48,160",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@144,592",
+     "open": false,
+     "alpha": 1
+    }
+   ],
+   "pushedBlocks": [],
+   "burnedTrees": {},
+   "pressed": [],
+   "persistence_cleared": [
+    {
+     "level": 39,
+     "tag": 0
+    },
+    {
+     "level": 39,
+     "tag": 1
+    },
+    {
+     "level": 39,
+     "tag": 2
+    },
+    {
+     "level": 39,
+     "tag": 9
+    },
+    {
+     "level": 39,
+     "tag": 10
+    }
+   ]
+  }
+ ],
+ "events": [],
+ "host": [
+  {
+   "t": 2796,
+   "totem_parts_2": true
+  },
+  {
+   "t": 2796,
+   "queued": "Main.hasSealPartSet(0, 0)  (Seal — seed 1 Totem Shard (Three Blocks Puzzle))"
+  }
+ ],
+ "tape": {
+  "load": "ok",
+  "start": "ok"
+ },
+ "deaths": [],
+ "notes": [
+  "[js runtime] boot level 0 at (80, 128) — the game's own first frame (Main.as:51)",
+  "[js runtime] boot level 39 at (144, 608) — teleport (new Game)",
+  "[js runtime] boot level 39 at (144, 608) — tape r5-shaft (botStart)",
+  "[js runtime] boot level 39 at (77.50019232250469, 34.29403071399816) — an item flag changed"
+ ]
+}

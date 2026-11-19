@@ -320,6 +320,18 @@ export function readPresetLinkParams(q) {
     return { preset, region };
 }
 
+/** ⛓ TILE-3 — `?packs=a,b` → `['a', 'b']`; absent or empty → null. A pack id that is not one is refused by name. */
+export function readPacksParam(raw) {
+    if (raw === null || raw === undefined || raw.trim() === '') return null;
+    const ids = raw.split(',').map((s) => s.trim());
+    for (const id of ids) {
+        if (!/^[a-z][a-z0-9-]*$/.test(id)) {
+            fail(`mazeLab: ?packs= names ${JSON.stringify(id)}, which is not a content pack id (lowercase, digits, -)`);
+        }
+    }
+    return ids;
+}
+
 export function readLabParams(search) {
     const q = new URLSearchParams(search);
     const source = (q.get('source') || SOURCES.GENERATE).toLowerCase();
@@ -386,6 +398,13 @@ export function readLabParams(search) {
          * quietly promising a document nobody is editing.
          */
         library: q.get('library'),
+        /**
+         * ⛓ CONTENT SETS TILE-3 — **THE CONTENT PACKS THE EDITOR READS**, a comma list in stack order (a later pack
+         * wins). Their declared tile kinds are what the TILE KIND palette entry places, and their art draws them.
+         * Absent: no pack is loaded, no kind is declared, and the entry refuses by name. Copied forward, never
+         * written.
+         */
+        packs: readPacksParam(q.get('packs')),
         /**
          * ⛓⛓⛓ EDITOR INTEGRATION W4 — **A WORLD BUNDLE TO FETCH AND HOLD**,
          * `?library=`'s own sibling one document up. ⛔ It names a `.zip`, not a
@@ -1235,8 +1254,9 @@ export function undoEdit(state) {
  * them. ⚠ A state's existing edits are replayed in, so entering EDIT twice in
  * one page life does not lose the first visit's work.
  */
-export function openEditSession(state) {
-    const session = createEditSession(mazeEditAdapter, state.baseRecord ?? state.record, {
+export function openEditSession(state, { adapter = mazeEditAdapter } = {}) {
+    // ⛓ CONTENT SETS TILE-3 — the page passes its own adapter, which knows the loaded packs' declared tile kinds.
+    const session = createEditSession(adapter, state.baseRecord ?? state.record, {
         base: editBaseTag(state),
         certified: state.certified ?? null,
     });

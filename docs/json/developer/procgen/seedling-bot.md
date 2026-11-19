@@ -724,6 +724,62 @@ The probes boot through `scripts/procgen/seedlingProbeBoot.js`:
 
 The `A valid external Instance reference no longer exists` lines are not a fault. They are this channel's device loss (see above), and the probe counts them inside a `bridge-never-ready` fault.
 
+## Running the whole-game walk
+
+The whole-game walk is the Tutorial panel's `seedling-whole-game` tutorial, played by the Playback Bot in the real game: the row `tutorial-walk-seedling-whole-game` in the MANUAL batch `tutorials-seedling-whole-game` (WebGPU). The row reads PASSED however far the bot gets, because the ratchet grades it against `firstFailingStep: 'bot-plays'`. **PASSED is not the result; the depth is.** `scripts/procgen/walk-seedling-whole-game.mjs` runs the batch with the walk instrument on and prints the depth as one line:
+
+```bash
+node scripts/procgen/walk-seedling-whole-game.mjs --budget-s=600 --port=8000
+# 7/48, stop: entry 8 "Level 020 - Shield" in level_19, cause: budget: the step's wait ran out (…) (transport wasm; walk 600 s, run 640 s)
+```
+
+(The line above shows the shape only; it is not a measurement.) The summary is `N/48` (checks the bot reached, skipped heads not counted), the entry it stopped on (the bot's queue head), its location and region, and the cause: a **refusal** (the bot's `error:` status, quoted), a **stall** (the status did not change for the stall window), a **budget** stop (the step's wait ran out), or `none` when the walk completed.
+
+| Flag | Does |
+|---|---|
+| `--seed=N` | the Seedling Playthrough seed (default 1, the committed preset). Another seed is generated into the tree with `Generate.py` and reverted afterwards: `preset_files.json` is checked out, and the new preset dir and its `output/AP_<id>.zip` are deleted. It refuses to start when `preset_files.json` already has changes. |
+| `--runtime=wasm\|js` | the Flash runtime, as a session override (unset: the app's setting) |
+| `--budget-s=` | the bot step's wait (default 10800). The in-app and Playwright clocks are set above it, so a stop is the walk's own, never the harness clock |
+| `--stall-s=` | the bot's stall window (default 300; the app's own is 60) |
+| `--skip-refusals=K` | the skip probe: on a bot error, count the head as seen and play on, K times. A lower bound on what lies past a stop; it fixes nothing |
+| `--min=N` | exit 1 below N checks. Otherwise it **exits 0 always**: it is a measure, not a gate |
+| `--port=`, `--wait-for-box=` | passed to `npm test` |
+
+The full walk takes about 50 minutes on wasm, so full re-measures run in the cloud or on CI, not on the box. The run's whole log is written to `test-results/whole-game-walk/`.
+
+**The instrument** (`tutorialTests.js` § *The walk instrument*) is inert unless one of its URL params is set. `test_json/e2e/app.spec.js` passes each one from an env var, and the script sets them:
+
+| env | URL param | effect |
+|---|---|---|
+| `TEST_MEASURE_STEP_TIMEOUT_MS` | `measureStepTimeoutMs` | every walk step's done-wait is at least this |
+| `TEST_MEASURE_BOT_STALL_MS` | `measureBotStallMs` | `botCannotFinish`'s stall window (`steps/procgen.js`) |
+| `TEST_MEASURE_PLAYTHROUGH_SEED` | `measurePlaythroughSeed` | the Seedling tutorials play that seed (`seedling.js`) |
+| `TEST_MEASURE_FLASH_RUNTIME` | `measureFlashRuntime` | plain walk rows play under that runtime |
+| `TEST_MEASURE_SKIP_REFUSALS` | `measureSkipRefusals` | the skip probe |
+
+With any of them set, the page logs a `[MEASURE tick]` line every 15 s, `[MEASURE skip k]` per skip, and one `[MEASURE end]` line. The end line carries the checks, the bot's queue, cursor and head (`botHead=`), its region, the region changes, the wasm teleport pushes, the transport, the heap sizes, the bot's status, and the walk's end (`walkEnd=`, `walkStep=`, `why=`). With none set, the rows run exactly as before: no sampler, no timer, no extra import, and the same timeouts, seed and runtime.
+
+## Live-server test (scaffold)
+
+`scripts/test/seedling-live-server.mjs` plays a Seedling Playthrough room on a real **upstream** Archipelago server. It is a scaffold: one short run that connects, sends at least one check and shuts down cleanly. A full pass, the goal included, waits for the bot to play the whole game.
+
+```bash
+node scripts/test/seedling-live-server.mjs --upstream=<upstream AP checkout> --port=8000 --budget-s=120
+```
+
+In order, it:
+
+1. packs `seedling_playthrough` (`scripts/build/pack_apworld.py`) and copies `apworlds/spoiler_export_hook.apworld` into `<upstream>/custom_worlds/`. Any file already there under those names is set aside and put back at the end.
+2. generates the room with upstream's `Generate.py` (default seed 2, Sprout alone at slot 1; `--with-apquest` adds Questy at slot 2).
+3. starts upstream's `MultiServer.py --disable_save` on `--ws-port` (default: a free port) and records its PID.
+4. opens the app in headless Chromium with no local preset for the game, so the server's own doc is what loads. It sets the Flash runtime (`--runtime`, default `js`), connects as Sprout, and runs the Playback Bot's `play()` for `--budget-s`.
+5. prints one line: the slot it connected as, the checks it sent out of the room's locations, whether the server reported Sprout's goal, and the bot's last status.
+6. closes the browser, stops the server **by its PID**, restores `custom_worlds/`, and deletes its temp dir (unless `--keep`).
+
+It exits 0 when it connected and sent a check, 1 when it did not, and 2 on a setup failure. Upstream Archipelago is not vendored: pass `--upstream=<dir>` or set `AP_UPSTREAM`. A missing or wrong directory is refused with a message saying what to do. The measured setup used a detached worktree of upstream `main` (AP 0.6.9) and this repo's venv, with `SKIP_REQUIREMENTS_UPDATE=1` so upstream's `ModuleUpdate` does not install packages. It takes the box lock as kind `own-port`.
+
+**What it cannot do yet:** it reports the goal but never requires it. Nobody plays Questy, so in a `--with-apquest` room Sprout's items placed in Questy's world never arrive. It has no reconnect, no release or collect modes, and Sprout is always slot 1. It is not a CI job and is in no batch.
+
 ## Rebuilding the game after an AS3 change
 
 `build_bot.sh` (in the seedling bot build directory, outside this repo) builds the SWF; its header documents the rest (inject → SWFRecomp → `build_wasm_avm2.sh` → `deploy_wasm_avm2.sh` → copy into `frontend/modules/flashPanel/wasm/`). That directory is the submodule `PeerInfinity/seedling-wasm`: a rebuilt build is committed and pushed there, then the pointer is bumped here in its own commit. A build belongs in the submodule if and only if a tracked file of this repo names it; `scripts/procgen/check-seedling-wasm-pins.mjs` gates the agreement between the manifest, the whitelist, what the submodule tracks and what this repo names. `frontend/modules/flashPanel/README.md` has the add and retire steps.

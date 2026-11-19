@@ -372,15 +372,22 @@ describe('the corpus census — printed, then pinned', () => {
          *              `same-doc` 40 → 42).
          *   435 → 437  ActionNodes AN-1b (2026-11-16): substrate-registry.md's new `fillRules` row → concepts.md and its
          *              `loopSupport.strictQueueActions` row → action-nodes.md § No explore (`doc` 327 → 329).
+         *   437 → 440  ActionNodes AN-3a (2026-11-17): substrate-registry.md's new `loopBot` row → action-nodes.md § The
+         *              bot planner, that § → playback-and-debugging.md § The playback bot, and that doc's runner
+         *              bullet back → action-nodes.md § The bot planner (`doc` 329 → 332).
+         *   440 → 446  rule-table-doc-command (2026-11-18): the new seedling-derived-rules.md — its README index row, its
+         *              links to maze.md and pipeline-presets.md § Regenerating the Seedling playthrough chain, and
+         *              maze.md's derived-rule-table bullet and pipeline-presets.md's table paragraph → it (`doc` 332 →
+         *              337); its own § Staleness link (`same-doc` 42 → 43).
          */
         expect(by).toEqual({
-            'same-doc': 42,
-            doc: 329,
+            'same-doc': 43,
+            doc: 337,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(437);
+        expect(CORPUS.length).toBe(446);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
@@ -392,7 +399,11 @@ describe('the corpus census — printed, then pinned', () => {
         //   registry's `loopSupport.actionGate` row → action-nodes.md § The runtime (3 doc).
         //   327 → 329: ActionNodes AN-1b — the registry's `fillRules` row → concepts.md and its
         //   `loopSupport.strictQueueActions` row → action-nodes.md § No explore (2 doc).
-        expect(docs).toHaveLength(329);
+        //   329 → 332: ActionNodes AN-3a — the registry's `loopBot` row → action-nodes.md § The bot planner, that § ⇄
+        //   playback-and-debugging.md § The playback bot (3 doc).
+        //   332 → 337: rule-table-doc-command — seedling-derived-rules.md (its index row, 2 links out) and the two
+        //   links in to it from maze.md and pipeline-presets.md (5 doc).
+        expect(docs).toHaveLength(337);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

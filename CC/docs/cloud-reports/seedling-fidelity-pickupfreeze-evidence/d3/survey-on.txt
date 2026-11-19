@@ -1,0 +1,4 @@
+== step 36 — L29 ... SOLVED 257 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 576 ms
+== step 66 — L40 ... REFUSED — solverBot(survey-step-66) collect (160,640) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (625.9,680.6) — spinner:spinner@816,84
+== step 96 — L40 ... REFUSED — solverBot(survey-step-96) collect (656,528) stance (ladder-routed: no corridor from (888.2497303124467,776.4935031361972) to a stance that can collect bosskey@6
+== step 149 — L40 ... REFUSED — solverBot(survey-step-149) collect (64,144) stance (ladder-routed: no corridor from (280.3669873047385,216.60071614521746) to a stance that can collect totempar

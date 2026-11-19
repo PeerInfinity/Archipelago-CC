@@ -21,5 +21,7 @@ describe('the committed derived-rule table is fresh against its inputs', () => {
         expect(REGEN_RECIPE).toMatch(/make-seedling-playthrough-rules\.mjs/);
         expect(REGEN_RECIPE).toMatch(/COMMIT THE TABLE IN THE SAME PACKET/);
         expect(REGEN_RECIPE).toMatch(/VERDICTS move.*designer review before js-16 slots it/s);
+        // ⛓ …and the one command that runs it (slice rule-table-doc-command).
+        expect(REGEN_RECIPE).toMatch(/refresh-seedling-derived-rules\.mjs --dispatch/);
     });
 });

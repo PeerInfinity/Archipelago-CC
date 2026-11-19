@@ -31,6 +31,7 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { blockKeyOf, resolveQueueBlocks } from '../loops/blockIdentity.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { substrateLoopPlannerOf } from './substrateLoopPlanner.js';
 import { mountChecksLine } from '../commonUI/checksLine.js';
 
 export class PlaybackBotPanel {
@@ -368,6 +369,10 @@ export class PlaybackBotPanel {
                 const loc = stateManager?.getStaticData?.()?.locations?.get?.(name);
                 return loc?.parent_region ?? loc?.region ?? null;
             },
+            // ⛓ A substrate that plans its own loops (`loopBot.planLoop`, ActionNodes AN-3a), when every region of
+            // the loaded world is one of its regions; null for every other world.
+            substrateLoopPlanner: () => substrateLoopPlannerOf(this._cachedRulesJson, this._cachedPlayerId ?? '1', substrateRegistry),
+            getSnapshot: () => stateManager?.getLatestStateSnapshot?.() ?? null,
             subscribe: (eventName, handler) => {
                 eventBus.subscribe(eventName, handler, 'playbackBot');
                 return () => eventBus.unsubscribe?.(eventName, handler, 'playbackBot');

@@ -284,3 +284,63 @@ describe('LoopModeRunner', () => {
         expect(count()).toBe(after);
     });
 });
+
+// ⛓ AN-3a: a substrate's own loop plan (`loopBot.planLoop`, via `deps.substrateLoopPlanner`).
+describe('LoopModeRunner — a substrate that plans its own loops', () => {
+    const PATH = [
+        { type: 'regionMove', sourceRegion: 'Menu', destinationRegion: 'Overworld', exitUsed: 'GameStart', instanceNumber: 1 },
+        { type: 'customAction', actionName: 'act', params: { nodeId: 'Overworld' }, sourceRegion: 'Overworld', instanceNumber: 1 },
+    ];
+
+    it('asks the substrate planner for the whole loop, writes its path, and hands its reasoning lines on', () => {
+        const { game, runner } = makeGame({ substrate: () => true });
+        const contexts = [];
+        const reasoning = [];
+        runner._d.substrateLoopPlanner = () => ({
+            substrateId: 'fake',
+            planLoop: (ctx) => { contexts.push(ctx); return { kind: 'checks', path: PATH, reason: 'Chose: act', lines: ['Chose: act', '  other: short'], key: 'k' }; },
+        });
+        runner._d.getSnapshot = () => ({ inventory: { Boost: 1 }, checkedLocations: ['A'] });
+        runner._d.onReasoning = (lines) => reasoning.push(...lines);
+        game.gameState.getRegionXP = (r) => (r === 'Overworld' ? { level: 1, xp: 5 } : { level: 0, xp: 0 });
+        runner.start();
+        expect(game.paths.at(-1)).toEqual(PATH);
+        expect(game.loopState.restartFromStart).toHaveBeenCalledTimes(1);
+        // a substrate region with no Bot / Playback mode is NOT "unplayable" for its own plan
+        expect(game.statuses.at(-1)).toMatch(/^loop 1: Chose: act/);
+        expect(reasoning).toEqual(['loop 1: Chose: act', 'loop 1:   other: short']);
+        expect(contexts[0]).toMatchObject({ startRegion: 'Menu', maxMana: 100, inventory: { Boost: 1 }, checkedLocations: ['A'] });
+        // total XP: level 1 takes 100, plus 5 of progress
+        expect(contexts[0].regionXp('Overworld')).toBe(105);
+        expect(contexts[0].regionXp('Menu')).toBe(0);
+    });
+
+    it('its done finishes the run; its unreachable waits and retries', () => {
+        const { game, runner } = makeGame();
+        let kind = 'unreachable';
+        runner._d.substrateLoopPlanner = () => ({ substrateId: 'fake', planLoop: () => ({ kind, path: [], reason: 'nothing open', lines: [] }) });
+        runner.start();
+        expect(game.statuses.at(-1)).toMatch(/waiting: nothing open/);
+        kind = 'done';
+        vi.advanceTimersByTime(1000);
+        expect(game.statuses.at(-1)).toMatch(/^finished/);
+        expect(runner.isActive()).toBe(false);
+    });
+
+    it('a planner that throws is a named wait, not a crash', () => {
+        const { game, runner } = makeGame();
+        runner._d.substrateLoopPlanner = () => ({ substrateId: 'fake', planLoop: () => { throw new Error('boom'); } });
+        runner.start();
+        expect(game.statuses.at(-1)).toMatch(/the fake loop plan failed — boom/);
+    });
+
+    it('⛓ with no substrate planner (null) the plan is planNextLoop\'s, exactly as before', () => {
+        const a = makeGame();
+        a.runner._d.substrateLoopPlanner = () => null;
+        a.runner.start();
+        const b = makeGame();
+        b.runner.start();
+        expect(a.game.paths).toEqual(b.game.paths);
+        expect(a.game.statuses).toEqual(b.game.statuses);
+    });
+});

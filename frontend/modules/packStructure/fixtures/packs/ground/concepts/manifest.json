@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "provenance": {
+    "sources": { "pass1": { "type": "authored", "by": "content sets PASS-1's parser pins" } },
+    "default": "pass1"
+  },
+  "concepts": {
+    "ground:terrain/rug": { "kind": "terrain", "name": "Rug", "base": "marker", "presents": "ground:terrain/rug" },
+    "ground:terrain/pillar": { "kind": "terrain", "name": "Pillar", "base": "wall", "presents": "ground:terrain/pillar" },
+    "ground:object/lamp": { "kind": "object", "name": "Lamp", "base": "marker" }
+  }
+}

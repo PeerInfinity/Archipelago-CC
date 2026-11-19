@@ -46,11 +46,13 @@ export function readBindingWitnesses(file = WITNESS_LEDGER) {
     return existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')).witnesses : [];
 }
 /** How a stale table is regenerated (named in every staleness failure). */
-export const REGEN_RECIPE = 'run alone, in this order: (1) `gh workflow run seedling-probe.yml -R PeerInfinity/Archipelago-CC --ref <branch> '
+export const REGEN_RECIPE = 'run alone. ONE COMMAND does steps (1)-(3) and the count check: `node scripts/procgen/refresh-seedling-derived-rules.mjs '
+    + '--dispatch --ref=<branch>` (or `--run=<id>` for a run already made; `--check` offline; docs/json/developer/procgen/seedling-derived-rules.md). '
+    + 'By hand, in this order: (1) `gh workflow run seedling-probe.yml -R PeerInfinity/Archipelago-CC --ref <branch> '
     + '-f probes=probe-seedling-derived-rules.mjs`; (2) `gh run download <run> -R PeerInfinity/Archipelago-CC` and copy '
     + 'probe-seedling-derived-rules-log/seedling-playthrough-derived-rules.json over '
-    + 'frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json; (3) `node scripts/procgen/make-seedling-playthrough-rules.mjs` '
-    + 'then `node scripts/procgen/make-seedling-playthrough-maze.mjs` (and the rest of the atlas recipe if the atlas id moves); '
+    + 'frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json; (3) the producer chain, `node scripts/procgen/regen-seedling.mjs --write` '
+    + '(make-seedling-playthrough-rules.mjs first, then partition, world, seed 1, the maze, ER, sphere order; a new atlas id also needs atlas_files.json); '
     + '(4) COMMIT THE TABLE IN THE SAME PACKET as the change that staled it. If the regenerated table\'s VERDICTS move (its rows or '
     + 'exclusions, not only its `inputs` hashes), the packet owes a tile-primitives designer review before js-16 slots it. '
     + 'The engine closure: `node scripts/procgen/seedlingDerivedRuleTable.js --print-engine-closure`';

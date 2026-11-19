@@ -322,6 +322,19 @@ export const TERMS = Object.freeze([
         seeAlso: ['zone', 'shuffled-spiral', 'substrate', 'rng-stream'],
     }),
     t({
+        id: 'content-pack',
+        term: 'a content pack',
+        aliases: ['content set', 'theme pack'],
+        area: 'pipeline',
+        plain: 'A folder of names, words, looks and pictures that a generated world can be dressed in, '
+            + 'without changing how the world plays.',
+        detail: 'A pack (`frontend/packs/<id>/`) carries layers such as `concepts`, `text` and `art`. A world '
+            + 'stacks several, and a later pack wins per key (`contentPacks.loadPackStack`). A concept row may '
+            + 'declare a tile `base`, which makes it a tile kind the maze lab\'s editor can place (`?packs=`).',
+        where: [{ label: 'concepts.md § A world\'s content stack', doc: 'docs/json/developer/procgen/concepts.md#a-worlds-content-stack' }],
+        seeAlso: ['content-source', 'palette'],
+    }),
+    t({
         id: 'zone',
         term: 'a zone',
         aliases: [],

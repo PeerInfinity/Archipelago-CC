@@ -578,12 +578,17 @@ export class GameState {
             }
         }
 
-        if (!lastRegionMove) {
+        // Outside Loop mode an empty path still refuses, exactly as before:
+        // gameState's own user:locationCheck handler appends performed
+        // checks there, and a check made before the first move has never
+        // been recorded in the path (sdc-loop-start-region-queue keeps
+        // non-Loop path tracking unchanged).
+        if (!lastRegionMove && !this.isLoopModeActive) {
             console.warn(`[GameState] Cannot add location check: no regionMove entries found in path`);
             return;
         }
 
-        // Use the provided region name, or look it up from staticData, or fall back to current region
+        // Use the provided region name, or look it up from staticData
         let locationRegion = regionName;
         if (!locationRegion && staticData && staticData.locations) {
             // Try to find the location in staticData to get its region
@@ -593,16 +598,31 @@ export class GameState {
             }
         }
 
-        // If still no region, use the current region from the last regionMove
-        if (!locationRegion) {
-            locationRegion = lastRegionMove.destinationRegion;
+        let sourceRegion;
+        let instanceNumber;
+        if (lastRegionMove) {
+            // Unchanged behaviour on a path with a regionMove: fall back to
+            // the last regionMove's destination, and always take its
+            // instance number.
+            sourceRegion = locationRegion || lastRegionMove.destinationRegion;
+            instanceNumber = lastRegionMove.instanceNumber;
+        } else {
+            // Loop mode, empty path (no synthesized start hop, e.g. an
+            // AP-native or add-on doc): resolve like addCustomAction does, so a
+            // START-region location can be queued. Falls back to
+            // currentRegion; instance from regionInstanceCounts or 1.
+            ({ sourceRegion, instanceNumber } = this._resolveRegionAndInstance(locationRegion || null));
+            if (!sourceRegion) {
+                console.warn(`[GameState] Cannot add location check: no region resolves (empty path, no current region)`);
+                return;
+            }
         }
 
         this.path.push({
             type: 'locationCheck',
             locationName: locationName,
-            sourceRegion: locationRegion,
-            instanceNumber: lastRegionMove.instanceNumber
+            sourceRegion,
+            instanceNumber
         });
         
         // Emit path updated event
@@ -755,7 +775,8 @@ export class GameState {
     }
 
     /**
-     * Shared helper for manual / customQueue path entries. Resolves
+     * Shared helper for manual / customQueue path entries (and an
+     * empty-path locationCheck). Resolves
      * the source region (explicit param > last regionMove's destination
      * > currentRegion) and the instance number using the same scheme
      * as addCustomAction.

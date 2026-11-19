@@ -92,6 +92,7 @@ import {
     setBlock, setButton, setItem, setObstacle, setTile, step,
 } from './mazeRoomEngine.js';
 import { rngFor } from './procgenRng.js';
+import { tileKindsList, withTileKinds } from './mazeTileKinds.js';
 
 export class ProcgenMazeError extends Error {
     constructor(message) {
@@ -246,6 +247,8 @@ export function cloneWorld(world) {
          */
         blocks: new Map(world.blocks ?? []),
         buttons: new Map(world.buttons ?? []),
+        // ⛓ CONTENT SETS TILE-3 — the placed tile kinds, copied (a spread would share the Map), and only when present.
+        ...(world.tileKinds ? { tileKinds: new Map(world.tileKinds) } : {}),
     };
     delete next._exitsByPos;
     return next;
@@ -337,6 +340,10 @@ export function serializeMazeLevel(world) {
      * said "nothing calls it yet"; this is the caller.
      */
     Object.assign(out, serializeMazeEntities(world));
+    // ⛓ CONTENT SETS TILE-3 — the placed tile kinds, OMITTED when there are none (so `worldsEqual` sees a placed or
+    //   removed kind, and a level without one is byte-identical).
+    const tileKinds = tileKindsList(world);
+    if (tileKinds) out.tileKinds = tileKinds;
     return out;
 }
 
@@ -455,6 +462,8 @@ export function deserializeMazeLevel(payload) {
     // world has one; the engine's one checker reads it back (absent → `{}`).
     world.actionLib = checkActionLib(payload.action_lib, 'deserializeMazeLevel');
     adoptEngineEntities(world, payload);
+    // ⛓ TILE-3 — and its placed tile kinds, checked against its own grid (`mazeTileKinds.withTileKinds`).
+    withTileKinds(world, payload);
     return world;
 }
 

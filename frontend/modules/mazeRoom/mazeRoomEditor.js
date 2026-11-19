@@ -64,6 +64,18 @@ import {
  * (which imports nothing substrate-side) and `procgenMaze` re-exports them.
  */
 import { flagIdFor, guardIdsFor } from '../procgenCore/elements.js';
+import {
+    BLOCKED_PASS, TILE_KIND_REFUSALS, declaredPassOf, occupiedWorldCells, tileKindRefusal, tileUnderPass,
+} from './mazeTileKinds.js';
+
+/**
+ * ⛓ TILE-3 — the declared kinds the palette offers: every one the loaded packs do not refuse
+ * (`mazeTileKinds.tileKindRefusal`; ⛓ PASS-1: a wall-based kind is offered when it is blocked, and a kind whose look
+ * lies about its pass, or whose pass cannot be read, is not).
+ */
+export function placeableTileKinds(declared) {
+    return Object.keys(declared ?? {}).filter((k) => tileKindRefusal(k, declared) === null);
+}
 
 export const PALETTE_TYPES = Object.freeze({
     FLOOR:    'floor',
@@ -75,6 +87,8 @@ export const PALETTE_TYPES = Object.freeze({
     BUTTON:   'button',
     FLAG:     'flag',
     ERASE:    'erase',
+    /** ⛓ CONTENT SETS TILE-3 — a pack-declared tile kind (`mazeTileKinds.js`), chosen from the loaded packs. */
+    TILE_KIND: 'tileKind',
 });
 
 export const PALETTE_ENTRIES = Object.freeze([
@@ -87,6 +101,8 @@ export const PALETTE_ENTRIES = Object.freeze([
     { type: PALETTE_TYPES.BLOCK,    label: 'Block',    glyph: '▣' },
     { type: PALETTE_TYPES.BUTTON,   label: 'Button',   glyph: '◉' },
     { type: PALETTE_TYPES.FLAG,     label: 'Flag',     glyph: '⚑' },
+    /** ⛓ TILE-3 — the kind is the editor's `selectedTileKind`, one the loaded packs declare (`setTileKinds`). */
+    { type: PALETTE_TYPES.TILE_KIND, label: 'Tile kind', glyph: '▤' },
     { type: PALETTE_TYPES.ERASE,    label: 'Erase entity', glyph: '⌫' },
 ]);
 
@@ -142,6 +158,8 @@ function nextFreeIndex(taken) {
 export const EDIT_OPS = Object.freeze([
     'setTile', 'setEntrance', 'setItem', 'setObstacle', 'setBlock', 'setButton', 'setFlag',
     'clearEntity',
+    // ⛓ CONTENT SETS TILE-3 — place a pack-declared tile kind (`mazeTileKinds.js`); `clearEntity` removes it.
+    'setTileKind',
 ]);
 
 export const TILE_NAMES = Object.freeze({ floor: TILE_FLOOR, wall: TILE_WALL });
@@ -186,7 +204,7 @@ const DEFAULT_LOCATION_NAME_FORMAT = (x, y) => `Edited Location ${x},${y}`;
  *
  * @returns the same descriptor `applyAt` returns, including the RESOLVED op.
  */
-export function applyEditOp(world, op, { locationNameFormat = DEFAULT_LOCATION_NAME_FORMAT } = {}) {
+export function applyEditOp(world, op, { locationNameFormat = DEFAULT_LOCATION_NAME_FORMAT, tileKinds = null } = {}) {
     if (!world) return notOk('no-world', 'No world loaded.');
     if (!op || !EDIT_OPS.includes(op.op)) {
         return notOk('unknown-op', `Unknown edit op ${JSON.stringify(op?.op)} — the declared `
@@ -202,6 +220,22 @@ export function applyEditOp(world, op, { locationNameFormat = DEFAULT_LOCATION_N
         return notOk('out-of-bounds', `Tile (${x},${y}) is out of bounds.`);
     }
     const ed = new MazeRoomEditor({ locationNameFormat });
+    /**
+     * ⛓ TILE-3 — a cell holding a placed tile kind takes nothing else (the kind stands on an EMPTY cell, and walling
+     * it would change its pass under its look): every op but `setTileKind`, `clearEntity` and `setTile floor` is
+     * refused there, by name.
+     * ⛓ PASS-1 — and `setTile floor` only on a walkable kind (a no-op there): on a BLOCKED kind it would open the wall
+     * the kind lowered to while the kind still says blocked, so it is refused by name — erase the kind first.
+     */
+    const heldKind = world.tileKinds?.get(`${x},${y}`);
+    if (heldKind && op.op === 'setTile' && op.tile === 'floor' && getTile(world, x, y) === TILE_WALL) {
+        return notOk('blocked-tile-kind', TILE_KIND_REFUSALS.floorOverBlocked(x, y, heldKind));
+    }
+    if (heldKind && !['setTileKind', 'clearEntity'].includes(op.op)
+        && !(op.op === 'setTile' && op.tile === 'floor')) {
+        return notOk('occupied-tile-kind', `Tile (${x},${y}) holds the tile kind "${heldKind}"; `
+            + 'erase it first.');
+    }
     switch (op.op) {
         case 'setTile': {
             if (op.tile === 'wall') return ed._setWall(world, x, y);
@@ -217,6 +251,7 @@ export function applyEditOp(world, op, { locationNameFormat = DEFAULT_LOCATION_N
         case 'setBlock': return ed._setBlock(world, x, y);
         case 'setButton': return ed._setButton(world, x, y, op.index ?? null);
         case 'setFlag': return ed._setFlag(world, x, y, op.index ?? null);
+        case 'setTileKind': return ed._setTileKind(world, x, y, op.kind, tileKinds);
         default: return ed._eraseEntity(world, x, y);
     }
 }
@@ -235,7 +270,22 @@ export class MazeRoomEditor {
         this.selectedItemId = defaultItemId ?? firstKey(itemLib);
         this.selectedObstacleId = defaultObstacleId ?? firstKey(obstacleLib);
         this.locationNameFormat = locationNameFormat;
+        /** ⛓ TILE-3 — the loaded packs' declared tile kinds (`mazeTileArt.tileKindKeys`), and the one selected. */
+        this.tileKinds = null;
+        this.selectedTileKind = null;
     }
+
+    /**
+     * ⛓ TILE-3 — the tile kinds the world's loaded packs declare (`{ conceptKey: { artKey, base } }`), which the
+     * TILE KIND palette entry places. A kind whose base is `wall` is not offered (`placeableTileKinds`).
+     */
+    setTileKinds(declared) {
+        this.tileKinds = declared ?? null;
+        const offered = placeableTileKinds(this.tileKinds);
+        if (!offered.includes(this.selectedTileKind)) this.selectedTileKind = offered[0] ?? null;
+    }
+
+    selectTileKind(kind) { this.selectedTileKind = kind; }
 
     setLibraries(itemLib, obstacleLib) {
         this.itemLib = itemLib ?? {};
@@ -291,6 +341,7 @@ export class MazeRoomEditor {
             case PALETTE_TYPES.BUTTON: return { op: 'setButton', x, y, index: null };
             case PALETTE_TYPES.FLAG: return { op: 'setFlag', x, y, index: null };
             case PALETTE_TYPES.ERASE: return { op: 'clearEntity', x, y };
+            case PALETTE_TYPES.TILE_KIND: return { op: 'setTileKind', x, y, kind: this.selectedTileKind };
             default: return null;
         }
     }
@@ -306,7 +357,7 @@ export class MazeRoomEditor {
          * cannot be the one nobody looks at. ⚠ The two id-bearing ops keep this
          * editor's own libraries by carrying the SELECTED id in the op.
          */
-        return applyEditOp(world, op, { locationNameFormat: this.locationNameFormat });
+        return applyEditOp(world, op, { locationNameFormat: this.locationNameFormat, tileKinds: this.tileKinds });
     }
 
     // --- per-type apply ---
@@ -525,14 +576,51 @@ export class MazeRoomEditor {
      * a level the ORACLE refuses, by name, rather than one that silently
      * solves).
      */
+    /**
+     * ⛓ TILE-3 — place a pack-declared tile kind on (x,y). Refused by name: no loaded pack declares tile kinds, the
+     * kind is undeclared or its look lies about its pass (`mazeTileKinds.tileKindRefusal`), the cell is a wall, or
+     * anything else names the cell (`occupiedWorldCells`). A kind already there is replaced.
+     *
+     * ⛓ PASS-1 — the kind's DECLARED pass is BAKED and LOWERED in this one op: a `blocked` kind writes `TILE_WALL`
+     * under itself, any other leaves (or, replacing a blocked kind, restores) floor. The cell it takes must be FLOOR
+     * (or one a kind already holds, which it owns): a blocked kind is never laid on a painted wall, so erasing it
+     * always gives back the floor it took.
+     */
+    _setTileKind(world, x, y, kind, declared) {
+        const op = { op: 'setTileKind', x, y, kind };
+        if (typeof kind !== 'string' || !kind) return notOk('no-tile-kind', 'No tile kind selected.');
+        if (!declared) {
+            return notOk('no-tile-kinds', `No packs are loaded, so no tile kind is declared; "${kind}" cannot be placed.`);
+        }
+        const refused = tileKindRefusal(kind, declared);
+        if (refused) return notOk(refused.reason, refused.description);
+        const before = world.tileKinds?.get(`${x},${y}`);
+        if (!before && getTile(world, x, y) !== TILE_FLOOR) return notOk('wall-tile', 'A tile kind must be on a floor tile.');
+        if (occupiedWorldCells(world).has(`${x},${y}`)) return notOk('occupied', TILE_KIND_REFUSALS.occupied(x, y));
+        const pass = declaredPassOf(declared[kind]);
+        const under = tileUnderPass(pass);
+        if (before === kind && getTile(world, x, y) === under) return ok('tileKind', `Tile (${x},${y}) already holds tile kind ${kind}.`, op);
+        if (!world.tileKinds) world.tileKinds = new Map();
+        world.tileKinds.set(`${x},${y}`, kind);
+        setTile(world, x, y, under);
+        return ok('tileKind', `Placed tile kind ${kind} at (${x},${y})${pass === BLOCKED_PASS ? ' (blocked: a wall under it)' : ''}.`, op);
+    }
+
     _eraseEntity(world, x, y) {
         const removedItem = getItem(world, x, y);
         const removedObstacle = getObstacle(world, x, y);
         const removedBlock = getBlock(world, x, y);
         const removedButton = getButton(world, x, y);
+        const removedKind = world.tileKinds?.get(`${x},${y}`) ?? null;
         const op = { op: 'clearEntity', x, y };
-        if (!removedItem && !removedObstacle && !removedBlock && !removedButton) {
+        if (!removedItem && !removedObstacle && !removedBlock && !removedButton && !removedKind) {
             return ok('erase', `Nothing to erase at (${x},${y}).`, op);
+        }
+        if (removedKind) {
+            world.tileKinds.delete(`${x},${y}`);
+            if (world.tileKinds.size === 0) delete world.tileKinds;
+            // ⛓ PASS-1 — the kind took a floor cell; a blocked one lowered it to a wall, which goes with it.
+            setTile(world, x, y, TILE_FLOOR);
         }
         if (removedItem) {
             clearItem(world, x, y);
@@ -546,6 +634,7 @@ export class MazeRoomEditor {
         if (removedObstacle) parts.push(`obstacle ${removedObstacle}`);
         if (removedBlock) parts.push('block');
         if (removedButton) parts.push(`button ${removedButton}`);
+        if (removedKind) parts.push(`tile kind ${removedKind}`);
         return ok('erase', `Erased ${parts.join(' + ')} at (${x},${y}).`, op);
     }
 }

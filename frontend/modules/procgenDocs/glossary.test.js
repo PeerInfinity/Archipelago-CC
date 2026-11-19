@@ -169,16 +169,23 @@ describe('the glossary as data', () => {
      * CERTIFICATION — the one thing ⚖ §3.8 forbids, and an alias buried in
      * `certification`'s list would say the opposite of what it means.
      */
+    /**
+     * ⛓⛓ **167 — CONTENT SETS TILE-3 SPENDS ONE**, `content-pack`, and the
+     * licence is the URL grammar's own rule: *every URL parameter names at least
+     * one glossary term, and every term it names exists*. The maze lab's new
+     * `?packs=` names content packs, and no entry defined one (`content-source`
+     * is a game that brings its own areas, a different thing).
+     */
     // ⛓ THE HEAD COUNT IS INTERPOLATED (`lint-gate-labels`); the number the row
     //   ASSERTS is the typed pin below, which is the input this row chose.
     it(`holds ${TERMS.length} entries — 149 + arc-5 slices 1/3/4/5's two + one `
         + '+ two + two, 6b\'s `density-block`, R9 slice 1\'s `element-subset`, '
         + 'R9 slice 2\'s `window`, the editor catalogue\'s five and maze slice '
-        + 'S2b\'s two, and every one is filed',
+        + 'S2b\'s two, TILE-3\'s `content-pack`, and every one is filed',
     () => {
-        expect(TERMS).toHaveLength(166);
+        expect(TERMS).toHaveLength(167);
         expect(TERMS.length).toBeGreaterThanOrEqual(80);
-        expect(TERMS.length).toBeLessThanOrEqual(166);
+        expect(TERMS.length).toBeLessThanOrEqual(167);
         expect(TERMS.filter((e) => !AREA_IDS.includes(e.area))).toHaveLength(0);
     });
 

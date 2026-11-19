@@ -1119,7 +1119,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchManual.js",
                     "fn": "readViewParams",
-                    "line": 587,
+                    "line": 598,
                     "role": "read"
                 }
             ],
@@ -1156,6 +1156,7 @@ export const URL_GRAMMAR = frz({
                 "gen": null,
                 "height": 11,
                 "library": null,
+                "packs": null,
                 "preset": null,
                 "region": null,
                 "require": null,
@@ -1517,6 +1518,27 @@ export const URL_GRAMMAR = frz({
                 },
                 {
                     "absentMeans": null,
+                    "atDefault": "not written by this page",
+                    "codec": "a comma list of content-pack ids, in stack order (a later pack wins); the TILE KIND palette entry places the kinds they declare (content sets TILE-3). Absent: no pack is loaded",
+                    "defaultField": "packs",
+                    "defaultIsUndefined": false,
+                    "defaultValue": null,
+                    "name": "packs",
+                    "retired": false,
+                    "terms": [
+                        "content-pack"
+                    ],
+                    "via": [
+                        {
+                            "file": "frontend/modules/mazeRoom/mazeLab.js",
+                            "fn": "readLabParams",
+                            "how": "get",
+                            "role": "read"
+                        }
+                    ]
+                },
+                {
+                    "absentMeans": null,
                     "atDefault": "DELETED at the default",
                     "codec": "a preset id of `presets/preset_files.json` (`<id>`, or `<id>/<folder>` when it has several) — `mazeLabPreset.presetRulesPath`",
                     "defaultField": "preset",
@@ -1865,7 +1887,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "readLabParams",
-                    "line": 323,
+                    "line": 335,
                     "role": "read"
                 },
                 {
@@ -1880,7 +1902,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "writeLabParams",
-                    "line": 439,
+                    "line": 458,
                     "role": "write"
                 }
             ],

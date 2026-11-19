@@ -1,0 +1,402 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [31m❯[39m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js [2m([22m[2m12 tests[22m[2m | [22m[31m8 failed[39m[2m)[22m[33m 502[2mms[22m[39m
+     [32m✓[39m ships OFF, appended last, with a worker env name[32m 1[2mms[22m[39m
+[31m     [31m×[31m OFF the timer runs on the middle frames; ON it holds until the closing frame, and the next spit moves[39m[32m 74[2mms[22m[39m
+[31m     [31m×[31m ice turret (`iceturret@0,104`): OFF the second volley at t49, ON at t63[39m[32m 80[2mms[22m[39m
+[31m     [31m×[31m drill on the player (`drill@56,112`): OFF a contact billed mid-dialogue (t21); ON the next is the closing frame[39m[32m 40[2mms[22m[39m
+[31m     [31m×[31m drill in sight (`drill@88,88`): OFF it hops on frame 15; ON it sits until the dialogue closes[39m[32m 42[2mms[22m[39m
+[31m     [31m×[31m beam tower (`beamtower@0,104`): OFF two steps per frozen tick, ON one (the frozen tick's, after the NPC)[39m[32m 39[2mms[22m[39m
+[31m     [31m×[31m OFF the turret fires through the 237-tick dialogue; ON it holds until the dialogue closes[39m[32m 50[2mms[22m[39m
+[31m     [31m×[31m OFF wave 50 refuses the dialogue tick by name; ON the frozen slot bills nothing and nothing refuses[39m[32m 30[2mms[22m[39m
+     [32m✓[39m a dialogue: both ON = this key ON alone, the whole result[32m 35[2mms[22m[39m
+     [32m✓[39m a pickup (L29, a text-less green key underfoot at boot): both ON = `pickupTickFreeze` ON alone[32m 36[2mms[22m[39m
+     [32m✓[39m no X released (L88, a staged turret and tower): ON = OFF, the whole result[32m 55[2mms[22m[39m
+[31m     [31m×[31m L88 as shipped (`introchar@56,104`, `drill@128,160` out of sight): the dialogue runs, ON = OFF[39m[32m 16[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 8 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js[2m > [22mDIALOGUEFREEZE — the turret (L88, `turret@0,104` beside the introchar)[2m > [22mOFF the timer runs on the middle frames; ON it holds until the closing frame, and the next spit moves
+[31m[1mAssertionError[22m: expected [ null, …(1) ] to deeply equal [ null, null ][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[2m    null,[22m
+[32m-   null,[39m
+[31m+   "levelRun: turret stepped tick 34 in level 88 frozen for dialogue frame, and the talker/watcher arms then did not freeze it. The families that update after a texted NPC read the freeze its `talk()` raises; refused by name rather than stepped on a guess (fidelity DIALOGUEFREEZE).",[39m
+[2m  ][22m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js:[2m93:41[22m[39m
+    [90m 91| [39m        [35mconst[39m off [33m=[39m [34mstage[39m(s[33m,[39m { [[33mKEY[39m][33m:[39m [35mfalse[39m })[33m;[39m
+    [90m 92| [39m        [35mconst[39m on [33m=[39m [34mstage[39m(s[33m,[39m { [[33mKEY[39m][33m:[39m [35mtrue[39m })[33m;[39m
+    [90m 93| [39m        [34mexpect[39m([off[33m.[39mthrown[33m,[39m on[33m.[39mthrown])[33m.[39m[34mtoEqual[39m([[35mnull[39m[33m,[39m [35mnull[39m])[33m;[39m
+    [90m   | [39m                                        [31m^[39m
+    [90m 94| [39m        // the dialogue: start frame 2 (live), frozen 3..33, closed on…
+    [90m 95| [39m        [34mexpect[39m([34mfrozenAt[39m(on))[33m.[39m[34mtoEqual[39m([34mfrozenAt[39m(off))[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js[2m > [22mDIALOGUEFREEZE — the lump-less families (L88, staged)[2m > [22mice turret (`iceturret@0,104`): OFF the second volley at t49, ON at t63
+[31m[1mAssertionError[22m: expected [ null, …(1) ] to deeply equal [ null, null ][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[2m    null,[22m
+[32m-   null,[39m
+[31m+   "levelRun: iceturret stepped tick 34 in level 88 frozen for dialogue frame, and the talker/watcher arms then did not freeze it. The families that update after a texted NPC read the freeze its `talk()` raises; refused by name rather than stepped on a guess (fidelity DIALOGUEFREEZE).",[39m
+[2m  ][22m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js:[2m118:41[22m[39m
+    [90m116| [39m        [35mconst[39m off [33m=[39m [34mstage[39m(s[33m,[39m { [[33mKEY[39m][33m:[39m [35mfalse[39m })[33m;[39m
+    [90m117| [39m        [35mconst[39m on [33m=[39m [34mstage[39m(s[33m,[39m { [[33mKEY[39m][33m:[39m [35mtrue[39m })[33m;[39m
+    [90m118| [39m        [34mexpect[39m([off[33m.[39mthrown[33m,[39m on[33m.[39mthrown])[33m.[39m[34mtoEqual[39m([[35mnull[39m[33m,[39m [35mnull[39m])[33m;[39m
+    [90m   | [39m                                        [31m^[39m
+    [90m119| [39m        [34mexpect[39m(off[33m.[39mvolleys)[33m.[39m[34mtoEqual[39m([[34m4[39m[33m,[39m [34m49[39m])[33m;[39m
+    [90m120| [39m        [34mexpect[39m(on[33m.[39mvolleys)[33m.[39m[34mtoEqual[39m([[34m4[39m[33m,[39m [34m63[39m])[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js[2m > [22mDIALOGUEFREEZE — the lump-less families (L88, staged)[2m > [22mdrill on the player (`drill@56,112`): OFF a contact billed mid-dialogue (t21); ON the next is the closing frame
+[31m[1mAssertionError[22m: expected [ null, …(1) ] to deeply equal [ null, null ][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[2m    null,[22m
+[32m-   null,[39m
+[31m+   "levelRun: drill stepped tick 34 in level 88 frozen for dialogue frame, and the talker/watcher arms then did not freeze it. The families that update after a texted NPC read the freeze its `talk()` raises; refused by name rather than stepped on a guess (fidelity DIALOGUEFREEZE).",[39m
+[2m  ][22m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js:[2m126:41[22m[39m
+    [90m124| [39m        [35mconst[39m off [33m=[39m [34mstage[39m(s[33m,[39m { [[33mKEY[39m][33m:[39m [35mfalse[39m })[33m;[39m
+    [90m125| [39m        [35mconst[39m on [33m=[39m [34mstage[39m(s[33m,[39m { [[33mKEY[39m][33m:[39m [35mtrue[39m })[33m;[39m
+    [90m126| [39m        [34mexpect[39m([off[33m.[39mthrown[33m,[39m on[33m.[39mthrown])[33m.[39m[34mtoEqual[39m([[35mnull[39m[33m,[39m [35mnull[39m])[33m;[39m
+    [90m   | [39m                                        [31m^[39m
+    [90m127| [39m        expect(off.hits).toEqual([[1, 'drill'], [21, 'drill'], [41, 'd…
+    [90m128| [39m        expect(on.hits).toEqual([[1, 'drill'], [35, 'drill'], [55, 'dr…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js[2m > [22mDIALOGUEFREEZE — the lump-less families (L88, staged)[2m > [22mdrill in sight (`drill@88,88`): OFF it hops on frame 15; ON it sits until the dialogue closes
+[31m[1mAssertionError[22m: expected [ null, …(1) ] to deeply equal [ null, null ][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[2m    null,[22m
+[32m-   null,[39m
+[31m+   "levelRun: drill stepped tick 34 in level 88 frozen for dialogue frame, and the talker/watcher arms then did not freeze it. The families that update after a texted NPC read the freeze its `talk()` raises; refused by name rather than stepped on a guess (fidelity DIALOGUEFREEZE).",[39m
+[2m  ][22m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js:[2m134:41[22m[39m
+    [90m132| [39m        [35mconst[39m off [33m=[39m [34mstage[39m(s[33m,[39m { [[33mKEY[39m][33m:[39m [35mfalse[39m })[33m;[39m
+    [90m133| [39m        [35mconst[39m on [33m=[39m [34mstage[39m(s[33m,[39m { [[33mKEY[39m][33m:[39m [35mtrue[39m })[33m;[39m
+    [90m134| [39m        [34mexpect[39m([off[33m.[39mthrown[33m,[39m on[33m.[39mthrown])[33m.[39m[34mtoEqual[39m([[35mnull[39m[33m,[39m [35mnull[39m])[33m;[39m
+    [90m   | [39m                                        [31m^[39m
+    [90m135| [39m        [34mexpect[39m(off[33m.[39mframes[[34m14[39m][33m.[39mdrills)[33m.[39m[34mtoEqual[39m([[[34m96[39m[33m,[39m [34m112[39m[33m,[39m [32m'sit'[39m]])[33m;[39m
+    [90m136| [39m        [34mexpect[39m(off[33m.[39mframes[[34m15[39m][33m.[39mdrills)[33m.[39m[34mtoEqual[39m([[[34m80[39m[33m,[39m [34m112[39m[33m,[39m [32m'drill'[39m]])[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js[2m > [22mDIALOGUEFREEZE — the lump-less families (L88, staged)[2m > [22mbeam tower (`beamtower@0,104`): OFF two steps per frozen tick, ON one (the frozen tick's, after the NPC)
+[31m[1mAssertionError[22m: expected [ null, …(1) ] to deeply equal [ null, null ][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[2m    null,[22m
+[32m-   null,[39m
+[31m+   "levelRun: beamtower stepped tick 34 in level 88 frozen for dialogue frame, and the talker/watcher arms then did not freeze it. The families that update after a texted NPC read the freeze its `talk()` raises; refused by name rather than stepped on a guess (fidelity DIALOGUEFREEZE).",[39m
+[2m  ][22m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js:[2m145:41[22m[39m
+    [90m143| [39m        [35mconst[39m off [33m=[39m [34mstage[39m(s[33m,[39m { [[33mKEY[39m][33m:[39m [35mfalse[39m })[33m;[39m
+    [90m144| [39m        [35mconst[39m on [33m=[39m [34mstage[39m(s[33m,[39m { [[33mKEY[39m][33m:[39m [35mtrue[39m })[33m;[39m
+    [90m145| [39m        [34mexpect[39m([off[33m.[39mthrown[33m,[39m on[33m.[39mthrown])[33m.[39m[34mtoEqual[39m([[35mnull[39m[33m,[39m [35mnull[39m])[33m;[39m
+    [90m   | [39m                                        [31m^[39m
+    [90m146| [39m        [35mfor[39m ([35mconst[39m k [35mof[39m [[34m3[39m[33m,[39m [34m14[39m[33m,[39m [34m33[39m]) {
+    [90m147| [39m            [34mexpect[39m(off[33m.[39mframes[k][33m.[39mbeam)[33m.[39m[34mtoEqual[39m([[35mfalse[39m[33m,[39m [35mtrue[39m])[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js[2m > [22mDIALOGUEFREEZE — a watcher (L114, `turret@72,128` staged; the watcher talks on proximity)[2m > [22mOFF the turret fires through the 237-tick dialogue; ON it holds until the dialogue closes
+[31m[1mAssertionError[22m: expected [ null, …(1) ] to deeply equal [ null, null ][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[2m    null,[22m
+[32m-   null,[39m
+[31m+   "levelRun: turret stepped tick 236 in level 114 frozen for dialogue frame, and the talker/watcher arms then did not freeze it. The families that update after a texted NPC read the freeze its `talk()` raises; refused by name rather than stepped on a guess (fidelity DIALOGUEFREEZE).",[39m
+[2m  ][22m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js:[2m164:41[22m[39m
+    [90m162| [39m        [35mconst[39m off [33m=[39m [34mstage[39m(s[33m,[39m { [[33mKEY[39m][33m:[39m [35mfalse[39m })[33m;[39m
+    [90m163| [39m        [35mconst[39m on [33m=[39m [34mstage[39m(s[33m,[39m { [[33mKEY[39m][33m:[39m [35mtrue[39m })[33m;[39m
+    [90m164| [39m        [34mexpect[39m([off[33m.[39mthrown[33m,[39m on[33m.[39mthrown])[33m.[39m[34mtoEqual[39m([[35mnull[39m[33m,[39m [35mnull[39m])[33m;[39m
+    [90m   | [39m                                        [31m^[39m
+    [90m165| [39m        [34mexpect[39m([34mfrozenAt[39m(on))[33m.[39m[34mtoEqual[39m([34mfrozenAt[39m(off))[33m;[39m
+    [90m166| [39m        [34mexpect[39m(off[33m.[39mwatcherTalks)[33m.[39m[34mtoEqual[39m([[34m237[39m])[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js[2m > [22mDIALOGUEFREEZE — with wave 50's slot contact (`turretSuitRetaliation`), `turret@56,120` on the player[2m > [22mOFF wave 50 refuses the dialogue tick by name; ON the frozen slot bills nothing and nothing refuses
+[31m[1mAssertionError[22m: expected 'levelRun: turret stepped tick 34 in l…' to be null // Object.is equality[39m
+
+[32m- Expected:[39m 
+null
+
+[31m+ Received:[39m 
+"levelRun: turret stepped tick 34 in level 88 frozen for dialogue frame, and the talker/watcher arms then did not freeze it. The families that update after a texted NPC read the freeze its `talk()` raises; refused by name rather than stepped on a guess (fidelity DIALOGUEFREEZE)."
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js:[2m179:27[22m[39m
+    [90m177| [39m        expect(off.thrown).toMatch(/contact was answered in its own sl…
+    [90m178| [39m        const on = stage(s, { turretSuitRetaliation: true, [KEY]: true…
+    [90m179| [39m        [34mexpect[39m(on[33m.[39mthrown)[33m.[39m[34mtoBe[39m([35mnull[39m)[33m;[39m
+    [90m   | [39m                          [31m^[39m
+    [90m180| [39m        expect(on.hits).toEqual([[1, 'enemy'], [35, 'enemy'], [55, 'en…
+    [90m181| [39m        // the same contacts as the static scan bills without wave 50'…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js[2m > [22mDIALOGUEFREEZE — no dialogue, and the room as shipped[2m > [22mL88 as shipped (`introchar@56,104`, `drill@128,160` out of sight): the dialogue runs, ON = OFF
+[31m[1mAssertionError[22m: expected { …(7) } to deeply equal { thrown: null, …(6) }[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[33m@@ -406,207 +406,15 @@[39m
+[2m          ],[22m
+[2m        ],[22m
+[2m        "frozen": true,[22m
+[2m        "turrets": [],[22m
+[2m      },[22m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[2m    ],[22m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "beam": [],[39m
+[32m-       "drills": [[39m
+[32m-         [[39m
+[32m-           136,[39m
+[32m-           168,[39m
+[32m-           "sit",[39m
+[32m-         ],[39m
+[32m-       ],[39m
+[32m-       "frozen": false,[39m
+[32m-       "turrets": [],[39m
+[32m-     },[39m
+[32m-   ],[39m
+[2m    "hits": [],[22m
+[2m    "spawns": [],[22m
+[2m    "talks": [[22m
+[2m      35,[22m
+[2m    ],[22m
+[32m-   "thrown": null,[39m
+[31m+   "thrown": "levelRun: drill stepped tick 34 in level 88 frozen for dialogue frame, and the talker/watcher arms then did not freeze it. The families that update after a texted NPC read the freeze its `talk()` raises; refused by name rather than stepped on a guess (fidelity DIALOGUEFREEZE).",[39m
+[2m    "volleys": [],[22m
+[2m    "watcherTalks": [],[22m
+[2m  }[22m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js:[2m213:43[22m[39m
+    [90m211| [39m        [34mexpect[39m(off[33m.[39mtalks)[33m.[39m[34mtoEqual[39m([[34m35[39m])[33m;[39m
+    [90m212| [39m        expect(off.frames.every((f) => JSON.stringify(f.drills) === '[…
+    [90m213| [39m        [34mexpect[39m([34mstage[39m(s[33m,[39m { [[33mKEY[39m][33m:[39m [35mtrue[39m }))[33m.[39m[34mtoEqual[39m(off)[33m;[39m
+    [90m   | [39m                                          [31m^[39m
+    [90m214| [39m    })[33m;[39m
+    [90m215| [39m})[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m8 failed[39m[22m[2m | [22m[1m[32m4 passed[39m[22m[90m (12)[39m
+[2m   Start at [22m 03:56:48
+[2m   Duration [22m 2.48s[2m (transform 1.41s, setup 227ms, import 1.64s, tests 502ms, environment 0ms)[22m
+

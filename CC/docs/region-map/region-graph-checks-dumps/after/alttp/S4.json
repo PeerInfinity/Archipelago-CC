@@ -1,0 +1,8791 @@
+{
+ "currentRegion": "Aginahs Cave",
+ "elements": {
+  "20 Rupee Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "50 Rupee Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Agahnim 1": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Agahnim 2": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Agahnims Tower": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 4,
+    "total": 4
+   }
+  },
+  "Agahnims Tower-Agahnim 1": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Agahnims Tower",
+   "target": "Agahnim 1"
+  },
+  "Aginahs Cave": {
+   "classes": [
+    "current",
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": true,
+    "checked": 1,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": true,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 1
+   }
+  },
+  "Archery Game": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Bat Cave (left)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Bat Cave (left)-Light World": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Bat Cave (left)",
+   "target": "Light World"
+  },
+  "Bat Cave (right)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Bat Cave (right)-Bat Cave (left)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Bat Cave (right)",
+   "target": "Bat Cave (left)"
+  },
+  "Bat Cave Drop Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Bat Cave Drop Ledge-Bat Cave (right)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Bat Cave Drop Ledge",
+   "target": "Bat Cave (right)"
+  },
+  "Big Bomb Shop": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Blacksmiths Hut": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Blind Fight": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Blinds Hideout": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 3,
+    "allChecked": false,
+    "checked": 2,
+    "hasAccessible": true,
+    "hasInaccessible": false,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 0,
+    "total": 5
+   }
+  },
+  "Bombos Tablet Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Bonk Fairy (Dark)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Bonk Fairy (Light)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Bonk Rock Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Bottom of Pyramid": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 1,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Brewery": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Bumper Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Bumper Cave Entrance": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Bumper Cave Entrance-Bumper Cave": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Bumper Cave Entrance",
+   "target": "Bumper Cave"
+  },
+  "Bumper Cave Entrance-Death Mountain Entrance": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Bumper Cave Entrance",
+   "target": "Death Mountain Entrance"
+  },
+  "Bumper Cave Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Bumper Cave Ledge-Death Mountain Return Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Bumper Cave Ledge",
+   "target": "Death Mountain Return Ledge"
+  },
+  "Bumper Cave Ledge-West Dark World": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Bumper Cave Ledge",
+   "target": "West Dark World"
+  },
+  "Bumper Cave-Bumper Cave Ledge": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Bumper Cave",
+   "target": "Bumper Cave Ledge"
+  },
+  "Bumper Cave-West Dark World": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Bumper Cave",
+   "target": "West Dark World"
+  },
+  "Bush Covered House": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "C-Shaped House": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Capacity Upgrade": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Catfish": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Catfish-Northeast Dark World": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Catfish",
+   "target": "Northeast Dark World"
+  },
+  "Cave 45": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Cave 45 Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Cave 45 Ledge-Cave 45": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Cave 45 Ledge",
+   "target": "Cave 45"
+  },
+  "Cave Shop (Dark Death Mountain)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Cave Shop (Lake Hylia)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Checkerboard Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Chest Game": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Chicken House": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 1,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": true,
+    "hasInaccessible": false,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 0,
+    "total": 1
+   }
+  },
+  "Chris Houlihan Room": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Chris Houlihan Room-Light World": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Chris Houlihan Room",
+   "target": "Light World"
+  },
+  "Dam": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 1,
+    "allChecked": false,
+    "checked": 1,
+    "hasAccessible": true,
+    "hasInaccessible": false,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 0,
+    "total": 2
+   }
+  },
+  "Dark Death Mountain (East Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Death Mountain (East Bottom)-Cave Shop (Dark Death Mountain)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain (East Bottom)",
+   "target": "Cave Shop (Dark Death Mountain)"
+  },
+  "Dark Death Mountain (East Bottom)-Fairy Ascension Plateau": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain (East Bottom)",
+   "target": "Fairy Ascension Plateau"
+  },
+  "Dark Death Mountain (East Bottom)-Superbunny Cave (Bottom)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain (East Bottom)",
+   "target": "Superbunny Cave (Bottom)"
+  },
+  "Dark Death Mountain (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "hub",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 1,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Death Mountain (Top)-Dark Death Mountain (East Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain (Top)",
+   "target": "Dark Death Mountain (East Bottom)"
+  },
+  "Dark Death Mountain (Top)-Dark Death Mountain (West Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain (Top)",
+   "target": "Dark Death Mountain (West Bottom)"
+  },
+  "Dark Death Mountain (Top)-East Death Mountain (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain (Top)",
+   "target": "East Death Mountain (Top)"
+  },
+  "Dark Death Mountain (West Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Death Mountain (West Bottom)-Dark Death Mountain Healer Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain (West Bottom)",
+   "target": "Dark Death Mountain Healer Fairy"
+  },
+  "Dark Death Mountain (West Bottom)-Spectacle Rock": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain (West Bottom)",
+   "target": "Spectacle Rock"
+  },
+  "Dark Death Mountain (West Bottom)-Spike Cave": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain (West Bottom)",
+   "target": "Spike Cave"
+  },
+  "Dark Death Mountain Bunny Descent Area": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Death Mountain Healer Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Death Mountain Isolated Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 1,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Death Mountain Isolated Ledge-Fairy Ascension Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain Isolated Ledge",
+   "target": "Fairy Ascension Ledge"
+  },
+  "Dark Death Mountain Isolated Ledge-Turtle Rock (Eye Bridge)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain Isolated Ledge",
+   "target": "Turtle Rock (Eye Bridge)"
+  },
+  "Dark Death Mountain Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 1,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Death Mountain Ledge-Mimic Cave Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain Ledge",
+   "target": "Mimic Cave Ledge"
+  },
+  "Dark Death Mountain Ledge-Spiral Cave Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain Ledge",
+   "target": "Spiral Cave Ledge"
+  },
+  "Dark Death Mountain Ledge-Turtle Rock (Big Chest)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain Ledge",
+   "target": "Turtle Rock (Big Chest)"
+  },
+  "Dark Death Mountain Ledge-Turtle Rock (Second Section)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Death Mountain Ledge",
+   "target": "Turtle Rock (Second Section)"
+  },
+  "Dark Desert": {
+   "classes": [
+    "discovery-hidden",
+    "hub",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Desert Healer Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Desert Hint": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Desert-Dark Desert Healer Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Desert",
+   "target": "Dark Desert Healer Fairy"
+  },
+  "Dark Desert-Dark Desert Hint": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Desert",
+   "target": "Dark Desert Hint"
+  },
+  "Dark Desert-Desert Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Desert",
+   "target": "Desert Ledge"
+  },
+  "Dark Desert-Desert Ledge (Northeast)": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Desert",
+   "target": "Desert Ledge (Northeast)"
+  },
+  "Dark Desert-Desert Palace Entrance (North) Spot": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Desert",
+   "target": "Desert Palace Entrance (North) Spot"
+  },
+  "Dark Desert-Desert Palace Stairs": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Desert",
+   "target": "Desert Palace Stairs"
+  },
+  "Dark Desert-Mire Shed": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Desert",
+   "target": "Mire Shed"
+  },
+  "Dark Desert-Misery Mire (Entrance)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Desert",
+   "target": "Misery Mire (Entrance)"
+  },
+  "Dark Grassy Lawn": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Grassy Lawn-Village of Outcasts Shop": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Grassy Lawn",
+   "target": "Village of Outcasts Shop"
+  },
+  "Dark Lake Hylia": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Lake Hylia Central Island": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Lake Hylia Central Island-Ice Palace (Entrance)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Lake Hylia Central Island",
+   "target": "Ice Palace (Entrance)"
+  },
+  "Dark Lake Hylia Healer Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Lake Hylia Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Lake Hylia Ledge Healer Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Lake Hylia Ledge Hint": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Lake Hylia Ledge Spike Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Lake Hylia Ledge-Dark Lake Hylia Ledge Healer Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Lake Hylia Ledge",
+   "target": "Dark Lake Hylia Ledge Healer Fairy"
+  },
+  "Dark Lake Hylia Ledge-Dark Lake Hylia Ledge Hint": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Lake Hylia Ledge",
+   "target": "Dark Lake Hylia Ledge Hint"
+  },
+  "Dark Lake Hylia Ledge-Dark Lake Hylia Ledge Spike Cave": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Lake Hylia Ledge",
+   "target": "Dark Lake Hylia Ledge Spike Cave"
+  },
+  "Dark Lake Hylia Shop": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark Lake Hylia-Dark Lake Hylia Ledge": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Lake Hylia",
+   "target": "Dark Lake Hylia Ledge"
+  },
+  "Dark Lake Hylia-East Dark World": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Lake Hylia",
+   "target": "East Dark World"
+  },
+  "Dark Lake Hylia-Lake Hylia Island": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Dark Lake Hylia",
+   "target": "Lake Hylia Island"
+  },
+  "Dark Sanctuary Hint": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark World Hammer Peg Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Dark World Lumberjack Shop": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Dark World Potion Shop": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Death Mountain": {
+   "classes": [
+    "discovery-hidden",
+    "hub",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 2,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Death Mountain (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Death Mountain (Top)-Death Mountain": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Death Mountain (Top)",
+   "target": "Death Mountain"
+  },
+  "Death Mountain (Top)-Tower of Hera (Bottom)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Death Mountain (Top)",
+   "target": "Tower of Hera (Bottom)"
+  },
+  "Death Mountain Entrance": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Death Mountain Entrance-Light World": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Death Mountain Entrance",
+   "target": "Light World"
+  },
+  "Death Mountain Entrance-Old Man Cave": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Death Mountain Entrance",
+   "target": "Old Man Cave"
+  },
+  "Death Mountain Floating Island (Dark World)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Death Mountain Floating Island (Dark World)-Dark Death Mountain (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Death Mountain Floating Island (Dark World)",
+   "target": "Dark Death Mountain (Top)"
+  },
+  "Death Mountain Floating Island (Dark World)-Death Mountain Floating Island (Light World)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Death Mountain Floating Island (Dark World)",
+   "target": "Death Mountain Floating Island (Light World)"
+  },
+  "Death Mountain Floating Island (Dark World)-Hookshot Cave (Upper)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Death Mountain Floating Island (Dark World)",
+   "target": "Hookshot Cave (Upper)"
+  },
+  "Death Mountain Floating Island (Light World)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 1,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Death Mountain Return Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Death Mountain Return Cave-Death Mountain": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Death Mountain Return Cave",
+   "target": "Death Mountain"
+  },
+  "Death Mountain Return Cave-Death Mountain Return Ledge": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Death Mountain Return Cave",
+   "target": "Death Mountain Return Ledge"
+  },
+  "Death Mountain Return Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Death Mountain Return Ledge-Light World": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Death Mountain Return Ledge",
+   "target": "Light World"
+  },
+  "Death Mountain-Dark Death Mountain (West Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Death Mountain",
+   "target": "Dark Death Mountain (West Bottom)"
+  },
+  "Desert Healer Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Desert Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Desert Ledge (Northeast)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Desert Ledge (Northeast)-Checkerboard Cave": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Desert Ledge (Northeast)",
+   "target": "Checkerboard Cave"
+  },
+  "Desert Ledge-Desert Palace Entrance (North) Spot": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Desert Ledge",
+   "target": "Desert Palace Entrance (North) Spot"
+  },
+  "Desert Ledge-Desert Palace Main (Outer)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Desert Ledge",
+   "target": "Desert Palace Main (Outer)"
+  },
+  "Desert Northern Cliffs": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Desert Palace East": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Desert Palace Entrance (North) Spot": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Desert Palace Entrance (North) Spot-Desert Palace North": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Desert Palace Entrance (North) Spot",
+   "target": "Desert Palace North"
+  },
+  "Desert Palace Lone Stairs": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Desert Palace Lone Stairs-Desert Palace Main (Outer)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Desert Palace Lone Stairs",
+   "target": "Desert Palace Main (Outer)"
+  },
+  "Desert Palace Lone Stairs-Light World": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Desert Palace Lone Stairs",
+   "target": "Light World"
+  },
+  "Desert Palace Main (Inner)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Desert Palace Main (Inner)-Desert Palace Main (Outer)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Desert Palace Main (Inner)",
+   "target": "Desert Palace Main (Outer)"
+  },
+  "Desert Palace Main (Outer)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 1,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 3,
+    "total": 3
+   }
+  },
+  "Desert Palace Main (Outer)-Desert Palace East": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Desert Palace Main (Outer)",
+   "target": "Desert Palace East"
+  },
+  "Desert Palace North": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 5,
+    "total": 5
+   }
+  },
+  "Desert Palace Stairs": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Desert Palace Stairs-Desert Palace Main (Inner)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Desert Palace Stairs",
+   "target": "Desert Palace Main (Inner)"
+  },
+  "East Dark World": {
+   "classes": [
+    "discovery-hidden",
+    "hub",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 1,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "East Dark World Hint": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "East Dark World-Dark Lake Hylia Healer Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Dark World",
+   "target": "Dark Lake Hylia Healer Fairy"
+  },
+  "East Dark World-East Dark World Hint": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Dark World",
+   "target": "East Dark World Hint"
+  },
+  "East Dark World-Hyrule Castle Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Dark World",
+   "target": "Hyrule Castle Ledge"
+  },
+  "East Dark World-Palace of Darkness Hint": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Dark World",
+   "target": "Palace of Darkness Hint"
+  },
+  "East Dark World-Pyramid": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Dark World",
+   "target": "Pyramid"
+  },
+  "East Dark World-Pyramid Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Dark World",
+   "target": "Pyramid Fairy"
+  },
+  "East Death Mountain (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "hub",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "East Death Mountain (Bottom)-Dark Death Mountain (East Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Death Mountain (Bottom)",
+   "target": "Dark Death Mountain (East Bottom)"
+  },
+  "East Death Mountain (Bottom)-Death Mountain": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Death Mountain (Bottom)",
+   "target": "Death Mountain"
+  },
+  "East Death Mountain (Bottom)-Fairy Ascension Plateau": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Death Mountain (Bottom)",
+   "target": "Fairy Ascension Plateau"
+  },
+  "East Death Mountain (Bottom)-Hookshot Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Death Mountain (Bottom)",
+   "target": "Hookshot Fairy"
+  },
+  "East Death Mountain (Bottom)-Paradox Cave": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Death Mountain (Bottom)",
+   "target": "Paradox Cave"
+  },
+  "East Death Mountain (Bottom)-Paradox Cave Front": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Death Mountain (Bottom)",
+   "target": "Paradox Cave Front"
+  },
+  "East Death Mountain (Bottom)-Spiral Cave (Bottom)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Death Mountain (Bottom)",
+   "target": "Spiral Cave (Bottom)"
+  },
+  "East Death Mountain (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "East Death Mountain (Top)-Death Mountain (Top)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Death Mountain (Top)",
+   "target": "Death Mountain (Top)"
+  },
+  "East Death Mountain (Top)-East Death Mountain (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Death Mountain (Top)",
+   "target": "East Death Mountain (Bottom)"
+  },
+  "East Death Mountain (Top)-Fairy Ascension Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Death Mountain (Top)",
+   "target": "Fairy Ascension Ledge"
+  },
+  "East Death Mountain (Top)-Spiral Cave Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Death Mountain (Top)",
+   "target": "Spiral Cave Ledge"
+  },
+  "East Death Mountain (Top)-Turtle Rock (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "East Death Mountain (Top)",
+   "target": "Turtle Rock (Top)"
+  },
+  "Eastern Palace": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 3,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": true,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 6,
+    "total": 9
+   }
+  },
+  "Eastern Palace-Light World": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Eastern Palace",
+   "target": "Light World"
+  },
+  "Elder House": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Elder House-Light World": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Elder House",
+   "target": "Light World"
+  },
+  "Fairy Ascension Cave (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Fairy Ascension Cave (Bottom)-Fairy Ascension Cave (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Fairy Ascension Cave (Bottom)",
+   "target": "Fairy Ascension Cave (Top)"
+  },
+  "Fairy Ascension Cave (Drop)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Fairy Ascension Cave (Drop)-Fairy Ascension Cave (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Fairy Ascension Cave (Drop)",
+   "target": "Fairy Ascension Cave (Bottom)"
+  },
+  "Fairy Ascension Cave (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Fairy Ascension Cave (Top)-Fairy Ascension Cave (Drop)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Fairy Ascension Cave (Top)",
+   "target": "Fairy Ascension Cave (Drop)"
+  },
+  "Fairy Ascension Cave (Top)-Fairy Ascension Ledge": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Fairy Ascension Cave (Top)",
+   "target": "Fairy Ascension Ledge"
+  },
+  "Fairy Ascension Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 2,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Fairy Ascension Ledge-Fairy Ascension Plateau": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Fairy Ascension Ledge",
+   "target": "Fairy Ascension Plateau"
+  },
+  "Fairy Ascension Plateau": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Fairy Ascension Plateau-Fairy Ascension Cave (Bottom)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Fairy Ascension Plateau",
+   "target": "Fairy Ascension Cave (Bottom)"
+  },
+  "Fortune Teller (Dark)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Fortune Teller (Light)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Ganons Tower (Before Moldorm)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 4,
+    "total": 4
+   }
+  },
+  "Ganons Tower (Before Moldorm)-Ganons Tower (Moldorm)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ganons Tower (Before Moldorm)",
+   "target": "Ganons Tower (Moldorm)"
+  },
+  "Ganons Tower (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 5,
+    "total": 5
+   }
+  },
+  "Ganons Tower (Compass Room)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 5,
+    "total": 5
+   }
+  },
+  "Ganons Tower (Compass Room)-Ganons Tower (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ganons Tower (Compass Room)",
+   "target": "Ganons Tower (Bottom)"
+  },
+  "Ganons Tower (Entrance)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 4,
+    "total": 4
+   }
+  },
+  "Ganons Tower (Entrance)-Dark Death Mountain (Top)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ganons Tower (Entrance)",
+   "target": "Dark Death Mountain (Top)"
+  },
+  "Ganons Tower (Entrance)-Ganons Tower (Hookshot Room)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ganons Tower (Entrance)",
+   "target": "Ganons Tower (Hookshot Room)"
+  },
+  "Ganons Tower (Entrance)-Ganons Tower (Tile Room)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ganons Tower (Entrance)",
+   "target": "Ganons Tower (Tile Room)"
+  },
+  "Ganons Tower (Entrance)-Ganons Tower (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ganons Tower (Entrance)",
+   "target": "Ganons Tower (Top)"
+  },
+  "Ganons Tower (Firesnake Room)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Ganons Tower (Firesnake Room)-Ganons Tower (Teleport Room)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ganons Tower (Firesnake Room)",
+   "target": "Ganons Tower (Teleport Room)"
+  },
+  "Ganons Tower (Hookshot Room)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 5,
+    "total": 5
+   }
+  },
+  "Ganons Tower (Hookshot Room)-Ganons Tower (Firesnake Room)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ganons Tower (Hookshot Room)",
+   "target": "Ganons Tower (Firesnake Room)"
+  },
+  "Ganons Tower (Hookshot Room)-Ganons Tower (Map Room)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ganons Tower (Hookshot Room)",
+   "target": "Ganons Tower (Map Room)"
+  },
+  "Ganons Tower (Map Room)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Ganons Tower (Moldorm)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Ganons Tower (Moldorm)-Agahnim 2": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ganons Tower (Moldorm)",
+   "target": "Agahnim 2"
+  },
+  "Ganons Tower (Teleport Room)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 4,
+    "total": 4
+   }
+  },
+  "Ganons Tower (Teleport Room)-Ganons Tower (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ganons Tower (Teleport Room)",
+   "target": "Ganons Tower (Bottom)"
+  },
+  "Ganons Tower (Tile Room)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Ganons Tower (Tile Room)-Ganons Tower (Compass Room)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ganons Tower (Tile Room)",
+   "target": "Ganons Tower (Compass Room)"
+  },
+  "Ganons Tower (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Ganons Tower (Top)-Ganons Tower (Before Moldorm)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ganons Tower (Top)",
+   "target": "Ganons Tower (Before Moldorm)"
+  },
+  "Good Bee Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Graveyard Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Graveyard Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Graveyard Ledge-Graveyard Cave": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Graveyard Ledge",
+   "target": "Graveyard Cave"
+  },
+  "Hammer Peg Area": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Hammer Peg Area-Bat Cave Drop Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Hammer Peg Area",
+   "target": "Bat Cave Drop Ledge"
+  },
+  "Hammer Peg Area-Dark World Hammer Peg Cave": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Hammer Peg Area",
+   "target": "Dark World Hammer Peg Cave"
+  },
+  "Hobo Bridge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Hookshot Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 4,
+    "total": 4
+   }
+  },
+  "Hookshot Cave (Upper)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 1,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Hookshot Cave-Dark Death Mountain (Top)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Hookshot Cave",
+   "target": "Dark Death Mountain (Top)"
+  },
+  "Hookshot Cave-Hookshot Cave (Upper)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Hookshot Cave",
+   "target": "Hookshot Cave (Upper)"
+  },
+  "Hookshot Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Hype Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 5,
+    "total": 5
+   }
+  },
+  "Hyrule Castle": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 2,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": true,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 4,
+    "total": 6
+   }
+  },
+  "Hyrule Castle Courtyard": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Hyrule Castle Courtyard-Hyrule Castle": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Hyrule Castle Courtyard",
+   "target": "Hyrule Castle"
+  },
+  "Hyrule Castle Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Hyrule Castle Ledge-Agahnims Tower": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Hyrule Castle Ledge",
+   "target": "Agahnims Tower"
+  },
+  "Hyrule Castle Ledge-Hyrule Castle": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Hyrule Castle Ledge",
+   "target": "Hyrule Castle"
+  },
+  "Hyrule Castle Ledge-Hyrule Castle Courtyard": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Hyrule Castle Ledge",
+   "target": "Hyrule Castle Courtyard"
+  },
+  "Hyrule Castle Secret Entrance": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 2,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": true,
+    "hasInaccessible": false,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 0,
+    "total": 2
+   }
+  },
+  "Hyrule Castle Secret Entrance-Hyrule Castle Courtyard": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Hyrule Castle Secret Entrance",
+   "target": "Hyrule Castle Courtyard"
+  },
+  "Hyrule Castle-Sewers (Dark)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Hyrule Castle",
+   "target": "Sewers (Dark)"
+  },
+  "Ice Palace (East Top)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 3,
+    "total": 3
+   }
+  },
+  "Ice Palace (East)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Ice Palace (East)-Ice Palace (East Top)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ice Palace (East)",
+   "target": "Ice Palace (East Top)"
+  },
+  "Ice Palace (Entrance)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Ice Palace (Entrance)-Ice Palace (Second Section)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ice Palace (Entrance)",
+   "target": "Ice Palace (Second Section)"
+  },
+  "Ice Palace (Kholdstare)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Ice Palace (Main)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 4,
+    "total": 4
+   }
+  },
+  "Ice Palace (Main)-Ice Palace (East)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ice Palace (Main)",
+   "target": "Ice Palace (East)"
+  },
+  "Ice Palace (Main)-Ice Palace (Kholdstare)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ice Palace (Main)",
+   "target": "Ice Palace (Kholdstare)"
+  },
+  "Ice Palace (Second Section)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Ice Palace (Second Section)-Ice Palace (Main)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Ice Palace (Second Section)",
+   "target": "Ice Palace (Main)"
+  },
+  "Ice Rod Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 1,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": true,
+    "hasInaccessible": false,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 0,
+    "total": 1
+   }
+  },
+  "Kakariko Gamble Game": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Kakariko Shop": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Kakariko Well (bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Kakariko Well (bottom)-Light World": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Kakariko Well (bottom)",
+   "target": "Light World"
+  },
+  "Kakariko Well (top)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 5,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": true,
+    "hasInaccessible": false,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 0,
+    "total": 5
+   }
+  },
+  "Kakariko Well (top)-Kakariko Well (bottom)": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Kakariko Well (top)",
+   "target": "Kakariko Well (bottom)"
+  },
+  "Kings Grave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Kings Grave Area": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Kings Grave Area-Kings Grave": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Kings Grave Area",
+   "target": "Kings Grave"
+  },
+  "Kings Grave Area-Light World": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Kings Grave Area",
+   "target": "Light World"
+  },
+  "Lake Hylia Central Island": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Lake Hylia Central Island-Capacity Upgrade": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Lake Hylia Central Island",
+   "target": "Capacity Upgrade"
+  },
+  "Lake Hylia Central Island-Dark Lake Hylia Central Island": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Lake Hylia Central Island",
+   "target": "Dark Lake Hylia Central Island"
+  },
+  "Lake Hylia Fortune Teller": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Lake Hylia Healer Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Lake Hylia Island": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Library": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Light World": {
+   "classes": [
+    "discovery-hidden",
+    "hub",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 2,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 3,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": true,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 3,
+    "total": 6
+   }
+  },
+  "Light World Bomb Hut": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Light World Death Mountain Shop": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Light World-20 Rupee Cave": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "20 Rupee Cave"
+  },
+  "Light World-50 Rupee Cave": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "50 Rupee Cave"
+  },
+  "Light World-Aginahs Cave": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Aginahs Cave"
+  },
+  "Light World-Bat Cave Drop Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Bat Cave Drop Ledge"
+  },
+  "Light World-Blacksmiths Hut": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Blacksmiths Hut"
+  },
+  "Light World-Blinds Hideout": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Blinds Hideout"
+  },
+  "Light World-Bonk Fairy (Light)": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Bonk Fairy (Light)"
+  },
+  "Light World-Bonk Rock Cave": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Bonk Rock Cave"
+  },
+  "Light World-Bush Covered House": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Bush Covered House"
+  },
+  "Light World-Cave Shop (Lake Hylia)": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Cave Shop (Lake Hylia)"
+  },
+  "Light World-Chicken House": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Chicken House"
+  },
+  "Light World-Dam": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Dam"
+  },
+  "Light World-Dark Desert": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Dark Desert"
+  },
+  "Light World-Death Mountain": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Death Mountain"
+  },
+  "Light World-Desert Healer Fairy": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Desert Healer Fairy"
+  },
+  "Light World-Desert Palace Stairs": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Desert Palace Stairs"
+  },
+  "Light World-East Dark World": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "East Dark World"
+  },
+  "Light World-Fortune Teller (Light)": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Fortune Teller (Light)"
+  },
+  "Light World-Good Bee Cave": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Good Bee Cave"
+  },
+  "Light World-Hobo Bridge": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Hobo Bridge"
+  },
+  "Light World-Hyrule Castle Courtyard": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Hyrule Castle Courtyard"
+  },
+  "Light World-Hyrule Castle Secret Entrance": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Hyrule Castle Secret Entrance"
+  },
+  "Light World-Ice Rod Cave": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Ice Rod Cave"
+  },
+  "Light World-Kakariko Gamble Game": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Kakariko Gamble Game"
+  },
+  "Light World-Kakariko Shop": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Kakariko Shop"
+  },
+  "Light World-Kakariko Well (top)": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Kakariko Well (top)"
+  },
+  "Light World-Lake Hylia Central Island": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Lake Hylia Central Island"
+  },
+  "Light World-Lake Hylia Fortune Teller": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Lake Hylia Fortune Teller"
+  },
+  "Light World-Lake Hylia Healer Fairy": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Lake Hylia Healer Fairy"
+  },
+  "Light World-Library": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Library"
+  },
+  "Light World-Light World Bomb Hut": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Light World Bomb Hut"
+  },
+  "Light World-Long Fairy Cave": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Long Fairy Cave"
+  },
+  "Light World-Lost Woods Gamble": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Lost Woods Gamble"
+  },
+  "Light World-Lost Woods Hideout (top)": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Lost Woods Hideout (top)"
+  },
+  "Light World-Lumberjack House": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Lumberjack House"
+  },
+  "Light World-Lumberjack Tree (top)": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Lumberjack Tree (top)"
+  },
+  "Light World-Master Sword Meadow": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Master Sword Meadow"
+  },
+  "Light World-Mini Moldorm Cave": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Mini Moldorm Cave"
+  },
+  "Light World-Potion Shop": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Potion Shop"
+  },
+  "Light World-Sahasrahlas Hut": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Sahasrahlas Hut"
+  },
+  "Light World-Sewer Drop": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Sewer Drop"
+  },
+  "Light World-Sick Kids House": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Sick Kids House"
+  },
+  "Light World-Snitch Lady (East)": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Snitch Lady (East)"
+  },
+  "Light World-Snitch Lady (West)": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Snitch Lady (West)"
+  },
+  "Light World-South Dark World": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "South Dark World"
+  },
+  "Light World-Swamp Healer Fairy": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Swamp Healer Fairy"
+  },
+  "Light World-Tavern": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Tavern"
+  },
+  "Light World-Tavern (Front)": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Tavern (Front)"
+  },
+  "Light World-Waterfall of Wishing": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Waterfall of Wishing"
+  },
+  "Light World-West Dark World": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "West Dark World"
+  },
+  "Light World-Zoras River": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Light World",
+   "target": "Zoras River"
+  },
+  "Links House": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 1,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 1,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": true,
+    "hasInaccessible": false,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 0,
+    "total": 1
+   }
+  },
+  "Links House-Light World": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Links House",
+   "target": "Light World"
+  },
+  "Long Fairy Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Lost Woods Gamble": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Lost Woods Hideout (bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Lost Woods Hideout (bottom)-Light World": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Lost Woods Hideout (bottom)",
+   "target": "Light World"
+  },
+  "Lost Woods Hideout (top)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 1,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": true,
+    "hasInaccessible": false,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 0,
+    "total": 1
+   }
+  },
+  "Lost Woods Hideout (top)-Lost Woods Hideout (bottom)": {
+   "classes": [
+    "accessible",
+    "discovery-hidden",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Lost Woods Hideout (top)",
+   "target": "Lost Woods Hideout (bottom)"
+  },
+  "Lumberjack House": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Lumberjack Tree (bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Lumberjack Tree (bottom)-Light World": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Lumberjack Tree (bottom)",
+   "target": "Light World"
+  },
+  "Lumberjack Tree (top)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Lumberjack Tree (top)-Lumberjack Tree (bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Lumberjack Tree (top)",
+   "target": "Lumberjack Tree (bottom)"
+  },
+  "Master Sword Meadow": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Maze Race Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 1,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": true,
+    "hasInaccessible": false,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 0,
+    "total": 1
+   }
+  },
+  "Menu": {
+   "classes": [
+    "accessible",
+    "completed",
+    "region",
+    "start-region"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": true,
+   "label": "Menu",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Menu-Links House": {
+   "classes": [
+    "accessible"
+   ],
+   "group": "edges",
+   "label": "Links House S&Q",
+   "source": "Menu",
+   "target": "Links House"
+  },
+  "Menu-Old Man House": {
+   "classes": [
+    "inaccessible"
+   ],
+   "group": "edges",
+   "label": "Old Man S&Q",
+   "source": "Menu",
+   "target": "Old Man House"
+  },
+  "Menu-Sanctuary": {
+   "classes": [
+    "accessible"
+   ],
+   "group": "edges",
+   "label": "Sanctuary S&Q",
+   "source": "Menu",
+   "target": "Sanctuary"
+  },
+  "Mimic Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 3,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Mimic Cave Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 2,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Mimic Cave Ledge-Mimic Cave": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Mimic Cave Ledge",
+   "target": "Mimic Cave"
+  },
+  "Mini Moldorm Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 5,
+    "total": 5
+   }
+  },
+  "Mire Shed": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Misery Mire (Entrance)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Misery Mire (Entrance)-Misery Mire (Main)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Misery Mire (Entrance)",
+   "target": "Misery Mire (Main)"
+  },
+  "Misery Mire (Final Area)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Misery Mire (Final Area)-Misery Mire (Vitreous)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Misery Mire (Final Area)",
+   "target": "Misery Mire (Vitreous)"
+  },
+  "Misery Mire (Main)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 8,
+    "total": 8
+   }
+  },
+  "Misery Mire (Main)-Misery Mire (Final Area)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Misery Mire (Main)",
+   "target": "Misery Mire (Final Area)"
+  },
+  "Misery Mire (Main)-Misery Mire (West)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Misery Mire (Main)",
+   "target": "Misery Mire (West)"
+  },
+  "Misery Mire (Vitreous)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Misery Mire (West)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "North Fairy Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "North Fairy Cave-Light World": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "North Fairy Cave",
+   "target": "Light World"
+  },
+  "Northeast Dark World": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Northeast Dark World-Dark Lake Hylia": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Northeast Dark World",
+   "target": "Dark Lake Hylia"
+  },
+  "Northeast Dark World-Dark World Potion Shop": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Northeast Dark World",
+   "target": "Dark World Potion Shop"
+  },
+  "Northeast Dark World-East Dark World": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Northeast Dark World",
+   "target": "East Dark World"
+  },
+  "Northeast Dark World-West Dark World": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Northeast Dark World",
+   "target": "West Dark World"
+  },
+  "Old Man Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Old Man Cave-Death Mountain": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Old Man Cave",
+   "target": "Death Mountain"
+  },
+  "Old Man Cave-Light World": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Old Man Cave",
+   "target": "Light World"
+  },
+  "Old Man House": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 1,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Old Man House Back": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 2,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Old Man House Back-Death Mountain": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Old Man House Back",
+   "target": "Death Mountain"
+  },
+  "Old Man House-Death Mountain": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Old Man House",
+   "target": "Death Mountain"
+  },
+  "Old Man House-Old Man House Back": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Old Man House",
+   "target": "Old Man House Back"
+  },
+  "Palace of Darkness (Big Key Chest)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Palace of Darkness (Bonk Section)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Palace of Darkness (Bonk Section)-Palace of Darkness (Center)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Palace of Darkness (Bonk Section)",
+   "target": "Palace of Darkness (Center)"
+  },
+  "Palace of Darkness (Center)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Palace of Darkness (Center)-Palace of Darkness (Big Key Chest)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Palace of Darkness (Center)",
+   "target": "Palace of Darkness (Big Key Chest)"
+  },
+  "Palace of Darkness (Center)-Palace of Darkness (Final Section)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Palace of Darkness (Center)",
+   "target": "Palace of Darkness (Final Section)"
+  },
+  "Palace of Darkness (Center)-Palace of Darkness (North)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Palace of Darkness (Center)",
+   "target": "Palace of Darkness (North)"
+  },
+  "Palace of Darkness (Entrance)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Palace of Darkness (Entrance)-East Dark World": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Palace of Darkness (Entrance)",
+   "target": "East Dark World"
+  },
+  "Palace of Darkness (Entrance)-Palace of Darkness (Bonk Section)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Palace of Darkness (Entrance)",
+   "target": "Palace of Darkness (Bonk Section)"
+  },
+  "Palace of Darkness (Entrance)-Palace of Darkness (Center)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Palace of Darkness (Entrance)",
+   "target": "Palace of Darkness (Center)"
+  },
+  "Palace of Darkness (Final Section)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Palace of Darkness (Harmless Hellway)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Palace of Darkness (Maze)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 3,
+    "total": 3
+   }
+  },
+  "Palace of Darkness (North)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 3,
+    "total": 3
+   }
+  },
+  "Palace of Darkness (North)-Palace of Darkness (Harmless Hellway)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Palace of Darkness (North)",
+   "target": "Palace of Darkness (Harmless Hellway)"
+  },
+  "Palace of Darkness (North)-Palace of Darkness (Maze)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Palace of Darkness (North)",
+   "target": "Palace of Darkness (Maze)"
+  },
+  "Palace of Darkness Hint": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Paradox Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Paradox Cave Chest Area": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 7,
+    "total": 7
+   }
+  },
+  "Paradox Cave Chest Area-Paradox Cave": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Paradox Cave Chest Area",
+   "target": "Paradox Cave"
+  },
+  "Paradox Cave Front": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Paradox Cave Front-Light World Death Mountain Shop": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Paradox Cave Front",
+   "target": "Light World Death Mountain Shop"
+  },
+  "Paradox Cave Front-Paradox Cave Chest Area": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Paradox Cave Front",
+   "target": "Paradox Cave Chest Area"
+  },
+  "Paradox Cave-East Death Mountain (Top)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Paradox Cave",
+   "target": "East Death Mountain (Top)"
+  },
+  "Potion Shop": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Pyramid": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Pyramid Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Pyramid Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Pyramid Ledge-Bottom of Pyramid": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Pyramid Ledge",
+   "target": "Bottom of Pyramid"
+  },
+  "Pyramid Ledge-East Dark World": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Pyramid Ledge",
+   "target": "East Dark World"
+  },
+  "Pyramid-Bottom of Pyramid": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Pyramid",
+   "target": "Bottom of Pyramid"
+  },
+  "Red Shield Shop": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Sahasrahlas Hut": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 3,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": true,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 4
+   }
+  },
+  "Sanctuary": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 1,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 1,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": true,
+    "hasInaccessible": false,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 0,
+    "total": 1
+   }
+  },
+  "Sanctuary-Light World": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Sanctuary",
+   "target": "Light World"
+  },
+  "Sewer Drop": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Sewer Drop-Sewers": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Sewer Drop",
+   "target": "Sewers"
+  },
+  "Sewers": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Sewers (Dark)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Sewers (Dark)-Sewers": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Sewers (Dark)",
+   "target": "Sewers"
+  },
+  "Sewers Secret Room": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 3,
+    "total": 3
+   }
+  },
+  "Sewers-Sanctuary": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Sewers",
+   "target": "Sanctuary"
+  },
+  "Sewers-Sewers Secret Room": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Sewers",
+   "target": "Sewers Secret Room"
+  },
+  "Sick Kids House": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Skull Woods Final Section (Entrance)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Skull Woods Final Section (Entrance)-Skull Woods Final Section (Mothula)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Skull Woods Final Section (Entrance)",
+   "target": "Skull Woods Final Section (Mothula)"
+  },
+  "Skull Woods Final Section (Mothula)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 3,
+    "total": 3
+   }
+  },
+  "Skull Woods First Section": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Skull Woods First Section (Left)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Skull Woods First Section (Left)-Skull Woods First Section (Right)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Skull Woods First Section (Left)",
+   "target": "Skull Woods First Section (Right)"
+  },
+  "Skull Woods First Section (Right)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Skull Woods First Section (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Skull Woods First Section-Skull Woods First Section (Left)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Skull Woods First Section",
+   "target": "Skull Woods First Section (Left)"
+  },
+  "Skull Woods First Section-Skull Woods First Section (Right)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Skull Woods First Section",
+   "target": "Skull Woods First Section (Right)"
+  },
+  "Skull Woods First Section-Skull Woods First Section (Top)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Skull Woods First Section",
+   "target": "Skull Woods First Section (Top)"
+  },
+  "Skull Woods Forest": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Skull Woods Forest (West)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Skull Woods Forest (West)-Skull Woods Final Section (Entrance)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Skull Woods Forest (West)",
+   "target": "Skull Woods Final Section (Entrance)"
+  },
+  "Skull Woods Forest (West)-Skull Woods Second Section": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Skull Woods Forest (West)",
+   "target": "Skull Woods Second Section"
+  },
+  "Skull Woods Forest (West)-Skull Woods Second Section (Drop)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Skull Woods Forest (West)",
+   "target": "Skull Woods Second Section (Drop)"
+  },
+  "Skull Woods Forest-Skull Woods First Section": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Skull Woods Forest",
+   "target": "Skull Woods First Section"
+  },
+  "Skull Woods Forest-Skull Woods First Section (Left)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Skull Woods Forest",
+   "target": "Skull Woods First Section (Left)"
+  },
+  "Skull Woods Forest-Skull Woods First Section (Right)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Skull Woods Forest",
+   "target": "Skull Woods First Section (Right)"
+  },
+  "Skull Woods Forest-Skull Woods First Section (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Skull Woods Forest",
+   "target": "Skull Woods First Section (Top)"
+  },
+  "Skull Woods Forest-Skull Woods Second Section": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Skull Woods Forest",
+   "target": "Skull Woods Second Section"
+  },
+  "Skull Woods Second Section": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Skull Woods Second Section (Drop)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Skull Woods Second Section (Drop)-Skull Woods Second Section": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Skull Woods Second Section (Drop)",
+   "target": "Skull Woods Second Section"
+  },
+  "Snitch Lady (East)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Snitch Lady (West)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "South Dark World": {
+   "classes": [
+    "discovery-hidden",
+    "hub",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "South Dark World-Archery Game": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "South Dark World",
+   "target": "Archery Game"
+  },
+  "South Dark World-Big Bomb Shop": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "South Dark World",
+   "target": "Big Bomb Shop"
+  },
+  "South Dark World-Bombos Tablet Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "South Dark World",
+   "target": "Bombos Tablet Ledge"
+  },
+  "South Dark World-Bonk Fairy (Dark)": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "South Dark World",
+   "target": "Bonk Fairy (Dark)"
+  },
+  "South Dark World-Cave 45 Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "South Dark World",
+   "target": "Cave 45 Ledge"
+  },
+  "South Dark World-Dark Lake Hylia": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "South Dark World",
+   "target": "Dark Lake Hylia"
+  },
+  "South Dark World-Dark Lake Hylia Shop": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "South Dark World",
+   "target": "Dark Lake Hylia Shop"
+  },
+  "South Dark World-East Dark World": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "South Dark World",
+   "target": "East Dark World"
+  },
+  "South Dark World-Hype Cave": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "South Dark World",
+   "target": "Hype Cave"
+  },
+  "South Dark World-Maze Race Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "South Dark World",
+   "target": "Maze Race Ledge"
+  },
+  "South Dark World-Swamp Palace (Entrance)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "South Dark World",
+   "target": "Swamp Palace (Entrance)"
+  },
+  "South Dark World-West Dark World": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "South Dark World",
+   "target": "West Dark World"
+  },
+  "Spectacle Rock": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Spectacle Rock Cave (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Spectacle Rock Cave (Bottom)-Death Mountain": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Spectacle Rock Cave (Bottom)",
+   "target": "Death Mountain"
+  },
+  "Spectacle Rock Cave (Peak)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Spectacle Rock Cave (Peak)-Death Mountain": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Spectacle Rock Cave (Peak)",
+   "target": "Death Mountain"
+  },
+  "Spectacle Rock Cave (Peak)-Spectacle Rock Cave (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Spectacle Rock Cave (Peak)",
+   "target": "Spectacle Rock Cave (Bottom)"
+  },
+  "Spectacle Rock Cave (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Spectacle Rock Cave (Top)-Death Mountain": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Spectacle Rock Cave (Top)",
+   "target": "Death Mountain"
+  },
+  "Spectacle Rock Cave (Top)-Spectacle Rock Cave (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Spectacle Rock Cave (Top)",
+   "target": "Spectacle Rock Cave (Bottom)"
+  },
+  "Spectacle Rock-Death Mountain (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Spectacle Rock",
+   "target": "Death Mountain (Top)"
+  },
+  "Spike Cave": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Spiral Cave (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Spiral Cave (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Spiral Cave (Top)-Spiral Cave (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Spiral Cave (Top)",
+   "target": "Spiral Cave (Bottom)"
+  },
+  "Spiral Cave (Top)-Spiral Cave Ledge": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Spiral Cave (Top)",
+   "target": "Spiral Cave Ledge"
+  },
+  "Spiral Cave Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 2,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Spiral Cave Ledge-East Death Mountain (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Spiral Cave Ledge",
+   "target": "East Death Mountain (Bottom)"
+  },
+  "Superbunny Cave (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Superbunny Cave (Bottom)-Superbunny Cave (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Superbunny Cave (Bottom)",
+   "target": "Superbunny Cave (Top)"
+  },
+  "Superbunny Cave (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Superbunny Cave (Top)-Dark Death Mountain (Top)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Superbunny Cave (Top)",
+   "target": "Dark Death Mountain (Top)"
+  },
+  "Swamp Healer Fairy": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Swamp Palace (Center)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 4,
+    "total": 4
+   }
+  },
+  "Swamp Palace (Center)-Swamp Palace (North)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Swamp Palace (Center)",
+   "target": "Swamp Palace (North)"
+  },
+  "Swamp Palace (Center)-Swamp Palace (West)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Swamp Palace (Center)",
+   "target": "Swamp Palace (West)"
+  },
+  "Swamp Palace (Entrance)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Swamp Palace (Entrance)-Swamp Palace (First Room)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Swamp Palace (Entrance)",
+   "target": "Swamp Palace (First Room)"
+  },
+  "Swamp Palace (First Room)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Swamp Palace (First Room)-Swamp Palace (Starting Area)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Swamp Palace (First Room)",
+   "target": "Swamp Palace (Starting Area)"
+  },
+  "Swamp Palace (North)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 6,
+    "total": 6
+   }
+  },
+  "Swamp Palace (Starting Area)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 3,
+    "total": 3
+   }
+  },
+  "Swamp Palace (Starting Area)-Swamp Palace (Center)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Swamp Palace (Starting Area)",
+   "target": "Swamp Palace (Center)"
+  },
+  "Swamp Palace (West)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Tavern": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 1,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": true,
+    "hasInaccessible": false,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 0,
+    "total": 1
+   }
+  },
+  "Tavern (Front)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Thieves Town (Deep)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 5,
+    "total": 5
+   }
+  },
+  "Thieves Town (Deep)-Blind Fight": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Thieves Town (Deep)",
+   "target": "Blind Fight"
+  },
+  "Thieves Town (Entrance)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 4,
+    "total": 4
+   }
+  },
+  "Thieves Town (Entrance)-Thieves Town (Deep)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Thieves Town (Entrance)",
+   "target": "Thieves Town (Deep)"
+  },
+  "Tower of Hera (Basement)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Tower of Hera (Bottom)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Tower of Hera (Bottom)-Tower of Hera (Basement)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Tower of Hera (Bottom)",
+   "target": "Tower of Hera (Basement)"
+  },
+  "Tower of Hera (Bottom)-Tower of Hera (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Tower of Hera (Bottom)",
+   "target": "Tower of Hera (Top)"
+  },
+  "Tower of Hera (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 4,
+    "total": 4
+   }
+  },
+  "Turtle Rock (Big Chest)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 2,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Turtle Rock (Big Chest)-Turtle Rock (Second Section)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (Big Chest)",
+   "target": "Turtle Rock (Second Section)"
+  },
+  "Turtle Rock (Chain Chomp Room)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 4,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Turtle Rock (Chain Chomp Room)-Turtle Rock (Pokey Room)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (Chain Chomp Room)",
+   "target": "Turtle Rock (Pokey Room)"
+  },
+  "Turtle Rock (Crystaroller Room)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 4,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Turtle Rock (Crystaroller Room)-Turtle Rock (Dark Room)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (Crystaroller Room)",
+   "target": "Turtle Rock (Dark Room)"
+  },
+  "Turtle Rock (Dark Room)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 5,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Turtle Rock (Entrance)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Turtle Rock (Entrance)-Dark Death Mountain (Top)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (Entrance)",
+   "target": "Dark Death Mountain (Top)"
+  },
+  "Turtle Rock (Entrance)-Turtle Rock (First Section)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (Entrance)",
+   "target": "Turtle Rock (First Section)"
+  },
+  "Turtle Rock (Eye Bridge Bomb Wall)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Turtle Rock (Eye Bridge Bomb Wall)-Dark Death Mountain Isolated Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (Eye Bridge Bomb Wall)",
+   "target": "Dark Death Mountain Isolated Ledge"
+  },
+  "Turtle Rock (Eye Bridge Bomb Wall)-Turtle Rock (Eye Bridge)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (Eye Bridge Bomb Wall)",
+   "target": "Turtle Rock (Eye Bridge)"
+  },
+  "Turtle Rock (Eye Bridge)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 2,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 4,
+    "total": 4
+   }
+  },
+  "Turtle Rock (Eye Bridge)-Turtle Rock (Dark Room)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (Eye Bridge)",
+   "target": "Turtle Rock (Dark Room)"
+  },
+  "Turtle Rock (Eye Bridge)-Turtle Rock (Trinexx)": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (Eye Bridge)",
+   "target": "Turtle Rock (Trinexx)"
+  },
+  "Turtle Rock (First Section)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 3,
+    "total": 3
+   }
+  },
+  "Turtle Rock (First Section)-Turtle Rock (Pokey Room)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (First Section)",
+   "target": "Turtle Rock (Pokey Room)"
+  },
+  "Turtle Rock (Pokey Room)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 5,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Turtle Rock (Second Section Bomb Wall)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Turtle Rock (Second Section Bomb Wall)-Dark Death Mountain Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (Second Section Bomb Wall)",
+   "target": "Dark Death Mountain Ledge"
+  },
+  "Turtle Rock (Second Section Bomb Wall)-Turtle Rock (Second Section)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (Second Section Bomb Wall)",
+   "target": "Turtle Rock (Second Section)"
+  },
+  "Turtle Rock (Second Section)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 3,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Turtle Rock (Second Section)-Turtle Rock (Chain Chomp Room)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (Second Section)",
+   "target": "Turtle Rock (Chain Chomp Room)"
+  },
+  "Turtle Rock (Second Section)-Turtle Rock (Crystaroller Room)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (Second Section)",
+   "target": "Turtle Rock (Crystaroller Room)"
+  },
+  "Turtle Rock (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Turtle Rock (Top)-Dark Death Mountain (Top)": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Turtle Rock (Top)",
+   "target": "Dark Death Mountain (Top)"
+  },
+  "Turtle Rock (Trinexx)": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 3,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "Two Brothers House": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Two Brothers House-Light World": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Two Brothers House",
+   "target": "Light World"
+  },
+  "Two Brothers House-Maze Race Ledge": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Two Brothers House",
+   "target": "Maze Race Ledge"
+  },
+  "Village of Outcasts Shop": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Waterfall of Wishing": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "West Dark World": {
+   "classes": [
+    "discovery-hidden",
+    "hub",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "West Dark World-Brewery": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "Brewery"
+  },
+  "West Dark World-Bumper Cave Entrance": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "Bumper Cave Entrance"
+  },
+  "West Dark World-C-Shaped House": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "C-Shaped House"
+  },
+  "West Dark World-Chest Game": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "Chest Game"
+  },
+  "West Dark World-Dark Grassy Lawn": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "Dark Grassy Lawn"
+  },
+  "West Dark World-Dark Sanctuary Hint": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "Dark Sanctuary Hint"
+  },
+  "West Dark World-Dark World Lumberjack Shop": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "Dark World Lumberjack Shop"
+  },
+  "West Dark World-East Dark World": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "East Dark World"
+  },
+  "West Dark World-Fortune Teller (Dark)": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "Fortune Teller (Dark)"
+  },
+  "West Dark World-Graveyard Ledge": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "Graveyard Ledge"
+  },
+  "West Dark World-Hammer Peg Area": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "Hammer Peg Area"
+  },
+  "West Dark World-Kings Grave Area": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "Kings Grave Area"
+  },
+  "West Dark World-Red Shield Shop": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "Red Shield Shop"
+  },
+  "West Dark World-Skull Woods Forest": {
+   "classes": [
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "Skull Woods Forest"
+  },
+  "West Dark World-Thieves Town (Entrance)": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "hub-edge",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "West Dark World",
+   "target": "Thieves Town (Entrance)"
+  },
+  "Zoras River": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "player": {
+   "classes": [
+    "player"
+   ],
+   "group": "nodes",
+   "label": "👤"
+  }
+ },
+ "path": [
+  {
+   "exit": null,
+   "location": null,
+   "region": "Aginahs Cave",
+   "type": "regionMove"
+  }
+ ],
+ "pathClasses": {},
+ "playerRegion": "Aginahs Cave",
+ "rulesSource": "./presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+ "hoverSweep": {}
+}

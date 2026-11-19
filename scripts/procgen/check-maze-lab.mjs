@@ -106,6 +106,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { PALETTE_ENTRIES } from '../../frontend/modules/mazeRoom/mazeRoomEditor.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-maze-lab.mjs', kind: 'browser' });
@@ -2198,9 +2199,10 @@ try {
      * as a member and reds three claims at once.
      */
     const paletteCount = await page.$$eval('#labPalette button', (bs) => bs.length);
-    check(paletteCount === 9,
-        '⛔ …and `#labPalette` still enumerates exactly the nine palette entries',
-        String(paletteCount));
+    // ⛓ CONTENT SETS TILE-3 — the count is READ off `PALETTE_ENTRIES` (it was a literal 9 until the TILE KIND entry).
+    check(paletteCount === PALETTE_ENTRIES.length,
+        '⛔ …and `#labPalette` still enumerates exactly the `PALETTE_ENTRIES` rows',
+        `${paletteCount} of ${PALETTE_ENTRIES.length}`);
 
     /* ⛓ THE SUBJECT CELLS, computed from the level's own tiles. */
     const tBusy = new Set([

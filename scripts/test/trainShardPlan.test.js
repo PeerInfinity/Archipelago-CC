@@ -28,14 +28,20 @@ const trainJob = () => WORKFLOW.slice(WORKFLOW.indexOf('\n  train-tier:\n'), WOR
 const matrixLength = () => JSON.parse(/^ {8}shard: (\[.*\])$/m.exec(trainJob())[1]).length;
 const assignment = (shards) => Object.fromEntries(shards.flatMap((s) => s.files.map((f) => [f, s.shard])));
 
+// The roots of vitest.train.config.js's include globs (pinned below): frontend/, and scripts/procgen/ for the CLI
+// checks wrapped beside their scripts (⚖ Robert 2026-11-17, "Train tier + nightly").
+const TRAIN_ROOTS = ['frontend', 'scripts/procgen'];
+
 describe('the committed train tier', () => {
-    const files = trainFilesOnDisk();
+    const files = TRAIN_ROOTS.flatMap((r) => trainFilesOnDisk(join(REPO, r)));
     const costs = loadTrainCosts();
     const shards = planTrainShards({ files, costs, bins: matrixLength() });
 
     it('the walk above collects what vitest.train.config.js collects', () => {
-        expect(trainConfig.test.include).toEqual(['frontend/**/*.train.test.js']);
+        expect(trainConfig.test.include).toEqual(TRAIN_ROOTS.map((r) => `${r}/**/*.train.test.js`));
         expect(files.length).toBeGreaterThan(0);
+        expect(files).toContain('scripts/procgen/derive-seedling-wallflyer-nohit.train.test.js');
+        expect(files).toContain('scripts/procgen/extract-seedling-map.train.test.js');
     });
 
     it('every train file is in exactly one shard of the workflow matrix', () => {

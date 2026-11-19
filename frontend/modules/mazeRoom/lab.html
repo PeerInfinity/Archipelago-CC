@@ -457,6 +457,13 @@
       <label title="draw each token wire (presser → responder) over the room"><input id="labShowLinks" type="checkbox" checked> links</label>
       <span id="labLinkNote" class="note"></span>
     </div>
+    <!-- ⛓⛓ CONTENT SETS TILE-3: the TILE KIND palette entry's kind — one the packs named by `?packs=` declare (a concept
+         row with a tile `base`; a wall-based kind is not offered: a placed kind is walkable). Shown only with `?packs=`.
+         ⛔ Not in `#labPalette`/`#labSetPalette`: those boxes are ENUMERATED, one button per palette entry. -->
+    <div id="labTileKindLine" class="line" hidden>
+      <label>tile kind <select id="labTileKind"></select></label>
+      <span id="labTileKindNote" class="note"></span>
+    </div>
     <!-- ⛓⛓⛓ WHERE THE LEVEL WOULD BE. A refused area graph — or a refused
          `requires` directive — prints the module's OWN reason here, VERBATIM,
          and a refused DIRECTIVE draws no level at all: a run that did not
@@ -806,8 +813,9 @@
         ⛓ MAZE WORLD MAP (step A) — the same canvas shows the STRIP (one cell per room, in index order: the adapter's
         own grid, and what RECT/PASTE between sets addresses) or the MAP (a 2D layout DERIVED from the overlay's links
         and each exit's side; nothing about it is stored). The strip is this page's default; `?setView=map` opens on
-        the map. A WORLD session has no map yet and says so in `#labSetMapWhy`. Pan: scroll the panel. Zoom: + / − / 0
-        on the focused map, the buttons, or Ctrl+wheel.
+        the map. A WORLD session has no map yet and says so in `#labSetMapWhy`. Pan: drag the map. Zoom: + / − (about
+        the view's centre) on the focused map or the buttons, Ctrl+wheel at the cursor; 0 / fit shows every room;
+        "centre on start" puts the start room in the middle (lab-map-camera).
       -->
       <div class="line">
         <label for="editSetMapView">map view</label>
@@ -815,6 +823,7 @@
         <button id="editSetZoomOut">−</button>
         <button id="editSetZoomIn">+</button>
         <button id="editSetZoomFit">fit</button>
+        <button id="editSetCentreStart" title="put the start room at the centre of the map">centre on start</button>
         <button id="editSetMapRelayout">RE-LAYOUT</button>
         <button id="editSetDisconnectTool">DISCONNECT on the map (d)</button>
         <span id="labSetMapWhy" class="note">on the map: click a room to select it, double-click to open it</span>

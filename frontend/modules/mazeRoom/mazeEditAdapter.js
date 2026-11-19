@@ -100,8 +100,13 @@ export function readMazeCell(world, x, y) {
     if (getBlock(world, x, y)) parts.block = true;
     const button = getButton(world, x, y);
     if (button) parts.button = indexOfGuardId(button);
+    // ⛓ CONTENT SETS TILE-3 — a placed tile kind is a part of the cell like any entity (it never shares one).
+    const tileKind = world.tileKinds?.get(`${x},${y}`);
+    if (tileKind) parts.tileKind = tileKind;
     return {
-        tile: NAME_OF_TILE[getTile(world, x, y)] ?? null,
+        // ⛓ CONTENT SETS PASS-1 — a placed kind OWNS the tile under it (a blocked one lowered it to a wall), so the
+        //   cell's own tile is the floor the kind took: a paste writes floor, then `setTileKind` lowers it again.
+        tile: tileKind ? 'floor' : (NAME_OF_TILE[getTile(world, x, y)] ?? null),
         entity: Object.keys(parts).length === 0 ? null : parts,
     };
 }
@@ -137,6 +142,7 @@ export function mazeWriteOps(desc, x, y) {
         if (e.obstacle !== undefined) out.push({ op: 'setObstacle', x, y, id: e.obstacle });
         if (e.block) out.push({ op: 'setBlock', x, y });
         if (e.button !== undefined) out.push({ op: 'setButton', x, y, index: e.button });
+        if (e.tileKind !== undefined) out.push({ op: 'setTileKind', x, y, kind: e.tileKind });
         if (e.entrance) out.push({ op: 'setEntrance', x, y });
     }
     return out;
@@ -189,8 +195,14 @@ export function mazeClearOps(record, x, y, { fields = null, incoming = null } = 
  * does not carry (`applyEditOp`'s own note), so it is a construction parameter
  * here rather than a default this file invents.
  */
-export function createMazeEditAdapter({ locationNameFormat = undefined } = {}) {
-    const opts = locationNameFormat ? { locationNameFormat } : {};
+export function createMazeEditAdapter({ locationNameFormat = undefined, tileKinds = undefined } = {}) {
+    const base = locationNameFormat ? { locationNameFormat } : {};
+    // ⛓ TILE-3 — the loaded packs' declared tile kinds, which `setTileKind` is checked against: an object, or a
+    //   function answering the current one (a page whose packs load after the adapter is built).
+    const optsNow = () => {
+        const declared = typeof tileKinds === 'function' ? tileKinds() : tileKinds;
+        return declared === undefined ? base : { ...base, tileKinds: declared };
+    };
     return Object.freeze({
         name: 'maze',
         /**
@@ -209,7 +221,7 @@ export function createMazeEditAdapter({ locationNameFormat = undefined } = {}) {
          */
         apply(record, op) {
             const next = cloneWorld(record);
-            const res = applyEditOp(next, op, opts);
+            const res = applyEditOp(next, op, optsNow());
             if (!res.ok) {
                 return { ok: false, description: `maze: ${res.description}`, reason: res.reason };
             }

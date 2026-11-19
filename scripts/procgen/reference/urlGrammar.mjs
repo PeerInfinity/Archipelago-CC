@@ -192,6 +192,7 @@ const PARAM_NOTES = {
      * name and says to load the bundle. ⚠ Lab-only: `watch.html`'s SET arm is
      * Seedling's own and stays what it is (⚖ Q4 put the world editor here).
      */
+    packs: { field: { watch: null, lab: 'packs' }, codec: 'a comma list of content-pack ids, in stack order (a later pack wins); the TILE KIND palette entry places the kinds they declare (content sets TILE-3). Absent: no pack is loaded', terms: ['content-pack'] },
     world: { field: { watch: null, lab: 'world' }, codec: 'a path to a WORLD BUNDLE `.zip` (a level set + a region library + the `world.json` that names them)', terms: ['content-source', 'region'] },
     /**
      * ⛓⛓ MAZE CONVERTED LINK (step 2 of 3) — a COMMITTED PRESET's room, by name: `?preset=` is a key of
