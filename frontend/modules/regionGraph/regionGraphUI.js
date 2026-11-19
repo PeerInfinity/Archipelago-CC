@@ -903,6 +903,7 @@ export class RegionGraphUI {
         if (key === '*' || key.startsWith('generalSettings.useSubstitutedNames') ||
             key.startsWith('moduleSettings.regionGraph')) {
           await this.loadDisplaySettings();
+          if (this.controlPanel) await this.layoutControlsManager.loadLocationVisibilityMode();
           if (this.cy && this.graphInitialized) {
             this.loadGraphData();
           }
