@@ -536,11 +536,20 @@ const stripSummary = () => document.querySelector(STRIP_SUMMARY)?.textContent ??
 /**
  * Open the graph, set this row's click actions (session-only, `ctx.setSetting`; `ctx.restoreSettings` puts them back)
  * and wait until the strip shows them (the panel holds what a click reads). → the Cytoscape instance.
+ * `alttp`: load ALTTP first (a known world with somewhere to walk from the start; the caller reloads the world
+ * loaded before) — the world a solo run boots into may have no reachable exit from its start.
  */
-async function clickActionsSetUp(testController, ctx, clickActions, expectSummary) {
+async function clickActionsSetUp(testController, ctx, clickActions, expectSummary, { alttp = false } = {}) {
   testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
-  const built = await testController.pollForCondition(graphShowsWorld, 'the graph shows the current world', MAX_WAIT_TIME, 100);
+  let built = await testController.pollForCondition(graphShowsWorld, 'the graph shows the current world', MAX_WAIT_TIME, 100);
   if (!built) throw new Error('the graph did not build');
+  if (alttp) {
+    const oldNode = regionNodes(graphCy())[0];
+    await testController.loadALTTPRules();
+    built = await testController.pollForCondition(() => !!oldNode?.removed() && graphShowsWorld(),
+      'the graph rebuilt for ALTTP', MAX_WAIT_TIME, 100);
+    if (!built) throw new Error('the graph did not rebuild for ALTTP');
+  }
   await ctx.setSetting(CLICK_ACTIONS, clickActions);
   const shown = await testController.pollForCondition(() => stripSummary() === expectSummary,
     `the strip shows "${expectSummary}"`, 5000, 50);
@@ -594,7 +603,8 @@ export async function testRegionGraphClickDefault(testController) {
   let rec = null;
   try {
     const { defaultClickActions } = await import('../../regionView/clickActions.js');
-    const cy = await clickActionsSetUp(testController, ctx, defaultClickActions(), 'On click: extend path · Regions — location: check');
+    const cy = await clickActionsSetUp(testController, ctx, defaultClickActions(), 'On click: extend path · Regions — location: check',
+      { alttp: true });
     const target = await accessibleTarget(testController, cy);
     if (!target) throw new Error(`no reachable region one exit from the path end (${await pathEnd()})`);
     const region = target.id();
@@ -630,15 +640,20 @@ export async function testRegionGraphClickMasterOff(testController) {
   const ctx = buildContext({ eventBus: testController.eventBus });
   const before = ctx.rulesSource();
   let rec = null;
+  let changed = true; // until the row has seen the path unchanged
   try {
     const { defaultClickActions } = await import('../../regionView/clickActions.js');
     const cy = await clickActionsSetUp(testController, ctx, { ...defaultClickActions(), enabled: false }, 'On click: ⏸ paused');
     const master = document.querySelector('.region-graph-panel-container .click-actions-strip-master');
     testController.reportCondition('the collapsed strip shows the master switch, paused (▶)', master?.textContent === '▶');
-    const target = await accessibleTarget(testController, cy);
-    if (!target) throw new Error(`no reachable region one exit from the path end (${await pathEnd()})`);
-    const region = target.id();
+    // Any reachable region but the path end: with the master switch on, `regions.open` would publish for it whether
+    // or not a walk exists, so its silence is the switch's. (No world load: this row changes nothing when it passes.)
     const endBefore = await pathEnd();
+    const snapshot = stateManagerProxySingleton.getLatestStateSnapshot?.();
+    const target = regionNodes(cy).filter((n) => n.id() !== endBefore && !n.hasClass('discovery-hidden')
+      && isRegionReachable(snapshot, n.id())).sort((a, b) => (a.id() < b.id() ? -1 : 1))[0] ?? null;
+    if (!target) throw new Error(`no reachable region but the path end (${endBefore})`);
+    const region = target.id();
     const { getGameStateSingleton } = await import('../../gameState/singleton.js');
     const pathBefore = JSON.stringify(getGameStateSingleton().getPath?.() ?? []);
     // Recorded from here: the row's own panel activation (the setup) is not the click's.
@@ -648,8 +663,8 @@ export async function testRegionGraphClickMasterOff(testController) {
       () => rec.seen.some(([n, d]) => n === 'regionGraph:nodeSelected' && d?.nodeId === region), 'regionGraph:nodeSelected', 3000, 50);
     testController.reportCondition(`master off: regionGraph:nodeSelected is still published for "${region}"`, selected);
     await new Promise((r) => setTimeout(r, 750)); // what a click would do, it would have done by now
-    testController.reportCondition(`master off: no move, no path edit (the path still ends at ${await pathEnd()})`,
-      (await pathEnd()) === endBefore && JSON.stringify(getGameStateSingleton().getPath?.() ?? []) === pathBefore);
+    changed = !((await pathEnd()) === endBefore && JSON.stringify(getGameStateSingleton().getPath?.() ?? []) === pathBefore);
+    testController.reportCondition(`master off: no move, no path edit (the path still ends at ${await pathEnd()})`, !changed);
     testController.reportCondition('master off: no Regions-panel change (no ui:activatePanel / ui:navigateToRegion)',
       !rec.seen.some(([n]) => n === 'ui:activatePanel' || n === 'ui:navigateToRegion'));
   } catch (error) {
@@ -657,7 +672,7 @@ export async function testRegionGraphClickMasterOff(testController) {
   } finally {
     rec?.stop();
     await ctx.restoreSettings();
-    await restoreWorld(testController, ctx, before, { always: true });
+    await restoreWorld(testController, ctx, before, { always: changed });
     ctx.dispose();
   }
   return testController.getOverallResult();
