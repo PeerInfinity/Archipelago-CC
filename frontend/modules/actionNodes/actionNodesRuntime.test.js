@@ -278,6 +278,25 @@ describe('the ActionNodes runtime on the committed example', () => {
         expect(f.gs.getCurrentMana()).toBe(mana);
     });
 
+    it('⛓ a baseline that arrives AFTER a performance keeps the loop and applies what is held at once (AN-3a)', () => {
+        // Found in-app: no snapshot came between the load and a check, so the check's own snapshot was the baseline,
+        // and restarting the loop there wiped the counts mid-loop and swallowed the item's boost.
+        const [item, b] = Object.entries(BLOCK.boosts).find(([, x]) => Object.keys(x.resources).length);
+        const [rid, n] = Object.entries(b.resources)[0];
+        const f = makeEnv();
+        const r = new ActionNodesRuntime(f.env);
+        r.loadWorld(RULES, P);
+        expect(r.perform(REPEATABLE.node_id).ok).toBe(true);
+        const [res, got] = Object.entries(REPEATABLE.results.resources)[0];
+        r.onSnapshot({ inventory: { [item]: 1 }, checkedLocations: [] });
+        expect(r.counts[r.nodeIndex(REPEATABLE.node_id)]).toBe(1);
+        const want = (rid === res ? got.amount : 0) + n;
+        expect(f.ledger.getResource(rid)).toBe(want);
+        // and the next snapshot with the same count changes nothing
+        r.onSnapshot({ inventory: { [item]: 1 }, checkedLocations: [] });
+        expect(f.ledger.getResource(rid)).toBe(want);
+    });
+
     it('per-item starting mana: the block\'s boosts replace the flat term while the world is loaded', () => {
         const table = perItemManaTableOf(BLOCK);
         expect(Object.keys(table).sort()).toEqual(Object.keys(BLOCK.boosts).sort());

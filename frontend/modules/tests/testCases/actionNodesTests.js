@@ -18,6 +18,13 @@ import { getResourceLedger } from '../../resourceChannels/resourceChannelsLibrar
 import discoveryStateSingleton from '../../discovery/singleton.js';
 import { getDiscoverySettings } from '../../discovery/index.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
+import { nodeCardView } from '../../actionNodes/nodeCardOverlay.js';
+import { NODE_STATES } from '../../actionNodes/nodeStates.js';
+import { CHECK_MARK, GOAL_MARK, PERFORM_ALL_SLOT, PLACEHOLDER_TEXT } from '../../actionNodes/nodeCard.js';
+import { playLiveToGoal } from '../../actionNodes/actionLiveSim.js';
+import { getActivePanel } from '../../playbackBot/index.js';
+import { getSphereStateSingleton } from '../../sphereState/singleton.js';
+import { startAppBotTestSpeed } from '../botTestSpeed.js';
 
 const PRESET_RULES = './presets/action_nodes_example/AP_1/AP_1_rules.json';
 const CATEGORY = 'ActionNodes';
@@ -534,6 +541,261 @@ async function twoWayMove(tc) {
     return tc.getOverallResult();
 }
 
+
+// ─── 9. The node states (AN-3a) ─────────────────────────────────────────────
+
+/** The app's own card view (as `actionNodes/index.js` wires it): the queue's end while planned, live while it runs. */
+function appCardView() {
+    return nodeCardView({
+        runtime: runtime(),
+        loopState: () => loopStateSingleton,
+        loopMode: () => gs()?.isLoopModeActive === true,
+        discovery: () => ({
+            enabled: getDiscoverySettings()?.enableDiscoveryMode === true,
+            isRegionDiscovered: (id) => discoveryStateSingleton.isRegionDiscovered(id),
+        }),
+    });
+}
+
+/**
+ * The state each node should have, derived from the preset: undiscovered when discovery has not discovered it; the
+ * start done; `cleared` (node id → performed its limit) and `counts` decide reach and done; a requirement unmet by the
+ * `held` resources/stats names it.
+ */
+function expectedStates(payloads, block, { counts = {}, held = {} } = {}) {
+    const limit = (id) => payloads[id].limit;
+    const isCleared = (id) => id === block.start || (counts[id] ?? 0) >= limit(id);
+    const out = {};
+    for (const p of Object.values(payloads)) {
+        const id = p.node_id;
+        if (!discoveryStateSingleton.isRegionDiscovered(id)) { out[id] = NODE_STATES.UNDISCOVERED; continue; }
+        if (id === block.start) { out[id] = NODE_STATES.DONE; continue; }
+        if (!p.after.some((set) => set.every(isCleared))) { out[id] = NODE_STATES.NOT_REACHED; continue; }
+        if ((counts[id] ?? 0) >= limit(id)) { out[id] = NODE_STATES.DONE; continue; }
+        const unmet = [...Object.entries(p.requires.stats), ...Object.entries(p.requires.resources)]
+            .some(([k, v]) => (held[k] ?? 0) < v.amount);
+        out[id] = unmet ? NODE_STATES.BLOCKED : NODE_STATES.READY;
+    }
+    return out;
+}
+
+async function nodeStatesRow(tc) {
+    const { block, payloads } = await readPreset();
+    if (!await loadExample(tc)) return tc.getOverallResult();
+    const restore = freshQueue();
+    const states = () => Object.fromEntries(Object.entries(appCardView().states).map(([k, v]) => [k, v.state]));
+    const same = (label, want) => {
+        const got = states();
+        tc.log(`${label}: ${JSON.stringify(got)}`);
+        tc.assertEqual(`${label}: every node's state`, JSON.stringify(want), JSON.stringify(got));
+    };
+    try {
+        same('at load', expectedStates(payloads, block));
+        // A planned route: a repeatable node cleared, then a node after it that spends what it gave.
+        const rep = Object.values(payloads).find((p) => p.limit > 1 && p.after.some((s) => s.includes(block.start))
+            && Object.keys(p.results.resources).length);
+        const spender = Object.values(payloads).find((p) => p.after.some((s) => s.includes(rep.node_id))
+            && Object.values(p.results.resources).some((v) => v.amount < 0));
+        const sibling = Object.values(payloads).find((p) => p !== spender && p.after.some((s) => s.includes(rep.node_id))
+            && Object.keys(p.requires.resources).length);
+        author(payloads, routeFrom(block, [rep.node_id, { act: rep.node_id, times: rep.limit }, spender.node_id, { act: spender.node_id }]));
+        const held = {};
+        for (const [k, v] of Object.entries(rep.results.resources)) held[k] = v.amount * rep.limit;
+        for (const [k, v] of Object.entries(spender.results.resources)) held[k] = (held[k] ?? 0) + v.amount;
+        const view = appCardView();
+        tc.assertEqual('a planned (not running) queue: the states are for its END', 'queue-end', view.basis);
+        tc.assertEqual('the live counts are untouched by planning', 0, countOf(rep.node_id));
+        const atEnd = expectedStates(payloads, block, { counts: { [rep.node_id]: rep.limit, [spender.node_id]: 1 }, held });
+        same('at the end of the planned queue', atEnd);
+        tc.assertEqual(`at the queue's end ${rep.name} is done (planned, not performed)`, NODE_STATES.DONE,
+            appCardView().states[rep.node_id].state);
+        // Run it: the states now follow the live state (the queue's acts are done).
+        tc.assertEqual('the queue ran to its end', true, await runQueue(tc, 'queue finished'));
+        const live = appCardView();
+        tc.assertEqual('a finished queue: the live state', 'live', live.basis);
+        same('after the clear', expectedStates(payloads, block, { counts: { [rep.node_id]: rep.limit, [spender.node_id]: 1 }, held }));
+        tc.assertEqual(`after the clear ${sibling.name} is discovered and blocked by what ${spender.name} spent`,
+            NODE_STATES.BLOCKED, live.states[sibling.node_id].state);
+        // A loop reset: counts and the ledger back to the start; discovery kept (D4).
+        gs().clearPath();
+        loopStateSingleton._resetLoop();
+        gs().triggerLoopReset();
+        await tc.pollForCondition(() => countOf(rep.node_id) === 0, 'the reset cleared the counts', 3000, 50);
+        const afterReset = expectedStates(payloads, block);
+        tc.assertEqual(`after the reset ${spender.name} is still discovered (D4) and not reached`, NODE_STATES.NOT_REACHED, afterReset[spender.node_id]);
+        same('after a loop reset', afterReset);
+    } finally {
+        restore();
+    }
+    return tc.getOverallResult();
+}
+
+// ─── 10. The node card on the Region Graph (AN-3a) ─────────────────────────
+
+const OTHER_PRESET = './presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+const cyOf = () => document.querySelector('.region-graph-panel-container div[id^="cy-"]')?._cyreg?.cy ?? null;
+const cards = () => [...document.querySelectorAll('.region-graph-overlay-container .an-node-card')];
+const cardOf = (id) => cards().find((c) => c.dataset.nodeId === id) ?? null;
+const textOf = (el) => (el?.textContent ?? '').replace(/\s+/g, ' ').trim();
+
+/** Every region node's size/shape and every edge's arrows: what an overlay provider may change. */
+function graphLook(cy) {
+    const nodes = {};
+    cy.nodes('.region').forEach((n) => {
+        nodes[n.id()] = { look: [n.style('width'), n.style('height'), n.style('shape'), n.hasClass('has-overlay')], classes: [...n.classes()].sort().join(' ') };
+    });
+    const edges = {};
+    cy.edges().forEach((e) => {
+        edges[e.id()] = ['target-arrow-shape', 'source-arrow-shape', 'mid-target-arrow-shape', 'mid-source-arrow-shape'].map((k) => e.style(k));
+    });
+    return { nodes, edges };
+}
+
+async function loadAndWaitForGraph(tc, path, label) {
+    await tc.loadRulesFromFile(path);
+    await tc.stateManager.pingWorker('after-rules-load', 3000);
+    const rules = await (await fetch(path, { cache: 'no-store' })).json();
+    const want = Object.keys(rules.regions?.[P] ?? {}).length;
+    const ok = await tc.pollForCondition(() => {
+        const cy = cyOf();
+        return !!cy && cy.nodes('.region').length === want;
+    }, `${label}: the Region Graph shows its ${want} regions`, 10000, 100);
+    tc.reportCondition(`${label}: the Region Graph shows the world's regions`, !!ok);
+    // let the layout and the overlay rebuild settle
+    await new Promise((r) => setTimeout(r, 1500));
+    return rules;
+}
+
+async function nodeCardRow(tc) {
+    const { block, payloads } = await readPreset();
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'regionGraphPanel' });
+    const panel = await tc.pollForValue(() => cyOf(), 'the Region Graph panel and its graph', 8000, 100);
+    tc.reportCondition('the Region Graph panel is open', !!panel);
+    if (!panel) return tc.getOverallResult();
+    // The other world FIRST: its look without any card is the baseline.
+    await loadAndWaitForGraph(tc, OTHER_PRESET, 'another world');
+    const before = graphLook(cyOf());
+    tc.assertEqual('another world: no card', 0, cards().length);
+    if (!await loadExample(tc)) return tc.getOverallResult();
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'regionGraphPanel' });
+    const ids = Object.keys(payloads);
+    const allCards = await tc.pollForCondition(() => ids.every((id) => cardOf(id)), 'a card per node', 10000, 100);
+    tc.reportCondition(`one card per node (${cards().length} of ${ids.length})`, !!allCards);
+    const restore = freshQueue();
+    try {
+        // An undiscovered node: a forward target of a start neighbour not yet cleared — the placeholder, nothing else.
+        const neighbour = payloads[block.start].exits.find((e) => !e.reverse && payloads[e.targetRegion].exits.some((x) => !x.reverse)).targetRegion;
+        const hidden = payloads[neighbour].exits.find((x) => !x.reverse).targetRegion;
+        await tc.pollForCondition(() => cardOf(hidden)?.dataset.state === NODE_STATES.UNDISCOVERED, 'the undiscovered card', 3000, 50);
+        tc.assertEqual(`${hidden} (undiscovered): the placeholder`, PLACEHOLDER_TEXT, textOf(cardOf(hidden)));
+        tc.assertEqual(`${hidden}: none of its contents`, false, textOf(cardOf(hidden)).includes(payloads[hidden].name));
+        // A check node, played to its check: the route the goal's own witness starts with, up to the check node.
+        const check = Object.values(payloads).find((p) => p.kind === 'check' && p.after.some((s) => s.every((m) => payloads[m].after.some((t) => t.includes(block.start))
+            && !Object.keys(payloads[m].requires.resources).length && !Object.keys(payloads[m].requires.stats).length)));
+        const pre = check.after.find((s) => s.length === 1)[0];
+        author(payloads, routeFrom(block, [pre, { act: pre, times: payloads[pre].limit }, check.node_id, { act: check.node_id }]));
+        tc.assertEqual('the queue ran to its end', true, await runQueue(tc, 'queue finished'));
+        const diag = () => `counts ${JSON.stringify(runtime().snapshot().nodes.map((n) => [n.id, n.count]))} mana ${gs().getCurrentMana()} `
+            + `resets ${gs().loopResetCount} processing ${loopStateSingleton.isProcessing} refusal ${JSON.stringify(loopStateSingleton.lastActionRefusal)} `
+            + `basis ${appCardView().basis}`;
+        tc.log(`DIAG after the run: ${diag()}`);
+        const checkedOk = await tc.pollForCondition(() => textOf(cardOf(check.node_id)).includes(CHECK_MARK),
+            `${check.name}: the check mark once its location is checked`, 5000, 100);
+        tc.reportCondition(`${check.name}: the check mark once its location is checked`, !!checkedOk);
+        tc.log(`DIAG after the check mark: ${diag()}`);
+        const c = cardOf(check.node_id);
+        tc.log(`check card: ${textOf(c)} [${c?.dataset.state}]`);
+        tc.assertEqual(`${check.name}: its name`, true, textOf(c).includes(check.name));
+        tc.assertEqual(`${check.name}: used/limit`, true, textOf(c).includes(`${check.limit}/${check.limit}`));
+        tc.assertEqual(`${check.name}: its mana`, true, / mana/.test(textOf(c)));
+        for (const v of Object.values(check.requires.stats)) {
+            tc.assertEqual(`${check.name}: needs ${v.name}`, true, textOf(c).includes(`${v.name} ${v.amount}`));
+        }
+        tc.assertEqual(`${check.name}: state done`, NODE_STATES.DONE, c?.dataset.state);
+        const slot = c?.querySelector(`[data-slot="${PERFORM_ALL_SLOT}"]`);
+        tc.assertEqual('the reserved "perform all remaining" slot is there, empty', true, !!slot && slot.children.length === 0);
+        tc.assertEqual('no button on the card (no click code in AN-3a)', 0, c?.querySelectorAll('button').length ?? -1);
+        // The goal: revealed by the check node's clear, marked as the goal, its needs listed.
+        const goal = payloads[block.goal];
+        await tc.pollForCondition(() => textOf(cardOf(goal.node_id)).includes(goal.name), 'the goal card shows', 3000, 50);
+        const g = cardOf(goal.node_id);
+        tc.log(`goal card: ${textOf(g)} [${g?.dataset.state}]`);
+        tc.assertEqual('the goal card: marked as the goal', true, textOf(g).includes(GOAL_MARK));
+        for (const v of Object.values(goal.requires.stats)) {
+            tc.assertEqual(`the goal card: needs ${v.name} ${v.amount}`, true, textOf(g).includes(`${v.name} ${v.amount}`));
+        }
+        tc.assertEqual('the goal card: blocked (a stat short), the unmet line marked', true,
+            g?.dataset.state === NODE_STATES.BLOCKED && !!g.querySelector('.an-card__unmet'));
+    } finally {
+        restore();
+    }
+    // ⛓ Unload (planner ruling (a)): another world after an ActionNodes one has its original look and no stale card.
+    await loadAndWaitForGraph(tc, OTHER_PRESET, 'another world again');
+    tc.assertEqual('after unload: no card left', 0, cards().length);
+    tc.assertEqual('after unload: the overlay container is empty', 0,
+        document.querySelector('.region-graph-overlay-container')?.children.length ?? 0);
+    const after = graphLook(cyOf());
+    // A node's own state classes (the player's region is drawn larger) may differ between the two loads: compare the
+    // nodes whose classes are the same, and hold every node free of the overlay's marks.
+    const sameClass = Object.keys(before.nodes).filter((id) => after.nodes[id]?.classes === before.nodes[id].classes);
+    tc.log(`after unload: ${sameClass.length} of ${Object.keys(before.nodes).length} nodes keep their classes; the rest: `
+        + JSON.stringify(Object.keys(before.nodes).filter((id) => !sameClass.includes(id)).map((id) => [id, before.nodes[id], after.nodes[id]])));
+    tc.assertEqual('after unload: most nodes compared', true, sameClass.length >= Object.keys(before.nodes).length - 2);
+    tc.assertEqual('after unload: every node\'s size and shape as before',
+        JSON.stringify(sameClass.map((id) => before.nodes[id].look)), JSON.stringify(sameClass.map((id) => after.nodes[id].look)));
+    const marked = Object.entries(after.nodes).filter(([, n]) => n.look[3] || n.look[2] === 'rectangle' || n.classes.includes('has-overlay'));
+    tc.assertEqual('after unload: no node keeps an overlay mark (has-overlay, the card\'s rectangle)', '[]', JSON.stringify(marked));
+    tc.assertEqual('after unload: every edge\'s arrows as before', JSON.stringify(before.edges), JSON.stringify(after.edges));
+    return tc.getOverallResult();
+}
+
+// ─── 11. The Playback Bot plays the example to the goal (AN-3a; category Playback Bot) ──
+
+async function botPlaysToGoal(tc) {
+    const { rules, block, payloads } = await readPreset();
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+    const panel = await tc.pollForValue(() => getActivePanel(), 'playback bot panel instance', 5000, 100);
+    const bot = panel?.getBot?.();
+    tc.reportCondition('bot reachable', !!bot);
+    if (!bot) return tc.getOverallResult();
+    bot.reset();
+    if (!await loadExample(tc)) return tc.getOverallResult();
+    await getSphereStateSingleton().loadSphereLog('embedded:actionNodesExample',
+        (rules.sphere_log ?? []).map((e) => JSON.stringify(e)).join('\n'));
+    bot.refresh();
+    const restore = freshQueue();
+    gs().setLoopModeActive(true);
+    const reasoningBefore = bot.getLogReasoning();
+    bot.setLogReasoning(true);
+    const restoreSpeed = await startAppBotTestSpeed();
+    const goalLocation = payloads[block.goal].location;
+    try {
+        await bot.play();
+        const finished = await tc.pollForCondition(() => (bot.getStatus() || '').startsWith('finished'),
+            'the bot finishes the world in Loop mode', 60000, 200);
+        const loops = bot.getLoopRunner?.()?.getLoopCount?.() ?? 0;
+        tc.reportCondition(`the bot finished (status: "${bot.getStatus()}", loops: ${loops})`, !!finished);
+        const checked = new Set(tc.stateManager.getLatestStateSnapshot()?.checkedLocations ?? []);
+        tc.assertEqual(`the goal (${goalLocation}) is checked`, true, checked.has(goalLocation));
+        const log = bot.getLog();
+        tc.log(`Bot loop log: ${JSON.stringify(log.slice(-40))}`);
+        for (let k = 1; k <= loops; k += 1) {
+            tc.assertEqual(`loop ${k}: its reason is in the log`, true,
+                log.some((l) => l.startsWith(`loop ${k}: `) && /^(loop \d+: )(Chose:|Goal reachable:|No check|Waiting)/.test(l)));
+        }
+        const sim = playLiveToGoal(rules);
+        tc.log(`headless live path: goal in ${sim.loops.length} loop(s); in-app: ${loops}`);
+        tc.assertEqual('the in-app run takes the headless live path\'s loops', sim.loops.length, loops);
+        tc.assertEqual('no queue refusal', null, loopStateSingleton.lastActionRefusal);
+    } finally {
+        bot.stop();
+        bot.setLogReasoning(reasoningBefore);
+        await restoreSpeed();
+        restore();
+    }
+    return tc.getOverallResult();
+}
+
 const ROWS = [
     ['an-load-and-act-once', 'ActionNodes: load the preset and act once',
         'Loads the example, queues a move and one act, runs the queue: the node is performed once, its result is in the ledger, the pool paid its authored price.', actOnce],
@@ -551,8 +813,23 @@ const ROWS = [
         'The discovered regions, exits and locations at load (the start in full, its neighbours with their contents, their forward exits unnamed), after a first clear, after a loop reset and with Loop mode off.', discoverySetsRow],
     ['an-two-way-move', 'ActionNodes: a move back costs 0 and is not refused; a forward exit of an uncleared node is',
         'Acts once at a repeatable node, moves back to the start and in again (cost 0, not refused), then takes its forward exit: refused by name, not cleared.', twoWayMove],
+    ['an-node-states', 'ActionNodes: the node states (ready, blocked, not reached, done, undiscovered)',
+        'The state of every node, derived from the preset: at load, at the end of a planned queue (the live counts untouched), after the queue ran (live), and after a loop reset (discovery kept).', nodeStatesRow],
+    ['an-node-card', 'ActionNodes: the node card on the Region Graph',
+        'The card of an undiscovered node (placeholder only), of a check node played to its check (name, used/limit, mana, needs, the check mark, the reserved slot, no button) and of the goal (the goal mark, its unmet line); then another world loads with its original node sizes and arrows and no card left.', nodeCardRow],
 ];
 
 for (const [id, name, description, testFunction] of ROWS) {
     registerTest({ id, name, description, testFunction, category: CATEGORY, enabled: false });
 }
+
+registerTest({
+    id: 'an-bot-plays-to-goal',
+    name: 'Playback Bot: the ActionNodes example to the goal in Loop mode, with its reasoning',
+    description: 'Loads the example and presses the bot\'s Play with "log reasoning" on: the runner asks the ActionNodes '
+        + 'entry\'s loopBot.planLoop for each loop, writes it as the Loops queue (free hops + acts) and plays it until the '
+        + 'goal is checked. Every loop\'s reason is in the log; the loop count is the headless live path\'s.',
+    testFunction: botPlaysToGoal,
+    category: 'Playback Bot',
+    enabled: false,
+});

@@ -51,6 +51,7 @@ import {
     MAZE_CONTENT_ROLES, MAZE_DEFAULT_CONTENT_PACK, presentingPlaceFromRules, presentingRegionCore,
 } from './mazeContent.js';
 import { thingsDeserializer, thingsRegionCore, thingsSerializer } from './mazeThings.js';
+import { tileKindsDeserializer } from './mazeTileKinds.js';
 import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
 import {
     DEFAULT_MAZE_PROCGEN_PARAMS,
@@ -152,7 +153,8 @@ export const substrateRegistryEntry = Object.freeze({
     ]),
     // ⛓ CONTENT SETS S2 — the engine's deserializer, then the region's `things` copied back (`mazeThings.js`):
     // the engine copies named fields, so it would drop them.
-    deserializeWorld: thingsDeserializer(tileGridDeserializer),
+    // ⛓ CONTENT SETS TILE-3 — and its placed tile kinds (`mazeTileKinds.js`), which the engine drops the same way.
+    deserializeWorld: tileKindsDeserializer(thingsDeserializer(tileGridDeserializer)),
 
     /**
      * ⛓⛓ CONCEPT LIBRARY T1 — **WHAT THE MAZE REALISES** (`mazeConcepts.js`;

@@ -24,7 +24,7 @@ export const REGISTRY = frz({
     "columnOrder": "`getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them",
     "columns": [
         {
-            "fields": 15,
+            "fields": 16,
             "id": "action_nodes",
             "label": "Action Nodes",
             "registeredBy": "frontend/modules/actionNodes/actionNodesLibrary.js"
@@ -136,6 +136,7 @@ export const REGISTRY = frz({
         },
         {
             "rows": [
+                "loopBot",
                 "loopSupport",
                 "loopSupport.actionGate",
                 "loopSupport.authoredCosts",
@@ -5569,6 +5570,88 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "{planLoop}",
+                    "type": "object",
+                    "value": [
+                        "planLoop"
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Loop mode",
+            "name": "loopBot"
+        },
+        {
+            "carriedBy": [
                 "action_nodes",
                 "bounce",
                 "cloudberry",
@@ -9366,7 +9449,7 @@ export const REGISTRY = frz({
                 {
                     "id": "maze",
                     "present": true,
-                    "short": "32 keys",
+                    "short": "33 keys",
                     "type": "object",
                     "value": [
                         "action_lib",
@@ -9396,6 +9479,7 @@ export const REGISTRY = frz({
                         "pulsers",
                         "shared_world",
                         "things",
+                        "tileKinds",
                         "tile_size",
                         "tiles",
                         "trapLib",

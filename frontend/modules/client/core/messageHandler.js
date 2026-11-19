@@ -42,7 +42,7 @@ import { applyReceivedItems, goalMet } from './goalCheck.js';
 import { readRoomSpoilerData } from './spoilerData.js';
 import { applyServerItemGroups, itemNameGroupsKey, readServerItemGroups } from './serverItemGroups.js';
 import { needsLogicGate, logicRefusal, refusalMessage, GAME_REPORTED_FIELD } from './checkGate.js';
-import { deriveUpstreamGoal, markGoalEvent, completesWithGoal } from './upstreamGoal.js';
+import { deriveUpstreamGoal, markGoalEvent, completesWithGoal, reportsOwnGoal } from './upstreamGoal.js';
 
 /** "gameKey/folder, …" for a few preset candidates (the console names them). */
 function describePresetFolders(presets, max = 3) {
@@ -453,8 +453,7 @@ export class MessageHandler {
       if (!otherPlayersName) {
         log('info', `[MessageHandler] Using game name from stateManager: ${loadedGame}`);
         this._warnOnSeedMismatch(data.seed_name);
-        this._sendConnect(loadedGame, { fromLoadedRules: true });
-        return;
+        return this._connectWithLoadedRules(loadedGame, data.seed_name, roomInfoSeq);
       }
       this._printToConsole(
         `The loaded rules are for ${otherPlayersName}, not ${this.clientSlotName}; looking for this slot's rules…`,
@@ -467,6 +466,40 @@ export class MessageHandler {
       );
     }
     return this._connectWithoutRules(data, roomGames, roomInfoSeq);
+  }
+
+  /**
+   * Connect with the rules already loaded. When they are this room's exact seed and their
+   * goal is one this client reports (_preparePresetGoal; ⚖ Robert 2026-11-19: any document
+   * with the exact seed), a marked copy is loaded first: the loaded document is unmarked,
+   * and its goal may already be auto-collected. Nothing is lost by the reload: Connected
+   * replaces the checked locations and the inventory anyway. A document that already is the
+   * goal record's (a same-seed reconnect) is kept as it is.
+   */
+  async _connectWithLoadedRules(game, roomSeedName, roomInfoSeq) {
+    const raw = getLastRawJsonData?.();
+    const doc = raw?.rawJsonData;
+    const player = raw?.selectedPlayerInfo?.playerId;
+    if (doc && player !== undefined && player !== null && this._upstreamGoal?.doc !== doc
+      && isSameSeed(doc.seed_name, roomSeedName) && doc.world?.[String(player)]?.game === game) {
+      this._upstreamGoal = null;
+      const copy = structuredClone(doc);
+      const goal = this._preparePresetGoal(copy, player, game, roomSeedName);
+      if (goal) {
+        const source = raw.source ?? `rules:${roomSeedName}:P${player}`;
+        const loaded = await this._loadRulesDocument(copy, player, source, raw.selectedPlayerInfo ?? undefined);
+        if (roomInfoSeq !== this._roomInfoSeq) return;
+        if (loaded) {
+          this._upstreamGoal = { goal, doc: copy, slot: String(player), seedName: String(roomSeedName) };
+        } else {
+          this._printToConsole(
+            `Could not reload the ${game} rules with their goal marked; this client won't tell the server when ${game} is finished.`,
+            'warning'
+          );
+        }
+      }
+    }
+    this._sendConnect(game, { fromLoadedRules: true });
   }
 
   /**
@@ -508,7 +541,7 @@ export class MessageHandler {
         `Found preset ${preset.gameKey}/${preset.folderName} for this room; loading it before connecting…`,
         'info'
       );
-      const loaded = await this._loadPresetRules(preset);
+      const loaded = await this._loadPresetRules(preset, { roomSeedName: roomInfo.seed_name });
       if (isStale()) return;
       if (loaded) {
         this._printToConsole(`Loaded ${preset.path} (player ${preset.playerId}).`, 'success');
@@ -785,7 +818,7 @@ export class MessageHandler {
    *
    * @returns {Promise<boolean>} true when stateManager:rulesLoaded arrived
    */
-  async _loadPresetRules(preset) {
+  async _loadPresetRules(preset, { roomSeedName = null } = {}) {
     let jsonData;
     try {
       const response = await fetch(preset.path);
@@ -795,7 +828,25 @@ export class MessageHandler {
       log('warn', `[MessageHandler] Could not fetch ${preset.path}: ${e.message}`);
       return false;
     }
-    return this._loadRulesDocument(jsonData, preset.playerId, preset.path);
+    this._upstreamGoal = null;
+    const goal = roomSeedName ? this._preparePresetGoal(jsonData, preset.playerId, preset.game, roomSeedName) : null;
+    const loaded = await this._loadRulesDocument(jsonData, preset.playerId, preset.path);
+    if (loaded && goal) {
+      this._upstreamGoal = { goal, doc: jsonData, slot: String(preset.playerId), seedName: String(roomSeedName) };
+    }
+    return loaded;
+  }
+
+  /**
+   * A committed preset matched to the room by its exact seed (sdc-preset-goal-report): the
+   * same goal as an add-on slot's (_prepareUpstreamGoal), derived and marked in `doc` (this
+   * fetch's own object) before it loads. Not for a world that reports its own goal
+   * (reportsOwnGoal), nor for a document of another seed. Returns the goal or null.
+   */
+  _preparePresetGoal(doc, player, game, roomSeedName) {
+    if (!isSameSeed(doc?.seed_name, roomSeedName)) return null;
+    if (reportsOwnGoal(doc, player)) return null;
+    return this._deriveAndMarkGoal(doc, player, game ?? doc?.world?.[String(player)]?.game ?? 'this game');
   }
 
   /**
@@ -1588,15 +1639,20 @@ export class MessageHandler {
   _prepareUpstreamGoal(build, connected, rules) {
     if (build.mode !== 'overlay' || build.overlaySource !== 'server') return null;
     if (build.overlayFrom !== UPSTREAM_RULES_ADDON_SOURCE) return null;
-    const slot = String(connected.slot);
-    const derived = deriveUpstreamGoal(rules, slot);
-    if (derived.goal && markGoalEvent(rules, slot, derived.goal)) {
-      log('info', `[MessageHandler] Add-on goal for slot ${slot}: "${derived.goal.location}" (${derived.goal.item}).`);
+    return this._deriveAndMarkGoal(rules, connected.slot, build.game);
+  }
+
+  /** Derive `slot`'s goal in `doc` and mark it `event_kind: 'goal'`; else one console line saying why not. */
+  _deriveAndMarkGoal(doc, slot, game) {
+    const p = String(slot);
+    const derived = deriveUpstreamGoal(doc, p);
+    if (derived.goal && markGoalEvent(doc, p, derived.goal)) {
+      log('info', `[MessageHandler] Goal reported by this client for slot ${p}: "${derived.goal.location}" (${derived.goal.item}).`);
       return derived.goal;
     }
     const why = derived.reason ?? 'its goal location was not found';
     this._printToConsole(
-      `This client won't tell the server when ${build.game} is finished (${why}). Its own game client reports the goal.`,
+      `This client won't tell the server when ${game} is finished (${why}). Its own game client reports the goal.`,
       'info'
     );
     return null;
