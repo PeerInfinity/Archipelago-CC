@@ -1,0 +1,56 @@
+spinner levels: L18x2 L39x3 L40x5 L92x1
+legs 922; in a spinner room 54; of those with the shield carried 50
+L39: 3
+  356	level_39__r0c9 <- in_L40_480_912 -> exit:out_teleporter_144_0
+  357	level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Totem Part 72,40
+  358	level_39__r25c9 <- in_L38_144_0 -> exit:out_teleporter_144_624
+L40: 46
+  359	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0
+  360	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96
+  361	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 7: wandlock@208,128 cleared
+  362	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0
+  363	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96
+  364	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 7: wandlock@208,128 cleared
+  365	level_40__r26c13 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+  366	level_40__r26c13 <- in_L39_144_0 -> exit:out_teleporter_480_912
+  367	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_20
+  368	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_20
+  369	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_13_20
+  370	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_14_20
+  371	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_21
+  372	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_21
+  373	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_13_21
+  374	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_14_21
+  375	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_22
+  376	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_22
+  377	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_23
+  378	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_23
+  379	level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+  380	level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest
+  381	level_40__r26c13 <- in_L43_176_464 -> exit:out_stairsdown_320_576
+  382	level_40__r26c13 <- in_L43_176_464 -> exit:out_teleporter_480_912
+  383	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_20
+  384	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_20
+  385	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_13_20
+  386	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_14_20
+  387	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_21
+  388	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_21
+  389	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_13_21
+  390	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_14_21
+  391	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_22
+  392	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_22
+  393	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_23
+  394	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_23
+  395	level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+  396	level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Chest
+  854	level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144
+  856	level_40__r4c4 <- in_L42_240_336 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144
+  860	level_40__r23c29 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 8: bosslock@480,352 cleared
+  861	level_40__r23c29 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 8: bosslock@480,352 cleared
+  862	level_40__r32c36 <- in_L39_144_0 ~> level_40__r26c13 -> location:Level 040 - Boss Key 2
+  863	level_40__r32c36 <- in_L43_176_464 ~> level_40__r26c13 -> location:Level 040 - Boss Key 2
+  864	level_40__r48c54 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+  865	level_40__r48c54 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+L92: 1
+  705	level_92__r4c2 <- in_L91_240_48 -> exit:out_teleporter_32_144
+in a spinner room WITHOUT the shield (the claim is not read): 4 — L18 L92
