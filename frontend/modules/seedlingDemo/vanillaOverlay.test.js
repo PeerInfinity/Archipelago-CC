@@ -21,13 +21,14 @@ import { describe, expect, it } from 'vitest';
 
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
-import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
+import { stampAtlasIdentity, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { freeEdgesOf } from '../procgenCore/setEditorCore.js';
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { TILE_SIZE } from './levelWorld.js';
 import { parseOelLevel } from './procgenLevelOel.js';
 import { tileOf } from './seedlingAtlasDerivation.js';
 import { emptyOverlay } from './seedlingSetOverlay.js';
+import { WATCH_SET_ATLAS, labSetIdentity } from './watchSetIdentity.js';
 import {
     createSeedlingSetAdapter, createSetSession, deriveAtlasOf, setRecord,
 } from './seedlingSetAdapter.js';
@@ -45,7 +46,8 @@ const DEPS = Object.freeze({
     tileSize: TILE_SIZE,
     tileTypeForPlacement,
     rulesSchema: loadRulesSchema(),
-    atlas: { game: 'seedling-watch-edit', mapDocument: 'watch.html set editor' },
+    // ⛓ the page's own `deps.atlas` (lab-set-seedling-identity), read, not copied
+    atlas: WATCH_SET_ATLAS,
 });
 
 /** ⛓ ONE lift for the whole file — it parses the 116-room map extract. */
@@ -504,7 +506,11 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
         const session = createSetSession(
             createSeedlingSetAdapter(DEPS), setRecord(LIFT.set, overlay),
             { base: { kind: 'set', set_id: LIFT.set.set_id } });
-        return reportOf(session, DEPS, { compileRegionAtlas, validateRegionAtlas });
+        // ⛓ …and the page's own compile: a `seedling-lab-` stamped copy, no `flash_panel`.
+        return reportOf(session, DEPS, {
+            compileRegionAtlas: labSetIdentity({ compileRegionAtlas, stampAtlasIdentity }).compileRegionAtlas,
+            validateRegionAtlas,
+        });
     };
 
     // ⛓ RULES (B): 332 -> 330 — the LavaBoss arena's two doors (L82 out, L96 in) lift as rules too.

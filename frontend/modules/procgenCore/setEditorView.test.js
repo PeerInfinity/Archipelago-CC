@@ -52,7 +52,7 @@ import {
 import { mountWatchSetEditor } from '../seedlingDemo/watchSetEditor.js';
 import { SET_CHANGE_WHY, mountSetEditor } from './setEditorView.js';
 import { exitArrowShapes } from './setEditorCore.js';
-import { BUNDLE_KINDS } from '../presets/documentBundle.js';
+import { BUNDLE_KINDS, readBundle } from '../presets/documentBundle.js';
 import { loadJSZipNode } from '../../../scripts/procgen/loadJSZipNode.mjs';
 import {
     createMazeSetAdapter, createSetSession as createMazeSetSession,
@@ -1570,7 +1570,7 @@ const mazeBindings = (rulesSchema, blankSize = null) => mazeSetBindings({ rulesS
 
 const mazeHarness = ({
     overlay = emptyMazeOverlay(), loadZip = null, extraMember = null, blankSize = null,
-    apworldEditor = null,
+    apworldEditor = null, atlasAtDoor = undefined,
 } = {}) => {
     for (const k of [...READOUT_NAMES, ...PRESS_COUNTERS]) delete globalThis[k];
     const adapter = createMazeSetAdapter({ rulesSchema: DEPS.rulesSchema });
@@ -1590,6 +1590,7 @@ const mazeHarness = ({
         validateRegionAtlas,
         atlasSchema: ATLAS_SCHEMA,
         apworldEditor,
+        ...(atlasAtDoor ? { atlasAtDoor } : {}),
         ...(() => {
             const b = mazeBindings(DEPS.rulesSchema, blankSize);
             if (!extraMember) return b;
@@ -2071,6 +2072,47 @@ describe('⛓⛓⛓ EDITOR v3 E2b — the SAME mount, bound to `mazeSetAdapter`,
         expect(h.session.ops()).toEqual([{
             op: 'mark-location', room: 0, item: 1, name: 'the hub chest', vanilla_item: 'Coin',
         }]);
+    });
+
+    /**
+     * ⛓⛓ lab-set-seedling-identity — **`atlasAtDoor`: THE BUNDLE'S ATLAS MEMBER IS THE
+     * HOOK'S ANSWER, ASKED WITH THE REPORT'S ATLAS AND RULES.** The Seedling watch page
+     * passes its stamped copy here (`seedlingDemo/watchSetIdentity.js`); a mount that
+     * passes nothing keeps the identity (the row above, unchanged, is that half).
+     */
+    it('`atlasAtDoor` is asked with the REPORT\'s atlas and rules, and its answer is the member', async () => {
+        const calls = [];
+        const h = mazeHarness({
+            loadZip: async () => loadJSZipNode(),
+            atlasAtDoor: (atlas, rules) => {
+                calls.push({ atlas, rules });
+                return { ...structuredClone(atlas), description: 'the door\'s copy' };
+            },
+        });
+        connectAll(h, RING);
+        const rep = h.ui.runReport();
+        await pressDownload(h, 'editDownloadBundle',
+            '__editorSetBundlePresses', '__editorSetBundleKinds');
+        expect(calls).toHaveLength(1);
+        expect(calls[0].atlas).toBe(rep.atlas);
+        expect(calls[0].rules).toBe(rep.rules);
+        expect(globalThis.__editorSetBundleKinds)
+            .toEqual(['region-library', 'overlay', 'rules', 'region-atlas']);
+        const back = await readBundle(globalThis.__editorSetBundleOut, { jszip: loadJSZipNode() });
+        expect(back.members.find((m) => m.kind === 'region-atlas').doc.description).toBe('the door\'s copy');
+        expect(rep.atlas.description).not.toBe('the door\'s copy');
+    });
+    it('…and a hook that THROWS refuses the bundle by name, writing nothing', async () => {
+        const h = mazeHarness({
+            loadZip: async () => loadJSZipNode(),
+            atlasAtDoor: () => { throw new Error('no compile on this page made that atlas'); },
+        });
+        connectAll(h, RING);
+        h.ui.runReport();
+        const before = h.downloads.length;
+        await pressDownload(h, 'editDownloadBundle', '__editorSetBundlePresses', null);
+        expect(textOf(h, 'editSetNote')).toBe('⛔ NOT BUNDLED — no compile on this page made that atlas');
+        expect(h.downloads.length).toBe(before);
     });
 });
 

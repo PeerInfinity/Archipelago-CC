@@ -973,14 +973,52 @@ async function buildCustomSeedlingSet() {
   const deps = {
     parseOel: parseOelLevel, tileSize: SEEDLING_TILE_SIZE, tileTypeForPlacement, rulesSchema,
     // ⛔ `game: 'seedling'` (→ `flash_seedling`, the registered substrate): the derivation's default and the maze set
-    // lab's `SEEDLING_ATLAS_GAME`. The watch page's `'seedling-watch-edit'` slugs to `flash_seedling_watch_edit`, which no
-    // substrate registers, so no Seedling hook runs for it (CC/docs/region-map/atlas-cache.md § Residue).
+    // lab's `SEEDLING_ATLAS_GAME`, which the watch page also uses since lab-set-seedling-identity (it said
+    // `'seedling-watch-edit'` before, a substrate no hook ran for; CC/docs/region-map/atlas-cache.md § Residue).
     atlas: { game: 'seedling', mapDocument: 'custom-set.json' },
   };
   const record = SA.setRecord(editorVanillaSet(vanillaSet, mapDoc).set, overlay);
   const session = SA.createSetSession(SA.createSeedlingSetAdapter(deps), record, { base: { kind: 'set', set_id: record.set.set_id } });
   const { rules, atlas } = SA.rulesJsonOf(session, deps, { compileRegionAtlas });
   return { rules, atlas };
+}
+
+/**
+ * lab-set-seedling-identity: the bundle the WATCH PAGE's set editor writes, built through the page's own modules: its set
+ * deps (`watchSetIdentity.WATCH_SET_ATLAS`, game `seedling`), the mount's REPORT (`watchSetEditor.reportOf`) with the
+ * page's compile (`labSetIdentity`: a `seedling-lab-<8 hex>` stamped copy, no `flash_panel`), and the bundle door's atlas
+ * member (`atlasAtDoor`). The page's real press is driven, byte for byte, by `check-seedling-editor-arm.mjs`; this row
+ * asks what the APP does with those documents. Same rooms + overlay as `buildCustomSeedlingSet`.
+ */
+async function buildWatchPageBundle() {
+  const [{ tileTypeForPlacement, SEEDLING_TILE_SIZE }, { compileRegionAtlas }, { stampAtlasIdentity, validateRegionAtlas }, { parseOelLevel }, SA, { editorVanillaSet, reportOf }, ID] = await Promise.all([
+    import(appUrl('./modules/flashPanel/seedlingSemantics.js')),
+    import(appUrl('./modules/procgenPipeline/regionAtlasCompiler.js')),
+    import(appUrl('./modules/procgenPipeline/regionAtlasValidator.js')),
+    import(appUrl('./modules/seedlingDemo/procgenLevelOel.js')),
+    import(appUrl('./modules/seedlingDemo/seedlingSetAdapter.js')),
+    import(appUrl('./modules/seedlingDemo/watchSetEditor.js')),
+    import(appUrl('./modules/seedlingDemo/watchSetIdentity.js')),
+  ]);
+  const [vanillaSet, mapDoc, overlay, rulesSchema, served] = await Promise.all([
+    fetchJson('./modules/seedlingDemo/fixtures/seedling-vanilla-set.json'),
+    fetchJson('./modules/flashPanel/atlases/seedling-map.json'),
+    fetchJson('./modules/seedlingDemo/fixtures/seedling-vanilla-overlay.json'),
+    fetchJson('./schema/rules.schema.json'),
+    fetchJson('./modules/flashPanel/atlases/atlas_files.json'),
+  ]);
+  const deps = { parseOel: parseOelLevel, tileSize: SEEDLING_TILE_SIZE, tileTypeForPlacement, rulesSchema, atlas: ID.WATCH_SET_ATLAS };
+  const lab = ID.labSetIdentity({ compileRegionAtlas, stampAtlasIdentity });
+  const record = SA.setRecord(editorVanillaSet(vanillaSet, mapDoc).set, overlay);
+  const session = SA.createSetSession(SA.createSeedlingSetAdapter(deps), record, { base: { kind: 'set', set_id: record.set.set_id } });
+  const rep = reportOf(session, deps, { compileRegionAtlas: lab.compileRegionAtlas, validateRegionAtlas });
+  if (!rep.download.rules.allowed) throw new Error(`the watch page's report refused the export: ${rep.download.rules.why}`);
+  return {
+    rules: rep.rules,
+    atlas: lab.atlasAtDoor(rep.atlas, rep.rules),
+    base: ID.LAB_SET_ATLAS_BASE,
+    servedIds: new Set((served.atlases ?? []).map((a) => a.atlas_id)),
+  };
 }
 
 /** Raise the Presets panel and hand back its live instance (its file door is `loadDocumentFile`). */
@@ -992,23 +1030,29 @@ async function presetsPanel(testController) {
   }, 'the Presets panel is live', WAIT, 50);
 }
 
-export async function testRegionMapCustomSetAtlas(testController) {
+/**
+ * The body both custom-set rows share: build `{rules, atlas}`, load them as a bundle through the Presets panel's file
+ * door, and measure the Region Map. `extra(testController, built, id)` adds a row's own conditions before the load.
+ */
+async function runCustomSetBundleRow(testController, build, { fileName, extra = null } = {}) {
   let s = null;
   try {
     s = await setUp(testController, SEEDLING);
     if (!s.ready) return testController.getOverallResult();
     atlasCache.clear();
     const t0 = performance.now();
-    const { rules, atlas } = await buildCustomSeedlingSet();
+    const built = await build();
+    const { rules, atlas } = built;
     const id = rules.region_atlas?.['1']?.atlas_id;
     testController.reportCondition(`the custom set compiled (${Object.keys(rules.regions?.['1'] ?? {}).length} regions, ${Math.round(performance.now() - t0)} ms) and its rules name its derived atlas (${id})`,
       typeof id === 'string' && id === atlas.atlas_id);
+    if (extra) extra(testController, built, id);
     const presets = await presetsPanel(testController);
     testController.reportCondition('the Presets panel is live', !!presets);
     if (!presets) return testController.getOverallResult();
     const bytes = await writeBundle([{ kind: 'rules', doc: rules }, { kind: 'region-atlas', doc: atlas }], { jszip: await presets.loadJSZip() });
     // ⛓ THE HOST ENTRY PATH: the same call a file pick makes (`#json-file-input` → `loadDocumentFile`).
-    await presets.loadDocumentFile(new File([bytes], 'custom-seedling-set.zip', { type: 'application/zip' }));
+    await presets.loadDocumentFile(new File([bytes], fileName, { type: 'application/zip' }));
     testController.reportCondition(`the bundle's region atlas is in the host cache under ${id}`, atlasCache.get(id)?.atlas_id === id);
     testController.eventBus.publish('ui:activatePanel', { panelId: COMPONENT }, 'tests');
     const want = Object.values(rules.regions['1']).reduce((n, r) => n + (r.locations?.length ?? 0), 0);
@@ -1039,6 +1083,30 @@ export async function testRegionMapCustomSetAtlas(testController) {
     if (s) await tearDown(testController, s, { restoreWorld: true });
   }
   return testController.getOverallResult();
+}
+
+export async function testRegionMapCustomSetAtlas(testController) {
+  return runCustomSetBundleRow(testController, buildCustomSeedlingSet, { fileName: 'custom-seedling-set.zip' });
+}
+
+/**
+ * lab-set-seedling-identity: the WATCH PAGE's bundle. Before the Region Map half (shared above), the documents
+ * themselves: every room is `flash_seedling`, there is no `flash_panel` block, and the atlas id is the lab's own
+ * `seedling-lab-<8 hex>` fingerprint, which the served atlas index does not hold.
+ */
+export async function testRegionMapWatchSetBundle(testController) {
+  return runCustomSetBundleRow(testController, buildWatchPageBundle, {
+    fileName: 'watch-page-set.zip',
+    extra: (tc, { rules, base, servedIds }, id) => {
+      const rows = Object.values(rules.preset_sidecars?.['1'] ?? {});
+      const subs = [...new Set(rows.map((r) => r.substrate))];
+      tc.reportCondition(`every room of the watch page's set is a Seedling room (${rows.length} rooms, substrates ${JSON.stringify(subs)})`,
+        rows.length > 0 && subs.length === 1 && subs[0] === 'flash_seedling');
+      tc.reportCondition(`the rules carry no flash_panel block (${'flash_panel' in rules ? 'present' : 'absent'})`, !('flash_panel' in rules));
+      tc.reportCondition(`the atlas id is the lab's own fingerprint and is not served (${id})`,
+        new RegExp(`^${base}-[0-9a-f]{8}$`).test(id ?? '') && !servedIds.has(id));
+    },
+  });
 }
 
 registerTest({
@@ -1136,4 +1204,12 @@ registerTest({
   testFunction: testRegionMapCustomSetAtlas,
   enabled: false,
   description: 'region-map atlas-cache: a custom set loaded as a bundle through the Presets panel\'s file door puts its derived atlas in the host cache; the panel then shows real extents, N/N squares on their tiles, and its warps',
+});
+registerTest({
+  id: 'region-map-watch-set-bundle',
+  name: 'Region Map: the Seedling watch page\'s set bundle is a Seedling world',
+  category: 'Region Map: Seedling',
+  testFunction: testRegionMapWatchSetBundle,
+  enabled: false,
+  description: 'lab-set-seedling-identity: the bundle the watch page\'s set editor writes (its own deps, report compile and atlas door) is Seedling rooms, no flash_panel, a seedling-lab fingerprint that is not served; loaded through the Presets panel\'s file door, the panel shows real extents, N/N squares on their tiles, and its warps',
 });
