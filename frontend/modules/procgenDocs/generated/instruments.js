@@ -119,7 +119,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 8,
+            "count": 9,
             "id": "measure"
         },
         {
@@ -259,13 +259,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 538,
+        "blockStyle": 539,
         "browser": 228,
         "cited": 296,
-        "files": 560,
+        "files": 561,
         "lineStyle": 22,
-        "withDocblock": 560,
-        "withFlags": 477
+        "withDocblock": 561,
+        "withFlags": 478
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8330,6 +8330,102 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "measure-seedling-escape-kernel — ⛓ SEEDLING HAMMER-PHASE A D2: what `spaceTimeReach` costs on L18.",
             "path": "scripts/procgen/measure-seedling-escape-kernel.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "measure",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget",
+                "dump-requests",
+                "jobs",
+                "out",
+                "request",
+                "route",
+                "steps",
+                "views"
+            ],
+            "file": "measure-seedling-hard-refusal-retry.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump-requests"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "goal"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "jobs"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "request"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "route"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "step"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "steps"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "views"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "work-sites"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Measure-only — DOES A HARD REFUSAL AT THE PAGE'S WORK BUDGET SOLVE AT THE HELD RETRY'S BUDGET? (slice `seedling-hammer-retry-rate`).",
+            "path": "scripts/procgen/measure-seedling-hard-refusal-retry.mjs"
         },
         {
             "argvHelpers": [
