@@ -1,0 +1,597 @@
+{
+ "probe": "probe-seedling-calib-levels",
+ "headSha": "e6ca7f2e5a4f8ea857b8fecd353a98dd7970a38a",
+ "limitMs": 900000,
+ "wallS": 910.092,
+ "rc": 0,
+ "nproc": 4,
+ "levels": [
+  {
+   "level": "level_0",
+   "ms": 18934,
+   "status": "passed"
+  },
+  {
+   "level": "level_1",
+   "ms": 25,
+   "status": "passed"
+  },
+  {
+   "level": "level_2",
+   "ms": 26,
+   "status": "passed"
+  },
+  {
+   "level": "level_3",
+   "ms": 944,
+   "status": "passed"
+  },
+  {
+   "level": "level_4",
+   "ms": 41,
+   "status": "passed"
+  },
+  {
+   "level": "level_5",
+   "ms": 60,
+   "status": "passed"
+  },
+  {
+   "level": "level_6",
+   "ms": 30,
+   "status": "passed"
+  },
+  {
+   "level": "level_7",
+   "ms": 26,
+   "status": "passed"
+  },
+  {
+   "level": "level_8",
+   "ms": 1660,
+   "status": "passed"
+  },
+  {
+   "level": "level_9",
+   "ms": 22,
+   "status": "passed"
+  },
+  {
+   "level": "level_10",
+   "ms": 25,
+   "status": "passed"
+  },
+  {
+   "level": "level_11",
+   "ms": 20,
+   "status": "passed"
+  },
+  {
+   "level": "level_12",
+   "ms": 67717,
+   "status": "passed"
+  },
+  {
+   "level": "level_13",
+   "ms": 30,
+   "status": "passed"
+  },
+  {
+   "level": "level_14",
+   "ms": 28,
+   "status": "passed"
+  },
+  {
+   "level": "level_15",
+   "ms": 5320,
+   "status": "passed"
+  },
+  {
+   "level": "level_16",
+   "ms": 247202,
+   "status": "passed"
+  },
+  {
+   "level": "level_17",
+   "ms": 29,
+   "status": "passed"
+  },
+  {
+   "level": "level_18",
+   "ms": 106,
+   "status": "passed"
+  },
+  {
+   "level": "level_19",
+   "ms": 93,
+   "status": "passed"
+  },
+  {
+   "level": "level_20",
+   "ms": 209,
+   "status": "passed"
+  },
+  {
+   "level": "level_21",
+   "ms": 29,
+   "status": "passed"
+  },
+  {
+   "level": "level_22",
+   "ms": 1961,
+   "status": "passed"
+  },
+  {
+   "level": "level_23",
+   "ms": 22,
+   "status": "passed"
+  },
+  {
+   "level": "level_24",
+   "ms": 33,
+   "status": "passed"
+  },
+  {
+   "level": "level_25",
+   "ms": 85,
+   "status": "passed"
+  },
+  {
+   "level": "level_26",
+   "ms": 111,
+   "status": "passed"
+  },
+  {
+   "level": "level_27",
+   "ms": 19,
+   "status": "passed"
+  },
+  {
+   "level": "level_28",
+   "ms": 315,
+   "status": "passed"
+  },
+  {
+   "level": "level_29",
+   "ms": 69,
+   "status": "passed"
+  },
+  {
+   "level": "level_30",
+   "ms": 7753,
+   "status": "passed"
+  },
+  {
+   "level": "level_31",
+   "ms": 73,
+   "status": "passed"
+  },
+  {
+   "level": "level_32",
+   "ms": 33,
+   "status": "passed"
+  },
+  {
+   "level": "level_33",
+   "ms": 21,
+   "status": "passed"
+  },
+  {
+   "level": "level_34",
+   "ms": 34,
+   "status": "passed"
+  },
+  {
+   "level": "level_35",
+   "ms": 20,
+   "status": "passed"
+  },
+  {
+   "level": "level_36",
+   "ms": 25,
+   "status": "passed"
+  },
+  {
+   "level": "level_37",
+   "ms": 528,
+   "status": "passed"
+  },
+  {
+   "level": "level_38",
+   "ms": 66,
+   "status": "passed"
+  },
+  {
+   "level": "level_39",
+   "ms": 609,
+   "status": "passed"
+  },
+  {
+   "level": "level_40",
+   "ms": 428285,
+   "status": "passed"
+  },
+  {
+   "level": "level_41",
+   "ms": 1193,
+   "status": "passed"
+  },
+  {
+   "level": "level_42",
+   "ms": 28,
+   "status": "passed"
+  },
+  {
+   "level": "level_43",
+   "ms": 486,
+   "status": "passed"
+  },
+  {
+   "level": "level_44",
+   "ms": 71,
+   "status": "passed"
+  },
+  {
+   "level": "level_45",
+   "ms": 246,
+   "status": "passed"
+  },
+  {
+   "level": "level_46",
+   "ms": 715,
+   "status": "passed"
+  },
+  {
+   "level": "level_47",
+   "ms": 3566,
+   "status": "passed"
+  },
+  {
+   "level": "level_48",
+   "ms": 382,
+   "status": "passed"
+  },
+  {
+   "level": "level_49",
+   "ms": 23,
+   "status": "passed"
+  },
+  {
+   "level": "level_50",
+   "ms": 29,
+   "status": "passed"
+  },
+  {
+   "level": "level_51",
+   "ms": 200,
+   "status": "passed"
+  },
+  {
+   "level": "level_52",
+   "ms": 80,
+   "status": "passed"
+  },
+  {
+   "level": "level_53",
+   "ms": 1852,
+   "status": "passed"
+  },
+  {
+   "level": "level_54",
+   "ms": 544,
+   "status": "passed"
+  },
+  {
+   "level": "level_55",
+   "ms": 19,
+   "status": "passed"
+  },
+  {
+   "level": "level_56",
+   "ms": 28,
+   "status": "passed"
+  },
+  {
+   "level": "level_57",
+   "ms": 74,
+   "status": "passed"
+  },
+  {
+   "level": "level_58",
+   "ms": 127,
+   "status": "passed"
+  },
+  {
+   "level": "level_59",
+   "ms": 34,
+   "status": "passed"
+  },
+  {
+   "level": "level_60",
+   "ms": 107,
+   "status": "passed"
+  },
+  {
+   "level": "level_61",
+   "ms": 76,
+   "status": "passed"
+  },
+  {
+   "level": "level_62",
+   "ms": 63,
+   "status": "passed"
+  },
+  {
+   "level": "level_63",
+   "ms": 90659,
+   "status": "passed"
+  },
+  {
+   "level": "level_64",
+   "ms": 21,
+   "status": "passed"
+  },
+  {
+   "level": "level_65",
+   "ms": 1276,
+   "status": "passed"
+  },
+  {
+   "level": "level_66",
+   "ms": 37,
+   "status": "passed"
+  },
+  {
+   "level": "level_67",
+   "ms": 78,
+   "status": "passed"
+  },
+  {
+   "level": "level_68",
+   "ms": 44,
+   "status": "passed"
+  },
+  {
+   "level": "level_69",
+   "ms": 33,
+   "status": "passed"
+  },
+  {
+   "level": "level_70",
+   "ms": 22,
+   "status": "passed"
+  },
+  {
+   "level": "level_71",
+   "ms": 2336,
+   "status": "passed"
+  },
+  {
+   "level": "level_72",
+   "ms": 28,
+   "status": "passed"
+  },
+  {
+   "level": "level_73",
+   "ms": 117,
+   "status": "passed"
+  },
+  {
+   "level": "level_74",
+   "ms": 25,
+   "status": "passed"
+  },
+  {
+   "level": "level_75",
+   "ms": 21,
+   "status": "passed"
+  },
+  {
+   "level": "level_76",
+   "ms": 27,
+   "status": "passed"
+  },
+  {
+   "level": "level_77",
+   "ms": 151,
+   "status": "passed"
+  },
+  {
+   "level": "level_78",
+   "ms": 297,
+   "status": "passed"
+  },
+  {
+   "level": "level_79",
+   "ms": 63,
+   "status": "passed"
+  },
+  {
+   "level": "level_80",
+   "ms": 200,
+   "status": "passed"
+  },
+  {
+   "level": "level_82",
+   "ms": 85,
+   "status": "passed"
+  },
+  {
+   "level": "level_83",
+   "ms": 38,
+   "status": "passed"
+  },
+  {
+   "level": "level_84",
+   "ms": 26,
+   "status": "passed"
+  },
+  {
+   "level": "level_85",
+   "ms": 25,
+   "status": "passed"
+  },
+  {
+   "level": "level_86",
+   "ms": 20,
+   "status": "passed"
+  },
+  {
+   "level": "level_87",
+   "ms": 225,
+   "status": "passed"
+  },
+  {
+   "level": "level_88",
+   "ms": 42,
+   "status": "passed"
+  },
+  {
+   "level": "level_89",
+   "ms": 216,
+   "status": "passed"
+  },
+  {
+   "level": "level_90",
+   "ms": 24,
+   "status": "passed"
+  },
+  {
+   "level": "level_91",
+   "ms": 34,
+   "status": "passed"
+  },
+  {
+   "level": "level_92",
+   "ms": 571,
+   "status": "passed"
+  },
+  {
+   "level": "level_93",
+   "ms": 68,
+   "status": "passed"
+  },
+  {
+   "level": "level_94",
+   "ms": 49,
+   "status": "passed"
+  },
+  {
+   "level": "level_95",
+   "ms": 27,
+   "status": "passed"
+  },
+  {
+   "level": "level_96",
+   "ms": 21,
+   "status": "passed"
+  },
+  {
+   "level": "level_97",
+   "ms": 21,
+   "status": "passed"
+  },
+  {
+   "level": "level_98",
+   "ms": 93,
+   "status": "passed"
+  },
+  {
+   "level": "level_99",
+   "ms": 60,
+   "status": "passed"
+  },
+  {
+   "level": "level_100",
+   "ms": 70,
+   "status": "passed"
+  },
+  {
+   "level": "level_101",
+   "ms": 1545,
+   "status": "passed"
+  },
+  {
+   "level": "level_102",
+   "ms": 53,
+   "status": "passed"
+  },
+  {
+   "level": "level_103",
+   "ms": 37,
+   "status": "passed"
+  },
+  {
+   "level": "level_104",
+   "ms": 21,
+   "status": "passed"
+  },
+  {
+   "level": "level_105",
+   "ms": 22,
+   "status": "passed"
+  },
+  {
+   "level": "level_106",
+   "ms": 26,
+   "status": "passed"
+  },
+  {
+   "level": "level_107",
+   "ms": 24,
+   "status": "passed"
+  },
+  {
+   "level": "level_108",
+   "ms": 43,
+   "status": "passed"
+  },
+  {
+   "level": "level_109",
+   "ms": 23,
+   "status": "passed"
+  },
+  {
+   "level": "level_110",
+   "ms": 27,
+   "status": "passed"
+  },
+  {
+   "level": "level_111",
+   "ms": 33,
+   "status": "passed"
+  },
+  {
+   "level": "level_112",
+   "ms": 151,
+   "status": "passed"
+  },
+  {
+   "level": "level_113",
+   "ms": 1199,
+   "status": "passed"
+  },
+  {
+   "level": "level_114",
+   "ms": 22,
+   "status": "passed"
+  },
+  {
+   "level": "level_115",
+   "ms": 198,
+   "status": "passed"
+  }
+ ],
+ "others": [
+  {
+   "title": "the levels partition the preset's regions: each region in exactly one level",
+   "ms": 2,
+   "status": "passed"
+  },
+  {
+   "title": "whole verdict: every level ran, and the problems over all levels are exactly the named OPEN rows",
+   "ms": 1,
+   "status": "passed"
+  }
+ ]
+}

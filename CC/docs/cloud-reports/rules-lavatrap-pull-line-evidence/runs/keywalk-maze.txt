@@ -1,0 +1,52 @@
+17 difference(s)
+/preset_sidecars/1/level_77__r2c0/playable_payload/pulls/0/from
+  - "len 10"
+  + "len 9"
+/preset_sidecars/1/level_77__r2c0/playable_payload/pulls/0/from/0/x
+  - 6
+  + 7
+/preset_sidecars/1/level_77__r2c0/playable_payload/pulls/0/from/0/y
+  - 10
+  + 11
+/preset_sidecars/1/level_77__r2c0/playable_payload/pulls/0/from/1/x
+  - 7
+  + 4
+/preset_sidecars/1/level_77__r2c0/playable_payload/pulls/0/from/1/y
+  - 11
+  + 12
+/preset_sidecars/1/level_77__r2c0/playable_payload/pulls/0/from/2/x
+  - 4
+  + 5
+/preset_sidecars/1/level_77__r2c0/playable_payload/pulls/0/from/3/x
+  - 5
+  + 7
+/preset_sidecars/1/level_77__r2c0/playable_payload/pulls/0/from/4/x
+  - 7
+  + 8
+/preset_sidecars/1/level_77__r2c0/playable_payload/pulls/0/from/5/x
+  - 8
+  + 5
+/preset_sidecars/1/level_77__r2c0/playable_payload/pulls/0/from/5/y
+  - 12
+  + 13
+/preset_sidecars/1/level_77__r2c0/playable_payload/pulls/0/from/6/x
+  - 5
+  + 6
+/preset_sidecars/1/level_77__r2c0/playable_payload/pulls/0/from/7/x
+  - 6
+  + 7
+/preset_sidecars/1/level_77__r2c0/playable_payload/pulls/0/from/8/x
+  - 7
+  + 6
+/preset_sidecars/1/level_77__r2c0/playable_payload/pulls/0/from/8/y
+  - 13
+  + 14
+/preset_sidecars/1/level_78__r0c2/playable_payload/pulls/2/from
+  - "len 9"
+  + "len 7"
+/preset_sidecars/1/level_78__r0c2/playable_payload/pulls/2/from/6/x
+  - 11
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/pulls/2/from/6/y
+  - 6
+  + 7

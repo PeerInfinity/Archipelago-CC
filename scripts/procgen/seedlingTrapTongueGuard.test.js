@@ -75,7 +75,8 @@ function synth(rows, { tag = 'lavatrap' } = {}) {
     }));
     const grid = { width, height, cells, origin: { x: 0, y: 0 } };
     const level = { level: 0, width, height, entities: traps.map(([x, y]) => ({ type: 'lavatrap', x: x * 16, y: y * 16 })) };
-    const pulls = lavaTrapPulls(level, 16).map((p) => ({ ...p, tag }));
+    // the disc takes the launch line once (`OV.pullLineClear`), with the walls standing for "Solid": T reads it as given
+    const pulls = lavaTrapPulls(level, 16, { solid: (x, y) => rows[y]?.[x] === '#' }).map((p) => ({ ...p, tag }));
     const hb = ENEMY_CLASSES.lavatrap.hitbox;
     const room = {
         widthPx: width * 16,
