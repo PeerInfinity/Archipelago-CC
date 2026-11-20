@@ -85,6 +85,15 @@ const fail = (message) => { throw new SetEditorViewError(message); };
 
 /** E3: one zoom step of the map (keys `+`/`-`, the buttons, Ctrl+wheel). */
 const MAP_ZOOM_STEP = 1.25;
+/**
+ * ⛓ (lab-stale-handover) what the REPORT note and a door's title say once the set changed after REPORT — exported so a
+ * check can read the sentence instead of copying it.
+ */
+export const STALE_REPORT_NOTE = '⚠ the set changed since this REPORT — the rows above describe the EARLIER set. '
+    + 'A door (rules.json, the bundle, Open in APWorld Editor) runs REPORT again on the current set first; '
+    + 'or press REPORT.';
+export const STALE_DOOR_TITLE = 'the set changed since the last REPORT — pressing this runs REPORT again on the '
+    + 'current set first';
 
 /**
  * ⛓ `reportOver`'s own discipline (`setEditorCore.js:54`): a reader that was
@@ -318,12 +327,18 @@ export function mountSetEditor({
         const here = Boolean(apworldEditor) && apworldEditor.available() === true;
         btn.hidden = !here;
         if (!here) return;
-        const allowed = lastReport ? lastReport.download.rules.allowed : false;
+        /**
+         * ⛓ (lab-stale-handover) a STALE report (the set changed since it ran) leaves the door OPEN: the press runs
+         * REPORT again on the current set first, and refuses by name if that one does not compile.
+         */
+        const stale = reportState() === 'stale';
+        const allowed = stale || (lastReport ? lastReport.download.rules.allowed : false);
         btn.disabled = !allowed;
-        btn.title = allowed
-            ? 'compile this document and open it in the APWorld Editor panel'
-            : (lastReport?.download.rules.why
-                ?? 'press REPORT first — the APWorld Editor opens the COMPILED document');
+        btn.title = stale ? STALE_DOOR_TITLE
+            : allowed
+                ? 'compile this document and open it in the APWorld Editor panel'
+                : (lastReport?.download.rules.why
+                    ?? 'press REPORT first — the APWorld Editor opens the COMPILED document');
     };
 
     /**
@@ -1654,9 +1669,30 @@ export function mountSetEditor({
     /* ── THE REPORT ────────────────────────────────────────────────── */
 
     let lastReport = null;
+    /**
+     * ⛓⛓⛓ (lab-stale-handover; ⚖ Robert 2026-11-20, *"Fix stale hand-over"*) **THE RECORD THE LAST REPORT RAN OVER**,
+     * and the rule every door reads it by. Every op is copy-on-write, so ANY change to the set — an edit, a CLOSE, an
+     * undo, a paste, another set loaded into this session — makes `record()` a different object: the SAME signal the
+     * unreachable marks' stale rule (`reportMarks.record`) already reads, not a parallel one.
+     *
+     * ⛔ THE DEFECT IT CURES: the three doors (rules.json, Open in APWorld Editor, the bundle) read
+     * `lastReport ?? runReport()` and nothing invalidated `lastReport`, so REPORT → edit → a door handed over the OLD
+     * rules and atlas (old rooms; for the Seedling lab the old `seedling-lab-<hash>` fingerprint). MEASURED in node on
+     * both labs: all three doors' documents were the pre-edit report's byte for byte.
+     *
+     * ⛓ THE CURE IS "ALWAYS THE CURRENT SET" (option (a)), not "refuse until REPORT is re-run": a door already runs
+     * REPORT at the click when there is none, so a stale report is treated exactly as no report. ⛔ With NO change
+     * since REPORT `currentReport()` IS `lastReport` and every door's output is what it was.
+     */
+    let reportRecord = null;
+    /** `'none'` (REPORT has not run) · `'current'` (it ran over the set as it is now) · `'stale'` (the set changed since). */
+    const reportState = () => (lastReport === null ? 'none' : reportRecord === record() ? 'current' : 'stale');
+    /** The last REPORT while it is still about the current set, else `null` — what a door reads before running one. */
+    const currentReport = () => (reportState() === 'current' ? lastReport : null);
 
     const runReport = () => {
         const box = $('editSetReportOut');
+        reportRecord = record();
         lastReport = reportOver({
             session,
             deps,
@@ -1704,20 +1740,35 @@ export function mountSetEditor({
             }
             box.appendChild(list);
         }
+        paintReportState();
+        return lastReport;
+    };
+
+    /**
+     * ⛓⛓ (lab-stale-handover) **THE REPORT NOTE AND THE rules.json BUTTON SAY WHICH SET THEY ARE ABOUT.** Current: the
+     * report's own verdict, exactly as `runReport` always wrote it. Stale: the rows stay (they are what the reader
+     * saw) and the note says they describe the EARLIER set and that a door runs REPORT again first; the rules button
+     * is enabled with that sentence as its title, because pressing it no longer hands over the old document. Painted
+     * by `runReport` and by every `render()`, so an undo back to the reported record reads "current" again.
+     * ⛔ Before the first REPORT nothing here is touched — the opening view is what it was.
+     */
+    function paintReportState() {
+        if (lastReport === null) return;
+        const stale = reportState() === 'stale';
         const btn = $('editDownloadRules');
         if (btn) {
-            btn.disabled = !lastReport.download.rules.allowed;
-            btn.title = lastReport.download.rules.why ?? 'write rules.json';
+            btn.disabled = !stale && !lastReport.download.rules.allowed;
+            btn.title = stale ? STALE_DOOR_TITLE : (lastReport.download.rules.why ?? 'write rules.json');
         }
         paintApworldButton();
         const why = $('editSetReportNote');
         if (why) {
-            why.textContent = lastReport.download.rules.why
-                ?? '⛓ the graph closes and the set validates — rules.json may be exported.';
-            why.className = lastReport.download.rules.allowed ? 'note' : 'note bad';
+            why.textContent = stale ? STALE_REPORT_NOTE
+                : (lastReport.download.rules.why
+                    ?? '⛓ the graph closes and the set validates — rules.json may be exported.');
+            why.className = stale || !lastReport.download.rules.allowed ? 'note bad' : 'note';
         }
-        return lastReport;
-    };
+    }
 
     /* ── THE IDENTITY LINE ─────────────────────────────────────────── */
 
@@ -1804,6 +1855,7 @@ export function mountSetEditor({
         renderIdentity();
         renderMapNote();
         paintApworldButton();
+        paintReportState();
         const close = $('editRoomClose');
         if (close) close.disabled = roomSession() === null;
     }
@@ -2069,7 +2121,7 @@ export function mountSetEditor({
     on('editDownloadRules', () => {
         pressScope('__editorSetRulesPresses',
             ['__editorSetRulesOut', '__editorSetRulesBytes']);
-        const rep = lastReport ?? runReport();
+        const rep = currentReport() ?? runReport();
         if (!rep.download.rules.allowed) {
             setNote(rep.download.rules.why, true);
             return;
@@ -2126,7 +2178,7 @@ export function mountSetEditor({
                 + 'A lab page is a standalone document; the editor lives in the app.', true);
             return;
         }
-        const rep = lastReport ?? runReport();
+        const rep = currentReport() ?? runReport();
         if (!rep.download.rules.allowed) {
             setNote(rep.download.rules.why, true);
             return;
@@ -2191,7 +2243,7 @@ export function mountSetEditor({
             return;
         }
         const out = adapterFns.download(session);
-        const rep = lastReport ?? runReport();
+        const rep = currentReport() ?? runReport();
         const members = [];
         const notes = [];
         /**
