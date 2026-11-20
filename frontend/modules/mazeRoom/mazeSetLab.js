@@ -78,6 +78,7 @@ import {
     exitRuleKey as seedlingExitRuleKey, locationRuleKey as seedlingLocationRuleKey,
 } from '../seedlingDemo/seedlingSetOverlay.js';
 import { roomRecordOf, roomSourceKind } from '../seedlingDemo/levelSetValidator.js';
+import { SEEDLING_ATLAS_GAME } from '../seedlingDemo/seedlingAtlasDerivation.js';
 /**
  * ⛓⛓ **THE SEEDLING LINK-SCAN BOUND IS IMPORTED, NOT RE-DERIVED.** `LINK_SCAN`
  * and `linkScanCost` are facts about the SEEDLING substrate — measured over the
@@ -471,10 +472,12 @@ export function mazeSetBindings({
  * cannot be DERIVED from the substrate id; it is PINNED against it instead —
  * `mazeSetLab.test.js` asserts `substrateIdFor(SEEDLING_ATLAS_GAME)` is
  * `flashSeedlingLibrary`'s own registry id, so the day either moves the row
- * says so. ⚠ It is deliberately NOT `watch.html`'s `'seedling-watch-edit'`,
- * which slugs to `flash_seedling_watch_edit` — a substrate nothing plays.
+ * says so. ⛓ HOISTED (lab-set-seedling-identity): the ONE spelling now lives
+ * on the Seedling side, `seedlingDemo/seedlingAtlasDerivation.js`, which the
+ * watch page's set adapter reads too; this file re-exports it so its own
+ * importers and its row did not move.
  */
-export const SEEDLING_ATLAS_GAME = 'seedling';
+export { SEEDLING_ATLAS_GAME };
 
 /**
  * ⛓⛓⛓ **THE PART DESCRIPTORS FOR ONE LOADED WORLD — ONE PER DECLARED PART.**

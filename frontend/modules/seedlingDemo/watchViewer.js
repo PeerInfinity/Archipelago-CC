@@ -314,7 +314,8 @@ import {
 } from '../presets/documentBundle.js';
 import { loadJSZipBrowser } from '../presets/loadJSZipBrowser.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
-import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
+import { stampAtlasIdentity, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
+import { WATCH_SET_ATLAS, labSetIdentity } from './watchSetIdentity.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { REDO_COMMAND_ID, TOOLS, UNDO_COMMAND_ID } from '../procgenCore/editorView.js';
 import { createEditSession, foldEdits, resolveBase } from '../procgenCore/editCore.js';
@@ -9140,9 +9141,18 @@ async function runEditor(params, lifetime) {
         tileTypeForPlacement,
         rulesSchema,
         levelSetSchema,
-        atlas: { game: 'seedling-watch-edit', mapDocument: 'watch.html set editor' },
+        // ⛓ lab-set-seedling-identity: the GAME is Seedling, the map document a LABEL (`watchSetIdentity.js`).
+        atlas: WATCH_SET_ATLAS,
     };
     const setAdapter = createSeedlingSetAdapter(setDeps);
+    /**
+     * ⛓⛓ THE SET'S IDENTITY AT THE DOORS (lab-set-seedling-identity). The compile the
+     * mount runs for the REPORT is the lab's: a stamped COPY of the atlas
+     * (`seedling-lab-<8 hex>`), with no `flash_panel` block. Every door (rules.json,
+     * the APWorld Editor, the bundle) reads the report, so all three carry that id.
+     * `atlasAtDoor` gives the bundle's atlas member the same stamp.
+     */
+    const labIdentity = labSetIdentity({ compileRegionAtlas, stampAtlasIdentity });
 
     const atlasLevels = (atlas.levels ?? []).map((l) => l.level);
     const wantLevel = Number.isInteger(params.level) ? params.level : atlasLevels[0];
@@ -9905,7 +9915,8 @@ async function runEditor(params, lifetime) {
             session: setSession,
             adapter: setAdapter,
             deps: setDeps,
-            compileRegionAtlas,
+            compileRegionAtlas: labIdentity.compileRegionAtlas,
+            atlasAtDoor: labIdentity.atlasAtDoor,
             validateRegionAtlas,
             atlasSchema: atlasSchema ?? undefined,
             /**

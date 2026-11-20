@@ -2049,6 +2049,12 @@
             "_comment": "REGION MAP atlas-cache (2026-11-17): a custom Seedling set (the vanilla rooms + the vanilla overlay, compiled in the page by the set editor's own rulesJsonOf) loaded as a BUNDLE through the Presets panel's loadDocumentFile: its region-atlas member lands in procgenCore/atlasCache, and the panel shows real extents in every cell, N/N squares on their tiles, and its warps. Batch playback-bot (on push). Counts derived at run time. Reloads the world loaded before."
         },
         {
+            "id": "region-map-watch-set-bundle",
+            "enabled": true,
+            "category": "Region Map: Seedling",
+            "_comment": "lab-set-seedling-identity (2026-11-19): the Seedling watch page's set bundle, built through the page's own modules (watchSetIdentity.js deps + report compile + atlasAtDoor), over the vanilla rooms + the vanilla overlay: every room flash_seedling, no flash_panel block, a seedling-lab-<8 hex> atlas id not in atlas_files.json; loaded through the Presets panel's loadDocumentFile, the Region Map shows real extents in every cell, N/N squares on their tiles, and its warps. Batch playback-bot (on push). Counts derived at run time. Reloads the world loaded before."
+        },
+        {
             "id": "region-map-discovery",
             "enabled": true,
             "category": "Region Map: Seedling",
