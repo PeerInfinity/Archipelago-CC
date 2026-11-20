@@ -107,7 +107,7 @@ describe('⛓⛓⛓ the page\'s deps over the vanilla 116: Seedling rooms, its o
     });
 });
 
-describe('⛓⛓⛓ the FINGERPRINT: one id per set, two sets two ids', () => {
+describe('⛓⛓⛓ the FINGERPRINT: the same set keeps its id, a different set gets its own', () => {
     it('the same set twice → ONE id (two fresh sessions, two fresh hooks)', () => {
         expect(reportFor(structuredClone(VANILLA_SET)).id).toBe(VAN.id);
     });
