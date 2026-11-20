@@ -10,7 +10,7 @@ import { dirname, join } from 'node:path';
 import { ActionNodesRuntime } from './actionNodesRuntime.js';
 import { NODE_STATES } from './nodeStates.js';
 import {
-    CHECK_MARK, GOAL_MARK, PERFORM_ALL_SLOT, PLACEHOLDER_TEXT, cardVisibility, createNodeCardProvider, nodeCardModel,
+    CHECK_MARK, GOAL_MARK, PERFORM_ALL_LABEL, PERFORM_ALL_SLOT, PLACEHOLDER_TEXT, cardVisibility, createNodeCardProvider, nodeCardModel,
     renderNodeCard,
 } from './nodeCard.js';
 import { nodeCardView, wireNodeCardOverlay } from './nodeCardOverlay.js';
@@ -38,6 +38,13 @@ function fakeDocument() {
                 getAttribute(k) { return el.attributes[k] ?? null; },
                 appendChild(c) { el.children.push(c); return c; },
                 replaceChildren() { el.children = []; },
+                listeners: {},
+                addEventListener(type, fn) { (el.listeners[type] ??= []).push(fn); },
+                fire(type) {
+                    const e = { stopped: false, stopPropagation() { this.stopped = true; }, preventDefault() {} };
+                    for (const fn of el.listeners[type] ?? []) fn(e);
+                    return e;
+                },
             };
             el.style.cssText = '';
             return el;
@@ -129,14 +136,36 @@ describe('the rendered card', () => {
         expect(textOf(checked)).toContain(`0/${CHECK.limit}`);
     });
 
-    it('⛓ the reserved slot: one empty, hidden `data-slot="perform-all-remaining"` element per card (AN-3b fills it)', () => {
+    it('⛓ AN-3b: the slot holds ONE "perform all remaining" button on a repeatable node (limit > 1), and nothing else', () => {
         const el = renderNodeCard(nodeCardModel({ payload: REPEATABLE, state: states[REPEATABLE.node_id] }), doc);
         const slots = walk(el).filter((e) => e.attributes['data-slot'] === PERFORM_ALL_SLOT);
         expect(slots).toHaveLength(1);
-        expect(slots[0].children).toHaveLength(0);
-        expect(slots[0].style.display).toBe('none');
-        // ⛔ no button anywhere on the card in AN-3a
-        expect(walk(el).some((e) => e.tagName === 'BUTTON')).toBe(false);
+        expect(slots[0].style.display).not.toBe('none');
+        const buttons = walk(el).filter((e) => e.tagName === 'BUTTON');
+        expect(buttons).toHaveLength(1);
+        expect(slots[0].children).toEqual(buttons);
+        expect(buttons[0].textContent).toBe(PERFORM_ALL_LABEL);
+        expect(buttons[0].dataset.nodeId).toBe(REPEATABLE.node_id);
+    });
+
+    it('⛓ AN-3b: a node with limit 1 (and the start) has an empty, hidden slot and no button', () => {
+        for (const p of Object.values(PAYLOADS).filter((x) => x.limit <= 1)) {
+            const el = renderNodeCard(nodeCardModel({ payload: p, state: states[p.node_id] }), doc);
+            const slot = walk(el).find((e) => e.attributes['data-slot'] === PERFORM_ALL_SLOT);
+            expect(slot.children, p.node_id).toHaveLength(0);
+            expect(slot.style.display, p.node_id).toBe('none');
+            expect(walk(el).some((e) => e.tagName === 'BUTTON'), p.node_id).toBe(false);
+        }
+    });
+
+    it('⛓ AN-3b: the button calls onPerformAll(nodeId) and stops its click and mousedown from reaching the card', () => {
+        const calls = [];
+        const el = renderNodeCard(nodeCardModel({ payload: REPEATABLE, state: states[REPEATABLE.node_id] }), doc,
+            { onPerformAll: (id) => calls.push(id) });
+        const btn = walk(el).find((e) => e.tagName === 'BUTTON');
+        expect(btn.fire('mousedown').stopped).toBe(true);
+        expect(btn.fire('click').stopped).toBe(true);
+        expect(calls).toEqual([REPEATABLE.node_id]);
     });
 
     it('a placeholder card says ??? and nothing else', () => {
@@ -156,6 +185,22 @@ describe('the provider and the overlay wiring', () => {
         expect(provider.create('Menu', {})).toBeNull();
         rt.unload();
         expect(provider.create(CHECK.node_id, {})).toBeNull();
+    });
+
+    it('⛓ AN-3b: the provider\'s button answer shows on that node\'s card, and a world switch clears it', () => {
+        const rt = runtimeWith();
+        const provider = createNodeCardProvider({
+            getView: () => nodeCardView({ runtime: rt }), getStamp: () => rt.model, document: fakeDocument(),
+            onPerformAll: (id) => ({ text: `answer for ${id}` }),
+        });
+        const el = provider.create(REPEATABLE.node_id, {});
+        expect(textOf(el)).not.toContain('answer for');
+        provider.performAll(REPEATABLE.node_id);
+        provider.update(REPEATABLE.node_id, {}, el);
+        expect(walk(el).find((e) => e.className === 'an-card__message')?.textContent).toBe(`answer for ${REPEATABLE.node_id}`);
+        rt.loadWorld(RULES, P);
+        provider.update(REPEATABLE.node_id, {}, el);
+        expect(textOf(el)).not.toContain('answer for');
     });
 
     it('⛓ registered while an ActionNodes world is loaded, unregistered (once) when another world loads', () => {

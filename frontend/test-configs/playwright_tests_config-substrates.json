@@ -58,6 +58,18 @@
             "_comment": "AN-3a: the Region Graph node card (undiscovered placeholder; a check node's fields + check mark + the reserved perform-all slot; the goal mark); then another world's node sizes and arrows are as before and no card is left (planner ruling (a): unregisterNodeOverlayProvider)."
         },
         {
+            "id": "an-click-performs-once",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-3b: the click action actionNodes.act performs ONCE (Robert 2026-11-17T21:35:22Z): a card click on a ready node queues the route then one act (Loop mode), again one act, blocked/done refused by name; the Region Map the same; Loop mode off performs at once. The card body click is the node's click (planner ruling 2026-11-20)."
+        },
+        {
+            "id": "an-perform-all-button",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-3b: the 'perform all remaining' button only on limit > 1 nodes; queues the route + the remaining acts, says so on the card, refused when none remain, capped by mana."
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
