@@ -45,37 +45,6 @@ export class LayoutControlsManager {
           </label>
         </details>
         <details open style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
-          <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">On Region Node Click:</summary>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="movePlayerOneStep" style="margin-right: 5px;">
-            Move player one step towards region
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="movePlayerDirectly" style="margin-right: 5px;" checked>
-            Move player directly to region
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="showRegionInPanel" style="margin-right: 5px;" checked>
-            Show region in Regions panel
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="addToPath" style="margin-right: 5px;" checked>
-            Add to path
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="overwritePath" style="margin-right: 5px;">
-            Overwrite path
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="addLocationsToPath" style="margin-right: 5px;">
-            Add locations to path
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="checkAllLocationsInRegion" style="margin-right: 5px;">
-            Check all locations in region
-          </label>
-        </details>
-        <details open style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
           <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">Location Visibility:</summary>
           <label style="display: block; margin: 3px 0; cursor: pointer;">
             <input type="radio" name="locationVisibility" value="hover" style="margin-right: 5px;">
@@ -132,18 +101,12 @@ export class LayoutControlsManager {
   }
 
   async loadCheckboxSettings() {
-    // Load checkbox states from settings
+    // Load checkbox states from settings. (The seven "On Region Node Click" boxes left in CA-S2: a click runs the
+    // panel's click actions, set in the "On click" strip — `moduleSettings.regionGraph.clickActions`.)
     const checkboxes = [
       { id: '#forceHideEdgeLabels', setting: 'moduleSettings.regionGraph.forceHideEdgeLabels', default: true },
       { id: '#keepRegionSetsComplete', setting: 'moduleSettings.regionGraph.keepRegionSetsComplete', default: true },
       { id: '#onlyShowLocationsInView', setting: 'moduleSettings.regionGraph.onlyShowLocationsInView', default: false },
-      { id: '#movePlayerOneStep', setting: 'moduleSettings.regionGraph.movePlayerOneStep', default: false },
-      { id: '#movePlayerDirectly', setting: 'moduleSettings.regionGraph.movePlayerDirectly', default: true },
-      { id: '#showRegionInPanel', setting: 'moduleSettings.regionGraph.showRegionInPanel', default: true },
-      { id: '#addToPath', setting: 'moduleSettings.regionGraph.addToPath', default: true },
-      { id: '#overwritePath', setting: 'moduleSettings.regionGraph.overwritePath', default: false },
-      { id: '#addLocationsToPath', setting: 'moduleSettings.regionGraph.addLocationsToPath', default: false },
-      { id: '#checkAllLocationsInRegion', setting: 'moduleSettings.regionGraph.checkAllLocationsInRegion', default: false },
       { id: '#graph-show-undiscovered', setting: 'moduleSettings.regionGraph.showUndiscovered', default: true }
     ];
 

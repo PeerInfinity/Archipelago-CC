@@ -3,25 +3,33 @@
  *
  * A registry of named actions, owned by panels, and a per-panel settings object that says which of them a click
  * runs. It replaces the Region Graph's seven "On Region Node Click" checkboxes with named choices (route from path
- * end / start / player; all the way / one step), and lets other panels add their own actions (the Regions panel's
- * "open at it", Flash's teleport, …). No panel uses it yet: the strip UI and the Region Graph's adoption are CA-S2,
- * the Region Map's CA-S3, the panel-owned actions CA-S4.
+ * end / start / player, always all the way), and lets other panels add their own actions (the Regions panel's
+ * "open at it", Flash's teleport, …). The shared "On click" strip (`clickActionsUI.js`) renders and edits a panel's
+ * settings; the Region Graph runs its clicks through `runClickActions` (CA-S2), the Region Map follows in CA-S3,
+ * the other panel-owned actions in CA-S4.
+ *
+ * ⚖ NO "ONE STEP" (user, 2026-11-17T23:00:54Z, session 84c8ab35): *"I think I want to entirely remove the "move
+ * player one step" option."* A route always goes all the way; there is no distance choice. The migration treats the
+ * old `movePlayerOneStep` key as false, and a stored route that still carries a `distance` is read without it.
  *
  * PURE. No DOM, no event bus, no singleton: every collaborator comes in through the handles `h` (the same handles as
  * `regionActions.js`, plus the few named below) and the click's `ctx`.
  *
- * AN ACTION is `{ id, owner, label, target: 'region'|'location', kind: 'toggle'|'choice', choices?, order?, run }`.
+ * AN ACTION is `{ id, owner, label, target: 'region'|'location', kind: 'toggle'|'choice', choices?, order?, run,
+ *   summary?, choiceLabels? }`.
  *   - `id` is namespaced by its owner: `path.route`, `path.checkAll`, `path.check`, `regions.open`, `flash.teleport`.
  *   - `kind: 'toggle'` is on when the panel's setting for it is `true`. `kind: 'choice'` is on when the setting is a
  *     value (`choices` lists the allowed values), off when it is `false`, `null` or absent.
  *   - `order` places it in the R8 run order: `ORDER.path` (100) first, then `ORDER.check` (200), then the panel
  *     actions (`ORDER.panel`, 300, the default). Equal orders run in registration order.
+ *   - `summary` (optional, for the strip's collapsed line): a string, or `(value) => string | null`. Default: `label`.
+ *   - `choiceLabels` (optional, for the strip): `{ <choice value>: <text> }`. An unlabelled value shows as itself.
  *   - `run(h, ctx)` gets the panel's handles and `{ panelId, target, regionName, locationName?, discovery?, settings,
  *     value }` (`value` = this action's setting). It returns the `regionActions` result shape (`{ ok, … }`).
  *
  * SETTINGS (per panel, R4: `moduleSettings.<panel>.clickActions`):
  *     { enabled: true,                                   // the master switch (false → a click runs nothing)
- *       region:   { 'path.route': { from: 'pathEnd', distance: 'all' } | false,
+ *       region:   { 'path.route': { from: 'pathEnd' | 'start' | 'player' } | false,
  *                   'path.checkAll': false,
  *                   'regions.open': true, … },           // ids of actions not registered here are KEPT
  *       location: { 'path.check': 'now' | 'addToPath' | false, … } }
@@ -59,21 +67,31 @@ export const BUILT_IN_IDS = Object.freeze({
     check: 'path.check',
 });
 
-/** The route choice: where the walk starts, and how far it goes. */
+/** The route choice: where the walk starts. It always goes all the way (no "one step", ⚖ 2026-11-17). */
 export const ROUTE_FROM = Object.freeze(['pathEnd', 'start', 'player']);
-/**
- * `'oneAndAll'` is the LEGACY state of the 7-box model with both "Move player one step" and "Move player directly"
- * ticked and neither path box: today's handler then makes a one-step move AND a direct move, both planned from where
- * the player stood. The Region Graph's UI never writes that state (its change handlers untick the other box); only a
- * hand-edited setting can hold it. The migration keeps it so the migrated config does exactly what today's does.
- */
-export const ROUTE_DISTANCE = Object.freeze(['all', 'one', 'oneAndAll']);
 export const LOCATION_CHECK = Object.freeze(['now', 'addToPath']);
 
 /* ── the registry ────────────────────────────────────────────────────── */
 
 const registry = new Map(); // id → { desc, seq }
 let seq = 0;
+const listeners = new Set(); // () => void, told after every register / unregister (the strip re-renders)
+
+function notifyChanged() {
+    for (const fn of [...listeners]) {
+        try { fn(); } catch { /* a listener's failure must not break a registration */ }
+    }
+}
+
+/**
+ * Be told when the registry changes (an action registered or unregistered). A plain listener list: no event bus.
+ * Returns the unsubscribe function.
+ */
+export function onClickActionsChanged(listener) {
+    if (typeof listener !== 'function') throw new Error('onClickActionsChanged: a function is required');
+    listeners.add(listener);
+    return () => { listeners.delete(listener); };
+}
 
 /**
  * Register an action. Throws on a malformed descriptor, and on a duplicate id (by name: the owner that holds it).
@@ -81,7 +99,7 @@ let seq = 0;
  */
 export function registerClickAction(desc) {
     if (!desc || typeof desc !== 'object') throw new Error('registerClickAction: a descriptor object is required');
-    const { id, owner, label, target, kind, choices, order, run } = desc;
+    const { id, owner, label, target, kind, choices, order, run, summary, choiceLabels } = desc;
     if (typeof id !== 'string' || !id) throw new Error('registerClickAction: `id` must be a non-empty string');
     if (typeof owner !== 'string' || !owner) throw new Error(`registerClickAction(${id}): \`owner\` must be a non-empty string`);
     if (!id.startsWith(`${owner}.`)) {
@@ -94,18 +112,33 @@ export function registerClickAction(desc) {
     }
     if (typeof run !== 'function') throw new Error(`registerClickAction(${id}): \`run\` must be a function`);
     if (order !== undefined && !Number.isFinite(order)) throw new Error(`registerClickAction(${id}): \`order\` must be a number`);
+    if (summary !== undefined && typeof summary !== 'string' && typeof summary !== 'function') {
+        throw new Error(`registerClickAction(${id}): \`summary\` must be a string or a function`);
+    }
+    if (choiceLabels !== undefined && (choiceLabels === null || typeof choiceLabels !== 'object')) {
+        throw new Error(`registerClickAction(${id}): \`choiceLabels\` must be an object`);
+    }
     const held = registry.get(id);
     if (held) {
         throw new Error(`registerClickAction: duplicate id "${id}" (already registered by "${held.desc.owner}")`);
     }
-    const frozen = Object.freeze({ id, owner, label: label ?? id, target, kind, choices, order: order ?? ORDER.panel, run });
+    const frozen = Object.freeze({ id, owner, label: label ?? id, target, kind, choices, order: order ?? ORDER.panel, run,
+        summary, choiceLabels: choiceLabels ? Object.freeze({ ...choiceLabels }) : undefined });
     registry.set(id, { desc: frozen, seq: seq++ });
+    notifyChanged();
     return frozen;
 }
 
 /** Unregister an action. Returns true when it was registered. */
 export function unregisterClickAction(id) {
-    return registry.delete(id);
+    const had = registry.delete(id);
+    if (had) notifyChanged();
+    return had;
+}
+
+/** The registered descriptor of `id`, or null. */
+export function getClickAction(id) {
+    return registry.get(id)?.desc ?? null;
 }
 
 /** The registered actions for `target`, in run order (`order`, then registration order). */
@@ -116,8 +149,8 @@ export function listClickActions(target) {
         .map((e) => e.desc);
 }
 
-/** Is `value` an "on" setting for `desc`? A toggle: `true`. A choice: a valid value. */
-function isOn(desc, value) {
+/** Is `value` an "on" setting for `desc`? A toggle: `true`. A choice: any value but `false` / `null` / absent. */
+export function isOn(desc, value) {
     if (desc.kind === 'toggle') return value === true;
     return value !== false && value !== null && value !== undefined;
 }
@@ -160,35 +193,63 @@ export function runClickActions(panelId, target, ctx, settings, h) {
 
 const noop = () => {};
 
+/** A route value is `{ from }` with a known `from`. Any other field (a pre-ruling `distance`) is ignored, not refused. */
 function validRoute(value) {
-    return !!value && typeof value === 'object'
-        && ROUTE_FROM.includes(value.from) && ROUTE_DISTANCE.includes(value.distance);
+    return !!value && typeof value === 'object' && ROUTE_FROM.includes(value.from);
 }
 
 /**
- * Route to `regionName` the way `route` says, from panel `panelId`. The Region Graph's precedence, re-expressed:
- *   pathEnd → `actions.addToPath` (navigationManager.addToPath); start → `actions.overwritePath`
- *   (navigationManager.overwritePath); player → `planOneStepMove` / `planDirectMove` then `publishRegionMove`
- *   (navigationManager.attemptMovePlayerOneStepToRegion / …DirectlyToRegion). `oneAndAll` plans both moves before
- *   publishing either, as today's handler does (both plans are taken from where the player stood).
- * A `distance: 'one'` path edit walks one step; `oneAndAll` on a path edit is one step too (the handler passes the
- * one-step box alone to the path edits).
+ * Route to `regionName` the way `route` says, from panel `panelId`, ALL THE WAY (the Region Graph's precedence,
+ * re-expressed; its `navigationManager.js` moves before CA-S2):
+ *   pathEnd → `actions.addToPath`; start → `actions.overwritePath`; player → `planDirectMove`, then
+ *   `publishRegionMove` when it plans a move.
+ * `moveOnlyOneStep: false` is `regionActions`' own option, passed as the Region Graph always passed it with the
+ * one-step box unticked.
  */
 export function routeTo(h, regionName, route, panelId) {
     if (!validRoute(route)) return { ok: false, reason: 'invalid-route' };
     const source = pathSourceFor(panelId);
-    const moveOnlyOneStep = route.distance !== 'all';
     const beforeExecute = h.beforePathExecute ?? null;
-    if (route.from === 'pathEnd') return actions.addToPath(h, regionName, { moveOnlyOneStep, source, beforeExecute });
-    if (route.from === 'start') return actions.overwritePath(h, regionName, { moveOnlyOneStep, source, beforeExecute });
-    const opts = { onError: h.onError ?? noop };
-    const plans = [];
-    if (route.distance !== 'all') plans.push(actions.planOneStepMove(h, regionName, opts));
-    if (route.distance !== 'one') plans.push(actions.planDirectMove(h, regionName, opts));
-    for (const plan of plans) {
-        if (plan.ok && plan.kind === 'move') actions.publishRegionMove(h, plan.move, source);
+    if (route.from === 'pathEnd') return actions.addToPath(h, regionName, { moveOnlyOneStep: false, source, beforeExecute });
+    if (route.from === 'start') return actions.overwritePath(h, regionName, { moveOnlyOneStep: false, source, beforeExecute });
+    const plan = actions.planDirectMove(h, regionName, { onError: h.onError ?? noop });
+    if (plan.ok && plan.kind === 'move') actions.publishRegionMove(h, plan.move, source);
+    return plan;
+}
+
+/**
+ * The status-bar text of one route result (the Region Graph's `navigationManager.js` texts before CA-S2), or null
+ * for a silent one. `from` is the route's `from`.
+ */
+export function routeStatusText(from, target, r) {
+    if (!r) return null;
+    if (!r.ok) {
+        if (r.reason !== 'no-path') return null;
+        return from === 'player' ? `No path to ${target}` : `No path from ${r.from} to ${target}`;
     }
-    return plans.length === 1 ? plans[0] : { ok: plans.some((p) => p.ok), kind: 'moves', plans };
+    if (r.kind === 'restart') return `Restart → ${r.region} (no walk from ${r.from} to ${target})`;
+    if (from === 'player') {
+        return r.path.length === 1 ? `Moving directly to ${target}` : `Moving directly to ${target} (skipping ${r.path.length - 1} steps)`;
+    }
+    if (from === 'pathEnd') return r.kind === 'path' ? `Added ${r.dispatched} region(s) to path` : null;
+    if (from === 'start') return `Created path: ${r.from} → ${target} (${r.dispatched} steps)`;
+    return null;
+}
+
+/**
+ * The status text of a whole `runClickActions` answer: the route's (a region click's `path.route`, or a location
+ * click's `path.check: 'addToPath'`, whose `moved` is the route result). → { text, from } | null.
+ */
+export function clickStatusOf(run, ctx, settings) {
+    if (!run?.ran) return null;
+    const route = settings?.region?.[BUILT_IN_IDS.route];
+    if (!validRoute(route)) return null;
+    for (const { id, result } of run.results) {
+        const r = id === BUILT_IN_IDS.route ? result : (id === BUILT_IN_IDS.check ? result?.moved : null);
+        const text = routeStatusText(route.from, ctx.regionName, r);
+        if (text) return { text, from: route.from };
+    }
+    return null;
 }
 
 function checksBlocked(ctx) {
@@ -203,7 +264,10 @@ export const BUILT_IN_ACTIONS = Object.freeze([
         label: 'Route to the region',
         target: 'region',
         kind: 'choice',
-        choices: { from: ROUTE_FROM, distance: ROUTE_DISTANCE },
+        choices: { from: ROUTE_FROM },
+        choiceLabels: { pathEnd: 'Extend the path from its end', start: 'Restart the path from the start',
+            player: 'Move the player there' },
+        summary: (v) => ({ pathEnd: 'extend path', start: 'restart path', player: 'move player' })[v?.from] ?? null,
         order: ORDER.path,
         run: (h, ctx) => routeTo(h, ctx.regionName, ctx.value, ctx.panelId),
     },
@@ -211,6 +275,7 @@ export const BUILT_IN_ACTIONS = Object.freeze([
         id: BUILT_IN_IDS.checkAll,
         owner: 'path',
         label: 'Check all accessible locations there',
+        summary: 'check all',
         target: 'region',
         kind: 'toggle',
         order: ORDER.check,
@@ -233,6 +298,8 @@ export const BUILT_IN_ACTIONS = Object.freeze([
         target: 'location',
         kind: 'choice',
         choices: LOCATION_CHECK,
+        choiceLabels: { now: 'Check it now', addToPath: 'Add the check to the path' },
+        summary: (v) => ({ now: 'check', addToPath: 'add check to path' })[v] ?? null,
         order: ORDER.check,
         // graphInteractionManager.handleLocationNodeClick: the discovery gate first (it blocks the moves too); then
         // either "add to path" (the parent region's route, by the panel's REGION route setting, then the path check)
@@ -264,6 +331,7 @@ export function resetClickActionsForTests() {
     registry.clear();
     seq = 0;
     registerBuiltIns();
+    notifyChanged();
 }
 
 /* ── settings: the migration from the Region Graph's seven keys ──────── */
@@ -287,11 +355,11 @@ export const REGIONS_OPEN_ID = 'regions.open';
 
 /**
  * The one-time migration (design §4.4) from the seven booleans to a `clickActions` object, preserving today's
- * EFFECTIVE behaviour. A missing key takes its default.
- *   - addToPath → route from 'pathEnd'; else overwritePath → 'start'; else movePlayerDirectly or movePlayerOneStep →
- *     'player'; all four off → the route is off (`false`).
- *   - distance: movePlayerOneStep → 'one'; with no path box and BOTH move boxes → 'oneAndAll' (legacy, see
- *     ROUTE_DISTANCE); else 'all'.
+ * EFFECTIVE behaviour for every config with `movePlayerOneStep` false. A missing key takes its default.
+ *   - addToPath → route from 'pathEnd'; else overwritePath → 'start'; else movePlayerDirectly → 'player'; all three
+ *     off → the route is off (`false`).
+ *   - ⚖ `movePlayerOneStep` is IGNORED (user, 2026-11-17T23:00:54Z: the option is removed): the answer is the one
+ *     the same keys give with it false. Alone it migrates to the route OFF.
  *   - showRegionInPanel → `regions.open`; checkAllLocationsInRegion → `path.checkAll`;
  *     addLocationsToPath → location `path.check: 'addToPath'`, else 'now'.
  */
@@ -301,12 +369,9 @@ export function migrateRegionGraphClickKeys(old7 = {}) {
         if (old7 && typeof old7[k] === 'boolean') o[k] = old7[k];
     }
     let route = false;
-    if (o.addToPath || o.overwritePath) {
-        route = { from: o.addToPath ? 'pathEnd' : 'start', distance: o.movePlayerOneStep ? 'one' : 'all' };
-    } else if (o.movePlayerOneStep || o.movePlayerDirectly) {
-        const distance = o.movePlayerOneStep && o.movePlayerDirectly ? 'oneAndAll' : (o.movePlayerOneStep ? 'one' : 'all');
-        route = { from: 'player', distance };
-    }
+    if (o.addToPath) route = { from: 'pathEnd' };
+    else if (o.overwritePath) route = { from: 'start' };
+    else if (o.movePlayerDirectly) route = { from: 'player' };
     return {
         enabled: true,
         region: {

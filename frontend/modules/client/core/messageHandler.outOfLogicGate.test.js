@@ -9,7 +9,7 @@
  *     `[INACCESSIBLE LOCATION DETECTED]` alarm; a genuine server/client mismatch still raises it.
  *
  * The payloads below are the exact ones the surfaces publish (locations/locationUI.js handleLocationClick,
- * regionGraph/graphInteractionManager.js dispatchLocationCheckEvent, flashPanel/seedlingRegionGlue.js _locationCheck).
+ * regionView/clickActions.js `path.check` (the Region Graph's location click), flashPanel/seedlingRegionGlue.js _locationCheck).
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';

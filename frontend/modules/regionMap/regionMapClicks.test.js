@@ -3,7 +3,6 @@
  * (`regionGraph/graphInteractionManager.js` `handleRegionNodeClick` / `handleLocationNodeClick`), under the Region
  * Map's own strings. Stubbed actions for the mapping; the real `regionActions` for the payloads.
  */
-import fs from 'node:fs';
 import { describe, it, expect, vi } from 'vitest';
 
 vi.mock('../shared/snapshotInterface.js', () => ({ createSnapshotInterface: () => ({}) }));
@@ -39,12 +38,11 @@ const H = { tag: 'handles' };
 const opts = (o = {}) => ({ ...CLICK_OPTION_DEFAULTS, ...o });
 
 describe('⛓ the toggles are the Region Graph\'s (planner ruling: option A)', () => {
-    it('the same seven keys and defaults as regionGraph/layoutControlsManager.js', () => {
-        const src = fs.readFileSync(new URL('../regionGraph/layoutControlsManager.js', import.meta.url), 'utf8');
-        const rg = {};
-        for (const m of src.matchAll(/setting: 'moduleSettings\.regionGraph\.(\w+)', default: (true|false)/g)) rg[m[1]] = m[2] === 'true';
-        const clickKeys = Object.keys(CLICK_OPTION_DEFAULTS);
-        expect(Object.fromEntries(clickKeys.map((k) => [k, rg[k]]))).toEqual({ ...CLICK_OPTION_DEFAULTS });
+    it('the same seven keys and defaults as the Region Graph\'s (its checkbox list until CA-S2, now clickActions.js)', async () => {
+        // CA-S2 removed the Region Graph's checkboxes (layoutControlsManager.js); the seven keys' defaults are kept by
+        // regionView/clickActions.js LEGACY_REGION_GRAPH_CLICK_DEFAULTS, which CA-S1 pinned to that checkbox list.
+        const { LEGACY_REGION_GRAPH_CLICK_DEFAULTS } = await import('../regionView/clickActions.js');
+        expect(JSON.stringify(CLICK_OPTION_DEFAULTS)).toBe(JSON.stringify(LEGACY_REGION_GRAPH_CLICK_DEFAULTS));
         expect(CLICK_OPTIONS_PREFIX).toBe('moduleSettings.regionGraph');
     });
 

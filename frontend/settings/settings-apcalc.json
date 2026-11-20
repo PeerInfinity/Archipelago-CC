@@ -2,6 +2,17 @@
   "activeLayout": "apcalc",
   "moduleSettings": {
     "regionGraph": {
+      "clickActions": {
+        "enabled": true,
+        "region": {
+          "path.route": false,
+          "path.checkAll": false,
+          "regions.open": false
+        },
+        "location": {
+          "path.check": "now"
+        }
+      },
       "checkAllLocationsInRegion": false,
       "addToPath": false,
       "overwritePath": false,

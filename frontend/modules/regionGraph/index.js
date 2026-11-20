@@ -1,6 +1,7 @@
 import { RegionGraphUI } from './regionGraphUI.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import eventBus from '../../app/core/eventBus.js';
+import { clickActionsSchemaEntry } from './clickActionsSettings.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -121,6 +122,10 @@ export function register(registrationApi) {
   registrationApi.registerSettingsSchema({
     type: 'object',
     properties: {
+      // ⛓ What a click runs (CA-S2): the "On click" strip's settings, migrated once from the seven old keys.
+      clickActions: clickActionsSchemaEntry(),
+      // One of the seven old "On Region Node Click" keys. The Region Graph no longer reads it (its `clickActions`
+      // does), but the Region Map's interim click reader (`regionMap/regionMapClicks.js`) still does until CA-S3.
       addLocationsToPath: {
         type: 'boolean',
         default: false,

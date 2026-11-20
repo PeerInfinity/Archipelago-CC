@@ -693,6 +693,18 @@ describe('SettingsManager — getSetting precedence (override > persisted > sche
     expect(await sm.getSetting('moduleSettings.phase1Std.widgetSize', 999)).toBe(123);
   });
 
+  it('hasStoredSetting: true for a persisted value or a session override, false for a schema/call-site default only', async () => {
+    const sm = makeSm({ moduleSettings: { phase1Std: { widgetSize: 7 } } });
+    expect(await sm.hasStoredSetting('moduleSettings.phase1Std.widgetSize')).toBe(true);
+    expect(await sm.hasStoredSetting('moduleSettings.phase1Wrapped.wrappedToggle')).toBe(false); // schema default only
+    expect(await sm.getSetting('moduleSettings.phase1Wrapped.wrappedToggle')).toBe(true);
+    expect(await sm.hasStoredSetting('moduleSettings.nope.x')).toBe(false);
+    await sm.updateSetting('moduleSettings.phase1Wrapped.wrappedToggle', false, { persist: false });
+    expect(await sm.hasStoredSetting('moduleSettings.phase1Wrapped.wrappedToggle')).toBe(true);
+    await sm.clearOverride('moduleSettings.phase1Wrapped.wrappedToggle');
+    expect(await sm.hasStoredSetting('moduleSettings.phase1Wrapped.wrappedToggle')).toBe(false);
+  });
+
   it('falls through to the call-site default when the schema prop has no default', async () => {
     const sm = makeSm();
     expect(await sm.getSetting('moduleSettings.phase1Std.noDefaultProp', 'fallback')).toBe('fallback');
