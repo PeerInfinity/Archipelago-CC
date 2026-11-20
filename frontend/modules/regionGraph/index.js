@@ -124,8 +124,9 @@ export function register(registrationApi) {
     properties: {
       // ⛓ What a click runs (CA-S2): the "On click" strip's settings, migrated once from the seven old keys.
       clickActions: clickActionsSchemaEntry(),
-      // One of the seven old "On Region Node Click" keys. The Region Graph no longer reads it (its `clickActions`
-      // does), but the Region Map's interim click reader (`regionMap/regionMapClicks.js`) still does until CA-S3.
+      // The one old "On Region Node Click" key kept (CA-S3 removed the other six). The Region Graph no longer reads it
+      // (its `clickActions` does), but the Regions panel's own location clicks do (`regions/regionBlockBuilder.js`),
+      // and a Region Graph strip save mirrors it (`clickActionsSettings.js`), until CA-S4.
       addLocationsToPath: {
         type: 'boolean',
         default: false,

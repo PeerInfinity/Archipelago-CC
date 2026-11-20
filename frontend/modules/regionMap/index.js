@@ -9,17 +9,18 @@
  * below; sub-regions fold into their level; it loads for any world (no `grid_cell`, no substrate hook → the generic
  * layout and boxes); cells sized by level by default, uniform cells as a toggle.
  *
- * ⛓ CLICKS (step 4) do what the Region Graph's clicks do (`regionMapClicks.js`), through
- * `regionView/regionActions.js`, under THIS module's dispatcher and event bus (registered below) and its own
- * `regionMap-*` sources / `regionMap*Check` originators. `regionMap` is a loop-mode planning prefix
- * (`loops/loopModeExemptions.js`), as `regionGraph` is. ⚖ The Region Graph's control-panel toggles
- * (`moduleSettings.regionGraph.*`) choose what a click does in BOTH panels until the Region Map has its own copy.
+ * ⛓ CLICKS (CA-S3) run the shared click-action registry (`regionView/clickActions.js`) over the panel's OWN
+ * `moduleSettings.regionMap.clickActions` (⚖ R4; the first run copies the Region Graph's), edited by the "On click"
+ * strip at the top of the panel (`regionMapClickActions.js`). They go out under THIS module's dispatcher and event bus
+ * (registered below): path moves under `regionView-path-regionMap` (R7, a loop-mode planning source), checks under
+ * the `regionMap*Check` originators. Every click also publishes the generic `regionView:regionClicked` /
+ * `regionView:locationClicked` (design §4.3).
  *
  * Open it from the panel menu ("Region Map"); it is in no layout preset.
  */
 import { RegionMapUI } from './regionMapUI.js';
 import { REGION_MAP_SETTINGS_SCHEMA, moduleHandles, panelInstances } from './regionMapSettings.js';
-import { REGION_MAP_NODE_SELECTED } from './regionMapClicks.js';
+import { LOCATION_CLICKED, REGION_CLICKED, REGION_MAP_NODE_SELECTED } from './regionMapClickActions.js';
 
 export const moduleInfo = {
     name: 'regionMap',
@@ -39,12 +40,16 @@ export const getPanelInstances = () => [...panelInstances];
 export function register(registrationApi) {
     registrationApi.registerPanelComponent('regionMapPanel', RegionMapUI);
     registrationApi.registerSettingsSchema(REGION_MAP_SETTINGS_SCHEMA);
-    // ⛓ step 4: the clicks' senders and publishers — the same set the Region Graph registers for its own clicks.
+    // ⛓ step 4: the clicks' senders and publishers — the same set the Region Graph registers for its own clicks
+    // (`ui:activatePanel` / `ui:navigateToRegion` are the Regions panel's `regions.open` action, published on THIS bus).
     registrationApi.registerEventBusPublisher('ui:activatePanel');
     registrationApi.registerEventBusPublisher('ui:navigateToRegion');
     registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
     registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
     registrationApi.registerEventBusPublisher(REGION_MAP_NODE_SELECTED);
+    // ⛓ CA-S3: the generic click events (mode-toggle design §4.3), `{ panelId: 'regionMap', regionName, locationName? }`.
+    registrationApi.registerEventBusPublisher(REGION_CLICKED);
+    registrationApi.registerEventBusPublisher(LOCATION_CLICKED);
 }
 
 export function initialize(mId, priorityIndex, initializationApi) {

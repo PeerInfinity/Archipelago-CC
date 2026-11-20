@@ -107,25 +107,6 @@ export function takeRestartStep(h, from, to) {
 }
 
 /**
- * Plan ONE step toward `target` from where the player stands.
- * → { ok: false, reason: 'no-current' | 'already-there' | 'no-path' | 'no-next-exit', from? }
- *   | { ok: true, kind: 'restart', from, region }     (the Restart was TAKEN — nothing left to dispatch)
- *   | { ok: true, kind: 'move', from, path, move }    (dispatch `move` with `publishRegionMove`)
- * Reads `h.gameState`, `h.pathFinder`, and (for the restart) `h.getRules`, `h.restart`.
- */
-export function planOneStepMove(h, target, { onError = null } = {}) {
-    const from = currentRegionOf(h, { onError });
-    if (!from) return { ok: false, reason: 'no-current' };
-    if (from === target) return { ok: false, reason: 'already-there', from };
-    const restart = takeRestartStep(h, from, target);
-    if (restart.ok) return { ok: true, kind: 'restart', from, region: restart.region };
-    const path = h.pathFinder.findPath(from, target);
-    if (!path || path.length === 0) return { ok: false, reason: 'no-path', from };
-    if (!path.nextExit) return { ok: false, reason: 'no-next-exit', from, path };
-    return { ok: true, kind: 'move', from, path, move: { sourceRegion: from, targetRegion: path.steps[1], exitName: path.nextExit } };
-}
-
-/**
  * Plan a DIRECT move to `target`: the path's final exit, taken from its second-to-last region.
  * → { ok: false, reason: 'no-current' | 'already-there' | 'no-path' | 'no-final-exit', from? }
  *   | { ok: true, kind: 'move', from, path, move }
@@ -148,32 +129,19 @@ export function planDirectMove(h, target, { onError = null } = {}) {
     return { ok: true, kind: 'move', from, path, move: { sourceRegion: finalSourceRegion, targetRegion: target, exitName } };
 }
 
-/** Plan + publish one step. Same result as `planOneStepMove`; a `'move'` is dispatched under `source`. */
-export function moveOneStep(h, target, source, opts) {
-    const r = planOneStepMove(h, target, opts);
-    if (r.ok && r.kind === 'move') publishRegionMove(h, r.move, source);
-    return r;
-}
-
-/** Plan + publish a direct move. Same result as `planDirectMove`; the move is dispatched under `source`. */
-export function moveDirectly(h, target, source, opts) {
-    const r = planDirectMove(h, target, opts);
-    if (r.ok) publishRegionMove(h, r.move, source);
-    return r;
-}
-
 /* ── path edits ──────────────────────────────────────────────────────── */
 
 /**
  * Extend the game-state path to `target`. With no path yet, publish one `user:regionMove` and let gameState build
- * it. Else walk from the path's last region, one step only when `moveOnlyOneStep`.
+ * it. Else walk from the path's last region, all the way (⚖ no "one step", user 2026-11-17; its option and the
+ * one-step moves left this file in CA-S3 with their last caller, the Region Map's interim click reader).
  * → { ok: false, reason: 'already-there' | 'no-path', from? }
  *   | { ok: true, kind: 'single', from }                 (no path yet: one move published)
  *   | { ok: true, kind: 'path', from, dispatched, regions }
  * `beforeExecute()` runs after a path is found, before any step is dispatched (the Region Graph turns the Regions
  * panel's "Show All Regions" off there). Reads `h.gameState`, `h.dispatcher`, `h.pathFinder`, `h.stateManager`.
  */
-export function addToPath(h, target, { moveOnlyOneStep = false, source, beforeExecute = null } = {}) {
+export function addToPath(h, target, { source, beforeExecute = null } = {}) {
     const gameState = h.gameState;
     const currentPath = gameState.getPath();
     if (!currentPath || currentPath.length === 0) {
@@ -188,7 +156,7 @@ export function addToPath(h, target, { moveOnlyOneStep = false, source, beforeEx
     }
     const from = gameState.getLastRegionInPath() || gameState.getCurrentRegion();
     if (from === target) return { ok: false, reason: 'already-there', from };
-    return walkAndDispatch(h, from, target, { moveOnlyOneStep, source, beforeExecute });
+    return walkAndDispatch(h, from, target, { source, beforeExecute });
 }
 
 /**
@@ -197,21 +165,21 @@ export function addToPath(h, target, { moveOnlyOneStep = false, source, beforeEx
  * `beforeExecute()` runs right after the reset (before the walk is planned) — the Region Graph's ordering.
  * Reads `h.gameState`, `h.dispatcher`, `h.pathFinder`, `h.stateManager`.
  */
-export function overwritePath(h, target, { moveOnlyOneStep = false, source, beforeExecute = null } = {}) {
+export function overwritePath(h, target, { source, beforeExecute = null } = {}) {
     const from = primaryStartRegion(h);
     h.gameState.setCurrentRegion(from);
     h.gameState.trimPath(from, 1);
     beforeExecute?.();
     if (from === target) return { ok: false, reason: 'already-there', from };
-    return walkAndDispatch(h, from, target, { moveOnlyOneStep, source });
+    return walkAndDispatch(h, from, target, { source });
 }
 
-function walkAndDispatch(h, from, target, { moveOnlyOneStep, source, beforeExecute = null }) {
+function walkAndDispatch(h, from, target, { source, beforeExecute = null }) {
     const path = h.pathFinder.findPath(from, target);
     if (!path || path.length === 0) return { ok: false, reason: 'no-path', from };
     beforeExecute?.();
     // path.steps[0] is the start; the rest are the regions moved through.
-    const regions = moveOnlyOneStep ? [path.steps[1]] : path.steps.slice(1);
+    const regions = path.steps.slice(1);
     const adjacencyMap = buildAdjacencyMap(h);
     const steps = buildStepsFromRegionList({
         startRegion: from,

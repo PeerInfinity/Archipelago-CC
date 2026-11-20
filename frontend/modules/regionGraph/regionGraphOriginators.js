@@ -1,14 +1,10 @@
 /**
- * The Region Graph's `source` (on `user:regionMove`) and `originator` (on `user:locationCheck`) strings. Other code
- * keys on them (readers: `CC/docs/region-map/step2-view-model.md`), so they stay byte-identical; the shared actions in
+ * The Region Graph's `originator` (on `user:locationCheck`) strings. Other code keys on them (readers:
+ * `CC/docs/region-map/step2-view-model.md`), so they stay byte-identical; the shared actions in
  * `regionView/regionActions.js` take them as arguments. A second panel uses its own.
+ * Its click moves carry `regionView-path-regionGraph` (`regionView/clickActions.js` `pathSourceFor`, CA-S2); the old
+ * `regionGraph-*` move sources left this file in CA-S3 (only tests named them; the CA-S2 oracle keeps their values).
  */
-export const REGION_GRAPH_SOURCES = Object.freeze({
-    oneStep: 'regionGraph-oneStep',
-    direct: 'regionGraph-direct',
-    addToPath: 'regionGraph-addToPath',
-    overwritePath: 'regionGraph-overwritePath',
-});
 
 export const REGION_GRAPH_ORIGINATORS = Object.freeze({
     check: 'RegionGraphCheck',

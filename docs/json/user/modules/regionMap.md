@@ -32,14 +32,19 @@ Hover over a cell to see its name and its counts (checked, accessible and inacce
 
 ## Clicking
 
-A click does what the same click does in the **Region Graph**:
+- **Click a cell** to select it (a yellow outline) and run the **On click** strip's *Region* actions on its region. By default that extends your path to the region, which moves you there, and opens it in the Regions panel.
+- **Click a location square** to run the strip's *Location* actions on it. By default that checks the location. A location you cannot reach yet is refused, exactly as it is in the Region Graph.
 
-- **Click a cell** to select it (a yellow outline) and act on its region. With the Region Graph's default settings, that adds the region to your path, which moves you there, and shows it in the Regions panel.
-- **Click a location square** to check that location. A location you cannot reach yet is refused, exactly as it is in the Region Graph.
+A dragged pan never counts as a click. In loop mode, a Region Map click plans your path the way a Region Graph click does. With discovery mode on, a location you have not discovered shows as `???` when you hover over it.
 
-What a click does is set by the **Region Graph's** control-panel checkboxes, for both panels: *Move player one step*, *Move player directly*, *Show region in panel*, *Add to path*, *Overwrite path*, *Add locations to path* and *Check all locations in region*. The Region Map has no copy of these controls yet. A dragged pan never counts as a click.
+## The "On click" strip
 
-In loop mode, a Region Map click plans your path the way a Region Graph click does. With discovery mode on, a location you have not discovered shows as `???` when you hover over it.
+What a click does is set in the **On click** strip, the row at the very top of the panel, above the toolbar. It is the same strip as the [Region Graph's](regionGraph.md#the-on-click-strip), with the same actions:
+
+- **Folded**, it is one line saying what a click does — for example *On click: extend path · Regions — location: check* — with the **⏸** switch beside it. **⏸** turns every click action off at once (a click then only selects the cell); **▶** turns them back on. The line then reads *On click: ⏸ paused*.
+- **Unfolded** (press **▸**), it lists the **Region** actions (route to the region, check all its accessible locations, open it in the Regions panel) and the **Location** actions (check it now, or add the check to the path). Other panels can add actions of their own.
+
+The Region Map keeps its own settings (`moduleSettings.regionMap.clickActions`), separate from the Region Graph's: changing one strip never changes the other. The first time the Region Map opens, it starts from a copy of the Region Graph's current setup.
 
 ## Discovery mode
 
@@ -55,5 +60,6 @@ With discovery mode on, regions you have not discovered are not drawn. A region 
 | Cells | `cellSize` | sized by level | **Sized by level**: one tile scale for every level, so a small level looks small. **Uniform**: every level scaled to fill the same square |
 | Grouping | `groupingRule` | R1 | How regions are grouped. **R1** groups everything joined by edge transitions |
 | — | `minSquarePx` | 6 | The smallest a location square gets on screen, in pixels |
+| On click strip | `clickActions` | a copy of the Region Graph's, on first open | What a click on a cell or a location square runs (above) |
 
 The settings are under **Region Map** in the Settings panel (`moduleSettings.regionMap.*`).

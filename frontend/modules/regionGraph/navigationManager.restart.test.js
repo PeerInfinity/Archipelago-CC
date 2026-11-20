@@ -47,8 +47,8 @@ beforeEach(() => { restart.mockClear(); statuses.length = 0; });
 
 describe('regionGraph — the RESTART step (takeRestartStepToward)', () => {
     // ⚖ CA-S2 (user, 2026-11-17T23:00:54Z): the one-step click move that took this step is removed. Its restart
-    // behaviour stays pinned where it lives, `regionView/regionActions.test.js` (`planOneStepMove` / `moveOneStep`,
-    // still used by the Region Map until CA-S3).
+    // behaviour stays pinned where it lives, `regionView/regionActions.test.js` (`takeRestartStep`; the one-step moves
+    // left `regionActions.js` in CA-S3 with the Region Map's interim click reader).
     it('flag ON, no walk from the pit: the step is the Menu panel\'s Restart, and the status says so', () => {
         rawJson = docWith(true);
         expect(nav.takeRestartStepToward('Pit', 'B', { restart })).toBe(true);

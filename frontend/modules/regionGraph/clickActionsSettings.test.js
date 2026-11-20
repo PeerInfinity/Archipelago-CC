@@ -2,10 +2,10 @@
  * clickActionsSettings — the Region Graph's `moduleSettings.regionGraph.clickActions` (slice CA-S2):
  *   1. the ONE-TIME migration (js-21 edit 3): it writes once, a second load changes nothing, and a stored
  *      `clickActions` is never overwritten; the seven old keys are left in place;
- *   2. the six settings presets carry `clickActions` = the migration of their own old keys, alongside those keys;
- *   3. the Region Map is unchanged (js-21 edit 2): its effective click config (`regionMapClicks.readClickOptions`,
- *      which reads the seven `regionGraph.*` keys until CA-S3) is the one measured at base, for each preset and the
- *      default.
+ *   2. the six settings presets carry `clickActions` = the migration of the old keys they named at base (CA-S3 removed
+ *      those keys from the presets, keeping `addLocationsToPath`; the pin: no `frontend/settings/*.json` names one);
+ *   3. the Region Map's FIRST-RUN COPY (CA-S3, ⚖ R4) over each preset and the default = the migration of the click
+ *      config its interim reader (`regionMapClicks.readClickOptions`) measured at base: the copy is exact.
  * The settings manager is a fake with getSetting's precedence (override > stored > schema default > call-site).
  */
 import { describe, it, expect } from 'vitest';
@@ -13,7 +13,7 @@ import fs from 'node:fs';
 
 const S = await import('./clickActionsSettings.js');
 const CA = await import('../regionView/clickActions.js');
-const { readClickOptions, CLICK_OPTIONS_PREFIX } = await import('../regionMap/regionMapClicks.js');
+const { loadRegionMapClickActions, REGION_MAP_CLICK_ACTIONS_KEY } = await import('../regionMap/regionMapClickActions.js');
 
 const PRESETS = ['depgraph', 'vibecoding', 'apcalc', 'check-all-from-graph', 'metamath', 'textadventure'];
 const presetFile = (name) => new URL(`../../settings/settings-${name}.json`, import.meta.url);
@@ -109,15 +109,11 @@ describe('⛓ the addLocationsToPath MIRROR (⚖ planner 2026-11-19): a strip sa
         const sm = fakeSettings({ moduleSettings: { regionGraph: { addToPath: true, movePlayerDirectly: false } } });
         const on = CA.defaultClickActions();
         on.location['path.check'] = 'addToPath';
-        const mapBefore = await readClickOptions(sm, CLICK_OPTIONS_PREFIX);
         await S.saveRegionGraphClickActions(sm, on);
         expect(sm.tree.moduleSettings.regionGraph.addLocationsToPath).toBe(true);
-        // The ONE interim change (js-21): the Region Map's click config follows the strip on this key alone.
-        expect(await readClickOptions(sm, CLICK_OPTIONS_PREFIX)).toEqual({ ...mapBefore, addLocationsToPath: true });
         const off = { ...on, location: { 'path.check': 'now' } };
         await S.saveRegionGraphClickActions(sm, off);
         expect(sm.tree.moduleSettings.regionGraph.addLocationsToPath).toBe(false);
-        expect(await readClickOptions(sm, CLICK_OPTIONS_PREFIX)).toEqual({ ...mapBefore, addLocationsToPath: false });
         expect(sm.writes.map(([k]) => k)).toEqual([S.CLICK_ACTIONS_KEY, S.MIRRORED_LEGACY_KEY, S.CLICK_ACTIONS_KEY, S.MIRRORED_LEGACY_KEY]);
         // An unchanged mirror is not rewritten; the region keys are never written.
         await S.saveRegionGraphClickActions(sm, { ...off, enabled: false });
@@ -135,32 +131,11 @@ describe('⛓ the addLocationsToPath MIRROR (⚖ planner 2026-11-19): a strip sa
     });
 });
 
-describe('⛓ the settings presets that name the old keys carry clickActions alongside them', () => {
-    it('the presets that name an old key are exactly the ones listed here (scanned, not trusted)', () => {
-        const dir = new URL('../../settings/', import.meta.url);
-        const naming = fs.readdirSync(dir).filter((f) => /^settings-.*\.json$/.test(f)).filter((f) => {
-            const rg = JSON.parse(fs.readFileSync(new URL(f, dir), 'utf8')).moduleSettings?.regionGraph ?? {};
-            return Object.keys(CA.LEGACY_REGION_GRAPH_CLICK_DEFAULTS).some((k) => k in rg);
-        }).map((f) => f.slice('settings-'.length, -'.json'.length)).sort();
-        expect(naming).toEqual([...PRESETS].sort());
-    });
-
-    for (const name of PRESETS) {
-        it(`settings-${name}.json: clickActions = the migration of its own old keys, and a load does not migrate`, async () => {
-            const rg = readPreset(name).moduleSettings.regionGraph;
-            const { clickActions, ...rest } = rg;
-            expect(clickActions).toEqual(CA.migrateRegionGraphClickKeys(rest));
-            const sm = fakeSettings(readPreset(name));
-            expect((await S.loadRegionGraphClickActions(sm)).migrated).toBe(false);
-            expect(sm.writes).toEqual([]);
-        });
-    }
-});
-
 /**
  * The Region Map's effective click config, MEASURED at base 41561f80944b (`readClickOptions` over each preset file, with
- * the Region Graph's schema then: only `addLocationsToPath: false`), as the JSON it printed. CA-S2 must leave it
- * byte-identical: the presets keep their old keys and the schema keeps `addLocationsToPath`.
+ * the Region Graph's schema then: only `addLocationsToPath: false`), as the JSON it printed. CA-S2 left it
+ * byte-identical (its presets kept their old keys); CA-S3 removed the keys, so these are now the record of what each
+ * preset said, and both pins below read them.
  */
 const MAP_CONFIG_AT_BASE = {
     default: '{"movePlayerOneStep":false,"movePlayerDirectly":true,"showRegionInPanel":true,"addToPath":true,"overwritePath":false,"addLocationsToPath":false,"checkAllLocationsInRegion":false}',
@@ -172,11 +147,54 @@ const MAP_CONFIG_AT_BASE = {
     textadventure: '{"movePlayerOneStep":false,"movePlayerDirectly":true,"showRegionInPanel":false,"addToPath":true,"overwritePath":false,"addLocationsToPath":false,"checkAllLocationsInRegion":false}',
 };
 
-describe('⛓ the Region Map is unchanged (js-21 edit 2): its effective click config, base → tip', () => {
+/** The six keys CA-S3 removed from the presets and the schema (`addLocationsToPath` stays until CA-S4). */
+const REMOVED_KEYS = Object.keys(CA.LEGACY_REGION_GRAPH_CLICK_DEFAULTS).filter((k) => k !== 'addLocationsToPath');
+
+describe('⛓ the old click keys are gone from every settings file (CA-S3)', () => {
+    it('no frontend/settings/*.json names a removed key (scanned, not trusted)', () => {
+        expect(REMOVED_KEYS).toEqual(['movePlayerOneStep', 'movePlayerDirectly', 'showRegionInPanel', 'addToPath',
+            'overwritePath', 'checkAllLocationsInRegion']);
+        const dir = new URL('../../settings/', import.meta.url);
+        const files = fs.readdirSync(dir).filter((f) => f.endsWith('.json'));
+        expect(files.length).toBeGreaterThan(PRESETS.length);
+        const naming = files.filter((f) => {
+            const rg = JSON.parse(fs.readFileSync(new URL(f, dir), 'utf8')).moduleSettings?.regionGraph ?? {};
+            return REMOVED_KEYS.some((k) => k in rg);
+        });
+        expect(naming).toEqual([]);
+    });
+
+    it('the Region Graph\'s schema keeps addLocationsToPath (the Regions panel reads it until CA-S4) and no removed key', async () => {
+        const src = fs.readFileSync(new URL('./index.js', import.meta.url), 'utf8');
+        const schema = src.slice(src.indexOf('registerSettingsSchema('));
+        expect(schema).toMatch(/addLocationsToPath: \{/);
+        for (const k of REMOVED_KEYS) expect(schema).not.toMatch(new RegExp(`\\b${k}: \\{`));
+    });
+});
+
+describe('⛓ the presets\' clickActions = the migration of the old keys they named at base', () => {
+    for (const name of PRESETS) {
+        it(`settings-${name}.json: clickActions = migrate(its base keys), and a load does not migrate`, async () => {
+            const { clickActions } = readPreset(name).moduleSettings.regionGraph;
+            expect(clickActions).toEqual(CA.migrateRegionGraphClickKeys(JSON.parse(MAP_CONFIG_AT_BASE[name])));
+            const sm = fakeSettings(readPreset(name));
+            expect((await S.loadRegionGraphClickActions(sm)).migrated).toBe(false);
+            expect(sm.writes).toEqual([]);
+        });
+    }
+});
+
+describe('⛓ the Region Map\'s first-run copy (CA-S3, ⚖ R4) per preset = the migration of what its interim reader read', () => {
     for (const name of ['default', ...PRESETS]) {
-        it(`${name}: readClickOptions is byte-identical to base`, async () => {
-            const got = await readClickOptions(fakeSettings(readPreset(name)), CLICK_OPTIONS_PREFIX);
-            expect(JSON.stringify(got)).toBe(MAP_CONFIG_AT_BASE[name]);
+        it(`${name}: the copy is exact, saved once as the Map's, and a second load writes nothing`, async () => {
+            const sm = fakeSettings(readPreset(name));
+            const first = await loadRegionMapClickActions(sm);
+            expect(first.copied).toBe(true);
+            expect(first.clickActions).toEqual(CA.migrateRegionGraphClickKeys(JSON.parse(MAP_CONFIG_AT_BASE[name])));
+            expect(sm.writes.at(-1)).toEqual([REGION_MAP_CLICK_ACTIONS_KEY, first.clickActions]);
+            const n = sm.writes.length;
+            expect(await loadRegionMapClickActions(sm)).toEqual({ clickActions: first.clickActions, copied: false });
+            expect(sm.writes).toHaveLength(n);
         });
     }
 });
