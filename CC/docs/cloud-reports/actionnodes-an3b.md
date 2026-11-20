@@ -327,6 +327,46 @@ and `vibeCodingSim/`; the `shared` submodule.
    Ruling C: a known gap, for its own Loops slice.
 5. **`gameState` has no mana setter.** The row sets the pool with `deductMana`.
 
+## The merge and CI
+
+**CI at the pre-merge tip `9aea8d2de4`, all success:**
+- unittests: 44779855768.
+- JSUT (dispatch): 44779906032. Suite 29214 passed / 0 failed over 1383 files; slow 438/438.
+- `train_only`: 44779901116, 3/3 shards.
+- TT: 44779911026. Headroom OK for every batch:
+
+  | Batch | Span |
+  |---|---|
+  | fast | 313.0 s = 52% |
+  | fast bundled | 307.5 s = 51% |
+  | playback-bot | 91.7 s = 15% |
+  | seedling-js | 36% |
+  | seedling-js-solver | 31% |
+  | seedling-wasm | 23% |
+  | apworld | 30% |
+
+  `an-node-card`, `an-click-performs-once`, `an-perform-all-button`, `an-cards-after-reopen`, `test_node_selection`
+  and `test_region_graph_node_picker` PASSED on both boots; `an-bot-plays-to-goal` PASSED in playback-bot.
+- feature-checks: 44779915213, 69.9 s (12%).
+
+**The merge.** Main moved to `7729ecd104` (lab-set-seedling-identity). It was merged ONCE, as `8ac5c03b4e`.
+- Only the generated docs index conflicted (the procgen `README.md` and `procgenDocs/generated/docsIndex.js`). I took
+  main's side and regenerated.
+- The substrates config auto-merged.
+
+Gates re-run at the merge, all green:
+- bounded vitest over the seven areas: 73 files, 1817 tests;
+- `action-nodes-compile.mjs --check`: byte-identical;
+- `check-sidecar-fields.mjs`: ALL PASS (2296);
+- `generate-procgen-reference.mjs --check`: all match;
+- `check-procgen-docs.mjs`: ALL CHECKS PASSED;
+- the quickLaunch docs index: current;
+- `action-nodes-play.mjs`: pure 2, live 2;
+- the closure: 43 lines, `a458a51c3cb725ba`; closure ∩ the diff against main = ∅;
+- presets against main: none changed; gitlinks: 0.
+
+CI at the final tip (this record's own commit) is quoted in the REPORT BACK.
+
 ## Next slice's line
 
 The Loops Instant fix is (A), for the planner to plan: under Instant, an action whose cost exceeds the pool drains it
