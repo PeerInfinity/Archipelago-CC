@@ -1926,6 +1926,22 @@ export class FlashPanelUI {
     if (this.adapter !== adapter) return;
 
     /**
+     * ⛓⛓ SLICE G — ASKED AGAIN AT BRIDGE-READY. A rules load that lands while a game is still booting (an adapter,
+     * but no AP load yet: `_mountedRoomsDiffer`'s "it will read these") is not re-mounted, so the init's own question
+     * was asked of the PREVIOUS rules. If the rules this load reads are a custom set, the game that booted is the
+     * original one: it is stopped, and the panel stays empty and says why (measured: CI seedling-js, the row after
+     * the same-wiring switch).
+     */
+    const customSet = await this._customSetRefusal();
+    if (this.adapter !== adapter) return;
+    if (customSet) {
+      this._teardownForReinit();
+      this.isInitialized = true;
+      this._showCustomSetRefusal(customSet);
+      return;
+    }
+
+    /**
      * ⛓ THE FIFTH FACT, READ HERE (seedling generated G2): does the world
      * carry GENERATED Seedling rooms? The census is a pass over the rules the
      * panel already holds, so the cheap call can DECIDE the generated arm — its
@@ -2394,7 +2410,8 @@ export class FlashPanelUI {
     if (rooms.length === 0) return null;
     const guard = await servedRegionAtlas({
       atlasId: regionAtlasOf(rawRules, player)?.atlas_id,
-      fetchIndex: () => this._loadConfig(atlasIndexPath()),
+      // ⛔ `document.baseURI`, as the wiring resolves it: the served index beside the atlases, in either build.
+      fetchIndex: () => this._loadConfig(new URL(atlasIndexPath(), document.baseURI).href),
     });
     if (!guard.regionAtlas) return null;
     const v = seedlingRandomizerEligibility({ generated: generatedRoomCensus(rawRules, player), atlas: { rooms },
