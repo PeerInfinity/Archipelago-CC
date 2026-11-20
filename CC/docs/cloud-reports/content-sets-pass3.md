@@ -219,6 +219,50 @@ whatever the original had" rule.
 - No glossary term was added. PASS-3's docs add no markdown link, so the doc-link census is unchanged.
 - CI at the final tip, including `train_only`, is quoted in the report back to the planner and in the project memory.
 
+### 6.1 Before the merge: CI at `3b4a3a762e`, all success
+
+- ut 44643305601.
+- JSUT 44643305815: suite 1373/29054, slow 36/438.
+- train_only 44643314305: all three train shards passed.
+- TT 44643305598, HEADROOM OK in every batch:
+  - fast 294.3 s (49%);
+  - fast bundled 284.7 s (47%);
+  - seedling-js 215.4 s (36%);
+  - seedling-js-solver 194.9 s (32%);
+  - seedling-wasm 180.0 s (30%);
+  - apworld 160.6 s (27%);
+  - playback-bot 98.4 s (16%).
+- feature-checks 44643310049.
+
+### 6.2 After the merge (`19d8e54206`, main `3a1909b2dc`: PASS-2 landed in trains 163, 164, 167 and 170)
+
+- **Merged once.** The generated `procgen/README.md` and `docsIndex.js` conflicted and were regenerated (`--write`).
+  The **derived table conflicted too**: main carries another slice's regeneration of it (106 rows, 50 regions, a moved
+  `seedling_playthrough_maze` preset). The merge took main's table, and the recipe re-derived it under this branch's
+  engine (`f07be1c6be`, CI run 44654241603).
+  - Against main's table: **verdicts moved: none**; rows 106=106, regions 50=50, excluded 6=6; every pinned count
+    matches.
+  - The producer chain left every preset byte-identical.
+  - Only `measuredAt` and `inputs.engineMd5` change. `--check`: fresh and on count.
+- Main's closure files are identical to the base's (no closure file changed between `a0196dab45` and `3a1909b2dc`).
+  The tip's `engineMd5` is `74ae60f575531492ed9eaec1839e1fe3`.
+- **The extraction probe, main vs the merged tip:** 38 documents, 1,188 regions. Only `seedling_playthrough_maze`
+  differs, in exactly the same **4** regions' compiled rules as § 2 (d) (`level_12__r0c19`, `level_19__r1c1`,
+  `level_68__r1c1`, `level_99__r2c4`). Nothing further moved under main's new preset.
+- **Sidecar rule agreement, main vs the merged tip:** identical, maze DERIVED **3,474/4,244** endpoints reproduced, 770
+  frozen. Main's own preset change moved these numbers from § 2's; this slice moves none of them.
+- **Op-log probe, main vs the merged tip:** identical, 38 documents, 1,188 regions, 4,816,224 ops; none
+  `163754933ecf4f3191dee1fa71330220`, meta `1b5633140c9086ae5cd6ff33095fedc1`, composite
+  `0a0078245a680e03386162200a2b92ff`. These are main's new hashes: its preset moved.
+- **Against main:** presets, packs, worlds and atlases differ only in the table's two fields and
+  `frontend/packs/README.md`. **0** gitlinks.
+- `regen-seedling.mjs --check` every step OK; both spiral-room `--check` runs and `action-nodes-compile --check` OK;
+  `check-sidecar-fields` ALL PASS (2,296 entries, 0 issues); `check-procgen-docs` and `check-maze-lab` ALL CHECKS
+  PASSED.
+- The spoiler test on `seedling_playthrough_maze` PASSED, on the right preset.
+- Bounded vitest (the same dirs as § 6): **230 files, 6,568 tests, all passed**.
+- CI at the final tip is quoted in the report back to the planner and in the project memory.
+
 ## 7. Test paths
 
 - `frontend/modules/mazeRoom/mazeEntryGatesExtract.test.js` (new): part 0.
