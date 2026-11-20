@@ -1,0 +1,4 @@
+OFF {"SOLVED":224,"REFUSED":26} | ON {"SOLVED":224,"REFUSED":25,"TIMEOUT":1}
+step 66 L40 [Level 040 - Chest + Level 040 - Totem Part 160,640]: REFUSED -> REFUSED | OFF 945583b58f solverBot(survey-step-66) collect (160,640) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (625.9,680.6) — sp | ON f62ce318db solverBot(survey-step-66) collect (160,640) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (628.8,680.7) — sp
+step 96 L40 [L40 flag 12: wandlock@480,560 cleared + Level 040 - Boss Key 2]: REFUSED -> TIMEOUT | OFF de4464c591 solverBot(survey-step-96) collect (656,528) stance (ladder-routed: no corridor from (888.2497303124467,776.4935031361972) to a stance that c | ON d41d8cd98f 
+2 step(s) moved; steps that GAINED a hit ON: none

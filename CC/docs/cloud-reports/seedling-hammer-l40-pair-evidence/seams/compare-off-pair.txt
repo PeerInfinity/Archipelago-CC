@@ -1,0 +1,138 @@
+chest-L39 5213     1267t/0h/6ff86b89cdc5                    1267t/0h/6ff86b89cdc5 
+chest-L39 5214     1285t/0h/8c10bf159779                    1285t/0h/8c10bf159779 
+chest-L39 5215     1167t/0h/95e4b43df7b0                    1159t/0h/f0ac537bb8fd   ~ moved
+chest-L39 5216     1165t/0h/f8584f0ed43b                    1165t/0h/f8584f0ed43b 
+chest-L39 5217     1165t/0h/f8584f0ed43b                    1165t/0h/f8584f0ed43b 
+chest-L39 5218     1222t/0h/a904378d42d4                    1222t/0h/a904378d42d4 
+chest-L39 5219     1222t/0h/a904378d42d4                    1222t/0h/a904378d42d4 
+chest-L39 5220     1222t/0h/a904378d42d4                    1222t/0h/a904378d42d4 
+chest-L39 5221     1222t/0h/a904378d42d4                    1222t/0h/a904378d42d4 
+chest-L39 5222     1222t/0h/a904378d42d4                    1222t/0h/a904378d42d4 
+chest-L39 5223     1222t/0h/a904378d42d4                    1222t/0h/a904378d42d4 
+chest-L39 5224     1285t/0h/6287c7692431                    1285t/0h/6287c7692431 
+chest-L39 5225     REF@112:kill (spinner@880,848)           REF@112:kill (spinner@880,848) 
+chest-L39 5226     1302t/0h/2662b97d4803                    1159t/0h/00b421fe67a6   ~ moved
+chest-L39 5227     REF@112:kill (spinner@880,848)           REF@112:kill (spinner@880,848) 
+chest-L39 5228     REF@112:kill (spinner@880,848)           REF@112:kill (spinner@880,848) 
+chest-L39 5229     1253t/0h/1ad0afea7028                    1253t/0h/1ad0afea7028 
+chest-L39 5230     1231t/0h/0b5afac4954a                    1231t/0h/0b5afac4954a 
+chest-L39 5231     1192t/0h/7dd3d0caaeb8                    1192t/0h/7dd3d0caaeb8 
+chest-L39 5232     1190t/0h/744ad79f62a4                    1190t/0h/744ad79f62a4 
+chest-L39 5233     1317t/0h/ff95a231a1b7                    1317t/0h/ff95a231a1b7 
+chest-L39 5234     1228t/0h/d648d51dad0c                    1312t/0h/8c91697eeab0   ~ moved
+chest-L39 5235     1228t/0h/d648d51dad0c                    1312t/0h/8c91697eeab0   ~ moved
+chest-L39 5236     1305t/0h/6083dd9d60d7                    1267t/0h/4fefcd28b34b   ~ moved
+chest-L39 5237     1305t/0h/6083dd9d60d7                    1269t/0h/1f2d665f622a   ~ moved
+chest-L39 5238     1153t/0h/1a97d4e2991a                    1153t/0h/1a97d4e2991a 
+chest-L39 5239     1243t/0h/ae52f0523c80                    1266t/0h/c3b581e11563   ~ moved
+chest-L39 5240     1260t/0h/8a787b695d74                    1215t/0h/1f587d6f9413   ~ moved
+chest-L39 5241     REF@340:kill (spinner@816,848)           1029t/0h/cae135d4f8f7   >> NEW
+chest-L39 5242     REF@340:kill (spinner@816,848)           1067t/0h/c008dbd25dc3   >> NEW
+chest-L39 5243     1106t/0h/5378f4e4df44                    1223t/0h/36812a22d605   ~ moved
+chest-L39 5244     1234t/0h/3e62a305b410                    1042t/0h/f047fc39ea32   ~ moved
+chest-L39 5245     1234t/0h/fdc9ef66ade5                    1065t/0h/dc7c3bf348c9   ~ moved
+chest-L39 5246     1039t/0h/e696164cfe50                    1235t/0h/945f4f169260   ~ moved
+chest-L39 5247     1066t/0h/4de514330810                    1078t/0h/e781e819818a   ~ moved
+chest-L39 5248     1018t/0h/2f3c5a0259b6                    1025t/0h/74be09728a16   ~ moved
+chest-L39 5249     1127t/0h/037c8a6d6ba4                    1010t/0h/406fb637a9df   ~ moved
+chest-L39 5250     1022t/0h/f49dcbbcd357                    REF@1374:EXHAUSTED   << LOST
+chest-L39 5251     1018t/0h/dc1d0dbc7987                    1011t/0h/65dc68b9d05c   ~ moved
+chest-L39 5252     1165t/0h/cca8852ce527                    1010t/0h/e72b2dd19c8c   ~ moved
+chest-L39 5253     1262t/0h/3e5baa1fd285                    1277t/0h/86dda762e576   ~ moved
+chest-L39 5254     1262t/0h/35156caa8762                    1277t/0h/86dda762e576   ~ moved
+chest-L39 5255     1262t/0h/3e5baa1fd285                    1335t/0h/f1f180ef1aef   ~ moved
+chest-L39 5256     1338t/0h/c39209496867                    1335t/0h/f1f180ef1aef   ~ moved
+chest-L39 5257     1285t/0h/8b6901ab940e                    1285t/0h/8b6901ab940e 
+flag12-L39 5213    1346t/0h/9cf9d4ccd252                    1346t/0h/9cf9d4ccd252 
+flag12-L39 5214    1364t/0h/5a40036045ce                    1364t/0h/5a40036045ce 
+flag12-L39 5215    1264t/0h/d143cdeb85f1                    1261t/0h/84aeef638e5d   ~ moved
+flag12-L39 5216    1262t/0h/cece0fe6e7ad                    1262t/0h/cece0fe6e7ad 
+flag12-L39 5217    1262t/0h/cece0fe6e7ad                    1262t/0h/cece0fe6e7ad 
+flag12-L39 5218    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5219    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5220    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5221    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5222    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5223    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5224    1364t/0h/6a72f5614041                    1364t/0h/6a72f5614041 
+flag12-L39 5225    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L39 5226    1385t/0h/b772f4aa1428                    1261t/0h/c8ffbffff1a4   ~ moved
+flag12-L39 5227    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L39 5228    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L39 5229    1353t/0h/138ecb05283b                    1353t/0h/138ecb05283b 
+flag12-L39 5230    1314t/0h/b7dde2d4d30c                    1314t/0h/b7dde2d4d30c 
+flag12-L39 5231    1294t/0h/0901d3e2b7ea                    1294t/0h/0901d3e2b7ea 
+flag12-L39 5232    1292t/0h/56478e718666                    1292t/0h/56478e718666 
+flag12-L39 5233    1417t/0h/78b21f550d37                    1417t/0h/78b21f550d37 
+flag12-L39 5234    1307t/0h/21331339ac20                    1391t/0h/e88db23e5684   ~ moved
+flag12-L39 5235    1307t/0h/21331339ac20                    1391t/0h/e88db23e5684   ~ moved
+flag12-L39 5236    1381t/0h/81f4e7af5114                    1367t/0h/483185898962   ~ moved
+flag12-L39 5237    1381t/0h/81f4e7af5114                    1348t/0h/9f1b835122ca   ~ moved
+flag12-L39 5238    1229t/0h/e9df2640e745                    1229t/0h/e9df2640e745 
+flag12-L39 5239    1347t/0h/7b6f8ef787fd                    1363t/0h/f0fd29d407d0   ~ moved
+flag12-L39 5240    1360t/0h/e49aa6486649                    1294t/0h/7fd2e4b4a608   ~ moved
+flag12-L39 5241    REF@724:kill (spinner@816,848)           1110t/0h/106c40080ca0   >> NEW
+flag12-L39 5242    REF@724:kill (spinner@816,848)           1169t/0h/ed9ae605061d   >> NEW
+flag12-L39 5243    1203t/0h/c366f00a3bb8                    1323t/0h/8b5d7c74eb32   ~ moved
+flag12-L39 5244    1313t/0h/d3eeb18ea0f7                    1123t/0h/cd766ef92ea4   ~ moved
+flag12-L39 5245    1313t/0h/786dcdeff8a2                    1141t/0h/a3861e7ecdb4   ~ moved
+flag12-L39 5246    1143t/0h/f4da79b260c0                    1335t/0h/7f0c5dea9e17   ~ moved
+flag12-L39 5247    1147t/0h/e67fe428bb04                    1180t/0h/d85072e032fd   ~ moved
+flag12-L39 5248    1115t/0h/d17f410c015b                    1127t/0h/4ae3f04e35c9   ~ moved
+flag12-L39 5249    1227t/0h/399e28645226                    1112t/0h/940b91c64edd   ~ moved
+flag12-L39 5250    1101t/0h/2e4ae7cbf0c3                    REF@1758:EXHAUSTED   << LOST
+flag12-L39 5251    1120t/0h/7cfe7ac7f0ad                    1111t/0h/5700d7eda4d3   ~ moved
+flag12-L39 5252    1262t/0h/c375cd0426f4                    1091t/0h/64a02f27e2f8   ~ moved
+flag12-L39 5253    1338t/0h/53ec3df6e283                    1356t/0h/f76f96aa142a   ~ moved
+flag12-L39 5254    1343t/0h/1660cead6451                    1356t/0h/f76f96aa142a   ~ moved
+flag12-L39 5255    1338t/0h/53ec3df6e283                    1418t/0h/b45dcca34a78   ~ moved
+flag12-L39 5256    1419t/0h/6a9e9c618e2f                    1418t/0h/b45dcca34a78   ~ moved
+flag12-L39 5257    1364t/0h/9b2806d566de                    1364t/0h/9b2806d566de 
+flag12-L43 5213    1749t/1h/bfecf9bc7bbd                    1756t/0h/2605ebd29db2   ~ moved
+flag12-L43 5214    1765t/0h/701fa7474ab8                    1745t/1h/16e4cb02bdfe   !! HIT
+flag12-L43 5215    1765t/0h/701fa7474ab8                    1745t/1h/16e4cb02bdfe   !! HIT
+flag12-L43 5216    1765t/0h/701fa7474ab8                    1765t/0h/701fa7474ab8 
+flag12-L43 5217    1765t/0h/3b3a6e46c44e                    1765t/0h/3b3a6e46c44e 
+flag12-L43 5218    1765t/0h/3b3a6e46c44e                    1765t/0h/3b3a6e46c44e 
+flag12-L43 5219    REF@2565:deadline                        REF@2565:deadline 
+flag12-L43 5220    1765t/0h/0f7a0cc3944d                    1765t/0h/0f7a0cc3944d 
+flag12-L43 5221    1765t/0h/0f7a0cc3944d                    1765t/0h/0f7a0cc3944d 
+flag12-L43 5222    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L43 5223    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L43 5224    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L43 5225    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L43 5226    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L43 5227    2068t/0h/5615506525c2                    REF@undefined:?   << LOST
+flag12-L43 5228    1321t/0h/ffccbee072d7                    1321t/0h/ffccbee072d7 
+flag12-L43 5229    1316t/0h/afa52028779c                    1316t/0h/53a53de8df5d   ~ moved
+flag12-L43 5230    1308t/0h/46512b36972c                    1308t/0h/46512b36972c 
+flag12-L43 5231    1232t/0h/a8daa76e0594                    1232t/0h/a8daa76e0594 
+flag12-L43 5232    REF@2562:EXHAUSTED                       REF@undefined:?   ~ moved
+flag12-L43 5233    REF@2562:EXHAUSTED                       1889t/0h/d72239b0fb55   >> NEW
+flag12-L43 5234    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L43 5235    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L43 5236    REF@2562:EXHAUSTED                       REF@2562:EXHAUSTED 
+flag12-L43 5237    REF@2562:EXHAUSTED                       1777t/0h/3f2e58c8acb2   >> NEW
+flag12-L43 5238    REF@2562:EXHAUSTED                       REF@2562:EXHAUSTED 
+flag12-L43 5239    REF@2562:EXHAUSTED                       REF@2562:EXHAUSTED 
+flag12-L43 5240    REF@2562:EXHAUSTED                       1744t/1h/bacb539f8884   >> NEW
+flag12-L43 5241    1765t/0h/0f7a0cc3944d                    1744t/1h/bacb539f8884   !! HIT
+flag12-L43 5242    1886t/0h/0041f28139ae                    1890t/0h/985207e55d95   ~ moved
+flag12-L43 5243    1796t/0h/8190bab880c8                    1879t/0h/0b07ac177991   ~ moved
+flag12-L43 5244    1112t/0h/cfe43a8249be                    REF@1758:EXHAUSTED   << LOST
+flag12-L43 5245    1051t/0h/e9c583bc71be                    REF@1752:EXHAUSTED   << LOST
+flag12-L43 5246    1093t/0h/64ef5ddd5eeb                    1093t/0h/64ef5ddd5eeb 
+flag12-L43 5247    1106t/0h/cdf5f5d2bb05                    1106t/0h/cdf5f5d2bb05 
+flag12-L43 5248    1099t/0h/69eaff61d2b5                    1104t/0h/6294a137d9a2   ~ moved
+flag12-L43 5249    1086t/0h/eed2387c46e3                    1104t/0h/6294a137d9a2   ~ moved
+flag12-L43 5250    1132t/0h/643daa40674a                    1092t/0h/b9113470bf80   ~ moved
+flag12-L43 5251    1937t/0h/fdd76c8f2f73                    1946t/0h/2c7e22898ae1   ~ moved
+flag12-L43 5252    1760t/0h/541ca6b2a325                    1794t/0h/cfb17a099047   ~ moved
+flag12-L43 5253    1760t/0h/541ca6b2a325                    1794t/0h/cfb17a099047   ~ moved
+flag12-L43 5254    1760t/0h/541ca6b2a325                    1794t/0h/cfb17a099047   ~ moved
+flag12-L43 5255    1760t/0h/541ca6b2a325                    1794t/0h/cfb17a099047   ~ moved
+flag12-L43 5256    1749t/1h/bfecf9bc7bbd                    1938t/0h/ed3daaf55f92   ~ moved
+flag12-L43 5257    1749t/1h/bfecf9bc7bbd                    1769t/0h/6010e12150d0   ~ moved
+chest-L39: 45 clocks — OFF 40 solved (0 with a hit) / 5 refused; ON 41 solved (0 with a hit) / 4 refused
+flag12-L39: 45 clocks — OFF 40 solved (0 with a hit) / 5 refused; ON 41 solved (0 with a hit) / 4 refused
+flag12-L43: 45 clocks — OFF 30 solved (3 with a hit) / 15 refused; ON 30 solved (4 with a hit) / 15 refused

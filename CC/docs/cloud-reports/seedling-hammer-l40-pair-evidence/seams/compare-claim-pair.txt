@@ -1,0 +1,138 @@
+chest-L39 5213     1267t/0h/6ff86b89cdc5                    1267t/0h/6ff86b89cdc5 
+chest-L39 5214     1285t/0h/8c10bf159779                    1285t/0h/8c10bf159779 
+chest-L39 5215     1159t/0h/f0ac537bb8fd                    1159t/0h/f0ac537bb8fd 
+chest-L39 5216     1165t/0h/f8584f0ed43b                    1165t/0h/f8584f0ed43b 
+chest-L39 5217     1165t/0h/f8584f0ed43b                    1165t/0h/f8584f0ed43b 
+chest-L39 5218     1222t/0h/a904378d42d4                    1222t/0h/a904378d42d4 
+chest-L39 5219     1222t/0h/a904378d42d4                    1222t/0h/a904378d42d4 
+chest-L39 5220     1222t/0h/a904378d42d4                    1222t/0h/a904378d42d4 
+chest-L39 5221     1222t/0h/a904378d42d4                    1222t/0h/a904378d42d4 
+chest-L39 5222     1222t/0h/a904378d42d4                    1222t/0h/a904378d42d4 
+chest-L39 5223     1222t/0h/a904378d42d4                    1222t/0h/a904378d42d4 
+chest-L39 5224     1285t/0h/6287c7692431                    1285t/0h/6287c7692431 
+chest-L39 5225     REF@112:kill (spinner@880,848)           REF@112:kill (spinner@880,848) 
+chest-L39 5226     1159t/0h/00b421fe67a6                    1159t/0h/00b421fe67a6 
+chest-L39 5227     REF@112:kill (spinner@880,848)           REF@112:kill (spinner@880,848) 
+chest-L39 5228     REF@112:kill (spinner@880,848)           REF@112:kill (spinner@880,848) 
+chest-L39 5229     1253t/0h/1ad0afea7028                    1253t/0h/1ad0afea7028 
+chest-L39 5230     1231t/0h/0b5afac4954a                    1231t/0h/0b5afac4954a 
+chest-L39 5231     1192t/0h/7dd3d0caaeb8                    1192t/0h/7dd3d0caaeb8 
+chest-L39 5232     1190t/0h/744ad79f62a4                    1190t/0h/744ad79f62a4 
+chest-L39 5233     1317t/0h/ff95a231a1b7                    1317t/0h/ff95a231a1b7 
+chest-L39 5234     1312t/0h/8c91697eeab0                    1312t/0h/8c91697eeab0 
+chest-L39 5235     1312t/0h/8c91697eeab0                    1312t/0h/8c91697eeab0 
+chest-L39 5236     1267t/0h/4fefcd28b34b                    1267t/0h/4fefcd28b34b 
+chest-L39 5237     1269t/0h/1f2d665f622a                    1269t/0h/1f2d665f622a 
+chest-L39 5238     1153t/0h/1a97d4e2991a                    1153t/0h/1a97d4e2991a 
+chest-L39 5239     1266t/0h/c3b581e11563                    1266t/0h/c3b581e11563 
+chest-L39 5240     1215t/0h/1f587d6f9413                    1215t/0h/1f587d6f9413 
+chest-L39 5241     1029t/0h/cae135d4f8f7                    1029t/0h/cae135d4f8f7 
+chest-L39 5242     1067t/0h/c008dbd25dc3                    1067t/0h/c008dbd25dc3 
+chest-L39 5243     1223t/0h/36812a22d605                    1223t/0h/36812a22d605 
+chest-L39 5244     1042t/0h/f047fc39ea32                    1042t/0h/f047fc39ea32 
+chest-L39 5245     1065t/0h/dc7c3bf348c9                    1065t/0h/dc7c3bf348c9 
+chest-L39 5246     1235t/0h/945f4f169260                    1235t/0h/945f4f169260 
+chest-L39 5247     1106t/1h/d5ef5ca46261                    1078t/0h/e781e819818a   ~ moved
+chest-L39 5248     1025t/0h/74be09728a16                    1025t/0h/74be09728a16 
+chest-L39 5249     1010t/0h/406fb637a9df                    1010t/0h/406fb637a9df 
+chest-L39 5250     REF@1374:EXHAUSTED                       REF@1374:EXHAUSTED 
+chest-L39 5251     1011t/0h/65dc68b9d05c                    1011t/0h/65dc68b9d05c 
+chest-L39 5252     1010t/0h/e72b2dd19c8c                    1010t/0h/e72b2dd19c8c 
+chest-L39 5253     1277t/0h/86dda762e576                    1277t/0h/86dda762e576 
+chest-L39 5254     1277t/0h/86dda762e576                    1277t/0h/86dda762e576 
+chest-L39 5255     1335t/0h/f1f180ef1aef                    1335t/0h/f1f180ef1aef 
+chest-L39 5256     1335t/0h/f1f180ef1aef                    1335t/0h/f1f180ef1aef 
+chest-L39 5257     1285t/0h/8b6901ab940e                    1285t/0h/8b6901ab940e 
+flag12-L39 5213    1346t/0h/9cf9d4ccd252                    1346t/0h/9cf9d4ccd252 
+flag12-L39 5214    1364t/0h/5a40036045ce                    1364t/0h/5a40036045ce 
+flag12-L39 5215    1261t/0h/84aeef638e5d                    1261t/0h/84aeef638e5d 
+flag12-L39 5216    1262t/0h/cece0fe6e7ad                    1262t/0h/cece0fe6e7ad 
+flag12-L39 5217    1262t/0h/cece0fe6e7ad                    1262t/0h/cece0fe6e7ad 
+flag12-L39 5218    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5219    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5220    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5221    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5222    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5223    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5224    1364t/0h/6a72f5614041                    1364t/0h/6a72f5614041 
+flag12-L39 5225    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L39 5226    1261t/0h/c8ffbffff1a4                    1261t/0h/c8ffbffff1a4 
+flag12-L39 5227    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L39 5228    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L39 5229    1353t/0h/138ecb05283b                    1353t/0h/138ecb05283b 
+flag12-L39 5230    1314t/0h/b7dde2d4d30c                    1314t/0h/b7dde2d4d30c 
+flag12-L39 5231    1294t/0h/0901d3e2b7ea                    1294t/0h/0901d3e2b7ea 
+flag12-L39 5232    1292t/0h/56478e718666                    1292t/0h/56478e718666 
+flag12-L39 5233    1417t/0h/78b21f550d37                    1417t/0h/78b21f550d37 
+flag12-L39 5234    1391t/0h/e88db23e5684                    1391t/0h/e88db23e5684 
+flag12-L39 5235    1391t/0h/e88db23e5684                    1391t/0h/e88db23e5684 
+flag12-L39 5236    1367t/0h/483185898962                    1367t/0h/483185898962 
+flag12-L39 5237    1348t/0h/9f1b835122ca                    1348t/0h/9f1b835122ca 
+flag12-L39 5238    1229t/0h/e9df2640e745                    1229t/0h/e9df2640e745 
+flag12-L39 5239    1363t/0h/f0fd29d407d0                    1363t/0h/f0fd29d407d0 
+flag12-L39 5240    1294t/0h/7fd2e4b4a608                    1294t/0h/7fd2e4b4a608 
+flag12-L39 5241    1110t/0h/106c40080ca0                    1110t/0h/106c40080ca0 
+flag12-L39 5242    1169t/0h/ed9ae605061d                    1169t/0h/ed9ae605061d 
+flag12-L39 5243    1323t/0h/8b5d7c74eb32                    1323t/0h/8b5d7c74eb32 
+flag12-L39 5244    1123t/0h/cd766ef92ea4                    1123t/0h/cd766ef92ea4 
+flag12-L39 5245    1141t/0h/a3861e7ecdb4                    1141t/0h/a3861e7ecdb4 
+flag12-L39 5246    1335t/0h/7f0c5dea9e17                    1335t/0h/7f0c5dea9e17 
+flag12-L39 5247    1208t/1h/15ecc1485a36                    1180t/0h/d85072e032fd   ~ moved
+flag12-L39 5248    1127t/0h/4ae3f04e35c9                    1127t/0h/4ae3f04e35c9 
+flag12-L39 5249    1112t/0h/940b91c64edd                    1112t/0h/940b91c64edd 
+flag12-L39 5250    REF@1758:EXHAUSTED                       REF@1758:EXHAUSTED 
+flag12-L39 5251    1111t/0h/5700d7eda4d3                    1111t/0h/5700d7eda4d3 
+flag12-L39 5252    1091t/0h/64a02f27e2f8                    1091t/0h/64a02f27e2f8 
+flag12-L39 5253    1356t/0h/f76f96aa142a                    1356t/0h/f76f96aa142a 
+flag12-L39 5254    1356t/0h/f76f96aa142a                    1356t/0h/f76f96aa142a 
+flag12-L39 5255    1418t/0h/b45dcca34a78                    1418t/0h/b45dcca34a78 
+flag12-L39 5256    1418t/0h/b45dcca34a78                    1418t/0h/b45dcca34a78 
+flag12-L39 5257    1364t/0h/9b2806d566de                    1364t/0h/9b2806d566de 
+flag12-L43 5213    1746t/1h/bfc59b4b2485                    1756t/0h/2605ebd29db2   ~ moved
+flag12-L43 5214    1745t/1h/16e4cb02bdfe                    1745t/1h/16e4cb02bdfe 
+flag12-L43 5215    1745t/1h/16e4cb02bdfe                    1745t/1h/16e4cb02bdfe 
+flag12-L43 5216    1765t/0h/701fa7474ab8                    1765t/0h/701fa7474ab8 
+flag12-L43 5217    1765t/0h/3b3a6e46c44e                    1765t/0h/3b3a6e46c44e 
+flag12-L43 5218    1765t/0h/3b3a6e46c44e                    1765t/0h/3b3a6e46c44e 
+flag12-L43 5219    REF@2565:deadline                        REF@2565:deadline 
+flag12-L43 5220    1765t/0h/0f7a0cc3944d                    1765t/0h/0f7a0cc3944d 
+flag12-L43 5221    1765t/0h/0f7a0cc3944d                    1765t/0h/0f7a0cc3944d 
+flag12-L43 5222    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L43 5223    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L43 5224    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L43 5225    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L43 5226    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L43 5227    2068t/0h/5615506525c2                    REF@undefined:?   << LOST
+flag12-L43 5228    1321t/0h/ffccbee072d7                    1321t/0h/ffccbee072d7 
+flag12-L43 5229    1316t/0h/53a53de8df5d                    1316t/0h/53a53de8df5d 
+flag12-L43 5230    1308t/0h/46512b36972c                    1308t/0h/46512b36972c 
+flag12-L43 5231    1232t/0h/a8daa76e0594                    1232t/0h/a8daa76e0594 
+flag12-L43 5232    1777t/0h/2e02dd4318fc                    REF@undefined:?   << LOST
+flag12-L43 5233    1889t/0h/d72239b0fb55                    1889t/0h/d72239b0fb55 
+flag12-L43 5234    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L43 5235    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L43 5236    REF@2562:EXHAUSTED                       REF@2562:EXHAUSTED 
+flag12-L43 5237    1777t/0h/3f2e58c8acb2                    1777t/0h/3f2e58c8acb2 
+flag12-L43 5238    REF@2562:EXHAUSTED                       REF@2562:EXHAUSTED 
+flag12-L43 5239    REF@2562:EXHAUSTED                       REF@2562:EXHAUSTED 
+flag12-L43 5240    1750t/1h/423b2cbd1102                    1744t/1h/bacb539f8884   ~ moved
+flag12-L43 5241    1750t/1h/423b2cbd1102                    1744t/1h/bacb539f8884   ~ moved
+flag12-L43 5242    1890t/0h/985207e55d95                    1890t/0h/985207e55d95 
+flag12-L43 5243    1879t/0h/0b07ac177991                    1879t/0h/0b07ac177991 
+flag12-L43 5244    REF@1758:EXHAUSTED                       REF@1758:EXHAUSTED 
+flag12-L43 5245    REF@1752:EXHAUSTED                       REF@1752:EXHAUSTED 
+flag12-L43 5246    1093t/0h/64ef5ddd5eeb                    1093t/0h/64ef5ddd5eeb 
+flag12-L43 5247    1106t/0h/cdf5f5d2bb05                    1106t/0h/cdf5f5d2bb05 
+flag12-L43 5248    1098t/1h/2a059cecc898                    1104t/0h/6294a137d9a2   ~ moved
+flag12-L43 5249    1098t/1h/2a059cecc898                    1104t/0h/6294a137d9a2   ~ moved
+flag12-L43 5250    1092t/0h/b9113470bf80                    1092t/0h/b9113470bf80 
+flag12-L43 5251    1946t/0h/2c7e22898ae1                    1946t/0h/2c7e22898ae1 
+flag12-L43 5252    1794t/0h/cfb17a099047                    1794t/0h/cfb17a099047 
+flag12-L43 5253    1794t/0h/cfb17a099047                    1794t/0h/cfb17a099047 
+flag12-L43 5254    1794t/0h/cfb17a099047                    1794t/0h/cfb17a099047 
+flag12-L43 5255    1794t/0h/cfb17a099047                    1794t/0h/cfb17a099047 
+flag12-L43 5256    1938t/0h/ed3daaf55f92                    1938t/0h/ed3daaf55f92 
+flag12-L43 5257    1769t/0h/6010e12150d0                    1769t/0h/6010e12150d0 
+chest-L39: 45 clocks — OFF 41 solved (1 with a hit) / 4 refused; ON 41 solved (0 with a hit) / 4 refused
+flag12-L39: 45 clocks — OFF 41 solved (1 with a hit) / 4 refused; ON 41 solved (0 with a hit) / 4 refused
+flag12-L43: 45 clocks — OFF 32 solved (7 with a hit) / 13 refused; ON 30 solved (4 with a hit) / 15 refused

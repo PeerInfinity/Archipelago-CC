@@ -1,0 +1,4 @@
+STAGING {"boot":{"level":40,"x":480,"y":896},"persistence":[],"goal":{"kind":"clear-tag","tag":{"level":40,"tag":12},"at":{"x":480,"y":560},"obstacle":"wandlock@480,560"}}
+# box lock: TAKEN by l40-spinner-walls-witness (browser, pid 10576) — head cef784d43, 1 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"leg":871,"persist":[],"finished":true,"ticks":1615,"end":{"level":40,"x":887.562319193881,"y":775.8304781969423},"hits":0,"clears":["40:0","40:12","40:13","40:15","40:16"],"earned":["40:0","40:12","40:13","40:15","40:16"]}

@@ -1,0 +1,136 @@
+  avoid: no admissible corridor wi
+chest-L39 5213 SOLVED 1596 1267 0hit 6ff86b89cdc5 
+chest-L39 5214 SOLVED 1648 1285 0hit 8c10bf159779 
+chest-L39 5215 SOLVED 1574 1159 0hit f0ac537bb8fd 
+chest-L39 5216 SOLVED 1510 1165 0hit f8584f0ed43b 
+chest-L39 5217 SOLVED 1510 1165 0hit f8584f0ed43b 
+chest-L39 5218 SOLVED 1459 1222 0hit a904378d42d4 
+chest-L39 5219 SOLVED 1459 1222 0hit a904378d42d4 
+chest-L39 5220 SOLVED 1459 1222 0hit a904378d42d4 
+chest-L39 5221 SOLVED 1459 1222 0hit a904378d42d4 
+chest-L39 5222 SOLVED 1459 1222 0hit a904378d42d4 
+chest-L39 5223 SOLVED 1459 1222 0hit a904378d42d4 
+chest-L39 5224 SOLVED 1566 1285 0hit 6287c7692431 
+chest-L39 5225 REFUSED 112 -   apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (741.44,685.29) in level 40. There is no
+chest-L39 5226 SOLVED 1572 1159 0hit 00b421fe67a6 
+chest-L39 5227 REFUSED 112 -   apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (741.44,685.29) in level 40. There is no
+chest-L39 5228 REFUSED 112 -   apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (739.28,683.81) in level 40. There is no
+chest-L39 5229 SOLVED 1689 1253 0hit 1ad0afea7028 
+chest-L39 5230 SOLVED 1687 1231 0hit 0b5afac4954a 
+chest-L39 5231 SOLVED 1535 1192 0hit 7dd3d0caaeb8 
+chest-L39 5232 SOLVED 1628 1190 0hit 744ad79f62a4 
+chest-L39 5233 SOLVED 1983 1317 0hit ff95a231a1b7 
+chest-L39 5234 SOLVED 1776 1312 0hit 8c91697eeab0 
+chest-L39 5235 SOLVED 1774 1312 0hit 8c91697eeab0 
+chest-L39 5236 SOLVED 1865 1267 0hit 4fefcd28b34b 
+chest-L39 5237 SOLVED 1747 1269 0hit 1f2d665f622a 
+chest-L39 5238 SOLVED 1584 1153 0hit 1a97d4e2991a 
+chest-L39 5239 SOLVED 1725 1266 0hit c3b581e11563 
+chest-L39 5240 SOLVED 1711 1215 0hit 1f587d6f9413 
+chest-L39 5241 SOLVED 1374 1029 0hit cae135d4f8f7 
+chest-L39 5242 SOLVED 1563 1067 0hit c008dbd25dc3 
+chest-L39 5243 SOLVED 1530 1223 0hit 36812a22d605 
+chest-L39 5244 SOLVED 1498 1042 0hit f047fc39ea32 
+chest-L39 5245 SOLVED 1507 1065 0hit dc7c3bf348c9 
+chest-L39 5246 SOLVED 1659 1235 0hit 945f4f169260 
+chest-L39 5247 SOLVED 1506 1078 0hit e781e819818a 
+chest-L39 5248 SOLVED 1475 1025 0hit 74be09728a16 
+chest-L39 5249 SOLVED 1488 1010 0hit 406fb637a9df 
+chest-L39 5250 REFUSED 1374 -   apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,855.8) — chaser:bob@736,800 (inside leash 80 (d=4.3), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's order refused:
+chest-L39 5251 SOLVED 1553 1011 0hit 65dc68b9d05c 
+chest-L39 5252 SOLVED 1453 1010 0hit e72b2dd19c8c 
+chest-L39 5253 SOLVED 2023 1277 0hit 86dda762e576 
+chest-L39 5254 SOLVED 2021 1277 0hit 86dda762e576 
+chest-L39 5255 SOLVED 1855 1335 0hit f1f180ef1aef 
+chest-L39 5256 SOLVED 1715 1335 0hit f1f180ef1aef 
+chest-L39 5257 SOLVED 1646 1285 0hit 8b6901ab940e 
+flag12-L39 5213 SOLVED 2017 1346 0hit 9cf9d4ccd252 
+flag12-L39 5214 SOLVED 2067 1364 0hit 5a40036045ce 
+flag12-L39 5215 SOLVED 1970 1261 0hit 84aeef638e5d 
+flag12-L39 5216 SOLVED 1906 1262 0hit cece0fe6e7ad 
+flag12-L39 5217 SOLVED 1906 1262 0hit cece0fe6e7ad 
+flag12-L39 5218 SOLVED 1855 1324 0hit 51e5518f0060 
+flag12-L39 5219 SOLVED 1855 1324 0hit 51e5518f0060 
+flag12-L39 5220 SOLVED 1855 1324 0hit 51e5518f0060 
+flag12-L39 5221 SOLVED 1855 1324 0hit 51e5518f0060 
+flag12-L39 5222 SOLVED 1855 1324 0hit 51e5518f0060 
+flag12-L39 5223 SOLVED 1855 1324 0hit 51e5518f0060 
+flag12-L39 5224 SOLVED 1985 1364 0hit 6a72f5614041 
+flag12-L39 5225 REFUSED 496 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next t
+flag12-L39 5226 SOLVED 1968 1261 0hit c8ffbffff1a4 
+flag12-L39 5227 REFUSED 496 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next t
+flag12-L39 5228 REFUSED 496 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next t
+flag12-L39 5229 SOLVED 2085 1353 0hit 138ecb05283b 
+flag12-L39 5230 SOLVED 2099 1314 0hit b7dde2d4d30c 
+flag12-L39 5231 SOLVED 1931 1294 0hit 0901d3e2b7ea 
+flag12-L39 5232 SOLVED 2024 1292 0hit 56478e718666 
+flag12-L39 5233 SOLVED 2379 1417 0hit 78b21f550d37 
+flag12-L39 5234 SOLVED 2197 1391 0hit e88db23e5684 
+flag12-L39 5235 SOLVED 2195 1391 0hit e88db23e5684 
+flag12-L39 5236 SOLVED 2261 1367 0hit 483185898962 
+flag12-L39 5237 SOLVED 2167 1348 0hit 9f1b835122ca 
+flag12-L39 5238 SOLVED 1992 1229 0hit e9df2640e745 
+flag12-L39 5239 SOLVED 2121 1363 0hit f0fd29d407d0 
+flag12-L39 5240 SOLVED 2115 1294 0hit 7fd2e4b4a608 
+flag12-L39 5241 SOLVED 1802 1110 0hit 106c40080ca0 
+flag12-L39 5242 SOLVED 1959 1169 0hit ed9ae605061d 
+flag12-L39 5243 SOLVED 1926 1323 0hit 8b5d7c74eb32 
+flag12-L39 5244 SOLVED 1927 1123 0hit cd766ef92ea4 
+flag12-L39 5245 SOLVED 1916 1141 0hit a3861e7ecdb4 
+flag12-L39 5246 SOLVED 2055 1335 0hit 7f0c5dea9e17 
+flag12-L39 5247 SOLVED 1906 1180 0hit d85072e032fd 
+flag12-L39 5248 SOLVED 1871 1127 0hit 4ae3f04e35c9 
+flag12-L39 5249 SOLVED 1888 1112 0hit 940b91c64edd 
+flag12-L39 5250 REFUSED 1758 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,855.8) — chaser:bob@736,800 (inside leash 80 (d=4.3), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's o
+flag12-L39 5251 SOLVED 1950 1111 0hit 5700d7eda4d3 
+flag12-L39 5252 SOLVED 1873 1091 0hit 64a02f27e2f8 
+flag12-L39 5253 SOLVED 2427 1356 0hit f76f96aa142a 
+flag12-L39 5254 SOLVED 2425 1356 0hit f76f96aa142a 
+flag12-L39 5255 SOLVED 2283 1418 0hit b45dcca34a78 
+flag12-L39 5256 SOLVED 2143 1418 0hit b45dcca34a78 
+flag12-L39 5257 SOLVED 2065 1364 0hit 9b2806d566de 
+flag12-L43 5213 SOLVED 2015 1756 0hit 2605ebd29db2 
+flag12-L43 5214 SOLVED 1965 1745 1hit 16e4cb02bdfe 
+flag12-L43 5215 SOLVED 1965 1745 1hit 16e4cb02bdfe 
+flag12-L43 5216 SOLVED 1931 1765 0hit 701fa7474ab8 
+flag12-L43 5217 SOLVED 1931 1765 0hit 3b3a6e46c44e 
+flag12-L43 5218 SOLVED 1931 1765 0hit 3b3a6e46c44e 
+flag12-L43 5219 REFUSED 2565 -   solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784)'s corridor (attempt 1) — the segment's own work is bounded there, so the solve stops he
+flag12-L43 5220 SOLVED 1931 1765 0hit 0f7a0cc3944d 
+flag12-L43 5221 SOLVED 1931 1765 0hit 0f7a0cc3944d 
+flag12-L43 5222 REFUSED 496 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next t
+flag12-L43 5223 REFUSED 496 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next t
+flag12-L43 5224 REFUSED 496 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next t
+flag12-L43 5225 REFUSED 496 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next t
+flag12-L43 5226 REFUSED 496 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next t
+flag12-L43 5227 REFUSED undefined -   WALL CAP 300s
+flag12-L43 5228 SOLVED 1940 1321 0hit ffccbee072d7 
+flag12-L43 5229 SOLVED 2026 1316 0hit 53a53de8df5d 
+flag12-L43 5230 SOLVED 1936 1308 0hit 46512b36972c 
+flag12-L43 5231 SOLVED 2150 1232 0hit a8daa76e0594 
+flag12-L43 5232 REFUSED undefined -   WALL CAP 300s
+flag12-L43 5233 SOLVED 2098 1889 0hit d72239b0fb55 
+flag12-L43 5234 REFUSED 496 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next t
+flag12-L43 5235 REFUSED 496 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next t
+flag12-L43 5236 REFUSED 2562 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (831.6,855.9) — spinner:spinner@816,848 (a live Spinner BODY at (836.1,859.7) at horizon 139 — `Enemy.hitPlayer`'s 7x7 `collide(
+flag12-L43 5237 SOLVED 2111 1777 0hit 3f2e58c8acb2 
+flag12-L43 5238 REFUSED 2562 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (831.6,855.9) — spinner:spinner@816,848 (a live Spinner BODY at (836.1,859.7) at horizon 139 — `Enemy.hitPlayer`'s 7x7 `collide(
+flag12-L43 5239 REFUSED 2562 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (831.6,855.9) — spinner:spinner@816,848 (a live Spinner BODY at (836.1,859.7) at horizon 139 — `Enemy.hitPlayer`'s 7x7 `collide(
+flag12-L43 5240 SOLVED 1947 1744 1hit bacb539f8884 
+flag12-L43 5241 SOLVED 1947 1744 1hit bacb539f8884 
+flag12-L43 5242 SOLVED 2050 1890 0hit 985207e55d95 
+flag12-L43 5243 SOLVED 2157 1879 0hit 0b07ac177991 
+flag12-L43 5244 REFUSED 1758 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (744.2,857.0) — chaser:bob@736,800 (inside leash 80 (d=4.2), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's o
+flag12-L43 5245 REFUSED 1752 -   clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (744.2,857.1) — chaser:bob@736,800 (inside leash 80 (d=4.2), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's o
+flag12-L43 5246 SOLVED 1813 1093 0hit 64ef5ddd5eeb 
+flag12-L43 5247 SOLVED 1886 1106 0hit cdf5f5d2bb05 
+flag12-L43 5248 SOLVED 1916 1104 0hit 6294a137d9a2 
+flag12-L43 5249 SOLVED 1918 1104 0hit 6294a137d9a2 
+flag12-L43 5250 SOLVED 1960 1092 0hit b9113470bf80 
+flag12-L43 5251 SOLVED 2102 1946 0hit 2c7e22898ae1 
+flag12-L43 5252 SOLVED 2094 1794 0hit cfb17a099047 
+flag12-L43 5253 SOLVED 2096 1794 0hit cfb17a099047 
+flag12-L43 5254 SOLVED 2094 1794 0hit cfb17a099047 
+flag12-L43 5255 SOLVED 2096 1794 0hit cfb17a099047 
+flag12-L43 5256 SOLVED 2141 1938 0hit ed3daaf55f92 
+flag12-L43 5257 SOLVED 2080 1769 0hit 6010e12150d0 
