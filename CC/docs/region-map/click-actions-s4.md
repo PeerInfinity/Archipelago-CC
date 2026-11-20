@@ -127,7 +127,7 @@ that is a new design question (those panels have no "On click" strip).
 apcalc and vibeCodingSim hear `regionView:regionClicked` only from the Region Graph (`isClickFromPanel(data,
 'regionGraph')`). That is exactly what they heard before, since the Map never published `regionGraph:nodeSelected`.
 
-**Question for the planner/user (not acted on):** should apcalc and vibeCodingSim hear Region Map clicks too? Each
+**Question for the planner/user (not acted on; archipelago-cc-23 2026-11-20: it goes to the user separately, and any change lands in a later slice):** should apcalc and vibeCodingSim hear Region Map clicks too? Each
 click changes their panel state: apcalc's `C` resets the calculator, and any region filters its paths;
 vibeCodingSim selects a feature. With the filter dropped, a Map click would do the same. No ruling licenses that
 behaviour change, so the filter stays.
@@ -198,7 +198,7 @@ ordered log of every observable call:
 |---|---|---|
 | **G**: the generic event | 252 (every Graph click) | The Region Graph publishes one `regionView:regionClicked` / `locationClicked` (`graphInteractionManager.js:184, :207`); the base published none. The Map's equals base (it published since CA-S3). The file moved by exactly these two publishes (pinned) |
 | **F**: Flash, the ruled change | 172 | See below |
-| **I**: independent listeners interleaved | 56 | Only with discovery's click-discovers bundle, on the two Graph region clicks (2 × 7 configs × 4 box states). apcalc/vibeCodingSim now hear the generic event, published before the actions, so they run before `discovery.discover`. The base ran Discovery first (both on one event). Each channel's own order is equal, and the calls are the same multiset. No preset combines apcalc/vibeCodingSim with discovery mode |
+| **I**: independent listeners interleaved | 56 | Only with discovery's click-discovers bundle, on the two Graph region clicks (2 × 7 configs × 4 box states). apcalc/vibeCodingSim now hear the generic event, published before the actions, so they run before `discovery.discover`. The base ran Discovery first (both on one event). Each channel's own order is equal, and the calls are the same multiset. No preset combines apcalc/vibeCodingSim with discovery mode. **Accepted:** "delta I accepted, archipelago-cc-23 2026-11-20" (planner ruling) |
 
 **F, by kind** (base teleports → tip teleports):
 
