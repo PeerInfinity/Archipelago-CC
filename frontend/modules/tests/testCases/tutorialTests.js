@@ -523,9 +523,10 @@ function wasmMemoryBytes() {
 
 async function startMeasureSampler(tutorial, stepStarts, ui) {
     // Imported here, not at the top: an inert run loads nothing it did not load before.
-    const [{ getActivePanel: getActiveBotPanel }, { getActivePanelInstance: getActiveFlashPanel }] = await Promise.all([
+    const [{ getActivePanel: getActiveBotPanel }, { getActivePanelInstance: getActiveFlashPanel }, { measureEndExtra, measureLine }] = await Promise.all([
         import('../../playbackBot/index.js'),
         import('../../flashPanel/index.js'),
+        import('../walkMeasureLine.js'),
     ]);
     const t0 = performance.now();
     let regionChanges = 0;
@@ -544,14 +545,15 @@ async function startMeasureSampler(tutorial, stepStarts, ui) {
             const mem = wasmMemoryBytes();
             const heap = performance.memory?.usedJSHeapSize ?? null;
             const head = bot?._queue?.[bot?._cursor] ?? null;
-            const line = `[MEASURE ${tag}] ${tutorial.id} t=${((performance.now() - t0) / 1000).toFixed(0)}s`
-                + ` step=${stepStarts.at(-1)?.id ?? '?'} checked=${checked}`
-                + ` botQueue=${bot?._queue?.length ?? '?'} botCursor=${bot?._cursor ?? '?'} botChecked=${bot?._checkedSoFar?.size ?? '?'}`
-                + ` botHead=${JSON.stringify(head?.locationName ?? null)}`
-                + ` botRegion=${JSON.stringify(bot?._currentRegion ?? null)} lastRegionEvent=${JSON.stringify(lastRegion)}`
-                + ` regionChanges=${regionChanges} wasmPushes=${fp?.adapter?.invocationPushes ?? '?'} transport=${fp?.transport ?? '?'}`
-                + ` wasmMemMB=${mem == null ? '?' : (mem / 1048576).toFixed(0)} jsHeapMB=${heap == null ? '?' : (heap / 1048576).toFixed(0)}`
-                + ` status=${JSON.stringify(botStatusText())}${extra}`;
+            // ONE line (`walkMeasureLine.js`): a multi-line status (a ladder refusal's rung lines) rides whole, escaped.
+            const line = measureLine(tag, tutorial.id, {
+                t: ((performance.now() - t0) / 1000).toFixed(0), step: stepStarts.at(-1)?.id ?? '?', checked,
+                botQueue: bot?._queue?.length ?? '?', botCursor: bot?._cursor ?? '?', botChecked: bot?._checkedSoFar?.size ?? '?',
+                botHead: head?.locationName ?? null, botRegion: bot?._currentRegion ?? null, lastRegionEvent: lastRegion,
+                regionChanges, wasmPushes: fp?.adapter?.invocationPushes ?? '?', transport: fp?.transport ?? '?',
+                wasmMemMB: mem == null ? '?' : (mem / 1048576).toFixed(0), jsHeapMB: heap == null ? '?' : (heap / 1048576).toFixed(0),
+                status: botStatusText(), extra,
+            });
             console.log(line);
         } catch (e) {
             console.log(`[MEASURE ${tag}] sampler threw: ${e?.message ?? e}`);
@@ -588,7 +590,7 @@ async function startMeasureSampler(tutorial, stepStarts, ui) {
         stop: (outcome) => {
             clearInterval(timer);
             if (skipTimer) clearInterval(skipTimer);
-            sample('end', ` walkEnd=${outcome?.end ?? 'threw'} walkStep=${outcome?.stepId ?? '?'} why=${JSON.stringify(outcome?.why ?? null)}`);
+            sample('end', measureEndExtra(outcome));
             try { unsub?.(); } catch { /* */ }
         },
     };
