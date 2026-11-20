@@ -7,6 +7,7 @@ import { dashShapeSchemaProps } from './seedlingDashShapeSettings.js';
 import { graphicsSchemaProps } from './seedlingGraphicsSettings.js';
 import { gameSpeedSchemaProps } from './seedlingGameSpeedSettings.js';
 import { soundSchemaProps } from './seedlingSoundSettings.js';
+import { jsSaveSchemaProps } from './seedlingJsSave.js';
 import { touchControlsSchemaProps } from './touchControls.js';
 import { SOLVE_PROGRESS_INTERVAL_MS, SOLVE_PROGRESS_INTERVALS_MS } from '../seedlingDemo/solveProgressTap.js';
 import { SOLVE_DEMO_EVENT } from './seedlingSolveDemo.js';
@@ -317,6 +318,8 @@ export function register(registrationApi) {
       ...gameSpeedSchemaProps(),
       // ⛓ SOUND EFFECTS — the JS page's sound on/off and volume (applied live), and its ▶ Start mode (`seedlingSoundSettings.js`).
       ...soundSchemaProps(),
+      // ⛓ USE THE SAVE — the JS runtime's per-room save, read and written only when on (default OFF; `seedlingJsSave.js`).
+      ...jsSaveSchemaProps(),
       // ⛓ TOUCH CONTROLS — generic: on-screen controls for a game whose config declares `touch_controls` (auto | on | off).
       ...touchControlsSchemaProps(),
     },
