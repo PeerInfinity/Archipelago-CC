@@ -55,6 +55,7 @@ import {
   SOUND_SETTING_KEY, START_SETTING_KEY, VOLUME_SETTING_KEY, soundMode, soundPageParams, soundVolume, startMode,
   MUSIC_SETTING_KEY, MUSIC_VOLUME_SETTING_KEY, musicPageParams,
 } from './seedlingSoundSettings.js';
+import { solverEnvPageParam } from './seedlingSolverEnvCarry.js';
 import { RUFFLE_CDN } from './ruffleCdn.js';
 
 function log(level, message, ...data) {
@@ -2472,7 +2473,10 @@ export class FlashPanelUI {
             // ⛓ SOUND EFFECTS — the sound switch and volume (none at on / 100), and `start=click` unless an automated run.
             soundPageParams(this._jsSound, this._jsVolume, this._jsStart),
             // ⛓ MUSIC — the music switch and volume (none at on / 100).
-            musicPageParams(this._jsMusic, this._jsMusicVolume)].filter(Boolean);
+            musicPageParams(this._jsMusic, this._jsMusicVolume),
+            // ⛓ SOLVER ENV — the host page's `?seedlingSolverEnv=`, verbatim (none when the host sets none), so the JS
+            // frame's solve worker honours the same switches as the wasm page's (`seedlingSolverEnvCarry.js`).
+            solverEnvPageParam(globalThis.location?.search)].filter(Boolean);
           this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
           this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);
           await this._initializeWasm(epoch);
