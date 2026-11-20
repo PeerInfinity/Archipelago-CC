@@ -246,6 +246,63 @@ export function entranceShuffleRefusal(rules, slot, why) {
     return `${ENTRANCE_SHUFFLE_NOT_PLAYABLE} (the shuffled rooms were not delivered: ${why})`;
 }
 
+/**
+ * ⛓⛓ SLICE G — **A REGION ATLAS THIS PAGE DOES NOT SERVE IS A CUSTOM SET** (⚖ Robert 2026-11-20, Q1 "G + S1", Q3
+ * "Stay empty, say why"). Neither the vanilla arm nor the atlas arm delivers a set's OWN rooms: the vanilla arm
+ * rewrites the committed 116 (`exporter.vanillaRecordSet(embed, mapDoc)`), and a `flash_seedling` sidecar is a
+ * reference into an atlas, not a room. So rules that name an atlas the served index (`atlas_files.json`) does not
+ * list — a lab set (S1 stamps `seedling-lab-<hash>`), or one compiled as plain `'seedling'` — were ELIGIBLE on the
+ * vanilla arm and played the ORIGINAL rooms under their own rules, with no warning (the study's probe p5: a tree
+ * added to room 10 → `eligible`, arm `vanilla`, delivered room 10 has no tree). That is refused here, BY NAME, on
+ * check `atlas` — which only the vanilla and atlas arms reach: a `generated` divert skips it, so the generated arm
+ * is untouched.
+ *
+ * The input is `regionAtlas: {atlasId, served}`: the rules' `region_atlas[p].atlas_id` and the `atlas_id`s of the
+ * served index (`servedAtlasIds`). ABSENT input, or an absent/blank `atlasId`, asks nothing: today's verdict, its
+ * text and its arm byte-for-byte. `served: null` (the index could not be read) refuses too — an id that cannot be
+ * told from a custom set's is not delivered as the original game. It ends once a set's own rooms can be carried (S4).
+ */
+export const CUSTOM_SET_NOT_PLAYABLE = 'This set can\'t be played yet';
+
+/** The named reason (both halves: the study's and js-21's). */
+export function unservedAtlasWhy(atlasId) {
+    return `these rules name a region atlas this page does not serve (atlas id \`${atlasId}\` is not in `
+        + 'atlas_files.json) — a custom set: its rooms are not the original game\'s, and the player cannot deliver '
+        + 'them yet. If this is a preset you just regenerated, regenerate or serve its atlas.';
+}
+
+/** The `atlas_id`s a parsed `atlas_files.json` lists (an unreadable index lists none: `[]`). */
+export function servedAtlasIds(index) {
+    return (Array.isArray(index?.atlases) ? index.atlases : [])
+        .map((a) => a?.atlas_id).filter((id) => typeof id === 'string' && id !== '');
+}
+
+/**
+ * The predicate's `regionAtlas` input for an atlas id: `{}` when there is none (nothing is fetched, nothing is
+ * asked), else `{regionAtlas: {atlasId, served}}` — `served: null` when `fetchIndex()` (the served
+ * `atlas_files.json`, parsed) throws. Import-free like the rest of this file: the caller hands the fetch.
+ * ⛓ The ONE reader for both callers — the wiring's load (JS and wasm alike) and the panel, before it starts a game.
+ */
+export async function servedRegionAtlas({ atlasId, fetchIndex }) {
+    if (typeof atlasId !== 'string' || atlasId === '') return {};
+    let served = null;
+    try { served = servedAtlasIds(await fetchIndex()); } catch { served = null; }
+    return { regionAtlas: { atlasId, served } };
+}
+
+/** The guard's sentence for `regionAtlas` (`{atlasId, served}`), or null when it does not fire. */
+export function unservedAtlasRefusal(regionAtlas) {
+    const id = regionAtlas?.atlasId;
+    if (typeof id !== 'string' || id === '') return null;
+    const served = regionAtlas.served;
+    if (served === undefined) return null;
+    if (served === null) {
+        return `the served atlas index atlas_files.json could not be read, so the region atlas these rules name `
+            + `(atlas id \`${id}\`) cannot be told from a custom set's — not played as the original game`;
+    }
+    return served.includes(id) ? null : unservedAtlasWhy(id);
+}
+
 /** The arm each diverting check decides. */
 const ARM_OF_DIVERT = Object.freeze({ generated: RANDOMIZER_ARMS.GENERATED, atlas: RANDOMIZER_ARMS.ATLAS });
 
@@ -406,7 +463,10 @@ function checkGenerated({ generated }) {
  * this arm places none: what it needs is the `pendingCheck` seam, which ships
  * in the same build and has no capability name of its own (plan §13 Open).
  */
-function checkAtlas({ atlas, placement }) {
+function checkAtlas({ atlas, placement, regionAtlas }) {
+    // ⛓ SLICE G — first: a custom set is refused whatever its rooms and its count (see `unservedAtlasRefusal`).
+    const unserved = unservedAtlasRefusal(regionAtlas);
+    if (unserved) return fail(unserved);
     if (atlas === undefined) return pass('no real-room census was supplied — the vanilla facts decide');
     const rooms = Array.isArray(atlas?.rooms) ? atlas.rooms : [];
     if (rooms.length === 0) return pass('the rules carry no real Seedling rooms');
@@ -482,6 +542,8 @@ const CHECKS = Object.freeze([
  *          map: {url: string, ok: boolean, source: string}}} [inputs.assets]
  * @param {{rooms: string[], mixed: string[]}} [inputs.generated]  `generatedRoomCensus(rules)`
  * @param {{rooms: string[]}} [inputs.atlas]  the rules' real-room (`flash_seedling`) regions
+ * @param {{atlasId: string|null, served: string[]|null}} [inputs.regionAtlas]  slice G: the rules' atlas id and
+ *   the served index's ids (`servedAtlasIds`); absent = not asked
  * @returns {{eligible: boolean, verdict: 'eligible'|'ineligible'|'undecided',
  *           arm: 'vanilla'|'generated'|'atlas'|null, failed: string|null, why: string, checks: object[]}}
  */
