@@ -48,9 +48,10 @@
  *     UNSTAMPED (§19.10 hard #1): it is rebuilt on every report and is not a document
  *     anybody keeps. Only the copies that leave through a door are stamped. The bundle's
  *     `region-atlas` member is the atlas the compile stamped, looked up by the id the
- *     rules name (`atlasAtDoor`). ⛔ It is NOT re-stamped from the live session: the
- *     mount's doors read the LAST REPORT, and a fingerprint of the current rooms would
- *     disagree with that report's rules whenever the set changed after REPORT.
+ *     rules name (`atlasAtDoor`). ⛔ It is NOT re-stamped from the live session: it is
+ *     the atlas the rules handed to it were compiled from. ⛓ (lab-stale-handover) Those
+ *     rules are always the CURRENT set's: the mount's doors run REPORT again when the set
+ *     changed after the last one, so the member and the rules never describe an older set.
  *
  *  3. **NOTHING PRETENDS TO PLAY.** The compile runs with `flashPanel: false`
  *     (`regionAtlasCompiler.js`, where `options.flashPanel ?? FLASH_PANEL_WIRING[game]`
