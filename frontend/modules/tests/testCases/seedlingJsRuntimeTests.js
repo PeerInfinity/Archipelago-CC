@@ -43,6 +43,7 @@ import { resolveQueueBlocks } from '../../loops/blockIdentity.js';
 import { restoresSavedQueues } from '../savedQueueIsolation.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import { CAMERA_SETTING_KEY, GRAPHICS_SETTING_KEY } from '../../flashPanel/seedlingGraphicsSettings.js';
+import { CUSTOM_SET_NOT_PLAYABLE, unservedAtlasWhy } from '../../flashPanel/seedlingRandomizerEligibility.js';
 
 /**
  * ⛔ The walk helper imports `levelWorld.js`; a static import here would put
@@ -5547,6 +5548,86 @@ for (const [id, fn, rt] of [
             + `the atlas preset's rooms, and the Playback Bot walks "${TOOLS_START} -> ${TOOLS_OWLS}" — an exit only those `
             + 'rooms have — into the owl\'s nest.',
         testFunction: fn,
+        category: seedlingRuntimeCategory(id),
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+// ── ⛓⛓ SLICE G: a custom set starts NO game and says why (⚖ Robert 2026-11-20, Q3 "Stay empty, say why") ──────
+
+/** The shape the Seedling lab's S1 stamps (`stampAtlasIdentity(copy, 'seedling-lab')`): served by no index. */
+const CUSTOM_ATLAS_ID = 'seedling-lab-2730489e';
+
+/**
+ * seedling_atlas's rules made into a CUSTOM SET: its `region_atlas` names `CUSTOM_ATLAS_ID`, which
+ * `atlas_files.json` does not list. `withFlashPanel` keeps the preset's `flash_panel` block and the vanilla
+ * `map_document` (the study's p5 hazard: that load was ELIGIBLE and played the original rooms); without it, the
+ * lab's own shape (S1: compiled `flashPanel: false`, `map_document` the page's label).
+ */
+function customSetRow(withFlashPanel) {
+    return async function customSetStartsNoGame(tc) {
+        let previous = 'auto';
+        try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+        try {
+            await settingsManager.updateSetting(RUNTIME_KEY, 'js', { persist: false });
+            const rules = structuredClone(await (await fetch(ATLAS_PATH)).json());
+            rules.region_atlas['1'] = { ...rules.region_atlas['1'], atlas_id: CUSTOM_ATLAS_ID,
+                map_document: withFlashPanel ? 'seedling-map.json' : 'watch.html set editor' };
+            if (!withFlashPanel) delete rules.flash_panel;
+            tc.assertEqual('the rules carry flash_seedling rooms', true,
+                Object.values(rules.preset_sidecars?.['1'] ?? {}).some((sc) => sc?.substrate === 'flash_seedling'));
+            tc.assertEqual(`the rules ${withFlashPanel ? 'carry' : 'carry no'} flash_panel block`, withFlashPanel,
+                !!rules.flash_panel);
+            // ⛔ A refusal box still up from an earlier row would answer the poll at once: wait for a NEW one.
+            const stale = document.querySelector('.flash-panel-custom-set-refusal');
+            const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+            tc.eventBus.publish('files:jsonLoaded', { jsonData: rules, selectedPlayerId: '1',
+                sourceName: `slice G custom set (${withFlashPanel ? 'with' : 'without'} flash_panel)` });
+            await loaded;
+            await tc.stateManager.pingWorker('after-rules-load', 5000);
+            tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+
+            const box = await tc.pollForValue(() => {
+                const el = document.querySelector('.flash-panel-custom-set-refusal');
+                return el && el !== stale ? el : null;
+            }, 'the flash panel shows the custom-set message', 20000, 200);
+            const panel = getActivePanelInstance();
+            const logTail = (document.querySelector('.flash-panel-log')?.textContent ?? '').split('\n').slice(-12).join(' | ');
+            if (!box) tc.log(`status ${JSON.stringify(document.querySelector('.flash-panel-status')?.textContent)}; `
+                + `adapter ${!!panel?.adapter}; log: ${logTail}`, 'error');
+            const why = unservedAtlasWhy(CUSTOM_ATLAS_ID);
+            tc.assertEqual('the status reads the message', CUSTOM_SET_NOT_PLAYABLE,
+                document.querySelector('.flash-panel-status')?.textContent ?? null);
+            tc.assertEqual('the panel shows "This set can\'t be played yet" + the named reason',
+                `${CUSTOM_SET_NOT_PLAYABLE}${why}`, box?.textContent ?? null);
+            // ⛔ NO GAME: no adapter, nothing embedded — and still none a moment later (no late start).
+            await new Promise((r) => setTimeout(r, 1500));
+            const stage = document.querySelector('.flash-panel-swf');
+            tc.assertEqual('no game was started (no adapter, no iframe, no embed)', '0/0/0',
+                `${panel?.adapter ? 1 : 0}/${stage?.querySelectorAll('iframe').length ?? -1}`
+                + `/${stage?.querySelectorAll('object, embed').length ?? -1}`);
+            tc.assertEqual('the refusal is the one the Playback Bot reads', `atlas: ${why}`,
+                panel?._apLoadRefusal ?? null);
+        } finally {
+            try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+        }
+        return tc.getOverallResult();
+    };
+}
+
+for (const [id, withFlashPanel] of [
+    ['seedling-js-runtime-custom-set-with-flash-panel-starts-no-game', true],
+    ['seedling-js-runtime-custom-set-without-flash-panel-starts-no-game', false],
+]) {
+    registerTest({
+        id,
+        name: `Seedling JS runtime: a custom set (${withFlashPanel ? 'with' : 'without'} a flash_panel block) starts no `
+            + 'game and says why',
+        description: `seedling_atlas with region_atlas naming ${CUSTOM_ATLAS_ID} (not in atlas_files.json)`
+            + (withFlashPanel ? ', its flash_panel block and the vanilla map_document kept (the p5 hazard)'
+                : ', no flash_panel block and the lab\'s map_document label (the S1 shape)')
+            + `: the Flash panel starts no game and shows "${CUSTOM_SET_NOT_PLAYABLE}" with the named reason.`,
+        testFunction: customSetRow(withFlashPanel),
         category: seedlingRuntimeCategory(id),
         enabled: false, // off by default — runs only in the test-substrates mode
     });

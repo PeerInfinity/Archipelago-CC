@@ -25,6 +25,9 @@ import {
     seedlingRandomizerEligibility,
 } from './seedlingRandomizerEligibility.js';
 import { BOSS_REPORT_CAPABILITY, jsRuntimeCapabilities } from './seedlingRandomizerEligibility.js';
+import {
+    CUSTOM_SET_NOT_PLAYABLE, servedAtlasIds, servedRegionAtlas, unservedAtlasRefusal, unservedAtlasWhy,
+} from './seedlingRandomizerEligibility.js';
 import { withContactFidelity } from '../seedlingDemo/contactFidelity.js';
 
 const path = (rel) => fileURLToPath(new URL(rel, import.meta.url));
@@ -369,5 +372,101 @@ describe('⛓ fidelity APFLIP D5 — the JS runtime declares `bossreport` exactl
         const seen = [false, true, false].map((on) => withContactFidelity({ apReportBosses: on },
             () => jsRuntimeCapabilities().includes(BOSS_REPORT_CAPABILITY)));
         expect(seen).toEqual([false, true, false]);
+    });
+});
+
+describe('⛓ slice G — a region atlas this page does not serve is a CUSTOM SET, refused by name', () => {
+    // ⛔ The served ids are the SHIPPED index's, never typed: a restamped atlas moves them and these rows with it.
+    const SERVED = servedAtlasIds(readJson('./atlases/atlas_files.json'));
+    const wasm = {
+        flashPanel: { config: 'seedling.json', wasm: 'seedling_bot_ap_p4d/game.html' },
+        transport: 'wasm',
+        manifest: { builds: [{ name: 'seedling_bot_ap_p4d', capabilities: [AP_ITEM_CAPABILITY] }] },
+        placement: OK_PLACEMENT,
+        assets: OK_ASSETS,
+    };
+    const atlasArm = { ...wasm, atlas: { rooms: ['starting_house'] }, placement: { resolved: 0, total: 41 } };
+    const js = { flashPanel: null, transport: JS_TRANSPORT, manifest: null };
+    const unserved = (id = 'seedling-lab-0123abcd') => ({ regionAtlas: { atlasId: id, served: SERVED } });
+
+    it('the served index lists the shipped ids (the fixture these rows stand on)', () => {
+        expect(SERVED.length).toBeGreaterThan(0);
+        expect(SERVED).not.toContain('seedling');
+        expect(SERVED.every((id) => /^seedling-/.test(id))).toBe(true);
+    });
+
+    it('the sentence: the id, the index, "a custom set", and what to do for a regenerated preset', () => {
+        expect(unservedAtlasWhy('seedling')).toBe('these rules name a region atlas this page does not serve '
+            + '(atlas id `seedling` is not in atlas_files.json) — a custom set: its rooms are not the original '
+            + 'game\'s, and the player cannot deliver them yet. If this is a preset you just regenerated, regenerate '
+            + 'or serve its atlas.');
+        expect(CUSTOM_SET_NOT_PLAYABLE).toBe('This set can\'t be played yet');
+    });
+
+    it('UNSERVED id on the VANILLA arm → ineligible on check `atlas`, by name', () => {
+        const v = seedlingRandomizerEligibility({ ...wasm, ...unserved('seedling') });
+        expect(v).toMatchObject({ eligible: false, verdict: 'ineligible', arm: null, failed: 'atlas' });
+        expect(v.why).toBe(`atlas: ${unservedAtlasWhy('seedling')}`);
+    });
+
+    it('UNSERVED id on the ATLAS arm → ineligible on check `atlas` (it never diverts)', () => {
+        expect(seedlingRandomizerEligibility(atlasArm)).toMatchObject({ eligible: true, arm: 'atlas' });
+        const v = seedlingRandomizerEligibility({ ...atlasArm, ...unserved() });
+        expect(v).toMatchObject({ eligible: false, verdict: 'ineligible', failed: 'atlas' });
+        expect(v.why).toBe(`atlas: ${unservedAtlasWhy('seedling-lab-0123abcd')}`);
+    });
+
+    it('UNSERVED on the JS runtime\'s cheap call (no flash_panel, nothing resolved yet) → ineligible, not undecided', () => {
+        const v = seedlingRandomizerEligibility({ ...js, generated: { rooms: [], mixed: [] },
+            atlas: { rooms: ['region_2_2'] }, ...unserved() });
+        expect(v).toMatchObject({ verdict: 'ineligible', failed: 'atlas' });
+    });
+
+    it('SERVED id → today\'s verdict, byte-for-byte, on both arms and on the cheap call', () => {
+        for (const id of SERVED) {
+            const served = { regionAtlas: { atlasId: id, served: SERVED } };
+            expect(seedlingRandomizerEligibility({ ...wasm, ...served })).toEqual(seedlingRandomizerEligibility(wasm));
+            expect(seedlingRandomizerEligibility({ ...atlasArm, ...served }))
+                .toEqual(seedlingRandomizerEligibility(atlasArm));
+            const cheap = { ...js, atlas: { rooms: ['region_2_2'] } };
+            expect(seedlingRandomizerEligibility({ ...cheap, ...served })).toEqual(seedlingRandomizerEligibility(cheap));
+        }
+    });
+
+    it('ABSENT region_atlas / atlas id → today\'s verdict, byte-for-byte (nothing asked)', () => {
+        for (const regionAtlas of [undefined, null, {}, { atlasId: null, served: SERVED },
+            { atlasId: '', served: SERVED }, { atlasId: 'seedling', served: undefined }]) {
+            expect(seedlingRandomizerEligibility({ ...wasm, regionAtlas })).toEqual(seedlingRandomizerEligibility(wasm));
+            expect(unservedAtlasRefusal(regionAtlas)).toBeNull();
+        }
+    });
+
+    it('the GENERATED arm is untouched: its divert skips check `atlas`, unserved id or not', () => {
+        const generated = { rooms: ['region_0_0'], mixed: [] };
+        const plain = seedlingRandomizerEligibility({ ...js, generated });
+        expect(plain).toMatchObject({ eligible: true, arm: 'generated' });
+        expect(seedlingRandomizerEligibility({ ...js, generated, ...unserved() })).toEqual(plain);
+        expect(seedlingRandomizerEligibility({ ...wasm, generated, ...unserved() }))
+            .toEqual(seedlingRandomizerEligibility({ ...wasm, generated }));
+    });
+
+    it('an earlier definite failure still outranks it (the first failing check is named)', () => {
+        const v = seedlingRandomizerEligibility({ ...wasm, transport: 'flash', ...unserved() });
+        expect(v.failed).toBe('transport');
+    });
+
+    it('servedRegionAtlas: no id → {} and NO fetch; an id → the served ids; an unreadable index → served: null → refused', async () => {
+        let fetched = 0;
+        const index = async () => { fetched += 1; return readJson('./atlases/atlas_files.json'); };
+        for (const atlasId of [undefined, null, '']) {
+            expect(await servedRegionAtlas({ atlasId, fetchIndex: index })).toEqual({});
+        }
+        expect(fetched).toBe(0);
+        expect(await servedRegionAtlas({ atlasId: 'x', fetchIndex: index }))
+            .toEqual({ regionAtlas: { atlasId: 'x', served: SERVED } });
+        const broken = await servedRegionAtlas({ atlasId: SERVED[0], fetchIndex: async () => { throw new Error('404'); } });
+        expect(broken).toEqual({ regionAtlas: { atlasId: SERVED[0], served: null } });
+        expect(seedlingRandomizerEligibility({ ...wasm, ...broken }))
+            .toMatchObject({ verdict: 'ineligible', failed: 'atlas' });
     });
 });

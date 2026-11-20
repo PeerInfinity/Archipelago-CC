@@ -34,6 +34,7 @@ const { seedlingMountKey } = await import('./seedlingMountKey.js');
 const { atlasRoomRegions } = await import('../seedlingDemo/seedlingAtlasCheckTable.js');
 const { AP_ASSET_PATHS } = await import('./seedlingRandomizerWiring.js');
 const { atlasIndexPath } = await import('./mapDocumentPath.js');
+const { CUSTOM_SET_NOT_PLAYABLE, unservedAtlasWhy } = await import('./seedlingRandomizerEligibility.js');
 
 const FRONTEND = path.resolve(import.meta.dirname, '../..');
 const BASE = pathToFileURL(FRONTEND + path.sep).href;
@@ -264,6 +265,34 @@ describe('a same-wiring rules load while the game runs', () => {
         expect(panel.adapter).toBe(inits[1]);
         expect(boundRooms(panel)).toEqual(roomsOf(ATLAS));
         expect(logs.some((l) => /different rooms\) — re-mounting/.test(l))).toBe(true);
+    });
+
+    it('⛓ slice G — a CUSTOM SET (an unserved atlas id) reaching bridge ready stops the game: no AP load, the message', async () => {
+        // The race CI's seedling-js batch measured: the rules land while a game is still booting, so no re-mount asks
+        // the init's question of them; bridge ready asks it again.
+        const ID = 'seedling-lab-2730489e';
+        const custom = clone(ATLAS);
+        custom.region_atlas['1'] = { ...custom.region_atlas['1'], atlas_id: ID };
+        state.payload = null;
+        state.staticData = { flash_panel: custom.flash_panel['1'] };
+        const { panel, inits } = barePanel();
+        const shown = [];
+        globalThis.document.createElement = () => ({ style: {}, append() {}, set textContent(t) { shown.push(t); } });
+        panel.swfContainer.replaceChildren = (box) => { panel.swfContainer.box = box; };
+        panel._setStatus = (t) => { panel.status = t; };
+        loadRules(panel, custom);
+        panel._initializeAdapter();
+        await settle(fetchStub, panel._loads);
+        expect(inits.length).toBe(1);
+        expect(panel.adapter).toBeNull();
+        expect(panel.isInitialized).toBe(true);
+        expect(panel._customSetShown).toBe(true);
+        expect(panel.status).toBe(CUSTOM_SET_NOT_PLAYABLE);
+        expect(shown).toEqual([CUSTOM_SET_NOT_PLAYABLE, unservedAtlasWhy(ID)]);
+        expect(panel._apLoadRefusal).toBe(`atlas: ${unservedAtlasWhy(ID)}`);
+        // ⛔ the AP load never ran: its first document was never asked for
+        expect(fetchStub.calls.map((c) => c.url)).not.toContain(new URL(AP_ASSET_PATHS.recordSet, BASE).href);
+        // …and the same check, on a served id, changes nothing (the row above: the atlas arm binds).
     });
 
     it('a load refused on the WIRING (the build: no readable manifest) restarts on no same-wiring rules change', async () => {
