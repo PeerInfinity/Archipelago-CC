@@ -1,0 +1,11 @@
+level_108__r2c0 pull 0 trap (8,5): from 2 -> 2; DEL [] ADD []; yields None -> None; other keys same
+level_108__r2c0 pull 1 trap (8,8): from 2 -> 2; DEL [] ADD []; yields None -> None; other keys same
+level_108__r2c0 pull 2 trap (8,11): from 3 -> 3; DEL [] ADD []; yields None -> None; other keys same
+level_77__r2c0 pull 0 trap (6,12): from 10 -> 9; DEL [(6, 10)] ADD []; yields None -> None; other keys same
+level_78__r0c2 pull 0 trap (6,5): from 12 -> 12; DEL [] ADD []; yields [{'from': {'x': 8, 'y': 4}, 'to': {'x': 8, 'y': 5}}] -> [{'from': {'x': 8, 'y': 4}, 'to': {'x': 8, 'y': 5}}]; other keys same
+level_78__r0c2 pull 1 trap (9,3): from 11 -> 11; DEL [] ADD []; yields None -> None; other keys same
+level_78__r0c2 pull 2 trap (9,6): from 9 -> 7; DEL [(9, 8), (11, 6)] ADD []; yields [{'from': {'x': 7, 'y': 7}, 'to': {'x': 7, 'y': 6}}] -> [{'from': {'x': 7, 'y': 7}, 'to': {'x': 7, 'y': 6}}]; other keys same
+level_80__r0c2 pull 0 trap (2,14): from 6 -> 6; DEL [] ADD []; yields None -> None; other keys same
+level_80__r0c2 pull 1 trap (5,6): from 9 -> 9; DEL [] ADD []; yields None -> None; other keys same
+top-level (non-sidecar) keys: same
+sidecars with other differences: 0
