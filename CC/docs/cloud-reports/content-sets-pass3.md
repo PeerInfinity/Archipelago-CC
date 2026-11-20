@@ -296,3 +296,34 @@ rulings on which concepts qualify, how many per region, and by what hash (no RNG
 - the APWorld editor could pass the document's content stack to the lab (`?packs=`);
 - the Maze Room panel's own palette could offer **Tile kind**;
 - `hazard` and `sink` stay unbuilt until a substrate models damage.
+
+## 10. Re-merge onto `11ca7efeca` (TRAIN 176)
+
+Branch `content-pass3r`, from `origin/content-pass3` `ac537d751c` (land OK 2026-11-20T18:22:44Z; that branch is not
+touched). TRAIN 176 (the rules pull-line) landed on main and rewrote the derived table (rows unchanged, `payloadMd5` →
+`104e6bf1…`), so the table and the two generated docs-index files conflicted.
+
+| # | SHA | What |
+|---|---|---|
+| merge | `a2d73306b2` | Merged main `11ca7efeca` once. `procgen/README.md` and `docsIndex.js`: main's side, then `generate-procgen-reference.mjs --write`. The table: main's side, as the recipe's starting point |
+| table | `8295bf4b30` | The table re-derived by `REGEN_RECIPE` (`refresh-seedling-derived-rules.mjs --dispatch --ref=content-pass3r`), probe run **44811882565** at `a2d73306b2` (red, as a refresh's probe always is) |
+| — | this commit | This section |
+
+| Check | Result |
+|---|---|
+| `inputs.payloadMd5` | `104e6bf182569b5548be4334859b45ef` (176's) |
+| `inputs.engineMd5` | `bec369878feb67081187edca62baa951` → **`74ae60f575531492ed9eaec1839e1fe3`** (42 files) |
+| Verdicts, against main's table | **verdicts moved: none**; rows 106=106, regions 50=50, excluded 6=6; every pinned count matches. The table's diff against main is `measuredAt` and `inputs.engineMd5` only |
+| `refresh --check` at the tip | `OK: the committed derived-rule table is fresh and on count` |
+| Producer chain (`regen-seedling.mjs --write`, inside the refresh) | every step OK; `git diff --stat origin/main -- frontend/presets` is **empty**. `regen-seedling.mjs --check`: every step OK |
+| Closure vs main | of the 42 closure files, only `frontend/modules/mazeRoom/mazeRoomEngine.js` differs from main |
+| Extraction probe (`git archive` export of main with the same `shared` commit vs the tip) | 38 documents, 1,188 regions; only `seedling_playthrough_maze` differs: 10 regions' extraction, and the compiled rules of exactly the same **4** regions as § 2 (d) (`level_12__r0c19`, `level_19__r1c1`, `level_68__r1c1`, `level_99__r2c4`) |
+| `check-sidecar-fields` rule agreement | identical on both sides: maze DERIVED 1,186 regions, 2,370 gated, **3,474/4,244** endpoints reproduced, 770 frozen, 0 rule-agreement FAIL. The tip: ALL PASS (2,296 entries, 0 issues). (The main export's 6 FAILs are `noiz2sa` UNREGISTERED: the export does not carry the `bulletml-dodge` submodule) |
+| Op-log probe, main vs tip | identical: 38 documents, 1,188 regions, 4,816,212 ops; none `f58f86d0c7b1ca702f57c5664e2001bd`, meta `645355ebf443e011dba84b8d844f8c53`, composite `0a0078245a680e03386162200a2b92ff` (main's hashes; 176 moved the maze preset) |
+| Spoiler test, `seedling_playthrough_maze` seed 1, at `8295bf4b30` | PASSED, `sourceName: ./presets/seedling_playthrough_maze/AP_1/AP_1_rules.json` |
+| `generate-procgen-reference --check` / `check-procgen-docs` | ALL MATCH / ALL CHECKS PASSED |
+| Bounded vitest: `mazeRoom` (with `tileSpike`), `procgenDocs`, `packConcepts`, `packStructure` | **114 files, 3,037 tests, all passed** |
+| Gitlinks changed against main | **0** |
+
+The closure equals `74ae60f5…`, the one PASS-3's timing pass measured (§ 6), so **the P3 timing pass is not re-owed**.
+CI at the final tip is quoted in the report back to the planner.
