@@ -26,7 +26,7 @@ import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDoc
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
 import { seedlingMountKey } from './seedlingMountKey.js';
 // ⛓ RE2 — the JS runtime's save, one localStorage key per room (the mount key).
-import { bindJsSave } from './seedlingJsSave.js';
+import { createJsSaveController, JS_SAVE_DEFAULT, JS_SAVE_SETTING_KEY } from './seedlingJsSave.js';
 // ⛓ SOLVER LIMIT OFF — import-free: the Solver section's limit controls and Stop.
 import { SOLVER_LIMIT_PROPS, anySolving, backstopMsOf, buildSolverLimitRow, stopSolves, wasmBudgetKnobOf } from './seedlingSolverLimitControls.js';
 import { SOLVE_DEMO_EVENT, SOLVE_DEMOS, pushDemoWindow, solveDemoMissing, solveDemoMoved, solveDemoStage } from './seedlingSolveDemo.js';
@@ -133,6 +133,9 @@ const SETTINGS_CONTROLS = Object.freeze([
   { prop: 'seedlingJsVolume', label: 'Volume', when: 'js' },
   { prop: 'seedlingJsMusic', label: 'Music', when: 'js' },
   { prop: 'seedlingJsMusicVolume', label: 'Music volume', when: 'js' },
+  // ⛓ USE THE SAVE (slice `js-save-toggle-clear`) — shown when the JS runtime is SELECTED (the setting), so it can be
+  // set before the game loads; the "Clear this room's save" button sits on the row under it.
+  { prop: 'seedlingJsSave', label: 'Use the save', when: 'jsSelected' },
   { prop: 'seedlingSolverWalk', label: 'Bot uses the solver', when: 'seedling' },
   { prop: 'touchControls', label: 'Touch controls', when: 'touch' },
   { prop: 'seedlingSolveProgressIntervalMs', label: 'Progress refresh (ms)', when: 'seedling' },
@@ -279,6 +282,8 @@ export class FlashPanelUI {
     this._settingsChangedHandler = async (data) => {
       // ⛓ PANEL LAYOUT — the Settings section's controls follow the setting, whoever wrote it.
       if (data?.key === '*' || data?.key?.startsWith?.(SETTING_KEY_PREFIX)) this._syncSettingsControls();
+      // ⛓ USE THE SAVE — the switch applies at once (on: written from now on; off: nothing more is written)
+      if (data?.key === '*' || data?.key === JS_SAVE_SETTING_KEY) this._onJsSaveSettingChanged();
       if (data?.key === SOLVER_WALK_SETTING_KEY || data?.key === '*') {
         this._refreshSolverWalk(data.key === '*' ? undefined : data.value);
       }
@@ -1383,6 +1388,7 @@ export class FlashPanelUI {
       input.classList.add('flash-panel-setting-input');
       host.append(row);
       this._settingsControls.push({ ...c, spec, row, input, key: SETTING_KEY_PREFIX + c.prop, ...(speedParts ?? {}) });
+      if (c.prop === 'seedlingJsSave') host.append(this._buildJsSaveClearRow());
     }
     // "TP on UI click" — the panel's own switch (not a setting), shown when the game can teleport
     const tp = document.createElement('label');
@@ -1393,6 +1399,27 @@ export class FlashPanelUI {
     host.append(tp);
     this.teleportOnClickRow = tp;
     this.teleportOnClickCheckbox = tp.querySelector('.flash-panel-tp-on-click');
+  }
+
+  /**
+   * ⛓ USE THE SAVE / CLEAR — the "Clear this room's save" row, under "Use the save" and shown with it. It works with
+   * the save on or off. `data-applies` is "true" while it is shown, so a tutorial step can target it only then.
+   */
+  _buildJsSaveClearRow() {
+    const row = document.createElement('div');
+    row.className = 'flash-panel-js-save-clear-row';
+    row.style.cssText = 'display:none;flex-wrap:wrap;align-items:center;gap:4px 8px;min-width:0;';
+    const button = document.createElement('button');
+    button.className = 'flash-panel-js-save-clear';
+    button.style.cssText = BUTTON_CSS;
+    button.textContent = "Clear this room's save";
+    button.title = "Remove this room's Seedling JS save from this browser (the room the loaded rules mount). The game "
+      + 'in progress keeps its progress; the next load of this room starts with no save.';
+    button.addEventListener('click', () => this.clearJsSave());
+    row.append(button);
+    this._jsSaveClearRow = row;
+    this._jsSaveClearButton = button;
+    return row;
   }
 
   /**
@@ -1551,9 +1578,12 @@ export class FlashPanelUI {
     if (this._solveProgressLine) this._solveProgressLine.element.style.display = seedling ? 'flex' : 'none';
     if (this.sections?.solver) this.sections.solver.style.display = seedling ? '' : 'none';
     if (this.restartButton) this.restartButton.style.display = seedling && getSeedlingRegionGlue() ? '' : 'none';
+    // ⛓ USE THE SAVE — the JS runtime SELECTED: the setting says js (a Seedling game, or none resolved yet), or it runs
+    const runtimeSetting = this._settingsControls.find((c) => c.prop === 'runtime')?.input?.value ?? null;
+    const jsSelected = transport === 'js' || (runtimeSetting === 'js' && (seedling || !this.configPath));
     for (const c of this._settingsControls) {
       const applies = c.when === 'always' || (c.when === 'seedling' && seedling) || (c.when === 'js' && transport === 'js')
-        || (c.when === 'touch' && !!this.gameConfig?.touch_controls);
+        || (c.when === 'jsSelected' && jsSelected) || (c.when === 'touch' && !!this.gameConfig?.touch_controls);
       c.row.style.display = applies ? 'flex' : 'none';
       if (c.prop !== 'runtime') continue;
       for (const opt of c.input.options) {
@@ -1569,6 +1599,10 @@ export class FlashPanelUI {
       }
     }
     if (this.teleportOnClickRow) this.teleportOnClickRow.style.display = this.gameConfig?.teleport ? 'flex' : 'none';
+    if (this._jsSaveClearRow) {
+      this._jsSaveClearRow.style.display = jsSelected ? 'flex' : 'none';
+      this._jsSaveClearButton.dataset.applies = String(jsSelected);
+    }
   }
 
   _setupTeleportUI() {
@@ -1996,7 +2030,7 @@ export class FlashPanelUI {
         log: (msg, cls) => this._panelLog(msg, cls),
       });
       // ⛓ RE2 — the rooms are mounted (a mount clears the JS save) and the player is at the start: this room's save.
-      if (this.adapter === adapter && this.transport === 'js' && this._apLoadResult?.ok) this._bindJsSave(adapter, glue);
+      if (this.adapter === adapter && this.transport === 'js' && this._apLoadResult?.ok) await this._bindJsSave(adapter, glue);
     } catch (err) {
       this._panelLog(`ap placement: ${err.message}`, 'error');
       this._apLoadRefusal = `the load threw: ${err.message}`;
@@ -2018,23 +2052,97 @@ export class FlashPanelUI {
    * load read. A stored save is restored into the page's core (the player stays at the start: ⚖ Robert, "Progress now,
    * position next"), and the glue's event load read runs again at once, so the restored clears collect their events.
    * The binding writes on every change the core announces, and is flushed and dropped with the adapter.
+   * ⛓ USE THE SAVE — only when `flashPanel.seedlingJsSave` is on (default OFF): off binds nothing (no read, no write)
+   * and says so in the log once.
    */
-  _bindJsSave(adapter, glue) {
+  async _bindJsSave(adapter, glue) {
     this._unbindJsSave();
-    let runtime = null;
-    try { runtime = adapter._getWin?.()?.__seedlingJsRuntime ?? null; } catch { runtime = null; }
-    if (!runtime?.exportSave || typeof this._apLoadKey !== 'string') return;
-    this._jsSave = bindJsSave({ runtime, roomKey: this._apLoadKey, log: (msg, cls) => this._panelLog(msg, cls) });
-    if (this._jsSave.restored?.ok) glue?.syncEventsFromGame?.();
-    if (!this._jsSavePageHide && typeof window !== 'undefined') {
-      this._jsSavePageHide = () => this._jsSave?.flush();
+    const runtime = this._jsSaveRuntime(adapter);
+    if (!runtime || typeof this._apLoadKey !== 'string') return;
+    const roomKey = this._apLoadKey;
+    const on = await this._readJsSaveSetting();
+    this._jsSaveOn = on;
+    // the setting read awaited: a teardown or a new load since then owns the binding now
+    if (this.adapter !== adapter || this._apLoadKey !== roomKey) return;
+    const bound = this._jsSaveController().load({ on, runtime, roomKey });
+    if (bound?.restored?.ok) glue?.syncEventsFromGame?.();
+    if (bound && !this._jsSavePageHide && typeof window !== 'undefined') {
+      this._jsSavePageHide = () => this._jsSaveCtl?.binding?.flush();
       window.addEventListener('pagehide', this._jsSavePageHide);
     }
   }
 
+  /** The JS page's core, or null (not the JS runtime, no page, no save API). */
+  _jsSaveRuntime(adapter = this.adapter) {
+    let runtime = null;
+    try { runtime = adapter?._getWin?.()?.__seedlingJsRuntime ?? null; } catch { runtime = null; }
+    return runtime?.exportSave ? runtime : null;
+  }
+
+  _jsSaveController() {
+    this._jsSaveCtl ??= createJsSaveController({ log: (msg, cls) => this._panelLog(msg, cls) });
+    return this._jsSaveCtl;
+  }
+
+  async _readJsSaveSetting() {
+    try { return (await settingsManager.getSetting(JS_SAVE_SETTING_KEY, JS_SAVE_DEFAULT)) === true; } catch { return JS_SAVE_DEFAULT; }
+  }
+
+  /** Are rules loaded at all (else there is no room whose save the Clear button could name)? */
+  _rulesLoaded() {
+    return !!rulesOfRawPayload(getLastRawJsonData?.());
+  }
+
+  /** The live binding (null when the save is off or nothing is loaded) — read by the in-app rows. */
+  get _jsSave() {
+    return this._jsSaveCtl?.binding ?? null;
+  }
+
   _unbindJsSave() {
-    this._jsSave?.dispose();
-    this._jsSave = null;
+    this._jsSaveCtl?.dispose();
+  }
+
+  /**
+   * ⛓ USE THE SAVE — the setting moved mid-run. ON: bind WRITE-ONLY from now on, if this panel has a JS room loaded
+   * (the stored save is read at the next AP load, never mid-run). OFF: unbind, writing nothing further. Only a change
+   * of the value acts (`_jsSaveOn` = the value last applied; undefined until the first AP load reads it).
+   */
+  async _onJsSaveSettingChanged() {
+    const on = await this._readJsSaveSetting();
+    // only a CHANGE acts: a broadcast of every setting (`*`) must not re-arm a binding the Clear button stopped
+    if (on === this._jsSaveOn) return;
+    this._jsSaveOn = on;
+    const ctl = this._jsSaveController();
+    if (!on) { ctl.turnOff(); return; }
+    if (ctl.binding || this.transport !== 'js' || !this._apLoadResult?.ok || typeof this._apLoadKey !== 'string') return;
+    const runtime = this._jsSaveRuntime();
+    if (!runtime) return;
+    ctl.turnOn({ runtime, roomKey: this._apLoadKey });
+    if (!this._jsSavePageHide && typeof window !== 'undefined') {
+      this._jsSavePageHide = () => this._jsSaveCtl?.binding?.flush();
+      window.addEventListener('pagehide', this._jsSavePageHide);
+    }
+  }
+
+  /**
+   * ⛓ USE THE SAVE / CLEAR — the "Clear this room's save" button. THIS ROOM is the one the loaded rules mount
+   * (`_mountKeyNow`: the room playing, or the one the next load will mount); only its key is removed. A binding to it
+   * is stopped without writing (`createJsSaveController().clear`). Works with the save on or off. The panel log says
+   * what was removed, and the root's `data-js-save-clear` / `data-js-save-cleared-at` say it for a tutorial step.
+   */
+  clearJsSave() {
+    let result;
+    if (!this._rulesLoaded()) {
+      this._panelLog('[js save] no rules are loaded, so there is no room whose save to clear');
+      result = { removed: false, none: 'no-rules' };
+    } else {
+      result = this._jsSaveController().clear(this._mountKeyNow());
+    }
+    if (this.rootElement) {
+      this.rootElement.dataset.jsSaveClear = result.error ? 'error' : (result.removed ? 'removed' : 'none');
+      this.rootElement.dataset.jsSaveClearedAt = String(Date.now());
+    }
+    return result;
   }
 
   /**
