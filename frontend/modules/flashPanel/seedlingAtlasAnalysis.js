@@ -26,7 +26,7 @@ import { contactRect } from '../seedlingDemo/combat.js';
 import { spearHitRect, pressRectTouches } from '../seedlingDemo/presses.js';
 import { swingHits } from '../seedlingDemo/combatVerbs.js';
 import { DARKTRAP_LIGHT_DEATH } from '../seedlingDemo/enemyDamage.js';
-import { lavaTrapPulls, LAVATRAP_PULL } from './seedlingPlaythroughOverlay.js';
+import { LAVATRAP_PULL } from './seedlingPlaythroughOverlay.js';
 
 import {
     buildSeedlingRegionGrid,
@@ -182,7 +182,7 @@ export function analyzeSeedlingAtlas(atlas, deps) {
  * @param {{ mapDoc:object, gameConfig:object, levelWorlds?:object, analysis?:object }} deps
  * @returns {{ gridFor:Function, conditionKey:Function, resolveCondition:Function, unresolved:string[] }}
  */
-export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = null, analysis = null, events = null, rockFire = null }) {
+export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = null, analysis = null, events = null, rockFire = null, lavaPulls = null }) {
     const levels = indexSeedlingLevels(mapDoc);
     const options = seedlingAnalyzerOptions(gameConfig);
     // ⛓ IN-ROOM LATCHES (session tile-lay-l40-latches): a level world lays each in-room press the rules minted as a
@@ -201,6 +201,12 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = n
     // compile without it is refused by name: a maze that silently lost Fire would be stricter than the rules.
     if (levelWorlds && !rockFire) {
         throw new Error('seedlingMazeProjectionDeps: a level-world compile needs `rockFire` (the rules producer\'s playthroughRockFireSides())');
+    }
+    // ⛓⛓ rules-lavatrap-pull-line: each LavaTrap's disc, HANDED IN by the rules producer (`lavaPulls`: its
+    // `playthroughLavaTrapPullMap()`, level number -> the line-cut pulls rule T reads), so maze and rules read ONE disc.
+    // A level-world compile without it is refused by name: a maze that re-derived the disc could reel where the game does not.
+    if (levelWorlds && !lavaPulls) {
+        throw new Error('seedlingMazeProjectionDeps: a level-world compile needs `lavaPulls` (the rules producer\'s playthroughLavaTrapPullMap())');
     }
     const rockFireCache = new Map();
     const rockFireOf = (level) => {
@@ -248,7 +254,7 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = n
             levelEntitiesFor: (region, grid) => {
                 const level = levels.get(levelKeyOf(region.map_ref));
                 return level ? seedlingLevelEntities(level, options.resolveCondition, {
-                    grid, latches: latchesOf(level, grid).laid, rockFire: rockFireOf(level),
+                    grid, latches: latchesOf(level, grid).laid, rockFire: rockFireOf(level), lavaPulls: lavaPulls.get(level.level) ?? [],
                 }) : null;
             },
             partitionFor: (region) => levelWorlds.partition?.regions?.[region.region_id] ?? null,
@@ -422,7 +428,8 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  *           A pole is not tile-aligned, so no footprint class can stand for it (session tile-primitives-lightpoles,
  *           ⚖ 2026-10-28 "Rope-shaped, stances").
  *   pull    a LavaTrap: `tiles` = its own cell, `from` = the cells its tongue grabs from and `rule` = what survives the
- *           ride — the rules producer's own `lavaTrapPulls` disc (32 px centre to centre, no line test) and
+ *           ride — the rules producer's own disc (`lavaPulls`: `lavaTrapPulls`, 32 px centre to centre, cut by the launch
+ *           line, ⛓⛓ rules-lavatrap-pull-line) and
  *           `LAVATRAP_PULL.condition` (the Dark Suit), so maze and rules read one disc (session
  *           tile-primitives-sphere-order-9, ⚖ 2026-10-29 "Forced pull, rules' disc"); `yields` (when any) = the
  *           steps into two discs it loses to the disc the walk enters first (session tile-primitives-sphere-order-10,
@@ -437,10 +444,11 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  *
  * @param {object} level a map-document level
  * @param {(condition:object)=>object|null} resolveCondition
- * @param {{grid?: object}} [opts] the level's analysis grid (whole level, origin 0) — a trap's lane needs it
+ * @param {{grid?: object, lavaPulls?: object[]}} [opts] the level's analysis grid (whole level, origin 0) — a trap's lane needs it;
+ *   `lavaPulls` = the rules producer's line-cut pulls of this level (`playthroughLavaTrapPulls`), needed for a LavaTrap row
  * @returns {Array<{kind:string, tiles:number[][], group?:string, strike?:object[], label:string}>}
  */
-export function seedlingLevelEntities(level, resolveCondition, { grid = null, latches = [], rockFire = null } = {}) {
+export function seedlingLevelEntities(level, resolveCondition, { grid = null, latches = [], rockFire = null, lavaPulls = null } = {}) {
     const rows = [];
     const ropes = ropesOf({ levels: [level] }).map((r) => ({ ...r, verdict: ropeVerdict(r, level) }));
     const minted = ropes.filter((r) => !r.verdict.refuse);
@@ -477,7 +485,8 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null, la
         }
         if (kind === 'pull') {
             const [x, y] = [Math.floor(entity.x / TILE), Math.floor(entity.y / TILE)];
-            const pull = lavaTrapPulls(level, TILE).find((p) => p.tile[0] === x && p.tile[1] === y);
+            if (!lavaPulls) throw new Error(`${label}: a LavaTrap row needs \`lavaPulls\` (the rules producer's line-cut discs)`);
+            const pull = lavaPulls.find((p) => p.tile[0] === x && p.tile[1] === y);
             const rule = resolveCondition(LAVATRAP_PULL.condition);
             if (!pull || !rule) throw new Error(`${label}: no pull of the rules producer's at (${x},${y}), or its condition has no AP rule`);
             rows.push({ kind, tiles: [pull.tile], from: pull.from, ...(pull.yields.length > 0 ? { yields: pull.yields } : {}), rule, label });

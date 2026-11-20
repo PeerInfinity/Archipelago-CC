@@ -9,8 +9,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { buildPlaythroughMaze } from '../../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
-import { PLAYTHROUGH_MAP, playthroughAnalyzerOptions, playthroughHandRuledGridFor } from '../../../../scripts/procgen/make-seedling-playthrough-rules.mjs';
-import { lavaTrapPulls } from '../../flashPanel/seedlingPlaythroughOverlay.js';
+import { PLAYTHROUGH_MAP, playthroughAnalyzerOptions, playthroughHandRuledGridFor, playthroughLavaTrapPulls } from '../../../../scripts/procgen/make-seedling-playthrough-rules.mjs';
 import { seedlingLevelEntities } from '../../flashPanel/seedlingAtlasAnalysis.js';
 import { deserializeMazeWorld, pullAfterMove } from '../mazeRoomEngine.js';
 import { chainedPull } from '../../procgenPipeline/regionAtlasMazeProjection.js';
@@ -26,12 +25,12 @@ const payloadOf = (rules, level) => Object.values(rules.preset_sidecars['1'])
 describe('the analysis rows: the rules producer\'s own discs', () => {
     it('L80\'s two LavaTraps are `pull` rows carrying `lavaTrapPulls` and the Dark Suit', () => {
         const level = levelOf(80);
-        const rows = seedlingLevelEntities(level, playthroughAnalyzerOptions.resolveCondition, { grid: playthroughHandRuledGridFor(level) })
+        const rows = seedlingLevelEntities(level, playthroughAnalyzerOptions.resolveCondition, { grid: playthroughHandRuledGridFor(level), lavaPulls: playthroughLavaTrapPulls(level) })
             .filter((r) => r.kind === 'pull');
         // entity order (the map's), the producer's sorted row-major
         expect(rows.map((r) => r.tiles[0])).toEqual([[2, 14], [5, 6]]);
         expect(rows.map((r) => ({ tiles: r.tiles, from: r.from, rule: r.rule })).reverse()).toEqual(
-            lavaTrapPulls(level, 16).map((p) => ({ tiles: [p.tile], from: p.from, rule: SUIT })));
+            playthroughLavaTrapPulls(level).map((p) => ({ tiles: [p.tile], from: p.from, rule: SUIT })));
     });
 });
 
@@ -48,7 +47,7 @@ describe('L80 in the maze (L71 + L79 + L80)', () => {
         expect(pp, 'L80 is a level world').toBeDefined();
         expect(pp.pulls.map((p) => [p.x, p.y])).toEqual([[2, 14], [5, 6]]);
         for (const p of pp.pulls) {
-            const disc = lavaTrapPulls(levelOf(80), 16).find((q) => q.tile[0] === p.x && q.tile[1] === p.y).from;
+            const disc = playthroughLavaTrapPulls(levelOf(80)).find((q) => q.tile[0] === p.x && q.tile[1] === p.y).from;
             expect(p.from.map((c) => [c.x, c.y]).every(([x, y]) => disc.some(([dx, dy]) => dx === x && dy === y))).toBe(true);
             expect(pp.obstacleLib[p.gate]).toMatchObject({ kind: 'pull', clear_set_type: 'rule', clear_rule: SUIT });
         }
@@ -103,7 +102,7 @@ describe('chained pulls are refused by name, and no level of the whole game has 
     });
     it('L77, L78, L80, L108: no trap lies in another\'s disc (L108\'s are 48 px apart, the disc 32)', () => {
         for (const n of [77, 78, 80, 108]) {
-            const rows = lavaTrapPulls(levelOf(n), 16).map((p) => ({ x: p.tile[0], y: p.tile[1], from: p.from.map(([x, y]) => ({ x, y })) }));
+            const rows = playthroughLavaTrapPulls(levelOf(n)).map((p) => ({ x: p.tile[0], y: p.tile[1], from: p.from.map(([x, y]) => ({ x, y })) }));
             expect(chainedPull(rows), `L${n}`).toBeNull();
         }
     });

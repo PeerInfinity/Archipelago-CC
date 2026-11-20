@@ -54,6 +54,7 @@ import {
     inRoomPressOf,
 } from './seedlingPlaythroughOverlay.js';
 import * as OVERLAY from './seedlingPlaythroughOverlay.js';
+import { playthroughLavaTrapPulls } from '../../../scripts/procgen/make-seedling-playthrough-rules.mjs';
 
 const lock = (tag, tset, persistTag = '3') => ({
     type: tag, x: 0, y: 0, attrs: { tset: String(tset), tag: persistTag },
@@ -329,7 +330,7 @@ describe('the LavaTrap lift', () => {
     it('reaches exactly two tiles, measured centre to centre', () => {
         const [pull] = lavaTrapPulls({
             width: 9, height: 9, entities: [{ type: 'lavatrap', x: 64, y: 64 }],
-        });
+        }, 16, { solid: null });
         expect(pull.tile).toEqual([4, 4]);
         const has = (x, y) => pull.from.some((t) => t[0] === x && t[1] === y);
         expect(has(4, 2)).toBe(true);   // straight up: exactly 32 px
@@ -340,7 +341,7 @@ describe('the LavaTrap lift', () => {
     });
 
     it('is what crosses L108, and each of the three hops is exactly one pull', () => {
-        const pulls = lavaTrapPulls(level(108));
+        const pulls = playthroughLavaTrapPulls(level(108));
         expect(pulls.map((p) => p.tile)).toEqual([[8, 5], [8, 8], [8, 11]]);
         const reaches = (i, tile) => pulls[i].from.some((t) => t[0] === tile[0] && t[1] === tile[1]);
         expect(reaches(0, [8, 3])).toBe(true);
@@ -349,13 +350,13 @@ describe('the LavaTrap lift', () => {
     });
 
     it('finds every lavatrap in the map and no other trap family', () => {
-        const total = MAP.levels.reduce((n, l) => n + lavaTrapPulls(l).length, 0);
+        const total = MAP.levels.reduce((n, l) => n + playthroughLavaTrapPulls(l).length, 0);
         const placed = MAP.levels
             .reduce((n, l) => n + l.entities.filter((e) => e.type === 'lavatrap').length, 0);
         expect(total).toBe(placed);
         expect(placed).toBe(9);
         // A darktrap is a different class and must not be swept in with them.
-        expect(lavaTrapPulls({ width: 5, height: 5, entities: [{ type: 'darktrap', x: 0, y: 0 }] }))
+        expect(lavaTrapPulls({ width: 5, height: 5, entities: [{ type: 'darktrap', x: 0, y: 0 }] }, 16, { solid: null }))
             .toEqual([]);
     });
 
@@ -363,7 +364,7 @@ describe('the LavaTrap lift', () => {
     // disc the walk from centre to centre enters FIRST takes the step; the other `yields` it. `probe-seedling-l78-pull-order.mjs`
     // drove L78's on the game: reeled onto (9,6).
     it('L78: (6,5) yields the step (8,4) → (8,5) to (9,6), whose disc the walk enters first (y 75.1 vs 79.9)', () => {
-        const pulls = lavaTrapPulls(level(78));
+        const pulls = playthroughLavaTrapPulls(level(78));
         // and its mirror on the lava, (7,7) → (7,6), the other way round (a step only the Dark Suit walks)
         expect(pulls.map((p) => [p.tile, p.yields])).toEqual([
             [[9, 3], []], [[6, 5], [{ from: [8, 4], to: [8, 5] }]], [[9, 6], [{ from: [7, 7], to: [7, 6] }]],
@@ -371,16 +372,16 @@ describe('the LavaTrap lift', () => {
     });
 
     it('no other level has a step into two discs from outside both (L77, L80, L108)', () => {
-        for (const id of [77, 80, 108]) expect(lavaTrapPulls(level(id)).flatMap((p) => p.yields), `L${id}`).toEqual([]);
+        for (const id of [77, 80, 108]) expect(playthroughLavaTrapPulls(level(id)).flatMap((p) => p.yields), `L${id}`).toEqual([]);
     });
 
     it('the first disc ENTERED wins; a tie yields nothing (the engine refuses it)', () => {
         const at = (x, y) => ({ type: 'lavatrap', x: x * 16, y: y * 16 });
         // traps (1,3) and (3,3) mirror each other about the step (2,1) → (2,2): a tie
-        expect(lavaTrapPulls({ width: 5, height: 6, entities: [at(1, 3), at(3, 3)] }).flatMap((p) => p.yields)).toEqual([]);
+        expect(lavaTrapPulls({ width: 5, height: 6, entities: [at(1, 3), at(3, 3)] }, 16, { solid: null }).flatMap((p) => p.yields)).toEqual([]);
         // traps (0,2) and (3,3) both take (2,2) from (2,1), (0,2) the NEARER to (2,2)'s centre on the line's axis but 32 px off
         // it: the walk down enters (3,3)'s disc at y 27.1 px and (0,2)'s at y 31.9, so (0,2) yields
-        const pulls = lavaTrapPulls({ width: 5, height: 6, entities: [at(0, 2), at(3, 3)] });
+        const pulls = lavaTrapPulls({ width: 5, height: 6, entities: [at(0, 2), at(3, 3)] }, 16, { solid: null });
         const ins = (p, c) => p.from.some((t) => t[0] === c[0] && t[1] === c[1]);
         expect(pulls.map((p) => [ins(p, [2, 2]), ins(p, [2, 1])])).toEqual([[true, false], [true, false]]);
         // (and the mirror step (1,4) → (1,3), which (3,3) yields)
