@@ -10,7 +10,9 @@ import {
 import { SolveProgressLine, SolveProgressView } from './seedlingSolveProgressView.js';
 import { SolveWatchView } from './seedlingSolveWatchView.js';
 import { AP_ITEM_FOUND_EVENT, RULES_RELOADED_IN_PLACE_EVENT } from './seedlingRegionGlue.js';
-import { RANDOMIZER_ARMS, entranceShuffleRefusal, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
+import {
+  CUSTOM_SET_NOT_PLAYABLE, RANDOMIZER_ARMS, entranceShuffleRefusal, seedlingRandomizerEligibility, servedRegionAtlas,
+} from './seedlingRandomizerEligibility.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 // ⛓ J3 — import-free (it imports nothing), so the panel's closure gains one small file.
 import { atlasRoomRegions } from '../seedlingDemo/seedlingAtlasCheckTable.js';
@@ -22,7 +24,7 @@ import { PUSH_INTERVAL_MS, WasmBridgeAdapter } from './wasmBridgeAdapter.js';
 import { createHeldKeyRelease, dispatchGameKey, focusGameCanvas } from './gameInput.js';
 // ⛓ TOUCH CONTROLS — generic: the game's config declares its buttons (`touch_controls`).
 import { TOUCH_SETTING_KEY, mountTouchControls, parseTouchLayout, touchControlsVisible } from './touchControls.js';
-import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
+import { atlasIndexPath, mapDocumentPath, playerOfRawPayload, regionAtlasOf, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
 import { seedlingMountKey } from './seedlingMountKey.js';
 // ⛓ RE2 — the JS runtime's save, one localStorage key per room (the mount key).
@@ -463,6 +465,13 @@ export class FlashPanelUI {
     if (!pinned && key === this._lastFlashPanelKey && this._mountedRoomsDiffer()) {
       // ⛓ SAME WIRING, OTHER ROOMS — the wiring change's own path: the game restarts on the loaded rules' rooms.
       this._panelLog('rules changed (same game wiring, different rooms) — re-mounting so the game plays the loaded rules\' rooms');
+      this._teardownForReinit();
+      this._initializeAdapter();
+      return;
+    }
+    if (!pinned && key === this._lastFlashPanelKey && (this._customSetShown || this._noGameConfigured)) {
+      // ⛓ SLICE G — the panel holds NO game (a custom set's refusal, or "no game configured"): the same wiring
+      // can still be a different answer (a custom set loaded, or left), so the init asks again. Nothing runs.
       this._teardownForReinit();
       this._initializeAdapter();
       return;
@@ -976,6 +985,8 @@ export class FlashPanelUI {
     this._seedlingRealSet = null;
     this._seedlingDelivery = null;
     this._apLoadRefusal = null;
+    this._customSetShown = false;
+    this._noGameConfigured = false;
     this._touchTransport = null;
     this._unmountTouchControls();
     this._heldKeys?.uninstall();
@@ -2172,6 +2183,16 @@ export class FlashPanelUI {
         }
       }
 
+      // ⛓⛓ SLICE G — A CUSTOM SET STARTS NO GAME (⚖ Robert 2026-11-20, Q3 "Stay empty, say why"). Asked
+      // BEFORE any transport is chosen, so neither the original game nor a JS/wasm page is started — with a
+      // `flash_panel` block or without one (the lab's sets are compiled without).
+      const customSet = await this._customSetRefusal();
+      if (this._initStale(epoch)) return;
+      if (customSet) {
+        this._showCustomSetRefusal(customSet);
+        return;
+      }
+
       // Transport selection: 'auto' takes the wasm page whenever the
       // wiring provides one (it runs in any browser; real Flash needs
       // a plugin-capable one), 'flash'/'wasm' force their transport.
@@ -2234,6 +2255,7 @@ export class FlashPanelUI {
         this._renderGameScope();
         this._panelLog('no flash game configured in rules data');
         this._setStatus('no game configured');
+        this._noGameConfigured = true;
         return;
       }
 
@@ -2244,6 +2266,53 @@ export class FlashPanelUI {
       this._panelLog(`init failed: ${err.message}`, 'error');
       this._setStatus('error');
     }
+  }
+
+  /**
+   * ⛓⛓ SLICE G — why these rules are a CUSTOM Seedling set this page cannot play yet (`{why, reason}`), or null.
+   *
+   * A custom set is rules carrying REAL Seedling rooms (`flash_seedling` sidecars, the loaded slot's) and no
+   * generated ones, whose `region_atlas[p].atlas_id` the served index (`atlas_files.json`) does not list. The
+   * verdict is the eligibility predicate's own (`servedRegionAtlas` + check `atlas`), the same question the
+   * randomizer load asks on both runtimes — asked here first so that NO game is started for it.
+   * ⛔ Rules without `flash_seedling` rooms are never asked (a maze-only preset of a Seedling atlas, e.g.
+   * `seedling_playthrough_maze`, names an unserved id and is not this panel's), nor are rules naming no atlas id.
+   */
+  async _customSetRefusal() {
+    const rawRules = rulesOfRawPayload(getLastRawJsonData?.());
+    if (!rawRules) return null;
+    const player = stateManager.getStaticData?.()?.playerId ?? playerOfRawPayload(getLastRawJsonData?.()) ?? null;
+    const rooms = atlasRoomRegions(rawRules, player).map((r) => r.region);
+    if (rooms.length === 0) return null;
+    const guard = await servedRegionAtlas({
+      atlasId: regionAtlasOf(rawRules, player)?.atlas_id,
+      fetchIndex: () => this._loadConfig(atlasIndexPath()),
+    });
+    if (!guard.regionAtlas) return null;
+    const v = seedlingRandomizerEligibility({ generated: generatedRoomCensus(rawRules, player), atlas: { rooms },
+      ...guard });
+    if (v.failed !== 'atlas') return null;
+    // `why` is the predicate's (`atlas: …`, what every refusal reads); `reason` is the sentence a person is shown.
+    return { why: v.why, reason: v.checks.find((c) => c.id === 'atlas').why };
+  }
+
+  /** ⛓ SLICE G — the panel stays EMPTY and says why: the status, the stage, the log, the playback surface. */
+  _showCustomSetRefusal({ why, reason }) {
+    this._customSetShown = true;
+    this._renderGameScope?.();
+    this._apLoadRefusal = why;
+    this._setStatus(CUSTOM_SET_NOT_PLAYABLE);
+    const box = document.createElement('div');
+    box.className = 'flash-panel-custom-set-refusal';
+    box.style.cssText = 'padding:12px;color:#e9c95a;max-width:480px;overflow-wrap:anywhere;';
+    const head = document.createElement('strong');
+    head.textContent = CUSTOM_SET_NOT_PLAYABLE;
+    const body = document.createElement('div');
+    body.style.marginTop = '6px';
+    body.textContent = reason;
+    box.append(head, body);
+    this.swfContainer.replaceChildren(box);
+    this._panelLog(`${CUSTOM_SET_NOT_PLAYABLE} — ${reason}`, 'warn');
   }
 
   /**

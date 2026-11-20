@@ -878,6 +878,18 @@
             "_comment": "⚖ Robert 2026-11-02 (same-wiring re-mount). Runtime js: seedling_atlas_location booted and running, then seedling_atlas (the SAME flash_panel wiring, the same runtime): the panel re-mounts (a fresh adapter; flashPanelUI._mountedRoomsDiffer on seedlingMountKey), the AP load binds the atlas rooms, and the Playback Bot walks overworld_start__r8c0 -> owls_nest_entrance (an exit only those rooms have) into the owl's nest. Before the fix the switch re-mounted nothing and the controller refused that exit."
         },
         {
+            "id": "seedling-js-runtime-custom-set-with-flash-panel-starts-no-game",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Slice G (⚖ Robert 2026-11-20, Q3 'Stay empty, say why'). Runtime js: seedling_atlas with region_atlas naming seedling-lab-2730489e (not in atlas_files.json), its flash_panel block and the vanilla map_document kept — the study's p5 hazard, which loaded ELIGIBLE and played the original rooms. The panel starts no game (no adapter, no iframe) and shows \"This set can't be played yet\" + the named reason (flashPanelUI._customSetRefusal)."
+        },
+        {
+            "id": "seedling-js-runtime-custom-set-without-flash-panel-starts-no-game",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Slice G. The same custom set in the lab's own shape (S1: no flash_panel block, map_document the page's label). Before G the panel said only 'no game configured'; now it shows the same message as the row above."
+        },
+        {
             "id": "seedling-wasm-runtime-same-wiring-switch-loads-new-rooms",
             "enabled": true,
             "category": "Seedling wasm runtime",
