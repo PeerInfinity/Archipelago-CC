@@ -10,6 +10,8 @@
  *  · `WATCH_SET_ATLAS.game` back to `'seedling-watch-edit'` → the substrate row;
  *  · the stamp removed (the compile handed the derived atlas) → the two-ids row;
  *  · `LAB_SET_COMPILE_OPTIONS` without `flashPanel: false` → the no-`flash_panel` row.
+ *  · S3: `seedlingSetAdapter.rulesJsonOf` stops handing `levelSet`, or the wrapper stops writing
+ *    `level_set` → the `region_atlas[1]` row and the S3 block's rows.
  */
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -19,13 +21,17 @@ import { describe, expect, it } from 'vitest';
 import { substrateRegistryEntry as FLASH_SEEDLING_ENTRY } from '../flashPanel/flashSeedlingLibrary.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { SEEDLING_ATLAS_GAME as MAZE_LAB_SEEDLING_GAME } from '../mazeRoom/mazeSetLab.js';
+import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
+import { levelSetContentHash, levelSetReferenceOf } from '../procgenCore/levelSetReference.js';
 import { compileRegionAtlas, substrateIdFor } from '../procgenPipeline/regionAtlasCompiler.js';
 import { stampAtlasIdentity, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { TILE_SIZE } from './levelWorld.js';
 import { parseOelLevel } from './procgenLevelOel.js';
 import { SEEDLING_ATLAS_GAME } from './seedlingAtlasDerivation.js';
-import { createSeedlingSetAdapter, createSetSession, setRecord } from './seedlingSetAdapter.js';
+import {
+    createSeedlingSetAdapter, createSetSession, downloadSet, roomsOfSet, setRecord,
+} from './seedlingSetAdapter.js';
 import { emptyOverlay } from './seedlingSetOverlay.js';
 import { editorVanillaSet, reportOf } from './watchSetEditor.js';
 import {
@@ -53,7 +59,7 @@ const reportFor = (set, lab = labSetIdentity({ compileRegionAtlas, stampAtlasIde
     const session = createSetSession(createSeedlingSetAdapter(DEPS), setRecord(set, emptyOverlay()),
         { base: { kind: 'set', set_id: set.set_id } });
     const rep = reportOf(session, DEPS, { compileRegionAtlas: lab.compileRegionAtlas, validateRegionAtlas });
-    return { rep, lab, id: rep.rules?.region_atlas?.['1']?.atlas_id };
+    return { rep, lab, session, id: rep.rules?.region_atlas?.['1']?.atlas_id };
 };
 const VAN = reportFor(VANILLA_SET);
 
@@ -67,6 +73,13 @@ const withTile = () => {
 const withTree = () => {
     const s = structuredClone(VANILLA_SET);
     s.rooms[10].source.record.entities.push({ type: 'tree', x: 16, y: 80 });
+    return s;
+};
+/** ⛓ S3 (lab-7's third case): one LINK changed — room 10's stairs lead to room 12, not 11. */
+const withLink = () => {
+    const s = structuredClone(VANILLA_SET);
+    const stairs = s.rooms[10].source.record.entities.find((e) => e.type === 'stairsup');
+    stairs.attrs = { ...stairs.attrs, to: String(Number(stairs.attrs.to) + 1) };
     return s;
 };
 
@@ -96,6 +109,8 @@ describe('⛓⛓⛓ the page\'s deps over the vanilla 116: Seedling rooms, its o
     it('`region_atlas[1]` names Seedling, a `seedling-lab-<8 hex>` id and the page\'s label, and every sidecar points at that id', () => {
         expect(VAN.rep.rules.region_atlas['1']).toEqual({
             atlas_id: VAN.id, game: SEEDLING_ATLAS_GAME, map_document: WATCH_SET_ATLAS.mapDocument,
+            // ⛓ S3: the set the rooms came from, beside the stamp (its own describe block below)
+            level_set: levelSetReferenceOf(downloadSet(VAN.session).set),
         });
         expect(VAN.id).toMatch(new RegExp(`^${LAB_SET_ATLAS_BASE}-[0-9a-f]{8}$`));
         const refs = new Set(Object.values(VAN.rep.rules.preset_sidecars['1']).map((r) => r.playable_payload.atlas_ref));
@@ -161,5 +176,47 @@ describe('⛓⛓ the BUNDLE door: the atlas member is the atlas the rules were c
     });
     it('the stamp REFUSES a compile handed no rooms, rather than fingerprinting the atlas alone', () => {
         expect(() => VAN.lab.compileRegionAtlas(VAN.rep.atlas, {})).toThrow(/handed no `mapDoc.levels`/);
+    });
+});
+
+describe('⛓⛓⛓ S3 — the rules name the SET the rooms came from: `region_atlas[1].level_set = {set_id, content_hash}`', () => {
+    /** The four sets lab-7 named: vanilla, one tile, one tree, one link. */
+    const CASES = [['vanilla', () => VANILLA_SET], ['one tile', withTile], ['one tree', withTree], ['one link', withLink]];
+    const ROWS = CASES.map(([name, make]) => {
+        const r = reportFor(make());
+        return { name, r, ref: r.rep.rules?.region_atlas?.['1']?.level_set, member: downloadSet(r.session).set };
+    });
+    it('every case compiles and carries the field', () => {
+        for (const { name, r, ref } of ROWS) {
+            expect(r.rep.download.rules.allowed, name).toBe(true);
+            expect(ref, name).toEqual({ set_id: expect.any(String), content_hash: expect.stringMatching(/^[0-9a-f]{8}$/) });
+        }
+    });
+    it('set_id IS the bundle\'s `level-set` member id (`downloadSet`), and content_hash its content hash', () => {
+        for (const { name, ref, member } of ROWS) {
+            expect(ref.set_id, name).toBe(member.set_id);
+            expect(ref.content_hash, name).toBe(levelSetContentHash(member));
+            expect(ref.content_hash, name).toBe(member.provenance.content_hash);
+        }
+    });
+    it('FOUR sets → FOUR set_ids and FOUR content_hashes (the id moves with the content; S1\'s one-id trap not repeated)', () => {
+        expect(new Set(ROWS.map((x) => x.ref.set_id)).size).toBe(4);
+        expect(new Set(ROWS.map((x) => x.ref.content_hash)).size).toBe(4);
+    });
+    it('the same set twice → the same reference', () => {
+        expect(reportFor(structuredClone(VANILLA_SET)).rep.rules.region_atlas['1'].level_set).toEqual(ROWS[0].ref);
+    });
+    it('the only addition to `region_atlas[1]` is `level_set`; the rules validate against rules.schema.json', () => {
+        for (const { name, r } of ROWS) {
+            const { level_set: _ls, ...rest } = r.rep.rules.region_atlas['1'];
+            expect(Object.keys(rest).sort(), name).toEqual(['atlas_id', 'game', 'map_document']);
+            expect(rulesJsonSchemaErrors(r.rep.rules, DEPS.rulesSchema), name).toEqual([]);
+        }
+    });
+    it('a compile not handed the set (any caller but `rulesJsonOf`) writes no field', () => {
+        const lab = labSetIdentity({ compileRegionAtlas, stampAtlasIdentity });
+        const out = lab.compileRegionAtlas(VAN.rep.atlas, { mapDoc: { levels: roomsOfSet(VANILLA_SET, parseOelLevel) } });
+        expect(out.rules.region_atlas['1'].atlas_id).toBe(VAN.id);
+        expect(out.rules.region_atlas['1']).not.toHaveProperty('level_set');
     });
 });

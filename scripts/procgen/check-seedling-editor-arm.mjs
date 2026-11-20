@@ -212,6 +212,9 @@ const { foldEdits, resolveBase } = await import(
 const { readBundle } = await import(
     join(REPO, 'frontend/modules/presets/documentBundle.js'));
 const { loadJSZipNode } = await import(join(REPO, 'scripts/procgen/loadJSZipNode.mjs'));
+/** ⛓ S3 — the one spelling of a level set's content hash (the rules' `level_set.content_hash`). */
+const { levelSetContentHash } = await import(
+    join(REPO, 'frontend/modules/procgenCore/levelSetReference.js'));
 /** ⛓ (lab-stale-handover) the sentences the mount says once the set changed after REPORT — read, not copied. */
 const { STALE_REPORT_NOTE, STALE_DOOR_TITLE } = await import(
     join(REPO, 'frontend/modules/procgenCore/setEditorView.js'));
@@ -2731,6 +2734,19 @@ try {
         + '(`atlas_files.json`) does not hold, named by `region_atlas`, by every sidecar\'s '
         + '`atlas_ref` and by the bundle\'s own atlas member, whose content hash validates',
         `${labRef?.atlas_id} · member ${atlasMember?.doc?.atlas_id} · served ${[...SERVED_ATLAS_IDS].join(',')}`);
+    /**
+     * ⛓⛓⛓ S3 (seedling-level-set-held) — **THE RULES NAME THE SET THE BUNDLE CARRIES.**
+     * `region_atlas[1].level_set` is `{set_id, content_hash}` of the bundle's own `level-set`
+     * member: its id, and the content hash recomputed in node from the member's bytes.
+     * ⛔ MUTANT: `seedlingSetAdapter.rulesJsonOf` stops handing `levelSet` → `level_set` is absent and this reds.
+     */
+    check(labRef?.level_set?.set_id === setMember?.doc?.set_id
+        && labRef?.level_set?.content_hash === levelSetContentHash(setMember.doc)
+        && json(Object.keys(labRef ?? {}).sort()) === json(['atlas_id', 'game', 'level_set', 'map_document']),
+        '⛓⛓⛓ **S3 — THE RULES NAME THE SET THE BUNDLE CARRIES** — `region_atlas[1].level_set` is the '
+        + '`level-set` member\'s own `set_id` and its content hash (recomputed in node), and it is the only '
+        + 'key S3 added beside the stamp',
+        `${json(labRef?.level_set)} · member ${setMember?.doc?.set_id}`);
     check(!/apmapping/i.test(json(kindsOf)) && /NOT a member/.test(bundled.note),
         '⛔ …and the `apMapping` companion is NOT a member — the note SAYS SO rather than '
         + 'leaving a person to notice it is missing',
@@ -3305,6 +3321,8 @@ try {
         rules: read.members.find((m) => m.kind === 'rules')?.doc?.region_atlas?.['1']?.atlas_id ?? null,
         member: read.members.find((m) => m.kind === 'region-atlas')?.doc?.atlas_id ?? null,
         rulesBytes: stringifyRulesJson(read.members.find((m) => m.kind === 'rules')?.doc ?? null),
+        levelSet: json(read.members.find((m) => m.kind === 'rules')?.doc?.region_atlas?.['1']?.level_set ?? null),
+        setMember: read.members.find((m) => m.kind === 'level-set')?.doc?.set_id ?? null,
     });
     const STALE_PAINT = (() => {
         const room = { ...vanOut.set.rooms[VANILLA_OPEN_ROOM].source.record, level: VANILLA_OPEN_ROOM };
@@ -3363,6 +3381,17 @@ try {
         + 'REPORT\'s documents, so the id did not move',
         `before ${staleBefore.rules} → door ${staleAfter.rules} (member ${staleAfter.member}) · fresh REPORT `
         + `${staleFresh.rules}`);
+    /**
+     * ⛓⛓ S3 — **…AND SO DOES ITS `level_set`**: REPORT → edit → door names the EDITED set (a new
+     * `set_id`, the bundle's own `level-set` member), equal to what a fresh REPORT then bundles.
+     */
+    check(staleBefore.levelSet !== 'null' && staleAfter.levelSet !== staleBefore.levelSet
+        && staleAfter.levelSet === staleFresh.levelSet
+        && JSON.parse(staleAfter.levelSet)?.set_id === staleAfter.setMember,
+        '⛓⛓ **S3 — THE DOOR TAKEN AFTER THE EDIT NAMES THE EDITED SET** — `region_atlas[1].level_set` moved '
+        + 'with the edit, names the bundle\'s own `level-set` member, and equals a fresh REPORT\'s',
+        `before ${staleBefore.levelSet} → door ${staleAfter.levelSet} (member ${staleAfter.setMember}) · fresh `
+        + `${staleFresh.levelSet}`);
 
     /**
      * ⛓⛓⛓ **THE OVERVIEW ARROWS ARE PAINTED AT LOAD — D2's DEFECT, FOUND BY

@@ -7,6 +7,7 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { JSZIP_SCRIPT, loadJSZipBrowser } from './loadJSZipBrowser.js';
 import { describeBundle, gunzipIfNeeded, readBundle } from './documentBundle.js';
 import { putAtlases } from '../procgenCore/atlasCache.js';
+import { putLevelSets } from '../procgenCore/levelSetReference.js';
 import { INITIALISE_DRIVER } from '../apworldEditor/initialiseDriver.js';
 
 const DEV_INDEX_PATH = './presets/preset_files.json';
@@ -1727,14 +1728,27 @@ export class PresetUI {
        */
       const atlases = members.filter((m) => m.kind === 'region-atlas');
       putAtlases(atlases.map((m) => m.doc));
-      const others = members.filter((m) => m.kind !== 'rules' && m.kind !== 'region-atlas');
-      if (others.length || notes.length || atlases.length) {
-        const cached = atlases.map((m) => `${m.kind} (\`${m.name}\`) as ${m.doc.atlas_id}`);
+      /**
+       * ⛓ S3 — **AND THE BUNDLE'S LEVEL SET GOES TO ITS HOST CACHE**, the same moment and for the same reason:
+       * the rules name it (`region_atlas[p].level_set = {set_id, content_hash}`) and carry no body. Held under its
+       * own `set_id` WITH its computed content hash (`procgenCore/levelSetReference.js`), so a reader that asks by
+       * the rules' hash is told of a mismatch rather than served the wrong set. ⛔ Nothing plays it yet (S4).
+       */
+      const levelSets = members.filter((m) => m.kind === 'level-set');
+      const heldSets = putLevelSets(levelSets.map((m) => m.doc));
+      const isCached = (m) => m.kind === 'region-atlas' || m.kind === 'level-set';
+      const others = members.filter((m) => m.kind !== 'rules' && !isCached(m));
+      if (others.length || notes.length || atlases.length || levelSets.length) {
+        const cached = [
+          ...atlases.map((m) => `${m.kind} (\`${m.name}\`) as ${m.doc.atlas_id}`),
+          ...levelSets.map((m) => `${m.kind} (\`${m.name}\`) as ${
+            heldSets.some((r) => r.set_id === m.doc.set_id) ? m.doc.set_id : '(NOT held: no set_id)'}`),
+        ];
         const skipped = [...others.map((m) => `${m.kind} (\`${m.name}\`)`), ...notes];
         this.eventBus.publish('ui:notification', {
           type: 'info',
           message: `${file.name}: loaded the rules member`
-            + `${cached.length ? `; CACHED for the Region Map — ${cached.join(', ')}` : ''}`
+            + `${cached.length ? `; CACHED — ${cached.join(', ')}` : ''}`
             + `${skipped.length ? `; NOT loaded — ${skipped.join(', ')}` : ''}`,
         });
       }
