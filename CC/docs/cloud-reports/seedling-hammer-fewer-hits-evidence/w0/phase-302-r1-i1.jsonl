@@ -1,0 +1,5 @@
+{"id":302,"i":1,"k":0,"idleHits":0,"ms":96,"ok":true,"shipped":{"pass":"full","ticks":98,"modelHits":{"hits":0,"deaths":0}},"passes":[["dashless",true,107,5,"1h0d"],["full",true,98,10,"0h0d"]]}
+{"id":302,"i":1,"k":1,"idleHits":0,"ms":45,"ok":true,"shipped":{"pass":"full","ticks":105,"modelHits":{"hits":1,"deaths":0}},"passes":[["dashless",true,106,5,"1h0d"],["full",true,104,14,"1h0d"]]}
+{"id":302,"i":1,"k":2,"idleHits":0,"ms":35,"ok":true,"shipped":{"pass":"full","ticks":99,"modelHits":{"hits":1,"deaths":0}},"passes":[["dashless",true,106,5,"1h0d"],["full",true,97,10,"1h0d"]]}
+{"id":302,"i":1,"k":3,"idleHits":0,"ms":64,"ok":true,"shipped":{"pass":"dashless","ticks":104,"modelHits":{"hits":1,"deaths":0}},"passes":[["dashless",true,101,5,"1h0d"],["full",true,101,70,"1h0d"]]}
+{"id":302,"i":1,"k":4,"idleHits":0,"ms":40,"ok":true,"shipped":{"pass":"dashless","ticks":103,"modelHits":{"hits":1,"deaths":0}},"passes":[["dashless",true,99,5,"1h0d"],["full",true,99,58,"1h0d"]]}
