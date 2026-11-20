@@ -39,7 +39,7 @@
 import { loadPackStack } from '../contentPacks/contentPacks.js';
 import { createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
 import { PACK_TILE_BASES, createPackConcepts } from '../packConcepts/packConcepts.js';
-import { createStructure, terrainPassOf } from '../packStructure/packStructure.js';
+import { createStructure, terrainOf } from '../packStructure/packStructure.js';
 
 /** The art keys' namespace: the maze's own, like `seedling:*` is the Seedling pack's. */
 export const MAZE_ART_NAMESPACE = 'maze';
@@ -285,8 +285,8 @@ export function drawMazeTile(ctx, tileArt, kind, x0, y0, px, { own = null, base 
  * (`mazeTileKind`), and the chain draws the placeholder.
  *
  * ⛓ CONTENT SETS PASS-1 — `pass` is the kind's DECLARED PASSABILITY, read through the structure layer
- * (`packStructure.terrainPassOf`: the pass of the terrain entry the concept presents, `walkable` when it presents
- * none). `structure` is the stack's `createStructure` reader, or null when the stack carries no structure layer. A
+ * (`packStructure.terrainOf`: the pass of the terrain entry the concept presents, `walkable` when it presents
+ * none; ⛓ PASS-2: and `needs`, the mechanic concept id, when the pass is `needs`). `structure` is the stack's `createStructure` reader, or null when the stack carries no structure layer. A
  * kind whose pass cannot be read (it presents a terrain entry no loaded structure holds) gets `pass: null` and
  * `passError`, the refusal's sentence: the editor refuses to place it by name (`mazeTileKinds.tileKindRefusal`), and a
  * draw is unaffected (the look never depends on the logic).
@@ -296,11 +296,11 @@ export function tileKindKeys(packConcepts, structure = null) {
     for (const key of packConcepts?.keys() ?? []) {
         const c = packConcepts.get(key);
         if (typeof c.base === 'string') {
-            let pass = null;
+            let terrain = { pass: null };
             let passError = null;
-            try { pass = terrainPassOf(c, structure); } catch (e) { passError = e.message; }
+            try { terrain = terrainOf(c, structure); } catch (e) { passError = e.message; }
             out[key] = Object.freeze({
-                artKey: typeof c.art === 'string' ? c.art : null, base: c.base, pack: c.pack, pass,
+                artKey: typeof c.art === 'string' ? c.art : null, base: c.base, pack: c.pack, ...terrain,
                 ...(passError ? { passError } : {}),
             });
         }
