@@ -727,6 +727,24 @@
             "map_document": {
               "type": "string",
               "description": "Path of the tile-space map document the atlas was marked on. Omitted when the atlas declares no tile space."
+            },
+            "level_set": {
+              "type": "object",
+              "description": "The level set this slot's rooms were built from, when it is not the game's own (a set edited in a lab). The rules carry the reference, not the body; a host that received the set (a bundle's `level-set` member) holds it under `set_id` (frontend/modules/procgenCore/levelSetCache.js). Producer: the watch-page set editor's compile (seedlingDemo/watchSetIdentity.js). Absent on every committed preset.",
+              "properties": {
+                "set_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The level-set document's own stamped `set_id`."
+                },
+                "content_hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}$",
+                  "description": "The set's content hash: the whole document minus `set_id` and `provenance` (procgenCore/levelSetReference.js `levelSetContentHash`; equal to a stamped set's `provenance.content_hash`)."
+                }
+              },
+              "required": ["set_id", "content_hash"],
+              "additionalProperties": false
             }
           },
           "required": ["atlas_id", "game"]

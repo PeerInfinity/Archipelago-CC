@@ -13,7 +13,9 @@
  *   slot       `staticData.playerId` (the load's `selfPlayer`, `region_atlas["<p>"]`, the map path)
  *   rooms      the `flash_seedling` (atlas / vanilla) and `flash_seedling_gen` (generated) sidecars, whole payloads,
  *              in sidecar order — the rooms the atlas arm binds and the generated arm assembles
- *   atlas      `region_atlas["<p>"]` — the atlas document the atlas arm binds against
+ *   atlas      `region_atlas["<p>"]` — the atlas document the atlas arm binds against, WHOLE: so its optional
+ *              `level_set = {set_id, content_hash}` (S3, a lab set's reference) is keyed too — two sets that differ
+ *              only in tiles key apart, and a document without it keys byte-identically to before the field existed
  *   map        `mapDocumentPath(...).path` — the map document every arm reads
  *   seed       `seed_name` / `generation_seed` — the generated set's id
  *   links      `realRoomLinks` — the logical sub-region links the playback map carries

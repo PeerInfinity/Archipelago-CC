@@ -64,6 +64,7 @@
  * `stampAtlasIdentity` are handed in.
  */
 import { fnv1a32, stableStringify } from '../procgenCore/contentIdentity.js';
+import { levelSetReferenceOf } from '../procgenCore/levelSetReference.js';
 import { SEEDLING_ATLAS_GAME } from './seedlingAtlasDerivation.js';
 
 /** ⛓ The set adapter's `deps.atlas` on the watch page: the GAME and the map-document LABEL. */
@@ -131,8 +132,21 @@ export function labSetIdentity({ compileRegionAtlas, stampAtlasIdentity } = {}) 
         stamp,
         compileRegionAtlas: (atlas, options = {}) => {
             const stamped = stamp(atlas, options.mapDoc);
-            const out = compileRegionAtlas(stamped, { ...options, ...LAB_SET_COMPILE_OPTIONS });
+            const { levelSet, ...rest } = options;
+            const out = compileRegionAtlas(stamped, { ...rest, ...LAB_SET_COMPILE_OPTIONS });
             remember(stamped);
+            /**
+             * ⛓ S3 — THE SET THE ROOMS CAME FROM, BESIDE THE STAMP: `region_atlas[p].level_set =
+             * {set_id, content_hash}` (`procgenCore/levelSetReference.js`), on the compile, so every door
+             * (rules.json, the APWorld Editor, the bundle) carries the same field. Written only when the
+             * caller handed the stamped set (`seedlingSetAdapter.rulesJsonOf` does).
+             */
+            if (levelSet && out?.rules?.region_atlas) {
+                const ref = levelSetReferenceOf(levelSet);
+                for (const p of Object.keys(out.rules.region_atlas)) {
+                    out.rules.region_atlas[p] = { ...out.rules.region_atlas[p], level_set: { ...ref } };
+                }
+            }
             return out;
         },
         atlasAtDoor: (atlas, rules) => {
