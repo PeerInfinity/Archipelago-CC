@@ -20486,7 +20486,10 @@ function killLockLineStanceTurn(run, perTick, resolved, ctx, { live, whys }) {
 
 /**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE L98-L99 — **THE LAST KILL'S STAND-OUT IS PART OF THE ATTEMPT** (`KILLLOCK_STANDOUT_GUARD`,
- * OFF — `SEEDLING_KILLLOCK_STANDOUT_GUARD=1` / `withKillLockStandOutGuard(enabled, fn)`).
+ * ON by default since the L28 flip's guard (⚖ the user, 2026-11-20: *"Add the guard flip (Recommended)"*) —
+ * `SEEDLING_KILLLOCK_STANDOUT_GUARD=0` / `withKillLockStandOutGuard(enabled, fn)`). MEASURED (step 227, the survey's own
+ * staging): `KILL_STANCE_SIGHT` ON re-times the default kill stance into the axe's sweep (477 t, `spinningaxe@128,64` at
+ * t367); with this guard the stand-out is refused and the next stance kills clear (537 t, 0 hits).
  *
  * When the kill-lock chaser arm's last counted body dies, `execKillByChaser` STANDS (no keys) where the kill left the
  * player: the corpses' fade, then the lock's own fade until it leaves the world. Those stands are not a walk or a
@@ -20503,8 +20506,8 @@ function killLockLineStanceTurn(run, perTick, resolved, ctx, { live, whys }) {
  * attempt by name. ⚖ No-hit logic: a kill whose stand-out tanks a hit is not a kill the plan may keep. Nothing reads a
  * level or a coordinate. OFF: not asked (byte-identical).
  */
-export const KILLLOCK_STANDOUT_GUARD = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_STANDOUT_GUARD === '1' };
-export const KILLLOCK_STANDOUT_GUARD_DEFAULT = false;
+export const KILLLOCK_STANDOUT_GUARD = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_STANDOUT_GUARD !== '0' };
+export const KILLLOCK_STANDOUT_GUARD_DEFAULT = true;
 
 /** Run `fn` with `KILLLOCK_STANDOUT_GUARD` set to `enabled`, restoring the previous value. */
 export function withKillLockStandOutGuard(enabled, fn) {

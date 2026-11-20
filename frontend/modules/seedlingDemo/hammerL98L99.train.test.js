@@ -98,6 +98,27 @@ describe('hammer-phase L98-L99 — survey step 227 (L98, the Chest then the L99 
     }, 120000);
 });
 
+describe('hammer-phase L98-L99 — survey step 227 at the shipped defaults (the L28 flip + its guard)', () => {
+    it('KILL_STANCE_SIGHT re-times the kill into the axe\'s sweep; the stand-out guard refuses that stance and the '
+        + 'next one kills clear — solved hitless', async () => {
+        const staging = solveStaging(stagingFromTape(parseTape(boot(227))));
+        const makeRun = (persistence) => createRunForStaging({ ...staging, persistence }, SOURCE);
+        const solve = (guard) => withKillLockStandOutGuard(guard, () => twoPassSolve({ makeRun, goals: STEPS[227],
+            name: 'hammer-l98-l99-step-227-defaults', boot: staging.boot, persistence: staging.persistence, log: () => {} }));
+        const replay = (solved) => {
+            const run = makeRun(solved.persistence);
+            const equipsAt = new Map((solved.out.equips ?? []).map((e) => [e.t, e.slot]));
+            solved.out.perTick.forEach((held, t) => { if (equipsAt.has(t)) run.equipNow(equipsAt.get(t)); run.advance(held); });
+            return { ticks: solved.out.perTick.length, hits: run.playerHits.map((h) => `${h.id ?? h.source}@t${h.t}`),
+                deaths: run.playerDeaths.length, level: run.level };
+        };
+        // the guard held OFF: today's KILL_STANCE_SIGHT stance stands in the axe's sweep (the survey's 477 t / 1 hit)
+        expect(replay(await solve(false))).toEqual({ ticks: 477, hits: ['spinningaxe@128,64@t367'], deaths: 0, level: 99 });
+        // the defaults (guard ON): refused stand-outs, then a clear kill
+        expect(replay(await solve(true))).toEqual({ ticks: 537, hits: [], deaths: 0, level: 99 });
+    }, 240000);
+});
+
 describe('hammer-phase L98-L99 — survey step 228 (L99, the L100 stairs)', () => {
     it('LINE_STANCE OFF: the reboot band refuses at t496; DRIVE_DEATH_REFUSED names the death at t484 instead', async () => {
         const off = await solveStep(228);
