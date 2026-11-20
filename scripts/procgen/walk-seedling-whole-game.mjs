@@ -116,7 +116,8 @@ export function summarize(log) {
     let cause;
     if (f.walkEnd === 'complete') cause = 'none: the walk completed';
     else if (status?.startsWith('error')) cause = `refusal ${JSON.stringify(status)}`;
-    else if (why && /has said .* for \d+(\.\d+)? s/.test(why)) cause = `stall ${JSON.stringify(why)}`;
+    // `[\s\S]`, not `.`: a quoted status may run to several lines (a ladder refusal's rung reasons, carried whole).
+    else if (why && /has said [\s\S]* for \d+(\.\d+)? s/.test(why)) cause = `stall ${JSON.stringify(why)}`;
     else if (why === 'its done check never held') cause = `budget: the step's wait ran out (status ${JSON.stringify(status)})`;
     else cause = `${f.walkEnd ?? '?'} ${JSON.stringify(why ?? status)}`;
     const timing = lines.find((l) => l.includes('[tutorial-walk-timing] seedling-whole-game'));
