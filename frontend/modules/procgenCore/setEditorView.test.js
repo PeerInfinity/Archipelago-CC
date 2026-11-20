@@ -2178,10 +2178,46 @@ describe('⛓⛓ Seedling editor E3 — the MAP on the same overview canvas (the
         panel.dispatch('mousemove', ev(80, 30));
         const m1 = h.ui.map();
         expect(m1.camera.engaged).toBe(true);
-        expect(m1.camera.x).toBe(m0.camera.x - 30);
-        expect(m1.camera.y).toBe(m0.camera.y + 10);
+        // ⛓ (lab-map-small-set-view) the drag engages keeping every pixel: the canvas's top-left stays frame (0, 0)
+        expect(m1.camera.x).toBe(m1.viewport.w / 2 - 30);
+        expect(m1.camera.y).toBe(m1.viewport.h / 2 + 10);
         expect(m1.cells[1]).toEqual([m0.cells[1][0] + 30, m0.cells[1][1] - 10, m0.cells[1][2], m0.cells[1][3]]);
     });
+
+    /**
+     * ⛓⛓ lab-map-small-set-view — on a frame SMALLER than its panel, the first gesture gives the map the panel's
+     * room: the panel's width, and its CSS `max-height` (read through `getComputedStyle`). `+` engages CENTRED (the
+     * window's centre at the view's centre, then the zoom about it); FIT then zooms IN to fill the tight axis.
+     * MUTANT: the old `min(panel, frame)` window → the viewport stays the frame's and FIT stays ≤ the home zoom.
+     */
+    it('a SMALL set\'s map takes the panel\'s room once engaged (width + CSS max-height); `+` is centred; FIT zooms in',
+        () => {
+            const h = seedlingHarness({ overviewMapOn: true });
+            const c = $(h, 'editSetOverview');
+            const panel = c.parentNode;
+            panel.nodeType = 1;
+            h.doc.defaultView = { getComputedStyle: (el) => ({ maxHeight: el === panel ? '640px' : 'none' }) };
+            const m0 = h.ui.map();
+            expect(m0.frame.width).toBeLessThan(panel.clientWidth);
+            expect(m0.frame.height).toBeLessThan(640);
+            const key = (k) => c.dispatch('keydown', { key: k, stopPropagation() {}, preventDefault() {} });
+            key('+');
+            const m1 = h.ui.map();
+            expect(m1.viewport).toEqual({ w: panel.clientWidth, h: 640 });
+            expect([c.width, c.height]).toEqual([panel.clientWidth, 640]);
+            // the frame point at the home window's centre is the new view's centre (zoomAtCentre keeps it there)
+            expect(m1.camera).toMatchObject({ x: m0.frame.width / 2, y: m0.frame.height / 2, zoom: 1.25 });
+            key('0');
+            const m2 = h.ui.map();
+            expect(m2.camera.zoom).toBeGreaterThan(1);
+            const xs = m2.cells.flatMap(([x, , w]) => [x, x + w]);
+            const ys = m2.cells.flatMap(([, y, , hh]) => [y, y + hh]);
+            const slack = Math.min(m2.viewport.w - (Math.max(...xs) - Math.min(...xs)),
+                m2.viewport.h - (Math.max(...ys) - Math.min(...ys)));
+            expect(slack).toBeLessThan(17);
+            expect(Math.min(...xs)).toBeGreaterThanOrEqual(-1e-6);
+            expect(Math.min(...ys)).toBeGreaterThanOrEqual(-1e-6);
+        });
 
     /**
      * ⛓ seedling-map-unreachable — the map marks the rooms the LAST REPORT finds unreachable, and only while the set

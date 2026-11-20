@@ -20,7 +20,10 @@
  *      `?setView=strip` opens on it); RE-LAYOUT is the canonical layout.
  *   8. **THE CAMERA** (slice `lab-map-camera`, `setMapCameraClaims.js`) — the vanilla 116 opens HOME (node's frame at
  *      zoom 1); a drag pans and is not a click; Ctrl+wheel zooms around the cursor; a click after a pan selects THAT
- *      room; `0` fits both axes; CENTRE ON START centres the start room.
+ *      room; `0` fits both axes; CENTRE ON START centres the start room. Then the SMALL-SET claims (slice
+ *      `lab-map-small-set-view`, `setMapSmallSetClaims`) on the four-room set: the engaged view is the panel's room,
+ *      the switch keeps every pixel, FIT zooms in, a click after FIT selects the room drawn there, a resize keeps the
+ *      top-left.
  *   7. **UNREACHABLE ROOMS** (slice `seedling-map-unreachable`) — a DISCONNECT on the map cuts a room off; nothing is
  *      marked until REPORT runs; then exactly the rooms node's `unreachableRoomsOf` finds over node's own report of the
  *      same set are hatched (ink in that cell, none in the start's) with a legend line; Ctrl+Z (the door back) clears
@@ -41,7 +44,7 @@ import { fileURLToPath } from 'node:url';
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { setMapCameraClaims } from './setMapCameraClaims.js';
+import { setMapCameraClaims, setMapSmallSetClaims } from './setMapCameraClaims.js';
 
 argvHelp(import.meta.url);
 
@@ -474,6 +477,19 @@ async function main() {
             const rec = setRecord(vanillaSet, emptyOverlay());
             const f = frameOf(layoutOf(vanillaSet).map(([gx, gy]) => ({ gx, gy })), mapLinksOf(rec, DEPS).sizes, 1);
             await setMapCameraClaims({
+                page, check, tag: '8',
+                mapOf: async () => (await set()).map,
+                homeCells: f.cells.map((c) => [c.x, c.y, c.w, c.h]),
+                shot: (name) => shot(`8-${name}`, '#editSetOverviewWrap'),
+            });
+        }
+        // ⛓ (lab-map-small-set-view) the SMALL set: its frame is smaller than the panel, so the engaged view grows
+        await loadSet(SMALL, 4);
+        await page.waitForFunction(() => window.__editorEdit?.set?.map, null, { timeout: 60000 });
+        {
+            const rec = setRecord(SMALL, emptyOverlay());
+            const f = frameOf(layoutOf(SMALL).map(([gx, gy]) => ({ gx, gy })), mapLinksOf(rec, DEPS).sizes, 1);
+            await setMapSmallSetClaims({
                 page, check, tag: '8',
                 mapOf: async () => (await set()).map,
                 homeCells: f.cells.map((c) => [c.x, c.y, c.w, c.h]),
