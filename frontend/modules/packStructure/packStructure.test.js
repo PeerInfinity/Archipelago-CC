@@ -11,7 +11,7 @@ import { createPackConcepts } from '../packConcepts/packConcepts.js';
 import { CONTENT_LAYERS, loadContentSet } from '../procgenPipeline/worldContent.js';
 import {
     DEFAULT_TERRAIN_PASS, MODIFIES_PARTS, RESULT_WHEN, STRUCTURE_FIELDS, STRUCTURE_KINDS, TERRAIN_PASSES,
-    assertPresentsStructure, terrainPassOf, createStructure, parseModifiesPart, parseStructureId, parseStructureManifest,
+    NEEDS_PASS, assertPresentsStructure, terrainOf, terrainPassOf, createStructure, parseModifiesPart, parseStructureId, parseStructureManifest,
 } from './packStructure.js';
 import { createNumbers, numbersSelectionRefusal, parseNumbersManifest, parseValuePath } from './packNumbers.js';
 import { assertBindingsBind, createBindings, parseBindingsManifest } from './packBindings.js';
@@ -125,8 +125,13 @@ describe('⛓ PASS-1 — terrain: a tile kind\'s declared passability', () => {
     it.each([
         ['a value outside the set', (e) => { e['ground:terrain/rug'].pass = 'one-way'; }, /entry "ground:terrain\/rug": pass "one-way" is not one of walkable, blocked/],
         ['no pass at all', (e) => { delete e['ground:terrain/rug'].pass; }, /entry "ground:terrain\/rug": pass undefined is not one of/],
-        ['a field a terrain does not take', (e) => { e['ground:terrain/rug'].needs = 'swim'; }, /field "needs" is not one a terrain takes \(kind, src, pass\)/],
+        ['a field a terrain does not take', (e) => { e['ground:terrain/rug'].dirs = ['E']; }, /field "dirs" is not one a terrain takes \(kind, src, pass, needs\)/],
         ['pass on a kind that is not terrain', (e) => { e['ground:place/hall'] = { kind: 'place', pass: 'blocked' }; }, /field "pass" is not one a place takes/],
+        // ⛓ PASS-2 — `needs` exactly when the pass is `needs`, and then a bare mechanic concept id
+        ['needs without a concept', (e) => { delete e['ground:terrain/pool'].needs; }, /entry "ground:terrain\/pool": pass "needs" needs `needs`, the bare id of a mechanic concept \(got undefined/],
+        ['needs naming an AP item', (e) => { e['ground:terrain/pool'].needs = 'Progressive Swim'; }, /pass "needs" needs `needs`, the bare id of a mechanic concept \(got "Progressive Swim"/],
+        ['needs naming a namespaced key', (e) => { e['ground:terrain/pool'].needs = 'ground:terrain/rug'; }, /the bare id of a mechanic concept/],
+        ['a concept on another pass', (e) => { e['ground:terrain/rug'].needs = 'swim'; }, /entry "ground:terrain\/rug": needs "swim" is only for pass "needs" \(this entry's pass is "walkable"\)/],
     ])('refused by name: %s', async (_, edit, pattern) => {
         const json = await ground();
         edit(json.entries);
@@ -143,6 +148,10 @@ describe('⛓ PASS-1 — terrain: a tile kind\'s declared passability', () => {
         expect(terrainPassOf(words.get('ground:terrain/rug'), structure)).toBe('walkable');
         expect(terrainPassOf(words.get('ground:object/lamp'), structure)).toBe(DEFAULT_TERRAIN_PASS);
         expect(terrainPassOf(words.get('ground:object/lamp'), null)).toBe(DEFAULT_TERRAIN_PASS);
+        // ⛓ PASS-2 — the whole declaration: `needs` rides with its pass, and only there
+        expect(terrainOf(words.get('ground:terrain/pool'), structure)).toEqual({ pass: NEEDS_PASS, needs: 'swim' });
+        expect(terrainOf(words.get('ground:terrain/pillar'), structure)).toEqual({ pass: 'blocked' });
+        expect(terrainOf(words.get('ground:object/lamp'), structure)).toEqual({ pass: DEFAULT_TERRAIN_PASS });
         // A terrain presented with no logic layer loaded is refused by name, never read as walkable.
         expect(() => terrainPassOf(words.get('ground:terrain/pillar'), null))
             .toThrow(/concept "ground:terrain\/pillar" presents "ground:terrain\/pillar", which no structure in the stack holds/);

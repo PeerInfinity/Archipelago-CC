@@ -65,32 +65,27 @@ function handles({ here = 'Menu', path = [], rules = null, restart = null } = {}
 const rulesWith = (flag) => ({ rules: { start_regions: { 1: ['Menu'] }, exporter: { 1: flag ? { return_to_menu: true } : {} } }, playerId: '1' });
 
 describe('moves', () => {
-    it('one step: the next region on the path, under the caller\'s source, through the caller\'s dispatcher', () => {
+    // ⚖ No "one step" (user, 2026-11-17): `planOneStepMove` / `moveOneStep` / `moveDirectly` left this module in CA-S3
+    // with their last caller (the Region Map's interim click reader). A direct move is `planDirectMove` +
+    // `publishRegionMove`, as the click actions' route from the player does (`clickActions.js` `routeTo`).
+    it('directly: the final exit from the second-to-last region, under the caller\'s source and dispatcher', () => {
         const { h, published } = handles();
-        const r = a.moveOneStep(h, 'B', 'regionGraph-oneStep');
-        expect(r).toMatchObject({ ok: true, kind: 'move', from: 'Menu', move: { sourceRegion: 'Menu', targetRegion: 'Start', exitName: 'GameStart' } });
+        const r = a.planDirectMove(h, 'B');
+        expect(r).toMatchObject({ ok: true, move: { sourceRegion: 'Start', targetRegion: 'B', exitName: 'toB' } });
+        a.publishRegionMove(h, r.move, 'regionGraph-direct');
         expect(published).toEqual([{ event: 'user:regionMove', target: 'bottom', payload: {
-            sourceRegion: 'Menu', sourceUID: undefined, targetRegion: 'Start', exitName: 'GameStart', updatePath: false,
-            source: 'regionGraph-oneStep' } }]);
-    });
-
-    it('directly: the final exit from the second-to-last region', () => {
-        const { h, published } = handles();
-        expect(a.moveDirectly(h, 'B', 'regionGraph-direct')).toMatchObject({ ok: true,
-            move: { sourceRegion: 'Start', targetRegion: 'B', exitName: 'toB' } });
-        expect(published[0].payload.source).toBe('regionGraph-direct');
+            sourceRegion: 'Start', sourceUID: undefined, targetRegion: 'B', exitName: 'toB', updatePath: false,
+            source: 'regionGraph-direct' } }]);
     });
 
     it('a result, never a flash: no current region / already there / no path', () => {
-        expect(a.planOneStepMove(handles({ here: null }).h, 'B')).toEqual({ ok: false, reason: 'no-current' });
+        expect(a.planDirectMove(handles({ here: null }).h, 'B')).toEqual({ ok: false, reason: 'no-current' });
         expect(a.planDirectMove(handles({ here: 'B' }).h, 'B')).toEqual({ ok: false, reason: 'already-there', from: 'B' });
-        const { h, published } = handles({ here: 'Pit' });
-        expect(a.moveDirectly(h, 'B', 'x')).toEqual({ ok: false, reason: 'no-path', from: 'Pit' });
-        expect(published).toEqual([]);
+        expect(a.planDirectMove(handles({ here: 'Pit' }).h, 'B')).toEqual({ ok: false, reason: 'no-path', from: 'Pit' });
         const thrower = handles();
         thrower.h.gameState.getCurrentRegion = () => { throw new Error('boom'); };
         const errs = [];
-        expect(a.planOneStepMove(thrower.h, 'B', { onError: (e) => errs.push(e.message) }).reason).toBe('no-current');
+        expect(a.planDirectMove(thrower.h, 'B', { onError: (e) => errs.push(e.message) }).reason).toBe('no-current');
         expect(errs).toEqual(['boom']);
     });
 });
@@ -99,7 +94,7 @@ describe('the RESTART step (⛓ RETURN TO MENU) — navigationManager.restart.te
     it('flag ON, no walk from the pit: the step is the Menu panel\'s Restart, and nothing is dispatched', () => {
         const restart = vi.fn(() => ({ mode: 'world', target: 'Menu' }));
         const { h, published } = handles({ here: 'Pit', rules: rulesWith(true), restart });
-        expect(a.moveOneStep(h, 'B', 'x')).toEqual({ ok: true, kind: 'restart', from: 'Pit', region: 'Menu' });
+        expect(a.takeRestartStep(h, 'Pit', 'B')).toEqual({ ok: true, region: 'Menu' });
         expect(restart).toHaveBeenCalledTimes(1);
         expect(published).toEqual([]);
     });
@@ -107,7 +102,7 @@ describe('the RESTART step (⛓ RETURN TO MENU) — navigationManager.restart.te
     it('flag OFF: no Restart; no path', () => {
         const restart = vi.fn(() => ({}));
         const { h } = handles({ here: 'Pit', rules: rulesWith(false), restart });
-        expect(a.planOneStepMove(h, 'B')).toEqual({ ok: false, reason: 'no-path', from: 'Pit' });
+        expect(a.takeRestartStep(h, 'Pit', 'B')).toEqual({ ok: false });
         expect(restart).not.toHaveBeenCalled();
     });
 
@@ -131,15 +126,13 @@ describe('path edits', () => {
             payload: { targetRegion: 'B', sourceRegion: 'Menu', source: 'regionGraph-addToPath' } }]);
     });
 
-    it('addToPath from the path\'s end: every step, beforeExecute first; one step when asked', () => {
+    it('addToPath from the path\'s end: every step, beforeExecute first', () => {
         const order = [];
         const { h, published } = handles({ path: [{ type: 'regionMove', region: 'Menu' }] });
         h.dispatcher.publish = (e, p) => { order.push(`dispatch ${p.targetRegion}`); published.push(p); };
         const r = a.addToPath(h, 'B', { source: 's', beforeExecute: () => order.push('before') });
         expect(r).toMatchObject({ ok: true, kind: 'path', from: 'Menu', regions: ['Start', 'B'] });
         expect(order[0]).toBe('before');
-        const one = handles({ path: [{ type: 'regionMove', region: 'Menu' }] });
-        expect(a.addToPath(one.h, 'B', { moveOnlyOneStep: true, source: 's' }).regions).toEqual(['Start']);
         const none = handles({ path: [{ type: 'regionMove', region: 'Pit' }] });
         const before = vi.fn();
         expect(a.addToPath(none.h, 'B', { source: 's', beforeExecute: before })).toEqual({ ok: false, reason: 'no-path', from: 'Pit' });

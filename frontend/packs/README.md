@@ -74,8 +74,9 @@ Details are in `docs/json/developer/procgen/concepts.md` § Provenance.
   sets TILE-2) A pack's concept row may declare a tile kind's `base` beside its `art` key (`packConcepts.PACK_TILE_BASES`),
   read through `mazeTileArt.mazeTileKind`. (TILE-3) The maze lab's editor places one on a floor cell (`?packs=` names
   the stack; the payload field `tileKinds`), and both views draw it. (PASS-1) A kind's passability is declared in the
-  pack's `structure` layer (a `terrain` entry, `pass` walkable or blocked, that the concept presents); the editor
-  bakes it per placed kind and lowers `blocked` to a wall. The art is
+  pack's `structure` layer (a `terrain` entry, `pass` walkable, blocked or needs, that the concept presents); the
+  editor bakes it per placed kind and lowers `blocked` to a wall and (PASS-2) `needs: <mechanic concept>` to a rule
+  obstacle on the cell. The art is
   play-time only, so an edit to it owes no preset rebuild. It presents the guardian as **the Gate** (a `look`,
   `#a0a8b8` / `#`, for the maze's gate role; the `blocked` and `passedWith` lines for the text adventure's), gives
   the sword's and the swim's checks a line that knows it is a check (their names stay the AP item names, and the

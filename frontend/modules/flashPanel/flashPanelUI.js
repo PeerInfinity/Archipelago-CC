@@ -10,7 +10,9 @@ import {
 import { SolveProgressLine, SolveProgressView } from './seedlingSolveProgressView.js';
 import { SolveWatchView } from './seedlingSolveWatchView.js';
 import { AP_ITEM_FOUND_EVENT, RULES_RELOADED_IN_PLACE_EVENT } from './seedlingRegionGlue.js';
-import { RANDOMIZER_ARMS, entranceShuffleRefusal, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
+import {
+  CUSTOM_SET_NOT_PLAYABLE, RANDOMIZER_ARMS, entranceShuffleRefusal, seedlingRandomizerEligibility, servedRegionAtlas,
+} from './seedlingRandomizerEligibility.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 // ⛓ J3 — import-free (it imports nothing), so the panel's closure gains one small file.
 import { atlasRoomRegions } from '../seedlingDemo/seedlingAtlasCheckTable.js';
@@ -22,11 +24,15 @@ import { PUSH_INTERVAL_MS, WasmBridgeAdapter } from './wasmBridgeAdapter.js';
 import { createHeldKeyRelease, dispatchGameKey, focusGameCanvas } from './gameInput.js';
 // ⛓ TOUCH CONTROLS — generic: the game's config declares its buttons (`touch_controls`).
 import { TOUCH_SETTING_KEY, mountTouchControls, parseTouchLayout, touchControlsVisible } from './touchControls.js';
-import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
+import { atlasIndexPath, mapDocumentPath, playerOfRawPayload, regionAtlasOf, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
 import { seedlingMountKey } from './seedlingMountKey.js';
 // ⛓ RE2 — the JS runtime's save, one localStorage key per room (the mount key).
-import { bindJsSave } from './seedlingJsSave.js';
+import { createJsSaveController, JS_SAVE_DEFAULT, JS_SAVE_SETTING_KEY } from './seedlingJsSave.js';
+// ⛓ USE THE SAVE / CLEAR for the Flash (Ruffle) save `…/shrumsave` (slice ruffle-save-toggle-clear).
+import {
+  clearRuffleSave, endRuffleSaveRun, prepareRuffleSave, ruffleSaveKey, RUFFLE_SAVE_DEFAULT, RUFFLE_SAVE_SETTING_KEY,
+} from './seedlingRuffleSave.js';
 // ⛓ SOLVER LIMIT OFF — import-free: the Solver section's limit controls and Stop.
 import { SOLVER_LIMIT_PROPS, anySolving, backstopMsOf, buildSolverLimitRow, stopSolves, wasmBudgetKnobOf } from './seedlingSolverLimitControls.js';
 import { SOLVE_DEMO_EVENT, SOLVE_DEMOS, pushDemoWindow, solveDemoMissing, solveDemoMoved, solveDemoStage } from './seedlingSolveDemo.js';
@@ -133,6 +139,12 @@ const SETTINGS_CONTROLS = Object.freeze([
   { prop: 'seedlingJsVolume', label: 'Volume', when: 'js' },
   { prop: 'seedlingJsMusic', label: 'Music', when: 'js' },
   { prop: 'seedlingJsMusicVolume', label: 'Music volume', when: 'js' },
+  // ⛓ USE THE SAVE (slice `js-save-toggle-clear`) — shown when the JS runtime is SELECTED (the setting), so it can be
+  // set before the game loads; the "Clear this room's save" button sits on the row under it.
+  { prop: 'seedlingJsSave', label: 'Use the save', when: 'jsSelected' },
+  // ⛓ USE THE SAVE (slice `ruffle-save-toggle-clear`) — the Flash (Ruffle) save, its own setting; shown when the Flash
+  // runtime is SELECTED on Seedling, with "Clear the Flash save" on the row under it.
+  { prop: 'seedlingRuffleSave', label: 'Use the save', when: 'flashSelected' },
   { prop: 'seedlingSolverWalk', label: 'Bot uses the solver', when: 'seedling' },
   { prop: 'touchControls', label: 'Touch controls', when: 'touch' },
   { prop: 'seedlingSolveProgressIntervalMs', label: 'Progress refresh (ms)', when: 'seedling' },
@@ -279,6 +291,10 @@ export class FlashPanelUI {
     this._settingsChangedHandler = async (data) => {
       // ⛓ PANEL LAYOUT — the Settings section's controls follow the setting, whoever wrote it.
       if (data?.key === '*' || data?.key?.startsWith?.(SETTING_KEY_PREFIX)) this._syncSettingsControls();
+      // ⛓ USE THE SAVE — the switch applies at once (on: written from now on; off: nothing more is written)
+      if (data?.key === '*' || data?.key === JS_SAVE_SETTING_KEY) this._onJsSaveSettingChanged();
+      // ⛓ USE THE SAVE (Flash) — acts at the game's next load; a running game is told so
+      if (data?.key === RUFFLE_SAVE_SETTING_KEY) this._onRuffleSaveSettingChanged(data.value);
       if (data?.key === SOLVER_WALK_SETTING_KEY || data?.key === '*') {
         this._refreshSolverWalk(data.key === '*' ? undefined : data.value);
       }
@@ -463,6 +479,13 @@ export class FlashPanelUI {
     if (!pinned && key === this._lastFlashPanelKey && this._mountedRoomsDiffer()) {
       // ⛓ SAME WIRING, OTHER ROOMS — the wiring change's own path: the game restarts on the loaded rules' rooms.
       this._panelLog('rules changed (same game wiring, different rooms) — re-mounting so the game plays the loaded rules\' rooms');
+      this._teardownForReinit();
+      this._initializeAdapter();
+      return;
+    }
+    if (!pinned && key === this._lastFlashPanelKey && (this._customSetShown || this._noGameConfigured)) {
+      // ⛓ SLICE G — the panel holds NO game (a custom set's refusal, or "no game configured"): the same wiring
+      // can still be a different answer (a custom set loaded, or left), so the init asks again. Nothing runs.
       this._teardownForReinit();
       this._initializeAdapter();
       return;
@@ -976,6 +999,8 @@ export class FlashPanelUI {
     this._seedlingRealSet = null;
     this._seedlingDelivery = null;
     this._apLoadRefusal = null;
+    this._customSetShown = false;
+    this._noGameConfigured = false;
     this._touchTransport = null;
     this._unmountTouchControls();
     this._heldKeys?.uninstall();
@@ -989,6 +1014,8 @@ export class FlashPanelUI {
       this._teleportUnsub = null;
     }
     this.swfContainer.innerHTML = '';
+    // ⛓ USE THE SAVE (Flash) — the player is gone and its last write is in (Ruffle writes inside the removal)
+    this._endRuffleSaveRun();
     this.teleportRow.style.display = 'none';
     this.gameConfig = null;
     this._stageSize = null;
@@ -1383,6 +1410,8 @@ export class FlashPanelUI {
       input.classList.add('flash-panel-setting-input');
       host.append(row);
       this._settingsControls.push({ ...c, spec, row, input, key: SETTING_KEY_PREFIX + c.prop, ...(speedParts ?? {}) });
+      if (c.prop === 'seedlingJsSave') host.append(this._buildJsSaveClearRow());
+      if (c.prop === 'seedlingRuffleSave') host.append(this._buildRuffleSaveClearRow());
     }
     // "TP on UI click" — the panel's own switch (not a setting), shown when the game can teleport
     const tp = document.createElement('label');
@@ -1393,6 +1422,48 @@ export class FlashPanelUI {
     host.append(tp);
     this.teleportOnClickRow = tp;
     this.teleportOnClickCheckbox = tp.querySelector('.flash-panel-tp-on-click');
+  }
+
+  /**
+   * ⛓ USE THE SAVE / CLEAR — the "Clear this room's save" row, under "Use the save" and shown with it. It works with
+   * the save on or off. `data-applies` is "true" while it is shown, so a tutorial step can target it only then.
+   */
+  _buildJsSaveClearRow() {
+    const row = document.createElement('div');
+    row.className = 'flash-panel-js-save-clear-row';
+    row.style.cssText = 'display:none;flex-wrap:wrap;align-items:center;gap:4px 8px;min-width:0;';
+    const button = document.createElement('button');
+    button.className = 'flash-panel-js-save-clear';
+    button.style.cssText = BUTTON_CSS;
+    button.textContent = "Clear this room's save";
+    button.title = "Remove this room's Seedling JS save from this browser (the room the loaded rules mount). The game "
+      + 'in progress keeps its progress; the next load of this room starts with no save.';
+    button.addEventListener('click', () => this.clearJsSave());
+    row.append(button);
+    this._jsSaveClearRow = row;
+    this._jsSaveClearButton = button;
+    return row;
+  }
+
+  /**
+   * ⛓ USE THE SAVE / CLEAR (Flash) — the "Clear the Flash save" row, under the Flash "Use the save" and shown with it
+   * (the 168 row's shape). It works with the save on or off; `data-applies` is "true" while it is shown.
+   */
+  _buildRuffleSaveClearRow() {
+    const row = document.createElement('div');
+    row.className = 'flash-panel-ruffle-save-clear-row';
+    row.style.cssText = 'display:none;flex-wrap:wrap;align-items:center;gap:4px 8px;min-width:0;';
+    const button = document.createElement('button');
+    button.className = 'flash-panel-ruffle-save-clear';
+    button.style.cssText = BUTTON_CSS;
+    button.textContent = 'Clear the Flash save';
+    button.title = "Remove the Flash (Ruffle) Seedling save, \"…/shrumsave\", from this browser: one save for this site's "
+      + 'Seedling SWF, shared by every room and seed. A game running now keeps its progress; the next load starts with no save.';
+    button.addEventListener('click', () => this.clearRuffleSave());
+    row.append(button);
+    this._ruffleSaveClearRow = row;
+    this._ruffleSaveClearButton = button;
+    return row;
   }
 
   /**
@@ -1551,9 +1622,14 @@ export class FlashPanelUI {
     if (this._solveProgressLine) this._solveProgressLine.element.style.display = seedling ? 'flex' : 'none';
     if (this.sections?.solver) this.sections.solver.style.display = seedling ? '' : 'none';
     if (this.restartButton) this.restartButton.style.display = seedling && getSeedlingRegionGlue() ? '' : 'none';
+    // ⛓ USE THE SAVE — the JS runtime SELECTED: the setting says js (a Seedling game, or none resolved yet), or it runs
+    const runtimeSetting = this._settingsControls.find((c) => c.prop === 'runtime')?.input?.value ?? null;
+    const jsSelected = transport === 'js' || (runtimeSetting === 'js' && (seedling || !this.configPath));
+    // ⛓ USE THE SAVE (Flash) — the Flash runtime SELECTED on Seedling (or no game resolved yet), or it runs Seedling
+    const flashSelected = (transport === 'flash' && seedling) || (runtimeSetting === 'flash' && (seedling || !this.configPath));
     for (const c of this._settingsControls) {
       const applies = c.when === 'always' || (c.when === 'seedling' && seedling) || (c.when === 'js' && transport === 'js')
-        || (c.when === 'touch' && !!this.gameConfig?.touch_controls);
+        || (c.when === 'jsSelected' && jsSelected) || (c.when === 'flashSelected' && flashSelected) || (c.when === 'touch' && !!this.gameConfig?.touch_controls);
       c.row.style.display = applies ? 'flex' : 'none';
       if (c.prop !== 'runtime') continue;
       for (const opt of c.input.options) {
@@ -1569,6 +1645,14 @@ export class FlashPanelUI {
       }
     }
     if (this.teleportOnClickRow) this.teleportOnClickRow.style.display = this.gameConfig?.teleport ? 'flex' : 'none';
+    if (this._jsSaveClearRow) {
+      this._jsSaveClearRow.style.display = jsSelected ? 'flex' : 'none';
+      this._jsSaveClearButton.dataset.applies = String(jsSelected);
+    }
+    if (this._ruffleSaveClearRow) {
+      this._ruffleSaveClearRow.style.display = flashSelected ? 'flex' : 'none';
+      this._ruffleSaveClearButton.dataset.applies = String(flashSelected);
+    }
   }
 
   _setupTeleportUI() {
@@ -1881,6 +1965,22 @@ export class FlashPanelUI {
     if (this.adapter !== adapter) return;
 
     /**
+     * ⛓⛓ SLICE G — ASKED AGAIN AT BRIDGE-READY. A rules load that lands while a game is still booting (an adapter,
+     * but no AP load yet: `_mountedRoomsDiffer`'s "it will read these") is not re-mounted, so the init's own question
+     * was asked of the PREVIOUS rules. If the rules this load reads are a custom set, the game that booted is the
+     * original one: it is stopped, and the panel stays empty and says why (measured: CI seedling-js, the row after
+     * the same-wiring switch).
+     */
+    const customSet = await this._customSetRefusal();
+    if (this.adapter !== adapter) return;
+    if (customSet) {
+      this._teardownForReinit();
+      this.isInitialized = true;
+      this._showCustomSetRefusal(customSet);
+      return;
+    }
+
+    /**
      * ⛓ THE FIFTH FACT, READ HERE (seedling generated G2): does the world
      * carry GENERATED Seedling rooms? The census is a pass over the rules the
      * panel already holds, so the cheap call can DECIDE the generated arm — its
@@ -1996,7 +2096,7 @@ export class FlashPanelUI {
         log: (msg, cls) => this._panelLog(msg, cls),
       });
       // ⛓ RE2 — the rooms are mounted (a mount clears the JS save) and the player is at the start: this room's save.
-      if (this.adapter === adapter && this.transport === 'js' && this._apLoadResult?.ok) this._bindJsSave(adapter, glue);
+      if (this.adapter === adapter && this.transport === 'js' && this._apLoadResult?.ok) await this._bindJsSave(adapter, glue);
     } catch (err) {
       this._panelLog(`ap placement: ${err.message}`, 'error');
       this._apLoadRefusal = `the load threw: ${err.message}`;
@@ -2018,23 +2118,168 @@ export class FlashPanelUI {
    * load read. A stored save is restored into the page's core (the player stays at the start: ⚖ Robert, "Progress now,
    * position next"), and the glue's event load read runs again at once, so the restored clears collect their events.
    * The binding writes on every change the core announces, and is flushed and dropped with the adapter.
+   * ⛓ USE THE SAVE — only when `flashPanel.seedlingJsSave` is on (default OFF): off binds nothing (no read, no write)
+   * and says so in the log once.
    */
-  _bindJsSave(adapter, glue) {
+  async _bindJsSave(adapter, glue) {
     this._unbindJsSave();
-    let runtime = null;
-    try { runtime = adapter._getWin?.()?.__seedlingJsRuntime ?? null; } catch { runtime = null; }
-    if (!runtime?.exportSave || typeof this._apLoadKey !== 'string') return;
-    this._jsSave = bindJsSave({ runtime, roomKey: this._apLoadKey, log: (msg, cls) => this._panelLog(msg, cls) });
-    if (this._jsSave.restored?.ok) glue?.syncEventsFromGame?.();
-    if (!this._jsSavePageHide && typeof window !== 'undefined') {
-      this._jsSavePageHide = () => this._jsSave?.flush();
+    const runtime = this._jsSaveRuntime(adapter);
+    if (!runtime || typeof this._apLoadKey !== 'string') return;
+    const roomKey = this._apLoadKey;
+    const on = await this._readJsSaveSetting();
+    this._jsSaveOn = on;
+    // the setting read awaited: a teardown or a new load since then owns the binding now
+    if (this.adapter !== adapter || this._apLoadKey !== roomKey) return;
+    const bound = this._jsSaveController().load({ on, runtime, roomKey });
+    if (bound?.restored?.ok) glue?.syncEventsFromGame?.();
+    if (bound && !this._jsSavePageHide && typeof window !== 'undefined') {
+      this._jsSavePageHide = () => this._jsSaveCtl?.binding?.flush();
       window.addEventListener('pagehide', this._jsSavePageHide);
     }
   }
 
+  /** The JS page's core, or null (not the JS runtime, no page, no save API). */
+  _jsSaveRuntime(adapter = this.adapter) {
+    let runtime = null;
+    try { runtime = adapter?._getWin?.()?.__seedlingJsRuntime ?? null; } catch { runtime = null; }
+    return runtime?.exportSave ? runtime : null;
+  }
+
+  _jsSaveController() {
+    this._jsSaveCtl ??= createJsSaveController({ log: (msg, cls) => this._panelLog(msg, cls) });
+    return this._jsSaveCtl;
+  }
+
+  async _readJsSaveSetting() {
+    try { return (await settingsManager.getSetting(JS_SAVE_SETTING_KEY, JS_SAVE_DEFAULT)) === true; } catch { return JS_SAVE_DEFAULT; }
+  }
+
+  /** Are rules loaded at all (else there is no room whose save the Clear button could name)? */
+  _rulesLoaded() {
+    return !!rulesOfRawPayload(getLastRawJsonData?.());
+  }
+
+  /** The live binding (null when the save is off or nothing is loaded) — read by the in-app rows. */
+  get _jsSave() {
+    return this._jsSaveCtl?.binding ?? null;
+  }
+
   _unbindJsSave() {
-    this._jsSave?.dispose();
-    this._jsSave = null;
+    this._jsSaveCtl?.dispose();
+  }
+
+  /**
+   * ⛓ USE THE SAVE — the setting moved mid-run. ON: bind WRITE-ONLY from now on, if this panel has a JS room loaded
+   * (the stored save is read at the next AP load, never mid-run). OFF: unbind, writing nothing further. Only a change
+   * of the value acts (`_jsSaveOn` = the value last applied; undefined until the first AP load reads it).
+   */
+  async _onJsSaveSettingChanged() {
+    const on = await this._readJsSaveSetting();
+    // only a CHANGE acts: a broadcast of every setting (`*`) must not re-arm a binding the Clear button stopped
+    if (on === this._jsSaveOn) return;
+    this._jsSaveOn = on;
+    const ctl = this._jsSaveController();
+    if (!on) { ctl.turnOff(); return; }
+    if (ctl.binding || this.transport !== 'js' || !this._apLoadResult?.ok || typeof this._apLoadKey !== 'string') return;
+    const runtime = this._jsSaveRuntime();
+    if (!runtime) return;
+    ctl.turnOn({ runtime, roomKey: this._apLoadKey });
+    if (!this._jsSavePageHide && typeof window !== 'undefined') {
+      this._jsSavePageHide = () => this._jsSaveCtl?.binding?.flush();
+      window.addEventListener('pagehide', this._jsSavePageHide);
+    }
+  }
+
+  /**
+   * ⛓ USE THE SAVE / CLEAR — the "Clear this room's save" button. THIS ROOM is the one the loaded rules mount
+   * (`_mountKeyNow`: the room playing, or the one the next load will mount); only its key is removed. A binding to it
+   * is stopped without writing (`createJsSaveController().clear`). Works with the save on or off. The panel log says
+   * what was removed, and the root's `data-js-save-clear` / `data-js-save-cleared-at` say it for a tutorial step.
+   */
+  clearJsSave() {
+    let result;
+    if (!this._rulesLoaded()) {
+      this._panelLog('[js save] no rules are loaded, so there is no room whose save to clear');
+      result = { removed: false, none: 'no-rules' };
+    } else {
+      result = this._jsSaveController().clear(this._mountKeyNow());
+    }
+    if (this.rootElement) {
+      this.rootElement.dataset.jsSaveClear = result.error ? 'error' : (result.removed ? 'removed' : 'none');
+      this.rootElement.dataset.jsSaveClearedAt = String(Date.now());
+    }
+    return result;
+  }
+
+  async _readRuffleSaveSetting() {
+    try {
+      return (await settingsManager.getSetting(RUFFLE_SAVE_SETTING_KEY, RUFFLE_SAVE_DEFAULT)) === true;
+    } catch {
+      return RUFFLE_SAVE_DEFAULT;
+    }
+  }
+
+  /** This page's Ruffle save key for the loaded SWF, or null (no SWF, or not Seedling: `shrumsave` is Seedling's). */
+  _ruffleSaveKeyNow() {
+    if (!this.swfPath || !this.configPath?.endsWith?.(`/${JS_RUNTIME_CONFIG}`)) return null;
+    return ruffleSaveKey(this.swfPath, typeof document !== 'undefined' ? document.baseURI : undefined);
+  }
+
+  /**
+   * ⛓ USE THE SAVE (Flash) — before the SWF is embedded (`seedlingRuffleSave.js` has the mechanism and the
+   * measurements). OFF: the stored save is set aside, the game starts with none. ON: a save set aside comes back;
+   * with none set aside nothing is touched. Native Flash keeps its own files: the switch cannot reach them.
+   */
+  _prepareRuffleSave(on) {
+    this._ruffleSaveRun = null;
+    const key = this._ruffleSaveKeyNow();
+    if (!key) return null;
+    if (hasFlashPlayer()) {
+      this._panelLog('[flash save] a native Flash Player plays the game: it keeps its own save files, which "Use the save" does not reach');
+      return null;
+    }
+    const result = prepareRuffleSave({ on, key, storage: this._ruffleSaveStorage, log: (msg, cls) => this._panelLog(msg, cls) });
+    this._ruffleSaveRun = { key, on };
+    if (this.rootElement) this.rootElement.dataset.ruffleSave = `${on ? 'on' : 'off'}:${result.action}`;
+    if (!this._ruffleSavePageHide && typeof window !== 'undefined') {
+      // a courtesy: Ruffle's own unload write may come after this, and the next boot throws that away
+      this._ruffleSavePageHide = () => this._endRuffleSaveRun({ keepRun: true });
+      window.addEventListener('pagehide', this._ruffleSavePageHide);
+    }
+    return result;
+  }
+
+  /** The player was removed: an OFF run's save is thrown away now (the next boot would do it anyway). */
+  _endRuffleSaveRun({ keepRun = false } = {}) {
+    const run = this._ruffleSaveRun;
+    if (!keepRun) this._ruffleSaveRun = null;
+    if (!run) return false;
+    return endRuffleSaveRun({ key: run.key, storage: this._ruffleSaveStorage });
+  }
+
+  /** ⛓ USE THE SAVE (Flash) — a change acts at the game's next load; a running game is told so. */
+  _onRuffleSaveSettingChanged(value) {
+    const run = this._ruffleSaveRun;
+    if (!run || (value === true) === run.on) return;
+    this._panelLog(`[flash save] "Use the save" is now ${value === true ? 'on' : 'off'}: it takes effect at the game's next load `
+      + `(this run keeps the save ${run.on ? 'on' : 'off'})`);
+  }
+
+  /**
+   * ⛓ USE THE SAVE / CLEAR (Flash) — the "Clear the Flash save" button: removes this page's `…/shrumsave` key and
+   * its aside key, nothing else (`clearRuffleSave`). A running game's later writes are thrown away at the next load.
+   * Works with the save on or off. The root's `data-ruffle-save-clear` / `data-ruffle-save-cleared-at` say it for a
+   * tutorial step.
+   */
+  clearRuffleSave() {
+    const key = this._ruffleSaveKeyNow();
+    const live = !!this._ruffleSaveRun && this._ruffleSaveRun.key === key;
+    const result = clearRuffleSave({ key, live, storage: this._ruffleSaveStorage, log: (msg, cls) => this._panelLog(msg, cls) });
+    if (this.rootElement) {
+      this.rootElement.dataset.ruffleSaveClear = result.error ? 'error' : (result.removed ? 'removed' : 'none');
+      this.rootElement.dataset.ruffleSaveClearedAt = String(Date.now());
+    }
+    return result;
   }
 
   /**
@@ -2172,6 +2417,16 @@ export class FlashPanelUI {
         }
       }
 
+      // ⛓⛓ SLICE G — A CUSTOM SET STARTS NO GAME (⚖ Robert 2026-11-20, Q3 "Stay empty, say why"). Asked
+      // BEFORE any transport is chosen, so neither the original game nor a JS/wasm page is started — with a
+      // `flash_panel` block or without one (the lab's sets are compiled without).
+      const customSet = await this._customSetRefusal();
+      if (this._initStale(epoch)) return;
+      if (customSet) {
+        this._showCustomSetRefusal(customSet);
+        return;
+      }
+
       // Transport selection: 'auto' takes the wasm page whenever the
       // wiring provides one (it runs in any browser; real Flash needs
       // a plugin-capable one), 'flash'/'wasm' force their transport.
@@ -2234,6 +2489,7 @@ export class FlashPanelUI {
         this._renderGameScope();
         this._panelLog('no flash game configured in rules data');
         this._setStatus('no game configured');
+        this._noGameConfigured = true;
         return;
       }
 
@@ -2244,6 +2500,54 @@ export class FlashPanelUI {
       this._panelLog(`init failed: ${err.message}`, 'error');
       this._setStatus('error');
     }
+  }
+
+  /**
+   * ⛓⛓ SLICE G — why these rules are a CUSTOM Seedling set this page cannot play yet (`{why, reason}`), or null.
+   *
+   * A custom set is rules carrying REAL Seedling rooms (`flash_seedling` sidecars, the loaded slot's) and no
+   * generated ones, whose `region_atlas[p].atlas_id` the served index (`atlas_files.json`) does not list. The
+   * verdict is the eligibility predicate's own (`servedRegionAtlas` + check `atlas`), the same question the
+   * randomizer load asks on both runtimes — asked here first so that NO game is started for it.
+   * ⛔ Rules without `flash_seedling` rooms are never asked (a maze-only preset of a Seedling atlas, e.g.
+   * `seedling_playthrough_maze`, names an unserved id and is not this panel's), nor are rules naming no atlas id.
+   */
+  async _customSetRefusal() {
+    const rawRules = rulesOfRawPayload(getLastRawJsonData?.());
+    if (!rawRules) return null;
+    const player = stateManager.getStaticData?.()?.playerId ?? playerOfRawPayload(getLastRawJsonData?.()) ?? null;
+    const rooms = atlasRoomRegions(rawRules, player).map((r) => r.region);
+    if (rooms.length === 0) return null;
+    const guard = await servedRegionAtlas({
+      atlasId: regionAtlasOf(rawRules, player)?.atlas_id,
+      // ⛔ `document.baseURI`, as the wiring resolves it: the served index beside the atlases, in either build.
+      fetchIndex: () => this._loadConfig(new URL(atlasIndexPath(), document.baseURI).href),
+    });
+    if (!guard.regionAtlas) return null;
+    const v = seedlingRandomizerEligibility({ generated: generatedRoomCensus(rawRules, player), atlas: { rooms },
+      ...guard });
+    if (v.failed !== 'atlas') return null;
+    // `why` is the predicate's (`atlas: …`, what every refusal reads); `reason` is the sentence a person is shown.
+    return { why: v.why, reason: v.checks.find((c) => c.id === 'atlas').why };
+  }
+
+  /** ⛓ SLICE G — the panel stays EMPTY and says why: the status, the stage, the log, the playback surface. */
+  _showCustomSetRefusal({ why, reason }) {
+    this._customSetShown = true;
+    this._renderGameScope?.();
+    this._apLoadRefusal = why;
+    this._setStatus(CUSTOM_SET_NOT_PLAYABLE);
+    const box = document.createElement('div');
+    box.className = 'flash-panel-custom-set-refusal';
+    box.style.cssText = 'padding:12px;color:#e9c95a;max-width:480px;overflow-wrap:anywhere;';
+    const head = document.createElement('strong');
+    head.textContent = CUSTOM_SET_NOT_PLAYABLE;
+    const body = document.createElement('div');
+    body.style.marginTop = '6px';
+    body.textContent = reason;
+    box.append(head, body);
+    this.swfContainer.replaceChildren(box);
+    this._panelLog(`${CUSTOM_SET_NOT_PLAYABLE} — ${reason}`, 'warn');
   }
 
   /**
@@ -2267,6 +2571,8 @@ export class FlashPanelUI {
     this._renderGameScope();
 
     const [w, h] = this.gameConfig.stage_size || [480, 480];
+    const ruffleSaveOn = await this._readRuffleSaveSetting();
+    if (this._initStale(epoch)) return;
 
     try {
       await ensureRuffleLoaded();
@@ -2276,6 +2582,8 @@ export class FlashPanelUI {
     }
     if (this._initStale(epoch)) return;
 
+    // ⛓ USE THE SAVE (Flash) — after the last await, right before the player is built: nothing can read the save first
+    this._prepareRuffleSave(ruffleSaveOn);
     this._embedSwf(w, h);
     this._setStatus('waiting for bridge…');
 
@@ -2596,6 +2904,7 @@ export class FlashPanelUI {
     this._initEpoch = (this._initEpoch ?? 0) + 1;
     this._unbindJsSave();
     if (this._jsSavePageHide) { window.removeEventListener('pagehide', this._jsSavePageHide); this._jsSavePageHide = null; }
+    if (this._ruffleSavePageHide) { window.removeEventListener('pagehide', this._ruffleSavePageHide); this._ruffleSavePageHide = null; }
     this._unmountTouchControls();
     this._heldKeys?.uninstall();
     this._solveProgressView?.close();

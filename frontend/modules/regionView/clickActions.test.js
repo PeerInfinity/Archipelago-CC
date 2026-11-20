@@ -1,6 +1,6 @@
 /**
  * clickActions — the click-action registry, its settings model and the migration from the Region Graph's seven keys
- * (mode-toggle design §4, slice CA-S1). Real `regionActions` with recording handles. The 2^7 equivalence against
+ * (mode-toggle design §4, slices CA-S1 and CA-S2: no "one step", ⚖ 2026-11-17). Real `regionActions` with recording handles. The 2^7 equivalence against
  * today's Region Graph handlers is `clickActions.equivalence.test.js`.
  */
 import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
@@ -78,6 +78,25 @@ describe('⛓ the registry', () => {
         expect(CA.listClickActions('region').map((x) => x.id)).toEqual([ID.route, ID.checkAll]);
     });
 
+    it('onClickActionsChanged: told on register and unregister (not on a no-op unregister); unsubscribe stops it', () => {
+        const seen = [];
+        const off = CA.onClickActionsChanged(() => seen.push(CA.listClickActions('region').map((d) => d.id).join(',')));
+        CA.registerClickAction({ id: 'x.a', owner: 'x', target: 'region', kind: 'toggle', run: () => ({}) });
+        CA.unregisterClickAction('x.a');
+        CA.unregisterClickAction('x.a');
+        off();
+        CA.registerClickAction({ id: 'x.b', owner: 'x', target: 'region', kind: 'toggle', run: () => ({}) });
+        expect(seen).toEqual([`${ID.route},${ID.checkAll},x.a`, `${ID.route},${ID.checkAll}`]);
+        expect(CA.getClickAction('x.b').owner).toBe('x');
+        expect(CA.getClickAction('x.a')).toBe(null);
+    });
+
+    it('a listener that throws does not break a registration', () => {
+        const off = CA.onClickActionsChanged(() => { throw new Error('boom'); });
+        expect(() => CA.registerClickAction({ id: 'x.c', owner: 'x', target: 'region', kind: 'toggle', run: () => ({}) })).not.toThrow();
+        off();
+    });
+
     it('a duplicate id refuses BY NAME, naming the owner that holds it', () => {
         const desc = { id: 'flash.teleport', owner: 'flash', target: 'region', kind: 'toggle', run: () => ({ ok: true }) };
         CA.registerClickAction(desc);
@@ -111,7 +130,7 @@ describe('⛓ runClickActions', () => {
         for (const d of [...CA.BUILT_IN_ACTIONS].reverse()) CA.registerClickAction(d);
         const h = handles();
         const settings = { enabled: true, region: { 'flash.teleport': true, 'regions.open': true, [ID.checkAll]: true,
-            [ID.route]: { from: 'player', distance: 'all' } } };
+            [ID.route]: { from: 'player' } } };
         const r = CA.runClickActions('regionMap', 'region', { regionName: 'Field', discovery: ALLOWED }, settings, h);
         expect(r.results.map((x) => x.id)).toEqual([ID.route, ID.checkAll, 'regions.open', 'flash.teleport']);
         expect(ran).toEqual(['regions.open', 'flash.teleport']);
@@ -157,7 +176,7 @@ describe('⛓ runClickActions', () => {
     it('locationChecksAllowed still blocks the check actions (discovery\'s disableLocationCheckUI), not the route', () => {
         const h = handles();
         const settings = { enabled: true,
-            region: { [ID.route]: { from: 'player', distance: 'all' }, [ID.checkAll]: true },
+            region: { [ID.route]: { from: 'player' }, [ID.checkAll]: true },
             location: { [ID.check]: 'now' } };
         const r = CA.runClickActions('regionGraph', 'region', { regionName: 'Field', discovery: BLOCKED }, settings, h);
         expect(r.results.map((x) => [x.id, x.result.ok, x.result.reason])).toEqual([
@@ -180,7 +199,7 @@ describe('⛓ the built-ins, through the real regionActions: payloads and the R7
 
     it('route from path end, no path yet: one user:regionMove under regionView-path-<panelId>', () => {
         const h = handles();
-        run('region', { region: { [ID.route]: { from: 'pathEnd', distance: 'all' } } }, {}, h);
+        run('region', { region: { [ID.route]: { from: 'pathEnd' } } }, {}, h);
         expect(h.log).toEqual([['dispatch', 'user:regionMove', { targetRegion: 'Field', sourceRegion: 'Menu', source: SRC },
             { initialTarget: 'bottom' }]]);
     });
@@ -188,27 +207,70 @@ describe('⛓ the built-ins, through the real regionActions: payloads and the R7
     it('route from start: reset to the start region, trim, then walk; beforePathExecute runs after the reset', () => {
         const h = handles({ current: 'Field' });
         h.beforePathExecute = () => h.log.push(['beforePathExecute']);
-        run('region', { region: { [ID.route]: { from: 'start', distance: 'one' } } }, {}, h);
+        run('region', { region: { [ID.route]: { from: 'start' } } }, {}, h);
         expect(h.log.map((e) => e[0] === 'dispatch' ? [e[1], e[2].source] : e)).toEqual([
             ['gameState.setCurrentRegion', 'Menu'], ['gameState.trimPath', 'Menu', 1], ['beforePathExecute'],
             ['user:regionMove', SRC]]);
     });
 
-    it('route from player: one step / all the way (direct) / the legacy oneAndAll', () => {
-        for (const [distance, n] of [['one', 1], ['all', 1], ['oneAndAll', 2]]) {
+    it('route from player: ONE direct move, all the way; a stored pre-ruling `distance` is read without it', () => {
+        // ⚖ 2026-11-17 (no "one step"): { from: 'player', distance: 'one' | 'oneAndAll' } is the direct move too.
+        for (const route of [{ from: 'player' }, { from: 'player', distance: 'one' }, { from: 'player', distance: 'oneAndAll' }]) {
             const h = handles();
-            run('region', { region: { [ID.route]: { from: 'player', distance } } }, {}, h);
-            expect(h.log).toHaveLength(n);
-            for (const e of h.log) {
-                expect(e).toEqual(['dispatch', 'user:regionMove', { sourceRegion: 'Menu', sourceUID: undefined,
-                    targetRegion: 'Field', exitName: 'Go', updatePath: false, source: SRC }, 'bottom']);
+            const r = run('region', { region: { [ID.route]: route } }, {}, h);
+            expect(r.results[0].result.ok).toBe(true);
+            expect(h.log).toEqual([['dispatch', 'user:regionMove', { sourceRegion: 'Menu', sourceUID: undefined,
+                targetRegion: 'Field', exitName: 'Go', updatePath: false, source: SRC }, 'bottom']]);
+        }
+    });
+
+    it('a path edit always walks the whole path (a stored `distance: \'one\'` is ignored)', () => {
+        const longFinder = (h) => {
+            h.pathFinder.findPath = (a, b) => ({ steps: [a, 'Mid', b], nextExit: 'Go', length: 2 });
+            return h;
+        };
+        for (const from of ['pathEnd', 'start']) {
+            for (const route of [{ from }, { from, distance: 'one' }]) {
+                const h = longFinder(handles({ path: [{ region: 'Menu' }], current: 'Menu' }));
+                h.gameState.getLastRegionInPath = () => 'Menu';
+                run('region', { region: { [ID.route]: route } }, {}, h);
+                const moves = h.log.filter((e) => e[1] === 'user:regionMove').map((e) => e[2].targetRegion);
+                expect(moves, JSON.stringify(route)).toEqual(['Mid', 'Field']);
             }
         }
     });
 
+    it('routeStatusText: the Region Graph\'s status-bar texts', () => {
+        const T = CA.routeStatusText;
+        expect(T('player', 'B', { ok: false, reason: 'no-path', from: 'A' })).toBe('No path to B');
+        expect(T('pathEnd', 'B', { ok: false, reason: 'no-path', from: 'A' })).toBe('No path from A to B');
+        expect(T('start', 'B', { ok: false, reason: 'no-path', from: 'Menu' })).toBe('No path from Menu to B');
+        expect(T('player', 'B', { ok: false, reason: 'already-there', from: 'B' })).toBe(null);
+        expect(T('player', 'B', { ok: true, kind: 'move', path: { length: 1, steps: ['A', 'B'] } })).toBe('Moving directly to B');
+        expect(T('player', 'B', { ok: true, kind: 'move', path: { length: 3, steps: ['A', 'x', 'y', 'B'] } }))
+            .toBe('Moving directly to B (skipping 2 steps)');
+        expect(T('pathEnd', 'B', { ok: true, kind: 'path', dispatched: 2 })).toBe('Added 2 region(s) to path');
+        expect(T('pathEnd', 'B', { ok: true, kind: 'single', from: 'A' })).toBe(null);
+        expect(T('start', 'B', { ok: true, kind: 'path', from: 'Menu', dispatched: 3 })).toBe('Created path: Menu → B (3 steps)');
+        expect(T('player', 'B', { ok: true, kind: 'restart', from: 'Pit', region: 'Menu' })).toBe('Restart → Menu (no walk from Pit to B)');
+        expect(T('player', 'B', null)).toBe(null);
+    });
+
+    it('clickStatusOf: the route\'s text, from a region click or a location click\'s addToPath move', () => {
+        const settings = { enabled: true, region: { [ID.route]: { from: 'pathEnd' } }, location: { [ID.check]: 'addToPath' } };
+        const ok = { ok: true, kind: 'path', dispatched: 1 };
+        expect(CA.clickStatusOf({ ran: true, results: [{ id: ID.route, result: ok }] }, { regionName: 'B' }, settings))
+            .toEqual({ text: 'Added 1 region(s) to path', from: 'pathEnd' });
+        expect(CA.clickStatusOf({ ran: true, results: [{ id: ID.check, result: { ok: true, moved: ok } }] }, { regionName: 'B' }, settings))
+            .toEqual({ text: 'Added 1 region(s) to path', from: 'pathEnd' });
+        expect(CA.clickStatusOf({ ran: false, reason: 'disabled' }, { regionName: 'B' }, settings)).toBe(null);
+        expect(CA.clickStatusOf({ ran: true, results: [{ id: ID.checkAll, result: { ok: true, checked: 2 } }] },
+            { regionName: 'B' }, settings)).toBe(null);
+    });
+
     it('an invalid route value is refused, not guessed', () => {
         const h = handles();
-        const r = run('region', { region: { [ID.route]: { from: 'nowhere', distance: 'all' } } }, {}, h);
+        const r = run('region', { region: { [ID.route]: { from: 'nowhere' } } }, {}, h);
         expect(r.results[0].result).toEqual({ ok: false, reason: 'invalid-route' });
         expect(h.log).toEqual([]);
     });
@@ -231,7 +293,7 @@ describe('⛓ the built-ins, through the real regionActions: payloads and the R7
 
     it('location check addToPath: the parent region\'s route (by the REGION route setting), then the path check', () => {
         const h = handles();
-        run('location', { region: { [ID.route]: { from: 'pathEnd', distance: 'all' } }, location: { [ID.check]: 'addToPath' } },
+        run('location', { region: { [ID.route]: { from: 'pathEnd' } }, location: { [ID.check]: 'addToPath' } },
             { locationName: 'chest' }, h);
         expect(h.log.map((e) => e.slice(0, 2))).toEqual([['dispatch', 'user:regionMove'], ['gameState.addLocationCheck', 'chest']]);
         const h2 = handles();
@@ -249,28 +311,30 @@ describe('⛓ the migration from the seven regionGraph keys (design §4.4)', () 
     it('defaultClickActions() = the migration of today\'s seven defaults: extend the path, open the Regions panel', () => {
         expect(CA.defaultClickActions()).toEqual(M(CA.LEGACY_REGION_GRAPH_CLICK_DEFAULTS));
         expect(CA.defaultClickActions()).toEqual({ enabled: true,
-            region: { [ID.route]: { from: 'pathEnd', distance: 'all' }, [ID.checkAll]: false, 'regions.open': true },
+            region: { [ID.route]: { from: 'pathEnd' }, [ID.checkAll]: false, 'regions.open': true },
             location: { [ID.check]: 'now' } });
         expect(CA.defaultClickActions()).not.toBe(CA.defaultClickActions());
         expect(M({})).toEqual(CA.defaultClickActions()); // a missing key takes its default
         expect(M(undefined)).toEqual(CA.defaultClickActions());
     });
 
-    it('the route: add wins over overwrite, both win over the move boxes; all four off → no route', () => {
-        expect(route({ addToPath: true })).toEqual({ from: 'pathEnd', distance: 'all' });
-        expect(route({ addToPath: true, overwritePath: true })).toEqual({ from: 'pathEnd', distance: 'all' });
-        expect(route({ overwritePath: true })).toEqual({ from: 'start', distance: 'all' });
-        expect(route({ overwritePath: true, movePlayerDirectly: true })).toEqual({ from: 'start', distance: 'all' });
-        expect(route({ movePlayerDirectly: true })).toEqual({ from: 'player', distance: 'all' });
-        expect(route({ movePlayerOneStep: true })).toEqual({ from: 'player', distance: 'one' });
+    it('the route: add wins over overwrite, both win over the direct move; all three off → no route', () => {
+        expect(route({ addToPath: true })).toEqual({ from: 'pathEnd' });
+        expect(route({ addToPath: true, overwritePath: true })).toEqual({ from: 'pathEnd' });
+        expect(route({ overwritePath: true })).toEqual({ from: 'start' });
+        expect(route({ overwritePath: true, movePlayerDirectly: true })).toEqual({ from: 'start' });
+        expect(route({ movePlayerDirectly: true })).toEqual({ from: 'player' });
         expect(route({})).toBe(false);
     });
 
-    it('distance: one-step → one (on a path edit too); both move boxes and no path box → the legacy oneAndAll', () => {
-        expect(route({ addToPath: true, movePlayerOneStep: true })).toEqual({ from: 'pathEnd', distance: 'one' });
-        expect(route({ addToPath: true, movePlayerOneStep: true, movePlayerDirectly: true })).toEqual({ from: 'pathEnd', distance: 'one' });
-        expect(route({ overwritePath: true, movePlayerOneStep: true })).toEqual({ from: 'start', distance: 'one' });
-        expect(route({ movePlayerOneStep: true, movePlayerDirectly: true })).toEqual({ from: 'player', distance: 'oneAndAll' });
+    it('⚖ movePlayerOneStep is ignored: every config migrates as it does with that key false (alone → route OFF)', () => {
+        expect(route({ movePlayerOneStep: true })).toBe(false);
+        const keys = Object.keys(CA.LEGACY_REGION_GRAPH_CLICK_DEFAULTS);
+        for (let m = 0; m < 1 << keys.length; m++) {
+            const bits = Object.fromEntries(keys.map((k, i) => [k, !!(m & (1 << i))]));
+            expect(M(bits), JSON.stringify(bits)).toEqual(M({ ...bits, movePlayerOneStep: false }));
+            expect(JSON.stringify(M(bits))).not.toContain('distance');
+        }
     });
 
     it('the add-ons: showRegionInPanel → regions.open, checkAll → path.checkAll, addLocationsToPath → check addToPath', () => {

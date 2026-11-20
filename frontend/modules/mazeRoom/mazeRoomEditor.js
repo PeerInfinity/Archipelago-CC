@@ -65,7 +65,8 @@ import {
  */
 import { flagIdFor, guardIdsFor } from '../procgenCore/elements.js';
 import {
-    BLOCKED_PASS, TILE_KIND_REFUSALS, declaredPassOf, occupiedWorldCells, tileKindRefusal, tileUnderPass,
+    BLOCKED_PASS, DEFAULT_TERRAIN_PASS, NEEDS_PASS, TILE_KIND_REFUSALS, declaredPassOf, liftTileKind, lowerTileKind, needsRealisationRefusal,
+    occupiedWorldCells, passLabel, tileKindGateId, tileKindNeedsAt, tileKindPassAt, tileKindRefusal,
 } from './mazeTileKinds.js';
 
 /**
@@ -226,10 +227,12 @@ export function applyEditOp(world, op, { locationNameFormat = DEFAULT_LOCATION_N
      * refused there, by name.
      * ⛓ PASS-1 — and `setTile floor` only on a walkable kind (a no-op there): on a BLOCKED kind it would open the wall
      * the kind lowered to while the kind still says blocked, so it is refused by name — erase the kind first.
+     * ⛓ PASS-2 — the same for a NEEDS kind: painting over its cell is refused by name.
      */
     const heldKind = world.tileKinds?.get(`${x},${y}`);
-    if (heldKind && op.op === 'setTile' && op.tile === 'floor' && getTile(world, x, y) === TILE_WALL) {
-        return notOk('blocked-tile-kind', TILE_KIND_REFUSALS.floorOverBlocked(x, y, heldKind));
+    const heldPass = heldKind ? tileKindPassAt(world, x, y) : null;
+    if (heldKind && op.op === 'setTile' && op.tile === 'floor' && heldPass !== DEFAULT_TERRAIN_PASS) {
+        return notOk(`${heldPass}-tile-kind`, TILE_KIND_REFUSALS.floorOverBlocked(x, y, heldKind, heldPass));
     }
     if (heldKind && !['setTileKind', 'clearEntity'].includes(op.op)
         && !(op.op === 'setTile' && op.tile === 'floor')) {
@@ -594,24 +597,37 @@ export class MazeRoomEditor {
         }
         const refused = tileKindRefusal(kind, declared);
         if (refused) return notOk(refused.reason, refused.description);
-        const before = world.tileKinds?.get(`${x},${y}`);
+        const key = `${x},${y}`;
+        const before = world.tileKinds?.get(key);
         if (!before && getTile(world, x, y) !== TILE_FLOOR) return notOk('wall-tile', 'A tile kind must be on a floor tile.');
-        if (occupiedWorldCells(world).has(`${x},${y}`)) return notOk('occupied', TILE_KIND_REFUSALS.occupied(x, y));
-        const pass = declaredPassOf(declared[kind]);
-        const under = tileUnderPass(pass);
-        if (before === kind && getTile(world, x, y) === under) return ok('tileKind', `Tile (${x},${y}) already holds tile kind ${kind}.`, op);
+        // ⛓ PASS-2 — a kind already here owns its derived gate, which is not "something else" on the cell.
+        if (occupiedWorldCells(withoutOwnedGate(world, x, y)).has(key)) return notOk('occupied', TILE_KIND_REFUSALS.occupied(x, y));
+        const d = declared[kind];
+        const pass = declaredPassOf(d);
+        if (pass === NEEDS_PASS) {
+            const why = needsRealisationRefusal(world, kind, d.needs);
+            if (why) return notOk('unrealisable-needs-tile-kind', why);
+        }
+        const baked = before ? passLabel(tileKindPassAt(world, x, y), tileKindNeedsAt(world, x, y)) : null;
+        if (before === kind && baked === passLabel(pass, d.needs)) return ok('tileKind', `Tile (${x},${y}) already holds tile kind ${kind}.`, op);
+        // ⛓ PASS-1/PASS-2 — bake and lower in this one op: lift what a kind here lowered, then lower the declared pass.
+        liftTileKind(world, x, y);
         if (!world.tileKinds) world.tileKinds = new Map();
-        world.tileKinds.set(`${x},${y}`, kind);
-        setTile(world, x, y, under);
-        return ok('tileKind', `Placed tile kind ${kind} at (${x},${y})${pass === BLOCKED_PASS ? ' (blocked: a wall under it)' : ''}.`, op);
+        world.tileKinds.set(key, kind);
+        lowerTileKind(world, x, y, d);
+        const said = pass === BLOCKED_PASS ? ' (blocked: a wall under it)'
+            : pass === NEEDS_PASS ? ` (needs ${d.needs}: the rule obstacle ${tileKindGateId(x, y)} under it)` : '';
+        return ok('tileKind', `Placed tile kind ${kind} at (${x},${y})${said}.`, op);
     }
 
     _eraseEntity(world, x, y) {
         const removedItem = getItem(world, x, y);
-        const removedObstacle = getObstacle(world, x, y);
+        const removedKind = world.tileKinds?.get(`${x},${y}`) ?? null;
+        // ⛓ PASS-2 — a kind's own gate goes WITH the kind (`liftTileKind`), not as an entity of its own.
+        const held = getObstacle(world, x, y);
+        const removedObstacle = removedKind && held === tileKindGateId(x, y) ? null : held;
         const removedBlock = getBlock(world, x, y);
         const removedButton = getButton(world, x, y);
-        const removedKind = world.tileKinds?.get(`${x},${y}`) ?? null;
         const op = { op: 'clearEntity', x, y };
         if (!removedItem && !removedObstacle && !removedBlock && !removedButton && !removedKind) {
             return ok('erase', `Nothing to erase at (${x},${y}).`, op);
@@ -619,8 +635,8 @@ export class MazeRoomEditor {
         if (removedKind) {
             world.tileKinds.delete(`${x},${y}`);
             if (world.tileKinds.size === 0) delete world.tileKinds;
-            // ⛓ PASS-1 — the kind took a floor cell; a blocked one lowered it to a wall, which goes with it.
-            setTile(world, x, y, TILE_FLOOR);
+            // ⛓ PASS-1/PASS-2 — the kind took a floor cell; its lowering (a wall, or its owned gate) goes with it.
+            liftTileKind(world, x, y);
         }
         if (removedItem) {
             clearItem(world, x, y);
@@ -637,6 +653,13 @@ export class MazeRoomEditor {
         if (removedKind) parts.push(`tile kind ${removedKind}`);
         return ok('erase', `Erased ${parts.join(' + ')} at (${x},${y}).`, op);
     }
+}
+
+/** ⛓ PASS-2 — `world` as the occupancy rule should see it around (x, y)'s kind: without that kind's own gate. */
+function withoutOwnedGate(world, x, y) {
+    const key = `${x},${y}`;
+    if (world.obstacles?.get(key) !== tileKindGateId(x, y) || !world.tileKinds?.has(key)) return world;
+    return { ...world, obstacles: new Map([...world.obstacles].filter(([k]) => k !== key)) };
 }
 
 function withinBounds(world, x, y) {

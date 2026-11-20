@@ -878,6 +878,18 @@
             "_comment": "⚖ Robert 2026-11-02 (same-wiring re-mount). Runtime js: seedling_atlas_location booted and running, then seedling_atlas (the SAME flash_panel wiring, the same runtime): the panel re-mounts (a fresh adapter; flashPanelUI._mountedRoomsDiffer on seedlingMountKey), the AP load binds the atlas rooms, and the Playback Bot walks overworld_start__r8c0 -> owls_nest_entrance (an exit only those rooms have) into the owl's nest. Before the fix the switch re-mounted nothing and the controller refused that exit."
         },
         {
+            "id": "seedling-js-runtime-custom-set-with-flash-panel-starts-no-game",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Slice G (⚖ Robert 2026-11-20, Q3 'Stay empty, say why'). Runtime js: seedling_atlas with region_atlas naming seedling-lab-2730489e (not in atlas_files.json), its flash_panel block and the vanilla map_document kept — the study's p5 hazard, which loaded ELIGIBLE and played the original rooms. The panel starts no game (no adapter, no iframe) and shows \"This set can't be played yet\" + the named reason (flashPanelUI._customSetRefusal)."
+        },
+        {
+            "id": "seedling-js-runtime-custom-set-without-flash-panel-starts-no-game",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Slice G. The same custom set in the lab's own shape (S1: no flash_panel block, map_document the page's label). Before G the panel said only 'no game configured'; now it shows the same message as the row above."
+        },
+        {
             "id": "seedling-wasm-runtime-same-wiring-switch-loads-new-rooms",
             "enabled": true,
             "category": "Seedling wasm runtime",
@@ -2049,6 +2061,12 @@
             "_comment": "REGION MAP atlas-cache (2026-11-17): a custom Seedling set (the vanilla rooms + the vanilla overlay, compiled in the page by the set editor's own rulesJsonOf) loaded as a BUNDLE through the Presets panel's loadDocumentFile: its region-atlas member lands in procgenCore/atlasCache, and the panel shows real extents in every cell, N/N squares on their tiles, and its warps. Batch playback-bot (on push). Counts derived at run time. Reloads the world loaded before."
         },
         {
+            "id": "region-map-watch-set-bundle",
+            "enabled": true,
+            "category": "Region Map: Seedling",
+            "_comment": "lab-set-seedling-identity (2026-11-19): the Seedling watch page's set bundle, built through the page's own modules (watchSetIdentity.js deps + report compile + atlasAtDoor), over the vanilla rooms + the vanilla overlay: every room flash_seedling, no flash_panel block, a seedling-lab-<8 hex> atlas id not in atlas_files.json; loaded through the Presets panel's loadDocumentFile, the Region Map shows real extents in every cell, N/N squares on their tiles, and its warps. Batch playback-bot (on push). Counts derived at run time. Reloads the world loaded before."
+        },
+        {
             "id": "region-map-discovery",
             "enabled": true,
             "category": "Region Map: Seedling",
@@ -2058,7 +2076,31 @@
             "id": "region-map-clicks-generated",
             "enabled": true,
             "category": "Region Map",
-            "_comment": "REGION MAP step 4 (2026-11-17): clicks on a generated non-Seedling world (procgen_topdown AP_1, by rules path): a cell click moves the player, a green square click checks it, the hover names it; the Region Graph panel's own boxes change what a Region Map click does (planner option A). Fast batch. Reloads the world loaded before."
+            "_comment": "REGION MAP step 4 (2026-11-17): clicks on a generated non-Seedling world (procgen_topdown AP_1, by rules path): a cell click moves the player, a green square click checks it, the hover names it; the Map's own moduleSettings.regionMap.clickActions route changes what a Region Map click does (CA-S3 2026-11-19: the leg sets the route off, then 'move the player', session-only; before CA-S3 it wrote the old regionGraph.* keys). Fast batch. Reloads the world loaded before."
+        },
+        {
+            "id": "region-map-click-default",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "CLICK ACTIONS CA-S3 (2026-11-19): the Region Map's default clickActions (session-only), on procgen_topdown AP_1: a cell click extends the path to its region and opens the Regions panel at it (regions.open); regionMap:nodeSelected then regionView:regionClicked first; the strip sits at the top of the panel. Fast batch. Reloads the world loaded before."
+        },
+        {
+            "id": "region-map-click-master-off",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "CLICK ACTIONS CA-S3 (2026-11-19): the Map's master switch off (clickActions.enabled false, session-only): a cell click moves nobody, edits no path, opens no Regions panel; the selection and regionView:regionClicked are still published. Fast batch. Reloads the world loaded before."
+        },
+        {
+            "id": "region-map-click-location-check",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "CLICK ACTIONS CA-S3 (2026-11-19): the Map's location action 'check it now' (session-only): a green square click checks it and publishes regionView:locationClicked. Fast batch. Reloads the world loaded before."
+        },
+        {
+            "id": "region-map-click-settings-independent",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "CLICK ACTIONS CA-S3 (2026-11-19, R4): pressing the Region Graph's strip master switch (and pressing it back: the Graph's real save path) leaves the Map's clickActions unchanged in the panel and in storage. Fast batch. Reloads the world loaded before."
         },
         {
             "id": "region-map-clicks-seedling",
@@ -2070,7 +2112,7 @@
             "id": "region-map-clicks-loop-mode",
             "enabled": true,
             "category": "Region Map: Seedling",
-            "_comment": "REGION MAP step 4 (2026-11-17): with loop mode on, a Region Map cell click plans (regionMap-* is a loopModeExemptions planning source): its move is appended to the path. Batch playback-bot (on push)."
+            "_comment": "REGION MAP step 4 (2026-11-17): with loop mode on, a Region Map cell click plans (CA-S3: its route move carries regionView-path-regionMap, a loopModeExemptions planning source; step 4 sent regionMap-*): its move is appended to the path. Covers Loop's click intercepts, which the On click strip now sits in front of. Batch playback-bot (on push)."
         },
         {
             "id": "test_region_graph_panel_activation",
@@ -2119,6 +2161,24 @@
             "enabled": true,
             "category": "Region Graph",
             "_comment": "REGION GRAPH CHECKS (2026-11-18): the location-node rebuild bug. force-show written through the settings draws the location nodes, and a later moduleSettings.regionGraph.* write (which rebuilds the graph) leaves them drawn; restores both settings. On push (fast batch)."
+        },
+        {
+            "id": "test_region_graph_click_default",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "CLICK ACTIONS CA-S2 (2026-11-19): with the default clickActions (set session-only), a tap on an accessible region extends the path to it and opens the Regions panel at it (regions.open, registered by the Regions module); regionGraph:nodeSelected is published first. Reloads the world loaded before. On push (fast batch)."
+        },
+        {
+            "id": "test_region_graph_click_master_off",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "CLICK ACTIONS CA-S2 (2026-11-19): the \u23f8 master switch off (clickActions.enabled false, session-only): a tap moves nobody, edits no path, opens no Regions panel, and still publishes regionGraph:nodeSelected. On push (fast batch)."
+        },
+        {
+            "id": "test_region_graph_click_location_check",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "CLICK ACTIONS CA-S2 (2026-11-19): the location action 'check it now' (session-only): a location click through the Go to picker checks an accessible location. Reloads the world loaded before. On push (fast batch)."
         },
         {
             "id": "tutorial-walk-start-workbench",

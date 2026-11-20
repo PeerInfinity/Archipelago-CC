@@ -49,9 +49,8 @@ export async function customSetRules() {
         parseOel: parseOelLevel, tileSize: SEEDLING_TILE_SIZE, tileTypeForPlacement, rulesSchema: loadRulesSchema(),
         /**
          * ⛔ `game: 'seedling'` — the derivation's own default (`seedlingAtlasDerivation.js`) and the maze set lab's
-         * `SEEDLING_ATLAS_GAME`, which compile to `flash_seedling` (the registered substrate). NOT the watch page's
-         * `'seedling-watch-edit'`: that slugs to `flash_seedling_watch_edit`, which no substrate registers, so no
-         * Seedling hook runs for it and an atlas changes nothing (measured; report § Residue).
+         * `SEEDLING_ATLAS_GAME`, which compile to `flash_seedling` (the registered substrate). The watch page uses it
+         * too since lab-set-seedling-identity; before, its `'seedling-watch-edit'` reached no Seedling hook (report § Residue).
          */
         atlas: { game: 'seedling', mapDocument: 'custom-set.json' },
     };

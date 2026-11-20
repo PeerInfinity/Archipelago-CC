@@ -25,7 +25,8 @@ import { MIN_ZOOM } from '../../procgenCore/mapCamera.js';
 import { seedlingCompositeMapStats } from '../../flashPanel/seedlingCompositeMap.js';
 import { worldToScreen } from '../../procgenCore/mapCamera.js';
 import { squareAt } from '../../regionMap/regionMapOverlay.js';
-import { CLICK_OPTION_DEFAULTS, CLICK_OPTIONS_PREFIX, regionOfCell } from '../../regionMap/regionMapClicks.js';
+import { REGION_MAP_CLICK_ACTIONS_KEY, regionOfCell } from '../../regionMap/regionMapClickActions.js';
+import { defaultClickActions } from '../../regionView/clickActions.js';
 import { resetLoopsToIdle } from './loopsPanelTests.js';
 import { writeBundle } from '../../presets/documentBundle.js';
 import { atlasCache } from '../../procgenCore/atlasCache.js';
@@ -345,20 +346,32 @@ export async function testRegionMapDiscovery(testController) {
 }
 
 
-/* ── step 4: CLICKS — the Region Graph's click behaviour, through the panel's real pointer events ── */
+/* ── step 4 / CA-S3: CLICKS — the panel's click actions, through its real pointer events ── */
+
+const STRIP = '.region-map-click-strip-host';
+const stripSummary = () => panel()?.clickStripHost?.querySelector('.click-actions-strip-summary')?.textContent ?? '';
 
 /**
- * The click toggles (⚖ planner, option A: the Region Graph's `moduleSettings.regionGraph.*`) set for this row only:
- * the defaults, overridden by `over`. Session-only (`ctx.setSetting`, put back by `restoreSettings`). The Region
- * Graph's checkboxes are NOT touched: they read their own DOM, which the restore leaves in agreement again.
+ * The Map's click actions (`moduleSettings.regionMap.clickActions`, CA-S3) for this row only: `clickActions`, or the
+ * defaults. Session-only (`ctx.setSetting`, put back by `restoreSettings`). It waits for the panel's own load first
+ * (a first run SAVES its copy of the Region Graph's, and a persistent write would clear this override), then until
+ * the panel holds the value a click reads. Follow is turned off: a move would ease the camera under the next click.
  */
-async function setClickOptions(ctx, over = {}) {
-  for (const [k, v] of Object.entries({ ...CLICK_OPTION_DEFAULTS, ...over })) await ctx.setSetting(`${CLICK_OPTIONS_PREFIX}.${k}`, v);
-  // Follow off: a move would ease the camera under the next click's measured point.
+async function setClickOptions(testController, ctx, clickActions = defaultClickActions()) {
+  await panel()?.clickActionsReady;
+  await ctx.setSetting(REGION_MAP_CLICK_ACTIONS_KEY, clickActions);
+  const want = JSON.stringify(clickActions);
+  const held = await testController.pollForCondition(() => JSON.stringify(dbg()?.clickActions) === want,
+    'the panel holds the row\'s click actions', 3000, 25);
+  if (!held) testController.reportCondition(`the panel holds the row's click actions (${JSON.stringify(dbg()?.clickActions)})`, false);
   await ctx.setSetting('moduleSettings.regionMap.followPlayer', false);
   const p = panel();
   if (p) { p.follow = false; p.controls.follow.checked = false; }
+  return held;
 }
+
+/** The `runClickActions` answer's result for action `id`, or undefined (a click's `lastClick.result`). */
+const actionResult = (click, id) => click?.result?.results?.find((r) => r.id === id)?.result;
 
 /** Dispatch a pointer down + up (no drag) at canvas point (sx, sy) and wait for the panel's click to land. */
 async function clickCanvas(testController, sx, sy, what) {
@@ -369,7 +382,7 @@ async function clickCanvas(testController, sx, sy, what) {
   p.canvas.dispatchEvent(new PointerEvent('pointerdown', init));
   p.canvas.dispatchEvent(new PointerEvent('pointerup', init));
   const ok = await testController.pollForCondition(() => panel().clickCount > n, `the click on ${what} landed`, 5000, 25);
-  // "Show region in panel" (on by default) activates the Regions panel, which can hide this tab: bring it back.
+  // `regions.open` (on by default) activates the Regions panel, which can hide this tab: bring it back.
   testController.eventBus.publish('ui:activatePanel', { panelId: COMPONENT }, 'tests');
   await testController.pollForCondition(() => dbg()?.viewport.w > 0 && panel().canvas.getBoundingClientRect().width > 0,
     'the Region Map tab is showing again', 3000, 25);
@@ -545,59 +558,34 @@ async function reloadIfChecked(testController, ctx, names, { before = null, rest
 }
 
 /**
- * The Region Graph's control panel drives Region Map clicks (⚖ planner, option A): untick its "Add to path" and
- * "Move player directly" boxes (the boxes' own change handlers save the settings) → a Region Map region click moves
- * nobody; tick "Move player directly" → the same click moves the player (a `regionMap-direct` move). The boxes are
- * put back by clicking them again, so the Region Graph's DOM and its settings agree after.
+ * The Map's OWN click actions change what a Region Map click does (CA-S3; before it, step 4's interim read the Region
+ * Graph's `regionGraph.*` keys). Session-only: the route OFF → a region click moves nobody; the route "move the
+ * player there" (`{ from: 'player' }`) → the same click moves the player directly. `ctx.restoreSettings()` puts them
+ * back.
  */
-async function rgToggleLeg(testController, label) {
-  testController.eventBus.publish('ui:activatePanel', { panelId: 'regionGraphPanel' }, 'tests');
-  let box = (id) => document.querySelector(`#${id}`);
-  let made = false;
-  if (!await testController.pollForCondition(() => !!box('movePlayerDirectly'), `${label}: the Region Graph panel's controls`, 4000, 50)) {
-    await panelManager.createPanelForComponent('regionGraphPanel', 'Region Graph', 2);
-    made = true;
-  }
-  const have = await testController.pollForCondition(() => !!box('movePlayerDirectly') && !!box('addToPath') && !!box('overwritePath')
-    && !!box('movePlayerOneStep'), `${label}: the Region Graph panel's click checkboxes`, 8000, 50);
-  testController.reportCondition(`${label}: the Region Graph panel's click checkboxes are present`, have);
-  if (!have) return;
-  const ids = ['addToPath', 'overwritePath', 'movePlayerOneStep', 'movePlayerDirectly'];
-  const orig = Object.fromEntries(ids.map((id) => [id, box(id).checked]));
-  const setBox = async (id, want) => {
-    if (box(id).checked === want) return;
-    box(id).click();
-    await testController.pollForCondition(async () => (await settingsManager.getSetting(`${CLICK_OPTIONS_PREFIX}.${id}`)) === want,
-      `${label}: the Region Graph saved ${id}=${want}`, 3000, 25);
-  };
+async function mapRouteLeg(testController, label, ctx) {
+  const withRoute = (route) => ({ ...defaultClickActions(), region: { ...defaultClickActions().region, 'path.route': route } });
   try {
     testController.eventBus.publish('ui:activatePanel', { panelId: COMPONENT }, 'tests');
-    panel().follow = false;
-    panel().controls.follow.checked = false;
-    for (const id of ids) await setBox(id, false);
-    await fitAllAndSettle(testController, `${label}: fit all (toggles)`);
+    await setClickOptions(testController, ctx, withRoute(false));
+    await fitAllAndSettle(testController, `${label}: fit all (route leg)`);
     const t = await reachableTarget(testController);
-    testController.reportCondition(`${label}: a reachable target for the toggle leg (${t?.region ?? 'none'})`, !!t);
+    testController.reportCondition(`${label}: a reachable target for the route leg (${t?.region ?? 'none'})`, !!t);
     if (!t) return;
     const before = gameStateRegion();
-    let c = await clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key} (all move boxes off)`);
+    let c = await clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key} (route off)`);
     await nextFrames(4);
-    testController.reportCondition(`${label}: Region Graph boxes "Add to path", "Overwrite path", "Move one step", "Move directly" all OFF → the Region Map click moves nobody (${gameStateRegion()})`,
-      c?.target === 'region' && c.result.moves.length === 0 && gameStateRegion() === before);
-    await setBox('movePlayerDirectly', true);
-    c = await clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key} (Move directly on)`);
+    testController.reportCondition(`${label}: regionMap.clickActions route OFF → the Region Map click moves nobody (${gameStateRegion()})`,
+      c?.target === 'region' && c.result?.ran === true && actionResult(c, 'path.route') === undefined && gameStateRegion() === before);
+    await setClickOptions(testController, ctx, withRoute({ from: 'player' }));
+    c = await clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key} (route: move the player)`);
     const moved = await testController.pollForCondition(() => gameStateRegion() === t.region, `${label}: moved directly`, 5000, 50);
-    testController.reportCondition(`${label}: tick the Region Graph's "Move player directly" → the same Region Map click moves the player (a ${c?.result?.moves?.[0]?.kind} move to ${gameStateRegion()})`,
-      moved && c?.result?.moves?.length === 1 && c.result.moves[0].kind === 'direct');
+    const r = actionResult(c, 'path.route');
+    testController.reportCondition(`${label}: regionMap.clickActions route "move the player there" → the same click moves the player (a ${r?.kind} move to ${gameStateRegion()})`,
+      moved && r?.ok === true && r.kind === 'move');
   } finally {
-    for (const id of ['movePlayerDirectly', 'movePlayerOneStep', 'overwritePath', 'addToPath']) {
-      if (orig[id] === false) await setBox(id, false);
-    }
-    for (const id of ['addToPath', 'overwritePath', 'movePlayerOneStep', 'movePlayerDirectly']) {
-      if (orig[id] === true) await setBox(id, true);
-    }
-    testController.reportCondition(`${label}: the Region Graph's boxes are put back`, ids.every((id) => box(id)?.checked === orig[id]));
-    if (made) { try { await panelManager.destroyPanelByComponentType('regionGraphPanel'); } catch { /* gone */ } }
+    await ctx.restoreSettings();
+    testController.reportCondition(`${label}: the row's click settings are put back`, ctx.settingsRestored());
   }
 }
 
@@ -610,11 +598,11 @@ export async function testRegionMapClicksGenerated(testController) {
     s = await setUp(testController, GENERATED, { rulesPath: GENERATED_RULES });
     if (!s.ready) return testController.getOverallResult();
     await s.ctx.setSetting('moduleSettings.discovery.enableDiscoveryMode', false);
-    await setClickOptions(s.ctx);
+    await setClickOptions(testController, s.ctx);
     restorePlayer = savePlayer();
     checked = await clickLegs(testController, GENERATED);
     await s.ctx.restoreSettings();
-    await rgToggleLeg(testController, GENERATED);
+    await mapRouteLeg(testController, GENERATED, s.ctx);
   } catch (error) {
     testController.reportCondition(`generated-world clicks row error-free: ${error.message}`, false);
   } finally {
@@ -634,7 +622,7 @@ export async function testRegionMapClicksSeedling(testController) {
     s = await setUp(testController, SEEDLING);
     if (!s.ready) return testController.getOverallResult();
     await s.ctx.setSetting('moduleSettings.discovery.enableDiscoveryMode', false);
-    await setClickOptions(s.ctx);
+    await setClickOptions(testController, s.ctx);
     restorePlayer = savePlayer();
     checked = await clickLegs(testController, SEEDLING);
 
@@ -678,8 +666,10 @@ export async function testRegionMapClicksSeedling(testController) {
 }
 
 /**
- * Loop mode: a Region Map click PLANS, as a Region Graph click does — `regionMap-*` is a planning source
- * (`loops/loopModeExemptions.js`), so the strict loop-mode gate lets the move through and its path append is kept.
+ * Loop mode: a Region Map click PLANS, as a Region Graph click does — its route moves carry `regionView-path-regionMap`
+ * (CA-S3, R7), a planning source (`loops/loopModeExemptions.js`), so the strict loop-mode gate lets the move through
+ * and its path append is kept. The "On click" strip now sits in front of Loop's click intercepts: this row is that
+ * check.
  */
 export async function testRegionMapClicksLoopMode(testController) {
   let s = null;
@@ -701,7 +691,7 @@ export async function testRegionMapClicksLoopMode(testController) {
     s = await setUp(testController, SEEDLING);
     if (!s.ready) return testController.getOverallResult();
     await s.ctx.setSetting('moduleSettings.discovery.enableDiscoveryMode', false);
-    await setClickOptions(s.ctx);
+    await setClickOptions(testController, s.ctx);
     restorePlayer = savePlayer();
     pathBefore = getGameStateSingleton().getPath().map((e) => ({ ...e }));
     testController.eventBus.publish('ui:activatePanel', { panelId: 'loopsPanel' }, 'tests');
@@ -733,8 +723,9 @@ export async function testRegionMapClicksLoopMode(testController) {
         const moves = p.filter((e) => e.type === 'regionMove');
         return p.length > n0 && moves.at(-1)?.destinationRegion === t.region;
       }, `loop mode: the click's move reached the path`, 5000, 50);
-      testController.reportCondition(`loop mode: a Region Map click PLANS — its move to ${t.region} is appended to the path (${c?.result?.moves?.[0]?.kind}, source regionMap-addToPath)`,
-        planned && c?.result?.moves?.[0]?.kind === 'addToPath');
+      const r = actionResult(c, 'path.route');
+      testController.reportCondition(`loop mode: a Region Map click PLANS — its move to ${t.region} is appended to the path (path.route: ${r?.kind}, source regionView-path-regionMap)`,
+        planned && r?.ok === true && (r.kind === 'path' || r.kind === 'single'));
     }
   } catch (error) {
     testController.reportCondition(`loop-mode clicks row error-free: ${error.message}`, false);
@@ -747,6 +738,202 @@ export async function testRegionMapClicksLoopMode(testController) {
     }
     restorePlayer?.();
     if (s) await tearDown(testController, s, { restoreWorld: false });
+  }
+  return testController.getOverallResult();
+}
+
+/* ── CA-S3: the "On click" strip and the Map's own click actions (each row sets its own state) ── */
+
+/** Record the given events (and their payloads) until `stop()`. */
+function recordEvents(testController, names) {
+  const seen = [];
+  const offs = names.map((name) => testController.eventBus.subscribe(name, (data) => seen.push([name, data]), 'tests'));
+  return { seen, stop: () => offs.forEach((off) => off?.()) };
+}
+const pathOf = () => JSON.stringify(getGameStateSingleton().getPath?.() ?? []);
+const pathEndRegion = () => { const gs = getGameStateSingleton(); return gs.getLastRegionInPath?.() || gs.getCurrentRegion?.(); };
+const CLICK_EVENTS = ['regionMap:nodeSelected', 'regionView:regionClicked', 'regionView:locationClicked', 'ui:activatePanel', 'ui:navigateToRegion'];
+
+/**
+ * The generated world, the panel, discovery off. With `target`, a reachable region in another cell first: the
+ * world's start reaches none until a few green squares are checked (their items open the way, as `clickLegs` does;
+ * procgen_topdown AP_1 needs 7), so up to 8 are checked under the DEFAULT actions. Then this row's `clickActions`; the strip reads `summary`.
+ * → { s, t, checked } (the caller reloads the world when `checked` is not empty)
+ */
+async function clickRowSetUp(testController, clickActions, summary, { target = false } = {}) {
+  const s = await setUp(testController, GENERATED, { rulesPath: GENERATED_RULES });
+  const checked = [];
+  let t = null;
+  if (!s.ready) return { s, t, checked };
+  await s.ctx.setSetting('moduleSettings.discovery.enableDiscoveryMode', false);
+  if (target) {
+    await setClickOptions(testController, s.ctx);
+    await fitAllAndSettle(testController, 'fit all (target)');
+    t = await reachableTarget(testController);
+    for (let i = 0; !t && i < 8; i += 1) {
+      const more = await checkGreenSquare(testController, 'opening the way', { assert: false });
+      if (!more) break;
+      checked.push(more);
+      // The region view recomputes on its own frame: let it see the check before looking again (as clickLegs does).
+      await fitAllAndSettle(testController, 'fit all (target, after a check)');
+      t = await reachableTarget(testController);
+    }
+    testController.reportCondition(`a reachable region in another cell, with a point off its squares (${t?.region ?? 'none'}; ${checked.length} check(s) first)`, !!t);
+  }
+  await setClickOptions(testController, s.ctx, clickActions);
+  const shown = await testController.pollForCondition(() => stripSummary() === summary, `the strip shows "${summary}"`, 3000, 25);
+  testController.reportCondition(`the Map's "On click" strip, at the top of the panel, reads "${summary}" (now "${stripSummary()}")`,
+    shown && panel().root.firstChild === panel().clickStripHost && !!document.querySelector(`${STRIP} .click-actions-strip`));
+  if (t && !await focusCell(testController, t.key)) t = null;
+  return { s, t, checked };
+}
+
+/** The DEFAULT Map click on a region: extend the path to it, and open the Regions panel at it; the generic event. */
+export async function testRegionMapClickDefault(testController) {
+  let s = null;
+  let restorePlayer = null;
+  let rec = null;
+  let checked = [];
+  try {
+    const got = await clickRowSetUp(testController, defaultClickActions(), 'On click: extend path · Regions — location: check',
+      { target: true });
+    ({ s, checked } = got);
+    const { t } = got;
+    if (!s.ready || !t) return testController.getOverallResult();
+    restorePlayer = savePlayer();
+    rec = recordEvents(testController, CLICK_EVENTS);
+    const c = await clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key}`);
+    const extended = await testController.pollForCondition(() => pathEndRegion() === t.region, `the path ends at ${t.region}`, 5000, 50);
+    const r = actionResult(c, 'path.route');
+    testController.reportCondition(`a click on ${t.region} extends the path to it (path.route ${r?.kind}; it ends at ${pathEndRegion()})`,
+      extended && r?.ok === true);
+    const opened = await testController.pollForCondition(
+      () => rec.seen.some(([n, d]) => n === 'ui:navigateToRegion' && d?.regionName === t.region), 'ui:navigateToRegion', 3000, 50);
+    testController.reportCondition('… and opens the Regions panel at it (regions.open: ui:activatePanel regionsPanel, ui:navigateToRegion)',
+      opened && rec.seen.some(([n, d]) => n === 'ui:activatePanel' && d?.panelId === 'regionsPanel'));
+    const order = rec.seen.map(([n]) => n);
+    testController.reportCondition(`regionMap:nodeSelected, then regionView:regionClicked { panelId: 'regionMap', regionName }, before any action (${order.join(', ')})`,
+      order[0] === 'regionMap:nodeSelected' && order[1] === 'regionView:regionClicked'
+      && JSON.stringify(rec.seen[1][1]) === JSON.stringify({ panelId: 'regionMap', regionName: t.region }));
+  } catch (error) {
+    testController.reportCondition(`default Map click row error-free: ${error.message}`, false);
+  } finally {
+    rec?.stop();
+    restorePlayer?.();
+    await reloadIfChecked(testController, s?.ctx, checked, { before: s?.before, restoreWorld: true });
+    if (s) await tearDown(testController, s, { restoreWorld: true });
+  }
+  return testController.getOverallResult();
+}
+
+/** The ⏸ MASTER SWITCH off: no move, no path edit, no Regions-panel change; the click and its event still happen. */
+export async function testRegionMapClickMasterOff(testController) {
+  let s = null;
+  let restorePlayer = null;
+  let rec = null;
+  let checked = [];
+  try {
+    const got = await clickRowSetUp(testController, { ...defaultClickActions(), enabled: false }, 'On click: ⏸ paused', { target: true });
+    ({ s, checked } = got);
+    const { t } = got;
+    if (!s.ready || !t) return testController.getOverallResult();
+    const master = panel().clickStripHost.querySelector('.click-actions-strip-master');
+    testController.reportCondition(`the collapsed strip keeps the master switch, paused (${master?.textContent})`, master?.textContent === '▶');
+    restorePlayer = savePlayer();
+    const regionBefore = gameStateRegion();
+    const pathBefore = pathOf();
+    rec = recordEvents(testController, CLICK_EVENTS);
+    const c = await clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key} (master off)`);
+    await new Promise((res) => setTimeout(res, 500)); // what a click would do, it would have done by now
+    testController.reportCondition(`master off: the click lands and runs nothing (${JSON.stringify(c?.result)})`,
+      c?.target === 'region' && c.result?.ran === false && c.result.reason === 'disabled');
+    testController.reportCondition(`master off: no move, no path edit (still at ${gameStateRegion()})`,
+      gameStateRegion() === regionBefore && pathOf() === pathBefore);
+    // (The row's own `clickCanvas` re-activates the Map's tab: a `ui:activatePanel` for the Map is not the click's.)
+    testController.reportCondition('master off: no Regions-panel change (no ui:activatePanel regionsPanel / ui:navigateToRegion)',
+      !rec.seen.some(([n, d]) => (n === 'ui:activatePanel' && d?.panelId !== COMPONENT) || n === 'ui:navigateToRegion'));
+    testController.reportCondition('master off: regionMap:nodeSelected and regionView:regionClicked are still published',
+      rec.seen.some(([n]) => n === 'regionMap:nodeSelected') && rec.seen.some(([n, d]) => n === 'regionView:regionClicked' && d?.regionName === t.region));
+  } catch (error) {
+    testController.reportCondition(`master-off Map click row error-free: ${error.message}`, false);
+  } finally {
+    rec?.stop();
+    restorePlayer?.();
+    await reloadIfChecked(testController, s?.ctx, checked, { before: s?.before, restoreWorld: true });
+    if (s) await tearDown(testController, s, { restoreWorld: true });
+  }
+  return testController.getOverallResult();
+}
+
+/** A location-square click with the location action "Check it now": the location is checked; the generic event. */
+export async function testRegionMapClickLocationCheck(testController) {
+  let s = null;
+  let rec = null;
+  let checked = [];
+  try {
+    const settings = defaultClickActions();
+    settings.location['path.check'] = 'now';
+    ({ s } = await clickRowSetUp(testController, settings, 'On click: extend path · Regions — location: check'));
+    if (!s.ready) return testController.getOverallResult();
+    rec = recordEvents(testController, CLICK_EVENTS);
+    const loc = await checkGreenSquare(testController, 'location check');
+    if (loc) checked = [loc];
+    const ev = rec.seen.find(([n]) => n === 'regionView:locationClicked');
+    testController.reportCondition(`regionView:locationClicked { panelId: 'regionMap', regionName, locationName: ${loc} } (${JSON.stringify(ev?.[1])})`,
+      !!loc && ev?.[1]?.panelId === 'regionMap' && ev[1].locationName === loc && typeof ev[1].regionName === 'string');
+    testController.reportCondition('a location click publishes no regionMap:nodeSelected (a region click\'s selection)',
+      !rec.seen.some(([n]) => n === 'regionMap:nodeSelected'));
+  } catch (error) {
+    testController.reportCondition(`location-check Map click row error-free: ${error.message}`, false);
+  } finally {
+    rec?.stop();
+    await reloadIfChecked(testController, s?.ctx, checked, { before: s?.before, restoreWorld: true });
+    if (s) await tearDown(testController, s, { restoreWorld: true });
+  }
+  return testController.getOverallResult();
+}
+
+/**
+ * The Map's settings are its OWN (⚖ R4): an edit of the Region Graph's strip (its ⏸ master switch, pressed and pressed
+ * back — the Graph's real save path) leaves the Map's `clickActions` unchanged, in the panel and in storage.
+ */
+export async function testRegionMapClickSettingsIndependent(testController) {
+  let s = null;
+  const GRAPH_KEY = 'moduleSettings.regionGraph.clickActions';
+  let graphBefore = null;
+  try {
+    s = await setUp(testController, GENERATED, { rulesPath: GENERATED_RULES });
+    if (!s.ready) return testController.getOverallResult();
+    await panel().clickActionsReady;
+    const mapHeld = JSON.stringify(dbg().clickActions);
+    const mapStored = JSON.stringify(await settingsManager.getSetting(REGION_MAP_CLICK_ACTIONS_KEY));
+    testController.reportCondition(`the Map holds its stored click actions (${mapHeld})`, mapHeld === mapStored);
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'regionGraphPanel' }, 'tests');
+    const master = await testController.pollForValue(
+      () => document.querySelector('.region-graph-panel-container .click-actions-strip-master'), 'the Region Graph\'s strip', 5000, 50);
+    testController.reportCondition('the Region Graph\'s "On click" strip is on the page', !!master);
+    if (!master) return testController.getOverallResult();
+    graphBefore = await settingsManager.getSetting(GRAPH_KEY);
+    const enabled0 = graphBefore?.enabled !== false;
+    master.click();
+    const flipped = await testController.pollForCondition(async () => ((await settingsManager.getSetting(GRAPH_KEY))?.enabled !== false) === !enabled0,
+      'the Region Graph saved its edit', 3000, 25);
+    testController.reportCondition(`the Region Graph's strip edit is saved (enabled ${enabled0} → ${!enabled0})`, flipped);
+    await nextFrames(2);
+    testController.reportCondition(`… and the Map's click actions are unchanged, in the panel (${JSON.stringify(dbg().clickActions)})`,
+      JSON.stringify(dbg().clickActions) === mapHeld);
+    testController.reportCondition('… and in storage', JSON.stringify(await settingsManager.getSetting(REGION_MAP_CLICK_ACTIONS_KEY)) === mapStored);
+    document.querySelector('.region-graph-panel-container .click-actions-strip-master')?.click();
+    const back = await testController.pollForCondition(async () => JSON.stringify(await settingsManager.getSetting(GRAPH_KEY)) === JSON.stringify(graphBefore),
+      'the Region Graph\'s setting is back', 3000, 25);
+    testController.reportCondition('the Region Graph\'s click actions are put back (its strip pressed again)', back);
+    if (back) graphBefore = null;
+  } catch (error) {
+    testController.reportCondition(`settings-independence row error-free: ${error.message}`, false);
+  } finally {
+    if (graphBefore) { try { await settingsManager.updateSetting(GRAPH_KEY, graphBefore); } catch { /* best effort */ } }
+    testController.eventBus.publish('ui:activatePanel', { panelId: COMPONENT }, 'tests');
+    if (s) await tearDown(testController, s, { restoreWorld: true });
   }
   return testController.getOverallResult();
 }
@@ -786,14 +973,52 @@ async function buildCustomSeedlingSet() {
   const deps = {
     parseOel: parseOelLevel, tileSize: SEEDLING_TILE_SIZE, tileTypeForPlacement, rulesSchema,
     // ⛔ `game: 'seedling'` (→ `flash_seedling`, the registered substrate): the derivation's default and the maze set
-    // lab's `SEEDLING_ATLAS_GAME`. The watch page's `'seedling-watch-edit'` slugs to `flash_seedling_watch_edit`, which no
-    // substrate registers, so no Seedling hook runs for it (CC/docs/region-map/atlas-cache.md § Residue).
+    // lab's `SEEDLING_ATLAS_GAME`, which the watch page also uses since lab-set-seedling-identity (it said
+    // `'seedling-watch-edit'` before, a substrate no hook ran for; CC/docs/region-map/atlas-cache.md § Residue).
     atlas: { game: 'seedling', mapDocument: 'custom-set.json' },
   };
   const record = SA.setRecord(editorVanillaSet(vanillaSet, mapDoc).set, overlay);
   const session = SA.createSetSession(SA.createSeedlingSetAdapter(deps), record, { base: { kind: 'set', set_id: record.set.set_id } });
   const { rules, atlas } = SA.rulesJsonOf(session, deps, { compileRegionAtlas });
   return { rules, atlas };
+}
+
+/**
+ * lab-set-seedling-identity: the bundle the WATCH PAGE's set editor writes, built through the page's own modules: its set
+ * deps (`watchSetIdentity.WATCH_SET_ATLAS`, game `seedling`), the mount's REPORT (`watchSetEditor.reportOf`) with the
+ * page's compile (`labSetIdentity`: a `seedling-lab-<8 hex>` stamped copy, no `flash_panel`), and the bundle door's atlas
+ * member (`atlasAtDoor`). The page's real press is driven, byte for byte, by `check-seedling-editor-arm.mjs`; this row
+ * asks what the APP does with those documents. Same rooms + overlay as `buildCustomSeedlingSet`.
+ */
+async function buildWatchPageBundle() {
+  const [{ tileTypeForPlacement, SEEDLING_TILE_SIZE }, { compileRegionAtlas }, { stampAtlasIdentity, validateRegionAtlas }, { parseOelLevel }, SA, { editorVanillaSet, reportOf }, ID] = await Promise.all([
+    import(appUrl('./modules/flashPanel/seedlingSemantics.js')),
+    import(appUrl('./modules/procgenPipeline/regionAtlasCompiler.js')),
+    import(appUrl('./modules/procgenPipeline/regionAtlasValidator.js')),
+    import(appUrl('./modules/seedlingDemo/procgenLevelOel.js')),
+    import(appUrl('./modules/seedlingDemo/seedlingSetAdapter.js')),
+    import(appUrl('./modules/seedlingDemo/watchSetEditor.js')),
+    import(appUrl('./modules/seedlingDemo/watchSetIdentity.js')),
+  ]);
+  const [vanillaSet, mapDoc, overlay, rulesSchema, served] = await Promise.all([
+    fetchJson('./modules/seedlingDemo/fixtures/seedling-vanilla-set.json'),
+    fetchJson('./modules/flashPanel/atlases/seedling-map.json'),
+    fetchJson('./modules/seedlingDemo/fixtures/seedling-vanilla-overlay.json'),
+    fetchJson('./schema/rules.schema.json'),
+    fetchJson('./modules/flashPanel/atlases/atlas_files.json'),
+  ]);
+  const deps = { parseOel: parseOelLevel, tileSize: SEEDLING_TILE_SIZE, tileTypeForPlacement, rulesSchema, atlas: ID.WATCH_SET_ATLAS };
+  const lab = ID.labSetIdentity({ compileRegionAtlas, stampAtlasIdentity });
+  const record = SA.setRecord(editorVanillaSet(vanillaSet, mapDoc).set, overlay);
+  const session = SA.createSetSession(SA.createSeedlingSetAdapter(deps), record, { base: { kind: 'set', set_id: record.set.set_id } });
+  const rep = reportOf(session, deps, { compileRegionAtlas: lab.compileRegionAtlas, validateRegionAtlas });
+  if (!rep.download.rules.allowed) throw new Error(`the watch page's report refused the export: ${rep.download.rules.why}`);
+  return {
+    rules: rep.rules,
+    atlas: lab.atlasAtDoor(rep.atlas, rep.rules),
+    base: ID.LAB_SET_ATLAS_BASE,
+    servedIds: new Set((served.atlases ?? []).map((a) => a.atlas_id)),
+  };
 }
 
 /** Raise the Presets panel and hand back its live instance (its file door is `loadDocumentFile`). */
@@ -805,23 +1030,29 @@ async function presetsPanel(testController) {
   }, 'the Presets panel is live', WAIT, 50);
 }
 
-export async function testRegionMapCustomSetAtlas(testController) {
+/**
+ * The body both custom-set rows share: build `{rules, atlas}`, load them as a bundle through the Presets panel's file
+ * door, and measure the Region Map. `extra(testController, built, id)` adds a row's own conditions before the load.
+ */
+async function runCustomSetBundleRow(testController, build, { fileName, extra = null } = {}) {
   let s = null;
   try {
     s = await setUp(testController, SEEDLING);
     if (!s.ready) return testController.getOverallResult();
     atlasCache.clear();
     const t0 = performance.now();
-    const { rules, atlas } = await buildCustomSeedlingSet();
+    const built = await build();
+    const { rules, atlas } = built;
     const id = rules.region_atlas?.['1']?.atlas_id;
     testController.reportCondition(`the custom set compiled (${Object.keys(rules.regions?.['1'] ?? {}).length} regions, ${Math.round(performance.now() - t0)} ms) and its rules name its derived atlas (${id})`,
       typeof id === 'string' && id === atlas.atlas_id);
+    if (extra) extra(testController, built, id);
     const presets = await presetsPanel(testController);
     testController.reportCondition('the Presets panel is live', !!presets);
     if (!presets) return testController.getOverallResult();
     const bytes = await writeBundle([{ kind: 'rules', doc: rules }, { kind: 'region-atlas', doc: atlas }], { jszip: await presets.loadJSZip() });
     // ⛓ THE HOST ENTRY PATH: the same call a file pick makes (`#json-file-input` → `loadDocumentFile`).
-    await presets.loadDocumentFile(new File([bytes], 'custom-seedling-set.zip', { type: 'application/zip' }));
+    await presets.loadDocumentFile(new File([bytes], fileName, { type: 'application/zip' }));
     testController.reportCondition(`the bundle's region atlas is in the host cache under ${id}`, atlasCache.get(id)?.atlas_id === id);
     testController.eventBus.publish('ui:activatePanel', { panelId: COMPONENT }, 'tests');
     const want = Object.values(rules.regions['1']).reduce((n, r) => n + (r.locations?.length ?? 0), 0);
@@ -852,6 +1083,30 @@ export async function testRegionMapCustomSetAtlas(testController) {
     if (s) await tearDown(testController, s, { restoreWorld: true });
   }
   return testController.getOverallResult();
+}
+
+export async function testRegionMapCustomSetAtlas(testController) {
+  return runCustomSetBundleRow(testController, buildCustomSeedlingSet, { fileName: 'custom-seedling-set.zip' });
+}
+
+/**
+ * lab-set-seedling-identity: the WATCH PAGE's bundle. Before the Region Map half (shared above), the documents
+ * themselves: every room is `flash_seedling`, there is no `flash_panel` block, and the atlas id is the lab's own
+ * `seedling-lab-<8 hex>` fingerprint, which the served atlas index does not hold.
+ */
+export async function testRegionMapWatchSetBundle(testController) {
+  return runCustomSetBundleRow(testController, buildWatchPageBundle, {
+    fileName: 'watch-page-set.zip',
+    extra: (tc, { rules, base, servedIds }, id) => {
+      const rows = Object.values(rules.preset_sidecars?.['1'] ?? {});
+      const subs = [...new Set(rows.map((r) => r.substrate))];
+      tc.reportCondition(`every room of the watch page's set is a Seedling room (${rows.length} rooms, substrates ${JSON.stringify(subs)})`,
+        rows.length > 0 && subs.length === 1 && subs[0] === 'flash_seedling');
+      tc.reportCondition(`the rules carry no flash_panel block (${'flash_panel' in rules ? 'present' : 'absent'})`, !('flash_panel' in rules));
+      tc.reportCondition(`the atlas id is the lab's own fingerprint and is not served (${id})`,
+        new RegExp(`^${base}-[0-9a-f]{8}$`).test(id ?? '') && !servedIds.has(id));
+    },
+  });
 }
 
 registerTest({
@@ -892,7 +1147,39 @@ registerTest({
   category: 'Region Map',
   testFunction: testRegionMapClicksGenerated,
   enabled: false,
-  description: 'Step 4: a cell click moves the player, a green square click checks it, the hover names it; the Region Graph panel\'s own boxes change what a Region Map click does',
+  description: 'Step 4: a cell click moves the player, a green square click checks it, the hover names it; CA-S3: the Map\'s own clickActions route changes what a Region Map click does',
+});
+registerTest({
+  id: 'region-map-click-default',
+  name: 'Region Map: the default click (extend the path, open the Regions panel)',
+  category: 'Region Map',
+  testFunction: testRegionMapClickDefault,
+  enabled: false,
+  description: 'CA-S3: with the default clickActions, a cell click extends the path to its region and opens the Regions panel at it; regionMap:nodeSelected then regionView:regionClicked first',
+});
+registerTest({
+  id: 'region-map-click-master-off',
+  name: 'Region Map: the click master switch off',
+  category: 'Region Map',
+  testFunction: testRegionMapClickMasterOff,
+  enabled: false,
+  description: 'CA-S3: clickActions.enabled false: a cell click moves nobody, edits no path, opens no Regions panel; the selection and the generic event are still published',
+});
+registerTest({
+  id: 'region-map-click-location-check',
+  name: 'Region Map: a location-square click checks it',
+  category: 'Region Map',
+  testFunction: testRegionMapClickLocationCheck,
+  enabled: false,
+  description: 'CA-S3: the location action "check it now": a green square click checks it and publishes regionView:locationClicked',
+});
+registerTest({
+  id: 'region-map-click-settings-independent',
+  name: 'Region Map: its click settings are its own',
+  category: 'Region Map',
+  testFunction: testRegionMapClickSettingsIndependent,
+  enabled: false,
+  description: 'CA-S3 (R4): an edit of the Region Graph\'s "On click" strip leaves the Map\'s clickActions unchanged',
 });
 registerTest({
   id: 'region-map-clicks-seedling',
@@ -908,7 +1195,7 @@ registerTest({
   category: 'Region Map: Seedling',
   testFunction: testRegionMapClicksLoopMode,
   enabled: false,
-  description: 'Step 4: with loop mode on, a Region Map cell click is a planning source (regionMap-*): its move is appended to the path',
+  description: 'Step 4: with loop mode on, a Region Map cell click is a planning source (CA-S3: regionView-path-regionMap): its move is appended to the path',
 });
 registerTest({
   id: 'region-map-custom-set-atlas',
@@ -917,4 +1204,12 @@ registerTest({
   testFunction: testRegionMapCustomSetAtlas,
   enabled: false,
   description: 'region-map atlas-cache: a custom set loaded as a bundle through the Presets panel\'s file door puts its derived atlas in the host cache; the panel then shows real extents, N/N squares on their tiles, and its warps',
+});
+registerTest({
+  id: 'region-map-watch-set-bundle',
+  name: 'Region Map: the Seedling watch page\'s set bundle is a Seedling world',
+  category: 'Region Map: Seedling',
+  testFunction: testRegionMapWatchSetBundle,
+  enabled: false,
+  description: 'lab-set-seedling-identity: the bundle the watch page\'s set editor writes (its own deps, report compile and atlas door) is Seedling rooms, no flash_panel, a seedling-lab fingerprint that is not served; loaded through the Presets panel\'s file door, the panel shows real extents, N/N squares on their tiles, and its warps',
 });

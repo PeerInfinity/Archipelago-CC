@@ -1,32 +1,26 @@
 /**
- * ⛓ CA-S1 EQUIVALENCE — the migrated click config, run through `runClickActions`, makes the SAME `regionActions` calls
- * as today's Region Graph handlers, for every combination of the seven `moduleSettings.regionGraph.*` booleans.
+ * ⛓ CA-S2 EQUIVALENCE (re-run of CA-S1's measured method) — the Region Graph's ADOPTED click handlers
+ * (`runClickActions` over `moduleSettings.regionGraph.clickActions`) make the SAME `regionActions` calls as its
+ * handlers BEFORE CA-S2, for every combination of the seven old keys with `movePlayerOneStep` FORCED FALSE
+ * (⚖ user, 2026-11-17T23:00:54Z: "move player one step" is removed). The combinations WITH it true are measured too,
+ * and classified: they are the user-visible change of the removal (the report's table).
  *
- * METHOD: MEASURED, not transcribed. Today's side drives the REAL handler functions —
- * `GraphInteractionManager.handleRegionNodeClick` / `handleLocationNodeClick` (`regionGraph/graphInteractionManager.js`)
- * over a REAL `NavigationManager` (`regionGraph/navigationManager.js`) — with no DOM: the checkboxes are
- * `{ checked }` stubs keyed by id, `addLocationsToPath` comes from a stubbed `settingsManager`. `regionActions.js` is
- * replaced by a recorder (shared by both sides) that logs each call's name and arguments. The new side runs
- * `migrateRegionGraphClickKeys(bits)` through `runClickActions('regionGraph', …)`. No expected list is written by
- * hand: each row compares the two recorded logs.
+ * METHOD: MEASURED, not transcribed. BEFORE = `legacyRegionGraphClicks.testkit.js`, the base's handler and navigation
+ * methods kept VERBATIM (base 41561f80944b, extracted with `git show`), driven with `{ checked }` checkbox stubs and a
+ * stubbed `settingsManager` for `addLocationsToPath`, exactly as CA-S1 drove them. AFTER = the REAL
+ * `GraphInteractionManager.handleRegionNodeClick` / `handleLocationNodeClick` over a REAL `NavigationManager`, with
+ * `ui.clickActions = migrateRegionGraphClickKeys(bits)`, and the REAL `regions.open` (`regions/regionsClickActions.js`).
+ * `regionActions.js` is replaced by a recorder shared by both sides. No expected list is written by hand.
  *
- * WHAT IS COMPARED, per combination:
- *   1. the `play` channel IN ORDER — every call that dispatches or edits the path (`publishRegionMove`, `addToPath`,
- *      `overwritePath`, `checkLocation`, `checkAccessibleLocationsInRegion`, `addLocationCheckToPath`), args included;
- *   2. the `regions` channel IN ORDER — `showRegionInRegionsPanel` and every CHANGE of the Regions panel's
- *      "Show All Regions" box (`navigationManager.setShowAllRegions` only fires when the value changes);
- *   3. the multiset of ALL calls, the read-only ones too (`planOneStepMove`, `planDirectMove`,
- *      `locationChecksAllowed`), args included.
- *   The interleaving BETWEEN the two channels is not compared: today's is set by the handlers' dynamic imports (the
- *   Regions-panel publishes are synchronous, the moves and checks run after `import('./index.js')` resolves), the new
- *   one by R8 (path, then checks, then panel actions). The row counts the combinations where it differs.
+ * COMPARED, per combination: the `play` channel IN ORDER (moves, path edits, checks), the `regions` channel IN ORDER
+ * (`showRegionInRegionsPanel` and every CHANGE of "Show All Regions"), the `select` channel (`regionGraph:nodeSelected`,
+ * published before any action), and the multiset of ALL calls (the read-only ones too).
  *
- * THE EXPECTED DELTA — the only one: a path move's `source` is `regionView-path-regionGraph` (R7) where today it is
- * one of `REGION_GRAPH_SOURCES`. Each row swaps today's source strings for it and counts the swaps.
- *
- * `regions.open` belongs to the Regions panel (CA-S4); here a STAND-IN registers it with today's behaviour (Show All
- * = !(add || overwrite path), then activate + navigate), to show the settings carry what it needs.
- * `publishNodeSelected` is the Region Graph's own publish (it stays with the panel, design §4.3) and is not compared.
+ * THE NAMED DELTAS, counted:
+ *   1. `source` — a path move carries `regionView-path-regionGraph` (R7) where the base carried a `regionGraph-*`
+ *      source. Each row swaps the base's strings for it (and asserts the new string was not in the base's log).
+ *   2. the R8 interleaving BETWEEN the channels (the base's was set by its dynamic imports) — not compared, counted.
+ *   With `movePlayerOneStep` false there is NO third kind: any other difference fails the row.
  */
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 
@@ -47,6 +41,13 @@ function norm(v) {
 vi.mock('./regionActions.js', async (importOriginal) => {
     const real = await importOriginal();
     const push = (channel, name, args) => rec.log.push({ channel, name, args: norm(args) });
+    // CA-S3: `moveOnlyOneStep` left `regionActions` (the base passed it `false`; the click actions pass nothing). A
+    // `false` is dropped on both sides; a `true` (the base's one-step rows) is kept, so `classify` still sees it.
+    const pathOpts = (o) => {
+        if (!o || o.moveOnlyOneStep !== false) return o;
+        const { moveOnlyOneStep, ...rest } = o;
+        return rest;
+    };
     return {
         ...real,
         planOneStepMove: (h, target, opts) => {
@@ -61,12 +62,12 @@ vi.mock('./regionActions.js', async (importOriginal) => {
         },
         publishRegionMove: (h, move, source) => { push('play', 'publishRegionMove', [move, source]); },
         addToPath: (h, target, opts) => {
-            push('play', 'addToPath', [target, opts]);
+            push('play', 'addToPath', [target, pathOpts(opts)]);
             opts?.beforeExecute?.();
             return { ok: true, kind: 'path', from: 'End', dispatched: 1, regions: [target] };
         },
         overwritePath: (h, target, opts) => {
-            push('play', 'overwritePath', [target, opts]);
+            push('play', 'overwritePath', [target, pathOpts(opts)]);
             opts?.beforeExecute?.();
             return { ok: true, kind: 'path', from: 'Menu', dispatched: 1, regions: [target] };
         },
@@ -111,43 +112,48 @@ vi.mock('../../app/core/settingsManager.js', () => ({ default: {
 
 const { GraphInteractionManager } = await import('../regionGraph/graphInteractionManager.js');
 const { NavigationManager } = await import('../regionGraph/navigationManager.js');
-const { REGION_GRAPH_SOURCES, REGION_GRAPH_ORIGINATORS } = await import('../regionGraph/regionGraphOriginators.js');
-const actions = await import('./regionActions.js');
+const { LegacyGraphInteraction, LegacyNavigation, REGION_GRAPH_SOURCES } = await import('./legacyRegionGraphClicks.testkit.js');
+const { REGIONS_OPEN_ACTION } = await import('../regions/regionsClickActions.js');
 const CA = await import('./clickActions.js');
 
 const KEYS = Object.keys(CA.LEGACY_REGION_GRAPH_CLICK_DEFAULTS);
+const OTHER_KEYS = KEYS.filter((k) => k !== 'movePlayerOneStep');
 const NEW_SOURCE = CA.pathSourceFor('regionGraph');
 const OLD_SOURCES = new Set(Object.values(REGION_GRAPH_SOURCES));
 
-/** The Regions panel's Show All box: `navigationManager.setShowAllRegions` changes (and fires) only on a change. */
+/** The Regions panel's Show All box: both sides change (and fire) it only on a change. */
 function setShowAll(enabled) {
     if (rec.showAll !== enabled) {
         rec.showAll = enabled;
         rec.log.push({ channel: 'regions', name: 'showAll', args: [enabled] });
     }
 }
+/** The page's `#show-all-regions`, for the code that reads the DOM (`navigationManager.setShowAllRegions`, `regions.open`). */
+const showAllBox = {
+    get checked() { return rec.showAll; },
+    set checked(v) { setShowAll(v); },
+    dispatchEvent: () => true,
+};
+globalThis.document = { querySelector: (sel) => (sel === '#show-all-regions' ? showAllBox : null) };
 
 const flush = async () => { for (let i = 0; i < 3; i++) await new Promise((r) => setTimeout(r, 0)); };
 
-function combos() {
+/** Every combination of the six keys other than movePlayerOneStep, with movePlayerOneStep = `oneStep`. */
+function combos(oneStep) {
     const out = [];
-    for (let m = 0; m < 1 << KEYS.length; m++) out.push(Object.fromEntries(KEYS.map((k, i) => [k, !!(m & (1 << i))])));
+    for (let m = 0; m < 1 << OTHER_KEYS.length; m++) {
+        out.push({ movePlayerOneStep: oneStep, ...Object.fromEntries(OTHER_KEYS.map((k, i) => [k, !!(m & (1 << i))])) });
+    }
     return out;
 }
 
 /**
- * Today: drive the real handler.
- *
- * ⚠ VITEST ARTEFACT, worked around: two `import()`s in flight at once inside a test resolve only once (measured: the
- * second never settles; `regionGraph/regionGraphDispatch.test.js` notes the same). The handler issues one per move
- * (`navigationManager.js` `attemptMovePlayer…` / `addToPath` / `overwritePath`) plus its own for a check, so a click with
- * two of them would lose one. So the handler runs with `ui`'s navigation methods as RECORDERS, its own async
- * work settles alone, and then each recorded navigation call is REPLAYED on a real `NavigationManager`, one at a time.
- * The log is put back in the browser's order: the handler's synchronous part, then the navigation calls' effects (their
- * imports were issued first), then the handler's own async checks (`checkAllLocationsInRegion`,
- * `dispatchLocationCheckEvent`, the path check), which were issued after them.
+ * BEFORE: drive the base's handler (CA-S1's method). ⚠ The vitest artefact CA-S1 recorded still applies (two
+ * `import()`s in flight at once resolve once), so the handler runs with `ui`'s navigation methods as RECORDERS, its own
+ * async work settles alone, and each recorded navigation call is REPLAYED on the base's navigation methods, one at a
+ * time; the log is put back in the browser's order (sync part, navigation effects, the handler's own async checks).
  */
-async function measureToday(target, bits, { region, discovery, showAll }) {
+async function measureBefore(target, bits, { region, discovery, showAll }) {
     rec.log = []; rec.bits = bits; rec.showAll = showAll;
     const navCalls = [];
     const ui = {
@@ -161,7 +167,7 @@ async function measureToday(target, bits, { region, discovery, showAll }) {
         attemptMovePlayerOneStepToRegion: (...a) => { navCalls.push(['attemptMovePlayerOneStepToRegion', a]); },
         attemptMovePlayerDirectlyToRegion: (...a) => { navCalls.push(['attemptMovePlayerDirectlyToRegion', a]); },
     };
-    const im = new GraphInteractionManager(ui);
+    const im = new LegacyGraphInteraction(ui, bus);
     if (target === 'region') {
         im.handleRegionNodeClick({ id: () => region, data: () => ({ id: region }), addClass: () => {} });
     } else {
@@ -170,16 +176,12 @@ async function measureToday(target, bits, { region, discovery, showAll }) {
     }
     const syncPart = rec.log;
     rec.log = [];
-    // The location handler reads addLocationsToPath through a promise, so ITS navigation calls are async too: they are
-    // issued (in the handler's order) before its path-check import, so they still come first.
     await flush();
     const handlerAsync = rec.log;
     const replayed = [];
     for (const [name, args] of navCalls) {
         rec.log = [];
-        const nav = new NavigationManager(ui);
-        nav.setShowAllRegions = setShowAll;
-        await nav[name](...args);
+        await new LegacyNavigation(ui)[name](...args);
         await flush();
         replayed.push(...rec.log);
     }
@@ -187,34 +189,24 @@ async function measureToday(target, bits, { region, discovery, showAll }) {
     return rec.log;
 }
 
-/** The stand-in for the Regions panel's own action (CA-S4): today's showRegionInPanel branch. */
-const STAND_IN_REGIONS_OPEN = {
-    id: CA.REGIONS_OPEN_ID, owner: 'regions', label: 'Open in the Regions panel', target: 'region', kind: 'toggle',
-    run: (h, ctx) => {
-        const route = ctx.settings.region[CA.BUILT_IN_IDS.route];
-        h.setShowAllRegions(!(route && (route.from === 'pathEnd' || route.from === 'start')));
-        actions.showRegionInRegionsPanel(h, ctx.regionName);
-        return { ok: true };
-    },
-};
-
-/** New: the migrated config through runClickActions. */
-function measureNew(target, bits, { region, discovery, showAll }) {
+/** AFTER: the adopted handler, with the migrated settings. Synchronous (no dynamic import left in the click path). */
+function measureAfter(target, bits, { region, discovery, showAll }) {
     rec.log = []; rec.showAll = showAll;
-    const h = {
-        stateManager: { getStaticData: () => staticData, getLatestStateSnapshot: () => snapshot },
-        originators: REGION_GRAPH_ORIGINATORS,
-        beforePathExecute: () => setShowAll(false),
-        onError: () => {},
-        setShowAllRegions: setShowAll,
+    const ui = {
+        pathFinder: {}, updateStatus: () => {},
+        cy: { $: () => ({ removeClass: () => {} }), nodes: () => [], edges: () => [] },
+        isDiscoveryModeActive: discovery.active, discoverySettings: discovery.settings,
+        clickActions: CA.migrateRegionGraphClickKeys(bits),
     };
-    const ctx = target === 'region' ? { regionName: region, discovery } : { regionName: region, locationName: 'chest', discovery };
-    const settings = CA.migrateRegionGraphClickKeys(bits);
-    const r = CA.runClickActions('regionGraph', target, ctx, settings, h);
-    return { log: rec.log, result: r };
+    ui.navigationManager = new NavigationManager(ui);
+    const im = new GraphInteractionManager(ui);
+    const result = target === 'region'
+        ? im.handleRegionNodeClick({ id: () => region, data: () => ({ id: region }), addClass: () => {} })
+        : im.handleLocationNodeClick({ data: (k) => ({ locationName: 'chest', parentRegion: region, label: 'chest' })[k] });
+    return { log: rec.log, result };
 }
 
-/** Swap today's path sources for the new one, counting the swaps (the expected delta). */
+/** Swap the base's path sources for the new one, counting the swaps (named delta 1). */
 function swapSources(log) {
     let swapped = 0;
     const out = log.map((e) => {
@@ -230,7 +222,7 @@ function swapSources(log) {
 }
 
 const channel = (log, c) => log.filter((e) => e.channel === c).map((e) => [e.name, e.args]);
-const multiset = (log) => log.filter((e) => e.channel !== 'select').map((e) => JSON.stringify([e.name, e.args])).sort();
+const multiset = (log) => log.map((e) => JSON.stringify([e.name, e.args])).sort();
 const crossOrder = (log) => log.filter((e) => e.channel === 'play' || e.channel === 'regions').map((e) => e.name);
 
 const DISCOVERY = {
@@ -239,15 +231,18 @@ const DISCOVERY = {
 };
 
 const summary = { rows: 0, swappedSources: 0, crossOrderDiffers: 0, nonEmptyPlay: 0, newSourceSeen: 0 };
+/** The movePlayerOneStep=true rows, classified (the user-visible change). */
+const oneStep = { rows: 0, same: 0, classes: {}, table: {} };
 
 beforeAll(() => {
     CA.resetClickActionsForTests();
-    CA.registerClickAction(STAND_IN_REGIONS_OPEN);
+    CA.registerClickAction(REGIONS_OPEN_ACTION);
 });
 afterAll(() => {
     CA.resetClickActionsForTests();
-    // The table's summary, for the report (stdout of the vitest run).
-    console.log(`[CA-S1 equivalence] ${JSON.stringify(summary)}`);
+    console.log(`[CA-S2 equivalence] ${JSON.stringify(summary)}`);
+    console.log(`[CA-S2 one-step=true] ${JSON.stringify({ rows: oneStep.rows, same: oneStep.same, classes: oneStep.classes })}`);
+    console.log(`[CA-S2 one-step table] ${JSON.stringify(oneStep.table)}`);
 });
 
 const SCENARIOS = [];
@@ -259,46 +254,87 @@ for (const target of ['region', 'location']) {
     }
 }
 
-describe(`⛓ 2^${KEYS.length} = ${1 << KEYS.length} combinations × {region, location}: migrated config ≡ today's Region Graph handlers`, () => {
-    it('the click keys and defaults are regionGraph/layoutControlsManager.js\'s (the source of the table)', async () => {
-        const fs = await import('node:fs');
-        const src = fs.readFileSync(new URL('../regionGraph/layoutControlsManager.js', import.meta.url), 'utf8');
-        const rg = {};
-        for (const m of src.matchAll(/setting: 'moduleSettings\.regionGraph\.(\w+)', default: (true|false)/g)) rg[m[1]] = m[2] === 'true';
-        expect(Object.fromEntries(KEYS.map((k) => [k, rg[k]]))).toEqual({ ...CA.LEGACY_REGION_GRAPH_CLICK_DEFAULTS });
-        // The design's migration (§4.4) maps exactly these keys; a new box must be mapped before the table can pass.
+/** A compact, comparable view of a play channel: name + the move's target / one-step flag / source kind. */
+function playShape(log) {
+    return channel(log, 'play').map(([name, args]) => {
+        if (name === 'addToPath' || name === 'overwritePath') return `${name}${args[1]?.moveOnlyOneStep ? '(one step)' : ''}`;
+        if (name === 'publishRegionMove') return `move(${String(args[0]?.exitName ?? '').split(':')[0]})`;
+        return name;
+    });
+}
+
+/**
+ * Classify a movePlayerOneStep=true row: what the base did that the adopted handler no longer does.
+ *   path-edit-one-step→all   a path edit walked ONE step; it now walks the whole path;
+ *   one-step-move→none       "one step" alone made a one-step move; the route is now off;
+ *   one-step+direct→direct   both move boxes made a one-step AND a direct move; now the direct move only;
+ *   unchanged                 the row's play channel is the same (one-step had no effect there).
+ */
+function classify(before, after) {
+    const b = playShape(before).join(' ');
+    const a = playShape(after).join(' ');
+    if (b === a) return 'unchanged';
+    if (b.includes('(one step)') && b.replace(/\(one step\)/g, '') === a) return 'path-edit-one-step→all';
+    if (b.includes('move(one)') && b.includes('move(direct)') && b.replace(/move\(one\) ?/g, '').trim() === a) return 'one-step+direct→direct';
+    if (b.includes('move(one)') && b.replace(/move\(one\) ?/g, '').trim() === a) return 'one-step-move→none';
+    return `UNEXPECTED: ${b} → ${a}`;
+}
+
+describe(`⛓ 2^${OTHER_KEYS.length} combinations (movePlayerOneStep forced false) × {region, location}: adopted handlers ≡ the base's`, () => {
+    it('the base\'s seven keys and defaults are the migration\'s (the frozen oracle is the right one)', () => {
         expect(KEYS).toEqual(['movePlayerOneStep', 'movePlayerDirectly', 'showRegionInPanel', 'addToPath',
             'overwritePath', 'addLocationsToPath', 'checkAllLocationsInRegion']);
     });
 
     for (const sc of SCENARIOS) {
         const name = `${sc.target} click on ${sc.region}, discovery ${sc.disc}, Show All starts ${sc.showAll}`;
-        it(`${name}: all ${1 << KEYS.length} combinations`, async () => {
+        it(`${name}: all ${1 << OTHER_KEYS.length} combinations`, async () => {
             const opts = { region: sc.region, discovery: DISCOVERY[sc.disc], showAll: sc.showAll };
-            for (const bits of combos()) {
-                const today = await measureToday(sc.target, bits, opts);
-                const { log: next } = measureNew(sc.target, bits, opts);
-                const { out: todaySwapped, swapped } = swapSources(today);
+            for (const bits of combos(false)) {
+                const before = await measureBefore(sc.target, bits, opts);
+                const { log: after } = measureAfter(sc.target, bits, opts);
+                const { out: beforeSwapped, swapped } = swapSources(before);
                 const label = `${name} ${JSON.stringify(bits)}`;
-                expect(channel(next, 'play'), `play channel: ${label}`).toEqual(channel(todaySwapped, 'play'));
-                expect(channel(next, 'regions'), `regions channel: ${label}`).toEqual(channel(todaySwapped, 'regions'));
-                expect(multiset(next), `all calls: ${label}`).toEqual(multiset(todaySwapped));
-                // The delta is exactly the source: no new-source string was in today's log before the swap.
-                expect(JSON.stringify(today)).not.toContain(NEW_SOURCE);
+                expect(channel(after, 'play'), `play channel: ${label}`).toEqual(channel(beforeSwapped, 'play'));
+                expect(channel(after, 'regions'), `regions channel: ${label}`).toEqual(channel(beforeSwapped, 'regions'));
+                expect(channel(after, 'select'), `select channel: ${label}`).toEqual(channel(beforeSwapped, 'select'));
+                expect(multiset(after), `all calls: ${label}`).toEqual(multiset(beforeSwapped));
+                expect(JSON.stringify(before)).not.toContain(NEW_SOURCE);
                 summary.rows++;
                 summary.swappedSources += swapped;
-                if (channel(next, 'play').length) summary.nonEmptyPlay++;
-                if (JSON.stringify(next).includes(NEW_SOURCE)) summary.newSourceSeen++;
-                if (JSON.stringify(crossOrder(next)) !== JSON.stringify(crossOrder(todaySwapped))) summary.crossOrderDiffers++;
+                if (channel(after, 'play').length) summary.nonEmptyPlay++;
+                if (JSON.stringify(after).includes(NEW_SOURCE)) summary.newSourceSeen++;
+                if (JSON.stringify(crossOrder(after)) !== JSON.stringify(crossOrder(beforeSwapped))) summary.crossOrderDiffers++;
             }
-        }, 60_000); // 128 handler drives with timer flushes: well over vitest's 5 s default under load
+        }, 60_000);
     }
 
     it('the table really exercised the handlers (not a vacuous equality)', () => {
-        // 128 × (region: 2 regions × 2 discovery × 2 Show All; location: 2 × 2) = 1536 rows.
-        expect(summary.rows).toBe(128 * 12);
-        expect(summary.nonEmptyPlay).toBeGreaterThan(1000);
+        expect(summary.rows).toBe((1 << OTHER_KEYS.length) * SCENARIOS.length);
+        expect(summary.nonEmptyPlay).toBeGreaterThan(summary.rows / 2);
         expect(summary.swappedSources).toBeGreaterThan(0);
         expect(summary.newSourceSeen).toBeGreaterThan(0);
     });
+});
+
+describe(`⛓ movePlayerOneStep = true: what each of the 2^${OTHER_KEYS.length} combinations now does (the removal's user-visible change)`, () => {
+    it('every row is unchanged or one of the named changes (classify), and the adopted side equals one-step=false\'s', async () => {
+        const opts = { region: 'Field', discovery: DISCOVERY.allowed, showAll: true };
+        for (const target of ['region', 'location']) {
+            for (const bits of combos(true)) {
+                const before = await measureBefore(target, bits, opts);
+                const { log: after } = measureAfter(target, bits, opts);
+                const { log: afterOff } = measureAfter(target, { ...bits, movePlayerOneStep: false }, opts);
+                expect(multiset(after)).toEqual(multiset(afterOff));
+                const cls = classify(swapSources(before).out, after);
+                expect(cls, `${target} ${JSON.stringify(bits)}`).not.toMatch(/^UNEXPECTED/);
+                oneStep.rows++;
+                if (cls === 'unchanged') oneStep.same++;
+                oneStep.classes[cls] = (oneStep.classes[cls] ?? 0) + 1;
+                const key = `${target} ${OTHER_KEYS.filter((k) => bits[k]).join('+') || '(none)'}`;
+                oneStep.table[key] = { cls, before: playShape(before).join(' ') || '—', after: playShape(after).join(' ') || '—' };
+            }
+        }
+        expect(oneStep.rows).toBe(2 << OTHER_KEYS.length);
+    }, 60_000);
 });

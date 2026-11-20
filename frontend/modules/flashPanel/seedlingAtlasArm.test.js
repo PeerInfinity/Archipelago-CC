@@ -25,6 +25,7 @@ import {
     AP_ATLAS_MODULE_PATHS, loadSeedlingAtlas, loadSeedlingRandomizer, runSeedlingRandomizerLoad,
 } from './seedlingRandomizerWiring.js';
 import { SeedlingCheckBinding } from './seedlingCheckBinding.js';
+import { unservedAtlasWhy } from './seedlingRandomizerEligibility.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..', '..');
@@ -229,8 +230,11 @@ describe('loadSeedlingRandomizer hands the four pipeline real-room worlds to the
         const rules = rulesOf('seedling_atlas');
         rules.region_atlas['1'].atlas_id = 'seedling-nowhere';
         const { r } = await load(rules);
-        expect(r).toMatchObject({ verdict: 'ineligible', arm: RANDOMIZER_ARMS.ATLAS, checkBinding: null });
-        expect(r.why).toMatch(/^atlas: the atlas index lists no atlas "seedling-nowhere"/);
+        // ⛓ slice G — refused by the eligibility guard (check `atlas`), BEFORE the atlas arm is chosen: a custom
+        // set, not a world of the original rooms. (`loadSeedlingAtlas`'s own index refusal stays, for a direct call.)
+        expect(r).toMatchObject({ verdict: 'ineligible', checkBinding: null, delivery: null });
+        expect(r.eligibility).toMatchObject({ arm: null, failed: 'atlas' });
+        expect(r.why).toBe(`atlas: ${unservedAtlasWhy('seedling-nowhere')}`);
     });
 
     it('loadSeedlingAtlas refuses a verdict that does not name its arm, and a blank slot', async () => {

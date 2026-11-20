@@ -66,7 +66,7 @@ import { DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { stampLibraryIdentity } from '../procgenPipeline/regionLibraryValidator.js';
 import { captureTileGridLibraryEntry } from './mazeLibraryEntry.js';
-import { deserializeMazeWorld, extractPathsAndObstacles } from './mazeRoomEngine.js';
+import { extractPathsAndObstacles } from './mazeRoomEngine.js';
 import { serializeMazeWorld } from './mazeSerializer.js';
 import { reseatThings } from './mazeThings.js';
 import { TILE_KINDS_FIELD, deserializeMazeWorldWithKinds } from './mazeTileKinds.js';
@@ -179,7 +179,10 @@ function save(saved, { regionId, payload }) {
     //   edit covered by the hash rule (none where no cell is free). A re-derive (an unedited save) moves nothing.
     refuseTileKindOnThing(edited, payload, regionId);
     const next = reseatThings(restamp(edited, payload), regionId);
-    const world = deserializeMazeWorld(next);
+    // ⛓ CONTENT SETS PASS-2 — the save carries the placed kinds' baked copies, and a needs kind's derived gate is
+    //   checked by name here (`mazeTileKinds.withTileKinds`: on its cell, a rule obstacle, the concept's rule) before
+    //   anything is derived from the payload. The kinds themselves change nothing the extractor reads.
+    const world = deserializeMazeWorldWithKinds(next);
     const extracted = extractPathsAndObstacles(world, { regionId });
     const compiled = compileRegion(extracted, { obstacleLib: obstacleLibOf(next) });
     /**

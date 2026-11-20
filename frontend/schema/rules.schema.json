@@ -1245,16 +1245,8 @@
       "properties": {
         "name": { "type": "string" },
         "id": {
-          "oneOf": [
-            { "type": "integer" },
-            { "type": "null" },
-            {
-              "type": "array",
-              "items": { "type": "integer" },
-              "description": "Array of Archipelago Item IDs for composite items."
-            }
-          ],
-          "description": "Archipelago Item ID. Can be a single integer, null, or an array of integers for composite items like pendants and crystals."
+          "type": ["integer", "null"],
+          "description": "Archipelago Item ID, or null for an item with none (an event). A world whose item code is not an integer (A Link to the Past's crystals and pendants carry ROM bytes) exports null: the exporter's int_id_or_none."
         },
         "groups": { "type": "array", "items": { "type": "string" } },
         "classification": {
