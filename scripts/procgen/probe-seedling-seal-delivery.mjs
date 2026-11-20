@@ -216,7 +216,7 @@ async function main() {
             state: rs,
             save: st?.save ?? null,
             cleared: st?.persistence_cleared ?? null,
-            jsLiveSeals: run?.finalDoorGate ?? null,
+            jsLiveSeals: { sealSlotsFilled: (run?.saveState?.bootSealParts ?? []).length }, // MUTANT: the old bootSealParts read
             ap: Object.fromEntries(Object.entries(snap.inventory ?? {}).filter(([, v]) => v > 0)),
             checked,
         };
