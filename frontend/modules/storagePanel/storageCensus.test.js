@@ -25,6 +25,7 @@ export const CENSUS_KEYS = [
     'updateRate', 'latestTheme', 'loadingText', 'loadPredictor', 'disabledMenus', 'actionListHeight',
     'localhost/frontend/modules/flashPanel/seedling.swf/shrumsave',
     'seedlingJsSave_0123456789abcdef',
+    'seedlingRuffleSaveAside_localhost/frontend/modules/flashPanel/swf/seedling_injected.swf/shrumsave',
 ];
 
 /**

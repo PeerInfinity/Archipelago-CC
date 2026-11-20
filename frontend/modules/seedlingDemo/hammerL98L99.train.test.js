@@ -24,6 +24,7 @@ import { CONTACT_FIDELITY } from './contactFidelity.js';
 import {
     DRIVE_DEATH_REFUSED_COUNTS, KILLLOCK_STANDOUT_GUARD_COUNTS, resetDriveDeathRefusedCounts,
     resetKillLockStandOutGuardCounts, withDriveDeathRefused, withKillLockLineStance, withKillLockStandOutGuard,
+    withKillStanceSight,
 } from './solverBot.js';
 import { patchedMapDocument } from './seedlingSetPatches.js';
 import { parseTape } from './tapeFormat.js';
@@ -50,8 +51,10 @@ async function solveStep(step, { line = false, standOut = false, death = false }
         boot: staging.boot, persistence: staging.persistence, log: () => {} });
     let solved;
     try {
-        solved = await withKillLockLineStance(line, () => withKillLockStandOutGuard(standOut,
-            () => withDriveDeathRefused(death, solve)));
+        // KILL_STANCE_SIGHT held OFF: it is ON by default since the L28 flip (2026-11-19) and moves these plans (ticks only,
+        // measured by the flip's sweeps); these rows predate it and keep pinning their own switch.
+        solved = await withKillStanceSight(false, () => withKillLockLineStance(line, () => withKillLockStandOutGuard(standOut,
+            () => withDriveDeathRefused(death, solve))));
     } catch (e) {
         return { ok: false, message: String(e.message), obstacle: e.obstacle ?? null,
             standOut: [...KILLLOCK_STANDOUT_GUARD_COUNTS.rows], deaths: [...DRIVE_DEATH_REFUSED_COUNTS.rows] };
@@ -93,6 +96,27 @@ describe('hammer-phase L98-L99 — survey step 227 (L98, the Chest then the L99 
         expect(refused[0].why).toMatch(/^spinningaxe@128,64 hits the player at run t358 /);
         expect(g.standOut.at(-1).verdict).toBe('clear');
     }, 120000);
+});
+
+describe('hammer-phase L98-L99 — survey step 227 at the shipped defaults (the L28 flip + its guard)', () => {
+    it('KILL_STANCE_SIGHT re-times the kill into the axe\'s sweep; the stand-out guard refuses that stance and the '
+        + 'next one kills clear — solved hitless', async () => {
+        const staging = solveStaging(stagingFromTape(parseTape(boot(227))));
+        const makeRun = (persistence) => createRunForStaging({ ...staging, persistence }, SOURCE);
+        const solve = (guard) => withKillLockStandOutGuard(guard, () => twoPassSolve({ makeRun, goals: STEPS[227],
+            name: 'hammer-l98-l99-step-227-defaults', boot: staging.boot, persistence: staging.persistence, log: () => {} }));
+        const replay = (solved) => {
+            const run = makeRun(solved.persistence);
+            const equipsAt = new Map((solved.out.equips ?? []).map((e) => [e.t, e.slot]));
+            solved.out.perTick.forEach((held, t) => { if (equipsAt.has(t)) run.equipNow(equipsAt.get(t)); run.advance(held); });
+            return { ticks: solved.out.perTick.length, hits: run.playerHits.map((h) => `${h.id ?? h.source}@t${h.t}`),
+                deaths: run.playerDeaths.length, level: run.level };
+        };
+        // the guard held OFF: today's KILL_STANCE_SIGHT stance stands in the axe's sweep (the survey's 477 t / 1 hit)
+        expect(replay(await solve(false))).toEqual({ ticks: 477, hits: ['spinningaxe@128,64@t367'], deaths: 0, level: 99 });
+        // the defaults (guard ON): refused stand-outs, then a clear kill
+        expect(replay(await solve(true))).toEqual({ ticks: 537, hits: [], deaths: 0, level: 99 });
+    }, 240000);
 });
 
 describe('hammer-phase L98-L99 — survey step 228 (L99, the L100 stairs)', () => {

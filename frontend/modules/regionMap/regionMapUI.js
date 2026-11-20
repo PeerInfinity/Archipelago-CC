@@ -14,9 +14,11 @@
  * Each level is baked ONCE, at the art's own 16 px per tile (`BAKE_TILE_PX`), and drawn under a canvas transform,
  * so zooming never re-bakes.
  *
- * The camera: `screen = (world − camera) · zoom + viewport / 2` (`regionMapCamera.js`). Drag pans, the wheel zooms
- * around the cursor. A click (no drag) SELECTS the cell under it and does what a Region Graph click does
- * (`regionMapClicks.js`, step 4): a location square → that location's click; elsewhere in a cell → its region's.
+ * The camera: `screen = (world − camera) · zoom + viewport / 2` (`procgenCore/mapCamera.js`). Drag pans, the wheel
+ * zooms around the cursor. A click (no drag) SELECTS the cell under it and runs the panel's click actions
+ * (`regionMapClickActions.js`, CA-S3: the shared registry over `moduleSettings.regionMap.clickActions`, edited by the
+ * "On click" strip at the top of the panel): a location square → the LOCATION actions; elsewhere in a cell → the
+ * REGION actions.
  */
 import settingsManager from '../../app/core/settingsManager.js';
 import eventBus from '../../app/core/eventBus.js';
@@ -37,7 +39,12 @@ import {
 } from '../procgenCore/mapCamera.js';
 import { SQUARE_COLORS, frameSquares, squareAt, squareColorKey } from './regionMapOverlay.js';
 import { REGION_MAP_SETTING_DEFAULTS, SETTINGS_PREFIX, moduleHandles, panelInstances } from './regionMapSettings.js';
-import { onLocationClick, onRegionClick, readClickOptions, regionOfCell } from './regionMapClicks.js';
+import {
+    PANEL_ID, REGION_MAP_CLICK_ACTIONS_KEY, loadRegionMapClickActions, regionOfCell, runRegionMapClick,
+    saveRegionMapClickActions, withClickHandles,
+} from './regionMapClickActions.js';
+import { defaultClickActions } from '../regionView/clickActions.js';
+import { mountClickActionsStrip } from '../regionView/clickActionsUI.js';
 
 /** The tile size every level is baked at (the art's own); drawn scaled by the camera. */
 export const BAKE_TILE_PX = 16;
@@ -70,6 +77,8 @@ export class RegionMapUI {
         this.pathFinder = new PathFinder(stateManager);
         this.lastClick = null;
         this.clickCount = 0;
+        // ⛓ CA-S3: what a click runs (`moduleSettings.regionMap.clickActions`); the defaults until the load lands.
+        this.clickActions = defaultClickActions();
         this._statusTimer = null;
         this._anim = null;
         this._paintHandle = null;
@@ -112,8 +121,13 @@ export class RegionMapUI {
         this._sub('app:readyForUiDataLoad', () => this._rebuild());
         this._sub('settings:changed', (d) => {
             const key = String(d?.key ?? '');
+            if (key === '*' || key === REGION_MAP_CLICK_ACTIONS_KEY) this._loadClickActions();
+            // The click configuration does not change what the map draws: no settings re-read, no repaint for it.
+            if (key === REGION_MAP_CLICK_ACTIONS_KEY) return;
             if (key === '*' || key.startsWith(SETTINGS_PREFIX)) this._loadSettings();
         });
+        /** Resolves once `clickActions` is loaded (the first run's copy of the Region Graph's saved). */
+        this.clickActionsReady = this._loadClickActions();
         this._loadSettings().then(() => this._rebuild());
     }
 
@@ -198,7 +212,22 @@ export class RegionMapUI {
             padding: '3px 6px', borderRadius: '3px', fontSize: '11px', whiteSpace: 'pre', zIndex: '2',
         });
         this.wrap.append(this.canvas, this.tooltip, this.status);
-        this.root.append(bar, this.info, this.notOnMap, this.wrap);
+        // ⛓ The "On click" strip (⚖ R6): its own collapsible section at the top of the panel, outside the toolbar's
+        // controls, keeping the ⏸ master switch when collapsed. The Region Graph's strip, with the Map's settings (R4).
+        this.clickStripHost = el('div', 'region-map-click-strip-host', {
+            padding: '2px 6px', background: '#15151d', borderBottom: '1px solid #2a2a3a',
+        });
+        this.clickStrip = mountClickActionsStrip({
+            panelId: PANEL_ID,
+            container: this.clickStripHost,
+            getSettings: () => this.clickActions,
+            saveSettings: (next) => {
+                this.clickActions = next;
+                saveRegionMapClickActions(settingsManager, next)
+                    .catch((e) => console.warn('regionMap: could not save the click actions', e));
+            },
+        });
+        this.root.append(this.clickStripHost, bar, this.info, this.notOnMap, this.wrap);
         this.container.element?.appendChild(this.root);
 
         const c = this.canvas;
@@ -293,6 +322,22 @@ export class RegionMapUI {
         this.controls.links.checked = !!this.settings.showLinks;
         this.controls.cellSize.value = this.settings.cellSize;
         this.controls.grouping.value = this.settings.groupingRule;
+    }
+
+    /**
+     * Read `moduleSettings.regionMap.clickActions` into `this.clickActions` and the strip. The FIRST run (never
+     * written) copies the Region Graph's resolved config and saves it (`loadRegionMapClickActions`, ⚖ R4).
+     */
+    async _loadClickActions() {
+        try {
+            const { clickActions, copied } = await loadRegionMapClickActions(settingsManager);
+            if (this._disposed) return;
+            this.clickActions = clickActions;
+            if (copied) console.info('regionMap: first run — copied the Region Graph\'s click actions', clickActions);
+        } catch (e) {
+            console.warn('regionMap: could not load the click actions; using the defaults', e);
+        }
+        this.clickStrip?.render();
     }
 
     async _setSetting(key, value) {
@@ -531,9 +576,12 @@ export class RegionMapUI {
 
     /* ── CLICKS (step 4) ─────────────────────────────────────────────── */
 
-    /** The action handles (`regionView/regionActions.js`): THIS module's dispatcher and event bus. */
+    /**
+     * The action handles (`regionView/regionActions.js`): THIS module's dispatcher and event bus, plus the click
+     * actions' extras (`withClickHandles`: the Map's originators, "Show All Regions" off before a path edit).
+     */
     _handles() {
-        return {
+        return withClickHandles({
             dispatcher: moduleHandles.dispatcher,
             eventBus: moduleHandles.eventBus ?? { publish: (event, data) => eventBus.publish(event, data, OWNER) },
             stateManager,
@@ -541,30 +589,37 @@ export class RegionMapUI {
             get gameState() { return getGameStateSingleton(); },
             getRules: () => this._rulesOf() ?? { rules: null, playerId: '1' },
             restart: () => centralRegistry.getPublicFunction?.('menuPanel', 'restart')?.(),
-        };
+        });
     }
 
     /**
      * ⛓ A CLICK on cell `frame` — on location square `square` when there is one (`squareAt`), else on the cell's
-     * region. The toggles and discovery settings are read at click time (async), then the click runs synchronously.
-     * Resolves to the click's record (also kept as `lastClick`, for the in-app rows).
+     * region. The discovery settings are read at click time (async), then the click runs synchronously through the
+     * registry (`runRegionMapClick`) over the panel's `clickActions` as they are at that moment.
+     * Resolves to the click's record (also kept as `lastClick`, for the in-app rows): `result` is the
+     * `runClickActions` answer (`{ ran, reason?, results: [{ id, owner, result }], skipped }`).
      */
     async clickAt(frame, square = null) {
         const view = this.view?.get();
         const members = view?.displayGroups?.get(frame.key)?.members ?? this.model?.cells.get(frame.key)?.members ?? [];
-        const [opts, discovery] = await Promise.all([readClickOptions(settingsManager), readDiscoverySettings(settingsManager)]);
-        const onStatus = (text) => this._flashStatus(text);
+        const discovery = await readDiscoverySettings(settingsManager);
+        const settings = this.clickActions;
         const h = this._handles();
         let record;
+        let status;
         if (square) {
             const regionName = view?.locations?.get(square.location)?.region ?? regionOfCell(frame.key, members);
-            const result = onLocationClick(h, { locationName: square.location, regionName }, opts, discovery, { onStatus });
-            record = { target: 'location', location: square.location, region: regionName, opts, result };
+            const r = runRegionMapClick(h, 'location', { regionName, locationName: square.location }, settings, discovery);
+            status = r.status;
+            record = { target: 'location', location: square.location, region: regionName, result: r.run };
         } else {
             const region = regionOfCell(frame.key, members);
-            const result = onRegionClick(h, region, opts, discovery, { onStatus, data: { id: region, displayKey: frame.key } });
-            record = { target: 'region', region, cell: frame.key, opts, result };
+            const r = runRegionMapClick(h, 'region', { regionName: region, data: { id: region, displayKey: frame.key } },
+                settings, discovery);
+            status = r.status;
+            record = { target: 'region', region, cell: frame.key, result: r.run };
         }
+        if (status) this._flashStatus(status.text);
         this.clickCount += 1;
         this.lastClick = { n: this.clickCount, ...record };
         return this.lastClick;
@@ -821,6 +876,9 @@ export class RegionMapUI {
             counters: { ...this.counters },
             selected: this.selected,
             clickCount: this.clickCount,
+            clickActions: JSON.parse(JSON.stringify(this.clickActions ?? null)),
+            clickStrip: this.clickStrip ? { expanded: this.clickStrip.isExpanded(),
+                summary: this.clickStripHost?.querySelector?.('.click-actions-strip-summary')?.textContent ?? null } : null,
             lastClick: this.lastClick ? JSON.parse(JSON.stringify(this.lastClick)) : null,
             status: this.status?.style.display === 'none' ? null : this.status?.textContent ?? null,
         };
@@ -840,6 +898,7 @@ export class RegionMapUI {
         if (this._paintHandle != null) cancelAnimationFrame(this._paintHandle);
         this._paintHandle = null;
         if (this._statusTimer) clearTimeout(this._statusTimer);
+        this.clickStrip?.destroy();
         this.view?.dispose();
         for (const u of this._unsubs.splice(0)) {
             try { u(); } catch { /* already gone */ }

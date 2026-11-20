@@ -267,6 +267,91 @@ const WASM_START_PROMPT = 'click ▶ Start in the game';
 const PAGE_UP = Object.freeze([WASM_START_PROMPT, 'JS runtime loaded', 'configured', 'ready']);
 
 /**
+ * ⛓ USE THE SAVE / CLEAR (slice `js-save-toggle-clear`, ⚖ Robert 2026-11-19: "update the tutorials to clear the save
+ * first") — start from NO Seedling JS save, so a second run starts as fresh as the first. Two steps, right after the
+ * world is loaded (the room is known then) and before the game page loads it: bring the Flash Panel forward (and note
+ * whether its **Settings** section is open), then open that section, press **Clear this room's save** and close the
+ * section again if it was closed. The button is shown only when the JS runtime is selected (`data-applies`): on wasm
+ * there is no JS save, so both clicks are skipped (`optional`, and the section is opened only when the button is in
+ * it, `:has`). Done = the panel's root says a clear happened since the step began (`data-js-save-cleared-at`), or the
+ * button does not apply. `required` (a feature check that sets the JS runtime itself): the button must be there and
+ * be pressed. ⛔ It does not rewind a game already running with a restored save (the button's log says so).
+ */
+const FLASH_ROOT = { ...FLASH, selector: '.flash-panel-container' };
+const SETTINGS_SECTION = { ...FLASH, selector: '.flash-panel-section-settings' };
+const CLEAR_SAVE_SELECTOR = '.flash-panel-js-save-clear[data-applies="true"]';
+const OPEN_SETTINGS_FOR_CLEAR = {
+    ...FLASH, selector: `.flash-panel-section-settings:not([open]):has(${CLEAR_SAVE_SELECTOR}) > summary`, optional: true,
+};
+const CLEAR_SAVE = { ...FLASH, selector: CLEAR_SAVE_SELECTOR, optional: true };
+// ⛓ USE THE SAVE / CLEAR (Flash) — slice `ruffle-save-toggle-clear` (⚖ Robert 2026-11-19: "tutorials that use Ruffle
+// clear it first"): the Flash (Ruffle) runtime's "Clear the Flash save", shown only when that runtime is selected.
+const CLEAR_RUFFLE_SAVE_SELECTOR = '.flash-panel-ruffle-save-clear[data-applies="true"]';
+const OPEN_SETTINGS_FOR_ANY_CLEAR = {
+    ...FLASH,
+    selector: `.flash-panel-section-settings:not([open]):has(${CLEAR_SAVE_SELECTOR}, ${CLEAR_RUFFLE_SAVE_SELECTOR}) > summary`,
+    optional: true,
+};
+const CLEAR_RUFFLE_SAVE = { ...FLASH, selector: CLEAR_RUFFLE_SAVE_SELECTOR, optional: true };
+// the panel's runtime control has its value once the panel's settings are read (the button's `data-applies` follows it)
+const RUNTIME_CONTROL = { ...FLASH, selector: '.flash-panel-setting[data-setting="runtime"] .flash-panel-setting-input' };
+let settingsWasOpen = null;
+
+export function clearSeedlingJsSave(id, { required = false } = {}) {
+    return clearSeedlingSaveSteps(id, { required, ruffle: false });
+}
+
+/**
+ * ⛓ USE THE SAVE / CLEAR, BOTH RUNTIMES THAT KEEP ONE — `clearSeedlingJsSave`'s two steps, whose press step also
+ * presses the Flash (Ruffle) runtime's **Clear the Flash save** when that runtime is selected. Every click is
+ * optional: on wasm neither button is shown and nothing is pressed. Used by `startSeedlingGame` (a tutorial runs
+ * whichever runtime the person has set).
+ */
+export function clearSeedlingSaves(id) {
+    return clearSeedlingSaveSteps(id, { required: false, ruffle: true });
+}
+
+function clearSeedlingSaveSteps(id, { required, ruffle }) {
+    const clear = required ? { ...FLASH, selector: CLEAR_SAVE_SELECTOR } : CLEAR_SAVE;
+    const text = ruffle
+        ? "Start from no save: in the panel's **Settings** section, press **Clear this room's save** on the **JS** runtime, or **Clear the Flash save** on the **Flash** (Ruffle) runtime (the panel's log says what it removed). On wasm there is no such save, and nothing to press."
+        : "On the **JS** runtime, start from no save: in the panel's **Settings** section, press **Clear this room's save** (the panel's log says what it removed). On wasm there is no JS save, and nothing to press.";
+    const actions = ruffle
+        ? [{ click: OPEN_SETTINGS_FOR_ANY_CLEAR }, { click: clear }, { click: CLEAR_RUFFLE_SAVE }]
+        : [{ click: OPEN_SETTINGS_FOR_CLEAR }, { click: clear }];
+    const root = (ctx) => ctx.query(FLASH_ROOT)?.dataset ?? {};
+    const done = ruffle
+        ? (ctx) => (!ctx.query(CLEAR_SAVE) && !ctx.query(CLEAR_RUFFLE_SAVE)) || ctx.sinceStep(root(ctx).jsSaveClearedAt)
+            || ctx.sinceStep(root(ctx).ruffleSaveClearedAt)
+        : (ctx) => (!required && !ctx.query(CLEAR_SAVE)) || ctx.sinceStep(root(ctx).jsSaveClearedAt);
+    return [
+        {
+            step: {
+                id: `${id}-panel`,
+                text: 'Open the **Flash Panel** tab.',
+                actions: [{ activate: FLASH }],
+                run: (ctx) => { settingsWasOpen = ctx.query(SETTINGS_SECTION)?.open === true; },
+                done: (ctx) => !!ctx.query(FLASH_ROOT) && (ctx.query(RUNTIME_CONTROL)?.value ?? '') !== '',
+                doneTimeoutMs: 30000,
+            },
+        },
+        {
+            step: {
+                id,
+                text,
+                actions,
+                run: (ctx) => {
+                    const section = ctx.query(SETTINGS_SECTION);
+                    if (settingsWasOpen === false && section?.open) section.querySelector('summary')?.click();
+                },
+                done,
+                doneTimeoutMs: 10000,
+            },
+        },
+    ];
+}
+
+/**
  * Start the Seedling game in the Flash Panel, in whichever runtime the person has set (⚖ the user, 2026-10-26:
  * "Work in both"; the setting is never changed). The wasm page waits for a click on its own ▶ Start (a browser lets
  * sound and graphics start only from one), and until then it has not loaded the world's rooms, so the Playback Bot
@@ -278,6 +363,8 @@ const PAGE_UP = Object.freeze([WASM_START_PROMPT, 'JS runtime loaded', 'configur
  */
 export function startSeedlingGame(id) {
     return [
+        // ⛓ USE THE SAVE / CLEAR — first, no Seedling JS or Flash (Ruffle) save (a no-op on wasm)
+        ...clearSeedlingSaves(`${id}-clear-save`),
         {
             step: {
                 id: `${id}-page`,

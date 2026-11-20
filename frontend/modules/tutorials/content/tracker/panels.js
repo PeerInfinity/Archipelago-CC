@@ -107,8 +107,16 @@ export const TRACKER_REGION_GRAPH = tracker({
             },
             {
                 step: {
+                    id: 'open-click-strip',
+                    text: 'The **On click** strip at the top says what a click does: on a region, extend the path to it and show it in the Regions panel; on a location, check it. Unfold it with **▸** to choose; **⏸** turns every click action off.',
+                    actions: [{ click: { ...GRAPH, selector: '.click-actions-strip[data-expanded="false"] .click-actions-strip-toggle', optional: true } }],
+                    done: (ctx) => ctx.query({ ...GRAPH, selector: '.click-actions-strip-body' })?.style?.display === 'block',
+                },
+            },
+            {
+                step: {
                     id: 'open-controls',
-                    text: 'Press **+** beside *Controls*. **On Region Node Click** says what a click on a region does: move the player there, show it in the Regions panel, add it to the path.',
+                    text: 'Press **+** beside *Controls* for the graph\'s own settings: the view, the layout, and which locations it draws.',
                     actions: [{ click: { ...GRAPH, selector: '#controlsHeader', optional: true } }],
                     done: (ctx) => ctx.text({ ...GRAPH, selector: '#toggleControls' }) === '−',
                 },

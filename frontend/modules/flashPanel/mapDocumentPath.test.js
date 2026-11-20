@@ -241,7 +241,15 @@ describe('T4 — a preset\'s map_document reaches the wiring through the catch-u
             playerId: '1',
             gameConfig: {},
             baseUrl: 'http://example.test/frontend/',
-            fetchJson: async (u) => { asked.push(u); throw new Error('not served in this row'); },
+            fetchJson: async (u) => {
+                asked.push(u);
+                // ⛓ slice G — the served atlas index is asked first (the rules name an atlas id); it is served,
+                // so the guard passes and the row reaches the documents it is about.
+                if (u.endsWith('/atlas_files.json')) {
+                    return JSON.parse(source('frontend/modules/flashPanel/atlases/atlas_files.json'));
+                }
+                throw new Error('not served in this row');
+            },
             importModule: async () => ({}),
         });
         expect(asked).toContain(`http://example.test/frontend/${ATLAS_DIR}other-map.json`);

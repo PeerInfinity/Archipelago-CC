@@ -61,14 +61,24 @@
  *   T5. MANUAL (running) + ▶ load in wasm: ONE strip, under the wasm frame, with Esc, and a held d-pad MOVES the
  *       real game's player. (Headless WebGPU, `HEADLESS_WEBGPU_ARGS` — the launch every headless wasm gate uses.)
  *
+ * ⛓ lab-load-flake-evidence: T2's wait for `play` times out in ≈1.5% of CI attempts, green on rerun. When T1/T2 fails
+ * after ▶ load in JS, its ONE FAIL line (the only kind `ci-gates.mjs` copies to the CI log) also says where the lab
+ * and the frame stood — the lab's `__editorJs` stage/reached/refusal and painted stage, MANUAL's buttons; the frame's
+ * `__seedlingJsSound.started` before the tap and now, `#btn-start` and what was at its tap point (in the frame and on
+ * the lab page), its `#status` and `botStatus`, each read twice 0.5 s apart, and the time from tap to failure — and
+ * keeps `evidence.json` and the page's and frame's DOM (`page.html`, `frame.html` — no pixels: in that state every
+ * capture hangs, measured) under `test-results/seedling-lab-load-flake/<UTC>/` (uploaded by the browser shard's
+ * `if: failure()` step). Read-only; a green run prints exactly what it did before.
+ *
  *   node scripts/procgen/check-seedling-lab-load-in-js.mjs [--host=http://localhost:8000] [--shots=<dir>]
  *        [--only=touch]   (the TOUCH section alone)
  *
  * Exits 0 when every check passes (or SKIPs with no dev server), 1 otherwise. Takes the box lock (kind `browser`).
  */
 import { chromium } from '@playwright/test';
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
@@ -435,6 +445,7 @@ async function touchSection({ PAGE, TAPE, check, SHOTS }) {
     };
 
     // T1 + T2 — MANUAL, then ▶ load in JS on the SAME page, MANUAL's run still going.
+    let loadJs = null;
     {
         const { ctx, page, cdp, errors } = await phone(`source=manual&boot=${BOOT}&speed=1`);
         try {
@@ -472,9 +483,15 @@ async function touchSection({ PAGE, TAPE, check, SHOTS }) {
             step = 'waitForFunction () => !document.getElementById(loadJs).disabled, null, { t';
             await page.waitForFunction(() => !document.getElementById('loadJs').disabled, null, { timeout: 120000 });
             await page.tap('#loadJs');
+            loadJs = { page, frame: null, pre: null, tappedAt: 0 };
             const frame = await frameOf(page, /\/jsRuntime\.html/);
+            loadJs.frame = frame;
             step = 'waitForSelector #frame + .flash-touch-controls, { timeout: 30000 });';
             await page.waitForSelector('#frame + .flash-touch-controls', { timeout: 60000 });
+            // Snapshot once the button is up (what the tap itself waits for), so `pre` is what it aimed at.
+            await frame?.waitForSelector('#btn-start', { state: 'visible', timeout: 30000 }).catch(() => {});
+            loadJs.pre = await tapTarget(page, frame);
+            loadJs.tappedAt = Date.now();
             await frame.tap('#btn-start');
             step = 'waitForFunction () => window.__editorJs?.stage === play || window.__editor';
             await page.waitForFunction(() => window.__editorJs?.stage === 'play' || window.__editorJs?.refusal, null,
@@ -495,7 +512,9 @@ async function touchSection({ PAGE, TAPE, check, SHOTS }) {
             if (SHOTS) await shot(page, 'touch-manual-plus-js.png');
             check(errors.length === 0, 'touch T1/T2: no page errors', errors.join(' | '));
         } catch (e) {
-            check(false, 'touch T1/T2: the case ran to its end', `at [${step}] ${e.message.split('\n')[0]}`);
+            // ⛓ lab-load-flake-evidence: past ▶ load in JS, the line also says WHERE the lab and the frame stood.
+            const where = loadJs ? ` · ${await loadJsEvidence(loadJs)}` : '';
+            check(false, 'touch T1/T2: the case ran to its end', `at [${step}] ${e.message.split('\n')[0]}${where}`);
         } finally {
             await ctx.close();
         }
@@ -618,6 +637,159 @@ async function touchSection({ PAGE, TAPE, check, SHOTS }) {
         }
     }
     await browser.close();
+}
+
+/**
+ * ⛓ lab-load-flake-evidence — WHERE T2's ▶ load in JS stood when it failed (≈1.5% of CI attempts time out waiting for
+ * `__editorJs.stage === 'play'`, green on rerun). READ-ONLY: it reads what the lab and the frame already expose and
+ * changes nothing; every read is bounded, so a dead page still yields a line.
+ *
+ * `tapTarget` — the frame's `#btn-start` (shown/enabled, its centre = where `frame.tap` aims), what element is at that
+ * point inside the frame and on the lab page (the IFRAME itself, or something over it), and the frame's own
+ * `__seedlingJsSound.started` (did a Start land). Taken just before the tap (`pre`) and again at the failure (`now`).
+ */
+const within = (p, ms = 5000) => Promise.race([p, new Promise((_, reject) => {
+    setTimeout(() => reject(new Error(`no answer in ${ms} ms`)), ms).unref();
+})]);
+async function tapTarget(page, frame) {
+    try {
+        const f = await within(frame.evaluate(() => {
+            const tag = (el) => (el ? `${el.tagName}${el.id ? `#${el.id}` : ''}`
+                + `${typeof el.className === 'string' && el.className ? `.${el.className.split(/\s+/)[0]}` : ''}`
+                : 'none');
+            const b = document.getElementById('btn-start');
+            const started = window.__seedlingJsSound?.started ?? null;
+            if (!b) return { btn: 'absent', started };
+            const r = b.getBoundingClientRect();
+            const x = r.x + r.width / 2;
+            const y = r.y + r.height / 2;
+            const shown = getComputedStyle(b).display !== 'none' && r.width > 0;
+            return { btn: `${shown ? 'shown' : 'hidden'},${b.disabled ? 'disabled' : 'enabled'}`, started,
+                x: Math.round(x), y: Math.round(y), w: Math.round(r.width), h: Math.round(r.height),
+                hitFrame: shown ? tag(document.elementFromPoint(x, y)) : '-' };
+        }));
+        const p = await within(page.evaluate(({ x, y }) => {
+            const el = document.getElementById('frame');
+            if (!el) return { hitPage: 'no #frame' };
+            const r = el.getBoundingClientRect();
+            const px = r.x + el.clientLeft + x;
+            const py = r.y + el.clientTop + y;
+            const hit = document.elementFromPoint(px, py);
+            const inView = px >= 0 && py >= 0 && px < innerWidth && py < innerHeight;
+            return { px: Math.round(px), py: Math.round(py), inView,
+                hitPage: hit ? `${hit.tagName}${hit.id ? `#${hit.id}` : ''}${typeof hit.className === 'string'
+                    && hit.className ? `.${hit.className.split(/\s+/)[0]}` : ''}` : 'none' };
+        }, { x: f.x ?? 0, y: f.y ?? 0 }));
+        return { ...f, ...p };
+    } catch (e) {
+        return { err: e.message.split('\n')[0] };
+    }
+}
+
+/**
+ * The one line T1/T2's FAIL carries past ▶ load in JS, and the files it keeps (`keepLoadEvidence`). What separates
+ * the causes:
+ *   - Start never landed: `started=false`, the button still `shown,enabled`, and the hit at the tap point;
+ *   - the frame started but the lab never heard: `started=true`, the lab's stage short of `start`, `bot` answering;
+ *   - the run started and stalled: the stage past `start` (levels/spot), and whether `#status` still ticks over 0.5 s.
+ */
+async function loadJsEvidence({ page, frame, pre, tappedAt }) {
+    const ev = { tapToFail: tappedAt ? `${((Date.now() - tappedAt) / 1000).toFixed(1)}s` : 'never tapped', pre };
+    try {
+        ev.lab = await within(page.evaluate(() => {
+            const js = window.__editorJs ?? null;
+            const $ = (id) => document.getElementById(id);
+            return {
+                stage: js?.stage ?? null, reached: js?.reached ?? null, refusal: js?.refusal ?? null,
+                painted: ($('wasmStage')?.textContent ?? '').replace(/\s+/g, ' ').slice(0, 90),
+                manual: `start ${$('manualStart')?.disabled ? 'off' : 'on'}`
+                    + `/stop ${$('manualStop')?.disabled ? 'off' : 'on'}`,
+            };
+        }));
+    } catch (e) { ev.lab = { err: e.message.split('\n')[0] }; }
+    if (frame) {
+        ev.frameUrl = frame.url();
+        ev.detached = frame.isDetached();
+        ev.now = await tapTarget(page, frame);
+        const side = () => within(frame.evaluate(() => {
+            let bot;
+            try {
+                const fn = window.__swfBridge?.game?.botStatus;
+                if (typeof fn !== 'function') bot = 'no botStatus';
+                else {
+                    const st = JSON.parse(fn());
+                    bot = { tick: st.tick, level: st.level, x: st.x, y: st.y, finished: st.finished ?? null,
+                        halted: st.halted ?? null };
+                }
+            } catch (e) { bot = `threw: ${e.message}`; }
+            return { ready: document.readyState, runtimeReady: window.__runtimeReady ?? null,
+                status: (document.getElementById('status')?.textContent ?? '').replace(/\s+/g, ' ').slice(0, 70),
+                gfx: window.__seedlingJsGraphics?.status ?? null, bot };
+        }));
+        try {
+            ev.frame = await side();
+            await page.waitForTimeout(500);
+            const again = await side();
+            ev.frame.botAfter500ms = again.bot;
+            ev.frame.statusAfter500ms = again.status;
+        } catch (e) { ev.frame = { err: e.message.split('\n')[0] }; }
+    } else ev.frameUrl = 'no jsRuntime.html frame';
+    ev.kept = await keepLoadEvidence(page, frame, ev);
+
+    const t = (x) => {
+        if (!x) return '?';
+        if (x.err) return `(${x.err})`;
+        const at = x.x === undefined ? ''
+            : `@(${x.px},${x.py} ${x.w}×${x.h}${x.inView === false ? ' OFF-VIEW' : ''})`;
+        return `${x.btn}${at} hit page=${x.hitPage} frame=${x.hitFrame ?? '-'}`;
+    };
+    const b = (x) => (typeof x === 'object' && x
+        ? `tick ${x.tick} lvl ${x.level} (${x.x},${x.y})${x.finished ? ' finished' : ''}`
+            + `${x.halted ? ` HALTED ${x.halted}` : ''}`
+        : String(x));
+    const L = ev.lab ?? {};
+    const F = ev.frame ?? {};
+    return [
+        `tap→fail ${ev.tapToFail}`,
+        L.err ? `lab: (${L.err})` : `lab: stage=${L.stage} reached=[${(L.reached ?? []).join(' ')}]`
+            + ` refusal=${L.refusal ?? '-'} `
+            + `painted="${L.painted}" manual=${L.manual}`,
+        `frame: started pre=${pre ? String(pre.started) : '?'} now=${ev.now ? String(ev.now.started) : '?'}`
+            + ` ready=${F.ready ?? '?'}`
+            + `${ev.detached ? ' DETACHED' : ''} status="${F.status ?? (F.err ? `(${F.err})` : '?')}"`
+            + `${F.statusAfter500ms !== undefined && F.statusAfter500ms !== F.status
+                ? ` → +0.5s "${F.statusAfter500ms}"` : ' (same +0.5s)'} gfx=${F.gfx ?? '-'}`,
+        `btn pre=${t(pre)}; now=${t(ev.now)}`,
+        `bot ${b(F.bot)} → +0.5s ${b(F.botAfter500ms)}`,
+        `url ${String(ev.frameUrl).replace(/^https?:\/\/[^/]+/, '')}`,
+        `kept: ${ev.kept}`,
+    ].join(' · ');
+}
+
+/**
+ * What T1/T2 keeps under `test-results/seedling-lab-load-flake/<UTC>/`: `evidence.json` (everything the line was made
+ * from) and the lab page's and the frame's DOM as they stood (`page.html`, `frame.html`).
+ * ⛔ NO PIXELS, MEASURED: from the frame's ▶ Start onward (and in the stuck state, Start pressed or not), every read
+ * of pixels gave NO answer — Playwright's `page.screenshot`, a raw CDP `Page.captureScreenshot`, and a canvas
+ * `toDataURL` (which then took the page's later evaluates down with it). And a hung capture stays queued: the touch
+ * section's tail took 12-16 min after it, against ~4 min green, which a CI shard's step deadline would cut. A green
+ * run's `--shots` pictures are taken after the run settles, where captures answer.
+ */
+async function keepLoadEvidence(page, frame, ev) {
+    try {
+        const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const dir = join(fileURLToPath(new URL('../../', import.meta.url)),
+            'test-results', 'seedling-lab-load-flake', stamp);
+        mkdirSync(dir, { recursive: true });
+        writeFileSync(join(dir, 'evidence.json'), `${JSON.stringify(ev, null, 2)}\n`);
+        for (const [name, w] of [['page.html', page], ['frame.html', frame]]) {
+            if (!w) continue;
+            await within(w.content()).then((html) => writeFileSync(join(dir, name), html), () => {});
+        }
+        return dir;
+    } catch (e) {
+        return `(could not keep them: ${e.message.split('\n')[0]})`;
+    }
 }
 
 if (isEntryPoint(import.meta.url)) main();

@@ -2,7 +2,7 @@ import { registerTest } from '../testRegistry.js';
 import { stateManagerProxySingleton } from '../../stateManager/index.js';
 import { buildContext } from '../../tutorials/tutorialContext.js';
 import { PICKER } from '../../regionGraph/nodePicker.js';
-import { locationState } from '../../regionView/regionViewModel.js';
+import { locationState, isRegionReachable } from '../../regionView/regionViewModel.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 
 const PANEL_ID = 'regionGraphPanel';
@@ -338,8 +338,8 @@ export async function testNodeSelection(testController) {
   // position, which Cytoscape turns into 'tap' — publishes
   // regionGraph:nodeSelected { nodeId, data } and marks the node selected.
   // The only row through the canvas → tap → handler wiring (the picker calls
-  // the handler directly). The tap also runs the "On Region Node Click"
-  // options (it may move the player), so the world loaded before is reloaded.
+  // the handler directly). The tap also runs the panel's "On click"
+  // actions (it may move the player), so the world loaded before is reloaded.
   const ctx = buildContext({ eventBus: testController.eventBus });
   const before = ctx.rulesSource();
   let nodeSelectedEvent = null;
@@ -527,6 +527,195 @@ export async function testRegionGraphLocationNodesSurviveRebuild(testController)
   return testController.getOverallResult();
 }
 
+/* ── CA-S2: the "On click" strip and the click actions ─────────────────── */
+
+const CLICK_ACTIONS = 'moduleSettings.regionGraph.clickActions';
+const STRIP_SUMMARY = '.region-graph-panel-container .click-actions-strip-summary';
+const stripSummary = () => document.querySelector(STRIP_SUMMARY)?.textContent ?? '';
+
+/**
+ * Open the graph, set this row's click actions (session-only, `ctx.setSetting`; `ctx.restoreSettings` puts them back)
+ * and wait until the strip shows them (the panel holds what a click reads). → the Cytoscape instance.
+ * `alttp`: load ALTTP first (a known world with somewhere to walk from the start; the caller reloads the world
+ * loaded before) — the world a solo run boots into may have no reachable exit from its start.
+ */
+async function clickActionsSetUp(testController, ctx, clickActions, expectSummary, { alttp = false } = {}) {
+  testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+  let built = await testController.pollForCondition(graphShowsWorld, 'the graph shows the current world', MAX_WAIT_TIME, 100);
+  if (!built) throw new Error('the graph did not build');
+  if (alttp) {
+    const oldNode = regionNodes(graphCy())[0];
+    await testController.loadALTTPRules();
+    built = await testController.pollForCondition(() => !!oldNode?.removed() && graphShowsWorld(),
+      'the graph rebuilt for ALTTP', MAX_WAIT_TIME, 100);
+    if (!built) throw new Error('the graph did not rebuild for ALTTP');
+  }
+  await ctx.setSetting(CLICK_ACTIONS, clickActions);
+  const shown = await testController.pollForCondition(() => stripSummary() === expectSummary,
+    `the strip shows "${expectSummary}"`, 5000, 50);
+  testController.reportCondition(`the "On click" strip reads "${expectSummary}" (now "${stripSummary()}")`, shown);
+  return graphCy();
+}
+
+/** The region the path (or, with no path, the player) ends at. */
+async function pathEnd() {
+  const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+  const gs = getGameStateSingleton();
+  return gs.getLastRegionInPath?.() || gs.getCurrentRegion?.();
+}
+
+/**
+ * A REACHABLE region one exit away from where the path ends, sorted for a stable pick. (An accessible region is not
+ * necessarily walkable from there — ALTTP's Menu is reachable, but has no walk back from Overworld — so the pick
+ * follows an exit out of the path end.) Reachability is read from the snapshot, not from the graph's colour
+ * classes, which a cold build applies a moment later. Polled: the first snapshot can arrive after the build.
+ */
+async function accessibleTarget(testController, cy) {
+  let found = null;
+  await testController.pollForCondition(async () => {
+    const end = await pathEnd();
+    const from = cy.getElementById(end);
+    const snapshot = stateManagerProxySingleton.getLatestStateSnapshot?.();
+    if (!from?.length || !snapshot) return false;
+    found = from.connectedEdges().filter((e) => e.source().id() === end).targets()
+      .filter((n) => n.id() !== end && !n.hasClass('player') && !n.hasClass('location-node')
+        && !n.hasClass('discovery-hidden') && isRegionReachable(snapshot, n.id()))
+      .sort((a, b) => (a.id() < b.id() ? -1 : 1))[0] ?? null;
+    return !!found;
+  }, 'a reachable region one exit from the path end', MAX_WAIT_TIME, 100);
+  return found;
+}
+
+/** Record the given events (and their payloads) until `stop()`. */
+function recordEvents(testController, names) {
+  const seen = [];
+  const offs = names.map((name) => testController.eventBus.subscribe(name, (data) => seen.push([name, data]), 'tests'));
+  return { seen, stop: () => offs.forEach((off) => off?.()) };
+}
+
+/**
+ * The DEFAULT click (CA-S2): a tap on an accessible region extends the path to it (route from the path end, all the
+ * way) and opens the Regions panel at it (`regions.open`, registered by the Regions module). Sets its own state.
+ */
+export async function testRegionGraphClickDefault(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  let rec = null;
+  try {
+    const { defaultClickActions } = await import('../../regionView/clickActions.js');
+    const cy = await clickActionsSetUp(testController, ctx, defaultClickActions(), 'On click: extend path · Regions — location: check',
+      { alttp: true });
+    const target = await accessibleTarget(testController, cy);
+    if (!target) throw new Error(`no reachable region one exit from the path end (${await pathEnd()})`);
+    const region = target.id();
+    // Recorded from here: the row's own panel activation (the setup) is not the click's.
+    rec = recordEvents(testController, ['regionGraph:nodeSelected', 'ui:activatePanel', 'ui:navigateToRegion']);
+    target.emit('tap');
+    const extended = await testController.pollForCondition(async () => (await pathEnd()) === region,
+      `the path ends at ${region}`, 5000, 50);
+    testController.reportCondition(`a click on "${region}" extends the path to it (it ends at ${await pathEnd()})`, extended);
+    const opened = await testController.pollForCondition(
+      () => rec.seen.some(([n, d]) => n === 'ui:navigateToRegion' && d?.regionName === region), 'ui:navigateToRegion', 3000, 50);
+    testController.reportCondition('… and opens the Regions panel at it (ui:activatePanel regionsPanel, then ui:navigateToRegion)',
+      opened && rec.seen.some(([n, d]) => n === 'ui:activatePanel' && d?.panelId === 'regionsPanel'));
+    const order = rec.seen.map(([n]) => n);
+    testController.reportCondition(`regionGraph:nodeSelected is published first (${order.join(', ')})`,
+      order[0] === 'regionGraph:nodeSelected' && rec.seen[0][1]?.nodeId === region);
+  } catch (error) {
+    testController.reportCondition(`default click test error-free: ${error.message}`, false);
+  } finally {
+    rec?.stop();
+    await ctx.restoreSettings();
+    await restoreWorld(testController, ctx, before, { always: true });
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
+/**
+ * The ⏸ MASTER SWITCH off (CA-S2): a tap moves nobody, edits no path, opens no Regions panel — but
+ * `regionGraph:nodeSelected` is still published (it stays outside the click actions until S5). Sets its own state.
+ */
+export async function testRegionGraphClickMasterOff(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  let rec = null;
+  let changed = true; // until the row has seen the path unchanged
+  try {
+    const { defaultClickActions } = await import('../../regionView/clickActions.js');
+    const cy = await clickActionsSetUp(testController, ctx, { ...defaultClickActions(), enabled: false }, 'On click: ⏸ paused');
+    const master = document.querySelector('.region-graph-panel-container .click-actions-strip-master');
+    testController.reportCondition('the collapsed strip shows the master switch, paused (▶)', master?.textContent === '▶');
+    // Any reachable region but the path end: with the master switch on, `regions.open` would publish for it whether
+    // or not a walk exists, so its silence is the switch's. (No world load: this row changes nothing when it passes.)
+    const endBefore = await pathEnd();
+    const snapshot = stateManagerProxySingleton.getLatestStateSnapshot?.();
+    const target = regionNodes(cy).filter((n) => n.id() !== endBefore && !n.hasClass('discovery-hidden')
+      && isRegionReachable(snapshot, n.id())).sort((a, b) => (a.id() < b.id() ? -1 : 1))[0] ?? null;
+    if (!target) throw new Error(`no reachable region but the path end (${endBefore})`);
+    const region = target.id();
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+    const pathBefore = JSON.stringify(getGameStateSingleton().getPath?.() ?? []);
+    // Recorded from here: the row's own panel activation (the setup) is not the click's.
+    rec = recordEvents(testController, ['regionGraph:nodeSelected', 'ui:activatePanel', 'ui:navigateToRegion']);
+    target.emit('tap');
+    const selected = await testController.pollForCondition(
+      () => rec.seen.some(([n, d]) => n === 'regionGraph:nodeSelected' && d?.nodeId === region), 'regionGraph:nodeSelected', 3000, 50);
+    testController.reportCondition(`master off: regionGraph:nodeSelected is still published for "${region}"`, selected);
+    await new Promise((r) => setTimeout(r, 750)); // what a click would do, it would have done by now
+    changed = !((await pathEnd()) === endBefore && JSON.stringify(getGameStateSingleton().getPath?.() ?? []) === pathBefore);
+    testController.reportCondition(`master off: no move, no path edit (the path still ends at ${await pathEnd()})`, !changed);
+    testController.reportCondition('master off: no Regions-panel change (no ui:activatePanel / ui:navigateToRegion)',
+      !rec.seen.some(([n]) => n === 'ui:activatePanel' || n === 'ui:navigateToRegion'));
+  } catch (error) {
+    testController.reportCondition(`master-off click test error-free: ${error.message}`, false);
+  } finally {
+    rec?.stop();
+    await ctx.restoreSettings();
+    await restoreWorld(testController, ctx, before, { always: changed });
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
+/**
+ * A LOCATION click with the location action "Check it now" (CA-S2): the location is checked. Through the "Go to"
+ * picker's location box, which calls the location handler as a location-node tap does. Sets its own state.
+ */
+export async function testRegionGraphClickLocationCheck(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  try {
+    const { defaultClickActions } = await import('../../regionView/clickActions.js');
+    const settings = defaultClickActions();
+    settings.location['path.check'] = 'now';
+    await clickActionsSetUp(testController, ctx, settings, 'On click: extend path · Regions — location: check');
+    const section = document.querySelector(`.region-graph-panel-container ${PICKER.section}`);
+    if (!section) throw new Error('no picker section in the Region Graph controls');
+    const staticData = stateManagerProxySingleton.getStaticData();
+    let target = null;
+    for (const [regionName, regionData] of staticData?.regions ?? []) {
+      for (const location of regionData?.locations ?? []) {
+        if (!target && locationState(ctx.snapshot(), staticData, location, { regionName }) === 'accessible') target = location.name;
+      }
+    }
+    if (!target) throw new Error('no accessible unchecked location');
+    const input = section.querySelector(PICKER.location);
+    input.value = target;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    const checked = await testController.pollForCondition(
+      () => (ctx.snapshot()?.checkedLocations ?? []).includes(target), `${target} checked`, 5000, 100);
+    testController.reportCondition(`a click on location "${target}" (check it now) checks it`, checked);
+  } catch (error) {
+    testController.reportCondition(`location check click test error-free: ${error.message}`, false);
+  } finally {
+    await ctx.restoreSettings();
+    await restoreWorld(testController, ctx, before, { always: true });
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
 // Register all tests
 registerTest({
   id: 'test_region_graph_panel_activation',
@@ -598,4 +787,31 @@ registerTest({
   testFunction: testRegionGraphLocationNodesSurviveRebuild,
   enabled: false, // runs where a roster enrols it (the substrates config)
   description: 'force-show written through the settings draws the location nodes, and a later moduleSettings.regionGraph.* write (which rebuilds the graph) leaves them drawn'
+});
+
+registerTest({
+  id: 'test_region_graph_click_default',
+  name: 'Region Graph: the default click extends the path and opens the Regions panel',
+  category: 'Region Graph',
+  testFunction: testRegionGraphClickDefault,
+  enabled: false, // runs where a roster enrols it (the substrates config)
+  description: 'CA-S2: with the default click actions, a tap on an accessible region extends the path to it and opens the Regions panel at it; regionGraph:nodeSelected comes first'
+});
+
+registerTest({
+  id: 'test_region_graph_click_master_off',
+  name: 'Region Graph: the ⏸ master switch off — no action, nodeSelected still published',
+  category: 'Region Graph',
+  testFunction: testRegionGraphClickMasterOff,
+  enabled: false, // runs where a roster enrols it (the substrates config)
+  description: 'CA-S2: with clickActions.enabled false, a tap moves nobody, edits no path and opens no Regions panel, but still publishes regionGraph:nodeSelected'
+});
+
+registerTest({
+  id: 'test_region_graph_click_location_check',
+  name: 'Region Graph: a location click checks it now',
+  category: 'Region Graph',
+  testFunction: testRegionGraphClickLocationCheck,
+  enabled: false, // runs where a roster enrols it (the substrates config)
+  description: 'CA-S2: with the location action "check it now", a location click (through the Go to picker) checks it'
 });

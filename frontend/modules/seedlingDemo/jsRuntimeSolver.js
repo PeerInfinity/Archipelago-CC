@@ -360,11 +360,195 @@ export const deadlineOf = (answer) => (answer?.ok ? answer.plan?.deadline : answ
 export function betterAnswer(best, next) {
     if (!next || next.kind === 'skipped') return false;
     if (!best || best.kind === 'skipped') return true;
-    if (best.ok) return next.ok === true && next.plan.solution.length < best.plan.solution.length;
+    if (best.ok) {
+        // ⛓ HIT-AWARE ANSWER (OFF) — between two plans with DIFFERENT model hit verdicts, the hitless one wins.
+        const verdict = HIT_AWARE_ANSWER.enabled && next.ok === true ? hitVerdictOrder(best.plan, next.plan) : null;
+        if (verdict !== null) return verdict;
+        // ⛓ FEWER-HITS RANK (OFF) — between two plans that BOTH take a hit: fewer hits, then fewer deaths, then ticks.
+        const fewer = FEWER_HITS_RANK.enabled && next.ok === true ? fewerHitsOrder(best.plan, next.plan) : null;
+        if (fewer !== null) return fewer;
+        return next.ok === true && next.plan.solution.length < best.plan.solution.length;
+    }
     // ⛓ DETERMINISTIC BUDGET — a refusal cut by its deadline is not the fuller search's word: it never
     // replaces a refusal that was not cut (the dashless decline leads, as when a page cut the full pass).
     if (!next.ok && next.deadline && !best.deadline) return false;
     return true;
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE HIT-TIEBREAK — **THE ANYTIME RANKING READS THE MODEL'S OWN HIT VERDICT**
+ * (`HIT_AWARE_ANSWER`, ON by default since the HIT-FLIP; `SEEDLING_HIT_AWARE_ANSWER=0` opts out). ⚖ The user,
+ * 2026-11-17: *"Slice it now (Recommended)"* (`CC/docs/cloud-reports/seedling-hammer-hit-tiebreak.md`); the flip,
+ * 2026-11-18T04:33Z: *"Flip ON, 3 sweeps (Recommended)"*.
+ *
+ * MEASURED: `betterAnswer` kept the later pass's plan on length alone, so a shorter plan the MODEL plays into a hit
+ * beat a longer one it plays hitless (L30 `bosslock@64,32` from L31: dashless 255 t hitless, full 191 t three hits and
+ * a death; L12 `bosslock@416,240` from L95 under FADE_MOVE: dashless 680 t hitless, full 632 t two punches). Both
+ * verdicts are the model's: the run each pass's segment ENDED on (the shadow, or the fork a rewind adopted) holds the
+ * hits in its `playerHits` ledger and the deaths in its rows — nothing the game alone sees.
+ *
+ * ON: `solveFromTape` stamps each plan with `modelHits` (`{hits, deaths}`: the ledger rows and deaths the plan's own
+ * ticks added, the prefix excluded), and `betterAnswer` ranks two plans whose verdicts differ by the verdict alone — a
+ * plan the model predicts hitless beats one it predicts takes a hit, whatever their lengths. Same verdict (or a plan
+ * with no stamp) → today's rule (strictly fewer ticks; a tie keeps the first). Refusals and skipped passes: unchanged.
+ * OFF: no stamp, no read — byte-identical.
+ *
+ * ⛓ THE THREAD: `betterAnswer` runs inside `solveAnytime`, i.e. in the page's SOLVE WORKER (and in node); no
+ * main-thread mapper reads it, so the worker's env channel (`?seedlingSolverEnv=SEEDLING_HIT_AWARE_ANSWER=0`) is the
+ * whole page wiring. `withHitAwareAnswer(enabled, fn)` for a row.
+ */
+export const HIT_AWARE_ANSWER = { enabled: globalThis.process?.env?.SEEDLING_HIT_AWARE_ANSWER !== '0' };
+export const HIT_AWARE_ANSWER_DEFAULT = true;
+
+/** Run `fn` with `HIT_AWARE_ANSWER` set to `enabled`, restoring the previous value. */
+export function withHitAwareAnswer(enabled, fn) {
+    const was = HIT_AWARE_ANSWER.enabled;
+    HIT_AWARE_ANSWER.enabled = enabled === true;
+    try { return fn(); } finally { HIT_AWARE_ANSWER.enabled = was; }
+}
+
+/** ⛓ HIT-AWARE ANSWER — does the model predict `plan` takes a hit (or dies)? null = the plan carries no verdict. */
+export function planTakesHit(plan) {
+    const m = plan?.modelHits;
+    if (!m || typeof m !== 'object') return null;
+    return (m.hits ?? 0) > 0 || (m.deaths ?? 0) > 0;
+}
+
+/**
+ * ⛓ HIT-AWARE ANSWER — the verdict order of two plans: true = `next` (hitless) beats `best` (hit), false = `best`
+ * (hitless) beats `next` (hit), null = the same verdict, or either plan unknown (today's length rule decides).
+ */
+export function hitVerdictOrder(bestPlan, nextPlan) {
+    const b = planTakesHit(bestPlan);
+    const n = planTakesHit(nextPlan);
+    if (b === null || n === null || b === n) return null;
+    return b && !n;
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE FEWER-HITS — **A THIRD, HIT-AVOIDING PASS** (`HIT_AVOID_PASS`, OFF; `SEEDLING_HIT_AVOID_PASS=1`)
+ * and **FEWER HITS FIRST BETWEEN TWO HIT PLANS** (`FEWER_HITS_RANK`, OFF; `SEEDLING_FEWER_HITS_RANK=1`). ⚖ The user,
+ * 2026-11-19: *"Fewer-hits ranking (Recommended)"* (`CC/docs/cloud-reports/seedling-hammer-fewer-hits.md`).
+ *
+ * MEASURED (page, seed 1, L30 `bosslock@64,32` from L28): the leg's hit is a CONTINUATION's — an item delivery replans
+ * the walk at t57 or t58 (the page's timing), and from t57 BOTH passes of the replan take a hit (dashless 103 t, full
+ * 101 t, one hit each) while from t58 the full pass is hitless (98 t). The same request with ONE idle tick first gives
+ * a hitless dashless plan (96 t + 1). The hit is a PHASE question: the bodies' motion against the start tick.
+ *
+ * HIT_AVOID_PASS ON: when the passes are done and the plan in hand still takes a model hit (`planTakesHit`; it needs
+ * the `modelHits` stamp, i.e. `HIT_AWARE_ANSWER` ON), the FIRST pass's search is re-run from a start `delay` ticks
+ * later (`delay` = 1 … `HIT_AVOID_MAX_DELAY`, the player standing still — empty key sets — for those ticks), and the
+ * first plan the model plays hitless over the idle ticks AND its own is the pass's answer (`pass: 'hit-avoid'`, its
+ * `delay`). Its ticks are counted from the original start (the idle ticks are the plan's first ticks), so the ranking
+ * compares like with like; a hitless plan beats the hit one by `betterAnswer`'s verdict rule. It runs on the attempt's
+ * work clock: the budget still binds, and the pass itself stops after `upgradeWindowWork` units of its own (the
+ * "upgrade briefly, then ship" rule). It costs nothing on a leg whose plan is hitless — it never runs there.
+ * ⚖ No-hit logic: the pass only ever ADDS a hitless candidate; it never makes a hit plan acceptable.
+ *
+ * FEWER_HITS_RANK ON: between two plans with the SAME verdict and both taking a hit, fewer model hits wins, then
+ * fewer deaths, then strictly fewer ticks (a tie keeps the first). A fallback improvement only.
+ *
+ * OFF (both): the pass never runs and `betterAnswer` never reads the counts — byte-identical.
+ * ⛓ THE THREAD: both run inside `solveAnytime`, i.e. the page's SOLVE WORKER (and node); the worker's env channel
+ * (`?seedlingSolverEnv=SEEDLING_HIT_AVOID_PASS=1`) is the whole page wiring. The pass does not post an `onPass`.
+ */
+export const HIT_AVOID_PASS = { enabled: globalThis.process?.env?.SEEDLING_HIT_AVOID_PASS === '1' };
+export const HIT_AVOID_PASS_DEFAULT = false;
+export const FEWER_HITS_RANK = { enabled: globalThis.process?.env?.SEEDLING_FEWER_HITS_RANK === '1' };
+export const FEWER_HITS_RANK_DEFAULT = false;
+/** ⛓ HIT-AVOID PASS — the latest start (idle ticks before the search) the pass tries. A search bound, not a game value. */
+export const HIT_AVOID_MAX_DELAY = 16;
+
+/** Run `fn` with `HIT_AVOID_PASS` set to `enabled`, restoring the previous value. */
+export function withHitAvoidPass(enabled, fn) {
+    const was = HIT_AVOID_PASS.enabled;
+    HIT_AVOID_PASS.enabled = enabled === true;
+    try { return fn(); } finally { HIT_AVOID_PASS.enabled = was; }
+}
+
+/** Run `fn` with `FEWER_HITS_RANK` set to `enabled`, restoring the previous value. */
+export function withFewerHitsRank(enabled, fn) {
+    const was = FEWER_HITS_RANK.enabled;
+    FEWER_HITS_RANK.enabled = enabled === true;
+    try { return fn(); } finally { FEWER_HITS_RANK.enabled = was; }
+}
+
+/**
+ * ⛓ FEWER-HITS RANK — the order of two plans that BOTH take a model hit: true = `next` wins, false = `best` wins,
+ * null = not both hit, either unstamped, or equal hits and deaths (the length rule decides).
+ */
+export function fewerHitsOrder(bestPlan, nextPlan) {
+    if (planTakesHit(bestPlan) !== true || planTakesHit(nextPlan) !== true) return null;
+    const b = bestPlan.modelHits;
+    const n = nextPlan.modelHits;
+    if ((n.hits ?? 0) !== (b.hits ?? 0)) return (n.hits ?? 0) < (b.hits ?? 0);
+    if ((n.deaths ?? 0) !== (b.deaths ?? 0)) return (n.deaths ?? 0) < (b.deaths ?? 0);
+    return null;
+}
+
+/**
+ * ⛓ HIT-AVOID PASS — `plan` (solved from a start `delay` idle ticks after the tape's end) re-based on the tape's end:
+ * the idle ticks become its first ticks (`idleRows`: the row after each), its equips and dash ticks move `delay`
+ * later, and `modelHits` adds the idle ticks' own (`idle`: `{hits, deaths}`).
+ */
+export function delayedPlan(plan, { delay, idleRows, idle, prefixLength }) {
+    const shift = (m) => new Map([...m].map(([k, v]) => [k + delay, v]));
+    const out = { ...plan, solution: [...Array.from({ length: delay }, () => new Set()), ...plan.solution],
+        expected: [...idleRows, ...plan.expected.slice(1)], equipsAt: shift(plan.equipsAt), equipItems: shift(plan.equipItems),
+        prefixLength, hitAvoidDelay: delay,
+        ...(plan.trailingEquip ? { trailingEquip: plan.trailingEquip + delay } : {}),
+        ...(plan.modelHits ? { modelHits: { hits: plan.modelHits.hits + idle.hits, deaths: plan.modelHits.deaths + idle.deaths } } : {}) };
+    const dash = PLAN_DASH_TICKS.get(plan);
+    if (dash) PLAN_DASH_TICKS.set(out, Object.freeze(dash.map((t) => t + delay)));
+    return out;
+}
+
+/**
+ * ⛓ HIT-AVOID PASS — the pass itself: `pass`'s search (`dashMode`) from each later start in turn, on the attempt's
+ * `work` clock (the budget binds; the pass stops `windowWork` units after its own start, or the budget's when there is
+ * no window). Returns `{answer, row}`: `answer` the first hitless plan (`pass: 'hit-avoid'`), or null; `row` the pass
+ * row (`tries`, `delay`, `work`, `cut`: what ended it without a plan — never `limit`/`deadline`, which name a cut of
+ * the shipped passes to a held retry).
+ */
+export function hitAvoidPass({ tape, pass, budgetWork = null, windowWork = null, work = createWorkClock(), clock = () => Date.now(),
+    maxDelay = HIT_AVOID_MAX_DELAY }) {
+    const t0 = clock();
+    const w0 = work.units;
+    const budgeted = Number.isFinite(budgetWork) && budgetWork > 0;
+    const stopAt = budgeted ? Math.min(budgetWork, w0 + upgradeWindowWork(budgetWork, windowWork)) : null;
+    let cut = null;
+    const shouldStop = budgeted ? () => { const n = work.tick(); if (n > stopAt) { cut ??= n > budgetWork ? 'budget' : 'window'; return true; } return false; } : null;
+    const { live: _live, ...rest } = tape;
+    const run = replayTape({ staging: rest.staging, perTick: rest.perTick, levelSource: rest.levelSource,
+        scratchPersistence: rest.scratchPersistence ?? false, equips: rest.equips ?? null, holds: rest.holds ?? null });
+    const hits0 = modelHitCount(run);
+    const deaths0 = run.playerDeaths.length;
+    const idleRows = [rowOf(run)];
+    let answer = null;
+    let tries = 0;
+    for (let delay = 1; delay <= maxDelay && cut === null && answer === null; delay += 1) {
+        run.advance(new Set());
+        idleRows.push(rowOf(run));
+        const idle = { hits: modelHitCount(run) - hits0, deaths: run.playerDeaths.length - deaths0 };
+        if (idle.hits > 0 || idle.deaths > 0) break; // standing still is hit: a later start only adds that hit
+        const perTick = [...rest.perTick, ...Array.from({ length: delay }, () => new Set())];
+        tries += 1;
+        const one = settleSolve(() => solveFromTape({ ...rest, perTick, live: liveOf(run), clock, dashMode: pass.dashMode,
+            adds: pass.adds ?? null, shouldStop, fineCheckpoints: shouldStop !== null && FINE_CHECKPOINTS }));
+        if (!one.ok || one.plan.deadline) continue;
+        const plan = delayedPlan(one.plan, { delay, idleRows: [...idleRows], idle, prefixLength: rest.perTick.length });
+        if (planTakesHit(plan) === false) answer = { ...one, pass: 'hit-avoid', plan: { ...plan, pass: 'hit-avoid' } };
+    }
+    const row = { pass: 'hit-avoid', ok: answer !== null, kind: null, ticks: answer ? answer.plan.solution.length : null,
+        ms: Math.round(clock() - t0), ...(budgeted ? { work: work.units - w0 } : {}), tries,
+        ...(answer ? { delay: answer.plan.hitAvoidDelay, modelHits: { ...answer.plan.modelHits } } : {}), ...(cut ? { cut } : {}) };
+    return { answer, row };
+}
+
+/** ⛓ HIT-AWARE ANSWER — the model's `playerHits` ledger length of `run` (0 when the run keeps none). */
+function modelHitCount(run) {
+    if (typeof run?.ledger === 'function') return run.ledger('playerHits').length;
+    return Array.isArray(run?.playerHits) ? run.playerHits.length : 0;
 }
 
 /**
@@ -491,11 +675,18 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => 
         const tripped = deadlineOf(answer);
         rows.push({ pass: p.pass, ok: answer.ok, kind: answer.kind ?? null, ticks: answer.ok ? answer.plan.solution.length : null,
             ms: Math.round(clock() - t0), ...(shouldStop ? { work: work.units - w0 } : {}),
-            ...(tripped ? { deadline: tripped.first, limit: limit.first ?? null } : {}) });
+            ...(tripped ? { deadline: tripped.first, limit: limit.first ?? null } : {}),
+            ...(answer.ok && answer.plan.modelHits ? { modelHits: { ...answer.plan.modelHits } } : {}) });
         last = answer;
         if (betterAnswer(best, answer)) best = answer;
         try { onPass(answer, best, i); } catch { /* a listener's bug is not the solve's */ }
         if (answer.kind === 'divergence') { best = answer; break; }
+    }
+    // ⛓ HIT-AVOID PASS (OFF) — every pass's plan takes a hit: try the first pass's search from a later start.
+    if (HIT_AVOID_PASS.enabled && best?.ok === true && best.kind !== 'divergence' && planTakesHit(best.plan) === true) {
+        const avoid = hitAvoidPass({ tape, pass: passes[0], budgetWork, windowWork, work, clock });
+        rows.push(avoid.row);
+        if (avoid.answer && betterAnswer(best, avoid.answer)) best = avoid.answer;
     }
     // Every pass skipped (a held retry resumed at a pass the run cannot use): the skip itself is the
     // answer — `betterAnswer` never lets it replace what an earlier attempt's passes said.
@@ -955,6 +1146,8 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
         forkRecs.set(fork, rec);
         return fork;
     };
+    // ⛓ HIT-AWARE ANSWER — the model's hits before the segment (the prefix's), ON only.
+    const hitsBefore = HIT_AWARE_ANSWER.enabled ? modelHitCount(shadow) : null;
     const t1 = clock();
     // ⛓ SHOULD-STOP — the pass's deadline (`passShouldStop`; null = today's search exactly).
     // ⛓ RECALIBRATE — and whether it also asks the fine sites (`time`, `walk`, the via-set `detour`; only with a hook).
@@ -995,7 +1188,10 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
         ...(trailingEquip ? { trailingEquip } : {}),
         // ⛓ SHOULD-STOP — `{tripped, first, sites}` when the pass's deadline tripped (named in the history), else null
         deadline: out.deadline ?? null,
-        ...forcedHitFieldsOf(out) };
+        ...forcedHitFieldsOf(out),
+        // ⛓ HIT-AWARE ANSWER — the model's verdict on the plan's own ticks (the run it ended on), ON only.
+        ...(hitsBefore === null ? {} : { modelHits: { hits: modelHitCount(ended) - hitsBefore,
+            deaths: expected[expected.length - 1].deaths - expected[0].deaths } }) };
     // ⛓ PANEL-ROUTE — beside the plan, never on it (the plan's bytes and its structured clone are unchanged).
     if (liveRec.dashTicks) PLAN_DASH_TICKS.set(plan, Object.freeze([...liveRec.dashTicks]));
     return plan;

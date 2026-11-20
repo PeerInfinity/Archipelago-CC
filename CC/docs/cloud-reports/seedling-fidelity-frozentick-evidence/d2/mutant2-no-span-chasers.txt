@@ -1,0 +1,4 @@
+[31m     [31m×[31m OFF the bob leaves the frozen tick and the rock's span with its i-frames; ON they drained through every frozen frame[39m[32m 38[2mms[22m[39m
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[31m[1mAssertionError[22m: expected [ 26, 25 ] to deeply equal [ 26, +0 ][39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m20 passed[39m[22m[90m (21)[39m

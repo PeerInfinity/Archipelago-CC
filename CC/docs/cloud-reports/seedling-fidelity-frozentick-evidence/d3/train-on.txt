@@ -1,0 +1,126 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/hammerChooserPair.train.test.js (6 tests) 246431ms
+     ✓ 853 at 5196: OFF the burn stance's walk refuses on bob@736,752 with the chooser silent; ON the set bob@736,752 + bob@736,800 + bobsoldier@880,832 admits (a TRIPLE since chaserSpinnerWalls: no pair does), the chaser arm kills the bob in the model, and the chain moves on to the spinner@816,848 press kill  85224ms
+     ✓ 853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and the pair arm = OFF  81821ms
+     ✓ 356 (its every climb answered by a single removal): the pair is never asked, and ON = OFF  43619ms
+     ✓ the measurement arm that asks triples too: 367 OFF refuses at its deadline; with triples the set bob@192,480 + bob@224,496 + puncher@128,624 admits, the arm kills bob@192,480 in the model, and the walk reaches the L43 pit  33562ms
+     ✓ the L16 guard: with the switch ON the solver re-derives r9-solve-16 (C1's regression stays closed)  2201ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostKillRung.train.test.js (7 tests) 358215ms
+     ✓ OFF: the kill rung refuses staging A's ghost primary at t0, by name (the BEFORE)  930ms
+     ✓ ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is the kill across the death; the strike floor OFF)  263103ms
+     ✓ ⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t1216), and the executed prefix is the witness's first 1216 ticks (the strike floor OFF)  94166ms
+ ✓ frontend/modules/seedlingDemo/hammerApproachOrder.train.test.js (7 tests) 428982ms
+     ✓ OFF: the page's solve runs out of its 2,560 units at the `crusher-fork` site, inside the approach's tries  59811ms
+     ✓ OFF with the budget lifted: 3,236 units — the hitless try is the 276th (right, the corridor, wait 29)  73849ms
+     ✓ ON: SOLVED inside the budget — the same try, the 70th (anchor 32, rank 5); OFF's plan; hitless on a fresh run  81053ms
+     ✓ OFF: solved inside the budget on the push side's via, wait 25 (its 27th try), 4,519 ticks, hitless  85078ms
+     ✓ ON: the right side's corridor at its anchor (wait 35, rank 0, the 8th fork), 4,527 ticks, fewer units, hitless  62600ms
+     ✓ OFF: solved 26 units inside the budget — the approach's 276th try again (right, the corridor, wait 29)  39900ms
+     ✓ ON: the same plan at about a quarter of the units (anchor 32, rank 5, the 70th fork), hitless on a fresh run  26687ms
+ ✓ frontend/modules/seedlingDemo/hammerPitWest.train.test.js (8 tests) 186331ms
+     ✓ 388 OFF at the page's 640: the deadline, as the page fails it  9517ms
+     ✓ 388 CHOOSER_CUT ON: the cut holds bob@192,480 and three more; the chaser arm kills it and the walk reaches the pit — SOLVED hitless inside 640, its plan replayed on a fresh run  29701ms
+     ✓ 387 CHOOSER_CUT ON: the same cut, SOLVED hitless inside 640 to out_pit_13_21  24467ms
+     ✓ 388 DETOUR_VIA_BOUND ON alone, the deadline lifted (40960): OFF's EXHAUSTED refusal by name, its detour row refused before a leg  3148ms
+     ✓ 388 both ON = CHOOSER_CUT alone (the cut answers before DETOUR is asked)  56834ms
+     ✓ 367 (a triple answers its climb): the cut is never asked, and ON = OFF  45202ms
+     ✓ 403 (← L43 → out_pit_5_21, solved OFF through NARROW): the cut defers, and ON = OFF in plan and work  15293ms
+     ✓ the L16 guard: with both switches ON the solver re-derives r9-solve-16  2166ms
+ ✓ frontend/modules/seedlingDemo/hammerClearTagChain.train.test.js (2 tests) 201270ms
+     ✓ leg 872 (from L43, (328,600)): OFF the set refuses at wall B; ON it SOLVES hitless — the tree burnt, {40,12} written  88964ms
+     ✓ leg 871 (from L39, (488,904)): the pre-wall plan (chaserSpinnerWalls OFF) SOLVES hitless and is the same hitless walk on the wall-ON model; ⛔ under the wall the search REFUSES at the burn stance — a LOST SOLVE (hammer hand-over)  112303ms
+ ✓ frontend/modules/seedlingDemo/hammerSouthDoor.train.test.js (4 tests) 231946ms
+     ✓ OFF, south of the latched door: APPROACH's refusal on the arrival legs — 24 forks (12 anchor probes + the 12 tries), all no-plan, from (488,579)  13829ms
+     ✓ ON, south of the latched door: the door's hold first, the approach from the doorway, Boss Key 2 hitless at t4812 on a fresh run  125348ms
+     ✓ the latch staging (the near side once the latch has faded the door): SOLVED 4144 ON, nothing asked  62178ms
+     ✓ ICEST's pocket boot (480,456): ON keys identical to OFF, nothing asked  30587ms
+ ✓ frontend/modules/seedlingDemo/hammerLatchWeigh.train.test.js (2 tests) 564429ms
+     ✓ OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271  431908ms
+     ✓ ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name  132519ms
+ ✓ frontend/modules/seedlingDemo/hammerBombPhase.train.test.js (3 tests) 156718ms
+     ✓ OFF: the page's 640 trips at the forced-hit rung's forks (main's answer)  22244ms
+     ✓ ON: SOLVED hitless inside the page's 640, by a 4-tick still wait before the walk to the rock  76377ms
+     ✓ phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row)  58093ms
+ ✓ frontend/modules/seedlingDemo/hammerOppFallbackHits.train.test.js (3 tests) 166146ms
+     ✓ OFF (census instrument): the redo is ADOPTED with 2 hits, and the segment refuses later at work 885  40846ms
+     ✓ ON: the redo is REFUSED by name, undone, and the original HAMMER_SAFETY refusal stands (work 255)  36402ms
+     ✓ ON keeps the hitless redo: audited, not refused, and the plan is OFF's byte for byte  88895ms
+ ✓ frontend/modules/seedlingDemo/hammerBk2Combat.train.test.js (4 tests) 463071ms
+     ✓ pocket shut, OPP, OFF: the burn walk's combat ladder is EXHAUSTED on the BobSoldier in its notch  37978ms
+     ✓ pocket shut, OPP, ON: staged at (856,856) after 15 still ticks, the BobSoldier dies hitless and the refusal moves past the combat to the ice turret's approach from the door  288288ms
+     ✓ pocket open, no OPP, ON: SOUTHDOOR's solve unchanged — Boss Key 2 hitless at t4812, the staged hunt never asked  136802ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeExact.train.test.js (2 tests) 606987ms
+     ✓ [needs fidelity's forecastShieldBump] key ON, SPIN OFF, ON: the t541 no-landing claims, then the frozen-tick press refusal at t2119 — spinner@816,848 is not reached (measured; not the brief's "hitless")  300280ms
+     ✓ [needs forecastShieldBump + frozenPressForecast] the same arm with the freeze forecast ON: no press lands on a frozen tick, and the solve runs past t2119 to its next wall  306705ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Latch.train.test.js (5 tests) 522875ms
+     ✓ the pre-flip hammer defaults (withL40Flip(false)), holdWaitPriced alone: the hold's wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier  119019ms
+     ✓ the pre-flip hammer defaults (withL40Flip(false)), both ON: the solve's refused prefix is the recorded tape  190159ms
+     ✓ AFTER (the shipped defaults), holdWaitPriced alone: refused before a tick at the iceturret approach staging; still no still stance kills the BobSoldier (the WAIT hit at tick 93); holdWaitPriced is inert there  35179ms
+     ✓ AFTER (the shipped defaults), both ON: the latch solve SOLVES Boss Key 2, and its plan is the recorded tape `l40latch-orbit-shipped`  63965ms
+     ✓ AFTER control: the shipped defaults MINUS `LATCH_WEIGH_FIRST` alone keep both BEFORE pins — D1a's EXHAUSTED hold with TIME's refusal, and the `l40latch-orbit-chain` prefix  114550ms
+ ✓ frontend/modules/seedlingDemo/hammerSpinnerPress.train.test.js (2 tests) 412569ms
+     ✓ OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall)  169432ms
+     ✓ ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death  243135ms
+ ✓ frontend/modules/seedlingDemo/hammerPocketBurn.train.test.js (4 tests) 180349ms
+     ✓ pocket shut, OFF: the latch hold's stance refuses on the tree, and its prerequisite list names no burn  26060ms
+     ✓ pocket shut, ON: the burn is raised for the hold's stance, and the refusal moves past the pocket to the burn walk's combat (bobsoldier@880,832)  29874ms
+     ✓ pocket open, ON: SOUTHDOOR's solve unchanged — Boss Key 2 hitless at t4812 on a fresh run  124412ms
+ ✓ frontend/modules/seedlingDemo/hammerOppPressFallback.train.test.js (4 tests) 148259ms
+     ✓ the defaults before the flip (the set OFF): SOLVED `hold, kill, walk`, hitless  38187ms
+     ✓ the BEFORE: the flip set ON with the fallback OFF refuses inside the hold's rock prerequisite (OPP's press)  30203ms
+     ✓ …and OPP is the cause: the flip set ON with OPP alone OFF solves, the defaults' plan  38141ms
+     ✓ the AFTER: the flip set ON with the fallback ON solves — the retry asked and adopted, the defaults' plan, hitless  41726ms
+ ✓ frontend/modules/seedlingDemo/hammerBodyGate.train.test.js (3 tests) 225919ms
+     ✓ OFF: refused at work 885 (today's refusal)  41465ms
+     ✓ ON: solved hitless — 1114 t, rows exact on a fresh run, flag 12 earned  36524ms
+     ✓ OFF = ON: 2385 t, sha 0c51cdb94854, hitless  147927ms
+ ✓ frontend/modules/seedlingDemo/hammerOppDashDefers.train.test.js (2 tests) 252260ms
+     ✓ OFF refuses as today (work 885); ON solves hitless without HAMMER_BODY_GATE, and the same plan with it  108645ms
+     ✓ control: leg 872 (from L43) is the same plan OFF and ON  143613ms
+ ✓ frontend/modules/seedlingDemo/hammerKillHitBody.train.test.js (3 tests) 18870ms
+     ✓ OFF: the climb is EXHAUSTED on the puncher, and BAIT and KILL reason about the spinner by the goal  4466ms
+     ✓ ON: the kill rung hunts puncher@816,128, and the plan reaches the goal with no hit and no death  10106ms
+     ✓ solved OFF; ON the plan is byte-identical  4297ms
+ ✓ frontend/modules/seedlingDemo/hammerShovedLookahead.train.test.js (3 tests) 418454ms
+     ✓ OFF: refused, no step out, at the approach corner  198832ms
+     ✓ ON: solved hitless — 1636 t, no death on a fresh run  156924ms
+     ✓ OFF = ON, byte-identical (1317 t)  62696ms
+ ✓ frontend/modules/mazeRoom/tileSpike/learnLattice.train.test.js (4 tests) 96924ms
+     ✓ L40 laid: the pass + the 5 entries (native, shared cache)  48886ms
+     ✓ L40 laid: deriveLevelWorldLogic + the 5 entries, compact on ≡ off (memoised probes become witnesses)  42005ms
+     ✓ L12 as ONE level world: compact ≡ full at sampled points of every arrival (lazy plans byte-equal)  5750ms
+ ✓ frontend/modules/seedlingDemo/hammerBaitRemoved.train.test.js (3 tests) 492952ms
+     ✓ L99 east → (48,96), Sword only: OFF refuses on the bait whose body is already gone  81561ms
+     ✓ L99 east → (48,96), Sword only: ON solves hitless into L100 (649 t), the bait counted gone  128207ms
+     ✓ ER c3 (L40 → pit, `CHASER_PASS`): ON goes past the bait — the next wall is the outer bait's stance walk in L43  283181ms
+ ✓ frontend/modules/seedlingDemo/fidelityCorpseBump2.train.test.js (3 tests) 255897ms
+     ✓ OFF: the walk's Fire press carries the corpse to (30,24) and runFire refuses bump 2 with no perTick  56529ms
+     ✓ ON: no second press; the lock opens and the chain refuses on the strategy bound at pushableblock@576,560  70006ms
+     ✓ ON costs an unmoved corpse nothing: the solved L+CP3+TA arm's ticks equal OFF's, key for key  129359ms
+ ✓ frontend/modules/seedlingDemo/hammerIceTurretStatic.train.test.js (2 tests) 643870ms
+     ✓ ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte  452504ms
+     ✓ ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit  191364ms
+ ✓ frontend/modules/seedlingDemo/hammerBaitSubwalkGoal.train.test.js (2 tests) 550004ms
+     ✓ OFF: the outer bait's stance walk falls into L43 at t688 hitless and refuses there  273682ms
+     ✓ ON: the crossing is the reach-pit walk's — SOLVED in 768 ticks, hitless, into L43  276320ms
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.latchSandwich.train.test.js (2 tests) 369036ms
+     ✓ native: byte-identical, and the prune removes at least half the searches (both counts derived)  100875ms
+     ✓ scripted, prune on: byte-identical to the native prune-off answer  268159ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Bk2.train.test.js (3 tests) 393297ms
+     ✓ the pre-flip hammer defaults (withL40Flip(false)): the solve from the pocket boot (D1 ON) refuses where it did, and its spent ticks are the recorded tape  344194ms
+     ✓ AFTER (the shipped defaults): the solve from the pocket boot SOLVES Boss Key 2, and its plan is the recorded tape `l40bk2-pocket-shipped`  32614ms
+     ✓ AFTER control: the shipped defaults MINUS `CHOOSER_CUT` alone keep the BEFORE — the refused prefix is `l40bk2-pocket-chain`, input for input (measured: each of the twelve flip switches OFF alone; only it)  16487ms
+ ✓ frontend/modules/seedlingDemo/hammerErGaps.train.test.js (1 test) 267435ms
+     ✓ the puncher is passed hitless by the via (216,680) walk (a 442-tick prefix); the leg then refuses in the bait arm on a Bob already gone  267434ms
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.train.test.js (1 test) 620893ms
+     ✓ scripted tile definition on the sample — and it agrees with the native one  620892ms
+ ✓ frontend/modules/seedlingDemo/hammerKeylockTurret.train.test.js (1 test) 12493ms
+     ✓ with the south door carried (tag 12): OFF "0 cell(s)"; ON SOLVED 718, hitless on a fresh run  12492ms
+
+ Test Files  29 passed (29)
+      Tests  96 passed (96)
+   Start at  00:32:44
+   Duration  9559.42s (transform 4.28s, setup 1.69s, import 61.39s, tests 9492.88s, environment 3ms)
+

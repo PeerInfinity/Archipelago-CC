@@ -13,7 +13,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gunzipSync } from 'node:zlib';
 
-import { withKillLockChaserRewind, withKillLockLineStance } from './solverBot.js';
+import { withKillLockChaserRewind, withKillLockLineStance, withKillStanceSight } from './solverBot.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { ANYTIME_PASSES, replayTape, solveAnytime } from './jsRuntimeSolver.js';
@@ -25,7 +25,9 @@ function solveBothPasses(leg, on) {
     const req = restoreRequest(leg.requests[0].request);
     const { passes = ANYTIME_PASSES, source, ...tape } = req;
     const levelSource = levelSourceFromAtlas(source.records);
-    const answer = withKillLockLineStance(false, () => withKillLockChaserRewind(on, () => solveAnytime({ ...tape, source, levelSource }, { passes })));
+    // KILL_STANCE_SIGHT held OFF: it is ON by default since the L28 flip (2026-11-19) and moves these plans (ticks only,
+    // measured by the flip's sweeps); these rows predate it and keep pinning their own switch.
+    const answer = withKillStanceSight(false, () => withKillLockLineStance(false, () => withKillLockChaserRewind(on, () => solveAnytime({ ...tape, source, levelSource }, { passes }))));
     if (!answer.ok) return { ok: false, message: String(answer.message ?? '') };
     const fresh = replayTape({ staging: tape.staging, perTick: [...tape.perTick, ...answer.plan.solution],
         levelSource, scratchPersistence: tape.scratchPersistence });

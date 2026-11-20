@@ -22,6 +22,19 @@ except (ImportError, AttributeError):
         return result.lower()
 
 
+def int_id_or_none(value: Any) -> Optional[int]:
+    """An exported ``id`` (item or location): the value when it is an int, else ``None``.
+
+    Archipelago ids are integers. Some worlds store something else in the same attribute: A Link to the Past's
+    prizes (Crystal 1-7, the three Pendants) carry a tuple of ROM bytes as ``ItemData.item_code``, and its prize
+    locations a list of ROM addresses as ``address``. Those are events with no AP id, so they export ``None``, as an
+    event's id does, and an item whose exported id is ``None`` here is marked ``event: true`` (Robert 2026-11-19,
+    "Mark prizes as events everywhere"), as world_generator and the procgen pipeline already read it. ``bool`` is an
+    ``int`` subclass and is refused too. Every place the exporter writes an ``id`` goes through here.
+    """
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
+
+
 def extract_closure_vars(rule_func: Callable) -> Dict[str, Any]:
     """Extract closure variables from a function.
 

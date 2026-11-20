@@ -610,10 +610,39 @@ function stampChaserGuards(level, grid, onto) {
  * Read off the patched map's traps, the class constants and the grid; no level literal.
  */
 export const playthroughTrapTongues = new Map();
+/**
+ * ⛓⛓ rules-lavatrap-pull-line — ONE LavaTrap disc per level (⚖ Robert 2026-11-20 "Fix pull disc, then K"): `OV.lavaTrapPulls`
+ * cut by the game's launch line (`LavaTrap.as:86-88` `!collideLine("Solid", trap, player)`), with this producer's analyzer
+ * grid's `wall` cells standing for `"Solid"`: the tiles `Tile.as:24-27` types `"Solid"` and the scenery that sets `type =
+ * "Solid"` (trees, rocks, statues, …) are the grid's walls; a pit, lava or water tile is `"Tile"` and never cuts (the tongue
+ * crosses it: L108's ferry). A gated solid (a lock, a breakable rock, a chain) is not a wall: the disc is the cleared
+ * state's, the state in which a player stands beside it. The walls are the RAW grid's (`rawBaseGridFor`): no stamp (the
+ * encounter locks, the off-grid solids, rule T) turns a cell into or out of `wall`, so every grid variant reads the same
+ * walls. Rule T's reach (`stampTrapTongues`), its arms (`playthroughTrapKillArms`), the lifts (`applyLavaTrapPulls`) and the
+ * maze's `pull` rows (`seedlingMazeProjectionDeps({lavaPulls})`) all read THIS disc: the tiles the tongue kills on are the
+ * tiles it reels from. No level literal.
+ */
+const lavaTrapPullsMemo = new Map();
+export function playthroughLavaTrapPulls(level) {
+    if (lavaTrapPullsMemo.has(level.level)) return lavaTrapPullsMemo.get(level.level);
+    const placed = (level.entities ?? []).some((e) => e.type === OV.LAVATRAP_PULL.tag);
+    let solid = null;
+    if (placed) {
+        const g = rawBaseGridFor(level, { directionalLocks: DIRECTIONAL_LOCKS, arrivals: true });
+        const ox = g.origin?.x ?? 0;
+        const oy = g.origin?.y ?? 0;
+        solid = (x, y) => g.cells[(y - oy) * g.width + (x - ox)]?.kind === 'wall';
+    }
+    const out = placed ? OV.lavaTrapPulls(level, TILE, { solid }) : [];
+    lavaTrapPullsMemo.set(level.level, out);
+    return out;
+}
+/** Every level's line-cut LavaTrap pulls (`playthroughLavaTrapPulls`), `level number -> pulls`, for the maze compile. */
+export const playthroughLavaTrapPullMap = () => new Map(LEVELS.map((l) => [l.level, playthroughLavaTrapPulls(l)]).filter(([, p]) => p.length > 0));
 const trapKillArmsMemo = new Map();
 export function playthroughTrapKillArms(level, grid = null) {
     if (trapKillArmsMemo.has(level.level)) return trapKillArmsMemo.get(level.level);
-    const pulls = OV.lavaTrapPulls(level, TILE).map((p) => ({ ...p, tag: OV.LAVATRAP_PULL.tag }));
+    const pulls = playthroughLavaTrapPulls(level).map((p) => ({ ...p, tag: OV.LAVATRAP_PULL.tag }));
     if (!pulls.some((p) => TT.tongueKills(p.tag))) {
         trapKillArmsMemo.set(level.level, []);
         return [];
@@ -639,7 +668,7 @@ export function playthroughTrapKillArms(level, grid = null) {
     return out;
 }
 function stampTrapTongues(level, grid) {
-    const pulls = OV.lavaTrapPulls(level, TILE).map((p) => ({ ...p, tag: OV.LAVATRAP_PULL.tag }));
+    const pulls = playthroughLavaTrapPulls(level).map((p) => ({ ...p, tag: OV.LAVATRAP_PULL.tag }));
     if (pulls.length === 0) return grid;
     const toIndex = ([x, y]) => (y - (grid.origin?.y ?? 0)) * grid.width + (x - (grid.origin?.x ?? 0));
     // Never charged: an arrival landing and a door (the trap's own tile is left out by `trapTongueCells`).
@@ -1760,7 +1789,7 @@ function chargeSealedPockets(atlas, regionId, level, analysis, options) {
  * gated on the Dark Suit. A pull inside one sub-region is nothing to add.
  */
 function applyLavaTrapPulls(atlas, regionId, level, analysis) {
-    const pulls = OV.lavaTrapPulls(level, TILE);
+    const pulls = playthroughLavaTrapPulls(level);
     if (pulls.length === 0) return;
     const region = atlas.regions.find((r) => r.region_id === regionId);
     const subs = new Set(region?.subgraph?.sub_regions ?? []);

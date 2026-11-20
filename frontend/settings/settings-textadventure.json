@@ -2,7 +2,19 @@
   "activeLayout": "textadventure",
   "moduleSettings": {
     "regionGraph": {
-      "showRegionInPanel": false
+      "clickActions": {
+        "enabled": true,
+        "region": {
+          "path.route": {
+            "from": "pathEnd"
+          },
+          "path.checkAll": false,
+          "regions.open": false
+        },
+        "location": {
+          "path.check": "now"
+        }
+      }
     },
     "discovery": {
       "enableDiscoveryMode": true,

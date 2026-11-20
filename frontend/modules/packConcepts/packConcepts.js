@@ -57,9 +57,15 @@ export const STRUCTURE_KINDS = Object.freeze(['task', 'stat', 'resource', 'boon'
  * into a maze primitive and its reachability pin. This module OWNS the names (as it owns `PACK_TILE_BASES`); the
  * structure parser refuses any other, and the maze payload's `tileKinds[].pass` enum is this list.
  *   · `walkable` — enter and leave freely (the default: TILE-3's "placed kinds are walkable");
- *   · `blocked`  — never entered: the editor lowers it to a wall under the kind.
+ *   · `blocked`  — never entered: the editor lowers it to a wall under the kind;
+ *   · `needs`    — (⛓ PASS-2) entered only while the inventory holds what a MECHANIC concept (`needs: "swim"`, a bare
+ *                  `procgenCore/concepts.js` id, never an AP item name: Q8) realises as; the editor lowers it to a rule
+ *                  obstacle on the kind's floor cell.
  */
-export const TERRAIN_PASSES = Object.freeze(['walkable', 'blocked']);
+export const TERRAIN_PASSES = Object.freeze(['walkable', 'blocked', 'needs']);
+
+/** ⛓ PASS-2 — the pass whose terrain entry names a mechanic concept (`needs`). */
+export const NEEDS_PASS = 'needs';
 
 /** ⛓ PASS-1 — the value of a tile kind that presents no terrain entry, and the one a world never writes. */
 export const DEFAULT_TERRAIN_PASS = 'walkable';

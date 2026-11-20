@@ -1,0 +1,8 @@
+MEASURED: level level_104 ms=19
+MEASURED: level level_86 ms=18
+MEASURED: level level_97 ms=18
+MEASURED: calib file rc=0 wall 1004.0 s, level tests sum 987.3 s, 115 levels + 2 other tests, nproc 4
+MEASURED: heaviest test level_40 474.7 s of the 900 s testTimeout (47.3% headroom)
+MEASURED: wrote calib-levels.json (115 levels) at 03872f77c017f9d89703200d9305ba7142f88864
+PASS: the calib file is green (rc=0)
+ALL CHECKS PASSED

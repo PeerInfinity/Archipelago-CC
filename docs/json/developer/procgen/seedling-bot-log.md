@@ -28406,3 +28406,35 @@ solver's own talk arm instead, and it shipped OFF. The switch now reads `SEEDLIN
 clear-tag arm talks maps differently, and in the shipped rules that is the L58 yeti alone. The stack sweep had shown its
 leg (`level_58__r3c3 <- in_tentacle_beast_mouth_L57_56_96 …`) as the switch's one real gain. `jsRuntimeSolverTalkClearGoal.test.js`
 pins the default ON and the page-side opt-out; its OFF and ON rows name their arm.
+
+### Seedling hammer-phase HIT-TIEBREAK + HIT-FLIP — `HIT_AWARE_ANSWER` ON by default
+
+⚖ The user, 2026-11-17: *"Slice it now (Recommended)"*. Then, for the flip, 2026-11-18: *"Flip ON, 3 sweeps (Recommended)"*.
+`betterAnswer` used to rank the anytime passes' plans on length alone. A shorter plan that the model itself plays into
+a hit therefore beat a longer one it plays hitless. Two cases: L30 `bosslock@64,32` from L31 (dashless 255 t hitless
+vs full 191 t with three hits and a death), and L12 `bosslock@416,240` from L95 under FADE_MOVE. With
+`jsRuntimeSolver.HIT_AWARE_ANSWER` ON, `solveFromTape` stamps each plan with `modelHits`, taken from the ended run's own
+`playerHits` ledger and deaths with the prefix excluded. When two plans' verdicts differ, `betterAnswer` ranks by the
+verdict alone; otherwise the old rule stands. The switch reads `SEEDLING_HIT_AWARE_ANSWER !== '0'`, default `true`.
+It runs only inside `solveAnytime` (the solve worker, or node), so the worker's env channel
+`?seedlingSolverEnv=SEEDLING_HIT_AWARE_ANSWER=0` is the whole page opt-out. `hammerHitTiebreak.test.js` pins the
+default and both arms. Its OFF rows wrap `withHitAwareAnswer(false, …)`.
+
+### Seedling hammer-phase L28 FLIP — `RESTING_HOLDER` + `KILL_STANCE_SIGHT` ON by default
+
+⚖ The user, 2026-11-19: *"Flip both, sweeps now (Recommended)"*. Seed 2's whole-game walk stopped in L28 with "no
+REACHABLE stance inside button@112,240". In the game, a rope drops `fallrock@112,240` onto that button, and the rock holds
+`grasslock@176,208` open. Three switches together solve the leg hitless. Fidelity's `fallRockHoldsButton` (already ON)
+makes the model count the landed rock as a presser. ROCK-HOLDER-WAIT's `RESTING_HOLDER` makes the solver wait out the
+lock's fade instead of looking for a press. L28-BOBSOLDIER's `KILL_STANCE_SIGHT` prices the chaser arm's kill stances
+with the sword's own Solid line test, so the bobsoldier beyond the lock dies from a stance the swing really reaches:
+L30 at t448, 0 hits, and 0 diverging samples on p4g. Both solver switches now read `SEEDLING_<NAME> !== '0'`, default
+`true`. They run in the solve worker, so the env channel is the page opt-out. `hammerRockHolderWait.test.js` and
+`hammerKillStanceSight.test.js` pin the defaults. The rows that pin another switch's behaviour (the wait alone, and
+L53's `KILLLOCK_CHASER_REWIND`) now hold `KILL_STANCE_SIGHT` OFF explicitly. ON, 9002's plan goes from 959 to 750 t, still hitless.
+**The guard rides with it** (⚖ the user, 2026-11-20: *"Add the guard flip (Recommended)"*). The first landing attempt was
+stopped on the route survey's step 227 (L98: the Chest, then the L99 stairs). `KILL_STANCE_SIGHT` re-times the kill-lock
+kill there, and the player's stand-out after the last kill sits in `spinningaxe@128,64`'s sweep: 477 t and one hit, where
+main had 520 t and none. `KILLLOCK_STANDOUT_GUARD` (from the L98-L99 slice) drives that stand-out on a replay and refuses
+the attempt on a hit, so it now ships ON too (`!== '0'`). Step 227 then solves in 537 t with no hit.
+`hammerL98L99.train.test.js` pins both arms of the shipped defaults.

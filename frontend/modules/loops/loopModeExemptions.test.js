@@ -23,8 +23,8 @@ import {
     MOVE_SOURCE_START,
     MOVE_SOURCE_RESTART,
 } from '../menuPanel/menuPanelEngine.js';
-import { REGION_MAP_SOURCES } from '../regionMap/regionMapClicks.js';
 import { PATH_SOURCE_PREFIX, pathSourceFor } from '../regionView/clickActions.js';
+import { PANEL_ID as REGION_MAP_PANEL_ID } from '../regionMap/regionMapClickActions.js';
 
 describe('⛓ isLoopModePlanningSource — authoring sources', () => {
     it('classifies the region graph\'s four click shapes', () => {
@@ -38,9 +38,15 @@ describe('⛓ isLoopModePlanningSource — authoring sources', () => {
         }
     });
 
-    it('classifies the Region Map\'s four click shapes, by the module\'s own constants (region-map step 4)', () => {
-        expect(Object.keys(REGION_MAP_SOURCES).sort()).toEqual(['addToPath', 'direct', 'oneStep', 'overwritePath']);
-        for (const source of Object.values(REGION_MAP_SOURCES)) {
+    // CA-S3: the Region Map's clicks run the shared click actions, so its path moves carry
+    // `pathSourceFor(<the Map's panel id>)`, by the Map module's own constant. Step 4's four `regionMap-*` sources
+    // (`regionMap/regionMapClicks.js` REGION_MAP_SOURCES, retired) are no longer sent; the `regionMap` prefix stays
+    // classified for older callers (as `regionGraph*` does, R7), pinned here by their literal strings.
+    it('classifies the Region Map\'s click moves, by the module\'s own constants (CA-S3), and keeps step 4\'s prefix', () => {
+        expect(REGION_MAP_PANEL_ID).toBe('regionMap');
+        expect(pathSourceFor(REGION_MAP_PANEL_ID)).toBe('regionView-path-regionMap');
+        expect(isLoopModePlanningSource(pathSourceFor(REGION_MAP_PANEL_ID))).toBe(true);
+        for (const source of ['regionMap-addToPath', 'regionMap-overwritePath', 'regionMap-oneStep', 'regionMap-direct']) {
             expect(isLoopModePlanningSource(source)).toBe(true);
         }
     });

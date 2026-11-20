@@ -73,6 +73,22 @@ import { NAMED_ROOMS } from './levelSetValidator.js';
  * not have, and AP would route a collectible through a door that only opens one
  * way.
  */
+/**
+ * ⛓⛓ **THE GAME A SEEDLING ATLAS DECLARES — ONE SPELLING FOR BOTH LABS.**
+ *
+ * The compiler keys a region's substrate off `substrateIdFor(atlas.game)`, so
+ * for a set's rooms to compile as `flash_seedling` (the substrate the player's
+ * registry and `flashSeedlingLibrary` know) the game has to be this word.
+ * ⛔ `substrateIdFor` is a slug function and cannot be inverted, so the value
+ * is PINNED against the registry id rather than derived from it
+ * (`mazeSetLab.test.js`, `watchSetIdentity.test.js`). It lives HERE, on the
+ * Seedling side, because it is a fact about Seedling; the maze lab re-exports
+ * it and the watch page's set adapter reads it (lab-set-seedling-identity,
+ * ⚖ Robert 2026-11-19: "a lab set is Seedling, with its own fingerprint").
+ * It is also this derivation's own default `game`.
+ */
+export const SEEDLING_ATLAS_GAME = 'seedling';
+
 export const LINK_TAGS = Object.freeze(['teleporter', 'stairsup', 'stairsdown']);
 
 /** The tile type a Pit paints, in `seedlingSemantics`' numbering. */
@@ -481,13 +497,16 @@ export function deriveAtlas(rooms, overlay = {}, deps = {}) {
     const neverEnterCite = overlay.neverEnter?.cite ?? {};
 
     /**
-     * ⛓ `game: 'seedling'` IS SPELLED, not defaulted (E3b, §26.9). It is FIRST
-     * so `deps.atlas` still overrides it — a caller deriving into a differently
-     * named document (the editor's `seedling-watch-edit`, the arm's own) still
-     * wins, which is the behaviour every existing caller already relies on.
+     * ⛓ `game: SEEDLING_ATLAS_GAME` IS SPELLED, not defaulted (E3b, §26.9). It is
+     * FIRST so `deps.atlas` still overrides it — a caller deriving into a
+     * differently named document still wins. ⚠ Since lab-set-seedling-identity
+     * no caller in the tree overrides the GAME (the watch page's set adapter
+     * passes this same constant); what `deps.atlas` still carries is the
+     * `mapDocument` LABEL (`'watch.html set editor'`), which is a document name,
+     * not a game.
      */
     const session = new AtlasSession(createEmptyAtlas({
-        game: 'seedling', tileSize, ...(deps.atlas ?? {}),
+        game: SEEDLING_ATLAS_GAME, tileSize, ...(deps.atlas ?? {}),
     }));
 
     /**
@@ -498,8 +517,8 @@ export function deriveAtlas(rooms, overlay = {}, deps = {}) {
      * `flash_<game>` in the tree, and the standing per-game-substrate ruling of
      * 2026-07-25 lives in it. Writing `'flash_seedling'` here would be a SECOND
      * spelling that happens to agree today: the moment `deps.atlas.game`
-     * overrides the default (the editor's `seedling-watch-edit`, the arm's own
-     * document — every existing caller relies on that override), the literal
+     * overrides the default (the watch page did, with `seedling-watch-edit`,
+     * until lab-set-seedling-identity moved it to `SEEDLING_ATLAS_GAME`), the literal
      * would name a substrate the compile is not defaulting to, and the compiler
      * would refuse the whole atlas by name because its table has no such row.
      * So it is read off the SESSION'S atlas, after the override has applied.

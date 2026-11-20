@@ -2,13 +2,18 @@
   "activeLayout": "depgraph",
   "moduleSettings": {
     "regionGraph": {
-      "checkAllLocationsInRegion": true,
-      "addToPath": false,
-      "overwritePath": false,
+      "clickActions": {
+        "enabled": true,
+        "region": {
+          "path.route": false,
+          "path.checkAll": true,
+          "regions.open": false
+        },
+        "location": {
+          "path.check": "now"
+        }
+      },
       "addLocationsToPath": false,
-      "movePlayerOneStep": false,
-      "movePlayerDirectly": false,
-      "showRegionInPanel": false,
       "forceHideLocations": true,
       "forceHideEdgeLabels": true
     }

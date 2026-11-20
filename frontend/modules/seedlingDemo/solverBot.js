@@ -6208,12 +6208,13 @@ function restingHolderOn(run, onto) {
 }
 
 /**
- * The switch for `restingHolderOn` — OFF by default; `SEEDLING_RESTING_HOLDER=1` turns it on in a node process (and in
- * the page's solve worker through `solverEnvChannel`), `withRestingHolder(enabled, fn)` for a test or a witness. OFF,
- * nothing is read and every walk is byte-identical.
+ * The switch for `restingHolderOn` — ON by default since the L28 flip (⚖ the user, 2026-11-19: *"Flip both, sweeps now
+ * (Recommended)"*); `SEEDLING_RESTING_HOLDER=0` turns it off in a node process (and in the page's solve worker through
+ * `solverEnvChannel`), `withRestingHolder(enabled, fn)` for a test or a witness. OFF, nothing is read and every walk is
+ * byte-identical to the pre-switch solver.
  */
-export const RESTING_HOLDER = { enabled: globalThis.process?.env?.SEEDLING_RESTING_HOLDER === '1' };
-export const RESTING_HOLDER_DEFAULT = false;
+export const RESTING_HOLDER = { enabled: globalThis.process?.env?.SEEDLING_RESTING_HOLDER !== '0' };
+export const RESTING_HOLDER_DEFAULT = true;
 
 /**
  * ⛓ READ-ONLY PROBE for `hammerRockHolderWait.test.js`: `restingHolderOn` for the presser at `at` (`{x, y}`) of `run`
@@ -8210,9 +8211,9 @@ let dashCertSightDepth = 0;
 
 /**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE L28-BOBSOLDIER — **THE CHASER ARM'S STANCE SCAN SEES THE SWING'S LINE OF SIGHT**
- * (`KILL_STANCE_SIGHT`, OFF).
+ * (`KILL_STANCE_SIGHT`, ON by default since the L28 flip; `SEEDLING_KILL_STANCE_SIGHT=0` opts out).
  *
- * ⚖ The user approved the slice on 2026-11-12 (the hammer replan: *"L28 bobsoldier kill stance"*).
+ * ⚖ The user approved the slice on 2026-11-12; the flip, 2026-11-19: *"Flip both, sweeps now (Recommended)"* (the hammer replan: *"L28 bobsoldier kill stance"*).
  *  - The gap (measured, `seedling-hammer-l28-bobsoldier.md` §3): DASHCERT's gap, one caller over. `deriveKillByChaser`
  *    prices each stance with `previewWalk`, whose chaser arm tests only the slash rect and the reach; the run's sword arm
  *    also refuses a chaser whose line from the player meets a Solid (`slash()`'s `collideLine("Solid", …)`,
@@ -8226,12 +8227,12 @@ let dashCertSightDepth = 0;
  *    is then the fight the dwell drives (⚖ 30(c)). Every other preview is untouched.
  *  - OFF: no line is asked anywhere a preview did not ask one before; byte-identical.
  * `counts` hears each scan ask (`asks`) and each swing the line refused inside one (`refused`); it decides nothing.
- * `SEEDLING_KILL_STANCE_SIGHT=1` in a node process or the page's solve worker (`solverEnvChannel`), or
+ * `SEEDLING_KILL_STANCE_SIGHT=0` in a node process or the page's solve worker (`solverEnvChannel`) turns it off, or
  * `withKillStanceSight(enabled, fn)` for a row. The decision runs in the solve WORKER (`solverBot`), not on the main thread.
  */
-export const KILL_STANCE_SIGHT = { enabled: globalThis.process?.env?.SEEDLING_KILL_STANCE_SIGHT === '1',
+export const KILL_STANCE_SIGHT = { enabled: globalThis.process?.env?.SEEDLING_KILL_STANCE_SIGHT !== '0',
     counts: { asks: 0, refused: 0 } };
-export const KILL_STANCE_SIGHT_DEFAULT = false;
+export const KILL_STANCE_SIGHT_DEFAULT = true;
 
 /** Run `fn` with `KILL_STANCE_SIGHT` set to `enabled`, restoring the previous value (also on a throw). */
 export function withKillStanceSight(enabled, fn) {
@@ -20485,7 +20486,10 @@ function killLockLineStanceTurn(run, perTick, resolved, ctx, { live, whys }) {
 
 /**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE L98-L99 — **THE LAST KILL'S STAND-OUT IS PART OF THE ATTEMPT** (`KILLLOCK_STANDOUT_GUARD`,
- * OFF — `SEEDLING_KILLLOCK_STANDOUT_GUARD=1` / `withKillLockStandOutGuard(enabled, fn)`).
+ * ON by default since the L28 flip's guard (⚖ the user, 2026-11-20: *"Add the guard flip (Recommended)"*) —
+ * `SEEDLING_KILLLOCK_STANDOUT_GUARD=0` / `withKillLockStandOutGuard(enabled, fn)`). MEASURED (step 227, the survey's own
+ * staging): `KILL_STANCE_SIGHT` ON re-times the default kill stance into the axe's sweep (477 t, `spinningaxe@128,64` at
+ * t367); with this guard the stand-out is refused and the next stance kills clear (537 t, 0 hits).
  *
  * When the kill-lock chaser arm's last counted body dies, `execKillByChaser` STANDS (no keys) where the kill left the
  * player: the corpses' fade, then the lock's own fade until it leaves the world. Those stands are not a walk or a
@@ -20502,8 +20506,8 @@ function killLockLineStanceTurn(run, perTick, resolved, ctx, { live, whys }) {
  * attempt by name. ⚖ No-hit logic: a kill whose stand-out tanks a hit is not a kill the plan may keep. Nothing reads a
  * level or a coordinate. OFF: not asked (byte-identical).
  */
-export const KILLLOCK_STANDOUT_GUARD = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_STANDOUT_GUARD === '1' };
-export const KILLLOCK_STANDOUT_GUARD_DEFAULT = false;
+export const KILLLOCK_STANDOUT_GUARD = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_STANDOUT_GUARD !== '0' };
+export const KILLLOCK_STANDOUT_GUARD_DEFAULT = true;
 
 /** Run `fn` with `KILLLOCK_STANDOUT_GUARD` set to `enabled`, restoring the previous value. */
 export function withKillLockStandOutGuard(enabled, fn) {

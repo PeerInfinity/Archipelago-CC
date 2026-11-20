@@ -62,6 +62,7 @@ import {
 import {
     getBlock, getButton, getItem, getObstacle, getTile, isEntrance,
 } from './mazeRoomEngine.js';
+import { tileKindGateId } from './mazeSerializer.js';
 import { cloneWorld, worldsEqual } from './procgenMaze.js';
 
 /**
@@ -96,7 +97,9 @@ export function readMazeCell(world, x, y) {
         if (flag === null) parts.item = item; else parts.flag = flag;
     }
     const obstacle = getObstacle(world, x, y);
-    if (obstacle) parts.obstacle = obstacle;
+    // ⛓ PASS-2 — a needs kind's own gate is the KIND's lowering, not an entity of the cell: a paste re-lowers it under
+    //   the destination's own derived id (`setTileKind`), so copying the id would plant a gate no kind owns.
+    if (obstacle && !(world.tileKinds?.has(`${x},${y}`) && obstacle === tileKindGateId(x, y))) parts.obstacle = obstacle;
     if (getBlock(world, x, y)) parts.block = true;
     const button = getButton(world, x, y);
     if (button) parts.button = indexOfGuardId(button);
