@@ -28432,6 +28432,12 @@ L30 at t448, 0 hits, and 0 diverging samples on p4g. Both solver switches now re
 `true`. They run in the solve worker, so the env channel is the page opt-out. `hammerRockHolderWait.test.js` and
 `hammerKillStanceSight.test.js` pin the defaults. The rows that pin another switch's behaviour (the wait alone, and
 L53's `KILLLOCK_CHASER_REWIND`) now hold `KILL_STANCE_SIGHT` OFF explicitly. ON, 9002's plan goes from 959 to 750 t, still hitless.
+**The guard rides with it** (⚖ the user, 2026-11-20: *"Add the guard flip (Recommended)"*). The first landing attempt was
+stopped on the route survey's step 227 (L98: the Chest, then the L99 stairs). `KILL_STANCE_SIGHT` re-times the kill-lock
+kill there, and the player's stand-out after the last kill sits in `spinningaxe@128,64`'s sweep: 477 t and one hit, where
+main had 520 t and none. `KILLLOCK_STANDOUT_GUARD` (from the L98-L99 slice) drives that stand-out on a replay and refuses
+the attempt on a hit, so it now ships ON too (`!== '0'`). Step 227 then solves in 537 t with no hit.
+`hammerL98L99.train.test.js` pins both arms of the shipped defaults.
 
 ### Seedling hammer-phase PKC + FH FLIP — `PRESS_KILL_CHASERS` and `HIT_AVOID_PASS` ON by default
 
