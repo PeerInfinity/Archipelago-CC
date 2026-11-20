@@ -1,0 +1,4 @@
+222	level_18__r1c1 <- in_L16_352_80 -> exit:out_stairsdown_16_16
+223	level_18__r1c1 <- in_L16_352_80 -> location:L18 flag 0: lock@144,112 cleared
+224	level_18__r7c10 <- in_L19_0_144 -> exit:out_teleporter_176_112
+706	level_92__r7c17 <- in_L87_16_32 -> exit:out_teleporter_272_144
