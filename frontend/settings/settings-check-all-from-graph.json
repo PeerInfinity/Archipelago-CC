@@ -12,13 +12,7 @@
           "path.check": "now"
         }
       },
-      "checkAllLocationsInRegion": true,
-      "addToPath": false,
-      "overwritePath": false,
-      "addLocationsToPath": false,
-      "movePlayerOneStep": false,
-      "movePlayerDirectly": false,
-      "showRegionInPanel": false
+      "addLocationsToPath": false
     }
   }
 }

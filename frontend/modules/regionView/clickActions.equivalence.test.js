@@ -41,6 +41,13 @@ function norm(v) {
 vi.mock('./regionActions.js', async (importOriginal) => {
     const real = await importOriginal();
     const push = (channel, name, args) => rec.log.push({ channel, name, args: norm(args) });
+    // CA-S3: `moveOnlyOneStep` left `regionActions` (the base passed it `false`; the click actions pass nothing). A
+    // `false` is dropped on both sides; a `true` (the base's one-step rows) is kept, so `classify` still sees it.
+    const pathOpts = (o) => {
+        if (!o || o.moveOnlyOneStep !== false) return o;
+        const { moveOnlyOneStep, ...rest } = o;
+        return rest;
+    };
     return {
         ...real,
         planOneStepMove: (h, target, opts) => {
@@ -55,12 +62,12 @@ vi.mock('./regionActions.js', async (importOriginal) => {
         },
         publishRegionMove: (h, move, source) => { push('play', 'publishRegionMove', [move, source]); },
         addToPath: (h, target, opts) => {
-            push('play', 'addToPath', [target, opts]);
+            push('play', 'addToPath', [target, pathOpts(opts)]);
             opts?.beforeExecute?.();
             return { ok: true, kind: 'path', from: 'End', dispatched: 1, regions: [target] };
         },
         overwritePath: (h, target, opts) => {
-            push('play', 'overwritePath', [target, opts]);
+            push('play', 'overwritePath', [target, pathOpts(opts)]);
             opts?.beforeExecute?.();
             return { ok: true, kind: 'path', from: 'Menu', dispatched: 1, regions: [target] };
         },
@@ -105,8 +112,7 @@ vi.mock('../../app/core/settingsManager.js', () => ({ default: {
 
 const { GraphInteractionManager } = await import('../regionGraph/graphInteractionManager.js');
 const { NavigationManager } = await import('../regionGraph/navigationManager.js');
-const { REGION_GRAPH_SOURCES } = await import('../regionGraph/regionGraphOriginators.js');
-const { LegacyGraphInteraction, LegacyNavigation } = await import('./legacyRegionGraphClicks.testkit.js');
+const { LegacyGraphInteraction, LegacyNavigation, REGION_GRAPH_SOURCES } = await import('./legacyRegionGraphClicks.testkit.js');
 const { REGIONS_OPEN_ACTION } = await import('../regions/regionsClickActions.js');
 const CA = await import('./clickActions.js');
 

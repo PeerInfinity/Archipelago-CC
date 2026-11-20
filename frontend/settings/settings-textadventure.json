@@ -14,8 +14,7 @@
         "location": {
           "path.check": "now"
         }
-      },
-      "showRegionInPanel": false
+      }
     },
     "discovery": {
       "enableDiscoveryMode": true,

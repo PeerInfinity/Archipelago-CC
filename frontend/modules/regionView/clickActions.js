@@ -5,7 +5,7 @@
  * runs. It replaces the Region Graph's seven "On Region Node Click" checkboxes with named choices (route from path
  * end / start / player, always all the way), and lets other panels add their own actions (the Regions panel's
  * "open at it", Flash's teleport, …). The shared "On click" strip (`clickActionsUI.js`) renders and edits a panel's
- * settings; the Region Graph runs its clicks through `runClickActions` (CA-S2), the Region Map follows in CA-S3,
+ * settings; the Region Graph runs its clicks through `runClickActions` (CA-S2), the Region Map too (CA-S3),
  * the other panel-owned actions in CA-S4.
  *
  * ⚖ NO "ONE STEP" (user, 2026-11-17T23:00:54Z, session 84c8ab35): *"I think I want to entirely remove the "move
@@ -203,15 +203,13 @@ function validRoute(value) {
  * re-expressed; its `navigationManager.js` moves before CA-S2):
  *   pathEnd → `actions.addToPath`; start → `actions.overwritePath`; player → `planDirectMove`, then
  *   `publishRegionMove` when it plans a move.
- * `moveOnlyOneStep: false` is `regionActions`' own option, passed as the Region Graph always passed it with the
- * one-step box unticked.
  */
 export function routeTo(h, regionName, route, panelId) {
     if (!validRoute(route)) return { ok: false, reason: 'invalid-route' };
     const source = pathSourceFor(panelId);
     const beforeExecute = h.beforePathExecute ?? null;
-    if (route.from === 'pathEnd') return actions.addToPath(h, regionName, { moveOnlyOneStep: false, source, beforeExecute });
-    if (route.from === 'start') return actions.overwritePath(h, regionName, { moveOnlyOneStep: false, source, beforeExecute });
+    if (route.from === 'pathEnd') return actions.addToPath(h, regionName, { source, beforeExecute });
+    if (route.from === 'start') return actions.overwritePath(h, regionName, { source, beforeExecute });
     const plan = actions.planDirectMove(h, regionName, { onError: h.onError ?? noop });
     if (plan.ok && plan.kind === 'move') actions.publishRegionMove(h, plan.move, source);
     return plan;
