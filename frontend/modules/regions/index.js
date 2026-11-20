@@ -5,7 +5,7 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import eventBus from '../../app/core/eventBus.js';
 import { registerClickAction, unregisterClickAction } from '../regionView/clickActions.js';
-import { REGIONS_OPEN_ACTION } from './regionsClickActions.js';
+import { REGIONS_OPEN_ACTION, REGIONS_SCROLL_TO_ACTION } from './regionsClickActions.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -293,6 +293,9 @@ export async function initialize(mId, priorityIndex, initializationApi) {
   // panels' "On click" strip. Owned here, unregistered in the cleanup below.
   try { registerClickAction(REGIONS_OPEN_ACTION); }
   catch (e) { log('warn', `[${moduleId} Module] regions.open not registered: ${e.message}`); }
+  // ⛓ CA-S4: a location click's "scroll the Regions panel to it" (`regions.scrollTo`), off to start.
+  try { registerClickAction(REGIONS_SCROLL_TO_ACTION); }
+  catch (e) { log('warn', `[${moduleId} Module] regions.scrollTo not registered: ${e.message}`); }
 
   // Example: Subscribe to something using the module-wide eventBus if needed later
   // const handle = moduleEventBus.subscribe('some:event', () => {}, 'moduleName');
@@ -309,6 +312,7 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     moduleUnsubscribeHandles.forEach((unsubscribe) => unsubscribe());
     moduleUnsubscribeHandles = [];
     unregisterClickAction(REGIONS_OPEN_ACTION.id);
+    unregisterClickAction(REGIONS_SCROLL_TO_ACTION.id);
     // Any other cleanup specific to this module's initialize phase
     moduleDispatcher = null; // Clear dispatcher reference
     _moduleEventBus = null;
