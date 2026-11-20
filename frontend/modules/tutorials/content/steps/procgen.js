@@ -284,12 +284,46 @@ const OPEN_SETTINGS_FOR_CLEAR = {
     ...FLASH, selector: `.flash-panel-section-settings:not([open]):has(${CLEAR_SAVE_SELECTOR}) > summary`, optional: true,
 };
 const CLEAR_SAVE = { ...FLASH, selector: CLEAR_SAVE_SELECTOR, optional: true };
+// ⛓ USE THE SAVE / CLEAR (Flash) — slice `ruffle-save-toggle-clear` (⚖ Robert 2026-11-19: "tutorials that use Ruffle
+// clear it first"): the Flash (Ruffle) runtime's "Clear the Flash save", shown only when that runtime is selected.
+const CLEAR_RUFFLE_SAVE_SELECTOR = '.flash-panel-ruffle-save-clear[data-applies="true"]';
+const OPEN_SETTINGS_FOR_ANY_CLEAR = {
+    ...FLASH,
+    selector: `.flash-panel-section-settings:not([open]):has(${CLEAR_SAVE_SELECTOR}, ${CLEAR_RUFFLE_SAVE_SELECTOR}) > summary`,
+    optional: true,
+};
+const CLEAR_RUFFLE_SAVE = { ...FLASH, selector: CLEAR_RUFFLE_SAVE_SELECTOR, optional: true };
 // the panel's runtime control has its value once the panel's settings are read (the button's `data-applies` follows it)
 const RUNTIME_CONTROL = { ...FLASH, selector: '.flash-panel-setting[data-setting="runtime"] .flash-panel-setting-input' };
 let settingsWasOpen = null;
 
 export function clearSeedlingJsSave(id, { required = false } = {}) {
+    return clearSeedlingSaveSteps(id, { required, ruffle: false });
+}
+
+/**
+ * ⛓ USE THE SAVE / CLEAR, BOTH RUNTIMES THAT KEEP ONE — `clearSeedlingJsSave`'s two steps, whose press step also
+ * presses the Flash (Ruffle) runtime's **Clear the Flash save** when that runtime is selected. Every click is
+ * optional: on wasm neither button is shown and nothing is pressed. Used by `startSeedlingGame` (a tutorial runs
+ * whichever runtime the person has set).
+ */
+export function clearSeedlingSaves(id) {
+    return clearSeedlingSaveSteps(id, { required: false, ruffle: true });
+}
+
+function clearSeedlingSaveSteps(id, { required, ruffle }) {
     const clear = required ? { ...FLASH, selector: CLEAR_SAVE_SELECTOR } : CLEAR_SAVE;
+    const text = ruffle
+        ? "Start from no save: in the panel's **Settings** section, press **Clear this room's save** on the **JS** runtime, or **Clear the Flash save** on the **Flash** (Ruffle) runtime (the panel's log says what it removed). On wasm there is no such save, and nothing to press."
+        : "On the **JS** runtime, start from no save: in the panel's **Settings** section, press **Clear this room's save** (the panel's log says what it removed). On wasm there is no JS save, and nothing to press.";
+    const actions = ruffle
+        ? [{ click: OPEN_SETTINGS_FOR_ANY_CLEAR }, { click: clear }, { click: CLEAR_RUFFLE_SAVE }]
+        : [{ click: OPEN_SETTINGS_FOR_CLEAR }, { click: clear }];
+    const root = (ctx) => ctx.query(FLASH_ROOT)?.dataset ?? {};
+    const done = ruffle
+        ? (ctx) => (!ctx.query(CLEAR_SAVE) && !ctx.query(CLEAR_RUFFLE_SAVE)) || ctx.sinceStep(root(ctx).jsSaveClearedAt)
+            || ctx.sinceStep(root(ctx).ruffleSaveClearedAt)
+        : (ctx) => (!required && !ctx.query(CLEAR_SAVE)) || ctx.sinceStep(root(ctx).jsSaveClearedAt);
     return [
         {
             step: {
@@ -304,13 +338,13 @@ export function clearSeedlingJsSave(id, { required = false } = {}) {
         {
             step: {
                 id,
-                text: "On the **JS** runtime, start from no save: in the panel's **Settings** section, press **Clear this room's save** (the panel's log says what it removed). On wasm there is no JS save, and nothing to press.",
-                actions: [{ click: OPEN_SETTINGS_FOR_CLEAR }, { click: clear }],
+                text,
+                actions,
                 run: (ctx) => {
                     const section = ctx.query(SETTINGS_SECTION);
                     if (settingsWasOpen === false && section?.open) section.querySelector('summary')?.click();
                 },
-                done: (ctx) => (!required && !ctx.query(CLEAR_SAVE)) || ctx.sinceStep(ctx.query(FLASH_ROOT)?.dataset.jsSaveClearedAt),
+                done,
                 doneTimeoutMs: 10000,
             },
         },
@@ -329,8 +363,8 @@ export function clearSeedlingJsSave(id, { required = false } = {}) {
  */
 export function startSeedlingGame(id) {
     return [
-        // ⛓ USE THE SAVE / CLEAR — first, no Seedling JS save (a no-op on wasm)
-        ...clearSeedlingJsSave(`${id}-clear-save`),
+        // ⛓ USE THE SAVE / CLEAR — first, no Seedling JS or Flash (Ruffle) save (a no-op on wasm)
+        ...clearSeedlingSaves(`${id}-clear-save`),
         {
             step: {
                 id: `${id}-page`,
