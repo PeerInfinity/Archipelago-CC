@@ -1,0 +1,4 @@
+arm pair (SEEDLING_PRESS_ESCAPE_SHIELD_CLAIM=1 SEEDLING_PRESS_KILL_CHASERS=1)
+empty pairs c3   bbc9ce7be220c50d834925d165c80093
+empty pairs c6   59c3f4b81f419ff74d67c5ff51baf617
+carved pairs c4  fd17f4e2a819806af17b0a3c26faed78
