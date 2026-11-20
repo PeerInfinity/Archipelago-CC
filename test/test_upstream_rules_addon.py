@@ -160,14 +160,19 @@ def test_an_item_id_that_is_not_an_integer_becomes_none():
                                                          "Text": {"id": None}}}}
 
 
-def test_the_committed_alttp_preset_has_the_prize_ids_the_add_on_clears():
-    """The premise, on the fork's own preset (the add-on's ALttP doc equals it after the strips)."""
+def test_the_committed_alttp_preset_carries_null_prize_ids_and_the_add_on_changes_none():
+    """The fork's own preset (the add-on's ALttP doc equals it after the strips). Until sdc-nonint-item-ids the
+    exporter wrote the 10 prizes' ROM-byte tuples as ``id`` and the add-on cleared them; the exporter now writes
+    ``null`` itself (``int_id_or_none``), so the add-on's normalisation is belt-and-braces and changes nothing."""
+    import copy
     preset = json.loads((REPO / "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json")
                         .read_text(encoding="utf-8"))
-    odd = sorted(n for n, it in preset["items"]["1"].items() if isinstance(it.get("id"), list))
-    assert "Crystal 1" in odd and "Red Pendant" in odd and len(odd) == 10
-    cleared = _addon.ids_the_server_knows(preset)
-    assert all(isinstance(it.get("id"), int) or it.get("id") is None for it in cleared["items"]["1"].values())
+    items = preset["items"]["1"]
+    prizes = [f"Crystal {n}" for n in range(1, 8)] + ["Red Pendant", "Blue Pendant", "Green Pendant"]
+    assert all(items[n]["id"] is None for n in prizes)
+    assert all(isinstance(it.get("id"), int) and not isinstance(it.get("id"), bool) or it.get("id") is None
+               for it in items.values())
+    assert _addon.ids_the_server_knows(copy.deepcopy(preset)) == preset
 
 
 def test_fields_the_client_reads_are_never_stripped():
