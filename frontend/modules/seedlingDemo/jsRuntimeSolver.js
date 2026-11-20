@@ -426,7 +426,8 @@ export function hitVerdictOrder(bestPlan, nextPlan) {
 }
 
 /**
- * ⛓⛓ SEEDLING HAMMER-PHASE FEWER-HITS — **A THIRD, HIT-AVOIDING PASS** (`HIT_AVOID_PASS`, OFF; `SEEDLING_HIT_AVOID_PASS=1`)
+ * ⛓⛓ SEEDLING HAMMER-PHASE FEWER-HITS — **A THIRD, HIT-AVOIDING PASS** (`HIT_AVOID_PASS`, ON by default since the FH flip,
+ * 2026-11-20: *"Flip it after landing (Recommended)"*; `SEEDLING_HIT_AVOID_PASS=0` opts out)
  * and **FEWER HITS FIRST BETWEEN TWO HIT PLANS** (`FEWER_HITS_RANK`, OFF; `SEEDLING_FEWER_HITS_RANK=1`). ⚖ The user,
  * 2026-11-19: *"Fewer-hits ranking (Recommended)"* (`CC/docs/cloud-reports/seedling-hammer-fewer-hits.md`).
  *
@@ -452,8 +453,8 @@ export function hitVerdictOrder(bestPlan, nextPlan) {
  * ⛓ THE THREAD: both run inside `solveAnytime`, i.e. the page's SOLVE WORKER (and node); the worker's env channel
  * (`?seedlingSolverEnv=SEEDLING_HIT_AVOID_PASS=1`) is the whole page wiring. The pass does not post an `onPass`.
  */
-export const HIT_AVOID_PASS = { enabled: globalThis.process?.env?.SEEDLING_HIT_AVOID_PASS === '1' };
-export const HIT_AVOID_PASS_DEFAULT = false;
+export const HIT_AVOID_PASS = { enabled: globalThis.process?.env?.SEEDLING_HIT_AVOID_PASS !== '0' };
+export const HIT_AVOID_PASS_DEFAULT = true;
 export const FEWER_HITS_RANK = { enabled: globalThis.process?.env?.SEEDLING_FEWER_HITS_RANK === '1' };
 export const FEWER_HITS_RANK_DEFAULT = false;
 /** ⛓ HIT-AVOID PASS — the latest start (idle ticks before the search) the pass tries. A search bound, not a game value. */
