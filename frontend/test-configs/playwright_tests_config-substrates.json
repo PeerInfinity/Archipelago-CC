@@ -70,6 +70,12 @@
             "_comment": "AN-3b: the 'perform all remaining' button only on limit > 1 nodes; queues the route + the remaining acts, says so on the card, refused when none remain, capped by mana."
         },
         {
+            "id": "an-cards-after-reopen",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-3b limit (a): the Region Graph panel closed and reopened shows a card per node again with no world reload (regionGraph:panelMounted → ActionNodes re-registers)."
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"

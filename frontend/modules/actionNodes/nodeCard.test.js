@@ -13,7 +13,7 @@ import {
     CHECK_MARK, GOAL_MARK, PERFORM_ALL_LABEL, PERFORM_ALL_SLOT, PLACEHOLDER_TEXT, cardVisibility, createNodeCardProvider, nodeCardModel,
     renderNodeCard,
 } from './nodeCard.js';
-import { nodeCardView, wireNodeCardOverlay } from './nodeCardOverlay.js';
+import { PANEL_MOUNTED_EVENT, nodeCardView, wireNodeCardOverlay } from './nodeCardOverlay.js';
 import { getActionNodesRuntime } from './actionNodesRuntime.js';
 import { ResourceLedger } from '../resourceChannels/resourceLedger.js';
 
@@ -225,6 +225,34 @@ describe('the provider and the overlay wiring', () => {
         wire.sync();
         expect(calls).toEqual(['register', 'refresh', 'unregister']);
         expect(wire.isRegistered()).toBe(false);
+    });
+
+    it('⛓ AN-3b limit (a): a Region Graph panel mounted while the card is registered gets it again; none otherwise', () => {
+        const calls = [];
+        const fns = {
+            registerNodeOverlayProvider: (p) => calls.push(['register', p]),
+            unregisterNodeOverlayProvider: () => calls.push(['unregister']),
+            refreshNodeOverlays: () => calls.push(['refresh']),
+        };
+        const subs = new Map();
+        const bus = { subscribe: (ev, fn) => { (subs.get(ev) ?? subs.set(ev, []).get(ev)).push(fn); } };
+        const fire = (ev) => (subs.get(ev) ?? []).forEach((fn) => fn({}));
+        const rt = getActionNodesRuntime();
+        rt.setEnv({ ledger: () => new ResourceLedger(), publish: () => {}, dispatch: () => {} });
+        rt.unload();
+        const wire = wireNodeCardOverlay({ getModuleFunction: (m, f) => (m === 'regionGraph' ? fns[f] : undefined), eventBus: bus });
+        expect(subs.has(PANEL_MOUNTED_EVENT)).toBe(true);
+        fire(PANEL_MOUNTED_EVENT);
+        expect(calls).toEqual([]); // no world: nothing to register
+        rt.loadWorld(RULES, P);
+        wire.sync();
+        fire(PANEL_MOUNTED_EVENT); // a panel closed and reopened
+        expect(calls.map((c) => c[0])).toEqual(['register', 'register']);
+        expect(calls[1][1]).toBe(wire.provider);
+        rt.loadWorld({ regions: {} }, P);
+        wire.sync();
+        fire(PANEL_MOUNTED_EVENT); // another world: the card stays away
+        expect(calls.map((c) => c[0])).toEqual(['register', 'register', 'unregister']);
     });
 
     it('the view reads the queue only in Loop mode, and the live state while the queue runs', () => {

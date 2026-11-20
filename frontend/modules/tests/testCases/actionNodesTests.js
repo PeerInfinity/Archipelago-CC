@@ -996,6 +996,35 @@ async function performAllButton(tc) {
     return tc.getOverallResult();
 }
 
+// ─── 14. The cards after the Region Graph panel is closed and reopened (AN-3b, limit (a)) ──
+
+async function cardsAfterReopen(tc) {
+    const { payloads } = await readPreset();
+    if (!await loadExample(tc)) return tc.getOverallResult();
+    const ids = Object.keys(payloads);
+    const allCards = () => ids.every((id) => cardOf(id));
+    if (!await graphWithCards(tc, payloads)) return tc.getOverallResult();
+    let reopened = false;
+    try {
+        await panelManager.destroyPanelByComponentType('regionGraphPanel');
+        const gone = await tc.pollForCondition(() => !cyOf() && cards().length === 0, 'the Region Graph panel is closed', 5000, 50);
+        tc.reportCondition('the Region Graph panel is closed (no graph, no card)', !!gone);
+        await panelManager.createPanelForComponent('regionGraphPanel', 'Region Graph', 2);
+        reopened = true;
+        tc.eventBus.publish('ui:activatePanel', { panelId: 'regionGraphPanel' }, 'tests');
+        // No world load in between: the cards come back from the panel's own mount (regionGraph:panelMounted).
+        const back = await tc.pollForCondition(() => !!cyOf() && allCards(), 'the cards are back on the reopened panel', 15000, 100);
+        tc.reportCondition(`the reopened panel shows a card per node without a world reload (${cards().length} of ${ids.length})`, !!back);
+        tc.assertEqual('… still the same world (no reload)', true, runtime().isLoaded());
+        tc.assertEqual('… one card per node, no duplicate', ids.length, cards().length);
+    } finally {
+        if (!reopened && !cyOf()) {
+            try { await panelManager.createPanelForComponent('regionGraphPanel', 'Region Graph', 2); } catch (e) { tc.log(`reopen: ${e.message}`); }
+        }
+    }
+    return tc.getOverallResult();
+}
+
 const ROWS = [
     ['an-load-and-act-once', 'ActionNodes: load the preset and act once',
         'Loads the example, queues a move and one act, runs the queue: the node is performed once, its result is in the ledger, the pool paid its authored price.', actOnce],
@@ -1021,6 +1050,8 @@ const ROWS = [
         'With only actionNodes.act on in the strip: a click on a ready node\'s card queues the route then ONE act (Loop mode); again, one more act and no hop; a blocked node and a done one are refused by name; the queue runs. On the Region Map the same. With Loop mode off the click performs at once.', clickPerformsOnce],
     ['an-perform-all-button', 'ActionNodes: the "perform all remaining" button',
         'The button exists only on nodes whose limit is greater than 1; it queues the route and every remaining performance, says so on the card, is refused by name when nothing remains, and is capped by mana.', performAllButton],
+    ['an-cards-after-reopen', 'ActionNodes: the node cards come back when the Region Graph panel is closed and reopened',
+        'Loads the example with the Region Graph open (a card per node), closes the panel, opens a new one: a card per node again, with no world reload (AN-3a\'s pending-slot limit).', cardsAfterReopen],
 ];
 
 for (const [id, name, description, testFunction] of ROWS) {

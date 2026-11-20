@@ -28,7 +28,21 @@ let _accessibilityVisibilityFilter = null; // () => boolean (true = show colors)
 let _keyForwarder = null;            // (event) => void — forward keydown events to another module
 let _panelInstances = new Set();     // all live RegionGraphUI instances
 
-export function registerPanelInstance(instance) { _panelInstances.add(instance); }
+/**
+ * A Region Graph panel was created (its constructor registered it, before it takes the pending overlay provider).
+ * Additive, for an overlay provider that must reach EVERY panel, a reopened one included (slice AN-3b): the pending
+ * slot below serves only the first panel created after a registration, so a closed and reopened panel had no cards
+ * until the owner registered again. ActionNodes re-registers its node card on this event.
+ */
+export const REGION_GRAPH_PANEL_MOUNTED = 'regionGraph:panelMounted';
+export function registerPanelInstance(instance) {
+  _panelInstances.add(instance);
+  try {
+    getModuleEventBus().publish(REGION_GRAPH_PANEL_MOUNTED, { panelCount: _panelInstances.size });
+  } catch (e) {
+    logger.warn('regionGraph:panelMounted could not be published', e);
+  }
+}
 export function unregisterPanelInstance(instance) { _panelInstances.delete(instance); }
 export function getPendingOverlayProvider() {
   const p = _pendingOverlayProvider;
@@ -65,6 +79,7 @@ export function register(registrationApi) {
   registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
   registrationApi.registerEventBusPublisher('regionGraph:nodeSelected');
+  registrationApi.registerEventBusPublisher(REGION_GRAPH_PANEL_MOUNTED);
 
   registrationApi.registerPublicFunction('regionGraph', 'registerNodeOverlayProvider', (providerOrCallback) => {
     // If panels already exist, register directly; otherwise stash for later
