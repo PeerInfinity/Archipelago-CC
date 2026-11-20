@@ -201,6 +201,14 @@ const el = (doc, tag, className, text) => {
  *   every path, so a page may publish what it derives from the MOUNT and not
  *   only what it derives from the SESSION. `why` is one of `SET_CHANGE_WHY`
  * @param {Function} [o.loadZip]   `() => Promise<JSZip>`
+ * @param {Function} [o.atlasAtDoor] `(atlas, rules) => atlas` — the `region-atlas` member
+ *   a BUNDLE carries, given the report's atlas and the report's rules. A substrate whose
+ *   compile stamps a COPY of the atlas (the Seedling watch page:
+ *   `seedlingDemo/watchSetIdentity.js`) returns that stamped copy here, so the member's
+ *   `atlas_id` is the one `rules.region_atlas[p]` names and the host atlas cache files it
+ *   under that id. The report's own atlas stays unstamped. A throw is printed as the
+ *   bundle's refusal. The default is the identity, so a mount that never heard of it
+ *   bundles exactly what it bundled before
  * @param {object} [o.apworldEditor] the REVERSE LINK (APWorld editor hub, H4c)
  *   — `{available: () => boolean, open: (rules) => boolean}`. ⛔ `null` (the
  *   default) is the STANDALONE answer and the button stays HIDDEN, not
@@ -232,7 +240,7 @@ export function mountSetEditor({
     cellSubstrate = () => null, identityOf = null, reportRows = null,
     say = () => {}, roomSession = () => null, openRoomAt = () => false,
     discardRoom = () => {}, download = () => {}, onSetChange = null,
-    loadZip = null, apworldEditor = null,
+    loadZip = null, apworldEditor = null, atlasAtDoor = (atlas) => atlas,
     overviewMap = null, overviewMapOn = false,
     doc = globalThis.document,
 } = {}) {
@@ -2206,7 +2214,17 @@ export function mountSetEditor({
         }
         if (rep.download.rules.allowed && rep.rules) {
             members.push({ kind: 'rules', doc: rep.rules });
-            if (rep.atlas) members.push({ kind: 'region-atlas', doc: rep.atlas });
+            if (rep.atlas) {
+                let atlasMember;
+                try {
+                    atlasMember = atlasAtDoor(rep.atlas, rep.rules);
+                } catch (e) {
+                    if (!(e instanceof Error)) throw e;
+                    setNote(`⛔ NOT BUNDLED — ${e.message}`, true);
+                    return;
+                }
+                members.push({ kind: 'region-atlas', doc: atlasMember });
+            }
         } else {
             notes.push(`no \`rules.json\` member — ${rep.download.rules.why}`);
         }
