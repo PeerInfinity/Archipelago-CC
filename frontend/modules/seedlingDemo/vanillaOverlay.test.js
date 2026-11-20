@@ -469,7 +469,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
             //   L77 splits into r2c0 / r12c6 / r15c6, L78 gains six sub-regions; no door, location or other level moves).
             // ⛓ rules-remerge-lavatrap: rule T re-merged onto main (train 146, land/rules-move-fireguard); re-recorded from the
             //   producers (9925cc35 -> 391ef89a; atlas id 5ca88dfe -> ea1ef5ba).
-            .toBe('391ef89a3af8a2410c835ce6c54455f7');
+            // ⛓ rules-k-pursuit-resume: rule K + (b) on the line-cut pull disc (a lavarunner that outruns the player gates its
+            //   leash cut at its kill-lock arm: L72/L74/L75 split, L71/L73/L78/L80 re-cut, the L98/L99 rename); re-recorded from
+            //   the producers (391ef89a -> 5c3dd651; atlas id ea1ef5ba -> b856f0fc). The overlay fixture `--check`s byte-identical.
+            .toBe('5c3dd651d2aa811d4536995f5ebcfae1');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

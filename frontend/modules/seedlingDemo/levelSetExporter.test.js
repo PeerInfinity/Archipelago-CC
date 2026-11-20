@@ -905,7 +905,8 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
         // ⛓ rules-l112-owl-rocklock: 53 -> 54 (L112 splits at its rock, which costs the Owl's kill).
         // ⛓ rules-no-hit-directional: 54 -> 56 (L22 and L25 split at their directional no-hit gates).
         // ⛓ rules-lavatrap-neck: 56 -> 57 (L77 splits at its lavatrap's gated disc, rule T).
-        expect(committed.regions.filter((r) => r.subgraph)).toHaveLength(57);
+        // ⛓ rules-k-pursuit-resume: 57 -> 60 (rule K: L72, L74 and L75 split at their lavarunners' leash cuts).
+        expect(committed.regions.filter((r) => r.subgraph)).toHaveLength(60);
         // ⛓ SWIM T4 D4: 285 -> 286, L12's two-way Or(Swim, Red Key) row split by the one-sided locks.
         // ⛓ RULES (A): 286 -> 295, the nine return rows through the OPENED one-sided locks.
         // ⛓ RULES logical-links: 295 -> 289, five model-sealed True_ rows + one Swim row between two pruned pockets.
@@ -935,7 +936,9 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
         //   pair r2c3 <-> r4c10 is one two-way swing row again (the two halves price the same).
         // ⛓ rules-lavatrap-neck: 316 -> 355, rule T gates L77's and L78's lavatrap discs (they seal the L76 <-> L78 and
         //   L77 <-> L79 necks): L77 splits into 3 sub-regions (+6 rows), L78 gains 6 (+33 rows).
-        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(355);   // merged: no-hit's 4 + Fire's 4 + L99's 1; chaser guard -1
+        // ⛓ rules-k-pursuit-resume: 355 -> 489, rule K + (b) gates the leash cuts of the lavarunners that outrun the player
+        //   (sub-regions/rows per level: L72 +9/+36, L73 +3/+6, L74 +4/+6, L75 +9/+36, L78 +4/+36, L80 +3/+8, L99 +3/+6).
+        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(489);   // merged: no-hit's 4 + Fire's 4 + L99's 1; chaser guard -1
         expect(fromXml.atlas.regions.filter((r) => r.subgraph)).toHaveLength(0);
         const exitKeys = new Set(committed.regions.flatMap((r) => (r.exits ?? [])
             .flatMap((e) => Object.keys(e))));

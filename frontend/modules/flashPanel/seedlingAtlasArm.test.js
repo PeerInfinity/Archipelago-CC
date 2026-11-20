@@ -135,7 +135,8 @@ describe('the sixth fact — `atlas`, decided by (iii)\'s own count', () => {
         //   band: r0c6 / r8c0, r2c7 / r3c2; ⚖ the user 2026-11-11, a per-room table for now).
         // ⛓ rules-lavatrap-neck: 266 -> 274 — rule T splits L77 (level_77 -> r2c0 + r12c6 + r15c6) and L78 (+ r1c10, r3c1, r3c9, r4c4, r5c6, r6c9), at its lava-trap
         //   discs that seal a route.
-        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(274);
+        // ⛓ rules-k-pursuit-resume: 274 -> 306 — rule K + (b) (a lavarunner that outruns the player gates its leash cut at its kill-lock arm) splits L72 (+9 sub-regions), L74 (+4), L75 (+9) and re-cuts L73 (+3), L78 (+4), L80 (+3), L99 (+3); -3 for the three whole-level regions L72/L74/L75 that split.
+        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(306);
         expect(atlasRoomRegions(rulesOf('seedling'))).toHaveLength(0);
         expect(atlasRoomRegions(rulesOf('seedling_generated_room'))).toHaveLength(0);
     });

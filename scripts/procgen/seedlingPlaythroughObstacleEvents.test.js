@@ -384,9 +384,11 @@ describe('encounter locks a side cannot clear — RULES rocklock-pocket', () => 
         // the rules: the pocket's crossing asks for the event, earned on the lower floor; the floor's own does not
         const R = RULES.regions['1'];
         const asks = (e) => JSON.stringify(e.access_rule).includes(JSON.stringify(row.name));
-        expect(asks(R.level_99__r2c4.exits.find((e) => e.connected_region === 'level_99__r2c7'))).toBe(true);
-        expect(asks(R.level_99__r2c7.exits.find((e) => e.connected_region === 'level_99__r2c4'))).toBe(false);
-        expect(eventsOf(RULES).find((e) => e.name === row.name)).toMatchObject({ region: 'level_99__r2c7', side: 'level_99__r2c7' });
+        // ⛓ rules-k-pursuit-resume: rule K cuts the lower floor at its lavarunners' leashes; the pocket's neighbour is its member r7c5 (was r2c7)
+        expect(asks(R.level_99__r2c4.exits.find((e) => e.connected_region === 'level_99__r7c5'))).toBe(true);
+        expect(asks(R.level_99__r7c5.exits.find((e) => e.connected_region === 'level_99__r2c4'))).toBe(false);
+        //   (the lock's lower-floor side is K's member r7c5, the stairs' landing member, which the cut separates from r2c7)
+        expect(eventsOf(RULES).find((e) => e.name === row.name)).toMatchObject({ region: 'level_99__r7c5', side: 'level_99__r7c5' });
     });
 
     it('each fired lock is a lock event on the side that clears it, and only the pocket\'s crossing asks for it', () => {

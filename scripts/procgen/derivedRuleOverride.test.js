@@ -30,7 +30,7 @@ const payloads = (doc) => JSON.stringify(Object.values(doc.preset_sidecars['1'])
 
 describe('⛔ the maze cannot read an override back (sentinel pin)', () => {
     const plain = compile({ rows: [] });
-    const STAIRS = 'level_98 -> level_99__r2c7';
+    const STAIRS = 'level_98 -> level_99__r7c5';   // ⛓ rules-k-pursuit-resume: L99's stairs member re-keyed r2c7 -> r7c5 by rule K's cut
     const SWIM = 'level_98 -> level_93__r5c7';
     const planted = compile({ rows: [row(STAIRS, 'out_stairsup_112_112', plantIn(ruleOf(plain, STAIRS))), row(SWIM, 'out_teleporter_112_192', plantIn(ruleOf(plain, SWIM)))] });
     it('the AP layer CARRIES the planted row (positive control: the plant reached the override)', () => {

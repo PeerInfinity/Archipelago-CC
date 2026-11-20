@@ -36,14 +36,16 @@ describe('the off-grid blocker census', () => {
         expect(new Set(rows.map((r) => r.level)).size).toBe(43);
     });
 
-    it('six of them split a component the grid calls one room; none of the splits loses anything (0 LOOSER)', () => {
+    // ⛓ rules-k-pursuit-resume: six -> five. L72's lavachain@240,152 no longer splits a component: at main its one-tile
+    //   minor pocket (15,9) split the 91-tile component at (11,0); rule K's leash cuts now gate the cells round it, so the
+    //   grid no longer calls that component one room (measured: `splits: []`, `touched: 2`, `sealed: 0`).
+    it('five of them split a component the grid calls one room; none of the splits loses anything (0 LOOSER)', () => {
         // Each minor pocket holds no exit or location, and borders only crossing material its room's main pocket
         // borders too (L72's lava, L115's water) or none at all (an NPC's corner, a spire's corner).
         const splits = rows.filter((r) => r.splits.length > 0).map((r) => `L${r.level} ${r.blocker}`);
         expect(splits).toEqual([
             'L34 adnanchar@56,48',
             'L35 forestchar@56,16',
-            'L72 lavachain@240,152',
             'L114 dungeonspire@40,112',
             'L114 dungeonspire@104,112',
             'L115 dungeonspire@72,32',

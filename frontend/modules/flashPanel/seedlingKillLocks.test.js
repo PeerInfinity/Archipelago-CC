@@ -175,7 +175,8 @@ describe('the committed rules: the doors under a kill-lock', () => {
     });
 
     it('L98 → L99 (the stairs under the lock) costs the room\'s kill', () => {
-        const rule = items(exitTo('level_98', 'level_99__r2c7').access_rule);
+        // ⛓ rules-k-pursuit-resume: rule K cuts L99's lower floor at its lavarunners' leashes; the stairs now land in its member r7c5 (was r2c7)
+        const rule = items(exitTo('level_98', 'level_99__r7c5').access_rule);
         for (const item of ['Progressive Sword', 'Ghost Spear', 'Wand']) expect(rule).toContain(item);
         expect(rule).toMatch(/Progressive Shield/);
     });
