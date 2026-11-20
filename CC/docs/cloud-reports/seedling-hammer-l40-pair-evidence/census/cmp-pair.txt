@@ -1,0 +1,13 @@
+level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest
+    OFF 1022t/0h/f49dcbbcd357@2560
+    ON  REF@2560:solverBot(wasm-arrival-solve) apitem (880,816) contact: the combat ladder is EXHAUSTED. Th
+level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Chest
+    OFF 1144t/0h/42264c18b45f
+    ON  1011t/0h/8ff37eda4f74@2560
+level_40__r48c54 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+    OFF 1101t/0h/2e4ae7cbf0c3@2560
+    ON  REF@2560:solverBot(wasm-arrival-solve) clear-tag {40,12} wandlock@480,560 -> burn stance (burnablet
+level_40__r48c54 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+    OFF 1132t/0h/643daa40674a@2560
+    ON  1092t/0h/b9113470bf80@2560
+50 legs, 4 moved. OFF: 49 solved (0 with a hit) / 1 refused / 0 capped; ON: 47 solved (0 with a hit) / 3 refused / 0 capped
