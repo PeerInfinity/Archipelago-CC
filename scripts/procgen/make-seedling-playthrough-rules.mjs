@@ -586,7 +586,7 @@ function stampChaserGuards(level, grid, onto) {
     const exempt = new Set([
         ...arrivalTilesFor(level.level).map(toIndex),
         ...[...doorTilesOf(level)].map((k) => toIndex(k.split(',').map(Number))),
-        ...OV.lavaTrapPulls(level, TILE).map((p) => toIndex(p.tile)),
+        ...playthroughLavaTrapPulls(level).map((p) => toIndex(p.tile)),
     ]);
     const centreOf = (b) => {
         const ctor = ENEMY_CLASSES[b.tag]?.ctor;
