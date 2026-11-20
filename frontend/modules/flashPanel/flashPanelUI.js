@@ -27,6 +27,10 @@ import { returnSpawnTable } from './seedlingReturnSpawns.js';
 import { seedlingMountKey } from './seedlingMountKey.js';
 // ⛓ RE2 — the JS runtime's save, one localStorage key per room (the mount key).
 import { createJsSaveController, JS_SAVE_DEFAULT, JS_SAVE_SETTING_KEY } from './seedlingJsSave.js';
+// ⛓ USE THE SAVE / CLEAR for the Flash (Ruffle) save `…/shrumsave` (slice ruffle-save-toggle-clear).
+import {
+  clearRuffleSave, endRuffleSaveRun, prepareRuffleSave, ruffleSaveKey, RUFFLE_SAVE_DEFAULT, RUFFLE_SAVE_SETTING_KEY,
+} from './seedlingRuffleSave.js';
 // ⛓ SOLVER LIMIT OFF — import-free: the Solver section's limit controls and Stop.
 import { SOLVER_LIMIT_PROPS, anySolving, backstopMsOf, buildSolverLimitRow, stopSolves, wasmBudgetKnobOf } from './seedlingSolverLimitControls.js';
 import { SOLVE_DEMO_EVENT, SOLVE_DEMOS, pushDemoWindow, solveDemoMissing, solveDemoMoved, solveDemoStage } from './seedlingSolveDemo.js';
@@ -136,6 +140,9 @@ const SETTINGS_CONTROLS = Object.freeze([
   // ⛓ USE THE SAVE (slice `js-save-toggle-clear`) — shown when the JS runtime is SELECTED (the setting), so it can be
   // set before the game loads; the "Clear this room's save" button sits on the row under it.
   { prop: 'seedlingJsSave', label: 'Use the save', when: 'jsSelected' },
+  // ⛓ USE THE SAVE (slice `ruffle-save-toggle-clear`) — the Flash (Ruffle) save, its own setting; shown when the Flash
+  // runtime is SELECTED on Seedling, with "Clear the Flash save" on the row under it.
+  { prop: 'seedlingRuffleSave', label: 'Use the save', when: 'flashSelected' },
   { prop: 'seedlingSolverWalk', label: 'Bot uses the solver', when: 'seedling' },
   { prop: 'touchControls', label: 'Touch controls', when: 'touch' },
   { prop: 'seedlingSolveProgressIntervalMs', label: 'Progress refresh (ms)', when: 'seedling' },
@@ -284,6 +291,8 @@ export class FlashPanelUI {
       if (data?.key === '*' || data?.key?.startsWith?.(SETTING_KEY_PREFIX)) this._syncSettingsControls();
       // ⛓ USE THE SAVE — the switch applies at once (on: written from now on; off: nothing more is written)
       if (data?.key === '*' || data?.key === JS_SAVE_SETTING_KEY) this._onJsSaveSettingChanged();
+      // ⛓ USE THE SAVE (Flash) — acts at the game's next load; a running game is told so
+      if (data?.key === RUFFLE_SAVE_SETTING_KEY) this._onRuffleSaveSettingChanged(data.value);
       if (data?.key === SOLVER_WALK_SETTING_KEY || data?.key === '*') {
         this._refreshSolverWalk(data.key === '*' ? undefined : data.value);
       }
@@ -994,6 +1003,8 @@ export class FlashPanelUI {
       this._teleportUnsub = null;
     }
     this.swfContainer.innerHTML = '';
+    // ⛓ USE THE SAVE (Flash) — the player is gone and its last write is in (Ruffle writes inside the removal)
+    this._endRuffleSaveRun();
     this.teleportRow.style.display = 'none';
     this.gameConfig = null;
     this._stageSize = null;
@@ -1389,6 +1400,7 @@ export class FlashPanelUI {
       host.append(row);
       this._settingsControls.push({ ...c, spec, row, input, key: SETTING_KEY_PREFIX + c.prop, ...(speedParts ?? {}) });
       if (c.prop === 'seedlingJsSave') host.append(this._buildJsSaveClearRow());
+      if (c.prop === 'seedlingRuffleSave') host.append(this._buildRuffleSaveClearRow());
     }
     // "TP on UI click" — the panel's own switch (not a setting), shown when the game can teleport
     const tp = document.createElement('label');
@@ -1419,6 +1431,27 @@ export class FlashPanelUI {
     row.append(button);
     this._jsSaveClearRow = row;
     this._jsSaveClearButton = button;
+    return row;
+  }
+
+  /**
+   * ⛓ USE THE SAVE / CLEAR (Flash) — the "Clear the Flash save" row, under the Flash "Use the save" and shown with it
+   * (the 168 row's shape). It works with the save on or off; `data-applies` is "true" while it is shown.
+   */
+  _buildRuffleSaveClearRow() {
+    const row = document.createElement('div');
+    row.className = 'flash-panel-ruffle-save-clear-row';
+    row.style.cssText = 'display:none;flex-wrap:wrap;align-items:center;gap:4px 8px;min-width:0;';
+    const button = document.createElement('button');
+    button.className = 'flash-panel-ruffle-save-clear';
+    button.style.cssText = BUTTON_CSS;
+    button.textContent = 'Clear the Flash save';
+    button.title = "Remove the Flash (Ruffle) Seedling save, \"…/shrumsave\", from this browser: one save for this site's "
+      + 'Seedling SWF, shared by every room and seed. A game running now keeps its progress; the next load starts with no save.';
+    button.addEventListener('click', () => this.clearRuffleSave());
+    row.append(button);
+    this._ruffleSaveClearRow = row;
+    this._ruffleSaveClearButton = button;
     return row;
   }
 
@@ -1581,9 +1614,11 @@ export class FlashPanelUI {
     // ⛓ USE THE SAVE — the JS runtime SELECTED: the setting says js (a Seedling game, or none resolved yet), or it runs
     const runtimeSetting = this._settingsControls.find((c) => c.prop === 'runtime')?.input?.value ?? null;
     const jsSelected = transport === 'js' || (runtimeSetting === 'js' && (seedling || !this.configPath));
+    // ⛓ USE THE SAVE (Flash) — the Flash runtime SELECTED on Seedling (or no game resolved yet), or it runs Seedling
+    const flashSelected = (transport === 'flash' && seedling) || (runtimeSetting === 'flash' && (seedling || !this.configPath));
     for (const c of this._settingsControls) {
       const applies = c.when === 'always' || (c.when === 'seedling' && seedling) || (c.when === 'js' && transport === 'js')
-        || (c.when === 'jsSelected' && jsSelected) || (c.when === 'touch' && !!this.gameConfig?.touch_controls);
+        || (c.when === 'jsSelected' && jsSelected) || (c.when === 'flashSelected' && flashSelected) || (c.when === 'touch' && !!this.gameConfig?.touch_controls);
       c.row.style.display = applies ? 'flex' : 'none';
       if (c.prop !== 'runtime') continue;
       for (const opt of c.input.options) {
@@ -1602,6 +1637,10 @@ export class FlashPanelUI {
     if (this._jsSaveClearRow) {
       this._jsSaveClearRow.style.display = jsSelected ? 'flex' : 'none';
       this._jsSaveClearButton.dataset.applies = String(jsSelected);
+    }
+    if (this._ruffleSaveClearRow) {
+      this._ruffleSaveClearRow.style.display = flashSelected ? 'flex' : 'none';
+      this._ruffleSaveClearButton.dataset.applies = String(flashSelected);
     }
   }
 
@@ -2145,6 +2184,77 @@ export class FlashPanelUI {
     return result;
   }
 
+  async _readRuffleSaveSetting() {
+    try {
+      return (await settingsManager.getSetting(RUFFLE_SAVE_SETTING_KEY, RUFFLE_SAVE_DEFAULT)) === true;
+    } catch {
+      return RUFFLE_SAVE_DEFAULT;
+    }
+  }
+
+  /** This page's Ruffle save key for the loaded SWF, or null (no SWF, or not Seedling: `shrumsave` is Seedling's). */
+  _ruffleSaveKeyNow() {
+    if (!this.swfPath || !this.configPath?.endsWith?.(`/${JS_RUNTIME_CONFIG}`)) return null;
+    return ruffleSaveKey(this.swfPath, typeof document !== 'undefined' ? document.baseURI : undefined);
+  }
+
+  /**
+   * ⛓ USE THE SAVE (Flash) — before the SWF is embedded (`seedlingRuffleSave.js` has the mechanism and the
+   * measurements). OFF: the stored save is set aside, the game starts with none. ON: a save set aside comes back;
+   * with none set aside nothing is touched. Native Flash keeps its own files: the switch cannot reach them.
+   */
+  _prepareRuffleSave(on) {
+    this._ruffleSaveRun = null;
+    const key = this._ruffleSaveKeyNow();
+    if (!key) return null;
+    if (hasFlashPlayer()) {
+      this._panelLog('[flash save] a native Flash Player plays the game: it keeps its own save files, which "Use the save" does not reach');
+      return null;
+    }
+    const result = prepareRuffleSave({ on, key, storage: this._ruffleSaveStorage, log: (msg, cls) => this._panelLog(msg, cls) });
+    this._ruffleSaveRun = { key, on };
+    if (this.rootElement) this.rootElement.dataset.ruffleSave = `${on ? 'on' : 'off'}:${result.action}`;
+    if (!this._ruffleSavePageHide && typeof window !== 'undefined') {
+      // a courtesy: Ruffle's own unload write may come after this, and the next boot throws that away
+      this._ruffleSavePageHide = () => this._endRuffleSaveRun({ keepRun: true });
+      window.addEventListener('pagehide', this._ruffleSavePageHide);
+    }
+    return result;
+  }
+
+  /** The player was removed: an OFF run's save is thrown away now (the next boot would do it anyway). */
+  _endRuffleSaveRun({ keepRun = false } = {}) {
+    const run = this._ruffleSaveRun;
+    if (!keepRun) this._ruffleSaveRun = null;
+    if (!run) return false;
+    return endRuffleSaveRun({ key: run.key, storage: this._ruffleSaveStorage });
+  }
+
+  /** ⛓ USE THE SAVE (Flash) — a change acts at the game's next load; a running game is told so. */
+  _onRuffleSaveSettingChanged(value) {
+    const run = this._ruffleSaveRun;
+    if (!run || (value === true) === run.on) return;
+    this._panelLog(`[flash save] "Use the save" is now ${value === true ? 'on' : 'off'}: it takes effect at the game's next load `
+      + `(this run keeps the save ${run.on ? 'on' : 'off'})`);
+  }
+
+  /**
+   * ⛓ USE THE SAVE / CLEAR (Flash) — the "Clear the Flash save" button: removes this page's `…/shrumsave` key and
+   * its aside key, nothing else (`clearRuffleSave`). A running game's later writes are thrown away at the next load.
+   * Works with the save on or off. The root's `data-ruffle-save-clear` / `data-ruffle-save-cleared-at` say it for a
+   * tutorial step.
+   */
+  clearRuffleSave() {
+    const key = this._ruffleSaveKeyNow();
+    const live = !!this._ruffleSaveRun && this._ruffleSaveRun.key === key;
+    const result = clearRuffleSave({ key, live, storage: this._ruffleSaveStorage, log: (msg, cls) => this._panelLog(msg, cls) });
+    if (this.rootElement) {
+      this.rootElement.dataset.ruffleSaveClear = result.error ? 'error' : (result.removed ? 'removed' : 'none');
+      this.rootElement.dataset.ruffleSaveClearedAt = String(Date.now());
+    }
+    return result;
+  }
+
   /**
    * ⛓⛓ ER E5 — A SHUFFLED WORLD LEFT ON VANILLA ROOMS IS REFUSED BY NAME. Every path of the randomized load
    * that ends WITHOUT delivering rooms calls this: when the loaded world places entrances, the game's own
@@ -2375,6 +2485,8 @@ export class FlashPanelUI {
     this._renderGameScope();
 
     const [w, h] = this.gameConfig.stage_size || [480, 480];
+    const ruffleSaveOn = await this._readRuffleSaveSetting();
+    if (this._initStale(epoch)) return;
 
     try {
       await ensureRuffleLoaded();
@@ -2384,6 +2496,8 @@ export class FlashPanelUI {
     }
     if (this._initStale(epoch)) return;
 
+    // ⛓ USE THE SAVE (Flash) — after the last await, right before the player is built: nothing can read the save first
+    this._prepareRuffleSave(ruffleSaveOn);
     this._embedSwf(w, h);
     this._setStatus('waiting for bridge…');
 
@@ -2704,6 +2818,7 @@ export class FlashPanelUI {
     this._initEpoch = (this._initEpoch ?? 0) + 1;
     this._unbindJsSave();
     if (this._jsSavePageHide) { window.removeEventListener('pagehide', this._jsSavePageHide); this._jsSavePageHide = null; }
+    if (this._ruffleSavePageHide) { window.removeEventListener('pagehide', this._ruffleSavePageHide); this._ruffleSavePageHide = null; }
     this._unmountTouchControls();
     this._heldKeys?.uninstall();
     this._solveProgressView?.close();
