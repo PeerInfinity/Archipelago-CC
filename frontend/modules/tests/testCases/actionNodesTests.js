@@ -22,6 +22,9 @@ import { nodeCardView } from '../../actionNodes/nodeCardOverlay.js';
 import { NODE_STATES } from '../../actionNodes/nodeStates.js';
 import { CHECK_MARK, GOAL_MARK, PERFORM_ALL_SLOT, PLACEHOLDER_TEXT } from '../../actionNodes/nodeCard.js';
 import { playLiveToGoal } from '../../actionNodes/actionLiveSim.js';
+import { buildActionModel } from '../../actionNodes/actionModel.js';
+import { playToGoal } from '../../actionNodes/actionPlanner.js';
+import { placementsFromRules } from '../../actionNodes/actionGraphCompiler.js';
 import { getActivePanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 import { startAppBotTestSpeed } from '../botTestSpeed.js';
@@ -791,7 +794,19 @@ async function botPlaysToGoal(tc) {
         }
         const sim = playLiveToGoal(rules);
         tc.log(`headless live path: goal in ${sim.loops.length} loop(s); in-app: ${loops}`);
-        tc.assertEqual('the in-app run takes the headless live path\'s loops', sim.loops.length, loops);
+        // ⛓ AN-3b, limit (b): the runner replans mid-loop when an item arrives (headless: live 2 = pure 2, pinned
+        // exactly in actionLoopBot.test.js). In-app the queue runs at Instant, where Loops COMPLETES an action started
+        // short of mana (loops/loopState.js _advanceActionProgress: completion runs before _maybeResetForOOM), so the
+        // replan's ⚖ Q1 attempt (it should drain and end the loop) can finish the goal a loop early. ⚖ planner
+        // ruling C (2026-11-20): assert the replan, the goal in ≤ the pure count, and the attempt named in the log;
+        // the Instant overshoot is a known gap for a Loops slice.
+        const model = buildActionModel(await (await fetch(`./${rules.procgen_metadata[P].graph_path.replace(/^frontend\//, '')}`, { cache: 'no-store' })).json());
+        const pure = playToGoal(model, { placements: placementsFromRules(rules, model, P) });
+        tc.log(`pure planner: goal in ${pure.loops.length} loop(s); headless live: ${sim.loops.length}; in-app (Instant): ${loops}`);
+        tc.assertEqual('the runner replanned mid-loop at least once', true, (bot.getLoopRunner?.()?.getReplanCount?.() ?? 0) >= 1);
+        tc.assertEqual('a replan\'s reasoning is in the log', true, log.some((l) => /^loop \d+ \(replan\): /.test(l)));
+        tc.assertEqual(`the goal in ≤ the pure planner's ${pure.loops.length} loop(s) (in-app ${loops})`, true, loops >= 1 && loops <= pure.loops.length);
+        tc.assertEqual('the Q1 attempt is named in the log', true, log.some((l) => /attempting /.test(l)));
         tc.assertEqual('no queue refusal', null, loopStateSingleton.lastActionRefusal);
     } finally {
         bot.stop();
@@ -1063,7 +1078,8 @@ registerTest({
     name: 'Playback Bot: the ActionNodes example to the goal in Loop mode, with its reasoning',
     description: 'Loads the example and presses the bot\'s Play with "log reasoning" on: the runner asks the ActionNodes '
         + 'entry\'s loopBot.planLoop for each loop, writes it as the Loops queue (free hops + acts) and plays it until the '
-        + 'goal is checked. Every loop\'s reason is in the log; the loop count is the headless live path\'s.',
+        + 'goal is checked. Every loop\'s reason is in the log; the loop count is the headless live path\'s and (AN-3b: the '
+        + 'runner replans mid-loop when an item arrives) the pure planner\'s.',
     testFunction: botPlaysToGoal,
     category: 'Playback Bot',
     enabled: false,

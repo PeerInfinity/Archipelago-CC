@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 31,
         "headings": 1347,
         "indexHeadings": 2,
-        "lines": 37038,
+        "lines": 37053,
         "pages": 4,
-        "words": 567097
+        "words": 567819
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -74,7 +74,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 9089
+            "words": 9111
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -193,7 +193,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/playback-and-debugging.md",
-            "words": 5176
+            "words": 5253
         },
         {
             "description": "How loop mode records what a player does in a region and plays it back: per-block modes (Manual, Record, Playback, Bot) and the Instant toggle, the saved-recording store, the capture contract that decides who records, queue annotations, summary substrates, reset handling and multi-run replay, and the strict action gate.",
@@ -355,7 +355,7 @@ export const DOCS_INDEX = frz({
             "file": "action-nodes.md",
             "h1": "ActionNodes Substrate",
             "headings": 13,
-            "lines": 127,
+            "lines": 142,
             "links": [
                 "architecture.md",
                 "gotchas.md",
@@ -364,7 +364,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/action-nodes.md",
-            "words": 3612
+            "words": 4235
         },
         {
             "description": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md).",

@@ -2383,7 +2383,7 @@
             "id": "an-bot-plays-to-goal",
             "enabled": true,
             "category": "Playback Bot",
-            "_comment": "AN-3a (design §7): the ActionNodes example in Loop mode; the runner asks the entry's loopBot.planLoop for each loop (free hops + acts) until the goal is checked; each loop's reason is in the log (logReasoning on); loop count = the headless live path's."
+            "_comment": "AN-3a (design §7): the ActionNodes example in Loop mode; the runner asks the entry's loopBot.planLoop for each loop (free hops + acts) until the goal is checked; each loop's reason is in the log (logReasoning on). AN-3b: the runner replans mid-loop when an item arrives (the replan in the log, the goal in <= the pure planner's loop count, the Q1 attempt named; Instant can complete the attempt a loop early: a known Loops gap)."
         },
         {
             "id": "playback-bot-loop-mode-maze",

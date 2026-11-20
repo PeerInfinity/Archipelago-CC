@@ -379,15 +379,17 @@ describe('the corpus census — printed, then pinned', () => {
          *              links to maze.md and pipeline-presets.md § Regenerating the Seedling playthrough chain, and
          *              maze.md's derived-rule-table bullet and pipeline-presets.md's table paragraph → it (`doc` 332 →
          *              337); its own § Staleness link (`same-doc` 42 → 43).
+         *   446 → 448  ActionNodes AN-3b (2026-11-20): action-nodes.md's opening paragraph now names what slice 3
+         *              added → its own § The node states and the node card and § The bot planner (`same-doc` 43 → 45).
          */
         expect(by).toEqual({
-            'same-doc': 43,
+            'same-doc': 45,
             doc: 337,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(446);
+        expect(CORPUS.length).toBe(448);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
