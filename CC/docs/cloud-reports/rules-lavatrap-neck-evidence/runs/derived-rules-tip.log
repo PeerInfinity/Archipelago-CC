@@ -1,0 +1,13 @@
+CHANNEL: headless logic-only (no wasm: a node measurement of the maze-derived rules)
+BUILT: 115 levels, 275 regions, 2076194 B in 18548 ms
+ECHOES: planted {"loc":48,"ex":640,"ix":337,"evt":30,"gate":26,"ixr":18,"ixg":4,"rope":2,"ropegate":2,"hand":19}; copied {"loc":10,"ex":9,"ix":1,"evt":0,"gate":0,"ixr":0,"ixg":0,"rope":0,"ropegate":0}; in shared worlds {"loc":7,"ex":5,"ix":0,"evt":0,"gate":0,"ixr":0,"ixg":0,"rope":0,"ropegate":0}; 21 AP elements; 8221 ms
+CERT: 1 problems / 16 accepted / 0 threw; 781 rows; wall 62303 ms, shard ms 62150/2487/2152/42049, heap MB 56/33/42/580
+  PROBLEM level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false
+WITNESSED BINDINGS: 3 (L63 flag 1: lightpole@64,88 cleared; L63 flag 6: lightpole@48,272 cleared; L71 flag 2: shieldlock@288,256 cleared)
+SUMMARY: {"certifier":{"problems":1,"accepted":16,"threw":0},"echoes":{"copied":{"loc":10,"ex":9,"ix":1,"evt":0,"gate":0,"ixr":0,"ixg":0,"rope":0,"ropegate":0},"elements":21},"labels":{"pair":{"path-vs-edge":133,"derived":213},"exit":{"derived":290,"echoed":13,"arrival-dependent":54,"path-vs-edge":18},"location":{"derived":60,"echoed":13,"path-vs-edge":13,"arrival-dependent":29}},"w0":{"exit":{"equal":278,"arrival-dependent":28,"stricter":6,"looser":5},"location":{"equal":62,"stricter":12,"arrival-dependent":15}},"elements":406,"echoedElements":21,"unpriced":354,"sharedBinding":159,"bindingWitnessed":14,"arrivals":{"regionsPriced":205,"arrivalNodes":241,"regionsPerArrivalCount":{"1":171,"2":32,"3":2},"regionsArrivalDependent":25},"routeA":{"classes":{"walk-in from another member":102,"overridable":59,"internal-only":28,"several arrivals":16},"overridableElements":135,"overridableEchoed":9,"overridableEchoFree":126,"regionsWithAnEchoFreeOverride":57,"overridablePartial":12,"overridableExact":112,"regionsWithAnExactOverride":51},"table":{"rows":106,"regions":50,"excluded":6}}
+WROTE: /tmp/claude-0/-home-user-Archipelago-CC/4230e151-f16c-5d18-82d1-ccdb529769b3/scratchpad/derived-tip/derived-rules.json (836 element rows)
+TABLE: 106 rows in 50 regions; 6 exact elements excluded
+PASS: the derived-rule table matches frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json
+PASS: explained problem level_63__r6c9 → level_63__r0c1 → path-vs-edge
+PASS: every pinned count matches scripts/procgen/seedling-derived-rules-expected.json
+ALL CHECKS PASSED

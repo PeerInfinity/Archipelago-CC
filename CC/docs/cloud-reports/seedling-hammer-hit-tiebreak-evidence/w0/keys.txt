@@ -1,0 +1,1 @@
+level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared|level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 0: bosslock@64,32 cleared

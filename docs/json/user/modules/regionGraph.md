@@ -31,6 +31,22 @@ The graph adjusts detail based on zoom level. Zooming in progressively reveals:
 4. Location nodes
 5. Location labels
 
+## The "On click" strip
+
+What a click on the graph does is set in the **On click** strip at the top right of the panel, separate from the Controls.
+
+- **Folded**, it is one line saying what a click does — for example *On click: extend path · Regions — location: check* — with the **⏸** switch beside it. **⏸** turns every click action off at once (a click then only selects the node); **▶** turns them back on. The line then reads *On click: ⏸ paused*.
+- **Unfolded** (press **▸**), it lists the actions in two groups:
+  - **Region** (a click on a region node):
+    - **Route to the region** — *Extend the path from its end*, *Restart the path from the start*, *Move the player there*, or *off*. A route always goes all the way to the region.
+    - **Check all accessible locations there**.
+    - **Open it in the Regions panel** — opens the [Regions](regions.md) panel at the region. It is there while the Regions panel's module is loaded.
+  - **Location** (a click on a location node):
+    - **Check the location** — *Check it now*, *Add the check to the path* (the route above takes you to its region first), or *off*.
+- Other panels can add actions of their own to these lists. An action whose panel is not loaded keeps its setting and shows greyed out as *(not loaded)*.
+
+The default is: extend the path to a clicked region and open it in the Regions panel; check a clicked location. The settings are kept per panel (`moduleSettings.regionGraph.clickActions`). The first time the panel opens, it carries over what the old **On Region Node Click** checkboxes were set to. The old *Move player one step towards region* option is gone: a click goes all the way.
+
 ## Controls
 
 Click the +/- toggle at the top to expand the control panel:
@@ -41,7 +57,7 @@ Click the +/- toggle at the top to expand the control panel:
 - **Export Positions** — Download current node positions as a JSON file
 
 ### Go to (instead of clicking a node)
-A folded section under the main controls. Type or choose a **Region** or a **Location** by name: it does exactly what clicking that node does (the Region Click Behavior options below apply), and centres the view on it. The lists hold the regions the graph shows and every location in them, drawn as a node right now or not. Useful when a node is hard to find or click, or from the keyboard.
+A folded section under the main controls. Type or choose a **Region** or a **Location** by name: it does exactly what clicking that node does (the **On click** strip's actions apply), and centres the view on it. The lists hold the regions the graph shows and every location in them, drawn as a node right now or not. Useful when a node is hard to find or click, or from the keyboard.
 
 ### Location Visibility
 - **Always show/hide locations** — Override zoom-based location visibility
@@ -50,15 +66,6 @@ A folded section under the main controls. Type or choose a **Region** or a **Loc
 - **Only show locations in view** — Only render location nodes within the current viewport
 - **Viewport stabilize delay** — Debounce delay before refreshing viewport-filtered locations
 
-### Region Click Behavior
-Configure what happens when you click a region node:
-- **Move player one step towards region** — Pathfinding moves you one exit closer
-- **Move player directly to region** — Teleport directly
-- **Show region in Regions panel** — Open the [Regions](regions.md) panel and navigate to it
-- **Add to path / Overwrite path** — Append or replace the player path
-- **Add locations to path** — Include location checks when clicking location nodes
-- **Check all locations in region** — Auto-check all accessible locations
-
 ### Discovery Mode
 When discovery mode is active, a checkbox appears to show or hide undiscovered regions and exits.
 
@@ -66,8 +73,8 @@ When discovery mode is active, a checkbox appears to show or hide undiscovered r
 
 | Action | Effect |
 |--------|--------|
-| **Click region node** | Executes the enabled click behaviors above |
-| **Click location node** | Checks the location (or adds to path if that option is enabled) |
+| **Click region node** | Selects it and runs the **On click** strip's Region actions |
+| **Click location node** | Runs the strip's Location actions (by default, checks the location) |
 | **Drag a region node** | Reposition it manually (positions persist until re-layout) |
 | **Scroll/pinch** | Zoom in and out |
 | **Click and drag background** | Pan the view |
@@ -78,4 +85,4 @@ The graph uses the COSE (Compound Spring Embedder) layout algorithm to automatic
 
 ## Where its state and actions live
 
-The Region Graph draws; it no longer decides. Whether a region is reachable, how many of its locations are checked or accessible, and whether discovery mode hides it or shows it as `???` all come from the shared region view model (`frontend/modules/regionView/regionViewModel.js`). What a click does — move one step, move directly, add to or overwrite the path, check a location — comes from the shared region actions (`frontend/modules/regionView/regionActions.js`). The Region Map panel uses the same two files, so a change to what a click does applies to both panels. See `frontend/modules/regionView/README.md`.
+The Region Graph draws; it no longer decides. Whether a region is reachable, how many of its locations are checked or accessible, and whether discovery mode hides it or shows it as `???` all come from the shared region view model (`frontend/modules/regionView/regionViewModel.js`). What a click does is a list of registered click actions (`frontend/modules/regionView/clickActions.js`), shown and edited by the shared **On click** strip (`frontend/modules/regionView/clickActionsUI.js`); the actions themselves move the player, edit the path or check locations through the shared region actions (`frontend/modules/regionView/regionActions.js`). The Region Map panel uses the same files. See `frontend/modules/regionView/README.md`.

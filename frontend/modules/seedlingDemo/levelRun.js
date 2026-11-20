@@ -4011,11 +4011,16 @@ export function createLevelRun({
         // reads them — see `fallRockFrozenFrame`.
         const spanOn = CONTACT_FIDELITY.drillTimedPass && CONTACT_FIDELITY.drillLive;
         for (let i = 1; i <= 1000; i += 1) {
+            // ⛓ fidelity FROZENTICK D2 (ON only): the blocks update before the rock (`Game.as:2382` vs `:2353`).
+            stepPushablesDeadFrameNow();
             const r = stepFallRock(s, playerBoxAt(state.x, state.y),
                 { cleared: true, ...(spanOn ? { screen: { width: SCREEN_W, height: SCREEN_H } } : {}) });
             s = r.state;
             frames = i;
             if (spanOn) fallRockFrozenFrame(r, i);
+            // ⛓ fidelity FROZENTICK D2 (ON only): the chasers after it (`:2276-2301`), frozen on every frame but the
+            // release frame (the rock lowers the flag before they update: unfrozen there, not stepped — named).
+            if (!r.unfroze && CONTACT_FIDELITY.frozenTickUngated && !noclip) stepChasersFrozenNow();
             // ⛓ fidelity ROCKBUTTON D1: the span's activator frames — all but the RELEASE frame, whose activator update
             // is the pull tick's own end-of-tick `stepActivators` (it runs after this collapsed span, with the rock
             // landed). Measured: stepping the release frame here too opens L28's lock one tick early (game t166).
@@ -4078,6 +4083,8 @@ export function createLevelRun({
         let snapY = null;
         let unfroze = false;
         for (let i = 1; i <= 2000 && !unfroze; i += 1) {
+            // ⛓ fidelity FROZENTICK D2 (ON only): the blocks update before the rocks (`Game.as:2382` vs `:2353`).
+            stepPushablesDeadFrameNow();
             for (const e of started) {
                 const r = stepFallRock(e.state, playerBoxAt(state.x, state.y),
                     { cleared: true });
@@ -4089,6 +4096,8 @@ export function createLevelRun({
                 if (r.unfroze) unfroze = true;
             }
             stepDrillGraphicsFrozen();
+            // ⛓ fidelity FROZENTICK D2 (ON only): the chasers, frozen on every frame but the release frame (named).
+            if (!unfroze && CONTACT_FIDELITY.frozenTickUngated && !noclip) stepChasersFrozenNow();
             for (const b of bosses) {
                 // ⛓ R6 SLICE 4: and `render()` runs on every frozen frame
                 // too — it is outside `Game.update` entirely. Without this
@@ -14691,8 +14700,39 @@ export function createLevelRun({
         pendingCeremonyLump = { level, what, due: ticksCompleted + 1, frames: CEREMONY_LUMP_SHOVE_FRAMES };
         ceremony.shoveLump = what;
     }
+    /**
+     * ⛓⛓ fidelity FROZENTICK D2 (`CONTACT_FIDELITY.frozenTickUngated`, ON only) — THE CHASERS' FROZEN UPDATE ON A FRAME
+     * WHOSE FREEZE IS NOT A CEREMONY. `stepChasersNow` reads `ceremony !== null` as `Game.freezeObjects` (the move,
+     * the chase blocks that test it, the sword, `applyPlayerHit`'s refusal); a dialogue frame, a button-dropped rock's
+     * frame and a rock's span hold no ceremony, so the freeze is held here for the one call, as the inventory hold
+     * and the seal lump hold theirs. What runs is what the game runs under the flag: `hitUpdate`, `Mobile.death`'s
+     * fade, the terrain switch and the pit descent, and `Jellyfish`'s and `Puncher`'s chase blocks (no freeze test).
+     */
+    const FROZEN_TICK_FREEZE = Object.freeze({ frozenTick: true });
+    function stepChasersFrozenNow() {
+        const held = ceremony;
+        if (held === null) ceremony = FROZEN_TICK_FREEZE;
+        try {
+            stepChasersNow();
+        } finally {
+            ceremony = held;
+        }
+    }
+    /**
+     * ⛓⛓ fidelity FROZENTICK D2 (ON only) — ONE DEAD FRAME OF THE PUSHABLE BLOCKS. `PushableBlock.update` and
+     * `PushableBlockFire.update` override `Mobile.update` without `mobileUpdate` (`PushableBlock.as:96-111`,
+     * `PushableBlockFire.as:125-142`): no freeze gate, so a gliding block keeps gliding through every dead frame. The
+     * main-tick slot steps them on a frozen TICK already; this is for the frames the model collapses.
+     */
+    function stepPushablesDeadFrameNow() {
+        if (!CONTACT_FIDELITY.frozenTickUngated || noclip) return;
+        const pushState = pushableStateFor(level);
+        if (pushState.byId.size > 0) stepPushables(pushState, pushableCtx());
+    }
     /** ONE dead frame: the chasers' frozen update, then the player's ungated lines (`Player.update`'s order). */
     function stepCeremonyDeadFrameNow() {
+        // ⛓ fidelity FROZENTICK D2 (ON only): the blocks first (`Game.as:2382-2384`, added after every chaser).
+        stepPushablesDeadFrameNow();
         stepChasersNow();
         shieldBumpNow();
         const d = stepPlayerDamage(damage);
@@ -16317,8 +16357,10 @@ export function createLevelRun({
      *
      * @param {object} activators the level's activator state, as of tick top
      * @param {string} what       what raised the freeze, for the messages
+     * @param {{chasers?: boolean}} [opts] ⛓ fidelity FROZENTICK D2: `chasers` — the caller's freeze is up when the
+     *   chasers update (its raiser updates before them), so `frozenTickUngated` ON runs their frozen update here.
      */
-    const runFrozenTick = (activators, what) => {
+    const runFrozenTick = (activators, what, { chasers = false } = {}) => {
         // ⛓ fidelity TURRETSUIT D2 (ON only): a freeze that starts AFTER a turret's contact was answered in its slot.
         if (turretSlotContact !== null && turretSlotContact.t === ticksCompleted + 1) {
             throw new Error(`levelRun: ${turretSlotContact.id}'s contact was answered in its own slot at tick `
@@ -16370,6 +16412,9 @@ export function createLevelRun({
         }
         // ⛓ fidelity BEAMTOWER D1: a tower's own update returns on the freeze, its graphic still updates.
         if (!noclip && beamTowersStepped()) stepBeamTowersNow({ frozen: true });
+        // ⛓ fidelity FROZENTICK D2 (ON only): and the chasers' frozen update — `hitUpdate`, the fade, the terrain
+        // switch, the pit descent, the Jellyfish's and the Puncher's chase — before the player's lines below.
+        if (chasers && CONTACT_FIDELITY.frozenTickUngated && !noclip) stepChasersFrozenNow();
         // ⛓ SLOTS: `Game.update`'s tail runs on a frozen frame too.
         flushPendingRemoved();
         syncSlotsAtTail();
@@ -22792,7 +22837,7 @@ export function createLevelRun({
                 pendingButtonFalls = null;
                 prevHeld = new Set(held);
                 buttonFallsInFlight = new Set(ids);
-                const tick = runFrozenTick(activators, 'a button-dropped fallrock');
+                const tick = runFrozenTick(activators, 'a button-dropped fallrock', { chasers: true });
                 buttonFallsInFlight = new Set();
                 resolveButtonFalls(ids);
                 // ── ⛓ fidelity SMALLGAPS D1 (`CONTACT_FIDELITY.buttonFallReleaseStep`): THE RELEASE STEP, IN THIS TICK ──
@@ -22919,10 +22964,14 @@ export function createLevelRun({
             // ⛓ fidelity PICKUPFREEZE D2 (ON only): a texted pickup touched this tick has already frozen them (`Game.as:2297`).
             // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): on a texted NPC's later frame the main slot does NOT step them:
             // `runFrozenTick`'s frozen step is the frame's one update, after the NPC as `Game.as:2297` orders it.
+            // ⛓ fidelity FROZENTICK D2 (`pickupTickFreeze` ON only): and on a TEXTED pickup's T likewise — that tick
+            // returns through `runFrozenTick`, whose frozen step is the frame's one update (wave 51 stepped it twice).
             if (!noclip && beamTowersStepped() && !(CONTACT_FIDELITY.dialogueFrameFreeze
                 && beamTowerStateFor(level).size > 0 && dialogueFreezeAheadNow('beamtower'))) {
-                stepBeamTowersNow({ frozen: ceremony !== null
-                    || (beamTowerStateFor(level).size > 0 && pickupFreezesFamilyNow('beamtower', { lump: false })) });
+                if (!(CONTACT_FIDELITY.pickupTickFreeze && beamTowerStateFor(level).size > 0
+                    && pickupFreezesFamilyNow('beamtower', { lump: false }))) {
+                    stepBeamTowersNow({ frozen: ceremony !== null });
+                }
             }
             if (!noclip) stepIceTurretsNow();
             // ── ⛓⛓⛓ U15-swim D1: THE TURRETS, BELOW THE ICE TURRETS ──────
@@ -23181,7 +23230,7 @@ export function createLevelRun({
                     }
                     assertDialogueFreezeAheadHeld(true);
                     prevHeld = new Set(held);
-                    return runFrozenTick(activators, 'a placed NPC\'s dialogue');
+                    return runFrozenTick(activators, 'a placed NPC\'s dialogue', { chasers: true });
                 }
             }
             if (!noclip) {
@@ -23199,7 +23248,7 @@ export function createLevelRun({
                             + 'Refused rather than approximated.');
                     }
                     prevHeld = new Set(held);
-                    return runFrozenTick(activators, 'a Watcher\'s dialogue');
+                    return runFrozenTick(activators, 'a Watcher\'s dialogue', { chasers: true });
                 }
             }
 
@@ -23378,6 +23427,8 @@ export function createLevelRun({
                     const fade = wandFadeFreezeTicks();
                     spendFrozen(fade, 'wand-approach-fade');
                     wandFades.push({ t: ticksCompleted, level, deadFrames: fade });
+                    // ⛓ fidelity FROZENTICK D2 (ON only): the blocks glide through the fade's dead frames.
+                    for (let k = 0; CONTACT_FIDELITY.frozenTickUngated && k < fade; k += 1) stepPushablesDeadFrameNow();
                 }
             }
             // ── ⛓⛓⛓ R6 SLICE 6d: THE RUNTIME SEED, BEFORE THE PLACED ──
@@ -23523,6 +23574,11 @@ export function createLevelRun({
                     } else if (!noclip) stepShootersThroughFreeze(CEREMONY_DEAD_FRAMES.pickup);
                     // ⛓ seedling-fidelity-bombpusher: and for the lobber and its bombs.
                     if (!noclip) stepBombsThroughFreeze(CEREMONY_DEAD_FRAMES.pickup);
+                    // ⛓ fidelity FROZENTICK D2 (ON only): and the blocks, which no freeze gates, through phase A's dead
+                    // frames when no stepped lump carries them (a text-less pickup: 149 frames and F+150).
+                    if (CONTACT_FIDELITY.frozenTickUngated && !(CONTACT_FIDELITY.ceremonyShove && ceremony.dialogue !== null)) {
+                        for (let k = 0; k < CEREMONY_DEAD_FRAMES.pickup; k += 1) stepPushablesDeadFrameNow();
+                    }
                 }
             }
             // ⛓ fidelity PICKUPFREEZE D2 (ON only): the slots' prediction against what the detection found.

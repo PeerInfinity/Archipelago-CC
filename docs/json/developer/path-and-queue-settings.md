@@ -51,12 +51,12 @@ These control what happens when the user clicks on graph nodes. They are graph-s
 
 | Setting | Type | Default | Purpose |
 |---------|------|---------|---------|
-| `addToPath` | boolean | `true` | Clicking appends to the existing path |
-| `overwritePath` | boolean | `false` | Clicking replaces the path from start region |
-| `movePlayerOneStep` | boolean | `false` | Move one step toward target on click |
-| `movePlayerDirectly` | boolean | `true` | Jump directly to target on click |
-| `addLocationsToPath` | boolean | `false` | Also add location checks when navigating |
-| `checkAllLocationsInRegion` | boolean | `false` | Auto-check all accessible locations on arrival |
+| `clickActions` | object | `{ enabled: true, region: { 'path.route': { from: 'pathEnd' }, 'path.checkAll': false, 'regions.open': true }, location: { 'path.check': 'now' } }` | What a click runs, edited by the panel's "On click" strip (`regionView/clickActionsUI.js`). `enabled` is the master switch. `path.route` is `{ from: 'pathEnd' \| 'start' \| 'player' }` (extend the path, restart it from the start, move the player directly; always all the way) or `false`. `path.check` is `'now'` \| `'addToPath'` \| `false`. Other panels' ids (`regions.open`, …) are kept even when their panel is not loaded. Model: `frontend/modules/regionView/README.md` § Click actions |
+
+`clickActions` replaced six of the old click keys (CA-S2): `addToPath` → `path.route.from = 'pathEnd'`; else `overwritePath` → `'start'`; else `movePlayerDirectly` → `'player'`; `showRegionInPanel` → `regions.open`; `checkAllLocationsInRegion` → `path.checkAll`; `addLocationsToPath` → `path.check: 'addToPath'`. The old "move one step" option (`movePlayerOneStep`) is removed and ignored. On first load with no stored `clickActions`, the panel migrates the old keys once and saves the result; the old keys stay where they are, because two other readers still use them until CA-S3/CA-S4:
+
+- the Region Map (`regionMap/regionMapClicks.js`) reads all seven old keys;
+- the Regions panel's location clicks (`regions/regionBlockBuilder.js`) read `addLocationsToPath`. A save from the Region Graph's strip mirrors it (`addLocationsToPath` = `path.check === 'addToPath'`), so editing the strip still moves these readers as the old checkbox did. No other old key is written.
 
 ### 5. Path Display Preferences (owned by `regions`)
 

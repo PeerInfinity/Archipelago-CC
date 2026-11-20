@@ -4,6 +4,8 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import eventBus from '../../app/core/eventBus.js';
+import { registerClickAction, unregisterClickAction } from '../regionView/clickActions.js';
+import { REGIONS_OPEN_ACTION } from './regionsClickActions.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -287,6 +289,11 @@ export async function initialize(mId, priorityIndex, initializationApi) {
   moduleDispatcher = initializationApi.getDispatcher();
   _moduleEventBus = initializationApi.getEventBus();
 
+  // ⛓ The Regions panel's map-click action (CA-S2): "open it in the Regions panel" (`regions.open`), for the map
+  // panels' "On click" strip. Owned here, unregistered in the cleanup below.
+  try { registerClickAction(REGIONS_OPEN_ACTION); }
+  catch (e) { log('warn', `[${moduleId} Module] regions.open not registered: ${e.message}`); }
+
   // Example: Subscribe to something using the module-wide eventBus if needed later
   // const handle = moduleEventBus.subscribe('some:event', () => {}, 'moduleName');
   // moduleUnsubscribeHandles.push(handle);
@@ -301,6 +308,7 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     log('info', `[${moduleId} Module] Cleaning up...`);
     moduleUnsubscribeHandles.forEach((unsubscribe) => unsubscribe());
     moduleUnsubscribeHandles = [];
+    unregisterClickAction(REGIONS_OPEN_ACTION.id);
     // Any other cleanup specific to this module's initialize phase
     moduleDispatcher = null; // Clear dispatcher reference
     _moduleEventBus = null;

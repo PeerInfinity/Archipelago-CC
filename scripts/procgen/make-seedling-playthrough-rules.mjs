@@ -83,6 +83,7 @@ const { plannerObstacleAt } = await imp('frontend/modules/seedlingDemo/botDriver
 const { buildRockFireSides, doorLandingTiles } = await imp('frontend/modules/flashPanel/seedlingRockBreakers.js');
 const HP = await imp('scripts/procgen/seedlingHolderParking.js');
 const FCG = await imp('scripts/procgen/seedlingFireChaserGuard.js');
+const TT = await imp('scripts/procgen/seedlingTrapTongueGuard.js');
 const { seedlingModelOracles, modelFloodTiles, modelFloodPoints, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
 const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
 const { lethalTerrainUnder, arrivalIsLethal } = await imp('frontend/modules/seedlingDemo/seedlingLethalArrivals.js');
@@ -233,7 +234,7 @@ function narrowRockFireByHolders(raw) {
         if (!heldBy) continue;
         const rocks = [...raw].filter(([, r]) => r.level === level.level && r.stances.length > 0);
         if (rocks.length === 0) continue;
-        const grid = gridFor(level);
+        const grid = gridFor(level, { guards: false });
         const tileTypes = HP.tileTypesOf(level, grid.width);
         const bodies = HP.holderRoomBodies(level, grid, tileTypes);
         const rows = HP.holderParkVerdicts(level, { grid, tileTypes, heldBy, bodies, entitySemantics: playthroughEntitySemantics }) ?? [];
@@ -248,7 +249,7 @@ function narrowRockFireByHolders(raw) {
                 rockFireForGrid = new Map(raw).set(key, { ...rock, stances: [] });
                 let without;
                 try {
-                    const g = gridFor(level);
+                    const g = gridFor(level, { guards: false });
                     without = HP.holderPrices(level, g, HP.tileTypesOf(level, g.width), [], { entitySemantics: playthroughEntitySemantics });
                 } finally { rockFireForGrid = null; }
                 if (hasFireTerm(without[entry])) continue;
@@ -277,7 +278,7 @@ function narrowRockFireByChasers(sides, raw) {
     const roomOf = (n) => {
         const level = LEVELS.find((l) => l.level === n);
         if (!level) return null;
-        const grid = gridFor(level);
+        const grid = gridFor(level, { guards: false });
         return { grid, tileTypes: HP.tileTypesOf(level, grid.width), bodies: combatCensusOf(level).enemies };
     };
     const { sides: out, narrowings } = FCG.narrowRockFireByChasers(sides, raw, { roomOf });
@@ -554,10 +555,87 @@ const gridFor = (level, options = {}) => {
     if (gate === null) return base;
     return { ...base, cells: base.cells.map((c) => (c.kind === 'gated' && gateKeyOf(c) === gate ? { ...c, kind: 'open', conditions: [] } : c)) };
 };
-const baseGridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = true, encounter = true } = {}) => {
+const baseGridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = true, encounter = true, guards = true } = {}) => {
     const grid = rawBaseGridFor(level, { directionalLocks, arrivals });
-    return encounter ? stampEncounterLocks(level, grid) : grid;
+    const stamped = encounter ? stampEncounterLocks(level, grid) : grid;
+    // ⛓⛓ rules-lavatrap-neck: RULE T's gates price the PLAYER's walk. They are left off (`guards: false`) where a census
+    // models something else on the grid: a kinds-only call (`arrivals: false`, the pit census's: the gates add no kind, and
+    // their landing exemption reads the atlas that census is part of, a cycle); the rock Fire narrowings (the holder census
+    // and the chaser guard decide from the rooms as they were); and the block push model (a block is not stopped by a
+    // tongue: `seedlingBlockPaths` refuses a block on any gated cell).
+    return arrivals && guards ? stampTrapTongues(level, stamped) : stamped;
 };
+/**
+ * ⛓⛓ rules-lavatrap-neck — RULE T (`seedlingTrapTongueGuard.js` holds the rule, its terms and its citations; ⚖ Robert
+ * 2026-11-17 "T wired + K measured, 2 parallel"): every cell in a killing trap's clear-line reach is a GATED cell costing
+ * `Or(Dark Suit, <the arms that kill it from outside its reach>)`, the kill-lock shape, so the analyzer prices a route that
+ * cannot avoid the reach and leaves one that can. Stamped last, over the finished grid (the encounter locks included), so a
+ * gate already on a cell is ANDed, never replaced. The arms are derived per level from the room's own geometry (the 1 px
+ * flood of the player through the room's solids, from its landings, avoiding every live reach), memoized per level.
+ * Read off the patched map's traps, the class constants and the grid; no level literal.
+ */
+export const playthroughTrapTongues = new Map();
+const trapKillArmsMemo = new Map();
+export function playthroughTrapKillArms(level, grid = null) {
+    if (trapKillArmsMemo.has(level.level)) return trapKillArmsMemo.get(level.level);
+    const pulls = OV.lavaTrapPulls(level, TILE).map((p) => ({ ...p, tag: OV.LAVATRAP_PULL.tag }));
+    if (!pulls.some((p) => TT.tongueKills(p.tag))) {
+        trapKillArmsMemo.set(level.level, []);
+        return [];
+    }
+    const g = grid ?? stampEncounterLocks(level, rawBaseGridFor(level, { directionalLocks: DIRECTIONAL_LOCKS, arrivals: true }));
+    const ox = g.origin?.x ?? 0;
+    const oy = g.origin?.y ?? 0;
+    const tilesOf = (e) => SEM.entityClaims(e, playthroughEntitySemantics(e, level) ?? SEM.entitySemantics(e), { pixelMaskFootprints: true })
+        .map((c) => c.tile);
+    // The world WITHOUT every entity that claims a cell the grid calls `gated` (the L99 sided kill-lock's permissive
+    // world): the grid prices those (`enterable` asks the arm's items), and what stays solid is what no item removes.
+    const world = buildLevelWorld({
+        ...level,
+        entities: (level.entities ?? []).filter((e) => !((playthroughEntitySemantics(e, level) ?? SEM.entitySemantics(e)) && tilesOf(e)
+            .some(([x, y]) => g.cells[(y - oy) * g.width + (x - ox)]?.kind === 'gated'))),
+    });
+    const room = TT.tongueRoomOf({
+        level, grid: g, world, pulls, seeds: arrivalTilesFor(level.level),
+        resolveCondition: (c) => analyzerOptions.resolveCondition(c),
+    });
+    const out = TT.trapKillArms(room);
+    trapKillArmsMemo.set(level.level, out);
+    return out;
+}
+function stampTrapTongues(level, grid) {
+    const pulls = OV.lavaTrapPulls(level, TILE).map((p) => ({ ...p, tag: OV.LAVATRAP_PULL.tag }));
+    if (pulls.length === 0) return grid;
+    const toIndex = ([x, y]) => (y - (grid.origin?.y ?? 0)) * grid.width + (x - (grid.origin?.x ?? 0));
+    // Never charged: an arrival landing and a door (the trap's own tile is left out by `trapTongueCells`).
+    const exempt = new Set([
+        ...arrivalTilesFor(level.level).map(toIndex),
+        ...[...doorTilesOf(level)].map((k) => toIndex(k.split(',').map(Number))),
+    ]);
+    const killArms = new Map(playthroughTrapKillArms(level, grid).map((r) => [r.id, r.arms]));
+    // The seal test's anchors: the derived region's exits and locations (the atlas the analyzer prices, as `entryGateOf`
+    // reads it) and the landings. A cell is passable WITHOUT the Dark Suit when every condition it holds is satisfied by
+    // every item but the suit.
+    if (!derivedRegionsByLevel) {
+        const { atlas } = derivePlaythroughLayer(LEVELS, { quiet: true });
+        derivedRegionsByLevel = new Map(atlas.regions.map((r) => [r.map_ref, r]));
+    }
+    const region = derivedRegionsByLevel.get(level.level);
+    const anchors = [
+        ...(region?.exits ?? []).map((e) => e.entrance_tile), ...(region?.locations ?? []).map((l) => l.tile), ...arrivalTilesFor(level.level),
+    ].filter(Boolean).map(toIndex);
+    const suit = new Set(Object.keys(TT.inventoryOf(analyzerOptions.resolveCondition(OV.LAVATRAP_PULL.condition))));
+    const allButSuit = new Proxy({}, { get: (_, item) => (suit.has(item) ? 0 : Infinity) });
+    const passable = (i) => {
+        const cell = grid.cells[i];
+        if (!cell || HP.BLOCKING.has(cell.kind)) return false;
+        const conds = [...(cell.conditions ?? []), ...Object.values(cell.dirs ?? {}).flatMap((g) => (Array.isArray(g) ? g : g ? [g] : []))];
+        return conds.every((c) => TT.satisfies(analyzerOptions.resolveCondition(c), allButSuit));
+    };
+    const out = TT.stampTrapTongues({ grid, exempt, pulls, killArms, anchors, passable });
+    playthroughTrapTongues.set(level.level, { traps: out.traps, sealed: out.sealed });
+    return out.grid;
+}
 const rawBaseGridFor = (level, { directionalLocks, arrivals }) => {
     const build = (extra) => SEM.buildSeedlingRegionGrid(
         { x: 0, y: 0, w: level.width, h: level.height }, level,
@@ -1657,13 +1735,23 @@ function applyLavaTrapPulls(atlas, regionId, level, analysis) {
         const i = indexOf[y * level.width + x];
         return i >= 0 && subs.has(components[i].id) ? components[i].id : null;
     };
+    // ⛓⛓ rules-lavatrap-neck: a disc tile RULE T gated (`seedlingTrapTongueGuard`) is no sub-region of its own; the player
+    // steps onto it from a sub-region beside it (paying its gate, which the lift's own Dark Suit implies), so the lift
+    // leaves from those.
+    const tGated = new Set((playthroughTrapTongues.get(level.level)?.traps ?? []).flatMap((t) => t.cells.map(([x, y]) => `${x},${y}`)));
+    const fromSubs = ([x, y]) => {
+        const own = subOf([x, y]);
+        if (own) return [own];
+        if (!tGated.has(`${x},${y}`)) return [];
+        return [[0, -1], [1, 0], [0, 1], [-1, 0]].map(([dx, dy]) => [x + dx, y + dy])
+            .filter(([nx, ny]) => nx >= 0 && ny >= 0 && nx < level.width && ny < level.height).map(subOf).filter(Boolean);
+    };
     const added = new Set();
     for (const pull of pulls) {
         const to = subOf(pull.tile);
         if (!to) continue;
-        for (const tile of pull.from) {
-            const from = subOf(tile);
-            if (!from || from === to || added.has(`${from}>${to}`)) continue;
+        for (const from of pull.from.flatMap(fromSubs)) {
+            if (from === to || added.has(`${from}>${to}`)) continue;
             added.add(`${from}>${to}`);
             region.subgraph.internal_exits.push({
                 from, to, bidirectional: false, source: 'manual', access_rule: DARKSUIT_RULE,
@@ -2471,7 +2559,8 @@ export function playthroughBlockCrossingCases(doc) {
         const region = doc.regions.find((r) => r.region_id === regionId);
         const analysis = regionAnalyses.get(regionId);
         if (!region?.subgraph?.sub_regions || !analysis) continue;
-        const grid = gridFor(level);
+        // ⛓ rules-lavatrap-neck: the push model's grid carries no T gates (`baseGridFor` says why).
+        const grid = gridFor(level, { guards: false });
         if ((grid.origin?.x ?? 0) !== 0 || (grid.origin?.y ?? 0) !== 0) throw new Error(`block crossings: L${level.level}'s grid is not whole-level`);
         const { indexOf, components } = analysis.componentsResult;
         const subOf = (i) => (indexOf[i] >= 0 && region.subgraph.sub_regions.includes(components[indexOf[i]].id) ? components[indexOf[i]].id : null);

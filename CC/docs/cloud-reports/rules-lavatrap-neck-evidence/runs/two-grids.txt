@@ -1,0 +1,7 @@
+L77: 5 cell(s) differ (open->gated), added [{"any":[{"flag":"hasDarkSuit"},{"flag":"hasSpear"}]}]; pushables 0, rocks 0
+  cells 4,12 5,12 5,13 6,13 6,14
+  every differing cell is a rule-T disc cell: true
+L78: 23 cell(s) differ (open->gated), added [{"any":[{"flag":"hasDarkSuit"},{"flag":"hasSpear"}]}]; pushables 0, rocks 0
+  cells 9,1 9,2 10,2 7,3 8,3 10,3 11,3 5,4 6,4 7,4 8,4 9,4 10,4 4,5 5,5 7,5 8,5 9,5 10,5 6,6 7,6 8,6 8,7
+  every differing cell is a rule-T disc cell: true
+levels scanned 116; cells differing in all 28

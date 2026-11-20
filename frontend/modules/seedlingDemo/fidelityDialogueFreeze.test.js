@@ -77,10 +77,12 @@ const frozenAt = (r) => r.frames.map((f) => f.frozen);
 
 describe('DIALOGUEFREEZE — the key', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_DIALOGUE_FRAME_FREEZE)(
-        'ships OFF, appended last, with a worker env name', () => {
+        'ships OFF, followed only by wave 53\'s key, with a worker env name', () => {
             expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe(KEY);
+            // ⛓ fidelity FROZENTICK D2 (wave 53): its key is appended after this one.
+            const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['frozenTickUngated']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_DIALOGUE_FRAME_FREEZE');
         });
 });

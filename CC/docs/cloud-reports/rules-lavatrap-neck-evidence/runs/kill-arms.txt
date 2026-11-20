@@ -1,0 +1,76 @@
+L77: seals [[[0,2],[6,18]],[[0,2],[6,19]],[[1,2],[6,18]],[[1,2],[6,19]]]; stamped 6,12 {"any":[{"flag":"hasDarkSuit"},{"flag":"hasSpear"}]} on 9 cells
+  trap 6,12: arms [hasSpear]
+    hasSpear: hits 2, spots 20 {"E":"33..37","N":"33..39","W":"33..37","S":"33..35"}, approaches [1,2 6,18], killed from [1,2 6,18], order {"1,2":[["6,12"]],"6,18":[["6,12"]]}, granted true
+    hasSword: hits 3, spots 0 {}, approaches [1,2 6,18], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasGhostSword: hits 2, spots 0 {}, approaches [1,2 6,18], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasWand: hits 6, spots 113 {"E":"33..70","W":"33..69","S":"33..70"}, approaches [1,2 6,18], killed from [1,2 6,18], order {"1,2":[["6,12"]],"6,18":[["6,12"]]}, granted false — its kill is 6 shots 30 ticks apart (WandShot.as:29 damage 0.5, Enemy.hitsMax 3): whether the room's other bodies allow the stand is a chase question (rule K), not decided here; the spot geometry is reported
+    hasDarkShield: hits 6, spots 0 {}, approaches [1,2 6,18], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasFire: hits Infinity, spots 0 {}, approaches [1,2 6,18], killed from [], order {}, granted false — `Enemy.hit` never kills it with t "Fire"
+    hasShield: hits Infinity, spots 0 {}, approaches [1,2 6,18], killed from [], order {}, granted false — `Enemy.hit` never kills it with no hit call
+L78: seals [[[2,0],[16,0]],[[2,0],[16,1]],[[16,0],[2,1]],[[2,1],[16,1]]]; stamped 9,3 {"any":[{"flag":"hasDarkSuit"},{"flag":"hasSpear"}]} on 11 cells | 6,5 {"any":[{"flag":"hasDarkSuit"},{"flag":"hasSpear"}]} on 12 cells | 9,6 {"any":[{"flag":"hasDarkSuit"},{"flag":"hasSpear"}]} on 7 cells
+  trap 9,3: arms [hasSpear]
+    hasSpear: hits 2, spots 20 {"E":"33..37","N":"33..39","W":"33..37","S":"33..35"}, approaches [16,1 2,1], killed from [16,1 2,1], order {"16,1":[["9,3","9,6"],["6,5"]],"2,1":[["6,5"],["9,3","9,6"]]}, granted true
+    hasSword: hits 3, spots 0 {}, approaches [16,1 2,1], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasGhostSword: hits 2, spots 0 {}, approaches [16,1 2,1], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasWand: hits 6, spots 120 {"E":"33..70","N":"33..56","W":"33..69","S":"33..53"}, approaches [16,1], killed from [16,1], order {"16,1":[["9,3","6,5"],["9,6"]]}, granted false — its kill is 6 shots 30 ticks apart (WandShot.as:29 damage 0.5, Enemy.hitsMax 3): whether the room's other bodies allow the stand is a chase question (rule K), not decided here; the spot geometry is reported
+    hasDarkShield: hits 6, spots 0 {}, approaches [16,1], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasFire: hits Infinity, spots 0 {}, approaches [16,1], killed from [], order {}, granted false — `Enemy.hit` never kills it with t "Fire"
+    hasShield: hits Infinity, spots 0 {}, approaches [16,1], killed from [], order {}, granted false — `Enemy.hit` never kills it with no hit call
+  trap 6,5: arms [hasSpear]
+    hasSpear: hits 2, spots 20 {"E":"33..37","N":"33..39","W":"33..37","S":"33..35"}, approaches [16,1 2,1], killed from [16,1 2,1], order {"16,1":[["9,3","9,6"],["6,5"]],"2,1":[["6,5"],["9,3","9,6"]]}, granted true
+    hasSword: hits 3, spots 0 {}, approaches [16,1 2,1], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasGhostSword: hits 2, spots 0 {}, approaches [16,1 2,1], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasWand: hits 6, spots 150 {"E":"33..70","N":"33..69","W":"33..69","S":"33..70"}, approaches [16,1], killed from [16,1], order {"16,1":[["9,3","6,5"],["9,6"]]}, granted false — its kill is 6 shots 30 ticks apart (WandShot.as:29 damage 0.5, Enemy.hitsMax 3): whether the room's other bodies allow the stand is a chase question (rule K), not decided here; the spot geometry is reported
+    hasDarkShield: hits 6, spots 0 {}, approaches [16,1], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasFire: hits Infinity, spots 0 {}, approaches [16,1], killed from [], order {}, granted false — `Enemy.hit` never kills it with t "Fire"
+    hasShield: hits Infinity, spots 0 {}, approaches [16,1], killed from [], order {}, granted false — `Enemy.hit` never kills it with no hit call
+  trap 9,6: arms [hasSpear]
+    hasSpear: hits 2, spots 20 {"E":"33..37","N":"33..39","W":"33..37","S":"33..35"}, approaches [16,1 2,1], killed from [16,1 2,1], order {"16,1":[["9,3","9,6"],["6,5"]],"2,1":[["6,5"],["9,3","9,6"]]}, granted true
+    hasSword: hits 3, spots 0 {}, approaches [16,1 2,1], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasGhostSword: hits 2, spots 0 {}, approaches [16,1 2,1], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasWand: hits 6, spots 74 {"N":"33..69","W":"33..69"}, approaches [16,1], killed from [16,1], order {"16,1":[["9,3","6,5"],["9,6"]]}, granted false — its kill is 6 shots 30 ticks apart (WandShot.as:29 damage 0.5, Enemy.hitsMax 3): whether the room's other bodies allow the stand is a chase question (rule K), not decided here; the spot geometry is reported
+    hasDarkShield: hits 6, spots 0 {}, approaches [16,1], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasFire: hits Infinity, spots 0 {}, approaches [16,1], killed from [], order {}, granted false — `Enemy.hit` never kills it with t "Fire"
+    hasShield: hits Infinity, spots 0 {}, approaches [16,1], killed from [], order {}, granted false — `Enemy.hit` never kills it with no hit call
+L80: seals []; stamped nothing
+  trap 5,6: arms []
+    hasSpear: hits 2, spots 20 {"E":"33..37","N":"33..39","W":"33..37","S":"33..35"}, approaches [], killed from [], order {"2,18":[["2,14"]]}, granted false — no landing comes near it
+    hasSword: hits 3, spots 0 {}, approaches [], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasGhostSword: hits 2, spots 0 {}, approaches [], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasWand: hits 6, spots 118 {"E":"33..38","N":"33..69","W":"33..69","S":"33..70"}, approaches [], killed from [], order {"2,18":[["2,14"]]}, granted false — no landing comes near it
+    hasDarkShield: hits 6, spots 0 {}, approaches [], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasFire: hits Infinity, spots 0 {}, approaches [], killed from [], order {}, granted false — `Enemy.hit` never kills it with t "Fire"
+    hasShield: hits Infinity, spots 0 {}, approaches [], killed from [], order {}, granted false — `Enemy.hit` never kills it with no hit call
+  trap 2,14: arms [hasSpear]
+    hasSpear: hits 2, spots 10 {"N":"33..39","S":"33..35"}, approaches [2,18], killed from [2,18], order {"2,18":[["2,14"]]}, granted true
+    hasSword: hits 3, spots 0 {}, approaches [2,18], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasGhostSword: hits 2, spots 0 {}, approaches [2,18], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasWand: hits 6, spots 75 {"N":"33..69","S":"33..70"}, approaches [2,18], killed from [2,18], order {"2,18":[["2,14"]]}, granted false — its kill is 6 shots 30 ticks apart (WandShot.as:29 damage 0.5, Enemy.hitsMax 3): whether the room's other bodies allow the stand is a chase question (rule K), not decided here; the spot geometry is reported
+    hasDarkShield: hits 6, spots 0 {}, approaches [2,18], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasFire: hits Infinity, spots 0 {}, approaches [2,18], killed from [], order {}, granted false — `Enemy.hit` never kills it with t "Fire"
+    hasShield: hits Infinity, spots 0 {}, approaches [2,18], killed from [], order {}, granted false — `Enemy.hit` never kills it with no hit call
+L108: seals []; stamped nothing
+  trap 8,5: arms [hasSpear]
+    hasSpear: hits 2, spots 20 {"E":"33..37","N":"33..39","W":"33..37","S":"33..35"}, approaches [1,2], killed from [1,2], order {"1,2":[["8,5"]],"13,14":[["8,11"]]}, granted true
+    hasSword: hits 3, spots 0 {}, approaches [1,2], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasGhostSword: hits 2, spots 0 {}, approaches [1,2], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasWand: hits 6, spots 150 {"E":"33..70","N":"33..69","W":"33..69","S":"33..70"}, approaches [1,2], killed from [1,2], order {"1,2":[["8,5"]],"13,14":[["8,11"],["8,8"]]}, granted false — its kill is 6 shots 30 ticks apart (WandShot.as:29 damage 0.5, Enemy.hitsMax 3): whether the room's other bodies allow the stand is a chase question (rule K), not decided here; the spot geometry is reported
+    hasDarkShield: hits 6, spots 0 {}, approaches [1,2], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasFire: hits Infinity, spots 0 {}, approaches [1,2], killed from [], order {}, granted false — `Enemy.hit` never kills it with t "Fire"
+    hasShield: hits Infinity, spots 0 {}, approaches [1,2], killed from [], order {}, granted false — `Enemy.hit` never kills it with no hit call
+  trap 8,8: arms []
+    hasSpear: hits 2, spots 20 {"E":"33..37","N":"33..39","W":"33..37","S":"33..35"}, approaches [], killed from [], order {"1,2":[["8,5"]],"13,14":[["8,11"]]}, granted false — no landing comes near it
+    hasSword: hits 3, spots 0 {}, approaches [], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasGhostSword: hits 2, spots 0 {}, approaches [], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasWand: hits 6, spots 150 {"E":"33..70","N":"33..69","W":"33..69","S":"33..70"}, approaches [], killed from [13,14], order {"1,2":[["8,5"]],"13,14":[["8,11"],["8,8"]]}, granted false — no landing comes near it
+    hasDarkShield: hits 6, spots 0 {}, approaches [], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasFire: hits Infinity, spots 0 {}, approaches [], killed from [], order {}, granted false — `Enemy.hit` never kills it with t "Fire"
+    hasShield: hits Infinity, spots 0 {}, approaches [], killed from [], order {}, granted false — `Enemy.hit` never kills it with no hit call
+  trap 8,11: arms [hasSpear]
+    hasSpear: hits 2, spots 20 {"E":"33..37","N":"33..39","W":"33..37","S":"33..35"}, approaches [13,14], killed from [13,14], order {"1,2":[["8,5"]],"13,14":[["8,11"]]}, granted true
+    hasSword: hits 3, spots 0 {}, approaches [13,14], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasGhostSword: hits 2, spots 0 {}, approaches [13,14], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasWand: hits 6, spots 150 {"E":"33..70","N":"33..69","W":"33..69","S":"33..70"}, approaches [13,14], killed from [13,14], order {"1,2":[["8,5"]],"13,14":[["8,11"],["8,8"]]}, granted false — its kill is 6 shots 30 ticks apart (WandShot.as:29 damage 0.5, Enemy.hitsMax 3): whether the room's other bodies allow the stand is a chase question (rule K), not decided here; the spot geometry is reported
+    hasDarkShield: hits 6, spots 0 {}, approaches [13,14], killed from [], order {}, granted false — no cardinal spot outside its reach lands the arm's hit test
+    hasFire: hits Infinity, spots 0 {}, approaches [13,14], killed from [], order {}, granted false — `Enemy.hit` never kills it with t "Fire"
+    hasShield: hits Infinity, spots 0 {}, approaches [13,14], killed from [], order {}, granted false — `Enemy.hit` never kills it with no hit call

@@ -10752,8 +10752,8 @@
             }
           },
           {
-            "name": "level_76 -> level_77",
-            "connected_region": "level_77",
+            "name": "level_76 -> level_77__r2c0",
+            "connected_region": "level_77__r2c0",
             "access_rule": {
               "rule": "True_"
             }
@@ -10761,18 +10761,176 @@
         ],
         "locations": []
       },
-      "level_77": {
-        "name": "level_77",
+      "level_77__r2c0": {
+        "name": "level_77__r2c0",
         "exits": [
           {
-            "name": "level_77 -> level_76",
+            "name": "level_77__r2c0 -> level_77__r12c6",
+            "connected_region": "level_77__r12c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_77__r2c0 -> level_77__r15c6",
+            "connected_region": "level_77__r15c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_77__r2c0 -> level_77__r12c6 #2",
+            "connected_region": "level_77__r12c6",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_77__r2c0 -> level_76",
             "connected_region": "level_76",
             "access_rule": {
               "rule": "True_"
             }
+          }
+        ],
+        "locations": []
+      },
+      "level_77__r12c6": {
+        "name": "level_77__r12c6",
+        "exits": [
+          {
+            "name": "level_77__r12c6 -> level_77__r15c6",
+            "connected_region": "level_77__r15c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
           },
           {
-            "name": "level_77 -> level_78__r0c16",
+            "name": "level_77__r12c6 -> level_77__r2c0",
+            "connected_region": "level_77__r2c0",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_77__r15c6": {
+        "name": "level_77__r15c6",
+        "exits": [
+          {
+            "name": "level_77__r15c6 -> level_77__r12c6",
+            "connected_region": "level_77__r12c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_77__r15c6 -> level_77__r12c6 #2",
+            "connected_region": "level_77__r12c6",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_77__r15c6 -> level_77__r2c0",
+            "connected_region": "level_77__r2c0",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_77__r15c6 -> level_78__r0c16",
             "connected_region": "level_78__r0c16",
             "access_rule": {
               "rule": "True_"
@@ -10787,6 +10945,26 @@
           {
             "name": "level_78__r0c2 -> level_78__r0c16",
             "connected_region": "level_78__r0c16",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r0c2 -> level_78__r1c10",
+            "connected_region": "level_78__r1c10",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r0c2 -> level_78__r3c1",
+            "connected_region": "level_78__r3c1",
             "access_rule": {
               "rule": "Or",
               "children": [
@@ -10812,6 +10990,46 @@
             }
           },
           {
+            "name": "level_78__r0c2 -> level_78__r3c9",
+            "connected_region": "level_78__r3c9",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r0c2 -> level_78__r4c4",
+            "connected_region": "level_78__r4c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r0c2 -> level_78__r5c6",
+            "connected_region": "level_78__r5c6",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r0c2 -> level_78__r6c9",
+            "connected_region": "level_78__r6c9",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
             "name": "level_78__r0c2 -> level_79__r8c4",
             "connected_region": "level_79__r8c4",
             "access_rule": {
@@ -10826,6 +11044,348 @@
         "exits": [
           {
             "name": "level_78__r0c16 -> level_78__r0c2",
+            "connected_region": "level_78__r0c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r0c16 -> level_78__r1c10",
+            "connected_region": "level_78__r1c10",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r0c16 -> level_78__r3c1",
+            "connected_region": "level_78__r3c1",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r0c16 -> level_78__r3c9",
+            "connected_region": "level_78__r3c9",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r0c16 -> level_78__r3c9 #2",
+            "connected_region": "level_78__r3c9",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r0c16 -> level_78__r4c4",
+            "connected_region": "level_78__r4c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r0c16 -> level_78__r5c6",
+            "connected_region": "level_78__r5c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r0c16 -> level_78__r6c9",
+            "connected_region": "level_78__r6c9",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r0c16 -> level_78__r6c9 #2",
+            "connected_region": "level_78__r6c9",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r0c16 -> level_77__r15c6",
+            "connected_region": "level_77__r15c6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_78__r1c10": {
+        "name": "level_78__r1c10",
+        "exits": [
+          {
+            "name": "level_78__r1c10 -> level_78__r0c16",
+            "connected_region": "level_78__r0c16",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r1c10 -> level_78__r0c2",
+            "connected_region": "level_78__r0c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r1c10 -> level_78__r3c1",
+            "connected_region": "level_78__r3c1",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r1c10 -> level_78__r3c9",
+            "connected_region": "level_78__r3c9",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r1c10 -> level_78__r3c9 #2",
+            "connected_region": "level_78__r3c9",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r1c10 -> level_78__r4c4",
+            "connected_region": "level_78__r4c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r1c10 -> level_78__r5c6",
+            "connected_region": "level_78__r5c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r1c10 -> level_78__r6c9",
+            "connected_region": "level_78__r6c9",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_78__r3c1": {
+        "name": "level_78__r3c1",
+        "exits": [
+          {
+            "name": "level_78__r3c1 -> level_78__r0c16",
+            "connected_region": "level_78__r0c16",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r3c1 -> level_78__r0c2",
             "connected_region": "level_78__r0c2",
             "access_rule": {
               "rule": "Or",
@@ -10852,10 +11412,716 @@
             }
           },
           {
-            "name": "level_78__r0c16 -> level_77",
-            "connected_region": "level_77",
+            "name": "level_78__r3c1 -> level_78__r1c10",
+            "connected_region": "level_78__r1c10",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r3c1 -> level_78__r3c9",
+            "connected_region": "level_78__r3c9",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r3c1 -> level_78__r4c4",
+            "connected_region": "level_78__r4c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r3c1 -> level_78__r5c6",
+            "connected_region": "level_78__r5c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r3c1 -> level_78__r5c6 #2",
+            "connected_region": "level_78__r5c6",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r3c1 -> level_78__r6c9",
+            "connected_region": "level_78__r6c9",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_78__r3c9": {
+        "name": "level_78__r3c9",
+        "exits": [
+          {
+            "name": "level_78__r3c9 -> level_78__r0c16",
+            "connected_region": "level_78__r0c16",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r3c9 -> level_78__r0c2",
+            "connected_region": "level_78__r0c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r3c9 -> level_78__r1c10",
+            "connected_region": "level_78__r1c10",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r3c9 -> level_78__r3c1",
+            "connected_region": "level_78__r3c1",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r3c9 -> level_78__r4c4",
+            "connected_region": "level_78__r4c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r3c9 -> level_78__r5c6",
+            "connected_region": "level_78__r5c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r3c9 -> level_78__r6c9",
+            "connected_region": "level_78__r6c9",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r3c9 -> level_78__r6c9 #2",
+            "connected_region": "level_78__r6c9",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_78__r4c4": {
+        "name": "level_78__r4c4",
+        "exits": [
+          {
+            "name": "level_78__r4c4 -> level_78__r0c16",
+            "connected_region": "level_78__r0c16",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r4c4 -> level_78__r0c2",
+            "connected_region": "level_78__r0c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r4c4 -> level_78__r1c10",
+            "connected_region": "level_78__r1c10",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r4c4 -> level_78__r3c1",
+            "connected_region": "level_78__r3c1",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r4c4 -> level_78__r3c9",
+            "connected_region": "level_78__r3c9",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r4c4 -> level_78__r5c6",
+            "connected_region": "level_78__r5c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r4c4 -> level_78__r5c6 #2",
+            "connected_region": "level_78__r5c6",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r4c4 -> level_78__r6c9",
+            "connected_region": "level_78__r6c9",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_78__r5c6": {
+        "name": "level_78__r5c6",
+        "exits": [
+          {
+            "name": "level_78__r5c6 -> level_78__r0c16",
+            "connected_region": "level_78__r0c16",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r5c6 -> level_78__r0c2",
+            "connected_region": "level_78__r0c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r5c6 -> level_78__r1c10",
+            "connected_region": "level_78__r1c10",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r5c6 -> level_78__r3c1",
+            "connected_region": "level_78__r3c1",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r5c6 -> level_78__r3c9",
+            "connected_region": "level_78__r3c9",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r5c6 -> level_78__r4c4",
+            "connected_region": "level_78__r4c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r5c6 -> level_78__r6c9",
+            "connected_region": "level_78__r6c9",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_78__r6c9": {
+        "name": "level_78__r6c9",
+        "exits": [
+          {
+            "name": "level_78__r6c9 -> level_78__r0c16",
+            "connected_region": "level_78__r0c16",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r6c9 -> level_78__r0c2",
+            "connected_region": "level_78__r0c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_78__r6c9 -> level_78__r1c10",
+            "connected_region": "level_78__r1c10",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r6c9 -> level_78__r3c1",
+            "connected_region": "level_78__r3c1",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r6c9 -> level_78__r3c9",
+            "connected_region": "level_78__r3c9",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r6c9 -> level_78__r4c4",
+            "connected_region": "level_78__r4c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r6c9 -> level_78__r5c6",
+            "connected_region": "level_78__r5c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r6c9 -> level_78__r3c9 #2",
+            "connected_region": "level_78__r3c9",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
             }
           }
         ],
@@ -14743,7 +16009,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-0746086f",
+      "atlas_id": "seedling-3d17c6c3",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -64477,12 +65743,12 @@
               "atlas_exit_id": "out_teleporter_0_80"
             },
             {
-              "exit_id": "level_76 -> level_77",
+              "exit_id": "level_76 -> level_77__r2c0",
               "x": 19,
               "y": 7,
               "side": null,
-              "exitName": "level_76 -> level_77",
-              "targetRegion": "level_77",
+              "exitName": "level_76 -> level_77__r2c0",
+              "targetRegion": "level_77__r2c0",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_304_112"
@@ -64500,7 +65766,7 @@
           }
         }
       },
-      "level_77": {
+      "level_77__r2c0": {
         "substrate": "maze",
         "shared_world": "level_77",
         "playable_payload": {
@@ -64513,22 +65779,22 @@
           },
           "exits": [
             {
-              "exit_id": "level_77 -> level_76",
+              "exit_id": "level_77__r2c0 -> level_76",
               "x": 0,
               "y": 2,
               "side": null,
-              "exitName": "level_77 -> level_76",
+              "exitName": "level_77__r2c0 -> level_76",
               "targetRegion": "level_76",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_0_32"
             },
             {
-              "exit_id": "level_77 -> level_78__r0c16",
+              "exit_id": "level_77__r15c6 -> level_78__r0c16",
               "x": 6,
               "y": 19,
               "side": null,
-              "exitName": "level_77 -> level_78__r0c16",
+              "exitName": "level_77__r15c6 -> level_78__r0c16",
               "targetRegion": "level_78__r0c16",
               "targetExitId": null,
               "isTeleporter": true,
@@ -65202,6 +66468,16 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 4,
+              "y": 12,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 5,
+              "y": 12,
+              "id": "atlas_gate_1"
+            },
+            {
               "x": 7,
               "y": 12,
               "id": "atlas_gate_0"
@@ -65265,6 +66541,16 @@
               "x": 4,
               "y": 13,
               "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 13,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 13,
+              "id": "atlas_gate_1"
             },
             {
               "x": 7,
@@ -65335,6 +66621,11 @@
               "x": 5,
               "y": 14,
               "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 14,
+              "id": "atlas_gate_1"
             },
             {
               "x": 9,
@@ -65726,6 +67017,32 @@
               "display": {
                 "mode": "tree"
               }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "(Dark Suit OR Ghost Spear)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Dark Suit"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
             }
           },
           "pulls": [
@@ -65780,37 +67097,54 @@
           "shared_world": {
             "key": "level_77",
             "regions": [
-              "level_77"
+              "level_77__r2c0",
+              "level_77__r12c6",
+              "level_77__r15c6"
             ],
             "rows": [
-              "AAAAAAAAAAAAAAA",
-              "AAAAAA..AAAAAAA",
-              "AAAAAA..AAAAAAA",
-              "AAAA.AA..AAAAAA",
-              "AAAA.AAA.AAAAAA",
-              "AA.A.AAAAAAAAAA",
-              "AA...AAAAAAAAAA",
-              "AAAAAAAAAAAAAAA",
-              "AAAAAAAAAAAAAAA",
-              "A..AAAAAAA.AAAA",
-              "A..AAAAAAA..AAA",
-              "AAAAA..AAA..AAA",
-              "AAAAAAAAAAAAAAA",
-              "AAAAAAAAAAAAAAA",
-              "AAAAAAA..AAAAAA",
-              "AAAAAAA..AAAAAA",
-              "AAAAAAAAAAAAAAA",
-              "AAAAAAAAAAAAAAA",
-              "AAAAA.AAAAAAAAA",
-              "AAAAA.AAAAAAAAA"
+              "...............",
+              "...............",
+              "AAAAAA.........",
+              "...A.AA........",
+              "...A.AAA.......",
+              "...A.AAA.......",
+              ".......A.......",
+              ".......A.......",
+              ".......A.......",
+              ".......A.......",
+              "....AAAA.......",
+              "....A..........",
+              "......B........",
+              "...............",
+              "...............",
+              "......C........",
+              "......C........",
+              "......C........",
+              "......C........",
+              "......C........"
             ],
             "entrances": {
-              "level_77": {
+              "level_77__r2c0": {
                 "x": 1,
                 "y": 2
+              },
+              "level_77__r12c6": {
+                "x": 6,
+                "y": 12
+              },
+              "level_77__r15c6": {
+                "x": 6,
+                "y": 19
               }
             },
-            "links": {}
+            "links": {
+              "level_77__r12c6>level_77__r15c6": "level_77__r12c6 -> level_77__r15c6",
+              "level_77__r15c6>level_77__r12c6": "level_77__r15c6 -> level_77__r12c6",
+              "level_77__r12c6>level_77__r2c0": "level_77__r12c6 -> level_77__r2c0",
+              "level_77__r2c0>level_77__r12c6": "level_77__r2c0 -> level_77__r12c6",
+              "level_77__r15c6>level_77__r2c0": "level_77__r15c6 -> level_77__r2c0",
+              "level_77__r2c0>level_77__r15c6": "level_77__r2c0 -> level_77__r15c6"
+            }
           },
           "atlas_region": "level_77",
           "level": 77,
@@ -65820,6 +67154,14 @@
             "y": 0
           }
         }
+      },
+      "level_77__r12c6": {
+        "substrate": "maze",
+        "shared_world": "level_77"
+      },
+      "level_77__r15c6": {
+        "substrate": "maze",
+        "shared_world": "level_77"
       },
       "level_78__r0c2": {
         "substrate": "maze",
@@ -65845,12 +67187,12 @@
               "atlas_exit_id": "out_teleporter_32_0"
             },
             {
-              "exit_id": "level_78__r0c16 -> level_77",
+              "exit_id": "level_78__r0c16 -> level_77__r15c6",
               "x": 16,
               "y": 0,
               "side": null,
-              "exitName": "level_78__r0c16 -> level_77",
-              "targetRegion": "level_77",
+              "exitName": "level_78__r0c16 -> level_77__r15c6",
+              "targetRegion": "level_77__r15c6",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_256_0"
@@ -65988,6 +67330,11 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 9,
+              "y": 1,
+              "id": "atlas_gate_1"
+            },
+            {
               "x": 12,
               "y": 1,
               "id": "atlas_gate_0"
@@ -66034,33 +67381,43 @@
             },
             {
               "x": 2,
+              "y": 2,
+              "id": "atlas_gate_2"
+            },
+            {
+              "x": 3,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
               "y": 2,
               "id": "atlas_gate_1"
             },
             {
-              "x": 3,
+              "x": 10,
               "y": 2,
-              "id": "atlas_gate_0"
-            },
-            {
-              "x": 4,
-              "y": 2,
-              "id": "atlas_gate_0"
-            },
-            {
-              "x": 5,
-              "y": 2,
-              "id": "atlas_gate_0"
-            },
-            {
-              "x": 6,
-              "y": 2,
-              "id": "atlas_gate_0"
-            },
-            {
-              "x": 7,
-              "y": 2,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 12,
@@ -66118,6 +67475,26 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 7,
+              "y": 3,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 8,
+              "y": 3,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 10,
+              "y": 3,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 11,
+              "y": 3,
+              "id": "atlas_gate_1"
+            },
+            {
               "x": 14,
               "y": 3,
               "id": "atlas_gate_0"
@@ -66148,6 +67525,36 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 5,
+              "y": 4,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 4,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 7,
+              "y": 4,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 8,
+              "y": 4,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 9,
+              "y": 4,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 10,
+              "y": 4,
+              "id": "atlas_gate_1"
+            },
+            {
               "x": 17,
               "y": 4,
               "id": "atlas_gate_0"
@@ -66171,6 +67578,36 @@
               "x": 1,
               "y": 5,
               "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 5,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 5,
+              "y": 5,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 7,
+              "y": 5,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 8,
+              "y": 5,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 9,
+              "y": 5,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 10,
+              "y": 5,
+              "id": "atlas_gate_1"
             },
             {
               "x": 16,
@@ -66221,6 +67658,21 @@
               "x": 5,
               "y": 6,
               "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 6,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 7,
+              "y": 6,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 8,
+              "y": 6,
+              "id": "atlas_gate_1"
             },
             {
               "x": 14,
@@ -66291,6 +67743,11 @@
               "x": 7,
               "y": 7,
               "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 7,
+              "id": "atlas_gate_1"
             },
             {
               "x": 13,
@@ -66561,6 +68018,32 @@
             },
             "atlas_gate_1": {
               "id": "atlas_gate_1",
+              "name": "(Dark Suit OR Ghost Spear)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Dark Suit"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_2": {
+              "id": "atlas_gate_2",
               "name": "(Progressive Sword OR Ghost Spear)",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -66765,17 +68248,23 @@
             "key": "level_78",
             "regions": [
               "level_78__r0c2",
-              "level_78__r0c16"
+              "level_78__r0c16",
+              "level_78__r1c10",
+              "level_78__r3c1",
+              "level_78__r3c9",
+              "level_78__r4c4",
+              "level_78__r5c6",
+              "level_78__r6c9"
             ],
             "rows": [
               "..A.............B...",
-              "..A......BBB....B...",
-              ".........BBB...BB...",
-              ".BB....BBBBBBB.BB...",
-              ".BB.BBBBBBBBBBBBB...",
-              "..BBBBBBBBBBBBBB....",
-              "......BBBB.BBB......",
-              "........B...B.......",
+              "..A.......CC....B...",
+              "...........C...BB...",
+              ".DD......E..BB.BB...",
+              ".DD.F......BBBBBB...",
+              "..DD..G....BBBBB....",
+              ".........H.BBB......",
+              "............B.......",
               "........BBBBB.......",
               "...................."
             ],
@@ -66787,11 +68276,89 @@
               "level_78__r0c16": {
                 "x": 16,
                 "y": 1
+              },
+              "level_78__r1c10": {
+                "x": 10,
+                "y": 1
+              },
+              "level_78__r3c1": {
+                "x": 1,
+                "y": 3
+              },
+              "level_78__r3c9": {
+                "x": 9,
+                "y": 3
+              },
+              "level_78__r4c4": {
+                "x": 4,
+                "y": 4
+              },
+              "level_78__r5c6": {
+                "x": 6,
+                "y": 5
+              },
+              "level_78__r6c9": {
+                "x": 9,
+                "y": 6
               }
             },
             "links": {
               "level_78__r0c16>level_78__r0c2": "level_78__r0c16 -> level_78__r0c2",
-              "level_78__r0c2>level_78__r0c16": "level_78__r0c2 -> level_78__r0c16"
+              "level_78__r0c2>level_78__r0c16": "level_78__r0c2 -> level_78__r0c16",
+              "level_78__r0c16>level_78__r1c10": "level_78__r0c16 -> level_78__r1c10",
+              "level_78__r1c10>level_78__r0c16": "level_78__r1c10 -> level_78__r0c16",
+              "level_78__r0c16>level_78__r3c1": "level_78__r0c16 -> level_78__r3c1",
+              "level_78__r3c1>level_78__r0c16": "level_78__r3c1 -> level_78__r0c16",
+              "level_78__r0c16>level_78__r3c9": "level_78__r0c16 -> level_78__r3c9",
+              "level_78__r3c9>level_78__r0c16": "level_78__r3c9 -> level_78__r0c16",
+              "level_78__r0c16>level_78__r4c4": "level_78__r0c16 -> level_78__r4c4",
+              "level_78__r4c4>level_78__r0c16": "level_78__r4c4 -> level_78__r0c16",
+              "level_78__r0c16>level_78__r5c6": "level_78__r0c16 -> level_78__r5c6",
+              "level_78__r5c6>level_78__r0c16": "level_78__r5c6 -> level_78__r0c16",
+              "level_78__r0c16>level_78__r6c9": "level_78__r0c16 -> level_78__r6c9",
+              "level_78__r6c9>level_78__r0c16": "level_78__r6c9 -> level_78__r0c16",
+              "level_78__r0c2>level_78__r1c10": "level_78__r0c2 -> level_78__r1c10",
+              "level_78__r1c10>level_78__r0c2": "level_78__r1c10 -> level_78__r0c2",
+              "level_78__r0c2>level_78__r3c1": "level_78__r0c2 -> level_78__r3c1",
+              "level_78__r3c1>level_78__r0c2": "level_78__r3c1 -> level_78__r0c2",
+              "level_78__r0c2>level_78__r3c9": "level_78__r0c2 -> level_78__r3c9",
+              "level_78__r3c9>level_78__r0c2": "level_78__r3c9 -> level_78__r0c2",
+              "level_78__r0c2>level_78__r4c4": "level_78__r0c2 -> level_78__r4c4",
+              "level_78__r4c4>level_78__r0c2": "level_78__r4c4 -> level_78__r0c2",
+              "level_78__r0c2>level_78__r5c6": "level_78__r0c2 -> level_78__r5c6",
+              "level_78__r5c6>level_78__r0c2": "level_78__r5c6 -> level_78__r0c2",
+              "level_78__r0c2>level_78__r6c9": "level_78__r0c2 -> level_78__r6c9",
+              "level_78__r6c9>level_78__r0c2": "level_78__r6c9 -> level_78__r0c2",
+              "level_78__r1c10>level_78__r3c1": "level_78__r1c10 -> level_78__r3c1",
+              "level_78__r3c1>level_78__r1c10": "level_78__r3c1 -> level_78__r1c10",
+              "level_78__r1c10>level_78__r3c9": "level_78__r1c10 -> level_78__r3c9",
+              "level_78__r3c9>level_78__r1c10": "level_78__r3c9 -> level_78__r1c10",
+              "level_78__r1c10>level_78__r4c4": "level_78__r1c10 -> level_78__r4c4",
+              "level_78__r4c4>level_78__r1c10": "level_78__r4c4 -> level_78__r1c10",
+              "level_78__r1c10>level_78__r5c6": "level_78__r1c10 -> level_78__r5c6",
+              "level_78__r5c6>level_78__r1c10": "level_78__r5c6 -> level_78__r1c10",
+              "level_78__r1c10>level_78__r6c9": "level_78__r1c10 -> level_78__r6c9",
+              "level_78__r6c9>level_78__r1c10": "level_78__r6c9 -> level_78__r1c10",
+              "level_78__r3c1>level_78__r3c9": "level_78__r3c1 -> level_78__r3c9",
+              "level_78__r3c9>level_78__r3c1": "level_78__r3c9 -> level_78__r3c1",
+              "level_78__r3c1>level_78__r4c4": "level_78__r3c1 -> level_78__r4c4",
+              "level_78__r4c4>level_78__r3c1": "level_78__r4c4 -> level_78__r3c1",
+              "level_78__r3c1>level_78__r5c6": "level_78__r3c1 -> level_78__r5c6",
+              "level_78__r5c6>level_78__r3c1": "level_78__r5c6 -> level_78__r3c1",
+              "level_78__r3c1>level_78__r6c9": "level_78__r3c1 -> level_78__r6c9",
+              "level_78__r6c9>level_78__r3c1": "level_78__r6c9 -> level_78__r3c1",
+              "level_78__r3c9>level_78__r4c4": "level_78__r3c9 -> level_78__r4c4",
+              "level_78__r4c4>level_78__r3c9": "level_78__r4c4 -> level_78__r3c9",
+              "level_78__r3c9>level_78__r5c6": "level_78__r3c9 -> level_78__r5c6",
+              "level_78__r5c6>level_78__r3c9": "level_78__r5c6 -> level_78__r3c9",
+              "level_78__r3c9>level_78__r6c9": "level_78__r3c9 -> level_78__r6c9",
+              "level_78__r6c9>level_78__r3c9": "level_78__r6c9 -> level_78__r3c9",
+              "level_78__r4c4>level_78__r5c6": "level_78__r4c4 -> level_78__r5c6",
+              "level_78__r5c6>level_78__r4c4": "level_78__r5c6 -> level_78__r4c4",
+              "level_78__r4c4>level_78__r6c9": "level_78__r4c4 -> level_78__r6c9",
+              "level_78__r6c9>level_78__r4c4": "level_78__r6c9 -> level_78__r4c4",
+              "level_78__r5c6>level_78__r6c9": "level_78__r5c6 -> level_78__r6c9",
+              "level_78__r6c9>level_78__r5c6": "level_78__r6c9 -> level_78__r5c6"
             }
           },
           "atlas_region": "level_78",
@@ -66804,6 +68371,30 @@
         }
       },
       "level_78__r0c16": {
+        "substrate": "maze",
+        "shared_world": "level_78"
+      },
+      "level_78__r1c10": {
+        "substrate": "maze",
+        "shared_world": "level_78"
+      },
+      "level_78__r3c1": {
+        "substrate": "maze",
+        "shared_world": "level_78"
+      },
+      "level_78__r3c9": {
+        "substrate": "maze",
+        "shared_world": "level_78"
+      },
+      "level_78__r4c4": {
+        "substrate": "maze",
+        "shared_world": "level_78"
+      },
+      "level_78__r5c6": {
+        "substrate": "maze",
+        "shared_world": "level_78"
+      },
+      "level_78__r6c9": {
         "substrate": "maze",
         "shared_world": "level_78"
       },
@@ -79398,9 +80989,17 @@
           "new_accessible_regions": [
             "level_71__r16c19",
             "level_76",
-            "level_77",
+            "level_77__r12c6",
+            "level_77__r15c6",
+            "level_77__r2c0",
             "level_78__r0c16",
             "level_78__r0c2",
+            "level_78__r1c10",
+            "level_78__r3c1",
+            "level_78__r3c9",
+            "level_78__r4c4",
+            "level_78__r5c6",
+            "level_78__r6c9",
             "level_79__r8c4"
           ],
           "sphere_locations": [

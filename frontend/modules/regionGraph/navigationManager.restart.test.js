@@ -1,7 +1,6 @@
 /**
- * ⛓ RETURN TO MENU — the region graph's ONE-STEP move (`attemptMovePlayerOneStepToRegion`) plans the player's
- * movement from where they stand, so it gets the Restart move (procgenCore/restartRoute.js): with the flag and no
- * walk, the step is the Menu panel's Restart; with a walk, or without the flag, it is what it was.
+ * ⛓ RETURN TO MENU — the region graph's `takeRestartStepToward`: with the flag and no walk, the step is the Menu
+ * panel's Restart (procgenCore/restartRoute.js); with a walk, or without the flag, it takes none.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
@@ -46,19 +45,22 @@ const docWith = (flag) => ({ rawJsonData: { start_regions: { 1: ['Menu'] }, expo
 
 beforeEach(() => { restart.mockClear(); statuses.length = 0; });
 
-describe('regionGraph one-step move — the RESTART step', () => {
-    it('flag ON, no walk from the pit: the step is the Menu panel\'s Restart', () => {
+describe('regionGraph — the RESTART step (takeRestartStepToward)', () => {
+    // ⚖ CA-S2 (user, 2026-11-17T23:00:54Z): the one-step click move that took this step is removed. Its restart
+    // behaviour stays pinned where it lives, `regionView/regionActions.test.js` (`planOneStepMove` / `moveOneStep`,
+    // still used by the Region Map until CA-S3).
+    it('flag ON, no walk from the pit: the step is the Menu panel\'s Restart, and the status says so', () => {
         rawJson = docWith(true);
-        nav.attemptMovePlayerOneStepToRegion('B');
+        expect(nav.takeRestartStepToward('Pit', 'B', { restart })).toBe(true);
         expect(restart).toHaveBeenCalledTimes(1);
         expect(statuses).toEqual(['Restart → Menu (no walk from Pit to B)']);
     });
 
-    it('flag OFF: no Restart; today\'s "No path" status', () => {
+    it('flag OFF: no Restart', () => {
         rawJson = docWith(false);
-        nav.attemptMovePlayerOneStepToRegion('B');
+        expect(nav.takeRestartStepToward('Pit', 'B', { restart })).toBe(false);
         expect(restart).not.toHaveBeenCalled();
-        expect(statuses[0]).toBe('No path to B');
+        expect(statuses).toEqual([]);
     });
 
     it('a walk exists: no Restart (walk preferred)', () => {

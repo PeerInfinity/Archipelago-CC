@@ -1,6 +1,17 @@
 {
   "moduleSettings": {
     "regionGraph": {
+      "clickActions": {
+        "enabled": true,
+        "region": {
+          "path.route": false,
+          "path.checkAll": true,
+          "regions.open": false
+        },
+        "location": {
+          "path.check": "now"
+        }
+      },
       "checkAllLocationsInRegion": true,
       "addToPath": false,
       "overwritePath": false,

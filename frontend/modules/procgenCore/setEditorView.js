@@ -66,8 +66,8 @@ import { ruleSchemaErrors } from './jsonSchemaCheck.js';
 import { UNDO_COMMAND_ID, mountEditorView } from './editorView.js';
 import { createLifetime } from './pageLifetime.js';
 import {
-    DRAG_THRESHOLD_PX, centreOnRect, engagedView, fitFrame, homeView, panScreen, rectToScreen, toScreen, toWorld,
-    transformOf, zoomAt, zoomAtCentre,
+    DRAG_THRESHOLD_PX, centreOnRect, engagedView, fitFrame, homeView, panScreen, rectToScreen, resizeView, toScreen,
+    toWorld, transformOf, zoomAt, zoomAtCentre,
 } from './setMapCamera.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 import {
@@ -1043,15 +1043,38 @@ export function mountSetEditor({
     /**
      * ⛓⛓ ENGAGE THE CAMERA (lab-map-camera): the canvas becomes the part of the home canvas its scrolling panel
      * shows, the camera centred where that window's centre was, and the panel's scroll goes back to 0 — so nothing
-     * moves on screen at the switch. A no-op once engaged.
+     * moves on screen at the switch. A no-op once engaged. ⛓ (lab-map-small-set-view) on an axis where the frame
+     * fits, the canvas takes the room the panel can give (`panelRoom`); `anchor` says where the camera starts —
+     * `'pixels'` (a drag, a wheel: every on-screen pixel stays put) or `'centre'` (`+`/`−`: the window's centre at
+     * the new view's centre). See `engagedView`.
      */
-    function engageCamera() {
+    function engageCamera(anchor = 'pixels') {
         if (mapEngaged || !mapOn || !mapFrame) return;
         const panel = overview?.parentNode ?? {};
-        ({ cam: mapCam, vp: mapVp } = engagedView(mapFrame, panel));
+        ({ cam: mapCam, vp: mapVp } = engagedView(mapFrame, panelRoom(panel), { anchor }));
         mapEngaged = true;
         if (Number.isFinite(panel.scrollLeft)) panel.scrollLeft = 0;
         if (Number.isFinite(panel.scrollTop)) panel.scrollTop = 0;
+    }
+    /**
+     * ⛓⛓ THE ROOM THE PANEL CAN GIVE (slice `lab-map-small-set-view`) — what `engagedView` reads. The width is the
+     * panel's client width (the page lays the panel out as a block, so it is as wide as its container whatever the
+     * canvas is); the HEIGHT is the panel's own CSS `max-height` in px, because at home a short frame's panel is only
+     * as tall as the canvas, and `max-height` is the height the page already gives a tall set's map. No px
+     * `max-height` (none, a percentage) → no room is claimed and the axis stays the frame's. Per page, from the page's
+     * own CSS; nothing here knows a game.
+     */
+    function panelRoom(panel) {
+        const view = doc?.defaultView;
+        let roomHeight;
+        if (panel && view && typeof view.getComputedStyle === 'function' && panel.nodeType === 1) {
+            const m = /^([0-9.]+)px$/.exec(String(view.getComputedStyle(panel).maxHeight ?? '').trim());
+            if (m) roomHeight = Number(m[1]);
+        }
+        return {
+            clientWidth: panel.clientWidth, clientHeight: panel.clientHeight,
+            scrollLeft: panel.scrollLeft, scrollTop: panel.scrollTop, roomHeight,
+        };
     }
     /** Repaint the map and its overlay only — a camera move changes no row, list or form. */
     function repaintMap() {
@@ -1061,7 +1084,7 @@ export function mountSetEditor({
     /** `+`/`-`/the buttons: zoom about the VIEW's centre. */
     function zoomBy(k) {
         if (!overviewMap || !mapOn || !mapFrame) return;
-        engageCamera();
+        engageCamera('centre');
         const before = mapCam.zoom;
         mapCam = zoomAtCentre(mapCam, mapVp, k);
         say(`MAP zoom ${mapCam.zoom.toFixed(2)}×${mapCam.zoom === before ? ' (at the limit)' : ''}`);
@@ -1185,6 +1208,22 @@ export function mountSetEditor({
                 ev.stopPropagation();
                 ev.preventDefault();
             }, { capture: true });
+        }
+        /**
+         * ⛓ A RESIZED PAGE while engaged (slice `lab-map-small-set-view`): the viewport takes the panel's new width
+         * (the panel is a block, so its client width is its container's, whatever the canvas is), the height is
+         * kept, and the frame point at the canvas's top-left stays there. At home there is nothing to do — the
+         * canvas is the frame's size and the panel scrolls, as before.
+         */
+        const win = doc?.defaultView;
+        if (panel && win && typeof win.addEventListener === 'function') {
+            mine.on(win, 'resize', () => {
+                if (!mapEngaged || !mapOn || !mapVp) return;
+                const cw = Math.floor(panel.clientWidth);
+                if (!(cw > 0) || cw === mapVp.w) return;
+                ({ cam: mapCam, vp: mapVp } = resizeView(mapCam, mapVp, { w: cw, h: mapVp.h }));
+                repaintMap();
+            });
         }
         if (doc && typeof doc.addEventListener === 'function') {
             // ⛓ a drag that leaves the panel keeps following the pointer (inside it, the capture above has it).

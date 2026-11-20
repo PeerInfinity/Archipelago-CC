@@ -78,7 +78,9 @@ function l4StairsSword({ prefix = [] } = {}) {
 const counter = () => { let n = 0; return () => n++; };
 /** A clock that jumps a DAY per read: if anything but `ms` read it, the answer would change. */
 const wildClock = () => { let n = 0; return () => (n += 86400000); };
-const rows = (r) => r.passes.map(({ ms, ...row }) => row);
+// `modelHits` (HIT_AWARE_ANSWER, ON since the HIT-FLIP) is the plan's hit verdict, pinned in `hammerHitTiebreak.test.js`;
+// these rows pin the passes' windows and budgets, so it drops with the wall-clock `ms`.
+const rows = (r) => r.passes.map(({ ms, modelHits, ...row }) => row);
 
 const plan = (ticks, pass = 'p', extra = {}) => ({ ok: true, pass, plan: { pass, solution: new Array(ticks).fill([]), ...extra } });
 

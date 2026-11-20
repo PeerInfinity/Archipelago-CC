@@ -12,9 +12,10 @@
  * pickers and its readouts are the pre-camera code path, byte for byte (⚖ Robert: "the default picture stays
  * unchanged").
  *
- * Once a gesture ENGAGES the camera the canvas becomes the VIEWPORT: the part of the home canvas that was on screen
- * in its scrolling panel (`engagedView`), with the camera centred where that window's centre was — so nothing moves
- * on screen at the switch, and the panel's scrollbars are replaced by the camera.
+ * Once a gesture ENGAGES the camera the canvas becomes the VIEWPORT (`engagedView`): on an axis where the frame is
+ * larger than its scrolling panel, the part of the home canvas that was on screen; on an axis where the frame fits,
+ * the room the panel can give (slice `lab-map-small-set-view`) — with the window's top-left kept at the canvas's
+ * top-left, so nothing moves on screen at the switch, and the panel's scrollbars are replaced by the camera.
  */
 import {
     MAX_ZOOM, MIN_ZOOM, centreOn, fitCamera, panBy, screenToWorld, worldToScreen, zoomAround,
@@ -33,19 +34,64 @@ export function homeView(frame) {
 }
 
 /**
- * The view a gesture switches to: the visible window of the home canvas inside its scrolling panel.
- * `panel` is `{clientWidth, clientHeight, scrollLeft, scrollTop}` (any of them absent → the whole frame, no scroll).
- * The canvas size is an integer; the camera centre is the window's centre in frame px, at zoom 1.
+ * The view a gesture switches to. `panel` is `{clientWidth, clientHeight, scrollLeft, scrollTop, roomWidth,
+ * roomHeight}` (any of them absent → that axis as before: the whole frame, no scroll). The canvas size is an integer.
+ *
+ * ⛓⛓ PER AXIS (slice `lab-map-small-set-view`):
+ *   · the frame is LARGER than the panel's window on the axis (the panel scrolls on it) → the canvas is that window,
+ *     exactly as `lab-map-camera` built it;
+ *   · the frame FITS (frame ≤ the window) → the canvas takes the ROOM the panel can give on that axis:
+ *     `roomWidth`/`roomHeight` when the mount knows it (the panel's own CSS limit, e.g. its `max-height`), else the
+ *     panel's client size (a block panel is already as wide as its container). Never less than the frame.
+ *     This is what lets a SMALL set zoom in and FIT into more than its home size.
+ *
+ * ⛓ WHERE THE CAMERA STARTS — `anchor`:
+ *   · `'pixels'` (the default; a DRAG and a CTRL+WHEEL engage this way): the window's top-left (the panel's scroll
+ *     offset, clamped into the frame) at the canvas's top-left, zoom 1. The canvas keeps its page position and only
+ *     grows right/down, so every frame point that was on screen stays on the SAME screen pixel — a drag or a wheel
+ *     that engages does not jump under the pointer.
+ *   · `'centre'` (`+`/`−`, which zoom about the view's centre): the frame point at the window's centre is at the new
+ *     viewport's centre, so the step zooms about the middle of what was on screen and a small set sits in the middle
+ *     of its new room.
+ *   On an axis that does not grow the two are the same camera (`lab-map-camera`'s rule).
  */
-export function engagedView(frame, panel = {}) {
+export function engagedView(frame, panel = {}, { anchor = 'pixels' } = {}) {
     const fw = frame?.width ?? 0;
     const fh = frame?.height ?? 0;
-    const pick = (v, whole) => (Number.isFinite(v) && v > 0 ? Math.min(whole, Math.floor(v)) : whole);
-    const w = Math.max(1, pick(panel.clientWidth, fw));
-    const h = Math.max(1, pick(panel.clientHeight, fh));
+    const finite = (v) => Number.isFinite(v) && v > 0;
+    const axis = (client, room, whole) => {
+        if (!finite(client)) return whole;
+        const win = Math.min(whole, Math.floor(client));
+        if (whole > client) return win;
+        return Math.max(win, Math.floor(finite(room) ? room : client));
+    };
+    const w = Math.max(1, axis(panel.clientWidth, panel.roomWidth, fw));
+    const h = Math.max(1, axis(panel.clientHeight, panel.roomHeight, fh));
+    if (anchor === 'centre') {
+        // the window as it was on screen: its size on each axis is min(frame, client), its offset the clamped scroll
+        const win = (client, whole) => (finite(client) ? Math.min(whole, Math.floor(client)) : whole);
+        const ww = win(panel.clientWidth, fw);
+        const wh = win(panel.clientHeight, fh);
+        const sx = Math.max(0, Math.min(fw - ww, Number(panel.scrollLeft) || 0));
+        const sy = Math.max(0, Math.min(fh - wh, Number(panel.scrollTop) || 0));
+        return { cam: { x: sx + ww / 2, y: sy + wh / 2, zoom: 1 }, vp: { w, h } };
+    }
     const sl = Math.max(0, Math.min(fw - w, Number(panel.scrollLeft) || 0));
     const st = Math.max(0, Math.min(fh - h, Number(panel.scrollTop) || 0));
     return { cam: { x: sl + w / 2, y: st + h / 2, zoom: 1 }, vp: { w, h } };
+}
+
+/**
+ * ⛓ A RESIZED PANEL while engaged: the viewport takes the new `{w, h}` and the camera keeps the frame point at the
+ * canvas's top-left where it was (the canvas grows or shrinks right/down, as at the switch).
+ */
+export function resizeView(cam, vp, next) {
+    const w = Math.max(1, Math.floor(next.w));
+    const h = Math.max(1, Math.floor(next.h));
+    return {
+        cam: { x: cam.x + (w - vp.w) / (2 * cam.zoom), y: cam.y + (h - vp.h) / (2 * cam.zoom), zoom: cam.zoom },
+        vp: { w, h },
+    };
 }
 
 /** The canvas transform `screen = world · zoom + (e, f)` for `ctx.setTransform(a, 0, 0, d, e, f)`. */

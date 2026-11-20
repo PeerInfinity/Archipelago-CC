@@ -109,7 +109,9 @@ describe('mazeSeedlingLink — which rooms link back, over every committed prese
                 }
             }
         }
-        expect({ rooms, roomless }).toEqual({ rooms: 126, roomless: 150 });
+        // ⛓ rules-lavatrap-neck: roomless 150 -> 158, rule T splits L77 (level_77 -> r2c0 + r12c6 + r15c6: +2 sharing r2c0's
+        //   world) and L78 (+6 sub-regions sharing r0c2's world), in the playthrough maze preset.
+        expect({ rooms, roomless }).toEqual({ rooms: 126, roomless: 158 });
     });
 
     it('a level split across several maze rooms: every one links to the same level, and says how many share it', () => {
