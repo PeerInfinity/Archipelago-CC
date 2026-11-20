@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 31,
         "headings": 1348,
         "indexHeadings": 2,
-        "lines": 37061,
+        "lines": 37065,
         "pages": 4,
-        "words": 567874
+        "words": 568160
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -109,7 +109,7 @@ export const DOCS_INDEX = frz({
             "file": "editing-core.md",
             "h1": "Procgen Editing Core",
             "headings": 22,
-            "lines": 222,
+            "lines": 224,
             "links": [
                 "architecture.md",
                 "maze-lab.md",
@@ -119,14 +119,14 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/editing-core.md",
-            "words": 4506
+            "words": 4659
         },
         {
             "description": "How Seedling rooms and level sets are edited: the room op vocabulary and its adapter, the set session that edits a whole level set with its overlay, the world session that joins several set documents, and the EDIT arm of `seedlingDemo/watch.html` that puts them on a page.",
             "file": "seedling-editor.md",
             "h1": "The Seedling Editor",
             "headings": 18,
-            "lines": 319,
+            "lines": 320,
             "links": [
                 "architecture.md",
                 "editing-core.md",
@@ -134,7 +134,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-editor.md",
-            "words": 8580
+            "words": 8661
         },
         {
             "description": "The Region Map's shared layout gives every world's display regions an integer cell in one unbounded, signed frame, with the start region at exactly (0, 0).",
@@ -241,7 +241,7 @@ export const DOCS_INDEX = frz({
             "file": "maze-lab.md",
             "h1": "The Maze Lab Page",
             "headings": 20,
-            "lines": 315,
+            "lines": 316,
             "links": [
                 "architecture.md",
                 "editing-core.md",
@@ -251,7 +251,7 @@ export const DOCS_INDEX = frz({
                 "maze.md"
             ],
             "path": "docs/json/developer/procgen/maze-lab.md",
-            "words": 5136
+            "words": 5188
         },
         {
             "description": "Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent.",

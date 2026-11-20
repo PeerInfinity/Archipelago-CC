@@ -50,8 +50,11 @@ import {
     createSeedlingSetAdapter, createSetSession, setRecord,
 } from '../seedlingDemo/seedlingSetAdapter.js';
 import { mountWatchSetEditor } from '../seedlingDemo/watchSetEditor.js';
-import { SET_CHANGE_WHY, mountSetEditor } from './setEditorView.js';
+import {
+    SET_CHANGE_WHY, STALE_DOOR_TITLE, STALE_REPORT_NOTE, mountSetEditor,
+} from './setEditorView.js';
 import { exitArrowShapes } from './setEditorCore.js';
+import { exitRuleKey } from './setOverlay.js';
 import { BUNDLE_KINDS, readBundle } from '../presets/documentBundle.js';
 import { loadJSZipNode } from '../../../scripts/procgen/loadJSZipNode.mjs';
 import {
@@ -271,6 +274,7 @@ const generatedSet = (n = ROOMS, setId = 'set-editor-view-test') => buildLevelSe
 
 const seedlingHarness = ({
     rooms = ROOMS, onSetChange = null, embeds = [], apworldEditor = null, overviewMapOn = false,
+    loadZip = null,
 } = {}) => {
     const adapter = createSeedlingSetAdapter(DEPS);
     /**
@@ -352,6 +356,8 @@ const seedlingHarness = ({
          * that predates this slice drives the same mount it always did.
          */
         apworldEditor,
+        // ⛓ lab-stale-handover — `null` by default, the mount's own default, so older rows drive the same mount.
+        loadZip,
         doc,
     });
     return {
@@ -749,9 +755,16 @@ const PIN = Object.freeze({
                 "[reach] region \"level_3\" is UNREACHABLE from the start — no chain of exits gets there at all, under any rule set",
                 "[locations] 1 location(s) in the OVERLAY, 1 compiled"
             ],
-            "reportNote": "⛔ REFUSED BEFORE EXPORT — 2 region(s) (level_1, level_3) cannot be reached from the start; a rules.json whose graph does not close is a world nobody can finish, and the seed that found out would be the report",
+            /**
+             * ⛔⛔ (lab-stale-handover, ON PURPOSE) the script's last REPORT is followed by a MOVE UP — a set change —
+             * so the note it ends on is the STALE sentence, and the rules button is open (a press re-runs REPORT on
+             * the current set). Captured before: the old verdict, `⛔ REFUSED BEFORE EXPORT — 2 region(s) (level_1,
+             * level_3) cannot be reached from the start; …`, and `rulesDisabled: true` — the pin had recorded the
+             * defect's visible face. Every other field is the pre-lift capture, unmoved.
+             */
+            "reportNote": STALE_REPORT_NOTE,
             "closeDisabled": true,
-            "rulesDisabled": true
+            "rulesDisabled": false
         },
         "ruleErrors": "⛓ the rule validates against `rules.schema.json`",
         "stills": [
@@ -2290,3 +2303,127 @@ describe('⛓⛓ Seedling editor E3 — the MAP on the same overview canvas (the
         expect(h.ui.map()).toMatchObject({ unreachable: [], unreachableReport: 'current' });
     });
 });
+
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ lab-stale-handover — A DOOR HANDS OVER THE SET AS IT IS NOW
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **REPORT → ONE EDIT → EVERY DOOR CARRIES THE CURRENT SET** (⚖ Robert 2026-11-20, "Fix stale hand-over").
+ * Before this slice the three doors read `lastReport ?? runReport()` and nothing invalidated `lastReport`, so after
+ * an edit each door handed over the rules (and the atlas) of the set as it was at the last REPORT.
+ * ⛔ MUTANT: the doors read the never-invalidated `lastReport` again — every row in the first half reds, because the
+ * door's document equals the PRE-edit report's and not a fresh one's.
+ */
+const LAB_EDITS = Object.freeze({
+    maze: {
+        harness: (o) => mazeHarness(o),
+        before: (h) => connectAll(h, RING),
+        /** ⛓ one exit of the closed ring gains a rule — the graph still closes, so every door stays open. */
+        edit: (h) => h.ui.applySet({
+            op: 'set-access-rule', room: 0, target: exitRuleKey('exit_1'),
+            rule: { rule: 'Has', args: { item_name: 'key_red' } },
+        }),
+        primaryKind: 'region-library',
+    },
+    seedling: {
+        harness: (o) => seedlingHarness(o),
+        before: () => {},
+        /** ⛓ room 0's exit gains a rule (the fixed script's own rule) — the graph still closes, every door stays open. */
+        edit: (h) => h.ui.applySet({
+            op: 'set-access-rule', room: 0, target: exitRuleKey('out_teleporter_128_128'),
+            rule: { rule: 'Reachable', region: 'level_0' },
+        }),
+        primaryKind: 'level-set',
+    },
+});
+const json = (d) => JSON.stringify(d);
+
+describe('⛓⛓⛓ lab-stale-handover — after an edit, every door carries the CURRENT set (both labs)', () => {
+    for (const lab of ['maze', 'seedling']) {
+        const L = LAB_EDITS[lab];
+        const setup = (extra = {}) => {
+            const host = hostLink();
+            const h = L.harness({ loadZip: async () => loadJSZipNode(), apworldEditor: host.link, ...extra });
+            L.before(h);
+            click(h, 'editSetReport');
+            const old = h.ui.report();
+            expect(old.download.rules.allowed).toBe(true);
+            return { h, host, old };
+        };
+        /** ⛔ NOT VACUOUS: the edit really changes the compiled rules, so "equals a fresh REPORT" can tell. */
+        it(`${lab}: the edit changes what a fresh REPORT compiles`, () => {
+            const { h, old } = setup();
+            expect(L.edit(h).ok).toBe(true);
+            expect(json(h.ui.runReport().rules)).not.toBe(json(old.rules));
+        });
+        it(`${lab}: the rules.json download writes the edited set's rules, not the last REPORT's`, () => {
+            const { h, old } = setup();
+            const res = L.edit(h);
+            expect(res.ok).toBe(true);
+            click(h, 'editDownloadRules');
+            const out = globalThis.__editorSetRulesOut;
+            expect(json(out)).not.toBe(json(old.rules));
+            expect(json(out)).toBe(json(h.ui.runReport().rules));
+        });
+        it(`${lab}: Open in APWorld Editor hands over the edited set's rules`, () => {
+            const { h, host, old } = setup();
+            expect(L.edit(h).ok).toBe(true);
+            click(h, 'editOpenApworldEditor');
+            expect(host.seen).toHaveLength(1);
+            expect(json(host.seen[0])).not.toBe(json(old.rules));
+            expect(json(host.seen[0])).toBe(json(h.ui.runReport().rules));
+        });
+        /**
+         * ⛔⛔ THE HOLD — with NO change after REPORT every door hands over the REPORT's own documents, by identity,
+         * and REPORT is not run again (the report object is the same one). MUTANT: invalidate on every render (or
+         * on a non-set event) — `report()` becomes a new object and the identity reds.
+         */
+        it(`${lab}: with NO edit after REPORT, every door hands over the REPORT's own documents`, async () => {
+            const { h, host, old } = setup();
+            click(h, 'editDownloadRules');
+            expect(globalThis.__editorSetRulesOut).toBe(old.rules);
+            click(h, 'editOpenApworldEditor');
+            expect(host.seen[0]).toBe(old.rules);
+            await pressDownload(h, 'editDownloadBundle', '__editorSetBundlePresses', '__editorSetBundleKinds');
+            const back = await readBundle(globalThis.__editorSetBundleOut, { jszip: loadJSZipNode() });
+            expect(json(back.members.find((m) => m.kind === 'rules').doc)).toBe(json(old.rules));
+            expect(h.ui.report()).toBe(old);
+        });
+        /**
+         * ⛓⛓ THE REPORT PANEL SAYS IT IS OUT OF DATE. After an edit the rows stay (they are what the reader saw), the
+         * note says they describe the EARLIER set, and the rules button is open with the sentence that a press runs
+         * REPORT again; a door press re-runs it, and the panel is the fresh verdict again. MUTANT: drop the
+         * `paintReportState()` call from `render()` — the note keeps the old verdict and the first expectation reds.
+         */
+        it(`${lab}: the REPORT panel says it is out of date after an edit, and is current again after a door`, () => {
+            const { h, old } = setup();
+            const verdict = textOf(h, 'editSetReportNote');
+            const rows = rowsOf(h, 'editSetReportOut');
+            expect(verdict).not.toBe(STALE_REPORT_NOTE);
+            expect(L.edit(h).ok).toBe(true);
+            expect(textOf(h, 'editSetReportNote')).toBe(STALE_REPORT_NOTE);
+            expect(rowsOf(h, 'editSetReportOut')).toEqual(rows);
+            expect($(h, 'editDownloadRules').disabled).toBe(false);
+            expect($(h, 'editDownloadRules').title).toBe(STALE_DOOR_TITLE);
+            expect($(h, 'editOpenApworldEditor').title).toBe(STALE_DOOR_TITLE);
+            click(h, 'editDownloadRules');
+            expect(h.ui.report()).not.toBe(old);
+            expect(textOf(h, 'editSetReportNote')).toBe(verdict);
+            expect($(h, 'editDownloadRules').title).not.toBe(STALE_DOOR_TITLE);
+        });
+        it(`${lab}: the bundle's rules and region-atlas members are the edited set's`, async () => {
+            const { h, old } = setup();
+            expect(L.edit(h).ok).toBe(true);
+            await pressDownload(h, 'editDownloadBundle', '__editorSetBundlePresses', '__editorSetBundleKinds');
+            const back = await readBundle(globalThis.__editorSetBundleOut, { jszip: loadJSZipNode() });
+            const member = (k) => back.members.find((m) => m.kind === k)?.doc;
+            const fresh = h.ui.runReport();
+            expect(json(member('rules'))).not.toBe(json(old.rules));
+            expect(json(member('rules'))).toBe(json(fresh.rules));
+            expect(json(member('region-atlas'))).toBe(json(fresh.atlas));
+        });
+    }
+});
+

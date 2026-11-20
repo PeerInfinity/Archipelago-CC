@@ -212,6 +212,9 @@ const { foldEdits, resolveBase } = await import(
 const { readBundle } = await import(
     join(REPO, 'frontend/modules/presets/documentBundle.js'));
 const { loadJSZipNode } = await import(join(REPO, 'scripts/procgen/loadJSZipNode.mjs'));
+/** ⛓ (lab-stale-handover) the sentences the mount says once the set changed after REPORT — read, not copied. */
+const { STALE_REPORT_NOTE, STALE_DOOR_TITLE } = await import(
+    join(REPO, 'frontend/modules/procgenCore/setEditorView.js'));
 
 const PAGE_PATH = '/frontend/modules/seedlingDemo/watch.html';
 const ATLAS = JSON.parse(readFileSync(
@@ -3288,6 +3291,78 @@ try {
         + 'absence to explain. ⛓ The refused-bundle claim did not go with it — it is driven on '
         + 'the CUT set above, whose graph still does not close by construction',
         `${json(vanKinds)} · ${vanBundle.bytes.length} B · ${vanBundle.note.slice(0, 140)}`);
+
+    /**
+     * ⛓⛓⛓ lab-stale-handover (⚖ Robert 2026-11-20, *"Fix stale hand-over"*) — **REPORT, EDIT ONE ROOM, TAKE THE
+     * DOOR: THE BUNDLE CARRIES THE SET AS IT IS NOW.** The vanilla 116 was just REPORTed and bundled. One more tile
+     * is painted in room `VANILLA_OPEN_ROOM` and CLOSEd (a set change; the lab fingerprint covers the rooms'
+     * tiles), and the bundle is pressed WITHOUT pressing REPORT. Before this slice the door read the never-
+     * invalidated last REPORT, so the bundle's rules and atlas kept the PRE-edit `seedling-lab-<hash>`.
+     * ⛔ MUTANT: the doors read `lastReport ?? runReport()` again — `staleIds.after` equals `staleIds.before` and
+     * the first claim below reds.
+     */
+    const atlasIdsOf = (read) => ({
+        rules: read.members.find((m) => m.kind === 'rules')?.doc?.region_atlas?.['1']?.atlas_id ?? null,
+        member: read.members.find((m) => m.kind === 'region-atlas')?.doc?.atlas_id ?? null,
+        rulesBytes: stringifyRulesJson(read.members.find((m) => m.kind === 'rules')?.doc ?? null),
+    });
+    const STALE_PAINT = (() => {
+        const room = { ...vanOut.set.rooms[VANILLA_OPEN_ROOM].source.record, level: VANILLA_OPEN_ROOM };
+        const b = adapter.bounds(room);
+        for (let y = 1; y < b.h - 1; y += 1) {
+            for (let x = 1; x < b.w - 1; x += 1) {
+                const c = adapter.readCell(room, x, y);
+                if (c.tile && c.tile.column !== PAINT_COLUMN && c.entities.length === 0
+                    && !(x === VANILLA_PAINT.tx && y === VANILLA_PAINT.ty)) return { tx: x, ty: y };
+            }
+        }
+        return null;
+    })();
+    const staleBefore = atlasIdsOf(vanRead);
+    const setEditsBefore = (await setRead()).edit.set?.edits ?? null;
+    await page.selectOption('#editSetRoom', String(VANILLA_OPEN_ROOM));
+    await page.click('#editSetOpen');
+    await page.waitForFunction(() => window.__editorEdit?.baseKind === 'set-room', null, { timeout: 60000 });
+    await page.selectOption('#genEditTool', 'paint');
+    await page.selectOption('#genEditLayer', 'tiles');
+    await page.selectOption('#genEditTerrain', PAINT_TERRAIN);
+    await clickCell(STALE_PAINT);
+    await page.waitForFunction(() => (window.__editorEdit?.edits ?? 0) >= 1, null, { timeout: 60000 });
+    await page.click('#editRoomClose');
+    await page.waitForFunction((n) => window.__editorEdit?.set?.edits === n + 1, setEditsBefore,
+        { timeout: 60000 }).catch(() => {});
+    const staleState = await page.evaluate(() => ({
+        edits: window.__editorEdit?.set?.edits ?? null,
+        note: document.getElementById('editSetReportNote')?.textContent ?? null,
+        rulesDisabled: document.getElementById('editDownloadRules')?.disabled ?? null,
+        rulesTitle: document.getElementById('editDownloadRules')?.title ?? null,
+    }));
+    check(STALE_PAINT !== null && staleState.edits === setEditsBefore + 1
+        && staleState.note === STALE_REPORT_NOTE
+        && staleState.rulesDisabled === false && staleState.rulesTitle === STALE_DOOR_TITLE,
+        '⛓⛓ **lab-stale-handover — AFTER AN EDIT THE REPORT SAYS IT IS OUT OF DATE** — one painted tile, CLOSEd '
+        + 'into ONE more set op, and the REPORT note says its rows describe the EARLIER set; the rules button is '
+        + 'open with the sentence that a press runs REPORT again on the current set first',
+        `${json(STALE_PAINT)} · set edits ${setEditsBefore} → ${staleState.edits} · ${json(staleState.note)}`);
+    await pressDownload('#editDownloadBundle', '__editorSetBundlePresses', { settleOn: '__editorSetBundleKinds' });
+    const staleAfter = atlasIdsOf(await readBundle(Uint8Array.from(
+        await page.evaluate(() => Array.from(window.__editorSetBundleOut))), { jszip: loadJSZipNode() }));
+    await page.click('#editSetReport');
+    await page.waitForTimeout(2500);
+    await pressDownload('#editDownloadBundle', '__editorSetBundlePresses', { settleOn: '__editorSetBundleKinds' });
+    const staleFresh = atlasIdsOf(await readBundle(Uint8Array.from(
+        await page.evaluate(() => Array.from(window.__editorSetBundleOut))), { jszip: loadJSZipNode() }));
+    const labIdRe = new RegExp(`^${LAB_SET_ATLAS_BASE}-[0-9a-f]{8}$`);
+    check(labIdRe.test(staleBefore.rules ?? '') && labIdRe.test(staleAfter.rules ?? '')
+        && staleAfter.rules !== staleBefore.rules && staleAfter.member === staleAfter.rules
+        && staleAfter.rules === staleFresh.rules && staleAfter.member === staleFresh.member
+        && staleAfter.rulesBytes === staleFresh.rulesBytes,
+        '⛓⛓⛓ **lab-stale-handover — THE BUNDLE TAKEN AFTER THE EDIT CARRIES THE EDITED SET** — its rules and its '
+        + '`region-atlas` member name a NEW `seedling-lab-<8 hex>` (not the pre-edit one), and both, with the rules '
+        + 'bytes, equal what a fresh REPORT then bundles. ⛔ Before this slice the door handed over the last '
+        + 'REPORT\'s documents, so the id did not move',
+        `before ${staleBefore.rules} → door ${staleAfter.rules} (member ${staleAfter.member}) · fresh REPORT `
+        + `${staleFresh.rules}`);
 
     /**
      * ⛓⛓⛓ **THE OVERVIEW ARROWS ARE PAINTED AT LOAD — D2's DEFECT, FOUND BY

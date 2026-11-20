@@ -136,6 +136,9 @@ const { clearItem } = await MAZE('mazeRoomEngine.js');
  * would be asserting against the day it was written.
  */
 const { OVERVIEW } = await import(join(REPO, 'frontend/modules/procgenCore/setEditorCore.js'));
+/** ⛓ (lab-stale-handover) the sentences the mount says once the set changed after REPORT — read, not copied. */
+const { STALE_REPORT_NOTE, STALE_DOOR_TITLE } = await import(
+    join(REPO, 'frontend/modules/procgenCore/setEditorView.js'));
 const { BUNDLE_KINDS } = await import(
     join(REPO, 'frontend/modules/presets/documentBundle.js'));
 /** ⛓ EDITOR v3 E6b — the constant the SET arm's blank-room inputs are SEEDED
@@ -3736,6 +3739,57 @@ try {
         + `⛔ Before E2c's first commit this press refused the maze's own PRIMARY document by `
         + `name, quoting a roster of ${BUNDLE_KINDS.length - 1}`,
         `${json(bundle.kinds)} · ${bundle.bytes} B`);
+
+    /**
+     * ⛓⛓⛓ lab-stale-handover (⚖ Robert 2026-11-20, *"Fix stale hand-over"*) — **REPORT, EDIT, TAKE THE DOOR: THE
+     * rules.json CARRIES THE EDIT.** The ring was just REPORTed and downloaded. One exit of room 0 gains a rule
+     * through the page's own rule form (a set op), and `rules.json` is pressed WITHOUT pressing REPORT. Before this
+     * slice the door read the never-invalidated last REPORT and wrote the pre-edit bytes again.
+     * ⛔ MUTANT: the doors read `lastReport ?? runReport()` again — `staleDoor` equals `staleBeforeBytes` and the
+     * second claim below reds.
+     */
+    const staleBeforeBytes = await page.evaluate(() => window.__editorSetRulesBytes ?? null);
+    const staleOpsBefore = (await read()).set.ops;
+    const STALE_RULE = { rule: 'Has', args: { item_name: 'lab-stale-handover-key' } };
+    await page.selectOption('#editSetRoom', '0');
+    /** ⛓ an exit the RING links (`RING_LINKS`), so the compiler builds an AP exit for it and the rule gates it. */
+    const staleTarget = await page.evaluate((want) => [...(document.getElementById('editSetRuleTarget')?.options ?? [])]
+        .map((o) => o.value).find((v) => v === want) ?? null, `exit:${RING_LINKS.find((l) => l.from[0] === 0).from[1]}`);
+    await page.selectOption('#editSetRuleTarget', staleTarget);
+    await page.fill('#editSetRuleJson', json(STALE_RULE));
+    await page.dispatchEvent('#editSetRuleJson', 'input');
+    await page.click('#editSetRuleCommit');
+    await settled((n) => window.__mazeLab?.set?.ops === n + 1, 'the rule commit to land as ONE set op',
+        staleOpsBefore).catch(async (e) => {
+        throw new Error(`${e.message} · target ${staleTarget} · rule note ${await page.textContent('#editSetRuleErrors')}`
+            + ` · set note ${await page.textContent('#editSetNote')} · options ${json(await page.evaluate(() => [
+                ...(document.getElementById('editSetRuleTarget')?.options ?? [])].map((o) => o.value)))}`);
+    });
+    const staleNow = await page.evaluate(() => ({
+        note: document.getElementById('editSetReportNote')?.textContent ?? null,
+        rulesDisabled: document.getElementById('editDownloadRules')?.disabled ?? null,
+        rulesTitle: document.getElementById('editDownloadRules')?.title ?? null,
+    }));
+    check(staleTarget !== null && staleNow.note === STALE_REPORT_NOTE
+        && staleNow.rulesDisabled === false && staleNow.rulesTitle === STALE_DOOR_TITLE,
+        '⛓⛓ **lab-stale-handover — AFTER AN EDIT THE REPORT SAYS IT IS OUT OF DATE** — a rule on room 0\'s '
+        + `\`${staleTarget}\`, and the REPORT note says its rows describe the EARLIER set; the rules button is open `
+        + 'with the sentence that a press runs REPORT again on the current set first',
+        json(staleNow.note));
+    await pressDownload('#editDownloadRules', '__editorSetRulesPresses', { settleOn: '__editorSetRulesBytes' });
+    const staleDoor = await page.evaluate(() => window.__editorSetRulesBytes ?? null);
+    await page.click('#editSetReport');
+    await settled((stale) => document.getElementById('editSetReportNote')?.textContent !== stale,
+        'the fresh REPORT to replace the out-of-date note', STALE_REPORT_NOTE);
+    await pressDownload('#editDownloadRules', '__editorSetRulesPresses', { settleOn: '__editorSetRulesBytes' });
+    const staleFresh = await page.evaluate(() => window.__editorSetRulesBytes ?? null);
+    check(typeof staleDoor === 'string' && staleDoor !== staleBeforeBytes
+        && staleDoor.includes('lab-stale-handover-key') && !(staleBeforeBytes ?? '').includes('lab-stale-handover-key')
+        && staleDoor === staleFresh,
+        '⛓⛓⛓ **lab-stale-handover — THE rules.json TAKEN AFTER THE EDIT CARRIES THE EDIT** — its bytes name the '
+        + 'new rule\'s item, differ from the pre-edit download, and equal what a fresh REPORT then writes. ⛔ Before '
+        + 'this slice the door wrote the last REPORT\'s bytes again',
+        `${(staleBeforeBytes ?? '').length} B → door ${(staleDoor ?? '').length} B · fresh ${(staleFresh ?? '').length} B`);
 
 
     /* ══════════════════════════════════════════════════════════════════
