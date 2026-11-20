@@ -1,0 +1,15 @@
+L12 guards= dropped=puncher@416,256
+L26 guards= dropped=puncher@32,208|puncher@80,168
+L28 guards= dropped=drill@80,96|drill@128,96
+L40 guards= dropped=puncher@128,624|puncher@816,128
+L53 guards= dropped=puncher@136,96
+L72 guards=lavarunner@80,216|lavarunner@136,88|lavarunner@216,240 dropped=
+L73 guards=lavarunner@32,24 dropped=
+L74 guards=lavarunner@24,56|lavarunner@208,96 dropped=
+L75 guards=lavarunner@8,112|lavarunner@104,64 dropped=
+L77 guards=lavarunner@80,272|lavarunner@112,256 dropped=
+L78 guards=lavarunner@192,144|lavarunner@144,72|lavarunner@96,32|lavarunner@56,120|lavarunner@112,136 dropped=
+L80 guards=lavarunner@80,32|lavarunner@0,96|lavarunner@120,208|lavarunner@0,144 dropped=
+L88 guards= dropped=drill@128,160
+L91 guards= dropped=drill@64,80
+L99 guards=lavarunner@192,64|lavarunner@160,32|lavarunner@176,64 dropped=

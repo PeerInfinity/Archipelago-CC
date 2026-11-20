@@ -1,0 +1,6 @@
+[folded] 1 atlas-id stamp path(s): seedling-3d17c6c3 -> seedling-94cd96dd
+[folded] /sphere_log/68/player_data/1/new_accessible_regions as a set: -['level_72', 'level_74', 'level_75'] +['level_72__r0c11', 'level_72__r10c8', 'level_72__r11c11', 'level_72__r11c6', 'level_72__r5c4', 'level_72__r6c17', 'level_72__r9c10', 'level_72__r9c12', 'level_72__r9c14', 'level_73__r4c4', 'level_73__r5c7', 'level_73__r8c2', 'level_74__r1c7', 'level_74__r2c11', 'level_74__r2c2', 'level_74__r8c18', 'level_75__r0c4', 'level_75__r10c4', 'level_75__r10c6', 'level_75__r11c3', 'level_75__r11c5', 'level_75__r13c3', 'level_75__r3c3', 'level_75__r8c4', 'level_75__r8c6']
+[folded] /sphere_log/75/player_data/1/new_accessible_regions as a set: -['level_78__r3c1', 'level_78__r4c4'] +['level_78__r3c12', 'level_78__r4c2', 'level_78__r5c12', 'level_78__r6c11', 'level_78__r8c10', 'level_78__r8c8']
+[folded] /sphere_log/77/player_data/1/new_accessible_regions as a set: -['level_80__r12c3', 'level_80__r6c4'] +['level_80__r12c4', 'level_80__r13c3', 'level_80__r14c2', 'level_80__r6c5', 'level_80__r9c5', 'level_99__r6c12', 'level_99__r7c5', 'level_99__r8c10']
+1323 changed path(s); levels: L71:10, L72:20, L73:94, L74:10, L75:20, L77:81, L78:724, L80:265, L98:5, L99:94
+0 path(s) naming no level
