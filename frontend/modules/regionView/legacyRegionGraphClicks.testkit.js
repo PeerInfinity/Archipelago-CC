@@ -15,13 +15,24 @@
  * table's planners are recorders) and `setShowAllRegions` (delegated to `ui`) are new; in the bodies, the dynamic
  * `import('./index.js')` is re-pointed to `'../regionGraph/index.js'` (the same module, from this directory).
  * ⛔ Do not edit the method bodies otherwise: they are the measurement.
+ * CA-S3: `REGION_GRAPH_SOURCES` left `regionGraph/regionGraphOriginators.js` (only tests named it once the Region Map's
+ * interim reader was retired); the base's value is kept here, where the bodies read it. `actions.planOneStepMove` left
+ * `regionActions.js` too: the equivalence test's recorder supplies it.
  */
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '../stateManager/index.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import * as actions from './regionActions.js';
-import { REGION_GRAPH_ORIGINATORS, REGION_GRAPH_SOURCES, REGION_GRAPH_NODE_SELECTED } from '../regionGraph/regionGraphOriginators.js';
+import { REGION_GRAPH_ORIGINATORS, REGION_GRAPH_NODE_SELECTED } from '../regionGraph/regionGraphOriginators.js';
+
+/** The Region Graph's `user:regionMove` sources at base (`regionGraph/regionGraphOriginators.js` until CA-S3). */
+export const REGION_GRAPH_SOURCES = Object.freeze({
+    oneStep: 'regionGraph-oneStep',
+    direct: 'regionGraph-direct',
+    addToPath: 'regionGraph-addToPath',
+    overwritePath: 'regionGraph-overwritePath',
+});
 
 const logger = createUniversalLogger('regionGraph');
 const menuPanelRestart = () => null;

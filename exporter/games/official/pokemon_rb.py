@@ -1,6 +1,7 @@
 # exporter/games/pokemon_rb.py
 
 from ..base import BaseGameExportHandler
+from ..base.utilities import int_id_or_none
 from typing import Any, Dict, Optional
 import logging
 
@@ -220,7 +221,7 @@ class PokemonRBGameExportHandler(BaseGameExportHandler):
 
                 item_data[item_name] = {
                     'name': item_name,
-                    'id': item_id,
+                    'id': int_id_or_none(item_id),
                     'groups': sorted(groups),
                     'advancement': False,
                     'useful': False,

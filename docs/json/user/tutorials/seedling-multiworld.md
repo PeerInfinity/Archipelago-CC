@@ -32,8 +32,10 @@ The next steps happen in a terminal, in your Archipelago folder (a source checko
 
 ## Play your slot
 
-1. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game*, or, on the JS runtime, *JS runtime loaded* or *configured* (the first time, the browser fetches the game's runtime).
-2. Press **▶ Start** in the game, if the game shows one. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
+1. Open the **Flash Panel** tab.
+2. Start from no save: in the panel's **Settings** section, press **Clear this room's save** on the **JS** runtime, or **Clear the Flash save** on the **Flash** (Ruffle) runtime (the panel's log says what it removed). On wasm there is no such save, and nothing to press.
+3. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game*, or, on the JS runtime, *JS runtime loaded* or *configured* (the first time, the browser fetches the game's runtime).
+4. Press **▶ Start** in the game, if the game shows one. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
 
 The checks you make arrive at the server, and the items other slots send you arrive in the game.
 

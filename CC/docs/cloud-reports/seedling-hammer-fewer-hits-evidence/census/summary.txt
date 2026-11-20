@@ -1,0 +1,36 @@
+  legs: 922
+  crash/over 240 s: 21
+  no solver goal: 3
+  refused: 81
+  solved: 817
+both passes hit (every planned pass of dashless/full takes a model hit): 9
+   127 level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+       dashless 565 t 2h0d w33; full 494 t 2h0d w117 | hit-avoid none tries 3 work 86 cut window
+       base full 494 t 2h0d -> ON full 494 t 2h0d
+   128 level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+       dashless 571 t 3h1d w34; full 541 t 2h0d w119 | hit-avoid none tries 3 work 86 cut window
+       base full 541 t 2h0d -> ON full 541 t 2h0d
+   160 level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared
+       dashless 680 t 2h0d w41; full 632 t 2h0d w125 | hit-avoid none tries 3 work 86 cut window
+       base full 632 t 2h0d -> ON full 632 t 2h0d
+   161 level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared
+       dashless 696 t 3h1d w42; full 610 t 2h0d w126 | hit-avoid none tries 3 work 86 cut window
+       base full 610 t 2h0d -> ON full 610 t 2h0d
+   172 level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared
+       dashless 716 t 2h0d w43; full 675 t 2h0d w128 | hit-avoid none tries 2 work 86 cut window
+       base full 675 t 2h0d -> ON full 675 t 2h0d
+   836 level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_7_2
+       dashless 371 t 1h0d w14; full 376 t 1h0d w100 | hit-avoid none tries 7 work 86 cut window
+       base dashless 371 t 1h0d -> ON dashless 371 t 1h0d
+   839 level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_7_3
+       dashless 402 t 1h0d w15; full 381 t 1h0d w100 | hit-avoid none tries 6 work 86 cut window
+       base full 381 t 1h0d -> ON full 381 t 1h0d
+   843 level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_7_2
+       dashless 183 t 1h0d w9; full 149 t 1h0d w21 | hit-avoid none tries 10 work 86 cut window
+       base full 149 t 1h0d -> ON full 149 t 1h0d
+   846 level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_7_3
+       dashless 217 t 1h0d w11; full 174 t 1h0d w47 | hit-avoid none tries 8 work 86 cut window
+       base full 174 t 1h0d -> ON full 174 t 1h0d
+moved (shipped pass or ticks differ, base rule -> ON): 0
+moved toward MORE hits/deaths: 0
+hit-avoid pass ran on 9 leg(s); work median 86 max 86; tries [3, 3, 3, 3, 2, 7, 6, 10, 8]; ok 0

@@ -29,7 +29,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gunzipSync } from 'node:zlib';
 
-import { withShovedBodyLookahead } from './solverBot.js';
+import { withKillStanceSight, withShovedBodyLookahead } from './solverBot.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { ANYTIME_PASSES, replayTape, solveAnytime } from './jsRuntimeSolver.js';
@@ -44,7 +44,9 @@ function solveAt(name, seam, on) {
     const { passes = ANYTIME_PASSES, source, ...tape } = restoreRequest({ ...c0,
         staging: { ...c0.staging, seam: { ...c0.staging.seam, time: seam } } });
     const levelSource = levelSourceFromAtlas(source.records);
-    const answer = withShovedBodyLookahead(on, () => solveAnytime({ ...tape, levelSource }, { passes }));
+    // KILL_STANCE_SIGHT held OFF: it is ON by default since the L28 flip (2026-11-19) and moves these plans (ticks only,
+    // measured by the flip's sweeps); these rows predate it and keep pinning their own switch.
+    const answer = withKillStanceSight(false, () => withShovedBodyLookahead(on, () => solveAnytime({ ...tape, levelSource }, { passes })));
     if (!answer.ok) return { ok: false, message: answer.message };
     const run = replayTape({ staging: tape.staging, perTick: tape.perTick, levelSource,
         scratchPersistence: tape.scratchPersistence === true, equips: tape.equips ?? null, holds: tape.holds ?? null });

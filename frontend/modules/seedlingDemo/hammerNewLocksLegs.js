@@ -10,7 +10,7 @@ import { gunzipSync } from 'node:zlib';
 
 import {
     KILLLOCK_LINE_STANCE_COUNTS, resetKillLockLineStanceCounts, withKillLockChaserRewind, withKillLockClearWrite,
-    withKillLockLineStance, withRockLockKill,
+    withKillLockLineStance, withKillStanceSight, withRockLockKill,
 } from './solverBot.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
@@ -28,8 +28,10 @@ export const ALL = { write: true, rock: true, rewind: true, line: true };
 export const NONE = { write: false, rock: false, rewind: false, line: false };
 
 /** Run `fn` with the four switches set as named (each restored after). */
-const under = ({ write, rock, rewind, line }, fn) => withKillLockClearWrite(write, () => withRockLockKill(rock,
-    () => withKillLockChaserRewind(rewind, () => withKillLockLineStance(line, fn))));
+// KILL_STANCE_SIGHT held OFF: it is ON by default since the L28 flip (2026-11-19) and moves these plans (ticks only,
+// measured by the flip's sweeps); these rows predate it and keep pinning their own switch.
+const under = ({ write, rock, rewind, line }, fn) => withKillStanceSight(false, () => withKillLockClearWrite(write,
+    () => withRockLockKill(rock, () => withKillLockChaserRewind(rewind, () => withKillLockLineStance(line, fn)))));
 
 export function staged(leg) {
     const req = restoreRequest(leg.requests[0].request);

@@ -27,6 +27,8 @@
  * The numbers in the text were measured (`seedling-bot-log.md`, SLOWSOLVE, re-measured by Seedling DF): the work units and ticks are
  * the same on every machine, the seconds are not. The steps assert the view's lifecycle and its outcome only.
  */
+import { clearSeedlingJsSave } from '../steps/procgen.js';
+
 const FLASH = { panel: 'flashPanel' };
 const VIEW = { ...FLASH, selector: '.flash-panel-solve-progress' };
 const ROOT = { ...FLASH, selector: '.flash-panel-container' };
@@ -176,6 +178,8 @@ export const CHECK_SEEDLING_DASH_WINDOW = Object.freeze({
                     },
                 },
                 loadStep('load', 'Load **Seedling Playthrough** (seed 1): the whole game as an Archipelago world, whose items reach the game through the item path.'),
+                // ⛓ USE THE SAVE / CLEAR — no Seedling JS save from an earlier run (⚖ Robert 2026-11-19)
+                ...clearSeedlingJsSave('clear-save', { required: true }),
                 listeningStep('listening', 'Open the **Flash Panel** tab and its **Solver** section: the Solve Progress view is open, waiting for a solve.'),
                 swordStep('sword', 'In the **Inventory** panel, tick **Show unowned** if it is off, then click **Progressive Sword**. The sword reaches the game in a slot of its own, which the solver needs to plan a sword-dash.'),
                 stageStep('stage-cut', 'Stage the solve: the player enters level 12 from level 0, holding the sword, and the solver plans a way to the teleporter at (432, 352). The view starts reporting: the tree of goals, the tiles the search has reached, and the work meter against the 640-unit budget.'),

@@ -5,9 +5,10 @@
  * MIGRATION: while `clickActions` has no value of its own (`hasStoredSetting` false — only the schema default answers),
  * read the seven `moduleSettings.regionGraph.*` keys (stored, preset-supplied, else their old defaults), run
  * `migrateRegionGraphClickKeys`, and WRITE the result. Once written it is never recomputed: a second load reads it,
- * and a stored `clickActions` is never overwritten. The seven old keys are LEFT IN PLACE: the Region Map's interim
- * click reader (`regionMap/regionMapClicks.js`, until CA-S3) still reads them, and the Regions panel reads
- * `addLocationsToPath` (which a strip save mirrors: `saveRegionGraphClickActions`).
+ * and a stored `clickActions` is never overwritten. The old keys are LEFT IN PLACE (never deleted from a user's
+ * storage); since CA-S3 only `addLocationsToPath` has a reader, the Regions panel (which a strip save mirrors:
+ * `saveRegionGraphClickActions`). The Region Map's first run copies this function's answer
+ * (`regionMap/regionMapClickActions.js`, ⚖ R4).
  * ⚖ `movePlayerOneStep` is read but ignored (user, 2026-11-17T23:00:54Z): the migration treats it as false.
  *
  * `settings` is the settings manager (injectable for the tests): `hasStoredSetting`, `getSetting`, `updateSetting`.
@@ -55,9 +56,9 @@ export const MIRRORED_LEGACY_KEY = `${LEGACY_CLICK_KEY_PREFIX}.addLocationsToPat
  * (= `location['path.check'] === 'addToPath'`).
  * ⚖ planner archipelago-cc-23, 2026-11-19: the old box drove three readers — the Graph, the Regions panel's own
  * location clicks (`regions/regionBlockBuilder.js`, which reads `regionGraph.addLocationsToPath`) and the interim
- * Region Map — so a strip edit keeps moving the other two exactly as the box did. ONLY this key, and ONLY on a save:
- * the migration and the load path never write it. Retired with the key once the Regions panel reads `clickActions`
- * or owns its option (CA-S3/CA-S4).
+ * Region Map (retired in CA-S3: the Map's location choice is now its own, R4) — so a strip edit keeps moving the
+ * Regions panel exactly as the box did. ONLY this key, and ONLY on a save: the migration and the load path never
+ * write it. Retired with the key once the Regions panel reads `clickActions` or owns its option (CA-S4).
  */
 export async function saveRegionGraphClickActions(settings, next) {
     await settings.updateSetting(CLICK_ACTIONS_KEY, next);

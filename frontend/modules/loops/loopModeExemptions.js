@@ -14,10 +14,10 @@
  * Sources:
  *   - 'regionGraph-*'        — region-graph authoring clicks
  *     (addToPath / overwritePath / oneStep / direct move).
- *   - 'regionMap-*'          — the Region Map panel's clicks (region-map
- *     step 4): the same four shapes as the Region Graph's, through the
- *     shared regionView/regionActions.js (regionMap/regionMapClicks.js
- *     REGION_MAP_SOURCES), so they plan the same way.
+ *   - 'regionMap-*'          — the Region Map panel's clicks as step 4
+ *     sent them. Since CA-S3 its clicks run the shared click actions and
+ *     carry 'regionView-path-regionMap' (below); the prefix is kept for
+ *     older callers, as 'regionGraph*' is (mode-toggle design R7).
  *   - 'regionView-path-*'    — the shared click actions' path moves
  *     (regionView/clickActions.js PATH_SOURCE_PREFIX; mode-toggle design
  *     R7): every map panel's built-in path action dispatches under

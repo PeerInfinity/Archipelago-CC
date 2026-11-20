@@ -1,4 +1,11 @@
 /**
+ * ⛔ TEST KIT — the BEFORE oracle of CA-S3's equivalence (`regionMapClicks.equivalence.test.js`). This is
+ * `regionMap/regionMapClicks.js` at base 3a1909b2dcf1 (step 4's interim Region Map click reader), kept VERBATIM below
+ * this header (`git show 3a1909b2dc:frontend/modules/regionMap/regionMapClicks.js`). CA-S3 retired the live module;
+ * nothing but the equivalence test imports this file. ⚠ Its `actions.moveOneStep` call is reached only with
+ * `movePlayerOneStep` true, which the forced-false table never sets (the function left `regionActions.js` in CA-S3).
+ */
+/**
  * regionMap/regionMapClicks — **WHAT A REGION MAP CLICK DOES** (region-map step 4).
  *
  * ⚖ (user, 2026-11-17) *"Yes, let's copy the Region Graph's click behavior for now."* ⇒ this module is the Region

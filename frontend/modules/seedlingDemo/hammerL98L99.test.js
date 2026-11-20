@@ -14,9 +14,9 @@ import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 const ENV = globalThis.process?.env ?? {};
 
 describe('hammer-phase L98-L99 — the switches', () => {
-    it('both ship OFF, `SEEDLING_<NAME>=1` turns each on in node, and the channel carries both names', () => {
-        expect([KILLLOCK_STANDOUT_GUARD_DEFAULT, DRIVE_DEATH_REFUSED_DEFAULT]).toEqual([false, false]);
-        expect(KILLLOCK_STANDOUT_GUARD.enabled).toBe(ENV.SEEDLING_KILLLOCK_STANDOUT_GUARD === '1');
+    it('the stand-out guard ships ON (=0 opts out; the L28 flip\'s guard), DRIVE_DEATH_REFUSED OFF; the channel carries both names', () => {
+        expect([KILLLOCK_STANDOUT_GUARD_DEFAULT, DRIVE_DEATH_REFUSED_DEFAULT]).toEqual([true, false]);
+        expect(KILLLOCK_STANDOUT_GUARD.enabled).toBe(ENV.SEEDLING_KILLLOCK_STANDOUT_GUARD !== '0');
         expect(DRIVE_DEATH_REFUSED.enabled).toBe(ENV.SEEDLING_DRIVE_DEATH_REFUSED === '1');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_KILLLOCK_STANDOUT_GUARD');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_DRIVE_DEATH_REFUSED');

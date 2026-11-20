@@ -7,6 +7,8 @@
  * their elements' `data-*` attributes — never elapsed seconds. It sets its own settings for the session and puts
  * them back, and leaves the Solver section as it found it.
  */
+import { clearSeedlingJsSave } from '../steps/procgen.js';
+
 const FLASH = { panel: 'flashPanel' };
 const VIEW = { ...FLASH, selector: '.flash-panel-solve-progress' };
 const ROOT = { ...FLASH, selector: '.flash-panel-container' };
@@ -65,6 +67,8 @@ export const CHECK_SEEDLING_SOLVE_PROGRESS_LINE = Object.freeze({
                         doneTimeoutMs: 30000,
                     },
                 },
+                // ⛓ USE THE SAVE / CLEAR — no Seedling JS save from an earlier run (⚖ Robert 2026-11-19)
+                ...clearSeedlingJsSave('clear-save', { required: true }),
                 {
                     step: {
                         id: 'panel',

@@ -46,6 +46,7 @@ from .constants import (
     SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
 )
 from .profiling import profiler, auto_enable_from_env
+from .games.base.utilities import int_id_or_none
 from BaseClasses import ItemClassification
 
 # Auto-enable profiling from environment variable
@@ -2046,7 +2047,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                 # Get location address, handling cases where it might be a list
                                 # (e.g., ALTTP prize locations have multiple ROM addresses)
                                 raw_address = getattr(location, 'address', None)
-                                location_id = raw_address if isinstance(raw_address, int) else None
+                                location_id = int_id_or_none(raw_address)
 
                                 # Determine if this is an event location
                                 # Event locations have event=True or address=None
@@ -2243,7 +2244,7 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
             #logger.warning(f"Item '{item_name}' found in item_id_to_name but not in handler data for {game_name}. Creating basic entry.")
             items_data[item_name] = {
                 'name': item_name,
-                'id': item_id,
+                'id': int_id_or_none(item_id),
                 'groups': [],
                 'classification': 'filler',
                 'type': None, 'max_count': 1
@@ -2252,7 +2253,7 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
             # Ensure the ID from the world map is added if missing
             # BUT don't overwrite if the item is marked as an event (game handler intentionally set id=None)
             if items_data[item_name].get('id') is None and not items_data[item_name].get('event'):
-                items_data[item_name]['id'] = item_id
+                items_data[item_name]['id'] = int_id_or_none(item_id)
         
         # Add groups from world.item_name_groups if they aren't already present
         base_groups = [
@@ -2307,10 +2308,10 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 item_entry = {'name': item_name}
                 if item_hint and item_hint != item_name:
                     item_entry['hint_text'] = item_hint
-                item_entry['id'] = getattr(location.item, 'code', None)
+                item_entry['id'] = int_id_or_none(getattr(location.item, 'code', None))
                 item_entry['groups'] = []
                 item_entry['classification'] = classification_to_string(item_classification)
-                if getattr(location.item, 'code', None) is None:
+                if item_entry['id'] is None:  # no AP id (code None, or not an int: int_id_or_none) = an event
                     item_entry['event'] = True
                 item_entry['type'] = item_type
                 item_entry['max_count'] = 1
@@ -2355,10 +2356,10 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 item_entry = {'name': item_name}
                 if item_hint and item_hint != item_name:
                     item_entry['hint_text'] = item_hint
-                item_entry['id'] = getattr(item, 'code', None)
+                item_entry['id'] = int_id_or_none(getattr(item, 'code', None))
                 item_entry['groups'] = []
                 item_entry['classification'] = classification_to_string(item_classification)
-                if getattr(item, 'code', None) is None:
+                if item_entry['id'] is None:  # no AP id (code None, or not an int: int_id_or_none) = an event
                     item_entry['event'] = True
                 item_entry['type'] = item_type
                 item_entry['max_count'] = 1

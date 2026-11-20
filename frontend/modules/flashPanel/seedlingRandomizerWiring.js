@@ -81,6 +81,7 @@ import {
     JS_TRANSPORT,
     RANDOMIZER_ARMS,
     seedlingRandomizerEligibility,
+    servedRegionAtlas,
     TAG_CAPABILITY,
     BOSS_REPORT_CAPABILITY,
     ENTRANCE_SHUFFLE_NOT_PLAYABLE,
@@ -874,6 +875,19 @@ export async function loadSeedlingRandomizer({
     const cheap = seedlingRandomizerEligibility({ flashPanel, transport, manifest, ...atlasRooms });
     if (cheap.verdict === 'ineligible') return refuse(cheap);
 
+    // ── ⛓ SLICE G — a region atlas this page does not serve is a CUSTOM SET ──
+    // Read BEFORE the two documents, for both runtimes (this one load is the JS page's and the wasm page's): the
+    // vanilla arm would deliver the ORIGINAL 116 rooms under the set's own rules, and the atlas arm cannot bind it.
+    // ⛔ Rules that name no atlas id fetch nothing more and are asked nothing: their verdict is today's.
+    const guard = await servedRegionAtlas({
+        atlasId: playerId === undefined ? null : regionAtlasOf(rawRules, playerId)?.atlas_id,
+        fetchIndex: () => fetchJson(url(atlasIndexPath())),
+    });
+    if (guard.regionAtlas) {
+        const named = seedlingRandomizerEligibility({ flashPanel, transport, manifest, ...atlasRooms, ...guard });
+        if (named.verdict === 'ineligible') return refuse(named);
+    }
+
     // ── (iv) the two documents ──────────────────────────────────────────
     const mapPath = resolveMapPath(rawRules, playerId);
     const assets = {
@@ -893,7 +907,7 @@ export async function loadSeedlingRandomizer({
 
     if (!assets.recordSet.ok || !assets.map.ok) {
         return refuse(seedlingRandomizerEligibility(
-            { flashPanel, transport, manifest, assets, ...atlasRooms }), { assets });
+            { flashPanel, transport, manifest, assets, ...atlasRooms, ...guard }), { assets });
     }
 
     // ── the heavy modules ───────────────────────────────────────────────
@@ -931,6 +945,7 @@ export async function loadSeedlingRandomizer({
         placement: { resolved: census.direct + census.viaApId, total: census.total,
             unresolved: census.unjoined },
         assets,
+        ...guard,
     });
     if (eligibility.arm === RANDOMIZER_ARMS.ATLAS) {
         return loadSeedlingAtlas({
