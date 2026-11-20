@@ -42,12 +42,12 @@ function solveDoor(cleared, sight) {
 }
 
 describe('L28-BOBSOLDIER — `KILL_STANCE_SIGHT` (OFF)', () => {
-    it.skipIf(process.env.SEEDLING_KILL_STANCE_SIGHT)('ships OFF; its env name is a known worker env name', () => {
-        expect(KILL_STANCE_SIGHT_DEFAULT).toBe(false);
-        expect(KILL_STANCE_SIGHT.enabled).toBe(false);
+    it.skipIf(process.env.SEEDLING_KILL_STANCE_SIGHT)('ships ON since the L28 flip (=0 opts out); its env name is a known worker env name', () => {
+        expect(KILL_STANCE_SIGHT_DEFAULT).toBe(true);
+        expect(KILL_STANCE_SIGHT.enabled).toBe(true);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_KILL_STANCE_SIGHT');
-        withKillStanceSight(true, () => expect(KILL_STANCE_SIGHT.enabled).toBe(true));
-        expect(KILL_STANCE_SIGHT.enabled).toBe(false);
+        withKillStanceSight(false, () => expect(KILL_STANCE_SIGHT.enabled).toBe(false));
+        expect(KILL_STANCE_SIGHT.enabled).toBe(true);
     });
 
     it('OFF: today\'s plan — the kill dwell is hit at t361 (the stance was priced with the swing landing through a Solid)',

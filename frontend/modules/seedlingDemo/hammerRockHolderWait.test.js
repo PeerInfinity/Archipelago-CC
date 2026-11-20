@@ -16,7 +16,7 @@ import { arrivalStaging } from './fidelityArrival.js';
 import { L28 } from './fidelityRockButton.js';
 import {
     RESTING_HOLDER, RESTING_HOLDER_DEFAULT, restingHolderProbe, solveSegment, SolverRefusal, stanceHypothesisProbe,
-    withRestingHolder,
+    withKillStanceSight, withRestingHolder,
 } from './solverBot.js';
 
 const BOOT = { level: 28, x: 128, y: 288 };
@@ -33,19 +33,21 @@ function solveDoor(cleared) {
     run.advance = (...a) => { const r = advance(...a); ys.push(run.state.y); return r; };
     let err = null;
     try {
-        solveSegment({ run, goals: DOOR, name: 'rock-holder-wait', boot: BOOT });
+        // KILL_STANCE_SIGHT held OFF (ON by default since the L28 flip, 2026-11-19, which solves the leg past this wall:
+        // `hammerKillStanceSight.test.js`): this row pins the wait ALONE and the next wall it then meets.
+        withKillStanceSight(false, () => solveSegment({ run, goals: DOOR, name: 'rock-holder-wait', boot: BOOT }));
     } catch (e) { err = e; }
     return { err, run, ys, hits: run.ledger('playerHits'),
         lockWrites: run.lockWrites.map((w) => [w.id, w.t, w.value]) };
 }
 
 describe('ROCK-HOLDER-WAIT — `RESTING_HOLDER` (OFF)', () => {
-    it.skipIf(process.env.SEEDLING_RESTING_HOLDER)('ships OFF; its env name is a known worker env name', () => {
-        expect(RESTING_HOLDER_DEFAULT).toBe(false);
-        expect(RESTING_HOLDER.enabled).toBe(false);
+    it.skipIf(process.env.SEEDLING_RESTING_HOLDER)('ships ON since the L28 flip (=0 opts out); its env name is a known worker env name', () => {
+        expect(RESTING_HOLDER_DEFAULT).toBe(true);
+        expect(RESTING_HOLDER.enabled).toBe(true);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_RESTING_HOLDER');
-        withRestingHolder(true, () => expect(RESTING_HOLDER.enabled).toBe(true));
-        expect(RESTING_HOLDER.enabled).toBe(false);
+        withRestingHolder(false, () => expect(RESTING_HOLDER.enabled).toBe(false));
+        expect(RESTING_HOLDER.enabled).toBe(true);
     });
 
     it('the holder read: a resting Solid on the presser AND the model reading it down — else nothing', () => {
