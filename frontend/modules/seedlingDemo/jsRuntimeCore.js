@@ -1341,6 +1341,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
      * its keys and totem parts (a union), its seal identities appended to the log where it lacks them (the log's
      * filled prefix: `sealLog`), and its last write to each item flag. Idempotent. Nothing is handed to a run here:
      * both callers stage the ledgers into the next boot.
+     * ⚠ (fidelity-22) the flags `Object.assign` after `restoreSave` LOWERS a restored save's higher flag (e.g. `hitsMax`)
+     * to the host's last write. Unreachable today (Health locations are `apitem`; the host is the only writer); it bites
+     * only if in-game Health (`Bot.as:2768`) coexisted with host writes.
      */
     function reseatHostDeliveries() {
         for (const k of hostDelivered.keys) heldKeys.add(k);
