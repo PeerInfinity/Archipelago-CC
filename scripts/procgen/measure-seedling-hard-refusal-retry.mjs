@@ -22,6 +22,7 @@
  * The world model is the survey's: the patched atlas, delivered as the default preset delivers it, with the AP
  * chests as `apitem`s when `CONTACT_FIDELITY.apChestItem` is on.
  *
+ * `--idle=K` plays K empty key sets at the boot before the first goal (a wait, then the same ask).
  * `--steps=66@-20,66@-19,…` asks step 66 with its arrival game clock moved (`staging.seam.time` + d); `--goal=K`
  * stops after goal K (the goals before it still solve, to build its prefix).
  *
@@ -158,6 +159,14 @@ async function runStep(spec) {
     const goals = step.goals.filter((g) => g.kind !== 'skip');
     const perTick = [];
     const equips = new Map();
+    // `--idle=K`: K empty key sets played at the boot before the first goal is asked (the player stands still while
+    // the room's clock and mobiles move) — a WAIT-then-re-ask, measured beside the budget retry.
+    const idle = Number(arg('idle', 0));
+    for (let i = 0; i < idle; i += 1) perTick.push(new Set());
+    const idleHits = idle > 0 ? (() => {
+        const r = J.replayTape({ staging, perTick, levelSource });
+        return { hits: r.playerHits.length, deaths: r.playerDeaths.length };
+    })() : null;
     const dump = arg('dump-requests');
     const scratchPersistence = J.replayTape({ staging, perTick: [], levelSource }).scratchPersistence === true;
     for (let k = 0; k < goals.length; k += 1) {
@@ -176,7 +185,7 @@ async function runStep(spec) {
         const straight = page.verdict === 'SOLVED' ? null
             : summary(J, request, await solveOne(J, request, budget * SOLVE_RETRY_BUDGET_FACTOR, J.ANYTIME_PASSES, sites));
         const row = { step: Number(stepId), seamOffset, seamTime: staging.seam?.time ?? null, level: step.level, goal: k, of: goals.length, location: g.location ?? g.why ?? null,
-            kind: g.kind, prefixTicks: perTick.length, budget, verdict: page.verdict, at640: page.first, retry: page.retry,
+            kind: g.kind, prefixTicks: perTick.length, ...(idle ? { idle, idleHits } : {}), budget, verdict: page.verdict, at640: page.first, retry: page.retry,
             straight, hitAware: J.HIT_AWARE_ANSWER.enabled };
         console.log(`##ROW##${JSON.stringify(row)}`);
         if (!page.final.ok) break;

@@ -8373,6 +8373,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "idle"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "jobs"
                 },
                 {
