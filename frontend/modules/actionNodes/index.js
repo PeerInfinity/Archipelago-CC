@@ -7,7 +7,9 @@
  *   - `stateManager:snapshotUpdated` → boosts (A4) and the checks already made;
  *   - `gameState:loopReset` and `loopState:loopReset` (the two reset flows) → a new loop;
  *   - `loop:actionCompleted` (Loops ran an `act`) → perform the node;
- *   - `crossSubstrate:itemGranted` to `action_nodes` → a resource lands in the ledger.
+ *   - `crossSubstrate:itemGranted` to `action_nodes` → a resource lands in the ledger;
+ *   - (AN-3b) the click action `actionNodes.act` (perform once), registered with the click-actions registry while an
+ *     ActionNodes world is loaded, and the card's "perform all remaining" button (`nodeClickAction.js`).
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -19,6 +21,7 @@ import {
 import { substrateRegistryEntry } from './actionNodesLibrary.js';
 import { getActionNodesRuntime, ACTION_NODES_STATE_EVENT } from './actionNodesRuntime.js';
 import { wireNodeCardOverlay } from './nodeCardOverlay.js';
+import { syncClickAction, lastPerformResult } from './nodeClickAction.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { getDiscoverySettings } from '../discovery/index.js';
 import {
@@ -50,6 +53,7 @@ export function register(registrationApi) {
     // Tests and the console read the runtime's state.
     registrationApi.registerPublicFunction?.(MODULE, 'getRuntimeSnapshot', () => getActionNodesRuntime().snapshot());
     registrationApi.registerPublicFunction?.(MODULE, 'getRuntime', () => getActionNodesRuntime());
+    registrationApi.registerPublicFunction?.(MODULE, 'getLastPerformResult', () => lastPerformResult());
 }
 
 export function initialize(_moduleId, _priorityIndex, initializationApi) {
@@ -79,17 +83,32 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     });
     if (!eventBus?.subscribe) return;
     // The node card on the Region Graph (AN-3a): registered while an ActionNodes world is loaded, removed on unload.
+    const loopState = () => initializationApi.getModuleFunction?.('loops', 'getLoopState')?.() ?? null;
+    const isDiscovered = (id) => (getDiscoverySettings()?.enableDiscoveryMode === true
+        ? !!discoveryStateSingleton.isRegionDiscovered(id) : true);
+    // AN-3b: what the click and the card's "perform all remaining" button run (`nodeClickAction.performNode`).
+    const performDeps = {
+        runtime,
+        gameState: gs,
+        loopState,
+        isDiscovered,
+        dispatcher,
+        onResult: (r) => {
+            if (!r.ok && r.code !== 'unknown-node') console.info(`[actionNodes] ${r.text}`);
+        },
+    };
     const cards = wireNodeCardOverlay({
         getModuleFunction: (m, f) => initializationApi.getModuleFunction?.(m, f),
         eventBus,
         viewDeps: {
-            loopState: () => initializationApi.getModuleFunction?.('loops', 'getLoopState')?.() ?? null,
+            loopState,
             loopMode: () => gs()?.isLoopModeActive === true,
             discovery: () => ({
                 enabled: getDiscoverySettings()?.enableDiscoveryMode === true,
                 isRegionDiscovered: (id) => discoveryStateSingleton.isRegionDiscovered(id),
             }),
         },
+        performDeps,
     });
     eventBus.subscribe('stateManager:rawJsonDataLoaded', (data) => {
         const rules = data?.rawJsonData;
@@ -101,6 +120,8 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
             runtime.unload();
         }
         cards.sync();
+        // AN-3b: the click action `actionNodes.act` exists only while an ActionNodes world is loaded.
+        syncClickAction(performDeps);
     });
     eventBus.subscribe('stateManager:snapshotUpdated', (data) => runtime.onSnapshot(data?.snapshot));
     eventBus.subscribe('gameState:loopReset', () => runtime.onLoopReset('gameState:loopReset'));

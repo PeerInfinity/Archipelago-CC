@@ -24,6 +24,10 @@
  *     'regionView-path-<panelId>', so the ACTION, not the panel, decides
  *     that a click plans. Panel-owned play actions (a Flash teleport) keep
  *     their own source and stay gated.
+ *   - 'actionNodes-plan-*'   — the ActionNodes click (`actionNodes.act`)
+ *     and its card's "perform all remaining" button
+ *     (actionNodes/nodeClickAction.js PLAN_SOURCE_PREFIX, slice AN-3b):
+ *     in Loop mode they QUEUE the free hops to the node, then its acts.
  *   - 'procgenPlayer-*'      — procgenPlayer's synthesized transitions
  *     (the initial Menu → first-region placement).
  *   - 'menuPanel-*'          — the menu panel's exit buttons, its
@@ -38,6 +42,7 @@ export function isLoopModePlanningSource(source) {
     return source.startsWith('regionGraph')
         || source.startsWith('regionMap')
         || source.startsWith('regionView-path')
+        || source.startsWith('actionNodes-plan')
         || source.startsWith('procgenPlayer')
         || source.startsWith('menuPanel');
 }

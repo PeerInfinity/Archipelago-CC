@@ -25,6 +25,7 @@ import {
 } from '../menuPanel/menuPanelEngine.js';
 import { PATH_SOURCE_PREFIX, pathSourceFor } from '../regionView/clickActions.js';
 import { PANEL_ID as REGION_MAP_PANEL_ID } from '../regionMap/regionMapClickActions.js';
+import { PLAN_SOURCE_PREFIX, planSourceFor } from '../actionNodes/nodeClickAction.js';
 
 describe('⛓ isLoopModePlanningSource — authoring sources', () => {
     it('classifies the region graph\'s four click shapes', () => {
@@ -56,6 +57,17 @@ describe('⛓ isLoopModePlanningSource — authoring sources', () => {
         for (const panelId of ['regionGraph', 'regionMap', 'someFuturePanel']) {
             expect(isLoopModePlanningSource(pathSourceFor(panelId))).toBe(true);
         }
+    });
+
+    // AN-3b: the ActionNodes click (`actionNodes.act`) and its card's "perform all remaining" button queue the free hops
+    // to the node under `actionNodes-plan-<panel>`, by the module's own constant.
+    it('classifies the ActionNodes click\'s and button\'s queued hops, by the module\'s own constants (AN-3b)', () => {
+        expect(PLAN_SOURCE_PREFIX).toBe('actionNodes-plan');
+        for (const panelId of ['regionGraph', 'regionMap', 'nodeCard']) {
+            expect(isLoopModePlanningSource(planSourceFor(panelId))).toBe(true);
+        }
+        expect(isLoopModePlanningSource('replay-actionNodes-plan-regionGraph')).toBe(false);
+        expect(isLoopModePlanningSource('actionNodes')).toBe(false);
     });
 
     it('classifies procgenPlayer\'s synthesized start hop', () => {
