@@ -86,7 +86,15 @@ green (job 136919970843). It is a flake, not this slice's.
 
 ## ActionNodes (step 4)
 
-<!-- AN3B -->
+AN-3b landed on main at 14c0386ccf (train 183, AN-3b train commit 7921ff42c8). Merged into this branch once.
+
+- `an-bot-plays-to-goal` (`frontend/modules/tests/testCases/actionNodesTests.js`) now asserts the goal in **exactly**
+  the pure planner's loop count, and in exactly the headless live path's (both 2 on the example). It no longer asserts
+  "≤ the pure count". The ⛓ comment there says why.
+- `CC/docs/cloud-reports/actionnodes-an3b.md`: the "Known gap: Instant overshoots" paragraph is marked FIXED (it says
+  what the gap was and why it is closed), and its test-table row records the tightening.
+- `docs/json/features/loops.md` (Instant mode row): "same outcome as normal speed, only faster: an action the pool
+  cannot pay for drains what is left into region XP, does not complete, and the loop resets".
 
 ## Follow-ups (named, not fixed here)
 
@@ -111,10 +119,16 @@ green (job 136919970843). It is a flake, not this slice's.
 
 ## Gates
 
-- Bounded vitest over `loops`, `playbackBot`, `actionNodes`, `resourceChannels`, `loopsCostDebugger`: 52 files,
-  1177 tests, green at `65f18ee25d`.
+- Bounded vitest over `loops`, `playbackBot`, `actionNodes`, `resourceChannels`, `loopsCostDebugger`: 54 files,
+  1216 tests, green after the merge (52 files and 1177 tests at `65f18ee25d`, before it).
 - `check-loop-costs-one-model.mjs`: ALL PASS (5 documents).
-- Maze engine closure: `engineMd5 bec369878feb67081187edca62baa951` (42 files), identical at base and tip.
-- No committed preset moves: the diff touches `loops/loopState.js`, `loops/instantParity.test.js` and this report.
+- Maze engine closure: identical at base and tip.
+  - `bec369878feb67081187edca62baa951` (42 files) at 84d9ccd29d and at the slice before the merge.
+  - `74ae60f575531492ed9eaec1839e1fe3` at 14c0386ccf and at the tip. Main moved it; this slice did not.
+- No committed preset moves. The diff against main touches:
+  - `loops/loopState.js` and `loops/instantParity.test.js`;
+  - `tests/testCases/actionNodesTests.js`;
+  - `docs/json/features/loops.md`;
+  - `CC/docs/cloud-reports/actionnodes-an3b.md` and this report.
 - Gitlinks: 0 moved.
 <!-- CI-TIP -->

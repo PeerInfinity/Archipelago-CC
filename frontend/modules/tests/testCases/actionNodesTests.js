@@ -795,17 +795,17 @@ async function botPlaysToGoal(tc) {
         const sim = playLiveToGoal(rules);
         tc.log(`headless live path: goal in ${sim.loops.length} loop(s); in-app: ${loops}`);
         // ⛓ AN-3b, limit (b): the runner replans mid-loop when an item arrives (headless: live 2 = pure 2, pinned
-        // exactly in actionLoopBot.test.js). In-app the queue runs at Instant, where Loops COMPLETES an action started
-        // short of mana (loops/loopState.js _advanceActionProgress: completion runs before _maybeResetForOOM), so the
-        // replan's ⚖ Q1 attempt (it should drain and end the loop) can finish the goal a loop early. ⚖ planner
-        // ruling C (2026-11-20): assert the replan, the goal in ≤ the pure count, and the attempt named in the log;
-        // the Instant overshoot is a known gap for a Loops slice.
+        // exactly in actionLoopBot.test.js). In-app the queue runs at Instant. Since LOOPS-I1 a Loops frame spends at
+        // most the pool (loops/loopState.js _advanceActionProgress; pinned by loops/instantParity.test.js), so the
+        // replan's ⚖ Q1 attempt drains the pool into region XP and ends the loop, as at normal speed. The in-app
+        // count is therefore EXACTLY the pure planner's (⚖ planner ruling C's "≤" was the Instant-overshoot gap).
         const model = buildActionModel(await (await fetch(`./${rules.procgen_metadata[P].graph_path.replace(/^frontend\//, '')}`, { cache: 'no-store' })).json());
         const pure = playToGoal(model, { placements: placementsFromRules(rules, model, P) });
         tc.log(`pure planner: goal in ${pure.loops.length} loop(s); headless live: ${sim.loops.length}; in-app (Instant): ${loops}`);
         tc.assertEqual('the runner replanned mid-loop at least once', true, (bot.getLoopRunner?.()?.getReplanCount?.() ?? 0) >= 1);
         tc.assertEqual('a replan\'s reasoning is in the log', true, log.some((l) => /^loop \d+ \(replan\): /.test(l)));
-        tc.assertEqual(`the goal in ≤ the pure planner's ${pure.loops.length} loop(s) (in-app ${loops})`, true, loops >= 1 && loops <= pure.loops.length);
+        tc.assertEqual(`the goal in EXACTLY the pure planner's loop count (pure ${pure.loops.length})`, pure.loops.length, loops);
+        tc.assertEqual(`… and the headless live path's (live ${sim.loops.length})`, sim.loops.length, loops);
         tc.assertEqual('the Q1 attempt is named in the log', true, log.some((l) => /attempting /.test(l)));
         tc.assertEqual('no queue refusal', null, loopStateSingleton.lastActionRefusal);
     } finally {
