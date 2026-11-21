@@ -2547,6 +2547,10 @@ function ghostStep(world, state, input) {
     const nx = state.player_pos.x + delta.dx;
     const ny = state.player_pos.y + delta.dy;
     if (!isFloor(world, nx, ny)) return null;
+    // ⛓ CONTENT SETS PASS-3 — an entry gate with `gate: null` is GEOMETRY ("no entry that way at all"), exactly as a
+    //   wall is: refused here, as `step` refuses it (`shutEntryAt`). A gated entry (an id) is a clearance, which this
+    //   walk is transparent to, as it is to an obstacle; `entryGateCrossed` annotates it.
+    if (entryRefused(world, nx, ny, input)) return null;
     const next = cloneState(state);
     next.player_pos.x = nx;
     next.player_pos.y = ny;
@@ -2567,17 +2571,42 @@ function ghostStep(world, state, input) {
 function obstaclesAlongPath(world, startState, plan) {
     const seen = [];
     const seenSet = new Set();
+    const note = (id) => {
+        if (id && !seenSet.has(id)) {
+            seen.push(id);
+            seenSet.add(id);
+        }
+    };
     let s = startState;
     for (const input of plan) {
         s = ghostStep(world, s, input);
         if (!s) break;
-        const obstacleId = getObstacle(world, s.player_pos.x, s.player_pos.y);
-        if (obstacleId && !seenSet.has(obstacleId)) {
-            seen.push(obstacleId);
-            seenSet.add(obstacleId);
-        }
+        // ⛓ PASS-3 — the gate on ENTERING the cell this way, then the cell's own obstacle (the order a walk meets them).
+        note(entryGateCrossed(world, s.player_pos.x, s.player_pos.y, input));
+        note(getObstacle(world, s.player_pos.x, s.player_pos.y));
     }
     return seen;
+}
+
+/**
+ * ⛓ CONTENT SETS PASS-3 — **THE EXTRACTOR READS ENTRY GATES** (content-sets-passability-design § 1.3: on a plain world
+ * the extractor reported a `null`-gated exit reachable with no rule while `step` refused the walk). `entryRefused`:
+ * entering (x, y) moving `dir` has an entry gate of `null` (no entry that way). `entryGateCrossed`: the gate id that
+ * move must clear, or null. A world without `entry_gates` answers false / null everywhere, so its extraction is
+ * byte-identical.
+ */
+function entryRefused(world, x, y, dir) {
+    const key = `${x},${y},${dir}`;
+    return world.entryGates?.has(key) === true && world.entryGates.get(key) === null;
+}
+
+function entryGateCrossed(world, x, y, dir) {
+    return world.entryGates?.get(`${x},${y},${dir}`) ?? null;
+}
+
+/** The direction of the one-cell move from `a` to `b` (adjacent cells), as an input. */
+function stepDir(a, b) {
+    return Object.keys(DELTAS).find((d) => a.x + DELTAS[d].dx === b.x && a.y + DELTAS[d].dy === b.y) ?? null;
 }
 
 /**
@@ -2657,7 +2686,9 @@ const routeSetOrder = (a, b) => popcount(a) - popcount(b) || (a < b ? -1 : a > b
 
 function minimalObstacleSets(world) {
     const start = createState(world).player_pos;
-    const ids = [...new Set(world.obstacles.values())];
+    // ⛓ PASS-3 — the entry gates' ids join the axis AFTER the cell obstacles', so a world without entry gates keeps
+    //   every bit (and so every mask, and every ordering by mask) it had.
+    const ids = [...new Set([...world.obstacles.values(), ...[...(world.entryGates?.values() ?? [])].filter((g) => g !== null)])];
     const bit = new Map(ids.map((id, i) => [id, 1n << BigInt(i)]));
     const key = (x, y) => `${x},${y}`;
     const labels = new Map([[key(start.x, start.y), [0n]]]);
@@ -2688,8 +2719,10 @@ function minimalObstacleSets(world) {
             const nx = x + DELTAS[input].dx;
             const ny = y + DELTAS[input].dy;
             if (!isFloor(world, nx, ny)) continue;
+            if (entryRefused(world, nx, ny, input)) continue;
             const id = getObstacle(world, nx, ny);
-            const next = id ? mask | bit.get(id) : mask;
+            const gate = entryGateCrossed(world, nx, ny, input);
+            const next = (id ? bit.get(id) : 0n) | (gate ? bit.get(gate) : 0n) | mask;
             if (!keep(key(nx, ny), next)) continue;
             const label = `${key(nx, ny)}|${next}`;
             if (!parent.has(label)) parent.set(label, `${key(x, y)}|${mask}`);
@@ -2702,10 +2735,17 @@ function minimalObstacleSets(world) {
     /** The obstacles the route that kept `mask` at `position` crosses, in encounter order. */
     const routeObstacles = (position, mask) => {
         const cells = [];
-        for (let at = `${key(position.x, position.y)}|${mask}`; parent.has(at); at = parent.get(at)) cells.push(at.split('|')[0]);
+        let at = `${key(position.x, position.y)}|${mask}`;
+        for (; parent.has(at); at = parent.get(at)) cells.push(at.split('|')[0]);
+        cells.push(at.split('|')[0]); // the route's start, so its first step has a direction (⛓ PASS-3)
         const seen = [];
-        for (const cell of cells.reverse()) {
-            const id = world.obstacles.get(cell);
+        const xy = (cell) => { const [x, y] = cell.split(',').map(Number); return { x, y }; };
+        const ordered = cells.reverse();
+        for (let i = 1; i < ordered.length; i++) {
+            const to = xy(ordered[i]);
+            const gate = world.entryGates ? entryGateCrossed(world, to.x, to.y, stepDir(xy(ordered[i - 1]), to)) : null;
+            if (gate && !seen.includes(gate)) seen.push(gate);
+            const id = world.obstacles.get(ordered[i]);
             if (id && !seen.includes(id)) seen.push(id);
         }
         return seen;
@@ -3180,6 +3220,7 @@ export function floorReachableSet(world) {
             const nx = p.x + d.dx;
             const ny = p.y + d.dy;
             if (!isFloor(world, nx, ny)) continue;
+            if (entryRefused(world, nx, ny, input)) continue; // ⛓ PASS-3: ghostStep's semantics, which this promises
             const k = posKey(nx, ny);
             if (visited.has(k)) continue;
             visited.add(k);
