@@ -1,0 +1,6 @@
+     × OFF the jellyfish takes no update there; ON it takes its one unfrozen move, and leads OFF by it after 251ms
+     × composed with every wave-51..53 key ON: no throw, the same release-frame lead 134ms
+     × with a suited bob staged under the player (`bob@112,150`): ON its one unfrozen move and `hitsTimer` drain 27ms
+     × a rock room holding a beam tower is refused by name ON at the release frame (OFF as before) 40ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  4 failed | 28 passed (32)
