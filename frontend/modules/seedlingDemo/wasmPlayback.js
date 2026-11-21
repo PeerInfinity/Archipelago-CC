@@ -1070,16 +1070,23 @@ export function expiryAction({ provisional = null, retries = 0, unanswered = tru
  * ⛓ O2 → DETERMINISTIC BUDGET — the named failure of a solve that ran out of
  * every work budget. A pass that DECLINED (a refusal its deadline did not cut)
  * is the solver's word and leads: its reason, then the budgets spent.
+ * ⛓ FULL REASONS (⚖ Robert 2026-11-20, "Show the full reasons") — the refusal's
+ * WHOLE text is carried: its first line where it always stood (line 1 of the
+ * failure is unchanged), and every further line (a ladder-EXHAUSTED refusal's
+ * `  rung: why` lines) after it, so the bot's status and the walk instrument's
+ * `[MEASURE end]` line show every rung's reason, not the first line alone.
  */
 export function expiryFailure({ goal, budgets = [], refusal = null }) {
     const spent = budgets.join(', then ');
     const over = `the solver ran out of ${spent} work units${budgets.length > 1 ? ' on its held retry' : ''} on ${goal?.kind} in level ${goal?.level}`;
-    if (refusal && refusal.kind === 'refusal' && !refusal.deadline) {
+    if (!refusal || refusal.kind !== 'refusal') return over;
+    const [head, ...rest] = String(refusal.message).split('\n');
+    const tail = rest.length ? `\n${rest.join('\n')}` : '';
+    if (!refusal.deadline) {
         return `the solver declined ${goal?.name ?? goal?.kind} in level ${goal?.level} (pass ${refusal.pass ?? '?'}): `
-            + `${String(refusal.message).split('\n')[0]} — and ${over}`;
+            + `${head} — and ${over}${tail}`;
     }
-    if (refusal && refusal.kind === 'refusal') return `${over}: ${String(refusal.message).split('\n')[0]}`;
-    return over;
+    return `${over}: ${head}${tail}`;
 }
 
 /** The named failure for a goal that diverged after spending every recovery. */

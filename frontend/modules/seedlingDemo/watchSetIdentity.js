@@ -48,9 +48,10 @@
  *     UNSTAMPED (§19.10 hard #1): it is rebuilt on every report and is not a document
  *     anybody keeps. Only the copies that leave through a door are stamped. The bundle's
  *     `region-atlas` member is the atlas the compile stamped, looked up by the id the
- *     rules name (`atlasAtDoor`). ⛔ It is NOT re-stamped from the live session: the
- *     mount's doors read the LAST REPORT, and a fingerprint of the current rooms would
- *     disagree with that report's rules whenever the set changed after REPORT.
+ *     rules name (`atlasAtDoor`). ⛔ It is NOT re-stamped from the live session: it is
+ *     the atlas the rules handed to it were compiled from. ⛓ (lab-stale-handover) Those
+ *     rules are always the CURRENT set's: the mount's doors run REPORT again when the set
+ *     changed after the last one, so the member and the rules never describe an older set.
  *
  *  3. **NOTHING PRETENDS TO PLAY.** The compile runs with `flashPanel: false`
  *     (`regionAtlasCompiler.js`, where `options.flashPanel ?? FLASH_PANEL_WIRING[game]`
@@ -63,6 +64,7 @@
  * `stampAtlasIdentity` are handed in.
  */
 import { fnv1a32, stableStringify } from '../procgenCore/contentIdentity.js';
+import { levelSetReferenceOf } from '../procgenCore/levelSetReference.js';
 import { SEEDLING_ATLAS_GAME } from './seedlingAtlasDerivation.js';
 
 /** ⛓ The set adapter's `deps.atlas` on the watch page: the GAME and the map-document LABEL. */
@@ -130,8 +132,21 @@ export function labSetIdentity({ compileRegionAtlas, stampAtlasIdentity } = {}) 
         stamp,
         compileRegionAtlas: (atlas, options = {}) => {
             const stamped = stamp(atlas, options.mapDoc);
-            const out = compileRegionAtlas(stamped, { ...options, ...LAB_SET_COMPILE_OPTIONS });
+            const { levelSet, ...rest } = options;
+            const out = compileRegionAtlas(stamped, { ...rest, ...LAB_SET_COMPILE_OPTIONS });
             remember(stamped);
+            /**
+             * ⛓ S3 — THE SET THE ROOMS CAME FROM, BESIDE THE STAMP: `region_atlas[p].level_set =
+             * {set_id, content_hash}` (`procgenCore/levelSetReference.js`), on the compile, so every door
+             * (rules.json, the APWorld Editor, the bundle) carries the same field. Written only when the
+             * caller handed the stamped set (`seedlingSetAdapter.rulesJsonOf` does).
+             */
+            if (levelSet && out?.rules?.region_atlas) {
+                const ref = levelSetReferenceOf(levelSet);
+                for (const p of Object.keys(out.rules.region_atlas)) {
+                    out.rules.region_atlas[p] = { ...out.rules.region_atlas[p], level_set: { ...ref } };
+                }
+            }
             return out;
         },
         atlasAtDoor: (atlas, rules) => {

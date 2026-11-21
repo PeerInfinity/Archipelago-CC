@@ -15,9 +15,12 @@
  *
  * ── THE REACH: the disc (grid cells) ───────────────────────────────────────────────────────────────────────────────────
  * The pulls' own disc (`OV.lavaTrapPulls`: every tile whose centre is within `chompRange` of the trap's, the game's
- * int-truncated `FP.distance`), KEPT only where the launch's line is clear (`LavaTrap.as:88` `!collideLine("Solid", …)`):
- * the centre-to-centre segment crosses no wall cell. The trap's own tile, a landing and a door are never charged (the pull
- * lands on the trap's tile, which must stay a sub-region; a landing is not a crossing; a door leaves the room).
+ * int-truncated `FP.distance`, and whose line to the trap is clear, `LavaTrap.as:88` `!collideLine("Solid", …)`: the
+ * centre-to-centre segment crosses no wall cell). ⛓⛓ rules-lavatrap-pull-line: the line test is the DISC's own
+ * (`OV.pullLineClear`, applied once by `lavaTrapPulls` with the producer's wall cells), so T reads that disc and never
+ * re-cuts it: the tiles the tongue kills on are the tiles it reels from. The trap's own tile, a landing and a door are
+ * never charged (the pull lands on the trap's tile, which must stay a sub-region; a landing is not a crossing; a door
+ * leaves the room).
  *
  * ── THE CHARGE: every disc cell is a GATED cell (the kill-lock shape) ──────────────────────────────────────────────────
  * Its occupancy condition is `Or(hasDarkSuit, <arms>)`. The analyzer floods `open` cells only, so a route that can AVOID the
@@ -95,33 +98,19 @@ export const tongueKills = (tag, classes = TONGUE_KILL_CLASSES) => classes[tag]?
 
 // ── the disc (grid) ─────────────────────────────────────────────────────────────────────────────────────────────────
 
-/** Is the centre-to-centre segment between cells `a` and `b` clear of every cell `solid(i)` names (sampled per px)? */
-export function lineClear(a, b, width, solid) {
-    const [ax, ay] = xy(a, width).map((v) => v * T + T / 2);
-    const [bx, by] = xy(b, width).map((v) => v * T + T / 2);
-    const steps = Math.ceil(Math.hypot(bx - ax, by - ay));
-    for (let s = 1; s < steps; s += 1) {
-        const px = ax + ((bx - ax) * s) / steps;
-        const py = ay + ((by - ay) * s) / steps;
-        const i = Math.floor(py / T) * width + Math.floor(px / T);
-        if (i !== a && i !== b && solid(i)) return false;
-    }
-    return true;
-}
-
 /**
- * One trap's disc: its pull disc (`pull` = an `OV.lavaTrapPulls` row: `tile`, `from`) cut to the player cells with a clear
- * line to the trap; the trap's own tile and `exempt` (landings, doors) left out. `solid(i)` = a cell the launch's
- * `collideLine("Solid")` stops at (the grid's walls).
+ * One trap's disc: its pull disc (`pull` = an `OV.lavaTrapPulls` row: `tile`, `from`, already line-cut) as player cells;
+ * the trap's own tile, the blocking cells and `exempt` (landings, doors) left out. No second line test: the disc IS the
+ * reach (`OV.pullLineClear` cut it once).
  */
-export function trapTongueCells(pull, { grid, exempt = new Set(), solid = (i) => grid.cells[i]?.kind === 'wall' }) {
+export function trapTongueCells(pull, { grid, exempt = new Set() }) {
     const { width, cells } = grid;
     const trap = pull.tile[1] * width + pull.tile[0];
     const disc = new Set();
     for (const [x, y] of pull.from) {
         const i = y * width + x;
         if (i === trap || BLOCKING.has(cells[i]?.kind ?? 'wall') || exempt.has(i)) continue;
-        if (lineClear(i, trap, width, solid)) disc.add(i);
+        disc.add(i);
     }
     return disc;
 }

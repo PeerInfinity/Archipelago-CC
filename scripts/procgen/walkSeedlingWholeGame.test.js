@@ -31,6 +31,15 @@ describe('walk-seedling-whole-game summary', () => {
         expect(s.cause).toMatch(/^stall ".*for 300 s"$/);
     });
 
+    it('⛓ FULL REASONS — a stall on a MULTI-LINE status (a decline\'s rung lines, escaped \\n on the line) is still a stall', () => {
+        const status = 'Sphere 1.8 → walking — the solver declined — the combat ladder is EXHAUSTED:\\n  time: hit\\n  bait: none\\n  kill: hit; walking instead';
+        const log = `${B}[MEASURE end] seedling-whole-game t=739s step=bot-plays checked=5 botQueue=48 botCursor=4 botChecked=4 botHead="Level 025 - Chest" botRegion="level_12__r0c37" transport=wasm status="${status}" walkEnd=failed walkStep=bot-plays why="the app shows it cannot finish: the Playback Bot has said \\"${status}\\" for 300 s"`;
+        expect(log).not.toMatch(/[\r\n]/);
+        const s = summarize(log);
+        expect(s.cause).toMatch(/^stall "[^\n]*for 300 s"$/);
+        for (const r of ['  time: hit', '  bait: none', '  kill: hit']) expect(JSON.parse(s.cause.slice('stall '.length))).toContain(r);
+    });
+
     it('a budget stop says the wait ran out', () => {
         const log = `${B}[MEASURE end] seedling-whole-game t=600s step=bot-plays checked=12 botQueue=48 botCursor=7 botChecked=7 botHead="Level 019 - Boss Key 0" botRegion="level_19" transport=wasm status="Sphere 3.1 → playing tick 4/90" walkEnd=failed walkStep=bot-plays why="its done check never held"`;
         expect(summarize(log).cause).toMatch(/^budget: the step's wait ran out/);

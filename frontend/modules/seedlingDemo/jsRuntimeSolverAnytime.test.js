@@ -136,4 +136,18 @@ describe('⛓ O2 — what a wasm solve past its budget does', () => {
         expect(expiryFailure({ goal, budgets: [400], refusal: { ...refusal('full'), deadline: { tripped: true, first: 'detour' } } }))
             .toBe('the solver ran out of 400 work units on exit in level 16: refused in full');
     });
+
+    it('⛓ FULL REASONS — a ladder-EXHAUSTED refusal\'s rung lines all follow line 1 (which is unchanged), both branches', () => {
+        const goal = { kind: 'exit', level: 22, name: 'level_22 -> level_29' };
+        const rungs = ['  time: a hit at tick 41', '  bait: no bait stance', '  kill: the strike is hit'];
+        const message = `exit level_22: the combat ladder is EXHAUSTED. every rung of the order refused:\n${rungs.join('\n')}`;
+        const declined = expiryFailure({ goal, budgets: [400, 1600], refusal: { ok: false, kind: 'refusal', pass: 'full', message } });
+        const cut = expiryFailure({ goal, budgets: [400], refusal: { ok: false, kind: 'refusal', pass: 'full', message, deadline: { tripped: true } } });
+        expect(declined.split('\n')[0]).toBe('the solver declined level_22 -> level_29 in level 22 (pass full): exit level_22: the combat '
+            + 'ladder is EXHAUSTED. every rung of the order refused: — and the solver ran out of 400, then 1600 work units on its held '
+            + 'retry on exit in level 22');
+        expect(cut.split('\n')[0]).toBe('the solver ran out of 400 work units on exit in level 22: exit level_22: the combat ladder is '
+            + 'EXHAUSTED. every rung of the order refused:');
+        for (const text of [declined, cut]) expect(text.split('\n').slice(1)).toEqual(rungs);
+    });
 });

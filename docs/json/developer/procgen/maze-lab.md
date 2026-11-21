@@ -250,6 +250,7 @@ A library is pasted into the mode's own box, uploaded (`.json`, or a `.zip` bund
 - **A fetch failure is fatal; a content failure is not.** A failed `?library=` fetch refuses by name; a validation failure (`validateRegionLibrary`) is shown in the load box and the page keeps working.
 - **A room opens inside this mode**, not by switching to `edit` (see [Gotchas](./gotchas.md)). Closing it folds its edits into one `replace-room` op (`closeRoomSession`).
 - **ADD ROOM** mints `blankMazeRoomPayload({width, height})` (`mazeSetAdapter.js`): a doorless all-floor room, so the REPORT refuses the `rules.json` export until a connect gives it a door. `createWorld` refuses a dimension below 2 by name, and that message reaches the mode's note.
+- **After an edit, the doors carry the edited library.** If the library changes after REPORT, `rules.json` and the bundle run REPORT again on the current library before handing anything over (Procgen Editing Core, § The set editor). Until then, the note under the REPORT rows says they describe the earlier library.
 
 **The map.** The overview can show the library as a 2D map instead of the strip: tick **map view** (`#editSetMapView`), or open with `?setView=map`. The strip is the default here, because RECT/PASTE addresses a range of room indices and a world session has no map. The provider is `mazeRoom/mazeSetMap.js`, over the layout shared with the Seedling editor (`procgenCore/setMapLayout.js`), so the gestures and rules are the Seedling map's (The Seedling Editor, § The map).
 

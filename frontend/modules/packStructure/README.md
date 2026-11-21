@@ -6,7 +6,7 @@ The readers for three content-pack layers (⛓ content packs PL-1; the shared ta
 
 - `packStructure.js`: the `structure` layer. Entries of kind `task`, `stat`, `resource`, `boon`, `place` and (content
   sets PASS-1) `terrain` — a maze tile kind's declared `pass`, one of `TERRAIN_PASSES`, and (PASS-2) with `pass:
-  "needs"` its `needs`, a mechanic concept id; read by `terrainOf` — keyed
+  "needs"` its `needs`, a mechanic concept id, and (PASS-3) with `pass: "one-way"` its `dirs`; read by `terrainOf` — keyed
   `<pack>:<kind>/<slug>` (the namespace is the pack's id), holding ids and links only. `createStructure(stack)`
   adds the packs together and resolves every id an entry names. `assertPresentsStructure(packConcepts, structure)`
   checks that every namespaced `presents` in the words names a real entry.

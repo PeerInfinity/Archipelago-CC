@@ -1,0 +1,76 @@
+L77 15x20 walls across grid variants: default=same guardsOff=same noDir=same kinds=same
+  trap (6,12) from 12; cut 1: (6,10)open; yields []
+    gggg.gg
+    g..X.gg
+    g.##Ggg
+    gGGTGGg
+    ggGGGgg
+    gggG##g
+    ggg.##g
+L78 20x10 walls across grid variants: default=same guardsOff=same noDir=same kinds=same
+  trap (9,3) from 12; cut 0: ; yields []
+    ggggggg
+    gggG..g
+    gg#GG.g
+    gGGTGG.
+    ggGGG..
+    .ggGg..
+    ggg.#..
+  trap (6,5) from 12; cut 0: ; yields [{"from":[8,4],"to":[8,5]}]
+    ggggg#g
+    gggGgg.
+    g.GGGgg
+    .GGTGGg
+    ggGGGg.
+    gggGgg#
+    ggggg..
+  trap (9,6) from 12; cut 2: (11,6)open (9,8)open; yields [{"from":[7,7],"to":[7,6]}]
+    ggg.gg.
+    gggGg..
+    .gGGG..
+    gGGT#X.
+    ggG###.
+    gg.X...
+    ggggggg
+L80 10x20 walls across grid variants: default=same guardsOff=same noDir=same kinds=same
+  trap (5,6) from 12; cut 0: ; yields []
+    ggggggg
+    gggGggg
+    ggGGGgg
+    gGoTGG#
+    ###S#g#
+    ##.o###
+    ##..#gg
+  trap (2,14) from 12; cut 1: (0,14)wall; yields []
+     gggggg
+     ggG...
+     gGoogg
+     X#To##
+     #SSSs#
+     #.o###
+     g#..#g
+L108 15x18 walls across grid variants: default=same guardsOff=same noDir=same kinds=same
+  trap (8,5) from 12; cut 0: ; yields []
+    ....sss
+    sssos#s
+    ssSSS#s
+    sSSTSSs
+    s#SoSss
+    s#sSsss
+    sss.sss
+  trap (8,8) from 12; cut 0: ; yields []
+    sss.sss
+    s#sosss
+    s#SSSss
+    sSSTSSs
+    ssSoS#s
+    sssSs#s
+    sss.sss
+  trap (8,11) from 12; cut 0: ; yields []
+    sss.sss
+    sssos#s
+    ssSSS#s
+    sSSTSSs
+    s#SoSss
+    s#sosss
+    sss....

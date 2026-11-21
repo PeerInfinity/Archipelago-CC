@@ -123,9 +123,16 @@ describe('⛓ PASS-1 — terrain: a tile kind\'s declared passability', () => {
     });
 
     it.each([
-        ['a value outside the set', (e) => { e['ground:terrain/rug'].pass = 'one-way'; }, /entry "ground:terrain\/rug": pass "one-way" is not one of walkable, blocked/],
+        ['a value outside the set', (e) => { e['ground:terrain/rug'].pass = 'sink'; }, /entry "ground:terrain\/rug": pass "sink" is not one of walkable, blocked, needs, one-way/],
         ['no pass at all', (e) => { delete e['ground:terrain/rug'].pass; }, /entry "ground:terrain\/rug": pass undefined is not one of/],
-        ['a field a terrain does not take', (e) => { e['ground:terrain/rug'].dirs = ['E']; }, /field "dirs" is not one a terrain takes \(kind, src, pass, needs\)/],
+        ['a field a terrain does not take', (e) => { e['ground:terrain/rug'].opens = 'x'; }, /field "opens" is not one a terrain takes \(kind, src, pass, needs, dirs\)/],
+        // ⛓ PASS-3 — `dirs` exactly when the pass is `one-way`: distinct move directions, not all four
+        ['one-way without dirs', (e) => { delete e['ground:terrain/ledge'].dirs; }, /entry "ground:terrain\/ledge": pass "one-way" needs `dirs`, a non-empty list of distinct move directions from N, S, E, W \(got undefined\)/],
+        ['one-way with an empty list', (e) => { e['ground:terrain/ledge'].dirs = []; }, /pass "one-way" needs `dirs`.*\(got \[\]\)/],
+        ['a direction that is not one', (e) => { e['ground:terrain/ledge'].dirs = ['up']; }, /pass "one-way" needs `dirs`.*\(got \["up"\]\)/],
+        ['a direction twice', (e) => { e['ground:terrain/ledge'].dirs = ['S', 'S']; }, /pass "one-way" needs `dirs`.*\(got \["S","S"\]\)/],
+        ['all four directions', (e) => { e['ground:terrain/ledge'].dirs = ['N', 'S', 'E', 'W']; }, /lets every move in: that is pass "walkable", not "one-way"/],
+        ['dirs on another pass', (e) => { e['ground:terrain/pillar'].dirs = ['E']; }, /entry "ground:terrain\/pillar": dirs \["E"\] is only for pass "one-way" \(this entry's pass is "blocked"\)/],
         ['pass on a kind that is not terrain', (e) => { e['ground:place/hall'] = { kind: 'place', pass: 'blocked' }; }, /field "pass" is not one a place takes/],
         // ⛓ PASS-2 — `needs` exactly when the pass is `needs`, and then a bare mechanic concept id
         ['needs without a concept', (e) => { delete e['ground:terrain/pool'].needs; }, /entry "ground:terrain\/pool": pass "needs" needs `needs`, the bare id of a mechanic concept \(got undefined/],
@@ -152,6 +159,7 @@ describe('⛓ PASS-1 — terrain: a tile kind\'s declared passability', () => {
         expect(terrainOf(words.get('ground:terrain/pool'), structure)).toEqual({ pass: NEEDS_PASS, needs: 'swim' });
         expect(terrainOf(words.get('ground:terrain/pillar'), structure)).toEqual({ pass: 'blocked' });
         expect(terrainOf(words.get('ground:object/lamp'), structure)).toEqual({ pass: DEFAULT_TERRAIN_PASS });
+        expect(terrainOf(words.get('ground:terrain/ledge'), structure)).toEqual({ pass: 'one-way', dirs: ['S'] });
         // A terrain presented with no logic layer loaded is refused by name, never read as walkable.
         expect(() => terrainPassOf(words.get('ground:terrain/pillar'), null))
             .toThrow(/concept "ground:terrain\/pillar" presents "ground:terrain\/pillar", which no structure in the stack holds/);
