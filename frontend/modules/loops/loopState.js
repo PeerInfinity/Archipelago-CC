@@ -58,6 +58,8 @@ import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
  * Record park IS the visit's recorded duration.
  */
 const TIME_DRAIN_INTERVAL_MS = 1000;
+// Percent-of-progress slack for "the pool pays exactly this action" (LOOPS-I1).
+const PROGRESS_EPSILON = 1e-9;
 
 /** A play-clock `stats` object reduced to its finite-number fields (N4): it is stored in a recording. */
 function plainNumbers(stats) {
@@ -3453,7 +3455,10 @@ export class LoopState {
    *   - gs.addRegionXP + gameState:xpChanged event for fine-grained UI updates
    *
    * Zero-cost actions, the global instantMode debug flag, and a per-block
-   * Instant toggle (M3) all complete the action in a single frame.
+   * Instant toggle (M3) all complete an AFFORDABLE action in a single frame.
+   * No path spends more than the pool holds (LOOPS-I1): an unaffordable
+   * action drains it and stays incomplete, so Instant ends where normal
+   * speed does, only sooner.
    */
   _advanceActionProgress(deltaTime) {
     const actionCost = this._calculateActionCost(this.currentAction);
@@ -3468,6 +3473,22 @@ export class LoopState {
       progressIncrement = (deltaTime / 1000) * (20 / actionCost);
     }
 
+    // ⚖ LOOPS-I1 (2026-11-21): a frame spends AT MOST what the pool holds.
+    // An action whose remaining cost exceeds the pool drains it, banks the
+    // drained mana as XP, does NOT complete, and the OOM reset follows. One
+    // rule for every path: Instant and a per-block Instant used to complete
+    // any action in one frame whatever the mana (deductMana clamps to 0 and
+    // completion runs before the OOM check), and a normal-speed frame could
+    // do the same on its last frame. With the debt flag on the pool runs
+    // negative instead, so nothing is capped.
+    const gs = this._gs();
+    if (gs && actionCost > 0 && !gs.noManaDepletionReset) {
+      const affordable = (Math.max(0, gs.currentMana) / actionCost) * 100;
+      // The tolerance keeps an action that costs EXACTLY the pool (up to
+      // float noise) affordable: it completes, then the OOM reset fires.
+      if (progressIncrement - affordable > PROGRESS_EPSILON) progressIncrement = affordable;
+    }
+
     const newProgress = currentProgress + progressIncrement;
     this.actionQueueManager.setProgress(
       this.currentAction.pathIndex,
@@ -3476,7 +3497,6 @@ export class LoopState {
     this.currentAction.progress = newProgress;
 
     const manaCost = (progressIncrement / 100) * actionCost;
-    const gs = this._gs();
     if (gs) {
       gs.deductMana(manaCost);
       if (manaCost > 0) this._passManaSpent += manaCost;
