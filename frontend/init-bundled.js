@@ -157,7 +157,6 @@ import './modules/tests/testCases/exitPanelTests.js';
 import './modules/tests/testCases/regionPanelTests.js';
 import './modules/tests/testCases/regionGraphPanelTests.js';
 import './modules/tests/testCases/regionMapTests.js';
-import './modules/tests/testCases/labApworldDoorTests.js';
 import './modules/tests/testCases/loopsPanelTests.js';
 import './modules/tests/testCases/eventsPanelTests.js';
 import './modules/tests/testCases/pathAnalyzerTests.js';
@@ -202,6 +201,7 @@ import './modules/tests/testCases/miniPanelsTests.js';
 import './modules/tests/testCases/tutorialTests.js';
 import './modules/tests/testCases/storagePanelTests.js';
 import './modules/tests/testCases/ruleConverterTests.js';
+import './modules/tests/testCases/labApworldDoorTests.js';
 
 // Signal that test cases have been pre-imported
 window.__BUNDLED_TEST_CASES__ = true;
