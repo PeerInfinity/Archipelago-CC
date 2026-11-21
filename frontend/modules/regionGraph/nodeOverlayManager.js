@@ -338,10 +338,14 @@ export class NodeOverlayManager {
       document.addEventListener('mouseup', onUp);
     });
 
-    // Click on overlay body → select the region node
+    // Click on overlay body → click the region node, exactly like a bare node: `handleRegionNodeClick` selects it,
+    // publishes `regionGraph:nodeSelected` ({ nodeId, data }, once) and runs the panel's click actions.
+    // ⚖ overlay card click → runClickActions (planner ruling 2026-11-20, archipelago-cc-23's option 1; slice AN-3b).
+    // Until then a card's body click published nodeSelected only, so the "On click" strip never ran for an overlaid
+    // node. CA-S4 moves this with the rest to regionView:regionClicked.
     el.addEventListener('click', (e) => {
       if (e.target.tagName === 'BUTTON') return;
-      this.ui.eventBus.publish('regionGraph:nodeSelected', { nodeId, data: cyNode.data() });
+      this.ui.interactionManager.handleRegionNodeClick(cyNode);
     });
   }
 

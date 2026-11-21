@@ -7,6 +7,9 @@
  * exactly as Loops asks it, an act is charged its live, XP-discounted price from the shared pool and earns region XP,
  * the check's item (the document's own placement) arrives as a snapshot the moment the check is sent (A4: at once),
  * an act the pool cannot finish drains it (⚖ Q1) and ends the loop. Then the loop resets and the next is planned.
+ * ⛓ AN-3b: when a plan's path runs out with mana left and an item arrived during the loop (the state diverged from the
+ * plan), the rest of the loop is planned again from the live state (`continueFrom`) and played — the runner's
+ * continuation (`playbackBot/loopModeRunner.js`).
  *
  * A refusal by the gate is a DEFECT of the planner's route (hops are never refused): it is recorded on the loop and
  * the run stops.
@@ -81,44 +84,62 @@ export function playLiveToGoal(rules, { playerId = '1', maxLoops = 100 } = {}) {
         runtime.onLoopReset('sim');
         const maxMana = (block.loop?.mana ?? 0) + runtime.model.boons.reduce((m, b) => m + b.mana * (inventory[b.name] ?? 0), 0);
         mana = maxMana;
-        const plan = planLiveLoop({
+        const context = () => ({
             model: runtime.model, inventory: { ...inventory }, checkedLocations: [...checked],
             regionXp: (id) => xp[id] ?? 0, maxMana, startRegion,
         });
+        let plan = planLiveLoop(context());
         const row = {
-            loop, kind: plan.kind, reason: plan.reason, lines: plan.lines, entries: plan.path.length,
-            acts: [], checks: [], received: [], attempt: null, manaLeft: 0,
+            loop, kind: plan.kind, reason: plan.reason, lines: [...plan.lines], entries: plan.path.length,
+            acts: [], checks: [], received: [], attempt: null, manaLeft: 0, replans: 0,
         };
         loops.push(row);
         if (plan.kind === 'done') break;
         const before = { ...inventory };
-        for (const entry of plan.path) {
-            const verdict = runtime.gate(entry);
-            if (!verdict.ok) {
-                row.refused = { entry, ...verdict };
-                return { reachedGoal: false, refused: row.refused, loops };
+        let at = null;
+        // ⛓ AN-3b: the runner's continuation. When a plan's path has run out with mana left and an item arrived during
+        // it (the state diverged from the plan), plan the rest of the loop from the live state and play that too.
+        for (;;) {
+            const planned = JSON.stringify(inventory);
+            let stopped = false;
+            for (const entry of plan.path) {
+                const verdict = runtime.gate(entry);
+                if (!verdict.ok) {
+                    row.refused = { entry, ...verdict };
+                    return { reachedGoal: false, refused: row.refused, loops };
+                }
+                if (entry.type === 'regionMove') { at = entry.destinationRegion; continue; }
+                if (entry.type !== 'customAction' || entry.actionName !== ACT_ACTION) continue;
+                const nodeId = entry.params?.nodeId ?? entry.sourceRegion;
+                at = nodeId;
+                const node = runtime.node(nodeId);
+                const cost = price(node.time, nodeId);
+                if (mana <= EPSILON || mana + EPSILON < cost) {
+                    // ⚖ Q1: started short, it drains what is left as region XP and the loop ends.
+                    xp[nodeId] = (xp[nodeId] ?? 0) + Math.max(0, mana) * scale;
+                    row.attempt = nodeId;
+                    mana = 0;
+                    stopped = true;
+                    break;
+                }
+                mana -= cost;
+                xp[nodeId] = (xp[nodeId] ?? 0) + cost * scale;
+                const r = runtime.perform(nodeId, { fromLoop: true });
+                if (!r.ok) {
+                    row.refused = { entry, code: r.code, reason: r.text };
+                    return { reachedGoal: false, refused: row.refused, loops };
+                }
+                row.acts.push(node.name);
+                if (r.checkSent) row.checks.push(r.checkSent);
+                if (won()) { stopped = true; break; }
             }
-            if (entry.type !== 'customAction' || entry.actionName !== ACT_ACTION) continue;
-            const nodeId = entry.params?.nodeId ?? entry.sourceRegion;
-            const node = runtime.node(nodeId);
-            const cost = price(node.time, nodeId);
-            if (mana <= EPSILON || mana + EPSILON < cost) {
-                // ⚖ Q1: started short, it drains what is left as region XP and the loop ends.
-                xp[nodeId] = (xp[nodeId] ?? 0) + Math.max(0, mana) * scale;
-                row.attempt = nodeId;
-                mana = 0;
-                break;
-            }
-            mana -= cost;
-            xp[nodeId] = (xp[nodeId] ?? 0) + cost * scale;
-            const r = runtime.perform(nodeId, { fromLoop: true });
-            if (!r.ok) {
-                row.refused = { entry, code: r.code, reason: r.text };
-                return { reachedGoal: false, refused: row.refused, loops };
-            }
-            row.acts.push(node.name);
-            if (r.checkSent) row.checks.push(r.checkSent);
-            if (won()) break;
+            if (stopped || mana <= EPSILON || JSON.stringify(inventory) === planned) break;
+            const next = planLiveLoop({ ...context(), continueFrom: { region: at, mana, state: runtime.liveState() } });
+            if (next.kind === 'done' || next.kind === 'unreachable' || !next.path.length) break;
+            row.replans += 1;
+            row.lines.push(...next.lines.map((l) => `(replan) ${l}`));
+            row.entries += next.path.length;
+            plan = next;
         }
         for (const [item, n] of Object.entries(inventory)) {
             for (let k = before[item] ?? 0; k < n; k += 1) row.received.push(item);

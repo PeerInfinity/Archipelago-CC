@@ -8,7 +8,8 @@
 // Then the LIVE BOT'S PATH (AN-3a, actionNodes/actionLiveSim.js): each loop the registry entry's planner
 // (`loopBot.planLoop` → actionLoopBot.planLiveLoop) writes the Loops path — the free hops between performances and the
 // `act` entries — and the path is played through the real runtime's start gate, pool and checks. A refused hop or
-// act is a defect (exit 1). `--live-only` skips the pure planner runs.
+// act is a defect (exit 1). `--live-only` skips the pure planner runs. AN-3b: a live loop whose state diverged from its
+// plan (an item arrived) and still has mana is planned again for its rest (`(replan)` lines), as the in-app runner does.
 //
 // Usage:
 //   node scripts/procgen/action-nodes-play.mjs [<rules.json>] [--graph <graph.json>] [--quiet] [--json] [--live-only]
@@ -77,7 +78,7 @@ function main() {
     else if (!quiet) {
         console.log('=== live bot path (loopBot.planLoop → the Loops queue → the runtime gate) ===');
         for (const loop of live.loops) {
-            console.log(`Loop ${loop.loop} [${loop.kind}]: ${loop.entries} queue entries; acts ${loop.acts.join(' → ') || '(none)'}`
+            console.log(`Loop ${loop.loop} [${loop.kind}]: ${loop.entries} queue entries${loop.replans ? ` (${loop.replans} mid-loop replan(s))` : ''}; acts ${loop.acts.join(' → ') || '(none)'}`
                 + `${loop.attempt ? ` → attempt ${loop.attempt}` : ''}`);
             console.log(`  checks: ${loop.checks.join(', ') || 'none'}; received: ${loop.received.join(', ') || 'nothing'}; mana left ${Math.round(loop.manaLeft * 10) / 10}`);
             for (const line of loop.lines) console.log(`  | ${line}`);

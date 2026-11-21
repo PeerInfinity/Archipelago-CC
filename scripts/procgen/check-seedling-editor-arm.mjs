@@ -185,8 +185,21 @@ const { stringifyRulesJson } = await import(
     join(REPO, 'frontend/modules/shared/rulesJsonBuilder.js'));
 const { compileRegionAtlas } = await import(
     join(REPO, 'frontend/modules/procgenPipeline/regionAtlasCompiler.js'));
-const { validateRegionAtlas } = await import(
+const { stampAtlasIdentity, validateRegionAtlas } = await import(
     join(REPO, 'frontend/modules/procgenPipeline/regionAtlasValidator.js'));
+/**
+ * ⛓⛓ lab-set-seedling-identity — **THE PAGE'S OWN IDENTITY MODULE, NOT A COPY OF IT.**
+ * The set adapter's `deps.atlas` (game `seedling`, the map-document LABEL) and the
+ * compile the mount runs (a `seedling-lab-<8 hex>` stamped copy, no `flash_panel`
+ * block) are read from `watchSetIdentity.js`, the file `watchViewer.js` reads, so
+ * node's answer cannot drift from the page's choice.
+ */
+const { LAB_SET_ATLAS_BASE, WATCH_SET_ATLAS, labSetIdentity } = await M('watchSetIdentity.js');
+const LAB = labSetIdentity({ compileRegionAtlas, stampAtlasIdentity });
+const LAB_COMPILE = LAB.compileRegionAtlas;
+const SERVED_ATLAS_IDS = new Set(JSON.parse(readFileSync(
+    join(REPO, 'frontend/modules/flashPanel/atlases/atlas_files.json'), 'utf8'))
+    .atlases.map((a) => a.atlas_id));
 const { TILE_COLUMN_TO_TYPE, TILE_TYPE_NAMES } = await import(
     join(REPO, 'frontend/modules/flashPanel/seedlingSemantics.js'));
 const { foldEdits, resolveBase } = await import(
@@ -567,7 +580,7 @@ const SET_DEPS = {
     tileSize: TILE_SIZE,
     tileTypeForPlacement,
     rulesSchema: loadRulesSchema(),
-    atlas: { game: 'seedling-watch-edit', mapDocument: 'watch.html set editor' },
+    atlas: WATCH_SET_ATLAS,
 };
 const setAdapter = createSeedlingSetAdapter(SET_DEPS);
 const nodeSetSession = () => createSetSession(setAdapter,
@@ -638,7 +651,7 @@ check(VANILLA_XML_SCAN.ok === true && VANILLA_XML_SCAN.why === null
 const VANILLA_XML_SESSION = createSetSession(setAdapter, VANILLA_XML_RECORD,
     { base: { kind: 'set', set_id: VANILLA_XML.set_id } });
 const VANILLA_XML_REPORT = reportOf(VANILLA_XML_SESSION, SET_DEPS,
-    { compileRegionAtlas, validateRegionAtlas });
+    { compileRegionAtlas: LAB_COMPILE, validateRegionAtlas });
 const VANILLA_XML_FREE = freeEdgesOf(VANILLA_XML_REPORT.rules);
 /**
  * ⛓⛓⛓ **EDITOR v3 E5 — THE VERDICT ON THIS ROW FLIPPED, AND THAT IS THE SLICE.**
@@ -693,7 +706,7 @@ const VANILLA_OVERLAY_RECORD = setRecord(VANILLA_XML, VANILLA_OVERLAY);
 const VANILLA_OVERLAY_REPORT = reportOf(
     createSetSession(setAdapter, VANILLA_OVERLAY_RECORD,
         { base: { kind: 'set', set_id: VANILLA_XML.set_id } }),
-    SET_DEPS, { compileRegionAtlas, validateRegionAtlas });
+    SET_DEPS, { compileRegionAtlas: LAB_COMPILE, validateRegionAtlas });
 const VANILLA_OVERLAY_FREE = freeEdgesOf(VANILLA_OVERLAY_REPORT.rules);
 const VANILLA_OVERLAY_LOCS = VANILLA_OVERLAY_REPORT.atlas.regions
     .reduce((n, r) => n + (r.locations ?? []).length, 0);
@@ -720,7 +733,7 @@ check(VANILLA_OVERLAY_LOCS > 0
  * levels", the permuted map) and is not repeated in a browser.
  */
 const D2_FREE = freeEdgesOf(reportOf(nodeSetSession(), SET_DEPS,
-    { compileRegionAtlas, validateRegionAtlas }).rules);
+    { compileRegionAtlas: LAB_COMPILE, validateRegionAtlas }).rules);
 check(D2_FREE.length !== VANILLA_XML_FREE.length && D2_FREE.length > 0,
     '⛓ …and that count really is a function of the SET — the D2 subject\'s differs, so a '
     + 'hardcoded expectation would be red on whichever document it was not written for',
@@ -2360,8 +2373,8 @@ try {
     const nodeReport = reportOf(nodeSetSession(), {
         parseOel: parseOelLevel, tileSize: TILE_SIZE, tileTypeForPlacement,
         rulesSchema: loadRulesSchema(),
-        atlas: { game: 'seedling-watch-edit', mapDocument: 'watch.html set editor' },
-    }, { compileRegionAtlas, validateRegionAtlas });
+        atlas: WATCH_SET_ATLAS,
+    }, { compileRegionAtlas: LAB_COMPILE, validateRegionAtlas });
     check(report.report.length > 0
         && report.report.some((r) => /^\[free\]/.test(r))
         && report.report.some((r) => /^\[reach\]/.test(r))
@@ -2690,6 +2703,31 @@ try {
         '⛓⛓ **AND THE `rules.json` MEMBER IS THE SAME DOCUMENT `#editDownloadRules` WROTE**, '
         + 'byte for byte at the same indent',
         `${pageBytes.length} B`);
+    /**
+     * ⛓⛓⛓ lab-set-seedling-identity — **THE SET LEAVES AS SEEDLING, WITH ITS OWN
+     * FINGERPRINT, AND OFFERS NOTHING TO PLAY.** Asked of the bytes the page wrote,
+     * read back in node: every room is `flash_seedling`; there is no `flash_panel` block;
+     * the rules name a `seedling-lab-<8 hex>` atlas that is NOT served; the bundle's
+     * `region-atlas` member IS that atlas (same id, a valid content hash), so the host
+     * atlas cache files it under the id the rules name.
+     */
+    const atlasMember = readBack.members.find((m) => m.kind === 'region-atlas');
+    const labRef = rulesMember?.doc?.region_atlas?.['1'] ?? null;
+    const labRows = Object.values(rulesMember?.doc?.preset_sidecars?.['1'] ?? {});
+    check(labRows.length > 0 && labRows.every((r) => r.substrate === 'flash_seedling')
+        && labRef?.game === WATCH_SET_ATLAS.game && !('flash_panel' in (rulesMember?.doc ?? {})),
+        '⛓⛓⛓ **THE BUNDLED RULES ARE SEEDLING\'S AND PLAY NOTHING** — every room `flash_seedling`, '
+        + '`region_atlas[1].game` the shared `SEEDLING_ATLAS_GAME`, and no `flash_panel` block',
+        `${labRows.length} room(s) · ${json(labRef)} · flash_panel ${'flash_panel' in (rulesMember?.doc ?? {})}`);
+    check(new RegExp(`^${LAB_SET_ATLAS_BASE}-[0-9a-f]{8}$`).test(labRef?.atlas_id ?? '')
+        && !SERVED_ATLAS_IDS.has(labRef.atlas_id)
+        && atlasMember?.doc?.atlas_id === labRef.atlas_id
+        && labRows.every((r) => r.playable_payload?.atlas_ref === labRef.atlas_id)
+        && validateRegionAtlas(atlasMember.doc).errors.length === 0,
+        '⛓⛓⛓ **…UNDER ITS OWN FINGERPRINT** — a `seedling-lab-<8 hex>` id that the served index '
+        + '(`atlas_files.json`) does not hold, named by `region_atlas`, by every sidecar\'s '
+        + '`atlas_ref` and by the bundle\'s own atlas member, whose content hash validates',
+        `${labRef?.atlas_id} · member ${atlasMember?.doc?.atlas_id} · served ${[...SERVED_ATLAS_IDS].join(',')}`);
     check(!/apmapping/i.test(json(kindsOf)) && /NOT a member/.test(bundled.note),
         '⛔ …and the `apMapping` companion is NOT a member — the note SAYS SO rather than '
         + 'leaving a person to notice it is missing',
