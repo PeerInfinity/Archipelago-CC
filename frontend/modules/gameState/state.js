@@ -3,6 +3,16 @@
  * Tracks the player's current region, path through regions, and resource economy
  * (mana / region XP) for loop mode.
  */
+
+/**
+ * How many fractional spends' worth of rounding noise `deductMana` forgives
+ * when it decides a pool is empty (LOOPS-I2). 2^20 ≈ 1e6: the longest chain
+ * that drains a pool is the loops timer at speed 1 (one frame spends
+ * 16 ms / 5000 ≈ 0.0032 mana, so ~31 000 frames for a pool of 100) — 33×
+ * inside it; a maze or a text adventure drains in tens to hundreds of steps.
+ */
+export const MANA_SLIVER_SPENDS = 2 ** 20;
+
 export class GameState {
     constructor(eventBus) {
         this.eventBus = eventBus;
@@ -157,14 +167,50 @@ export class GameState {
      */
     deductMana(amount) {
         const newMana = this.currentMana - amount;
-        if (newMana < 0 && this.noManaDepletionReset) {
-            this.manaDebt = Math.max(this.manaDebt, Math.abs(newMana));
+        if (this.noManaDepletionReset) {
+            // Debt mode is untouched by the sliver snap below (LOOPS-I2):
+            // nothing resets on 0 here, so a sliver changes no outcome.
+            if (newMana < 0) {
+                this.manaDebt = Math.max(this.manaDebt, Math.abs(newMana));
+            }
             this.currentMana = newMana;
+        } else if (newMana <= this._manaSliverTolerance(amount)) {
+            // ⚖ LOOPS-I2: a pool spent down by fractional costs (the maze's
+            // 100/n per tile, chargeMana, a frame's share of an action) can
+            // keep ~1e-14 where it should hold 0, and every `<= 0` depletion
+            // test then fires one spend late. Float noise is not mana: a
+            // result within the tolerance of 0 IS 0 (and below 0 clamps, as
+            // ever).
+            this.currentMana = 0;
         } else {
-            this.currentMana = Math.max(0, newMana);
+            this.currentMana = newMana;
         }
         this.emitManaChanged();
         return this.currentMana;
+    }
+
+    /**
+     * The largest pool `deductMana` treats as float noise (LOOPS-I2).
+     *
+     * Each subtraction from a pool of scale S rounds by at most half an ulp,
+     * ≤ ½·Number.EPSILON·S, so a pool drained by k fractional spends carries
+     * at most k·½·EPSILON·S of noise; the tolerance allows MANA_SLIVER_SPENDS
+     * spends of it. S is the pool's scale: the largest of `maxMana` (the
+     * starting pool), the pool before this spend (it can exceed maxMana after
+     * gains) and this spend. At S = 100 the tolerance is ~1.2e-8 mana: six
+     * orders of magnitude below the smallest remainder anything leaves on
+     * purpose (0.01, the in-app tests' "one step from empty") and five above
+     * the worst measured sliver (1.35e-13).
+     * @param {number} amount - this spend
+     * @returns {number}
+     */
+    _manaSliverTolerance(amount) {
+        const scale = Math.max(
+            Math.abs(this.maxMana) || 0,
+            Math.abs(this.currentMana) || 0,
+            Math.abs(amount) || 0,
+        );
+        return 0.5 * Number.EPSILON * scale * MANA_SLIVER_SPENDS;
     }
 
     /**
