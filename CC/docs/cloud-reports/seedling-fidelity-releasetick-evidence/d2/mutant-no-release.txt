@@ -1,0 +1,13 @@
+MUTANT no-release
+predicted: the four family rows, the composition row and the slot row (6); key, text-less, no-freeze, rope stay green
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed | 4 passed (5)
+      Tests  6 failed | 48 passed (54)
+restored: 0
+rows (re-run):
+RELEASETICK — the four families through a texted ceremony (staged) > beam tower (L29 + a tower, a feather underfoot): C steps it frozen; ON R unfrozen too, the beam a tick early
+RELEASETICK — the four families through a texted ceremony (staged) > turret (L29, a feather in range): ON R counts one shootTimer, and the next spit leaves a tick early
+RELEASETICK — the four families through a texted ceremony (staged) > ice turret (L59, its turret swapped out): ON its volley leaves a tick early
+RELEASETICK — the four families through a texted ceremony (staged) > drill (L59, wave 51's T freeze ON so it is idle at the close): ON it hops on R, OFF a tick later
+RELEASETICK — composition (waves 50 to 54 ON underneath) > every family leads by one tick with all five ON, and nothing refuses
+RELEASETICK — composition (waves 50 to 54 ON underneath) > wave 50's slot (`turretSuitRetaliation`): the contact on R is billed once, on the finishing tick, ON
