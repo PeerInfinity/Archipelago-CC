@@ -1272,8 +1272,7 @@ export class MessageHandler {
     const reachability = stateManagerProxySingleton.getLatestStateSnapshot?.()?.locationReachability ?? {};
     const batch = pickPass(pending, { reachability, inFlight: this._offlineInFlight });
     let sent = 0;
-    for (const entry of batch) {
-      if (!connection.isConnected() || this._activeOfflineRecord() !== record) break;
+    const push = async (entry) => {
       this._offlineInFlight.add(entry.name);
       const eventData = { locationName: entry.name, originator: OFFLINE_ORIGINATOR };
       if (entry.reportedByGame) eventData[GAME_REPORTED_FIELD] = true;
@@ -1281,6 +1280,15 @@ export class MessageHandler {
       const went = entry.goal ? this._goalStatus(entry.name) === 'checked' : this._sentLocationIds.has(entry.id);
       if (went) sent += 1;
       else this._offlineInFlight.delete(entry.name); // refused after all: tried again next pass
+    };
+    // The ID checks together, as clicks in a burst would go (one at a time, each gate's worker round trip
+    // waits behind the recompute of every item the server returns: measured live, 27 of 100 in a slow
+    // crawl on A Short Hike). Each still takes the gate. The goal after them.
+    const ids = batch.filter((e) => !e.goal);
+    if (connection.isConnected() && this._activeOfflineRecord() === record) await Promise.all(ids.map(push));
+    for (const entry of batch.filter((e) => e.goal)) {
+      if (!connection.isConnected() || this._activeOfflineRecord() !== record) break;
+      await push(entry);
     }
     // The goal is ID-less: the server never confirms it, so it leaves the record once it is reported.
     if (this._goalReported && record.goalLocation !== null) {
