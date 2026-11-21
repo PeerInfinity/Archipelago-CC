@@ -186,6 +186,7 @@ beforeEach(() => {
   messageHandler._offlineOffer = null;
   messageHandler._offlinePassChain = Promise.resolve();
   messageHandler._clientRulesSources = new Set();
+  messageHandler._goalReportedRooms = new Set();
   messageHandler.scoutedLocations = new Map();
 });
 
@@ -287,7 +288,7 @@ describe('Send: passes through the ordinary path, never out of logic', () => {
     smState.reachability = { 'Bottom Left Chest': 'reachable', 'Top Middle Chest': 'unreachable' };
     await messageHandler.respondToOfflineProgress('send');
     expect(sentIds()).toEqual([1001]);
-    expect(consoleLines().at(-1)).toMatch(/Sent 1 offline check\(s\)\. 1 are out of logic for now; they are kept/);
+    expect(consoleLines().at(-1)).toMatch(/Sent 1 offline check\(s\)\. Still out of logic: 1; kept/);
     expect(published('client:locationCheckRefused')).toEqual([]); // a pass never asks the gate for an out-of-logic one
     // Our own Sword comes back; logic now reaches the other chest.
     smState.reachability['Top Middle Chest'] = 'reachable';
@@ -359,6 +360,17 @@ describe('the goal', () => {
     expect(sentIds()).toEqual([1001, 1002]);
     expect(goalFrames()).toHaveLength(1);
     await received(1, [{ item: 7, location: 1001, player: 1 }]);
+    expect(goalFrames()).toHaveLength(1);
+    // Live-found (APQ-s1): the ID-less goal stays checked locally and the server never echoes it, so the next
+    // RoomInfo re-captures it. A goal this session already reported is never offered again.
+    await messageHandler._handleRoomUpdate({ cmd: 'RoomUpdate', checked_locations: [1001, 1002] });
+    await messageHandler._offlinePassChain;
+    expect(messageHandler._offlineRecords.size).toBe(0);
+    smState.checked = ['Bottom Left Chest', 'Top Middle Chest', GOAL];
+    roomInfo();
+    await connected({ slot: 1, checked: [1001, 1002] });
+    await messageHandler._offlinePassChain;
+    expect(offers()).toHaveLength(1);
     expect(goalFrames()).toHaveLength(1);
   });
 

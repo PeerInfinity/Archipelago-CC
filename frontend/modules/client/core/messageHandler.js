@@ -212,6 +212,9 @@ export class MessageHandler {
     this._roomCheckedIds = new Set();
     this._offlinePassChain = Promise.resolve();
     this._clientRulesSources = new Set();
+    // `${seed}|${slot}` of every slot whose goal this page session reported: an ID-less goal the server never
+    // echoes stays checked locally, and must not be offered again at the next connect.
+    this._goalReportedRooms = new Set();
   }
 
   // Add method to inject eventBus
@@ -1148,7 +1151,10 @@ export class MessageHandler {
 
   /** Sorts a record against this connection, and drops what will never be sent (already on the server, unknown here). */
   _classifyOfflineRecord(record) {
-    const goalReportable = record.goalLocation !== null && this._upstreamGoalFor(record.goalLocation) !== null;
+    const goalReportable =
+      record.goalLocation !== null &&
+      this._upstreamGoalFor(record.goalLocation) !== null &&
+      !this._goalReportedRooms.has(`${record.seedName}|${record.slot}`);
     const out = classifyRecord(record, {
       roomIds: this.serverLocationNameToId ?? new Map(),
       checkedIds: this._roomCheckedIds,
@@ -1286,7 +1292,7 @@ export class MessageHandler {
       this._printToConsole(
         `Sent ${sent} offline check(s).` +
           (waiting > 0
-            ? ` ${waiting} are out of logic for now; they are kept and sent when the items you receive put them in logic (until the page is reloaded).`
+            ? ` Still out of logic: ${waiting}; kept, and sent once the items you receive put them in logic (until the page is reloaded).`
             : ''),
         'info'
       );
@@ -2444,6 +2450,7 @@ Location was force-checked to maintain server sync.`;
     if (!connection.isConnected()) return false;
 
     this._goalReported = true;
+    this._goalReportedRooms.add(`${this.roomInfo?.seed_name ?? ''}|${this.clientSlot}`);
     // The server may release/collect the slot's remaining locations now; their echo is not a logic bug.
     this._slotReleased = true;
     log('info', '[MessageHandler] Reporting goal completion to server (CLIENT_GOAL).');
