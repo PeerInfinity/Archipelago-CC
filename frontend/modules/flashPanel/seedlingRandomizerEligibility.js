@@ -260,7 +260,7 @@ export function entranceShuffleRefusal(rules, slot, why) {
  * The input is `regionAtlas: {atlasId, served}`: the rules' `region_atlas[p].atlas_id` and the `atlas_id`s of the
  * served index (`servedAtlasIds`). ABSENT input, or an absent/blank `atlasId`, asks nothing: today's verdict, its
  * text and its arm byte-for-byte. `served: null` (the index could not be read) refuses too — an id that cannot be
- * told from a custom set's is not delivered as the original game. It ends once a set's own rooms can be carried (S4).
+ * told from a custom set's is not delivered as the original game. ⛓ S4 lifts it for a HELD set only (`heldSetLiftsGuard`).
  */
 export const CUSTOM_SET_NOT_PLAYABLE = 'This set can\'t be played yet';
 
@@ -283,17 +283,34 @@ export function servedAtlasIds(index) {
  * `atlas_files.json`, parsed) throws. Import-free like the rest of this file: the caller hands the fetch.
  * ⛓ The ONE reader for both callers — the wiring's load (JS and wasm alike) and the panel, before it starts a game.
  */
-export async function servedRegionAtlas({ atlasId, fetchIndex }) {
+export async function servedRegionAtlas({ atlasId, fetchIndex, heldSet = null }) {
     if (typeof atlasId !== 'string' || atlasId === '') return {};
     let served = null;
     try { served = servedAtlasIds(await fetchIndex()); } catch { served = null; }
-    return { regionAtlas: { atlasId, served } };
+    // ⛓ S4 — `heldSet` (the set_id of a level set the host HOLDS with the content hash the rules name) is carried
+    // only when the caller found one; absent, the input is G's byte-for-byte.
+    return { regionAtlas: { atlasId, served, ...(heldLevelSetId(heldSet) ? { heldSet } : {}) } };
+}
+
+const heldLevelSetId = (id) => (typeof id === 'string' && id !== '' ? id : null);
+
+/**
+ * ⛓⛓ S4 — **A HELD CUSTOM SET IS NOT REFUSED.** The rules name the level set their rooms came from
+ * (`region_atlas[p].level_set = {set_id, content_hash}`), and the host holds THAT set (`levelSetCache.get` answered
+ * `held`: the same id AND the same content hash). The player then delivers the set's own rooms, so G's hazard (the
+ * original rooms under the set's rules) cannot happen. The caller asks the cache and hands the set_id
+ * (`heldSet`); this predicate stays import-free.
+ *   ⛔ A set that is NOT held, or held under another hash (`mismatch`), hands nothing: G's sentence, unchanged.
+ */
+export function heldSetLiftsGuard(regionAtlas) {
+    return heldLevelSetId(regionAtlas?.heldSet) !== null;
 }
 
 /** The guard's sentence for `regionAtlas` (`{atlasId, served}`), or null when it does not fire. */
 export function unservedAtlasRefusal(regionAtlas) {
     const id = regionAtlas?.atlasId;
     if (typeof id !== 'string' || id === '') return null;
+    if (heldSetLiftsGuard(regionAtlas)) return null;
     const served = regionAtlas.served;
     if (served === undefined) return null;
     if (served === null) {

@@ -48,6 +48,18 @@ export function levelSetRefOf(rules, player) {
 }
 
 /**
+ * ⛓ S4 — THE HOST READER'S CALL: the level set `rules` name for `player`, IF `cache` holds it under that id AND
+ * that content hash. `{ref, status, set, why}`: `none` (the slot names no set — nothing asked), `held` (`set` is
+ * the body), `absent` / `mismatch` (`set` null, `why` the cache's sentence). Never serves a mismatched body.
+ */
+export function heldLevelSetOf(rules, player, cache = levelSetCache) {
+    const ref = levelSetRefOf(rules, player);
+    if (!ref) return { ref: null, status: 'none', set: null, why: null };
+    const got = cache.get(ref.set_id, ref.content_hash);
+    return { ref, status: got.status, set: got.status === 'held' ? got.set : null, why: got.why };
+}
+
+/**
  * ⛓ THE HOST WRITER'S CALL — every level set in `docs`, put under its own `set_id` with its computed content
  * hash, in order. Returns `[{set_id, content_hash}]` for what was put. Non-sets are skipped.
  */

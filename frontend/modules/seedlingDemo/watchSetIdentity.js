@@ -53,11 +53,13 @@
  *     rules are always the CURRENT set's: the mount's doors run REPORT again when the set
  *     changed after the last one, so the member and the rules never describe an older set.
  *
- *  3. **NOTHING PRETENDS TO PLAY.** The compile runs with `flashPanel: false`
- *     (`regionAtlasCompiler.js`, where `options.flashPanel ?? FLASH_PANEL_WIRING[game]`
- *     keeps `false`), so the rules carry no `flash_panel` block. The player cannot
- *     deliver a lab set's rooms yet (the study's S4). Q3's message *"this set can't be
- *     played yet"* is the PLAYER's (slice G, `flashPanel/`), not this file's.
+ *  3. **IT PLAYS WHEN THE SET IS HELD (S4).** Until S4 the compile ran with
+ *     `flashPanel: false`, so nothing pretended to play. S4 lifted that: the rules carry
+ *     the compiler's own `flash_panel` block, and the player delivers the set's OWN rooms
+ *     when the host holds the set `region_atlas[p].level_set` names (the bundle's
+ *     `level-set` member, `procgenCore/levelSetCache.js`). Rules that arrive WITHOUT the
+ *     set (a rules.json alone, the APWorld door) are still refused by the PLAYER with
+ *     slice G's *"this set can't be played yet"* (`flashPanel/`), not by this file.
  *
  * ⛔ **THE PAGE INJECTS.** Like `watchSetEditor.js` and `seedlingSetAdapter.js`, this
  * file names no `procgenPipeline/` dependency: `compileRegionAtlas` and
@@ -76,8 +78,12 @@ export const WATCH_SET_ATLAS = Object.freeze({
 /** ⛓ The id base of every atlas that leaves the watch page: `seedling-lab-<8 hex>`. */
 export const LAB_SET_ATLAS_BASE = `${SEEDLING_ATLAS_GAME}-lab`;
 
-/** ⛓ The compile options the lab adds: no `flash_panel` block until a lab set can play. */
-export const LAB_SET_COMPILE_OPTIONS = Object.freeze({ flashPanel: false });
+/**
+ * ⛓ The compile options the lab adds. ⛓ S4 (seedling-custom-set-arm): NONE — the `flash_panel` block is back
+ * (the compiler's own `FLASH_PANEL_WIRING[game]`), because the player now delivers a HELD set's own rooms. Until
+ * S4 this was `{flashPanel: false}`.
+ */
+export const LAB_SET_COMPILE_OPTIONS = Object.freeze({});
 
 /** ⛓ The prefix of the rooms' fingerprint in `tile_space.map_source`. */
 export const LAB_SET_ROOMS_SOURCE = 'level-set-rooms';
@@ -167,4 +173,52 @@ export function labSetIdentity({ compileRegionAtlas, stampAtlasIdentity } = {}) 
             return structuredClone(hit);
         },
     });
+}
+
+/**
+ * ⛓⛓ S4 (seedling-custom-set-arm) — **A HOST'S HAND-OVER NEVER SILENTLY REPLACES UNSAVED WORK.** The EDIT arm's
+ * answer to "may this handed-over level set replace what you hold?" (`watchViewer.js` `hostLoad`, the Edit ▸
+ * receiver): the sentence it REFUSES with, or null. ⛔ Refuse, not ask: the page has no dialog; the host's Edit ▸ is
+ * pressed again once the work is saved or discarded.
+ *   · nothing held → null;
+ *   · a HOST'S room is still OPEN (`hostRoomOpen`) → REFUSED: that host is waiting for the room's close, and a new
+ *     set would hand it the WRONG record as its save (the same reason the LOAD box refuses then);
+ *   · an open room with unwritten edits (`roomEdits`) → REFUSED;
+ *   · the held set's CONTENT differs from its last SAVE (`unsaved`: the page compares `levelSetContentHash` now
+ *     with the one recorded at the last save — never an op count, which undo + redo can bring back to the saved
+ *     number with different content) → REFUSED. A save is: the load itself, a SET or BUNDLE download
+ *     (`isSetSaveDownload`), or a host's room CLOSE (its record went back to that host). Host-handed or reader-loaded
+ *     alike: edits made after a host's close return to nobody.
+ * @param {{heldSetId: string|null, unsaved: boolean, roomEdits: number, openRoom: number|null,
+ *   hostRoomOpen: boolean, handedSetId: string|null}} o
+ */
+export function handoverRefusalOf({ heldSetId = null, unsaved = false, roomEdits = 0, openRoom = null,
+    hostRoomOpen = false, handedSetId = null } = {}) {
+    if (heldSetId === null) return null;
+    const head = `another panel's Edit ▸ handed over the set ${JSON.stringify(handedSetId)}, and this page holds the set `
+        + `${JSON.stringify(heldSetId)}`;
+    const tail = ' — it was NOT replaced.';
+    if (hostRoomOpen) {
+        return `${head} with room ${openRoom} HANDED OVER earlier and still OPEN${tail} CLOSE that room first (its edits `
+            + 'go back to the panel that opened it), then press Edit ▸ again.';
+    }
+    if (roomEdits <= 0 && !unsaved) return null;
+    const what = [unsaved ? 'set edits not saved since its last download' : null,
+        roomEdits > 0 ? `${roomEdits} unwritten edit(s) in open room ${openRoom}` : null].filter(Boolean).join(' and ');
+    return `${head} with ${what}${tail} Download the set (or its bundle), or reload this page to discard it, then `
+        + 'press Edit ▸ again.';
+}
+
+/**
+ * ⛓ S4 — is this download a SAVE of the whole set? A bundle (`application/zip`: the set editor's bundle always carries
+ * the `level-set` member) or a LEVEL-SET document (JSON with a `set_id` and a `rooms` array). ⛔ NOT a room's
+ * `.json`/`.oel`, the overlay, the apMapping companion or `rules.json`: none of them carries the set.
+ */
+export function isSetSaveDownload({ text = null, type = '' } = {}) {
+    if (type === 'application/zip') return true;
+    if (typeof text !== 'string' || !text.includes('"rooms"')) return false;
+    try {
+        const doc = JSON.parse(text);
+        return typeof doc?.set_id === 'string' && doc.set_id !== '' && Array.isArray(doc.rooms);
+    } catch { return false; }
 }

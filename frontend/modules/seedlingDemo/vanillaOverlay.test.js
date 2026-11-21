@@ -506,7 +506,7 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
         const session = createSetSession(
             createSeedlingSetAdapter(DEPS), setRecord(LIFT.set, overlay),
             { base: { kind: 'set', set_id: LIFT.set.set_id } });
-        // ⛓ …and the page's own compile: a `seedling-lab-` stamped copy, no `flash_panel`.
+        // ⛓ …and the page's own compile: a `seedling-lab-` stamped copy (⛓ S4: with the compiler's own `flash_panel`).
         return reportOf(session, DEPS, {
             compileRegionAtlas: labSetIdentity({ compileRegionAtlas, stampAtlasIdentity }).compileRegionAtlas,
             validateRegionAtlas,
