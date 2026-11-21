@@ -21,6 +21,7 @@ import {
     LAB_VALIDATORS, LabProtocolError, PAGE_TO_HOST, SUBSTRATES, addressedTo, assertLabPayload,
     assertLevelChanged, assertLoad, assertNavigate, assertReady, assertRequestState,
     assertOpenInApworldEditor, assertSelectTile, assertStateChanged,
+    LAB_OPTIONAL_PAYLOAD_FIELDS, atlasIdsNamedBy, labAtlasRefusal,
 } from './labProtocol.js';
 
 /** ⛓ ONE GOOD PAYLOAD PER EVENT, spelled out — never derived from the field
@@ -254,6 +255,45 @@ describe('labProtocol — the per-field types', () => {
         expect(() => assertOpenInApworldEditor({ ...good, source: 7 }))
             .toThrow(/must be a string/);
         expect(() => assertOpenInApworldEditor({ ...good })).not.toThrow();
+    });
+
+    /**
+     * ⛓ lab-apworld-door-map — `atlases` is the ONE optional field: absent is accepted (it means `[]`, what every
+     * page sent before), present must be an ARRAY, and its name is now no longer an "unexpected field".
+     */
+    it('⛓ openInApworldEditor.atlases: absent accepted, an array accepted, anything else refused', () => {
+        const good = GOOD[LAB_EVENTS.openInApworldEditor];
+        expect([...LAB_OPTIONAL_PAYLOAD_FIELDS[LAB_EVENTS.openInApworldEditor]]).toEqual(['atlases']);
+        expect(Object.keys(LAB_OPTIONAL_PAYLOAD_FIELDS)).toEqual([LAB_EVENTS.openInApworldEditor]);
+        expect(() => assertOpenInApworldEditor({ ...good })).not.toThrow();
+        expect(() => assertOpenInApworldEditor({ ...good, atlases: [] })).not.toThrow();
+        expect(() => assertOpenInApworldEditor({ ...good, atlases: [{ atlas_id: 'a', regions: [] }] })).not.toThrow();
+        for (const bad of [null, {}, 'a', { atlas_id: 'a' }]) {
+            expect(() => assertOpenInApworldEditor({ ...good, atlases: bad })).toThrow(/atlases must be an array/);
+        }
+        // ⛔ still only on THIS event: another event carrying `atlases` is an unexpected field
+        expect(() => assertSelectTile({ ...GOOD[LAB_EVENTS.selectTile], atlases: [] }))
+            .toThrow(/unexpected field "atlases"/);
+    });
+
+    /** ⛓ the host's per-atlas refusal: shape, then the id named by SOME player of the rules (every player read). */
+    it('⛓ labAtlasRefusal: refuses a non-atlas and an id no player names; accepts any player\'s id', () => {
+        const rules = { region_atlas: { 1: { atlas_id: 'a1' }, 2: { atlas_id: 'a2' }, 3: {} } };
+        expect(atlasIdsNamedBy(rules)).toEqual(['a1', 'a2']);
+        expect(atlasIdsNamedBy({})).toEqual([]);
+        expect(labAtlasRefusal({ atlas_id: 'a1', regions: [] }, rules)).toBeNull();
+        expect(labAtlasRefusal({ atlas_id: 'a2', regions: [] }, rules)).toBeNull();
+        expect(labAtlasRefusal({ atlas_id: 'zz', regions: [] }, rules))
+            .toBe('atlas "zz" is not the one the rules name (region_atlas names "a1", "a2")');
+        expect(labAtlasRefusal({ atlas_id: 'a1' }, {})).toMatch(/region_atlas names none/);
+        for (const bad of [null, [], { atlas_id: '' }, { regions: [] }, 7n]) {
+            expect(labAtlasRefusal(bad, rules)).toMatch(/^not a region atlas/);
+        }
+        const cyclic = { atlas_id: 5 };
+        cyclic.self = cyclic;
+        expect(labAtlasRefusal(cyclic, rules)).toBe('not a region atlas (no non-empty atlas_id): an object with keys [atlas_id, self]');
+        expect(() => assertOpenInApworldEditor({ ...GOOD[LAB_EVENTS.openInApworldEditor], atlases: cyclic }))
+            .toThrow(/atlases must be an array of region atlases — got an object with keys \[atlas_id, self\]/);
     });
 });
 

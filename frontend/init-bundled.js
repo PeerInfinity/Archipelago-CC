@@ -157,6 +157,7 @@ import './modules/tests/testCases/exitPanelTests.js';
 import './modules/tests/testCases/regionPanelTests.js';
 import './modules/tests/testCases/regionGraphPanelTests.js';
 import './modules/tests/testCases/regionMapTests.js';
+import './modules/tests/testCases/labApworldDoorTests.js';
 import './modules/tests/testCases/loopsPanelTests.js';
 import './modules/tests/testCases/eventsPanelTests.js';
 import './modules/tests/testCases/pathAnalyzerTests.js';

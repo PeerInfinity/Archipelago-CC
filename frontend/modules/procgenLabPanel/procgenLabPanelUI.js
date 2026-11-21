@@ -44,8 +44,10 @@
 import eventBus from '../../app/core/eventBus.js';
 import {
     LAB_EVENTS, SUBSTRATES, addressedTo, assertLoad, assertNavigate,
-    assertOpenInApworldEditor, assertRequestState,
+    assertOpenInApworldEditor, assertRequestState, labAtlasRefusal, summarizeValue,
 } from '../procgenCore/labProtocol.js';
+import { putAtlases } from '../procgenCore/atlasCache.js';
+import { classifyDocument } from '../presets/documentBundle.js';
 import {
     registerAppEventBus, registerLabPanelInstance, unregisterLabPanelInstance,
 } from './labRoomEditor.js';
@@ -149,6 +151,8 @@ export class ProcgenLabPanelUI {
         this.connected = false;
         this.lastState = null;
         this.lastLevel = null;
+        /** ⛓ lab-apworld-door-map — the last door-A hand-over's atlases: `{put: [atlas_id], refused: [{atlas_id, why}]}`. */
+        this.lastAtlasHandover = { put: [], refused: [] };
         /** ⚠ ONE-DEEP, LAST WINS — see the docblock. */
         this.pendingLoad = null;
         this.pendingNavigate = null;
@@ -366,6 +370,10 @@ export class ProcgenLabPanelUI {
          * decides whether the document is worth opening: `data.rules` goes
          * across verbatim and `data.source` with it, because the PAGE is the
          * authority on both what it compiled and where that came from.
+         * ⛓ lab-apworld-door-map — ONE stated interpretation, and it is the
+         * bundle door's: each handed atlas is checked (the bundle's region-atlas
+         * shape test, and an id the rules name) before it is cached
+         * (`_fileAtlases`). The rules are still forwarded verbatim either way.
          *
          * ⛓ TWO EVENTS, IN THIS ORDER, and it is the pipeline's own pair
          * (`procgenPipelineUI.js`): the focus-safe `apworldEditor:loadRules`
@@ -392,13 +400,49 @@ export class ProcgenLabPanelUI {
                 this._render();
                 return;
             }
+            const atlasNote = this._fileAtlases(data);
             eventBus.publish(APWORLD_EDITOR_LOAD_RULES,
                 { jsonData: data.rules, source: data.source }, MODULE_ID);
             eventBus.publish('ui:activatePanel',
                 { panelId: APWORLD_EDITOR_PANEL_ID }, MODULE_ID);
-            this._note(`opened in the APWorld editor — ${data.source}`);
+            this._note(`opened in the APWorld editor — ${data.source}${atlasNote}`,
+                this.lastAtlasHandover.refused.length > 0);
             this._render();
         });
+    }
+
+    /**
+     * ⛓ lab-apworld-door-map — **THE HOST-SIDE WRITER FOR DOOR A.** The rules name their atlas by
+     * `region_atlas[p].atlas_id` and carry no body; the page hands the atlas beside them, and this is the one moment
+     * the host holds both — exactly the bundle door's moment (`presetUI.loadDocumentFile`). Each atlas goes into the
+     * SAME shared `atlasCache` through the SAME `putAtlases`, BEFORE `apworldEditor:loadRules` is published, so the
+     * editor's Apply (`files:jsonLoaded` → the Region Map's `hookCtxFor`) finds it.
+     *
+     * ⛔ **VALIDATED BEFORE THE PUT, AND A REFUSED ATLAS IS NEVER PUT** (put overwrites, so a bad atlas under a good
+     * id would shadow the good one). Two checks, both game-neutral: the bundle door's own shape test for a
+     * `region-atlas` member (`classifyDocument`), and `labAtlasRefusal` — some player of THESE rules must name that
+     * id. A refusal is NAMED in the note and the rules still go over, as they did before atlases travelled.
+     *
+     * @returns {string} the note's tail
+     */
+    _fileAtlases(data) {
+        const offered = data.atlases ?? [];
+        const ok = [];
+        const refused = [];
+        for (const atlas of offered) {
+            const why = classifyDocument(atlas) === 'region-atlas'
+                ? labAtlasRefusal(atlas, data.rules)
+                : `not a region atlas (the bundle door's test: atlas_id + regions[].region_id): `
+                    + `${summarizeValue(atlas)}`;
+            if (why) refused.push({ atlas_id: atlas?.atlas_id ?? null, why });
+            else ok.push(atlas);
+        }
+        const put = putAtlases(ok);
+        this.lastAtlasHandover = { put, refused };
+        return [
+            put.length ? ` · region atlas ${put.join(', ')} filed for the Region Map` : '',
+            ...refused.map((r) => ` · ⛔ region atlas REFUSED (not cached) — ${r.why}`),
+        ].join('');
     }
 
     _publish(event, payload, assert) {

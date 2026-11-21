@@ -3049,7 +3049,8 @@ export const INSTRUMENTS = frz({
             "category": "check",
             "citedBy": [
                 "docs/json/developer/procgen/maze-lab.md",
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-editor.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [

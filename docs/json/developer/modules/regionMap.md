@@ -27,6 +27,8 @@ The as-built report is `CC/docs/region-map/step3b-panel.md`.
 
 The raw rules come from `stateManager/index.js` `getLastRawJsonData()`, since the proxy's static data does not keep `preset_sidecars`.
 
+A custom world's atlas comes from `procgenCore/atlasCache.js` (`hookCtxFor`). Two host doors put one there before the rules load: the Presets panel's bundle (its `region-atlas` member) and a lab page's *Open in APWorld Editor* (the atlas the page hands over beside the rules, filed by `procgenLabPanel`). The in-app row for the second door is `region-map-lab-apworld-door-seedling-set` (`tests/testCases/labApworldDoorTests.js`).
+
 ## Painting
 
 - **Only the visible cells are drawn.** `visibleFrames` culls against `viewRect(camera)`.

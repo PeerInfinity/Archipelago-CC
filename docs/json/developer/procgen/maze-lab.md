@@ -294,7 +294,7 @@ and talks to it over the `iframeAdapter` bridge. The vocabulary is defined once 
 | `procgenLab:selectTile` | page → host | `tx`, `ty` |
 | `procgenLab:openInApworldEditor` | page → host | `rules`, `source` |
 
-`selectTile` fires on a canvas click in every mode. `openInApworldEditor` sends the set mode's compiled `rules.json`; the panel forwards it as `apworldEditor:loadRules` plus `ui:activatePanel`. Its button is hidden when the page is standalone. See [the APWorld editor](../../modules/apworldEditor.md#the-links-tab).
+`selectTile` fires on a canvas click in every mode. `openInApworldEditor` sends the set mode's compiled `rules.json` and the region atlas it was compiled from (`atlases`; the editing core describes the field); the panel puts the atlas in the host atlas cache and forwards the rules as `apworldEditor:loadRules` plus `ui:activatePanel`. The Region Map gains from it only where it has an atlas reader: in a WORLD, the Seedling rooms get their real extents. Maze rooms are drawn as generic boxes with or without it, so a SET-arm hand-over shows the same map as before. Its button is hidden when the page is standalone. See [the APWorld editor](../../modules/apworldEditor.md#the-links-tab).
 
 The in-page half, `mazeLabBridge.js`, is imported dynamically only when `?iframeId=` is present (`check-procgen-lab-hosting.mjs` checks a standalone load never fetches it). `window.__mazeLab.loaded` is true when the state came from a payload.
 
