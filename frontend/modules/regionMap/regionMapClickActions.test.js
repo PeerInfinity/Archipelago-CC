@@ -4,7 +4,8 @@
  *      config through the Graph's own loader — its stored `clickActions`; else the migration of the old keys; else the
  *      defaults — saved ONCE. A stored Map config is never overwritten; a second load writes nothing;
  *   2. independence: a Graph strip save never touches the Map's key, and a Map strip save writes the Map's key only
- *      (no `addLocationsToPath` mirror: the Map's location choice is its own);
+ *      (and, since CA-S4, a Graph save writes no `addLocationsToPath` mirror either);
+ *   2b. CA-S4: the copy leaves out the panel-owned actions (`PANEL_ACTION_IDS`), whose first value is per panel;
  *   3. the generic click events' payloads, master switch off included;
  *   4. the schema entry.
  * The settings manager is a fake with getSetting's precedence (stored > schema default > call-site).
@@ -18,8 +19,7 @@ const { REGION_MAP_SETTINGS_SCHEMA, REGION_MAP_SETTING_DEFAULTS } = await import
 
 const GRAPH_KEY = G.CLICK_ACTIONS_KEY;
 const MAP_KEY = M.REGION_MAP_CLICK_ACTIONS_KEY;
-const SCHEMA = { [GRAPH_KEY]: CA.defaultClickActions(), [MAP_KEY]: CA.defaultClickActions(),
-    'moduleSettings.regionGraph.addLocationsToPath': false };
+const SCHEMA = { [GRAPH_KEY]: CA.defaultClickActions(), [MAP_KEY]: CA.defaultClickActions() };
 
 function fakeSettings(tree = {}) {
     const writes = [];
@@ -51,7 +51,11 @@ function fakeSettings(tree = {}) {
 }
 
 const GRAPH_STORED = { enabled: true, region: { 'path.route': { from: 'player' }, 'path.checkAll': true, 'regions.open': false,
-    'flash.teleport': true }, location: { 'path.check': 'addToPath' } };
+    'actionNodes.act': true }, location: { 'path.check': 'addToPath' } };
+/** CA-S4: the Graph's stored config WITH the panel-owned actions (their first value is per panel: not copied). */
+const GRAPH_STORED_S4 = { enabled: true,
+    region: { ...GRAPH_STORED.region, 'flash.teleport': true, 'discovery.discover': true, 'regionMap.centre': true },
+    location: { ...GRAPH_STORED.location, 'flash.teleportLocation': true, 'regions.scrollTo': true } };
 
 describe('⛓ the first-run copy of the Region Graph\'s RESOLVED config (⚖ R4; js-21 edit 1: all three sources)', () => {
     it('(1) the Graph\'s stored clickActions: copied as is (unknown ids kept), saved once; the Graph is not written', async () => {
@@ -108,6 +112,27 @@ describe('⛓ the first-run copy of the Region Graph\'s RESOLVED config (⚖ R4;
     });
 });
 
+describe('⛓ CA-S4: the copy leaves out the panel-owned actions (⚖ user 2026-11-20T16:29:00Z: the Map\'s teleport starts OFF)', () => {
+    it('every PANEL_ACTION_IDS id is dropped from the copy; every other id (an unknown one too) is kept', async () => {
+        const sm = fakeSettings({ moduleSettings: { regionGraph: { clickActions: structuredClone(GRAPH_STORED_S4) } } });
+        const r = await M.loadRegionMapClickActions(sm);
+        expect(r.clickActions).toEqual(GRAPH_STORED);
+        expect(sm.writes).toEqual([[MAP_KEY, GRAPH_STORED]]);
+        // the Graph's own value is untouched
+        expect(sm.tree.moduleSettings.regionGraph.clickActions).toEqual(GRAPH_STORED_S4);
+    });
+    it('a seeded save keeps a session override session-only; a plain save persists', async () => {
+        const calls = [];
+        const sm = { hasOverride: (k) => k === MAP_KEY, updateSetting: async (...a) => { calls.push(a); } };
+        await M.saveRegionMapClickActions(sm, { enabled: true }, { seeded: true });
+        await M.saveRegionMapClickActions(sm, { enabled: false });
+        expect(calls).toEqual([[MAP_KEY, { enabled: true }, { persist: false }], [MAP_KEY, { enabled: false }]]);
+        const sm2 = { hasOverride: () => false, updateSetting: async (...a) => { calls.push(a); } };
+        await M.saveRegionMapClickActions(sm2, { enabled: true }, { seeded: true });
+        expect(calls.at(-1)).toEqual([MAP_KEY, { enabled: true }]);
+    });
+});
+
 describe('⛓ the two panels are independent once the copy is made (⚖ R4)', () => {
     it('a Graph strip save never writes the Map\'s key; a Map strip save writes the Map\'s key only (no mirror)', async () => {
         const sm = fakeSettings({ moduleSettings: {} });
@@ -115,7 +140,8 @@ describe('⛓ the two panels are independent once the copy is made (⚖ R4)', ()
         const n = sm.writes.length;
         const graphNext = { ...CA.defaultClickActions(), enabled: false, location: { 'path.check': 'addToPath' } };
         await G.saveRegionGraphClickActions(sm, graphNext);
-        expect(sm.writes.slice(n).map(([k]) => k)).toEqual([GRAPH_KEY, G.MIRRORED_LEGACY_KEY]);
+        // CA-S4: the Graph's save writes its own key only (the addLocationsToPath mirror is retired)
+        expect(sm.writes.slice(n).map(([k]) => k)).toEqual([GRAPH_KEY]);
         expect((await M.loadRegionMapClickActions(sm)).clickActions).toEqual(map0);
         const mapNext = { ...map0, location: { 'path.check': 'addToPath' } };
         const m = sm.writes.length;

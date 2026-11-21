@@ -57,6 +57,8 @@ import {
 } from './seedlingSoundSettings.js';
 import { solverEnvPageParam } from './seedlingSolverEnvCarry.js';
 import { RUFFLE_CDN } from './ruffleCdn.js';
+import { registerClickAction, unregisterClickAction, getClickAction, isMapClickOriginator } from '../regionView/clickActions.js';
+import { makeFlashTeleportActions } from './flashClickActions.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -1010,10 +1012,7 @@ export class FlashPanelUI {
       this.adapter.detach();
       this.adapter = null;
     }
-    if (this._teleportUnsub) {
-      this._teleportUnsub();
-      this._teleportUnsub = null;
-    }
+    this._unregisterClickActions();
     this.swfContainer.innerHTML = '';
     // ⛓ USE THE SAVE (Flash) — the player is gone and its last write is in (Ruffle writes inside the removal)
     this._endRuffleSaveRun();
@@ -1418,7 +1417,11 @@ export class FlashPanelUI {
     const tp = document.createElement('label');
     tp.className = 'flash-panel-setting flash-panel-setting-tp';
     tp.style.cssText = 'display:none;align-items:center;gap:8px;color:#aaa;';
-    tp.title = 'A click on a region or location in another panel teleports the player there';
+    // ⛓ CA-S4 (⚖ user 2026-11-20T16:29:00Z): a click in the Region Graph or the Region Map teleports only through that
+    // map's own "On click" option (`flash.teleport` / `flash.teleportLocation`, `flashClickActions.js`); this box keeps
+    // the location checks from every OTHER panel (`handleUserLocationCheck`).
+    tp.title = 'A location check in another panel (not the Region Graph or the Region Map: their "On click" strips '
+      + 'have their own teleport option) teleports the player there';
     tp.innerHTML = '<input class="flash-panel-tp-on-click" type="checkbox" /> <span>TP on UI click</span>';
     host.append(tp);
     this.teleportOnClickRow = tp;
@@ -1657,7 +1660,10 @@ export class FlashPanelUI {
   }
 
   _setupTeleportUI() {
-    if (!this.gameConfig?.teleport) return;
+    if (!this.gameConfig?.teleport) {
+      this._unregisterClickActions(); // ⛓ CA-S4: a game that cannot teleport offers no map-click teleport
+      return;
+    }
     this.teleportRow.style.display = '';
 
     // Populate region dropdown (hidden by default but wired in
@@ -1681,16 +1687,28 @@ export class FlashPanelUI {
       this.teleportLocationSelect.appendChild(opt);
     }
 
-    // Subscribe to region-graph node clicks (eventBus). The "TP on
-    // UI click" checkbox gates whether the click triggers a
-    // teleport; we always subscribe so toggling the checkbox
-    // starts working immediately.
-    const unsub = this.eventBus.subscribe('regionGraph:nodeSelected', (payload) => {
-      if (!this.teleportOnClickCheckbox?.checked) return;
-      if (!payload?.nodeId) return;
-      this._teleportToRegion(payload.nodeId);
-    });
-    this._teleportUnsub = unsub;
+    // ⛓ CA-S4: a MAP click teleports through the map's own "On click" option, registered here while this game can
+    // teleport (it REPLACED the box's `regionGraph:nodeSelected` listener; ⚖ user 2026-11-20T16:29:00Z, "Per-map
+    // option"). The Region Graph's first value is the box's at this moment, the Region Map's is off.
+    this._registerClickActions();
+  }
+
+  /** Register `flash.teleport` / `flash.teleportLocation` for THIS panel (idempotent; `flashClickActions.js`). */
+  _registerClickActions() {
+    this._unregisterClickActions();
+    const descs = makeFlashTeleportActions(() => this);
+    const mine = [];
+    for (const d of descs) {
+      if (getClickAction(d.id)) continue; // another Flash panel holds it; it stays that panel's
+      try { registerClickAction(d); mine.push(d.id); } catch (e) { this._panelLog(`click action ${d.id}: ${e.message}`, 'error'); }
+    }
+    this._clickActionIds = mine;
+  }
+
+  /** Unregister the click actions THIS panel registered (teardown, a game that cannot teleport). */
+  _unregisterClickActions() {
+    for (const id of this._clickActionIds ?? []) unregisterClickAction(id);
+    this._clickActionIds = [];
   }
 
   /**
@@ -1698,11 +1716,15 @@ export class FlashPanelUI {
    * dispatcher chain. Gated on the "TP on UI click" checkbox.
    * Ignores events originating from this panel so we don't
    * re-teleport when Flash itself reports a pickup.
+   * ⛓ CA-S4: ignores the two MAP panels' checks too (`isMapClickOriginator`: the Region Graph's and the Region Map's
+   * click checks and bulk checks): a map click teleports only through its own "On click" option (⚖ user
+   * 2026-11-20T16:29:00Z). Every other panel's check still follows the box.
    */
   handleUserLocationCheck(eventData) {
     if (!this.teleportOnClickCheckbox?.checked) return;
     if (!eventData?.locationName) return;
     if (eventData.originator === 'FlashPanel') return;
+    if (isMapClickOriginator(eventData.originator)) return;
     this._teleportToLocation(eventData.locationName);
   }
 
@@ -2941,10 +2963,7 @@ export class FlashPanelUI {
       this.adapter.detach();
       this.adapter = null;
     }
-    if (this._teleportUnsub) {
-      this._teleportUnsub();
-      this._teleportUnsub = null;
-    }
+    this._unregisterClickActions();
     this.unsubscribeHandles.forEach((u) => typeof u === 'function' && u());
     this.unsubscribeHandles = [];
     setActivePanelInstance(null);

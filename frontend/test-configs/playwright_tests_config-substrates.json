@@ -2199,6 +2199,18 @@
             "_comment": "CLICK ACTIONS CA-S2 (2026-11-19): the location action 'check it now' (session-only): a location click through the Go to picker checks an accessible location. Reloads the world loaded before. On push (fast batch)."
         },
         {
+            "id": "test_region_graph_click_discover",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "CLICK ACTIONS CA-S4 (2026-11-20): discovery.discover, the registered action that replaced Discovery's regionGraph:nodeSelected listener. Discovery on with clickDiscoversRegion (session-only): a tap discovers an undiscovered region; loop mode's bundle (clickDiscoversRegion false): a tap discovers nothing. Reloads the world loaded before. On push (fast batch)."
+        },
+        {
+            "id": "test_regions_location_click_follows_graph_strip",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "CLICK ACTIONS CA-S4 (2026-11-20): the Regions panel reads the Region Graph's resolved clickActions location choice (the addLocationsToPath mirror is retired): 'add to path' queues a Regions-panel location click in the path, 'check it now' checks it. Reloads the world loaded before. On push (fast batch)."
+        },
+        {
             "id": "tutorial-walk-start-workbench",
             "enabled": true,
             "category": "Tutorial walks",
@@ -2563,7 +2575,13 @@
             "id": "seedling-js-runtime-tools-restart-teleport",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "seedling-js-panel-restart. seedling_atlas on js: Tools ▸ Restart lands where the Menu's Restart lands; a walked exit (the owl's nest stairs, by keys) vs Tools ▸ Go to its spot from the same room: same AP region, same spot, no door named (arrivedFrom null), no path entry, no warning; TP on UI click into the dungeon (no door from the start) reaches it. Batch seedling-js."
+            "_comment": "seedling-js-panel-restart. seedling_atlas on js: Tools ▸ Restart lands where the Menu's Restart lands; a walked exit (the owl's nest stairs, by keys) vs Tools ▸ Go to its spot from the same room: same AP region, same spot, no door named (arrivedFrom null), no path entry, no warning; a Graph click's flash.teleport action (CA-S4) into the dungeon (no door from the start) reaches it. Batch seedling-js."
+        },
+        {
+            "id": "seedling-js-runtime-click-teleport",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "CLICK ACTIONS CA-S4 (user 2026-11-20T16:29:00Z, 'Per-map option'): seedling_atlas on js. The Graph's flash.teleport seeds from the box at the registration, then the strip decides (teleports with the box unticked; set false, no teleport with the box ticked); the Map's starts OFF (no teleport, box ticked), turned on it teleports; a non-map originator's location check still follows the box, the maps' never do. Batch seedling-js."
         },
         {
             "id": "seedling-wasm-runtime-tools-restart-teleport",

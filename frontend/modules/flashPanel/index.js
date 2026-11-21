@@ -335,7 +335,6 @@ export function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent('stateManager:inventoryChanged');
   registrationApi.registerEventBusSubscriberIntent('stateManager:ready');
   registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
-  registrationApi.registerEventBusSubscriberIntent('regionGraph:nodeSelected');
   registrationApi.registerEventBusSubscriberIntent(FLASH_SEEDLING_LOAD_REGION_EVENT);
   // ⛓ LOOP-MODE RESTART — the glue hears the loops' reset (`seedlingRegionGlue.handleLoopReset`).
   registrationApi.registerEventBusSubscriberIntent(LOOP_RESET_EVENT);

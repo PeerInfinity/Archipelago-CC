@@ -14,14 +14,20 @@
  *   2. otherwise `migrateRegionGraphClickKeys` over the old keys (stored or preset), which the loader also saves as
  *      the Graph's (its own idempotent one-time migration);
  *   3. otherwise the defaults (the migration of the old defaults = `defaultClickActions()`).
- * and SAVES a deep copy once as the Map's. A stored Map config is never overwritten; a second load writes nothing.
+ * and SAVES a deep copy once as the Map's, WITHOUT the CA-S4 panel-owned actions (`PANEL_ACTION_IDS`), whose first
+ * value is per panel: the Map's strip then seeds its own (⚖ user 2026-11-20T16:29:00Z, *"Per-map option
+ * (Recommended)"*: the Map's teleport starts OFF; Discovery's discover too, as the Map's clicks never discovered).
+ * A stored Map config is never overwritten; a second load writes nothing.
  * From then on the two are independent: an edit of either strip never moves the other.
  *
  * ⛓ THE EVENTS (design §4.3): every Map click publishes `regionView:regionClicked` / `regionView:locationClicked`
  * `{ panelId: 'regionMap', regionName, locationName? }`, whatever the click actions do (master off included).
  * `regionMap:nodeSelected` (a region click's selection) is published first, as before; it is not a click action.
  */
-import { runClickActions, clickStatusOf, defaultClickActions } from '../regionView/clickActions.js';
+import {
+    runClickActions, clickStatusOf, defaultClickActions, withoutPerPanelInitials, PANEL_ACTION_IDS,
+    REGION_CLICKED, LOCATION_CLICKED,
+} from '../regionView/clickActions.js';
 import { loadRegionGraphClickActions } from '../regionGraph/clickActionsSettings.js';
 import { setShowAllRegionsBox } from '../regions/regionsClickActions.js';
 import { publishNodeSelected } from '../regionView/regionActions.js';
@@ -37,9 +43,8 @@ export const REGION_MAP_ORIGINATORS = Object.freeze({
 
 export const REGION_MAP_NODE_SELECTED = 'regionMap:nodeSelected';
 
-/** The generic click events (design §4.3), published by every map panel that adopts the registry. */
-export const REGION_CLICKED = 'regionView:regionClicked';
-export const LOCATION_CLICKED = 'regionView:locationClicked';
+/** The generic click events (design §4.3), published by every map panel (named in `regionView/clickActions.js`). */
+export { REGION_CLICKED, LOCATION_CLICKED };
 
 /** A usable `clickActions` value (an object), else null. */
 function usable(v) {
@@ -58,14 +63,45 @@ export async function loadRegionMapClickActions(settings) {
         return { clickActions: usable(stored) ?? defaultClickActions(), copied: false };
     }
     const graph = await loadRegionGraphClickActions(settings);
-    const clickActions = structuredClone(graph.clickActions);
+    const clickActions = withoutPerPanelInitials(structuredClone(graph.clickActions));
     await settings.updateSetting(REGION_MAP_CLICK_ACTIONS_KEY, clickActions);
     return { clickActions, copied: true, graphMigrated: graph.migrated };
 }
 
-/** A strip save: the Map's key only (no mirror — the Map's location choice is its own, ⚖ R4). */
-export async function saveRegionMapClickActions(settings, next) {
-    await settings.updateSetting(REGION_MAP_CLICK_ACTIONS_KEY, next);
+/**
+ * A strip save: the Map's key only (no mirror — the Map's location choice is its own, ⚖ R4). A SEEDED save (the
+ * strip writing an action's initial value, CA-S4) keeps a session override session-only, as the Graph's does.
+ */
+export async function saveRegionMapClickActions(settings, next, { seeded = false } = {}) {
+    if (seeded && settings.hasOverride?.(REGION_MAP_CLICK_ACTIONS_KEY)) {
+        await settings.updateSetting(REGION_MAP_CLICK_ACTIONS_KEY, next, { persist: false });
+    } else {
+        await settings.updateSetting(REGION_MAP_CLICK_ACTIONS_KEY, next);
+    }
+}
+
+/**
+ * ⛓ `regionMap.centre` (CA-S4): "centre the Region Map on the clicked region", the Map's own action, offered to the
+ * OTHER map (the Region Graph) and never to the Map itself. It starts OFF in every strip. It eases every live Map
+ * panel's camera onto the region's cell (`RegionMapUI.centreOnRegion`) and turns its Follow off, as a manual pan does.
+ * Registered by `regionMap/index.js` `initialize`, over `getPanels()` (the live panels).
+ */
+export function makeRegionMapCentreAction(getPanels) {
+    return Object.freeze({
+        id: PANEL_ACTION_IDS.mapCentre,
+        owner: 'regionMap',
+        label: 'Centre the Region Map on it',
+        summary: 'centre Map',
+        target: 'region',
+        kind: 'toggle',
+        initial: () => false,
+        offeredTo: (panelId) => panelId !== PANEL_ID,
+        run: (h, ctx) => {
+            let centred = 0;
+            for (const p of getPanels()) if (p?.centreOnRegion?.(ctx.regionName)) centred++;
+            return centred > 0 ? { ok: true, centred } : { ok: false, reason: 'not-drawn' };
+        },
+    });
 }
 
 /** The settings-schema entry (`regionMapSettings.js`): the default is `defaultClickActions()`. */

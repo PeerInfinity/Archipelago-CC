@@ -9,6 +9,7 @@
 import { APCalcUI } from './apcalcUI.js';
 import { APCalcState } from './apcalcState.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { REGION_CLICKED, isClickFromPanel } from '../regionView/clickActions.js';
 
 export const moduleInfo = {
     name: 'apcalc',
@@ -40,7 +41,7 @@ export function register(registrationApi) {
     registrationApi.registerEventBusPublisher('apcalc:stateChanged');
     registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
     registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
-    registrationApi.registerEventBusSubscriberIntent('regionGraph:nodeSelected');
+    registrationApi.registerEventBusSubscriberIntent(REGION_CLICKED);
 
     // Dispatcher: send region moves, location checks, and path clearing
     registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
@@ -65,9 +66,12 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         if (staticData) initializeGame(staticData);
     });
 
-    // Listen for region graph node clicks → filter paths, or clear on C click
-    eventBus.subscribe('regionGraph:nodeSelected', (data) => {
-        const nodeId = data?.nodeId;
+    // Listen for region graph node clicks → filter paths, or clear on C click. ⛓ CA-S4: the generic click event,
+    // FILTERED to the Region Graph (it heard only the Graph's `regionGraph:nodeSelected` before; a Region Map click is
+    // not heard — whether it should be is an open question, not a ruling).
+    eventBus.subscribe(REGION_CLICKED, (data) => {
+        if (!isClickFromPanel(data, 'regionGraph')) return;
+        const nodeId = data?.regionName;
         if (!nodeId) return;
         if (nodeId === 'C' && gameState) {
             gameState.reset();

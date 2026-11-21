@@ -4,7 +4,7 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import * as actions from '../regionView/regionActions.js';
-import { runClickActions, clickStatusOf } from '../regionView/clickActions.js';
+import { runClickActions, clickStatusOf, REGION_CLICKED, LOCATION_CLICKED } from '../regionView/clickActions.js';
 import { REGION_GRAPH_ORIGINATORS, REGION_GRAPH_NODE_SELECTED } from './regionGraphOriginators.js';
 
 const logger = createUniversalLogger('regionGraph');
@@ -180,12 +180,15 @@ export class GraphInteractionManager {
     const parentRegion = node.data('parentRegion');
 
     logger.debug(`Location node clicked: ${locationName} in ${parentRegion}`);
+    // ⛓ CA-S4: the generic click event (design §4.3), before the actions, as the Region Map publishes it.
+    this.eventBus.publish(LOCATION_CLICKED, { panelId: 'regionGraph', regionName: parentRegion, locationName });
     return this.runClick('location', { regionName: parentRegion, locationName });
   }
 
   /**
    * ⛓ A click on a region node (a tap, or the "Go to" picker): select it, publish `regionGraph:nodeSelected` (BEFORE
-   * any action and outside them, until S5 retires the event), then the panel's REGION click actions.
+   * any action and outside them, until S5 retires the event), then the generic `regionView:regionClicked` (CA-S4),
+   * then the panel's REGION click actions.
    */
   handleRegionNodeClick(node) {
     const regionName = node.id(); // Node ID is the region name
@@ -200,6 +203,8 @@ export class GraphInteractionManager {
 
     // Publish the custom regionGraph event for any other listeners
     actions.publishNodeSelected({ eventBus: this.eventBus }, REGION_GRAPH_NODE_SELECTED, regionName, node.data());
+    // ⛓ CA-S4: the generic click event (design §4.3), the Region Map's shape; apcalc and vibeCodingSim hear it.
+    this.eventBus.publish(REGION_CLICKED, { panelId: 'regionGraph', regionName });
 
     return this.runClick('region', { regionName });
   }

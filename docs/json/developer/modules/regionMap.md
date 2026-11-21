@@ -63,7 +63,7 @@ A click (a pointer down and up with no drag) on a visible cell selects it, then 
 2. else the migration of the old `regionGraph.*` click keys (the loader saves that as the Graph's too);
 3. else the defaults.
 
-It saves a deep copy once as the Map's. A stored Map value is never overwritten, and a second load writes nothing. After that the two panels are independent. The Map does not mirror `addLocationsToPath` (the Region Graph's strip does, for the Regions panel, until CA-S4): the Map's location choice is its own.
+It saves a deep copy once as the Map's. A stored Map value is never overwritten, and a second load writes nothing. After that the two panels are independent. The Map's location choice is its own (since CA-S4 no strip mirrors `addLocationsToPath`). The copy leaves out the CA-S4 panel-owned actions (`withoutPerPanelInitials`): the Map's strip seeds its own first values, all off (⚖ user 2026-11-20T16:29:00Z: the Map's Flash teleport starts OFF).
 
 **Events.** Every click publishes, on this module's bus:
 - a region click: `regionMap:nodeSelected` `{ nodeId, data: { id, displayKey } }` (the selection), then `regionView:regionClicked` `{ panelId: 'regionMap', regionName }`;

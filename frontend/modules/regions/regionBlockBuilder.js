@@ -6,6 +6,7 @@ import commonUI from '../commonUI/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { regionGraphLocationAddsToPath } from '../regionGraph/clickActionsSettings.js';
 import { getModuleEventBus } from './index.js';
 
 // Helper function for logging with fallback
@@ -1081,8 +1082,9 @@ export class RegionBlockBuilder {
           }
         });
 
-        // Check if location is queued in the path (only if the setting is enabled)
-        settingsManager.getSetting('moduleSettings.regionGraph.addLocationsToPath', false).then(addToPathEnabled => {
+        // Check if location is queued in the path (only if the Region Graph's location action adds checks to the path;
+        // CA-S4: read through its resolver, `clickActions.location['path.check'] === 'addToPath'`)
+        regionGraphLocationAddsToPath(settingsManager).then(addToPathEnabled => {
           if (addToPathEnabled) {
             import('../gameState/singleton.js').then(({ getGameStateSingleton }) => {
               try {
@@ -1179,8 +1181,9 @@ export class RegionBlockBuilder {
                 `[LocationWrapper] Clicked on location: ${locationDef.name}, Region: ${regionName}`
               );
 
-              // Check if we should add to path (use same setting as regionGraph)
-              const shouldAddToPath = await settingsManager.getSetting('moduleSettings.regionGraph.addLocationsToPath', false);
+              // Check if we should add to path: the Region Graph's location action (CA-S4: its resolved
+              // `clickActions.location['path.check'] === 'addToPath'`, which replaced the old `addLocationsToPath` key)
+              const shouldAddToPath = await regionGraphLocationAddsToPath(settingsManager);
               
               if (shouldAddToPath) {
                 // Add location check to path

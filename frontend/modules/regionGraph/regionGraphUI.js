@@ -156,9 +156,9 @@ export class RegionGraphUI {
       panelId: 'regionGraph',
       container: this.clickStripHost,
       getSettings: () => this.clickActions,
-      saveSettings: (next) => {
+      saveSettings: (next, opts) => {
         this.clickActions = next;
-        saveRegionGraphClickActions(settingsManager, next)
+        saveRegionGraphClickActions(settingsManager, next, opts)
           .catch((error) => logger.warn('Could not save the click actions:', error));
       },
     });
@@ -208,6 +208,9 @@ export class RegionGraphUI {
     } catch (error) {
       logger.warn('Could not load the click actions; using the defaults:', error);
     }
+    // ⛓ CA-S4: once loaded, write the panel-owned actions' first values this config does not name yet (the strip's
+    // `seed`: Flash's teleport = the box's setting at that moment, Discovery's discover = on, the Map's centre = off).
+    this.clickStrip?.seed();
     this.clickStrip?.render();
   }
 

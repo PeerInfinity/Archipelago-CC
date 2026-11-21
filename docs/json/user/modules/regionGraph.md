@@ -41,11 +41,17 @@ What a click on the graph does is set in the **On click** strip at the top right
     - **Route to the region** — *Extend the path from its end*, *Restart the path from the start*, *Move the player there*, or *off*. A route always goes all the way to the region.
     - **Check all accessible locations there**.
     - **Open it in the Regions panel** — opens the [Regions](regions.md) panel at the region. It is there while the Regions panel's module is loaded.
+    - **Discover the region** — in [Discovery mode](discoveryPanel.md), discovers a clicked undiscovered region. It does something only while Discovery mode is on and **Click Discovers Region** is ticked (loop mode turns that off). On by default here.
+    - **Teleport there in Flash** — the [Flash panel](flashPanel.md) teleports the player to the clicked region. It is there while the Flash panel runs a game that can teleport. Its first value is what the Flash panel's **TP on UI click** box was at that moment (normally unticked, so off); after that this option decides, not the box.
+    - **Centre the Region Map on it** — the [Region Map](regionMap.md) eases its view onto the clicked region. Off by default.
   - **Location** (a click on a location node):
-    - **Check the location** — *Check it now*, *Add the check to the path* (the route above takes you to its region first), or *off*.
+    - **Check the location** — *Check it now*, *Add the check to the path* (the route above takes you to its region first), or *off*. The [Regions](regions.md) panel's own location clicks follow this choice too.
+    - **Teleport to it in Flash** — as above, for a location. Same first value.
+    - **Scroll the Regions panel to it** — opens the Regions panel at the location and highlights it. Off by default.
 - Other panels can add actions of their own to these lists. An action whose panel is not loaded keeps its setting and shows greyed out as *(not loaded)*.
+- Actions run in this order: discover and teleport first, then the route, then the checks, then the rest.
 
-The default is: extend the path to a clicked region and open it in the Regions panel; check a clicked location. The settings are kept per panel (`moduleSettings.regionGraph.clickActions`). The first time the panel opens, it carries over what the old **On Region Node Click** checkboxes were set to. The old *Move player one step towards region* option is gone: a click goes all the way.
+The default is: extend the path to a clicked region and open it in the Regions panel (and, in Discovery mode, discover it); check a clicked location. The settings are kept per panel (`moduleSettings.regionGraph.clickActions`). The first time the panel opens, it carries over what the old **On Region Node Click** checkboxes were set to. The old *Move player one step towards region* option is gone: a click goes all the way.
 
 ## Controls
 

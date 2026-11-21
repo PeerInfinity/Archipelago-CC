@@ -26,7 +26,7 @@ import { seedlingCompositeMapStats } from '../../flashPanel/seedlingCompositeMap
 import { worldToScreen } from '../../procgenCore/mapCamera.js';
 import { squareAt } from '../../regionMap/regionMapOverlay.js';
 import { REGION_MAP_CLICK_ACTIONS_KEY, regionOfCell } from '../../regionMap/regionMapClickActions.js';
-import { defaultClickActions } from '../../regionView/clickActions.js';
+import { defaultClickActions, withInitialValues } from '../../regionView/clickActions.js';
 import { resetLoopsToIdle } from './loopsPanelTests.js';
 import { writeBundle } from '../../presets/documentBundle.js';
 import { atlasCache } from '../../procgenCore/atlasCache.js';
@@ -360,7 +360,9 @@ const stripSummary = () => panel()?.clickStripHost?.querySelector('.click-action
 async function setClickOptions(testController, ctx, clickActions = defaultClickActions()) {
   await panel()?.clickActionsReady;
   await ctx.setSetting(REGION_MAP_CLICK_ACTIONS_KEY, clickActions);
-  const want = JSON.stringify(clickActions);
+  // ⛓ CA-S4: once loaded, the Map's strip seeds the panel-owned actions this config does not name (all OFF on the Map,
+  // written session-only over this override), so the panel holds the row's config plus those values.
+  const want = JSON.stringify(withInitialValues('regionMap', clickActions).settings);
   const held = await testController.pollForCondition(() => JSON.stringify(dbg()?.clickActions) === want,
     'the panel holds the row\'s click actions', 3000, 25);
   if (!held) testController.reportCondition(`the panel holds the row's click actions (${JSON.stringify(dbg()?.clickActions)})`, false);
