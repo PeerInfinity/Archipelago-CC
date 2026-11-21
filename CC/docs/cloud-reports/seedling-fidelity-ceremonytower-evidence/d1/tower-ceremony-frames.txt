@@ -1,0 +1,3 @@
+{} [[0,"feather"]] t1F:[false,true] t2F:[true,true] t3F:[true,true] t4F:[true,true] t5F:[true,true] t6F:[true,true] … t23-C:[true] t24-:[false] t25-:[false]
+{"freezeEdgeFrames":true} [[0,"feather"]] t1F:[false,true] t2F:[true] t3F:[true] t4F:[true] t5F:[true] t6F:[true] … t23-C:[true] t24-:[false] t25-:[false]
+{"freezeEdgeFrames":true,"pickupTickFreeze":true,"frozenTickUngated":true,"dialogueFrameFreeze":true,"turretSuitRetaliation":true} [[0,"feather"]] t1F:[true] t2F:[true] t3F:[true] t4F:[true] t5F:[true] t6F:[true] … t23-C:[true] t24-:[false] t25-:[false]
