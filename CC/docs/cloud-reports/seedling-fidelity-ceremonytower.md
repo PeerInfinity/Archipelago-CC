@@ -10,7 +10,7 @@ default change, no change to any existing key's ON branch.
 | Base | `d16235993efd3b57699d19d1af9386026a735f62` (the W53 harvest, TRAIN 169; 144 keys, 126 ON, the last six `darkSuitBossRetaliation`, `owlContactInStep`, `turretSuitRetaliation`, `pickupTickFreeze`, `dialogueFrameFreeze`, `frozenTickUngated`, all OFF: measured) |
 | Harness branch | `claude/ceremony-tower-frame-updates-7i9q1f` (local branch `seedling-fidelity-ceremonytower`) |
 | Commits | D2 `257bf23a` (the code, the key, the pins, the rows: **the last CODE commit**) · evidence `24b0bcf8` · this report (the head) |
-| Verdict | **PASS** (key OFF; OFF byte-identical; the acceptance md5 is the standing value at all four settings; 294/294 tapes ON = OFF; the survey's 4 rock-room steps ON = OFF. **ON moves L29**: its turrets fire 5 ticks earlier after the button's rock: 2 gate rows move ON; the train tier ON is NOT measured (its run was cut off)) |
+| Verdict | **PASS** (key OFF; OFF byte-identical; the acceptance md5 is the standing value at all four settings; 294/294 tapes ON = OFF; the survey's 4 rock-room steps ON = OFF. **ON moves L29**: its turrets fire 5 ticks earlier after the button's rock: 2 gate rows move ON; the train tier ON moves nothing (10 files, 41/41)) |
 
 **The one thing to know first:** gap 2 is not vacuous. The shipped L29 room moves ON. Its two turrets are mid-shot when
 the button drops the rock. In the game their anim runs out through the 172 frozen frames, and the release frame counts
@@ -231,7 +231,7 @@ this file, `fidelityPickupFreeze.test.js` and `fidelityFrozenTick.test.js`: 32 r
   - `seedlingSoundCues.test.js:215` — `stand:29:112,144:60:up`: a new `"Turret Shoot"` cue at t56, inside the 60-tick
     window. This is L29's turret firing 5 ticks earlier.
 - **Train ON** (`vitest.train.config.js`, the 10 `.train.` files naming L28/L29/L43/L74: `d3/train-files.txt`):
-  **NOT MEASURED** — the run was cut off by a container restart before any file reported; `d3/train-on.txt` holds no summary. Owed: re-run these 10 files with the key ON, or read the planner's `train_only` dispatch (`d3/train-on.txt`).
+  **10/10 files, 41/41 tests passed, 3535 s: 0 ON movers**. The first run was cut off by a container restart, and this is the re-run (`d3/train-on.txt`).
 
 ### The named sweep (for the planner)
 
@@ -257,7 +257,7 @@ this file, `fidelityPickupFreeze.test.js` and `fidelityFrozenTick.test.js`: 32 r
     pins.
   - Plus `r8Acceptance`, `tapeEnvelope`, `solverDeadline`, `decisionTrace`, `lintGateLabels`, `seedlingConstantsCensus`
     and `seedlingSolverSurface`.
-- `ci-producer-checks.mjs --jobs=3`: **99 run, 1 red, 1 skipped** (`plan-seedling-r7-ends-meet`, a browser arm in CI). The red is the battery's `TREE-MOVED` guard, not a check: this slice's evidence and report files were written into the tree while the battery ran. No producer row failed. Not re-run on a still tree (`d3/producer-checks.txt`).
+- `ci-producer-checks.mjs --jobs=3`: **99 run, 0 red**, 1 skipped (`plan-seedling-r7-ends-meet`, a browser arm in CI). The first run's one red was the battery's `TREE-MOVED` guard (evidence files were written while it ran); this re-run, with the tree held still, is clean (`d3/producer-checks.txt`).
 - `check-procgen-docs.mjs`: ALL CHECKS PASSED. `generate-procgen-reference.mjs --check`: all 7 modules and 5 regions match.
 - **Constants census:** `--check` PASSes after `--write` (8 new + 1 vanished cosmetic/structural, 953 line moves).
   `--profile-rows` left `seedling-constants-fields.csv` byte-identical, and a second `--write` then `--check` showed 0

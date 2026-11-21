@@ -1,9 +1,60 @@
 
 [1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
 
- [32m✓[39m frontend/modules/seedlingDemo/hammerChooserPair.train.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 232717[2mms[22m[39m
-     [33m[2m✓[22m[39m 853 at 5196: OFF the burn stance's walk refuses on bob@736,752 with the chooser silent; ON the set bob@736,752 + bob@736,800 + bobsoldier@880,832 admits (a TRIPLE since chaserSpinnerWalls: no pair does), the chaser arm kills the bob in the model, and the chain moves on to the spinner@816,848 press kill [33m 82189[2mms[22m[39m
-     [33m[2m✓[22m[39m 853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and the pair arm = OFF [33m 76810[2mms[22m[39m
-     [33m[2m✓[22m[39m 356 (its every climb answered by a single removal): the pair is never asked, and ON = OFF [33m 40263[2mms[22m[39m
-     [33m[2m✓[22m[39m the measurement arm that asks triples too: 367 OFF refuses at its deadline; with triples the set bob@192,480 + bob@224,496 + puncher@128,624 admits, the arm kills bob@192,480 in the model, and the walk reaches the L43 pit [33m 31594[2mms[22m[39m
-     [33m[2m✓[22m[39m the L16 guard: with the switch ON the solver re-derives r9-solve-16 (C1's regression stays closed) [33m 1857[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerChooserPair.train.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 282348[2mms[22m[39m
+     [33m[2m✓[22m[39m 853 at 5196: OFF the burn stance's walk refuses on bob@736,752 with the chooser silent; ON the set bob@736,752 + bob@736,800 + bobsoldier@880,832 admits (a TRIPLE since chaserSpinnerWalls: no pair does), the chaser arm kills the bob in the model, and the chain moves on to the spinner@816,848 press kill [33m 100247[2mms[22m[39m
+     [33m[2m✓[22m[39m 853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and the pair arm = OFF [33m 95699[2mms[22m[39m
+     [33m[2m✓[22m[39m 356 (its every climb answered by a single removal): the pair is never asked, and ON = OFF [33m 47310[2mms[22m[39m
+     [33m[2m✓[22m[39m the measurement arm that asks triples too: 367 OFF refuses at its deadline; with triples the set bob@192,480 + bob@224,496 + puncher@128,624 admits, the arm kills bob@192,480 in the model, and the walk reaches the L43 pit [33m 36361[2mms[22m[39m
+     [33m[2m✓[22m[39m the L16 guard: with the switch ON the solver re-derives r9-solve-16 (C1's regression stays closed) [33m 2726[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerApproachOrder.train.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 487124[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the page's solve runs out of its 2,560 units at the `crusher-fork` site, inside the approach's tries [33m 64541[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF with the budget lifted: 3,236 units — the hitless try is the 276th (right, the corridor, wait 29) [33m 85067[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: SOLVED inside the budget — the same try, the 70th (anchor 32, rank 5); OFF's plan; hitless on a fresh run [33m 97626[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: solved inside the budget on the push side's via, wait 25 (its 27th try), 4,519 ticks, hitless [33m 92775[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the right side's corridor at its anchor (wait 35, rank 0, the 8th fork), 4,527 ticks, fewer units, hitless [33m 73353[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: solved 26 units inside the budget — the approach's 276th try again (right, the corridor, wait 29) [33m 44420[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the same plan at about a quarter of the units (anchor 32, rank 5, the 70th fork), hitless on a fresh run [33m 29338[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPitWest.train.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 215357[2mms[22m[39m
+     [33m[2m✓[22m[39m 388 OFF at the page's 640: the deadline, as the page fails it [33m 8432[2mms[22m[39m
+     [33m[2m✓[22m[39m 388 CHOOSER_CUT ON: the cut holds bob@192,480 and three more; the chaser arm kills it and the walk reaches the pit — SOLVED hitless inside 640, its plan replayed on a fresh run [33m 34133[2mms[22m[39m
+     [33m[2m✓[22m[39m 387 CHOOSER_CUT ON: the same cut, SOLVED hitless inside 640 to out_pit_13_21 [33m 29263[2mms[22m[39m
+     [33m[2m✓[22m[39m 388 DETOUR_VIA_BOUND ON alone, the deadline lifted (40960): OFF's EXHAUSTED refusal by name, its detour row refused before a leg [33m 3153[2mms[22m[39m
+     [33m[2m✓[22m[39m 388 both ON = CHOOSER_CUT alone (the cut answers before DETOUR is asked) [33m 63284[2mms[22m[39m
+     [33m[2m✓[22m[39m 367 (a triple answers its climb): the cut is never asked, and ON = OFF [33m 56387[2mms[22m[39m
+     [33m[2m✓[22m[39m 403 (← L43 → out_pit_5_21, solved OFF through NARROW): the cut defers, and ON = OFF in plan and work [33m 18535[2mms[22m[39m
+     [33m[2m✓[22m[39m the L16 guard: with both switches ON the solver re-derives r9-solve-16 [33m 2165[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerClearTagChain.train.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 209045[2mms[22m[39m
+     [33m[2m✓[22m[39m leg 872 (from L43, (328,600)): OFF the set refuses at wall B; ON it SOLVES hitless — the tree burnt, {40,12} written [33m 92579[2mms[22m[39m
+     [33m[2m✓[22m[39m leg 871 (from L39, (488,904)): the pre-wall plan (chaserSpinnerWalls OFF) SOLVES hitless and is the same hitless walk on the wall-ON model; ⛔ under the wall the search REFUSES at the burn stance — a LOST SOLVE (hammer hand-over) [33m 116463[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerBodyGate.train.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 250684[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: refused at work 885 (today's refusal) [33m 45494[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: solved hitless — 1114 t, rows exact on a fresh run, flag 12 earned [33m 38071[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF = ON: 2385 t, sha 0c51cdb94854, hitless [33m 167117[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerOppDashDefers.train.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 286850[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF refuses as today (work 885); ON solves hitless without HAMMER_BODY_GATE, and the same plan with it [33m 128811[2mms[22m[39m
+     [33m[2m✓[22m[39m control: leg 872 (from L43) is the same plan OFF and ON [33m 158037[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerShovedLookahead.train.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 460900[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: refused, no step out, at the approach corner [33m 225347[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: solved hitless — 1636 t, no death on a fresh run [33m 171806[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF = ON, byte-identical (1317 t) [33m 63744[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerWallFlyerDrillKill.train.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 87539[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: EXHAUSTED at wallflyer@48,112 [33m 17547[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: two wallflyers struck where they rest, and the step crosses to L29 with no hit (539 t) [33m 21945[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF (DRILL_EXIT_PASS off): EXHAUSTED at drill@128,160 ("not a body this run can watch die") [33m 15113[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF at the stack defaults (DRILL_EXIT_PASS on): L87 reached with no hit, and the drill arm is never asked [33m 19787[2mms[22m[39m
+     [33m[2m✓[22m[39m ON (the drill arm alone): drill@128,160 killed from its south pre-stance, L87 reached with no hit (354 t) [33m 13146[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerBaitRemoved.train.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 579234[2mms[22m[39m
+     [33m[2m✓[22m[39m L99 east → (48,96), Sword only: OFF refuses on the bait whose body is already gone [33m 95802[2mms[22m[39m
+     [33m[2m✓[22m[39m L99 east → (48,96), Sword only: ON solves hitless into L100 (649 t), the bait counted gone [33m 137302[2mms[22m[39m
+     [33m[2m✓[22m[39m ER c3 (L40 → pit, `CHASER_PASS`): ON goes past the bait — the next wall is the outer bait's stance walk in L43 [33m 346127[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerBaitSubwalkGoal.train.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 660199[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the outer bait's stance walk falls into L43 at t688 hitless and refuses there [33m 333260[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the crossing is the reach-pit walk's — SOLVED in 768 ticks, hitless, into L43 [33m 326936[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[32m41 passed[39m[22m[90m (41)[39m
+[2m   Start at [22m 15:59:49
+[2m   Duration [22m 3534.76s[2m (transform 5.05s, setup 1.81s, import 12.20s, tests 3519.28s, environment 1ms)[22m
+
+EXIT 0
