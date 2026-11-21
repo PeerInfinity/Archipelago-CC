@@ -73,8 +73,24 @@ Mutations:
 Every in-app batch ran on CI. The first full set was at `f2284988b3`: TT 44922782034 and manual `batch=all` 44922784603.
 Every batch was green except the two rows above, and those were this slice's own defect.
 
-**Rows that moved because they had passed only thanks to the overshoot: NONE.** No row needed a test fix, at either the
-normal-speed edge or Instant.
+**Rows that moved because they had passed only thanks to the overshoot: ONE, under Instant (none at the normal-speed
+edge).** It is a test fix in this slice.
+
+- **`tutorial-walk-loops-adventure`** (manual `tutorials` batch). Source: `frontend/modules/tutorials/content/loops/
+  adventureLoopMode.js`, step `run-check`.
+  - The walk ticks Instant and runs the explore loop after loop. It then pauses partway through a loop, drops the
+    explore, queues `Check: Black Castle Gate`, and pressed the run button once.
+  - Whatever the pool held at the pause, Instant used to COMPLETE the check. Now a pool smaller than the check's cost
+    drains, the check fails, and the loop resets and pauses (auto-restart is off). At normal speed the same happens.
+  - So the walk passed or failed on where the pause landed:
+    - green at `65f18ee25d` (manual `tutorials` 44924871859);
+    - red at `07c3bcc5f8` (manual 44937649266, "fails at step 10 of 19 (run-check): its done check never held").
+  - Fix: `run-check` presses **Restart** ("restart the queue from the beginning, refill mana, and run"). The check is
+    paid for from a fresh loop's pool, which the section's own prose asks for ("exploring and checking in the same loop
+    costs more than that"). The now-unused `runQueue` helper is deleted.
+  - Locally at the fix, on port 8140: 3/3 PASSED (10.9 s, 9.7 s, 10.1 s).
+  - The tutorial is `status: 'in-progress'`, so no generated user guide moves.
+  - The substrate's LOGIC did not depend on the overshoot: only the walk's single press did.
 
 At `65f18ee25d` (the sliver fix) the regression job of TT 44924869576 went red once:
 - `test_settings_colorblind_mode_toggle` ("Colorblind symbol not found in Menu region");
@@ -127,7 +143,7 @@ AN-3b landed on main at 14c0386ccf (train 183, AN-3b train commit 7921ff42c8). M
   - `74ae60f575531492ed9eaec1839e1fe3` at 14c0386ccf and at the tip. Main moved it; this slice did not.
 - No committed preset moves. The diff against main touches:
   - `loops/loopState.js` and `loops/instantParity.test.js`;
-  - `tests/testCases/actionNodesTests.js`;
+  - `tests/testCases/actionNodesTests.js` and `tutorials/content/loops/adventureLoopMode.js`;
   - `docs/json/features/loops.md`;
   - `CC/docs/cloud-reports/actionnodes-an3b.md` and this report.
 - Gitlinks: 0 moved.
