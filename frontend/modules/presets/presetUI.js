@@ -1732,7 +1732,7 @@ export class PresetUI {
        * ⛓ S3 — **AND THE BUNDLE'S LEVEL SET GOES TO ITS HOST CACHE**, the same moment and for the same reason:
        * the rules name it (`region_atlas[p].level_set = {set_id, content_hash}`) and carry no body. Held under its
        * own `set_id` WITH its computed content hash (`procgenCore/levelSetReference.js`), so a reader that asks by
-       * the rules' hash is told of a mismatch rather than served the wrong set. ⛔ Nothing plays it yet (S4).
+       * the rules' hash is told of a mismatch rather than served the wrong set. ⛓ S4: the Flash panel's AP load delivers it.
        */
       const levelSets = members.filter((m) => m.kind === 'level-set');
       const heldSets = putLevelSets(levelSets.map((m) => m.doc));

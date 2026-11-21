@@ -91,6 +91,13 @@ import {
 import { GEN_ROOM_TILE_SIZE, generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 import { SeedlingCheckBinding } from './seedlingCheckBinding.js';
 import { SeedlingLevelSetDelivery } from './seedlingLevelSetDelivery.js';
+// ⛓ S4 — the host's held level sets and atlases (both game-neutral, pure; already in the panel's closure through
+// `presetUI.js`, the writer that fills them from a bundle). ⛔ The panel HANDS ITS OWN instances (`levelSets`,
+// `atlases`): this module is reached through a computed URL, so in the bundled build these imports are a SECOND,
+// empty instance. They are only the defaults for a direct (node) caller.
+import { levelSetCache as sharedLevelSetCache } from '../procgenCore/levelSetCache.js';
+import { heldLevelSetOf } from '../procgenCore/levelSetReference.js';
+import { atlasCache as sharedAtlasCache } from '../procgenCore/atlasCache.js';
 import { ATLAS_DIR, atlasIndexPath, atlasPathInIndex, mapDocumentPath, regionAtlasOf } from './mapDocumentPath.js';
 // ⛓ G7 — DEPENDENCY-FREE (it imports nothing), so a static import costs this
 // lazy module one small file and the panel's static closure nothing.
@@ -805,6 +812,28 @@ async function runSeedlingRandomizerLoadSteps({
         delivered: result };
 }
 
+/**
+ * ⛓ S4 — the MAP DOCUMENT of a held set: its own rooms' records, `levels[i] = {...rooms[i].source.record, level: i}`
+ * — the very document the lab compiled the rules from (`seedlingSetAdapter.roomsOfSet`: a `record` room's record,
+ * keyed by its POSITION), on the game's 16-px grid. Every reader downstream (`indexLevels`, `buildPlacementTable`'s
+ * `rooms`, `buildAtlasCheckTable`, the reset's `tileSize`) reads exactly these fields.
+ * ⛔ A room that is not record-sourced is REFUSED BY NAME (thrown → the `assets` refusal): resolving an `embed`/`xml`
+ * room needs the OEL parser, which this lazy module does not carry, and a guessed room is the hazard itself.
+ */
+export function heldSetMapDocument(set) {
+    const levels = (set?.rooms ?? []).map((room, level) => {
+        const record = room?.source?.record;
+        if (!record || typeof record !== 'object' || !Array.isArray(record.entities)) {
+            throw new Error(`the held level set ${JSON.stringify(set?.set_id ?? null)}: rooms[${level}] `
+                + `${JSON.stringify(room?.name ?? null)} is not record-sourced (source: `
+                + `${JSON.stringify(Object.keys(room?.source ?? {}))}) — the player delivers a set's own records only`);
+        }
+        return { ...record, level };
+    });
+    return { schema_version: 1, game: 'seedling', generator: 'held level set', source: { set_id: set.set_id },
+        tile_size: GEN_ROOM_TILE_SIZE, level_count: levels.length, levels };
+}
+
 const defaultFetchJson = async (url) => {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
@@ -847,6 +876,9 @@ export async function loadSeedlingRandomizer({
     fetchJson = defaultFetchJson,
     importModule = defaultImportModule,
     log = () => {},
+    /** ⛓ S4 — the host's held sets and atlases (tests hand their own). */
+    levelSets = sharedLevelSetCache,
+    atlases = sharedAtlasCache,
 } = {}) {
     const url = (rel) => new URL(rel, baseUrl).href;
     const refuse = (eligibility, extra = {}) => ({
@@ -879,9 +911,14 @@ export async function loadSeedlingRandomizer({
     // Read BEFORE the two documents, for both runtimes (this one load is the JS page's and the wasm page's): the
     // vanilla arm would deliver the ORIGINAL 116 rooms under the set's own rules, and the atlas arm cannot bind it.
     // ⛔ Rules that name no atlas id fetch nothing more and are asked nothing: their verdict is today's.
+    // ⛓⛓ S4 — …UNLESS THE HOST HOLDS THE SET THE RULES NAME (`level_set`, same id AND same content hash): then its
+    // OWN rooms are what is delivered below, and the guard has nothing to stand between. Absent or mismatched: G.
+    const held = heldLevelSetOf(rawRules, playerId, levelSets);
+    if (held.ref && !held.set) log(`[ap placement] the rules name level set ${held.ref.set_id} — ${held.why}`, 'warn');
     const guard = await servedRegionAtlas({
         atlasId: playerId === undefined ? null : regionAtlasOf(rawRules, playerId)?.atlas_id,
         fetchIndex: () => fetchJson(url(atlasIndexPath())),
+        heldSet: held.set ? held.ref.set_id : null,
     });
     if (guard.regionAtlas) {
         const named = seedlingRandomizerEligibility({ flashPanel, transport, manifest, ...atlasRooms, ...guard });
@@ -889,21 +926,36 @@ export async function loadSeedlingRandomizer({
     }
 
     // ── (iv) the two documents ──────────────────────────────────────────
-    const mapPath = resolveMapPath(rawRules, playerId);
-    const assets = {
+    // ⛓⛓ S4 — A HELD SET IS BOTH: its rooms are the record set (`embed`'s role), and their records are the map
+    // document's `levels`. Nothing is fetched for it. Everything downstream is unchanged.
+    const heldSet = held.set;
+    const mapPath = heldSet ? { path: null, source: 'held level set' } : resolveMapPath(rawRules, playerId);
+    const assets = heldSet ? {
+        recordSet: { url: `levelSetCache:${held.ref.set_id}`, ok: false, held: held.ref },
+        map: { url: `levelSetCache:${held.ref.set_id}`, ok: false, source: mapPath.source },
+    } : {
         recordSet: { url: url(AP_ASSET_PATHS.recordSet), ok: false },
         map: { url: url(mapPath.path), ok: false, source: mapPath.source },
     };
     let embed = null;
     let mapDoc = null;
-    try {
-        embed = await fetchJson(assets.recordSet.url);
-        assets.recordSet.ok = true;
-    } catch (e) { assets.recordSet.why = e.message; }
-    try {
-        mapDoc = await fetchJson(assets.map.url);
-        assets.map.ok = true;
-    } catch (e) { assets.map.why = e.message; }
+    if (heldSet) {
+        try {
+            mapDoc = heldSetMapDocument(heldSet);
+            embed = heldSet;
+            assets.recordSet.ok = true;
+            assets.map.ok = true;
+        } catch (e) { assets.recordSet.why = e.message; assets.map.why = e.message; }
+    } else {
+        try {
+            embed = await fetchJson(assets.recordSet.url);
+            assets.recordSet.ok = true;
+        } catch (e) { assets.recordSet.why = e.message; }
+        try {
+            mapDoc = await fetchJson(assets.map.url);
+            assets.map.ok = true;
+        } catch (e) { assets.map.why = e.message; }
+    }
 
     if (!assets.recordSet.ok || !assets.map.ok) {
         return refuse(seedlingRandomizerEligibility(
@@ -955,7 +1007,7 @@ export async function loadSeedlingRandomizer({
             // ⛓ R9 slice P4E: the build's `tag` capability, from DATA, and what
             // a delivery needs if the table allocates a tag.
             tagCapable: buildCapabilities.includes(TAG_CAPABILITY),
-            embed, bot,
+            embed, bot, heldSet, atlases,
         });
     }
     if (!eligibility.eligible) return refuse(eligibility, { census, assets });
@@ -978,7 +1030,8 @@ export async function loadSeedlingRandomizer({
             + `these rules and stay VANILLA: ${census.unjoined.join(', ')}`);
     }
 
-    const { set: vanilla } = exporter.vanillaRecordSet(embed, mapDoc);
+    // ⛓ S4 — a held set IS the record set (its rooms are already records); the vanilla join is the served one's.
+    const { set: vanilla } = heldSet ? { set: structuredClone(heldSet) } : exporter.vanillaRecordSet(embed, mapDoc);
     // ⛓⛓ R4b part 2 — THE `bossreport` GUARD. Only a build declaring it reports the nine boss/encounter rows
     // (the seven kills, Fire (32,4), the dark sword (12,1)) and leaves Fire / the dark sword to the host. A build
     // without it grants those itself and never clears the addresses, so its checks would never fire: the rows come
@@ -1241,6 +1294,9 @@ export async function loadSeedlingAtlas({
     tagCapable = false,
     embed = null,
     bot = null,
+    /** ⛓ S4 — the held level set whose rooms these rules name (null: the game's own rooms). */
+    heldSet = null,
+    atlases = sharedAtlasCache,
 } = {}) {
     const url = (rel) => new URL(rel, baseUrl).href;
     const refuse = (why, extra = {}) => ({
@@ -1277,12 +1333,20 @@ export async function loadSeedlingAtlas({
     try {
         const index = await fetchJson(url(atlasIndexPath()));
         const rel = atlasPathInIndex(index, atlasId);
-        if (!rel) {
+        // ⛓ S4 — a HELD set's atlas is not served: it came in the same bundle, and the host cached it.
+        const cached = !rel && heldSet ? atlases.get(atlasId) : null;
+        if (!rel && !cached) {
             return refuse(`atlas: the atlas index lists no atlas ${JSON.stringify(atlasId)} — `
-                + 'the rules name a region atlas this page does not serve');
+                + 'the rules name a region atlas this page does not serve'
+                + (heldSet ? ', and the host holds no atlas under that id' : ''));
         }
-        atlasUrl = url(rel);
-        atlasDoc = await fetchJson(atlasUrl);
+        if (cached) {
+            atlasUrl = `atlasCache:${atlasId}`;
+            atlasDoc = cached;
+        } else {
+            atlasUrl = url(rel);
+            atlasDoc = await fetchJson(atlasUrl);
+        }
     } catch (e) {
         return refuse(`atlas: the region atlas ${JSON.stringify(atlasId)} could not be read — ${e.message}`);
     }
@@ -1339,12 +1403,18 @@ export async function loadSeedlingAtlas({
             + 'and the game\'s own rooms lead where vanilla says');
     }
     let shuffle = null;
-    if (retags.length > 0 || shuffled) {
+    // ⛓⛓ S4 — A HELD SET IS ALWAYS DELIVERED: the rooms the game holds are the ORIGINAL ones, and these rules
+    // describe the set's own.
+    if (heldSet && (!exporter || !validator)) {
+        return refuse('atlas: these rules name a held level set, and the delivery modules were not handed in — '
+            + 'its rooms cannot be delivered, and the game\'s own rooms are not the set\'s');
+    }
+    if (retags.length > 0 || shuffled || heldSet) {
         if (!embed || !exporter || !validator) {
             return refuse('atlas: the build declares `tag` and a location needs one allocated, '
                 + 'but the vanilla record set or the delivery modules were not handed in');
         }
-        const { set: vanilla } = exporter.vanillaRecordSet(embed, mapDoc);
+        const { set: vanilla } = heldSet ? { set: structuredClone(heldSet) } : exporter.vanillaRecordSet(embed, mapDoc);
         const tagged = retags.length > 0 ? rewriter.retagRecordSet(vanilla, retags).set : vanilla;
         shuffle = shuffled ? entrances.applyEntranceShuffle({ rules: rawRules, slot: playerId, set: tagged }) : null;
         if (shuffle?.plan) {
@@ -1354,7 +1424,7 @@ export async function loadSeedlingAtlas({
         set = shuffle ? shuffle.set : tagged;
     }
     // ⛓ An identity shuffle with no retag changes no room: nothing to deliver, the G7 arm byte for byte.
-    if (set && (retags.length > 0 || (shuffle?.retargeted ?? 0) > 0)) {
+    if (set && (heldSet || retags.length > 0 || (shuffle?.retargeted ?? 0) > 0)) {
         invalidation = exporter.apMappingInvalidation(set);
         delivery = new SeedlingLevelSetDelivery({
             planChunks: validator.planLevelSetChunks, bot, log,
@@ -1367,7 +1437,7 @@ export async function loadSeedlingAtlas({
     log(`[ap placement] atlas arm: ${census.regions} real room(s), ${census.bound} of `
         + `${census.locations} location(s) bound where they stand `
         + `${retags.length > 0 ? `(${retags.length} tag(s) written, delivered)`
-            : '(no rewrite, no delivery)'}`
+            : heldSet ? `(the held set ${heldSet.set_id}'s own rooms, delivered)` : '(no rewrite, no delivery)'}`
         + `${census.refused > 0 ? `; ${census.refused} refused by name` : ''}`);
 
     const checkBinding = new SeedlingCheckBinding({

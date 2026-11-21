@@ -44,6 +44,11 @@ import { restoresSavedQueues } from '../savedQueueIsolation.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import { CAMERA_SETTING_KEY, GRAPHICS_SETTING_KEY } from '../../flashPanel/seedlingGraphicsSettings.js';
 import { CUSTOM_SET_NOT_PLAYABLE, unservedAtlasWhy } from '../../flashPanel/seedlingRandomizerEligibility.js';
+// ⛓ S4 — light (each imports nothing heavy): the bundle writer, the host caches, the lab's announce event.
+import { writeBundle } from '../../presets/documentBundle.js';
+import { atlasCache } from '../../procgenCore/atlasCache.js';
+import { levelSetCache } from '../../procgenCore/levelSetCache.js';
+import { LAB_EVENTS } from '../../procgenCore/labProtocol.js';
 
 /**
  * ⛔ The walk helper imports `levelWorld.js`; a static import here would put
@@ -5628,6 +5633,208 @@ for (const [id, withFlashPanel] of [
                 : ', no flash_panel block and the lab\'s map_document label (the S1 shape)')
             + `: the Flash panel starts no game and shows "${CUSTOM_SET_NOT_PLAYABLE}" with the named reason.`,
         testFunction: customSetRow(withFlashPanel),
+        category: seedlingRuntimeCategory(id),
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+// ── ⛓⛓ S4 (seedling-custom-set-arm): a HELD custom set plays ITS OWN rooms, and Edit ▸ opens one back in the lab ──
+// (⚖ Robert 2026-11-20, "Make lab sets playable"). The inverse of the study's probe p5, in the app: the watch page's
+// own compile over the vanilla 116 with ONE tree added to room 10, written as a bundle with its `level-set` and
+// `region-atlas` members, loaded through the Presets panel's file door (`loadDocumentFile` holds both). The game the
+// panel boots is delivered THAT set: room 10 has the tree.
+
+const HELD_TREE = Object.freeze({ type: 'tree', x: 16, y: 80 });
+const S4_APP_URL = (rel) => new URL(rel, document.baseURI).href;
+const s4FetchJson = async (rel) => {
+    const res = await fetch(S4_APP_URL(rel));
+    if (!res.ok) throw new Error(`${rel}: HTTP ${res.status}`);
+    return res.json();
+};
+const hasHeldTree = (record) => (record?.entities ?? [])
+    .some((e) => e.type === HELD_TREE.type && e.x === HELD_TREE.x && e.y === HELD_TREE.y);
+
+/** The watch page's bundle of the tree set (its own deps, compile and atlas door): `{rules, levelSet, atlas}`. */
+async function buildHeldTreeBundle() {
+    const [{ tileTypeForPlacement, SEEDLING_TILE_SIZE }, { compileRegionAtlas }, { stampAtlasIdentity }, { parseOelLevel },
+        SA, { editorVanillaSet }, ID, { emptyOverlay }] = await Promise.all([
+        import(S4_APP_URL('./modules/flashPanel/seedlingSemantics.js')),
+        import(S4_APP_URL('./modules/procgenPipeline/regionAtlasCompiler.js')),
+        import(S4_APP_URL('./modules/procgenPipeline/regionAtlasValidator.js')),
+        import(S4_APP_URL('./modules/seedlingDemo/procgenLevelOel.js')),
+        import(S4_APP_URL('./modules/seedlingDemo/seedlingSetAdapter.js')),
+        import(S4_APP_URL('./modules/seedlingDemo/watchSetEditor.js')),
+        import(S4_APP_URL('./modules/seedlingDemo/watchSetIdentity.js')),
+        import(S4_APP_URL('./modules/seedlingDemo/seedlingSetOverlay.js')),
+    ]);
+    const [vanillaSet, mapDoc, rulesSchema] = await Promise.all([
+        s4FetchJson('./modules/seedlingDemo/fixtures/seedling-vanilla-set.json'),
+        s4FetchJson('./modules/flashPanel/atlases/seedling-map.json'),
+        s4FetchJson('./schema/rules.schema.json'),
+    ]);
+    const deps = { parseOel: parseOelLevel, tileSize: SEEDLING_TILE_SIZE, tileTypeForPlacement, rulesSchema, atlas: ID.WATCH_SET_ATLAS };
+    const set = editorVanillaSet(vanillaSet, mapDoc).set;
+    set.rooms[10].source.record.entities.push({ ...HELD_TREE });
+    const lab = ID.labSetIdentity({ compileRegionAtlas, stampAtlasIdentity });
+    const session = SA.createSetSession(SA.createSeedlingSetAdapter(deps), SA.setRecord(set, emptyOverlay()),
+        { base: { kind: 'set', set_id: set.set_id } });
+    const out = SA.rulesJsonOf(session, deps, { compileRegionAtlas: lab.compileRegionAtlas });
+    return { rules: out.rules, levelSet: SA.downloadSet(session).set, atlas: lab.atlasAtDoor(out.atlas, out.rules) };
+}
+
+/** Load the bundle through the Presets panel's file door (the call a file pick makes). */
+async function loadHeldTreeBundle(tc, built) {
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'presetsPanel' }, 'tests');
+    const presets = await tc.pollForValue(() => {
+        const p = document.getElementById('presets-panel')?.__panel;
+        return p && typeof p.loadDocumentFile === 'function' ? p : null;
+    }, 'the Presets panel is live', 15000, 50);
+    if (!presets) return false;
+    const bytes = await writeBundle([{ kind: 'rules', doc: built.rules }, { kind: 'region-atlas', doc: built.atlas },
+        { kind: 'level-set', doc: built.levelSet }], { jszip: await presets.loadJSZip() });
+    const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+    await presets.loadDocumentFile(new File([bytes], 'held-tree-set.zip', { type: 'application/zip' }));
+    await loaded;
+    await tc.stateManager.pingWorker('after-rules-load', 5000);
+    return true;
+}
+
+/**
+ * Boot the held tree set on `runtime`: the bundle loaded, the panel's AP load OK, and its delivered set the held one.
+ * Returns `{panel, built}` or null (every failure reported).
+ */
+async function heldTreeSetOn(tc, runtime) {
+    levelSetCache.clear();
+    atlasCache.clear();
+    const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+    await settingsManager.updateSetting(RUNTIME_KEY, runtime, { persist: false });
+    const built = await buildHeldTreeBundle();
+    const ref = built.rules.region_atlas['1'].level_set;
+    tc.assertEqual(`[${runtime}] the lab's rules name the bundle's level set and carry the Seedling flash_panel`,
+        `${built.levelSet.set_id}/true`, `${ref?.set_id}/${typeof built.rules.flash_panel?.['1']?.wasm === 'string'}`);
+    tc.reportCondition(`[${runtime}] the set's room 10 has the tree`, hasHeldTree(built.levelSet.rooms[10].source.record));
+    if (!(await loadHeldTreeBundle(tc, built))) return null;
+    tc.assertEqual(`[${runtime}] the host HOLDS the set under the hash the rules name`, 'held',
+        levelSetCache.get(ref.set_id, ref.content_hash).status);
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+    const panel = await tc.pollForValue(() => {
+        const p = getActivePanelInstance();
+        return p?.transport === runtime && p.adapter && p.adapter !== staleAdapter && p._initRuntime === runtime ? p : null;
+    }, `[${runtime}] the flash panel mounted the ${runtime} runtime (a fresh adapter)`, 30000, 250);
+    if (!panel) {
+        tc.log(`[${runtime}] status ${JSON.stringify(document.querySelector('.flash-panel-status')?.textContent)}; log: `
+            + `${(document.querySelector('.flash-panel-log')?.textContent ?? '').split('\n').slice(-15).join(' | ')}`, 'error');
+        return null;
+    }
+    if (runtime === 'wasm') {
+        const start = await tc.pollForValue(() => {
+            if (panel.statusElement?.textContent !== 'click ▶ Start in the game') return null;
+            try { return frameOf(panel)?.document?.querySelector('#btn-start') ?? null; } catch { return null; }
+        }, '[wasm] the panel asks for ▶ Start', 120000, 250);
+        if (!start) return null;
+        start.click();
+    }
+    const done = await tc.pollForValue(() => (panel._apLoadResult ? panel._apLoadResult : null),
+        `[${runtime}] the AP load ran`, runtime === 'wasm' ? 120000 : 60000, 250);
+    if (!done?.ok) {
+        tc.log(`[${runtime}] apLoad ${JSON.stringify(done ?? null)?.slice(0, 400)}; refusal ${JSON.stringify(panel._apLoadRefusal ?? null)}; log: `
+            + `${(document.querySelector('.flash-panel-log')?.textContent ?? '').split('\n').slice(-20).join(' | ')}`, 'error');
+    }
+    tc.reportCondition(`[${runtime}] the AP load delivered and reset (ok)`, !!done?.ok);
+    tc.assertEqual(`[${runtime}] no refusal (G is lifted for a HELD set only)`, null, panel._apLoadRefusal ?? null);
+    const delivered = panel._seedlingRealSet;
+    tc.reportCondition(`[${runtime}] the DELIVERED room 10 has the tree (the held set's own room, not the original)`,
+        hasHeldTree(delivered?.rooms?.[10]?.source?.record));
+    return done?.ok ? { panel, built, delivered } : null;
+}
+
+const heldSetPlaysOwnRooms = (runtime) => async (tc) => {
+    let previous = 'auto';
+    try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try {
+        const up = await heldTreeSetOn(tc, runtime);
+        if (!up) return tc.getOverallResult();
+        const { panel, delivered } = up;
+        let ls = null;
+        try { ls = JSON.parse(panel.adapter.bot('botLevelSet')); } catch { ls = null; }
+        tc.assertEqual(`[${runtime}] the RUNTIME mounted the delivered set (botLevelSet.active, its 116 rooms)`,
+            `${delivered?.set_id}/116`, `${ls?.active ?? null}/${ls?.rooms ?? ls?.table_levels ?? null}`);
+        if (runtime === 'js') {
+            const rt = frameOf(panel)?.__seedlingJsRuntime ?? null;
+            tc.reportCondition('[js] the JS page\'s mounted room 10 has the tree', hasHeldTree(rt?.mounted?.records?.get(10)));
+        }
+        tc.assertEqual(`[${runtime}] Edit ▸ is offered (a held set)`, '', panel.editRoomButton?.style.display ?? null);
+    } catch (e) {
+        tc.reportCondition(`[${runtime}] the held-set row ran without throwing: ${e.message}`, false);
+    } finally {
+        levelSetCache.clear();
+        atlasCache.clear();
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+};
+
+/**
+ * ⛓ Edit ▸ → the lab (lab-7's claim (d), setting its own state): the held tree set, the game moved to room 10, Edit ▸
+ * pressed; the lab's own announce (`procgenLab:levelChanged`, `watchLabPayload`) names room 10 OPEN, its set id the
+ * handed one, and that room's record carries the tree.
+ */
+async function heldSetEditOpensRoomInLab(tc) {
+    let previous = 'auto';
+    try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    let off = () => {};
+    try {
+        const up = await heldTreeSetOn(tc, 'js');
+        if (!up) return tc.getOverallResult();
+        const { panel, built } = up;
+        panel.adapter.teleport({ level: 10, x: 48, y: 48 });
+        const in10 = await tc.pollForCondition(() => {
+            try { return JSON.parse(panel.adapter.bot('botStatus'))?.level === 10; } catch { return false; }
+        }, 'the game is in room 10', 20000, 200);
+        tc.reportCondition('the game is in room 10', !!in10);
+        if (!in10) return tc.getOverallResult();
+        let announced = null;
+        const handler = (data) => {
+            const p = data?.payload;
+            if (p?.substrate === 'seedling' && p.room === 10 && p.record?.set) announced = p;
+        };
+        tc.eventBus.subscribe(LAB_EVENTS.levelChanged, handler, 'tests');
+        off = () => tc.eventBus.unsubscribe?.(LAB_EVENTS.levelChanged, handler, 'tests');
+        const answer = await panel._editHeldSetRoom();
+        tc.assertEqual('Edit ▸ handed room 10 of the held set to the lab', `true/10/${built.levelSet.set_id}`,
+            `${answer?.ok}/${answer?.room}/${answer?.set_id}`);
+        if (!answer?.ok) { tc.log(`Edit ▸: ${answer?.why}`, 'error'); return tc.getOverallResult(); }
+        const seen = await tc.pollForValue(() => announced, 'the lab announces room 10 open', 60000, 250);
+        tc.reportCondition('the lab opened room 10 (its own announce)', !!seen);
+        tc.assertEqual('the lab holds the HANDED set (its set id)', built.levelSet.set_id, seen?.record?.set?.set_id ?? null);
+        tc.reportCondition('the lab\'s room 10 has the tree', hasHeldTree(seen?.record?.set?.rooms?.[10]?.source?.record));
+    } catch (e) {
+        tc.reportCondition(`the Edit ▸ row ran without throwing: ${e.message}`, false);
+    } finally {
+        off();
+        getActivePanelInstance()?._heldSetEditHandle?.close?.();
+        levelSetCache.clear();
+        atlasCache.clear();
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+for (const [id, fn, rt, what] of [
+    ['seedling-js-runtime-held-custom-set-plays-its-rooms', heldSetPlaysOwnRooms('js'), 'JS',
+        'the JS page mounts the delivered set and its room 10 has the tree'],
+    ['seedling-wasm-runtime-held-custom-set-plays-its-rooms', heldSetPlaysOwnRooms('wasm'), 'wasm',
+        'the wasm game mounts the delivered set (botLevelSet.active), no rebuild'],
+    ['seedling-js-runtime-held-custom-set-edit-opens-room-in-lab', heldSetEditOpensRoomInLab, 'JS',
+        'the game moved to room 10, Edit ▸ opens it in the Seedling lab: the lab announces room 10 open, the handed set id, the tree'],
+]) {
+    registerTest({
+        id,
+        name: `Seedling ${rt} runtime: a HELD custom set ${id.endsWith('in-lab') ? '— Edit ▸ opens its room back in the lab' : 'plays its own rooms'}`,
+        description: 'S4 (seedling-custom-set-arm): the watch page\'s bundle of the vanilla 116 + one tree in room 10 '
+            + '(rules, region-atlas, level-set members), loaded through the Presets panel\'s file door; the AP load is '
+            + `delivered the HELD set, so the delivered room 10 has the tree; ${what}.`,
+        testFunction: fn,
         category: seedlingRuntimeCategory(id),
         enabled: false, // off by default — runs only in the test-substrates mode
     });
