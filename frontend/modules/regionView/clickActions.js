@@ -16,7 +16,7 @@
  * `regionActions.js`, plus the few named below) and the click's `ctx`.
  *
  * AN ACTION is `{ id, owner, label, target: 'region'|'location', kind: 'toggle'|'choice', choices?, order?, run,
- *   summary?, choiceLabels? }`.
+ *   summary?, choiceLabels?, initial?, offeredTo? }`.
  *   - `id` is namespaced by its owner: `path.route`, `path.checkAll`, `path.check`, `regions.open`, `flash.teleport`.
  *   - `kind: 'toggle'` is on when the panel's setting for it is `true`. `kind: 'choice'` is on when the setting is a
  *     value (`choices` lists the allowed values), off when it is `false`, `null` or absent.
@@ -24,6 +24,11 @@
  *     actions (`ORDER.panel`, 300, the default). Equal orders run in registration order.
  *   - `summary` (optional, for the strip's collapsed line): a string, or `(value) => string | null`. Default: `label`.
  *   - `choiceLabels` (optional, for the strip): `{ <choice value>: <text> }`. An unlabelled value shows as itself.
+ *   - `initial(panelId)` (optional, CA-S4): the value the action has in a panel whose settings do not name it yet
+ *     (`effectiveValue`). The strip writes it into the panel's settings once (`withInitialValues`, the panel's first
+ *     run with the action); after that the stored value decides. `undefined` = off.
+ *   - `offeredTo(panelId)` (optional, CA-S4): false hides the action from that panel (its strip, its clicks): a
+ *     panel never offers to centre itself. Default: every panel.
  *   - `run(h, ctx)` gets the panel's handles and `{ panelId, target, regionName, locationName?, discovery?, settings,
  *     value }` (`value` = this action's setting). It returns the `regionActions` result shape (`{ ok, … }`).
  *
@@ -47,8 +52,38 @@
  */
 import * as actions from './regionActions.js';
 
-/** The R8 run order: path first, then checks, then panel actions. */
-export const ORDER = Object.freeze({ path: 100, check: 200, panel: 300 });
+/**
+ * The R8 run order: path first, then checks, then panel actions. `select` (CA-S4) runs BEFORE the path: the panel
+ * actions that replaced a `regionGraph:nodeSelected` listener (Flash's region teleport, Discovery's discover), which
+ * the Region Graph published before any action ran, keep that place, so a Graph click calls them in the base's order.
+ */
+export const ORDER = Object.freeze({ select: 50, path: 100, check: 200, panel: 300 });
+
+/**
+ * The generic click events (design §4.3): every map panel publishes one per click, BEFORE its click actions run
+ * (`{ panelId, regionName }` / `{ panelId, regionName, locationName }`). The Region Map since CA-S3, the Region Graph
+ * since CA-S4. A listener that only ever heard one panel filters on `panelId`.
+ */
+export const REGION_CLICKED = 'regionView:regionClicked';
+export const LOCATION_CLICKED = 'regionView:locationClicked';
+
+/** Is a generic click event's payload `data` a click in panel `panelId`? (A listener that hears one map only.) */
+export function isClickFromPanel(data, panelId) {
+    return !!data && data.panelId === panelId;
+}
+
+/**
+ * The `user:locationCheck` `originator` strings of the two map panels' click checks (the Region Graph's
+ * `regionGraph/regionGraphOriginators.js`, the Region Map's `regionMap/regionMapClickActions.js`; pinned equal to them
+ * by `clickActions.test.js`). Flash's "TP on UI click" box ignores a check with one of them (⚖ user,
+ * 2026-11-20T16:29:00Z: a map click teleports only through the map's own `flash.teleport*` option).
+ */
+export const MAP_CLICK_ORIGINATORS = Object.freeze(['RegionGraphCheck', 'RegionGraphBulkCheck', 'regionMapCheck', 'regionMapBulkCheck']);
+
+/** Is `originator` one of the two map panels' click checks? */
+export function isMapClickOriginator(originator) {
+    return MAP_CLICK_ORIGINATORS.includes(originator);
+}
 
 /** The `source` prefix of every built-in path move (R7). `loops/loopModeExemptions.js` plans on it. */
 export const PATH_SOURCE_PREFIX = 'regionView-path';
@@ -99,7 +134,7 @@ export function onClickActionsChanged(listener) {
  */
 export function registerClickAction(desc) {
     if (!desc || typeof desc !== 'object') throw new Error('registerClickAction: a descriptor object is required');
-    const { id, owner, label, target, kind, choices, order, run, summary, choiceLabels } = desc;
+    const { id, owner, label, target, kind, choices, order, run, summary, choiceLabels, initial, offeredTo } = desc;
     if (typeof id !== 'string' || !id) throw new Error('registerClickAction: `id` must be a non-empty string');
     if (typeof owner !== 'string' || !owner) throw new Error(`registerClickAction(${id}): \`owner\` must be a non-empty string`);
     if (!id.startsWith(`${owner}.`)) {
@@ -118,12 +153,16 @@ export function registerClickAction(desc) {
     if (choiceLabels !== undefined && (choiceLabels === null || typeof choiceLabels !== 'object')) {
         throw new Error(`registerClickAction(${id}): \`choiceLabels\` must be an object`);
     }
+    if (initial !== undefined && typeof initial !== 'function') throw new Error(`registerClickAction(${id}): \`initial\` must be a function`);
+    if (offeredTo !== undefined && typeof offeredTo !== 'function') {
+        throw new Error(`registerClickAction(${id}): \`offeredTo\` must be a function`);
+    }
     const held = registry.get(id);
     if (held) {
         throw new Error(`registerClickAction: duplicate id "${id}" (already registered by "${held.desc.owner}")`);
     }
     const frozen = Object.freeze({ id, owner, label: label ?? id, target, kind, choices, order: order ?? ORDER.panel, run,
-        summary, choiceLabels: choiceLabels ? Object.freeze({ ...choiceLabels }) : undefined });
+        summary, choiceLabels: choiceLabels ? Object.freeze({ ...choiceLabels }) : undefined, initial, offeredTo });
     registry.set(id, { desc: frozen, seq: seq++ });
     notifyChanged();
     return frozen;
@@ -141,12 +180,52 @@ export function getClickAction(id) {
     return registry.get(id)?.desc ?? null;
 }
 
-/** The registered actions for `target`, in run order (`order`, then registration order). */
-export function listClickActions(target) {
+/** Is `desc` offered to panel `panelId`? (No `offeredTo`, or no panel named: yes.) */
+export function isOfferedTo(desc, panelId) {
+    return panelId == null || typeof desc.offeredTo !== 'function' || desc.offeredTo(panelId) !== false;
+}
+
+/**
+ * The registered actions for `target`, in run order (`order`, then registration order). With `panelId`, only those
+ * offered to that panel (`offeredTo`).
+ */
+export function listClickActions(target, panelId = null) {
     return [...registry.values()]
-        .filter((e) => e.desc.target === target)
+        .filter((e) => e.desc.target === target && isOfferedTo(e.desc, panelId))
         .sort((a, b) => (a.desc.order - b.desc.order) || (a.seq - b.seq))
         .map((e) => e.desc);
+}
+
+/**
+ * The value action `desc` has for panel `panelId` in `wanted` (the panel's `settings[target]`): the stored value when
+ * `wanted` names the id (even `false`), else `desc.initial(panelId)` (CA-S4; `undefined` when there is none).
+ */
+export function effectiveValue(desc, panelId, wanted) {
+    if (wanted && Object.prototype.hasOwnProperty.call(wanted, desc.id)) return wanted[desc.id];
+    return typeof desc.initial === 'function' ? desc.initial(panelId) : undefined;
+}
+
+/**
+ * The panel's settings with every registered, offered action it does not name yet set to its `initial(panelId)` (one
+ * that answers `undefined` stays absent). → `{ settings, added: [{ target, id, value }] }`; `settings` is `settings`
+ * itself when nothing was added, else a NEW object (nothing is dropped or changed). The strip saves it once.
+ */
+export function withInitialValues(panelId, settings) {
+    if (!settings || typeof settings !== 'object') return { settings, added: [] };
+    const added = [];
+    let next = settings;
+    for (const target of TARGETS) {
+        const wanted = settings[target] ?? {};
+        for (const desc of listClickActions(target, panelId)) {
+            if (Object.prototype.hasOwnProperty.call(wanted, desc.id) || typeof desc.initial !== 'function') continue;
+            const value = desc.initial(panelId);
+            if (value === undefined) continue;
+            if (next === settings) next = { ...settings };
+            next[target] = { ...(next[target] ?? {}), [desc.id]: value };
+            added.push({ target, id: desc.id, value });
+        }
+    }
+    return { settings: next, added };
 }
 
 /** Is `value` an "on" setting for `desc`? A toggle: `true`. A choice: any value but `false` / `null` / absent. */
@@ -164,7 +243,8 @@ export function isOn(desc, value) {
  * @param {object} h - the panel's handles (see the file header)
  * → { ran: false, reason: 'disabled' | 'no-settings' }
  *   | { ran: true, results: [{ id, owner, result }], skipped: [{ id, reason: 'unregistered' }] }
- * An enabled id with no registered action is skipped and reported; `settings` keeps it.
+ * An enabled id with no registered action is skipped and reported; `settings` keeps it. An action the panel's settings
+ * do not name runs by its `initial(panelId)` (`effectiveValue`); one not offered to the panel never runs.
  */
 export function runClickActions(panelId, target, ctx, settings, h) {
     if (!TARGETS.includes(target)) throw new Error(`runClickActions: unknown target "${target}"`);
@@ -173,15 +253,15 @@ export function runClickActions(panelId, target, ctx, settings, h) {
     const wanted = settings[target] ?? {};
     const results = [];
     const skipped = [];
-    const registered = listClickActions(target);
+    const registered = listClickActions(target, panelId);
     const known = new Set(registered.map((d) => d.id));
     for (const [id, value] of Object.entries(wanted)) {
-        if (known.has(id)) continue;
+        if (known.has(id) || registry.has(id)) continue;
         if (value === false || value === null || value === undefined) continue;
         skipped.push({ id, reason: 'unregistered' });
     }
     for (const desc of registered) {
-        const value = wanted[desc.id];
+        const value = effectiveValue(desc, panelId, wanted);
         if (!isOn(desc, value)) continue;
         const result = desc.run(h, { ...ctx, panelId, target, settings, value });
         results.push({ id: desc.id, owner: desc.owner, result });
@@ -350,6 +430,33 @@ export const LEGACY_REGION_GRAPH_CLICK_DEFAULTS = Object.freeze({
 
 /** The Regions panel's "open at the region" action id (registered by the Regions panel, CA-S4). */
 export const REGIONS_OPEN_ID = 'regions.open';
+
+/**
+ * The panel-owned actions CA-S4 added, by id (each registered by its owner's module). Their first value is PER PANEL
+ * (`initial(panelId)`), so the Region Map's first-run copy of the Region Graph's config (⚖ R4) leaves them out
+ * (`withoutPerPanelInitials`) and each panel takes its own: ⚖ user 2026-11-20T16:29:00Z, *"Per-map option
+ * (Recommended)"*: the Graph's teleport starts with the Flash box's setting, the Map's starts OFF.
+ */
+export const PANEL_ACTION_IDS = Object.freeze({
+    flashTeleport: 'flash.teleport',                 // region (Flash panel)
+    flashTeleportLocation: 'flash.teleportLocation', // location (Flash panel)
+    discover: 'discovery.discover',                  // region (Discovery)
+    regionsScrollTo: 'regions.scrollTo',             // location (Regions panel)
+    graphCentre: 'regionGraph.centre',               // region (Region Graph; offered to the other map)
+    mapCentre: 'regionMap.centre',                   // region (Region Map; offered to the other map)
+});
+
+/** `settings` without the `PANEL_ACTION_IDS` (a new object; every other id kept). The Map's first-run copy. */
+export function withoutPerPanelInitials(settings) {
+    if (!settings || typeof settings !== 'object') return settings;
+    const ids = new Set(Object.values(PANEL_ACTION_IDS));
+    const next = { ...settings };
+    for (const target of TARGETS) {
+        if (!next[target] || typeof next[target] !== 'object') continue;
+        next[target] = Object.fromEntries(Object.entries(next[target]).filter(([id]) => !ids.has(id)));
+    }
+    return next;
+}
 
 /**
  * The one-time migration (design §4.4) from the seven booleans to a `clickActions` object, preserving today's

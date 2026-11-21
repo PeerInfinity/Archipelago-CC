@@ -10,8 +10,9 @@ import { dirname, join } from 'node:path';
 import { ActionNodesRuntime, getActionNodesRuntime } from './actionNodesRuntime.js';
 import { hopsBetween, planLiveLoop, plannerModelOf, routeOfPlan } from './actionLoopBot.js';
 import { playLiveToGoal } from './actionLiveSim.js';
-import { PLAN_KINDS, planLoop } from './actionPlanner.js';
-import { loopStartState, perform, isReached } from './actionModel.js';
+import { PLAN_KINDS, planLoop, playToGoal } from './actionPlanner.js';
+import { buildActionModel, loopStartState, perform, isReached } from './actionModel.js';
+import { placementsFromRules } from './actionGraphCompiler.js';
 import { substrateRegistryEntry } from './actionNodesLibrary.js';
 import { ResourceLedger } from '../resourceChannels/resourceLedger.js';
 
@@ -20,6 +21,7 @@ const RULES = JSON.parse(readFileSync(join(HERE, '../../presets/action_nodes_exa
 const P = '1';
 const BLOCK = RULES.action_nodes[P];
 const START_REGION = RULES.start_regions[P].default[0];
+const GRAPH = JSON.parse(readFileSync(join(HERE, '../../..', RULES.procgen_metadata[P].graph_path), 'utf8'));
 
 function loaded() {
     const rt = new ActionNodesRuntime({ ledger: () => new ResourceLedger(), publish: () => {}, dispatch: () => {} });
@@ -131,5 +133,38 @@ describe('⛓ the live path played headless through the runtime gate reaches the
         expect(new Set(all).size).toBe(all.length);
         const locations = Object.values(RULES.preset_sidecars[P]).map((s) => s.playable_payload.location).filter(Boolean);
         for (const c of all) expect(locations).toContain(c);
+    });
+});
+
+describe('⛓ AN-3b, limit (b): the mid-loop replan — the live path takes the pure planner\'s loop count', () => {
+    it('the live path reaches the goal in as many loops as playToGoal (the example: 2; AN-3a\'s live path took 3)', () => {
+        const live = playLiveToGoal(RULES);
+        const model = buildActionModel(GRAPH);
+        const pure = playToGoal(model, { placements: placementsFromRules(RULES, model, P) });
+        expect(live.reachedGoal).toBe(true);
+        expect(pure.reachedGoal).toBe(true);
+        expect(live.loops.length).toBe(pure.loops.length);
+        expect(live.loops.length).toBe(2);
+        // the replan happened in loop 1, after the first check's item, and its lines say so
+        expect(live.loops[0].replans).toBeGreaterThan(0);
+        expect(live.loops[0].lines.some((l) => l.startsWith('(replan) '))).toBe(true);
+        // and its lines are the pure planner's, line for line
+        expect(live.loops[0].lines).toEqual(pure.loops[0].lines);
+    });
+
+    it('continueFrom: the rest of the loop from the live state, routed from the player\'s node (no Menu hop)', () => {
+        const rt = getActionNodesRuntime();
+        rt.setEnv({ ledger: () => new ResourceLedger(), publish: () => {}, dispatch: () => {} });
+        rt.loadWorld(RULES, P);
+        const first = substrateRegistryEntry.loopBot.planLoop({ startRegion: START_REGION });
+        const firstAct = first.path.find((e) => e.type === 'customAction').params.nodeId;
+        rt.perform(firstAct);
+        const rest = substrateRegistryEntry.loopBot.planLoop({ startRegion: START_REGION, maxMana: 1000,
+            continueFrom: { region: firstAct, mana: 1000 } });
+        expect(rest.path.length).toBeGreaterThan(0);
+        expect(rest.path.some((e) => e.sourceRegion === START_REGION)).toBe(false);
+        const firstMove = rest.path.find((e) => e.type === 'regionMove');
+        if (firstMove) expect(firstMove.sourceRegion).toBe(firstAct);
+        rt.unload();
     });
 });

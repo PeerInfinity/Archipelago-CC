@@ -224,7 +224,7 @@ describe('2. the editor bakes and lowers; the payload carries the copy', () => {
             try { substrateRegistryEntry.deserializeWorld({ ...fresh(), tileKinds: list }); } catch (e) { return e; }
             return null;
         };
-        for (const pass of [DEFAULT_TERRAIN_PASS, 'one-way']) {
+        for (const pass of [DEFAULT_TERRAIN_PASS, 'sink']) {
             const e = refused([{ ...a, kind: RUG, pass }]);
             expect(e, pass).toBeInstanceOf(MazeTileKindError);
             expect(e.message).toMatch(new RegExp(`entry 0: pass "${pass}" is not one a payload writes`));

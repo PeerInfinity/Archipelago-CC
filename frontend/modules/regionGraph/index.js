@@ -2,6 +2,10 @@ import { RegionGraphUI } from './regionGraphUI.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import eventBus from '../../app/core/eventBus.js';
 import { clickActionsSchemaEntry } from './clickActionsSettings.js';
+import { makeRegionGraphCentreAction } from './regionGraphCentreAction.js';
+import {
+  registerClickAction, unregisterClickAction, REGION_CLICKED, LOCATION_CLICKED, PANEL_ACTION_IDS,
+} from '../regionView/clickActions.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -28,7 +32,21 @@ let _accessibilityVisibilityFilter = null; // () => boolean (true = show colors)
 let _keyForwarder = null;            // (event) => void — forward keydown events to another module
 let _panelInstances = new Set();     // all live RegionGraphUI instances
 
-export function registerPanelInstance(instance) { _panelInstances.add(instance); }
+/**
+ * A Region Graph panel was created (its constructor registered it, before it takes the pending overlay provider).
+ * Additive, for an overlay provider that must reach EVERY panel, a reopened one included (slice AN-3b): the pending
+ * slot below serves only the first panel created after a registration, so a closed and reopened panel had no cards
+ * until the owner registered again. ActionNodes re-registers its node card on this event.
+ */
+export const REGION_GRAPH_PANEL_MOUNTED = 'regionGraph:panelMounted';
+export function registerPanelInstance(instance) {
+  _panelInstances.add(instance);
+  try {
+    getModuleEventBus().publish(REGION_GRAPH_PANEL_MOUNTED, { panelCount: _panelInstances.size });
+  } catch (e) {
+    logger.warn('regionGraph:panelMounted could not be published', e);
+  }
+}
 export function unregisterPanelInstance(instance) { _panelInstances.delete(instance); }
 export function getPendingOverlayProvider() {
   const p = _pendingOverlayProvider;
@@ -65,6 +83,12 @@ export function register(registrationApi) {
   registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
   registrationApi.registerEventBusPublisher('regionGraph:nodeSelected');
+  // ⛓ CA-S4: the generic click events (design §4.3), `{ panelId: 'regionGraph', regionName, locationName? }`, and the
+  // Regions panel's `regions.scrollTo` (a location click's action, published on THIS bus).
+  registrationApi.registerEventBusPublisher(REGION_CLICKED);
+  registrationApi.registerEventBusPublisher(LOCATION_CLICKED);
+  registrationApi.registerEventBusPublisher('ui:navigateToLocation');
+  registrationApi.registerEventBusPublisher(REGION_GRAPH_PANEL_MOUNTED);
 
   registrationApi.registerPublicFunction('regionGraph', 'registerNodeOverlayProvider', (providerOrCallback) => {
     // If panels already exist, register directly; otherwise stash for later
@@ -122,16 +146,9 @@ export function register(registrationApi) {
   registrationApi.registerSettingsSchema({
     type: 'object',
     properties: {
-      // ⛓ What a click runs (CA-S2): the "On click" strip's settings, migrated once from the seven old keys.
+      // ⛓ What a click runs (CA-S2): the "On click" strip's settings, migrated once from the seven old keys. The last
+      // old key, `addLocationsToPath`, left the schema in CA-S4 (the Regions panel reads `clickActions` now).
       clickActions: clickActionsSchemaEntry(),
-      // The one old "On Region Node Click" key kept (CA-S3 removed the other six). The Region Graph no longer reads it
-      // (its `clickActions` does), but the Regions panel's own location clicks do (`regions/regionBlockBuilder.js`),
-      // and a Region Graph strip save mirrors it (`clickActionsSettings.js`), until CA-S4.
-      addLocationsToPath: {
-        type: 'boolean',
-        default: false,
-        label: 'Add locations to path on click',
-      },
       locationVisibility: {
         type: 'string',
         default: 'hover',
@@ -150,6 +167,11 @@ export function initialize(mId, priorityIndex, initializationApi) {
   moduleDispatcher = initializationApi.getDispatcher();
   _moduleEventBus = initializationApi.getEventBus();
   moduleId = mId;
+
+  // ⛓ CA-S4: "centre the Region Graph on it", for the OTHER map's "On click" strip (off by default).
+  try { registerClickAction(makeRegionGraphCentreAction(() => [..._panelInstances])); }
+  catch (e) { logger.warn(`regionGraph.centre not registered: ${e.message}`); }
+  return () => { unregisterClickAction(PANEL_ACTION_IDS.graphCentre); };
 }
 
 export function postInitialize(initializationApi) {

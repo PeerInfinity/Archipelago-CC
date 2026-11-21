@@ -11,8 +11,7 @@
         "location": {
           "path.check": "now"
         }
-      },
-      "addLocationsToPath": false
+      }
     }
   }
 }

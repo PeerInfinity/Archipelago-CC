@@ -13,7 +13,6 @@
           "path.check": "now"
         }
       },
-      "addLocationsToPath": false,
       "forceHideLocations": true,
       "forceHideEdgeLabels": true
     }

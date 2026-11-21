@@ -9,7 +9,7 @@ Report: `CC/docs/region-map/step2-view-model.md`.
 | `regionViewModel.js` | Pure functions of (snapshot, staticData, discovery context): `isRegionReachable`, `locationState`, `locationCounts`, `regionInteriorState`, `regionColorState`, `exitState`, `regionDiscovery` / `locationDiscovery` / `exitDiscovery` (the ONE hide/placeholder decision), `displayGroupsOf` + `aggregateCounts` / `aggregateVisibility` | Region Graph (`graphDataManager.js`), `regionViewState.js` |
 | `regionViewState.js` | `createRegionViewState(handles)`: subscribes to the Region Graph's triggers, recomputes at most once per animation frame, `get()` a frozen view, `subscribe`, `refresh`, `dispose` | Region Map (step 3b). The Region Graph keeps its own wiring |
 | `regionActions.js` | Moves (`planDirectMove` + `publishRegionMove`, the ⛓ restart step), path edits (add, overwrite; always all the way), location checks (single, bulk), select/show publishes. Explicit handles in, a result out (`{ ok: false, reason: 'no-path' }`). The one-step moves and option left in CA-S3 with their last caller | `clickActions.js`; Region Graph (`navigationManager.js`, `graphInteractionManager.js`); Region Map (`regionMap/regionMapClickActions.js`) |
-| `clickActions.js` | The click-action registry: which named actions a click on a region or a location RUNS, per panel. `registerClickAction` / `unregisterClickAction` / `listClickActions` / `getClickAction` / `onClickActionsChanged`, `runClickActions`, the built-in path actions, `routeStatusText` / `clickStatusOf`, `migrateRegionGraphClickKeys` / `defaultClickActions` | Region Graph (CA-S2: `graphInteractionManager.js`); Region Map (CA-S3: `regionMap/regionMapClickActions.js`); the Regions panel (`regions/regionsClickActions.js`, `regions.open`) |
+| `clickActions.js` | The click-action registry: which named actions a click on a region or a location RUNS, per panel. `registerClickAction` / `unregisterClickAction` / `listClickActions` / `getClickAction` / `onClickActionsChanged`, `runClickActions`, the built-in path actions, `routeStatusText` / `clickStatusOf`, `migrateRegionGraphClickKeys` / `defaultClickActions` | Region Graph (CA-S2: `graphInteractionManager.js`); Region Map (CA-S3: `regionMap/regionMapClickActions.js`); the panel-owned actions (CA-S4: Regions, Flash, Discovery, the two centre actions; see below); apcalc and vibeCodingSim (the generic event) |
 | `clickActionsUI.js` | The shared "On click" strip: `mountClickActionsStrip({ panelId, container, getSettings, saveSettings })`. Renders the registry generically, edits a panel's `clickActions` | Region Graph (CA-S2); Region Map (CA-S3) |
 
 ## Rules
@@ -37,14 +37,20 @@ What a click on a map panel DOES is a list of named **actions**, owned by panels
 saying which of them a click runs. It replaces the Region Graph's seven "On Region Node Click" checkboxes.
 
 **An action** is `{ id, owner, label, target: 'region'|'location', kind: 'toggle'|'choice', choices?, order?, run(h, ctx),
-summary?, choiceLabels? }`.
+summary?, choiceLabels?, initial?, offeredTo? }`.
 
 - The id is namespaced by its owner (`path.route`, `regions.open`, `flash.teleport`). A duplicate id throws, naming
   the owner that holds it.
 - `run` gets the panel's handles and `{ panelId, target, regionName, locationName?, discovery?, settings, value }`,
   and returns the `regionActions` result shape.
 - **Run order** (R8): `order` = `ORDER.path` (100), then `ORDER.check` (200), then panel actions (`ORDER.panel`,
-  300, the default). Equal orders run in registration order.
+  300, the default). Equal orders run in registration order. `ORDER.select` (50, CA-S4) runs BEFORE the path: the
+  panel actions that replaced a `regionGraph:nodeSelected` listener (Flash's region teleport, Discovery's discover),
+  which ran before any action because the Graph published that event first.
+- `initial(panelId)` (CA-S4): the value the action has in a panel whose settings do not name it (`effectiveValue`).
+  The strip writes it ONCE (`withInitialValues`, the strip's `seed()`), after which the stored value decides.
+- `offeredTo(panelId)` (CA-S4): `false` hides the action from that panel's strip and clicks (a panel never offers to
+  centre itself).
 - `summary` (a string, or `(value) => string`) is the action's word in the strip's collapsed line (default: `label`);
   `choiceLabels` (`{ value: text }`) labels a choice's values in the strip. Both are optional and display-only.
 - `onClickActionsChanged(listener)` tells a listener after every register / unregister (a plain listener list, no
@@ -102,10 +108,37 @@ on a region and a location click: the same `regionActions` calls, with the same 
 (and the order between the play and Regions-panel channels, R8). The rows with `movePlayerOneStep` true are classified
 there: they are what the removal changes.
 
+## The panel-owned actions (CA-S4, design §4.2)
+
+Each is registered by its owner's module (a panel that is not loaded registers nothing) and starts per panel
+(`initial`); `PANEL_ACTION_IDS` names them, and the Region Map's first-run copy of the Graph's config leaves them out
+(`withoutPerPanelInitials`) so each panel seeds its own.
+
+| Id | Owner (file) | Target | Order | Graph starts | Map starts | Run |
+|---|---|---|---|---|---|---|
+| `regions.open` | Regions (`regions/regionsClickActions.js`, CA-S2) | region | panel | migrated (`showRegionInPanel`) | the Graph's, copied | Show All off when the route edits the path, then `ui:activatePanel` + `ui:navigateToRegion` |
+| `regions.scrollTo` | Regions (same file) | location | panel | off | off | `ui:activatePanel` + `ui:navigateToLocation` |
+| `flash.teleport` | Flash (`flashPanel/flashClickActions.js`) | region | select | the "TP on UI click" box at the seed (normally unticked: off) | off | `_teleportToRegion` |
+| `flash.teleportLocation` | Flash (same file) | location | panel | the box at the seed | off | `_teleportToLocation` |
+| `discovery.discover` | Discovery (`discovery/discoveryClickActions.js`) | region | select | on (today's listener) | off | `handleRegionClicked`: discovers only with `enableDiscoveryMode` AND `clickDiscoversRegion` (loop mode: off) |
+| `regionGraph.centre` | Region Graph (`regionGraph/regionGraphCentreAction.js`) | region | panel | not offered | off | animate every Graph onto the node |
+| `regionMap.centre` | Region Map (`regionMap/regionMapClickActions.js`) | region | panel | off | not offered | `RegionMapUI.centreOnRegion` |
+
+Flash's actions are registered while its game can teleport (`gameConfig.teleport`) and unregistered on teardown.
+⚖ user 2026-11-20T16:29:00Z, *"Per-map option (Recommended)"*: a map click teleports only through its own option; the
+box keeps the location checks of every OTHER panel (`isMapClickOriginator` filters the two maps' originators,
+`MAP_CLICK_ORIGINATORS`).
+
+**The generic click events** (`REGION_CLICKED` / `LOCATION_CLICKED`, design §4.3): `regionView:regionClicked`
+`{ panelId, regionName }` and `regionView:locationClicked` `{ panelId, regionName, locationName }`, published by both
+map panels (the Region Map since CA-S3, the Region Graph since CA-S4) on every click, before the actions. apcalc and
+vibeCodingSim listen to `regionView:regionClicked` FILTERED to `panelId === 'regionGraph'` (`isClickFromPanel`): they
+hear what they heard before. `regionGraph:nodeSelected` is still published until CA-S5.
+
 ## The "On click" strip (`clickActionsUI.js`)
 
-`mountClickActionsStrip({ panelId, container, getSettings, saveSettings, doc? })` → `{ element, render, setExpanded,
-isExpanded, destroy }`. The host keeps its `clickActions` in memory (`getSettings()` is synchronous) and stores what
+`mountClickActionsStrip({ panelId, container, getSettings, saveSettings, doc? })` → `{ element, render, seed,
+setExpanded, isExpanded, destroy }`. The host keeps its `clickActions` in memory (`getSettings()` is synchronous) and stores what
 `saveSettings(next)` hands it (always a new object). It knows no panel and no action by name:
 
 - **Collapsed:** one line — `On click: extend path · Regions — location: check` — and the ⏸ master switch
@@ -116,10 +149,16 @@ isExpanded, destroy }`. The host keeps its `clickActions` in memory (`getSetting
 - **Unknown ids are kept.** An enabled id with no registered action (its panel is not loaded) shows greyed out,
   `<id>: <value> (not loaded)`; an edit elsewhere never drops it.
 - It re-renders on `onClickActionsChanged`; the host calls `render()` when its settings change from outside.
+- **Per panel (CA-S4):** it lists only the actions offered to `panelId`, each by its effective value (`initial` for one
+  the settings do not name). `seed()` writes those initial values once, as `saveSettings(next, { seeded: true })`; the
+  host calls it after its own load lands, and from then on a registration seeds the new action. A seeded save keeps a
+  session override session-only (`hasOverride`), so an in-app row's own click settings are not cleared.
 
 ## Tests
 
 `regionViewModel.test.js`, `regionViewState.test.js`, `clickActions.test.js`, `clickActions.equivalence.test.js`,
+`panelClickActions.test.js` and `panelClickActions.equivalence.test.js` (CA-S4: the panel-owned actions, and base vs tip
+with the four old listeners kept verbatim in `legacyNodeSelectedListeners.testkit.js`),
 `clickActionsUI.test.js` (the strip, on `procgenCore/fakeEditorDom.testkit.js`), `regionActions.test.js` (it carries
 `regionGraph/navigationManager.restart.test.js`'s restart cases too), and `regionGraph/regionGraphDispatch.test.js`
 (the Region Graph's adopted handlers still dispatch through its own `moduleDispatcher`, with its originators).

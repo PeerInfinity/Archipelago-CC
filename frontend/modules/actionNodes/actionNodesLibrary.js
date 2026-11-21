@@ -167,7 +167,10 @@ export const substrateRegistryEntry = Object.freeze({
         planLoop: (context = {}) => {
             const rt = getActionNodesRuntime();
             if (!rt.isLoaded()) return { kind: 'unreachable', reason: 'no ActionNodes world is loaded', path: [], lines: [] };
-            return planLiveLoop({ ...context, model: rt.model });
+            // AN-3b: a continuation (`context.continueFrom`) plans the rest of the running loop from the runtime's
+            // live counts, stats and resources.
+            const continueFrom = context.continueFrom ? { ...context.continueFrom, state: rt.liveState() } : null;
+            return planLiveLoop({ ...context, model: rt.model, continueFrom });
         },
     }),
     sharing: Object.freeze({

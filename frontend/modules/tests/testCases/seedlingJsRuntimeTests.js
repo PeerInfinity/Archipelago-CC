@@ -5310,13 +5310,19 @@ const toolsRestartAndTeleport = (runtime) => async (tc) => withRuntimeRestored(t
         tc.assertEqual(`[${runtime}] no warning and no location check from the teleport`, `${pre.warnings}/${pre.locationChecks}`,
             `${tp?.warnings ?? null}/${tp?.locationChecks ?? null}`);
 
-        // ── "TP on UI click": a region-graph click into the dungeon, which the start has no door to ──
-        if (tpCheckbox) tpCheckbox.checked = true;
-        // the region graph's own click (`graphInteractionManager`): published as its module, the registered publisher
-        tc.eventBus.publishAs('regionGraph:nodeSelected', { nodeId: TOOLS_DUNGEON, data: {} }, 'regionGraph');
+        // ── A MAP CLICK'S TELEPORT into the dungeon, which the start has no door to. ⛓ CA-S4 (⚖ user
+        // 2026-11-20T16:29:00Z, "Per-map option"): through the Region Graph's registered `flash.teleport` click action
+        // (the "On click" strip's option), as a Graph click with only that action on runs it; the box is off and
+        // plays no part (a map click no longer teleports through it). ──
+        if (tpCheckbox) tpCheckbox.checked = false;
+        const { runClickActions } = await import('../../regionView/clickActions.js');
+        const clicked = runClickActions('regionGraph', 'region', { regionName: TOOLS_DUNGEON },
+            { enabled: true, region: { 'flash.teleport': true }, location: {} }, {});
+        const tpRun = clicked?.results?.find((r) => r.id === 'flash.teleport');
+        tc.assertEqual(`[${runtime}] the Graph's flash.teleport action ran`, 'flash.teleport/true', `${tpRun?.id}/${tpRun?.result?.ok}`);
         const dungeon = await toolsSettledIn(tc, `[${runtime}] the region-graph teleport reached the dungeon`, TOOLS_DUNGEON, 3);
         tc.log(`[${runtime}] REGION CLICK ${JSON.stringify({ ...(dungeon ?? toolsFacts()), verdict: glue.lastTeleport })}`);
-        tc.reportCondition(`[${runtime}] TP on UI click into ${TOOLS_DUNGEON} (no door from the start): gameState, the binding and the game reach it`, !!dungeon);
+        tc.reportCondition(`[${runtime}] a Graph click's flash.teleport into ${TOOLS_DUNGEON} (no door from the start): gameState, the binding and the game reach it`, !!dungeon);
         tc.assertEqual(`[${runtime}] no warning from the region-graph teleport`, pre.warnings, toolsFacts().warnings);
 
         // ── ⛓ THE ORDERING WITNESS (rules-4's review): the binding's no-door arrival teleport goes first, the spot
@@ -5383,12 +5389,164 @@ for (const [runtime, fn] of [['js', seedlingJsRuntimeToolsRestartTeleport], ['wa
         description: `On seedling_atlas with flashPanel.runtime = ${runtime}: the Menu's Restart from the owl's nest sets the reference spot `
             + 'and Tools ▸ Restart lands on it (the glue\'s own handler re-took the hop). Then a WALKED exit (the owl\'s nest stairs, '
             + 'by keys) against Tools ▸ Go to the spot it landed on: the same AP region in gameState and the binding, the same spot, '
-            + 'no door named, no path entry, no warning. Then TP on UI click into the dungeon (no door from the start) reaches it.',
+            + 'no door named, no path entry, no warning. Then a Graph click\'s flash.teleport action (CA-S4) into the dungeon (no door from the start) reaches it.',
         testFunction: fn,
         category: seedlingRuntimeCategory(`seedling-${runtime}-runtime-tools-restart-teleport`),
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+// ── ⛓ CA-S4: A MAP CLICK TELEPORTS ONLY THROUGH THAT MAP'S OWN OPTION (js) ──────────────────────────────────────────
+//
+// ⚖ user, session 84c8ab35, 2026-11-20T16:29:00Z, "Per-map option (Recommended)": each map's "On click" strip has
+// its own "Teleport in Flash" (`flash.teleport`); the Region Graph's starts with the current box setting, the Region
+// Map's starts OFF; Flash's "TP on UI click" box keeps working only for clicks outside the two maps. Four legs, each
+// setting its own state (session-only click settings, the box put back):
+//   1. GRAPH FIRST RUN: with the Graph's config naming no `flash.teleport`, the box TICKED at the moment the action
+//      registers seeds the Graph's value `true`; with the box then UNTICKED a Graph click teleports (the strip decides);
+//      the Graph's value set `false` and the box ticked, a Graph click does not (the box does not);
+//   2. MAP DEFAULT OFF: the Map seeds `false`; a Map click does not teleport, even with the box ticked;
+//   3. MAP ON: the Map's `flash.teleport` on, a Map click teleports;
+//   4. A NON-MAP SOURCE: a location check from another originator still follows the box; the two maps' originators
+//      never do (the real dispatcher chain, Flash's receiver; the teleport recorded, not made).
+export async function seedlingJsRuntimeClickTeleport(tc) {
+    return withRuntimeRestored(tc, async () => {
+        const CA = await import('../../regionView/clickActions.js');
+        const { getPanelInstances: mapPanels } = await import('../../regionMap/index.js');
+        const { REGION_MAP_CLICK_ACTIONS_KEY } = await import('../../regionMap/regionMapClickActions.js');
+        const { REGION_GRAPH_ORIGINATORS } = await import('../../regionGraph/regionGraphOriginators.js');
+        const panelManager = (await import('../../../app/core/panelManager.js')).default;
+        const GRAPH_KEY = 'moduleSettings.regionGraph.clickActions';
+        const up = await atlasPresetOn(tc, 'js', ATLAS_PATH, TOOLS_START);
+        if (!up) return;
+        const { panel } = up;
+        const box = panel.teleportOnClickCheckbox;
+        const boxWas = box?.checked ?? false;
+        tc.reportCondition('[js] Flash registered flash.teleport for this teleport-capable game',
+            !!CA.getClickAction('flash.teleport'));
+        const overrides = [];
+        const setSession = async (key, value) => {
+            overrides.push(key);
+            await settingsManager.updateSetting(key, value, { persist: false });
+        };
+        const only = (extra = {}) => ({ enabled: true, region: { 'path.route': false, 'path.checkAll': false,
+            'regions.open': false, 'discovery.discover': false, ...extra }, location: { 'path.check': false } });
+        const backToStart = async (label) => {
+            toolsMove(readCurrentRegion(), TOOLS_START, null);
+            tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+            return toolsSettledIn(tc, `[js] ${label}: back in the start`, TOOLS_START, 0);
+        };
+        const staysOut = async (label) => {
+            await new Promise((r) => setTimeout(r, 2500));
+            const f = toolsFacts();
+            tc.reportCondition(`[js] ${label}: no teleport (gameState in ${f.region}, the game on level ${f.level})`,
+                f.region === TOOLS_START && f.level === 0);
+        };
+        let openedMap = false;
+        try {
+            // ── 1. THE GRAPH'S FIRST RUN follows the box AT THAT MOMENT; after that the strip decides ──
+            // The Graph's config names no flash.teleport (a first run): its strip seeds the value the moment it next
+            // loads with the action registered — here, the write of this row's config — from the box AT THAT MOMENT.
+            box.checked = true;
+            await setSession(GRAPH_KEY, only());
+            const seeded = await tc.pollForValue(async () => {
+                const v = (await settingsManager.getSetting(GRAPH_KEY))?.region?.['flash.teleport'];
+                return v === undefined ? null : { v };
+            }, '[js] the Graph seeded flash.teleport', 5000, 100);
+            tc.assertEqual('[js] GRAPH FIRST RUN: the box ticked at the registration seeds the Graph\'s flash.teleport true',
+                true, seeded?.v);
+            box.checked = false;
+            const graphSettings = await settingsManager.getSetting(GRAPH_KEY);
+            const g1 = CA.runClickActions('regionGraph', 'region', { regionName: TOOLS_DUNGEON }, graphSettings, {});
+            tc.log(`[js] Graph click (box now unticked): ${JSON.stringify(g1?.results)}`);
+            const inDungeon = await toolsSettledIn(tc, '[js] the Graph\'s own option teleported', TOOLS_DUNGEON, 3);
+            tc.reportCondition('[js] GRAPH: its stored flash.teleport (true) teleports with the box UNTICKED (the strip decides)', !!inDungeon);
+            await backToStart('graph');
+            await setSession(GRAPH_KEY, only({ 'flash.teleport': false }));
+            box.checked = true;
+            CA.runClickActions('regionGraph', 'region', { regionName: TOOLS_DUNGEON }, await settingsManager.getSetting(GRAPH_KEY), {});
+            await staysOut('GRAPH: its flash.teleport false and the box TICKED');
+
+            // ── 2. THE MAP STARTS OFF, and the box does not teleport a Map click ──
+            openedMap = mapPanels().length === 0;
+            if (openedMap) await panelManager.createPanelForComponent('regionMapPanel', 'Region Map', 2);
+            const map = await tc.pollForValue(() => {
+                const p = mapPanels()[0];
+                return p?.getDebugState?.()?.hasModel ? p : null;
+            }, '[js] the Region Map has its model', 15000, 100);
+            if (!map) { tc.reportCondition('[js] the Region Map opened on the atlas', false); return; }
+            await map.clickActionsReady;
+            await setSession(REGION_MAP_CLICK_ACTIONS_KEY, only());
+            await tc.pollForCondition(() => JSON.stringify(map.clickActions?.region?.['path.route']) === 'false', '[js] the Map holds the row\'s actions', 3000, 50);
+            panel._registerClickActions(); // a registration: the Map's strip seeds its own value
+            const mapSeed = await tc.pollForValue(() => {
+                const v = map.clickActions?.region?.['flash.teleport'];
+                return v === undefined ? null : { v };
+            }, '[js] the Map seeded flash.teleport', 5000, 100);
+            tc.assertEqual('[js] MAP: its flash.teleport starts OFF (seeded false, the box ticked)', false, mapSeed?.v);
+            const frame = [...map.frames.values()].find((f) => f.key === TOOLS_DUNGEON)
+                ?? [...map.frames.values()].find((f) => (map.view?.get()?.displayGroups?.get(f.key)?.members ?? []).includes(TOOLS_DUNGEON));
+            tc.reportCondition(`[js] the Map draws ${TOOLS_DUNGEON}`, !!frame);
+            if (!frame) return;
+            const m1 = await map.clickAt(frame);
+            tc.log(`[js] Map click (OFF, box ticked): ${JSON.stringify(m1?.result)}`);
+            tc.reportCondition('[js] MAP OFF: the click runs no flash.teleport', !(m1?.result?.results ?? []).some((r) => r.id === 'flash.teleport'));
+            tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+            await staysOut('MAP OFF with the box TICKED');
+
+            // ── 3. THE MAP'S OPTION ON: a Map click teleports ──
+            await setSession(REGION_MAP_CLICK_ACTIONS_KEY, only({ 'flash.teleport': true }));
+            await tc.pollForCondition(() => map.clickActions?.region?.['flash.teleport'] === true, '[js] the Map holds flash.teleport on', 3000, 50);
+            box.checked = false;
+            const m2 = await map.clickAt(frame);
+            tc.log(`[js] Map click (ON): ${JSON.stringify(m2?.result)}`);
+            tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+            const viaMap = await toolsSettledIn(tc, '[js] the Map\'s option teleported', TOOLS_DUNGEON, 3);
+            tc.reportCondition('[js] MAP ON: a Map click teleports into the dungeon', !!viaMap);
+            await backToStart('map');
+
+            // ── 4. A NON-MAP SOURCE still follows the box; a map originator never does ──
+            const asked = [];
+            const realTp = panel._teleportToLocation;
+            panel._teleportToLocation = (name) => { asked.push(name); };
+            try {
+                box.checked = true;
+                const d = getSeedlingRegionGlue()?.getDispatcher?.();
+                const loc = (tc.stateManager.getStaticData?.() ?? null)?.regions?.get?.(TOOLS_DUNGEON)?.locations?.[0]?.name
+                    ?? 'no-such-location';
+                for (const originator of ['tests-non-map', REGION_GRAPH_ORIGINATORS.check, 'regionMapCheck']) {
+                    d?.publish?.('user:locationCheck', { locationName: loc, regionName: TOOLS_DUNGEON, originator }, { initialTarget: 'bottom' });
+                }
+                await new Promise((r) => setTimeout(r, 500));
+                tc.log(`[js] the box asked to teleport to: ${JSON.stringify(asked)} (location ${loc})`);
+                tc.assertEqual('[js] NON-MAP SOURCE: the ticked box teleports for another originator\'s check, never for a map\'s',
+                    JSON.stringify([loc]), JSON.stringify(asked));
+            } finally {
+                panel._teleportToLocation = realTp;
+            }
+        } finally {
+            if (box) box.checked = boxWas;
+            for (const k of new Set(overrides)) await settingsManager.clearOverride(k);
+            if (openedMap) {
+                try { await panelManager.destroyPanelByComponentType('regionMapPanel'); } catch (e) { tc.log(`close the Map: ${e.message}`); }
+            }
+            tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+        }
+    });
+}
+
+registerTest({
+    id: 'seedling-js-runtime-click-teleport',
+    name: 'Seedling JS runtime: a map click teleports only through that map\'s own "On click" option',
+    description: 'CA-S4 (user 2026-11-20T16:29:00Z, "Per-map option"): on seedling_atlas with flashPanel.runtime = js. The Graph\'s '
+        + 'flash.teleport is seeded from the box at the registration (ticked → true) and then teleports with the box unticked; '
+        + 'set false, a Graph click does not teleport with the box ticked. The Map seeds it OFF: a Map click does not teleport, '
+        + 'box ticked; turned on, a Map click teleports into the dungeon. A location check from another originator still '
+        + 'follows the box; the two maps\' originators never do.',
+    testFunction: seedlingJsRuntimeClickTeleport,
+    category: seedlingRuntimeCategory('seedling-js-runtime-click-teleport'),
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
 
 // ── ⛔ THE RESTART HOLD: a Restart with no walk arms nothing, so a hand walk after it moves (wasm) ─────────────────
 //

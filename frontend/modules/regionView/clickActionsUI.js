@@ -18,10 +18,18 @@
  *   - `getSettings()` → the panel's current `clickActions` object (synchronous; the host keeps it in memory);
  *   - `saveSettings(next)` → the host stores `next` (a NEW object; the strip never mutates what it was given);
  *   - `container` gets the strip's root element appended; `doc` defaults to the page's `document`.
- * → `{ element, render(), setExpanded(bool), isExpanded(), destroy() }`. It re-renders on its own when an action is
- * registered or unregistered; the host calls `render()` when the settings change from outside.
+ * → `{ element, render(), seed(), setExpanded(bool), isExpanded(), destroy() }`. It re-renders on its own when an
+ * action is registered or unregistered; the host calls `render()` when the settings change from outside.
+ *
+ * PER PANEL (CA-S4): the strip lists only the actions offered to `panelId` (`offeredTo`), and shows an action its
+ * settings do not name by its `initial(panelId)` (`effectiveValue`), as a click runs it.
+ * SEED (CA-S4): `seed()` writes those initial values into the panel's settings ONCE (`withInitialValues`;
+ * `saveSettings(next, { seeded: true })`), so after that the stored value decides. The host calls it when its own load
+ * has landed (never before: an unloaded host holds the defaults); from then on, a registration seeds the new action.
  */
-import { listClickActions, onClickActionsChanged, getClickAction, isOn, TARGETS } from './clickActions.js';
+import {
+    listClickActions, onClickActionsChanged, getClickAction, isOn, TARGETS, effectiveValue, withInitialValues,
+} from './clickActions.js';
 
 /** Class names / data attributes the in-app rows and the tests find the strip's parts by. */
 export const STRIP = Object.freeze({
@@ -49,9 +57,9 @@ function summaryOf(desc, value) {
 /**
  * The collapsed one-line summary of `settings` over what is registered now. Pure (exported for the tests and for a
  * host's tooltip). Region parts, then the location parts after "location:". An id that is on but not registered
- * shows as `<id> (not loaded)`.
+ * shows as `<id> (not loaded)`. With `panelId`: only the actions offered to that panel, each by its effective value.
  */
-export function summarizeClickActions(settings) {
+export function summarizeClickActions(settings, panelId = null) {
     if (!settings || typeof settings !== 'object') return 'On click: (no settings)';
     if (settings.enabled === false) return 'On click: ⏸ paused';
     const parts = {};
@@ -59,14 +67,15 @@ export function summarizeClickActions(settings) {
         const wanted = settings[target] ?? {};
         const out = [];
         const known = new Set();
-        for (const desc of listClickActions(target)) {
+        for (const desc of listClickActions(target, panelId)) {
             known.add(desc.id);
-            if (!isOn(desc, wanted[desc.id])) continue;
-            const s = summaryOf(desc, wanted[desc.id]);
+            const value = effectiveValue(desc, panelId, wanted);
+            if (!isOn(desc, value)) continue;
+            const s = summaryOf(desc, value);
             if (s) out.push(s);
         }
         for (const [id, v] of Object.entries(wanted)) {
-            if (known.has(id) || v === false || v === null || v === undefined) continue;
+            if (known.has(id) || getClickAction(id) || v === false || v === null || v === undefined) continue;
             out.push(`${id} (not loaded)`);
         }
         parts[target] = out;
@@ -105,6 +114,7 @@ export function mountClickActionsStrip({ panelId, container, getSettings, saveSe
 
     let expanded = false;
     let destroyed = false;
+    let seeding = false; // set by the host's first seed(): from then on a registration seeds the new action too
 
     const root = el('div', STRIP.root);
     root.dataset.panelId = panelId;
@@ -141,6 +151,15 @@ export function mountClickActionsStrip({ panelId, container, getSettings, saveSe
         saveSettings(next);
         render();
     };
+
+    /** Write the offered actions' initial values the settings do not name yet, once (see the header). */
+    function seed() {
+        if (destroyed) return [];
+        seeding = true;
+        const { settings: next, added } = withInitialValues(panelId, getSettings());
+        if (added.length) saveSettings(next, { seeded: true });
+        return added;
+    }
 
     const onToggle = () => setExpanded(!expanded);
     toggle.addEventListener('click', onToggle);
@@ -219,7 +238,7 @@ export function mountClickActionsStrip({ panelId, container, getSettings, saveSe
         if (destroyed) return;
         const settings = getSettings();
         const enabled = settings?.enabled !== false;
-        summary.textContent = summarizeClickActions(settings);
+        summary.textContent = summarizeClickActions(settings, panelId);
         summary.title = summary.textContent;
         master.textContent = enabled ? '⏸' : '▶';
         master.title = enabled ? 'Pause every click action (the master switch)' : 'Resume the click actions';
@@ -238,9 +257,9 @@ export function mountClickActionsStrip({ panelId, container, getSettings, saveSe
             list.appendChild(title);
             const wanted = settings?.[target] ?? {};
             const known = new Set();
-            for (const desc of listClickActions(target)) {
+            for (const desc of listClickActions(target, panelId)) {
                 known.add(desc.id);
-                list.appendChild(rowFor(target, desc, wanted[desc.id], settings));
+                list.appendChild(rowFor(target, desc, effectiveValue(desc, panelId, wanted), settings));
             }
             for (const [id, v] of Object.entries(wanted)) {
                 if (known.has(id) || getClickAction(id) || v === false || v === null || v === undefined) continue;
@@ -255,13 +274,17 @@ export function mountClickActionsStrip({ panelId, container, getSettings, saveSe
         render();
     }
 
-    const unsubscribe = onClickActionsChanged(() => render());
+    const unsubscribe = onClickActionsChanged(() => {
+        if (seeding) seed();
+        render();
+    });
     container?.appendChild?.(root);
     render();
 
     return {
         element: root,
         render,
+        seed,
         setExpanded,
         isExpanded: () => expanded,
         destroy() {

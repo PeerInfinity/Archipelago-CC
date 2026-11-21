@@ -14,7 +14,7 @@ The Discovery panel controls discovery mode — a feature that hides parts of th
 | **Auto-discover Exits** | Automatically discover all exits from a region when that region is discovered. |
 | **Items in Undiscovered Regions** | Choose "Hide entirely" to remove undiscovered items from view, or "Show as '???'" to show placeholders. |
 | **Show Undiscovered Region Names** | Show actual names instead of "???" for undiscovered regions that have a discovered exit leading to them. |
-| **Click Discovers Region** | Clicking an undiscovered region in the Region Graph or Regions panel automatically discovers it. |
+| **Click Discovers Region** | Clicking an undiscovered region in the Regions panel, or in a map whose **On click** strip has **Discover the region** on (the [Region Graph](regionGraph.md#the-on-click-strip)'s is on by default; the [Region Map](regionMap.md)'s starts off), automatically discovers it. |
 | **Disable Location Check UI** | Prevent location check actions when clicking locations (useful for entrance shuffle exploration). |
 | **Show Debug Options** | Reveal the debug settings and discovery state lists below. |
 

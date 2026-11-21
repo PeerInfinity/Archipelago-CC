@@ -42,9 +42,9 @@ A dragged pan never counts as a click. In loop mode, a Region Map click plans yo
 What a click does is set in the **On click** strip, the row at the very top of the panel, above the toolbar. It is the same strip as the [Region Graph's](regionGraph.md#the-on-click-strip), with the same actions:
 
 - **Folded**, it is one line saying what a click does — for example *On click: extend path · Regions — location: check* — with the **⏸** switch beside it. **⏸** turns every click action off at once (a click then only selects the cell); **▶** turns them back on. The line then reads *On click: ⏸ paused*.
-- **Unfolded** (press **▸**), it lists the **Region** actions (route to the region, check all its accessible locations, open it in the Regions panel) and the **Location** actions (check it now, or add the check to the path). Other panels can add actions of their own.
+- **Unfolded** (press **▸**), it lists the **Region** actions (route to the region, check all its accessible locations, open it in the Regions panel, discover it, teleport there in Flash, centre the Region Graph on it) and the **Location** actions (check it now, or add the check to the path; teleport to it in Flash; scroll the Regions panel to it). Each is described under the [Region Graph's strip](regionGraph.md#the-on-click-strip); the Region Map offers to centre the *Region Graph*, never itself.
 
-The Region Map keeps its own settings (`moduleSettings.regionMap.clickActions`), separate from the Region Graph's: changing one strip never changes the other. The first time the Region Map opens, it starts from a copy of the Region Graph's current setup.
+The Region Map keeps its own settings (`moduleSettings.regionMap.clickActions`), separate from the Region Graph's: changing one strip never changes the other. The first time the Region Map opens, it starts from a copy of the Region Graph's current setup, except for the actions other panels add (discover, teleport in Flash, centre, scroll the Regions panel): those start **off** on the Region Map. So a Region Map click teleports in Flash only once you tick **Teleport there in Flash** in its strip.
 
 ## Discovery mode
 

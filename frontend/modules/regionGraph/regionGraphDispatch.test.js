@@ -86,6 +86,8 @@ describe('the Region Graph dispatches through its own module dispatcher (adopted
             ['user:regionMove', { targetRegion: 'Field', sourceRegion: 'Menu', source: SRC }, { initialTarget: 'bottom' }],
         ]);
         expect(bus.publish.mock.calls[0]).toEqual(['regionGraph:nodeSelected', { nodeId: 'Field', data: { id: 'Field' } }]);
+        // CA-S4: then the generic click event, before any action
+        expect(bus.publish.mock.calls[1]).toEqual(['regionView:regionClicked', { panelId: 'regionGraph', regionName: 'Field' }]);
     });
 
     it('location checks: RegionGraphCheck (a location click) and RegionGraphBulkCheck (accessible ones only)', () => {
@@ -118,7 +120,10 @@ describe('the Region Graph dispatches through its own module dispatcher (adopted
         expect(im.handleRegionNodeClick(regionNode('Field'))).toEqual({ ran: false, reason: 'disabled', results: [], skipped: [] });
         im.handleLocationNodeClick(locationNode('chest', 'Field'));
         expect(regionGraphDispatcher.publish).not.toHaveBeenCalled();
-        expect(bus.publish.mock.calls).toEqual([['regionGraph:nodeSelected', { nodeId: 'Field', data: { id: 'Field' } }]]);
+        // CA-S4: the generic click events are published too, master off included (as the Region Map's are).
+        expect(bus.publish.mock.calls).toEqual([['regionGraph:nodeSelected', { nodeId: 'Field', data: { id: 'Field' } }],
+            ['regionView:regionClicked', { panelId: 'regionGraph', regionName: 'Field' }],
+            ['regionView:locationClicked', { panelId: 'regionGraph', regionName: 'Field', locationName: 'chest' }]]);
         // Switched on, the same click runs the registered panel action on the Graph's own bus.
         ui.clickActions = { ...ui.clickActions, enabled: true };
         im.handleRegionNodeClick(regionNode('Field'));
