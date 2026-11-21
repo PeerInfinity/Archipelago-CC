@@ -5707,6 +5707,8 @@ async function heldTreeSetOn(tc, runtime) {
     levelSetCache.clear();
     atlasCache.clear();
     const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+    // ⛔ An earlier row's AP load is still on the panel: wait for THIS load's own result, never that one.
+    const staleLoad = getActivePanelInstance()?._apLoadResult ?? null;
     await settingsManager.updateSetting(RUNTIME_KEY, runtime, { persist: false });
     const built = await buildHeldTreeBundle();
     const ref = built.rules.region_atlas['1'].level_set;
@@ -5734,7 +5736,8 @@ async function heldTreeSetOn(tc, runtime) {
         if (!start) return null;
         start.click();
     }
-    const done = await tc.pollForValue(() => (panel._apLoadResult ? panel._apLoadResult : null),
+    const done = await tc.pollForValue(() => (panel._apLoadResult && panel._apLoadResult !== staleLoad
+        && panel._seedlingRealSet?.set_id === built.levelSet.set_id ? panel._apLoadResult : null),
         `[${runtime}] the AP load ran`, runtime === 'wasm' ? 120000 : 60000, 250);
     if (!done?.ok) {
         tc.log(`[${runtime}] apLoad ${JSON.stringify(done ?? null)?.slice(0, 400)}; refusal ${JSON.stringify(panel._apLoadRefusal ?? null)}; log: `

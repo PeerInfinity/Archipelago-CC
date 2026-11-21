@@ -1070,7 +1070,6 @@ export class FlashPanelUI {
       <div class="flash-panel-header" style="flex-shrink: 0; margin-bottom: 6px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 12px; min-width: 0;">
         <span class="flash-panel-title" style="color: #e94560;">Flash Panel</span>
         <span class="flash-panel-status" style="color: #aaa; font-size: 12px; overflow-wrap: anywhere;">initializing…</span>
-        <button class="flash-panel-edit-room" style="${BUTTON_CSS}display:none;" title="Open the room the game is in back in the Seedling lab (this set's own rooms)">Edit ▸</button>
       </div>
       <div class="flash-panel-stage" style="flex-shrink: 0; width: 100%; overflow: hidden;">
         <div class="flash-panel-swf" style="position: relative; transform-origin: 0 0;"></div>
@@ -1083,6 +1082,7 @@ export class FlashPanelUI {
           <button class="flash-panel-readstate" style="${BUTTON_CSS}">Read State</button>
           <button class="flash-panel-configure" style="${BUTTON_CSS}">Configure Bridge</button>
           <button class="flash-panel-restart" style="${BUTTON_CSS}display:none;" title="Return to the start region (the Menu panel's Restart)">Restart</button>
+          <button class="flash-panel-edit-room" style="${BUTTON_CSS}display:none;" title="S4: open the room the game is in back in the Seedling lab (a held set's own rooms)">Edit ▸</button>
         </div>
         <div class="flash-panel-teleport" style="margin-top: 6px; font-size: 12px; display: none;">
           <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px;">

@@ -117,6 +117,7 @@ describe('S4 — the inverse of p5: a HELD edited set delivers its OWN room 10, 
             expect(r.assets.atlas).toMatchObject({ ok: true, url: `atlasCache:${TREE_WORLD.atlas.atlas_id}` });
             expect(r.delivery).not.toBeNull();
             expect(r.set.rooms).toHaveLength(116);
+            expect(r.set.set_id).toBe(TREE_WORLD.levelSet.set_id);
             expect(hasTree(roomOf(r.set, 10))).toBe(true);
             // …and NOTHING else of the set moved but the placement's own rewrite: every room's geometry is the
             // held set's (tiles and non-placement entities), room for room.
