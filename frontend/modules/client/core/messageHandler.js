@@ -211,6 +211,7 @@ export class MessageHandler {
     this._offlineInFlight = new Set();
     this._roomCheckedIds = new Set();
     this._offlinePassChain = Promise.resolve();
+    this._offlinePassWaiting = false;
     this._clientRulesSources = new Set();
     // `${seed}|${slot}` of every slot whose goal this page session reported: an ID-less goal the server never
     // echoes stays checked locally, and must not be offered again at the next connect.
@@ -1241,11 +1242,24 @@ export class MessageHandler {
     return true;
   }
 
-  /** One pass at a time: a ReceivedItems during a pass queues the next one behind it. */
+  /**
+   * One pass at a time, and at most one waiting: every ReceivedItems and RoomUpdate asks for a pass,
+   * and a push of 100 checks brings ~200 of them. Measured live (MW-P3): queued one each, the no-op
+   * passes and their worker round trips held the real sends back for minutes. A pass that starts
+   * later sees every item that arrived before it, so one waiting pass serves them all.
+   */
   _queueOfflinePass() {
+    if (this._offlinePassWaiting) return this._offlinePassChain;
+    this._offlinePassWaiting = true;
     this._offlinePassChain = this._offlinePassChain
-      .then(() => this._offlineProgressPass())
-      .catch((e) => log('error', '[MessageHandler] Offline progress pass failed:', e));
+      .then(() => {
+        this._offlinePassWaiting = false;
+        return this._offlineProgressPass();
+      })
+      .catch((e) => {
+        this._offlinePassWaiting = false;
+        log('error', '[MessageHandler] Offline progress pass failed:', e);
+      });
     return this._offlinePassChain;
   }
 

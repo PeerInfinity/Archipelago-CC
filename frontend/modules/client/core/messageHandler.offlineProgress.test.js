@@ -185,6 +185,7 @@ beforeEach(() => {
   messageHandler._offlineGameReported = new Set();
   messageHandler._offlineOffer = null;
   messageHandler._offlinePassChain = Promise.resolve();
+  messageHandler._offlinePassWaiting = false;
   messageHandler._clientRulesSources = new Set();
   messageHandler._goalReportedRooms = new Set();
   messageHandler.scoutedLocations = new Map();
@@ -305,6 +306,22 @@ describe('Send: passes through the ordinary path, never out of logic', () => {
     for (let i = 1; i <= 3; i += 1) await received(i, [{ item: 8, location: -1, player: 2 }]);
     expect(sentIds()).toEqual([]);
     expect(messageHandler._offlineRecords.size).toBe(1); // still kept for this session
+  });
+
+  it('a burst of deliveries asks for many passes; at most one runs and one waits (live: MW-P3 crawled otherwise)', async () => {
+    const pass = vi.spyOn(messageHandler, '_offlineProgressPass').mockImplementation(async () => {
+      await new Promise((r) => setTimeout(r, 5));
+    });
+    try {
+      for (let i = 0; i < 20; i += 1) messageHandler._queueOfflinePass();
+      await messageHandler._offlinePassChain;
+      expect(pass).toHaveBeenCalledTimes(1);
+      messageHandler._queueOfflinePass();
+      await messageHandler._offlinePassChain;
+      expect(pass).toHaveBeenCalledTimes(2);
+    } finally {
+      pass.mockRestore();
+    }
   });
 
   it('every pushed check is a direct handler call (originator OfflineProgress): Loop mode never sees it', async () => {
