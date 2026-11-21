@@ -60,9 +60,18 @@ export const STRUCTURE_KINDS = Object.freeze(['task', 'stat', 'resource', 'boon'
  *   · `blocked`  — never entered: the editor lowers it to a wall under the kind;
  *   · `needs`    — (⛓ PASS-2) entered only while the inventory holds what a MECHANIC concept (`needs: "swim"`, a bare
  *                  `procgenCore/concepts.js` id, never an AP item name: Q8) realises as; the editor lowers it to a rule
- *                  obstacle on the kind's floor cell.
+ *                  obstacle on the kind's floor cell;
+ *   · `one-way`  — (⛓ PASS-3) entered only by a move in one of `dirs` (`TERRAIN_DIRS`, the MOVE's direction: `["E"]`
+ *                  is entered moving east, i.e. from the west); leaving is free. The editor lowers it to the engine's
+ *                  `entry_gates`, `gate: null` for every other direction.
  */
-export const TERRAIN_PASSES = Object.freeze(['walkable', 'blocked', 'needs']);
+export const TERRAIN_PASSES = Object.freeze(['walkable', 'blocked', 'needs', 'one-way']);
+
+/** ⛓ PASS-3 — the pass whose terrain entry names the directions a move may ENTER the cell in. */
+export const ONE_WAY_PASS = 'one-way';
+
+/** ⛓ PASS-3 — the move directions a `one-way` entry's `dirs` names (the maze engine's inputs, in its order). */
+export const TERRAIN_DIRS = Object.freeze(['N', 'S', 'E', 'W']);
 
 /** ⛓ PASS-2 — the pass whose terrain entry names a mechanic concept (`needs`). */
 export const NEEDS_PASS = 'needs';

@@ -37,12 +37,17 @@ A flood fill (`componentsOf` in `scripts/procgen/seedlingRouteGraph.mjs`) treats
 - Check with a directed flood (the same BFS with the edge predicate) against the undirected one.
 - Two one-way branches can be mutually exclusive; sweep each opener alone and all together before reporting a route.
 
-### The engine's `entry_gates` are invisible to the extractor and the autopather
+### Entry gates: every reader honours them (fixed by content sets PASS-3)
 
-The maze engine's one-way primitive, `entry_gates` (`{x, y, dir, gate}`; `gate: null` means no entry that way), is honoured by `step`, `whyBlocked` and `bfsSolver`, but **not** by the generic extractor's geometry and set search (`ghostStep`, `minimalObstacleSets` in `extractPathsAndObstacles`) or by the autopather's `_bfsToGoal`. On a plain 5×3 corridor with one `null` gate, the extractor reports the exit reachable with no rule while `bfsSolver` refuses the walk (measured by content sets PASS-D). It is latent: the one committed world with entry gates, `seedling_playthrough_maze`, takes its rules from the derived-rule table, not the extractor, so no committed world is wrong today.
+The maze engine's one-way primitive, `entry_gates` (`{x, y, dir, gate}`; `gate: null` means no entry that way), used to be honoured by `step`, `whyBlocked` and `bfsSolver` only. The generic extractor (`ghostStep`, `minimalObstacleSets`) and the autopather's `_bfsToGoal` ignored it, so a `null`-gated exit was extracted as reachable with no rule while the engine refused the walk (measured by content sets PASS-D). **Fixed in PASS-3 part 0**:
+- `ghostStep` and `floorReachableSet` refuse a `null` gate as they refuse a wall;
+- `obstaclesAlongPath` and `minimalObstacleSets` charge a gated entry (a gate id) like an obstacle on that directed step;
+- the autopather's walkability check reads the move's gate.
 
-- Do not put `entry_gates` on a non-Seedling maze and trust its extracted rules or its click-to-move.
-- Declared passability lowers `blocked` to a wall for exactly this reason; `one-way` waits for the fix (content sets PASS-3), which moves the engine closure.
+Pinned by `mazeRoom/mazeEntryGatesExtract.test.js`: PASS-D's corridor, and every single and pair of `null` gates on an open room (the extractor, `step`'s BFS and the autopather agree per target).
+
+- The fix moved `engineMd5`. The derived-rule table was regenerated with no verdict moved, and no preset byte moved. The generic extractor's own re-derivation of four `seedling_playthrough_maze` regions (`level_12__r0c19`, `level_19__r1c1`, `level_68__r1c1`, `level_99__r2c4`) became stricter, because it now charges their gated entries (⚖ the user, 2026-11-19: "Yes, please continue"). Their shipped rules come from the table, and the hub keeps them frozen.
+- Still not reading entry gates, on purpose: `mazeGeometry`'s `longestShortestPath`, a geometric metric baked into payloads (reading gates there would move preset bytes), and the visualizer's blocked-step log text.
 
 ### A minimal-set search over an item lattice assumes monotonicity, and the learning walk cannot check it
 
