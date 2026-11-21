@@ -1,0 +1,10 @@
+frontend/modules/seedlingDemo/hammerApproachOrder.train.test.js
+frontend/modules/seedlingDemo/hammerBaitRemoved.train.test.js
+frontend/modules/seedlingDemo/hammerBaitSubwalkGoal.train.test.js
+frontend/modules/seedlingDemo/hammerBodyGate.train.test.js
+frontend/modules/seedlingDemo/hammerChooserPair.train.test.js
+frontend/modules/seedlingDemo/hammerClearTagChain.train.test.js
+frontend/modules/seedlingDemo/hammerOppDashDefers.train.test.js
+frontend/modules/seedlingDemo/hammerPitWest.train.test.js
+frontend/modules/seedlingDemo/hammerShovedLookahead.train.test.js
+frontend/modules/seedlingDemo/hammerWallFlyerDrillKill.train.test.js

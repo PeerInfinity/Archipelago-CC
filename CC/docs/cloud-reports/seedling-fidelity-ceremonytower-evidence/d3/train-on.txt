@@ -1,0 +1,9 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerChooserPair.train.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 232717[2mms[22m[39m
+     [33m[2m✓[22m[39m 853 at 5196: OFF the burn stance's walk refuses on bob@736,752 with the chooser silent; ON the set bob@736,752 + bob@736,800 + bobsoldier@880,832 admits (a TRIPLE since chaserSpinnerWalls: no pair does), the chaser arm kills the bob in the model, and the chain moves on to the spinner@816,848 press kill [33m 82189[2mms[22m[39m
+     [33m[2m✓[22m[39m 853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and the pair arm = OFF [33m 76810[2mms[22m[39m
+     [33m[2m✓[22m[39m 356 (its every climb answered by a single removal): the pair is never asked, and ON = OFF [33m 40263[2mms[22m[39m
+     [33m[2m✓[22m[39m the measurement arm that asks triples too: 367 OFF refuses at its deadline; with triples the set bob@192,480 + bob@224,496 + puncher@128,624 admits, the arm kills bob@192,480 in the model, and the walk reaches the L43 pit [33m 31594[2mms[22m[39m
+     [33m[2m✓[22m[39m the L16 guard: with the switch ON the solver re-derives r9-solve-16 (C1's regression stays closed) [33m 1857[2mms[22m[39m
