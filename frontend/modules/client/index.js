@@ -172,6 +172,9 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('game:connected');
   // After _handleConnected's applyRuntimeStateData (game:connected comes before it): RE1, reconnect events.
   registrationApi.registerEventBusPublisher('client:connectedStateApplied');
+  // Offline progress at connect (core/offlineProgress.js): the Send / Not now / Discard offer, and its close.
+  registrationApi.registerEventBusPublisher('client:offlineProgressOffer');
+  registrationApi.registerEventBusPublisher('client:offlineProgressOfferClosed');
   registrationApi.registerEventBusPublisher('game:bounced');
   registrationApi.registerEventBusPublisher('game:bouncedMessage');
   registrationApi.registerEventBusPublisher('game:roomUpdate');
