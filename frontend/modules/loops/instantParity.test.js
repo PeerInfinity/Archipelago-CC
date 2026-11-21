@@ -129,7 +129,7 @@ describe('LOOPS-I1 — Instant ends where normal speed ends', () => {
       want: { completed: 1, reset: true, xp: 50, mana: 100, index: 0 } },
     { name: 'exceeds the pool (pool 30, cost 50)', mana: 30,
       want: { completed: 0, reset: true, xp: 30, mana: 100, index: 0 } },
-    { name: 'exceeds the pool mid-frame (pool 49, cost 50)', mana: 49,
+    { name: 'the NORMAL-SPEED edge: exceeds the pool mid-frame (pool 49, cost 50; before LOOPS-I1 normal speed\'s last frame completed it)', mana: 49,
       want: { completed: 0, reset: true, xp: 49, mana: 100, index: 0 } },
   ];
 
