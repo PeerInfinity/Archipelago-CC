@@ -1295,12 +1295,9 @@ export class MessageHandler {
       if (went) sent += 1;
       else this._offlineInFlight.delete(entry.name); // refused after all: tried again next pass
     };
-    // The ID checks together, as clicks in a burst would go (one at a time, each gate's worker round trip
-    // waits behind the recompute of every item the server returns: measured live, 27 of 100 in a slow
-    // crawl on A Short Hike). Each still takes the gate. The goal after them.
-    const ids = batch.filter((e) => !e.goal);
-    if (connection.isConnected() && this._activeOfflineRecord() === record) await Promise.all(ids.map(push));
-    for (const entry of batch.filter((e) => e.goal)) {
+    // One at a time, the goal last (pickPass). Measured live (MW-P3, 83 in logic): sent all at once, 27 of
+    // the gate's calls never settled; one at a time with the passes coalesced, all went.
+    for (const entry of batch) {
       if (!connection.isConnected() || this._activeOfflineRecord() !== record) break;
       await push(entry);
     }
