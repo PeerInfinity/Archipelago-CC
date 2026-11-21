@@ -1,7 +1,7 @@
 // client/core/offlineProgress.js
 //
-// Offline progress at connect (sdc-offline-progress-op1; design
-// NewDocs/plans/server-data/design-offline-progress.md, Robert's answers 2026-11-21).
+// Offline progress at connect (sdc-offline-progress-op1; per the offline-progress design and
+// Robert's answers, 2026-11-21).
 //
 // Offline, a check reaches only the state manager. At connect the client loses it twice: the
 // connect flow's own rules reload, then the `Connected` reset. So a RECORD is captured at

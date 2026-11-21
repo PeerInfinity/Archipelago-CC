@@ -1,5 +1,5 @@
 /**
- * Offline progress at connect (sdc-offline-progress-op1; design-offline-progress.md § 8; ⚖ Robert 2026-11-21):
+ * Offline progress at connect (sdc-offline-progress-op1; the offline-progress design; ⚖ Robert 2026-11-21):
  * a record captured at RoomInfo, offered only on an EXACT seed + slot + game match (Send / Not now / Discard),
  * pushed through the ordinary check path in passes (never out of logic; leftovers retried on ReceivedItems),
  * the goal named in the offer and reported once, Loop mode bypassed by calling the handler directly, and a
