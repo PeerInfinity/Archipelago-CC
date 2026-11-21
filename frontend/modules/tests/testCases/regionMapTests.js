@@ -988,7 +988,7 @@ async function buildCustomSeedlingSet() {
 /**
  * lab-set-seedling-identity: the bundle the WATCH PAGE's set editor writes, built through the page's own modules: its set
  * deps (`watchSetIdentity.WATCH_SET_ATLAS`, game `seedling`), the mount's REPORT (`watchSetEditor.reportOf`) with the
- * page's compile (`labSetIdentity`: a `seedling-lab-<8 hex>` stamped copy, no `flash_panel`), and the bundle door's atlas
+ * page's compile (`labSetIdentity`: a `seedling-lab-<8 hex>` stamped copy; ⛓ S4: with its `flash_panel`), and the bundle door's atlas
  * member (`atlasAtDoor`). The page's real press is driven, byte for byte, by `check-seedling-editor-arm.mjs`; this row
  * asks what the APP does with those documents. Same rooms + overlay as `buildCustomSeedlingSet`.
  */
@@ -1093,7 +1093,8 @@ export async function testRegionMapCustomSetAtlas(testController) {
 
 /**
  * lab-set-seedling-identity: the WATCH PAGE's bundle. Before the Region Map half (shared above), the documents
- * themselves: every room is `flash_seedling`, there is no `flash_panel` block, and the atlas id is the lab's own
+ * themselves: every room is `flash_seedling`, the `flash_panel` block is the compiler's own Seedling wiring (⛓ RE-RECORDED
+ * by S4, seedling-custom-set-arm: until S4 there was none), and the atlas id is the lab's own
  * `seedling-lab-<8 hex>` fingerprint, which the served atlas index does not hold.
  */
 export async function testRegionMapWatchSetBundle(testController) {
@@ -1104,7 +1105,10 @@ export async function testRegionMapWatchSetBundle(testController) {
       const subs = [...new Set(rows.map((r) => r.substrate))];
       tc.reportCondition(`every room of the watch page's set is a Seedling room (${rows.length} rooms, substrates ${JSON.stringify(subs)})`,
         rows.length > 0 && subs.length === 1 && subs[0] === 'flash_seedling');
-      tc.reportCondition(`the rules carry no flash_panel block (${'flash_panel' in rules ? 'present' : 'absent'})`, !('flash_panel' in rules));
+      // ⛓ S4 RE-RECORD (was "no flash_panel block"): the compiler's own Seedling wiring. This bundle carries no level-set
+      // member, so the player still refuses these rules with slice G's sentence (seedlingCustomSetArm.test.js).
+      tc.reportCondition(`the rules carry the Seedling flash_panel block (S4) (${JSON.stringify(rules.flash_panel?.['1']?.wasm ?? null)})`,
+        typeof rules.flash_panel?.['1']?.wasm === 'string' && Object.keys(rules.flash_panel).join() === '1');
       tc.reportCondition(`the atlas id is the lab's own fingerprint and is not served (${id})`,
         new RegExp(`^${base}-[0-9a-f]{8}$`).test(id ?? '') && !servedIds.has(id));
     },
@@ -1213,5 +1217,5 @@ registerTest({
   category: 'Region Map: Seedling',
   testFunction: testRegionMapWatchSetBundle,
   enabled: false,
-  description: 'lab-set-seedling-identity: the bundle the watch page\'s set editor writes (its own deps, report compile and atlas door) is Seedling rooms, no flash_panel, a seedling-lab fingerprint that is not served; loaded through the Presets panel\'s file door, the panel shows real extents, N/N squares on their tiles, and its warps',
+  description: 'lab-set-seedling-identity: the bundle the watch page\'s set editor writes (its own deps, report compile and atlas door) is Seedling rooms, the Seedling flash_panel wiring (S4), a seedling-lab fingerprint that is not served; loaded through the Presets panel\'s file door, the panel shows real extents, N/N squares on their tiles, and its warps',
 });
