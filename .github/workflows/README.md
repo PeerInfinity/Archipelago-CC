@@ -126,7 +126,7 @@ id=$(gh run list -R PeerInfinity/Archipelago-CC -w test-substrates-nightly.yml -
 
 ### After-hours bulk runs (B1, convention; ⚖ Robert 2026-11-11)
 
-Bulk harvests and exploratory sweeps (divergence-sweep harvests, multi-arm A/B sweeps, survey batches, wasm-probe fan-outs) are dispatched **22:00–07:00 Pacific**, so they do not hold the runners that push gates wait on during the day. **Exempt, run now:** (1) anything a landing train dispatches; (2) gate runs at a slice tip (`train_only`, `full_matrix`, TT); (3) a re-measure that a queued packet is waiting on. It is a convention, with no enforcement. The nightly above is in the window too, and is a signal, never evidence.
+Bulk harvests and exploratory sweeps (divergence-sweep harvests, multi-arm A/B sweeps, survey batches, wasm-probe fan-outs) are dispatched **20:00–21:30 Pacific** (⚖ Robert 2026-11-21, moved from 22:00–07:00: the laptop is in standby from about 21:30, so no session dispatched anything in the old window; the runs go on overnight in CI), so they do not hold the runners that push gates wait on during the day. **Exempt, run now:** (1) anything a landing train dispatches; (2) gate runs at a slice tip (`train_only`, `full_matrix`, TT); (3) a re-measure that a queued packet is waiting on. It is a convention, with no enforcement. The nightly above is in the window too, and is a signal, never evidence.
 
 ---
 
