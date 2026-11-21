@@ -3482,11 +3482,15 @@ export class LoopState {
     // do the same on its last frame. With the debt flag on the pool runs
     // negative instead, so nothing is capped.
     const gs = this._gs();
+    let drainsPool = false;
     if (gs && actionCost > 0 && !gs.noManaDepletionReset) {
       const affordable = (Math.max(0, gs.currentMana) / actionCost) * 100;
       // The tolerance keeps an action that costs EXACTLY the pool (up to
       // float noise) affordable: it completes, then the OOM reset fires.
-      if (progressIncrement - affordable > PROGRESS_EPSILON) progressIncrement = affordable;
+      if (progressIncrement - affordable > PROGRESS_EPSILON) {
+        progressIncrement = affordable;
+        drainsPool = true;
+      }
     }
 
     const newProgress = currentProgress + progressIncrement;
@@ -3496,14 +3500,20 @@ export class LoopState {
     );
     this.currentAction.progress = newProgress;
 
-    const manaCost = (progressIncrement / 100) * actionCost;
+    // A capped frame spends the pool EXACTLY: recomputing it as
+    // (mana / cost × 100) / 100 × cost leaves a ~1e-14 residue about one
+    // time in ten, and a pool above 0 never fires the OOM reset — the queue
+    // would drain slivers forever.
+    const manaCost = drainsPool
+      ? Math.max(0, gs.currentMana)
+      : (progressIncrement / 100) * actionCost;
     if (gs) {
       gs.deductMana(manaCost);
       if (manaCost > 0) this._passManaSpent += manaCost;
     }
 
     if (this.currentAction.sourceRegion) {
-      const xpGain = (progressIncrement / 100) * actionCost;
+      const xpGain = manaCost; // XP = mana spent, 1:1
       this.addRegionXP(this.currentAction.sourceRegion, xpGain);
       const xpData = this.getRegionXP(this.currentAction.sourceRegion);
       this.eventBus.publish('gameState:xpChanged', {

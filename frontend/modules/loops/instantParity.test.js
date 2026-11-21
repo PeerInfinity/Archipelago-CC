@@ -150,4 +150,20 @@ describe('LOOPS-I1 — Instant ends where normal speed ends', () => {
       }
     });
   }
+
+  // A pool whose capped spend, recomputed as (mana / cost × 100) / 100 × cost,
+  // leaves a float sliver (77/97 − that = 1.1e-16 with cost 50). A sliver above
+  // 0 never fires the OOM reset, and the queue drained slivers forever: the
+  // first cut of this fix stalled playback-bot-loop-mode-adventure in loop 2.
+  describe('a fractional pool lands on EXACTLY 0 and resets (no sliver stall)', () => {
+    const mana = 77 / 97;
+    for (const speed of ['normal', 'instant', 'blockInstant']) {
+      it(`${speed}`, () => {
+        const run = runOnce(mana, speed);
+        expect(run.result).toMatchObject({ completed: 0, reset: true, mana: 100, index: 0 });
+        expect(run.result.xp).toBe(mana);
+        expect(run.frames).toBe(FAST_FRAMES);
+      });
+    }
+  });
 });
