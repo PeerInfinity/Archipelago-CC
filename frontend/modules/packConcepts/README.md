@@ -16,7 +16,7 @@ content-pack stack (`../contentPacks/`), merged so that a later pack wins per ke
   since content packs PL-1 `task`, `stat`, `resource` and `boon` (the structure layer's kinds), and since content
   sets PASS-1 `terrain` (a tile kind whose passability a structure terrain entry declares). This module owns the
   list; the roles contract imports it. `STRUCTURE_KINDS` (the four, `place` and `terrain`), `STRUCTURE_ID_PATTERN`
-  (built from them) and `TERRAIN_PASSES` (`walkable`, `blocked`, `needs`; one value per slice) are the structure layer's
+  (built from them) and `TERRAIN_PASSES` (`walkable`, `blocked`, `needs`, `one-way`; one value per slice; `TERRAIN_DIRS` for `one-way`'s `dirs`) are the structure layer's
   (`../packStructure/`).
 - `presents` takes two forms: a bare mechanic id (`guardian`), or a namespaced STRUCTURE id
   (`<pack>:<kind>/<slug>`) whose kind is the concept's own. `presenting(id)` answers either. An entry may carry
