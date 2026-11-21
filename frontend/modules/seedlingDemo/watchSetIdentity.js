@@ -176,22 +176,49 @@ export function labSetIdentity({ compileRegionAtlas, stampAtlasIdentity } = {}) 
 }
 
 /**
- * ⛓⛓ S4 (seedling-custom-set-arm) — **A HOST'S HAND-OVER NEVER SILENTLY REPLACES THE READER'S UNSAVED SET.** The
- * EDIT arm's answer to "may this handed-over level set replace what you hold?" (`watchViewer.js` `hostLoad`, the
- * Edit ▸ receiver): the sentence it REFUSES with, or null.
- *   · nothing held, or the held set was itself a HOST's (its edits go back to that host on close) → null;
- *   · the READER's set with no edits since its last download (set edits) and none in an open room → null;
- *   · otherwise REFUSED, naming both set ids and the edit counts. ⛔ Refuse, not ask: the page has no dialog, and
- *     the host's Edit ▸ is simply pressed again once the reader has downloaded or discarded.
- * @param {{heldSetId: string|null, fromHost: boolean, setEdits: number, roomEdits: number, openRoom: number|null,
- *   handedSetId: string|null}} o
+ * ⛓⛓ S4 (seedling-custom-set-arm) — **A HOST'S HAND-OVER NEVER SILENTLY REPLACES UNSAVED WORK.** The EDIT arm's
+ * answer to "may this handed-over level set replace what you hold?" (`watchViewer.js` `hostLoad`, the Edit ▸
+ * receiver): the sentence it REFUSES with, or null. ⛔ Refuse, not ask: the page has no dialog; the host's Edit ▸ is
+ * pressed again once the work is saved or discarded.
+ *   · nothing held → null;
+ *   · a HOST'S room is still OPEN (`hostRoomOpen`) → REFUSED: that host is waiting for the room's close, and a new
+ *     set would hand it the WRONG record as its save (the same reason the LOAD box refuses then);
+ *   · an open room with unwritten edits (`roomEdits`) → REFUSED;
+ *   · the held set's CONTENT differs from its last SAVE (`unsaved`: the page compares `levelSetContentHash` now
+ *     with the one recorded at the last save — never an op count, which undo + redo can bring back to the saved
+ *     number with different content) → REFUSED. A save is: the load itself, a SET or BUNDLE download
+ *     (`isSetSaveDownload`), or a host's room CLOSE (its record went back to that host). Host-handed or reader-loaded
+ *     alike: edits made after a host's close return to nobody.
+ * @param {{heldSetId: string|null, unsaved: boolean, roomEdits: number, openRoom: number|null,
+ *   hostRoomOpen: boolean, handedSetId: string|null}} o
  */
-export function handoverRefusalOf({ heldSetId = null, fromHost = false, setEdits = 0, roomEdits = 0, openRoom = null,
-    handedSetId = null } = {}) {
-    if (heldSetId === null || fromHost) return null;
-    if (setEdits <= 0 && roomEdits <= 0) return null;
-    return `another panel's Edit ▸ handed over the set ${JSON.stringify(handedSetId)}, and this page holds YOUR set `
-        + `${JSON.stringify(heldSetId)} with ${Math.max(setEdits, 0)} set edit(s)`
-        + `${roomEdits > 0 ? ` and ${roomEdits} edit(s) in open room ${openRoom}` : ''} not downloaded — it was NOT `
-        + 'replaced. Download your set (or reload this page to discard it), then press Edit ▸ again.';
+export function handoverRefusalOf({ heldSetId = null, unsaved = false, roomEdits = 0, openRoom = null,
+    hostRoomOpen = false, handedSetId = null } = {}) {
+    if (heldSetId === null) return null;
+    const head = `another panel's Edit ▸ handed over the set ${JSON.stringify(handedSetId)}, and this page holds the set `
+        + `${JSON.stringify(heldSetId)}`;
+    const tail = ' — it was NOT replaced.';
+    if (hostRoomOpen) {
+        return `${head} with room ${openRoom} HANDED OVER earlier and still OPEN${tail} CLOSE that room first (its edits `
+            + 'go back to the panel that opened it), then press Edit ▸ again.';
+    }
+    if (roomEdits <= 0 && !unsaved) return null;
+    const what = [unsaved ? 'set edits not saved since its last download' : null,
+        roomEdits > 0 ? `${roomEdits} unwritten edit(s) in open room ${openRoom}` : null].filter(Boolean).join(' and ');
+    return `${head} with ${what}${tail} Download the set (or its bundle), or reload this page to discard it, then `
+        + 'press Edit ▸ again.';
+}
+
+/**
+ * ⛓ S4 — is this download a SAVE of the whole set? A bundle (`application/zip`: the set editor's bundle always carries
+ * the `level-set` member) or a LEVEL-SET document (JSON with a `set_id` and a `rooms` array). ⛔ NOT a room's
+ * `.json`/`.oel`, the overlay, the apMapping companion or `rules.json`: none of them carries the set.
+ */
+export function isSetSaveDownload({ text = null, type = '' } = {}) {
+    if (type === 'application/zip') return true;
+    if (typeof text !== 'string' || !text.includes('"rooms"')) return false;
+    try {
+        const doc = JSON.parse(text);
+        return typeof doc?.set_id === 'string' && doc.set_id !== '' && Array.isArray(doc.rooms);
+    } catch { return false; }
 }

@@ -36,7 +36,7 @@ import {
 import { emptyOverlay } from './seedlingSetOverlay.js';
 import { editorVanillaSet, reportOf } from './watchSetEditor.js';
 import {
-    LAB_SET_ATLAS_BASE, LAB_SET_ROOMS_SOURCE, WATCH_SET_ATLAS, handoverRefusalOf, labSetIdentity,
+    LAB_SET_ATLAS_BASE, LAB_SET_ROOMS_SOURCE, WATCH_SET_ATLAS, handoverRefusalOf, isSetSaveDownload, labSetIdentity,
 } from './watchSetIdentity.js';
 
 const readJson = (rel) => JSON.parse(readFileSync(fileURLToPath(new URL(rel, import.meta.url)), 'utf8'));
@@ -228,25 +228,41 @@ describe('⛓⛓⛓ S3 — the rules name the SET the rooms came from: `region_a
     });
 });
 
-describe('⛓⛓ S4 — the Edit ▸ receiver never silently replaces the reader\'s unsaved set (`handoverRefusalOf`)', () => {
+describe('⛓⛓ S4 — the Edit ▸ receiver never silently replaces unsaved work (`handoverRefusalOf`, `isSetSaveDownload`)', () => {
     const base = { heldSetId: 'seedling-vanilla-record-1040ace1', handedSetId: 'seedling-vanilla-record-baf03f0b' };
+    /** ⛓ The page's own rule, by CONTENT: the held set's hash now vs. the one recorded at its last save. */
+    const unsavedAgainst = (saved, now) => levelSetContentHash(saved) !== levelSetContentHash(now);
+
     it('nothing held → taken', () => {
-        expect(handoverRefusalOf({ ...base, heldSetId: null, setEdits: 3 })).toBeNull();
+        expect(handoverRefusalOf({ ...base, heldSetId: null, unsaved: true, roomEdits: 3 })).toBeNull();
     });
-    it('a HOST\'s set held (its edits return to that host) → taken, whatever its edits', () => {
-        expect(handoverRefusalOf({ ...base, fromHost: true, setEdits: 4, roomEdits: 2, openRoom: 10 })).toBeNull();
+    it('the held set unchanged since its save, no room edits → taken', () => {
+        expect(handoverRefusalOf({ ...base, unsaved: unsavedAgainst(VANILLA_SET, structuredClone(VANILLA_SET)) })).toBeNull();
     });
-    it('the reader\'s set with nothing unsaved → taken', () => {
-        expect(handoverRefusalOf({ ...base, setEdits: 0, roomEdits: 0 })).toBeNull();
-    });
-    it('the reader\'s set with set edits not downloaded → REFUSED, naming both ids', () => {
-        const why = handoverRefusalOf({ ...base, setEdits: 2 });
+    it('set edits not saved → REFUSED, naming both ids', () => {
+        const why = handoverRefusalOf({ ...base, unsaved: unsavedAgainst(VANILLA_SET, withTree()) });
         expect(why).toMatch(/NOT replaced/);
         expect(why).toContain(base.heldSetId);
         expect(why).toContain(base.handedSetId);
-        expect(why).toContain('2 set edit(s)');
     });
-    it('the reader\'s set with edits in an open room → REFUSED, naming the room', () => {
-        expect(handoverRefusalOf({ ...base, roomEdits: 5, openRoom: 7 })).toContain('5 edit(s) in open room 7');
+    it('lab-7: undo + new edits back to the saved op COUNT with different content is still unsaved (content, not counts)', () => {
+        // saved = the tree set; then the tree undone and a TILE flipped: one op either way, a different set.
+        expect(unsavedAgainst(withTree(), withTile())).toBe(true);
+        expect(handoverRefusalOf({ ...base, unsaved: unsavedAgainst(withTree(), withTile()) })).toMatch(/NOT replaced/);
+    });
+    it('edits in an open room → REFUSED, naming the room', () => {
+        expect(handoverRefusalOf({ ...base, roomEdits: 5, openRoom: 7 })).toContain('5 unwritten edit(s) in open room 7');
+    });
+    it('lab-7 #2: a HOST\'s room still open → REFUSED even with no edits (that host would be handed the wrong record)', () => {
+        expect(handoverRefusalOf({ ...base, hostRoomOpen: true, openRoom: 10 })).toMatch(/room 10 HANDED OVER earlier and still OPEN/);
+    });
+    it('lab-7 #1: a ROOM download is not a save; the SET and the BUNDLE are', () => {
+        const room = VANILLA_SET.rooms[10].source.record;
+        expect(isSetSaveDownload({ text: `${JSON.stringify({ ...room, level: 10 }, null, 2)}\n`, type: 'application/json' })).toBe(false);
+        expect(isSetSaveDownload({ text: '<level width="112"></level>', type: 'application/xml' })).toBe(false);
+        expect(isSetSaveDownload({ text: JSON.stringify(VAN.rep.rules), type: 'application/json' })).toBe(false);
+        expect(isSetSaveDownload({ text: JSON.stringify({ overlay_id: 'overlay-1', rooms: {} }), type: 'application/json' })).toBe(false);
+        expect(isSetSaveDownload({ text: JSON.stringify(downloadSet(VAN.session).set), type: 'application/json' })).toBe(true);
+        expect(isSetSaveDownload({ text: new Uint8Array([0x50, 0x4b]), type: 'application/zip' })).toBe(true);
     });
 });

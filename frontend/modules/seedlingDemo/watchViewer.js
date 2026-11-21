@@ -315,7 +315,8 @@ import {
 import { loadJSZipBrowser } from '../presets/loadJSZipBrowser.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
 import { stampAtlasIdentity, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
-import { WATCH_SET_ATLAS, handoverRefusalOf, labSetIdentity } from './watchSetIdentity.js';
+import { WATCH_SET_ATLAS, handoverRefusalOf, isSetSaveDownload, labSetIdentity } from './watchSetIdentity.js';
+import { levelSetContentHash } from '../procgenCore/levelSetReference.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { REDO_COMMAND_ID, TOOLS, UNDO_COMMAND_ID } from '../procgenCore/editorView.js';
 import { createEditSession, foldEdits, resolveBase } from '../procgenCore/editCore.js';
@@ -9083,9 +9084,13 @@ async function runEditor(params, lifetime) {
     let setSession = null;
     let setRoomSource = null;
     let setUi = null;
-    /** ⛓ S4 — did a HOST hand this session's set over (else the READER loaded it), and its op count at the last download. */
-    let setSessionFromHost = false;
-    let setSessionSavedOps = 0;
+    /**
+     * ⛓ S4 — the held set's CONTENT HASH at its last SAVE (`levelSetContentHash`): the load, a set/bundle download, a
+     * host room's close. The hand-over guard compares it with the hash now (`watchSetIdentity.handoverRefusalOf`).
+     */
+    let setSessionSavedHash = null;
+    const setHashNow = () => (setSession ? levelSetContentHash(setSession.record().set) : null);
+    const markSetSaved = () => { setSessionSavedHash = setHashNow(); };
     /** ⛓ Which room of the SET the room session below was opened on, or null. */
     let openRoom = null;
     /**
@@ -9109,6 +9114,8 @@ async function runEditor(params, lifetime) {
         if (hostRoomOpen && openRoom === null) {
             hostRoomOpen = false;
             holdHostSetDocument(null);
+            // ⛓ S4 — the close's announce handed this record back to the host: that is its save.
+            markSetSaved();
         }
         return hostRoomOpen;
     };
@@ -9172,10 +9179,10 @@ async function runEditor(params, lifetime) {
     // ⛓ S4 — the hand-over guard (module docblock at `installHandoverRefusal`), over this arm's live locals.
     installHandoverRefusal((set) => handoverRefusalOf({
         heldSetId: setSession ? setSession.record().set.set_id : null,
-        fromHost: setSessionFromHost,
-        setEdits: setSession ? setSession.ops().length - setSessionSavedOps : 0,
+        unsaved: !!setSession && setHashNow() !== setSessionSavedHash,
         roomEdits: openRoom !== null && session ? session.ops().length : 0,
         openRoom,
+        hostRoomOpen: hostRoomStillOpen(),
         handedSetId: set?.set_id ?? null,
     }));
     lifetime.onRetire(() => installHandoverRefusal(() => null));
@@ -9918,9 +9925,8 @@ async function runEditor(params, lifetime) {
         }
         setSession = createSetSession(setAdapter, record, { base });
         setRoomSource = setSessionRoomSource(setSession);
-        setSessionFromHost = fromHost;
-        setSessionSavedOps = 0;
         openRoom = null;
+        markSetSaved();
         // ⛓ A set the READER loaded is theirs: the host's document is not held for it.
         if (!fromHost) holdHostSetDocument(null);
         /**
@@ -9975,7 +9981,12 @@ async function runEditor(params, lifetime) {
                 : { room: openRoom, ops: session.ops().length, session }),
             openRoomAt,
             discardRoom,
-            download,
+            // ⛓ S4 — the set editor's downloads: a SET or BUNDLE one is the set's save (the hand-over guard's); a room's,
+            // the overlay's, the companion's or rules.json's is not (`isSetSaveDownload`).
+            download: (name, text, type) => {
+                if (isSetSaveDownload({ text, type })) markSetSaved();
+                download(name, text, type);
+            },
             loadZip,
             onSetChange: () => {
                 renderSetRooms();
@@ -10363,8 +10374,6 @@ async function runEditor(params, lifetime) {
     });
 
     const download = (name, text, type) => {
-        // ⛓ S4 — a download is the reader's save: the hand-over guard counts edits since it.
-        if (setSession) setSessionSavedOps = setSession.ops().length;
         const a = document.createElement('a');
         a.href = URL.createObjectURL(new Blob([text], { type }));
         a.download = name;
