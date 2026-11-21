@@ -1625,7 +1625,13 @@ export function rulesJsonOf(session, deps, { compileRegionAtlas, gameName = 'See
     const record = session.record();
     const derived = deriveAtlasOf(record, deps);
     const mapDoc = { levels: roomsOfSet(record.set, deps.parseOel) };
-    const { rules, report } = compileRegionAtlas(derived.atlas, { mapDoc, gameName });
+    /**
+     * ⛓ S3 — `levelSet` is the STAMPED set the download would write (`stampedSetOf`, the one spelling), so a
+     * compile that names the set (the lab's, `watchSetIdentity.js`) names the id the bundle's `level-set` member
+     * carries. The plain `compileRegionAtlas` reads no such option.
+     */
+    const { rules, report } = compileRegionAtlas(derived.atlas,
+        { mapDoc, gameName, levelSet: stampedSetOf(record) });
     return { rules, report, atlas: derived.atlas, stats: derived.stats, dropped: derived.dropped };
 }
 

@@ -336,10 +336,16 @@ function _bfsToGoal(world, from, isGoal, opts = {}) {
     // whether this candidate is the destination — the exclude-other-
     // exits rule allows the goal tile to be an exit (we're trying to
     // walk TO it, not THROUGH it).
-    function isWalkable(x, y, isAlsoGoal) {
+    function isWalkable(x, y, isAlsoGoal, dir) {
         if (!isFloor(world, x, y)) return false;
         if (excludeOtherExits && !isAlsoGoal && getExitAt(world, x, y)) return false;
+        // ⛓ CONTENT SETS PASS-3 — the ENTRY GATE on entering (x, y) moving `dir`, as `step` reads it (`shutEntryAt`):
+        //   `null` refuses the move outright; a gate id is a clearance, judged like an obstacle (against the
+        //   inventory when one is given, else transparent).
+        const entry = world.entryGates?.has(`${x},${y},${dir}`) ? world.entryGates.get(`${x},${y},${dir}`) : undefined;
+        if (entry === null) return false;
         if (inventory && obstacleLib) {
+            if (entry && !isObstacleCleared(entry, inventory, obstacleLib, clearanceOpts)) return false;
             const obstacleId = getObstacle(world, x, y);
             if (obstacleId && !isObstacleCleared(obstacleId, inventory, obstacleLib, clearanceOpts)) {
                 return false;
@@ -360,8 +366,8 @@ function _bfsToGoal(world, from, isGoal, opts = {}) {
     visited.add(startKey);
 
     const DELTAS = [
-        { dx: 1, dy: 0 }, { dx: -1, dy: 0 },
-        { dx: 0, dy: 1 }, { dx: 0, dy: -1 },
+        { dx: 1, dy: 0, dir: INPUT_E }, { dx: -1, dy: 0, dir: INPUT_W },
+        { dx: 0, dy: 1, dir: INPUT_S }, { dx: 0, dy: -1, dir: INPUT_N },
     ];
 
     let frontier = [{ x: from.x, y: from.y, t: 0 }];
@@ -379,7 +385,7 @@ function _bfsToGoal(world, from, isGoal, opts = {}) {
                 const nKey = stateKey(nx, ny, nt);
                 if (visited.has(nKey)) continue;
                 const isAlsoGoal = isGoal(nx, ny);
-                if (!isWalkable(nx, ny, isAlsoGoal)) continue;
+                if (!isWalkable(nx, ny, isAlsoGoal, d.dir)) continue;
                 // Hazard validation at turn t: Rule 1 (can't move
                 // into hazard.next), Rule 2 (head-on collision into
                 // hazard.cur from hazard.next). Always passes when

@@ -69,7 +69,7 @@ import { captureTileGridLibraryEntry } from './mazeLibraryEntry.js';
 import { extractPathsAndObstacles } from './mazeRoomEngine.js';
 import { serializeMazeWorld } from './mazeSerializer.js';
 import { reseatThings } from './mazeThings.js';
-import { TILE_KINDS_FIELD, deserializeMazeWorldWithKinds } from './mazeTileKinds.js';
+import { ONE_WAY_PASS, TILE_KINDS_FIELD, deserializeMazeWorldWithKinds } from './mazeTileKinds.js';
 
 /** ⛓ The three deps the capture path takes — the maze's own, in one place. */
 const CAPTURE_DEPS = Object.freeze({
@@ -245,9 +245,32 @@ function restamp(edited, original) {
     //   a serializer that stops emitting a second field cannot lose it silently.
     // ⛓ CONTENT SETS TILE-3 — EXCEPT the placed tile kinds: the LAB owns them (it shows and edits them), so an edit
     //   that removed the last one saves a payload with no `tileKinds`, and copying the document's back would undo it.
-    for (const [k, v] of Object.entries(original ?? {})) if (!(k in next) && k !== TILE_KINDS_FIELD) next[k] = v;
+    const gatesMerged = ownsGates(original, edited);
+    for (const [k, v] of Object.entries(original ?? {})) {
+        if (!(k in next) && k !== TILE_KINDS_FIELD && !(k === ENTRY_GATES && gatesMerged)) next[k] = v;
+    }
+    // ⛓⛓ CONTENT SETS PASS-3 — ENTRY GATES, MERGED. The lab's library capture (`serializeMazeWorld`) keeps a world's
+    //   `entry_gates` only when a placed one-way kind owns some, so the edit carries exactly ITS kinds' gates and none
+    //   of the document's own (the world's direction physics, e.g. a Seedling level's). The save is the document's
+    //   gates minus those its one-way kinds owned (the edit decides those), then the edit's. A world where no one-way
+    //   kind is involved on either side takes the old rule above, byte for byte.
+    if (gatesMerged) {
+        const theirs = (original?.[ENTRY_GATES] ?? []).filter((g) => !oneWayCells(original).has(tileKey(g)));
+        const mine = edited[ENTRY_GATES] ?? [];
+        const slot = (g) => `${g.x},${g.y},${g.dir}`;
+        const mineSlots = new Set(mine.map(slot));
+        const merged = [...theirs.filter((g) => !mineSlots.has(slot(g))), ...mine];
+        delete next[ENTRY_GATES];
+        if (merged.length) next[ENTRY_GATES] = merged;
+    }
     return next;
 }
+
+const ENTRY_GATES = 'entry_gates';
+/** ⛓ PASS-3 — the cells of a payload's placed one-way kinds. */
+const oneWayCells = (payload) => new Set((payload?.[TILE_KINDS_FIELD] ?? []).filter((k) => k.pass === ONE_WAY_PASS).map(tileKey));
+/** ⛓ PASS-3 — is a placed one-way kind involved on either side of the save? */
+const ownsGates = (original, edited) => oneWayCells(original).size > 0 || oneWayCells(edited).size > 0;
 
 /**
  * ⛓ CONTENT SETS TILE-3 — **A PLACED KIND MAY NOT COVER A THING.** The lab never sees the region's `things` (they come
