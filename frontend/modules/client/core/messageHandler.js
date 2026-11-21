@@ -85,6 +85,9 @@ export function rulesNeededMessage(game, seedName, presetsAtOtherSeeds = null, {
   return `No rules for ${game} are loaded, and the server did not send them${addon}. Load its rules.json (${where})${tail}`;
 }
 
+/** How long one check of an offline-progress pass may take before the pass goes on without it. */
+export const OFFLINE_STEP_TIMEOUT_MS = 10_000;
+
 /** client:locationCheckRefused reason while a slot's rules are pending (not a checkGate REFUSAL). */
 export const RULES_PENDING = 'rules_pending';
 
@@ -212,6 +215,10 @@ export class MessageHandler {
     this._roomCheckedIds = new Set();
     this._offlinePassChain = Promise.resolve();
     this._offlinePassWaiting = false;
+    // A step of a pass that has not finished after this long is left behind (tried again next pass): measured
+    // live (MW-P3, ~1 play in 3), a gate's worker ping occasionally never settles, and one such call held the
+    // whole push. Above the ping's own 5 s timeout.
+    this._offlineStepTimeoutMs = OFFLINE_STEP_TIMEOUT_MS;
     this._clientRulesSources = new Set();
     // `${seed}|${slot}` of every slot whose goal this page session reported: an ID-less goal the server never
     // echoes stays checked locally, and must not be offered again at the next connect.
@@ -1278,11 +1285,19 @@ export class MessageHandler {
       this._printToConsole('All your offline checks are on the server.', 'success');
       return;
     }
+    let pingTimer = null;
     try {
-      await stateManagerProxySingleton.pingWorker?.('client:offlineProgress');
+      // Bounded like a step (see _offlineStepTimeoutMs): a ping that never settles must not hold the passes.
+      await Promise.race([
+        stateManagerProxySingleton.pingWorker?.('client:offlineProgress'),
+        new Promise((resolve) => {
+          pingTimer = setTimeout(resolve, this._offlineStepTimeoutMs);
+        }),
+      ]);
     } catch {
       // keep the last snapshot; the gate asks again per check
     }
+    clearTimeout(pingTimer);
     const reachability = stateManagerProxySingleton.getLatestStateSnapshot?.()?.locationReachability ?? {};
     const batch = pickPass(pending, { reachability, inFlight: this._offlineInFlight });
     let sent = 0;
@@ -1290,7 +1305,18 @@ export class MessageHandler {
       this._offlineInFlight.add(entry.name);
       const eventData = { locationName: entry.name, originator: OFFLINE_ORIGINATOR };
       if (entry.reportedByGame) eventData[GAME_REPORTED_FIELD] = true;
-      await handleUserLocationCheckForClient(eventData, 'user:locationCheck');
+      let timer = null;
+      const outcome = await Promise.race([
+        handleUserLocationCheckForClient(eventData, 'user:locationCheck').then(() => 'done'),
+        new Promise((resolve) => {
+          timer = setTimeout(() => resolve('stuck'), this._offlineStepTimeoutMs);
+        }),
+      ]);
+      clearTimeout(timer);
+      if (outcome === 'stuck') {
+        log('warn', `[MessageHandler] Offline progress: the check of "${entry.name}" did not finish within ` +
+          `${this._offlineStepTimeoutMs} ms; going on, and trying it again on the next pass.`);
+      }
       const went = entry.goal ? this._goalStatus(entry.name) === 'checked' : this._sentLocationIds.has(entry.id);
       if (went) sent += 1;
       else this._offlineInFlight.delete(entry.name); // refused after all: tried again next pass

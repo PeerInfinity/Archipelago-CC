@@ -15,10 +15,21 @@ const connectionMock = vi.hoisted(() => ({
 }));
 vi.mock('./apClient.js', () => ({ default: connectionMock }));
 
-const smState = vi.hoisted(() => ({ reachability: {}, checked: [], raw: null, player: null }));
+const smState = vi.hoisted(() => ({ reachability: {}, checked: [], raw: null, player: null, hangPings: 0 }));
 vi.mock('../../stateManager/index.js', () => {
   const proxy = {
-    pingWorker: async () => true,
+    pingWorker: (label) => {
+      // A gate ping that never settles (measured live, stateManagerProxy): the next `hangPings` gate pings hang.
+      if (label === 'client:offlineProgress' && smState.hangPassPing) {
+        smState.hangPassPing = false;
+        return new Promise(() => {});
+      }
+      if (label === 'client:checkGate' && smState.hangPings > 0) {
+        smState.hangPings -= 1;
+        return new Promise(() => {});
+      }
+      return Promise.resolve(true);
+    },
     getLatestStateSnapshot: () => ({ locationReachability: smState.reachability, checkedLocations: smState.checked }),
     getSnapshot: () => ({ locationReachability: smState.reachability, inventory: {}, regionReachability: {} }),
     getStaticData: () => null,
@@ -149,6 +160,8 @@ beforeEach(() => {
   smState.checked = [];
   smState.raw = null;
   smState.player = null;
+  smState.hangPings = 0;
+  smState.hangPassPing = false;
   busEvents = [];
   subscribers = new Map();
   dispatcher = {
@@ -186,6 +199,7 @@ beforeEach(() => {
   messageHandler._offlineOffer = null;
   messageHandler._offlinePassChain = Promise.resolve();
   messageHandler._offlinePassWaiting = false;
+  messageHandler._offlineStepTimeoutMs = 50;
   messageHandler._clientRulesSources = new Set();
   messageHandler._goalReportedRooms = new Set();
   messageHandler.scoutedLocations = new Map();
@@ -322,6 +336,27 @@ describe('Send: passes through the ordinary path, never out of logic', () => {
     } finally {
       pass.mockRestore();
     }
+  });
+
+  it('a gate call that never settles does not hold the push: the rest go, the stuck one is retried next pass', async () => {
+    playOffline(questDoc(), 1, ['Bottom Left Chest', 'Top Middle Chest'], { ...ALL_IN_LOGIC });
+    roomInfo();
+    await connected({ slot: 1 });
+    smState.hangPings = 1;
+    await messageHandler.respondToOfflineProgress('send');
+    expect(sentIds()).toEqual([1002]);
+    expect(messageHandler._offlineInFlight.has('Bottom Left Chest')).toBe(false);
+    await received(1, [{ item: 8, location: 1002, player: 1 }]);
+    expect(sentIds()).toEqual([1002, 1001]);
+  });
+
+  it("the pass's own snapshot ping never settling does not hold the push either", async () => {
+    playOffline(questDoc(), 1, ['Bottom Left Chest'], { ...ALL_IN_LOGIC });
+    roomInfo();
+    await connected({ slot: 1 });
+    smState.hangPassPing = true;
+    await messageHandler.respondToOfflineProgress('send');
+    expect(sentIds()).toEqual([1001]);
   });
 
   it('every pushed check is a direct handler call (originator OfflineProgress): Loop mode never sees it', async () => {
