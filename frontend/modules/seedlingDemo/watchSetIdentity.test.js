@@ -9,7 +9,8 @@
  * Mutants this file must red (each driven by hand, quoted in the as-built):
  *  · `WATCH_SET_ATLAS.game` back to `'seedling-watch-edit'` → the substrate row;
  *  · the stamp removed (the compile handed the derived atlas) → the two-ids row;
- *  · `LAB_SET_COMPILE_OPTIONS` without `flashPanel: false` → the no-`flash_panel` row.
+ *  · `LAB_SET_COMPILE_OPTIONS` without `flashPanel: false` → the no-`flash_panel` row. ⛓ S4 RE-RECORDED that row:
+ *    the option is now `{}` and the row pins the compiler's own wiring; `{flashPanel: false}` back → it reds.
  *  · S3: `seedlingSetAdapter.rulesJsonOf` stops handing `levelSet`, or the wrapper stops writing
  *    `level_set` → the `region_atlas[1]` row and the S3 block's rows.
  */
@@ -24,7 +25,7 @@ import { SEEDLING_ATLAS_GAME as MAZE_LAB_SEEDLING_GAME } from '../mazeRoom/mazeS
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { levelSetContentHash, levelSetReferenceOf } from '../procgenCore/levelSetReference.js';
-import { compileRegionAtlas, substrateIdFor } from '../procgenPipeline/regionAtlasCompiler.js';
+import { FLASH_PANEL_WIRING, compileRegionAtlas, substrateIdFor } from '../procgenPipeline/regionAtlasCompiler.js';
 import { stampAtlasIdentity, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { TILE_SIZE } from './levelWorld.js';
 import { parseOelLevel } from './procgenLevelOel.js';
@@ -35,7 +36,7 @@ import {
 import { emptyOverlay } from './seedlingSetOverlay.js';
 import { editorVanillaSet, reportOf } from './watchSetEditor.js';
 import {
-    LAB_SET_ATLAS_BASE, LAB_SET_ROOMS_SOURCE, WATCH_SET_ATLAS, labSetIdentity,
+    LAB_SET_ATLAS_BASE, LAB_SET_ROOMS_SOURCE, WATCH_SET_ATLAS, handoverRefusalOf, labSetIdentity,
 } from './watchSetIdentity.js';
 
 const readJson = (rel) => JSON.parse(readFileSync(fileURLToPath(new URL(rel, import.meta.url)), 'utf8'));
@@ -95,7 +96,7 @@ describe('⛓⛓ the GAME: one Seedling constant, read by both labs', () => {
     });
 });
 
-describe('⛓⛓⛓ the page\'s deps over the vanilla 116: Seedling rooms, its own atlas id, no flash_panel', () => {
+describe('⛓⛓⛓ the page\'s deps over the vanilla 116: Seedling rooms, its own atlas id, its flash_panel (S4)', () => {
     it('the export is allowed, and EVERY room\'s substrate is `flash_seedling`', () => {
         expect(VAN.rep.download.rules.allowed).toBe(true);
         const rows = Object.values(VAN.rep.rules.preset_sidecars?.['1'] ?? {});
@@ -103,8 +104,14 @@ describe('⛓⛓⛓ the page\'s deps over the vanilla 116: Seedling rooms, its o
         expect(rows.length).toBeGreaterThan(100);
         expect(new Set(rows.map((r) => r.substrate))).toEqual(new Set([FLASH_SEEDLING_ENTRY.id]));
     });
-    it('the rules carry NO `flash_panel` block (nothing pretends to play)', () => {
-        expect(VAN.rep.rules).not.toHaveProperty('flash_panel');
+    /**
+     * ⛓ RE-RECORDED by S4 (seedling-custom-set-arm), reviewed by lab-7: until S4 this row pinned NO `flash_panel`
+     * block (S1's `flashPanel: false`, "nothing pretends to play"). S4's player delivers a HELD set's own rooms, so
+     * the compile's own wiring is back — exactly `FLASH_PANEL_WIRING.seedling`, nothing the lab chose. Rules that
+     * arrive WITHOUT the set are refused by the player (slice G), pinned in `flashPanel/seedlingCustomSetArm.test.js`.
+     */
+    it('the rules carry the compiler\'s own Seedling `flash_panel` block (S4: a held set plays)', () => {
+        expect(VAN.rep.rules.flash_panel).toEqual({ 1: FLASH_PANEL_WIRING.seedling });
     });
     it('`region_atlas[1]` names Seedling, a `seedling-lab-<8 hex>` id and the page\'s label, and every sidecar points at that id', () => {
         expect(VAN.rep.rules.region_atlas['1']).toEqual({
@@ -218,5 +225,28 @@ describe('⛓⛓⛓ S3 — the rules name the SET the rooms came from: `region_a
         const out = lab.compileRegionAtlas(VAN.rep.atlas, { mapDoc: { levels: roomsOfSet(VANILLA_SET, parseOelLevel) } });
         expect(out.rules.region_atlas['1'].atlas_id).toBe(VAN.id);
         expect(out.rules.region_atlas['1']).not.toHaveProperty('level_set');
+    });
+});
+
+describe('⛓⛓ S4 — the Edit ▸ receiver never silently replaces the reader\'s unsaved set (`handoverRefusalOf`)', () => {
+    const base = { heldSetId: 'seedling-vanilla-record-1040ace1', handedSetId: 'seedling-vanilla-record-baf03f0b' };
+    it('nothing held → taken', () => {
+        expect(handoverRefusalOf({ ...base, heldSetId: null, setEdits: 3 })).toBeNull();
+    });
+    it('a HOST\'s set held (its edits return to that host) → taken, whatever its edits', () => {
+        expect(handoverRefusalOf({ ...base, fromHost: true, setEdits: 4, roomEdits: 2, openRoom: 10 })).toBeNull();
+    });
+    it('the reader\'s set with nothing unsaved → taken', () => {
+        expect(handoverRefusalOf({ ...base, setEdits: 0, roomEdits: 0 })).toBeNull();
+    });
+    it('the reader\'s set with set edits not downloaded → REFUSED, naming both ids', () => {
+        const why = handoverRefusalOf({ ...base, setEdits: 2 });
+        expect(why).toMatch(/NOT replaced/);
+        expect(why).toContain(base.heldSetId);
+        expect(why).toContain(base.handedSetId);
+        expect(why).toContain('2 set edit(s)');
+    });
+    it('the reader\'s set with edits in an open room → REFUSED, naming the room', () => {
+        expect(handoverRefusalOf({ ...base, roomEdits: 5, openRoom: 7 })).toContain('5 edit(s) in open room 7');
     });
 });
