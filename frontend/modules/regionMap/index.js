@@ -21,7 +21,7 @@
 import { RegionMapUI } from './regionMapUI.js';
 import { REGION_MAP_SETTINGS_SCHEMA, moduleHandles, panelInstances } from './regionMapSettings.js';
 import {
-    LOCATION_CLICKED, REGION_CLICKED, REGION_MAP_NODE_SELECTED, makeRegionMapCentreAction,
+    LOCATION_CLICKED, REGION_CLICKED, makeRegionMapCentreAction,
 } from './regionMapClickActions.js';
 import { registerClickAction, unregisterClickAction, PANEL_ACTION_IDS } from '../regionView/clickActions.js';
 
@@ -49,7 +49,6 @@ export function register(registrationApi) {
     registrationApi.registerEventBusPublisher('ui:navigateToRegion');
     registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
     registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
-    registrationApi.registerEventBusPublisher(REGION_MAP_NODE_SELECTED);
     // ⛓ CA-S3: the generic click events (mode-toggle design §4.3), `{ panelId: 'regionMap', regionName, locationName? }`.
     registrationApi.registerEventBusPublisher(REGION_CLICKED);
     registrationApi.registerEventBusPublisher(LOCATION_CLICKED);

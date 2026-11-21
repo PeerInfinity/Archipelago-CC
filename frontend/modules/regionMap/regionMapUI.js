@@ -637,8 +637,7 @@ export class RegionMapUI {
             record = { target: 'location', location: square.location, region: regionName, result: r.run };
         } else {
             const region = regionOfCell(frame.key, members);
-            const r = runRegionMapClick(h, 'region', { regionName: region, data: { id: region, displayKey: frame.key } },
-                settings, discovery);
+            const r = runRegionMapClick(h, 'region', { regionName: region }, settings, discovery);
             status = r.status;
             record = { target: 'region', region, cell: frame.key, result: r.run };
         }

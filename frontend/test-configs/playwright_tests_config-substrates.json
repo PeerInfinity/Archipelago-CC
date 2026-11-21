@@ -2100,7 +2100,7 @@
             "id": "region-map-click-default",
             "enabled": true,
             "category": "Region Map",
-            "_comment": "CLICK ACTIONS CA-S3 (2026-11-19): the Region Map's default clickActions (session-only), on procgen_topdown AP_1: a cell click extends the path to its region and opens the Regions panel at it (regions.open); regionMap:nodeSelected then regionView:regionClicked first; the strip sits at the top of the panel. Fast batch. Reloads the world loaded before."
+            "_comment": "CLICK ACTIONS CA-S3 (2026-11-19): the Region Map's default clickActions (session-only), on procgen_topdown AP_1: a cell click extends the path to its region and opens the Regions panel at it (regions.open); regionView:regionClicked first (CA-S5 retired regionMap:nodeSelected); the strip sits at the top of the panel. Fast batch. Reloads the world loaded before."
         },
         {
             "id": "region-map-click-master-off",
@@ -2166,7 +2166,7 @@
             "id": "test_node_selection",
             "enabled": true,
             "category": "Region Graph",
-            "_comment": "REGION GRAPH CHECKS (2026-11-18): a pointer tap (mousedown + mouseup at the node's rendered position) on a region node publishes regionGraph:nodeSelected { nodeId, data } and marks it selected: the only row through the canvas → tap → handler wiring CA-S2 rewrites. Reloads the world loaded before. On push (fast batch)."
+            "_comment": "REGION GRAPH CHECKS (2026-11-18): a pointer tap (mousedown + mouseup at the node's rendered position) on a region node publishes regionView:regionClicked { panelId: 'regionGraph', regionName } and marks it selected (CA-S5: was regionGraph:nodeSelected, retired; the row checks it stays silent): the only row through the canvas → tap → handler wiring CA-S2 rewrites. Reloads the world loaded before. On push (fast batch)."
         },
         {
             "id": "test_region_graph_node_picker",
@@ -2184,13 +2184,13 @@
             "id": "test_region_graph_click_default",
             "enabled": true,
             "category": "Region Graph",
-            "_comment": "CLICK ACTIONS CA-S2 (2026-11-19): with the default clickActions (set session-only), a tap on an accessible region extends the path to it and opens the Regions panel at it (regions.open, registered by the Regions module); regionGraph:nodeSelected is published first. Reloads the world loaded before. On push (fast batch)."
+            "_comment": "CLICK ACTIONS CA-S2 (2026-11-19): with the default clickActions (set session-only), a tap on an accessible region extends the path to it and opens the Regions panel at it (regions.open, registered by the Regions module); regionView:regionClicked is published first (CA-S5 retired regionGraph:nodeSelected). Reloads the world loaded before. On push (fast batch)."
         },
         {
             "id": "test_region_graph_click_master_off",
             "enabled": true,
             "category": "Region Graph",
-            "_comment": "CLICK ACTIONS CA-S2 (2026-11-19): the \u23f8 master switch off (clickActions.enabled false, session-only): a tap moves nobody, edits no path, opens no Regions panel, and still publishes regionGraph:nodeSelected. On push (fast batch)."
+            "_comment": "CLICK ACTIONS CA-S2 (2026-11-19): the \u23f8 master switch off (clickActions.enabled false, session-only): a tap moves nobody, edits no path, opens no Regions panel, and still publishes regionView:regionClicked (CA-S5 retired regionGraph:nodeSelected). On push (fast batch)."
         },
         {
             "id": "test_region_graph_click_location_check",
@@ -2202,7 +2202,7 @@
             "id": "test_region_graph_click_discover",
             "enabled": true,
             "category": "Region Graph",
-            "_comment": "CLICK ACTIONS CA-S4 (2026-11-20): discovery.discover, the registered action that replaced Discovery's regionGraph:nodeSelected listener. Discovery on with clickDiscoversRegion (session-only): a tap discovers an undiscovered region; loop mode's bundle (clickDiscoversRegion false): a tap discovers nothing. Reloads the world loaded before. On push (fast batch)."
+            "_comment": "CLICK ACTIONS CA-S4 (2026-11-20): discovery.discover, the registered action that replaced Discovery's regionGraph:nodeSelected listener (the event was retired in CA-S5). Discovery on with clickDiscoversRegion (session-only): a tap discovers an undiscovered region; loop mode's bundle (clickDiscoversRegion false): a tap discovers nothing. Reloads the world loaded before. On push (fast batch)."
         },
         {
             "id": "test_regions_location_click_follows_graph_strip",

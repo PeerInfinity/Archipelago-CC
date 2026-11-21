@@ -67,8 +67,8 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     });
 
     // Listen for region graph node clicks → filter paths, or clear on C click. ⛓ CA-S4: the generic click event,
-    // FILTERED to the Region Graph (it heard only the Graph's `regionGraph:nodeSelected` before; a Region Map click is
-    // not heard — whether it should be is an open question, not a ruling).
+    // FILTERED to the Region Graph (it heard only the Graph's `regionGraph:nodeSelected` before, retired in CA-S5). A
+    // Region Map click is not heard: ⚖ user 2026-11-20 (session 84c8ab35), "Region Graph only".
     eventBus.subscribe(REGION_CLICKED, (data) => {
         if (!isClickFromPanel(data, 'regionGraph')) return;
         const nodeId = data?.regionName;

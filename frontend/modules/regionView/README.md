@@ -46,7 +46,7 @@ summary?, choiceLabels?, initial?, offeredTo? }`.
 - **Run order** (R8): `order` = `ORDER.path` (100), then `ORDER.check` (200), then panel actions (`ORDER.panel`,
   300, the default). Equal orders run in registration order. `ORDER.select` (50, CA-S4) runs BEFORE the path: the
   panel actions that replaced a `regionGraph:nodeSelected` listener (Flash's region teleport, Discovery's discover),
-  which ran before any action because the Graph published that event first.
+  which ran before any action because the Graph published that event first (the event itself was retired in CA-S5).
 - `initial(panelId)` (CA-S4): the value the action has in a panel whose settings do not name it (`effectiveValue`).
   The strip writes it ONCE (`withInitialValues`, the strip's `seed()`), after which the stored value decides.
 - `offeredTo(panelId)` (CA-S4): `false` hides the action from that panel's strip and clicks (a panel never offers to
@@ -133,7 +133,9 @@ box keeps the location checks of every OTHER panel (`isMapClickOriginator` filte
 `{ panelId, regionName }` and `regionView:locationClicked` `{ panelId, regionName, locationName }`, published by both
 map panels (the Region Map since CA-S3, the Region Graph since CA-S4) on every click, before the actions. apcalc and
 vibeCodingSim listen to `regionView:regionClicked` FILTERED to `panelId === 'regionGraph'` (`isClickFromPanel`): they
-hear what they heard before. `regionGraph:nodeSelected` is still published until CA-S5.
+hear what they heard before (⚖ user 2026-11-20, session 84c8ab35: *"Region Graph only"*). They are the ONLY click
+events the maps publish: CA-S5 retired `regionGraph:nodeSelected` and `regionMap:nodeSelected` (and
+`regionActions.publishNodeSelected`), which nothing in the app heard any more.
 
 ## The "On click" strip (`clickActionsUI.js`)
 

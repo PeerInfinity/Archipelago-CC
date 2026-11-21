@@ -754,7 +754,8 @@ function recordEvents(testController, names) {
 }
 const pathOf = () => JSON.stringify(getGameStateSingleton().getPath?.() ?? []);
 const pathEndRegion = () => { const gs = getGameStateSingleton(); return gs.getLastRegionInPath?.() || gs.getCurrentRegion?.(); };
-const CLICK_EVENTS = ['regionMap:nodeSelected', 'regionView:regionClicked', 'regionView:locationClicked', 'ui:activatePanel', 'ui:navigateToRegion'];
+// CA-S5: `regionMap:nodeSelected` left this list with the event (retired; nothing heard it).
+const CLICK_EVENTS = ['regionView:regionClicked', 'regionView:locationClicked', 'ui:activatePanel', 'ui:navigateToRegion'];
 
 /**
  * The generated world, the panel, discovery off. With `target`, a reachable region in another cell first: the
@@ -814,9 +815,9 @@ export async function testRegionMapClickDefault(testController) {
     testController.reportCondition('… and opens the Regions panel at it (regions.open: ui:activatePanel regionsPanel, ui:navigateToRegion)',
       opened && rec.seen.some(([n, d]) => n === 'ui:activatePanel' && d?.panelId === 'regionsPanel'));
     const order = rec.seen.map(([n]) => n);
-    testController.reportCondition(`regionMap:nodeSelected, then regionView:regionClicked { panelId: 'regionMap', regionName }, before any action (${order.join(', ')})`,
-      order[0] === 'regionMap:nodeSelected' && order[1] === 'regionView:regionClicked'
-      && JSON.stringify(rec.seen[1][1]) === JSON.stringify({ panelId: 'regionMap', regionName: t.region }));
+    testController.reportCondition(`regionView:regionClicked { panelId: 'regionMap', regionName } first, before any action (${order.join(', ')})`,
+      order[0] === 'regionView:regionClicked'
+      && JSON.stringify(rec.seen[0][1]) === JSON.stringify({ panelId: 'regionMap', regionName: t.region }));
   } catch (error) {
     testController.reportCondition(`default Map click row error-free: ${error.message}`, false);
   } finally {
@@ -854,8 +855,8 @@ export async function testRegionMapClickMasterOff(testController) {
     // (The row's own `clickCanvas` re-activates the Map's tab: a `ui:activatePanel` for the Map is not the click's.)
     testController.reportCondition('master off: no Regions-panel change (no ui:activatePanel regionsPanel / ui:navigateToRegion)',
       !rec.seen.some(([n, d]) => (n === 'ui:activatePanel' && d?.panelId !== COMPONENT) || n === 'ui:navigateToRegion'));
-    testController.reportCondition('master off: regionMap:nodeSelected and regionView:regionClicked are still published',
-      rec.seen.some(([n]) => n === 'regionMap:nodeSelected') && rec.seen.some(([n, d]) => n === 'regionView:regionClicked' && d?.regionName === t.region));
+    testController.reportCondition('master off: regionView:regionClicked is still published',
+      rec.seen.some(([n, d]) => n === 'regionView:regionClicked' && d?.regionName === t.region));
   } catch (error) {
     testController.reportCondition(`master-off Map click row error-free: ${error.message}`, false);
   } finally {
@@ -883,8 +884,6 @@ export async function testRegionMapClickLocationCheck(testController) {
     const ev = rec.seen.find(([n]) => n === 'regionView:locationClicked');
     testController.reportCondition(`regionView:locationClicked { panelId: 'regionMap', regionName, locationName: ${loc} } (${JSON.stringify(ev?.[1])})`,
       !!loc && ev?.[1]?.panelId === 'regionMap' && ev[1].locationName === loc && typeof ev[1].regionName === 'string');
-    testController.reportCondition('a location click publishes no regionMap:nodeSelected (a region click\'s selection)',
-      !rec.seen.some(([n]) => n === 'regionMap:nodeSelected'));
   } catch (error) {
     testController.reportCondition(`location-check Map click row error-free: ${error.message}`, false);
   } finally {
@@ -1157,7 +1156,7 @@ registerTest({
   category: 'Region Map',
   testFunction: testRegionMapClickDefault,
   enabled: false,
-  description: 'CA-S3: with the default clickActions, a cell click extends the path to its region and opens the Regions panel at it; regionMap:nodeSelected then regionView:regionClicked first',
+  description: 'CA-S3: with the default clickActions, a cell click extends the path to its region and opens the Regions panel at it; regionView:regionClicked first',
 });
 registerTest({
   id: 'region-map-click-master-off',
