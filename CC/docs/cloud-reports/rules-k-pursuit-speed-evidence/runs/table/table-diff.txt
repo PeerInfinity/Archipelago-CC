@@ -1,0 +1,23 @@
+committed 044feacc98 {'rows': 106, 'regions': 50, 'excluded': 6} 3bff04abcd283cbdb6d52de65e87ec89
+candidate 0e2c7de72d {'rows': 99, 'regions': 47, 'excluded': 6} e7f7f02917124dfd4c04f9fab84c1c80
+engineMd5 bec369878feb67081187edca62baa951 -> bec369878feb67081187edca62baa951
+excluded equal: True
+DEL level_72|level_72 -> level_71__r0c6 
+   rule {"rule": "True_"}
+DEL level_72|level_72 -> level_73__r3c7 
+   rule {"rule": "True_"}
+DEL level_74|@Level 074 - Darkshield 
+   rule {"rule": "True_"}
+DEL level_74|level_74 -> level_73__r0c4 
+   rule {"rule": "True_"}
+DEL level_74|level_74 -> level_75 
+   rule {"rule": "True_"}
+DEL level_75|level_75 -> level_71__r0c6 
+   rule {"rule": "True_"}
+DEL level_75|level_75 -> level_74 
+   rule {"rule": "True_"}
+DEL level_98|level_98 -> level_99__r2c7 
+   rule {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]}
+ADD level_98|level_98 -> level_99__r7c5 
+   rule {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]}
+rename-map level_99__r2c7 -> level_99__r7c5: L98 row equal under the map: True

@@ -1,0 +1,19 @@
+guards [["lavarunner@80,216",[16,17],16],["lavarunner@136,88",[17,16],29],["lavarunner@216,240",[17,16],18]] dropped []
+ 0 ggggggggKKg.gggggggg
+ 1 gggggKKKggK.Kggggggg
+ 2 ggggKggggg..gKgggggg
+ 3 ggggKgggg...gKgggggg
+ 4 ggggK.....gggKgggggg
+ 5 gggK.gggggggggKggg##
+ 6 gggK..gggggg..Kgg..#
+ 7 gggg#........K....##
+ 8 ggggKK..gggggKggg..#
+ 9 ggKKKgKKKg.g.K..g..g
+10 gKgg#gKK.KKKKKKKK..g
+11 Kggg##..KKK.....gKgg
+12 gg###....KK.......Kg
+13 gg#g...####..ggg.gKg
+14 gggg..##gK#gggggggKg
+15 g....gg##gKggggggggK
+16 ...gggg#gKKgggggggKg
+17 gKggggg#gKggggggggKg

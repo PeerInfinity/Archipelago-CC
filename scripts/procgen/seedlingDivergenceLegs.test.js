@@ -286,15 +286,19 @@ describe('the committed playthrough\'s leg list', () => {
         // ⛓ rules-lavatrap-neck: the SAME legs by key (no leg gained or lost a goal event), every id from 627 on shifted by
         //   -2 — rule T splits L77 at its lava trap's sealing disc, so of its four door legs two re-key (r2c0 <- the L76
         //   arrival, r15c6 <- the L78 arrival, each to its own door) and two go (each now a crossing of the trap neck).
+        // ⛓ rules-k-pursuit-resume: the SAME legs by key (67 goal-event legs, the same keys and events), every id from 609 on
+        //   shifted by -2 and from 621 by -7 — rule K (a lavarunner that outruns the player gates its leash cut) splits L72, L74
+        //   and L75 into walk-in members and re-keys L73 r3c7 -> r8c2 and L99 r2c7 -> r7c5: 17 one-region door legs go, 10 re-keyed
+        //   ones come (fixtures/divergence-door-leg-keys.json, re-recorded by its `rerecord` recipe).
         expect(by).toEqual({
             'flag:L0:4': [45], 'flag:L0:1': [97, 108, 119, 130, 141, 152, 163], 'flag:L24:0': [180],
             'flag:L16:0': [206, 208, 210, 212, 214, 216, 218], 'flag:L39:8': [348],
             'flag:L62:0': [515, 520, 525, 530, 535, 566], 'flag:L63:1': [517, 522, 527, 532, 537, 541, 546, 551, 556],
             'flag:L63:6': [569, 571], 'flag:L63:7': [572],
-            'flag:L71:2': [621, 623], 'flag:L12:7+flag:L12:12': [639], 'flag:L101:0': [747],
-            'flag:L112:1': [791, 792, 798, 799, 805, 806, 812, 813, 819, 820],
-            'flag:L114:0': [793, 794, 795, 800, 801, 802, 807, 808, 809, 814, 815, 821, 822],
-            'flag:L113:0': [830, 831, 832, 833],
+            'flag:L71:2': [614, 616], 'flag:L12:7+flag:L12:12': [632], 'flag:L101:0': [740],
+            'flag:L112:1': [784, 785, 791, 792, 798, 799, 805, 806, 812, 813],
+            'flag:L114:0': [786, 787, 788, 793, 794, 795, 800, 801, 802, 807, 808, 814, 815],
+            'flag:L113:0': [823, 824, 825, 826],
         });
         // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
         for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);

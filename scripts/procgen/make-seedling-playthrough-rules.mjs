@@ -84,6 +84,7 @@ const { buildRockFireSides, doorLandingTiles } = await imp('frontend/modules/fla
 const HP = await imp('scripts/procgen/seedlingHolderParking.js');
 const FCG = await imp('scripts/procgen/seedlingFireChaserGuard.js');
 const TT = await imp('scripts/procgen/seedlingTrapTongueGuard.js');
+const KG = await imp('scripts/procgen/seedlingChaserPursuitGuard.js');
 const { seedlingModelOracles, modelFloodTiles, modelFloodPoints, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
 const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
 const { lethalTerrainUnder, arrivalIsLethal } = await imp('frontend/modules/seedlingDemo/seedlingLethalArrivals.js');
@@ -563,8 +564,42 @@ const baseGridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = t
     // their landing exemption reads the atlas that census is part of, a cycle); the rock Fire narrowings (the holder census
     // and the chaser guard decide from the rooms as they were); and the block push model (a block is not stopped by a
     // tongue: `seedlingBlockPaths` refuses a block on any gated cell).
-    return arrivals && guards ? stampTrapTongues(level, stamped) : stamped;
+    // ⛓⛓ rules-k-pursuit-speed: RULE K (with term (b)) is measured on the grid before T and stamped after T, under the same
+    // exclusions (a block is not stopped by a body's leash either), so T's arms and seal test read the grid they read before K.
+    return arrivals && guards ? stampChaserGuards(level, stamped, stampTrapTongues(level, stamped)) : stamped;
 };
+/**
+ * ⛓⛓ rules-k-pursuit-speed — RULE K with TERM (b) (`seedlingChaserPursuitGuard.js` holds the rule, its terms, the measured
+ * speeds and their citations; ⚖ Robert 2026-11-18 "Wire (b) after T"): every cell on the leash cut of a contact chaser that
+ * OUTRUNS the player on some tile of its own flood is a GATED cell costing that body's kill-lock arm, the kill-lock shape,
+ * so the analyzer prices a route that cannot avoid the cut and leaves one that can. Stamped over T's grid with T's own
+ * `stampOccupancy` (a cell holding the arm or a disjunct of it is left; a T cell gains the arm beside T's gate). Read off the
+ * patched map's bodies, the class constants, the ports and the grid; no level literal.
+ */
+export const playthroughChaserGuards = new Map();
+function stampChaserGuards(level, grid, onto) {
+    const bodies = combatCensusOf(level).enemies;
+    if (bodies.length === 0) return onto;
+    const toIndex = ([x, y]) => (y - (grid.origin?.y ?? 0)) * grid.width + (x - (grid.origin?.x ?? 0));
+    // Never charged: an arrival landing (landing there is not crossing), a door (stepping on it leaves the room) and a
+    // LavaTrap's own tile (the pull's landing, which `applyLavaTrapPulls` and the maze's `pulls` need as a sub-region).
+    const exempt = new Set([
+        ...arrivalTilesFor(level.level).map(toIndex),
+        ...[...doorTilesOf(level)].map((k) => toIndex(k.split(',').map(Number))),
+        ...playthroughLavaTrapPulls(level).map((p) => toIndex(p.tile)),
+    ]);
+    const centreOf = (b) => {
+        const ctor = ENEMY_CLASSES[b.tag]?.ctor;
+        if (!ctor) throw new Error(`chaser guards: L${level.level} ${b.tag}@${b.x},${b.y} has no ENEMY_CLASSES ctor row`);
+        return [b.x + ctor.dx, b.y + ctor.dy];
+    };
+    const out = KG.stampChaserGuards({ grid, onto, tileTypes: HP.tileTypesOf(level, grid.width), bodies, centreOf, exempt });
+    if (out.refused.length) throw new Error(`chaser guards: L${level.level}: ${out.refused.join('; ')}`);
+    if (out.guards.length || out.dropped.length) {
+        playthroughChaserGuards.set(level.level, { guards: out.guards, dropped: out.dropped, charged: out.charged });
+    }
+    return out.grid;
+}
 /**
  * ⛓⛓ rules-lavatrap-neck — RULE T (`seedlingTrapTongueGuard.js` holds the rule, its terms and its citations; ⚖ Robert
  * 2026-11-17 "T wired + K measured, 2 parallel"): every cell in a killing trap's clear-line reach is a GATED cell costing
@@ -1767,30 +1802,47 @@ function applyLavaTrapPulls(atlas, regionId, level, analysis) {
     // ⛓⛓ rules-lavatrap-neck: a disc tile RULE T gated (`seedlingTrapTongueGuard`) is no sub-region of its own; the player
     // steps onto it from a sub-region beside it (paying its gate, which the lift's own Dark Suit implies), so the lift
     // leaves from those.
+    // ⛓⛓ rules-k-pursuit-speed: a disc tile RULE K gated (a lavarunner's leash cut, `seedlingChaserPursuitGuard`) is no
+    // sub-region of its own either; the player stands on it to be reeled, so the lift leaves from the sub-regions beside it
+    // and costs the Dark Suit AND the cell's K arm (the suit does not imply the arm: a tile both rules gate needs both).
     const tGated = new Set((playthroughTrapTongues.get(level.level)?.traps ?? []).flatMap((t) => t.cells.map(([x, y]) => `${x},${y}`)));
+    const kArms = new Map();
+    for (const g of playthroughChaserGuards.get(level.level)?.guards ?? []) {
+        for (const [x, y] of g.cut) kArms.set(`${x},${y}`, g.arm);
+    }
+    const ruleFor = ([x, y]) => {
+        const arm = kArms.get(`${x},${y}`);
+        return arm ? { rule: 'And', children: [DARKSUIT_RULE, analyzerOptions.resolveCondition(arm)] } : DARKSUIT_RULE;
+    };
     const fromSubs = ([x, y]) => {
         const own = subOf([x, y]);
-        if (own) return [own];
-        if (!tGated.has(`${x},${y}`)) return [];
+        if (own) return [{ from: own, rule: DARKSUIT_RULE }];
+        if (!tGated.has(`${x},${y}`) && !kArms.has(`${x},${y}`)) return [];
+        const rule = ruleFor([x, y]);
         return [[0, -1], [1, 0], [0, 1], [-1, 0]].map(([dx, dy]) => [x + dx, y + dy])
-            .filter(([nx, ny]) => nx >= 0 && ny >= 0 && nx < level.width && ny < level.height).map(subOf).filter(Boolean);
+            .filter(([nx, ny]) => nx >= 0 && ny >= 0 && nx < level.width && ny < level.height).map(subOf).filter(Boolean)
+            .map((from) => ({ from, rule }));
     };
-    const added = new Set();
+    const added = new Map();
     for (const pull of pulls) {
         const to = subOf(pull.tile);
         if (!to) continue;
-        for (const from of pull.from.flatMap(fromSubs)) {
-            if (from === to || added.has(`${from}>${to}`)) continue;
-            added.add(`${from}>${to}`);
-            region.subgraph.internal_exits.push({
-                from, to, bidirectional: false, source: 'manual', access_rule: DARKSUIT_RULE,
-            });
+        for (const { from, rule } of pull.from.flatMap(fromSubs)) {
+            if (from === to) continue;
+            const k = `${from}>${to}`;
+            const prev = added.get(k);
+            // one lift per pair: a plain Dark Suit lift subsumes a K-charged one; two K-charged ones carry the same arm
+            if (prev && (prev.access_rule === DARKSUIT_RULE || rule !== DARKSUIT_RULE)) continue;
+            if (prev) { prev.access_rule = rule; continue; }
+            const exit = { from, to, bidirectional: false, source: 'manual', access_rule: rule };
+            added.set(k, exit);
+            region.subgraph.internal_exits.push(exit);
         }
     }
     if (added.size === 0) return;
     region.subgraph.internal_exits.sort((a, b) => a.from.localeCompare(b.from) || a.to.localeCompare(b.to));
     region.annotations.rules_source = 'mixed';
-    lavaTrapLifts.push(...[...added].map((k) => `${regionId}/${k}`));
+    lavaTrapLifts.push(...[...added.keys()].map((k) => `${regionId}/${k}`));
     note(`${regionId}: ${added.size} LavaTrap lift(s) added, one-way and gated on the Dark Suit — `
         + `${OV.LAVATRAP_PULL.why} (${OV.LAVATRAP_PULL.cite})`);
 }

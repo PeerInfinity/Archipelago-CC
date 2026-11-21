@@ -143,7 +143,7 @@ describe('census-seedling-er-doorways — the committed playthrough atlas', () =
             'level_12__r13c6 -> level_5__r1c1 LANDING/terrain',
             'level_16__r3c7 -> level_17 DEPARTURE',
             'level_17 -> level_16__r3c7 LANDING',
-            'level_98 -> level_99__r2c7 DEPARTURE',
+            'level_98 -> level_99__r7c5 DEPARTURE',   // ⛓ rules-k-pursuit-resume: L99's stairs member re-keyed r2c7 -> r7c5
         ]);
         expect(c.gates.stairsRows.every((r) => r.owners.every((o) => o.owner !== 'UNATTRIBUTED'))).toBe(true);
     });

@@ -225,8 +225,11 @@ describe('the producer\'s map', () => {
         const ruleOf = (rules, from, to) => JSON.stringify(rules.regions['1'][from].exits.find((e) => e.connected_region === to)?.access_rule);
         for (const preset of ['seedling_playthrough', 'seedling_er', 'seedling_playthrough_maze']) {
             const rules = read(`frontend/presets/${preset}/AP_1/AP_1_rules.json`);
-            expect(ruleOf(rules, 'level_73__r3c7', 'level_73__r0c4'), preset).not.toContain('"Fire"');
-            expect(ruleOf(rules, 'level_73__r0c4', 'level_73__r3c7'), preset).not.toContain('"Fire"');
+            // ⛓ rules-k-pursuit-resume: rule K cuts L73 at its lavarunners' leashes, so the rock's far side is the new member r4c4 (was r3c7);
+            //   the rock row keeps its rule, Or(Dark Suit, Sword, Spear), Fire-free.
+            expect(ruleOf(rules, 'level_73__r4c4', 'level_73__r0c4'), preset).not.toContain('"Fire"');
+            expect(ruleOf(rules, 'level_73__r0c4', 'level_73__r4c4'), preset).not.toContain('"Fire"');
+            expect(ruleOf(rules, 'level_73__r0c4', 'level_73__r4c4'), preset).toContain('"Dark Suit"');
             expect(ruleOf(rules, 'level_100__r4c10', 'level_100__r2c3'), preset).not.toContain('"Fire"');
             expect(ruleOf(rules, 'level_92__r1c7', 'level_92__r3c12'), preset).toContain('"Fire"');
             expect(ruleOf(rules, 'level_92__r3c12', 'level_92__r7c17'), preset).toContain('"Fire"');

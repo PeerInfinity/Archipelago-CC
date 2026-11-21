@@ -1,0 +1,30 @@
+NATIVE problems [] accepted []
+   level_80__r0c2>level_80__r6c4=[["Dark Suit"]]
+   level_80__r0c2>level_80__r8c1=[["Dark Suit"]]
+   level_80__r0c2>level_80__r8c4=[]
+   level_80__r0c2>level_80__r12c3=[]
+   level_80__r0c2>level_80__r16c1=[]
+   level_80__r16c1>level_80__r0c2=[["Dark Suit"]]
+   level_80__r16c1>level_80__r6c4=[["Dark Suit"]]
+   level_80__r16c1>level_80__r8c1=[["Dark Suit"]]
+   level_80__r16c1>level_80__r8c4=[["Dark Suit"]]
+   level_80__r16c1>level_80__r12c3=[["Dark Suit"]]
+   level_80__r0c2->level_71__r0c6=[[]]
+   level_80__r8c1@Level 080 - Chest<level_80__r0c2=[["Dark Suit"]]
+   level_80__r8c1@Level 080 - Chest<level_80__r16c1=[["Dark Suit"]]
+   level_80__r16c1->level_79__r0c4=[[],[]]
+STRIPPED problems 6
+   level_80__r16c1 → level_80__r0c2 holding [Dark Suit]: derived false, atlas true
+   level_80__r16c1 → level_80__r6c4 holding [Dark Suit]: derived false, atlas true
+   level_80__r16c1 → level_80__r8c1 holding [Dark Suit]: derived false, atlas true
+   level_80__r16c1 → level_80__r8c4 holding [Dark Suit]: derived false, atlas true
+   level_80__r16c1 → level_80__r12c3 holding [Dark Suit]: derived false, atlas true
+   level_80__r8c1 @ Level 080 - Chest (from level_80__r16c1) holding [Dark Suit]: derived false, atlas true
+BROKEN problems 7
+   level_80__r0c2 → level_80__r6c4: witness [Dark Suit] replays to 6,6, not 4,6
+   level_80__r16c1 → level_80__r0c2 holding [Dark Suit]: derived false, atlas true
+   level_80__r16c1 → level_80__r6c4 holding [Dark Suit]: derived false, atlas true
+   level_80__r16c1 → level_80__r8c1 holding [Dark Suit]: derived false, atlas true
+   level_80__r16c1 → level_80__r8c4 holding [Dark Suit]: derived false, atlas true
+   level_80__r16c1 → level_80__r12c3 holding [Dark Suit]: derived false, atlas true
+   level_80__r8c1 @ Level 080 - Chest (from level_80__r16c1) holding [Dark Suit]: derived false, atlas true
