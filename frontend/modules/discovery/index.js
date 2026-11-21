@@ -5,6 +5,8 @@ import discoveryStateSingleton from './singleton.js'; // <<< IMPORT SINGLETON
 // Import singletons needed for injection
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { registerClickAction, unregisterClickAction, PANEL_ACTION_IDS } from '../regionView/clickActions.js';
+import { makeDiscoverAction } from './discoveryClickActions.js';
 import { getLastRawJsonData } from '../stateManager/index.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import {
@@ -279,10 +281,10 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     );
     _unsubscribeHandles.push(settingsChangedUnsubscribe);
 
-    // Subscribe to UI click events for discovery handling
+    // Subscribe to UI click events for discovery handling. A MAP click (the Region Graph, the Region Map) discovers
+    // through the registered `discovery.discover` click action instead (CA-S4, below), which runs the same handler.
     log('info', '[Discovery Module] Subscribing to UI click events');
     _unsubscribeHandles.push(
-      _moduleEventBus.subscribe('regionGraph:nodeSelected', handleRegionClicked),
       _moduleEventBus.subscribe('ui:regionHeaderClicked', handleRegionClicked),
       // user:locationCheck and user:exitClicked are handled via dispatcher chains
       _moduleEventBus.subscribe('gameState:regionChanged', handlePlayerRegionChanged)
@@ -293,6 +295,10 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     );
   }
 
+  // ⛓ CA-S4: a map click's "discover the region" (`discovery.discover`), still gated by the settings bundle.
+  try { registerClickAction(makeDiscoverAction(handleRegionClicked)); }
+  catch (e) { log('warn', `[Discovery Module] discovery.discover not registered: ${e.message}`); }
+
   log('info', '[Discovery Module] Initialization complete.');
 
   // Return cleanup function
@@ -300,6 +306,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     log('info', '[Discovery Module] Cleaning up... Unsubscribing & disposing.');
     _unsubscribeHandles.forEach((unsubscribe) => unsubscribe());
     _unsubscribeHandles = [];
+    unregisterClickAction(PANEL_ACTION_IDS.discover);
 
     if (
       discoveryStateSingleton && // <<< Use singleton
@@ -479,16 +486,17 @@ function handleMoveCompleted(eventData) {
 // --- UI Click Event Handlers ---
 
 /**
- * Handle region click from region graph or regions panel.
- * Discovers the region if clickDiscoversRegion is enabled.
+ * Handle a region click: the Regions panel's `ui:regionHeaderClicked`, and a map click's `discovery.discover` action
+ * (CA-S4; before it, the Region Graph's `regionGraph:nodeSelected`). Discovers the region if clickDiscoversRegion is
+ * enabled. → `{ ok, reason?, discovered? }` (the click action's result; the event ignores it).
  */
-function handleRegionClicked(eventData) {
-  if (!_settings.enableDiscoveryMode || !_settings.clickDiscoversRegion) return;
-  if (!discoveryStateSingleton) return;
+export function handleRegionClicked(eventData) {
+  if (!_settings.enableDiscoveryMode || !_settings.clickDiscoversRegion) return { ok: false, reason: 'not-enabled' };
+  if (!discoveryStateSingleton) return { ok: false, reason: 'no-discovery-state' };
 
-  // regionGraph:nodeSelected uses nodeId, ui:regionHeaderClicked uses regionName
+  // ui:regionHeaderClicked and the click action pass regionName (a legacy payload's nodeId is still read)
   const regionName = eventData?.regionName || eventData?.nodeId;
-  if (!regionName) return;
+  if (!regionName) return { ok: false, reason: 'no-region' };
 
   if (!discoveryStateSingleton.isRegionDiscovered(regionName)) {
     log('info', `[Discovery Module] Discovering region via click: ${regionName}`);
@@ -497,7 +505,9 @@ function handleRegionClicked(eventData) {
       autoDiscoverLocationsInRegion(regionName);
       autoDiscoverExitsInRegion(regionName);
     }
+    return { ok: true, discovered: !!wasNewlyDiscovered };
   }
+  return { ok: true, discovered: false };
 }
 
 /**

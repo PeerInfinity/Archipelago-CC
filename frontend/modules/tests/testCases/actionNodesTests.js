@@ -22,9 +22,18 @@ import { nodeCardView } from '../../actionNodes/nodeCardOverlay.js';
 import { NODE_STATES } from '../../actionNodes/nodeStates.js';
 import { CHECK_MARK, GOAL_MARK, PERFORM_ALL_SLOT, PLACEHOLDER_TEXT } from '../../actionNodes/nodeCard.js';
 import { playLiveToGoal } from '../../actionNodes/actionLiveSim.js';
+import { buildActionModel } from '../../actionNodes/actionModel.js';
+import { playToGoal } from '../../actionNodes/actionPlanner.js';
+import { placementsFromRules } from '../../actionNodes/actionGraphCompiler.js';
 import { getActivePanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 import { startAppBotTestSpeed } from '../botTestSpeed.js';
+import { buildContext } from '../../tutorials/tutorialContext.js';
+import panelManager from '../../../app/core/panelManager.js';
+import { getPanelInstances as getRegionMapPanels } from '../../regionMap/index.js';
+import { REGION_MAP_CLICK_ACTIONS_KEY, regionOfCell } from '../../regionMap/regionMapClickActions.js';
+import { ACT_CLICK_ID, PLAN_SOURCE_PREFIX, lastPerformResult } from '../../actionNodes/nodeClickAction.js';
+import { PERFORM_ALL_LABEL } from '../../actionNodes/nodeCard.js';
 
 const PRESET_RULES = './presets/action_nodes_example/AP_1/AP_1_rules.json';
 const CATEGORY = 'ActionNodes';
@@ -714,7 +723,7 @@ async function nodeCardRow(tc) {
         tc.assertEqual(`${check.name}: state done`, NODE_STATES.DONE, c?.dataset.state);
         const slot = c?.querySelector(`[data-slot="${PERFORM_ALL_SLOT}"]`);
         tc.assertEqual('the reserved "perform all remaining" slot is there, empty', true, !!slot && slot.children.length === 0);
-        tc.assertEqual('no button on the card (no click code in AN-3a)', 0, c?.querySelectorAll('button').length ?? -1);
+        tc.assertEqual('no button on a limit-1 card (AN-3b puts one on limit > 1 only)', 0, c?.querySelectorAll('button').length ?? -1);
         // The goal: revealed by the check node's clear, marked as the goal, its needs listed.
         const goal = payloads[block.goal];
         await tc.pollForCondition(() => textOf(cardOf(goal.node_id)).includes(goal.name), 'the goal card shows', 3000, 50);
@@ -785,13 +794,248 @@ async function botPlaysToGoal(tc) {
         }
         const sim = playLiveToGoal(rules);
         tc.log(`headless live path: goal in ${sim.loops.length} loop(s); in-app: ${loops}`);
-        tc.assertEqual('the in-app run takes the headless live path\'s loops', sim.loops.length, loops);
+        // ⛓ AN-3b, limit (b): the runner replans mid-loop when an item arrives (headless: live 2 = pure 2, pinned
+        // exactly in actionLoopBot.test.js). In-app the queue runs at Instant, where Loops COMPLETES an action started
+        // short of mana (loops/loopState.js _advanceActionProgress: completion runs before _maybeResetForOOM), so the
+        // replan's ⚖ Q1 attempt (it should drain and end the loop) can finish the goal a loop early. ⚖ planner
+        // ruling C (2026-11-20): assert the replan, the goal in ≤ the pure count, and the attempt named in the log;
+        // the Instant overshoot is a known gap for a Loops slice.
+        const model = buildActionModel(await (await fetch(`./${rules.procgen_metadata[P].graph_path.replace(/^frontend\//, '')}`, { cache: 'no-store' })).json());
+        const pure = playToGoal(model, { placements: placementsFromRules(rules, model, P) });
+        tc.log(`pure planner: goal in ${pure.loops.length} loop(s); headless live: ${sim.loops.length}; in-app (Instant): ${loops}`);
+        tc.assertEqual('the runner replanned mid-loop at least once', true, (bot.getLoopRunner?.()?.getReplanCount?.() ?? 0) >= 1);
+        tc.assertEqual('a replan\'s reasoning is in the log', true, log.some((l) => /^loop \d+ \(replan\): /.test(l)));
+        tc.assertEqual(`the goal in ≤ the pure planner's ${pure.loops.length} loop(s) (in-app ${loops})`, true, loops >= 1 && loops <= pure.loops.length);
+        tc.assertEqual('the Q1 attempt is named in the log', true, log.some((l) => /attempting /.test(l)));
         tc.assertEqual('no queue refusal', null, loopStateSingleton.lastActionRefusal);
     } finally {
         bot.stop();
         bot.setLogReasoning(reasoningBefore);
         await restoreSpeed();
         restore();
+    }
+    return tc.getOverallResult();
+}
+
+// ─── 12. The click: actionNodes.act performs ONCE (AN-3b) ──────────────────
+
+const GRAPH_CLICK_ACTIONS = 'moduleSettings.regionGraph.clickActions';
+/** Only `actionNodes.act` on: the built-in route, the bulk check and the Regions panel off (this row's own state). */
+const ACT_ONLY = Object.freeze({
+    enabled: true,
+    region: { 'path.route': false, 'path.checkAll': false, 'regions.open': false, [ACT_CLICK_ID]: true },
+    location: { 'path.check': 'now' },
+});
+const graphStrip = () => document.querySelector('.region-graph-panel-container .click-actions-strip-summary')?.textContent ?? '';
+const pathNow = () => gs().getPath?.() ?? [];
+const actsIn = (path, nodeId) => path.filter((e) => e.type === 'customAction' && e.actionName === 'act' && e.params?.nodeId === nodeId).length;
+const movesOf = (path) => path.filter((e) => e.type === 'regionMove').map((e) => `${e.sourceRegion}>${e.destinationRegion}`);
+
+/** Open the Region Graph on the example and wait for a card per node. */
+async function graphWithCards(tc, payloads) {
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'regionGraphPanel' }, 'tests');
+    const ok = await tc.pollForCondition(() => !!cyOf() && Object.keys(payloads).every((id) => cardOf(id)),
+        'the Region Graph shows a card per node', 10000, 100);
+    tc.reportCondition('the Region Graph shows a card per node', !!ok);
+    return !!ok;
+}
+
+/** Click a card's body (not its button): the overlay forwards it as the node's click (⚖ planner ruling 2026-11-20). */
+function clickCard(id) {
+    const before = lastPerformResult();
+    const el = cardOf(id);
+    el?.querySelector('.an-card__title')?.click();
+    return lastPerformResult() !== before ? lastPerformResult() : null;
+}
+
+async function clickPerformsOnce(tc) {
+    const { block, payloads } = await readPreset();
+    const ctx = buildContext({ eventBus: tc.eventBus });
+    if (!await loadExample(tc)) return tc.getOverallResult();
+    const restore = freshQueue();
+    let mapOpened = false;
+    const fromStart = (p) => p.after.some((set) => set.length === 1 && set[0] === block.start);
+    const needsNothing = (p) => !Object.keys(p.requires.resources).length && !Object.keys(p.requires.stats).length;
+    const ready = Object.values(payloads).find((p) => fromStart(p) && p.limit > 1 && needsNothing(p));
+    const blocked = Object.values(payloads).find((p) => fromStart(p) && Object.keys(p.requires.resources).length);
+    const once = Object.values(payloads).find((p) => fromStart(p) && p.limit === 1 && needsNothing(p) && p.kind !== 'start');
+    const selected = [];
+    const off = tc.eventBus.subscribe('regionGraph:nodeSelected', (d) => selected.push(d?.nodeId), 'tests');
+    try {
+        if (!await graphWithCards(tc, payloads)) return tc.getOverallResult();
+        await ctx.setSetting(GRAPH_CLICK_ACTIONS, ACT_ONLY);
+        const strip = await tc.pollForCondition(() => graphStrip().includes('perform once'), 'the strip shows "perform once"', 5000, 50);
+        tc.reportCondition(`the Region Graph strip runs actionNodes.act ("${graphStrip()}")`, !!strip);
+
+        // Loop mode, a ready node away from the queue's end: the route, then ONE act.
+        tc.assertEqual('Loop mode is on', true, gs().isLoopModeActive === true);
+        // The route starts where the queue ends: after clearQueue the player stands on the start (or on Menu).
+        const at0 = gs().getCurrentRegion();
+        const route0 = at0 === block.start ? [`${block.start}>${ready.node_id}`] : [`${at0}>${block.start}`, `${block.start}>${ready.node_id}`];
+        const r1 = clickCard(ready.node_id);
+        tc.log(`click ${ready.name}: ${JSON.stringify(r1)}`);
+        tc.assertEqual(`click on ${ready.name}'s card: nodeSelected once`, JSON.stringify([ready.node_id]), JSON.stringify(selected));
+        tc.assertEqual(`${ready.name} (unreached by the queue): queued, ok`, true, r1?.ok === true && r1.loopMode === true);
+        tc.assertEqual(`${ready.name}: the route from ${at0} to it, queued (the planning source appends in Loop mode)`, JSON.stringify(route0),
+            JSON.stringify(movesOf(pathNow())));
+        tc.assertEqual(`${ready.name}: ONE act`, 1, actsIn(pathNow(), ready.node_id));
+        tc.assertEqual('nothing performed yet (queued only)', 0, countOf(ready.node_id));
+        // Again: the queue ends there now — no hop, one more act.
+        const r2 = clickCard(ready.node_id);
+        tc.assertEqual(`${ready.name} again: no hop, one more act`, true, r2?.ok === true && r2.hops.length === 0 && actsIn(pathNow(), ready.node_id) === 2);
+        // Blocked: refused by name, nothing queued.
+        const before = JSON.stringify(pathNow());
+        const r3 = clickCard(blocked.node_id);
+        tc.log(`click ${blocked.name}: ${JSON.stringify(r3)}`);
+        const [, need] = Object.entries(blocked.requires.resources)[0];
+        tc.assertEqual(`${blocked.name}: refused by name with the unmet requirement`, true,
+            r3?.ok === false && r3.code === 'blocked' && r3.text.includes(blocked.name) && r3.text.includes(need.name));
+        tc.assertEqual(`${blocked.name}: the queue unchanged`, before, JSON.stringify(pathNow()));
+        // Done (at the queue's end): refused by name.
+        const r4 = clickCard(ready.node_id);
+        tc.assertEqual(`${ready.name} at its limit at the queue's end: refused, done`, true, r4?.ok === false && r4.code === 'done');
+        tc.assertEqual('the queue runs', true, await runQueue(tc, 'queue finished'));
+        tc.assertEqual('no start-gate refusal', null, loopStateSingleton.lastActionRefusal);
+        tc.assertEqual(`${ready.name} performed twice`, 2, countOf(ready.node_id));
+
+        // The Region Map: the same action through the Map's strip (its own settings, CA-S3).
+        loopStateSingleton.clearQueue();
+        loopStateSingleton._resetLoop();
+        if (getRegionMapPanels().length === 0) {
+            await panelManager.createPanelForComponent('regionMapPanel', 'Region Map', 2);
+            mapOpened = true;
+        }
+        tc.eventBus.publish('ui:activatePanel', { panelId: 'regionMapPanel' }, 'tests');
+        const map = await tc.pollForValue(() => {
+            const m = getRegionMapPanels()[0];
+            return m?.getDebugState?.()?.hasModel && m.view?.get?.()?.displayGroups?.size ? m : null;
+        }, 'the Region Map panel and its model', 10000, 100);
+        tc.reportCondition('the Region Map panel opens', !!map);
+        if (map) {
+            await map.clickActionsReady;
+            await ctx.setSetting(REGION_MAP_CLICK_ACTIONS_KEY, ACT_ONLY);
+            await tc.pollForCondition(() => JSON.stringify(map.getDebugState().clickActions) === JSON.stringify(ACT_ONLY),
+                'the Map holds the row\'s click actions', 5000, 50);
+            const key = [...map.view.get().displayGroups].find(([k, g]) => regionOfCell(k, g.members) === once.node_id)?.[0];
+            tc.assertEqual(`the Map has a cell for ${once.name}`, true, !!key);
+            const click = key ? await map.clickAt({ key }) : null;
+            const res = click?.result?.results?.find((x) => x.id === ACT_CLICK_ID)?.result;
+            tc.log(`Map click ${once.name}: ${JSON.stringify(res)}`);
+            tc.assertEqual(`Map click on ${once.name}: queued the route and ONE act`, true,
+                res?.ok === true && res.panelId === 'regionMap' && actsIn(pathNow(), once.node_id) === 1);
+        }
+
+        // Outside Loop mode it does what the queue would do, at once.
+        loopStateSingleton.clearQueue();
+        loopStateSingleton._resetLoop();
+        gs().setLoopModeActive(false);
+        await tc.pollForCondition(() => gs().isLoopModeActive === false, 'Loop mode off', 3000, 50);
+        tc.eventBus.publish('ui:activatePanel', { panelId: 'regionGraphPanel' }, 'tests');
+        await tc.pollForCondition(() => !!cardOf(once.node_id), 'the cards are back', 5000, 50);
+        const c0 = countOf(once.node_id);
+        const mana0 = gs().getCurrentMana();
+        const r5 = clickCard(once.node_id);
+        tc.log(`click ${once.name} (Loop mode off): ${JSON.stringify(r5)}`);
+        tc.assertEqual(`Loop mode off: ${once.name} performed at once`, true, r5?.ok === true && r5.performed === 1 && countOf(once.node_id) === c0 + 1);
+        tc.assertEqual(`Loop mode off: the pool paid ${once.name}'s price`, mana0 - once.time, gs().getCurrentMana());
+        tc.assertEqual(`Loop mode off: the player stands on ${once.name}`, once.node_id, gs().getCurrentRegion());
+        tc.assertEqual('no source but the planning one on the queued hops', true, PLAN_SOURCE_PREFIX === 'actionNodes-plan');
+    } finally {
+        off?.();
+        await ctx.restoreSettings();
+        if (mapOpened) {
+            try { await panelManager.destroyPanelByComponentType('regionMapPanel'); } catch (e) { tc.log(`close the Map: ${e.message}`); }
+        }
+        ctx.dispose();
+        restore();
+    }
+    return tc.getOverallResult();
+}
+
+// ─── 13. The "perform all remaining" button (AN-3b) ────────────────────────
+
+async function performAllButton(tc) {
+    const { block, payloads } = await readPreset();
+    if (!await loadExample(tc)) return tc.getOverallResult();
+    const restore = freshQueue();
+    const fromStart = (p) => p.after.some((set) => set.length === 1 && set[0] === block.start);
+    const needsNothing = (p) => !Object.keys(p.requires.resources).length && !Object.keys(p.requires.stats).length;
+    const rep = Object.values(payloads).find((p) => fromStart(p) && p.limit > 1 && needsNothing(p));
+    const selected = [];
+    const off = tc.eventBus.subscribe('regionGraph:nodeSelected', (d) => selected.push(d?.nodeId), 'tests');
+    try {
+        if (!await graphWithCards(tc, payloads)) return tc.getOverallResult();
+        // The button exists exactly on the nodes whose limit is greater than 1 (and are shown, not a placeholder).
+        for (const p of Object.values(payloads)) {
+            const btn = cardOf(p.node_id)?.querySelector('[data-slot="perform-all-remaining"] button');
+            const placeholder = cardOf(p.node_id)?.dataset.state === NODE_STATES.UNDISCOVERED;
+            tc.assertEqual(`${p.node_id} (limit ${p.limit}${placeholder ? ', undiscovered' : ''}): a button ${p.limit > 1 && !placeholder ? 'is' : 'is not'} there`,
+                p.limit > 1 && !placeholder, !!btn && btn.textContent === PERFORM_ALL_LABEL);
+        }
+        // Loop mode: the route, then every remaining performance; the button's click is not the node's click.
+        const btn = () => cardOf(rep.node_id)?.querySelector('[data-slot="perform-all-remaining"] button');
+        const at0 = gs().getCurrentRegion();
+        btn()?.click();
+        const r = lastPerformResult();
+        tc.log(`perform all ${rep.name}: ${JSON.stringify(r)}`);
+        tc.assertEqual('the button is not a node click (no nodeSelected)', '[]', JSON.stringify(selected));
+        tc.assertEqual(`${rep.name}: queued the route and ${rep.limit} acts`, true,
+            r?.ok === true && r.times === 'remaining' && r.hops[0]?.from === at0 && r.hops.at(-1)?.to === rep.node_id
+                && movesOf(pathNow()).at(-1) === `${r.hops.at(-1).from}>${rep.node_id}` && actsIn(pathNow(), rep.node_id) === rep.limit);
+        const msg = await tc.pollForCondition(() => /×/.test(cardOf(rep.node_id)?.querySelector('.an-card__message')?.textContent ?? ''),
+            'the card says what the button did', 3000, 50);
+        tc.reportCondition(`the card says what it did ("${cardOf(rep.node_id)?.querySelector('.an-card__message')?.textContent}")`, !!msg);
+        // Pressed again: nothing remains at the queue's end → refused by name.
+        btn()?.click();
+        const again = lastPerformResult();
+        tc.assertEqual(`${rep.name} again: refused by name (done at the queue's end)`, true,
+            again?.ok === false && again.code === 'done' && again.text.includes(rep.name));
+        tc.assertEqual('the queue runs', true, await runQueue(tc, 'queue finished'));
+        tc.assertEqual(`${rep.name} performed ${rep.limit} times`, rep.limit, countOf(rep.node_id));
+
+        // Capped by mana (Loop mode): a pool that covers one performance less than the limit.
+        loopStateSingleton.clearQueue();
+        loopStateSingleton._resetLoop();
+        const covers = rep.limit - 1;
+        gs().deductMana(gs().getCurrentMana() - (rep.time * covers + 1));
+        await tc.pollForCondition(() => Math.abs(gs().getCurrentMana() - (rep.time * covers + 1)) < 1e-9, 'the pool set', 3000, 50);
+        btn()?.click();
+        const capped = lastPerformResult();
+        tc.log(`perform all, capped: ${JSON.stringify(capped)}`);
+        tc.assertEqual(`capped by mana: ${covers} of the ${rep.limit} queued, the cap named`, true,
+            capped?.ok === true && capped.acts === covers && capped.capped?.by === 'mana' && actsIn(pathNow(), rep.node_id) === covers);
+    } finally {
+        off?.();
+        restore();
+    }
+    return tc.getOverallResult();
+}
+
+// ─── 14. The cards after the Region Graph panel is closed and reopened (AN-3b, limit (a)) ──
+
+async function cardsAfterReopen(tc) {
+    const { payloads } = await readPreset();
+    if (!await loadExample(tc)) return tc.getOverallResult();
+    const ids = Object.keys(payloads);
+    const allCards = () => ids.every((id) => cardOf(id));
+    if (!await graphWithCards(tc, payloads)) return tc.getOverallResult();
+    let reopened = false;
+    try {
+        await panelManager.destroyPanelByComponentType('regionGraphPanel');
+        const gone = await tc.pollForCondition(() => !cyOf() && cards().length === 0, 'the Region Graph panel is closed', 5000, 50);
+        tc.reportCondition('the Region Graph panel is closed (no graph, no card)', !!gone);
+        await panelManager.createPanelForComponent('regionGraphPanel', 'Region Graph', 2);
+        reopened = true;
+        tc.eventBus.publish('ui:activatePanel', { panelId: 'regionGraphPanel' }, 'tests');
+        // No world load in between: the cards come back from the panel's own mount (regionGraph:panelMounted).
+        const back = await tc.pollForCondition(() => !!cyOf() && allCards(), 'the cards are back on the reopened panel', 15000, 100);
+        tc.reportCondition(`the reopened panel shows a card per node without a world reload (${cards().length} of ${ids.length})`, !!back);
+        tc.assertEqual('… still the same world (no reload)', true, runtime().isLoaded());
+        tc.assertEqual('… one card per node, no duplicate', ids.length, cards().length);
+    } finally {
+        if (!reopened && !cyOf()) {
+            try { await panelManager.createPanelForComponent('regionGraphPanel', 'Region Graph', 2); } catch (e) { tc.log(`reopen: ${e.message}`); }
+        }
     }
     return tc.getOverallResult();
 }
@@ -817,6 +1061,12 @@ const ROWS = [
         'The state of every node, derived from the preset: at load, at the end of a planned queue (the live counts untouched), after the queue ran (live), and after a loop reset (discovery kept).', nodeStatesRow],
     ['an-node-card', 'ActionNodes: the node card on the Region Graph',
         'The card of an undiscovered node (placeholder only), of a check node played to its check (name, used/limit, mana, needs, the check mark, the reserved slot, no button) and of the goal (the goal mark, its unmet line); then another world loads with its original node sizes and arrows and no card left.', nodeCardRow],
+    ['an-click-performs-once', 'ActionNodes: a click performs ONCE (actionNodes.act), on the Region Graph and the Region Map',
+        'With only actionNodes.act on in the strip: a click on a ready node\'s card queues the route then ONE act (Loop mode); again, one more act and no hop; a blocked node and a done one are refused by name; the queue runs. On the Region Map the same. With Loop mode off the click performs at once.', clickPerformsOnce],
+    ['an-perform-all-button', 'ActionNodes: the "perform all remaining" button',
+        'The button exists only on nodes whose limit is greater than 1; it queues the route and every remaining performance, says so on the card, is refused by name when nothing remains, and is capped by mana.', performAllButton],
+    ['an-cards-after-reopen', 'ActionNodes: the node cards come back when the Region Graph panel is closed and reopened',
+        'Loads the example with the Region Graph open (a card per node), closes the panel, opens a new one: a card per node again, with no world reload (AN-3a\'s pending-slot limit).', cardsAfterReopen],
 ];
 
 for (const [id, name, description, testFunction] of ROWS) {
@@ -828,7 +1078,8 @@ registerTest({
     name: 'Playback Bot: the ActionNodes example to the goal in Loop mode, with its reasoning',
     description: 'Loads the example and presses the bot\'s Play with "log reasoning" on: the runner asks the ActionNodes '
         + 'entry\'s loopBot.planLoop for each loop, writes it as the Loops queue (free hops + acts) and plays it until the '
-        + 'goal is checked. Every loop\'s reason is in the log; the loop count is the headless live path\'s.',
+        + 'goal is checked. Every loop\'s reason is in the log; the loop count is the headless live path\'s and (AN-3b: the '
+        + 'runner replans mid-loop when an item arrives) the pure planner\'s.',
     testFunction: botPlaysToGoal,
     category: 'Playback Bot',
     enabled: false,

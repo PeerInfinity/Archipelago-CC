@@ -44,6 +44,11 @@ import { restoresSavedQueues } from '../savedQueueIsolation.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import { CAMERA_SETTING_KEY, GRAPHICS_SETTING_KEY } from '../../flashPanel/seedlingGraphicsSettings.js';
 import { CUSTOM_SET_NOT_PLAYABLE, unservedAtlasWhy } from '../../flashPanel/seedlingRandomizerEligibility.js';
+// ⛓ S4 — light (each imports nothing heavy): the bundle writer, the host caches, the lab's announce event.
+import { writeBundle } from '../../presets/documentBundle.js';
+import { atlasCache } from '../../procgenCore/atlasCache.js';
+import { levelSetCache } from '../../procgenCore/levelSetCache.js';
+import { LAB_EVENTS } from '../../procgenCore/labProtocol.js';
 
 /**
  * ⛔ The walk helper imports `levelWorld.js`; a static import here would put
@@ -5310,13 +5315,19 @@ const toolsRestartAndTeleport = (runtime) => async (tc) => withRuntimeRestored(t
         tc.assertEqual(`[${runtime}] no warning and no location check from the teleport`, `${pre.warnings}/${pre.locationChecks}`,
             `${tp?.warnings ?? null}/${tp?.locationChecks ?? null}`);
 
-        // ── "TP on UI click": a region-graph click into the dungeon, which the start has no door to ──
-        if (tpCheckbox) tpCheckbox.checked = true;
-        // the region graph's own click (`graphInteractionManager`): published as its module, the registered publisher
-        tc.eventBus.publishAs('regionGraph:nodeSelected', { nodeId: TOOLS_DUNGEON, data: {} }, 'regionGraph');
+        // ── A MAP CLICK'S TELEPORT into the dungeon, which the start has no door to. ⛓ CA-S4 (⚖ user
+        // 2026-11-20T16:29:00Z, "Per-map option"): through the Region Graph's registered `flash.teleport` click action
+        // (the "On click" strip's option), as a Graph click with only that action on runs it; the box is off and
+        // plays no part (a map click no longer teleports through it). ──
+        if (tpCheckbox) tpCheckbox.checked = false;
+        const { runClickActions } = await import('../../regionView/clickActions.js');
+        const clicked = runClickActions('regionGraph', 'region', { regionName: TOOLS_DUNGEON },
+            { enabled: true, region: { 'flash.teleport': true }, location: {} }, {});
+        const tpRun = clicked?.results?.find((r) => r.id === 'flash.teleport');
+        tc.assertEqual(`[${runtime}] the Graph's flash.teleport action ran`, 'flash.teleport/true', `${tpRun?.id}/${tpRun?.result?.ok}`);
         const dungeon = await toolsSettledIn(tc, `[${runtime}] the region-graph teleport reached the dungeon`, TOOLS_DUNGEON, 3);
         tc.log(`[${runtime}] REGION CLICK ${JSON.stringify({ ...(dungeon ?? toolsFacts()), verdict: glue.lastTeleport })}`);
-        tc.reportCondition(`[${runtime}] TP on UI click into ${TOOLS_DUNGEON} (no door from the start): gameState, the binding and the game reach it`, !!dungeon);
+        tc.reportCondition(`[${runtime}] a Graph click's flash.teleport into ${TOOLS_DUNGEON} (no door from the start): gameState, the binding and the game reach it`, !!dungeon);
         tc.assertEqual(`[${runtime}] no warning from the region-graph teleport`, pre.warnings, toolsFacts().warnings);
 
         // ── ⛓ THE ORDERING WITNESS (rules-4's review): the binding's no-door arrival teleport goes first, the spot
@@ -5383,12 +5394,164 @@ for (const [runtime, fn] of [['js', seedlingJsRuntimeToolsRestartTeleport], ['wa
         description: `On seedling_atlas with flashPanel.runtime = ${runtime}: the Menu's Restart from the owl's nest sets the reference spot `
             + 'and Tools ▸ Restart lands on it (the glue\'s own handler re-took the hop). Then a WALKED exit (the owl\'s nest stairs, '
             + 'by keys) against Tools ▸ Go to the spot it landed on: the same AP region in gameState and the binding, the same spot, '
-            + 'no door named, no path entry, no warning. Then TP on UI click into the dungeon (no door from the start) reaches it.',
+            + 'no door named, no path entry, no warning. Then a Graph click\'s flash.teleport action (CA-S4) into the dungeon (no door from the start) reaches it.',
         testFunction: fn,
         category: seedlingRuntimeCategory(`seedling-${runtime}-runtime-tools-restart-teleport`),
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+// ── ⛓ CA-S4: A MAP CLICK TELEPORTS ONLY THROUGH THAT MAP'S OWN OPTION (js) ──────────────────────────────────────────
+//
+// ⚖ user, session 84c8ab35, 2026-11-20T16:29:00Z, "Per-map option (Recommended)": each map's "On click" strip has
+// its own "Teleport in Flash" (`flash.teleport`); the Region Graph's starts with the current box setting, the Region
+// Map's starts OFF; Flash's "TP on UI click" box keeps working only for clicks outside the two maps. Four legs, each
+// setting its own state (session-only click settings, the box put back):
+//   1. GRAPH FIRST RUN: with the Graph's config naming no `flash.teleport`, the box TICKED at the moment the action
+//      registers seeds the Graph's value `true`; with the box then UNTICKED a Graph click teleports (the strip decides);
+//      the Graph's value set `false` and the box ticked, a Graph click does not (the box does not);
+//   2. MAP DEFAULT OFF: the Map seeds `false`; a Map click does not teleport, even with the box ticked;
+//   3. MAP ON: the Map's `flash.teleport` on, a Map click teleports;
+//   4. A NON-MAP SOURCE: a location check from another originator still follows the box; the two maps' originators
+//      never do (the real dispatcher chain, Flash's receiver; the teleport recorded, not made).
+export async function seedlingJsRuntimeClickTeleport(tc) {
+    return withRuntimeRestored(tc, async () => {
+        const CA = await import('../../regionView/clickActions.js');
+        const { getPanelInstances: mapPanels } = await import('../../regionMap/index.js');
+        const { REGION_MAP_CLICK_ACTIONS_KEY } = await import('../../regionMap/regionMapClickActions.js');
+        const { REGION_GRAPH_ORIGINATORS } = await import('../../regionGraph/regionGraphOriginators.js');
+        const panelManager = (await import('../../../app/core/panelManager.js')).default;
+        const GRAPH_KEY = 'moduleSettings.regionGraph.clickActions';
+        const up = await atlasPresetOn(tc, 'js', ATLAS_PATH, TOOLS_START);
+        if (!up) return;
+        const { panel } = up;
+        const box = panel.teleportOnClickCheckbox;
+        const boxWas = box?.checked ?? false;
+        tc.reportCondition('[js] Flash registered flash.teleport for this teleport-capable game',
+            !!CA.getClickAction('flash.teleport'));
+        const overrides = [];
+        const setSession = async (key, value) => {
+            overrides.push(key);
+            await settingsManager.updateSetting(key, value, { persist: false });
+        };
+        const only = (extra = {}) => ({ enabled: true, region: { 'path.route': false, 'path.checkAll': false,
+            'regions.open': false, 'discovery.discover': false, ...extra }, location: { 'path.check': false } });
+        const backToStart = async (label) => {
+            toolsMove(readCurrentRegion(), TOOLS_START, null);
+            tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+            return toolsSettledIn(tc, `[js] ${label}: back in the start`, TOOLS_START, 0);
+        };
+        const staysOut = async (label) => {
+            await new Promise((r) => setTimeout(r, 2500));
+            const f = toolsFacts();
+            tc.reportCondition(`[js] ${label}: no teleport (gameState in ${f.region}, the game on level ${f.level})`,
+                f.region === TOOLS_START && f.level === 0);
+        };
+        let openedMap = false;
+        try {
+            // ── 1. THE GRAPH'S FIRST RUN follows the box AT THAT MOMENT; after that the strip decides ──
+            // The Graph's config names no flash.teleport (a first run): its strip seeds the value the moment it next
+            // loads with the action registered — here, the write of this row's config — from the box AT THAT MOMENT.
+            box.checked = true;
+            await setSession(GRAPH_KEY, only());
+            const seeded = await tc.pollForValue(async () => {
+                const v = (await settingsManager.getSetting(GRAPH_KEY))?.region?.['flash.teleport'];
+                return v === undefined ? null : { v };
+            }, '[js] the Graph seeded flash.teleport', 5000, 100);
+            tc.assertEqual('[js] GRAPH FIRST RUN: the box ticked at the registration seeds the Graph\'s flash.teleport true',
+                true, seeded?.v);
+            box.checked = false;
+            const graphSettings = await settingsManager.getSetting(GRAPH_KEY);
+            const g1 = CA.runClickActions('regionGraph', 'region', { regionName: TOOLS_DUNGEON }, graphSettings, {});
+            tc.log(`[js] Graph click (box now unticked): ${JSON.stringify(g1?.results)}`);
+            const inDungeon = await toolsSettledIn(tc, '[js] the Graph\'s own option teleported', TOOLS_DUNGEON, 3);
+            tc.reportCondition('[js] GRAPH: its stored flash.teleport (true) teleports with the box UNTICKED (the strip decides)', !!inDungeon);
+            await backToStart('graph');
+            await setSession(GRAPH_KEY, only({ 'flash.teleport': false }));
+            box.checked = true;
+            CA.runClickActions('regionGraph', 'region', { regionName: TOOLS_DUNGEON }, await settingsManager.getSetting(GRAPH_KEY), {});
+            await staysOut('GRAPH: its flash.teleport false and the box TICKED');
+
+            // ── 2. THE MAP STARTS OFF, and the box does not teleport a Map click ──
+            openedMap = mapPanels().length === 0;
+            if (openedMap) await panelManager.createPanelForComponent('regionMapPanel', 'Region Map', 2);
+            const map = await tc.pollForValue(() => {
+                const p = mapPanels()[0];
+                return p?.getDebugState?.()?.hasModel ? p : null;
+            }, '[js] the Region Map has its model', 15000, 100);
+            if (!map) { tc.reportCondition('[js] the Region Map opened on the atlas', false); return; }
+            await map.clickActionsReady;
+            await setSession(REGION_MAP_CLICK_ACTIONS_KEY, only());
+            await tc.pollForCondition(() => JSON.stringify(map.clickActions?.region?.['path.route']) === 'false', '[js] the Map holds the row\'s actions', 3000, 50);
+            panel._registerClickActions(); // a registration: the Map's strip seeds its own value
+            const mapSeed = await tc.pollForValue(() => {
+                const v = map.clickActions?.region?.['flash.teleport'];
+                return v === undefined ? null : { v };
+            }, '[js] the Map seeded flash.teleport', 5000, 100);
+            tc.assertEqual('[js] MAP: its flash.teleport starts OFF (seeded false, the box ticked)', false, mapSeed?.v);
+            const frame = [...map.frames.values()].find((f) => f.key === TOOLS_DUNGEON)
+                ?? [...map.frames.values()].find((f) => (map.view?.get()?.displayGroups?.get(f.key)?.members ?? []).includes(TOOLS_DUNGEON));
+            tc.reportCondition(`[js] the Map draws ${TOOLS_DUNGEON}`, !!frame);
+            if (!frame) return;
+            const m1 = await map.clickAt(frame);
+            tc.log(`[js] Map click (OFF, box ticked): ${JSON.stringify(m1?.result)}`);
+            tc.reportCondition('[js] MAP OFF: the click runs no flash.teleport', !(m1?.result?.results ?? []).some((r) => r.id === 'flash.teleport'));
+            tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+            await staysOut('MAP OFF with the box TICKED');
+
+            // ── 3. THE MAP'S OPTION ON: a Map click teleports ──
+            await setSession(REGION_MAP_CLICK_ACTIONS_KEY, only({ 'flash.teleport': true }));
+            await tc.pollForCondition(() => map.clickActions?.region?.['flash.teleport'] === true, '[js] the Map holds flash.teleport on', 3000, 50);
+            box.checked = false;
+            const m2 = await map.clickAt(frame);
+            tc.log(`[js] Map click (ON): ${JSON.stringify(m2?.result)}`);
+            tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+            const viaMap = await toolsSettledIn(tc, '[js] the Map\'s option teleported', TOOLS_DUNGEON, 3);
+            tc.reportCondition('[js] MAP ON: a Map click teleports into the dungeon', !!viaMap);
+            await backToStart('map');
+
+            // ── 4. A NON-MAP SOURCE still follows the box; a map originator never does ──
+            const asked = [];
+            const realTp = panel._teleportToLocation;
+            panel._teleportToLocation = (name) => { asked.push(name); };
+            try {
+                box.checked = true;
+                const d = getSeedlingRegionGlue()?.getDispatcher?.();
+                const loc = (tc.stateManager.getStaticData?.() ?? null)?.regions?.get?.(TOOLS_DUNGEON)?.locations?.[0]?.name
+                    ?? 'no-such-location';
+                for (const originator of ['tests-non-map', REGION_GRAPH_ORIGINATORS.check, 'regionMapCheck']) {
+                    d?.publish?.('user:locationCheck', { locationName: loc, regionName: TOOLS_DUNGEON, originator }, { initialTarget: 'bottom' });
+                }
+                await new Promise((r) => setTimeout(r, 500));
+                tc.log(`[js] the box asked to teleport to: ${JSON.stringify(asked)} (location ${loc})`);
+                tc.assertEqual('[js] NON-MAP SOURCE: the ticked box teleports for another originator\'s check, never for a map\'s',
+                    JSON.stringify([loc]), JSON.stringify(asked));
+            } finally {
+                panel._teleportToLocation = realTp;
+            }
+        } finally {
+            if (box) box.checked = boxWas;
+            for (const k of new Set(overrides)) await settingsManager.clearOverride(k);
+            if (openedMap) {
+                try { await panelManager.destroyPanelByComponentType('regionMapPanel'); } catch (e) { tc.log(`close the Map: ${e.message}`); }
+            }
+            tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+        }
+    });
+}
+
+registerTest({
+    id: 'seedling-js-runtime-click-teleport',
+    name: 'Seedling JS runtime: a map click teleports only through that map\'s own "On click" option',
+    description: 'CA-S4 (user 2026-11-20T16:29:00Z, "Per-map option"): on seedling_atlas with flashPanel.runtime = js. The Graph\'s '
+        + 'flash.teleport is seeded from the box at the registration (ticked → true) and then teleports with the box unticked; '
+        + 'set false, a Graph click does not teleport with the box ticked. The Map seeds it OFF: a Map click does not teleport, '
+        + 'box ticked; turned on, a Map click teleports into the dungeon. A location check from another originator still '
+        + 'follows the box; the two maps\' originators never do.',
+    testFunction: seedlingJsRuntimeClickTeleport,
+    category: seedlingRuntimeCategory('seedling-js-runtime-click-teleport'),
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
 
 // ── ⛔ THE RESTART HOLD: a Restart with no walk arms nothing, so a hand walk after it moves (wasm) ─────────────────
 //
@@ -5628,6 +5791,211 @@ for (const [id, withFlashPanel] of [
                 : ', no flash_panel block and the lab\'s map_document label (the S1 shape)')
             + `: the Flash panel starts no game and shows "${CUSTOM_SET_NOT_PLAYABLE}" with the named reason.`,
         testFunction: customSetRow(withFlashPanel),
+        category: seedlingRuntimeCategory(id),
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+// ── ⛓⛓ S4 (seedling-custom-set-arm): a HELD custom set plays ITS OWN rooms, and Edit ▸ opens one back in the lab ──
+// (⚖ Robert 2026-11-20, "Make lab sets playable"). The inverse of the study's probe p5, in the app: the watch page's
+// own compile over the vanilla 116 with ONE tree added to room 10, written as a bundle with its `level-set` and
+// `region-atlas` members, loaded through the Presets panel's file door (`loadDocumentFile` holds both). The game the
+// panel boots is delivered THAT set: room 10 has the tree.
+
+const HELD_TREE = Object.freeze({ type: 'tree', x: 16, y: 80 });
+const S4_APP_URL = (rel) => new URL(rel, document.baseURI).href;
+const s4FetchJson = async (rel) => {
+    const res = await fetch(S4_APP_URL(rel));
+    if (!res.ok) throw new Error(`${rel}: HTTP ${res.status}`);
+    return res.json();
+};
+const hasHeldTree = (record) => (record?.entities ?? [])
+    .some((e) => e.type === HELD_TREE.type && e.x === HELD_TREE.x && e.y === HELD_TREE.y);
+
+/** The watch page's bundle of the tree set (its own deps, compile and atlas door): `{rules, levelSet, atlas}`. */
+async function buildHeldTreeBundle() {
+    const [{ tileTypeForPlacement, SEEDLING_TILE_SIZE }, { compileRegionAtlas }, { stampAtlasIdentity }, { parseOelLevel },
+        SA, { editorVanillaSet }, ID, { emptyOverlay }] = await Promise.all([
+        import(S4_APP_URL('./modules/flashPanel/seedlingSemantics.js')),
+        import(S4_APP_URL('./modules/procgenPipeline/regionAtlasCompiler.js')),
+        import(S4_APP_URL('./modules/procgenPipeline/regionAtlasValidator.js')),
+        import(S4_APP_URL('./modules/seedlingDemo/procgenLevelOel.js')),
+        import(S4_APP_URL('./modules/seedlingDemo/seedlingSetAdapter.js')),
+        import(S4_APP_URL('./modules/seedlingDemo/watchSetEditor.js')),
+        import(S4_APP_URL('./modules/seedlingDemo/watchSetIdentity.js')),
+        import(S4_APP_URL('./modules/seedlingDemo/seedlingSetOverlay.js')),
+    ]);
+    const [vanillaSet, mapDoc, rulesSchema] = await Promise.all([
+        s4FetchJson('./modules/seedlingDemo/fixtures/seedling-vanilla-set.json'),
+        s4FetchJson('./modules/flashPanel/atlases/seedling-map.json'),
+        s4FetchJson('./schema/rules.schema.json'),
+    ]);
+    const deps = { parseOel: parseOelLevel, tileSize: SEEDLING_TILE_SIZE, tileTypeForPlacement, rulesSchema, atlas: ID.WATCH_SET_ATLAS };
+    const set = editorVanillaSet(vanillaSet, mapDoc).set;
+    set.rooms[10].source.record.entities.push({ ...HELD_TREE });
+    const lab = ID.labSetIdentity({ compileRegionAtlas, stampAtlasIdentity });
+    const session = SA.createSetSession(SA.createSeedlingSetAdapter(deps), SA.setRecord(set, emptyOverlay()),
+        { base: { kind: 'set', set_id: set.set_id } });
+    const out = SA.rulesJsonOf(session, deps, { compileRegionAtlas: lab.compileRegionAtlas });
+    return { rules: out.rules, levelSet: SA.downloadSet(session).set, atlas: lab.atlasAtDoor(out.atlas, out.rules) };
+}
+
+/** Load the bundle through the Presets panel's file door (the call a file pick makes). */
+async function loadHeldTreeBundle(tc, built) {
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'presetsPanel' }, 'tests');
+    const presets = await tc.pollForValue(() => {
+        const p = document.getElementById('presets-panel')?.__panel;
+        return p && typeof p.loadDocumentFile === 'function' ? p : null;
+    }, 'the Presets panel is live', 15000, 50);
+    if (!presets) return false;
+    const bytes = await writeBundle([{ kind: 'rules', doc: built.rules }, { kind: 'region-atlas', doc: built.atlas },
+        { kind: 'level-set', doc: built.levelSet }], { jszip: await presets.loadJSZip() });
+    const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+    await presets.loadDocumentFile(new File([bytes], 'held-tree-set.zip', { type: 'application/zip' }));
+    await loaded;
+    await tc.stateManager.pingWorker('after-rules-load', 5000);
+    return true;
+}
+
+/**
+ * Boot the held tree set on `runtime`: the bundle loaded, the panel's AP load OK, and its delivered set the held one.
+ * Returns `{panel, built}` or null (every failure reported).
+ */
+async function heldTreeSetOn(tc, runtime) {
+    levelSetCache.clear();
+    atlasCache.clear();
+    const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+    // ⛔ An earlier row's AP load is still on the panel: wait for THIS load's own result, never that one.
+    const staleLoad = getActivePanelInstance()?._apLoadResult ?? null;
+    await settingsManager.updateSetting(RUNTIME_KEY, runtime, { persist: false });
+    const built = await buildHeldTreeBundle();
+    const ref = built.rules.region_atlas['1'].level_set;
+    tc.assertEqual(`[${runtime}] the lab's rules name the bundle's level set and carry the Seedling flash_panel`,
+        `${built.levelSet.set_id}/true`, `${ref?.set_id}/${typeof built.rules.flash_panel?.['1']?.wasm === 'string'}`);
+    tc.reportCondition(`[${runtime}] the set's room 10 has the tree`, hasHeldTree(built.levelSet.rooms[10].source.record));
+    if (!(await loadHeldTreeBundle(tc, built))) return null;
+    tc.assertEqual(`[${runtime}] the host HOLDS the set under the hash the rules name`, 'held',
+        levelSetCache.get(ref.set_id, ref.content_hash).status);
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+    const panel = await tc.pollForValue(() => {
+        const p = getActivePanelInstance();
+        return p?.transport === runtime && p.adapter && p.adapter !== staleAdapter && p._initRuntime === runtime ? p : null;
+    }, `[${runtime}] the flash panel mounted the ${runtime} runtime (a fresh adapter)`, 30000, 250);
+    if (!panel) {
+        tc.log(`[${runtime}] status ${JSON.stringify(document.querySelector('.flash-panel-status')?.textContent)}; log: `
+            + `${(document.querySelector('.flash-panel-log')?.textContent ?? '').split('\n').slice(-15).join(' | ')}`, 'error');
+        return null;
+    }
+    if (runtime === 'wasm') {
+        const start = await tc.pollForValue(() => {
+            if (panel.statusElement?.textContent !== 'click ▶ Start in the game') return null;
+            try { return frameOf(panel)?.document?.querySelector('#btn-start') ?? null; } catch { return null; }
+        }, '[wasm] the panel asks for ▶ Start', 120000, 250);
+        if (!start) return null;
+        start.click();
+    }
+    const done = await tc.pollForValue(() => (panel._apLoadResult && panel._apLoadResult !== staleLoad
+        && panel._seedlingRealSet?.set_id === built.levelSet.set_id ? panel._apLoadResult : null),
+        `[${runtime}] the AP load ran`, runtime === 'wasm' ? 120000 : 60000, 250);
+    if (!done?.ok) {
+        tc.log(`[${runtime}] apLoad ${JSON.stringify(done ?? null)?.slice(0, 400)}; refusal ${JSON.stringify(panel._apLoadRefusal ?? null)}; log: `
+            + `${(document.querySelector('.flash-panel-log')?.textContent ?? '').split('\n').slice(-20).join(' | ')}`, 'error');
+    }
+    tc.reportCondition(`[${runtime}] the AP load delivered and reset (ok)`, !!done?.ok);
+    tc.assertEqual(`[${runtime}] no refusal (G is lifted for a HELD set only)`, null, panel._apLoadRefusal ?? null);
+    const delivered = panel._seedlingRealSet;
+    tc.reportCondition(`[${runtime}] the DELIVERED room 10 has the tree (the held set's own room, not the original)`,
+        hasHeldTree(delivered?.rooms?.[10]?.source?.record));
+    return done?.ok ? { panel, built, delivered } : null;
+}
+
+const heldSetPlaysOwnRooms = (runtime) => async (tc) => {
+    let previous = 'auto';
+    try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try {
+        const up = await heldTreeSetOn(tc, runtime);
+        if (!up) return tc.getOverallResult();
+        const { panel, delivered } = up;
+        let ls = null;
+        try { ls = JSON.parse(panel.adapter.bot('botLevelSet')); } catch { ls = null; }
+        tc.assertEqual(`[${runtime}] the RUNTIME mounted the delivered set (botLevelSet.active, its 116 rooms)`,
+            `${delivered?.set_id}/116`, `${ls?.active ?? null}/${ls?.rooms ?? ls?.table_levels ?? null}`);
+        if (runtime === 'js') {
+            const rt = frameOf(panel)?.__seedlingJsRuntime ?? null;
+            tc.reportCondition('[js] the JS page\'s mounted room 10 has the tree', hasHeldTree(rt?.mounted?.records?.get(10)));
+        }
+        tc.assertEqual(`[${runtime}] Edit ▸ is offered (a held set)`, '', panel.editRoomButton?.style.display ?? null);
+    } catch (e) {
+        tc.reportCondition(`[${runtime}] the held-set row ran without throwing: ${e.message}`, false);
+    } finally {
+        levelSetCache.clear();
+        atlasCache.clear();
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+};
+
+/**
+ * ⛓ Edit ▸ → the lab (lab-7's claim (d), setting its own state): the held tree set, the game moved to room 10, Edit ▸
+ * pressed; the lab's own announce (`procgenLab:levelChanged`, `watchLabPayload`) names room 10 OPEN, its set id the
+ * handed one, and that room's record carries the tree.
+ */
+async function heldSetEditOpensRoomInLab(tc) {
+    let previous = 'auto';
+    try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    let off = () => {};
+    try {
+        const up = await heldTreeSetOn(tc, 'js');
+        if (!up) return tc.getOverallResult();
+        const { panel, built } = up;
+        panel.adapter.teleport({ level: 10, x: 48, y: 48 });
+        const in10 = await tc.pollForCondition(() => {
+            try { return JSON.parse(panel.adapter.bot('botStatus'))?.level === 10; } catch { return false; }
+        }, 'the game is in room 10', 20000, 200);
+        tc.reportCondition('the game is in room 10', !!in10);
+        if (!in10) return tc.getOverallResult();
+        let announced = null;
+        const handler = (data) => {
+            const p = data?.payload;
+            if (p?.substrate === 'seedling' && p.room === 10 && p.record?.set) announced = p;
+        };
+        tc.eventBus.subscribe(LAB_EVENTS.levelChanged, handler, 'tests');
+        off = () => tc.eventBus.unsubscribe?.(LAB_EVENTS.levelChanged, handler, 'tests');
+        const answer = await panel._editHeldSetRoom();
+        tc.assertEqual('Edit ▸ handed room 10 of the held set to the lab', `true/10/${built.levelSet.set_id}`,
+            `${answer?.ok}/${answer?.room}/${answer?.set_id}`);
+        if (!answer?.ok) { tc.log(`Edit ▸: ${answer?.why}`, 'error'); return tc.getOverallResult(); }
+        const seen = await tc.pollForValue(() => announced, 'the lab announces room 10 open', 60000, 250);
+        tc.reportCondition('the lab opened room 10 (its own announce)', !!seen);
+        tc.assertEqual('the lab holds the HANDED set (its set id)', built.levelSet.set_id, seen?.record?.set?.set_id ?? null);
+        tc.reportCondition('the lab\'s room 10 has the tree', hasHeldTree(seen?.record?.set?.rooms?.[10]?.source?.record));
+    } catch (e) {
+        tc.reportCondition(`the Edit ▸ row ran without throwing: ${e.message}`, false);
+    } finally {
+        off();
+        getActivePanelInstance()?._heldSetEditHandle?.close?.();
+        levelSetCache.clear();
+        atlasCache.clear();
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+for (const [id, fn, rt, what] of [
+    ['seedling-js-runtime-held-custom-set-plays-its-rooms', heldSetPlaysOwnRooms('js'), 'JS',
+        'the JS page mounts the delivered set and its room 10 has the tree'],
+    ['seedling-wasm-runtime-held-custom-set-plays-its-rooms', heldSetPlaysOwnRooms('wasm'), 'wasm',
+        'the wasm game mounts the delivered set (botLevelSet.active), no rebuild'],
+    ['seedling-js-runtime-held-custom-set-edit-opens-room-in-lab', heldSetEditOpensRoomInLab, 'JS',
+        'the game moved to room 10, Edit ▸ opens it in the Seedling lab: the lab announces room 10 open, the handed set id, the tree'],
+]) {
+    registerTest({
+        id,
+        name: `Seedling ${rt} runtime: a HELD custom set ${id.endsWith('in-lab') ? '— Edit ▸ opens its room back in the lab' : 'plays its own rooms'}`,
+        description: 'S4 (seedling-custom-set-arm): the watch page\'s bundle of the vanilla 116 + one tree in room 10 '
+            + '(rules, region-atlas, level-set members), loaded through the Presets panel\'s file door; the AP load is '
+            + `delivered the HELD set, so the delivered room 10 has the tree; ${what}.`,
+        testFunction: fn,
         category: seedlingRuntimeCategory(id),
         enabled: false, // off by default — runs only in the test-substrates mode
     });

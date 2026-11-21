@@ -1,0 +1,9 @@
+atlas id seedling-ea1ef5ba -> seedling-b856f0fc
+level_72: sub-regions/internal exits (0, 0) -> (9, 36)
+level_73: sub-regions/internal exits (2, 1) -> (5, 7)
+level_74: sub-regions/internal exits (0, 0) -> (4, 6)
+level_75: sub-regions/internal exits (0, 0) -> (9, 36)
+level_78: sub-regions/internal exits (8, 35) -> (12, 71)
+level_80: sub-regions/internal exits (6, 6) -> (9, 14)
+level_99: sub-regions/internal exits (2, 2) -> (5, 8)
+totals [216, 355] -> [251, 489]

@@ -58,6 +58,24 @@
             "_comment": "AN-3a: the Region Graph node card (undiscovered placeholder; a check node's fields + check mark + the reserved perform-all slot; the goal mark); then another world's node sizes and arrows are as before and no card is left (planner ruling (a): unregisterNodeOverlayProvider)."
         },
         {
+            "id": "an-click-performs-once",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-3b: the click action actionNodes.act performs ONCE (Robert 2026-11-17T21:35:22Z): a card click on a ready node queues the route then one act (Loop mode), again one act, blocked/done refused by name; the Region Map the same; Loop mode off performs at once. The card body click is the node's click (planner ruling 2026-11-20)."
+        },
+        {
+            "id": "an-perform-all-button",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-3b: the 'perform all remaining' button only on limit > 1 nodes; queues the route + the remaining acts, says so on the card, refused when none remain, capped by mana."
+        },
+        {
+            "id": "an-cards-after-reopen",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-3b limit (a): the Region Graph panel closed and reopened shows a card per node again with no world reload (regionGraph:panelMounted → ActionNodes re-registers)."
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
@@ -836,6 +854,12 @@
             "_comment": "seedling-gen-chestdoor-preset. The REAL wasm game (WebGPU, the seedling-wasm batch's launch) on the committed seedling_generated_chestdoor preset: the Playback Bot walks to the door chest region_0_0 - Chest (the WG engine stages the mounted set, the solver's tape opens the chest from below) and the row ends on its locationCheck — that location alone, the game's own pendingCheck of {level 0, tag 1}, no error status. Room 1's chest (two goals, Q5) is not walked."
         },
         {
+            "id": "seedling-wasm-runtime-held-custom-set-plays-its-rooms",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "S4 seedling-custom-set-arm. The REAL wasm game (WebGPU, the seedling-wasm batch's launch), no rebuild: the watch page's bundle of the vanilla 116 + one tree in room 10, held by the host; the wasm AP load delivers ITS rooms through botLoadLevels — the delivered room 10 has the tree and botLevelSet.active is the delivered set."
+        },
+        {
             "id": "seedling-wasm-runtime-solver-stop-button",
             "enabled": true,
             "category": "Seedling wasm runtime",
@@ -888,6 +912,18 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "Slice G. The same custom set in the lab's own shape (S1: no flash_panel block, map_document the page's label). Before G the panel said only 'no game configured'; now it shows the same message as the row above."
+        },
+        {
+            "id": "seedling-js-runtime-held-custom-set-plays-its-rooms",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "S4 seedling-custom-set-arm (⚖ Robert 2026-11-20, 'Make lab sets playable'). The inverse of the study's probe p5 in the app: the watch page's bundle of the vanilla 116 + one tree in room 10 (rules + region-atlas + level-set members) loaded through the Presets panel's file door; the host holds the set, so the JS AP load delivers ITS rooms: the delivered room 10 and the JS page's mounted room 10 have the tree, botLevelSet.active = the delivered set, Edit ▸ offered."
+        },
+        {
+            "id": "seedling-js-runtime-held-custom-set-edit-opens-room-in-lab",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "S4 seedling-custom-set-arm (⚖ Robert Q4 'Open back in the lab'; lab-7's claim (d)). The held tree set on the JS runtime, the game teleported to room 10, Edit ▸ pressed: the lab's own announce (procgenLab:levelChanged) names room 10 open, the handed set_id, and room 10's record has the tree."
         },
         {
             "id": "seedling-wasm-runtime-same-wiring-switch-loads-new-rooms",
@@ -2181,6 +2217,18 @@
             "_comment": "CLICK ACTIONS CA-S2 (2026-11-19): the location action 'check it now' (session-only): a location click through the Go to picker checks an accessible location. Reloads the world loaded before. On push (fast batch)."
         },
         {
+            "id": "test_region_graph_click_discover",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "CLICK ACTIONS CA-S4 (2026-11-20): discovery.discover, the registered action that replaced Discovery's regionGraph:nodeSelected listener. Discovery on with clickDiscoversRegion (session-only): a tap discovers an undiscovered region; loop mode's bundle (clickDiscoversRegion false): a tap discovers nothing. Reloads the world loaded before. On push (fast batch)."
+        },
+        {
+            "id": "test_regions_location_click_follows_graph_strip",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "CLICK ACTIONS CA-S4 (2026-11-20): the Regions panel reads the Region Graph's resolved clickActions location choice (the addLocationsToPath mirror is retired): 'add to path' queues a Regions-panel location click in the path, 'check it now' checks it. Reloads the world loaded before. On push (fast batch)."
+        },
+        {
             "id": "tutorial-walk-start-workbench",
             "enabled": true,
             "category": "Tutorial walks",
@@ -2371,7 +2419,7 @@
             "id": "an-bot-plays-to-goal",
             "enabled": true,
             "category": "Playback Bot",
-            "_comment": "AN-3a (design §7): the ActionNodes example in Loop mode; the runner asks the entry's loopBot.planLoop for each loop (free hops + acts) until the goal is checked; each loop's reason is in the log (logReasoning on); loop count = the headless live path's."
+            "_comment": "AN-3a (design §7): the ActionNodes example in Loop mode; the runner asks the entry's loopBot.planLoop for each loop (free hops + acts) until the goal is checked; each loop's reason is in the log (logReasoning on). AN-3b: the runner replans mid-loop when an item arrives (the replan in the log, the goal in <= the pure planner's loop count, the Q1 attempt named; Instant can complete the attempt a loop early: a known Loops gap)."
         },
         {
             "id": "playback-bot-loop-mode-maze",
@@ -2545,7 +2593,13 @@
             "id": "seedling-js-runtime-tools-restart-teleport",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "seedling-js-panel-restart. seedling_atlas on js: Tools ▸ Restart lands where the Menu's Restart lands; a walked exit (the owl's nest stairs, by keys) vs Tools ▸ Go to its spot from the same room: same AP region, same spot, no door named (arrivedFrom null), no path entry, no warning; TP on UI click into the dungeon (no door from the start) reaches it. Batch seedling-js."
+            "_comment": "seedling-js-panel-restart. seedling_atlas on js: Tools ▸ Restart lands where the Menu's Restart lands; a walked exit (the owl's nest stairs, by keys) vs Tools ▸ Go to its spot from the same room: same AP region, same spot, no door named (arrivedFrom null), no path entry, no warning; a Graph click's flash.teleport action (CA-S4) into the dungeon (no door from the start) reaches it. Batch seedling-js."
+        },
+        {
+            "id": "seedling-js-runtime-click-teleport",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "CLICK ACTIONS CA-S4 (user 2026-11-20T16:29:00Z, 'Per-map option'): seedling_atlas on js. The Graph's flash.teleport seeds from the box at the registration, then the strip decides (teleports with the box unticked; set false, no teleport with the box ticked); the Map's starts OFF (no teleport, box ticked), turned on it teleports; a non-map originator's location check still follows the box, the maps' never do. Batch seedling-js."
         },
         {
             "id": "seedling-wasm-runtime-tools-restart-teleport",

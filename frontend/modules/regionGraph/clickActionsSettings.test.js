@@ -3,7 +3,10 @@
  *   1. the ONE-TIME migration (js-21 edit 3): it writes once, a second load changes nothing, and a stored
  *      `clickActions` is never overwritten; the seven old keys are left in place;
  *   2. the six settings presets carry `clickActions` = the migration of the old keys they named at base (CA-S3 removed
- *      those keys from the presets, keeping `addLocationsToPath`; the pin: no `frontend/settings/*.json` names one);
+ *      six of those keys from the presets, CA-S4 the last, `addLocationsToPath`; the pin: no `frontend/settings/*.json`
+ *      names one);
+ *   2b. CA-S4: the strip's `addLocationsToPath` mirror is retired; the Regions panel reads the Graph's resolver
+ *      (`regionGraphLocationAddsToPath`), the old-key-only user included (js-21 edit 3); a seeded save keeps an override;
  *   3. the Region Map's FIRST-RUN COPY (CA-S3, ⚖ R4) over each preset and the default = the migration of the click
  *      config its interim reader (`regionMapClicks.readClickOptions`) measured at base: the copy is exact.
  * The settings manager is a fake with getSetting's precedence (override > stored > schema default > call-site).
@@ -20,8 +23,8 @@ const presetFile = (name) => new URL(`../../settings/settings-${name}.json`, imp
 const readPreset = (name) => JSON.parse(fs.readFileSync(name === 'default'
     ? new URL('../../settings/settings.json', import.meta.url) : presetFile(name), 'utf8'));
 
-/** The Region Graph's schema defaults as registered (`index.js`): `clickActions` and the one old key it keeps. */
-const SCHEMA = { [S.CLICK_ACTIONS_KEY]: S.clickActionsSchemaEntry().default, 'moduleSettings.regionGraph.addLocationsToPath': false };
+/** The Region Graph's schema defaults as registered (`index.js`): `clickActions` (CA-S4 removed the last old key). */
+const SCHEMA = { [S.CLICK_ACTIONS_KEY]: S.clickActionsSchemaEntry().default };
 
 /** A settings manager over `tree` (stored values), recording every write. */
 function fakeSettings(tree = {}) {
@@ -104,22 +107,27 @@ describe('⛓ the one-time migration (js-21 edit 3)', () => {
     });
 });
 
-describe('⛓ the addLocationsToPath MIRROR (⚖ planner 2026-11-19): a strip save only', () => {
-    it('a strip save flips the old key both ways, and touches no other old key', async () => {
+describe('⛓ CA-S4: the addLocationsToPath MIRROR is retired; the Regions panel reads the resolver', () => {
+    it('a strip save writes clickActions only (no old key, whatever the location choice)', async () => {
         const sm = fakeSettings({ moduleSettings: { regionGraph: { addToPath: true, movePlayerDirectly: false } } });
         const on = CA.defaultClickActions();
         on.location['path.check'] = 'addToPath';
         await S.saveRegionGraphClickActions(sm, on);
-        expect(sm.tree.moduleSettings.regionGraph.addLocationsToPath).toBe(true);
-        const off = { ...on, location: { 'path.check': 'now' } };
-        await S.saveRegionGraphClickActions(sm, off);
-        expect(sm.tree.moduleSettings.regionGraph.addLocationsToPath).toBe(false);
-        expect(sm.writes.map(([k]) => k)).toEqual([S.CLICK_ACTIONS_KEY, S.MIRRORED_LEGACY_KEY, S.CLICK_ACTIONS_KEY, S.MIRRORED_LEGACY_KEY]);
-        // An unchanged mirror is not rewritten; the region keys are never written.
-        await S.saveRegionGraphClickActions(sm, { ...off, enabled: false });
-        expect(sm.writes.map(([k]) => k).slice(4)).toEqual([S.CLICK_ACTIONS_KEY]);
-        expect(sm.tree.moduleSettings.regionGraph.addToPath).toBe(true);
-        expect(sm.tree.moduleSettings.regionGraph.movePlayerDirectly).toBe(false);
+        await S.saveRegionGraphClickActions(sm, { ...on, location: { 'path.check': 'now' } });
+        expect(sm.writes.map(([k]) => k)).toEqual([S.CLICK_ACTIONS_KEY, S.CLICK_ACTIONS_KEY]);
+        expect('addLocationsToPath' in sm.tree.moduleSettings.regionGraph).toBe(false);
+        expect(S.MIRRORED_LEGACY_KEY).toBeUndefined();
+    });
+
+    it('a SEEDED save keeps a session override session-only; a plain save (and a seeded one with no override) persists', async () => {
+        const calls = [];
+        const sm = { hasOverride: (k) => k === S.CLICK_ACTIONS_KEY, updateSetting: async (...a) => { calls.push(a); } };
+        await S.saveRegionGraphClickActions(sm, { enabled: true }, { seeded: true });
+        await S.saveRegionGraphClickActions(sm, { enabled: false });
+        sm.hasOverride = () => false;
+        await S.saveRegionGraphClickActions(sm, { enabled: true }, { seeded: true });
+        expect(calls).toEqual([[S.CLICK_ACTIONS_KEY, { enabled: true }, { persist: false }],
+            [S.CLICK_ACTIONS_KEY, { enabled: false }], [S.CLICK_ACTIONS_KEY, { enabled: true }]]);
     });
 
     it('a LOAD (the migration included) never writes the old key', async () => {
@@ -128,6 +136,38 @@ describe('⛓ the addLocationsToPath MIRROR (⚖ planner 2026-11-19): a strip sa
         await S.loadRegionGraphClickActions(sm);
         expect(sm.writes.map(([k]) => k)).toEqual([S.CLICK_ACTIONS_KEY]);
         expect(sm.tree.moduleSettings.regionGraph.addLocationsToPath).toBe(true);
+    });
+
+    it('regionGraphLocationAddsToPath reads the resolved clickActions, both values', async () => {
+        for (const choice of ['addToPath', 'now', false]) {
+            const ca = CA.defaultClickActions();
+            ca.location['path.check'] = choice;
+            const sm = fakeSettings({ moduleSettings: { regionGraph: { clickActions: ca } } });
+            expect(await S.regionGraphLocationAddsToPath(sm)).toBe(choice === 'addToPath');
+            expect(sm.writes).toEqual([]);
+        }
+    });
+
+    it('js-21 edit 3: a user whose ONLY stored state is the old addLocationsToPath key reads what the old key said, '
+        + 'through the migration, and nothing is written', async () => {
+        for (const old of [true, false]) {
+            const sm = fakeSettings({ moduleSettings: { regionGraph: { addLocationsToPath: old } } });
+            expect(await S.regionGraphLocationAddsToPath(sm)).toBe(old);
+            expect(sm.writes).toEqual([]);
+            // and the Graph's own one-time migration, when it runs later, agrees
+            const { clickActions } = await S.loadRegionGraphClickActions(sm);
+            expect(clickActions.location['path.check'] === 'addToPath').toBe(old);
+            expect(await S.regionGraphLocationAddsToPath(sm)).toBe(old);
+        }
+        // nothing stored at all: the old default (false)
+        expect(await S.regionGraphLocationAddsToPath(fakeSettings({}))).toBe(false);
+    });
+
+    it('a stored clickActions wins over a stale old key (the strip decides, as the mirror made it)', async () => {
+        const ca = CA.defaultClickActions();
+        ca.location['path.check'] = 'addToPath';
+        const sm = fakeSettings({ moduleSettings: { regionGraph: { clickActions: ca, addLocationsToPath: false } } });
+        expect(await S.regionGraphLocationAddsToPath(sm)).toBe(true);
     });
 });
 
@@ -147,13 +187,13 @@ const MAP_CONFIG_AT_BASE = {
     textadventure: '{"movePlayerOneStep":false,"movePlayerDirectly":true,"showRegionInPanel":false,"addToPath":true,"overwritePath":false,"addLocationsToPath":false,"checkAllLocationsInRegion":false}',
 };
 
-/** The six keys CA-S3 removed from the presets and the schema (`addLocationsToPath` stays until CA-S4). */
-const REMOVED_KEYS = Object.keys(CA.LEGACY_REGION_GRAPH_CLICK_DEFAULTS).filter((k) => k !== 'addLocationsToPath');
+/** The seven old keys: CA-S3 removed six from the presets and the schema, CA-S4 the last (`addLocationsToPath`). */
+const REMOVED_KEYS = Object.keys(CA.LEGACY_REGION_GRAPH_CLICK_DEFAULTS);
 
-describe('⛓ the old click keys are gone from every settings file (CA-S3)', () => {
+describe('⛓ the old click keys are gone from every settings file (CA-S3, CA-S4)', () => {
     it('no frontend/settings/*.json names a removed key (scanned, not trusted)', () => {
         expect(REMOVED_KEYS).toEqual(['movePlayerOneStep', 'movePlayerDirectly', 'showRegionInPanel', 'addToPath',
-            'overwritePath', 'checkAllLocationsInRegion']);
+            'overwritePath', 'addLocationsToPath', 'checkAllLocationsInRegion']);
         const dir = new URL('../../settings/', import.meta.url);
         const files = fs.readdirSync(dir).filter((f) => f.endsWith('.json'));
         expect(files.length).toBeGreaterThan(PRESETS.length);
@@ -164,10 +204,10 @@ describe('⛓ the old click keys are gone from every settings file (CA-S3)', () 
         expect(naming).toEqual([]);
     });
 
-    it('the Region Graph\'s schema keeps addLocationsToPath (the Regions panel reads it until CA-S4) and no removed key', async () => {
+    it('the Region Graph\'s schema names no old key (CA-S4 removed addLocationsToPath, the last one)', async () => {
         const src = fs.readFileSync(new URL('./index.js', import.meta.url), 'utf8');
         const schema = src.slice(src.indexOf('registerSettingsSchema('));
-        expect(schema).toMatch(/addLocationsToPath: \{/);
+        expect(schema).toMatch(/clickActions: clickActionsSchemaEntry\(\)/);
         for (const k of REMOVED_KEYS) expect(schema).not.toMatch(new RegExp(`\\b${k}: \\{`));
     });
 });

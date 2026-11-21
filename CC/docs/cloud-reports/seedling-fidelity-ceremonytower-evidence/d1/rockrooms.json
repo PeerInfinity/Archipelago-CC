@@ -1,0 +1,368 @@
+{
+ "addLine": {
+  "player": 2244,
+  "control": 2258,
+  "droplet": 2266,
+  "bob": 2276,
+  "bobsoldier": 2277,
+  "bobboss1": 2278,
+  "bobboss2": 2279,
+  "bobboss3": 2280,
+  "bosstotem": 2281,
+  "lightbosscontroller": 2282,
+  "lavaboss": 2283,
+  "finalboss": 2284,
+  "flyer": 2285,
+  "jellyfish": 2286,
+  "lavarunner": 2287,
+  "bulb": 2288,
+  "tentaclebeast": 2289,
+  "drill": 2290,
+  "sandtrap": 2291,
+  "icetrap": 2292,
+  "lavatrap": 2293,
+  "darktrap": 2294,
+  "turret": 2295,
+  "iceturret": 2296,
+  "beamtower": 2297,
+  "grenade": 2298,
+  "bombpusher": 2299,
+  "crusher": 2300,
+  "puncher": 2301,
+  "treelarge": 2302,
+  "tree": 2303,
+  "treebare": 2304,
+  "burnabletree": 2305,
+  "opentree": 2306,
+  "snowhill": 2307,
+  "building": 2308,
+  "building1": 2309,
+  "building2": 2310,
+  "building3": 2311,
+  "building4": 2312,
+  "building5": 2313,
+  "building6": 2314,
+  "building7": 2315,
+  "building8": 2316,
+  "wire": 2317,
+  "bed": 2318,
+  "dresser": 2319,
+  "bar": 2320,
+  "barstool": 2321,
+  "rock": 2322,
+  "rock2": 2323,
+  "rock3": 2324,
+  "rock4": 2325,
+  "pole": 2326,
+  "apitem": 2330,
+  "sword": 2331,
+  "feather": 2332,
+  "ghostspear": 2333,
+  "ghostsword": 2334,
+  "darkshield": 2335,
+  "darksuit": 2336,
+  "conch": 2337,
+  "shield": 2338,
+  "torchpickup": 2339,
+  "fire": 2340,
+  "button": 2341,
+  "buttonroom": 2342,
+  "arrowtrap": 2343,
+  "bosskey": 2348,
+  "totempart": 2349,
+  "health": 2350,
+  "seed": 2351,
+  "pull": 2352,
+  "fallrock": 2353,
+  "fallrocklarge": 2354,
+  "rocklock": 2355,
+  "lock": 2356,
+  "pulser": 2357,
+  "spinningaxe": 2358,
+  "lavachain": 2359,
+  "cover": 2360,
+  "grasslock": 2361,
+  "shieldlocknorm": 2362,
+  "shieldlock": 2363,
+  "wandlock": 2364,
+  "bosslock": 2365,
+  "magicallock": 2366,
+  "magicallockfire": 2367,
+  "moonrock": 2368,
+  "torch": 2369,
+  "bonetorch": 2370,
+  "bonetorch2": 2371,
+  "planttorch": 2372,
+  "lightpole": 2373,
+  "orb": 2374,
+  "breakablerock": 2375,
+  "breakablerockghost": 2376,
+  "chest": 2377,
+  "dungeonspire": 2378,
+  "lightbosstotem": 2379,
+  "littlestones": 2380,
+  "whirlpool": 2381,
+  "pushableblock": 2382,
+  "pushableblockfire": 2383,
+  "pushableblockspear": 2384,
+  "stairsup": 2385,
+  "stairsdown": 2386,
+  "teleporter": 2387,
+  "shieldboss": 2388,
+  "introchar": 2389,
+  "rekcahdam": 2390,
+  "forestchar": 2391,
+  "karlore": 2392,
+  "adnanchar": 2393,
+  "watcher": 2394,
+  "oracle": 2395,
+  "witch": 2396,
+  "hermit": 2397,
+  "yeti": 2398,
+  "sensei": 2399,
+  "sign": 2400,
+  "totem": 2401,
+  "wand": 2402,
+  "firewand": 2403,
+  "brickpole": 2404,
+  "statue1": 2405,
+  "statue2": 2406,
+  "brickwell": 2407,
+  "finaldoor": 2408,
+  "pod": 2409,
+  "frozenboss": 2410,
+  "moonrockpile": 2411,
+  "shieldstatue": 2412,
+  "oraclestatue": 2413,
+  "ruinedpillar": 2414,
+  "wallflyer": 2415,
+  "spinner": 2416,
+  "lightray": 2417,
+  "shadow": 2418,
+  "rope": 2419
+ },
+ "rocks": [
+  {
+   "level": 28,
+   "rocks": [
+    "fallrock@112,240 t1"
+   ],
+   "sources": [
+    "rope@160,64 t1",
+    "button@112,240 t0"
+   ],
+   "updatesAfterRock": [
+    "button",
+    "drill",
+    "bobsoldier"
+   ],
+   "updatesBeforeRock": [
+    "teleporter",
+    "torch",
+    "dungeonspire",
+    "rope",
+    "grasslock"
+   ],
+   "notInLoadlevel": [
+    "lightalpha"
+   ]
+  },
+  {
+   "level": 29,
+   "rocks": [
+    "fallrock@112,112 t0"
+   ],
+   "sources": [
+    "button@112,128 t0"
+   ],
+   "updatesAfterRock": [
+    "bosskey",
+    "button",
+    "pole",
+    "rock2",
+    "tree",
+    "turret"
+   ],
+   "updatesBeforeRock": [
+    "dungeonspire",
+    "brickpole",
+    "teleporter",
+    "stairsdown"
+   ],
+   "notInLoadlevel": [
+    "lightalpha"
+   ]
+  },
+  {
+   "level": 32,
+   "rocks": [
+    "fallrocklarge@64,128 t0"
+   ],
+   "sources": [],
+   "updatesAfterRock": [
+    "burnabletree",
+    "tree",
+    "control"
+   ],
+   "updatesBeforeRock": [
+    "stairsdown",
+    "fallrocklarge",
+    "watcher"
+   ],
+   "notInLoadlevel": [
+    "lightalpha"
+   ]
+  },
+  {
+   "level": 37,
+   "rocks": [
+    "fallrock@288,32 t0"
+   ],
+   "sources": [],
+   "updatesAfterRock": [
+    "rock",
+    "burnabletree",
+    "tree"
+   ],
+   "updatesBeforeRock": [
+    "ruinedpillar",
+    "totem",
+    "teleporter",
+    "orb",
+    "stairsdown",
+    "watcher",
+    "hermit"
+   ],
+   "notInLoadlevel": [
+    "daynight"
+   ]
+  },
+  {
+   "level": 39,
+   "rocks": [
+    "fallrock@144,624 t6"
+   ],
+   "sources": [
+    "button@144,112 t4",
+    "button@112,144 t3",
+    "button@176,144 t5",
+    "button@144,128 t1",
+    "button@128,144 t0",
+    "button@160,144 t2",
+    "rope@96,384 t6"
+   ],
+   "updatesAfterRock": [
+    "totempart",
+    "button"
+   ],
+   "updatesBeforeRock": [
+    "ruinedpillar",
+    "teleporter",
+    "wandlock",
+    "cover",
+    "pushableblockfire",
+    "spinner",
+    "orb",
+    "rope",
+    "torch",
+    "pulser"
+   ],
+   "notInLoadlevel": [
+    "lightalpha"
+   ]
+  },
+  {
+   "level": 43,
+   "rocks": [
+    "fallrock@96,336 t0",
+    "fallrock@192,336 t0",
+    "fallrock@176,384 t0"
+   ],
+   "sources": [
+    "wand@144,224"
+   ],
+   "updatesAfterRock": [
+    "rock",
+    "bosstotem"
+   ],
+   "updatesBeforeRock": [
+    "dungeonspire",
+    "orb",
+    "wand",
+    "stairsup",
+    "magicallock",
+    "teleporter",
+    "watcher"
+   ],
+   "notInLoadlevel": [
+    "lightalpha"
+   ]
+  },
+  {
+   "level": 74,
+   "rocks": [
+    "fallrock@288,144 t0"
+   ],
+   "sources": [
+    "button@288,128 t0"
+   ],
+   "updatesAfterRock": [
+    "button",
+    "darkshield",
+    "bulb",
+    "lavarunner"
+   ],
+   "updatesBeforeRock": [
+    "teleporter",
+    "lightpole"
+   ],
+   "notInLoadlevel": [
+    "lightalpha"
+   ]
+  },
+  {
+   "level": 82,
+   "rocks": [
+    "fallrocklarge@128,224 t0"
+   ],
+   "sources": [
+    "button@192,240 t1"
+   ],
+   "updatesAfterRock": [
+    "button",
+    "lavaboss"
+   ],
+   "updatesBeforeRock": [
+    "fallrocklarge",
+    "teleporter",
+    "watcher",
+    "lock"
+   ],
+   "notInLoadlevel": [
+    "lightalpha"
+   ]
+  }
+ ],
+ "towers": [
+  {
+   "level": 103,
+   "special": []
+  },
+  {
+   "level": 104,
+   "special": []
+  },
+  {
+   "level": 105,
+   "special": []
+  },
+  {
+   "level": 107,
+   "special": []
+  },
+  {
+   "level": 108,
+   "special": []
+  }
+ ]
+}

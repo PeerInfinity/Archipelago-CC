@@ -315,7 +315,8 @@ import {
 import { loadJSZipBrowser } from '../presets/loadJSZipBrowser.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
 import { stampAtlasIdentity, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
-import { WATCH_SET_ATLAS, labSetIdentity } from './watchSetIdentity.js';
+import { WATCH_SET_ATLAS, handoverRefusalOf, isSetSaveDownload, labSetIdentity } from './watchSetIdentity.js';
+import { levelSetContentHash } from '../procgenCore/levelSetReference.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { REDO_COMMAND_ID, TOOLS, UNDO_COMMAND_ID } from '../procgenCore/editorView.js';
 import { createEditSession, foldEdits, resolveBase } from '../procgenCore/editCore.js';
@@ -4070,6 +4071,14 @@ const holdHostSetDocument = (doc) => { hostSetDocument = doc; };
  */
 let setArmSnapshot = () => null;
 const installSetArmSnapshot = (fn) => { setArmSnapshot = fn; };
+
+/**
+ * ⛓⛓ S4 (seedling-custom-set-arm) — **A HOST'S SET NEVER SILENTLY REPLACES THE READER'S UNSAVED ONE.** Installed by
+ * the EDIT arm (`(set) => null | why`), asked by `hostLoad` BEFORE a handed-over level set is held; the rule is
+ * `watchSetIdentity.handoverRefusalOf` (pinned in node). A retired arm answers null (nothing to lose).
+ */
+let handoverRefusal = () => null;
+const installHandoverRefusal = (fn) => { handoverRefusal = fn; };
 
 /**
  * A source that answers for the held generated level and defers to the atlas
@@ -9075,6 +9084,13 @@ async function runEditor(params, lifetime) {
     let setSession = null;
     let setRoomSource = null;
     let setUi = null;
+    /**
+     * ⛓ S4 — the held set's CONTENT HASH at its last SAVE (`levelSetContentHash`): the load, a set/bundle download, a
+     * host room's close. The hand-over guard compares it with the hash now (`watchSetIdentity.handoverRefusalOf`).
+     */
+    let setSessionSavedHash = null;
+    const setHashNow = () => (setSession ? levelSetContentHash(setSession.record().set) : null);
+    const markSetSaved = () => { setSessionSavedHash = setHashNow(); };
     /** ⛓ Which room of the SET the room session below was opened on, or null. */
     let openRoom = null;
     /**
@@ -9098,6 +9114,8 @@ async function runEditor(params, lifetime) {
         if (hostRoomOpen && openRoom === null) {
             hostRoomOpen = false;
             holdHostSetDocument(null);
+            // ⛓ S4 — the close's announce handed this record back to the host: that is its save.
+            markSetSaved();
         }
         return hostRoomOpen;
     };
@@ -9148,7 +9166,7 @@ async function runEditor(params, lifetime) {
     /**
      * ⛓⛓ THE SET'S IDENTITY AT THE DOORS (lab-set-seedling-identity). The compile the
      * mount runs for the REPORT is the lab's: a stamped COPY of the atlas
-     * (`seedling-lab-<8 hex>`), with no `flash_panel` block. Every door (rules.json,
+     * (`seedling-lab-<8 hex>`); ⛓ S4: with the compiler's own `flash_panel` block. Every door (rules.json,
      * the APWorld Editor, the bundle) reads the report, so all three carry that id.
      * `atlasAtDoor` gives the bundle's atlas member the same stamp.
      */
@@ -9158,6 +9176,16 @@ async function runEditor(params, lifetime) {
     const wantLevel = Number.isInteger(params.level) ? params.level : atlasLevels[0];
 
     let session = null;
+    // ⛓ S4 — the hand-over guard (module docblock at `installHandoverRefusal`), over this arm's live locals.
+    installHandoverRefusal((set) => handoverRefusalOf({
+        heldSetId: setSession ? setSession.record().set.set_id : null,
+        unsaved: !!setSession && setHashNow() !== setSessionSavedHash,
+        roomEdits: openRoom !== null && session ? session.ops().length : 0,
+        openRoom,
+        hostRoomOpen: hostRoomStillOpen(),
+        handedSetId: set?.set_id ?? null,
+    }));
+    lifetime.onRetire(() => installHandoverRefusal(() => null));
     let baseTag = null;
     /**
      * ⛓ THE BASE'S RECORD, KEPT BESIDE THE TAG. The session owns it internally
@@ -9898,6 +9926,7 @@ async function runEditor(params, lifetime) {
         setSession = createSetSession(setAdapter, record, { base });
         setRoomSource = setSessionRoomSource(setSession);
         openRoom = null;
+        markSetSaved();
         // ⛓ A set the READER loaded is theirs: the host's document is not held for it.
         if (!fromHost) holdHostSetDocument(null);
         /**
@@ -9952,7 +9981,12 @@ async function runEditor(params, lifetime) {
                 : { room: openRoom, ops: session.ops().length, session }),
             openRoomAt,
             discardRoom,
-            download,
+            // ⛓ S4 — the set editor's downloads: a SET or BUNDLE one is the set's save (the hand-over guard's); a room's,
+            // the overlay's, the companion's or rules.json's is not (`isSetSaveDownload`).
+            download: (name, text, type) => {
+                if (isSetSaveDownload({ text, type })) markSetSaved();
+                download(name, text, type);
+            },
             loadZip,
             onSetChange: () => {
                 renderSetRooms();
@@ -12354,6 +12388,18 @@ async function hostLoad(payload) {
      */
     const got = sniffLoadBox(JSON.stringify(payload));
     if (got.kind === 'levelset' || got.kind === 'overlay') {
+        // ⛓ S4 — nothing of the reader's is clobbered: refused by name, the document NOT held, no navigate.
+        const refused = got.kind === 'levelset' ? handoverRefusal(got.set) : null;
+        if (refused) {
+            const status = document.getElementById('status');
+            if (status) {
+                status.className = 'bad';
+                status.textContent = `the HAND-OVER was REFUSED — ${refused}`;
+            }
+            // eslint-disable-next-line no-console
+            console.warn(`watchViewer: the hand-over was REFUSED — ${refused}`);
+            return;
+        }
         const held = peekHostSetDocument();
         holdHostSetDocument(got.kind === 'levelset'
             ? { set: got.set, overlay: held?.overlay ?? null }

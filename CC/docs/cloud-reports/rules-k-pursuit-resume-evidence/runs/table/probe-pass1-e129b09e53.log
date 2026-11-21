@@ -1,0 +1,130 @@
+CHANNEL: headless logic-only (no wasm: a node measurement of the maze-derived rules)
+BUILT: 115 levels, 307 regions, 2648981 B in 19394 ms
+ECHOES: planted {"loc":48,"ex":640,"ix":471,"evt":30,"gate":26,"ixr":18,"ixg":4,"rope":2,"ropegate":2,"hand":19}; copied {"loc":10,"ex":9,"ix":1,"evt":0,"gate":0,"ixr":0,"ixg":0,"rope":0,"ropegate":0}; in shared worlds {"loc":7,"ex":5,"ix":0,"evt":0,"gate":0,"ixr":0,"ixg":0,"rope":0,"ropegate":0}; 21 AP elements; 7304 ms
+CERT: 1 problems / 16 accepted / 0 threw; 845 rows; wall 56119 ms, shard ms 56020/36614, heap MB 107/319
+  PROBLEM level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false
+WITNESSED BINDINGS: 3 (L63 flag 1: lightpole@64,88 cleared; L63 flag 6: lightpole@48,272 cleared; L71 flag 2: shieldlock@288,256 cleared)
+SUMMARY: {"certifier":{"problems":1,"accepted":16,"threw":0},"echoes":{"copied":{"loc":10,"ex":9,"ix":1,"evt":0,"gate":0,"ixr":0,"ixg":0,"rope":0,"ropegate":0},"elements":21},"labels":{"pair":{"path-vs-edge":181,"derived":229},"exit":{"derived":290,"echoed":13,"arrival-dependent":54,"path-vs-edge":18},"location":{"derived":60,"echoed":13,"path-vs-edge":13,"arrival-dependent":29}},"w0":{"exit":{"equal":278,"arrival-dependent":28,"stricter":6,"looser":5},"location":{"equal":62,"stricter":12,"arrival-dependent":15}},"elements":406,"echoedElements":21,"unpriced":572,"sharedBinding":162,"bindingWitnessed":14,"arrivals":{"regionsPriced":208,"arrivalNodes":244,"regionsPerArrivalCount":{"1":174,"2":32,"3":2},"regionsArrivalDependent":25},"routeA":{"classes":{"walk-in from another member":108,"overridable":56,"several arrivals":16,"internal-only":28},"overridableElements":128,"overridableEchoed":9,"overridableEchoFree":119,"regionsWithAnEchoFreeOverride":54,"overridablePartial":12,"overridableExact":105,"regionsWithAnExactOverride":48},"table":{"rows":99,"regions":47,"excluded":6}}
+WROTE: /tmp/claude-0/tbl/derived-rules.json (900 element rows)
+TABLE: 99 rows in 47 regions; 6 exact elements excluded
+  TABLE ADDED level_102__r5c3|level_102__r5c3 -> level_101__r4c2
+  TABLE ADDED level_102__r5c3|level_102__r5c3 -> level_103
+  TABLE ADDED level_102__r5c9|level_102__r5c9 -> level_107
+  TABLE ADDED level_103|level_103 -> level_102__r5c3
+  TABLE ADDED level_103|level_103 -> level_104
+  TABLE ADDED level_104|level_104 -> level_103
+  TABLE ADDED level_104|level_104 -> level_105
+  TABLE ADDED level_105|level_105 -> level_104
+  TABLE ADDED level_105|level_105 -> level_106
+  TABLE ADDED level_106|@Level 106 - Ghostsword
+  TABLE ADDED level_106|level_106 -> level_101__r4c2
+  TABLE ADDED level_106|level_106 -> level_105
+  TABLE ADDED level_107|level_107 -> level_102__r5c9
+  TABLE ADDED level_107|level_107 -> level_108__r2c0
+  TABLE ADDED level_108__r2c0|level_108__r2c0 -> level_107
+  TABLE ADDED level_109|@Level 109 - Firewand
+  TABLE ADDED level_109|level_109 -> level_101__r4c2
+  TABLE ADDED level_109|level_109 -> level_108__r11c8
+  TABLE ADDED level_10|@Level 010 - Sword
+  TABLE ADDED level_10|level_10 -> level_11
+  TABLE ADDED level_10|level_10 -> level_9
+  TABLE ADDED level_110|level_110 -> level_2
+  TABLE ADDED level_114|level_114 -> level_113
+  TABLE ADDED level_114|level_114 -> level_113 #2
+  TABLE ADDED level_11|@Level 011 - Chest
+  TABLE ADDED level_11|level_11 -> level_10
+  TABLE ADDED level_11|level_11 -> level_3__r8c6
+  TABLE ADDED level_13|level_13 -> level_0__r7c6
+  TABLE ADDED level_13|level_13 -> level_14
+  TABLE ADDED level_13|level_13 -> level_20__r3c1
+  TABLE ADDED level_14|level_14 -> level_13
+  TABLE ADDED level_14|level_14 -> level_15__r1c5
+  TABLE ADDED level_21|level_21 -> level_22__r0c6
+  TABLE ADDED level_21|level_21 -> level_23
+  TABLE ADDED level_21|level_21 -> level_29__r5c0
+  TABLE ADDED level_23|level_23 -> level_21
+  TABLE ADDED level_23|level_23 -> level_24
+  TABLE ADDED level_27|level_27 -> level_26__r2c4
+  TABLE ADDED level_27|level_27 -> level_28__r11c4
+  TABLE ADDED level_28__r0c6|level_28__r0c6 -> level_25__r2c7
+  TABLE ADDED level_28__r0c6|level_28__r0c6 -> level_26__r13c8
+  TABLE ADDED level_2|level_2 -> level_0__r7c6
+  TABLE ADDED level_2|level_2 -> level_3__r0c4
+  TABLE ADDED level_32|level_32 -> level_30__r2c10
+  TABLE ADDED level_32|level_32 -> level_30__r2c10 #2
+  TABLE ADDED level_32|level_32 -> level_30__r8c13
+  TABLE ADDED level_33|level_33 -> level_12__r0c19
+  TABLE ADDED level_34|level_34 -> level_12__r0c37
+  TABLE ADDED level_34|level_34 -> level_12__r43c21
+  TABLE ADDED level_35|level_35 -> level_12__r0c19
+  TABLE ADDED level_36|@Level 036 - Chest
+  TABLE ADDED level_36|level_36 -> level_12__r0c19
+  TABLE ADDED level_38|@Level 038 - Chest
+  TABLE ADDED level_38|level_38 -> level_37__r0c18
+  TABLE ADDED level_42|@Level 042 - Totem Part 184,152
+  TABLE ADDED level_42|level_42 -> level_40__r0c53
+  TABLE ADDED level_59|level_59 -> level_60__r5c0
+  TABLE ADDED level_59|level_59 -> level_67__r6c11
+  TABLE ADDED level_59|level_59 -> level_95
+  TABLE ADDED level_59|level_59 -> level_95 #2
+  TABLE ADDED level_61__r0c10|@L63 flag 1: lightpole@64,88 cleared
+  TABLE ADDED level_61__r0c10|level_61__r0c10 -> level_62
+  TABLE ADDED level_61__r0c10|level_61__r0c10 -> level_63__r0c1
+  TABLE ADDED level_64|@Level 064 - Ghostspear
+  TABLE ADDED level_65__r0c2|level_65__r0c2 -> level_63__r10c2
+  TABLE ADDED level_65__r0c2|level_65__r0c2 -> level_66__r9c8
+  TABLE ADDED level_6|level_6 -> level_5__r1c5
+  TABLE ADDED level_6|level_6 -> level_7
+  TABLE ADDED level_70|level_70 -> level_66__r5c4
+  TABLE ADDED level_76|level_76 -> level_71__r0c6
+  TABLE ADDED level_76|level_76 -> level_77__r2c0
+  TABLE ADDED level_7|level_7 -> level_6
+  TABLE ADDED level_7|level_7 -> level_8
+  TABLE ADDED level_80__r16c1|level_80__r16c1 -> level_79__r0c4
+  TABLE ADDED level_80__r16c1|level_80__r16c1 -> level_79__r0c4 #2
+  TABLE ADDED level_84__r2c4|level_84__r2c4 -> level_85 #2
+  TABLE ADDED level_84__r2c4|level_84__r2c4 -> level_85 #3
+  TABLE ADDED level_85|level_85 -> level_71__r13c7
+  TABLE ADDED level_86|@Level 086 - Chest
+  TABLE ADDED level_86|level_86 -> level_0__r7c6
+  TABLE ADDED level_88|level_88 -> level_12__r0c19
+  TABLE ADDED level_88|level_88 -> level_87__r1c3
+  TABLE ADDED level_88|level_88 -> level_87__r1c3 #2
+  TABLE ADDED level_90|@Level 090 - Chest
+  TABLE ADDED level_90|level_90 -> level_89__r1c15
+  TABLE ADDED level_94__r2c16|level_94__r2c16 -> level_0__r7c6
+  TABLE ADDED level_94__r2c16|level_94__r2c16 -> level_0__r7c6 #2
+  TABLE ADDED level_95|level_95 -> level_12__r0c19
+  TABLE ADDED level_95|level_95 -> level_12__r0c19 #2
+  TABLE ADDED level_95|level_95 -> level_59
+  TABLE ADDED level_95|level_95 -> level_59 #2
+  TABLE ADDED level_96|level_96 -> level_97
+  TABLE ADDED level_97|level_97 -> level_37__r9c36
+  TABLE ADDED level_97|level_97 -> level_96
+  TABLE ADDED level_98|@Level 098 - Chest
+  TABLE ADDED level_98|level_98 -> level_93__r5c7
+  TABLE ADDED level_98|level_98 -> level_99__r7c5
+  TABLE ADDED level_9|level_9 -> level_10
+  TABLE ADDED level_9|level_9 -> level_8
+  TABLE INPUTS null → {"payloadMd5":"e705ea936f2ccf407f1046a4e5d11439","engineMd5":"bec369878feb67081187edca62baa951","engineFiles":42,"witnessMd5":"2e4e3caad3c894a7e8877f255ae2de56"}
+  TABLE EXCLUDED list moved
+FAIL: the derived-rule table differs from frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json — run alone. ONE COMMAND does steps (1)-(3) and the count check: `node scripts/procgen/refresh-seedling-derived-rules.mjs --dispatch --ref=<branch>` (or `--run=<id>` for a run already made; `--check` offline; docs/json/developer/procgen/seedling-derived-rules.md). By hand, in this order: (1) `gh workflow run seedling-probe.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f probes=probe-seedling-derived-rules.mjs`; (2) `gh run download <run> -R PeerInfinity/Archipelago-CC` and copy probe-seedling-derived-rules-log/seedling-playthrough-derived-rules.json over frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json; (3) the producer chain, `node scripts/procgen/regen-seedling.mjs --write` (make-seedling-playthrough-rules.mjs first, then partition, world, seed 1, the maze, ER, sphere order; a new atlas id also needs atlas_files.json); (4) COMMIT THE TABLE IN THE SAME PACKET as the change that staled it. If the regenerated table's VERDICTS move (its rows or exclusions, not only its `inputs` hashes), the packet owes a tile-primitives designer review before js-16 slots it. The engine closure: `node scripts/procgen/seedlingDerivedRuleTable.js --print-engine-closure`
+PASS: explained problem level_63__r6c9 → level_63__r0c1 → path-vs-edge
+  DRIFT labels.pair.path-vs-edge: expected 133, measured 181
+  DRIFT labels.pair.derived: expected 213, measured 229
+  DRIFT arrivals.regionsPriced: expected 205, measured 208
+  DRIFT arrivals.arrivalNodes: expected 241, measured 244
+  DRIFT arrivals.regionsPerArrivalCount.1: expected 171, measured 174
+  DRIFT routeA.classes.walk-in from another member: expected 102, measured 108
+  DRIFT routeA.classes.overridable: expected 59, measured 56
+  DRIFT routeA.overridableElements: expected 135, measured 128
+  DRIFT routeA.overridableEchoFree: expected 126, measured 119
+  DRIFT routeA.regionsWithAnEchoFreeOverride: expected 57, measured 54
+  DRIFT routeA.overridableExact: expected 112, measured 105
+  DRIFT routeA.regionsWithAnExactOverride: expected 51, measured 48
+  DRIFT unpriced: expected 354, measured 572
+  DRIFT sharedBinding: expected 159, measured 162
+  DRIFT table.rows: expected 106, measured 99
+  DRIFT table.regions: expected 50, measured 47
+FAIL: 16 count(s) drifted from scripts/procgen/seedling-derived-rules-expected.json
+2 CHECK(S) FAILED

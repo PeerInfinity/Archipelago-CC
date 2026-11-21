@@ -20,7 +20,10 @@
  */
 import { RegionMapUI } from './regionMapUI.js';
 import { REGION_MAP_SETTINGS_SCHEMA, moduleHandles, panelInstances } from './regionMapSettings.js';
-import { LOCATION_CLICKED, REGION_CLICKED, REGION_MAP_NODE_SELECTED } from './regionMapClickActions.js';
+import {
+    LOCATION_CLICKED, REGION_CLICKED, REGION_MAP_NODE_SELECTED, makeRegionMapCentreAction,
+} from './regionMapClickActions.js';
+import { registerClickAction, unregisterClickAction, PANEL_ACTION_IDS } from '../regionView/clickActions.js';
 
 export const moduleInfo = {
     name: 'regionMap',
@@ -50,12 +53,18 @@ export function register(registrationApi) {
     // ⛓ CA-S3: the generic click events (mode-toggle design §4.3), `{ panelId: 'regionMap', regionName, locationName? }`.
     registrationApi.registerEventBusPublisher(REGION_CLICKED);
     registrationApi.registerEventBusPublisher(LOCATION_CLICKED);
+    // ⛓ CA-S4: the Regions panel's `regions.scrollTo` (a location click's action), published on THIS bus.
+    registrationApi.registerEventBusPublisher('ui:navigateToLocation');
 }
 
 export function initialize(mId, priorityIndex, initializationApi) {
     // Held in regionMapSettings.js, not here: the UI reads them, and a UI → index import is a TDZ cycle.
     moduleHandles.dispatcher = initializationApi?.getDispatcher?.() ?? null;
     moduleHandles.eventBus = initializationApi?.getEventBus?.() ?? null;
+    // ⛓ CA-S4: "centre the Region Map on it", for the OTHER map's "On click" strip (off by default).
+    try { registerClickAction(makeRegionMapCentreAction(() => [...panelInstances])); }
+    catch (e) { console.warn(`regionMap: regionMap.centre not registered: ${e.message}`); }
+    return () => { unregisterClickAction(PANEL_ACTION_IDS.mapCentre); };
 }
 
 export function postInitialize() {}

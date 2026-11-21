@@ -250,7 +250,8 @@ train checks (`-f only=seedling-checks` runs those alone). It is a drift SIGNAL,
 landing evidence for any SHA. A red is a note to the owner, read off the run's summary
 and its `nightly-manual-summary` artifact (morning pickup one-liner:
 `.github/workflows/README.md` § *Substrate tests — nightly manual batches*). **B1:** by
-convention, bulk harvests and exploratory sweeps are dispatched 22:00–07:00 Pacific.
+convention, bulk harvests and exploratory sweeps are dispatched 20:00–21:30 Pacific (⚖ Robert
+2026-11-21: the laptop is in standby from ~21:30, so a later dispatch never goes out; the runs go on overnight in CI).
 Exempt: anything a landing train dispatches; gate runs at a slice tip (`train_only`,
 `full_matrix`, TT); a re-measure that a queued packet is waiting on.
 

@@ -45,7 +45,7 @@ Each region block contains:
 - **Header** — Region name with accessibility color-coding. Click to expand/collapse.
 - **Entrances** — Connections from other regions into this one, with access rules.
 - **Exits** — Connections to other regions. Each exit shows the destination as a clickable link and an access rule logic tree. Click an exit to move through it (in navigation mode) or navigate to the destination (in show-all mode).
-- **Locations** — Items available in this region. Each shows its access rule. Click to check a location.
+- **Locations** — Items available in this region. Each shows its access rule. Click to check a location. Whether a click checks it now or adds the check to your path follows the [Region Graph](regionGraph.md#the-on-click-strip)'s **On click** strip (its Location choice, *Check the location*).
 
 ## Interactions
 

@@ -1,0 +1,127 @@
+CHANNEL: headless logic-only (P3 timing probe: compare two calib-levels.json; runs nothing)
+MEASURED: control CC/docs/cloud-reports/rules-k-pursuit-resume-evidence/runs/base/calib-levels.json @ 11ca7efeca6fe33b74e6645ee2e4bcf67dbc8117 wall 958.0 s; tip CC/docs/cloud-reports/rules-k-pursuit-resume-evidence/runs/tip/calib-levels.json @ 7eb2e90ff04103234ef8a6997c4bc28fc7fa80d3 wall 940.8 s
+PASS: the control run is green on every test (red: none)
+PASS: the tip run is green on every test (red: none)
+PASS: both runs time the same levels (tip only: none; control only: none)
+PASS: every --moved level is a level (unknown: none)
+MEASURED: ratio level_72 tip 588 ms / control 27 ms = 21.778, normalised 21.669 (moved) (under 100 ms: not rated)
+MEASURED: ratio level_75 tip 401 ms / control 19 ms = 21.105, normalised 21.000 (moved) (under 100 ms: not rated)
+MEASURED: ratio level_74 tip 167 ms / control 23 ms = 7.261, normalised 7.225 (moved) (under 100 ms: not rated)
+MEASURED: ratio level_99 tip 339 ms / control 72 ms = 4.708, normalised 4.685 (moved) (under 100 ms: not rated)
+MEASURED: ratio level_78 tip 1182 ms / control 301 ms = 3.927, normalised 3.907 (moved) FLAGGED
+MEASURED: ratio level_73 tip 323 ms / control 98 ms = 3.296, normalised 3.280 (moved) (under 100 ms: not rated)
+MEASURED: ratio level_80 tip 618 ms / control 208 ms = 2.971, normalised 2.956 (moved) FLAGGED
+MEASURED: ratio level_77 tip 335 ms / control 159 ms = 2.107, normalised 2.096 (moved) FLAGGED
+MEASURED: ratio level_105 tip 32 ms / control 21 ms = 1.524, normalised 1.516 (under 100 ms: not rated)
+MEASURED: ratio level_27 tip 26 ms / control 18 ms = 1.444, normalised 1.437 (under 100 ms: not rated)
+MEASURED: ratio level_14 tip 36 ms / control 25 ms = 1.440, normalised 1.433 (under 100 ms: not rated)
+MEASURED: ratio level_76 tip 33 ms / control 23 ms = 1.435, normalised 1.428 (under 100 ms: not rated)
+MEASURED: ratio level_114 tip 30 ms / control 21 ms = 1.429, normalised 1.421 (under 100 ms: not rated)
+MEASURED: ratio level_26 tip 152 ms / control 107 ms = 1.421, normalised 1.413
+MEASURED: ratio level_70 tip 24 ms / control 17 ms = 1.412, normalised 1.405 (under 100 ms: not rated)
+MEASURED: ratio level_96 tip 22 ms / control 16 ms = 1.375, normalised 1.368 (under 100 ms: not rated)
+MEASURED: ratio level_33 tip 24 ms / control 18 ms = 1.333, normalised 1.327 (under 100 ms: not rated)
+MEASURED: ratio level_64 tip 25 ms / control 19 ms = 1.316, normalised 1.309 (under 100 ms: not rated)
+MEASURED: ratio level_87 tip 281 ms / control 214 ms = 1.313, normalised 1.307
+MEASURED: ratio level_97 tip 21 ms / control 16 ms = 1.313, normalised 1.306 (under 100 ms: not rated)
+MEASURED: ratio level_104 tip 26 ms / control 20 ms = 1.300, normalised 1.294 (under 100 ms: not rated)
+MEASURED: ratio level_86 tip 22 ms / control 17 ms = 1.294, normalised 1.288 (under 100 ms: not rated)
+MEASURED: ratio level_61 tip 74 ms / control 58 ms = 1.276, normalised 1.270 (under 100 ms: not rated)
+MEASURED: ratio level_19 tip 109 ms / control 86 ms = 1.267, normalised 1.261 (under 100 ms: not rated)
+MEASURED: ratio level_84 tip 29 ms / control 23 ms = 1.261, normalised 1.255 (under 100 ms: not rated)
+MEASURED: ratio level_69 tip 34 ms / control 27 ms = 1.259, normalised 1.253 (under 100 ms: not rated)
+MEASURED: ratio level_102 tip 39 ms / control 31 ms = 1.258, normalised 1.252 (under 100 ms: not rated)
+MEASURED: ratio level_49 tip 25 ms / control 20 ms = 1.250, normalised 1.244 (under 100 ms: not rated)
+MEASURED: ratio level_50 tip 32 ms / control 26 ms = 1.231, normalised 1.225 (under 100 ms: not rated)
+MEASURED: ratio level_36 tip 27 ms / control 22 ms = 1.227, normalised 1.221 (under 100 ms: not rated)
+MEASURED: ratio level_29 tip 99 ms / control 81 ms = 1.222, normalised 1.216 (under 100 ms: not rated)
+MEASURED: ratio level_115 tip 176 ms / control 144 ms = 1.222, normalised 1.216
+MEASURED: ratio level_66 tip 40 ms / control 33 ms = 1.212, normalised 1.206 (under 100 ms: not rated)
+MEASURED: ratio level_90 tip 23 ms / control 19 ms = 1.211, normalised 1.205 (under 100 ms: not rated)
+MEASURED: ratio level_60 tip 98 ms / control 81 ms = 1.210, normalised 1.204 (under 100 ms: not rated)
+MEASURED: ratio level_68 tip 48 ms / control 40 ms = 1.200, normalised 1.194 (under 100 ms: not rated)
+MEASURED: ratio level_67 tip 80 ms / control 67 ms = 1.194, normalised 1.188 (under 100 ms: not rated)
+MEASURED: ratio level_94 tip 37 ms / control 31 ms = 1.194, normalised 1.188 (under 100 ms: not rated)
+MEASURED: ratio level_62 tip 75 ms / control 63 ms = 1.190, normalised 1.185 (under 100 ms: not rated)
+MEASURED: ratio level_25 tip 80 ms / control 68 ms = 1.176, normalised 1.171 (under 100 ms: not rated)
+MEASURED: ratio level_55 tip 20 ms / control 17 ms = 1.176, normalised 1.171 (under 100 ms: not rated)
+MEASURED: ratio level_93 tip 67 ms / control 57 ms = 1.175, normalised 1.170 (under 100 ms: not rated)
+MEASURED: ratio level_91 tip 34 ms / control 29 ms = 1.172, normalised 1.167 (under 100 ms: not rated)
+MEASURED: ratio level_21 tip 35 ms / control 30 ms = 1.167, normalised 1.161 (under 100 ms: not rated)
+MEASURED: ratio level_59 tip 36 ms / control 31 ms = 1.161, normalised 1.156 (under 100 ms: not rated)
+MEASURED: ratio level_34 tip 30 ms / control 26 ms = 1.154, normalised 1.148 (under 100 ms: not rated)
+MEASURED: ratio level_113 tip 1305 ms / control 1139 ms = 1.146, normalised 1.140
+MEASURED: ratio level_83 tip 40 ms / control 35 ms = 1.143, normalised 1.137 (under 100 ms: not rated)
+MEASURED: ratio level_85 tip 24 ms / control 21 ms = 1.143, normalised 1.137 (under 100 ms: not rated)
+MEASURED: ratio level_109 tip 24 ms / control 21 ms = 1.143, normalised 1.137 (under 100 ms: not rated)
+MEASURED: ratio level_58 tip 146 ms / control 128 ms = 1.141, normalised 1.135
+MEASURED: ratio level_110 tip 25 ms / control 22 ms = 1.136, normalised 1.131 (under 100 ms: not rated)
+MEASURED: ratio level_30 tip 8953 ms / control 7905 ms = 1.133, normalised 1.127
+MEASURED: ratio level_107 tip 26 ms / control 23 ms = 1.130, normalised 1.125 (under 100 ms: not rated)
+MEASURED: ratio level_24 tip 35 ms / control 31 ms = 1.129, normalised 1.123 (under 100 ms: not rated)
+MEASURED: ratio level_82 tip 92 ms / control 82 ms = 1.122, normalised 1.116 (under 100 ms: not rated)
+MEASURED: ratio level_28 tip 399 ms / control 359 ms = 1.111, normalised 1.106
+MEASURED: ratio level_17 tip 31 ms / control 28 ms = 1.107, normalised 1.102 (under 100 ms: not rated)
+MEASURED: ratio level_57 tip 83 ms / control 75 ms = 1.107, normalised 1.101 (under 100 ms: not rated)
+MEASURED: ratio level_35 tip 21 ms / control 19 ms = 1.105, normalised 1.100 (under 100 ms: not rated)
+MEASURED: ratio level_44 tip 85 ms / control 77 ms = 1.104, normalised 1.098 (under 100 ms: not rated)
+MEASURED: ratio level_52 tip 87 ms / control 79 ms = 1.101, normalised 1.096 (under 100 ms: not rated)
+MEASURED: ratio level_23 tip 22 ms / control 20 ms = 1.100, normalised 1.095 (under 100 ms: not rated)
+MEASURED: ratio level_79 tip 66 ms / control 60 ms = 1.100, normalised 1.095 (under 100 ms: not rated)
+MEASURED: ratio level_88 tip 45 ms / control 41 ms = 1.098, normalised 1.092 (under 100 ms: not rated)
+MEASURED: ratio level_10 tip 23 ms / control 21 ms = 1.095, normalised 1.090 (under 100 ms: not rated)
+MEASURED: ratio level_106 tip 25 ms / control 23 ms = 1.087, normalised 1.082 (under 100 ms: not rated)
+MEASURED: ratio level_89 tip 206 ms / control 190 ms = 1.084, normalised 1.079
+MEASURED: ratio level_103 tip 26 ms / control 24 ms = 1.083, normalised 1.078 (under 100 ms: not rated)
+MEASURED: ratio level_95 tip 27 ms / control 25 ms = 1.080, normalised 1.075 (under 100 ms: not rated)
+MEASURED: ratio level_51 tip 217 ms / control 201 ms = 1.080, normalised 1.074
+MEASURED: ratio level_6 tip 29 ms / control 27 ms = 1.074, normalised 1.069 (under 100 ms: not rated)
+MEASURED: ratio level_32 tip 29 ms / control 27 ms = 1.074, normalised 1.069 (under 100 ms: not rated)
+MEASURED: ratio level_56 tip 30 ms / control 28 ms = 1.071, normalised 1.066 (under 100 ms: not rated)
+MEASURED: ratio level_42 tip 32 ms / control 30 ms = 1.067, normalised 1.061 (under 100 ms: not rated)
+MEASURED: ratio level_100 tip 82 ms / control 77 ms = 1.065, normalised 1.060 (under 100 ms: not rated)
+MEASURED: ratio level_98 tip 83 ms / control 78 ms = 1.064, normalised 1.059 (moved) (under 100 ms: not rated)
+MEASURED: ratio level_18 tip 115 ms / control 109 ms = 1.055, normalised 1.050
+MEASURED: ratio level_11 tip 20 ms / control 19 ms = 1.053, normalised 1.047 (under 100 ms: not rated)
+MEASURED: ratio level_9 tip 21 ms / control 20 ms = 1.050, normalised 1.045 (under 100 ms: not rated)
+MEASURED: ratio level_108 tip 45 ms / control 43 ms = 1.047, normalised 1.041 (under 100 ms: not rated)
+MEASURED: ratio level_22 tip 2090 ms / control 2003 ms = 1.043, normalised 1.038
+MEASURED: ratio level_13 tip 28 ms / control 27 ms = 1.037, normalised 1.032 (under 100 ms: not rated)
+MEASURED: ratio level_48 tip 384 ms / control 371 ms = 1.035, normalised 1.030
+MEASURED: ratio level_111 tip 35 ms / control 34 ms = 1.029, normalised 1.024 (under 100 ms: not rated)
+MEASURED: ratio level_101 tip 1876 ms / control 1827 ms = 1.027, normalised 1.022
+MEASURED: ratio level_20 tip 216 ms / control 211 ms = 1.024, normalised 1.019
+MEASURED: ratio level_15 tip 5597 ms / control 5488 ms = 1.020, normalised 1.015
+MEASURED: ratio level_71 tip 2447 ms / control 2416 ms = 1.013, normalised 1.008 (moved)
+MEASURED: ratio level_53 tip 2140 ms / control 2113 ms = 1.013, normalised 1.008
+MEASURED: ratio level_8 tip 1717 ms / control 1700 ms = 1.010, normalised 1.005
+MEASURED: ratio level_2 tip 24 ms / control 24 ms = 1.000, normalised 0.995 (under 100 ms: not rated)
+MEASURED: ratio level_7 tip 27 ms / control 27 ms = 1.000, normalised 0.995 (under 100 ms: not rated)
+MEASURED: ratio level_92 tip 559 ms / control 559 ms = 1.000, normalised 0.995
+MEASURED: ratio level_47 tip 3680 ms / control 3683 ms = 0.999, normalised 0.994
+MEASURED: ratio level_40 tip 452569 ms / control 454657 ms = 0.995, normalised 0.990
+MEASURED: ratio level_41 tip 1249 ms / control 1259 ms = 0.992, normalised 0.987
+MEASURED: ratio level_54 tip 580 ms / control 590 ms = 0.983, normalised 0.978
+MEASURED: ratio level_65 tip 1254 ms / control 1276 ms = 0.983, normalised 0.978
+MEASURED: ratio level_43 tip 498 ms / control 511 ms = 0.975, normalised 0.970
+MEASURED: ratio level_37 tip 526 ms / control 540 ms = 0.974, normalised 0.969
+MEASURED: ratio level_4 tip 37 ms / control 38 ms = 0.974, normalised 0.969 (under 100 ms: not rated)
+MEASURED: ratio level_16 tip 257545 ms / control 265299 ms = 0.971, normalised 0.966
+MEASURED: ratio level_63 tip 86050 ms / control 90296 ms = 0.953, normalised 0.948
+MEASURED: ratio level_45 tip 268 ms / control 282 ms = 0.950, normalised 0.946
+MEASURED: ratio level_0 tip 18726 ms / control 19918 ms = 0.940, normalised 0.935
+MEASURED: ratio level_38 tip 62 ms / control 66 ms = 0.939, normalised 0.935 (under 100 ms: not rated)
+MEASURED: ratio level_39 tip 668 ms / control 729 ms = 0.916, normalised 0.912
+MEASURED: ratio level_12 tip 65310 ms / control 71360 ms = 0.915, normalised 0.911
+MEASURED: ratio level_112 tip 130 ms / control 144 ms = 0.903, normalised 0.898
+MEASURED: ratio level_1 tip 26 ms / control 29 ms = 0.897, normalised 0.892 (under 100 ms: not rated)
+MEASURED: ratio level_31 tip 81 ms / control 91 ms = 0.890, normalised 0.886 (under 100 ms: not rated)
+MEASURED: ratio level_5 tip 48 ms / control 54 ms = 0.889, normalised 0.884 (under 100 ms: not rated)
+MEASURED: ratio level_3 tip 871 ms / control 988 ms = 0.882, normalised 0.877
+MEASURED: ratio level_46 tip 720 ms / control 818 ms = 0.880, normalised 0.876
+MEASURED: median ratio 1.005 over 34 reference levels (≥ 100 ms in the control, not moved); their normalised spread 0.876–1.413, 0.876–1.413 without the flagged ones; threshold 1.5
+FLAG: level_77 normalised 2.096 > 1.5
+FLAG: level_78 normalised 3.907 > 1.5
+FLAG: level_80 normalised 2.956 > 1.5
+FAIL: the flagged levels are none (flagged: level_77,level_78,level_80)
+1 CHECK(S) FAILED

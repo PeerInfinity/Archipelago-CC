@@ -1,0 +1,12 @@
+regen-seedling --check: 10 step(s); python = /home/user/Archipelago-CC/.venv/bin/python; logs in .cache/regen-seedling/
+rules          OK [11.0s]
+partition      OK [3.6s]
+world          OK [0.6s]
+template       OK: Players/Templates/Seedling Playthrough.yaml matches a fresh build [3.1s]
+host-settings  OK [0.0s]
+seed1          OK: 4 files + the seedling_playthrough row match a fresh build [2.9s]
+maze           OK [16.7s]
+er             OK [18.4s]
+sphere-order   OK [0.0s]
+census         STALE: FAIL  campaign-frontier.json: sources [1.4s]
+total 57.8s — 1 step(s) not OK

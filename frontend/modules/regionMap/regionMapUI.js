@@ -221,9 +221,9 @@ export class RegionMapUI {
             panelId: PANEL_ID,
             container: this.clickStripHost,
             getSettings: () => this.clickActions,
-            saveSettings: (next) => {
+            saveSettings: (next, opts) => {
                 this.clickActions = next;
-                saveRegionMapClickActions(settingsManager, next)
+                saveRegionMapClickActions(settingsManager, next, opts)
                     .catch((e) => console.warn('regionMap: could not save the click actions', e));
             },
         });
@@ -337,6 +337,9 @@ export class RegionMapUI {
         } catch (e) {
             console.warn('regionMap: could not load the click actions; using the defaults', e);
         }
+        if (this._disposed) return;
+        // ⛓ CA-S4: once loaded, write the panel-owned actions' first values this config does not name (all OFF here).
+        this.clickStrip?.seed();
         this.clickStrip?.render();
     }
 
@@ -507,6 +510,26 @@ export class RegionMapUI {
         const f = this._currentFrame();
         if (!f) return;
         this._animateTo(centreOn({ x0: f.cell.x, y0: f.cell.y, x1: f.cell.x + f.cell.w, y1: f.cell.y + f.cell.h }, this.camera.zoom));
+    }
+
+    /**
+     * ⛓ CA-S4 (`regionMap.centre`): ease the camera onto the cell that draws region `name` (its own cell, else the
+     * display group or cell it is a member of), and turn Follow off as a manual pan does. → true when a cell draws it.
+     */
+    centreOnRegion(name) {
+        if (!this.model || this._disposed) return false;
+        let f = this.frames.get(name) ?? null;
+        if (!f) {
+            const view = this.view?.get();
+            for (const [key, frame] of this.frames) {
+                const members = view?.displayGroups?.get(key)?.members ?? this.model?.cells.get(key)?.members ?? [];
+                if (members.includes(name)) { f = frame; break; }
+            }
+        }
+        if (!f) return false;
+        this._manualCamera();
+        this._animateTo(this._focusCamera(f));
+        return true;
     }
 
     centreOnStart() {

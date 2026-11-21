@@ -1,0 +1,7 @@
+L78: K's route from r0c16 to the one-cell r6c11 (11,6), the cells the engine's step BFS from r0c16's entrance (16,1) walks
+holding [Ghost Spear, Progressive Shield, Wand] (rules-k-pursuit-speed-evidence/runs/tip/L78-bfs-from-r0c16.txt), along
+the K-gated row 4 (runs/../tools l78cells.mjs: (11,4) and (11,5) are K-only cells, (11,6) neither K nor T, in no disc):
+  (16,1) -> (16,2) -> (16,3) -> (16,4) -> (15,4) -> (14,4) -> (13,4) -> (12,4) -> (11,4) -> (11,5) -> (11,6)
+The certifier's derivation at tip: level_78__r0c16>level_78__r6c11=[["Ghost Spear"],["Progressive Sword"],["Wand"],["Progressive Shield","Progressive Shield"]]
+Trap (9,3)'s centre is (152,56); LavaTrap.as:81-88 launches when floor(distance(trap, player)) <= chompRange (32) on a clear line.
+(11,4)'s tile centre (184,72) is 35.78 px away: in no tile-centre disc. Its west part is in the game's disc.

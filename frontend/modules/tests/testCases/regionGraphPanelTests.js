@@ -534,6 +534,16 @@ const STRIP_SUMMARY = '.region-graph-panel-container .click-actions-strip-summar
 const stripSummary = () => document.querySelector(STRIP_SUMMARY)?.textContent ?? '';
 
 /**
+ * The Graph's collapsed summary of the default actions. ⛓ CA-S4: Discovery's `discovery.discover` starts ON for the
+ * Region Graph (it reproduces the old `regionGraph:nodeSelected` listener; still gated by the discovery bundle), and it
+ * runs first (`ORDER.select`), so the summary leads with "discover" whenever the Discovery module is loaded.
+ */
+async function defaultGraphSummary(rest = 'extend path · Regions — location: check') {
+  const { getClickAction } = await import('../../regionView/clickActions.js');
+  return `On click: ${getClickAction('discovery.discover') ? 'discover · ' : ''}${rest}`;
+}
+
+/**
  * Open the graph, set this row's click actions (session-only, `ctx.setSetting`; `ctx.restoreSettings` puts them back)
  * and wait until the strip shows them (the panel holds what a click reads). → the Cytoscape instance.
  * `alttp`: load ALTTP first (a known world with somewhere to walk from the start; the caller reloads the world
@@ -603,8 +613,7 @@ export async function testRegionGraphClickDefault(testController) {
   let rec = null;
   try {
     const { defaultClickActions } = await import('../../regionView/clickActions.js');
-    const cy = await clickActionsSetUp(testController, ctx, defaultClickActions(), 'On click: extend path · Regions — location: check',
-      { alttp: true });
+    const cy = await clickActionsSetUp(testController, ctx, defaultClickActions(), await defaultGraphSummary(), { alttp: true });
     const target = await accessibleTarget(testController, cy);
     if (!target) throw new Error(`no reachable region one exit from the path end (${await pathEnd()})`);
     const region = target.id();
@@ -689,7 +698,7 @@ export async function testRegionGraphClickLocationCheck(testController) {
     const { defaultClickActions } = await import('../../regionView/clickActions.js');
     const settings = defaultClickActions();
     settings.location['path.check'] = 'now';
-    await clickActionsSetUp(testController, ctx, settings, 'On click: extend path · Regions — location: check');
+    await clickActionsSetUp(testController, ctx, settings, await defaultGraphSummary());
     const section = document.querySelector(`.region-graph-panel-container ${PICKER.section}`);
     if (!section) throw new Error('no picker section in the Region Graph controls');
     const staticData = stateManagerProxySingleton.getStaticData();
@@ -709,6 +718,119 @@ export async function testRegionGraphClickLocationCheck(testController) {
   } catch (error) {
     testController.reportCondition(`location check click test error-free: ${error.message}`, false);
   } finally {
+    await ctx.restoreSettings();
+    await restoreWorld(testController, ctx, before, { always: true });
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
+/* ── CA-S4: the panel-owned actions ────────────────────────────────────── */
+
+/**
+ * `discovery.discover` on the Region Graph (CA-S4): with discovery mode on and a click allowed to discover
+ * (`clickDiscoversRegion`), a tap on an undiscovered region discovers it; with loop mode's bundle
+ * (`clickDiscoversRegion: false`) a tap discovers nothing. The Graph runs ONLY that action here (route, Regions and the
+ * location check off). Sets its own state (session-only settings); reloads the world loaded before.
+ */
+export async function testRegionGraphClickDiscover(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  try {
+    const discoveryState = (await import('../../discovery/singleton.js')).default;
+    const { LOOP_MODE_OVERRIDES } = await import('../../discovery/worldDiscoveryMode.js');
+    const only = { enabled: true, region: { 'path.route': false, 'path.checkAll': false, 'regions.open': false,
+      'discovery.discover': true }, location: { 'path.check': false } };
+    const cy = await clickActionsSetUp(testController, ctx, only, 'On click: discover');
+    const setBundle = async (bundle) => {
+      for (const [k, v] of Object.entries(bundle)) await ctx.setSetting(`moduleSettings.discovery.${k}`, v);
+      await new Promise((r) => setTimeout(r, 300)); // Discovery reloads its bundle on settings:changed
+    };
+    await setBundle({ enableDiscoveryMode: true, regionDiscoveryTrigger: 'onEnter', clickDiscoversRegion: true,
+      disableLocationCheckUI: false });
+    const undiscovered = () => regionNodes(cy).filter((n) => !discoveryState.isRegionDiscovered(n.id()))
+      .sort((a, b) => (a.id() < b.id() ? -1 : 1));
+    const first = undiscovered()[0];
+    if (!first) throw new Error('no undiscovered region in discovery mode');
+    first.emit('tap');
+    const discovered = await testController.pollForCondition(() => discoveryState.isRegionDiscovered(first.id()),
+      `${first.id()} discovered`, 3000, 50);
+    testController.reportCondition(`discovery.discover: a tap on undiscovered "${first.id()}" discovers it`, discovered);
+    await setBundle(LOOP_MODE_OVERRIDES);
+    const second = undiscovered()[0];
+    if (!second) throw new Error('no second undiscovered region');
+    second.emit('tap');
+    await new Promise((r) => setTimeout(r, 750));
+    testController.reportCondition(`loop mode's bundle (clickDiscoversRegion: false): a tap on "${second.id()}" discovers nothing`,
+      !discoveryState.isRegionDiscovered(second.id()));
+  } catch (error) {
+    testController.reportCondition(`discover click test error-free: ${error.message}`, false);
+  } finally {
+    await ctx.restoreSettings();
+    await restoreWorld(testController, ctx, before, { always: true });
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
+/**
+ * THE REGIONS PANEL'S LOCATION CLICK FOLLOWS THE GRAPH'S STRIP (CA-S4): it reads the Region Graph's resolved
+ * `clickActions.location['path.check']` (it read the old `addLocationsToPath` key, kept in step by CA-S2's mirror,
+ * now retired). With "add the check to the path", a click on an accessible location in the Regions panel queues it
+ * in the path and checks nothing; with "check it now", the same click checks it. Sets its own state; reloads the world.
+ */
+export async function testRegionsLocationClickFollowsGraphStrip(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  let showAllBox = null;
+  let showAllWas = null;
+  try {
+    const { defaultClickActions } = await import('../../regionView/clickActions.js');
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+    const withCheck = (choice) => { const s = defaultClickActions(); s.location['path.check'] = choice; return s; };
+    await ctx.setSetting(CLICK_ACTIONS, withCheck('addToPath'));
+    const staticData = stateManagerProxySingleton.getStaticData();
+    let target = null;
+    for (const [regionName, regionData] of staticData?.regions ?? []) {
+      for (const location of regionData?.locations ?? []) {
+        if (!target && locationState(ctx.snapshot(), staticData, location, { regionName }) === 'accessible') {
+          target = { name: location.name, region: regionName };
+        }
+      }
+    }
+    if (!target) throw new Error('no accessible unchecked location');
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'tests');
+    // Show every region (the target need not be on the visited path); put the box back after
+    showAllBox = document.querySelector('#show-all-regions');
+    showAllWas = showAllBox?.checked ?? null;
+    if (showAllBox && !showAllBox.checked) showAllBox.click();
+    const wrapper = () => document.querySelector(`li.location-item[data-location-name="${CSS.escape(target.name)}"] .location-wrapper`);
+    const block = () => document.querySelector(`.region-block[data-region="${CSS.escape(target.region)}"]`);
+    await testController.pollForCondition(() => !!block(), `the Regions panel shows the region ${target.region}`, 5000, 100);
+    // A collapsed block renders no locations: expand it with its own header (as a user would)
+    if (!wrapper()) block()?.querySelector('.region-header')?.click();
+    const shown = await testController.pollForCondition(() => !!wrapper(), `the Regions panel shows ${target.name}`, 5000, 100);
+    if (!shown) {
+      const items = [...document.querySelectorAll('li.location-item')];
+      testController.log(`Regions panel: ${items.length} location items; ${target.name}'s: ${items.filter((li) => li.dataset.locationName === target.name).map((li) => li.outerHTML.slice(0, 300)).join(' | ') || 'none'}; region blocks ${[...document.querySelectorAll('.region-block')].map((b) => `${b.dataset.region}:${b.className}`).join(',')} (target ${target.region}); world ${ctx.rulesSource()}; the panel ${document.querySelector('.regions-panel-container, #regions-panel') ? 'mounted' : 'NOT found'}`);
+      throw new Error(`the Regions panel shows no clickable ${target.name}`);
+    }
+    const queued = () => (getGameStateSingleton().getPath?.() ?? []).some((e) => e.type === 'locationCheck' && e.locationName === target.name);
+    wrapper().click();
+    const inPath = await testController.pollForCondition(queued, `${target.name} queued in the path`, 5000, 50);
+    testController.reportCondition(`the Graph's strip says "add the check to the path": a Regions-panel click queues "${target.name}"`,
+      inPath && !(ctx.snapshot()?.checkedLocations ?? []).includes(target.name));
+    await ctx.setSetting(CLICK_ACTIONS, withCheck('now'));
+    const again = await testController.pollForCondition(() => !!wrapper(), `${target.name} still clickable`, 5000, 100);
+    if (!again) throw new Error(`${target.name} is no longer clickable`);
+    wrapper().click();
+    const checked = await testController.pollForCondition(
+      () => (ctx.snapshot()?.checkedLocations ?? []).includes(target.name), `${target.name} checked`, 5000, 100);
+    testController.reportCondition(`the Graph's strip says "check it now": the same click checks "${target.name}"`, checked);
+  } catch (error) {
+    testController.reportCondition(`Regions-panel location click test error-free: ${error.message}`, false);
+  } finally {
+    if (showAllBox && showAllWas !== null && showAllBox.checked !== showAllWas) showAllBox.click();
     await ctx.restoreSettings();
     await restoreWorld(testController, ctx, before, { always: true });
     ctx.dispose();
@@ -814,4 +936,22 @@ registerTest({
   testFunction: testRegionGraphClickLocationCheck,
   enabled: false, // runs where a roster enrols it (the substrates config)
   description: 'CA-S2: with the location action "check it now", a location click (through the Go to picker) checks it'
+});
+
+registerTest({
+  id: 'test_region_graph_click_discover',
+  name: 'Region Graph: a click discovers (discovery.discover), not under loop mode',
+  category: 'Region Graph',
+  testFunction: testRegionGraphClickDiscover,
+  enabled: false,
+  description: 'CA-S4: with discovery on and clickDiscoversRegion, a tap discovers an undiscovered region (the registered discovery.discover); with loop mode\'s bundle it discovers nothing',
+});
+
+registerTest({
+  id: 'test_regions_location_click_follows_graph_strip',
+  name: 'Regions panel: a location click follows the Region Graph\'s strip',
+  category: 'Region Graph',
+  testFunction: testRegionsLocationClickFollowsGraphStrip,
+  enabled: false,
+  description: 'CA-S4: the Regions panel reads the Graph\'s clickActions location choice: "add to path" queues the check, "check it now" checks it',
 });

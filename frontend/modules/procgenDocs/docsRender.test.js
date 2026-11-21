@@ -330,7 +330,9 @@ describe('⛓ the links the render emits', () => {
         //   playback-and-debugging.md § The playback bot (3 doc).
         //   440 → 446: rule-table-doc-command — seedling-derived-rules.md: its index row, 2 links out, its
         //   § Staleness self-link, and maze.md's and pipeline-presets.md's links to it (5 doc, 1 same-doc).
-        expect(checked).toBe(446);
+        //   446 → 448: ActionNodes AN-3b — action-nodes.md's opening paragraph → its own § The node states and the node
+        //   card and § The bot planner (2 same-doc).
+        expect(checked).toBe(448);
     });
 
     it('tags each link with the kind that produced it', () => {

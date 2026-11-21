@@ -1,0 +1,17 @@
+  DRIFT certifier.problems: expected 1, measured 3
+  DRIFT labels.pair.path-vs-edge: expected 133, measured 181
+  DRIFT labels.pair.derived: expected 213, measured 227
+  DRIFT arrivals.regionsPriced: expected 205, measured 208
+  DRIFT arrivals.arrivalNodes: expected 241, measured 244
+  DRIFT arrivals.regionsPerArrivalCount.1: expected 171, measured 174
+  DRIFT routeA.classes.walk-in from another member: expected 102, measured 108
+  DRIFT routeA.classes.overridable: expected 59, measured 56
+  DRIFT routeA.overridableElements: expected 135, measured 128
+  DRIFT routeA.overridableEchoFree: expected 126, measured 119
+  DRIFT routeA.regionsWithAnEchoFreeOverride: expected 57, measured 54
+  DRIFT routeA.overridableExact: expected 112, measured 105
+  DRIFT routeA.regionsWithAnExactOverride: expected 51, measured 48
+  DRIFT unpriced: expected 354, measured 574
+  DRIFT sharedBinding: expected 159, measured 162
+  DRIFT table.rows: expected 106, measured 99
+  DRIFT table.regions: expected 50, measured 47

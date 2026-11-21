@@ -27,6 +27,14 @@ import { TOUCH_SETTING_KEY, mountTouchControls, parseTouchLayout, touchControlsV
 import { atlasIndexPath, mapDocumentPath, playerOfRawPayload, regionAtlasOf, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
 import { seedlingMountKey } from './seedlingMountKey.js';
+// ⛓ S4 — the host's held level sets and atlases: THESE instances (static, beside `presetUI.js`, their writer) are
+// the ones handed to the wiring, which is reached through a computed URL (a second instance in the bundled build).
+import { levelSetCache } from '../procgenCore/levelSetCache.js';
+import { heldLevelSetOf } from '../procgenCore/levelSetReference.js';
+import { atlasCache } from '../procgenCore/atlasCache.js';
+// ⛓ S4 — Edit ▸ opens a held set's room back in the lab: the ONE opener both Edit ▸ callers use (⚖ region-editor-launch
+// Q1). ⛔ STATIC, for the same reason as the caches: its lab-panel registry is module state.
+import { openRoomEditor } from '../procgenPipeline/regionEditors.js';
 // ⛓ RE2 — the JS runtime's save, one localStorage key per room (the mount key).
 import { createJsSaveController, JS_SAVE_DEFAULT, JS_SAVE_SETTING_KEY } from './seedlingJsSave.js';
 // ⛓ USE THE SAVE / CLEAR for the Flash (Ruffle) save `…/shrumsave` (slice ruffle-save-toggle-clear).
@@ -57,6 +65,8 @@ import {
 } from './seedlingSoundSettings.js';
 import { solverEnvPageParam } from './seedlingSolverEnvCarry.js';
 import { RUFFLE_CDN } from './ruffleCdn.js';
+import { registerClickAction, unregisterClickAction, getClickAction, isMapClickOriginator } from '../regionView/clickActions.js';
+import { makeFlashTeleportActions } from './flashClickActions.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -1000,6 +1010,7 @@ export class FlashPanelUI {
     this._seedlingRealSet = null;
     this._seedlingDelivery = null;
     this._apLoadRefusal = null;
+    this._setHeldSetEdit(null);
     this._customSetShown = false;
     this._noGameConfigured = false;
     this._touchTransport = null;
@@ -1010,10 +1021,7 @@ export class FlashPanelUI {
       this.adapter.detach();
       this.adapter = null;
     }
-    if (this._teleportUnsub) {
-      this._teleportUnsub();
-      this._teleportUnsub = null;
-    }
+    this._unregisterClickActions();
     this.swfContainer.innerHTML = '';
     // ⛓ USE THE SAVE (Flash) — the player is gone and its last write is in (Ruffle writes inside the removal)
     this._endRuffleSaveRun();
@@ -1073,6 +1081,7 @@ export class FlashPanelUI {
           <button class="flash-panel-readstate" style="${BUTTON_CSS}">Read State</button>
           <button class="flash-panel-configure" style="${BUTTON_CSS}">Configure Bridge</button>
           <button class="flash-panel-restart" style="${BUTTON_CSS}display:none;" title="Return to the start region (the Menu panel's Restart)">Restart</button>
+          <button class="flash-panel-edit-room" style="${BUTTON_CSS}display:none;" title="S4: open the room the game is in back in the Seedling lab (a held set's own rooms)">Edit ▸</button>
         </div>
         <div class="flash-panel-teleport" style="margin-top: 6px; font-size: 12px; display: none;">
           <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px;">
@@ -1158,6 +1167,8 @@ export class FlashPanelUI {
       .addEventListener('click', () => this._configureBridge());
     this.restartButton = this.rootElement.querySelector('.flash-panel-restart');
     this.restartButton.addEventListener('click', () => this._toolsRestart());
+    this.editRoomButton = this.rootElement.querySelector('.flash-panel-edit-room');
+    this.editRoomButton.addEventListener('click', () => { void this._editHeldSetRoom(); });
     this.rootElement.querySelector('.flash-panel-tp-go')
       .addEventListener('click', () => this._manualTeleport());
     this.rootElement.querySelector('.flash-panel-tp-region-go')
@@ -1418,7 +1429,11 @@ export class FlashPanelUI {
     const tp = document.createElement('label');
     tp.className = 'flash-panel-setting flash-panel-setting-tp';
     tp.style.cssText = 'display:none;align-items:center;gap:8px;color:#aaa;';
-    tp.title = 'A click on a region or location in another panel teleports the player there';
+    // ⛓ CA-S4 (⚖ user 2026-11-20T16:29:00Z): a click in the Region Graph or the Region Map teleports only through that
+    // map's own "On click" option (`flash.teleport` / `flash.teleportLocation`, `flashClickActions.js`); this box keeps
+    // the location checks from every OTHER panel (`handleUserLocationCheck`).
+    tp.title = 'A location check in another panel (not the Region Graph or the Region Map: their "On click" strips '
+      + 'have their own teleport option) teleports the player there';
     tp.innerHTML = '<input class="flash-panel-tp-on-click" type="checkbox" /> <span>TP on UI click</span>';
     host.append(tp);
     this.teleportOnClickRow = tp;
@@ -1657,7 +1672,10 @@ export class FlashPanelUI {
   }
 
   _setupTeleportUI() {
-    if (!this.gameConfig?.teleport) return;
+    if (!this.gameConfig?.teleport) {
+      this._unregisterClickActions(); // ⛓ CA-S4: a game that cannot teleport offers no map-click teleport
+      return;
+    }
     this.teleportRow.style.display = '';
 
     // Populate region dropdown (hidden by default but wired in
@@ -1681,16 +1699,28 @@ export class FlashPanelUI {
       this.teleportLocationSelect.appendChild(opt);
     }
 
-    // Subscribe to region-graph node clicks (eventBus). The "TP on
-    // UI click" checkbox gates whether the click triggers a
-    // teleport; we always subscribe so toggling the checkbox
-    // starts working immediately.
-    const unsub = this.eventBus.subscribe('regionGraph:nodeSelected', (payload) => {
-      if (!this.teleportOnClickCheckbox?.checked) return;
-      if (!payload?.nodeId) return;
-      this._teleportToRegion(payload.nodeId);
-    });
-    this._teleportUnsub = unsub;
+    // ⛓ CA-S4: a MAP click teleports through the map's own "On click" option, registered here while this game can
+    // teleport (it REPLACED the box's `regionGraph:nodeSelected` listener; ⚖ user 2026-11-20T16:29:00Z, "Per-map
+    // option"). The Region Graph's first value is the box's at this moment, the Region Map's is off.
+    this._registerClickActions();
+  }
+
+  /** Register `flash.teleport` / `flash.teleportLocation` for THIS panel (idempotent; `flashClickActions.js`). */
+  _registerClickActions() {
+    this._unregisterClickActions();
+    const descs = makeFlashTeleportActions(() => this);
+    const mine = [];
+    for (const d of descs) {
+      if (getClickAction(d.id)) continue; // another Flash panel holds it; it stays that panel's
+      try { registerClickAction(d); mine.push(d.id); } catch (e) { this._panelLog(`click action ${d.id}: ${e.message}`, 'error'); }
+    }
+    this._clickActionIds = mine;
+  }
+
+  /** Unregister the click actions THIS panel registered (teardown, a game that cannot teleport). */
+  _unregisterClickActions() {
+    for (const id of this._clickActionIds ?? []) unregisterClickAction(id);
+    this._clickActionIds = [];
   }
 
   /**
@@ -1698,11 +1728,15 @@ export class FlashPanelUI {
    * dispatcher chain. Gated on the "TP on UI click" checkbox.
    * Ignores events originating from this panel so we don't
    * re-teleport when Flash itself reports a pickup.
+   * ⛓ CA-S4: ignores the two MAP panels' checks too (`isMapClickOriginator`: the Region Graph's and the Region Map's
+   * click checks and bulk checks): a map click teleports only through its own "On click" option (⚖ user
+   * 2026-11-20T16:29:00Z). Every other panel's check still follows the box.
    */
   handleUserLocationCheck(eventData) {
     if (!this.teleportOnClickCheckbox?.checked) return;
     if (!eventData?.locationName) return;
     if (eventData.originator === 'FlashPanel') return;
+    if (isMapClickOriginator(eventData.originator)) return;
     this._teleportToLocation(eventData.locationName);
   }
 
@@ -1947,6 +1981,7 @@ export class FlashPanelUI {
   async _startSeedlingRandomizer(adapter) {
     this._apLoadRefusal = null;
     this._seedlingDelivery = null;
+    this._setHeldSetEdit(null);
     // ⛓ WHAT THIS LOAD MOUNTS FROM, read before its first await — `_mountedRoomsDiffer` compares the loaded rules'.
     this._apLoadKey = this._mountKeyNow();
     this._apLoadRulesIgnored = false;
@@ -2046,6 +2081,8 @@ export class FlashPanelUI {
         gameConfig: this.gameConfig,
         baseUrl: document.baseURI,
         log: (msg, cls) => this._panelLog(msg, cls),
+        levelSets: levelSetCache,
+        atlases: atlasCache,
       });
       if (this.adapter !== adapter) { overlay.remove(); return; }
       if (!loaded.eligibility?.eligible) {
@@ -2070,6 +2107,8 @@ export class FlashPanelUI {
       // ⛓ THE DELIVERED ROOMS FIRST — the delivery this load arms (null on an arm that only binds): the JS
       // runtime's walks wait until the page plays its set (`SeedlingPlaybackController._deliveredSetGate`).
       this._seedlingDelivery = loaded.delivery ?? null;
+      // ⛓ S4 — a HELD custom set's rooms were delivered: Edit ▸ is offered for the room the game is in.
+      this._setHeldSetEdit(loaded.assets?.recordSet?.held ?? null);
 
       const glue = getSeedlingRegionGlue();
       if (!glue) {
@@ -2507,6 +2546,62 @@ export class FlashPanelUI {
   }
 
   /**
+   * ⛓⛓ S4 — **EDIT ▸ IS OFFERED FOR A HELD SET ONLY** (⚖ Robert Q4 "Open back in the lab"). `ref` is the
+   * `{set_id, content_hash}` the loaded rules name and the AP load delivered from the host's `levelSetCache`
+   * (`loaded.assets.recordSet.held`); null hides it. ⛔ A served preset (the original game's rooms) never sets it:
+   * those rooms are read-only in a world (⚖ region-editor-launch Q4), and this panel offered no Edit ▸ for them.
+   */
+  _setHeldSetEdit(ref) {
+    this._heldSetEdit = ref ? { set_id: ref.set_id, content_hash: ref.content_hash } : null;
+    if (!ref) { this._heldSetEditHandle?.close?.(); this._heldSetEditHandle = null; }
+    if (this.editRoomButton) this.editRoomButton.style.display = this._heldSetEdit ? '' : 'none';
+  }
+
+  /**
+   * ⛓⛓ S4 — **EDIT ▸: THE ROOM THE GAME IS IN, OPENED BACK IN THE SEEDLING LAB.** What crosses: the held SET
+   * DOCUMENT itself (`levelSetCache.get(set_id, content_hash)` — the bundle's `level-set` member, which carries its
+   * own `set_id` and its stamped `provenance.content_hash`) and the ROOM index (`botStatus().level`), through the
+   * ONE opener (`regionEditors.openRoomEditor('flash_seedling', {room, record})` → the lab's `?source=edit&room=n`).
+   * The lab re-verifies the body against that stamp (`validateLevelSet`) before it opens it, and refuses by name.
+   * ⛔ Refused here, by name, when the set is no longer held under the hash the rules name, or its stamp is not
+   * that hash, or the game reports no room of the set.
+   * @returns {Promise<{ok: boolean, why?: string, room?: number, set_id?: string}>}
+   */
+  async _editHeldSetRoom({ open = openRoomEditor } = {}) {
+    const say = (ok, why, extra = {}) => {
+      this._panelLog(`Edit ▸ ${ok ? '' : 'REFUSED — '}${why}`, ok ? undefined : 'warn');
+      return { ok, why, ...extra };
+    };
+    const ref = this._heldSetEdit;
+    if (!ref) return say(false, 'no held level set is loaded (only a set the host holds opens back in the lab)');
+    const got = levelSetCache.get(ref.set_id, ref.content_hash);
+    if (got.status !== 'held') return say(false, got.why);
+    if (got.set.provenance?.content_hash !== ref.content_hash) {
+      return say(false, `the held set ${ref.set_id} carries the stamp ${JSON.stringify(got.set.provenance?.content_hash ?? null)}, `
+        + `not ${ref.content_hash} — the lab could not verify it`);
+    }
+    let room = null;
+    try { room = JSON.parse(this.adapter?.bot?.('botStatus') ?? 'null')?.level ?? null; } catch { room = null; }
+    if (!Number.isInteger(room) || room < 0 || room >= got.set.rooms.length) {
+      return say(false, `the game reports no room of this set (level ${JSON.stringify(room)}; the set has `
+        + `${got.set.rooms.length} rooms)`);
+    }
+    this._heldSetEditHandle?.close?.();
+    const handle = await open('flash_seedling', {
+      room,
+      record: structuredClone(got.set),
+      onSave: () => {
+        this._panelLog(`Edit ▸ the lab closed room ${room} of ${ref.set_id}. Its edits stay in the lab: download the `
+          + 'set\'s bundle there and load it here to play them (these rules describe the set as it was).');
+      },
+    });
+    this._heldSetEditHandle = handle ?? null;
+    if (handle && handle.ok === false) return say(false, handle.why ?? 'the lab door refused');
+    return say(true, `room ${room} of ${ref.set_id} (content hash ${ref.content_hash}) handed to the Seedling lab`,
+      { room, set_id: ref.set_id });
+  }
+
+  /**
    * ⛓⛓ SLICE G — why these rules are a CUSTOM Seedling set this page cannot play yet (`{why, reason}`), or null.
    *
    * A custom set is rules carrying REAL Seedling rooms (`flash_seedling` sidecars, the loaded slot's) and no
@@ -2522,10 +2617,13 @@ export class FlashPanelUI {
     const player = stateManager.getStaticData?.()?.playerId ?? playerOfRawPayload(getLastRawJsonData?.()) ?? null;
     const rooms = atlasRoomRegions(rawRules, player).map((r) => r.region);
     if (rooms.length === 0) return null;
+    // ⛓ S4 — a set the host HOLDS (same id, same content hash) is played, not refused: the wiring delivers its rooms.
+    const held = heldLevelSetOf(rawRules, player, levelSetCache);
     const guard = await servedRegionAtlas({
       atlasId: regionAtlasOf(rawRules, player)?.atlas_id,
       // ⛔ `document.baseURI`, as the wiring resolves it: the served index beside the atlases, in either build.
       fetchIndex: () => this._loadConfig(new URL(atlasIndexPath(), document.baseURI).href),
+      heldSet: held.set ? held.ref.set_id : null,
     });
     if (!guard.regionAtlas) return null;
     const v = seedlingRandomizerEligibility({ generated: generatedRoomCensus(rawRules, player), atlas: { rooms },
@@ -2941,10 +3039,7 @@ export class FlashPanelUI {
       this.adapter.detach();
       this.adapter = null;
     }
-    if (this._teleportUnsub) {
-      this._teleportUnsub();
-      this._teleportUnsub = null;
-    }
+    this._unregisterClickActions();
     this.unsubscribeHandles.forEach((u) => typeof u === 'function' && u());
     this.unsubscribeHandles = [];
     setActivePanelInstance(null);

@@ -2246,6 +2246,35 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_FROZEN_TICK_UNGATED=0|1`. ⛔ OFF by default (no flip licence).
      */
     frozenTickUngated: false,
+    /**
+     * fidelity CEREMONYTOWER D2 (wave 54) — THE ONE UPDATE A FAMILY TAKES ON A FREEZE'S EDGE FRAMES: a texted pickup's
+     * later frames, and a falling rock's release frame.
+     * (1) THE BEAM TOWER ON A TEXTED CEREMONY'S DIALOGUE FRAMES. On every frame after T, `Pickup.update` calls
+     * `pick_up()` again (`specialTimer < specialTimerMax`, `Pickups/Pickup.as:57-60`), which re-raises
+     * `Game.freezeObjects` (`:95`) every frame until its text NPC is gone (`NPCs/NPC.as:71-79` nulls `myText` when it is
+     * removed); the pickups (`Game.as:2330-2351`) are added after the tower (`:2297`) and `addUpdate` prepends, so the
+     * tower's one update on each such frame is frozen. The model stepped it twice there: the main slot (`frozen:
+     * ceremony !== null`), then `runFrozenTick` (wave 53's measured hand-over, `t2F:[true,true]`). ON the main slot does
+     * not step it on a tick whose ceremony holds through (its dialogue does not finish this tick, read off a CLONE with
+     * the tick's own talk-key release, `stepDialogue`): `runFrozenTick`'s frozen step is the frame's one update, waves 52
+     * and 53's shape. The finishing tick is untouched (one step, the main slot's; it falls through, no `runFrozenTick`).
+     * The ceremony branch re-checks the prediction and refuses a disagreement by name.
+     * (2) A FALLING ROCK'S RELEASE FRAME. `FallRock.update` lowers the flag on the frame its camera hold runs out
+     * (`Scenery/FallRock.as:92-96`) and the rock (`Game.as:2353`) updates before every family added above it: the
+     * turrets (`:2295`), the drills (`:2290`), the chasers (`:2276-2301`) and the boss totem (`:2281`) take ONE UNFROZEN
+     * update there, a dead frame the tape never sees. The model stepped only the player (`pendingFreeSteps`). ON, on
+     * that frame of `dropRock` (a rope's pull) and `dropRocksTogether` (a button's or the wand's drop), in the game's
+     * order: the spits (runtime adds, ahead of the rock: frozen), the turrets unfrozen (their aim, `shootTimer`, fire
+     * gate and, with wave 50's slot, `hitPlayer`), the drills unfrozen (`dropRocksTogether` only; `dropRock` already
+     * does under `drillTimedPass`), the chasers unfrozen (their move, chase and `hitPlayer`), and the boss totem with
+     * the flag down. The turrets' anim runs through the span's frozen frames (and a button-dropped rock's frame A), so
+     * those are stepped frozen ahead of it (`stepShootersThroughFreeze`, the shape a text-less pickup's F+150 uses).
+     * A rock room holding an ice turret or a beam tower is REFUSED by name at the release frame (no shipped one does).
+     * Composes with `frozenTickUngated` (its frozen chaser frames are the span's others), `pickupTickFreeze`,
+     * `dialogueFrameFreeze` (their predicates are asked by the main slot only) and `turretSuitRetaliation`. OFF:
+     * byte-identical. `SEEDLING_FREEZE_EDGE_FRAMES=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    freezeEdgeFrames: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2676,6 +2705,9 @@ if (globalThis.process?.env?.SEEDLING_DIALOGUE_FRAME_FREEZE === '0') CONTACT_FID
 // ⛓ fidelity FROZENTICK D2: `SEEDLING_FROZEN_TICK_UNGATED=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FROZEN_TICK_UNGATED === '1') CONTACT_FIDELITY.frozenTickUngated = true;
 if (globalThis.process?.env?.SEEDLING_FROZEN_TICK_UNGATED === '0') CONTACT_FIDELITY.frozenTickUngated = false;
+// ⛓ fidelity CEREMONYTOWER D2: `SEEDLING_FREEZE_EDGE_FRAMES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FREEZE_EDGE_FRAMES === '1') CONTACT_FIDELITY.freezeEdgeFrames = true;
+if (globalThis.process?.env?.SEEDLING_FREEZE_EDGE_FRAMES === '0') CONTACT_FIDELITY.freezeEdgeFrames = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
