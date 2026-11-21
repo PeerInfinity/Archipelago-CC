@@ -2289,8 +2289,10 @@ export const CONTACT_FIDELITY = {
      * the tower, the ice turret, the turrets (with wave 50's slot, `turretHitPlayerNow`) and the drills, in the game's
      * order, below the chasers' C (`stepCeremonyReleaseFrameNow`) and above the chasers' and the player's R (the tick's
      * fall-through). A text-less pickup has no C and is untouched (its R is F+150: `pickupTickFreeze` for the turrets,
-     * T's step for the other three); a Seed keeps the flag up and is untouched. ⚠ With a `Game.time`, C and R share the
-     * tick's one clock value, so the tower's anim and `y` read unknown after R (refused if the player stands in reach).
+     * T's step for the other three); a Seed keeps the flag up and is untouched. C is the observed frame and R a dead one
+     * (`setTemp` raises `Game.talking`, so `Game.as:1044-1051` lowers the flag at the end of every dialogue frame but
+     * not C's): phase A's 149 dead frames and R are the measured 150. ⚠ With a `Game.time` the tower's anim is already
+     * unknown here (phase A is not stepped for it, pre-existing); R's step keeps it so.
      * The rope rock's player release step needs no key: the pull frame is itself frozen for the player (the pull runs
      * inside `Player.update` above `super.update()`), so the model's pull-tick step IS the release frame's
      * (game-witnessed, `rockbutton-l28-livefall`, Δ 0). Composes with `freezeEdgeFrames` (its tower skip is on the hold

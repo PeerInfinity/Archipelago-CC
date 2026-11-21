@@ -14873,10 +14873,15 @@ export function createLevelRun({
      * blasts update ahead of the pickup), then — the flag held DOWN for the call and restored — the tower, the ice
      * turret, the turrets (with wave 50's slot, `turretHitPlayerNow`: its `turretSlotContact` is the tick's own, and the
      * static scan below reads it) and the drills, in the game's order. The pickup and dialogue predicates are not asked
-     * (R is not a pickup's T). ⚠ With a `Game.time`, C and R share the tick's one clock value, so the tower's
-     * `lastClock` test marks its anim and `y` unknown after R (a refusal if the player then stands in reach: the clock
-     * question is named, not guessed). A text-less pickup has no C (no NPC): its R is F+150, which `pickupTickFreeze`
-     * models (the turrets) and T's step stands for (the lump-less three); a Seed's `removeSelf` keeps the flag up.
+     * (R is not a pickup's T). R is a DEAD frame and C the observed one: `setTemp` raises `Game.talking` when the NPC
+     * is added (`NPC.as:95-100`), so `Game.update`'s `inventory.open = false` (`Game.as:1044-1051`) lowers the flag at
+     * the end of phase A's last frame and of every dialogue frame, but not at C's (the NPC has cleared `Game.talking`):
+     * phase A is 149 dead frames, R the 150th (the measured 150, `fixtures/dead-frame-observations.json`). The clock's
+     * phase-A spend of 150 counts R's frame, so `clock.now()` on the finishing tick is R's `Game.time`. ⚠ With a
+     * `Game.time` the tower's anim is unknown here anyway (phase A's frames are not stepped for it, so its `lastClock`
+     * test fails from T on: pre-existing), and R's step keeps it so. A text-less pickup has no C (no NPC): its R is
+     * F+150, which `pickupTickFreeze` models (the turrets) and T's step stands for (the lump-less three); a Seed's
+     * `removeSelf` keeps the flag up.
      */
     function stepCeremonyReleaseFamiliesNow() {
         if (!CONTACT_FIDELITY.freezeReleaseTick || noclip || ceremony === null || !ceremony.dialogue) return;
