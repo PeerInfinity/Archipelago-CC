@@ -11,14 +11,19 @@
  * 5 mana                      ← the live price (region-XP discounted)
  * needs  –                    ← minimums; the unmet line is marked when the node is blocked
  * gives  Gold +3
- * [perform all remaining]     ← RESERVED, empty: `.an-card__actions[data-slot="perform-all-remaining"]` (AN-3b)
+ * [perform all remaining]     ← AN-3b: `.an-card__actions[data-slot="perform-all-remaining"]`, on a node whose limit > 1
  * ```
  *
  * and takes its state's styling (`data-state` = `nodeStates.js`'s state; the border colour). The state is the one
  * `runtime.nodeStates` computes: for the END of the Loops queue while it is planned, the live state while it runs.
  *
- * ⛔ No click code (the click is AN-3b, after the click-actions series): the card adds no listener. The overlay
- * manager's own handlers (drag forwarding; a click selects the region) stay as they are.
+ * ⛓ THE BUTTON (AN-3b, ⚖ Robert 2026-11-17T21:35:22Z: "a separate button on the repeatable nodes to perform all
+ * remaining"): a node whose limit is greater than 1 gets ONE button, "Perform all remaining", in the reserved slot. It
+ * calls the provider's `onPerformAll(nodeId)` (`nodeClickAction.performNode` with `times: 'remaining'`: the route,
+ * then the remaining performances, capped by the end-of-queue state). Its answer (queued, performed, capped, or the
+ * refusal by name) is the card's `.an-card__message` line until the next answer for that node or a world switch. The
+ * button is the card's only listener; the click on the card's body is the Region Graph's (the overlay manager runs the
+ * panel's click actions, where `actionNodes.act` performs ONCE), and a BUTTON is excluded from that handler.
  *
  * ⛓ DISCOVERY HOLDS. A node whose region is undiscovered shows the discovery placeholder (`???`), never its contents;
  * one with no way in from a discovered node is not drawn at all (the graph hides it too:
@@ -29,8 +34,9 @@
 
 import { NODE_STATES } from './nodeStates.js';
 
-/** The reserved slot for AN-3b's "perform all remaining" button (⚖ Robert 2026-11-17T21:35:22Z). */
+/** The slot of the "perform all remaining" button (⚖ Robert 2026-11-17T21:35:22Z; AN-3a reserved it, AN-3b fills it). */
 export const PERFORM_ALL_SLOT = 'perform-all-remaining';
+export const PERFORM_ALL_LABEL = 'Perform all remaining';
 export const CHECK_MARK = '✓';
 export const GOAL_MARK = '🏁';
 export const PLACEHOLDER_TEXT = '???';
@@ -89,9 +95,10 @@ export function cardVisibility(model, nodeId, isDiscovered) {
  * @param {object} input.state       its `nodeStates` entry `{state, unmet, count, limit, price}`
  * @param {string} input.visibility  `cardVisibility`
  * @param {boolean} input.checked    its location is checked
+ * @param {string|null} [input.message]  the last "perform all remaining" answer for this node
  * @returns {object|null} null: not drawn
  */
-export function nodeCardModel({ payload, state, visibility = 'shown', checked = false }) {
+export function nodeCardModel({ payload, state, visibility = 'shown', checked = false, message = null }) {
     if (!payload || !state || visibility === 'hidden') return null;
     const nodeId = payload.node_id;
     if (visibility === 'placeholder' || state.state === NODE_STATES.UNDISCOVERED) {
@@ -110,6 +117,7 @@ export function nodeCardModel({ payload, state, visibility = 'shown', checked = 
         checked: !!payload.location && !!checked,
         used: isStart ? null : `${state.count}/${state.limit}`,
         repeatable: payload.limit > 1,
+        message: message ?? null,
         mana: isStart ? null : `${manaText(state.price)} mana`,
         needs: needsOf(payload),
         gives: givesOf(payload),
@@ -126,8 +134,12 @@ function line(doc, cls, text, attrs = {}) {
     return e;
 }
 
-/** Fill `el` (the card root) from a card model. */
-export function updateNodeCard(el, card) {
+/**
+ * Fill `el` (the card root) from a card model. `onPerformAll(nodeId)` (optional) is what the button calls; it is kept
+ * on the element, so an in-place update re-binds nothing.
+ */
+export function updateNodeCard(el, card, { onPerformAll = null } = {}) {
+    if (onPerformAll) el._anOnPerformAll = onPerformAll;
     const doc = el.ownerDocument;
     el.replaceChildren();
     const st = STATE_STYLE[card?.state] ?? STATE_STYLE[NODE_STATES.NOT_REACHED];
@@ -165,33 +177,63 @@ export function updateNodeCard(el, card) {
     el.appendChild(mark('needs', line(doc, 'an-card__needs', `needs  ${card.needs}`)));
     el.appendChild(mark('gives', line(doc, 'an-card__gives', `gives  ${card.gives}`)));
     if (card.unmet) el.appendChild(line(doc, 'an-card__why', card.unmet.text));
-    // ⛓ RESERVED for AN-3b: the "perform all remaining" button of a repeatable node. Empty in AN-3a.
+    // ⛓ The "perform all remaining" button of a repeatable node (limit > 1); the slot stays empty and hidden otherwise.
     const slot = line(doc, 'an-card__actions', '', { 'data-slot': PERFORM_ALL_SLOT });
-    slot.style.display = 'none';
+    if (card.repeatable) {
+        const btn = doc.createElement('button');
+        btn.type = 'button';
+        btn.className = 'an-card__perform-all';
+        btn.textContent = PERFORM_ALL_LABEL;
+        btn.dataset.nodeId = card.nodeId;
+        btn.style.cssText = 'font:inherit;margin-top:2px;padding:0 4px;cursor:pointer;';
+        btn.addEventListener('mousedown', (e) => e.stopPropagation());
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            el._anOnPerformAll?.(card.nodeId);
+        });
+        slot.appendChild(btn);
+    } else {
+        slot.style.display = 'none';
+    }
     el.appendChild(slot);
+    if (card.message) el.appendChild(line(doc, 'an-card__message', card.message));
     return el;
 }
 
 /** A new card element for a card model. */
-export function renderNodeCard(card, doc = globalThis.document) {
+export function renderNodeCard(card, doc = globalThis.document, opts = {}) {
     const el = doc.createElement('div');
     el.className = 'an-node-card';
     el.style.cssText = 'width:120px;box-sizing:border-box;padding:3px 5px;border:2px solid;border-radius:4px;'
         + 'font:10px/1.25 sans-serif;color:#ddd;pointer-events:auto;';
-    return updateNodeCard(el, card);
+    return updateNodeCard(el, card, opts);
 }
 
 /**
  * The overlay provider. `getView()` returns `{loaded, model, payloads, states, isDiscovered, checked}` or null; it is
  * computed once per refresh (memoised until the next microtask), not once per node. `getStamp()` (the runtime's model
  * object) invalidates the memo at once when the world changes inside one task.
- * @param {{getView: () => object|null, getStamp?: () => unknown, document?: Document}} deps
+ * `onPerformAll(nodeId)` (AN-3b) runs the button and returns its answer (`{text}`), shown on that node's card.
+ * @param {{getView: () => object|null, getStamp?: () => unknown, document?: Document,
+ *   onPerformAll?: (nodeId: string) => {text?: string}|null, onAnswered?: () => void}} deps
  */
-export function createNodeCardProvider({ getView, getStamp = () => null, document: doc = globalThis.document }) {
+export function createNodeCardProvider({ getView, getStamp = () => null, document: doc = globalThis.document,
+    onPerformAll = null, onAnswered = () => {} }) {
     let memo = null;
     let stamp;
+    const messages = new Map(); // nodeId → the last button answer's text (this world only)
+    let messagesStamp;
+    const performAll = onPerformAll ? (nodeId) => {
+        const r = onPerformAll(nodeId);
+        messages.set(nodeId, r?.text ?? null);
+        memo = null;
+        onAnswered();
+        return r;
+    } : null;
     const view = () => {
         const now = getStamp();
+        if (now !== messagesStamp) { messages.clear(); messagesStamp = now; }
         if (memo && now === stamp) return memo;
         memo = getView() ?? { loaded: false };
         stamp = now;
@@ -207,16 +249,19 @@ export function createNodeCardProvider({ getView, getStamp = () => null, documen
             state: v.states[nodeId],
             visibility: cardVisibility(v.model, nodeId, v.isDiscovered),
             checked: !!payload.location && v.checked(payload.location),
+            message: messages.get(nodeId) ?? null,
         });
     };
     return {
         create(nodeId) {
             const v = view();
             if (!v.loaded || !v.payloads?.[nodeId]) return null; // Menu, or another world's region: no card
-            return renderNodeCard(cardOf(nodeId), doc);
+            return renderNodeCard(cardOf(nodeId), doc, { onPerformAll: performAll });
         },
         update(nodeId, _nodeData, el) {
-            updateNodeCard(el, cardOf(nodeId));
+            updateNodeCard(el, cardOf(nodeId), { onPerformAll: performAll });
         },
+        /** Tests: run the button's effect for a node as a click on it would. */
+        performAll,
     };
 }

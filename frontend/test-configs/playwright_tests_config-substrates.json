@@ -58,6 +58,24 @@
             "_comment": "AN-3a: the Region Graph node card (undiscovered placeholder; a check node's fields + check mark + the reserved perform-all slot; the goal mark); then another world's node sizes and arrows are as before and no card is left (planner ruling (a): unregisterNodeOverlayProvider)."
         },
         {
+            "id": "an-click-performs-once",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-3b: the click action actionNodes.act performs ONCE (Robert 2026-11-17T21:35:22Z): a card click on a ready node queues the route then one act (Loop mode), again one act, blocked/done refused by name; the Region Map the same; Loop mode off performs at once. The card body click is the node's click (planner ruling 2026-11-20)."
+        },
+        {
+            "id": "an-perform-all-button",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-3b: the 'perform all remaining' button only on limit > 1 nodes; queues the route + the remaining acts, says so on the card, refused when none remain, capped by mana."
+        },
+        {
+            "id": "an-cards-after-reopen",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-3b limit (a): the Region Graph panel closed and reopened shows a card per node again with no world reload (regionGraph:panelMounted → ActionNodes re-registers)."
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
@@ -2371,7 +2389,7 @@
             "id": "an-bot-plays-to-goal",
             "enabled": true,
             "category": "Playback Bot",
-            "_comment": "AN-3a (design §7): the ActionNodes example in Loop mode; the runner asks the entry's loopBot.planLoop for each loop (free hops + acts) until the goal is checked; each loop's reason is in the log (logReasoning on); loop count = the headless live path's."
+            "_comment": "AN-3a (design §7): the ActionNodes example in Loop mode; the runner asks the entry's loopBot.planLoop for each loop (free hops + acts) until the goal is checked; each loop's reason is in the log (logReasoning on). AN-3b: the runner replans mid-loop when an item arrives (the replan in the log, the goal in <= the pure planner's loop count, the Q1 attempt named; Instant can complete the attempt a loop early: a known Loops gap)."
         },
         {
             "id": "playback-bot-loop-mode-maze",

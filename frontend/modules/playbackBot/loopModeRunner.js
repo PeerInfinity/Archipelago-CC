@@ -20,14 +20,38 @@
  * ⛓ A SUBSTRATE'S OWN LOOP PLAN (ActionNodes design §7, AN-3a). When every region of the loaded world belongs to a
  * substrate whose registry entry declares `loopBot.planLoop(context)` (`substrateLoopPlanner.js`, handed in as
  * `deps.substrateLoopPlanner`), the runner asks IT for the whole loop instead of `planNextLoop`; the rest of the
- * glue is the same (write the path, restart, wait). Its reasoning lines go to `deps.onReasoning`. Every other world
- * plans exactly as before.
+ * glue is the same (write the path, restart, wait). Its reasoning lines go to `deps.onReasoning`. AN-3b: when its
+ * queue ends with mana left and an item arrived during the loop, the runner asks it for the REST of the loop
+ * (`context.continueFrom`) and appends that to the queue (`_continuation`). Every other world plans exactly as before.
  *
  * Every dependency is injected, so the runner is exercised in vitest without the app.
  */
 import { DEFAULT_MANA_STRATEGY, availableTasks, planNextLoop } from './loopDriver.js';
 
 const RETRY_MS = 1000;
+
+/**
+ * The queue `existing` with the continuation `rest` appended (AN-3b): each appended move's `instanceNumber` follows the
+ * moves already in the path, and each appended custom action takes the instance of the last move into its region (a
+ * continuation is planned on its own, so its numbers start from 1). Pure.
+ */
+export function appendContinuation(existing, rest) {
+    const counts = new Map();
+    for (const e of existing) {
+        if (e?.type === 'regionMove') counts.set(e.destinationRegion, (counts.get(e.destinationRegion) ?? 0) + 1);
+    }
+    const out = [...existing];
+    for (const e of rest) {
+        if (e?.type === 'regionMove') {
+            const n = (counts.get(e.destinationRegion) ?? 0) + 1;
+            counts.set(e.destinationRegion, n);
+            out.push({ ...e, instanceNumber: n });
+        } else {
+            out.push({ ...e, instanceNumber: counts.get(e.sourceRegion) ?? e.instanceNumber ?? 1 });
+        }
+    }
+    return out;
+}
 
 /**
  * A region's TOTAL XP from gameState's `{level, xp}` (`xp` is the progress inside the level): the XP that level
@@ -93,10 +117,13 @@ export class LoopModeRunner {
         // Regions where exploring measurably yields nothing (free spins): never explored for XP again this run.
         this._noYield = new Set();
         this._lastPlan = null;
+        this._replans = 0;
     }
 
     isActive() { return this._active; }
     getLoopCount() { return this._loops; }
+    /** Mid-loop replans so far (AN-3b): continuations of a substrate plan whose state diverged. */
+    getReplanCount() { return this._replans; }
     getLastPlan() { return this._lastPlan; }
 
     /** Start playing loops; `{once: true}` plays exactly one (the bot's Step). */
@@ -232,7 +259,7 @@ export class LoopModeRunner {
      * The loop plan of a substrate that declares `loopBot.planLoop` (`substrateLoopPlanner.js`): its context is the
      * live pool, inventory, checks and region XP. Its reasoning lines go to `onReasoning`.
      */
-    _substratePlan(substrate, gameState) {
+    _substratePlan(substrate, gameState, { continueFrom = null } = {}) {
         const d = this._d;
         const snapshot = d.getSnapshot?.() ?? null;
         const context = {
@@ -241,11 +268,37 @@ export class LoopModeRunner {
             inventory: snapshot?.inventory ?? {},
             checkedLocations: snapshot?.checkedLocations ?? [],
             regionXp: (region) => totalRegionXp(gameState.getRegionXP?.(region)),
+            ...(continueFrom ? { continueFrom } : {}),
         };
         const plan = substrate.planLoop(context) ?? { kind: 'unreachable', reason: 'no plan' };
         const lines = Array.isArray(plan.lines) ? plan.lines : [];
-        if (lines.length) d.onReasoning?.(lines.map((l) => `loop ${this._loops + 1}: ${l}`), plan);
-        return { ...plan, path: plan.path ?? [], reason: plan.reason ?? lines[0] ?? plan.kind, substrate: substrate.substrateId };
+        const tag = continueFrom ? `loop ${this._loops} (replan)` : `loop ${this._loops + 1}`;
+        if (lines.length) d.onReasoning?.(lines.map((l) => `${tag}: ${l}`), plan);
+        return { ...plan, path: plan.path ?? [], reason: plan.reason ?? lines[0] ?? plan.kind, substrate: substrate.substrateId,
+            inventory: { ...context.inventory } };
+    }
+
+    /**
+     * ⛓ THE MID-LOOP REPLAN (AN-3b, limit (b)). A substrate plan's queue has run to its end with mana left: when the
+     * state DIVERGED from the plan — an item arrived during it (a check's own item, applied at once, A4), the one
+     * thing the plan could not foresee — ask the substrate's `planLoop` again for the REST of this loop
+     * (`context.continueFrom`: the player's region and the mana left; the substrate reads its own live counts) and
+     * APPEND that route to the queue, which resumes where it stopped: no reset, no refill. Without a divergence the
+     * plan already was the planner's answer for this state, so the loop ends as before. → the continuation plan, or
+     * null (end the loop).
+     */
+    _continuation(substrate, gameState, plan) {
+        const d = this._d;
+        const mana = Number(gameState.currentMana ?? gameState.getCurrentMana?.());
+        if (!(mana > 1e-9)) return null;
+        const now = d.getSnapshot?.()?.inventory ?? {};
+        const before = plan.inventory ?? {};
+        const diverged = Object.entries(now).some(([item, n]) => (Number(n) || 0) > (Number(before[item]) || 0));
+        if (!diverged) return null;
+        const region = gameState.getCurrentRegion?.() ?? gameState.currentRegion ?? null;
+        const next = this._substratePlan(substrate, gameState, { continueFrom: { region, mana } });
+        if (next.kind === 'done' || next.kind === 'unreachable' || !next.path.length) return null;
+        return next;
     }
 
     _runLoop() {
@@ -369,7 +422,34 @@ export class LoopModeRunner {
             if (flush && typeof flush.then === 'function') flush.then(next, next);
             else next();
         };
-        this._unsubs.push(d.subscribe('loopState:queueCompleted', () => { this._runResetOwed = true; ended(); }));
+        // A substrate plan whose queue ends with mana left may CONTINUE the loop (`_continuation`), after the worker's
+        // snapshot has settled (the last act's item arrives a moment after its check). Every other plan ends here.
+        const onQueueCompleted = () => {
+            if (!this._active) return;
+            if (!substrate) { this._runResetOwed = true; ended(); return; }
+            const decide = () => {
+                if (!this._active) return;
+                let next = null;
+                try {
+                    next = this._continuation(substrate, gameState, plan);
+                } catch (e) {
+                    this._status(`loop ${this._loops}: the replan failed — ${e?.message ?? e}`);
+                }
+                if (!next) { this._runResetOwed = true; ended(); return; }
+                this._replans += 1;
+                gameState.setPath(appendContinuation(gameState.getPath?.() ?? gameState.path ?? [], next.path));
+                for (const r of next.path.flatMap((e) => [e.sourceRegion, e.destinationRegion]).filter(Boolean)) planned.add(r);
+                plan = { ...next, reason: `${next.reason} (replanned mid-loop)` };
+                this._lastPlan = plan;
+                shown = this._progressText(plan, loopState, gameState);
+                this._status(shown);
+                loopState.resumeProcessing?.();
+            };
+            const flush = d.flush?.();
+            if (flush && typeof flush.then === 'function') flush.then(decide, decide);
+            else decide();
+        };
+        this._unsubs.push(d.subscribe('loopState:queueCompleted', onQueueCompleted));
         this._unsubs.push(d.subscribe('loopState:loopReset', () => ended()));
         this._unsubs.push(d.subscribe('loopState:actionCompleted', onActionCompleted));
         this._unsubs.push(d.subscribe('gameState:regionChanged', onRegionChanged));

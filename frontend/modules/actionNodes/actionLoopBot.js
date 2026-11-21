@@ -64,10 +64,11 @@ export function hopsBetween(model, state, from, to) {
  * @param {object} start - the loop's start state
  * @param {string[]} plan
  * @param {string|null} attempt
- * @param {{startRegion: string}} opts - the loop's start region (the world's `Menu`)
+ * @param {{startRegion: string, from?: string|null}} opts - the loop's start region (the world's `Menu`); `from`: a
+ *   node the player stands on mid-loop (AN-3b's continuation): the route starts there, with no `Menu → start` hop
  * @returns {object[]}
  */
-export function routeOfPlan(model, start, plan, attempt, { startRegion }) {
+export function routeOfPlan(model, start, plan, attempt, { startRegion, from = null }) {
     const startNode = model.nodes[model.startIndex].id;
     const instances = new Map();
     const path = [];
@@ -84,8 +85,9 @@ export function routeOfPlan(model, start, plan, attempt, { startRegion }) {
             sourceRegion: id, instanceNumber: instances.get(id) ?? 1,
         });
     };
-    if (startRegion && startRegion !== startNode) move(startRegion, startNode, `${startRegion} -> ${startNode}`);
-    let at = startNode;
+    const fromNode = from && model.nodeIx.has(from) ? from : null;
+    if (!fromNode && startRegion && startRegion !== startNode) move(startRegion, startNode, `${startRegion} -> ${startNode}`);
+    let at = fromNode ?? startNode;
     let state = start;
     const visit = (id) => {
         const hops = hopsBetween(model, state, at, id);
@@ -111,22 +113,31 @@ export function routeOfPlan(model, start, plan, attempt, { startRegion }) {
  * @param {(nodeId: string) => number} [context.regionXp]   raw region XP of a node
  * @param {number} [context.maxMana]       the loop's pool (default: the model's start mana with the items)
  * @param {string} context.startRegion
+ * @param {{region: string, mana: number, state: object}} [context.continueFrom]  AN-3b: plan the REST of the running
+ *   loop — from `state` (the runtime's live counts, stats and resources) with `mana` left, routed from `region` (the
+ *   node the player stands on; no `Menu → start` hop). The Playback Bot's runner asks this when the state diverged
+ *   from the loop's plan (an item arrived during it).
  * @returns {{kind: string, path: object[], reason: string, lines: string[], key: string, plan: string[],
  *   attempt: string|null, earns: string[]}}
  */
 export function planLiveLoop({ model: runtimeModel, inventory = {}, checkedLocations = [], regionXp = () => 0,
-    maxMana, startRegion }) {
+    maxMana, startRegion, continueFrom = null }) {
     const model = plannerModelOf(runtimeModel);
     const items = Object.fromEntries(model.boons.map((b) => [b.id, Math.max(0, inventory[b.name] ?? 0)]));
     const checkedSet = new Set(checkedLocations);
     const checked = model.nodes.filter((n) => n.location && checkedSet.has(n.location)).map((n) => n.id);
     const xp = Object.fromEntries(model.nodes.map((n) => [n.id, Number(regionXp(n.id)) || 0]));
-    const start = loopStartState(model, items);
+    let start = loopStartState(model, items);
     if (Number.isFinite(maxMana)) start.mana = maxMana;
+    if (continueFrom?.state) {
+        const st = continueFrom.state;
+        start = { counts: st.counts.slice(), stats: st.stats.slice(), resources: st.resources.slice(),
+            mana: Number(continueFrom.mana) || 0, spent: 0 };
+    }
     const p = planLoop(model, { items, checked, xp, start });
     const kind = p.kind;
     if (kind === PLAN_KINDS.DONE) return { ...p, kind, path: [], reason: 'the goal is done', key: 'done', lines: p.lines };
-    const path = routeOfPlan(model, start, p.plan, p.attempt, { startRegion });
+    const path = routeOfPlan(model, start, p.plan, p.attempt, { startRegion, from: continueFrom?.region ?? null });
     const reason = p.lines[0] ?? kind;
     return { ...p, kind, path, reason, key: `${kind}:${p.earns.join('+') || p.attempt || p.plan.join('>')}`, lines: p.lines, prices: livePrices(model, xp) };
 }
