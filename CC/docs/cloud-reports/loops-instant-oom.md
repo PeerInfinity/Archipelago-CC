@@ -98,7 +98,6 @@ At `65f18ee25d` (the sliver fix) the regression job of TT 44924869576 went red o
 
 Neither touches Loop mode. The same job was green at `f2284988b3`, and a re-run of the failed job at the same SHA was
 green (job 136919970843). It is a flake, not this slice's.
-<!-- BLAST-RADIUS-TIP -->
 
 ## ActionNodes (step 4)
 
@@ -147,4 +146,17 @@ AN-3b landed on main at 14c0386ccf (train 183, AN-3b train commit 7921ff42c8). M
   - `docs/json/features/loops.md`;
   - `CC/docs/cloud-reports/actionnodes-an3b.md` and this report.
 - Gitlinks: 0 moved.
-<!-- CI-TIP -->
+
+## CI at the tip `72997c3f16`
+
+The code tip. The commit after it adds this section only (docs).
+
+| Gate | Run | Result |
+|---|---|---|
+| ut (`unittests`, push) | 44946572170 | success |
+| JSUT (push) | 44946572209 | success. `ci-vitest-summary`: suite vitest (unfiltered) 1399/29394 (29394 passed, 0 skipped, 0 failed); slow battery 36/438 |
+| `train_only` (dispatch) | 44946576314 | success: Train-tier Vitest shards 1/3, 2/3, 3/3 |
+| TT (dispatch) | 44946572089 | success. HEADROOM OK on every batch: fast 323.9 s / 600 (54 %); fast bundled 311.5 s (52 %); seedling-js 228.2 s (38 %); seedling-js-solver 194.7 s (32 %); apworld 176.6 s (29 %); seedling-wasm 138.0 s (23 %); playback-bot 95.4 s (16 %) |
+| `test-substrates-manual.yml -f batch=all` | 44946574133 | success: bot-walks, noiz2sa, cloudberry, tutorials, tutorials-procgen, tutorials-procgen-loops, tutorials-tracker, tutorials-seedling, tutorials-seedling-whole-game, feature-checks |
+
+Gitlinks: 0 (`git diff origin/main --raw` has no `160000` line). Main at the merge: 14c0386ccf.
