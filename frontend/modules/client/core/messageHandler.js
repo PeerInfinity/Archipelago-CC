@@ -43,6 +43,18 @@ import { readRoomSpoilerData } from './spoilerData.js';
 import { applyServerItemGroups, itemNameGroupsKey, readServerItemGroups } from './serverItemGroups.js';
 import { needsLogicGate, logicRefusal, refusalMessage, GAME_REPORTED_FIELD } from './checkGate.js';
 import { deriveUpstreamGoal, markGoalEvent, completesWithGoal, reportsOwnGoal } from './upstreamGoal.js';
+import {
+  OFFLINE_CHOICE,
+  OFFLINE_ORIGINATOR,
+  captureRecord,
+  classifyRecord,
+  goalInPending,
+  matchesRoom,
+  mergeRecord,
+  offerMessage,
+  pickPass,
+  recordKey,
+} from './offlineProgress.js';
 
 /** "gameKey/folder, …" for a few preset candidates (the console names them). */
 function describePresetFolders(presets, max = 3) {
@@ -72,6 +84,9 @@ export function rulesNeededMessage(game, seedName, presetsAtOtherSeeds = null, {
   const where = game === APCALC_GAME ? 'APCalc Generator → Load in Frontend, or the Files panel' : 'the Files panel';
   return `No rules for ${game} are loaded, and the server did not send them${addon}. Load its rules.json (${where})${tail}`;
 }
+
+/** How long one check of an offline-progress pass may take before the pass goes on without it. */
+export const OFFLINE_STEP_TIMEOUT_MS = 10_000;
 
 /** client:locationCheckRefused reason while a slot's rules are pending (not a checkGate REFUSAL). */
 export const RULES_PENDING = 'rules_pending';
@@ -188,6 +203,26 @@ export class MessageHandler {
     // loaded one, for that room seed and slot (_upstreamGoalFor): a same-seed reconnect
     // keeps the loaded rules, and so keeps it; any other load replaces the document.
     this._upstreamGoal = null;
+    // Offline progress (offlineProgress.js; sdc-offline-progress-op1). Records captured at RoomInfo, by
+    // document identity (recordKey), for this page session only; names the GAME reported while offline
+    // (kept exempt from the gate when pushed); the open offer; names pushed on this connection; the
+    // ids the server has checked on it; the passes, one at a time; and the sources of the client's
+    // own rules loads (any other load is the player's, and discards the records).
+    this._offlineRecords = new Map();
+    this._offlineGameReported = new Set();
+    this._offlineOffer = null;
+    this._offlineInFlight = new Set();
+    this._roomCheckedIds = new Set();
+    this._offlinePassChain = Promise.resolve();
+    this._offlinePassWaiting = false;
+    // A step of a pass that has not finished after this long is left behind (tried again next pass): measured
+    // live (MW-P3, ~1 play in 3), a gate's worker ping occasionally never settles, and one such call held the
+    // whole push. Above the ping's own 5 s timeout.
+    this._offlineStepTimeoutMs = OFFLINE_STEP_TIMEOUT_MS;
+    this._clientRulesSources = new Set();
+    // `${seed}|${slot}` of every slot whose goal this page session reported: an ID-less goal the server never
+    // echoes stays checked locally, and must not be offered again at the next connect.
+    this._goalReportedRooms = new Set();
   }
 
   // Add method to inject eventBus
@@ -250,6 +285,7 @@ export class MessageHandler {
     this.eventBus.subscribe('connection:message', (commands) => {
       commands.forEach((command) => this.processMessage(command));
     });
+    this.eventBus.subscribe('stateManager:rulesLoaded', (event) => this._onRulesLoadedForOfflineProgress(event));
   }
 
   processMessage(command) {
@@ -401,6 +437,8 @@ export class MessageHandler {
       this.clientSlotName = this.getDefaultSlotName();
     }
 
+    // Before the connect flow touches the rules: its reload and the Connected reset both lose offline checks.
+    this._captureOfflineProgress();
     this.roomInfo = data;
     this._dropHeldGameChecks('the server is another room now', (held) => !isSameSeed(held.seedName, data.seed_name));
     this._cancelServerBuild();
@@ -857,10 +895,13 @@ export class MessageHandler {
   _loadRulesDocument(jsonData, playerId, sourceName, playerInfo = undefined) {
     if (!this.eventBus) return Promise.resolve(false);
     const preset = { playerId, path: sourceName };
+    // The client's own load: not the player loading other rules (_onRulesLoadedForOfflineProgress).
+    this._clientRulesSources.add(sourceName);
     return new Promise((resolve) => {
       let unsubscribe = null;
       const timer = setTimeout(() => {
         unsubscribe?.();
+        this._clientRulesSources.delete(sourceName);
         resolve(false);
       }, PRESET_LOAD_TIMEOUT_MS);
       unsubscribe = this.eventBus.subscribe('stateManager:rulesLoaded', (event) => {
@@ -927,6 +968,8 @@ export class MessageHandler {
     this._invalidGameRetried = false;
     this._serverItems.clear();
     this._connectionSeq += 1;
+    this._offlineInFlight = new Set();
+    this._roomCheckedIds = new Set(data.checked_locations || []);
 
     // Get stateManager
     const stateManager = await this._getStateManager();
@@ -1047,6 +1090,7 @@ export class MessageHandler {
       this.eventBus?.publish('game:locationsScouted', { locations: this.getScoutedLocations() });
     }
     await this._replayHeldGameChecks();
+    await this._offerOfflineProgress();
   }
 
   /**
@@ -1079,6 +1123,239 @@ export class MessageHandler {
       `(${dropped.map((h) => `"${h.eventData.locationName}"`).join(', ')}); ${why}.`;
     log('warn', `[MessageHandler] ${message}`);
     this._printToConsole(message, 'warning');
+  }
+
+  // ---- Offline progress (offlineProgress.js; sdc-offline-progress-op1, ⚖ Robert 2026-11-21) ----
+
+  /**
+   * At RoomInfo, before the connect flow reloads anything: the loaded document's checked
+   * ID-bearing locations (and its goal) become a record, merged into a kept one of the same
+   * identity. The state manager still holds the offline state here; after Connected it holds
+   * only the server's, so a record is never taken anywhere else.
+   */
+  _captureOfflineProgress() {
+    const raw = getLastRawJsonData?.();
+    const checked = stateManagerProxySingleton?.getLatestStateSnapshot?.()?.checkedLocations;
+    const fresh = captureRecord(raw?.rawJsonData, raw?.selectedPlayerInfo?.playerId, checked, this._offlineGameReported);
+    this._offlineGameReported = new Set();
+    if (!fresh) return;
+    const key = recordKey(fresh);
+    this._offlineRecords.set(key, mergeRecord(this._offlineRecords.get(key), fresh));
+  }
+
+  /** The record of this connection's room and slot, if any (exact identity: matchesRoom). */
+  _offlineRecordForConnection() {
+    if (this.clientSlot === null || this.clientSlot === undefined) return null;
+    const room = { seedName: this.roomInfo?.seed_name ?? null, slot: this.clientSlot, slotInfo: this.slotInfo };
+    for (const record of this._offlineRecords.values()) if (matchesRoom(record, room)) return record;
+    return null;
+  }
+
+  /** This connection's record when the player chose Send (its passes run on item deliveries). */
+  _activeOfflineRecord() {
+    const record = this._offlineRecordForConnection();
+    return record?.decision === OFFLINE_CHOICE.SEND ? record : null;
+  }
+
+  /** Sorts a record against this connection, and drops what will never be sent (already on the server, unknown here). */
+  _classifyOfflineRecord(record) {
+    const goalReportable =
+      record.goalLocation !== null &&
+      this._upstreamGoalFor(record.goalLocation) !== null &&
+      !this._goalReportedRooms.has(`${record.seedName}|${record.slot}`);
+    const out = classifyRecord(record, {
+      roomIds: this.serverLocationNameToId ?? new Map(),
+      checkedIds: this._roomCheckedIds,
+      goalReportable,
+    });
+    if (out.unknown.length > 0) {
+      const message =
+        `Not sent: ${out.unknown.length} offline check(s) this room has no location for ` +
+        `(${out.unknown.map((n) => `"${n}"`).join(', ')}).`;
+      log('warn', `[MessageHandler] ${message}`);
+      this._printToConsole(message, 'warning');
+    }
+    const keep = new Set(out.pending.map((e) => e.name));
+    record.names = record.names.filter((n) => keep.has(n));
+    if (record.names.length === 0) this._offlineRecords.delete(recordKey(record));
+    return out;
+  }
+
+  /**
+   * After every applied Connected (a build's too): the record of this exact room and slot is
+   * offered (Send / Not now / Discard), or, when the player already chose Send earlier in this
+   * session (a reconnect mid-push), its passes go on without asking again.
+   */
+  async _offerOfflineProgress() {
+    this._closeOfflineOffer(null);
+    if (this._serverBuild) return;
+    const record = this._offlineRecordForConnection();
+    if (!record) return;
+    const { pending } = this._classifyOfflineRecord(record);
+    if (pending.length === 0) return;
+    if (record.decision === OFFLINE_CHOICE.SEND) {
+      this._printToConsole(`Sending the rest of your offline checks (${pending.length}).`, 'info');
+      await this._queueOfflinePass();
+      return;
+    }
+    const doc = getLastRawJsonData?.()?.rawJsonData;
+    const goal = goalInPending(doc, this.clientSlot, pending, this._serverItems);
+    const slotName = this.slotInfo?.[String(this.clientSlot)]?.name ?? this.clientSlotName;
+    const message = offerMessage(record, pending.length, goal, slotName);
+    const key = recordKey(record);
+    this._offlineOffer = { key, count: pending.length, goal, message };
+    this._printToConsole(`${message} Choose Send, Not now or Discard above the console.`, 'info');
+    this.eventBus?.publish('client:offlineProgressOffer', { key, count: pending.length, goal, message });
+  }
+
+  /** @returns {object|null} The open offer: { key, count, goal, message }. */
+  getOfflineProgressOffer() {
+    return this._offlineOffer;
+  }
+
+  _closeOfflineOffer(choice) {
+    if (!this._offlineOffer) return;
+    this._offlineOffer = null;
+    this.eventBus?.publish('client:offlineProgressOfferClosed', { choice });
+  }
+
+  /**
+   * The player's answer to the offer. Send: push now, and keep pushing on item deliveries
+   * (and on later connects in this session). Not now: keep it, offer it at the next connect.
+   * Discard: delete it.
+   *
+   * @param {'send'|'later'|'discard'} choice
+   * @returns {Promise<boolean>} whether there was an offer to answer
+   */
+  async respondToOfflineProgress(choice) {
+    const offer = this._offlineOffer;
+    if (!offer || !Object.values(OFFLINE_CHOICE).includes(choice)) return false;
+    this._closeOfflineOffer(choice);
+    const record = this._offlineRecords.get(offer.key);
+    if (!record) return false;
+    if (choice === OFFLINE_CHOICE.DISCARD) {
+      this._offlineRecords.delete(offer.key);
+      this._printToConsole('Discarded your offline checks; nothing was sent.', 'info');
+    } else if (choice === OFFLINE_CHOICE.LATER) {
+      record.decision = OFFLINE_CHOICE.LATER;
+      this._printToConsole(
+        'Kept your offline checks; they are offered again the next time you connect to this room (until the page is reloaded).',
+        'info'
+      );
+    } else {
+      record.decision = OFFLINE_CHOICE.SEND;
+      await this._queueOfflinePass();
+    }
+    return true;
+  }
+
+  /**
+   * One pass at a time, and at most one waiting: every ReceivedItems and RoomUpdate asks for a pass,
+   * and a push of 100 checks brings ~200 of them. Measured live (MW-P3): queued one each, the no-op
+   * passes and their worker round trips held the real sends back for minutes. A pass that starts
+   * later sees every item that arrived before it, so one waiting pass serves them all.
+   */
+  _queueOfflinePass() {
+    if (this._offlinePassWaiting) return this._offlinePassChain;
+    this._offlinePassWaiting = true;
+    this._offlinePassChain = this._offlinePassChain
+      .then(() => {
+        this._offlinePassWaiting = false;
+        return this._offlineProgressPass();
+      })
+      .catch((e) => {
+        this._offlinePassWaiting = false;
+        log('error', '[MessageHandler] Offline progress pass failed:', e);
+      });
+    return this._offlinePassChain;
+  }
+
+  /**
+   * One pass: every pending check that is in logic now (or that the game reported) goes
+   * through the ordinary check path, called directly as _replayHeldGameChecks does (the
+   * dispatcher would hand it to Loop mode's queue). The gate there still decides; a check
+   * that is out of logic is never sent, and stays for the next pass.
+   */
+  async _offlineProgressPass() {
+    if (!connection.isConnected() || this._serverBuild) return;
+    const record = this._activeOfflineRecord();
+    if (!record) return;
+    const { pending } = this._classifyOfflineRecord(record);
+    if (pending.length === 0) {
+      this._printToConsole('All your offline checks are on the server.', 'success');
+      return;
+    }
+    let pingTimer = null;
+    try {
+      // Bounded like a step (see _offlineStepTimeoutMs): a ping that never settles must not hold the passes.
+      await Promise.race([
+        stateManagerProxySingleton.pingWorker?.('client:offlineProgress'),
+        new Promise((resolve) => {
+          pingTimer = setTimeout(resolve, this._offlineStepTimeoutMs);
+        }),
+      ]);
+    } catch {
+      // keep the last snapshot; the gate asks again per check
+    }
+    clearTimeout(pingTimer);
+    const reachability = stateManagerProxySingleton.getLatestStateSnapshot?.()?.locationReachability ?? {};
+    const batch = pickPass(pending, { reachability, inFlight: this._offlineInFlight });
+    let sent = 0;
+    const push = async (entry) => {
+      this._offlineInFlight.add(entry.name);
+      const eventData = { locationName: entry.name, originator: OFFLINE_ORIGINATOR };
+      if (entry.reportedByGame) eventData[GAME_REPORTED_FIELD] = true;
+      let timer = null;
+      const outcome = await Promise.race([
+        handleUserLocationCheckForClient(eventData, 'user:locationCheck').then(() => 'done'),
+        new Promise((resolve) => {
+          timer = setTimeout(() => resolve('stuck'), this._offlineStepTimeoutMs);
+        }),
+      ]);
+      clearTimeout(timer);
+      if (outcome === 'stuck') {
+        log('warn', `[MessageHandler] Offline progress: the check of "${entry.name}" did not finish within ` +
+          `${this._offlineStepTimeoutMs} ms; going on, and trying it again on the next pass.`);
+      }
+      const went = entry.goal ? this._goalStatus(entry.name) === 'checked' : this._sentLocationIds.has(entry.id);
+      if (went) sent += 1;
+      else this._offlineInFlight.delete(entry.name); // refused after all: tried again next pass
+    };
+    // One at a time, the goal last (pickPass). Measured live (MW-P3, 83 in logic): sent all at once, 27 of
+    // the gate's calls never settled; one at a time with the passes coalesced, all went.
+    for (const entry of batch) {
+      if (!connection.isConnected() || this._activeOfflineRecord() !== record) break;
+      await push(entry);
+    }
+    // The goal is ID-less: the server never confirms it, so it leaves the record once it is reported.
+    if (this._goalReported && record.goalLocation !== null) {
+      record.names = record.names.filter((n) => n !== record.goalLocation);
+      if (record.names.length === 0) this._offlineRecords.delete(recordKey(record));
+    }
+    const waiting = pending.filter((e) => !this._offlineInFlight.has(e.name)).length;
+    if (sent > 0) {
+      this._printToConsole(
+        `Sent ${sent} offline check(s).` +
+          (waiting > 0
+            ? ` Still out of logic: ${waiting}; kept, and sent once the items you receive put them in logic (until the page is reloaded).`
+            : ''),
+        'info'
+      );
+    }
+  }
+
+  /** A rules load the client did not start is the player's: the records describe state they no longer see. */
+  _onRulesLoadedForOfflineProgress(event) {
+    const source = event?.source;
+    if (source !== undefined && this._clientRulesSources.has(source)) {
+      this._clientRulesSources.delete(source);
+      return;
+    }
+    this._offlineGameReported = new Set();
+    if (this._offlineRecords.size === 0) return;
+    this._offlineRecords.clear();
+    this._closeOfflineOffer(OFFLINE_CHOICE.DISCARD);
+    this._printToConsole('Discarded your offline checks: other rules were loaded.', 'info');
   }
 
   /**
@@ -1614,6 +1891,8 @@ export class MessageHandler {
 
     applyReceivedItems(this._serverItems, data.index, processedItemDetails.map((d) => d.itemName));
     this._reportGoalIfMet();
+    // Items can put kept offline checks in logic (our own come back from the push): another pass.
+    if (this._activeOfflineRecord()) this._queueOfflinePass();
 
     // Publish notification
     this.eventBus?.publish('game:itemsReceived', {
@@ -1755,7 +2034,9 @@ export class MessageHandler {
 
     // Process location updates directly to stateManager
     if (stateManager && data.checked_locations) {
+      for (const id of data.checked_locations) this._roomCheckedIds.add(id);
       await this._syncLocationsFromServer(data.checked_locations);
+      if (this._activeOfflineRecord()) this._queueOfflinePass();
     }
 
     // Process player updates if present - detect new players joining
@@ -2214,6 +2495,7 @@ Location was force-checked to maintain server sync.`;
     if (!connection.isConnected()) return false;
 
     this._goalReported = true;
+    this._goalReportedRooms.add(`${this.roomInfo?.seed_name ?? ''}|${this.clientSlot}`);
     // The server may release/collect the slot's remaining locations now; their echo is not a logic bug.
     this._slotReleased = true;
     log('info', '[MessageHandler] Reporting goal completion to server (CLIENT_GOAL).');
@@ -2595,6 +2877,10 @@ export async function handleUserLocationCheckForClient(
     log('info', 
       '[ClientModule/MessageHandler] Not connected. Propagating user:locationCheck up.'
     );
+    // A pickup the game reported offline stays exempt from the gate when it is pushed at connect.
+    if (eventData?.locationName && (eventName === 'system:locationCheck' || eventData[GAME_REPORTED_FIELD] === true)) {
+      messageHandlerSingleton._offlineGameReported.add(eventData.locationName);
+    }
     if (dispatcher) {
       dispatcher.publishToNextModule(
         MODULE_NAME,
