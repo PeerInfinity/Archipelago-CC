@@ -18,13 +18,19 @@
  * CA-S3: `REGION_GRAPH_SOURCES` left `regionGraph/regionGraphOriginators.js` (only tests named it once the Region Map's
  * interim reader was retired); the base's value is kept here, where the bodies read it. `actions.planOneStepMove` left
  * `regionActions.js` too: the equivalence test's recorder supplies it.
+ * CA-S5: `regionGraph:nodeSelected` was RETIRED. `REGION_GRAPH_NODE_SELECTED` and `actions.publishNodeSelected` left the
+ * app; the base's name is kept here and the recorder supplies `publishNodeSelected`, so the base's `select` publish is
+ * still measured, as the retired channel the equivalence test counts.
  */
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '../stateManager/index.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import * as actions from './regionActions.js';
-import { REGION_GRAPH_ORIGINATORS, REGION_GRAPH_NODE_SELECTED } from '../regionGraph/regionGraphOriginators.js';
+import { REGION_GRAPH_ORIGINATORS } from '../regionGraph/regionGraphOriginators.js';
+
+/** The base's event name (`regionGraph/regionGraphOriginators.js` until CA-S5, which retired the event). */
+const REGION_GRAPH_NODE_SELECTED = 'regionGraph:nodeSelected';
 
 /** The Region Graph's `user:regionMove` sources at base (`regionGraph/regionGraphOriginators.js` until CA-S3). */
 export const REGION_GRAPH_SOURCES = Object.freeze({

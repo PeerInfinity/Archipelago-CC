@@ -16,7 +16,7 @@
  *
  * COMPARED, per row: the `play` channel IN ORDER (moves, path edits, the locations a check or bulk check dispatches),
  * the `regions` channel IN ORDER (`showRegionInRegionsPanel` and every CHANGE of "Show All Regions"), the `select`
- * channel (`regionMap:nodeSelected`), the multiset of ALL calls (the read-only ones too), and the status text.
+ * channel (`regionMap:nodeSelected`; retired in CA-S5, delta 4), the multiset of ALL calls (the read-only ones too), and the status text.
  *
  * THE NAMED DELTAS, counted:
  *   1. `source` — a path move carries `regionView-path-regionMap` (R7) where the base carried a `regionMap-*` source.
@@ -24,6 +24,10 @@
  *      actions) — not compared, counted.
  *   3. the generic event (design §4.3) — every AFTER click publishes `regionView:regionClicked` /
  *      `regionView:locationClicked` once; the base published none. Asserted, counted, and excluded from the compare.
+ *   4. (CA-S5) the `select` channel is RETIRED: the base's `regionMap:nodeSelected` (one per region click, recorded
+ *      through the recorder's `publishNodeSelected`, which the base reader still calls) is gone at the tip. The AFTER
+ *      side's `select` channel must be empty; the base's entry is asserted, removed before the other comparisons and
+ *      counted (`summary.retiredSelect`). KEPT for its play / regions / status / R4-copy pins over every combination.
  * NORMALISED (the same behaviour, a different call shape — named in the report):
  *   - the bulk check is compared by the locations it DISPATCHES (base passed `{ originator }` and let the action read
  *     the latest state; the registry reads the same state first, and skips a region with no locations);
@@ -231,7 +235,7 @@ const DISCOVERY = {
 };
 
 const summary = { rows: 0, swappedSources: 0, crossOrderDiffers: 0, nonEmptyPlay: 0, newSourceSeen: 0, genericEvents: 0,
-    statusRows: 0, regionsOpened: 0, graphMigratedOnCopy: 0, rowsWithOldSource: 0 };
+    statusRows: 0, regionsOpened: 0, graphMigratedOnCopy: 0, rowsWithOldSource: 0, retiredSelect: 0 };
 
 beforeAll(() => {
     CA.resetClickActionsForTests();
@@ -277,10 +281,16 @@ describe(`⛓ 2^${OTHER_KEYS.length} combinations (movePlayerOneStep forced fals
                 expect(after.loaded.clickActions, `copy: ${label}`).toEqual(CA.migrateRegionGraphClickKeys(bits));
                 expect(after.loaded.copied).toBe(true);
                 expect(after.sm.writes).toEqual(['moduleSettings.regionGraph.clickActions', 'moduleSettings.regionMap.clickActions']);
-                const { out: beforeSwapped, swapped } = swapSources(before.log);
+                const { out: swappedAll, swapped } = swapSources(before.log);
+                // Named delta 4 (CA-S5): the base's select publish is retired; the adopted side publishes none.
+                const retired = channel(swappedAll, 'select');
+                expect(retired, `the base's select channel: ${label}`).toEqual(sc.target === 'region'
+                    ? [['publishNodeSelected', ['regionMap:nodeSelected', sc.region, { id: sc.region, displayKey: sc.region }]]] : []);
+                expect(channel(after.log, 'select'), `select channel (retired): ${label}`).toEqual([]);
+                summary.retiredSelect += retired.length;
+                const beforeSwapped = swappedAll.filter((e) => e.channel !== 'select');
                 expect(channel(after.log, 'play'), `play channel: ${label}`).toEqual(channel(beforeSwapped, 'play'));
                 expect(channel(after.log, 'regions'), `regions channel: ${label}`).toEqual(channel(beforeSwapped, 'regions'));
-                expect(channel(after.log, 'select'), `select channel: ${label}`).toEqual(channel(beforeSwapped, 'select'));
                 expect(multiset(after.log), `all calls: ${label}`).toEqual(multiset(beforeSwapped));
                 expect(after.statuses, `status: ${label}`).toEqual(before.statuses);
                 expect(JSON.stringify(before.log)).not.toContain(NEW_SOURCE);
@@ -313,5 +323,6 @@ describe(`⛓ 2^${OTHER_KEYS.length} combinations (movePlayerOneStep forced fals
         expect(summary.newSourceSeen).toBe(summary.rowsWithOldSource);
         expect(summary.regionsOpened).toBeGreaterThan(0);
         expect(summary.statusRows).toBeGreaterThan(0);
+        expect(summary.retiredSelect).toBe((1 << OTHER_KEYS.length) * SCENARIOS.filter((sc) => sc.target === 'region').length);
     });
 });

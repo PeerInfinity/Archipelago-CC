@@ -79,15 +79,14 @@ describe('the Region Graph dispatches through its own module dispatcher (adopted
         expect(ui.statuses).toEqual(['Moving directly to Field']);
     });
 
-    it('the default click with no path yet: one user:regionMove (extend the path), after regionGraph:nodeSelected', () => {
+    it('the default click with no path yet: one user:regionMove (extend the path), after regionView:regionClicked', () => {
         const ui = makeUi(CA.defaultClickActions());
         new GraphInteractionManager(ui).handleRegionNodeClick(regionNode('Field'));
         expect(regionGraphDispatcher.publish.mock.calls).toEqual([
             ['user:regionMove', { targetRegion: 'Field', sourceRegion: 'Menu', source: SRC }, { initialTarget: 'bottom' }],
         ]);
-        expect(bus.publish.mock.calls[0]).toEqual(['regionGraph:nodeSelected', { nodeId: 'Field', data: { id: 'Field' } }]);
-        // CA-S4: then the generic click event, before any action
-        expect(bus.publish.mock.calls[1]).toEqual(['regionView:regionClicked', { panelId: 'regionGraph', regionName: 'Field' }]);
+        // CA-S4: the generic click event, before any action. CA-S5: it is the FIRST publish (no regionGraph:nodeSelected).
+        expect(bus.publish.mock.calls[0]).toEqual(['regionView:regionClicked', { panelId: 'regionGraph', regionName: 'Field' }]);
     });
 
     it('location checks: RegionGraphCheck (a location click) and RegionGraphBulkCheck (accessible ones only)', () => {
@@ -112,7 +111,7 @@ describe('the Region Graph dispatches through its own module dispatcher (adopted
         expect(regionGraphDispatcher.publish).not.toHaveBeenCalled();
     });
 
-    it('the master switch off: no move, no check, no Regions-panel publish; regionGraph:nodeSelected is still published', () => {
+    it('the master switch off: no move, no check, no Regions-panel publish; the generic click events are still published', () => {
         const ui = makeUi({ ...withRegion({ [CA.BUILT_IN_IDS.checkAll]: true }), enabled: false });
         CA.registerClickAction({ id: 'regions.open', owner: 'regions', target: 'region', kind: 'toggle',
             run: (h, ctx) => { h.eventBus.publish('ui:navigateToRegion', { regionName: ctx.regionName }); return { ok: true }; } });
@@ -121,7 +120,7 @@ describe('the Region Graph dispatches through its own module dispatcher (adopted
         im.handleLocationNodeClick(locationNode('chest', 'Field'));
         expect(regionGraphDispatcher.publish).not.toHaveBeenCalled();
         // CA-S4: the generic click events are published too, master off included (as the Region Map's are).
-        expect(bus.publish.mock.calls).toEqual([['regionGraph:nodeSelected', { nodeId: 'Field', data: { id: 'Field' } }],
+        expect(bus.publish.mock.calls).toEqual([
             ['regionView:regionClicked', { panelId: 'regionGraph', regionName: 'Field' }],
             ['regionView:locationClicked', { panelId: 'regionGraph', regionName: 'Field', locationName: 'chest' }]]);
         // Switched on, the same click runs the registered panel action on the Graph's own bus.
@@ -129,4 +128,30 @@ describe('the Region Graph dispatches through its own module dispatcher (adopted
         im.handleRegionNodeClick(regionNode('Field'));
         expect(bus.publish.mock.calls.map((c) => c[0])).toContain('ui:navigateToRegion');
     });
+});
+
+// ⛓ CA-S5: the bus recorder, master on AND off — the Graph publishes no `*:nodeSelected` (regionGraph:nodeSelected is
+// retired) and exactly ONE generic event per click, first. The overlay card's body click is pinned the same way in
+// `nodeOverlayClick.test.js` (AN-3b's exactly-once).
+describe('CA-S5: no regionGraph:nodeSelected; one generic event per click', () => {
+    for (const enabled of [true, false]) {
+        it(`master ${enabled ? 'on' : 'off'}: a region tap and a location tap`, () => {
+            const ui = makeUi({ ...CA.defaultClickActions(), enabled });
+            const im = new GraphInteractionManager(ui);
+            for (const [click, generic] of [
+                [() => im.handleRegionNodeClick(regionNode('Field')),
+                    ['regionView:regionClicked', { panelId: 'regionGraph', regionName: 'Field' }]],
+                [() => im.handleLocationNodeClick(locationNode('chest', 'Field')),
+                    ['regionView:locationClicked', { panelId: 'regionGraph', regionName: 'Field', locationName: 'chest' }]],
+            ]) {
+                bus.publish.mockClear();
+                click();
+                const calls = bus.publish.mock.calls;
+                expect(calls.filter(([ev]) => /:nodeSelected$/.test(ev))).toEqual([]);
+                expect(calls.filter(([ev]) => ev.startsWith('regionView:'))).toEqual([generic]);
+                expect(calls[0]).toEqual(generic);
+            }
+            expect(ui.selectedNode).toBe('Field'); // the SELECTION stays; only the event went
+        });
+    }
 });

@@ -163,17 +163,35 @@ describe('⛓ the generic click events (design §4.3)', () => {
     beforeAll(() => CA.resetClickActionsForTests());
     afterAll(() => CA.resetClickActionsForTests());
 
-    it('a region click: regionMap:nodeSelected, then regionView:regionClicked { panelId, regionName }', () => {
+    it('a region click (master off): regionView:regionClicked { panelId, regionName } alone', () => {
         calls.length = 0;
         const off = { ...CA.defaultClickActions(), enabled: false };
-        const r = M.runRegionMapClick(h, 'region', { regionName: 'Field', data: { id: 'Field', displayKey: 'F' } }, off);
+        const r = M.runRegionMapClick(h, 'region', { regionName: 'Field' }, off);
         expect(calls).toEqual([
-            ['regionMap:nodeSelected', { nodeId: 'Field', data: { id: 'Field', displayKey: 'F' } }],
             ['regionView:regionClicked', { panelId: 'regionMap', regionName: 'Field' }],
         ]);
         expect(r.run).toMatchObject({ ran: false, reason: 'disabled' });
         expect(r.status).toBe(null);
     });
+
+    // ⛓ CA-S5: the bus recorder, master on AND off — the Map publishes no `*:nodeSelected` (regionMap:nodeSelected is
+    // retired), and exactly ONE generic event per click, first, before anything the actions publish or dispatch.
+    for (const enabled of [true, false]) {
+        it(`CA-S5, master ${enabled ? 'on' : 'off'}: a region click and a location click publish no *:nodeSelected, one generic event each, first`, () => {
+            const settings = { ...CA.defaultClickActions(), enabled };
+            for (const [target, click, generic] of [
+                ['region', { regionName: 'Field' }, ['regionView:regionClicked', { panelId: 'regionMap', regionName: 'Field' }]],
+                ['location', { regionName: 'Field', locationName: 'chest' },
+                    ['regionView:locationClicked', { panelId: 'regionMap', regionName: 'Field', locationName: 'chest' }]],
+            ]) {
+                calls.length = 0;
+                M.runRegionMapClick(h, target, click, settings, {});
+                expect(calls.filter(([ev]) => /:nodeSelected$/.test(ev)), target).toEqual([]);
+                expect(calls.filter(([ev]) => ev.startsWith('regionView:')), target).toEqual([generic]);
+                expect(calls[0], target).toEqual(generic);
+            }
+        });
+    }
 
     it('a location click: regionView:locationClicked { panelId, regionName, locationName }, then the check (originator regionMapCheck)', () => {
         calls.length = 0;

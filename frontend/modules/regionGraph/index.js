@@ -82,7 +82,6 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('ui:navigateToRegion');
   registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
-  registrationApi.registerEventBusPublisher('regionGraph:nodeSelected');
   // ⛓ CA-S4: the generic click events (design §4.3), `{ panelId: 'regionGraph', regionName, locationName? }`, and the
   // Regions panel's `regions.scrollTo` (a location click's action, published on THIS bus).
   registrationApi.registerEventBusPublisher(REGION_CLICKED);
