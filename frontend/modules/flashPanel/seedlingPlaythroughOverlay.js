@@ -1729,6 +1729,18 @@ export function pullCrossing(n, t, trap, c, tileSize, solid) {
 }
 
 /**
+ * The game's per-frame launch test for ONE player origin `[px, py]` (real, in tile `t`) against the trap on tile `trap`:
+ * `int(FP.distance(trap, player)) <= chompRange` on the REAL origin (`LavaTrap.as:81`, `FP.as:264` takes `Number`s and
+ * the `int` coerces the result), and `pullLineClear` from the trap to the origin truncated to int (`:88`, `World.as:411`).
+ * `pullClass` and `pullCrossing` are this predicate taken over a tile's standable origins.
+ */
+export function pullsOrigin([px, py], t, trap, tileSize, solid) {
+    const [cx, cy] = tileCentre(trap, tileSize);
+    return Math.trunc(Math.hypot(px - cx, py - cy)) <= LAVATRAP_PULL.chompRange
+        && (!solid || pullLineClear(t, trap, tileSize, solid, [px, py]));
+}
+
+/**
  * Does SOME standable origin of tile `t` (`pullStandBox`) lie within the trap's range (centre `c`): `FP.distance` on the
  * real origin, int-coerced, `<= chompRange` (`LavaTrap.as:81`), i.e. the box's nearest point closer than chompRange + 1?
  */
