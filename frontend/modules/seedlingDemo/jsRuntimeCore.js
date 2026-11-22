@@ -1835,6 +1835,14 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         botMobiles: () => JSON.stringify({
             mobiles: session ? [{ cls: 'Player', x: session.run.state.x, y: session.run.state.y }] : [],
         }),
+        /**
+         * ⛓ seedling-p4h-beside — a STUB of the p4h `botActivators()` (`Bot.as`, p4h-as3 a8f1d5d316: `{tick,
+         * activators: [{cls, x, y, t, type}], chests: [{cls, x, y, type, frame, alpha, tag}]}`), so a bridge reader
+         * that asks it on the JS runtime gets the shape and not a throw. ⛔ EMPTY rosters, always: the JS runtime
+         * declares neither `activators` nor `apchest` (`jsRuntimeCapabilities`), so a reader gated on those words
+         * never reads this; one that is not gated reads "nothing here", never a fabricated roster.
+         */
+        botActivators: () => JSON.stringify({ tick: tape.tick ?? 0, activators: [], chests: [] }),
         botLoadLevels: (json) => botLoadLevels(json),
         botLevelSet: () => JSON.stringify({
             vanilla: vanilla ? vanilla.records.size : 0,

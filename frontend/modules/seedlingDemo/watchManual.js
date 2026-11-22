@@ -198,23 +198,38 @@ export const touchSendFor = (keys) => (type, k) => {
  * A menu session is zero tape ticks (its frames are the Bot's dead frames), so all it can leave on a tape is its
  * outcome. An X write is `Main.primary = selected`, which IS a tape `equips` row (`{t, slot}` at the tick the run had
  * reached), so the menu's rows join the staging's (a menu row wins on a shared tick, as the later store does). A C
- * write is `Main.secondary`, which no tape field carries yet: the Bot directive `secondaries: [{t, slot}]` is queued
- * for the next wasm rebuild. Until it lands the fold REFUSES by name rather than drop the write; once it does, this
- * is the one place that emits `secondaries` instead. Untouched sessions return the staging itself.
+ * write is `Main.secondary`: the Bot directive `secondaries: [{t, slot}]` (tape_version 13, `tapeFormat.js`'s
+ * `SECONDARIES_TAPE_VERSION`) carries it on a build declaring the `secondaries` capability (p4h). ⛓ seedling-p4h-beside:
+ * with `secondariesCapable` true the fold EMITS the rows as `staging.secondaries`; otherwise (p4g, the JS runtime, an
+ * unread manifest) it still REFUSES by name rather than drop the write. Untouched sessions return the staging itself.
+ * @param {object} staging
+ * @param {object} run
+ * @param {{secondariesCapable?: boolean}} [o]
  */
-export function withMenuWrites(staging, run) {
+export function withMenuWrites(staging, run, { secondariesCapable = false } = {}) {
     const secondaries = run.secondariesFired ?? [];
-    if (secondaries.length > 0) {
+    if (secondaries.length > 0 && !secondariesCapable) {
         throw new Error(`watchManual.fold: this session set \`Main.secondary\` from the inventory menu `
-            + `(${secondaries.map((r) => `slot ${r.slot} at tick ${r.t}`).join(', ')}), and a tape has no field for it yet. `
-            + 'The Bot directive `secondaries: [{t, slot}]` (mirroring `equips`) is queued for the next wasm rebuild; '
-            + 'until then the fold refuses rather than write a tape the game would replay with a different C slot.');
+            + `(${secondaries.map((r) => `slot ${r.slot} at tick ${r.t}`).join(', ')}). The tape field for it is the Bot `
+            + 'directive `secondaries: [{t, slot}]` (tape_version 13, mirroring `equips`), and only a build declaring '
+            + 'the `secondaries` capability reads it; the build this tape is for does not declare `secondaries`, so the fold refuses rather than write a tape '
+            + 'the game would replay with a different C slot.');
     }
     const menu = run.inventoryMenuEquips ?? [];
-    if (menu.length === 0) return staging;
-    const byTick = new Map((staging.equips ?? []).map((e) => [e.t, e]));
-    for (const e of menu) byTick.set(e.t, { t: e.t, slot: e.slot });
-    return { ...staging, equips: [...byTick.values()].sort((a, b) => a.t - b.t) };
+    if (menu.length === 0 && secondaries.length === 0) return staging;
+    let out = staging;
+    if (menu.length > 0) {
+        const byTick = new Map((staging.equips ?? []).map((e) => [e.t, e]));
+        for (const e of menu) byTick.set(e.t, { t: e.t, slot: e.slot });
+        out = { ...out, equips: [...byTick.values()].sort((a, b) => a.t - b.t) };
+    }
+    if (secondaries.length > 0) {
+        // The LAST write on a tick wins (the later store), like the menu's equips above.
+        const byTick = new Map((staging.secondaries ?? []).map((e) => [e.t, e]));
+        for (const e of secondaries) byTick.set(e.t, { t: e.t, slot: e.slot });
+        out = { ...out, secondaries: [...byTick.values()].sort((a, b) => a.t - b.t) };
+    }
+    return out;
 }
 
 /**
@@ -223,8 +238,13 @@ export function withMenuWrites(staging, run) {
  *   included. ⛔ Such a session is a REPLAY, not a producer: `fold()` refuses it by name, so the ONE-CONSTRUCTION
  *   law above still holds for every tape a manual drive writes. Default false: every other caller is unchanged.
  */
+/**
+ * @param {() => boolean} [o.secondariesCapable] ⛓ seedling-p4h-beside — asked at FOLD time: does the build this tape
+ *   is for declare `secondaries`? Default: no (the fold refuses a C write by name, as before p4h).
+ */
 export function createManualSession({
     levelSource, staging, name = 'manual', scratchPersistence = false, declared = false,
+    secondariesCapable = () => false,
 }) {
     const honest = declared ? staging : solveStaging(staging);
     const run = createRunForStaging(honest, levelSource, { scratchPersistence });
@@ -391,7 +411,9 @@ export function createManualSession({
                     + 'not an honest one — it is not a producer, and a tape folded from it would claim a world it '
                     + 'was not built under');
             }
-            return buildStagedTape({ staging: withMenuWrites(honest, run), perTick, name });
+            let capable = false;
+            try { capable = secondariesCapable() === true; } catch { capable = false; }
+            return buildStagedTape({ staging: withMenuWrites(honest, run, { secondariesCapable: capable }), perTick, name });
         },
         /**
          * ⛓ The DECLARED despawns, checked against what this drive computed

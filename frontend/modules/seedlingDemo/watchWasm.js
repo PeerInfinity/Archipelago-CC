@@ -78,7 +78,7 @@ import {
     diffObservationStreams, gameStreamFromDrain, gameVisibleTape, holdingWindowTape, KEY_CODES,
 } from './tapeFormat.js';
 import {
-    buildNameFromWasmPath, capabilitiesOf, HOLD_CAPABILITY,
+    buildNameFromWasmPath, capabilitiesOf, HOLD_CAPABILITY, SECONDARIES_CAPABILITY,
 } from '../flashPanel/seedlingRandomizerEligibility.js';
 /**
  * ⛓⛓⛓ R9 SLICE 2 (⚖ ruling 10) — THE DIRECTOR'S BOUNDARY RULES, IMPORTED, and
@@ -201,6 +201,19 @@ export function holdCapabilityOf(manifest, page) {
     return { build, capable,
         why: capable ? `${build} declares \`${HOLD_CAPABILITY}\``
             : `${build} does not declare \`${HOLD_CAPABILITY}\`` };
+}
+
+/**
+ * ⛓ seedling-p4h-beside — does the build a page drives declare `secondaries` (tape_version 13)? From DATA, as
+ * `holdCapabilityOf`: an unreadable manifest, or no entry, is NO. The MANUAL fold asks it so a C write folds into a
+ * tape only for a build that reads one (`watchManual.withMenuWrites`).
+ * @param {object|null} manifest the parsed `builds.json`
+ * @param {string} page the page `wasmPageFor` chose
+ * @returns {boolean}
+ */
+export function secondariesCapableOf(manifest, page) {
+    const { capabilities } = capabilitiesOf(manifest, buildNameFromWasmPath(page));
+    return (capabilities ?? []).includes(SECONDARIES_CAPABILITY);
 }
 
 /** ⛓ The ordered stage vocabulary. The rows assert on these names. */

@@ -252,6 +252,7 @@ import {
 import {
     END_STATE_TOLERANCE, levelSetDisagreement, remapStreamRooms, roomOfGeneratedLevel,
     shipToWasm, stagesOf, VERDICT_SCOPE, verdictBlock, WASM_PAGE, WASM_STAGES, verdictOf,
+    WASM_MANIFEST, secondariesCapableOf, wasmPageFor,
 } from './watchWasm.js';
 import { foldLedger } from './procgenLedger.js';
 import {
@@ -5379,9 +5380,18 @@ async function runManual(params, lifetime) {
                 + 'own message', e.message);
             return;
         }
+        /**
+         * ⛓ seedling-p4h-beside — the manifest is read now and asked at FOLD time: an inventory-menu C write folds
+         * into `secondaries` only for a `?wasm=` build that declares them (p4h); until the read lands, or on any
+         * other build, the fold refuses it by name.
+         */
+        let manualManifest = null;
+        fetch(WASM_MANIFEST, { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null))
+            .then((m) => { manualManifest = m; }, () => { manualManifest = null; });
         try {
             session = createManualSession({
                 levelSource, staging: block, name,
+                secondariesCapable: () => secondariesCapableOf(manualManifest, wasmPageFor(location.search)),
                 // ⛓ Same fork, same reason as SOLVE's — a generated room has
                 // no tape to declare a clear, and driving it is what would
                 // produce one.
