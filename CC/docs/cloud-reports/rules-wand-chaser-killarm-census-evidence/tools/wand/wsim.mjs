@@ -123,6 +123,7 @@ export function tick(room, s, keys) {
             }
             continue;
         }
+        if (h.kind === 'door') { if (ov(pb, h.rect)) { s.dead = s.t; s.hz = 'door'; } continue; }
         if ( ((h.kind !== 'trap' || !s.suit) && Math.hypot(p.x - h.cx, p.y - h.cy) < h.r && !(s.ignore ?? []).includes(h.kind))) { s.dead = s.t; s.hz = h.kind; }
     }
     const cam = { x: Math.max(0, Math.min(room.W - 160, p.x - 80)), y: Math.max(0, Math.min(room.H - 160, p.y - 80)), w: 160, h: 160 };
@@ -176,6 +177,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     const goalTiles = G0.startsWith('tiles:') ? G0.slice(6).split(';').map((q) => q.split(',').map(Number)) : null;
     const [gx, gy] = goalTiles ? [goalTiles[0][0] * 16, goalTiles[0][1] * 16] : G0.split(':').map(Number);
     const goalRect = goalTiles ? null : { x: gx, y: gy, w: 16, h: 16 };
+    // every OTHER exit (a teleporter or stairs that is not the goal) is a no-go zone: the tape must not leave by it
+    const goalLevel = goalTiles ? null : Number(G0.split(':')[2]);
+    room.hz.push(...room.teleporters.filter((e) => goalTiles || (!(e.x === gx && e.y === gy) && Number(e.attrs?.to) !== goalLevel))
+        .map((e) => ({ kind: 'door', rect: { x: e.x, y: e.y, w: 16, h: 16 } })));
     const reached = (s) => (goalRect ? ov(pbox(s.p.x, s.p.y), goalRect) : goalTiles.some(([tx, ty]) => Math.floor(s.p.x / 16) === tx && Math.floor(s.p.y / 16) === ty));
     // tile distance field (lava passable only with the suit)
     const suit = items.includes('hasDarkSuit');

@@ -1,0 +1,49 @@
+level_71:level_71 -> level_72 => exit:level_72 -> level_73
+    base ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword']
+level_73:level_73 -> level_72 => exit:level_72 -> level_71
+    base ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword']
+level_72:level_72 -> level_73 => exit:level_73 -> level_74
+    base ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Wand', 'Ghost Spear', 'Progressive Sword']
+    tip  ['Dark Suit & Progressive Shieldx2', 'Ghost Spear', 'Progressive Sword']
+level_74:level_74 -> level_73 => exit:level_73 -> level_72
+    base ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Wand', 'Ghost Spear', 'Progressive Sword']
+    tip  ['Dark Suit & Progressive Shieldx2', 'Ghost Spear', 'Progressive Sword']
+level_73:level_73 -> level_74 => exit:level_74 -> level_75
+    base ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword']
+level_73:level_73 -> level_74 => loc:Level 074 - Darkshield
+    base ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword']
+level_75:level_75 -> level_74 => exit:level_74 -> level_73
+    base ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword']
+level_71:level_71 -> level_75 => exit:level_75 -> level_74
+    base ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword']
+level_74:level_74 -> level_75 => exit:level_75 -> level_71
+    base ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword']
+level_76:level_76 -> level_77 => exit:level_77 -> level_78
+    base ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Dark Suit & Wand', 'Ghost Spear']
+    tip  ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Ghost Spear']
+level_78:level_78 -> level_77 => exit:level_77 -> level_76
+    base ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Dark Suit & Wand', 'Ghost Spear']
+    tip  ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Ghost Spear']
+level_77:level_77 -> level_78 => exit:level_78 -> level_79
+    base ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Dark Suit & Wand', 'Ghost Spear']
+    tip  ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Ghost Spear']
+level_79:level_79 -> level_78 => exit:level_78 -> level_77
+    base ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Dark Suit & Wand', 'Ghost Spear']
+    tip  ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Ghost Spear']
+level_71:level_71 -> level_80 => loc:Level 080 - Chest
+    base ['Dark Suit & Ghost Spear', 'Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Dark Suit & Wand']
+    tip  ['Dark Suit & Ghost Spear', 'Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword']
+level_79:level_79 -> level_80 => exit:level_80 -> level_71
+    base ['Dark Suit & Ghost Spear', 'Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Dark Suit & Wand']
+    tip  ['Dark Suit & Ghost Spear', 'Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword']
+level_79:level_79 -> level_80 => loc:Level 080 - Chest
+    base ['Dark Suit & Ghost Spear', 'Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Dark Suit & Wand']
+    tip  ['Dark Suit & Ghost Spear', 'Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword']
+MOVED ROUTES: 16
