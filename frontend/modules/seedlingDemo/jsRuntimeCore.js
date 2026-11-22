@@ -1309,10 +1309,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         if (!ints(save.seals) || save.seals.length !== SAVE_SLOTS.seal_parts) return `seals must be ${SAVE_SLOTS.seal_parts} integers`;
         if (!save.flags || typeof save.flags !== 'object') return 'flags must be an object';
         if (save.slots !== null && save.slots !== undefined && !ints(save.slots.slots)) return 'slots.slots must be an integer list';
-        // ⛓ sdc-js-save-day-clock — absent (version 1) or null is a fresh start's clock, never a refusal.
-        if (save.time !== null && save.time !== undefined && !(Number.isFinite(save.time) && save.time > 0)) {
-            return 'time must be a positive number or null';
-        }
+        // ⛓ sdc-js-save-day-clock — `time` is NEVER a refusal: absent (version 1), null or malformed is a fresh start's
+        // clock, and the rest of the save is restored (js-22: "restore everything it has"; `restoreSave` names it).
         return null;
     }
 
@@ -1349,8 +1347,11 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ seedling-early-delivery — what the host delivered stays (a save written before it arrived lacks it).
         reseatHostDeliveries();
         restoredSlots = save.slots ? { ...save.slots, slots: [...save.slots.slots] } : null;
-        // ⛓ sdc-js-save-day-clock — the day clock; a version-1 save (no `time`) boots a fresh start's.
-        restoredTime = Number.isFinite(save.time) ? save.time : null;
+        // ⛓ sdc-js-save-day-clock — the day clock; a version-1 save (no `time`), a null one or a malformed one (not a
+        // positive number) boots a fresh start's, the malformed one said by name in the note. The next write is valid.
+        const timeOk = Number.isFinite(save.time) && save.time > 0;
+        const badTime = !timeOk && save.time !== null && save.time !== undefined;
+        restoredTime = timeOk ? save.time : null;
         restorePending = true;
         if (session) {
             restoreBoot = true;
@@ -1360,7 +1361,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         pendingDeliveries = [];
         note({ type: 'save', restored: true, message: `[js runtime] save restored — ${carried.size} clear(s), `
             + `${collected.size} apitem(s), ${heldKeys.size} key(s), ${sealLog().length} seal(s), ${heldTotems.size} totem part(s), `
-            + `the clock ${restoredTime === null ? "a fresh start's" : `at ${restoredTime}`}` });
+            + (badTime ? `the saved clock ${JSON.stringify(save.time)} was not a positive number; the clock is a fresh start's`
+                : `the clock ${restoredTime === null ? "a fresh start's" : `at ${restoredTime}`}`) });
         return { ok: true };
     }
 

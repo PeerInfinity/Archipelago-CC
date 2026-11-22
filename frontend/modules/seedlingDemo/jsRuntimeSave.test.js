@@ -23,6 +23,7 @@
  *   m10 `flush` writes only a pending change       → "a flush with nothing announced still writes the moved clock…" red
  *                                                    (the stored time is the last boot's, 7822 → 4822)
  *   m11 the clock flush ignores a refused restore  → "a REFUSED stored save is never overwritten…" red
+ *   m12 a malformed `time` refuses the whole save   → "a version-2 save with a MALFORMED time restores everything else…" red
  */
 import { readFileSync } from 'node:fs';
 
@@ -202,8 +203,6 @@ describe('⛓⛓ RE2 — the JS save across a page reload', () => {
         const before = rt.exportSave();
         expect(rt.restoreSave({ version: 99 }).reason).toMatch(/version 99/);
         expect(rt.restoreSave({ ...before, carried: [[0, 'x']] }).reason).toMatch(/carried/);
-        expect(rt.restoreSave({ ...before, time: 0 }).reason).toMatch(/time must be a positive number or null/);
-        expect(rt.restoreSave({ ...before, time: '7000' }).reason).toMatch(/time must be/);
         expect(rt.exportSave()).toEqual(before);
         expect(rt.restorePending).toBe(false);
     });
@@ -355,6 +354,26 @@ describe('⛓ sdc-js-save-day-clock — the JS save brings back the time of day 
         expect(c.restoreSave(reloaded({ ...rest, time: null }))).toEqual({ ok: true });
         c.tick();
         expect(c.run.gameTime).toBe(PAGE_BOOT_TIME + freshOffset());
+    });
+
+    it('a version-2 save with a MALFORMED time restores everything else, with a fresh start\'s clock, said by name', () => {
+        const a = vanillaPage();
+        a.queueItems([keyCall(0), keyCall(3), totemCall(2), flag('hasSword')]);
+        a.tick();
+        idle(a, 3000);
+        const good = reloaded(a.exportSave());
+        for (const bad of [0, -5, 'x', Number.NaN]) {
+            const b = vanillaPage();
+            const save = { ...good, time: bad };
+            expect(b.restoreSave(save)).toEqual({ ok: true });
+            expect(b.events.at(-1).message).toContain(`the saved clock ${JSON.stringify(bad)} was not a positive number; the clock is a fresh start's`);
+            expect(b.exportSave().time).toBe(null);
+            b.tick();
+            expect(b.run.gameTime).toBe(PAGE_BOOT_TIME + freshOffset());
+            expect([...b.run.keys].sort()).toEqual([0, 3]);
+            expect(withoutAt(b.exportSave())).toEqual(withoutAt(good));
+            expect(b.exportSave().time).toBe(b.run.gameTime);      // the next write stores a valid clock
+        }
     });
 
     it('with no restore the clock is untouched: every boot is a fresh page\'s (the save OFF is today\'s run)', () => {
