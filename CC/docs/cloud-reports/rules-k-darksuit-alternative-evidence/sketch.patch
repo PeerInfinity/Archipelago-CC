@@ -1,0 +1,69 @@
+diff --git a/scripts/procgen/seedlingChaserPursuitGuard.js b/scripts/procgen/seedlingChaserPursuitGuard.js
+index 73d30a28..b76044fc 100644
+--- a/scripts/procgen/seedlingChaserPursuitGuard.js
++++ b/scripts/procgen/seedlingChaserPursuitGuard.js
+@@ -137,6 +137,27 @@ export function measureHopper({ ticks = MEASURE.ticks, warm = MEASURE.warm } = {
+     return (d.x - x0) / (ticks - warm);
+ }
+ 
++// ── SKETCH (rules-k-darksuit-alternative, THROWAWAY): the player's BEST-HEADING speed, measured off the same port ─────
++// `Player.as:1525-1553` caps each AXIS at moveSpeed and `Mobile.as:73-84` shortens the VECTOR by f, so a diagonal press
++// runs faster than an axis press; `Bob.as:61-68` normalizes the body's v to its moveSpeed (isotropic).
++export function measurePlayerHeading({ moveSpeed, friction }, keys, { ticks = MEASURE.ticks, warm = MEASURE.warm, step = PP.step } = {}) {
++    let s = { x: 5e4, y: 5e4, vx: 0, vy: 0 };
++    let x0 = 0, y0 = 0;
++    for (let t = 0; t < ticks; t += 1) {
++        if (t === warm) { x0 = s.x; y0 = s.y; }
++        s = { ...s, ...step(s, new Set(keys), { world: { width: 1e5, height: 1e5 }, moveSpeed, friction }) };
++    }
++    return Math.hypot(s.x - x0, s.y - y0) / (ticks - warm);
++}
++export function playerBestSpeedOn(tileType) {
++    const swim = SWIM_TILES.includes(tileType);
++    return memo(`playerBest:${swim ? tileType : 'walk'}`, () => Math.max(
++        measurePlayerHeading(playerTerrain(tileType), ['right']), measurePlayerHeading(playerTerrain(tileType), ['right', 'down'])));
++}
++export const SUIT_ALT = process.env.K_SUIT_ALT ?? '';
++// S2R: the narrowing slice's race (straight crossings + walks in from every landing/door), ported (evidence tools/kNarrow.mjs)
++const KN = SUIT_ALT === 'S2R' ? await import('../../CC/docs/cloud-reports/rules-k-darksuit-alternative-evidence/tools/kNarrow.mjs') : null;
++
+ const speedMemo = new Map();
+ const memo = (k, f) => {
+     if (!speedMemo.has(k)) speedMemo.set(k, f());
+@@ -247,6 +268,36 @@ export function stampChaserGuards(room, { armOf = killArmOf, ...opts } = {}) {
+             dropped.push({ body: v.body, terrainTypes: v.terrainTypes, kCut: v.kCut.size, why: 'term (b): outrun on no tile of its flood' });
+         }
+         if (!v.guards || v.cut.size === 0) continue;
++        if (SUIT_ALT === 'S1' || SUIT_ALT === 'S1all') {
++            // S1: a cut cell on a SWIM tile (the Suit's lava, `Player.as:1460`) charges no arm when the body does not
++            // out-swim the player's best heading there; S1all applies the same test on every tile type.
++            for (const i of [...v.cut]) {
++                const t = tileTypes.get(i) ?? null;
++                if (SUIT_ALT === 'S1' && !SWIM_TILES.includes(t)) continue;
++                if (bodySpeedOn(body.tag, t) <= playerBestSpeedOn(t)) v.cut.delete(i);
++            }
++            if (v.cut.size === 0) continue;
++        }
++        if (SUIT_ALT === 'S2' || SUIT_ALT === 'S2R') {
++            const raced = SUIT_ALT === 'S2R'
++                ? KN.narrowBody(body, { grid, tileTypes, centre: centreOf(body), exempt, starts: [...exempt].filter((k) => !BLOCKING.has(grid.cells[k]?.kind ?? 'wall')), guardCells: chaserGuardCells })
++                : null;
++            const lost = new Set((raced?.perCell ?? []).filter((r) => r.race || r.arrival).map((r) => r.cell[1] * width + r.cell[0]));
++            // S2: S1 restricted to OPEN lava, where the best heading is free: the cell and all 8 neighbours are swim tiles.
++            const { height } = grid;
++            for (const i of [...v.cut]) {
++                const t = tileTypes.get(i) ?? null;
++                if (!SWIM_TILES.includes(t)) continue;
++                const [x, y] = xy(i, width);
++                let open = true;
++                for (let dy = -1; dy <= 1; dy += 1) for (let dx = -1; dx <= 1; dx += 1) {
++                    const nx = x + dx, ny = y + dy;
++                    if (nx < 0 || ny < 0 || nx >= width || ny >= height || !SWIM_TILES.includes(tileTypes.get(ny * width + nx)) || BLOCKING.has(grid.cells[ny * width + nx].kind)) open = false;
++                }
++                if (open && bodySpeedOn(body.tag, t) <= playerBestSpeedOn(t) && !(SUIT_ALT === 'S2R' && lost.has(i))) v.cut.delete(i);
++            }
++            if (v.cut.size === 0) continue;
++        }
+         const arm = armOf(body.tag);
+         if (arm.refuse) { refused.push(`${v.body}: ${arm.refuse}`); continue; }
+         if (arm.free) continue;
