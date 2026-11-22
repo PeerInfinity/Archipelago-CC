@@ -144,3 +144,9 @@ export function mergeReports(reps) {
     });
     return { levels, others, problems: [...new Set(reps.flatMap((r) => r.problems))] };
 }
+
+/**
+ * An abbreviated SHA (4–39 hex digits): a paired run cannot fetch one into a one-commit-deep CI checkout (GitHub
+ * fetches a full SHA or a ref name only), so the probe refuses it by name instead of failing inside `git fetch`.
+ */
+export const isAbbreviatedSha = (ref) => /^[0-9a-f]{4,39}$/i.test(ref);

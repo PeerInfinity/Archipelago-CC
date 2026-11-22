@@ -53,7 +53,7 @@ import { tmpdir, cpus } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { compareLevels, levelReport, medianBand, medianVerdict, mergeReports, presetLevels } from './seedlingCalibLevels.js';
+import { compareLevels, isAbbreviatedSha, levelReport, medianBand, medianVerdict, mergeReports, presetLevels } from './seedlingCalibLevels.js';
 
 argvHelp(import.meta.url);
 
@@ -167,7 +167,7 @@ function prepareTree(ref, dir, label) {
     let sha = git(['rev-parse', '--verify', '--quiet', `${ref}^{commit}`]).stdout.trim();
     if (!sha) {
         // GitHub serves a one-commit fetch for a full SHA or a ref name, never for an abbreviated SHA.
-        if (/^[0-9a-f]{4,39}$/i.test(ref)) throw new Error(`${label}: ${ref} is an abbreviated SHA this checkout does not hold; pass the full 40-character SHA (or a branch name)`);
+        if (isAbbreviatedSha(ref)) throw new Error(`${label}: ${ref} is an abbreviated SHA this checkout does not hold; pass the full 40-character SHA (or a branch name)`);
         const f = git(['fetch', '--no-tags', '--depth=1', 'origin', ref]);
         if (f.status !== 0) throw new Error(`${label}: git fetch origin ${ref} failed: ${f.stderr.trim()}`);
         sha = git(['rev-parse', 'FETCH_HEAD']).stdout.trim();

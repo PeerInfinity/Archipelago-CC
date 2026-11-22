@@ -5,7 +5,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { compareLevels, levelReport, median, medianBand, medianVerdict, mergeReports, presetLevels } from './seedlingCalibLevels.js';
+import { compareLevels, isAbbreviatedSha, levelReport, median, medianBand, medianVerdict, mergeReports, presetLevels } from './seedlingCalibLevels.js';
 
 const RULES = JSON.parse(readFileSync(new URL('../../frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
 
@@ -135,5 +135,14 @@ describe('mergeReports (an ABBA pass runs each tree twice)', () => {
     it('refuses runs that list different levels, and no runs', () => {
         expect(() => mergeReports([])).toThrow();
         expect(() => mergeReports([rep(1, 1), { ...rep(1, 1), levels: [{ level: 'z', ms: 1, status: 'passed' }, { level: 'b', ms: 1, status: 'passed' }] }])).toThrow();
+    });
+});
+
+describe('isAbbreviatedSha (a paired run refuses a short SHA by name)', () => {
+    it('is a short hex SHA, and not a full SHA or a branch name', () => {
+        expect(isAbbreviatedSha('3c602f965d')).toBe(true);
+        expect(isAbbreviatedSha('3c602f965d2db8ef4c12d7d6f8cb96a837500448')).toBe(false);
+        expect(isAbbreviatedSha('main')).toBe(false);
+        expect(isAbbreviatedSha('tile-probe-median')).toBe(false);
     });
 });
