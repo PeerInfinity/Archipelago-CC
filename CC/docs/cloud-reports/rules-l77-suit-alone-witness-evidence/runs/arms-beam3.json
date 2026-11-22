@@ -1,0 +1,14 @@
+{
+ "q1-fwd-beam-w24-ext": {
+  "level": 77,
+  "grants": [],
+  "tapeFile": "CC/docs/cloud-reports/rules-l77-suit-alone-witness-evidence/tapes/beam-suit-fwd-w24-ext.tape.json",
+  "note": "Q1 L78->L76 Suit alone, model route extended"
+ },
+ "q1-rev-beam-avoid-w24": {
+  "level": 77,
+  "grants": [],
+  "tapeFile": "CC/docs/cloud-reports/rules-l77-suit-alone-witness-evidence/tapes/beam-suit-rev-avoid-w24.tape.json",
+  "note": "Q1 L76->L78 Suit alone, model route avoiding the trap disc"
+ }
+}

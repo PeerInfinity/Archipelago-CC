@@ -1,0 +1,38 @@
+{
+ "q3-rev-suit-sword": {
+  "level": 77,
+  "grants": [],
+  "tapeFile": "CC/docs/cloud-reports/rules-l77-suit-alone-witness-evidence/tapes/q3-rev-suit-sword.tape.json",
+  "note": "Q3"
+ },
+ "q3-rev-suit-wand": {
+  "level": 77,
+  "grants": [],
+  "tapeFile": "CC/docs/cloud-reports/rules-l77-suit-alone-witness-evidence/tapes/q3-rev-suit-wand.tape.json",
+  "note": "Q3"
+ },
+ "q3-rev-suit-shield2": {
+  "level": 77,
+  "grants": [],
+  "tapeFile": "CC/docs/cloud-reports/rules-l77-suit-alone-witness-evidence/tapes/q3-rev-suit-shield2.tape.json",
+  "note": "Q3"
+ },
+ "q3-fwd-suit-sword": {
+  "level": 77,
+  "grants": [],
+  "tapeFile": "CC/docs/cloud-reports/rules-l77-suit-alone-witness-evidence/tapes/q3-fwd-suit-sword.tape.json",
+  "note": "Q3"
+ },
+ "q3-fwd-suit-wand": {
+  "level": 77,
+  "grants": [],
+  "tapeFile": "CC/docs/cloud-reports/rules-l77-suit-alone-witness-evidence/tapes/q3-fwd-suit-wand.tape.json",
+  "note": "Q3"
+ },
+ "q3-fwd-suit-shield2": {
+  "level": 77,
+  "grants": [],
+  "tapeFile": "CC/docs/cloud-reports/rules-l77-suit-alone-witness-evidence/tapes/q3-fwd-suit-shield2.tape.json",
+  "note": "Q3"
+ }
+}

@@ -1,0 +1,240 @@
+{
+ "q1-rev-K-4-12-col6-west": {
+  "level": 77,
+  "boot": [
+   16,
+   32
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "right",
+    55
+   ],
+   [
+    "up",
+    30
+   ],
+   [
+    null,
+    120
+   ],
+   [
+    "down",
+    58
+   ],
+   [
+    "right",
+    24
+   ],
+   [
+    "down",
+    74
+   ],
+   [
+    "left",
+    40
+   ],
+   [
+    null,
+    10
+   ],
+   [
+    "down",
+    200
+   ],
+   [
+    null,
+    30
+   ]
+  ],
+  "note": "K's derivation line: r2c0 -> (4,11) -> (4,12) (a K cut cell) -> reeled onto (6,12) -> straight down column 6 along its west wall (x 97)"
+ },
+ "q1-rev-K-4-12-col6-east": {
+  "level": 77,
+  "boot": [
+   16,
+   32
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "right",
+    55
+   ],
+   [
+    "up",
+    30
+   ],
+   [
+    null,
+    120
+   ],
+   [
+    "down",
+    58
+   ],
+   [
+    "right",
+    24
+   ],
+   [
+    "down",
+    74
+   ],
+   [
+    "left",
+    40
+   ],
+   [
+    null,
+    10
+   ],
+   [
+    "down",
+    31
+   ],
+   [
+    "right",
+    10
+   ],
+   [
+    "down",
+    160
+   ],
+   [
+    null,
+    30
+   ]
+  ],
+  "note": "K's line, then column 6 along its EAST wall (x ~110)"
+ },
+ "q1-rev-K-7-11-col6": {
+  "level": 77,
+  "boot": [
+   16,
+   32
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "right",
+    55
+   ],
+   [
+    "up",
+    30
+   ],
+   [
+    null,
+    120
+   ],
+   [
+    "down",
+    58
+   ],
+   [
+    "right",
+    24
+   ],
+   [
+    "down",
+    74
+   ],
+   [
+    "down",
+    40
+   ],
+   [
+    "left",
+    8
+   ],
+   [
+    "down",
+    160
+   ],
+   [
+    null,
+    30
+   ]
+  ],
+  "note": "K's other entry: (7,10) -> (7,11) (lava, a K cut cell) -> (7,12) -> reeled onto (6,12) -> down column 6"
+ },
+ "q1-fwd-col6-up-west": {
+  "level": 77,
+  "boot": [
+   96,
+   288
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "up",
+    160
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "L78->L76: straight up column 6 from the south landing (x 104)"
+ },
+ "q1-fwd-col6-up-east": {
+  "level": 77,
+  "boot": [
+   96,
+   288
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "right",
+    5
+   ],
+   [
+    "up",
+    160
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "L78->L76: up column 6 hugging its east wall"
+ },
+ "q1-fwd-west-lava": {
+  "level": 77,
+  "boot": [
+   96,
+   288
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "up",
+    20
+   ],
+   [
+    "left+up",
+    200
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "L78->L76: up, then diagonally into the west lava field"
+ }
+}

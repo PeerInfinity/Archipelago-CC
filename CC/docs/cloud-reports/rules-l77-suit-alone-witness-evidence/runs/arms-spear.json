@@ -1,0 +1,26 @@
+{
+ "q2-rev-spear": {
+  "level": 77,
+  "tapeFile": "CC/docs/cloud-reports/rules-l77-suit-alone-witness-evidence/tapes/prior/l77-rev-spear.tape.json",
+  "note": "Q2 L76->L78 Spear, no Suit",
+  "grants": []
+ },
+ "q2-fwd-spear": {
+  "level": 77,
+  "tapeFile": "CC/docs/cloud-reports/rules-l77-suit-alone-witness-evidence/tapes/prior/l77-fwd-spear.tape.json",
+  "note": "Q2 L78->L76 Spear, no Suit",
+  "grants": []
+ },
+ "q3-rev-suit-spear": {
+  "level": 77,
+  "tapeFile": "CC/docs/cloud-reports/rules-l77-suit-alone-witness-evidence/tapes/q3-rev-suit-spear.tape.json",
+  "note": "Q3",
+  "grants": []
+ },
+ "q3-fwd-suit-spear": {
+  "level": 77,
+  "tapeFile": "CC/docs/cloud-reports/rules-l77-suit-alone-witness-evidence/tapes/q3-fwd-suit-spear.tape.json",
+  "note": "Q3",
+  "grants": []
+ }
+}

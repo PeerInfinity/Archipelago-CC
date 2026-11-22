@@ -1,0 +1,691 @@
+[
+ {
+  "attempt": "beam/q1-fwd-beam-w24-ext",
+  "level": 77,
+  "trap": "lavatrap@96,192",
+  "trapTile": [
+   6,
+   12
+  ],
+  "frame_attached": 181,
+  "frame_released": 186,
+  "before": {
+   "t": 180,
+   "x": 132.22,
+   "y": 203.27,
+   "tile": [
+    8,
+    12
+   ],
+   "d": 28.41
+  },
+  "attachedAt": {
+   "x": 135.19,
+   "y": 203.99,
+   "tile": [
+    8,
+    12
+   ]
+  },
+  "releasedAt": {
+   "x": 109.43,
+   "y": 199.48,
+   "tile": [
+    6,
+    12
+   ]
+  },
+  "tongue_lengths": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ],
+  "measured_distances": [
+   31.45,
+   28.34,
+   21.23,
+   14.13,
+   9.04,
+   5.45
+  ]
+ },
+ {
+  "attempt": "beam/q1-fwd-beam-w24",
+  "level": 77,
+  "trap": "lavatrap@96,192",
+  "trapTile": [
+   6,
+   12
+  ],
+  "frame_attached": 181,
+  "frame_released": 186,
+  "before": {
+   "t": 180,
+   "x": 132.22,
+   "y": 203.27,
+   "tile": [
+    8,
+    12
+   ],
+   "d": 28.41
+  },
+  "attachedAt": {
+   "x": 135.19,
+   "y": 203.99,
+   "tile": [
+    8,
+    12
+   ]
+  },
+  "releasedAt": {
+   "x": 109.43,
+   "y": 199.48,
+   "tile": [
+    6,
+    12
+   ]
+  },
+  "tongue_lengths": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ],
+  "measured_distances": [
+   31.45,
+   28.34,
+   21.23,
+   14.13,
+   9.04,
+   5.45
+  ]
+ },
+ {
+  "attempt": "beam/q1-rev-beam-w24",
+  "level": 77,
+  "trap": "lavatrap@96,192",
+  "trapTile": [
+   6,
+   12
+  ],
+  "frame_attached": 188,
+  "frame_released": 193,
+  "before": {
+   "t": 187,
+   "x": 72.47,
+   "y": 196.82,
+   "tile": [
+    4,
+    12
+   ],
+   "d": 31.69
+  },
+  "attachedAt": {
+   "x": 72.34,
+   "y": 196.56,
+   "tile": [
+    4,
+    12
+   ]
+  },
+  "releasedAt": {
+   "x": 98.34,
+   "y": 199.88,
+   "tile": [
+    6,
+    12
+   ]
+  },
+  "tongue_lengths": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ],
+  "measured_distances": [
+   31.85,
+   28.88,
+   21.83,
+   14.07,
+   8.44,
+   5.67
+  ]
+ },
+ {
+  "attempt": "cal/cal-5",
+  "level": 77,
+  "trap": "lavatrap@96,192",
+  "trapTile": [
+   6,
+   12
+  ],
+  "frame_attached": 437,
+  "frame_released": 442,
+  "before": {
+   "t": 436,
+   "x": 74.21,
+   "y": 197.35,
+   "tile": [
+    4,
+    12
+   ],
+   "d": 29.9
+  },
+  "attachedAt": {
+   "x": 72.26,
+   "y": 196.85,
+   "tile": [
+    4,
+    12
+   ]
+  },
+  "releasedAt": {
+   "x": 97.06,
+   "y": 200.4,
+   "tile": [
+    6,
+    12
+   ]
+  },
+  "tongue_lengths": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ],
+  "measured_distances": [
+   31.89,
+   28.85,
+   21.88,
+   14.9,
+   9.92,
+   6.95
+  ]
+ },
+ {
+  "attempt": "hand/q1-rev-K-4-12-col6-east",
+  "level": 77,
+  "trap": "lavatrap@96,192",
+  "trapTile": [
+   6,
+   12
+  ],
+  "frame_attached": 437,
+  "frame_released": 442,
+  "before": {
+   "t": 436,
+   "x": 74.21,
+   "y": 197.35,
+   "tile": [
+    4,
+    12
+   ],
+   "d": 29.9
+  },
+  "attachedAt": {
+   "x": 72.26,
+   "y": 196.85,
+   "tile": [
+    4,
+    12
+   ]
+  },
+  "releasedAt": {
+   "x": 97.06,
+   "y": 200.4,
+   "tile": [
+    6,
+    12
+   ]
+  },
+  "tongue_lengths": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ],
+  "measured_distances": [
+   31.89,
+   28.85,
+   21.88,
+   14.9,
+   9.92,
+   6.95
+  ]
+ },
+ {
+  "attempt": "hand/q1-rev-K-4-12-col6-west",
+  "level": 77,
+  "trap": "lavatrap@96,192",
+  "trapTile": [
+   6,
+   12
+  ],
+  "frame_attached": 437,
+  "frame_released": 442,
+  "before": {
+   "t": 436,
+   "x": 74.21,
+   "y": 197.35,
+   "tile": [
+    4,
+    12
+   ],
+   "d": 29.9
+  },
+  "attachedAt": {
+   "x": 72.26,
+   "y": 196.85,
+   "tile": [
+    4,
+    12
+   ]
+  },
+  "releasedAt": {
+   "x": 97.06,
+   "y": 200.4,
+   "tile": [
+    6,
+    12
+   ]
+  },
+  "tongue_lengths": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ],
+  "measured_distances": [
+   31.89,
+   28.85,
+   21.88,
+   14.9,
+   9.92,
+   6.95
+  ]
+ },
+ {
+  "attempt": "hand/q1-rev-K-7-11-col6",
+  "level": 77,
+  "trap": "lavatrap@96,192",
+  "trapTile": [
+   6,
+   12
+  ],
+  "frame_attached": 381,
+  "frame_released": 386,
+  "before": {
+   "t": 380,
+   "x": 122.68,
+   "y": 184.7,
+   "tile": [
+    7,
+    11
+   ],
+   "d": 24.15
+  },
+  "attachedAt": {
+   "x": 128.34,
+   "y": 179.82,
+   "tile": [
+    8,
+    11
+   ]
+  },
+  "releasedAt": {
+   "x": 109.32,
+   "y": 197.01,
+   "tile": [
+    6,
+    12
+   ]
+  },
+  "tongue_lengths": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ],
+  "measured_distances": [
+   31.62,
+   28.65,
+   21.71,
+   14.71,
+   9.38,
+   6.11
+  ]
+ },
+ {
+  "attempt": "px/pxs-d20u1",
+  "level": 77,
+  "trap": "lavatrap@96,192",
+  "trapTile": [
+   6,
+   12
+  ],
+  "frame_attached": 437,
+  "frame_released": 442,
+  "before": {
+   "t": 436,
+   "x": 74.21,
+   "y": 191.05,
+   "tile": [
+    4,
+    11
+   ],
+   "d": 31.1
+  },
+  "attachedAt": {
+   "x": 73.35,
+   "y": 190.8,
+   "tile": [
+    4,
+    11
+   ]
+  },
+  "releasedAt": {
+   "x": 97.3,
+   "y": 197.99,
+   "tile": [
+    6,
+    12
+   ]
+  },
+  "tongue_lengths": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ],
+  "measured_distances": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ]
+ },
+ {
+  "attempt": "pxcont/q1-px-reel-then-beam-w21",
+  "level": 77,
+  "trap": "lavatrap@96,192",
+  "trapTile": [
+   6,
+   12
+  ],
+  "frame_attached": 437,
+  "frame_released": 442,
+  "before": {
+   "t": 436,
+   "x": 74.21,
+   "y": 191.05,
+   "tile": [
+    4,
+    11
+   ],
+   "d": 31.1
+  },
+  "attachedAt": {
+   "x": 73.35,
+   "y": 190.8,
+   "tile": [
+    4,
+    11
+   ]
+  },
+  "releasedAt": {
+   "x": 97.3,
+   "y": 197.99,
+   "tile": [
+    6,
+    12
+   ]
+  },
+  "tongue_lengths": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ],
+  "measured_distances": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ]
+ },
+ {
+  "attempt": "pxcont/q1-px-reel-then-beam-w23",
+  "level": 77,
+  "trap": "lavatrap@96,192",
+  "trapTile": [
+   6,
+   12
+  ],
+  "frame_attached": 437,
+  "frame_released": 442,
+  "before": {
+   "t": 436,
+   "x": 74.21,
+   "y": 191.05,
+   "tile": [
+    4,
+    11
+   ],
+   "d": 31.1
+  },
+  "attachedAt": {
+   "x": 73.35,
+   "y": 190.8,
+   "tile": [
+    4,
+    11
+   ]
+  },
+  "releasedAt": {
+   "x": 97.3,
+   "y": 197.99,
+   "tile": [
+    6,
+    12
+   ]
+  },
+  "tongue_lengths": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ],
+  "measured_distances": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ]
+ },
+ {
+  "attempt": "q3/q3-fwd-suit-shield2",
+  "level": 77,
+  "trap": "lavatrap@96,192",
+  "trapTile": [
+   6,
+   12
+  ],
+  "frame_attached": 181,
+  "frame_released": 186,
+  "before": {
+   "t": 180,
+   "x": 132.22,
+   "y": 203.27,
+   "tile": [
+    8,
+    12
+   ],
+   "d": 28.41
+  },
+  "attachedAt": {
+   "x": 135.19,
+   "y": 203.99,
+   "tile": [
+    8,
+    12
+   ]
+  },
+  "releasedAt": {
+   "x": 109.43,
+   "y": 199.48,
+   "tile": [
+    6,
+    12
+   ]
+  },
+  "tongue_lengths": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ],
+  "measured_distances": [
+   31.45,
+   28.34,
+   21.23,
+   14.13,
+   9.04,
+   5.45
+  ]
+ },
+ {
+  "attempt": "q3/q3-fwd-suit-sword",
+  "level": 77,
+  "trap": "lavatrap@96,192",
+  "trapTile": [
+   6,
+   12
+  ],
+  "frame_attached": 181,
+  "frame_released": 186,
+  "before": {
+   "t": 180,
+   "x": 132.22,
+   "y": 203.27,
+   "tile": [
+    8,
+    12
+   ],
+   "d": 28.41
+  },
+  "attachedAt": {
+   "x": 135.19,
+   "y": 203.99,
+   "tile": [
+    8,
+    12
+   ]
+  },
+  "releasedAt": {
+   "x": 109.43,
+   "y": 199.48,
+   "tile": [
+    6,
+    12
+   ]
+  },
+  "tongue_lengths": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ],
+  "measured_distances": [
+   31.45,
+   28.34,
+   21.23,
+   14.13,
+   9.04,
+   5.45
+  ]
+ },
+ {
+  "attempt": "q3/q3-fwd-suit-wand",
+  "level": 77,
+  "trap": "lavatrap@96,192",
+  "trapTile": [
+   6,
+   12
+  ],
+  "frame_attached": 181,
+  "frame_released": 186,
+  "before": {
+   "t": 180,
+   "x": 132.22,
+   "y": 203.27,
+   "tile": [
+    8,
+    12
+   ],
+   "d": 28.41
+  },
+  "attachedAt": {
+   "x": 135.19,
+   "y": 203.99,
+   "tile": [
+    8,
+    12
+   ]
+  },
+  "releasedAt": {
+   "x": 109.43,
+   "y": 199.48,
+   "tile": [
+    6,
+    12
+   ]
+  },
+  "tongue_lengths": [
+   32,
+   29,
+   22,
+   15,
+   10,
+   7
+  ],
+  "measured_distances": [
+   31.45,
+   28.34,
+   21.23,
+   14.13,
+   9.04,
+   5.45
+  ]
+ }
+]

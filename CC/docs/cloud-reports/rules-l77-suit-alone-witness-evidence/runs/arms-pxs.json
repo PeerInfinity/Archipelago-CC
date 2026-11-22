@@ -1,0 +1,344 @@
+{
+"pxs-d19u1": {
+"level": 77,
+"boot": [
+16,
+32
+],
+"grants": [
+"darksuit"
+],
+"segs": [
+[
+"right",
+55
+],
+[
+"up",
+30
+],
+[
+null,
+120
+],
+[
+"down",
+58
+],
+[
+"right",
+24
+],
+[
+"down",
+74
+],
+[
+"left",
+40
+],
+[
+null,
+10
+],
+[
+"down",
+19
+],
+[
+"up",
+1
+],
+[
+null,
+80
+]
+],
+"note": "stand at the bottom of (4,11), x~74"
+},
+"pxs-d20u1": {
+"level": 77,
+"boot": [
+16,
+32
+],
+"grants": [
+"darksuit"
+],
+"segs": [
+[
+"right",
+55
+],
+[
+"up",
+30
+],
+[
+null,
+120
+],
+[
+"down",
+58
+],
+[
+"right",
+24
+],
+[
+"down",
+74
+],
+[
+"left",
+40
+],
+[
+null,
+10
+],
+[
+"down",
+20
+],
+[
+"up",
+1
+],
+[
+null,
+80
+]
+],
+"note": "stand at the bottom of (4,11), x~74"
+},
+"pxs-d20u2": {
+"level": 77,
+"boot": [
+16,
+32
+],
+"grants": [
+"darksuit"
+],
+"segs": [
+[
+"right",
+55
+],
+[
+"up",
+30
+],
+[
+null,
+120
+],
+[
+"down",
+58
+],
+[
+"right",
+24
+],
+[
+"down",
+74
+],
+[
+"left",
+40
+],
+[
+null,
+10
+],
+[
+"down",
+20
+],
+[
+"up",
+2
+],
+[
+null,
+80
+]
+],
+"note": "stand at the bottom of (4,11), x~74"
+},
+"pxs-d21u2": {
+"level": 77,
+"boot": [
+16,
+32
+],
+"grants": [
+"darksuit"
+],
+"segs": [
+[
+"right",
+55
+],
+[
+"up",
+30
+],
+[
+null,
+120
+],
+[
+"down",
+58
+],
+[
+"right",
+24
+],
+[
+"down",
+74
+],
+[
+"left",
+40
+],
+[
+null,
+10
+],
+[
+"down",
+21
+],
+[
+"up",
+2
+],
+[
+null,
+80
+]
+],
+"note": "stand at the bottom of (4,11), x~74"
+},
+"pxs-d21u3": {
+"level": 77,
+"boot": [
+16,
+32
+],
+"grants": [
+"darksuit"
+],
+"segs": [
+[
+"right",
+55
+],
+[
+"up",
+30
+],
+[
+null,
+120
+],
+[
+"down",
+58
+],
+[
+"right",
+24
+],
+[
+"down",
+74
+],
+[
+"left",
+40
+],
+[
+null,
+10
+],
+[
+"down",
+21
+],
+[
+"up",
+3
+],
+[
+null,
+80
+]
+],
+"note": "stand at the bottom of (4,11), x~74"
+},
+"pxs-d22u3": {
+"level": 77,
+"boot": [
+16,
+32
+],
+"grants": [
+"darksuit"
+],
+"segs": [
+[
+"right",
+55
+],
+[
+"up",
+30
+],
+[
+null,
+120
+],
+[
+"down",
+58
+],
+[
+"right",
+24
+],
+[
+"down",
+74
+],
+[
+"left",
+40
+],
+[
+null,
+10
+],
+[
+"down",
+22
+],
+[
+"up",
+3
+],
+[
+null,
+80
+]
+],
+"note": "stand at the bottom of (4,11), x~74"
+}
+}

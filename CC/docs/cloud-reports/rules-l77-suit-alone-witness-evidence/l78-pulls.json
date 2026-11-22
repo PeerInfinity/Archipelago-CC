@@ -1,0 +1,17 @@
+{
+ "note": "every L78 lava-trap reel seen in this slice (w77.mjs sequence detector: >= 4 ticks on the tongue table [32,29,22,15,10,7] within 1.6 px). attemptsInL78 lists every attempt that spent ticks in L78.",
+ "pulls": [],
+ "attemptsInL78": [
+  "beam/q1-rev-beam-avoid-w24",
+  "hand/q1-fwd-west-lava",
+  "l78/q4-rev-suit-then-L78-K-route-centre-left69",
+  "l78/q4-rev-suit-then-L78-K-route-left64",
+  "l78/q4-rev-suit-then-L78-K-route-left71",
+  "l78/q4-rev-suit-then-L78-K-route-left74-westedge",
+  "q3/q3-rev-suit-shield2",
+  "q3/q3-rev-suit-sword",
+  "q3/q3-rev-suit-wand",
+  "spear/q2-rev-spear",
+  "spear/q3-rev-suit-spear"
+ ]
+}

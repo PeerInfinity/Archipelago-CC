@@ -1,0 +1,1 @@
+{ "cal-5": { "level": 77, "boot": [16, 32], "grants": ["darksuit"], "grantLevels": [78], "segs": [["right", 55], ["up", 30], [null, 120], ["down", 58], ["right", 24], ["down", 74], ["left", 40], [null,10], ["down", 200], [null, 30]], "note": "cal" } }

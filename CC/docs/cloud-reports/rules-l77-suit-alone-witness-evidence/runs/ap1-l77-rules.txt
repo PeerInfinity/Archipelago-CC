@@ -1,0 +1,10 @@
+level_77__r2c0 -> level_77__r12c6   ((Suit & (Sword | Spear | Wand | Shield×2)) | ((Sword | Spear | Wand | Shield×2) & (Suit | Spear)))
+level_77__r2c0 -> level_77__r15c6   ((Suit & (Sword | Spear | Wand | Shield×2)) | ((Sword | Spear | Wand | Shield×2) & (Suit | Spear)))
+level_77__r2c0 -> level_77__r12c6   (Suit & (Sword | Spear | Wand | Shield×2))
+level_77__r2c0 -> level_76   True_""
+level_77__r12c6 -> level_77__r15c6   ((Suit & (Sword | Spear | Wand | Shield×2)) | Suit | Spear)
+level_77__r12c6 -> level_77__r2c0   ((Suit & (Sword | Spear | Wand | Shield×2)) | ((Sword | Spear | Wand | Shield×2) & (Suit | Spear)))
+level_77__r15c6 -> level_77__r12c6   ((Suit & (Sword | Spear | Wand | Shield×2)) | Suit | Spear)
+level_77__r15c6 -> level_77__r12c6   Suit
+level_77__r15c6 -> level_77__r2c0   ((Suit & (Sword | Spear | Wand | Shield×2)) | ((Sword | Spear | Wand | Shield×2) & (Suit | Spear)))
+level_77__r15c6 -> level_78__r0c16   True_""
