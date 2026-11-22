@@ -164,4 +164,25 @@ Every other row's conditions are identical:
 
 Gitlinks: 0. `git diff origin/loops-instant-oom --raw` has no `160000` line.
 
-Still to come: the merge of the landed main (train 188), once, and the gates again at that final tip.
+## The merge of main, and CI at the final code tip `ad6958deb0`
+
+The landed main `c1b250e638` (train 188: LOOPS-I1) was merged ONCE into the branch as `ad6958deb0`. The merge was clean.
+`git diff c1b250e638..ad6958deb0` touches the same 7 files as before, with no `160000` line (gitlinks 0).
+
+The local gates at `ad6958deb0`:
+- bounded vitest (`loops`, `gameState`, `mazeRoom`, `resourceChannels`, `playbackBot`, `actionNodes`): 159 files,
+  3810 tests, all passed;
+- `check-loop-costs-one-model.mjs`: ALL PASS (5 documents);
+- the engine closure: md5 `9dc4d84abc6e91bd324173a3c353854a`, the same as at base, and closure ∩ diff = ∅;
+- no preset moved.
+
+| Gate | Run | Result |
+|---|---|---|
+| ut (`unittests`, push) | 44979364933 | success |
+| JSUT (push) | 44979364937 | success. `ci-vitest-summary`: suite vitest (unfiltered) 1405/29606 (29606 passed, 0 skipped, 0 failed); slow battery 36/438 |
+| `train_only` (dispatch) | 44979365484 | success |
+| TT (dispatch) | 44979367254 | success on attempt 1, every job. HEADROOM OK: fast 313.7 s / 600 (52 %); fast bundled 330.9 s (55 %); seedling-js 231.3 s (39 %); seedling-wasm 226.6 s (38 %); apworld 212.2 s (35 %); seedling-js-solver 202.9 s (34 %); playback-bot 108.4 s (18 %) |
+| `test-substrates-manual.yml -f batch=all` | 44979369610 | success: all 10 batches (bot-walks, noiz2sa, cloudberry, tutorials, tutorials-procgen, tutorials-procgen-loops, tutorials-tracker, tutorials-seedling, tutorials-seedling-whole-game, feature-checks) |
+
+The type check and "Analyze modified files" runs were also green on the push (44979364939, 44979364913).
+This report's own commit only edits the report. JSUT is dispatched at it, and its id is in the report-back message.
