@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "_comment": "A TEST FIXTURE (packStructure.test.js): one terrain entry per passability value built (PASS-1, PASS-2, PASS-3).",
+  "_comment": "A TEST FIXTURE (packStructure.test.js): one terrain entry per passability value built (PASS-1, PASS-2, PASS-3); GEN-1 opts the rug and the pillar in to the generator (`generate`).",
   "provenance": {
     "sources": { "pass1": { "type": "authored", "by": "content sets PASS-1's parser pins" } },
     "default": "pass1"
   },
   "entries": {
-    "ground:terrain/rug": { "kind": "terrain", "pass": "walkable" },
-    "ground:terrain/pillar": { "kind": "terrain", "pass": "blocked" },
-    "ground:terrain/pool": { "kind": "terrain", "pass": "needs", "needs": "swim" },
+    "ground:terrain/rug": { "kind": "terrain", "pass": "walkable", "generate": true },
+    "ground:terrain/pillar": { "kind": "terrain", "pass": "blocked", "generate": true },
+    "ground:terrain/pool": { "kind": "terrain", "pass": "needs", "needs": "swim", "generate": false },
     "ground:terrain/ledge": { "kind": "terrain", "pass": "one-way", "dirs": ["S"] }
   }
 }
