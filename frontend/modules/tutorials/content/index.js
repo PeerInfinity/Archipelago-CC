@@ -19,6 +19,7 @@ import {
     TRACKER_DUNGEONS, TRACKER_EDITOR, TRACKER_HELPERS, TRACKER_PATH_ANALYZER, TRACKER_REGION_GRAPH,
     TRACKER_SPOILER_CHECKLIST, TRACKER_TIMER,
 } from './tracker/panels.js';
+import { TRACKER_REGION_MAP } from './tracker/regionMap.js';
 import { PROCGEN_SPHERE_GROWTH } from './procgen/sphereGrowth.js';
 import { PROCGEN_SHUFFLED_SPIRAL } from './procgen/shuffledSpiral.js';
 import { PROCGEN_GRID_GROWTH } from './procgen/gridGrowth.js';
@@ -70,6 +71,7 @@ export const TUTORIALS = Object.freeze([
     entry('tracker/trackAGame.js', TRACKER_TRACK_A_GAME),
     entry('tracker/panels.js', TRACKER_PATH_ANALYZER),
     entry('tracker/panels.js', TRACKER_REGION_GRAPH),
+    entry('tracker/regionMap.js', TRACKER_REGION_MAP),
     entry('tracker/panels.js', TRACKER_DUNGEONS),
     entry('tracker/panels.js', TRACKER_HELPERS),
     entry('tracker/panels.js', TRACKER_SPOILER_CHECKLIST),

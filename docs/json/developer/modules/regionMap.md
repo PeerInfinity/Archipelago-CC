@@ -19,6 +19,7 @@ The as-built report is `CC/docs/region-map/step3b-panel.md`.
 | `regionMapOverlay.js` | **Pure.** The location squares (centred on the tile, never under `minSquarePx`), the colour rule (`squareColorKey`), generic square places, and square hit-testing. |
 | `regionMapClickActions.js` | What a click runs (CA-S3): `loadRegionMapClickActions` (the first-run copy), `saveRegionMapClickActions`, the schema entry, `runRegionMapClick` (the selection, the generic event, then `runClickActions`), `withClickHandles`, `regionOfCell`, the originators and event names. |
 | `regionMapUI.js` | The panel: its DOM, the settings, the "On click" strip, the camera, pointer input and painting. |
+| `regionMapPicker.js` | The "Go to" picker (region-map tutorial, G1): a folded `details.region-map-pick` in the toolbar with a region box and a location box. Choosing calls the panel's `clickCell` (the pointer-up path), then `centreOnRegion`. Lists only drawn cells and their visible locations (`pickableCells`, `pickableLocations`). The Map's twin of `regionGraph/nodePicker.js`. |
 
 ## Two rates
 
@@ -50,12 +51,14 @@ The rows for these hooks are in `docs/json/developer/procgen/substrate-registry.
 
 ## Clicks (the click-action registry)
 
-A click (a pointer down and up with no drag) on a visible cell selects it, then `clickAt(frame, square)` runs the panel's click actions. A location square under the pointer (`squareAt`) makes it a **location** click; anywhere else in the cell is a **region** click on `regionOfCell(key, members)`.
+A click (a pointer down and up with no drag) on a visible cell runs `clickCell(frame, square)`: it selects the cell, then `clickAt(frame, square)` runs the panel's click actions. The "Go to" picker (`regionMapPicker.js`) calls the same `clickCell`, so a choice there IS a click (pinned by `region-map-go-to-equals-canvas-click`). A location square under the pointer (`squareAt`) makes it a **location** click; anywhere else in the cell is a **region** click on `regionOfCell(key, members)`.
 
 - **The registry.** `runRegionMapClick` calls `regionView/clickActions.js` `runClickActions('regionMap', target, ctx, settings, h)`, in the R8 order: path, then checks, then panel actions. The settings are the panel's own `clickActions`, as held in memory when the click lands. The discovery settings are read at click time (`readDiscoverySettings`); they gate the checks (`disableLocationCheckUI`).
 - **The handles** (`_handles()` + `withClickHandles`): this module's dispatcher and event bus (registered in `index.js`), the Map's originators (`regionMapCheck`, `regionMapBulkCheck`), and the Regions panel's *Show All Regions* turned off before a path edit runs.
 - **Sources.** A path move goes out with `source: 'regionView-path-regionMap'` (`pathSourceFor`), which `loops/loopModeExemptions.js` classifies as planning. Step 4's `regionMap-*` sources are no longer sent; the prefix stays classified for older callers.
 - **The status overlay** shows the route's text (`clickActions.clickStatusOf`) for 2 s.
+- **DOM readouts for a tutorial step** (which reads the DOM, never the instance): `canvas.dataset.squares` is the number of squares the last paint drew; the Region Graph's root carries `data-centred-on` / `data-centred-at` after `regionGraph.centre` centres it (`regionGraph/regionGraphCentreAction.js`), written when the camera actually moves.
+- **A centre asked of a hidden panel** (G4: its tab is not the active one, so the canvas is 0×0) is kept and applied when it is shown: `centreOnRegion` keeps `_pendingCentre` and `_resize` applies it once the viewport has a size; on the Graph, `centreGraphOn` keeps `pendingCentreOn` and `onPanelShow` centres on it in place of its `fit(30)`. The last one asked wins; a rebuild that no longer draws it drops it; neither action ever shows a tab.
 - **The strip** (`regionView/clickActionsUI.js` `mountClickActionsStrip({ panelId: 'regionMap', … })`) is the first row of the panel, above the toolbar. Its save writes `moduleSettings.regionMap.clickActions` only. A write of that key reloads the click actions and re-renders the strip; it re-reads no view setting, repaints nothing and rebuilds nothing.
 
 **Settings.** `moduleSettings.regionMap.clickActions` has the same shape as the Region Graph's (`regionView/README.md` § Click actions). Its schema default is `defaultClickActions()`. It is in the schema but not in `REGION_MAP_SETTING_DEFAULTS`: the view-settings loop does not read it.
@@ -91,8 +94,9 @@ They are published before any action, and also when the ⏸ master switch is off
   - `regionMap/regionMap.test.js` covers frames, the cull, the camera, squares and colours, the settings, and the model over three presets. Every count is derived from the preset itself.
   - `regionMap/regionMapClickActions.test.js` covers the first-run copy (all three sources, idempotent, a stored Map value kept), independence, the events and the schema.
   - `regionMap/regionMapClicks.equivalence.test.js` measures the adopted click path against step 4's reader, kept verbatim as `legacyRegionMapClicks.testkit.js`.
+  - `regionMap/regionMapPicker.test.js` covers the Go-to picker's lists (drawn cells, visible locations) and that a choice calls `clickCell` with the cell's frame (and `{ location }` for a square), then centres.
 - **In-app** (`tests/testCases/regionMapTests.js`):
-  - Category **Region Map** (fast batch): `region-map-classic-world`, `region-map-clicks-generated`, `region-map-click-default`, `region-map-click-master-off`, `region-map-click-location-check` and `region-map-click-settings-independent`.
+  - Category **Region Map** (fast batch): `region-map-classic-world`, `region-map-clicks-generated`, `region-map-click-default`, `region-map-click-master-off`, `region-map-click-location-check`, `region-map-go-to-equals-canvas-click` and `region-map-click-settings-independent`.
   - Category **Region Map: Seedling** (playback-bot batch, on push): `region-map-seedling-paints`, `region-map-follow-player`, `region-map-discovery`, `region-map-clicks-seedling`, `region-map-clicks-loop-mode` and `region-map-custom-set-atlas`.
 
   The rows read `getDebugState()`, never pixels.

@@ -17,6 +17,7 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 import { defaultClickActions } from '../regionView/clickActions.js';
 import { mountClickActionsStrip } from '../regionView/clickActionsUI.js';
 import { CLICK_ACTIONS_KEY, loadRegionGraphClickActions, saveRegionGraphClickActions } from './clickActionsSettings.js';
+import { applyPendingCentre } from './regionGraphCentreAction.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -1101,7 +1102,8 @@ export class RegionGraphUI {
     logger.debug('Panel shown', { hasCytoscape: !!this.cy });
     if (this.cy) {
       this.cy.resize();
-      this.cy.fit(30);
+      // ⛓ G4: a "Centre the Region Graph on it" that landed while the tab was hidden is applied now, in place of the fit.
+      if (!applyPendingCentre(this)) this.cy.fit(30);
     } else {
       logger.debug('Panel shown but no Cytoscape instance, checking if libraries are loaded...');
       logger.verbose('Library check', { cytoscape: !!window.cytoscape, coseBase: !!window.coseBase, cytoscapeFcose: !!window.cytoscapeFcose });

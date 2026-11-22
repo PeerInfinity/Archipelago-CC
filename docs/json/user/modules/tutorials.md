@@ -93,6 +93,7 @@ Written, but not working all the way through yet. The panel lists these in a col
 - **APCalc: the calculator game** — Play APCalc: a calculator whose number and operation keys are the items, and whose results are the locations. `?tutorial=apcalc-demo`
 - **Tracking: why can't I get there?** — Ask the Path Analyzer how to reach a region, and which items each way needs. `?tutorial=tracker-path-analyzer`
 - **Tracking: the Region Graph** — Track a game on the Region Graph: regions coloured by reachability, clicked to move, check and show. `?tutorial=tracker-region-graph`
+- **Tracking: the Region Map** — See a Seedling world as its real map: levels in groups, locations as squares on their tiles, and clicks that move and check. `?tutorial=tracker-region-map`
 - **Tracking: dungeons** — See a dungeon's regions and boss in the Dungeons panel. `?tutorial=tracker-dungeons`
 - **Tracking: helpers** — Watch a game's helper rules — "can lift rocks" and the like — turn true as you collect items. `?tutorial=tracker-helpers`
 - **Tracking: the Spoiler Checklist** — Follow a seed's spoiler sphere by sphere, and see which item each location holds. `?tutorial=tracker-spoiler-checklist`
