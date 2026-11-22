@@ -72,6 +72,16 @@ export const INPUTS = [INPUT_N, INPUT_S, INPUT_E, INPUT_W];
 // world stay byte-identical (the blocks precedent, ⚖ arc 2 ruling 5).
 export const TURN_PREFIX = 'TURN_';
 export const USE_PREFIX = 'USE:';
+// ⛓⛓ PULL PASSES — THE HYBRID (slice tile-pixel-pull-disc, ⚖ Robert 2026-11-21 "Hybrid + direction check"). A move into
+// a PARTIAL pull cell across an edge the producer names in the trap's `passes` (the game has an unpulled path that way)
+// is NOT reeled: the player stands there with the trap ARMED (`state.pullArmed`). Any other move into the disc is reeled
+// as before (an ALWAYS cell always is). A WAIT while ARMED in a cell of that trap's disc is reeled (`LavaTrap.as:81-97`
+// re-tests the launch every frame; standing still lets the tongue come). Only on a world whose pulls carry `passes`
+// (`hasPullPasses`), where WAIT also becomes a searched input (`worldInputs`).
+/** True iff a pull of this world names a passable step (the switch for `state.pullArmed` and the searched WAIT). */
+export function hasPullPasses(world) {
+    return !!world?.pulls?.some((p) => p.passes?.size > 0);
+}
 /** The default facing of a fresh state on an item-action world. */
 export const DEFAULT_FACING = INPUT_S;
 /** The one primitive an `action_lib` entry may name in v1. */
@@ -115,9 +125,12 @@ export function hasItemActions(world) {
  * actions; on any other world this IS `INPUTS`.
  */
 export function worldInputs(world) {
-    if (!hasItemActions(world)) return INPUTS;
+    // ⛓ PULL PASSES: on a world with passes a WAIT is no longer a self-loop (an armed trap reels it), so the searches take it
+    const waits = hasPullPasses(world) ? [INPUT_WAIT] : [];
+    if (!hasItemActions(world)) return waits.length ? [...INPUTS, ...waits] : INPUTS;
     return [
         ...INPUTS,
+        ...waits,
         ...INPUTS.map(turnInput),
         ...Object.keys(world.actionLib).sort().map(useInput),
     ];
@@ -938,7 +951,33 @@ export function checkPulls(pulls, world, who) {
             }
             yields.add(stepKey(from, to));
         }
-        return { x: p.x, y: p.y, gate: p.gate, disc, yields };
+        // ⛓ PULL PASSES: `passes` [{from, to}] — the steps into a PARTIAL cell of the disc across an edge with an unpulled
+        // crossing (the producer derives them per edge, `pullCrossing`); `to` in the disc, one move.
+        if (p.passes !== undefined && !Array.isArray(p.passes)) throw bad(`trap at (${p.x},${p.y}) "passes" must be a list`);
+        const passes = new Set();
+        for (const { from, to } of p.passes ?? []) {
+            if (!inGrid(from) || !inGrid(to)) throw bad(`trap at (${p.x},${p.y}) passes ${JSON.stringify({ from, to })}, not cells of the grid`);
+            if (!disc.has(posKey(to.x, to.y)) || (to.x === p.x && to.y === p.y)) throw bad(`trap at (${p.x},${p.y}) passes a step into (${to.x},${to.y}), which is not a cell of its disc`);
+            if (Math.abs(from.x - to.x) + Math.abs(from.y - to.y) !== 1) {
+                throw bad(`trap at (${p.x},${p.y}) passes a step from (${from.x},${from.y}) into (${to.x},${to.y}), which is not one move`);
+            }
+            passes.add(stepKey(from, to));
+        }
+        // ⛓ PULL PASSES: `range` [{x, y}] — the cells with SOME standable origin within the trap's range, line or no line
+        // (a superset of the disc). An ARMED trap stays armed on every one of them: the game clears `wait` only past the
+        // range (`LavaTrap.as:99-102`), and a cell's part can be out of it while the rest is in, which a cell walk cannot
+        // see, so the walk disarms only where no origin is in range at all (the conservative reading). Absent = the disc.
+        if (p.range !== undefined && !Array.isArray(p.range)) throw bad(`trap at (${p.x},${p.y}) "range" must be a list`);
+        let range = null;
+        if (p.range !== undefined) {
+            range = new Set([at]);
+            for (const c of p.range) {
+                if (!inGrid(c)) throw bad(`trap at (${p.x},${p.y}) ranges over ${JSON.stringify(c)}, not a cell of the grid`);
+                range.add(posKey(c.x, c.y));
+            }
+            for (const key of disc) if (!range.has(key)) throw bad(`trap at (${p.x},${p.y}) grabs from ${key}, which its range does not hold`);
+        }
+        return { x: p.x, y: p.y, gate: p.gate, disc, yields, passes, range };
     });
     for (const a of out) {
         for (const b of out) {
@@ -972,28 +1011,50 @@ export function checkPulls(pulls, world, who) {
  * The GEOMETRY of a pull, shared by both steps: the trap whose disc a move from `from` to `to` enters from outside it
  * (`{x, y, gate}`), or null (see `checkPulls`; at most one, as the load refuses an ambiguous step).
  */
-export function pullCatching(world, from, to) {
+export function pullCatching(world, from, to, armed = null) {
     if (!world.pulls) return null;
-    return pullsTaking(world.pulls, from, to)[0] ?? null;
+    return pullsTaking(world.pulls, from, to, armed)[0] ?? null;
 }
 
 /** A step's key in a pull's `yields`. */
 const stepKey = (from, to) => `${posKey(from.x, from.y)}>${posKey(to.x, to.y)}`;
 
 /** The traps whose disc a move from `from` to `to` enters from outside it, less those that yield the step. */
-function pullsTaking(pulls, from, to) {
+function pullsTaking(pulls, from, to, armed = null) {
     const t = posKey(to.x, to.y);
     const f = posKey(from.x, from.y);
     const step = stepKey(from, to);
-    return pulls.filter((p) => p.disc.has(t) && !p.disc.has(f) && !p.yields?.has(step));
+    // ⛓ PULL PASSES: a trap that is ARMED (passed, never reeled since) takes a step into its disc as if from outside: the
+    // game re-tests every frame (`LavaTrap.as:81-97`) and only a reel sets `wait` again.
+    return pulls.filter((p) => p.disc.has(t) && (!p.disc.has(f) || !!armed?.includes(posKey(p.x, p.y))) && !p.yields?.has(step));
+}
+
+/** May the step `from` → `to` cross into the catching trap `p`'s disc unpulled (a pass, `passes`)? */
+export function pullPasses(p, from, to) {
+    return !!p?.passes?.has(stepKey(from, to));
+}
+
+/**
+ * The armed set after the player lands on `to`: a trap stays armed while `to` lies in its `range` (else its disc), it
+ * leaves on `drop` (its reel: `LavaTrap.as:68` sets `wait`), and `add` joins it (a pass). SORTED posKeys.
+ */
+export function armedAfter(world, armed, to, add = null, drop = null) {
+    const k = posKey(to.x, to.y);
+    const keep = new Set(armed.filter((t) => {
+        if (t === drop) return false;
+        const p = world.pulls.find((q) => posKey(q.x, q.y) === t);
+        return !!p && (p.range ?? p.disc).has(k);
+    }));
+    if (add !== null) keep.add(add);
+    return [...keep].sort();
 }
 
 /**
  * The trap cell a move from `from` to `to` is pulled onto, holding `inv` — or null: the trap `pullCatching` names, its
  * gate cleared NATIVELY. The scripted step asks the same question of the `pulled` helper (`tileStep.js`).
  */
-export function pullAfterMove(world, from, to, inv, clearanceOpts) {
-    const p = pullCatching(world, from, to);
+export function pullAfterMove(world, from, to, inv, clearanceOpts, armed = null) {
+    const p = pullCatching(world, from, to, armed);
     if (p === null) return null;
     return isObstacleCleared(p.gate, inv, world.obstacleLib, clearanceOpts) ? { x: p.x, y: p.y } : null;
 }
@@ -1435,6 +1496,11 @@ export function serializeMazeEntities(world) {
                 yields: [...p.yields].map((k) => k.split('>').map(unposKey)).map(([from, to]) => ({ from, to }))
                     .sort((a, b) => rowMajor(a.to, b.to) || rowMajor(a.from, b.from)),
             } : {}),
+            ...(p.passes?.size > 0 ? {
+                passes: [...p.passes].map((k) => k.split('>').map(unposKey)).map(([from, to]) => ({ from, to }))
+                    .sort((a, b) => rowMajor(a.to, b.to) || rowMajor(a.from, b.from)),
+            } : {}),
+            ...(p.range ? { range: [...p.range].filter((k) => k !== posKey(p.x, p.y)).map(unposKey).sort(rowMajor) } : {}),
         }));
     }
     if (world.pulsers?.length) {
@@ -1559,6 +1625,10 @@ export function createState(world) {
     // ⛓ LATCHING BUTTONS — the same "absence is the switch" rule: `latched` (a SORTED array of the posKeys of the
     // latching buttons pressed THIS VISIT) exists only on a world that places one.
     if (hasLatches(world)) state.latched = [];
+    // ⛓ PULL PASSES: `pullArmed` (SORTED posKeys of the traps that are ARMED: a pass entered their disc and no reel or range
+    // exit has followed) exists only on a world with passes. A fresh state holds none: a trap's `wait` starts TRUE
+    // (`LavaTrap.as:26`), so an arrival inside a disc is not reeled until the player has left the range and come back.
+    if (hasPullPasses(world)) state.pullArmed = [];
     // ⛓ PULSERS (designer review, session tile-mechanisms-m1): the START is settled too — a world entered with a token
     // already held and a pulsed block on its reach is shoved before the first step, so a WAIT from the start is a
     // self-loop like every other (the searches never branch on one). Asked with the fresh state's own (empty) carried
@@ -1597,6 +1667,7 @@ function cloneState(state) {
     if (state.facing !== undefined) next.facing = state.facing;
     if (state.broken !== undefined) next.broken = state.broken.slice();
     if (state.latched !== undefined) next.latched = state.latched.slice();
+    if (state.pullArmed !== undefined) next.pullArmed = state.pullArmed.slice();
     return next;
 }
 
@@ -2062,6 +2133,22 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
     return next;
 }
 
+/** The GEOMETRY of a WAIT's reel, shared by both steps: the ARMED traps whose disc holds the player's cell (gate unasked). */
+export function pullArmedAt(world, state) {
+    if (!world.pulls || !state.pullArmed?.length) return [];
+    const here = posKey(state.player_pos.x, state.player_pos.y);
+    return world.pulls.filter((p) => state.pullArmed.includes(posKey(p.x, p.y)) && p.disc.has(here) && posKey(p.x, p.y) !== here);
+}
+
+/** `pullArmedAt`, less the traps whose gate the player does not clear (natively): a WAIT there is reeled. */
+function armedWaitTakers(world, state, inventoryOverride, clearanceOpts) {
+    const armed = pullArmedAt(world, state);
+    if (armed.length === 0) return [];
+    const inv = effectiveInventory(world, inventoryOverride !== undefined ? inventoryOverride : state.inventory,
+        state.player_pos, state.blocks, state.broken, state.latched);
+    return armed.filter((p) => isObstacleCleared(p.gate, inv, world.obstacleLib, clearanceOpts));
+}
+
 /** `step` before the pulse that ends it (`settlePulses`): every input's own effect and guards. */
 function stepCore(world, state, input, inventoryOverride, clearanceOpts) {
     // A WAIT is a turn and nothing else: no arrival, so no pickup, no push,
@@ -2070,6 +2157,18 @@ function stepCore(world, state, input, inventoryOverride, clearanceOpts) {
     if (input === INPUT_WAIT) {
         const waited = cloneState(state);
         waited.turn += 1;
+        // ⛓ PULL PASSES: a WAIT while ARMED in a cell of that trap's disc is reeled onto the trap (and picks up what lies
+        // there), holding its gate; two armed traps over the cell is refused (which tongue lands first is not settled).
+        const takers = armedWaitTakers(world, state, inventoryOverride, clearanceOpts);
+        if (takers.length > 1) return null;
+        if (takers.length === 1) {
+            const p = takers[0];
+            waited.player_pos.x = p.x;
+            waited.player_pos.y = p.y;
+            const itemId = inventoryOverride === undefined ? getItem(world, p.x, p.y) : null;
+            if (itemId) holdInInventory(waited.inventory, itemId);
+            waited.pullArmed = armedAfter(world, state.pullArmed, waited.player_pos, null, posKey(p.x, p.y));
+        }
         return waited;
     }
     if (typeof input === 'string' && input.startsWith(TURN_PREFIX)) {
@@ -2155,15 +2254,27 @@ function stepCore(world, state, input, inventoryOverride, clearanceOpts) {
     // ⛓ PULLS — after the move lands (a pickup there included): into a trap's disc from outside it, holding its gate,
     // the player is reeled onto the trap's cell (`pullAfterMove`) and picks up what lies there.
     if (world.pulls) {
+        const landed = { x: next.player_pos.x, y: next.player_pos.y };
         const pulled = pullAfterMove(world, state.player_pos, next.player_pos,
             effectiveInventory(world, inventoryOverride !== undefined ? inventoryOverride : next.inventory, next.player_pos, next.blocks, next.broken, next.latched),
-            clearanceOpts);
+            clearanceOpts, state.pullArmed);
+        // ⛓ PULL PASSES: the move that would be reeled, across a crossing the producer names, is NOT reeled — the player
+        // stands in the cell and the trap is ARMED (a WAIT there, or the next step into its disc, is reeled).
+        if (pulled !== null && next.pullArmed !== undefined) {
+            const p = pullCatching(world, state.player_pos, landed, state.pullArmed);
+            if (pullPasses(p, state.player_pos, landed)) {
+                next.pullArmed = armedAfter(world, state.pullArmed, landed, posKey(p.x, p.y));
+                return next;
+            }
+        }
         if (pulled !== null) {
             next.player_pos.x = pulled.x;
             next.player_pos.y = pulled.y;
             const itemId = inventoryOverride === undefined ? getItem(world, pulled.x, pulled.y) : null;
             if (itemId) holdInInventory(next.inventory, itemId);
         }
+        // a reel sets the trap's `wait` (`LavaTrap.as:68`): it leaves the armed set; leaving a disc leaves it too
+        if (next.pullArmed !== undefined) next.pullArmed = armedAfter(world, state.pullArmed, next.player_pos, null, pulled === null ? null : posKey(pulled.x, pulled.y));
     }
     return next;
 }
@@ -2269,8 +2380,14 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
 /** `whyBlocked` before the pulse: every guard of `stepCore`, in its order. */
 function whyRefused(world, state, input, inventoryOverride, clearanceOpts) {
     if (!world || !state) return 'no world or state loaded';
-    // ⛓ S2a: a WAIT is always legal — the engine owns "a turn passes".
-    if (input === INPUT_WAIT) return null;
+    // ⛓ S2a: a WAIT is always legal — the engine owns "a turn passes" — but where two ARMED traps' discs hold the cell
+    // (⛓ PULL PASSES: which reels first is not settled).
+    if (input === INPUT_WAIT) {
+        const takers = armedWaitTakers(world, state, inventoryOverride, clearanceOpts);
+        return takers.length > 1
+            ? `waiting at (${state.player_pos.x},${state.player_pos.y}) inside the discs of armed traps ${takers.map((p) => `(${p.x},${p.y})`).join(' and ')} — which reels first is not settled`
+            : null;
+    }
     const isTurn = typeof input === 'string' && input.startsWith(TURN_PREFIX);
     const isUse = typeof input === 'string' && input.startsWith(USE_PREFIX);
     if ((isTurn || isUse) && state.facing === undefined) {
@@ -2521,7 +2638,9 @@ export function mazeVisitedKey(state) {
         ? withBlocks
         : `${withBlocks}|f${state.facing}|${state.broken.join(';')}`;
     // ⛓ LATCHING BUTTONS append `|l<latched>` ONLY on a world that places one (`state.latched`).
-    return state.latched === undefined ? withActions : `${withActions}|l${state.latched.join(';')}`;
+    const withLatches = state.latched === undefined ? withActions : `${withActions}|l${state.latched.join(';')}`;
+    // ⛓ PULL PASSES append `|a<armed>` ONLY on a world with passes (`state.pullArmed`).
+    return state.pullArmed === undefined ? withLatches : `${withLatches}|a${state.pullArmed.join(';')}`;
 }
 
 export const bfsSolver = makeBfsSolver({

@@ -43,7 +43,7 @@
 import { evaluateRule } from '../../shared/ruleEngine/index.js';
 import {
     INPUT_WAIT, TURN_PREFIX, USE_PREFIX, getObstacle, getItem, isFloor, posKey, copyInventory, holdInInventory, actionItems, actionUsable,
-    sinksBlock, footprintCells, blockStrikeCells, stanceStrikes, ropeLatch, pullCatching,
+    sinksBlock, footprintCells, blockStrikeCells, stanceStrikes, ropeLatch, pullCatching, pullPasses, armedAfter, pullArmedAt,
     blockEntryAt, blockKindAt, moveBlockIn, strikeDelta, awayDelta, sidedOpeners, openerEvents,
 } from '../mazeRoomEngine.js';
 
@@ -351,10 +351,26 @@ function scriptedPulse(world, next, helpers, tileLib) {
 }
 
 function scriptedStepCore(world, state, input, helpers, tileLib, { latch = true } = {}) {
-    if (input === INPUT_WAIT) {
-        return { next: { ...cloneState(state), turn: state.turn + 1 }, refused: null };
-    }
     const noInput = { next: null, refused: { primitive: 'input', cell: null, helper: null } };
+    if (input === INPUT_WAIT) {
+        const waited = { ...cloneState(state), turn: state.turn + 1 };
+        // ⛓ PULL PASSES (the native WAIT): ARMED in a cell of a trap's disc, its `pulled` helper answering for the gate, the
+        // WAIT is reeled onto the trap; two armed traps over the cell is refused, as natively.
+        const armed = pullArmedAt(world, state);
+        if (armed.length === 0) return { next: waited, refused: null };
+        const ctx = makeContext(helpers, scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken, state.latched));
+        const here = { x: state.player_pos.x, y: state.player_pos.y };
+        const takers = armed.filter((p) => callHelper(ctx, tileLib.pull.fires, here, { ...tileAt(world, here.x, here.y, state.blocks, state.player_pos, state.broken, null, null), pull: clearSetOf(world, p.gate) }));
+        if (takers.length > 1) return noInput;
+        if (takers.length === 1) {
+            const trap = takers[0];
+            waited.player_pos = { x: trap.x, y: trap.y };
+            const there = latch ? getItem(world, trap.x, trap.y) : null;
+            if (there) holdInInventory(waited.inventory, there);
+            waited.pullArmed = armedAfter(world, state.pullArmed, waited.player_pos, null, posKey(trap.x, trap.y));
+        }
+        return { next: waited, refused: null };
+    }
     if (typeof input === 'string' && input.startsWith(TURN_PREFIX)) {
         const dir = input.slice(TURN_PREFIX.length);
         if (state.facing === undefined || !DELTAS[dir]) return noInput;
@@ -438,6 +454,9 @@ function scriptedStepCore(world, state, input, helpers, tileLib, { latch = true 
     const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken, state.latched);
     const ctx = makeContext(helpers, inv);
     const target = tileAt(world, nx, ny, state.blocks, state.player_pos, state.broken, null, input);
+    // the armed traps take a step inside their disc too (the native `pullsTaking`)
+    const catchingArmed = state.pullArmed === undefined ? null : pullCatching(world, state.player_pos, { x: nx, y: ny }, state.pullArmed);
+    if (state.pullArmed !== undefined) target.pull = catchingArmed === null ? null : clearSetOf(world, catchingArmed.gate);
     if (!callHelper(ctx, tileLib.cell.enter, { x: nx, y: ny }, target)) {
         return { next: null, refused: { primitive: 'enter', cell: { x: nx, y: ny }, helper: tileLib.cell.enter } };
     }
@@ -470,15 +489,23 @@ function scriptedStepCore(world, state, input, helpers, tileLib, { latch = true 
     // ⛓ PULLS (session tile-primitives-sphere-order-9): the entered tile's `pull` fact (the native geometry) asked of the
     // `pulled` helper, against the effective inventory after the move landed (a pickup there included) — the native
     // `pullAfterMove`'s clearance, answered by the tile definition. Pulled, the step ends on the trap's cell.
+    let reeled = null;
     if (target.pull !== null) {
         const after = makeContext(helpers, scriptedEffectiveInventory(world, next.inventory, next.player_pos, next.blocks, tileLib, helpers, next.broken, next.latched));
         if (callHelper(after, tileLib.pull.fires, { x: nx, y: ny }, target)) {
-            const trap = pullCatching(world, state.player_pos, next.player_pos);
+            const trap = pullCatching(world, state.player_pos, next.player_pos, state.pullArmed ?? null);
+            // ⛓ PULL PASSES (the native move): across a crossing the producer names, not reeled — the trap is armed
+            if (next.pullArmed !== undefined && pullPasses(trap, state.player_pos, next.player_pos)) {
+                next.pullArmed = armedAfter(world, state.pullArmed, next.player_pos, posKey(trap.x, trap.y));
+                return { next, refused: null };
+            }
+            reeled = trap;
             next.player_pos = { x: trap.x, y: trap.y };
             const there = latch ? getItem(world, trap.x, trap.y) : null;
             if (there) holdInInventory(next.inventory, there);
         }
     }
+    if (next.pullArmed !== undefined) next.pullArmed = armedAfter(world, state.pullArmed, next.player_pos, null, reeled === null ? null : posKey(reeled.x, reeled.y));
     return { next, refused: null };
 }
 
@@ -493,5 +520,6 @@ function cloneState(state) {
     if (state.facing !== undefined) next.facing = state.facing;
     if (state.broken !== undefined) next.broken = state.broken.slice();
     if (state.latched !== undefined) next.latched = state.latched.slice();
+    if (state.pullArmed !== undefined) next.pullArmed = state.pullArmed.slice();
     return next;
 }

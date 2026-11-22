@@ -489,7 +489,7 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null, la
             const pull = lavaPulls.find((p) => p.tile[0] === x && p.tile[1] === y);
             const rule = resolveCondition(LAVATRAP_PULL.condition);
             if (!pull || !rule) throw new Error(`${label}: no pull of the rules producer's at (${x},${y}), or its condition has no AP rule`);
-            rows.push({ kind, tiles: [pull.tile], from: pull.from, ...(pull.yields.length > 0 ? { yields: pull.yields } : {}), rule, label });
+            rows.push({ kind, tiles: [pull.tile], from: pull.from, ...(pull.yields.length > 0 ? { yields: pull.yields } : {}), ...(pull.passes?.length > 0 ? { passes: pull.passes, range: pull.range } : {}), rule, label });
             continue;
         }
         const rope = kind === 'rope' ? minted.find((r) => r.x === entity.x && r.y === entity.y) : null;
