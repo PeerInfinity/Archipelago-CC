@@ -122,3 +122,25 @@ export function medianVerdict(median, band) {
     const direction = median > band.hi ? 'slower' : median < band.lo ? 'faster' : 'inside';
     return { median, band, outside: direction !== 'inside', direction };
 }
+
+/**
+ * Several runs of ONE tree (a paired ABBA pass runs each tree twice) as one report: each level's ms is the mean of its
+ * runs (`runsMs` keeps each), its status `passed` only when every run passed (else the first other status); the other
+ * tests the same way, by title; `problems` the union. One report comes back as it was, plus `runsMs`.
+ */
+export function mergeReports(reps) {
+    if (!reps.length) throw new Error('mergeReports needs at least one report');
+    const mean = (xs) => (xs.every(Number.isFinite) ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length) : null);
+    const status = (ss) => ss.find((s) => s !== 'passed') ?? 'passed';
+    const levels = reps[0].levels.map((row, i) => {
+        const rows = reps.map((r) => r.levels[i]);
+        if (rows.some((x) => x?.level !== row.level)) throw new Error(`mergeReports: the runs list different levels at ${i}`);
+        return { level: row.level, ms: mean(rows.map((x) => x.ms)), status: status(rows.map((x) => x.status)), runsMs: rows.map((x) => x.ms) };
+    });
+    const titles = [...new Set(reps.flatMap((r) => r.others.map((t) => t.title)))];
+    const others = titles.map((title) => {
+        const ts = reps.map((r) => r.others.find((t) => t.title === title));
+        return { title, ms: mean(ts.map((t) => t?.ms ?? NaN)) ?? 0, status: status(ts.map((t) => t?.status ?? 'missing')) };
+    });
+    return { levels, others, problems: [...new Set(reps.flatMap((r) => r.problems))] };
+}

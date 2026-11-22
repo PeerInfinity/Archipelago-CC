@@ -5,7 +5,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { compareLevels, levelReport, median, medianBand, medianVerdict, presetLevels } from './seedlingCalibLevels.js';
+import { compareLevels, levelReport, median, medianBand, medianVerdict, mergeReports, presetLevels } from './seedlingCalibLevels.js';
 
 const RULES = JSON.parse(readFileSync(new URL('../../frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
 
@@ -115,5 +115,25 @@ describe('medianBand / medianVerdict (the median verdict)', () => {
         const v = medianVerdict(1.24, medianBand(UNPAIRED_MAIN_MEDIANS));
         expect(v.outside).toBe(false);
         expect(v.band.hi).toBeGreaterThan(1.24);
+    });
+});
+
+describe('mergeReports (an ABBA pass runs each tree twice)', () => {
+    const rep = (a, b, st = 'passed') => ({ levels: [{ level: 'a', ms: a, status: 'passed' }, { level: 'b', ms: b, status: st }],
+        others: [{ title: 'whole verdict', ms: 2, status: 'passed' }], problems: [] });
+    it('takes the mean ms per level, keeps each run, and is red when any run was', () => {
+        const m = mergeReports([rep(100, 300), rep(200, 500, 'failed')]);
+        expect(m.levels).toEqual([{ level: 'a', ms: 150, status: 'passed', runsMs: [100, 200] }, { level: 'b', ms: 400, status: 'failed', runsMs: [300, 500] }]);
+        expect(m.others).toEqual([{ title: 'whole verdict', ms: 2, status: 'passed' }]);
+    });
+    it('a drift linear in time cancels: A B B A with a steady slowdown reads 1 for equal trees', () => {
+        const at = (t) => 1000 * (1 + 0.1 * t); // the runner slows by 10% per pass
+        const A = mergeReports([rep(at(0), at(0)), rep(at(3), at(3))]);
+        const B = mergeReports([rep(at(1), at(1)), rep(at(2), at(2))]);
+        expect(compareLevels(B, A, { threshold: 1.5, floorMs: 1 }).median).toBeCloseTo(1, 6);
+    });
+    it('refuses runs that list different levels, and no runs', () => {
+        expect(() => mergeReports([])).toThrow();
+        expect(() => mergeReports([rep(1, 1), { ...rep(1, 1), levels: [{ level: 'z', ms: 1, status: 'passed' }, { level: 'b', ms: 1, status: 'passed' }] }])).toThrow();
     });
 });

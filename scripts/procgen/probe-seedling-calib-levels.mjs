@@ -29,7 +29,8 @@
  *     file in both, on the same runner, so the runner's speed cancels. Its band is narrow, and a median outside it is
  *     a FAILED check row. The job writes both sides and runs the comparison itself (so `--moved`, `--expect-flag` and
  *     `--expect-median` go to the run too). `--paired-tip=<ref>` checks the tip out as a tree as well (default: this
- *     checkout); `--paired-order=sequential|concurrent` runs the two one after the other (control first) or at once.
+ *     checkout); `--paired-order=sequential|abba|concurrent` and `--paired-first=control|tip` say how (`pairedRun`).
+ *     Until an order's band rests on PAIRED_MIN_PAIRS pairs it is PROVISIONAL and warns only.
  *     A paired artifact compares again with `--compare=<run id>` and no `--tip`.
  * `--expect-median=slower|faster|inside` adds a check row for an expected median verdict (a mutant's check), either kind.
  *
@@ -39,7 +40,7 @@
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<…> --tip=<…> --moved=<level,level>
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<…> --tip=<…> --expect-flag=<level>   (a mutant's check)
  *   gh workflow run seedling-probe.yml --ref <branch> -f probes=probe-seedling-calib-levels.mjs -f args=--paired=<control sha>
- *   gh workflow run seedling-probe.yml --ref <branch> -f probes=probe-seedling-calib-levels.mjs -f args="--paired=<sha> --paired-tip=<sha> --paired-order=concurrent"
+ *   gh workflow run seedling-probe.yml --ref <branch> -f probes=probe-seedling-calib-levels.mjs -f args="--paired=<sha> --paired-tip=<sha> --paired-order=abba --paired-first=tip"
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<paired run id>
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<…> --tip=<…> --expect-median=slower   (a uniform mutant's check)
  *
@@ -52,7 +53,7 @@ import { tmpdir, cpus } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { compareLevels, levelReport, medianBand, medianVerdict, presetLevels } from './seedlingCalibLevels.js';
+import { compareLevels, levelReport, medianBand, medianVerdict, mergeReports, presetLevels } from './seedlingCalibLevels.js';
 
 argvHelp(import.meta.url);
 
@@ -85,10 +86,13 @@ export const THRESHOLD = 1.5;
  *   UNPAIRED (two jobs): 43779970506, 43779978397, 43779985847 (all at 27bc98c8b6) and 43785541082 (0b8dc816f1, the
  *     same tree but for the probe's own files), every pair: 0.961 1.574 1.588 0.843 0.868 0.545. Worst 1.835 → band
  *     0.375–2.670. The runners alone differ by up to 1.84×, so a uniform slowdown under that is invisible to two jobs.
- *   PAIRED (one job, both sides): PROVISIONAL, none measured yet; with no pair the paired verdict is not given.
+ *   PAIRED (one job, both sides), one list PER `--paired-order` (each order has its own noise): none measured yet.
+ *     A band on fewer than PAIRED_MIN_PAIRS pairs is PROVISIONAL: it prints a `WARN:` and fails nothing; with no pair the
+ *     paired verdict is not given at all.
  */
 export const UNPAIRED_MAIN_MEDIANS = [0.961, 1.574, 1.588, 0.843, 0.868, 0.545];
-export const PAIRED_MAIN_MEDIANS = [];
+export const PAIRED_MAIN_MEDIANS = { sequential: [], abba: [], concurrent: [] };
+export const PAIRED_MIN_PAIRS = 3;
 
 const arg = (k) => process.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3);
 const list = (s) => (s ? s.split(',').map((x) => x.trim()).filter(Boolean) : []);
@@ -111,12 +115,17 @@ async function treeInputs(dir) {
  * One finished calib run, read out of vitest's JSON report at `raw`: its check rows and `MEASURED:` lines (each
  * prefixed by `tag`, a paired side's name; '' prints RUN mode's rows as they always were), and the doc to write.
  */
-function readRun({ raw, r, wallS, levels, limitMs, sha, tag = '' }) {
-    if (!existsSync(raw)) {
-        check(false, `${pre(tag)}vitest wrote its JSON report (rc=${r.status} signal=${r.signal}, none at ${raw})`);
-        return null;
+function readRun({ raws, rs, wallS, levels, limitMs, sha, tag = '' }) {
+    const reps = [];
+    for (const [i, raw] of raws.entries()) {
+        if (!existsSync(raw)) {
+            check(false, `${pre(tag)}vitest wrote its JSON report (rc=${rs[i].status} signal=${rs[i].signal}, none at ${raw})`);
+            return null;
+        }
+        reps.push(levelReport(JSON.parse(readFileSync(raw, 'utf8')), levels));
     }
-    const rep = levelReport(JSON.parse(readFileSync(raw, 'utf8')), levels);
+    const rep = reps.length === 1 ? reps[0] : mergeReports(reps);
+    const r = { status: rs.find((x) => x.status !== 0)?.status ?? 0 };
     check(rep.problems.length === 0, `${pre(tag)}every one of the preset's ${levels.length} levels has exactly one test (${rep.problems.join('; ') || 'none off'})`);
     for (const row of rep.levels) check(row.status === 'passed', `${pre(tag)}${row.level} ${row.status} ${row.ms ?? '-'} ms`);
     for (const t of rep.others) check(t.status === 'passed', `${pre(tag)}${t.title} ${t.status} ${t.ms} ms`);
@@ -140,7 +149,7 @@ async function runMode() {
     const raw = resolve(OUT, 'calib-vitest.json');
     const t0 = Date.now();
     const r = spawnSync('npx', vitestArgs(raw), { cwd: REPO, stdio: 'inherit' });
-    const doc = readRun({ raw, r, wallS: (Date.now() - t0) / 1000, levels, limitMs, sha: headSha() });
+    const doc = readRun({ raws: [raw], rs: [r], wallS: (Date.now() - t0) / 1000, levels, limitMs, sha: headSha() });
     if (!doc) return;
     writeFileSync(resolve(OUT, OUT_FILE), `${JSON.stringify(doc, null, 1)}\n`);
     console.log(`MEASURED: wrote ${OUT_FILE} (${doc.levels.length} levels) at ${doc.headSha}`);
@@ -189,37 +198,52 @@ function runSide(side, raw, log) {
 
 /**
  * PAIRED: the control (and, with `--paired-tip`, the tip) checked out as trees beside this one, the calib file run in
- * both inside ONE job, so the runner's speed is the same on both sides; then the comparison, here.
+ * both inside ONE job, so the runner's speed is the same on both sides; then the comparison, here. `--paired-order`:
+ *   sequential — first, then second (drift inside the job lands on one side);
+ *   abba       — first, second, second, first: each tree runs twice, each level's ms is the mean of its two runs, so a
+ *                drift linear in time cancels (four passes: the job's 90 min bounds it, so the wall is printed);
+ *   concurrent — both at once (the runner's cores are shared; `nproc` and the CPU model are printed).
+ * `--paired-first=control|tip` (default control) says which side starts, so a slot bias can be measured both ways.
  */
 async function pairedRun(controlRef) {
     const order = arg('paired-order') ?? 'sequential';
-    if (!['sequential', 'concurrent'].includes(order)) throw new Error(`--paired-order is sequential or concurrent (got ${order})`);
+    if (!['sequential', 'abba', 'concurrent'].includes(order)) throw new Error(`--paired-order is sequential, abba or concurrent (got ${order})`);
+    const first = arg('paired-first') ?? 'control';
+    if (!['control', 'tip'].includes(first)) throw new Error(`--paired-first is control or tip (got ${first})`);
     const tipRef = arg('paired-tip');
     mkdirSync(OUT, { recursive: true });
     const work = mkdtempSync(join(process.env.RUNNER_TEMP || tmpdir(), 'calib-paired-'));
     const t0 = Date.now();
     const control = prepareTree(controlRef, join(work, 'control'), 'control');
     const tip = tipRef ? prepareTree(tipRef, join(work, 'tip'), 'tip') : { dir: REPO, sha: headSha(), ref: 'this checkout' };
-    console.log(`MEASURED: paired control ${control.ref} @ ${control.sha}; tip ${tip.ref} @ ${tip.sha}; order ${order}; trees ready in ${((Date.now() - t0) / 1000).toFixed(1)} s`);
-    const sides = [['control', control], ['tip', tip]];
-    for (const [, side] of sides) Object.assign(side, await treeInputs(side.dir), {
-        raw: resolve(OUT, `calib-vitest-${side === control ? 'control' : 'tip'}.json`),
-        log: resolve(OUT, `calib-vitest-${side === control ? 'control' : 'tip'}.log`),
-    });
-    const runs = order === 'concurrent'
-        ? await Promise.all(sides.map(([, s]) => runSide(s, s.raw, s.log)))
-        : [await runSide(control, control.raw, control.log), await runSide(tip, tip.raw, tip.log)];
+    const S = { control: { ...control, tag: 'control', runs: [] }, tip: { ...tip, tag: 'tip', runs: [] } };
+    for (const s of Object.values(S)) Object.assign(s, await treeInputs(s.dir));
+    const [A, B] = first === 'control' ? [S.control, S.tip] : [S.tip, S.control];
+    console.log(`MEASURED: paired control ${control.ref} @ ${control.sha}; tip ${tip.ref} @ ${tip.sha}; order ${order}, ${first} first; nproc ${cpus().length} (${cpus()[0]?.model ?? '?'}); trees ready in ${((Date.now() - t0) / 1000).toFixed(1)} s`);
+    const one = async (s) => {
+        const k = s.runs.length + 1;
+        const raw = resolve(OUT, `calib-vitest-${s.tag}-${k}.json`);
+        const res = await runSide(s, raw, resolve(OUT, `calib-vitest-${s.tag}-${k}.log`));
+        console.log(`MEASURED: paired ${s.tag} pass ${k} rc=${res.status} wall ${res.wallS.toFixed(1)} s (at +${((Date.now() - t0) / 1000).toFixed(0)} s)`);
+        s.runs.push({ raw, res });
+    };
+    if (order === 'concurrent') await Promise.all([one(A), one(B)]);
+    else for (const s of order === 'abba' ? [A, B, B, A] : [A, B]) await one(s);
     const pairId = process.env.GITHUB_RUN_ID ? `run ${process.env.GITHUB_RUN_ID}` : `local ${new Date(t0).toISOString()}`;
-    const docs = sides.map(([tag, s], i) => {
-        const doc = readRun({ raw: s.raw, r: runs[i], wallS: runs[i].wallS, levels: s.levels, limitMs: s.limitMs, sha: s.sha, tag });
-        if (doc) doc.paired = { pairId, order, side: tag, controlSha: control.sha, tipSha: tip.sha };
+    const docs = [S.control, S.tip].map((s) => {
+        const doc = readRun({ raws: s.runs.map((x) => x.raw), rs: s.runs.map((x) => x.res), wallS: s.runs.reduce((a, x) => a + x.res.wallS, 0),
+            levels: s.levels, limitMs: s.limitMs, sha: s.sha, tag: s.tag });
+        if (doc) doc.paired = { pairId, order, first, side: s.tag, passes: s.runs.length, controlSha: control.sha, tipSha: tip.sha };
         return doc;
     });
-    for (const [i, [tag]] of sides.entries()) check(runs[i].status === 0, `${tag} the calib file is green (rc=${runs[i].status})`);
+    for (const s of [S.control, S.tip]) {
+        const bad = s.runs.filter((x) => x.res.status !== 0).map((x) => x.res.status);
+        check(bad.length === 0, `${s.tag} the calib file is green on every pass (${s.runs.length} passes; rc ${s.runs.map((x) => x.res.status).join(',')})`);
+    }
     if (!docs[0] || !docs[1]) return;
     writeFileSync(resolve(OUT, CONTROL_FILE), `${JSON.stringify(docs[0], null, 1)}\n`);
     writeFileSync(resolve(OUT, OUT_FILE), `${JSON.stringify(docs[1], null, 1)}\n`);
-    console.log(`MEASURED: wrote ${CONTROL_FILE} @ ${control.sha} and ${OUT_FILE} @ ${tip.sha} (paired, ${pairId}, ${order}); wall ${((Date.now() - t0) / 1000).toFixed(1)} s`);
+    console.log(`MEASURED: wrote ${CONTROL_FILE} @ ${control.sha} and ${OUT_FILE} @ ${tip.sha} (paired, ${pairId}, ${order}, ${first} first); job wall so far ${((Date.now() - t0) / 1000).toFixed(1)} s`);
     compareDocs({ ...docs[0], source: `paired control (${pairId})` }, { ...docs[1], source: `paired tip (${pairId})` });
 }
 
@@ -285,17 +309,20 @@ function compareDocs(control, tip) {
  */
 function medianCheck(med, control, tip, expectMedian) {
     const kind = control.paired && tip.paired && control.paired.pairId === tip.paired.pairId ? 'paired' : 'unpaired';
-    const medians = kind === 'paired' ? PAIRED_MAIN_MEDIANS : UNPAIRED_MAIN_MEDIANS;
+    const order = kind === 'paired' ? control.paired.order : null;
+    const medians = kind === 'paired' ? (PAIRED_MAIN_MEDIANS[order] ?? []) : UNPAIRED_MAIN_MEDIANS;
+    const label = kind === 'paired' ? `paired ${order}` : kind;
+    const provisional = kind === 'paired' && medians.length < PAIRED_MIN_PAIRS;
     let v = null;
-    if (!medians.length) console.log(`MEASURED: median verdict not given: no ${kind} main-vs-main pair is on record yet (${kind.toUpperCase()}_MAIN_MEDIANS)`);
+    if (!medians.length) console.log(`MEASURED: median verdict not given: no ${label} main-vs-main pair is on record yet (median ratio ${med.toFixed(3)})`);
     else {
         v = medianVerdict(med, medianBand(medians));
         const band = `${v.band.lo.toFixed(3)}–${v.band.hi.toFixed(3)}`;
-        console.log(`MEASURED: median verdict ${kind}: median ratio ${med.toFixed(3)} is ${v.direction} the ${kind} main-vs-main band ${band} (${v.band.pairs} pairs, worst ${v.band.worst.toFixed(3)})${kind === 'unpaired' ? `; two jobs on two runners, so a uniform change inside the band is not visible (--paired sees one)` : ''}`);
-        if (v.outside) console.log(`WARN: median ratio ${med.toFixed(3)} is outside the ${kind} main-vs-main band ${band}: every level is ${v.direction} together, which the per-level FLAG normalises away${kind === 'unpaired' ? '; separate jobs, so re-run it PAIRED before believing it' : ''}`);
-        if (kind === 'paired' && expectMedian === undefined) check(!v.outside, `the median ratio ${med.toFixed(3)} is inside the paired main-vs-main band ${band} (${v.band.pairs} pairs)`);
+        console.log(`MEASURED: median verdict ${label}: median ratio ${med.toFixed(3)} is ${v.direction} the ${label} main-vs-main band ${band} (${v.band.pairs} pairs, worst ${v.band.worst.toFixed(3)})${provisional ? ` PROVISIONAL: under ${PAIRED_MIN_PAIRS} pairs, so it warns only` : ''}${kind === 'unpaired' ? `; two jobs on two runners, so a uniform change inside the band is not visible (--paired sees one)` : ''}`);
+        if (v.outside) console.log(`WARN: median ratio ${med.toFixed(3)} is outside the ${label} main-vs-main band ${band}: every level is ${v.direction} together, which the per-level FLAG normalises away${kind === 'unpaired' ? '; separate jobs, so re-run it PAIRED before believing it' : ''}`);
+        if (kind === 'paired' && !provisional && expectMedian === undefined) check(!v.outside, `the median ratio ${med.toFixed(3)} is inside the ${label} main-vs-main band ${band} (${v.band.pairs} pairs)`);
     }
-    if (expectMedian !== undefined) check(v?.direction === expectMedian, `the ${kind} median verdict is the expected ${expectMedian} (${v ? v.direction : 'no band on record'})`);
+    if (expectMedian !== undefined) check(v?.direction === expectMedian, `the ${label} median verdict is the expected ${expectMedian} (${v ? v.direction : 'no band on record'})`);
 }
 
 async function main() {

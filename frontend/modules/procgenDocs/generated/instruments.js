@@ -12317,6 +12317,7 @@ export const INSTRUMENTS = frz({
                 "expect-median",
                 "moved",
                 "paired",
+                "paired-first",
                 "paired-order",
                 "paired-tip",
                 "ref",
@@ -12353,6 +12354,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "paired"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "paired-first"
                 },
                 {
                     "how": [
