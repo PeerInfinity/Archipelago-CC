@@ -78,7 +78,8 @@ const chooser = (rng) => (typeof rng?.choice === 'function'
 export function conceptGateFor(rule, { offered, rng, n, logicGateBase }) {
     const cand = selectRealisation(rule, MAZE_CONCEPT_REALISATIONS, { concepts: CONCEPTS, offered, rng: chooser(rng) });
     if (!cand) return null;
-    const art = MAZE_CONCEPT_REALISATIONS[cand.concept]?.art ?? {};
+    // every gate-placed realisation carries its `art` (the table above): no fallback
+    const { art } = MAZE_CONCEPT_REALISATIONS[cand.concept];
     const id = `${cand.mechanic?.obstacle ?? `${cand.concept}_gate`}_${n}`;
     return {
         id,
@@ -89,9 +90,9 @@ export function conceptGateFor(rule, { offered, rng, n, logicGateBase }) {
             clear_rule: rule,
             concept: cand.concept,
             placement: cand.placement,
-            ...(art.name !== undefined ? { name: art.name } : {}),
-            ...(art.color !== undefined ? { color: art.color } : {}),
-            ...(art.symbol !== undefined ? { symbol: art.symbol } : {}),
+            name: art.name,
+            color: art.color,
+            symbol: art.symbol,
         },
     };
 }
