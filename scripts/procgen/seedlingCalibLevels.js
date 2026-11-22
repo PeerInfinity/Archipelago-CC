@@ -181,3 +181,24 @@ export function wallVerdict(wallS, limitS, warnAt) {
     const used = wallS / limitS;
     return { used, warn: used > warnAt };
 }
+
+/**
+ * Whether an order's band FAILS a row yet: it rests on at least `rule.pairs` pairs, `rule.checkoutTip` of them in the
+ * default shape (`shape: 'checkout-tip'`, the tip in the job's own checkout). Below that it is PROVISIONAL (WARN only).
+ */
+export function bandFails(rows, rule) {
+    const checkoutTip = rows.filter((r) => r.shape === 'checkout-tip').length;
+    return { fails: rows.length >= rule.pairs && checkoutTip >= rule.checkoutTip, pairs: rows.length, checkoutTip };
+}
+
+/**
+ * The median verdict as a check row, ONE-SIDED: the probe exists to catch slowdowns, so only a median ABOVE the band
+ * fails; below it passes (a faster tip never blocks a landing; the WARN line says to check the control). The text
+ * names the side the median is actually on.
+ */
+export function medianRow(v, label) {
+    const where = { slower: 'above', faster: 'below', inside: 'inside' }[v.direction];
+    const band = `${v.band.lo.toFixed(3)}–${v.band.hi.toFixed(3)}`;
+    const why = { slower: 'a slowdown the main-vs-main noise never reached', faster: 'faster: never a failure', inside: 'main-vs-main noise' }[v.direction];
+    return { ok: v.direction !== 'slower', text: `the median ratio ${v.median.toFixed(3)} is ${where} the ${label} main-vs-main band ${band} (${v.band.pairs} pairs; ${why})` };
+}

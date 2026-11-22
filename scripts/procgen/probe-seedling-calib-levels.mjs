@@ -31,8 +31,8 @@
  *     `--expect-median` go to the run too). `--paired-tip=<ref>` checks the tip out as a tree as well (default: this
  *     checkout); `--paired-order=concurrent|abba|sequential` and `--paired-first=control|tip` say how (`pairedRun`).
  *     Concurrent (the default) judges the MEDIAN only: its per-level ratios are printed, never flagged. abba judges
- *     both, at ~4 passes of wall. Until an order's band rests on PAIRED_MIN_PAIRS pairs it is PROVISIONAL and warns
- *     only. The paired wall is printed against the workflow job's timeout, with a `WARN:` over WALL_WARN_AT.
+ *     both, at ~4 passes of wall. Until an order's band meets PAIRED_FAIL_WHEN it is PROVISIONAL and warns
+ *     only; once failing, only a median ABOVE it fails. The paired wall is printed against the workflow job's timeout, with a `WARN:` over WALL_WARN_AT.
  *     A paired artifact compares again with `--compare=<run id>` and no `--tip`.
  * `--expect-median=slower|faster|inside` adds a check row for an expected median verdict (a mutant's check), either kind.
  *
@@ -55,7 +55,7 @@ import { tmpdir, cpus } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { compareLevels, flagsLevels, isAbbreviatedSha, jobTimeoutMinutes, levelReport, medianBand, medianVerdict, mergeReports, presetLevels, wallVerdict } from './seedlingCalibLevels.js';
+import { bandFails, compareLevels, flagsLevels, isAbbreviatedSha, jobTimeoutMinutes, levelReport, medianBand, medianRow, medianVerdict, mergeReports, presetLevels, wallVerdict } from './seedlingCalibLevels.js';
 
 argvHelp(import.meta.url);
 
@@ -88,25 +88,37 @@ export const THRESHOLD = 1.5;
  *   UNPAIRED (two jobs): 43779970506, 43779978397, 43779985847 (all at 27bc98c8b6) and 43785541082 (0b8dc816f1, the
  *     same tree but for the probe's own files), every pair: 0.961 1.574 1.588 0.843 0.868 0.545. Worst 1.835 → band
  *     0.375–2.670. The runners alone differ by up to 1.84×, so a uniform slowdown under that is invisible to two jobs.
- *   PAIRED (one job, both sides = main 3c602f965d, the probe at 18f18376ba; session tile-probe-median, 2026-11-22),
- *     one list PER `--paired-order`, since each order has its own noise. Each row is a seedling-probe run, its median,
- *     and the side that started. Same band rule. A band on PAIRED_MIN_PAIRS (3) or more pairs is a FAILED check row
- *     when the median is outside it. Under 3 it is PROVISIONAL: a `WARN:` only. With no pair, no verdict.
- *       concurrent (4 pairs) → band 0.984–1.016, a failing row; the default order (~1,200 s of the 5,400 s job).
+ *   PAIRED (one job; session tile-probe-median, 2026-11-22; main 3c602f965d vs itself with the probe at 18f18376ba,
+ *     both sides fresh worktrees, unless a row says checkout-tip), one list PER `--paired-order`, since each order has
+ *     its own noise. Each row is a seedling-probe run, its median, the side that started and its shape. Same band rule.
+ *     A band that meets PAIRED_FAIL_WHEN fails a row when the median is ABOVE it; until then it is PROVISIONAL: a
+ *     `WARN:` only. With no pair, no verdict.
+ *       concurrent (5 pairs) → band 0.947–1.058, PROVISIONAL (PAIRED_FAIL_WHEN); the default order (~700–1,200 s of
+ *         the 5,400 s job). Its first 4 pairs gave 0.984–1.016; the 5th (45040853937) read 0.972, outside it.
  *       abba       (3 pairs) → band 0.953–1.049, a failing row; 3,387–4,347 s, and 4,753 s for a ×1.24 tip.
  *       sequential (2 pairs) → band 0.943–1.060, PROVISIONAL.
+ *     ONE-SIDED: once failing, only a median ABOVE the band fails (`medianRow`); below it is a WARN to check the control.
  *     The ×1.24 uniform mutant (044b24e5b9) read 1.240 abba (44983298644) and 1.197 concurrent (44983304303): both
  *     outside, and no per-level FLAG. Concurrent under-reads it because the control finishes first.
  */
 export const UNPAIRED_MAIN_MEDIANS = [0.961, 1.574, 1.588, 0.843, 0.868, 0.545];
+const BF = 'both-fresh'; // both sides a fresh worktree of main (`--paired-tip=<main>`)
+const CT = 'checkout-tip'; // the DEFAULT shape: the tip in the job's own checkout, the control in RUNNER_TEMP
 export const PAIRED_MAIN_MEDIANS = {
-    concurrent: [{ run: 44983231138, median: 1.001, first: 'control' }, { run: 44983236757, median: 0.992, first: 'control' },
-        { run: 44983248084, median: 1.008, first: 'tip' }, { run: 44983253719, median: 0.994, first: 'tip' }],
-    abba: [{ run: 44983214066, median: 0.991, first: 'control' }, { run: 44983220060, median: 0.976, first: 'control' },
-        { run: 44983225887, median: 0.992, first: 'tip' }],
-    sequential: [{ run: 44983258675, median: 0.978, first: 'control' }, { run: 44983263697, median: 1.030, first: 'tip' }],
+    concurrent: [{ run: 44983231138, median: 1.001, first: 'control', shape: BF }, { run: 44983236757, median: 0.992, first: 'control', shape: BF },
+        { run: 44983248084, median: 1.008, first: 'tip', shape: BF }, { run: 44983253719, median: 0.994, first: 'tip', shape: BF },
+        // main 0749fcb4d5 vs this probe's tip 002d1fc01f (probe files only): it fell BELOW the 4-pair band
+        { run: 45040853937, median: 0.972, first: 'control', shape: CT }],
+    abba: [{ run: 44983214066, median: 0.991, first: 'control', shape: BF }, { run: 44983220060, median: 0.976, first: 'control', shape: BF },
+        { run: 44983225887, median: 0.992, first: 'tip', shape: BF }],
+    sequential: [{ run: 44983258675, median: 0.978, first: 'control', shape: BF }, { run: 44983263697, median: 1.030, first: 'tip', shape: BF }],
 };
-export const PAIRED_MIN_PAIRS = 3;
+/**
+ * When an order's band FAILS a row (`bandFails`), else it is PROVISIONAL and warns only. concurrent: ≥ 8 pairs, ≥ 4 of
+ * them in the default shape, since its 5th pair (the first checkout-tip one) widened the band 3.6×; whether the shape
+ * matters at all (both-fresh vs checkout-tip) is still open. abba, sequential: ≥ 3 pairs.
+ */
+export const PAIRED_FAIL_WHEN = { concurrent: { pairs: 8, checkoutTip: 4 }, abba: { pairs: 3, checkoutTip: 0 }, sequential: { pairs: 3, checkoutTip: 0 } };
 export const DEFAULT_PAIRED_ORDER = 'concurrent';
 
 /**
@@ -355,18 +367,22 @@ function compareDocs(control, tip) {
 function medianCheck(med, control, tip, expectMedian) {
     const kind = control.paired && tip.paired && control.paired.pairId === tip.paired.pairId ? 'paired' : 'unpaired';
     const order = kind === 'paired' ? control.paired.order : null;
-    const medians = kind === 'paired' ? (PAIRED_MAIN_MEDIANS[order] ?? []).map((p) => p.median) : UNPAIRED_MAIN_MEDIANS;
+    const rows = kind === 'paired' ? (PAIRED_MAIN_MEDIANS[order] ?? []) : null;
+    const medians = kind === 'paired' ? rows.map((p) => p.median) : UNPAIRED_MAIN_MEDIANS;
     const label = kind === 'paired' ? `paired ${order}` : kind;
-    const provisional = kind === 'paired' && medians.length < PAIRED_MIN_PAIRS;
+    const rule = kind === 'paired' ? (PAIRED_FAIL_WHEN[order] ?? { pairs: Infinity, checkoutTip: 0 }) : null;
+    const gate = kind === 'paired' ? bandFails(rows, rule) : null;
     let v = null;
     if (!medians.length) console.log(`MEASURED: median verdict not given: no ${label} main-vs-main pair is on record yet (median ratio ${med.toFixed(3)})`);
     else {
         v = medianVerdict(med, medianBand(medians));
         const band = `${v.band.lo.toFixed(3)}–${v.band.hi.toFixed(3)}`;
         const where = { slower: 'above', faster: 'below', inside: 'inside' }[v.direction];
-        console.log(`MEASURED: median verdict ${label}: median ratio ${med.toFixed(3)} is ${where} the ${label} main-vs-main band ${band} (${v.band.pairs} pairs, worst ${v.band.worst.toFixed(3)})${provisional ? ` PROVISIONAL: under ${PAIRED_MIN_PAIRS} pairs, so it warns only` : ''}${kind === 'unpaired' ? `; two jobs on two runners, so a uniform change inside the band is not visible (--paired sees one)` : ''}`);
-        if (v.outside) console.log(`WARN: median ratio ${med.toFixed(3)} is outside the ${label} main-vs-main band ${band}: every level is ${v.direction} together, which the per-level FLAG normalises away${kind === 'unpaired' ? '; separate jobs, so re-run it PAIRED before believing it' : ''}`);
-        if (kind === 'paired' && !provisional && expectMedian === undefined) check(!v.outside, `the median ratio ${med.toFixed(3)} is inside the ${label} main-vs-main band ${band} (${v.band.pairs} pairs)`);
+        const prov = gate && !gate.fails ? ` PROVISIONAL: ${gate.pairs} pairs (${gate.checkoutTip} checkout-tip) of the ${rule.pairs} (${rule.checkoutTip}) it needs to fail a row, so it warns only` : '';
+        console.log(`MEASURED: median verdict ${label}: median ratio ${med.toFixed(3)} is ${where} the ${label} main-vs-main band ${band} (${v.band.pairs} pairs, worst ${v.band.worst.toFixed(3)})${prov}${kind === 'unpaired' ? `; two jobs on two runners, so a uniform change inside the band is not visible (--paired sees one)` : ''}`);
+        if (v.direction === 'slower') console.log(`WARN: median ratio ${med.toFixed(3)} is outside the ${label} main-vs-main band ${band}: every level is slower together, which the per-level FLAG normalises away${kind === 'unpaired' ? '; separate jobs, so re-run it PAIRED before believing it' : ''}`);
+        if (v.direction === 'faster') console.log(`WARN: median ratio ${med.toFixed(3)} is below the ${label} main-vs-main band ${band}: faster than main-vs-main noise: check the control (a faster tip never fails)`);
+        if (gate?.fails && expectMedian === undefined) { const r = medianRow(v, label); check(r.ok, r.text); }
     }
     if (expectMedian !== undefined) check(v?.direction === expectMedian, `the ${label} median verdict is the expected ${expectMedian} (${v ? v.direction : 'no band on record'})`);
 }

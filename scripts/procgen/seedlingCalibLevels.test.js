@@ -5,7 +5,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { compareLevels, flagsLevels, isAbbreviatedSha, jobTimeoutMinutes, levelReport, median, medianBand, medianVerdict, mergeReports, presetLevels, wallVerdict } from './seedlingCalibLevels.js';
+import { bandFails, compareLevels, flagsLevels, isAbbreviatedSha, jobTimeoutMinutes, levelReport, median, medianBand, medianRow, medianVerdict, mergeReports, presetLevels, wallVerdict } from './seedlingCalibLevels.js';
 
 const RULES = JSON.parse(readFileSync(new URL('../../frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
 
@@ -148,11 +148,13 @@ describe('isAbbreviatedSha (a paired run refuses a short SHA by name)', () => {
 });
 
 describe('the recorded paired bands (the probe\'s PAIRED_MAIN_MEDIANS)', () => {
-    it('concurrent and abba rest on >= PAIRED_MIN_PAIRS pairs, each a run id; the x1.24 mutants are outside, PASS-3 inside', async () => {
-        const { PAIRED_MAIN_MEDIANS: P, PAIRED_MIN_PAIRS, DEFAULT_PAIRED_ORDER } = await import('./probe-seedling-calib-levels.mjs');
+    it('abba fails rows, concurrent and sequential are PROVISIONAL; each row a run id; the x1.24 mutants are outside, PASS-3 inside', async () => {
+        const { PAIRED_MAIN_MEDIANS: P, PAIRED_FAIL_WHEN: W, DEFAULT_PAIRED_ORDER } = await import('./probe-seedling-calib-levels.mjs');
         expect(DEFAULT_PAIRED_ORDER).toBe('concurrent');
-        for (const order of ['concurrent', 'abba']) expect(P[order].length).toBeGreaterThanOrEqual(PAIRED_MIN_PAIRS);
-        expect(P.sequential.length).toBeLessThan(PAIRED_MIN_PAIRS); // PROVISIONAL
+        expect(bandFails(P.abba, W.abba).fails).toBe(true);
+        expect(bandFails(P.concurrent, W.concurrent)).toEqual({ fails: false, pairs: 5, checkoutTip: 1 });
+        expect(bandFails(P.sequential, W.sequential).fails).toBe(false);
+        expect(medianBand(P.concurrent.map((r) => r.median)).hi).toBeCloseTo(1 + 2 * (1 / 0.972 - 1), 6); // 45040853937 sets it
         for (const rows of Object.values(P)) for (const r of rows) expect(r.run).toBeGreaterThan(4e10);
         const band = (order) => medianBand(P[order].map((r) => r.median));
         expect(medianVerdict(1.197, band('concurrent')).direction).toBe('slower'); // mutant 44983304303
@@ -184,5 +186,26 @@ describe('jobTimeoutMinutes / wallVerdict (the paired wall against the job)', ()
         expect(wallVerdict(1173, 5400, 0.8)).toMatchObject({ warn: false });
         expect(wallVerdict(4320, 5400, 0.8).warn).toBe(false); // exactly 80% is not over it
         expect(() => wallVerdict(1, 0, 0.8)).toThrow();
+    });
+});
+
+describe('bandFails / medianRow (when a paired band fails, and only above)', () => {
+    const rows = (n, ct) => Array.from({ length: n }, (_, i) => ({ median: 1, shape: i < ct ? 'checkout-tip' : 'both-fresh' }));
+    it('fails only once the pairs AND the default-shape pairs are enough', () => {
+        expect(bandFails(rows(8, 4), { pairs: 8, checkoutTip: 4 }).fails).toBe(true);
+        expect(bandFails(rows(8, 3), { pairs: 8, checkoutTip: 4 }).fails).toBe(false);
+        expect(bandFails(rows(7, 7), { pairs: 8, checkoutTip: 4 }).fails).toBe(false);
+    });
+    const band = medianBand([1.03, 0.98, 1.02]);
+    it('is one-sided: above fails, below and inside pass', () => {
+        expect(medianRow(medianVerdict(1.2, band), 'paired concurrent').ok).toBe(false);
+        expect(medianRow(medianVerdict(0.9, band), 'paired concurrent').ok).toBe(true);
+        expect(medianRow(medianVerdict(1.0, band), 'paired concurrent').ok).toBe(true);
+    });
+    it('names the side the median is on (run 45040853937 printed "0.972 is inside" for a value below the band)', () => {
+        const b = medianBand([1.001, 0.992, 1.008, 0.994]);
+        expect(medianRow(medianVerdict(0.972, b), 'paired concurrent').text).toMatch(/^the median ratio 0\.972 is below the paired concurrent/);
+        expect(medianRow(medianVerdict(1.197, b), 'paired concurrent').text).toMatch(/is above the/);
+        expect(medianRow(medianVerdict(1.0, b), 'paired concurrent').text).toMatch(/is inside the/);
     });
 });

@@ -526,7 +526,7 @@ The two constants and their derivation from main-vs-main runs and a 2× mutant (
   - `abba`: A B B A, each tree twice, so a drift over the job cancels. It judges the median and the per-level FLAG, but it takes four passes of wall. On main that is most of the job's timeout, so a genuinely slower tip may time out. Use it only when a slice asks for per-level precision.
   - `sequential`: one after the other; its band is still PROVISIONAL.
 
-  A median outside an order's band is a failed check row once the band rests on `PAIRED_MIN_PAIRS` measured pairs; before that it only warns. The run prints its wall against the workflow job's `timeout-minutes`, with a `WARN:` over `WALL_WARN_AT` of it. `--compare=<paired run id>` with no `--tip` compares the artifact again.
+  The check is ONE-SIDED, because the probe exists to catch slowdowns. A median ABOVE an order's band is a failed check row once the band meets `PAIRED_FAIL_WHEN`, and before that it only warns. A median BELOW the band only warns ("check the control"): a faster tip never blocks a landing. The concurrent band is PROVISIONAL until it rests on 8 pairs, 4 of them in the default shape (the tip in the job's own checkout). Its first pairs had both sides as fresh worktrees, and its first default-shape pair fell outside their band. Whether the shape matters (both-fresh vs checkout-tip) is an OPEN measurement, which those pairs answer. The run prints its wall against the workflow job's `timeout-minutes`, with a `WARN:` over `WALL_WARN_AT` of it. `--compare=<paired run id>` with no `--tip` compares the artifact again.
 - `--expect-median=slower|faster|inside` expects a verdict, for a mutant (the uniform-slowdown mutant is the one the per-level `FLAG:` cannot see).
 
 **The recipe for an engine mover:**
