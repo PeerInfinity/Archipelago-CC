@@ -175,12 +175,11 @@ describe('location checks + select/show', () => {
         expect(a.locationChecksAllowed({ active: false, settings: { disableLocationCheckUI: true } })).toBe(true);
     });
 
-    it('select and show publish through the caller\'s bus', () => {
+    it('show publishes through the caller\'s bus (CA-S5: publishNodeSelected is gone, with the nodeSelected events)', () => {
+        expect(a.publishNodeSelected).toBeUndefined();
         const { h, events, gs } = handles();
-        a.publishNodeSelected(h, 'regionGraph:nodeSelected', 'B', { id: 'B' });
         a.showRegionInRegionsPanel(h, 'B');
         expect(events).toEqual([
-            ['regionGraph:nodeSelected', { nodeId: 'B', data: { id: 'B' } }],
             ['ui:activatePanel', { panelId: 'regionsPanel' }],
             ['ui:navigateToRegion', { regionName: 'B' }],
         ]);

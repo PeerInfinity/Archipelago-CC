@@ -56,6 +56,7 @@ import * as actions from './regionActions.js';
  * The R8 run order: path first, then checks, then panel actions. `select` (CA-S4) runs BEFORE the path: the panel
  * actions that replaced a `regionGraph:nodeSelected` listener (Flash's region teleport, Discovery's discover), which
  * the Region Graph published before any action ran, keep that place, so a Graph click calls them in the base's order.
+ * (CA-S5 retired the event itself; the order stays.)
  */
 export const ORDER = Object.freeze({ select: 50, path: 100, check: 200, panel: 300 });
 

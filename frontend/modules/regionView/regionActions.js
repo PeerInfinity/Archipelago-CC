@@ -13,10 +13,9 @@
  * registered the sender in its `register()`:
  *     registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
  *     registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
- * and, for `publishNodeSelected` / `showRegionInRegionsPanel`, its event-bus publishers:
+ * and, for `showRegionInRegionsPanel`, its event-bus publishers:
  *     registrationApi.registerEventBusPublisher('ui:activatePanel');
  *     registrationApi.registerEventBusPublisher('ui:navigateToRegion');
- *     registrationApi.registerEventBusPublisher('<module>:nodeSelected');
  * The Region Graph does this in `regionGraph/index.js`. A second panel (the Region Map) registers its OWN senders
  * and passes its OWN dispatcher and event bus: moving the code here never moves a dispatch to another module id.
  *
@@ -258,12 +257,8 @@ export function addLocationCheckToPath(h, locationName, regionName) {
     return { ok: true };
 }
 
-/* ── select / show ───────────────────────────────────────────────────── */
-
-/** Publish `<event>` = { nodeId, data } (the Region Graph's is 'regionGraph:nodeSelected'). Reads `h.eventBus`. */
-export function publishNodeSelected(h, event, regionName, data) {
-    h.eventBus.publish(event, { nodeId: regionName, data });
-}
+/* ── show ────────────────────────────────────────────────────────────── */
+/* (`publishNodeSelected`, which published `<panel>:nodeSelected`, left in CA-S5 with the events.) */
 
 /** Activate the Regions panel and navigate it to `regionName`. Reads `h.eventBus`. */
 export function showRegionInRegionsPanel(h, regionName) {

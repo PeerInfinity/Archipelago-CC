@@ -40,8 +40,7 @@
 | `ui:navigateToRegion` | Navigates to a specific region in the panel |
 | `user:regionMove` | User attempts to move player to a region |
 | `user:locationCheck` | User checks a location |
-| `regionGraph:nodeSelected` | A region node is selected in the graph (kept until CA-S5; its four listeners moved off it in CA-S4) |
-| `regionView:regionClicked` / `regionView:locationClicked` | Every region / location click, `{ panelId: 'regionGraph', regionName, locationName? }`, before the click actions (CA-S4) |
+| `regionView:regionClicked` / `regionView:locationClicked` | Every region / location click, `{ panelId: 'regionGraph', regionName, locationName? }`, before the click actions (CA-S4). A click on an overlay card's body publishes it too, once. They are the only click events the Graph publishes: CA-S5 retired `regionGraph:nodeSelected` |
 | `ui:navigateToLocation` | The Regions panel's `regions.scrollTo` click action, on this bus |
 
 ## Events Subscribed To

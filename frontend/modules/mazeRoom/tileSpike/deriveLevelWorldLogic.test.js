@@ -198,16 +198,29 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
         const SPHERE8_WEAPON_GATED = ['level_41__r4c15', 'level_41__r4c3', 'level_41__r7c15', 'level_42', 'level_57', 'level_58__r1c2',
             'level_58__r1c4', 'level_58__r2c1', 'level_58__r2c5', 'level_58__r3c3', 'level_58__r4c1', 'level_58__r6c5', 'level_65__r0c2',
             'level_65__r0c8', 'level_65__r4c11', 'level_66__r5c4', 'level_66__r9c8', 'level_68__r1c1', 'level_68__r3c1'];
-        const SPHERE85_WEAPON_GATED = ['level_69', 'level_70', 'level_71__r0c6', 'level_71__r11c7', 'level_71__r14c12', 'level_71__r16c19',
-            'level_72', 'level_73__r0c4', 'level_73__r3c7', 'level_74', 'level_75', 'level_80__r0c2', 'level_80__r6c4', 'level_80__r8c1'];
+        // ⛓ rules-k-pursuit-resume: rule K + (b) cuts L72, L73, L74, L75 and L80's rooted half at their lavarunners' leashes:
+        //   level_72 / level_74 / level_75 split into their members, L73 gains r4c4 / r5c7 / r8c2, L80's r6c4 is r6c5 now; every new
+        //   sub-region stays behind the same weapon gate (none freed).
+        const SPHERE85_WEAPON_GATED = ['level_69', 'level_70', 'level_71__r0c6', 'level_71__r11c7', 'level_71__r14c12',
+            'level_71__r16c19', 'level_72__r0c11', 'level_72__r10c8', 'level_72__r11c11', 'level_72__r11c6', 'level_72__r5c4',
+            'level_72__r6c17', 'level_72__r9c10', 'level_72__r9c12', 'level_72__r9c14', 'level_73__r0c4', 'level_73__r3c7',
+            'level_73__r4c4', 'level_73__r5c7', 'level_73__r8c2', 'level_74__r1c7', 'level_74__r2c11', 'level_74__r2c2',
+            'level_74__r8c18', 'level_75__r0c4', 'level_75__r10c4', 'level_75__r10c6', 'level_75__r11c3', 'level_75__r11c5',
+            'level_75__r13c3', 'level_75__r3c3', 'level_75__r8c4', 'level_75__r8c6', 'level_80__r0c2', 'level_80__r6c5',
+            'level_80__r8c1'];
         // ⛓ rules-lavatrap-neck: rule T splits L77 (level_77 -> r2c0 / r12c6 / r15c6) and L78 (+ r1c10, r3c1, r3c9, r4c4, r5c6,
         //   r6c9) at their lava traps' sealing discs; every new sub-region stays behind the same weapon gate (+8, none freed).
+        // ⛓ rules-k-pursuit-resume: rule K re-cuts L78 (- r3c1, r4c4; + r3c12, r4c2, r5c12, r6c11, r8c8, r8c10) and L80's L79
+        //   half (- r12c3; + r9c5, r12c4, r13c3 and the trap (2,14)'s own tile r14c2); none freed.
         const SPHERE910_WEAPON_GATED = ['level_76', 'level_77__r12c6', 'level_77__r15c6', 'level_77__r2c0', 'level_78__r0c16',
-            'level_78__r0c2', 'level_78__r1c10', 'level_78__r3c1', 'level_78__r3c9', 'level_78__r4c4', 'level_78__r5c6', 'level_78__r6c9',
-            'level_79__r0c4', 'level_79__r8c4', 'level_80__r12c3', 'level_80__r16c1', 'level_80__r8c4'];
-        const SPHERE102_WEAPON_GATED = ['level_100__r2c3', 'level_100__r4c10', 'level_101__r0c6', 'level_101__r4c2', 'level_101__r4c9',
-            'level_102__r5c3', 'level_102__r5c9', 'level_103', 'level_104', 'level_105', 'level_106', 'level_82', 'level_98', 'level_99__r2c4',
-            'level_99__r2c7'];
+            'level_78__r0c2', 'level_78__r1c10', 'level_78__r3c12', 'level_78__r3c9', 'level_78__r4c2', 'level_78__r5c12',
+            'level_78__r5c6', 'level_78__r6c11', 'level_78__r6c9', 'level_78__r8c10', 'level_78__r8c8', 'level_79__r0c4',
+            'level_79__r8c4', 'level_80__r12c4', 'level_80__r13c3', 'level_80__r14c2', 'level_80__r16c1', 'level_80__r8c4',
+            'level_80__r9c5'];
+        // ⛓ rules-k-pursuit-resume: rule K cuts L99's lower floor at its lavarunners' leashes (+ r6c12, r7c5 the L98 stairs, r8c10).
+        const SPHERE102_WEAPON_GATED = ['level_100__r2c3', 'level_100__r4c10', 'level_101__r0c6', 'level_101__r4c2',
+            'level_101__r4c9', 'level_102__r5c3', 'level_102__r5c9', 'level_103', 'level_104', 'level_105', 'level_106', 'level_82',
+            'level_98', 'level_99__r2c4', 'level_99__r2c7', 'level_99__r6c12', 'level_99__r7c5', 'level_99__r8c10'];
         const SPHERE116_WEAPON_GATED = ['level_107', 'level_108__r11c8', 'level_108__r2c0', 'level_108__r5c8', 'level_108__r8c8', 'level_109',
             'level_111', 'level_112__r0c7', 'level_112__r2c2', 'level_113', 'level_114'];
         const SPHERE122_WEAPON_GATED = ['level_110', 'level_115__r2c2', 'level_115__r4c4', 'level_115__r5c1', 'level_115__r6c7',

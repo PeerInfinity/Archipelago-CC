@@ -8,6 +8,8 @@
 // on this connection, never against the frontend's own state. That state holds
 // auto-collected events (logic says reachable, not that the player did it) and
 // can hold offline progress or another game's document while connecting.
+// Offline progress reaches the server only when the player sends it at connect
+// (offlineProgress.js); its goal then reports through the same paths as a check.
 
 import { isGeneratedWorldDoc } from './localRulesOverlay.js';
 import { evaluateRuleWithInventory } from '../../shared/procgen/library.js';

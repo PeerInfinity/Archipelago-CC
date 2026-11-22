@@ -13,14 +13,20 @@
  * `regionActions.js` is replaced by a recorder shared by both sides. No expected list is written by hand.
  *
  * COMPARED, per combination: the `play` channel IN ORDER (moves, path edits, checks), the `regions` channel IN ORDER
- * (`showRegionInRegionsPanel` and every CHANGE of "Show All Regions"), the `select` channel (`regionGraph:nodeSelected`,
- * published before any action), and the multiset of ALL calls (the read-only ones too).
+ * (`showRegionInRegionsPanel` and every CHANGE of "Show All Regions"), the `select` channel, and the multiset of ALL
+ * calls (the read-only ones too).
+ *
+ * ⛓ THE `select` CHANNEL IS RETIRED (CA-S5). It recorded `regionGraph:nodeSelected` (`publishNodeSelected`), which the
+ * base published before any action. CA-S5 retired the event: the adopted side's `select` channel must be EMPTY, and
+ * the base's `select` entries are removed before the other comparisons and COUNTED (`summary.retiredSelect`, exactly
+ * one per region-click row). The oracle is KEPT for its `play` / `regions` / all-calls pins over every combination.
  *
  * THE NAMED DELTAS, counted:
  *   1. `source` — a path move carries `regionView-path-regionGraph` (R7) where the base carried a `regionGraph-*`
  *      source. Each row swaps the base's strings for it (and asserts the new string was not in the base's log).
  *   2. the R8 interleaving BETWEEN the channels (the base's was set by its dynamic imports) — not compared, counted.
- *   With `movePlayerOneStep` false there is NO third kind: any other difference fails the row.
+ *   3. (CA-S5) the base's `select` publish, gone — counted.
+ *   With `movePlayerOneStep` false there is NO other kind: any other difference fails the row.
  */
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 
@@ -230,7 +236,7 @@ const DISCOVERY = {
     blocked: { active: true, settings: { disableLocationCheckUI: true } },
 };
 
-const summary = { rows: 0, swappedSources: 0, crossOrderDiffers: 0, nonEmptyPlay: 0, newSourceSeen: 0 };
+const summary = { rows: 0, swappedSources: 0, crossOrderDiffers: 0, nonEmptyPlay: 0, newSourceSeen: 0, retiredSelect: 0 };
 /** The movePlayerOneStep=true rows, classified (the user-visible change). */
 const oneStep = { rows: 0, same: 0, classes: {}, table: {} };
 
@@ -293,11 +299,17 @@ describe(`⛓ 2^${OTHER_KEYS.length} combinations (movePlayerOneStep forced fals
             for (const bits of combos(false)) {
                 const before = await measureBefore(sc.target, bits, opts);
                 const { log: after } = measureAfter(sc.target, bits, opts);
-                const { out: beforeSwapped, swapped } = swapSources(before);
+                const { out: swappedAll, swapped } = swapSources(before);
                 const label = `${name} ${JSON.stringify(bits)}`;
+                // Named delta 3 (CA-S5): the base's select publish is retired; the adopted side publishes none.
+                const retired = channel(swappedAll, 'select');
+                expect(retired, `the base's select channel: ${label}`).toEqual(sc.target === 'region'
+                    ? [['publishNodeSelected', ['regionGraph:nodeSelected', sc.region, { id: sc.region }]]] : []);
+                expect(channel(after, 'select'), `select channel (retired): ${label}`).toEqual([]);
+                summary.retiredSelect += retired.length;
+                const beforeSwapped = swappedAll.filter((e) => e.channel !== 'select');
                 expect(channel(after, 'play'), `play channel: ${label}`).toEqual(channel(beforeSwapped, 'play'));
                 expect(channel(after, 'regions'), `regions channel: ${label}`).toEqual(channel(beforeSwapped, 'regions'));
-                expect(channel(after, 'select'), `select channel: ${label}`).toEqual(channel(beforeSwapped, 'select'));
                 expect(multiset(after), `all calls: ${label}`).toEqual(multiset(beforeSwapped));
                 expect(JSON.stringify(before)).not.toContain(NEW_SOURCE);
                 summary.rows++;
@@ -314,6 +326,9 @@ describe(`⛓ 2^${OTHER_KEYS.length} combinations (movePlayerOneStep forced fals
         expect(summary.nonEmptyPlay).toBeGreaterThan(summary.rows / 2);
         expect(summary.swappedSources).toBeGreaterThan(0);
         expect(summary.newSourceSeen).toBeGreaterThan(0);
+        // CA-S5: exactly one retired select publish per region-click row, none per location-click row.
+        const regionScenarios = SCENARIOS.filter((sc) => sc.target === 'region').length;
+        expect(summary.retiredSelect).toBe((1 << OTHER_KEYS.length) * regionScenarios);
     });
 });
 
@@ -326,6 +341,7 @@ describe(`⛓ movePlayerOneStep = true: what each of the 2^${OTHER_KEYS.length} 
                 const { log: after } = measureAfter(target, bits, opts);
                 const { log: afterOff } = measureAfter(target, { ...bits, movePlayerOneStep: false }, opts);
                 expect(multiset(after)).toEqual(multiset(afterOff));
+                expect(channel(after, 'select')).toEqual([]);
                 const cls = classify(swapSources(before).out, after);
                 expect(cls, `${target} ${JSON.stringify(bits)}`).not.toMatch(/^UNEXPECTED/);
                 oneStep.rows++;

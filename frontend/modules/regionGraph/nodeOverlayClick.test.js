@@ -65,7 +65,8 @@ beforeEach(() => {
 /**
  * ⚖ overlay card click → runClickActions (planner ruling 2026-11-20, archipelago-cc-23's option 1; slice AN-3b).
  * A click on an overlay card's BODY clicks the node like a bare node: `handleRegionNodeClick` publishes
- * `regionGraph:nodeSelected` ({ nodeId, data }) ONCE and runs the panel's click actions ONCE. A BUTTON inside the card
+ * `regionView:regionClicked` ({ panelId: 'regionGraph', regionName }) ONCE and runs the panel's click actions ONCE
+ * (until CA-S5 retired it, `regionGraph:nodeSelected` was the event counted here; it is now published never). A BUTTON inside the card
  * is the card's own. These hold for any provider's card (ActionNodes', vibeCodingSim's): the listener is the overlay
  * manager's, not the provider's.
  * The forwarded mousedown (the card → the canvas, for dragging) adding no second run is MEASURED with a real mouse
@@ -94,22 +95,24 @@ const counting = () => {
     return runs;
 };
 const settingsWith = (extra) => ({ ...withRegion({ [CA.BUILT_IN_IDS.route]: false, 'regions.open': false, 'probe.count': true }), ...extra });
-const selected = () => bus.publish.mock.calls.filter(([e]) => e === 'regionGraph:nodeSelected');
+const selected = () => bus.publish.mock.calls.filter(([e]) => e === 'regionView:regionClicked');
+const nodeSelected = () => bus.publish.mock.calls.filter(([e]) => /:nodeSelected$/.test(e));
 
 describe('⛓ an overlay card\'s body click is the node\'s click (AN-3b)', () => {
     for (const kind of ['an ActionNodes card', 'a vibeCodingSim card']) {
-        it(`${kind}: nodeSelected once with { nodeId, data }, the strip once`, () => {
+        it(`${kind}: regionView:regionClicked once with { panelId, regionName }, the strip once, no nodeSelected`, () => {
             const runs = counting();
             const ui = makeUi(settingsWith({}));
             ui.interactionManager = new GraphInteractionManager(ui);
             const el = overlayFor(ui, 'Field');
             click(el);
-            expect(selected()).toEqual([['regionGraph:nodeSelected', { nodeId: 'Field', data: { id: 'Field' } }]]);
+            expect(selected()).toEqual([['regionView:regionClicked', { panelId: 'regionGraph', regionName: 'Field' }]]);
+            expect(nodeSelected()).toEqual([]);
             expect(runs).toEqual(['Field']);
         });
     }
 
-    it('a BUTTON inside the card: neither nodeSelected nor the strip', () => {
+    it('a BUTTON inside the card: neither the click event nor the strip', () => {
         const runs = counting();
         const ui = makeUi(settingsWith({}));
         ui.interactionManager = new GraphInteractionManager(ui);
@@ -119,12 +122,13 @@ describe('⛓ an overlay card\'s body click is the node\'s click (AN-3b)', () =>
         expect(runs).toEqual([]);
     });
 
-    it('the master switch off: no action runs; nodeSelected is still published once', () => {
+    it('the master switch off: no action runs; regionView:regionClicked is still published once, no nodeSelected', () => {
         const runs = counting();
         const ui = makeUi(settingsWith({ enabled: false }));
         ui.interactionManager = new GraphInteractionManager(ui);
         click(overlayFor(ui, 'Field'));
-        expect(selected()).toHaveLength(1);
+        expect(selected()).toEqual([['regionView:regionClicked', { panelId: 'regionGraph', regionName: 'Field' }]]);
+        expect(nodeSelected()).toEqual([]);
         expect(runs).toEqual([]);
         expect(regionGraphDispatcher.publish).not.toHaveBeenCalled();
     });

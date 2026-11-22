@@ -39,6 +39,8 @@ export const REGION_MAP_ORIGINATORS = Object.freeze({
     bulkCheck: 'regionMapBulkCheck',
 });
 
+/** The base's selection event. CA-S5 retired it (and `regionActions.publishNodeSelected`) in the app; the equivalence
+ * test's recorder supplies `publishNodeSelected`, so this frozen reader still records it, as the retired channel. */
 export const REGION_MAP_NODE_SELECTED = 'regionMap:nodeSelected';
 
 /** ⚖ option A: the Region Graph's toggles. One argument away from a Region Map copy. */

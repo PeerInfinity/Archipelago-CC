@@ -67,7 +67,8 @@ describe('the census of the committed rules', () => {
     it('enumerates the rules\' landings, each with the regions it serves', () => {
         expect(delivered.landings.length).toBeGreaterThan(300);
         const l74 = delivered.landings.find((l) => l.level === 73 && l.x === 64 && l.y === 16);
-        expect(l74.arrivedFrom).toEqual(['level_74']);
+        // ⛓ rules-k-pursuit-resume: rule K splits L74 at its lavarunners' leash cuts; its L73 door is in member r8c18
+        expect(l74.arrivedFrom).toEqual(['level_74__r8c18']);
     });
     it('the delivered set leaves no screen hit that a door arrives through (the L73 runner is moved)', () => {
         const arrived = delivered.rows.filter((r) => r.hit && r.arrivedFrom.length > 0);

@@ -854,6 +854,12 @@
             "_comment": "seedling-gen-chestdoor-preset. The REAL wasm game (WebGPU, the seedling-wasm batch's launch) on the committed seedling_generated_chestdoor preset: the Playback Bot walks to the door chest region_0_0 - Chest (the WG engine stages the mounted set, the solver's tape opens the chest from below) and the row ends on its locationCheck — that location alone, the game's own pendingCheck of {level 0, tag 1}, no error status. Room 1's chest (two goals, Q5) is not walked."
         },
         {
+            "id": "seedling-wasm-runtime-held-custom-set-plays-its-rooms",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "S4 seedling-custom-set-arm. The REAL wasm game (WebGPU, the seedling-wasm batch's launch), no rebuild: the watch page's bundle of the vanilla 116 + one tree in room 10, held by the host; the wasm AP load delivers ITS rooms through botLoadLevels — the delivered room 10 has the tree and botLevelSet.active is the delivered set."
+        },
+        {
             "id": "seedling-wasm-runtime-solver-stop-button",
             "enabled": true,
             "category": "Seedling wasm runtime",
@@ -906,6 +912,18 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "Slice G. The same custom set in the lab's own shape (S1: no flash_panel block, map_document the page's label). Before G the panel said only 'no game configured'; now it shows the same message as the row above."
+        },
+        {
+            "id": "seedling-js-runtime-held-custom-set-plays-its-rooms",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "S4 seedling-custom-set-arm (⚖ Robert 2026-11-20, 'Make lab sets playable'). The inverse of the study's probe p5 in the app: the watch page's bundle of the vanilla 116 + one tree in room 10 (rules + region-atlas + level-set members) loaded through the Presets panel's file door; the host holds the set, so the JS AP load delivers ITS rooms: the delivered room 10 and the JS page's mounted room 10 have the tree, botLevelSet.active = the delivered set, Edit ▸ offered."
+        },
+        {
+            "id": "seedling-js-runtime-held-custom-set-edit-opens-room-in-lab",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "S4 seedling-custom-set-arm (⚖ Robert Q4 'Open back in the lab'; lab-7's claim (d)). The held tree set on the JS runtime, the game teleported to room 10, Edit ▸ pressed: the lab's own announce (procgenLab:levelChanged) names room 10 open, the handed set_id, and room 10's record has the tree."
         },
         {
             "id": "seedling-wasm-runtime-same-wiring-switch-loads-new-rooms",
@@ -2100,7 +2118,7 @@
             "id": "region-map-click-default",
             "enabled": true,
             "category": "Region Map",
-            "_comment": "CLICK ACTIONS CA-S3 (2026-11-19): the Region Map's default clickActions (session-only), on procgen_topdown AP_1: a cell click extends the path to its region and opens the Regions panel at it (regions.open); regionMap:nodeSelected then regionView:regionClicked first; the strip sits at the top of the panel. Fast batch. Reloads the world loaded before."
+            "_comment": "CLICK ACTIONS CA-S3 (2026-11-19): the Region Map's default clickActions (session-only), on procgen_topdown AP_1: a cell click extends the path to its region and opens the Regions panel at it (regions.open); regionView:regionClicked first (CA-S5 retired regionMap:nodeSelected); the strip sits at the top of the panel. Fast batch. Reloads the world loaded before."
         },
         {
             "id": "region-map-click-master-off",
@@ -2166,7 +2184,7 @@
             "id": "test_node_selection",
             "enabled": true,
             "category": "Region Graph",
-            "_comment": "REGION GRAPH CHECKS (2026-11-18): a pointer tap (mousedown + mouseup at the node's rendered position) on a region node publishes regionGraph:nodeSelected { nodeId, data } and marks it selected: the only row through the canvas → tap → handler wiring CA-S2 rewrites. Reloads the world loaded before. On push (fast batch)."
+            "_comment": "REGION GRAPH CHECKS (2026-11-18): a pointer tap (mousedown + mouseup at the node's rendered position) on a region node publishes regionView:regionClicked { panelId: 'regionGraph', regionName } and marks it selected (CA-S5: was regionGraph:nodeSelected, retired; the row checks it stays silent): the only row through the canvas → tap → handler wiring CA-S2 rewrites. Reloads the world loaded before. On push (fast batch)."
         },
         {
             "id": "test_region_graph_node_picker",
@@ -2184,13 +2202,13 @@
             "id": "test_region_graph_click_default",
             "enabled": true,
             "category": "Region Graph",
-            "_comment": "CLICK ACTIONS CA-S2 (2026-11-19): with the default clickActions (set session-only), a tap on an accessible region extends the path to it and opens the Regions panel at it (regions.open, registered by the Regions module); regionGraph:nodeSelected is published first. Reloads the world loaded before. On push (fast batch)."
+            "_comment": "CLICK ACTIONS CA-S2 (2026-11-19): with the default clickActions (set session-only), a tap on an accessible region extends the path to it and opens the Regions panel at it (regions.open, registered by the Regions module); regionView:regionClicked is published first (CA-S5 retired regionGraph:nodeSelected). Reloads the world loaded before. On push (fast batch)."
         },
         {
             "id": "test_region_graph_click_master_off",
             "enabled": true,
             "category": "Region Graph",
-            "_comment": "CLICK ACTIONS CA-S2 (2026-11-19): the \u23f8 master switch off (clickActions.enabled false, session-only): a tap moves nobody, edits no path, opens no Regions panel, and still publishes regionGraph:nodeSelected. On push (fast batch)."
+            "_comment": "CLICK ACTIONS CA-S2 (2026-11-19): the \u23f8 master switch off (clickActions.enabled false, session-only): a tap moves nobody, edits no path, opens no Regions panel, and still publishes regionView:regionClicked (CA-S5 retired regionGraph:nodeSelected). On push (fast batch)."
         },
         {
             "id": "test_region_graph_click_location_check",
@@ -2202,7 +2220,7 @@
             "id": "test_region_graph_click_discover",
             "enabled": true,
             "category": "Region Graph",
-            "_comment": "CLICK ACTIONS CA-S4 (2026-11-20): discovery.discover, the registered action that replaced Discovery's regionGraph:nodeSelected listener. Discovery on with clickDiscoversRegion (session-only): a tap discovers an undiscovered region; loop mode's bundle (clickDiscoversRegion false): a tap discovers nothing. Reloads the world loaded before. On push (fast batch)."
+            "_comment": "CLICK ACTIONS CA-S4 (2026-11-20): discovery.discover, the registered action that replaced Discovery's regionGraph:nodeSelected listener (the event was retired in CA-S5). Discovery on with clickDiscoversRegion (session-only): a tap discovers an undiscovered region; loop mode's bundle (clickDiscoversRegion false): a tap discovers nothing. Reloads the world loaded before. On push (fast batch)."
         },
         {
             "id": "test_regions_location_click_follows_graph_strip",

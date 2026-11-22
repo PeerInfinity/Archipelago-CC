@@ -183,15 +183,15 @@ const { loadRulesSchema } = await import(
     join(REPO, 'frontend/modules/procgenCore/jsonSchemaFiles.js'));
 const { stringifyRulesJson } = await import(
     join(REPO, 'frontend/modules/shared/rulesJsonBuilder.js'));
-const { compileRegionAtlas } = await import(
+const { compileRegionAtlas, FLASH_PANEL_WIRING } = await import(
     join(REPO, 'frontend/modules/procgenPipeline/regionAtlasCompiler.js'));
 const { stampAtlasIdentity, validateRegionAtlas } = await import(
     join(REPO, 'frontend/modules/procgenPipeline/regionAtlasValidator.js'));
 /**
  * ⛓⛓ lab-set-seedling-identity — **THE PAGE'S OWN IDENTITY MODULE, NOT A COPY OF IT.**
  * The set adapter's `deps.atlas` (game `seedling`, the map-document LABEL) and the
- * compile the mount runs (a `seedling-lab-<8 hex>` stamped copy, no `flash_panel`
- * block) are read from `watchSetIdentity.js`, the file `watchViewer.js` reads, so
+ * compile the mount runs (a `seedling-lab-<8 hex>` stamped copy; ⛓ S4: WITH the
+ * compiler's own `flash_panel` block again) are read from `watchSetIdentity.js`, the file `watchViewer.js` reads, so
  * node's answer cannot drift from the page's choice.
  */
 const { LAB_SET_ATLAS_BASE, WATCH_SET_ATLAS, labSetIdentity } = await M('watchSetIdentity.js');
@@ -2711,8 +2711,11 @@ try {
         `${pageBytes.length} B`);
     /**
      * ⛓⛓⛓ lab-set-seedling-identity — **THE SET LEAVES AS SEEDLING, WITH ITS OWN
-     * FINGERPRINT, AND OFFERS NOTHING TO PLAY.** Asked of the bytes the page wrote,
-     * read back in node: every room is `flash_seedling`; there is no `flash_panel` block;
+     * FINGERPRINT.** Asked of the bytes the page wrote, read back in node: every room is
+     * `flash_seedling`; ⛓ RE-RECORDED by S4 (seedling-custom-set-arm, lab-7 reviewed): the
+     * `flash_panel` block is the compiler's own Seedling wiring (until S4: none — "offers
+     * nothing to play"; S4's player delivers a HELD set's own rooms, and the bundle carries
+     * the set);
      * the rules name a `seedling-lab-<8 hex>` atlas that is NOT served; the bundle's
      * `region-atlas` member IS that atlas (same id, a valid content hash), so the host
      * atlas cache files it under the id the rules name.
@@ -2721,10 +2724,12 @@ try {
     const labRef = rulesMember?.doc?.region_atlas?.['1'] ?? null;
     const labRows = Object.values(rulesMember?.doc?.preset_sidecars?.['1'] ?? {});
     check(labRows.length > 0 && labRows.every((r) => r.substrate === 'flash_seedling')
-        && labRef?.game === WATCH_SET_ATLAS.game && !('flash_panel' in (rulesMember?.doc ?? {})),
-        '⛓⛓⛓ **THE BUNDLED RULES ARE SEEDLING\'S AND PLAY NOTHING** — every room `flash_seedling`, '
-        + '`region_atlas[1].game` the shared `SEEDLING_ATLAS_GAME`, and no `flash_panel` block',
-        `${labRows.length} room(s) · ${json(labRef)} · flash_panel ${'flash_panel' in (rulesMember?.doc ?? {})}`);
+        && labRef?.game === WATCH_SET_ATLAS.game
+        && json(rulesMember?.doc?.flash_panel ?? null) === json({ 1: FLASH_PANEL_WIRING.seedling }),
+        '⛓⛓⛓ **THE BUNDLED RULES ARE SEEDLING\'S AND WIRED TO PLAY (S4)** — every room `flash_seedling`, '
+        + '`region_atlas[1].game` the shared `SEEDLING_ATLAS_GAME`, and the compiler\'s own Seedling '
+        + '`flash_panel` block (re-recorded by S4: was "no `flash_panel` block")',
+        `${labRows.length} room(s) · ${json(labRef)} · flash_panel ${json(rulesMember?.doc?.flash_panel ?? null)}`);
     check(new RegExp(`^${LAB_SET_ATLAS_BASE}-[0-9a-f]{8}$`).test(labRef?.atlas_id ?? '')
         && !SERVED_ATLAS_IDS.has(labRef.atlas_id)
         && atlasMember?.doc?.atlas_id === labRef.atlas_id

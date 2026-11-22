@@ -3,9 +3,8 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
-import * as actions from '../regionView/regionActions.js';
 import { runClickActions, clickStatusOf, REGION_CLICKED, LOCATION_CLICKED } from '../regionView/clickActions.js';
-import { REGION_GRAPH_ORIGINATORS, REGION_GRAPH_NODE_SELECTED } from './regionGraphOriginators.js';
+import { REGION_GRAPH_ORIGINATORS } from './regionGraphOriginators.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -186,9 +185,9 @@ export class GraphInteractionManager {
   }
 
   /**
-   * ⛓ A click on a region node (a tap, or the "Go to" picker): select it, publish `regionGraph:nodeSelected` (BEFORE
-   * any action and outside them, until S5 retires the event), then the generic `regionView:regionClicked` (CA-S4),
-   * then the panel's REGION click actions.
+   * ⛓ A click on a region node (a tap, the "Go to" picker, or an overlay card's body): select it (the visual select
+   * state), publish the generic `regionView:regionClicked` (CA-S4), then run the panel's REGION click actions.
+   * CA-S5 retired `regionGraph:nodeSelected`, which was published here first: nothing in the app heard it.
    */
   handleRegionNodeClick(node) {
     const regionName = node.id(); // Node ID is the region name
@@ -201,8 +200,6 @@ export class GraphInteractionManager {
     this.ui.cy.$('node').removeClass('selected');
     node.addClass('selected');
 
-    // Publish the custom regionGraph event for any other listeners
-    actions.publishNodeSelected({ eventBus: this.eventBus }, REGION_GRAPH_NODE_SELECTED, regionName, node.data());
     // ⛓ CA-S4: the generic click event (design §4.3), the Region Map's shape; apcalc and vibeCodingSim hear it.
     this.eventBus.publish(REGION_CLICKED, { panelId: 'regionGraph', regionName });
 
