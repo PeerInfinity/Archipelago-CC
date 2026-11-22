@@ -41,12 +41,13 @@ export function jsSaveSchemaProps() {
         [JS_SAVE_SETTING_PROP]: {
             type: 'boolean',
             default: JS_SAVE_DEFAULT,
-            label: 'Seedling JS: use the save',
-            description: "Runtime 'js' only. On: the game's progress in this room (the broken rocks, keys, seals, totem "
+            label: 'Seedling JS / wasm: use the save',
+            description: "Runtime 'js', and runtime 'wasm' on a build that can keep its save (the manifest's `sosave`). "
+                + "On: the game's progress in this room (the broken rocks, keys, seals, totem "
                 + 'parts, slot order) is kept in this browser and comes back when the same room is loaded again. Off '
                 + '(the default): the save is neither read nor written. Turning it on takes effect at once (written from '
                 + 'now on; a stored save is read at the next load); turning it off stops writing at once. The Flash '
-                + "panel's \"Clear this room's save\" removes the stored save either way.",
+                + "panel's \"Clear this room's save\" removes the stored save (both runtimes') either way.",
         },
     };
 }

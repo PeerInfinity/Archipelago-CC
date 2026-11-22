@@ -271,8 +271,8 @@ const PAGE_UP = Object.freeze([WASM_START_PROMPT, 'JS runtime loaded', 'configur
  * first") — start from NO Seedling JS save, so a second run starts as fresh as the first. Two steps, right after the
  * world is loaded (the room is known then) and before the game page loads it: bring the Flash Panel forward (and note
  * whether its **Settings** section is open), then open that section, press **Clear this room's save** and close the
- * section again if it was closed. The button is shown only when the JS runtime is selected (`data-applies`): on wasm
- * there is no JS save, so both clicks are skipped (`optional`, and the section is opened only when the button is in
+ * section again if it was closed. The button is shown only when the JS runtime is selected, or a wasm build that
+ * declares `sosave` (RE3 (i), `data-applies`): on any other wasm build there is no save, so both clicks are skipped (`optional`, and the section is opened only when the button is in
  * it, `:has`). Done = the panel's root says a clear happened since the step began (`data-js-save-cleared-at`), or the
  * button does not apply. `required` (a feature check that sets the JS runtime itself): the button must be there and
  * be pressed. ⛔ It does not rewind a game already running with a restored save (the button's log says so).
@@ -314,8 +314,8 @@ export function clearSeedlingSaves(id) {
 function clearSeedlingSaveSteps(id, { required, ruffle }) {
     const clear = required ? { ...FLASH, selector: CLEAR_SAVE_SELECTOR } : CLEAR_SAVE;
     const text = ruffle
-        ? "Start from no save: in the panel's **Settings** section, press **Clear this room's save** on the **JS** runtime, or **Clear the Flash save** on the **Flash** (Ruffle) runtime (the panel's log says what it removed). On wasm there is no such save, and nothing to press."
-        : "On the **JS** runtime, start from no save: in the panel's **Settings** section, press **Clear this room's save** (the panel's log says what it removed). On wasm there is no JS save, and nothing to press.";
+        ? "Start from no save: in the panel's **Settings** section, press **Clear this room's save** on the **JS** runtime (or a **wasm** build that keeps a save), or **Clear the Flash save** on the **Flash** (Ruffle) runtime (the panel's log says what it removed). On a wasm build that keeps no save there is nothing to press."
+        : "On the **JS** runtime (or a **wasm** build that keeps a save), start from no save: in the panel's **Settings** section, press **Clear this room's save** (the panel's log says what it removed). On a wasm build that keeps no save there is nothing to press.";
     const actions = ruffle
         ? [{ click: OPEN_SETTINGS_FOR_ANY_CLEAR }, { click: clear }, { click: CLEAR_RUFFLE_SAVE }]
         : [{ click: OPEN_SETTINGS_FOR_CLEAR }, { click: clear }];

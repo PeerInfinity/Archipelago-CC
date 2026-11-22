@@ -87,6 +87,7 @@ export const moduleInfo = {
     { pattern: '/shrumsave$', kind: STORAGE_KINDS.user, label: 'Seedling save (a Ruffle SharedObject; the key starts with the host and SWF path)' },
     { prefix: 'seedlingRuffleSaveAside_', kind: STORAGE_KINDS.user, label: 'Seedling Flash save set aside while "Use the save" is off (comes back when it is on)' },
     { prefix: 'seedlingJsSave_', kind: STORAGE_KINDS.user, label: 'Seedling JS runtime save, one per room (the broken rocks, keys, seals, slot order)' },
+    { prefix: 'seedlingWasmSave_', kind: STORAGE_KINDS.user, label: 'Seedling wasm runtime save, one per room (the game\'s own SharedObject, on a build that keeps it)' },
     { key: 'flashPanel_sections', kind: STORAGE_KINDS.state, label: 'Flash panel: which sections are open (Solver, Settings, Tools)' },
   ],
 };

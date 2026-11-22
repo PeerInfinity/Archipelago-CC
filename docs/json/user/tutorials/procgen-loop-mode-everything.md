@@ -28,7 +28,7 @@ Seedling rooms play in the **wasm** build of the original game by default. The *
 1. Open the **Loops** tab: loop mode is on (**Exit Loop Mode** in its controls), and every region's block is there to queue.
 2. The **Idle Loops** tab plays its region: the whole town of the idle game, spending the shared mana.
 3. Open the **Flash Panel** tab.
-4. Start from no save: in the panel's **Settings** section, press **Clear this room's save** on the **JS** runtime, or **Clear the Flash save** on the **Flash** (Ruffle) runtime (the panel's log says what it removed). On wasm there is no such save, and nothing to press.
+4. Start from no save: in the panel's **Settings** section, press **Clear this room's save** on the **JS** runtime (or a **wasm** build that keeps a save), or **Clear the Flash save** on the **Flash** (Ruffle) runtime (the panel's log says what it removed). On a wasm build that keeps no save there is nothing to press.
 5. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game*, or, on the JS runtime, *JS runtime loaded* or *configured* (the first time, the browser fetches the game's runtime).
 6. Press **▶ Start** in the game, if the game shows one. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
 7. Open the **Playback Bot** tab. It says "Sphere log loaded" — it has the world's solution path, sphere by sphere.

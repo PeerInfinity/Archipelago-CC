@@ -12,6 +12,7 @@ import { SolveWatchView } from './seedlingSolveWatchView.js';
 import { AP_ITEM_FOUND_EVENT, RULES_RELOADED_IN_PLACE_EVENT } from './seedlingRegionGlue.js';
 import {
   CUSTOM_SET_NOT_PLAYABLE, RANDOMIZER_ARMS, entranceShuffleRefusal, seedlingRandomizerEligibility, servedRegionAtlas,
+  SO_SAVE_CAPABILITY, buildNameFromWasmPath, capabilitiesOf,
 } from './seedlingRandomizerEligibility.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 // ⛓ J3 — import-free (it imports nothing), so the panel's closure gains one small file.
@@ -37,6 +38,7 @@ import { atlasCache } from '../procgenCore/atlasCache.js';
 import { openRoomEditor } from '../procgenPipeline/regionEditors.js';
 // ⛓ RE2 — the JS runtime's save, one localStorage key per room (the mount key).
 import { createJsSaveController, JS_SAVE_DEFAULT, JS_SAVE_SETTING_KEY } from './seedlingJsSave.js';
+import { createWasmSaveController } from './seedlingWasmSave.js';
 // ⛓ USE THE SAVE / CLEAR for the Flash (Ruffle) save `…/shrumsave` (slice ruffle-save-toggle-clear).
 import {
   clearRuffleSave, endRuffleSaveRun, prepareRuffleSave, ruffleSaveKey, RUFFLE_SAVE_DEFAULT, RUFFLE_SAVE_SETTING_KEY,
@@ -151,8 +153,9 @@ const SETTINGS_CONTROLS = Object.freeze([
   { prop: 'seedlingJsMusic', label: 'Music', when: 'js' },
   { prop: 'seedlingJsMusicVolume', label: 'Music volume', when: 'js' },
   // ⛓ USE THE SAVE (slice `js-save-toggle-clear`) — shown when the JS runtime is SELECTED (the setting), so it can be
-  // set before the game loads; the "Clear this room's save" button sits on the row under it.
-  { prop: 'seedlingJsSave', label: 'Use the save', when: 'jsSelected' },
+  // set before the game loads; the "Clear this room's save" button sits on the row under it. ⛓ RE3 (i) (⚖ Robert
+  // 2026-11-22 "Same setting and Clear"): the wasm runtime's save rides the same switch and button.
+  { prop: 'seedlingJsSave', label: 'Use the save', when: 'jsOrWasmSelected' },
   // ⛓ USE THE SAVE (slice `ruffle-save-toggle-clear`) — the Flash (Ruffle) save, its own setting; shown when the Flash
   // runtime is SELECTED on Seedling, with "Clear the Flash save" on the row under it.
   { prop: 'seedlingRuffleSave', label: 'Use the save', when: 'flashSelected' },
@@ -1001,6 +1004,7 @@ export class FlashPanelUI {
   _teardownForReinit() {
     this._initEpoch = (this._initEpoch ?? 0) + 1;
     this._unbindJsSave();
+    this._disposeWasmSave();
     this._initRuntime = undefined;
     this._apLoadKey = undefined;
     this._apLoadRulesIgnored = false;
@@ -1452,8 +1456,8 @@ export class FlashPanelUI {
     button.className = 'flash-panel-js-save-clear';
     button.style.cssText = BUTTON_CSS;
     button.textContent = "Clear this room's save";
-    button.title = "Remove this room's Seedling JS save from this browser (the room the loaded rules mount). The game "
-      + 'in progress keeps its progress; the next load of this room starts with no save.';
+    button.title = "Remove this room's Seedling save (the JS runtime's and the wasm runtime's) from this browser (the "
+      + 'room the loaded rules mount). The game in progress keeps its progress; the next load of this room starts with no save.';
     button.addEventListener('click', () => this.clearJsSave());
     row.append(button);
     this._jsSaveClearRow = row;
@@ -1628,6 +1632,34 @@ export class FlashPanelUI {
    * Solver section (Seedling only: its solver is the only one), each settings row's `when`, the runtime's choices
    * (`auto` + what the wiring plays; `auto` names the runtime it picks) and the TP switch (a game that teleports).
    */
+  /**
+   * ⛓ RE3 (i) — does the wasm build this game plays DECLARE `sosave`? Read off `builds.json` (fetched once, before
+   * boot; the panel re-renders when it lands), for the build the wiring names (`flash_panel.wasm` or the component's
+   * `wasmPath`). False until the manifest is read, and for any build that does not declare it.
+   */
+  _wasmSaveCapable() {
+    const fp = stateManager.getStaticData?.()?.flash_panel ?? null;
+    const wasmPath = this.componentState?.wasmPath || fp?.wasm || null;
+    const buildName = buildNameFromWasmPath(wasmPath);
+    if (!buildName) return false;
+    if (this._wasmManifest === undefined) {
+      this._loadWasmManifest();
+      return false;
+    }
+    return capabilitiesOf(this._wasmManifest, buildName).capabilities?.includes(SO_SAVE_CAPABILITY) === true;
+  }
+
+  /** The manifest, fetched once per panel (null when it cannot be read). */
+  _loadWasmManifest() {
+    if (this._wasmManifestLoad) return this._wasmManifestLoad;
+    this._wasmManifest = null;
+    this._wasmManifestLoad = this._loadConfig(`${WASM_DIR}builds.json`).then((m) => {
+      this._wasmManifest = m ?? null;
+      this._renderGameScope();
+    }, () => { /* no manifest: no wasm save offered */ });
+    return this._wasmManifestLoad;
+  }
+
   _renderGameScope() {
     if (!this.rootElement || !this._settingsControls) return;
     const game = this.gameConfig?.game ?? null;
@@ -1643,9 +1675,16 @@ export class FlashPanelUI {
     const jsSelected = transport === 'js' || (runtimeSetting === 'js' && (seedling || !this.configPath));
     // ⛓ USE THE SAVE (Flash) — the Flash runtime SELECTED on Seedling (or no game resolved yet), or it runs Seedling
     const flashSelected = (transport === 'flash' && seedling) || (runtimeSetting === 'flash' && (seedling || !this.configPath));
+    // ⛓ RE3 (i) — the wasm runtime SELECTED on Seedling (the setting says wasm, or auto picks it), or it runs Seedling
+    const wasmSetting = runtimeSetting === 'wasm' || (runtimeSetting === 'auto' && (runtimes === null || runtimes.includes('wasm')));
+    // ⛔ and only on a build that DECLARES `sosave` (the manifest, read before boot): on p4g the save cannot be kept
+    const wasmSelected = ((transport === 'wasm' && seedling) || (wasmSetting && (seedling || !this.configPath)))
+      && this._wasmSaveCapable();
+    const jsOrWasmSelected = jsSelected || wasmSelected;
     for (const c of this._settingsControls) {
       const applies = c.when === 'always' || (c.when === 'seedling' && seedling) || (c.when === 'js' && transport === 'js')
-        || (c.when === 'jsSelected' && jsSelected) || (c.when === 'flashSelected' && flashSelected) || (c.when === 'touch' && !!this.gameConfig?.touch_controls);
+        || (c.when === 'jsSelected' && jsSelected) || (c.when === 'jsOrWasmSelected' && jsOrWasmSelected)
+        || (c.when === 'flashSelected' && flashSelected) || (c.when === 'touch' && !!this.gameConfig?.touch_controls);
       c.row.style.display = applies ? 'flex' : 'none';
       if (c.prop !== 'runtime') continue;
       for (const opt of c.input.options) {
@@ -1662,8 +1701,8 @@ export class FlashPanelUI {
     }
     if (this.teleportOnClickRow) this.teleportOnClickRow.style.display = this.gameConfig?.teleport ? 'flex' : 'none';
     if (this._jsSaveClearRow) {
-      this._jsSaveClearRow.style.display = jsSelected ? 'flex' : 'none';
-      this._jsSaveClearButton.dataset.applies = String(jsSelected);
+      this._jsSaveClearRow.style.display = jsOrWasmSelected ? 'flex' : 'none';
+      this._jsSaveClearButton.dataset.applies = String(jsOrWasmSelected);
     }
     if (this._ruffleSaveClearRow) {
       this._ruffleSaveClearRow.style.display = flashSelected ? 'flex' : 'none';
@@ -1910,6 +1949,12 @@ export class FlashPanelUI {
       this._setStatus('loading wasm page…');
       await adapter.waitForRuntime(30000);
       if (this._initStale(epoch, adapter)) return;
+      // ⛓ RE3 (i) — the wasm save's hook goes on the frame's Module before ▶ Start (its load answers null at boot).
+      if (this.transport !== 'js') {
+        await this._loadWasmManifest();
+        if (this._initStale(epoch, adapter)) return;
+        if (this._wasmSaveCapable()) this._installWasmSave(adapter);
+      }
       this._heldKeys.install();
       if (this.transport === 'js' && this._jsStart === 'click') {
         // ⛓ ▶ START — the JS page waits for its ▶ Start (the tap that unlocks the sound), as the wasm page does.
@@ -2121,9 +2166,13 @@ export class FlashPanelUI {
       // before/after world, its wait in ms, the delivery's chunk count. A
       // browser row that could only see the END state cannot tell a reset that
       // landed from a world that was already there.
+      // ⛓ RE3 (i) — the wasm save's switch and room are read NOW: nothing between its reload and deliver() may await.
+      const wasmSave = this.transport !== 'js' ? await this._prepareWasmSave(adapter) : null;
+      if (this.adapter !== adapter) return;
       this._apLoadResult = await wiring.runSeedlingRandomizerLoad({
         loaded,
         glue,
+        ...(wasmSave ? { beforeDeliver: () => wasmSave.beforeDeliver(), afterDeliver: () => wasmSave.afterDeliver() } : {}),
         teleport: (t) => adapter.teleport(t),
         // ⛔ THE ADAPTER'S, NOT A CAPTURED `game` (maze-lab arms F-b / §17.1
         // F2). This was `const g = adapter._getFlash()` above and `g[name](arg)`
@@ -2218,6 +2267,8 @@ export class FlashPanelUI {
     // only a CHANGE acts: a broadcast of every setting (`*`) must not re-arm a binding the Clear button stopped
     if (on === this._jsSaveOn) return;
     this._jsSaveOn = on;
+    // ⛓ RE3 (i) — the same switch drives the wasm save (on: write-only once the set is mounted; off: no more writes)
+    if (on) this._wasmSaveCtl?.turnOn(); else this._wasmSaveCtl?.turnOff();
     const ctl = this._jsSaveController();
     if (!on) { ctl.turnOff(); return; }
     if (ctl.binding || this.transport !== 'js' || !this._apLoadResult?.ok || typeof this._apLoadKey !== 'string') return;
@@ -2228,6 +2279,54 @@ export class FlashPanelUI {
       this._jsSavePageHide = () => this._jsSaveCtl?.binding?.flush();
       window.addEventListener('pagehide', this._jsSavePageHide);
     }
+  }
+
+  /**
+   * ⛓⛓ RE3 (i) — THE WASM RUNTIME'S SAVE (`seedlingWasmSave.js`). One controller per panel; `_installWasmSave` puts its
+   * hook on the frame's `Module` before ▶ Start, and listens for the bridge's reports (a debounced flush) and the page
+   * hiding. A build with no hook exports (p4g, rc1) gets none of it, by name, without a throw.
+   */
+  _wasmSaveController() {
+    this._wasmSaveCtl ??= createWasmSaveController({ log: (msg, cls) => this._panelLog(msg, cls) });
+    return this._wasmSaveCtl;
+  }
+
+  _installWasmSave(adapter) {
+    const ctl = this._wasmSaveController();
+    let Module = null;
+    try { Module = adapter?._getWin?.()?.Module ?? null; } catch { Module = null; }
+    if (!ctl.install(Module)) return;
+    this._wasmSaveOffReport = adapter.addStateListener?.(() => ctl.noteChange()) ?? null;
+    if (!this._wasmSavePageHide && typeof window !== 'undefined') {
+      this._wasmSavePageHide = () => this._wasmSaveCtl?.flushNow();
+      this._wasmSaveHidden = () => { if (document.visibilityState === 'hidden') this._wasmSaveCtl?.flushNow(); };
+      window.addEventListener('pagehide', this._wasmSavePageHide);
+      document.addEventListener('visibilitychange', this._wasmSaveHidden);
+    }
+  }
+
+  /** At the AP load, before the wiring: the switch and the room. Null when this build has no hook. */
+  async _prepareWasmSave(adapter) {
+    const ctl = this._wasmSaveCtl;
+    if (!ctl?.supported || typeof this._apLoadKey !== 'string') return null;
+    const roomKey = this._apLoadKey;
+    const on = await this._readJsSaveSetting();
+    if (this.adapter !== adapter || this._apLoadKey !== roomKey) return null;
+    this._jsSaveOn = on;
+    ctl.prepareLoad({ on, roomKey });
+    return ctl;
+  }
+
+  _disposeWasmSave() {
+    this._wasmSaveCtl?.dispose();
+    this._wasmSaveOffReport?.();
+    this._wasmSaveOffReport = null;
+    if (this._wasmSavePageHide && typeof window !== 'undefined') {
+      window.removeEventListener('pagehide', this._wasmSavePageHide);
+      document.removeEventListener('visibilitychange', this._wasmSaveHidden);
+    }
+    this._wasmSavePageHide = null;
+    this._wasmSaveHidden = null;
   }
 
   /**
@@ -2242,7 +2341,11 @@ export class FlashPanelUI {
       this._panelLog('[js save] no rules are loaded, so there is no room whose save to clear');
       result = { removed: false, none: 'no-rules' };
     } else {
-      result = this._jsSaveController().clear(this._mountKeyNow());
+      const roomKey = this._mountKeyNow();
+      result = this._jsSaveController().clear(roomKey);
+      // ⛓ RE3 (i) — the same button clears the room's wasm save (`seedlingWasmSave_<hash>`, its own key)
+      const wasm = this._wasmSaveController().clear(roomKey);
+      result = { ...result, wasm, removed: result.removed || wasm.removed, error: result.error ?? wasm.error };
     }
     if (this.rootElement) {
       this.rootElement.dataset.jsSaveClear = result.error ? 'error' : (result.removed ? 'removed' : 'none');
@@ -3005,6 +3108,7 @@ export class FlashPanelUI {
     log('info', '[FlashPanelUI] Destroying');
     this._initEpoch = (this._initEpoch ?? 0) + 1;
     this._unbindJsSave();
+    this._disposeWasmSave();
     if (this._jsSavePageHide) { window.removeEventListener('pagehide', this._jsSavePageHide); this._jsSavePageHide = null; }
     if (this._ruffleSavePageHide) { window.removeEventListener('pagehide', this._ruffleSavePageHide); this._ruffleSavePageHide = null; }
     this._unmountTouchControls();

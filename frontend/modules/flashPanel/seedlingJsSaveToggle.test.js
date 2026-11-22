@@ -76,7 +76,7 @@ describe('⛓ USE THE SAVE — the setting', () => {
         const index = readFileSync(new URL('./index.js', import.meta.url), 'utf8');
         expect(index).toMatch(/\.\.\.jsSaveSchemaProps\(\)/);
         const ui = readFileSync(new URL('./flashPanelUI.js', import.meta.url), 'utf8');
-        expect(ui).toMatch(/\{ prop: 'seedlingJsSave', label: 'Use the save', when: 'jsSelected' \}/);
+        expect(ui).toMatch(/\{ prop: 'seedlingJsSave', label: 'Use the save', when: 'jsOrWasmSelected' \}/);
     });
 });
 

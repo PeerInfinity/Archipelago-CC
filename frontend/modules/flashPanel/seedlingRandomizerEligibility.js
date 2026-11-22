@@ -163,13 +163,23 @@ export const SINCE_BEGIN_CAPABILITY = 'sincebegin';
 export const BOSS_REPORT_CAPABILITY = 'bossreport';
 
 /**
+ * ⛓ RE3 (i) (slice sdc-wasm-save-host, ⚖ Robert 2026-11-22 "Same setting and Clear"): THE SAVE IS KEPT. A build
+ * declaring `sosave` carries the SWFRecomp-CC SharedObject host hook (master 746c39489: `Module.swfSharedObjectHost`,
+ * the exports `avm2_so_reload` / `avm2_so_flush_all`), so the panel can keep the game's `shrumsave` per room
+ * (`seedlingWasmSave.js`). The panel offers "Use the save" and "Clear this room's save" on wasm only for such a build:
+ * on one without it (p4g) a control would do nothing. Read BEFORE boot from the manifest; the calls themselves are
+ * also gated on the exports by name, so a manifest that over-claims degrades to no call rather than a throw.
+ */
+export const SO_SAVE_CAPABILITY = 'sosave';
+
+/**
  * ⛓ THE DECLARED VOCABULARY. A manifest entry may only name capabilities from
  * this list — otherwise `"apitm"` would silently mean "this build does not
  * have it" and the feature would vanish with no error anywhere.
  */
 export const WASM_BUILD_CAPABILITIES = Object.freeze(
     [AP_ITEM_CAPABILITY, ARM_CAPABILITY, HOLD_CAPABILITY, TAG_CAPABILITY,
-        FREEZE_CAPABILITY, SINCE_BEGIN_CAPABILITY, BOSS_REPORT_CAPABILITY]);
+        FREEZE_CAPABILITY, SINCE_BEGIN_CAPABILITY, BOSS_REPORT_CAPABILITY, SO_SAVE_CAPABILITY]);
 
 /**
  * ⛓ SEEDLING JS J1 — THE JS RUNTIME'S OWN ANSWER (`flashPanel.runtime: 'js'`).

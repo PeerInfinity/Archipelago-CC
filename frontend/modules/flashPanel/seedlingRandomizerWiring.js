@@ -597,6 +597,8 @@ async function runSeedlingRandomizerLoadSteps({
     sleep = (ms) => new Promise((r) => setTimeout(r, ms)),
     swapTimeoutMs = 30000,
     swapPollMs = 100,
+    beforeDeliver = null,
+    afterDeliver = null,
 } = {}) {
     const steps = [];
     const step = (name, detail) => { steps.push({ name, detail }); };
@@ -640,8 +642,13 @@ async function runSeedlingRandomizerLoadSteps({
         }
     }
     // ⛔ NO `await` FROM HERE TO `deliver()`: the settle's answer holds only in the turn it was read.
+    // ⛓ RE3 (i) — and the wasm save's restore point (`seedlingWasmSave.js`): `beforeDeliver` is SYNC and runs in this
+    // same turn, so the save it reloads into `SAVE_FILE.data` is the one the AP LevelSet's `reconcileSave` reads.
+    if (typeof beforeDeliver === 'function') step('save-reload', beforeDeliver());
     const result = loaded.delivery.deliver();
     step('deliver-end', { ok: result.ok, chunks: result.chunks, why: result.why });
+    // ⛓ RE3 (i) — the AP set is mounted: only now may the wasm save be written (before, the save is the boot one).
+    if (result.ok && typeof afterDeliver === 'function') afterDeliver();
     if (!result.ok) {
         // ⛓ ER E5 — a shuffled world on the vanilla rooms is the wrong world, and the overlay (sticky) says so.
         const shuffledWorld = (loaded.entrances?.retargeted ?? 0) > 0;

@@ -11,7 +11,10 @@
 //
 // Each row SETS its own state (⚖): both host caches cleared first and after, the runtime setting restored, the world
 // loaded before reloaded. ⛔ No preset-derived hard pins: every count is derived from the handed rules at run time.
-import { registerTest } from '../testRegistry.js';
+import { registerTest as registerRow } from '../testRegistry.js';
+import { isolatesJsSaves } from '../jsSaveIsolation.js';
+// ⛓ RE3 (i) — these rows boot the wasm (and JS) Seedling: each starts with no per-room save and leaves none behind.
+const registerTest = (def) => registerRow({ ...def, testFunction: isolatesJsSaves(def.testFunction) });
 import { buildContext } from '../../tutorials/tutorialContext.js';
 import panelManager from '../../../app/core/panelManager.js';
 import settingsManager from '../../../app/core/settingsManager.js';

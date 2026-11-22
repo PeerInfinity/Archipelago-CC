@@ -83,6 +83,8 @@ export class FlashBridgeAdapter {
     // Optional `(property, value) => void` installed by a host-side consumer
     // of raw BridgeGeneric reports (see _onStateChanged).
     this.onStateReport = null;
+    // ⛓ RE3 (i) — further report listeners (the wasm save's debounced flush): `onStateReport` is the glue's one slot.
+    this._stateListeners = new Set();
 
     // Lookup maps built from the game config
     this.apItemIdToFlash = {};
@@ -437,6 +439,12 @@ export class FlashBridgeAdapter {
   // --------------------------------------------------------------
   // Flash -> frontend: state changes
   // --------------------------------------------------------------
+  /** A further raw-report listener (beside the glue's `onStateReport`); returns its remover. */
+  addStateListener(fn) {
+    this._stateListeners.add(fn);
+    return () => this._stateListeners.delete(fn);
+  }
+
   _onStateChanged(property, value) {
     this.gameState[property] = value;
 
@@ -452,6 +460,13 @@ export class FlashBridgeAdapter {
         this.onStateReport(property, value);
       } catch (e) {
         this.log(`onStateReport handler threw: ${e.message}`, 'error');
+      }
+    }
+    for (const fn of this._stateListeners) {
+      try {
+        fn(property, value);
+      } catch (e) {
+        this.log(`state listener threw: ${e.message}`, 'error');
       }
     }
 

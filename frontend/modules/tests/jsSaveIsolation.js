@@ -11,12 +11,16 @@
  * the person's are restored. (⚖ 2026-09-26: every row cleans up after itself; `savedQueueIsolation.js` is the precedent.)
  */
 import { JS_SAVE_KEY_PREFIX } from '../flashPanel/seedlingJsSave.js';
+import { WASM_SAVE_KEY_PREFIX } from '../flashPanel/seedlingWasmSave.js';
+
+/** ⛓ RE3 (i) — the wasm runtime's per-room saves (`seedlingWasmSave_*`) are isolated the same way. */
+export const ISOLATED_SAVE_PREFIXES = Object.freeze([JS_SAVE_KEY_PREFIX, WASM_SAVE_KEY_PREFIX]);
 
 function jsSaveKeys(storage) {
     const keys = [];
     for (let i = 0; i < storage.length; i += 1) {
         const k = storage.key(i);
-        if (k !== null && k.startsWith(JS_SAVE_KEY_PREFIX)) keys.push(k);
+        if (k !== null && ISOLATED_SAVE_PREFIXES.some((p) => k.startsWith(p))) keys.push(k);
     }
     return keys;
 }

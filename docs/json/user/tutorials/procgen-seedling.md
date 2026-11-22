@@ -19,7 +19,7 @@ Two mazes and two generated Seedling rooms, laid out by Shuffled spiral. Each Se
 The Seedling regions play in the **Flash Panel**, in the original game.
 
 1. Open the **Flash Panel** tab.
-2. Start from no save: in the panel's **Settings** section, press **Clear this room's save** on the **JS** runtime, or **Clear the Flash save** on the **Flash** (Ruffle) runtime (the panel's log says what it removed). On wasm there is no such save, and nothing to press.
+2. Start from no save: in the panel's **Settings** section, press **Clear this room's save** on the **JS** runtime (or a **wasm** build that keeps a save), or **Clear the Flash save** on the **Flash** (Ruffle) runtime (the panel's log says what it removed). On a wasm build that keeps no save there is nothing to press.
 3. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game*, or, on the JS runtime, *JS runtime loaded* or *configured* (the first time, the browser fetches the game's runtime).
 4. Press **▶ Start** in the game, if the game shows one. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
 5. Open the **Playback Bot** tab. It says "Sphere log loaded" — it has the world's solution path, sphere by sphere.
