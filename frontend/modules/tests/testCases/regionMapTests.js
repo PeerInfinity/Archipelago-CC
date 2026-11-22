@@ -895,6 +895,76 @@ export async function testRegionMapClickLocationCheck(testController) {
 }
 
 /**
+ * ⛓ "GO TO" ≡ A CANVAS CLICK (region-map tutorial, G1: `regionMap/regionMapPicker.js`). The same target clicked on the
+ * canvas and chosen in the picker give the same click record (`lastClick` but its counter), the same bus record
+ * (`regionView:*Clicked`, `ui:navigateToRegion`) and the same path end: a region under the default actions; then, with
+ * the master switch off, a region and a location square (the events are published, no action runs).
+ */
+export async function testRegionMapGoToEqualsCanvasClick(testController) {
+  let s = null;
+  let restorePlayer = null;
+  let checked = [];
+  const sameRecord = (c) => (c ? JSON.stringify({ ...c, n: 0 }) : null);
+  const busOf = (seen) => JSON.stringify(seen.filter(([n]) => n !== 'ui:activatePanel'));
+  /** One leg: `act()` makes the click; → { click, bus, pathEnd } */
+  const leg = async (act) => {
+    const rec = recordEvents(testController, CLICK_EVENTS);
+    try {
+      const click = await act();
+      await new Promise((res) => setTimeout(res, 300)); // the route's dispatch and the Regions panel's navigation
+      return { click: sameRecord(click), bus: busOf(rec.seen), pathEnd: pathEndRegion() };
+    } finally { rec.stop(); }
+  };
+  try {
+    const got = await clickRowSetUp(testController, defaultClickActions(), 'On click: extend path · Regions — location: check',
+      { target: true });
+    ({ s, checked } = got);
+    const { t } = got;
+    if (!s.ready || !t) return testController.getOverallResult();
+    testController.reportCondition('the picker starts folded', panel().pickerEl.open === false);
+    restorePlayer = savePlayer();
+    const canvasLeg = await leg(() => clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key}`));
+    restorePlayer();
+    const pickerLeg = await leg(() => panel().picker.goToRegion(t.key));
+    restorePlayer();
+    testController.reportCondition(`a region: the picker's click record equals the canvas click's (${pickerLeg.click} vs ${canvasLeg.click})`,
+      !!canvasLeg.click && pickerLeg.click === canvasLeg.click);
+    testController.reportCondition(`… the same bus record (${pickerLeg.bus})`, canvasLeg.bus.includes('regionView:regionClicked') && pickerLeg.bus === canvasLeg.bus);
+    testController.reportCondition(`… the same path end (${pickerLeg.pathEnd})`, pickerLeg.pathEnd === canvasLeg.pathEnd && pickerLeg.pathEnd === t.region);
+
+    // Master off: a click (canvas or picker) publishes its event and runs nothing.
+    await s.ctx.setSetting(REGION_MAP_CLICK_ACTIONS_KEY, { ...defaultClickActions(), enabled: false });
+    await testController.pollForCondition(() => dbg()?.clickActions?.enabled === false, 'the panel holds master off', 3000, 25);
+    await focusCell(testController, t.key);
+    const point = cellPointOffSquares(t.key);
+    const offCanvas = await leg(() => clickCanvas(testController, point.x, point.y, `cell ${t.key} (master off)`));
+    const offPicker = await leg(() => panel().picker.goToRegion(t.key));
+    testController.reportCondition(`master off, a region: equal records, nothing ran (${offPicker.click})`,
+      offPicker.click === offCanvas.click && JSON.parse(offPicker.click ?? '{}').result?.ran === false && offPicker.bus === offCanvas.bus
+      && offPicker.bus.includes('regionView:regionClicked'));
+    await fitAllAndSettle(testController, 'fit all (a square)');
+    const q = dbg().squares.find((x) => squarePoint(x.location));
+    if (q) await focusCell(testController, q.key);
+    const at = q ? squarePoint(q.location) : null;
+    testController.reportCondition(`a location square on screen (${q?.location ?? 'none'})`, !!at);
+    if (at) {
+      const sqCanvas = await leg(() => clickCanvas(testController, at.x, at.y, `square ${q.location} (master off)`));
+      const sqPicker = await leg(() => panel().picker.goToLocation(q.location));
+      testController.reportCondition(`master off, a location: equal records and bus records (${sqPicker.bus})`,
+        !!sqCanvas.click && sqPicker.click === sqCanvas.click && JSON.parse(sqPicker.click).target === 'location'
+        && sqPicker.bus === sqCanvas.bus && sqPicker.bus.includes('regionView:locationClicked'));
+    }
+  } catch (error) {
+    testController.reportCondition(`go-to ≡ canvas click row error-free: ${error.message}`, false);
+  } finally {
+    restorePlayer?.();
+    await reloadIfChecked(testController, s?.ctx, checked, { before: s?.before, restoreWorld: true });
+    if (s) await tearDown(testController, s, { restoreWorld: true });
+  }
+  return testController.getOverallResult();
+}
+
+/**
  * The Map's settings are its OWN (⚖ R4): an edit of the Region Graph's strip (its ⏸ master switch, pressed and pressed
  * back — the Graph's real save path) leaves the Map's `clickActions` unchanged, in the panel and in storage.
  */
@@ -1177,6 +1247,14 @@ registerTest({
   testFunction: testRegionMapClickLocationCheck,
   enabled: false,
   description: 'CA-S3: the location action "check it now": a green square click checks it and publishes regionView:locationClicked',
+});
+registerTest({
+  id: 'region-map-go-to-equals-canvas-click',
+  name: 'Region Map: "Go to" does what a canvas click does',
+  category: 'Region Map',
+  testFunction: testRegionMapGoToEqualsCanvasClick,
+  enabled: false,
+  description: 'region-map tutorial (G1): the same cell or square, clicked on the canvas and chosen in the Go-to picker: the same click record, bus record and path end (default actions; master off, a region and a square)',
 });
 registerTest({
   id: 'region-map-click-settings-independent',

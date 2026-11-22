@@ -121,8 +121,8 @@ Each is registered by its owner's module (a panel that is not loaded registers n
 | `flash.teleport` | Flash (`flashPanel/flashClickActions.js`) | region | select | the "TP on UI click" box at the seed (normally unticked: off) | off | `_teleportToRegion` |
 | `flash.teleportLocation` | Flash (same file) | location | panel | the box at the seed | off | `_teleportToLocation` |
 | `discovery.discover` | Discovery (`discovery/discoveryClickActions.js`) | region | select | on (today's listener) | off | `handleRegionClicked`: discovers only with `enableDiscoveryMode` AND `clickDiscoversRegion` (loop mode: off) |
-| `regionGraph.centre` | Region Graph (`regionGraph/regionGraphCentreAction.js`) | region | panel | not offered | off | animate every Graph onto the node |
-| `regionMap.centre` | Region Map (`regionMap/regionMapClickActions.js`) | region | panel | off | not offered | `RegionMapUI.centreOnRegion` |
+| `regionGraph.centre` | Region Graph (`regionGraph/regionGraphCentreAction.js`) | region | panel | not offered | off | animate every Graph onto the node; a Graph whose tab is hidden centres when shown (`pendingCentreOn`, G4) |
+| `regionMap.centre` | Region Map (`regionMap/regionMapClickActions.js`) | region | panel | off | not offered | `RegionMapUI.centreOnRegion`; a hidden Map centres once it has a size (`_pendingCentre`, G4) |
 
 Flash's actions are registered while its game can teleport (`gameConfig.teleport`) and unregistered on teardown.
 ⚖ user 2026-11-20T16:29:00Z, *"Per-map option (Recommended)"*: a map click teleports only through its own option; the
