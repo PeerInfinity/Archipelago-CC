@@ -359,7 +359,9 @@ export const rolesForStaging = (staging) => (staging.noclip ? RELAXED_ROLES : RO
  * `false`, which is what makes committed-room replay and the battery outside
  * this flag by construction rather than by convention.
  */
-export function createRunForStaging(staging, levelSource, { scratchPersistence = false } = {}) {
+export function createRunForStaging(staging, levelSource, { scratchPersistence = false, capabilities = null } = {}) {
+    // ⛓ seedling-fidelity-p4hport: `capabilities` is the BUILD the run models (`modelBuild.js`) — an argument like
+    // `scratchPersistence`, for the same reason: no tape field can switch it. Omitted, it is the default build's (p4g's).
     // The v2 engine's level tracking, world swapping and transition log all
     // live in `createLevelRun`, because `botDriverV2` advances the same
     // physics through the same transitions while choosing its keys instead
@@ -448,6 +450,7 @@ export function createRunForStaging(staging, levelSource, { scratchPersistence =
         // ⛓ PROCGEN PoC slice 4b: the one field that comes from the CALLER
         // rather than from the staging block. See the docblock.
         scratchPersistence,
+        capabilities,
     });
 }
 
