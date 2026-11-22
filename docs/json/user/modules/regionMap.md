@@ -4,6 +4,8 @@ The Region Map shows the loaded world as a flat map: each region is drawn as its
 
 **Opening it:** pick **Region Map** from the panel menu (*Analysis Panels*). It is not in any layout preset, so it appears only when you open it.
 
+**Tutorial:** *Tracking: the Region Map* walks through it on Seedling Playthrough: open the app with `?tutorial=tracker-region-map`, or start it from the [Tutorial panel](tutorials.md). It is still in progress.
+
 ## What you see
 
 - **Cells.** One cell per *whole level*. A Seedling level split into several sub-regions is drawn once, whole, and its sub-regions' locations all appear in it.
@@ -34,6 +36,8 @@ Hover over a cell to see its name and its counts (checked, accessible and inacce
 
 - **Click a cell** to select it (a yellow outline) and run the **On click** strip's *Region* actions on its region. By default that extends your path to the region, which moves you there, and opens it in the Regions panel.
 - **Click a location square** to run the strip's *Location* actions on it. By default that checks the location. A location you cannot reach yet is refused, exactly as it is in the Region Graph.
+
+**Go to** (in the toolbar, folded) does the same without the mouse: unfold it, then choose a level under *Region* or a location under *Location*. Choosing one does exactly what clicking it on the map does, and then centres the view on it. It lists only the levels the map draws, and their locations.
 
 A dragged pan never counts as a click. In loop mode, a Region Map click plans your path the way a Region Graph click does. With discovery mode on, a location you have not discovered shows as `???` when you hover over it.
 
