@@ -12,6 +12,7 @@ import {
 import { centralRegistry } from '../../../app/core/centralRegistry.js'; // RE-ADD import
 import { docsBase } from '../../../app/config/docsBase.js';
 import { mountChecksLine } from '../../commonUI/checksLine.js';
+import { createOfferTabMarker } from './offerTabMarker.js';
 
 
 // Helper function for logging with fallback
@@ -117,6 +118,14 @@ class MainContentUI {
     });
     this.eventBus.subscribe('client:offlineProgressOffer', (offer) => this._renderOfflineProgress(offer));
     this.eventBus.subscribe('client:offlineProgressOfferClosed', () => this._renderOfflineProgress(null));
+    // While an offer waits and this panel is another tab, its tab shows " •" (DOM only; never
+    // setTitle, which would write the marker into the saved layout). Its own subscriptions,
+    // dropped in dispose(), so a remounted panel's dead instance marks nothing.
+    this.offerTabMarker = createOfferTabMarker({
+      container: this.container,
+      bus: this.eventBus,
+      getOffer: () => this.messageHandler?.getOfflineProgressOffer?.() ?? null,
+    });
     this.eventBus.subscribe('client:gameChoiceNeeded', (data) => {
       if (Array.isArray(data?.games)) this._roomGames = data.games;
       this._gamePickerShown = true;
@@ -1268,6 +1277,8 @@ class MainContentUI {
 
     this.checksLine?.dispose();
     this.checksLine = null;
+    this.offerTabMarker?.dispose();
+    this.offerTabMarker = null;
 
     // Detach any DOM elements this UI created if necessary
     if (this.rootElement && this.rootElement.parentNode) {
