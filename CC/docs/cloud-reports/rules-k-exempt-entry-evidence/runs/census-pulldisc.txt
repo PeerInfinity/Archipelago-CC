@@ -1,0 +1,95 @@
+L71 lavarunner@64,224 zone=9 cut=0 exemptCut=[]
+L71 lavarunner@64,192 zone=9 cut=0 exemptCut=[]
+L71 lavarunner@72,208 zone=9 cut=0 exemptCut=[]
+L71 lavarunner@48,200 zone=9 cut=0 exemptCut=[]
+L71 lavarunner@80,224 zone=9 cut=0 exemptCut=[]
+L72 lavarunner@80,216 zone=74 cut=16 exemptCut=[[0,16]]
+  (i) [0,16] door [boundary] r11c6 -> TRAVERSE nonExempt=42 exits=["1,16:landing,door:r11c6"] subs=r11c6,(gated gated)
+      own=["exit out_teleporter_0_256 (r11c6)","exit in_L71_304_96 (r11c6)"] UNCHARGED-GOALS=[]
+  (i) [1,16] landing+door [interior] r11c6 -> TRAVERSE nonExempt=42 exits=["0,16:door:r11c6"] subs=r11c6,(gated gated)
+      own=["exit in_L71_304_96 (r11c6)","exit out_teleporter_0_256 (r11c6)"] UNCHARGED-GOALS=[]
+L72 lavarunner@136,88 zone=103 cut=29 exemptCut=[[11,1]]
+  (i) [11,1] landing+door [boundary] r0c11 -> TRAVERSE nonExempt=65 exits=[] subs=r0c11,(gated gated),r5c4,r9c12,r9c10
+      own=["exit in_L73_32_144 (r0c11)","exit out_teleporter_176_0 (r0c11)"] UNCHARGED-GOALS=[]
+L72 lavarunner@216,240 zone=72 cut=18 exemptCut=[]
+L73 lavarunner@32,24 zone=42 cut=8 exemptCut=[]
+  (i) [4,0] door [interior] r0c4 -> TRAVERSE nonExempt=31 exits=["4,1:landing,door:r0c4"] subs=r0c4,(gated gated),r4c4
+      own=["exit out_teleporter_64_0 (r0c4)","exit in_L74_288_144 (r0c4)"] UNCHARGED-GOALS=[]
+  (i) [4,1] landing+door [interior] r0c4 -> TRAVERSE nonExempt=31 exits=["4,0:door:r0c4"] subs=r0c4,(gated gated),r4c4
+      own=["exit in_L74_288_144 (r0c4)","exit out_teleporter_64_0 (r0c4)"] UNCHARGED-GOALS=[]
+L74 lavarunner@24,56 zone=55 cut=11 exemptCut=[[1,9]]
+  (i) [1,8] landing+door [interior] r2c2 -> TRAVERSE nonExempt=42 exits=["1,9:door:r2c2"] subs=r2c2,(gated gated)
+      own=["exit in_L75_64_0 (r2c2)","exit out_teleporter_16_144 (r2c2)"] UNCHARGED-GOALS=["loc Level 074 - Darkshield (r2c2) @3,2"]
+  (i) [1,9] door [boundary] r2c2 -> TRAVERSE nonExempt=42 exits=["1,8:landing,door:r2c2"] subs=r2c2,(gated gated)
+      own=["exit out_teleporter_16_144 (r2c2)","exit in_L75_64_0 (r2c2)"] UNCHARGED-GOALS=["loc Level 074 - Darkshield (r2c2) @3,2"]
+L74 lavarunner@208,96 zone=86 cut=22 exemptCut=[[18,8]]
+  (i) [18,8] landing+door [boundary] r8c18 -> ARRIVE-AND-LEAVE nonExempt=0 exits=[] subs=r8c18
+      own=["exit in_L73_64_0 (r8c18)","exit out_teleporter_288_144 (r8c18)"] UNCHARGED-GOALS=[]
+L75 lavarunner@8,112 zone=61 cut=16 exemptCut=[]
+L75 lavarunner@104,64 zone=71 cut=15 exemptCut=[]
+  (i) [4,0] door [interior] r0c4 -> TRAVERSE nonExempt=35 exits=["4,1:landing,door:r0c4"] subs=r0c4,(gated gated),r8c6
+      own=["exit out_teleporter_64_0 (r0c4)","exit in_L74_16_144 (r0c4)"] UNCHARGED-GOALS=[]
+  (i) [4,1] landing+door [interior] r0c4 -> TRAVERSE nonExempt=35 exits=["4,0:door:r0c4"] subs=r0c4,(gated gated),r8c6
+      own=["exit in_L74_16_144 (r0c4)","exit out_teleporter_64_0 (r0c4)"] UNCHARGED-GOALS=[]
+L77 lavarunner@80,272 zone=72 cut=15 exemptCut=[]
+  (i) [6,12] trap [interior] r12c6 -> TRAVERSE nonExempt=37 exits=["6,18:landing,door:r15c6","6,19:door:r15c6"] subs=r12c6,(open gated),(gated gated),r15c6
+      own=[] UNCHARGED-GOALS=["exit in_L78_256_0 (r15c6) @6,18","exit out_teleporter_96_304 (r15c6) @6,19"]
+  (i) [6,18] landing+door [interior] r15c6 -> TRAVERSE nonExempt=37 exits=["6,19:door:r15c6","6,12:trap:r12c6"] subs=r15c6,(gated gated),(open gated),r12c6
+      own=["exit in_L78_256_0 (r15c6)","exit out_teleporter_96_304 (r15c6)"] UNCHARGED-GOALS=[]
+  (i) [6,19] door [interior] r15c6 -> TRAVERSE nonExempt=37 exits=["6,18:landing,door:r15c6","6,12:trap:r12c6"] subs=r15c6,(gated gated),(open gated),r12c6
+      own=["exit out_teleporter_96_304 (r15c6)","exit in_L78_256_0 (r15c6)"] UNCHARGED-GOALS=[]
+L77 lavarunner@112,256 zone=79 cut=20 exemptCut=[]
+  (i) [6,12] trap [interior] r12c6 -> TRAVERSE nonExempt=37 exits=["6,18:landing,door:r15c6","6,19:door:r15c6"] subs=r12c6,(open gated),(gated gated),r15c6
+      own=[] UNCHARGED-GOALS=["exit in_L78_256_0 (r15c6) @6,18","exit out_teleporter_96_304 (r15c6) @6,19"]
+  (i) [6,18] landing+door [interior] r15c6 -> TRAVERSE nonExempt=37 exits=["6,19:door:r15c6","6,12:trap:r12c6"] subs=r15c6,(gated gated),(open gated),r12c6
+      own=["exit in_L78_256_0 (r15c6)","exit out_teleporter_96_304 (r15c6)"] UNCHARGED-GOALS=[]
+  (i) [6,19] door [interior] r15c6 -> TRAVERSE nonExempt=37 exits=["6,18:landing,door:r15c6","6,12:trap:r12c6"] subs=r15c6,(gated gated),(open gated),r12c6
+      own=["exit out_teleporter_96_304 (r15c6)","exit in_L78_256_0 (r15c6)"] UNCHARGED-GOALS=[]
+L78 lavarunner@192,144 zone=52 cut=17 exemptCut=[]
+  (i) [9,6] trap [interior] r6c9 -> ARRIVE-AND-LEAVE nonExempt=0 exits=[] subs=r6c9
+      own=[] UNCHARGED-GOALS=[]
+L78 lavarunner@144,72 zone=93 cut=20 exemptCut=[]
+  (i) [9,3] trap [interior] r3c9 -> TRAVERSE nonExempt=16 exits=[] subs=r3c9,(open gated),(gated gated)
+      own=[] UNCHARGED-GOALS=[]
+  (i) [6,5] trap [interior] r5c6 -> TRAVERSE nonExempt=6 exits=[] subs=r5c6,(open gated),(gated gated)
+      own=[] UNCHARGED-GOALS=[]
+  (i) [9,6] trap [interior] r6c9 -> ARRIVE-AND-LEAVE nonExempt=0 exits=[] subs=r6c9
+      own=[] UNCHARGED-GOALS=[]
+L78 lavarunner@96,32 zone=76 cut=19 exemptCut=[]
+  (i) [2,0] door [interior] r0c2 -> TRAVERSE nonExempt=6 exits=["2,1:landing,door:r0c2"] subs=r0c2,(gated gated)
+      own=["exit out_teleporter_32_0 (r0c2)","exit in_L79_64_224 (r0c2)"] UNCHARGED-GOALS=[]
+  (i) [2,1] landing+door [interior] r0c2 -> TRAVERSE nonExempt=6 exits=["2,0:door:r0c2"] subs=r0c2,(gated gated)
+      own=["exit in_L79_64_224 (r0c2)","exit out_teleporter_32_0 (r0c2)"] UNCHARGED-GOALS=[]
+  (i) [9,3] trap [interior] r3c9 -> TRAVERSE nonExempt=16 exits=[] subs=r3c9,(open gated),(gated gated)
+      own=[] UNCHARGED-GOALS=[]
+  (i) [6,5] trap [interior] r5c6 -> TRAVERSE nonExempt=6 exits=[] subs=r5c6,(open gated),(gated gated)
+      own=[] UNCHARGED-GOALS=[]
+  (i) [9,6] trap [interior] r6c9 -> ARRIVE-AND-LEAVE nonExempt=0 exits=[] subs=r6c9
+      own=[] UNCHARGED-GOALS=[]
+L78 lavarunner@56,120 zone=65 cut=13 exemptCut=[]
+  (i) [6,5] trap [interior] r5c6 -> TRAVERSE nonExempt=6 exits=[] subs=r5c6,(open gated),(gated gated)
+      own=[] UNCHARGED-GOALS=[]
+L78 lavarunner@112,136 zone=57 cut=17 exemptCut=[]
+  (i) [6,5] trap [interior] r5c6 -> TRAVERSE nonExempt=6 exits=[] subs=r5c6,(open gated),(gated gated)
+      own=[] UNCHARGED-GOALS=[]
+  (i) [9,6] trap [interior] r6c9 -> ARRIVE-AND-LEAVE nonExempt=0 exits=[] subs=r6c9
+      own=[] UNCHARGED-GOALS=[]
+L80 lavarunner@80,32 zone=68 cut=3 exemptCut=[]
+  (i) [2,0] door [interior] r0c2 -> TRAVERSE nonExempt=47 exits=["2,1:landing,door:r0c2","5,6:trap:r6c5"] subs=r0c2,(gated gated),r6c5
+      own=["exit out_teleporter_32_0 (r0c2)","exit in_L71_224_304 (r0c2)"] UNCHARGED-GOALS=[]
+  (i) [2,1] landing+door [interior] r0c2 -> TRAVERSE nonExempt=47 exits=["2,0:door:r0c2","5,6:trap:r6c5"] subs=r0c2,(gated gated),r6c5
+      own=["exit in_L71_224_304 (r0c2)","exit out_teleporter_32_0 (r0c2)"] UNCHARGED-GOALS=[]
+  (i) [5,6] trap [interior] r6c5 -> TRAVERSE nonExempt=47 exits=["2,1:landing,door:r0c2","2,0:door:r0c2"] subs=r6c5,(gated gated),r0c2
+      own=[] UNCHARGED-GOALS=["exit in_L71_224_304 (r0c2) @2,1","exit out_teleporter_32_0 (r0c2) @2,0"]
+L80 lavarunner@0,96 zone=36 cut=7 exemptCut=[[2,1],[5,6]]
+  (i) [2,1] landing+door [boundary] r0c2 -> TRAVERSE nonExempt=9 exits=[] subs=r0c2,(gated gated)
+      own=["exit in_L71_224_304 (r0c2)","exit out_teleporter_32_0 (r0c2)"] UNCHARGED-GOALS=[]
+  (i) [5,6] trap [boundary] r6c5 -> ARRIVE-AND-LEAVE nonExempt=0 exits=[] subs=r6c5
+      own=[] UNCHARGED-GOALS=[]
+L80 lavarunner@120,208 zone=42 cut=6 exemptCut=[]
+L80 lavarunner@0,144 zone=18 cut=6 exemptCut=[]
+L99 lavarunner@192,64 zone=36 cut=4 exemptCut=[]
+L99 lavarunner@160,32 zone=33 cut=8 exemptCut=[]
+L99 lavarunner@176,64 zone=40 cut=5 exemptCut=[[7,7]]
+  (i) [7,7] door [boundary] r7c5 -> ARRIVE-AND-LEAVE nonExempt=0 exits=[] subs=r7c5
+      own=["exit out_stairsdown_112_112 (r7c5)","exit in_L98_112_112 (r7c5)"] UNCHARGED-GOALS=[]

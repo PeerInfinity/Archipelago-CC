@@ -1,0 +1,325 @@
+{
+ "trav-612-down": {
+  "level": 77,
+  "boot": [
+   97,
+   200
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "down",
+    170
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "TRAVERSE: boot on the trap tile (6,12) at the reel's release point, straight down column 6 to the (6,19) door"
+ },
+ "trav-612-east-down": {
+  "level": 77,
+  "boot": [
+   97,
+   200
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "right",
+    6
+   ],
+   [
+    "down",
+    170
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "TRAVERSE: (6,12), column 6 hugging its east wall"
+ },
+ "trav-612-west-down": {
+  "level": 77,
+  "boot": [
+   97,
+   200
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "left",
+    4
+   ],
+   [
+    "down",
+    170
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "TRAVERSE: (6,12), column 6 hugging its west side"
+ },
+ "trav-612-wait60-down": {
+  "level": 77,
+  "boot": [
+   97,
+   200
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    null,
+    60
+   ],
+   [
+    "down",
+    170
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "TRAVERSE: (6,12), stand 60 ticks (the runners come up), then down"
+ },
+ "trav-612-wait150-down": {
+  "level": 77,
+  "boot": [
+   97,
+   200
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    null,
+    150
+   ],
+   [
+    "down",
+    170
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "TRAVERSE: (6,12), stand 150 ticks, then down"
+ },
+ "trav-612-westlava": {
+  "level": 77,
+  "boot": [
+   97,
+   200
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "left",
+    28
+   ],
+   [
+    "down",
+    40
+   ],
+   [
+    "left+down",
+    30
+   ],
+   [
+    "down",
+    60
+   ],
+   [
+    "right+down",
+    50
+   ],
+   [
+    "down",
+    60
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "TRAVERSE: (6,12) -> (4,12) -> south through the west lava field -> back east to (6,18)/(6,19) (the 1a weave's shape, hand-timed)"
+ },
+ "trav-612-eastlava": {
+  "level": 77,
+  "boot": [
+   97,
+   200
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "right",
+    30
+   ],
+   [
+    "down",
+    40
+   ],
+   [
+    "right+down",
+    30
+   ],
+   [
+    "down",
+    50
+   ],
+   [
+    "left+down",
+    60
+   ],
+   [
+    "down",
+    60
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "TRAVERSE: (6,12) -> (8,12) -> south through the east lava -> back west to column 6 low"
+ },
+ "rev-1b-cut200": {
+  "level": 77,
+  "tapeFile": "CC/docs/cloud-reports/rules-k-exempt-entry-evidence/tapes/rev-1b-cut200.tape.json",
+  "grants": [
+   "darksuit"
+  ],
+  "note": "REVERSE: 1b cut at t200"
+ },
+ "rev-1b-cut230": {
+  "level": 77,
+  "tapeFile": "CC/docs/cloud-reports/rules-k-exempt-entry-evidence/tapes/rev-1b-cut230.tape.json",
+  "grants": [
+   "darksuit"
+  ],
+  "note": "REVERSE: 1b cut at t230"
+ },
+ "rev-col6-up-to-612": {
+  "level": 77,
+  "boot": [
+   96,
+   288
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "up",
+    90
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "REVERSE: straight up column 6 from the L78 landing to (6,12)"
+ },
+ "al-619-now": {
+  "level": 77,
+  "boot": [
+   96,
+   288
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "down",
+    30
+   ]
+  ],
+  "note": "ARRIVE-AND-LEAVE: boot on the L78 landing (96,288), down at once onto the (6,19) door"
+ },
+ "al-619-wait10": {
+  "level": 77,
+  "boot": [
+   96,
+   288
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    null,
+    10
+   ],
+   [
+    "down",
+    30
+   ]
+  ],
+  "note": "ARRIVE-AND-LEAVE: 10 ticks idle on the landing, then down"
+ },
+ "al-619-wait30": {
+  "level": 77,
+  "boot": [
+   96,
+   288
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    null,
+    30
+   ],
+   [
+    "down",
+    30
+   ]
+  ],
+  "note": "ARRIVE-AND-LEAVE: 30 ticks idle, then down"
+ },
+ "al-619-from78": {
+  "level": 78,
+  "grantLevels": [
+   77
+  ],
+  "boot": [
+   256,
+   16
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "up",
+    10
+   ],
+   [
+    "down",
+    40
+   ]
+  ],
+  "note": "ARRIVE-AND-LEAVE, whole: boot on L78's landing from L77, up into its door to L77, land (6,18), down onto (6,19) back to L78"
+ }
+}

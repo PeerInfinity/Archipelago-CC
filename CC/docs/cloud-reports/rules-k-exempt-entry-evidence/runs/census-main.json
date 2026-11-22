@@ -1,0 +1,3830 @@
+{
+ "tree": "/home/user/Archipelago-CC",
+ "head": null,
+ "levels": [
+  {
+   "level": 71,
+   "bodies": [
+    {
+     "body": "lavarunner@64,224",
+     "tag": "lavarunner",
+     "centre": [
+      72,
+      232
+     ],
+     "runRange": 80,
+     "faster": [
+      16,
+      5
+     ],
+     "zone": 9,
+     "cut": [],
+     "exemptCutCells": [],
+     "entryExempt": [],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 282
+    },
+    {
+     "body": "lavarunner@64,192",
+     "tag": "lavarunner",
+     "centre": [
+      72,
+      200
+     ],
+     "runRange": 80,
+     "faster": [
+      16,
+      5
+     ],
+     "zone": 9,
+     "cut": [],
+     "exemptCutCells": [],
+     "entryExempt": [],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 282
+    },
+    {
+     "body": "lavarunner@72,208",
+     "tag": "lavarunner",
+     "centre": [
+      80,
+      216
+     ],
+     "runRange": 80,
+     "faster": [
+      16,
+      5
+     ],
+     "zone": 9,
+     "cut": [],
+     "exemptCutCells": [],
+     "entryExempt": [],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 282
+    },
+    {
+     "body": "lavarunner@48,200",
+     "tag": "lavarunner",
+     "centre": [
+      56,
+      208
+     ],
+     "runRange": 80,
+     "faster": [
+      16,
+      5
+     ],
+     "zone": 9,
+     "cut": [],
+     "exemptCutCells": [],
+     "entryExempt": [],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 282
+    },
+    {
+     "body": "lavarunner@80,224",
+     "tag": "lavarunner",
+     "centre": [
+      88,
+      232
+     ],
+     "runRange": 80,
+     "faster": [
+      16,
+      5
+     ],
+     "zone": 9,
+     "cut": [],
+     "exemptCutCells": [],
+     "entryExempt": [],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 282
+    }
+   ]
+  },
+  {
+   "level": 72,
+   "bodies": [
+    {
+     "body": "lavarunner@80,216",
+     "tag": "lavarunner",
+     "centre": [
+      88,
+      224
+     ],
+     "runRange": 80,
+     "faster": [
+      16,
+      17
+     ],
+     "zone": 74,
+     "cut": [
+      [
+       5,
+       8
+      ],
+      [
+       2,
+       9
+      ],
+      [
+       3,
+       9
+      ],
+      [
+       4,
+       9
+      ],
+      [
+       6,
+       9
+      ],
+      [
+       7,
+       9
+      ],
+      [
+       8,
+       9
+      ],
+      [
+       1,
+       10
+      ],
+      [
+       9,
+       10
+      ],
+      [
+       0,
+       11
+      ],
+      [
+       10,
+       11
+      ],
+      [
+       10,
+       12
+      ],
+      [
+       10,
+       15
+      ],
+      [
+       10,
+       16
+      ],
+      [
+       1,
+       17
+      ],
+      [
+       9,
+       17
+      ]
+     ],
+     "exemptCutCells": [
+      [
+       0,
+       16
+      ]
+     ],
+     "entryExempt": [
+      {
+       "cell": [
+        0,
+        16
+       ],
+       "kind": [
+        "door"
+       ],
+       "boundary": true,
+       "subRegion": "r11c6",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit out_teleporter_0_256 (r11c6)",
+        "exit in_L71_304_96 (r11c6)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 42,
+        "sample": [
+         [
+          0,
+          15
+         ],
+         [
+          0,
+          14
+         ],
+         [
+          1,
+          15
+         ],
+         [
+          2,
+          16
+         ],
+         [
+          0,
+          13
+         ],
+         [
+          1,
+          14
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           1,
+           16
+          ],
+          "kind": [
+           "landing",
+           "door"
+          ],
+          "subRegion": "r11c6"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r11c6",
+        "(gated gated)"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        1,
+        16
+       ],
+       "kind": [
+        "landing",
+        "door"
+       ],
+       "boundary": false,
+       "subRegion": "r11c6",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit in_L71_304_96 (r11c6)",
+        "exit out_teleporter_0_256 (r11c6)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 42,
+        "sample": [
+         [
+          1,
+          15
+         ],
+         [
+          2,
+          16
+         ],
+         [
+          1,
+          14
+         ],
+         [
+          2,
+          15
+         ],
+         [
+          0,
+          15
+         ],
+         [
+          3,
+          16
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           0,
+           16
+          ],
+          "kind": [
+           "door"
+          ],
+          "subRegion": "r11c6"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r11c6",
+        "(gated gated)"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    },
+    {
+     "body": "lavarunner@136,88",
+     "tag": "lavarunner",
+     "centre": [
+      144,
+      96
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16
+     ],
+     "zone": 103,
+     "cut": [
+      [
+       8,
+       0
+      ],
+      [
+       9,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       6,
+       1
+      ],
+      [
+       7,
+       1
+      ],
+      [
+       10,
+       1
+      ],
+      [
+       12,
+       1
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       13,
+       2
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       13,
+       3
+      ],
+      [
+       4,
+       4
+      ],
+      [
+       13,
+       4
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       14,
+       5
+      ],
+      [
+       3,
+       6
+      ],
+      [
+       14,
+       6
+      ],
+      [
+       13,
+       7
+      ],
+      [
+       4,
+       8
+      ],
+      [
+       13,
+       8
+      ],
+      [
+       4,
+       9
+      ],
+      [
+       13,
+       9
+      ],
+      [
+       6,
+       10
+      ],
+      [
+       7,
+       10
+      ],
+      [
+       10,
+       10
+      ],
+      [
+       11,
+       10
+      ],
+      [
+       12,
+       10
+      ],
+      [
+       8,
+       11
+      ],
+      [
+       9,
+       11
+      ]
+     ],
+     "exemptCutCells": [
+      [
+       11,
+       1
+      ]
+     ],
+     "entryExempt": [
+      {
+       "cell": [
+        11,
+        1
+       ],
+       "kind": [
+        "landing",
+        "door"
+       ],
+       "boundary": true,
+       "subRegion": "r0c11",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit in_L73_32_144 (r0c11)",
+        "exit out_teleporter_176_0 (r0c11)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 65,
+        "sample": [
+         [
+          11,
+          2
+         ],
+         [
+          12,
+          2
+         ],
+         [
+          11,
+          3
+         ],
+         [
+          10,
+          2
+         ],
+         [
+          12,
+          3
+         ],
+         [
+          11,
+          4
+         ]
+        ],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r0c11",
+        "(gated gated)",
+        "r5c4",
+        "r9c12",
+        "r9c10"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    },
+    {
+     "body": "lavarunner@216,240",
+     "tag": "lavarunner",
+     "centre": [
+      224,
+      248
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16
+     ],
+     "zone": 72,
+     "cut": [
+      [
+       11,
+       10
+      ],
+      [
+       12,
+       10
+      ],
+      [
+       13,
+       10
+      ],
+      [
+       14,
+       10
+      ],
+      [
+       15,
+       10
+      ],
+      [
+       16,
+       10
+      ],
+      [
+       10,
+       11
+      ],
+      [
+       17,
+       11
+      ],
+      [
+       9,
+       12
+      ],
+      [
+       18,
+       12
+      ],
+      [
+       18,
+       13
+      ],
+      [
+       9,
+       14
+      ],
+      [
+       18,
+       14
+      ],
+      [
+       19,
+       15
+      ],
+      [
+       9,
+       16
+      ],
+      [
+       18,
+       16
+      ],
+      [
+       9,
+       17
+      ],
+      [
+       18,
+       17
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    }
+   ]
+  },
+  {
+   "level": 73,
+   "bodies": [
+    {
+     "body": "lavarunner@32,24",
+     "tag": "lavarunner",
+     "centre": [
+      40,
+      32
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16
+     ],
+     "zone": 42,
+     "cut": [
+      [
+       7,
+       0
+      ],
+      [
+       7,
+       1
+      ],
+      [
+       7,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       3,
+       6
+      ],
+      [
+       4,
+       6
+      ],
+      [
+       5,
+       6
+      ],
+      [
+       2,
+       7
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [
+      {
+       "cell": [
+        4,
+        0
+       ],
+       "kind": [
+        "door"
+       ],
+       "boundary": false,
+       "subRegion": "r0c4",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit out_teleporter_64_0 (r0c4)",
+        "exit in_L74_288_144 (r0c4)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 31,
+        "sample": [
+         [
+          5,
+          0
+         ],
+         [
+          3,
+          0
+         ],
+         [
+          6,
+          0
+         ],
+         [
+          5,
+          1
+         ],
+         [
+          4,
+          2
+         ],
+         [
+          2,
+          0
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           4,
+           1
+          ],
+          "kind": [
+           "landing",
+           "door"
+          ],
+          "subRegion": "r0c4"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r0c4",
+        "(gated gated)",
+        "r4c4"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]",
+        "[{\"any\":[{\"flag\":\"hasSword\"},{\"flag\":\"hasSpear\"},{\"flag\":\"hasFire\"}]}]"
+       ]
+      },
+      {
+       "cell": [
+        4,
+        1
+       ],
+       "kind": [
+        "landing",
+        "door"
+       ],
+       "boundary": false,
+       "subRegion": "r0c4",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit in_L74_288_144 (r0c4)",
+        "exit out_teleporter_64_0 (r0c4)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 31,
+        "sample": [
+         [
+          5,
+          1
+         ],
+         [
+          4,
+          2
+         ],
+         [
+          5,
+          0
+         ],
+         [
+          3,
+          0
+         ],
+         [
+          6,
+          1
+         ],
+         [
+          5,
+          2
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           4,
+           0
+          ],
+          "kind": [
+           "door"
+          ],
+          "subRegion": "r0c4"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r0c4",
+        "(gated gated)",
+        "r4c4"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]",
+        "[{\"any\":[{\"flag\":\"hasSword\"},{\"flag\":\"hasSpear\"},{\"flag\":\"hasFire\"}]}]"
+       ]
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    }
+   ]
+  },
+  {
+   "level": 74,
+   "bodies": [
+    {
+     "body": "lavarunner@24,56",
+     "tag": "lavarunner",
+     "centre": [
+      32,
+      64
+     ],
+     "runRange": 80,
+     "faster": [
+      16,
+      17,
+      31
+     ],
+     "zone": 55,
+     "cut": [
+      [
+       6,
+       0
+      ],
+      [
+       6,
+       1
+      ],
+      [
+       6,
+       2
+      ],
+      [
+       7,
+       3
+      ],
+      [
+       7,
+       4
+      ],
+      [
+       6,
+       5
+      ],
+      [
+       6,
+       6
+      ],
+      [
+       6,
+       7
+      ],
+      [
+       0,
+       8
+      ],
+      [
+       5,
+       8
+      ],
+      [
+       2,
+       9
+      ]
+     ],
+     "exemptCutCells": [
+      [
+       1,
+       9
+      ]
+     ],
+     "entryExempt": [
+      {
+       "cell": [
+        1,
+        8
+       ],
+       "kind": [
+        "landing",
+        "door"
+       ],
+       "boundary": false,
+       "subRegion": "r2c2",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit in_L75_64_0 (r2c2)",
+        "exit out_teleporter_16_144 (r2c2)"
+       ],
+       "unchargedGoals": [
+        "loc Level 074 - Darkshield (r2c2) @3,2"
+       ],
+       "reaches": {
+        "nonExempt": 42,
+        "sample": [
+         [
+          1,
+          7
+         ],
+         [
+          2,
+          8
+         ],
+         [
+          1,
+          6
+         ],
+         [
+          2,
+          7
+         ],
+         [
+          0,
+          7
+         ],
+         [
+          1,
+          5
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           1,
+           9
+          ],
+          "kind": [
+           "door"
+          ],
+          "subRegion": "r2c2"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r2c2",
+        "(gated gated)"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        1,
+        9
+       ],
+       "kind": [
+        "door"
+       ],
+       "boundary": true,
+       "subRegion": "r2c2",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit out_teleporter_16_144 (r2c2)",
+        "exit in_L75_64_0 (r2c2)"
+       ],
+       "unchargedGoals": [
+        "loc Level 074 - Darkshield (r2c2) @3,2"
+       ],
+       "reaches": {
+        "nonExempt": 42,
+        "sample": [
+         [
+          1,
+          7
+         ],
+         [
+          2,
+          8
+         ],
+         [
+          1,
+          6
+         ],
+         [
+          2,
+          7
+         ],
+         [
+          0,
+          7
+         ],
+         [
+          1,
+          5
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           1,
+           8
+          ],
+          "kind": [
+           "landing",
+           "door"
+          ],
+          "subRegion": "r2c2"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r2c2",
+        "(gated gated)"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    },
+    {
+     "body": "lavarunner@208,96",
+     "tag": "lavarunner",
+     "centre": [
+      216,
+      104
+     ],
+     "runRange": 80,
+     "faster": [
+      16,
+      17,
+      31
+     ],
+     "zone": 86,
+     "cut": [
+      [
+       11,
+       1
+      ],
+      [
+       12,
+       1
+      ],
+      [
+       13,
+       1
+      ],
+      [
+       14,
+       1
+      ],
+      [
+       15,
+       1
+      ],
+      [
+       9,
+       2
+      ],
+      [
+       10,
+       2
+      ],
+      [
+       16,
+       2
+      ],
+      [
+       17,
+       2
+      ],
+      [
+       9,
+       3
+      ],
+      [
+       17,
+       3
+      ],
+      [
+       8,
+       4
+      ],
+      [
+       18,
+       4
+      ],
+      [
+       8,
+       5
+      ],
+      [
+       18,
+       5
+      ],
+      [
+       8,
+       6
+      ],
+      [
+       18,
+       6
+      ],
+      [
+       8,
+       7
+      ],
+      [
+       18,
+       7
+      ],
+      [
+       8,
+       8
+      ],
+      [
+       9,
+       9
+      ],
+      [
+       17,
+       9
+      ]
+     ],
+     "exemptCutCells": [
+      [
+       18,
+       8
+      ]
+     ],
+     "entryExempt": [
+      {
+       "cell": [
+        18,
+        8
+       ],
+       "kind": [
+        "landing",
+        "door"
+       ],
+       "boundary": true,
+       "subRegion": "r8c18",
+       "class": "ARRIVE-AND-LEAVE",
+       "ownGoals": [
+        "exit in_L73_64_0 (r8c18)",
+        "exit out_teleporter_288_144 (r8c18)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 0,
+        "sample": [],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r8c18"
+       ],
+       "gatesCrossed": []
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    }
+   ]
+  },
+  {
+   "level": 75,
+   "bodies": [
+    {
+     "body": "lavarunner@8,112",
+     "tag": "lavarunner",
+     "centre": [
+      16,
+      120
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16
+     ],
+     "zone": 61,
+     "cut": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       2,
+       2
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       5,
+       4
+      ],
+      [
+       5,
+       6
+      ],
+      [
+       6,
+       7
+      ],
+      [
+       5,
+       8
+      ],
+      [
+       5,
+       9
+      ],
+      [
+       5,
+       10
+      ],
+      [
+       4,
+       11
+      ],
+      [
+       0,
+       12
+      ],
+      [
+       1,
+       12
+      ],
+      [
+       2,
+       12
+      ],
+      [
+       3,
+       12
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    },
+    {
+     "body": "lavarunner@104,64",
+     "tag": "lavarunner",
+     "centre": [
+      112,
+      72
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16
+     ],
+     "zone": 71,
+     "cut": [
+      [
+       3,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       2
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       2,
+       7
+      ],
+      [
+       3,
+       8
+      ],
+      [
+       4,
+       9
+      ],
+      [
+       5,
+       9
+      ],
+      [
+       6,
+       9
+      ],
+      [
+       7,
+       9
+      ],
+      [
+       8,
+       9
+      ],
+      [
+       9,
+       9
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [
+      {
+       "cell": [
+        4,
+        0
+       ],
+       "kind": [
+        "door"
+       ],
+       "boundary": false,
+       "subRegion": "r0c4",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit out_teleporter_64_0 (r0c4)",
+        "exit in_L74_16_144 (r0c4)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 35,
+        "sample": [
+         [
+          4,
+          2
+         ],
+         [
+          3,
+          1
+         ],
+         [
+          5,
+          2
+         ],
+         [
+          6,
+          2
+         ],
+         [
+          5,
+          3
+         ],
+         [
+          6,
+          3
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           4,
+           1
+          ],
+          "kind": [
+           "landing",
+           "door"
+          ],
+          "subRegion": "r0c4"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r0c4",
+        "(gated gated)",
+        "r8c6"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        4,
+        1
+       ],
+       "kind": [
+        "landing",
+        "door"
+       ],
+       "boundary": false,
+       "subRegion": "r0c4",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit in_L74_16_144 (r0c4)",
+        "exit out_teleporter_64_0 (r0c4)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 35,
+        "sample": [
+         [
+          4,
+          2
+         ],
+         [
+          3,
+          1
+         ],
+         [
+          5,
+          2
+         ],
+         [
+          6,
+          2
+         ],
+         [
+          5,
+          3
+         ],
+         [
+          6,
+          3
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           4,
+           0
+          ],
+          "kind": [
+           "door"
+          ],
+          "subRegion": "r0c4"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r0c4",
+        "(gated gated)",
+        "r8c6"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    }
+   ]
+  },
+  {
+   "level": 77,
+   "bodies": [
+    {
+     "body": "lavarunner@80,272",
+     "tag": "lavarunner",
+     "centre": [
+      88,
+      280
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16,
+      31
+     ],
+     "zone": 72,
+     "cut": [
+      [
+       3,
+       12
+      ],
+      [
+       4,
+       12
+      ],
+      [
+       7,
+       12
+      ],
+      [
+       1,
+       13
+      ],
+      [
+       2,
+       13
+      ],
+      [
+       8,
+       13
+      ],
+      [
+       9,
+       13
+      ],
+      [
+       1,
+       14
+      ],
+      [
+       9,
+       14
+      ],
+      [
+       0,
+       15
+      ],
+      [
+       10,
+       15
+      ],
+      [
+       10,
+       16
+      ],
+      [
+       10,
+       17
+      ],
+      [
+       10,
+       18
+      ],
+      [
+       10,
+       19
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [
+      {
+       "cell": [
+        6,
+        12
+       ],
+       "kind": [
+        "trap"
+       ],
+       "boundary": false,
+       "subRegion": "r12c6",
+       "class": "TRAVERSE",
+       "ownGoals": [],
+       "unchargedGoals": [
+        "exit in_L78_256_0 (r15c6) @6,18",
+        "exit out_teleporter_96_304 (r15c6) @6,19"
+       ],
+       "reaches": {
+        "nonExempt": 37,
+        "sample": [
+         [
+          6,
+          13
+         ],
+         [
+          5,
+          12
+         ],
+         [
+          7,
+          13
+         ],
+         [
+          6,
+          14
+         ],
+         [
+          5,
+          13
+         ],
+         [
+          6,
+          15
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           6,
+           18
+          ],
+          "kind": [
+           "landing",
+           "door"
+          ],
+          "subRegion": "r15c6"
+         },
+         {
+          "cell": [
+           6,
+           19
+          ],
+          "kind": [
+           "door"
+          ],
+          "subRegion": "r15c6"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r12c6",
+        "(open gated)",
+        "(gated gated)",
+        "r15c6"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        6,
+        18
+       ],
+       "kind": [
+        "landing",
+        "door"
+       ],
+       "boundary": false,
+       "subRegion": "r15c6",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit in_L78_256_0 (r15c6)",
+        "exit out_teleporter_96_304 (r15c6)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 37,
+        "sample": [
+         [
+          6,
+          17
+         ],
+         [
+          7,
+          18
+         ],
+         [
+          6,
+          16
+         ],
+         [
+          7,
+          17
+         ],
+         [
+          5,
+          17
+         ],
+         [
+          8,
+          18
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           6,
+           19
+          ],
+          "kind": [
+           "door"
+          ],
+          "subRegion": "r15c6"
+         },
+         {
+          "cell": [
+           6,
+           12
+          ],
+          "kind": [
+           "trap"
+          ],
+          "subRegion": "r12c6"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r15c6",
+        "(gated gated)",
+        "(open gated)",
+        "r12c6"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        6,
+        19
+       ],
+       "kind": [
+        "door"
+       ],
+       "boundary": false,
+       "subRegion": "r15c6",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit out_teleporter_96_304 (r15c6)",
+        "exit in_L78_256_0 (r15c6)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 37,
+        "sample": [
+         [
+          7,
+          19
+         ],
+         [
+          6,
+          17
+         ],
+         [
+          7,
+          18
+         ],
+         [
+          8,
+          19
+         ],
+         [
+          6,
+          16
+         ],
+         [
+          7,
+          17
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           6,
+           18
+          ],
+          "kind": [
+           "landing",
+           "door"
+          ],
+          "subRegion": "r15c6"
+         },
+         {
+          "cell": [
+           6,
+           12
+          ],
+          "kind": [
+           "trap"
+          ],
+          "subRegion": "r12c6"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r15c6",
+        "(gated gated)",
+        "(open gated)",
+        "r12c6"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    },
+    {
+     "body": "lavarunner@112,256",
+     "tag": "lavarunner",
+     "centre": [
+      120,
+      264
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16,
+      31
+     ],
+     "zone": 79,
+     "cut": [
+      [
+       7,
+       11
+      ],
+      [
+       8,
+       11
+      ],
+      [
+       9,
+       11
+      ],
+      [
+       3,
+       12
+      ],
+      [
+       4,
+       12
+      ],
+      [
+       11,
+       12
+      ],
+      [
+       3,
+       13
+      ],
+      [
+       11,
+       13
+      ],
+      [
+       2,
+       14
+      ],
+      [
+       12,
+       14
+      ],
+      [
+       2,
+       15
+      ],
+      [
+       12,
+       15
+      ],
+      [
+       2,
+       16
+      ],
+      [
+       12,
+       16
+      ],
+      [
+       2,
+       17
+      ],
+      [
+       12,
+       17
+      ],
+      [
+       2,
+       18
+      ],
+      [
+       12,
+       18
+      ],
+      [
+       3,
+       19
+      ],
+      [
+       11,
+       19
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [
+      {
+       "cell": [
+        6,
+        12
+       ],
+       "kind": [
+        "trap"
+       ],
+       "boundary": false,
+       "subRegion": "r12c6",
+       "class": "TRAVERSE",
+       "ownGoals": [],
+       "unchargedGoals": [
+        "exit in_L78_256_0 (r15c6) @6,18",
+        "exit out_teleporter_96_304 (r15c6) @6,19"
+       ],
+       "reaches": {
+        "nonExempt": 37,
+        "sample": [
+         [
+          6,
+          13
+         ],
+         [
+          5,
+          12
+         ],
+         [
+          7,
+          13
+         ],
+         [
+          6,
+          14
+         ],
+         [
+          5,
+          13
+         ],
+         [
+          6,
+          15
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           6,
+           18
+          ],
+          "kind": [
+           "landing",
+           "door"
+          ],
+          "subRegion": "r15c6"
+         },
+         {
+          "cell": [
+           6,
+           19
+          ],
+          "kind": [
+           "door"
+          ],
+          "subRegion": "r15c6"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r12c6",
+        "(open gated)",
+        "(gated gated)",
+        "r15c6"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        6,
+        18
+       ],
+       "kind": [
+        "landing",
+        "door"
+       ],
+       "boundary": false,
+       "subRegion": "r15c6",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit in_L78_256_0 (r15c6)",
+        "exit out_teleporter_96_304 (r15c6)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 37,
+        "sample": [
+         [
+          6,
+          17
+         ],
+         [
+          7,
+          18
+         ],
+         [
+          6,
+          16
+         ],
+         [
+          7,
+          17
+         ],
+         [
+          5,
+          17
+         ],
+         [
+          8,
+          18
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           6,
+           19
+          ],
+          "kind": [
+           "door"
+          ],
+          "subRegion": "r15c6"
+         },
+         {
+          "cell": [
+           6,
+           12
+          ],
+          "kind": [
+           "trap"
+          ],
+          "subRegion": "r12c6"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r15c6",
+        "(gated gated)",
+        "(open gated)",
+        "r12c6"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        6,
+        19
+       ],
+       "kind": [
+        "door"
+       ],
+       "boundary": false,
+       "subRegion": "r15c6",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit out_teleporter_96_304 (r15c6)",
+        "exit in_L78_256_0 (r15c6)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 37,
+        "sample": [
+         [
+          7,
+          19
+         ],
+         [
+          6,
+          17
+         ],
+         [
+          7,
+          18
+         ],
+         [
+          8,
+          19
+         ],
+         [
+          6,
+          16
+         ],
+         [
+          7,
+          17
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           6,
+           18
+          ],
+          "kind": [
+           "landing",
+           "door"
+          ],
+          "subRegion": "r15c6"
+         },
+         {
+          "cell": [
+           6,
+           12
+          ],
+          "kind": [
+           "trap"
+          ],
+          "subRegion": "r12c6"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r15c6",
+        "(gated gated)",
+        "(open gated)",
+        "r12c6"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    }
+   ]
+  },
+  {
+   "level": 78,
+   "bodies": [
+    {
+     "body": "lavarunner@192,144",
+     "tag": "lavarunner",
+     "centre": [
+      200,
+      152
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16,
+      31
+     ],
+     "zone": 52,
+     "cut": [
+      [
+       10,
+       4
+      ],
+      [
+       11,
+       4
+      ],
+      [
+       12,
+       4
+      ],
+      [
+       13,
+       4
+      ],
+      [
+       14,
+       4
+      ],
+      [
+       8,
+       5
+      ],
+      [
+       9,
+       5
+      ],
+      [
+       15,
+       5
+      ],
+      [
+       16,
+       5
+      ],
+      [
+       8,
+       6
+      ],
+      [
+       16,
+       6
+      ],
+      [
+       7,
+       7
+      ],
+      [
+       17,
+       7
+      ],
+      [
+       7,
+       8
+      ],
+      [
+       17,
+       8
+      ],
+      [
+       7,
+       9
+      ],
+      [
+       17,
+       9
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [
+      {
+       "cell": [
+        9,
+        6
+       ],
+       "kind": [
+        "trap"
+       ],
+       "boundary": false,
+       "subRegion": "r6c9",
+       "class": "ARRIVE-AND-LEAVE",
+       "ownGoals": [],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 0,
+        "sample": [],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r6c9"
+       ],
+       "gatesCrossed": []
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    },
+    {
+     "body": "lavarunner@144,72",
+     "tag": "lavarunner",
+     "centre": [
+      152,
+      80
+     ],
+     "runRange": 80,
+     "faster": [
+      16,
+      17,
+      31
+     ],
+     "zone": 93,
+     "cut": [
+      [
+       6,
+       0
+      ],
+      [
+       12,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       13,
+       1
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       14,
+       2
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       14,
+       3
+      ],
+      [
+       4,
+       4
+      ],
+      [
+       14,
+       4
+      ],
+      [
+       4,
+       5
+      ],
+      [
+       14,
+       5
+      ],
+      [
+       4,
+       6
+      ],
+      [
+       14,
+       6
+      ],
+      [
+       4,
+       7
+      ],
+      [
+       14,
+       7
+      ],
+      [
+       5,
+       8
+      ],
+      [
+       13,
+       8
+      ],
+      [
+       6,
+       9
+      ],
+      [
+       12,
+       9
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [
+      {
+       "cell": [
+        9,
+        3
+       ],
+       "kind": [
+        "trap"
+       ],
+       "boundary": false,
+       "subRegion": "r3c9",
+       "class": "TRAVERSE",
+       "ownGoals": [],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 16,
+        "sample": [
+         [
+          9,
+          2
+         ],
+         [
+          10,
+          3
+         ],
+         [
+          8,
+          3
+         ],
+         [
+          9,
+          1
+         ],
+         [
+          10,
+          2
+         ],
+         [
+          9,
+          0
+         ]
+        ],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r3c9",
+        "(open gated)",
+        "(gated gated)",
+        "r1c10"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        6,
+        5
+       ],
+       "kind": [
+        "trap"
+       ],
+       "boundary": false,
+       "subRegion": "r5c6",
+       "class": "TRAVERSE",
+       "ownGoals": [],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 6,
+        "sample": [
+         [
+          7,
+          5
+         ],
+         [
+          6,
+          6
+         ],
+         [
+          5,
+          5
+         ],
+         [
+          7,
+          4
+         ],
+         [
+          7,
+          6
+         ],
+         [
+          5,
+          6
+         ]
+        ],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r5c6",
+        "(open gated)",
+        "(gated gated)"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        9,
+        6
+       ],
+       "kind": [
+        "trap"
+       ],
+       "boundary": false,
+       "subRegion": "r6c9",
+       "class": "ARRIVE-AND-LEAVE",
+       "ownGoals": [],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 0,
+        "sample": [],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r6c9"
+       ],
+       "gatesCrossed": []
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    },
+    {
+     "body": "lavarunner@96,32",
+     "tag": "lavarunner",
+     "centre": [
+      104,
+      40
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16,
+      31
+     ],
+     "zone": 76,
+     "cut": [
+      [
+       1,
+       0
+      ],
+      [
+       11,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       11,
+       1
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       11,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       11,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       11,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       10,
+       5
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       6
+      ],
+      [
+       4,
+       7
+      ],
+      [
+       5,
+       7
+      ],
+      [
+       6,
+       7
+      ],
+      [
+       7,
+       7
+      ],
+      [
+       8,
+       7
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [
+      {
+       "cell": [
+        2,
+        0
+       ],
+       "kind": [
+        "door"
+       ],
+       "boundary": false,
+       "subRegion": "r0c2",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit out_teleporter_32_0 (r0c2)",
+        "exit in_L79_64_224 (r0c2)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 6,
+        "sample": [
+         [
+          3,
+          0
+         ],
+         [
+          4,
+          0
+         ],
+         [
+          3,
+          1
+         ],
+         [
+          2,
+          2
+         ],
+         [
+          5,
+          0
+         ],
+         [
+          4,
+          1
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           2,
+           1
+          ],
+          "kind": [
+           "landing",
+           "door"
+          ],
+          "subRegion": "r0c2"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r0c2",
+        "(gated gated)"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]",
+        "[{\"any\":[{\"flag\":\"hasSword\"},{\"flag\":\"hasSpear\"}]}]"
+       ]
+      },
+      {
+       "cell": [
+        2,
+        1
+       ],
+       "kind": [
+        "landing",
+        "door"
+       ],
+       "boundary": false,
+       "subRegion": "r0c2",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit in_L79_64_224 (r0c2)",
+        "exit out_teleporter_32_0 (r0c2)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 6,
+        "sample": [
+         [
+          3,
+          1
+         ],
+         [
+          2,
+          2
+         ],
+         [
+          3,
+          0
+         ],
+         [
+          4,
+          1
+         ],
+         [
+          4,
+          0
+         ],
+         [
+          5,
+          0
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           2,
+           0
+          ],
+          "kind": [
+           "door"
+          ],
+          "subRegion": "r0c2"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r0c2",
+        "(gated gated)"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]",
+        "[{\"any\":[{\"flag\":\"hasSword\"},{\"flag\":\"hasSpear\"}]}]"
+       ]
+      },
+      {
+       "cell": [
+        9,
+        3
+       ],
+       "kind": [
+        "trap"
+       ],
+       "boundary": false,
+       "subRegion": "r3c9",
+       "class": "TRAVERSE",
+       "ownGoals": [],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 16,
+        "sample": [
+         [
+          9,
+          2
+         ],
+         [
+          10,
+          3
+         ],
+         [
+          8,
+          3
+         ],
+         [
+          9,
+          1
+         ],
+         [
+          10,
+          2
+         ],
+         [
+          9,
+          0
+         ]
+        ],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r3c9",
+        "(open gated)",
+        "(gated gated)",
+        "r1c10"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        6,
+        5
+       ],
+       "kind": [
+        "trap"
+       ],
+       "boundary": false,
+       "subRegion": "r5c6",
+       "class": "TRAVERSE",
+       "ownGoals": [],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 6,
+        "sample": [
+         [
+          7,
+          5
+         ],
+         [
+          6,
+          6
+         ],
+         [
+          5,
+          5
+         ],
+         [
+          7,
+          4
+         ],
+         [
+          7,
+          6
+         ],
+         [
+          5,
+          6
+         ]
+        ],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r5c6",
+        "(open gated)",
+        "(gated gated)"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        9,
+        6
+       ],
+       "kind": [
+        "trap"
+       ],
+       "boundary": false,
+       "subRegion": "r6c9",
+       "class": "ARRIVE-AND-LEAVE",
+       "ownGoals": [],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 0,
+        "sample": [],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r6c9"
+       ],
+       "gatesCrossed": []
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    },
+    {
+     "body": "lavarunner@56,120",
+     "tag": "lavarunner",
+     "centre": [
+      64,
+      128
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16,
+      31
+     ],
+     "zone": 65,
+     "cut": [
+      [
+       3,
+       2
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       5,
+       3
+      ],
+      [
+       6,
+       3
+      ],
+      [
+       7,
+       3
+      ],
+      [
+       8,
+       4
+      ],
+      [
+       8,
+       5
+      ],
+      [
+       8,
+       6
+      ],
+      [
+       9,
+       8
+      ],
+      [
+       8,
+       9
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [
+      {
+       "cell": [
+        6,
+        5
+       ],
+       "kind": [
+        "trap"
+       ],
+       "boundary": false,
+       "subRegion": "r5c6",
+       "class": "TRAVERSE",
+       "ownGoals": [],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 6,
+        "sample": [
+         [
+          7,
+          5
+         ],
+         [
+          6,
+          6
+         ],
+         [
+          5,
+          5
+         ],
+         [
+          7,
+          4
+         ],
+         [
+          7,
+          6
+         ],
+         [
+          5,
+          6
+         ]
+        ],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r5c6",
+        "(open gated)",
+        "(gated gated)"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    },
+    {
+     "body": "lavarunner@112,136",
+     "tag": "lavarunner",
+     "centre": [
+      120,
+      144
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16,
+      31
+     ],
+     "zone": 57,
+     "cut": [
+      [
+       7,
+       3
+      ],
+      [
+       4,
+       4
+      ],
+      [
+       5,
+       4
+      ],
+      [
+       6,
+       4
+      ],
+      [
+       8,
+       4
+      ],
+      [
+       9,
+       4
+      ],
+      [
+       10,
+       4
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       11,
+       5
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       12,
+       6
+      ],
+      [
+       2,
+       7
+      ],
+      [
+       12,
+       7
+      ],
+      [
+       2,
+       8
+      ],
+      [
+       12,
+       8
+      ],
+      [
+       2,
+       9
+      ],
+      [
+       12,
+       9
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [
+      {
+       "cell": [
+        6,
+        5
+       ],
+       "kind": [
+        "trap"
+       ],
+       "boundary": false,
+       "subRegion": "r5c6",
+       "class": "TRAVERSE",
+       "ownGoals": [],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 6,
+        "sample": [
+         [
+          7,
+          5
+         ],
+         [
+          6,
+          6
+         ],
+         [
+          5,
+          5
+         ],
+         [
+          7,
+          4
+         ],
+         [
+          7,
+          6
+         ],
+         [
+          5,
+          6
+         ]
+        ],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r5c6",
+        "(open gated)",
+        "(gated gated)"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        9,
+        6
+       ],
+       "kind": [
+        "trap"
+       ],
+       "boundary": false,
+       "subRegion": "r6c9",
+       "class": "ARRIVE-AND-LEAVE",
+       "ownGoals": [],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 0,
+        "sample": [],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r6c9"
+       ],
+       "gatesCrossed": []
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 0
+    }
+   ]
+  },
+  {
+   "level": 80,
+   "bodies": [
+    {
+     "body": "lavarunner@80,32",
+     "tag": "lavarunner",
+     "centre": [
+      88,
+      40
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16
+     ],
+     "zone": 68,
+     "cut": [
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [
+      {
+       "cell": [
+        2,
+        0
+       ],
+       "kind": [
+        "door"
+       ],
+       "boundary": false,
+       "subRegion": "r0c2",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit out_teleporter_32_0 (r0c2)",
+        "exit in_L71_224_304 (r0c2)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 47,
+        "sample": [
+         [
+          3,
+          0
+         ],
+         [
+          1,
+          0
+         ],
+         [
+          4,
+          0
+         ],
+         [
+          3,
+          1
+         ],
+         [
+          2,
+          2
+         ],
+         [
+          0,
+          0
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           2,
+           1
+          ],
+          "kind": [
+           "landing",
+           "door"
+          ],
+          "subRegion": "r0c2"
+         },
+         {
+          "cell": [
+           5,
+           6
+          ],
+          "kind": [
+           "trap"
+          ],
+          "subRegion": "r6c5"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r0c2",
+        "(gated gated)",
+        "r6c5"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        2,
+        1
+       ],
+       "kind": [
+        "landing",
+        "door"
+       ],
+       "boundary": false,
+       "subRegion": "r0c2",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit in_L71_224_304 (r0c2)",
+        "exit out_teleporter_32_0 (r0c2)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 47,
+        "sample": [
+         [
+          3,
+          1
+         ],
+         [
+          2,
+          2
+         ],
+         [
+          3,
+          0
+         ],
+         [
+          1,
+          0
+         ],
+         [
+          4,
+          1
+         ],
+         [
+          2,
+          3
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           2,
+           0
+          ],
+          "kind": [
+           "door"
+          ],
+          "subRegion": "r0c2"
+         },
+         {
+          "cell": [
+           5,
+           6
+          ],
+          "kind": [
+           "trap"
+          ],
+          "subRegion": "r6c5"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r0c2",
+        "(gated gated)",
+        "r6c5"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        5,
+        6
+       ],
+       "kind": [
+        "trap"
+       ],
+       "boundary": false,
+       "subRegion": "r6c5",
+       "class": "TRAVERSE",
+       "ownGoals": [],
+       "unchargedGoals": [
+        "exit in_L71_224_304 (r0c2) @2,1",
+        "exit out_teleporter_32_0 (r0c2) @2,0"
+       ],
+       "reaches": {
+        "nonExempt": 47,
+        "sample": [
+         [
+          6,
+          6
+         ],
+         [
+          6,
+          5
+         ],
+         [
+          7,
+          6
+         ],
+         [
+          6,
+          4
+         ],
+         [
+          7,
+          5
+         ],
+         [
+          7,
+          7
+         ]
+        ],
+        "exempt": [
+         {
+          "cell": [
+           2,
+           1
+          ],
+          "kind": [
+           "landing",
+           "door"
+          ],
+          "subRegion": "r0c2"
+         },
+         {
+          "cell": [
+           2,
+           0
+          ],
+          "kind": [
+           "door"
+          ],
+          "subRegion": "r0c2"
+         }
+        ]
+       },
+       "reachSubRegions": [
+        "r6c5",
+        "(gated gated)",
+        "r0c2"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 75
+    },
+    {
+     "body": "lavarunner@0,96",
+     "tag": "lavarunner",
+     "centre": [
+      8,
+      104
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16
+     ],
+     "zone": 36,
+     "cut": [
+      [
+       0,
+       1
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       5,
+       4
+      ],
+      [
+       5,
+       5
+      ]
+     ],
+     "exemptCutCells": [
+      [
+       2,
+       1
+      ],
+      [
+       5,
+       6
+      ]
+     ],
+     "entryExempt": [
+      {
+       "cell": [
+        2,
+        1
+       ],
+       "kind": [
+        "landing",
+        "door"
+       ],
+       "boundary": true,
+       "subRegion": "r0c2",
+       "class": "TRAVERSE",
+       "ownGoals": [
+        "exit in_L71_224_304 (r0c2)",
+        "exit out_teleporter_32_0 (r0c2)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 9,
+        "sample": [
+         [
+          2,
+          2
+         ],
+         [
+          2,
+          3
+         ],
+         [
+          1,
+          2
+         ],
+         [
+          3,
+          3
+         ],
+         [
+          1,
+          3
+         ],
+         [
+          0,
+          2
+         ]
+        ],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r0c2",
+        "(gated gated)"
+       ],
+       "gatesCrossed": [
+        "[{\"flag\":\"hasDarkSuit\"}]"
+       ]
+      },
+      {
+       "cell": [
+        5,
+        6
+       ],
+       "kind": [
+        "trap"
+       ],
+       "boundary": true,
+       "subRegion": "r6c5",
+       "class": "ARRIVE-AND-LEAVE",
+       "ownGoals": [],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 0,
+        "sample": [],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r6c5"
+       ],
+       "gatesCrossed": []
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 75
+    },
+    {
+     "body": "lavarunner@120,208",
+     "tag": "lavarunner",
+     "centre": [
+      128,
+      216
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16
+     ],
+     "zone": 42,
+     "cut": [
+      [
+       5,
+       8
+      ],
+      [
+       4,
+       9
+      ],
+      [
+       3,
+       11
+      ],
+      [
+       3,
+       12
+      ],
+      [
+       2,
+       13
+      ],
+      [
+       3,
+       14
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 97
+    },
+    {
+     "body": "lavarunner@0,144",
+     "tag": "lavarunner",
+     "centre": [
+      8,
+      152
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16
+     ],
+     "zone": 18,
+     "cut": [
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       4,
+       5
+      ],
+      [
+       4,
+       6
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 75
+    }
+   ]
+  },
+  {
+   "level": 99,
+   "bodies": [
+    {
+     "body": "lavarunner@192,64",
+     "tag": "lavarunner",
+     "centre": [
+      200,
+      72
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      31,
+      16,
+      33,
+      4,
+      null
+     ],
+     "zone": 36,
+     "cut": [
+      [
+       7,
+       5
+      ],
+      [
+       8,
+       8
+      ],
+      [
+       9,
+       8
+      ],
+      [
+       10,
+       9
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 16
+    },
+    {
+     "body": "lavarunner@160,32",
+     "tag": "lavarunner",
+     "centre": [
+      168,
+      40
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      16,
+      31,
+      33,
+      4,
+      null
+     ],
+     "zone": 33,
+     "cut": [
+      [
+       5,
+       2
+      ],
+      [
+       5,
+       3
+      ],
+      [
+       5,
+       4
+      ],
+      [
+       6,
+       5
+      ],
+      [
+       9,
+       7
+      ],
+      [
+       10,
+       7
+      ],
+      [
+       11,
+       7
+      ],
+      [
+       12,
+       7
+      ]
+     ],
+     "exemptCutCells": [],
+     "entryExempt": [],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 16
+    },
+    {
+     "body": "lavarunner@176,64",
+     "tag": "lavarunner",
+     "centre": [
+      184,
+      72
+     ],
+     "runRange": 80,
+     "faster": [
+      17,
+      31,
+      16,
+      33,
+      4,
+      null
+     ],
+     "zone": 40,
+     "cut": [
+      [
+       6,
+       5
+      ],
+      [
+       7,
+       8
+      ],
+      [
+       8,
+       8
+      ],
+      [
+       9,
+       9
+      ],
+      [
+       10,
+       9
+      ]
+     ],
+     "exemptCutCells": [
+      [
+       7,
+       7
+      ]
+     ],
+     "entryExempt": [
+      {
+       "cell": [
+        7,
+        7
+       ],
+       "kind": [
+        "door"
+       ],
+       "boundary": true,
+       "subRegion": "r7c5",
+       "class": "ARRIVE-AND-LEAVE",
+       "ownGoals": [
+        "exit out_stairsdown_112_112 (r7c5)",
+        "exit in_L98_112_112 (r7c5)"
+       ],
+       "unchargedGoals": [],
+       "reaches": {
+        "nonExempt": 0,
+        "sample": [],
+        "exempt": []
+       },
+       "reachSubRegions": [
+        "r7c5"
+       ],
+       "gatesCrossed": []
+      }
+     ],
+     "unfollowed": [],
+     "unfollowedAny": [],
+     "unfollowedOutside": 16
+    }
+   ]
+  }
+ ]
+}

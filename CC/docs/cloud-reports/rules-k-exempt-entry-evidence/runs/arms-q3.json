@@ -1,0 +1,250 @@
+{
+ "l74-75-darkshield-now": {
+  "level": 74,
+  "boot": [
+   16,
+   128
+  ],
+  "grants": [],
+  "segs": [
+   [
+    "up",
+    14
+   ],
+   [
+    "right",
+    36
+   ],
+   [
+    "up",
+    80
+   ],
+   [
+    "left",
+    14
+   ],
+   [
+    "up",
+    30
+   ],
+   [
+    null,
+    10
+   ]
+  ],
+  "note": "L74, item-less, from the L75 landing (16,128) = (1,8) (exempt, inside lavarunner@24,56's zone): row 7 east, column 4 north, onto the Darkshield (3,2)"
+ },
+ "l74-75-darkshield-wait40": {
+  "level": 74,
+  "boot": [
+   16,
+   128
+  ],
+  "grants": [],
+  "segs": [
+   [
+    null,
+    40
+   ],
+   [
+    "up",
+    14
+   ],
+   [
+    "right",
+    36
+   ],
+   [
+    "up",
+    80
+   ],
+   [
+    "left",
+    14
+   ],
+   [
+    "up",
+    30
+   ],
+   [
+    null,
+    10
+   ]
+  ],
+  "note": "the same after 40 idle ticks on the landing"
+ },
+ "l74-75-darkshield-wait160": {
+  "level": 74,
+  "boot": [
+   16,
+   128
+  ],
+  "grants": [],
+  "segs": [
+   [
+    null,
+    160
+   ],
+   [
+    "up",
+    14
+   ],
+   [
+    "right",
+    36
+   ],
+   [
+    "up",
+    80
+   ],
+   [
+    "left",
+    14
+   ],
+   [
+    "up",
+    30
+   ],
+   [
+    null,
+    10
+   ]
+  ],
+  "note": "the same after 160 idle ticks (seedling-fidelity-leash: the runner pins on (2,5)'s corner from t10 while the player stands here)"
+ },
+ "l74-75-darkshield-west": {
+  "level": 74,
+  "boot": [
+   16,
+   128
+  ],
+  "grants": [],
+  "segs": [
+   [
+    "up",
+    60
+   ],
+   [
+    "right",
+    30
+   ],
+   [
+    "up",
+    40
+   ],
+   [
+    null,
+    10
+   ]
+  ],
+  "note": "column 1 north to row 4, then east to column 3 and north onto (3,2)"
+ },
+ "l80-612-door-diag": {
+  "level": 80,
+  "boot": [
+   81,
+   104
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "left+up",
+    60
+   ],
+   [
+    "up",
+    50
+   ],
+   [
+    null,
+    10
+   ]
+  ],
+  "note": "L80, Suit alone, booted on lavatrap@80,96's own tile (5,6) (exempt, inside lavarunner@80,32's zone): diagonally NW through the lava to (2,1)/(2,0), the L71 door"
+ },
+ "l80-612-door-west": {
+  "level": 80,
+  "boot": [
+   81,
+   104
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "left",
+    40
+   ],
+   [
+    "up",
+    110
+   ],
+   [
+    null,
+    10
+   ]
+  ],
+  "note": "west to column 2 in the lava, then straight north to the door"
+ },
+ "l80-612-door-north": {
+  "level": 80,
+  "boot": [
+   81,
+   104
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "up",
+    50
+   ],
+   [
+    "left+up",
+    40
+   ],
+   [
+    "up",
+    40
+   ],
+   [
+    null,
+    10
+   ]
+  ],
+  "note": "north first (past the runner's spawn (5,2)), then NW to the door"
+ },
+ "l80-612-door-wait60": {
+  "level": 80,
+  "boot": [
+   81,
+   104
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    null,
+    60
+   ],
+   [
+    "left",
+    40
+   ],
+   [
+    "up",
+    110
+   ],
+   [
+    null,
+    10
+   ]
+  ],
+  "note": "60 idle ticks on the trap tile, then west and north"
+ }
+}

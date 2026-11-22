@@ -1,0 +1,4 @@
+level_75:level_75 -> level_74 => loc:Level 074 - Darkshield
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+MOVED ROUTES: 1

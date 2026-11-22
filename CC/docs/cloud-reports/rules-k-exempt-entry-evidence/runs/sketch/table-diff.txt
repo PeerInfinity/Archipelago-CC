@@ -1,0 +1,2 @@
+committed vs local base: ADD [] DEL [] CHG [] excluded-equal True
+local base vs sketch: ADD [] DEL [] CHG [] excluded-equal True
