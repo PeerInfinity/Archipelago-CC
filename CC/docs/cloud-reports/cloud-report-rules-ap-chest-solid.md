@@ -160,6 +160,41 @@ fix is the solver's switch, which is outside this slice. I did not wire it. With
 so the route still takes L26. **Not verified here:** the END survey's "+3-shifted REFUSED rows, nothing else new". I cannot read CI
 artifacts from this container, and I did not run the survey locally.
 
+## Step 35 (designer, tile-primitives-design-8): L26 `level_26__r2c4 -> level_26__r13c8`
+
+> **⚠ FOR LANDING: at this tip, seed 1 and ER both DEPEND on this edge, and at main neither does.** The edge's rule,
+> `Or(Shield×2, Ghost Spear, Sword, Wand)`, is a pre-existing no-hit SUSPECT. hammer-13 ran with `ROCKLOCK_KILL` +
+> `KILLLOCK_CLEAR_WRITE` + `FADE_MOVE` on, and no stance kills `puncher@80,168` / `puncher@32,208` from the arrival (8,2) without a hit.
+> So **the no-hit witness (or a re-pricing of this row) has to come BEFORE this slice lands.**
+
+**(a) Why step 35 newly appears.** The route list is derived with no game run
+(`survey-seedling-route.mjs --through=4.2 --derive-only`, at the tip and in a main worktree; `runs/step35/route-derive-*.txt`):
+- **main**: step 33 L22 → L25, then **step 34 L25 visit 1: `collect-placement(Level 025 - Chest (sphere 3.2))` then
+  `reach-exit(… → L22)`**. The chest is taken from L22's side, through the chest that was free from every side.
+- **tip**: step 33 L22 → L25, step 34 L25 → L26 (`teleporter@0,96`, which lands at L26 (128,32) = tile **(8,2)**, `level_26__r2c4`),
+  **step 35 L26 → L28** (`teleporter@144,208`), step 36 L28 → L25 (landing in the chest's probe side r7c6), step 37 L25 visit 2:
+  `collect-placement(Level 025 - Chest (sphere 3.2))`. From L22's side the chest and L28's door cost L25's latch event, which is
+  earned only in r7c6. So the leg toward **`Level 025 - Chest`** goes round by L26 and L28, and that pulls in the L26 arrival (8,2) and
+  its crossing to r13c8. That is the planner's "+3".
+
+**(b) Does any seed-1 sphere depend on this edge alone?** Throwaway: the exit removed from a copy, then the mode's own sphere walk
+(`tools/edge-dependence.mjs`, `entranceShuffleSteps.beatability`; `runs/step35/edge-dependence.txt`):
+
+| preset | main f9010498, without the edge | tip, without the edge |
+|---|---|---|
+| seed 1 `AP_14089154938208861744` | beatable, 90 spheres, **0 moves** | **NOT beatable**: `Level 025 - Chest`, `L25 flag 0: chest@96,96 cleared`, `L28 flag 0: rope@160,64 cleared` never collected (L26 flag 0 3.5 → 3.4, Shield 3.7 → 3.5, Boss Key 1 3.9 → 3.6) |
+| `seedling_playthrough/AP_1` | beatable, 0 moves | **NOT beatable**, the same 3 |
+| `seedling_er/AP_1` (each tree's own draw) | beatable, 0 moves | **NOT beatable**: 83 locations, the goal The Seed never collected |
+
+So yes: **at the tip this edge is the only way into `level_26__r13c8`, and so into L28's r0c6 and L25's chest pocket r7c6**. L28's
+other doors (from L27 into r11c4, from L30 into r1c18) do not reach r0c6 in the walk. At main the edge carries nothing on its own.
+The cause is the latch: L25's L22 side now costs an event that is earned only behind L28. The row itself is unchanged against main.
+
+**(c)** The train-tier pin is folded in: `deriveLevelWorldLogic.fixture.js` `SAMPLE` names `level_38__r0c9` + `level_38__r8c9`.
+`deriveLevelWorldLogic.train` + `latchSandwich.train` + `learnLattice.train`: 3 files, 7 tests pass. **Scripted and native AGREE on
+every L11/L25/L38 sub-region** (24 lines each, identical, 0 problems). No other `*.train.test.js` names a moved region or a chest
+event (grep).
+
 ## The host change
 
 - `frontend/modules/seedlingDemo/apPlacementRewriter.js`: new `apItemAttrs(tag, look, vanillaType)`, `AP_CHEST_KIND = 'chest'` and
