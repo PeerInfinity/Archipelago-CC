@@ -1,0 +1,4 @@
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.slow.test.js (2 tests) 171406ms
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Duration  186.68s (transform 3.04s, setup 199ms, import 14.93s, tests 171.41s, environment 0ms)
