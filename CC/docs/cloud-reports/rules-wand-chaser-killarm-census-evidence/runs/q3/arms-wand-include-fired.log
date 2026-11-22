@@ -1,0 +1,5 @@
+PAGE: seedling_bot_ap_p4g · 6 subject lock(s): L18 lock@144,112 · L26 rocklock@112,208 · L53 lock@144,208 · L60 lock@128,80 · L71 lock@112,192 · L99 lock@80,96
+# box lock: TAKEN by probe-seedling-killlock-arms.mjs (browser, pid 5170) — head 8be2068cd, 2 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+PASS: the census leaves at least one lock with a side it does not settle
+COUNTED (Game.as totalEnemies()): Enemies::Bob Enemies::BobBoss Enemies::BobSoldier Enemies::BossTotem Enemies::Bulb Enemies::Cactus Enemies::DarkTrap Enemies::Drill Enemies::Enemy Enemies::FinalBoss Enemies::Flyer Enemies::Grenade Enemies::IceTurret Enemies::Jellyfish Enemies::LavaRunner Enemies::LightBoss Enemies::Puncher Enemies::SandTrap Enemies::ShieldBoss Enemies::Spinner Enemies::Squishle Enemies::Tentacle Enemies::TentacleBeast Enemies::Turret Enemies::WallFlyer
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
