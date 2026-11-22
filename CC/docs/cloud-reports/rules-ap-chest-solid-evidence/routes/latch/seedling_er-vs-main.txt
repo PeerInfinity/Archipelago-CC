@@ -1,0 +1,1309 @@
+level_100:level_100 -> level_5 => exit:level_5 -> level_100
+    base None
+    tip  ['FREE']
+level_100:level_100 -> level_5 => exit:level_5 -> level_18
+    base None
+    tip  ['Progressive Swim']
+level_100:level_100 -> level_5 => exit:level_5 -> level_6
+    base None
+    tip  ['Progressive Swim']
+level_102:level_102 -> level_5 => exit:level_5 -> level_102
+    base ['FREE']
+    tip  None
+level_102:level_102 -> level_5 => exit:level_5 -> level_6
+    base ['FREE']
+    tip  None
+level_102:level_102 -> level_5 => exit:level_5 -> level_7
+    base ['Progressive Swim']
+    tip  None
+level_18:level_18 -> level_5 => exit:level_5 -> level_100
+    base None
+    tip  ['Progressive Swim']
+level_18:level_18 -> level_5 => exit:level_5 -> level_18
+    base None
+    tip  ['FREE']
+level_18:level_18 -> level_5 => exit:level_5 -> level_6
+    base None
+    tip  ['FREE']
+level_6:level_6 -> level_5 => exit:level_5 -> level_100
+    base None
+    tip  ['Progressive Swim']
+level_6:level_6 -> level_5 => exit:level_5 -> level_102
+    base ['FREE']
+    tip  None
+level_6:level_6 -> level_5 => exit:level_5 -> level_18
+    base None
+    tip  ['FREE']
+level_6:level_6 -> level_5 => exit:level_5 -> level_7
+    base ['Progressive Swim']
+    tip  None
+level_7:level_7 -> level_5 => exit:level_5 -> level_102
+    base ['Progressive Swim']
+    tip  None
+level_7:level_7 -> level_5 => exit:level_5 -> level_6
+    base ['Progressive Swim']
+    tip  None
+level_7:level_7 -> level_5 => exit:level_5 -> level_7
+    base ['FREE']
+    tip  None
+level_15:level_15 -> level_6 => exit:level_6 -> level_15
+    base None
+    tip  ['FREE']
+level_15:level_15 -> level_6 => exit:level_6 -> level_5
+    base None
+    tip  ['FREE']
+level_24:level_24 -> level_6 => exit:level_6 -> level_24
+    base ['FREE']
+    tip  None
+level_24:level_24 -> level_6 => exit:level_6 -> level_5
+    base ['FREE']
+    tip  None
+level_5:level_5 -> level_6 => exit:level_6 -> level_15
+    base None
+    tip  ['FREE']
+level_5:level_5 -> level_6 => exit:level_6 -> level_24
+    base ['FREE']
+    tip  None
+level_101:level_101 -> level_7 => exit:level_7 -> level_101
+    base None
+    tip  ['FREE']
+level_101:level_101 -> level_7 => exit:level_7 -> level_14
+    base None
+    tip  ['FREE']
+level_14:level_14 -> level_7 => exit:level_7 -> level_101
+    base None
+    tip  ['FREE']
+level_14:level_14 -> level_7 => exit:level_7 -> level_14
+    base None
+    tip  ['FREE']
+level_5:level_5 -> level_7 => exit:level_7 -> level_5
+    base ['Progressive Swim']
+    tip  None
+level_5:level_5 -> level_7 => exit:level_7 -> level_96
+    base ['FREE']
+    tip  None
+level_96:level_96 -> level_7 => exit:level_7 -> level_5
+    base ['Progressive Swim']
+    tip  None
+level_96:level_96 -> level_7 => exit:level_7 -> level_96
+    base ['FREE']
+    tip  None
+level_11:level_11 -> level_10 => exit:level_10 -> level_11
+    base None
+    tip  ['FREE']
+level_11:level_11 -> level_10 => exit:level_10 -> level_9
+    base None
+    tip  ['FREE']
+level_11:level_11 -> level_10 => loc:Level 010 - Sword
+    base None
+    tip  ['FREE']
+level_12:level_12 -> level_10 => exit:level_10 -> level_12
+    base ['FREE']
+    tip  None
+level_12:level_12 -> level_10 => exit:level_10 -> level_9
+    base ['FREE']
+    tip  None
+level_12:level_12 -> level_10 => loc:Level 010 - Sword
+    base ['FREE']
+    tip  None
+level_9:level_9 -> level_10 => exit:level_10 -> level_11
+    base None
+    tip  ['FREE']
+level_9:level_9 -> level_10 => exit:level_10 -> level_12
+    base ['FREE']
+    tip  None
+level_10:level_10 -> level_11 => exit:level_11 -> level_10
+    base None
+    tip  ['FREE']
+level_10:level_10 -> level_11 => exit:level_11 -> level_3
+    base None
+    tip  ['FREE']
+level_10:level_10 -> level_11 => loc:L11 flag 0: chest@32,48 cleared
+    base None
+    tip  ['FREE']
+level_10:level_10 -> level_11 => loc:Level 011 - Chest
+    base None
+    tip  ['FREE']
+level_3:level_3 -> level_11 => exit:level_11 -> level_10
+    base None
+    tip  ['L11 flag 0: chest@32,48 cleared', 'Progressive Swim']
+level_3:level_3 -> level_11 => exit:level_11 -> level_99
+    base ['FREE']
+    tip  None
+level_3:level_3 -> level_11 => loc:L11 flag 0: chest@32,48 cleared
+    base None
+    tip  ['L11 flag 0: chest@32,48 cleared', 'Progressive Swim']
+level_3:level_3 -> level_11 => loc:Level 011 - Chest
+    base ['FREE']
+    tip  ['L11 flag 0: chest@32,48 cleared', 'Progressive Swim']
+level_99:level_99 -> level_11 => exit:level_11 -> level_3
+    base ['FREE']
+    tip  None
+level_99:level_99 -> level_11 => exit:level_11 -> level_99
+    base ['FREE']
+    tip  None
+level_99:level_99 -> level_11 => loc:Level 011 - Chest
+    base ['FREE']
+    tip  None
+level_0:level_0 -> level_12 => exit:level_12 -> level_10
+    base ['L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+    tip  None
+level_0:level_0 -> level_12 => exit:level_12 -> level_96
+    base None
+    tip  ['L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+level_10:level_10 -> level_12 => exit:level_12 -> level_0
+    base ['L0 flag 1: breakablerock@288,176 cleared & Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => exit:level_12 -> level_10
+    base ['FREE']
+    tip  None
+level_10:level_10 -> level_12 => exit:level_12 -> level_21
+    base ['Fire & Progressive Swim & Yellow Key', 'Red Key & Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => exit:level_12 -> level_24
+    base ['Green Key & L12 flag 3: bosslock@80,656 cleared & L24 flag 0: burnabletree@32,128 cleared & Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => exit:level_12 -> level_33
+    base ['Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => exit:level_12 -> level_34
+    base ['Progressive Shield & Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => exit:level_12 -> level_35
+    base ['Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => exit:level_12 -> level_36
+    base ['Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => exit:level_12 -> level_37
+    base ['Fire & Progressive Swim & Yellow Key', 'Red Key & Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => exit:level_12 -> level_83
+    base ['Fire & Red Key & Wand & Yellow Key', 'Progressive Swim & Wand & Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => exit:level_12 -> level_88
+    base ['Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => exit:level_12 -> level_95
+    base ['Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => exit:level_12 -> level_95 #2
+    base ['Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base ['Progressive Shield & Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => loc:L12 flag 11: bosslock@112,192 cleared
+    base ['Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => loc:L12 flag 12: bosslock@32,864 cleared
+    base ['Fire & Red Key & Yellow Key', 'Progressive Swim & Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => loc:L12 flag 3: bosslock@80,656 cleared
+    base ['Green Key & L12 flag 3: bosslock@80,656 cleared & Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => loc:L12 flag 4: bosslock@416,240 cleared
+    base ['Red Key & Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => loc:L12 flag 5: bosslock@432,240 cleared
+    base ['Red Key & Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => loc:L12 flag 7: magicallock@32,864 cleared
+    base ['Fire & Red Key & Wand & Yellow Key', 'Progressive Swim & Wand & Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => loc:Level 012 - Chest
+    base ['Fire & Red Key & Yellow Key', 'Progressive Swim & Yellow Key']
+    tip  None
+level_10:level_10 -> level_12 => loc:Level 012 - Witch
+    base ['Wand & Yellow Key']
+    tip  None
+level_24:level_24 -> level_12 #2 => exit:level_12 -> level_10
+    base ['Green Key & L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+    tip  None
+level_24:level_24 -> level_12 #2 => exit:level_12 -> level_96
+    base None
+    tip  ['Green Key & L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+level_24:level_24 -> level_12 => exit:level_12 -> level_10
+    base ['Green Key & L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+    tip  None
+level_24:level_24 -> level_12 => exit:level_12 -> level_96
+    base None
+    tip  ['Green Key & L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+level_33:level_33 -> level_12 => exit:level_12 -> level_10
+    base ['L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+    tip  None
+level_33:level_33 -> level_12 => exit:level_12 -> level_96
+    base None
+    tip  ['L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+level_34:level_34 -> level_12 => exit:level_12 -> level_10
+    base ['Fire & L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Yellow Key']
+    tip  None
+level_34:level_34 -> level_12 => exit:level_12 -> level_96
+    base None
+    tip  ['Fire & L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Yellow Key']
+level_35:level_35 -> level_12 => exit:level_12 -> level_10
+    base ['L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+    tip  None
+level_35:level_35 -> level_12 => exit:level_12 -> level_96
+    base None
+    tip  ['L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+level_36:level_36 -> level_12 => exit:level_12 -> level_10
+    base ['L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+    tip  None
+level_36:level_36 -> level_12 => exit:level_12 -> level_96
+    base None
+    tip  ['L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+level_37:level_37 -> level_12 => exit:level_12 -> level_10
+    base ['Fire & L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Yellow Key']
+    tip  None
+level_37:level_37 -> level_12 => exit:level_12 -> level_96
+    base None
+    tip  ['Fire & L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Yellow Key']
+level_83:level_83 -> level_12 => exit:level_12 -> level_10
+    base ['Fire & L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Yellow Key', 'Fire & L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key']
+    tip  None
+level_83:level_83 -> level_12 => exit:level_12 -> level_96
+    base None
+    tip  ['Fire & L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Yellow Key', 'Fire & L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key']
+level_88:level_88 -> level_12 => exit:level_12 -> level_10
+    base ['L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+    tip  None
+level_88:level_88 -> level_12 => exit:level_12 -> level_96
+    base None
+    tip  ['L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+level_95:level_95 -> level_12 #2 => exit:level_12 -> level_10
+    base ['L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+    tip  None
+level_95:level_95 -> level_12 #2 => exit:level_12 -> level_96
+    base None
+    tip  ['L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+level_95:level_95 -> level_12 => exit:level_12 -> level_10
+    base ['L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+    tip  None
+level_95:level_95 -> level_12 => exit:level_12 -> level_96
+    base None
+    tip  ['L12 flag 11: bosslock@112,192 cleared & Yellow Key']
+level_96:level_96 -> level_12 => exit:level_12 -> level_0
+    base None
+    tip  ['L0 flag 1: breakablerock@288,176 cleared & Yellow Key']
+level_96:level_96 -> level_12 => exit:level_12 -> level_21
+    base None
+    tip  ['Fire & Progressive Swim & Yellow Key', 'Red Key & Yellow Key']
+level_96:level_96 -> level_12 => exit:level_12 -> level_24
+    base None
+    tip  ['Green Key & L12 flag 3: bosslock@80,656 cleared & L24 flag 0: burnabletree@32,128 cleared & Yellow Key']
+level_96:level_96 -> level_12 => exit:level_12 -> level_33
+    base None
+    tip  ['Yellow Key']
+level_96:level_96 -> level_12 => exit:level_12 -> level_34
+    base None
+    tip  ['Progressive Shield & Yellow Key']
+level_96:level_96 -> level_12 => exit:level_12 -> level_35
+    base None
+    tip  ['Yellow Key']
+level_96:level_96 -> level_12 => exit:level_12 -> level_36
+    base None
+    tip  ['Yellow Key']
+level_96:level_96 -> level_12 => exit:level_12 -> level_37
+    base None
+    tip  ['Fire & Progressive Swim & Yellow Key', 'Red Key & Yellow Key']
+level_96:level_96 -> level_12 => exit:level_12 -> level_83
+    base None
+    tip  ['Fire & Red Key & Wand & Yellow Key', 'Progressive Swim & Wand & Yellow Key']
+level_96:level_96 -> level_12 => exit:level_12 -> level_88
+    base None
+    tip  ['Yellow Key']
+level_96:level_96 -> level_12 => exit:level_12 -> level_95
+    base None
+    tip  ['Yellow Key']
+level_96:level_96 -> level_12 => exit:level_12 -> level_95 #2
+    base None
+    tip  ['Yellow Key']
+level_96:level_96 -> level_12 => exit:level_12 -> level_96
+    base None
+    tip  ['FREE']
+level_96:level_96 -> level_12 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base None
+    tip  ['Progressive Shield & Yellow Key']
+level_96:level_96 -> level_12 => loc:L12 flag 11: bosslock@112,192 cleared
+    base None
+    tip  ['Yellow Key']
+level_96:level_96 -> level_12 => loc:L12 flag 12: bosslock@32,864 cleared
+    base None
+    tip  ['Fire & Red Key & Yellow Key', 'Progressive Swim & Yellow Key']
+level_96:level_96 -> level_12 => loc:L12 flag 3: bosslock@80,656 cleared
+    base None
+    tip  ['Green Key & L12 flag 3: bosslock@80,656 cleared & Yellow Key']
+level_96:level_96 -> level_12 => loc:L12 flag 4: bosslock@416,240 cleared
+    base None
+    tip  ['Red Key & Yellow Key']
+level_96:level_96 -> level_12 => loc:L12 flag 5: bosslock@432,240 cleared
+    base None
+    tip  ['Red Key & Yellow Key']
+level_96:level_96 -> level_12 => loc:L12 flag 7: magicallock@32,864 cleared
+    base None
+    tip  ['Fire & Red Key & Wand & Yellow Key', 'Progressive Swim & Wand & Yellow Key']
+level_96:level_96 -> level_12 => loc:Level 012 - Chest
+    base None
+    tip  ['Fire & Red Key & Yellow Key', 'Progressive Swim & Yellow Key']
+level_96:level_96 -> level_12 => loc:Level 012 - Witch
+    base None
+    tip  ['Wand & Yellow Key']
+level_15:level_15 -> level_14 => exit:level_14 -> level_40
+    base ['FREE']
+    tip  None
+level_15:level_15 -> level_14 => exit:level_14 -> level_7
+    base None
+    tip  ['FREE']
+level_40:level_40 -> level_14 => exit:level_14 -> level_15
+    base ['FREE']
+    tip  None
+level_40:level_40 -> level_14 => exit:level_14 -> level_40
+    base ['FREE']
+    tip  None
+level_7:level_7 -> level_14 => exit:level_14 -> level_15
+    base None
+    tip  ['FREE']
+level_7:level_7 -> level_14 => exit:level_14 -> level_7
+    base None
+    tip  ['FREE']
+level_101:level_101 -> level_15 => exit:level_15 -> level_101
+    base ['Ghost Spear', 'L101 flag 0: lightpole@144,64 cleared']
+    tip  None
+level_101:level_101 -> level_15 => exit:level_15 -> level_14
+    base ['Progressive Swim']
+    tip  None
+level_101:level_101 -> level_15 => loc:Level 015 - Chest
+    base ['Progressive Swim']
+    tip  None
+level_14:level_14 -> level_15 => exit:level_15 -> level_101
+    base ['Fire & L101 flag 0: lightpole@144,64 cleared', 'Ghost Spear', 'L101 flag 0: lightpole@144,64 cleared & Progressive Swim', 'L101 flag 0: lightpole@144,64 cleared & Progressive Sword']
+    tip  None
+level_14:level_14 -> level_15 => exit:level_15 -> level_6
+    base None
+    tip  ['Fire', 'Ghost Spear', 'Progressive Swim', 'Progressive Sword']
+level_6:level_6 -> level_15 => exit:level_15 -> level_14
+    base None
+    tip  ['Progressive Swim']
+level_6:level_6 -> level_15 => exit:level_15 -> level_6
+    base None
+    tip  ['FREE']
+level_6:level_6 -> level_15 => loc:Level 015 - Chest
+    base None
+    tip  ['Progressive Swim']
+level_102:level_102 -> level_16 => exit:level_16 -> level_102
+    base ['FREE']
+    tip  None
+level_24:level_24 -> level_16 => exit:level_16 -> level_24
+    base None
+    tip  ['FREE']
+level_30:level_30 -> level_16 => exit:level_16 -> level_102
+    base ['Ghost Spear & L16 flag 0: rope@32,16 cleared', 'L16 flag 0: rope@32,16 cleared & Progressive Sword']
+    tip  None
+level_30:level_30 -> level_16 => exit:level_16 -> level_17
+    base ['L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_30:level_30 -> level_16 => exit:level_16 -> level_17 #2
+    base ['L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_30:level_30 -> level_16 => exit:level_16 -> level_17 #3
+    base ['L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_30:level_30 -> level_16 => exit:level_16 -> level_17 #4
+    base ['L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_30:level_30 -> level_16 => exit:level_16 -> level_17 #5
+    base ['L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_30:level_30 -> level_16 => exit:level_16 -> level_17 #6
+    base ['L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_30:level_30 -> level_16 => exit:level_16 -> level_17 #7
+    base ['L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_30:level_30 -> level_16 => exit:level_16 -> level_30
+    base ['L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_30:level_30 -> level_16 => exit:level_16 -> level_37
+    base ['L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_30:level_30 -> level_16 => loc:L16 flag 0: rope@32,16 cleared
+    base ['Fire & L16 flag 0: rope@32,16 cleared', 'Ghost Spear & L16 flag 0: rope@32,16 cleared', 'L16 flag 0: rope@32,16 cleared & Progressive Sword']
+    tip  None
+level_37:level_37 -> level_16 => exit:level_16 -> level_102
+    base ['Ghost Spear & L16 flag 0: rope@32,16 cleared', 'L16 flag 0: rope@32,16 cleared & Progressive Sword']
+    tip  None
+level_37:level_37 -> level_16 => exit:level_16 -> level_24
+    base None
+    tip  ['Ghost Spear & L16 flag 0: rope@32,16 cleared', 'L16 flag 0: rope@32,16 cleared & Progressive Sword']
+level_37:level_37 -> level_16 => exit:level_16 -> level_30
+    base ['L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_37:level_37 -> level_16 => exit:level_16 -> level_98
+    base None
+    tip  ['L16 flag 0: rope@32,16 cleared']
+level_98:level_98 -> level_16 => exit:level_16 -> level_17
+    base None
+    tip  ['L16 flag 0: rope@32,16 cleared']
+level_98:level_98 -> level_16 => exit:level_16 -> level_17 #2
+    base None
+    tip  ['L16 flag 0: rope@32,16 cleared']
+level_98:level_98 -> level_16 => exit:level_16 -> level_17 #3
+    base None
+    tip  ['L16 flag 0: rope@32,16 cleared']
+level_98:level_98 -> level_16 => exit:level_16 -> level_17 #4
+    base None
+    tip  ['L16 flag 0: rope@32,16 cleared']
+level_98:level_98 -> level_16 => exit:level_16 -> level_17 #5
+    base None
+    tip  ['L16 flag 0: rope@32,16 cleared']
+level_98:level_98 -> level_16 => exit:level_16 -> level_17 #6
+    base None
+    tip  ['L16 flag 0: rope@32,16 cleared']
+level_98:level_98 -> level_16 => exit:level_16 -> level_17 #7
+    base None
+    tip  ['L16 flag 0: rope@32,16 cleared']
+level_98:level_98 -> level_16 => exit:level_16 -> level_24
+    base None
+    tip  ['Ghost Spear & L16 flag 0: rope@32,16 cleared', 'L16 flag 0: rope@32,16 cleared & Progressive Sword']
+level_98:level_98 -> level_16 => exit:level_16 -> level_37
+    base None
+    tip  ['L16 flag 0: rope@32,16 cleared']
+level_98:level_98 -> level_16 => exit:level_16 -> level_98
+    base None
+    tip  ['L16 flag 0: rope@32,16 cleared']
+level_98:level_98 -> level_16 => loc:L16 flag 0: rope@32,16 cleared
+    base None
+    tip  ['Fire & L16 flag 0: rope@32,16 cleared', 'Ghost Spear & L16 flag 0: rope@32,16 cleared', 'L16 flag 0: rope@32,16 cleared & Progressive Sword']
+level_19:level_19 -> level_18 => exit:level_18 -> level_31
+    base ['Ghost Spear & L18 flag 0: lock@144,112 cleared', 'L18 flag 0: lock@144,112 cleared & Progressive Shieldx2', 'L18 flag 0: lock@144,112 cleared & Progressive Sword', 'L18 flag 0: lock@144,112 cleared & Wand']
+    tip  None
+level_19:level_19 -> level_18 => exit:level_18 -> level_5
+    base None
+    tip  ['Ghost Spear & L18 flag 0: lock@144,112 cleared', 'L18 flag 0: lock@144,112 cleared & Progressive Shieldx2', 'L18 flag 0: lock@144,112 cleared & Progressive Sword', 'L18 flag 0: lock@144,112 cleared & Wand']
+level_31:level_31 -> level_18 => exit:level_18 -> level_19
+    base ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+    tip  None
+level_31:level_31 -> level_18 => exit:level_18 -> level_31
+    base ['FREE']
+    tip  None
+level_31:level_31 -> level_18 => loc:L18 flag 0: lock@144,112 cleared
+    base ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+    tip  None
+level_5:level_5 -> level_18 => exit:level_18 -> level_19
+    base None
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_5:level_5 -> level_18 => exit:level_18 -> level_5
+    base None
+    tip  ['FREE']
+level_5:level_5 -> level_18 => loc:L18 flag 0: lock@144,112 cleared
+    base None
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_100:level_100 -> level_19 => exit:level_19 -> level_100
+    base ['FREE']
+    tip  None
+level_100:level_100 -> level_19 => exit:level_19 -> level_18
+    base ['L19 flag 1: bosslock@48,32 cleared & Progressive Sword & Red Key']
+    tip  None
+level_100:level_100 -> level_19 => loc:L19 flag 1: bosslock@48,32 cleared
+    base ['L19 flag 1: bosslock@48,32 cleared & Red Key']
+    tip  None
+level_100:level_100 -> level_19 => loc:Level 019 - Boss Key 0
+    base ['L19 flag 1: bosslock@48,32 cleared & Progressive Sword & Red Key']
+    tip  None
+level_100:level_100 -> level_19 => loc:Level 019 - Shieldspire
+    base ['L19 flag 1: bosslock@48,32 cleared & Progressive Sword & Red Key']
+    tip  None
+level_18:level_18 -> level_19 => exit:level_19 -> level_100
+    base ['Progressive Sword & Red Key']
+    tip  None
+level_18:level_18 -> level_19 => exit:level_19 -> level_40
+    base None
+    tip  ['Progressive Sword & Red Key']
+level_40:level_40 -> level_19 => exit:level_19 -> level_18
+    base None
+    tip  ['L19 flag 1: bosslock@48,32 cleared & Progressive Sword & Red Key']
+level_40:level_40 -> level_19 => exit:level_19 -> level_40
+    base None
+    tip  ['FREE']
+level_40:level_40 -> level_19 => loc:L19 flag 1: bosslock@48,32 cleared
+    base None
+    tip  ['L19 flag 1: bosslock@48,32 cleared & Red Key']
+level_40:level_40 -> level_19 => loc:Level 019 - Boss Key 0
+    base None
+    tip  ['L19 flag 1: bosslock@48,32 cleared & Progressive Sword & Red Key']
+level_40:level_40 -> level_19 => loc:Level 019 - Shieldspire
+    base None
+    tip  ['L19 flag 1: bosslock@48,32 cleared & Progressive Sword & Red Key']
+level_101:level_101 -> level_20 => exit:level_20 -> level_101
+    base None
+    tip  ['Ghost Spear', 'L101 flag 0: lightpole@144,64 cleared']
+level_101:level_101 -> level_20 => exit:level_20 -> level_13
+    base None
+    tip  ['L20 flag 4: lock@32,80 cleared']
+level_101:level_101 -> level_20 => loc:L20 flag 0: shieldlocknorm@176,16 cleared
+    base None
+    tip  ['Progressive Shield']
+level_101:level_101 -> level_20 => loc:L20 flag 4: lock@32,80 cleared
+    base None
+    tip  ['Progressive Shield']
+level_101:level_101 -> level_20 => loc:Level 020 - Shield
+    base None
+    tip  ['FREE']
+level_13:level_13 -> level_20 => exit:level_20 -> level_101
+    base None
+    tip  ['Ghost Spear & L20 flag 4: lock@32,80 cleared', 'L101 flag 0: lightpole@144,64 cleared & L20 flag 4: lock@32,80 cleared']
+level_13:level_13 -> level_20 => exit:level_20 -> level_51
+    base ['L20 flag 4: lock@32,80 cleared']
+    tip  None
+level_51:level_51 -> level_20 => exit:level_20 -> level_13
+    base ['L20 flag 4: lock@32,80 cleared']
+    tip  None
+level_51:level_51 -> level_20 => exit:level_20 -> level_51
+    base ['FREE']
+    tip  None
+level_51:level_51 -> level_20 => loc:L20 flag 0: shieldlocknorm@176,16 cleared
+    base ['Progressive Shield']
+    tip  None
+level_51:level_51 -> level_20 => loc:L20 flag 4: lock@32,80 cleared
+    base ['Progressive Shield']
+    tip  None
+level_51:level_51 -> level_20 => loc:Level 020 - Shield
+    base ['FREE']
+    tip  None
+level_12:level_12 -> level_24 => exit:level_24 -> level_16
+    base None
+    tip  ['FREE']
+level_12:level_12 -> level_24 => exit:level_24 -> level_6
+    base ['FREE']
+    tip  None
+level_16:level_16 -> level_24 => exit:level_24 -> level_12
+    base None
+    tip  ['Fire']
+level_16:level_16 -> level_24 => exit:level_24 -> level_12 #2
+    base None
+    tip  ['Fire']
+level_16:level_16 -> level_24 => exit:level_24 -> level_16
+    base None
+    tip  ['FREE']
+level_16:level_16 -> level_24 => loc:L24 flag 0: burnabletree@32,128 cleared
+    base None
+    tip  ['Fire']
+level_6:level_6 -> level_24 => exit:level_24 -> level_12
+    base ['Fire']
+    tip  None
+level_6:level_6 -> level_24 => exit:level_24 -> level_12 #2
+    base ['Fire']
+    tip  None
+level_6:level_6 -> level_24 => exit:level_24 -> level_6
+    base ['FREE']
+    tip  None
+level_6:level_6 -> level_24 => loc:L24 flag 0: burnabletree@32,128 cleared
+    base ['Fire']
+    tip  None
+level_22:level_22 -> level_25 => exit:level_25 -> level_28
+    base ['FREE']
+    tip  ['L25 flag 0: chest@96,96 cleared']
+level_22:level_22 -> level_25 => loc:L25 flag 0: chest@96,96 cleared
+    base None
+    tip  ['L25 flag 0: chest@96,96 cleared']
+level_22:level_22 -> level_25 => loc:Level 025 - Chest
+    base ['FREE']
+    tip  ['L25 flag 0: chest@96,96 cleared']
+level_26:level_26 -> level_25 => exit:level_25 -> level_28
+    base ['Ghost Spear', 'Progressive Shield', 'Progressive Sword']
+    tip  ['Ghost Spear & L25 flag 0: chest@96,96 cleared', 'L25 flag 0: chest@96,96 cleared & Progressive Shield', 'L25 flag 0: chest@96,96 cleared & Progressive Sword']
+level_26:level_26 -> level_25 => loc:L25 flag 0: chest@96,96 cleared
+    base None
+    tip  ['Ghost Spear & L25 flag 0: chest@96,96 cleared', 'L25 flag 0: chest@96,96 cleared & Progressive Shield', 'L25 flag 0: chest@96,96 cleared & Progressive Sword']
+level_26:level_26 -> level_25 => loc:Level 025 - Chest
+    base ['Ghost Spear', 'Progressive Shield', 'Progressive Sword']
+    tip  ['Ghost Spear & L25 flag 0: chest@96,96 cleared', 'L25 flag 0: chest@96,96 cleared & Progressive Shield', 'L25 flag 0: chest@96,96 cleared & Progressive Sword']
+level_28:level_28 -> level_25 => loc:L25 flag 0: chest@96,96 cleared
+    base None
+    tip  ['FREE']
+level_16:level_16 -> level_30 => exit:level_30 -> level_16
+    base ['L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_16:level_16 -> level_30 => exit:level_30 -> level_17
+    base ['Green Key & L30 flag 2: bosslock@224,208 cleared']
+    tip  None
+level_16:level_16 -> level_30 => exit:level_30 -> level_22
+    base ['Green Key & L30 flag 2: bosslock@224,208 cleared']
+    tip  None
+level_16:level_16 -> level_30 => exit:level_30 -> level_28
+    base ['Green Key & L30 flag 2: bosslock@224,208 cleared']
+    tip  None
+level_16:level_16 -> level_30 => exit:level_30 -> level_31
+    base ['Fire & Green Key & L30 flag 2: bosslock@224,208 cleared', 'Ghost Spear & Green Key & L30 flag 2: bosslock@224,208 cleared', 'Green Key & L30 flag 2: bosslock@224,208 cleared & Progressive Sword']
+    tip  None
+level_16:level_16 -> level_30 => loc:L30 flag 0: bosslock@64,32 cleared
+    base ['Green Key & L30 flag 2: bosslock@224,208 cleared']
+    tip  None
+level_16:level_16 -> level_30 => loc:L30 flag 2: bosslock@224,208 cleared
+    base ['Green Key & L30 flag 2: bosslock@224,208 cleared']
+    tip  None
+level_16:level_16 -> level_30 => loc:Level 030 - Torchpickup
+    base ['Green Key & L30 flag 2: bosslock@224,208 cleared']
+    tip  None
+level_17:level_17 -> level_30 => exit:level_30 -> level_16
+    base ['Green Key & L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_17:level_17 -> level_30 => exit:level_30 -> level_53
+    base None
+    tip  ['Green Key']
+level_22:level_22 -> level_30 => exit:level_30 -> level_16
+    base ['Green Key & L16 flag 0: rope@32,16 cleared & L30 flag 0: bosslock@64,32 cleared']
+    tip  None
+level_22:level_22 -> level_30 => exit:level_30 -> level_53
+    base None
+    tip  ['Green Key & L30 flag 0: bosslock@64,32 cleared']
+level_28:level_28 -> level_30 => exit:level_30 -> level_16
+    base ['Green Key & L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_28:level_28 -> level_30 => exit:level_30 -> level_53
+    base None
+    tip  ['Green Key']
+level_32:level_32 -> level_30 #2 => exit:level_30 -> level_16
+    base ['Green Key & L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_32:level_32 -> level_30 #2 => exit:level_30 -> level_53
+    base None
+    tip  ['Green Key']
+level_32:level_32 -> level_30 => exit:level_30 -> level_16
+    base ['Green Key & L16 flag 0: rope@32,16 cleared']
+    tip  None
+level_32:level_32 -> level_30 => exit:level_30 -> level_53
+    base None
+    tip  ['Green Key']
+level_53:level_53 -> level_30 => exit:level_30 -> level_17
+    base None
+    tip  ['Green Key & L30 flag 2: bosslock@224,208 cleared']
+level_53:level_53 -> level_30 => exit:level_30 -> level_22
+    base None
+    tip  ['Green Key & L30 flag 2: bosslock@224,208 cleared']
+level_53:level_53 -> level_30 => exit:level_30 -> level_28
+    base None
+    tip  ['Green Key & L30 flag 2: bosslock@224,208 cleared']
+level_53:level_53 -> level_30 => exit:level_30 -> level_31
+    base None
+    tip  ['Fire & Green Key & L30 flag 2: bosslock@224,208 cleared', 'Ghost Spear & Green Key & L30 flag 2: bosslock@224,208 cleared', 'Green Key & L30 flag 2: bosslock@224,208 cleared & Progressive Sword']
+level_53:level_53 -> level_30 => exit:level_30 -> level_53
+    base None
+    tip  ['FREE']
+level_53:level_53 -> level_30 => loc:L30 flag 0: bosslock@64,32 cleared
+    base None
+    tip  ['Green Key & L30 flag 2: bosslock@224,208 cleared']
+level_53:level_53 -> level_30 => loc:L30 flag 2: bosslock@224,208 cleared
+    base None
+    tip  ['Green Key & L30 flag 2: bosslock@224,208 cleared']
+level_53:level_53 -> level_30 => loc:Level 030 - Torchpickup
+    base None
+    tip  ['Green Key & L30 flag 2: bosslock@224,208 cleared']
+level_102:level_102 -> level_31 => exit:level_31 -> level_102
+    base None
+    tip  ['FREE']
+level_102:level_102 -> level_31 => exit:level_31 -> level_4
+    base None
+    tip  ['Green Key']
+level_102:level_102 -> level_31 => loc:L31 flag 0: bosslock@192,432 cleared
+    base None
+    tip  ['Green Key']
+level_18:level_18 -> level_31 => exit:level_31 -> level_18
+    base ['FREE']
+    tip  None
+level_18:level_18 -> level_31 => exit:level_31 -> level_4
+    base ['Green Key']
+    tip  None
+level_18:level_18 -> level_31 => loc:L31 flag 0: bosslock@192,432 cleared
+    base ['Green Key']
+    tip  None
+level_30:level_30 -> level_31 => exit:level_31 -> level_102
+    base None
+    tip  ['FREE']
+level_30:level_30 -> level_31 => exit:level_31 -> level_18
+    base ['FREE']
+    tip  None
+level_4:level_4 -> level_31 => exit:level_31 -> level_102
+    base None
+    tip  ['Green Key & L31 flag 0: bosslock@192,432 cleared']
+level_4:level_4 -> level_31 => exit:level_31 -> level_18
+    base ['Green Key & L31 flag 0: bosslock@192,432 cleared']
+    tip  None
+level_101:level_101 -> level_32 => exit:level_32 -> level_101
+    base ['FREE']
+    tip  None
+level_101:level_101 -> level_32 => exit:level_32 -> level_30
+    base ['Fire']
+    tip  None
+level_101:level_101 -> level_32 => exit:level_32 -> level_30 #2
+    base ['Fire']
+    tip  None
+level_101:level_101 -> level_32 => loc:Level 032 - Bob Boss
+    base ['Ghost Spear', 'Progressive Sword']
+    tip  None
+level_101:level_101 -> level_32 => loc:Level 032 - Times
+    base ['Ghost Spear', 'Progressive Sword']
+    tip  None
+level_43:level_43 -> level_32 => exit:level_32 -> level_30
+    base None
+    tip  ['Fire']
+level_43:level_43 -> level_32 => exit:level_32 -> level_30 #2
+    base None
+    tip  ['Fire']
+level_43:level_43 -> level_32 => exit:level_32 -> level_43
+    base None
+    tip  ['FREE']
+level_43:level_43 -> level_32 => loc:Level 032 - Bob Boss
+    base None
+    tip  ['Ghost Spear', 'Progressive Sword']
+level_43:level_43 -> level_32 => loc:Level 032 - Times
+    base None
+    tip  ['Ghost Spear', 'Progressive Sword']
+level_37:level_37 -> level_38 => loc:L38 flag 1: chest@144,112 cleared
+    base None
+    tip  ['FREE']
+level_39:level_39 -> level_38 => exit:level_38 -> level_37
+    base ['FREE']
+    tip  ['L38 flag 1: chest@144,112 cleared']
+level_39:level_39 -> level_38 => loc:L38 flag 1: chest@144,112 cleared
+    base None
+    tip  ['L38 flag 1: chest@144,112 cleared']
+level_39:level_39 -> level_38 => loc:Level 038 - Chest
+    base ['FREE']
+    tip  ['L38 flag 1: chest@144,112 cleared']
+level_14:level_14 -> level_40 => exit:level_40 -> level_14
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_39
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_41
+    base ['L40 flag 12: wandlock@480,560 cleared & Purple Key']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_42
+    base ['L40 flag 12: wandlock@480,560 cleared & Purple Key']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_43
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_43 #10
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_43 #11
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_43 #12
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_43 #2
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_43 #3
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_43 #4
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_43 #5
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_43 #6
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_43 #7
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_43 #8
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => exit:level_40 -> level_43 #9
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => loc:L40 flag 12: wandlock@480,560 cleared
+    base ['Fire & Ghost Spear', 'Fire & Progressive Sword']
+    tip  None
+level_14:level_14 -> level_40 => loc:L40 flag 1: wandlock@176,80 cleared
+    base ['L40 flag 12: wandlock@480,560 cleared & L40 flag 1: wandlock@176,80 cleared & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & L40 flag 7: wandlock@208,128 cleared & Purple Key']
+    tip  None
+level_14:level_14 -> level_40 => loc:L40 flag 7: wandlock@208,128 cleared
+    base ['L40 flag 12: wandlock@480,560 cleared & Purple Key']
+    tip  None
+level_14:level_14 -> level_40 => loc:L40 flag 8: bosslock@480,352 cleared
+    base ['L40 flag 12: wandlock@480,560 cleared & Purple Key']
+    tip  None
+level_14:level_14 -> level_40 => loc:Level 040 - Boss Key 2
+    base ['Fire & Ghost Spear & L40 flag 12: wandlock@480,560 cleared', 'Fire & L40 flag 12: wandlock@480,560 cleared & Progressive Sword']
+    tip  None
+level_14:level_14 -> level_40 => loc:Level 040 - Chest
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => loc:Level 040 - Totem Part 160,640
+    base ['FREE']
+    tip  None
+level_14:level_14 -> level_40 => loc:Level 040 - Totem Part 64,144
+    base ['L40 flag 12: wandlock@480,560 cleared & L40 flag 1: wandlock@176,80 cleared & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & L40 flag 7: wandlock@208,128 cleared & Purple Key']
+    tip  None
+level_19:level_19 -> level_40 => exit:level_40 -> level_19
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => exit:level_40 -> level_39
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => exit:level_40 -> level_41
+    base None
+    tip  ['L40 flag 12: wandlock@480,560 cleared & Purple Key']
+level_19:level_19 -> level_40 => exit:level_40 -> level_42
+    base None
+    tip  ['L40 flag 12: wandlock@480,560 cleared & Purple Key']
+level_19:level_19 -> level_40 => exit:level_40 -> level_43
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => exit:level_40 -> level_43 #10
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => exit:level_40 -> level_43 #11
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => exit:level_40 -> level_43 #12
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => exit:level_40 -> level_43 #2
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => exit:level_40 -> level_43 #3
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => exit:level_40 -> level_43 #4
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => exit:level_40 -> level_43 #5
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => exit:level_40 -> level_43 #6
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => exit:level_40 -> level_43 #7
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => exit:level_40 -> level_43 #8
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => exit:level_40 -> level_43 #9
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => loc:L40 flag 12: wandlock@480,560 cleared
+    base None
+    tip  ['Fire & Ghost Spear', 'Fire & Progressive Sword']
+level_19:level_19 -> level_40 => loc:L40 flag 1: wandlock@176,80 cleared
+    base None
+    tip  ['L40 flag 12: wandlock@480,560 cleared & L40 flag 1: wandlock@176,80 cleared & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & L40 flag 7: wandlock@208,128 cleared & Purple Key']
+level_19:level_19 -> level_40 => loc:L40 flag 7: wandlock@208,128 cleared
+    base None
+    tip  ['L40 flag 12: wandlock@480,560 cleared & Purple Key']
+level_19:level_19 -> level_40 => loc:L40 flag 8: bosslock@480,352 cleared
+    base None
+    tip  ['L40 flag 12: wandlock@480,560 cleared & Purple Key']
+level_19:level_19 -> level_40 => loc:Level 040 - Boss Key 2
+    base None
+    tip  ['Fire & Ghost Spear & L40 flag 12: wandlock@480,560 cleared', 'Fire & L40 flag 12: wandlock@480,560 cleared & Progressive Sword']
+level_19:level_19 -> level_40 => loc:Level 040 - Chest
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => loc:Level 040 - Totem Part 160,640
+    base None
+    tip  ['FREE']
+level_19:level_19 -> level_40 => loc:Level 040 - Totem Part 64,144
+    base None
+    tip  ['L40 flag 12: wandlock@480,560 cleared & L40 flag 1: wandlock@176,80 cleared & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & L40 flag 7: wandlock@208,128 cleared & Purple Key']
+level_39:level_39 -> level_40 => exit:level_40 -> level_14
+    base ['FREE']
+    tip  None
+level_39:level_39 -> level_40 => exit:level_40 -> level_19
+    base None
+    tip  ['FREE']
+level_41:level_41 -> level_40 => exit:level_40 -> level_14
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  None
+level_41:level_41 -> level_40 => exit:level_40 -> level_19
+    base None
+    tip  ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+level_42:level_42 -> level_40 => exit:level_40 -> level_14
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  None
+level_42:level_42 -> level_40 => exit:level_40 -> level_19
+    base None
+    tip  ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+level_32:level_32 -> level_43 => exit:level_43 -> level_32
+    base None
+    tip  ['FREE']
+level_32:level_32 -> level_43 => exit:level_43 -> level_37
+    base None
+    tip  ['Totem Shardx5 & Wand']
+level_32:level_32 -> level_43 => loc:Level 043 - Totem of Lacste
+    base None
+    tip  ['Totem Shardx5 & Wand']
+level_32:level_32 -> level_43 => loc:Level 043 - Wand
+    base None
+    tip  ['Ghost Spear & Totem Shardx5', 'Progressive Sword & Totem Shardx5']
+level_40:level_40 -> level_43 #10 => exit:level_43 -> level_32
+    base None
+    tip  ['FREE']
+level_40:level_40 -> level_43 #10 => exit:level_43 -> level_99
+    base ['FREE']
+    tip  None
+level_40:level_40 -> level_43 #11 => exit:level_43 -> level_32
+    base None
+    tip  ['FREE']
+level_40:level_40 -> level_43 #11 => exit:level_43 -> level_99
+    base ['FREE']
+    tip  None
+level_40:level_40 -> level_43 #12 => exit:level_43 -> level_32
+    base None
+    tip  ['FREE']
+level_40:level_40 -> level_43 #12 => exit:level_43 -> level_99
+    base ['FREE']
+    tip  None
+level_40:level_40 -> level_43 #2 => exit:level_43 -> level_32
+    base None
+    tip  ['FREE']
+level_40:level_40 -> level_43 #2 => exit:level_43 -> level_99
+    base ['FREE']
+    tip  None
+level_40:level_40 -> level_43 #3 => exit:level_43 -> level_32
+    base None
+    tip  ['FREE']
+level_40:level_40 -> level_43 #3 => exit:level_43 -> level_99
+    base ['FREE']
+    tip  None
+level_40:level_40 -> level_43 #4 => exit:level_43 -> level_32
+    base None
+    tip  ['FREE']
+level_40:level_40 -> level_43 #4 => exit:level_43 -> level_99
+    base ['FREE']
+    tip  None
+level_40:level_40 -> level_43 #5 => exit:level_43 -> level_32
+    base None
+    tip  ['FREE']
+level_40:level_40 -> level_43 #5 => exit:level_43 -> level_99
+    base ['FREE']
+    tip  None
+level_40:level_40 -> level_43 #6 => exit:level_43 -> level_32
+    base None
+    tip  ['FREE']
+level_40:level_40 -> level_43 #6 => exit:level_43 -> level_99
+    base ['FREE']
+    tip  None
+level_40:level_40 -> level_43 #7 => exit:level_43 -> level_32
+    base None
+    tip  ['FREE']
+level_40:level_40 -> level_43 #7 => exit:level_43 -> level_99
+    base ['FREE']
+    tip  None
+level_40:level_40 -> level_43 #8 => exit:level_43 -> level_32
+    base None
+    tip  ['FREE']
+level_40:level_40 -> level_43 #8 => exit:level_43 -> level_99
+    base ['FREE']
+    tip  None
+level_40:level_40 -> level_43 #9 => exit:level_43 -> level_32
+    base None
+    tip  ['FREE']
+level_40:level_40 -> level_43 #9 => exit:level_43 -> level_99
+    base ['FREE']
+    tip  None
+level_40:level_40 -> level_43 => exit:level_43 -> level_32
+    base None
+    tip  ['FREE']
+level_40:level_40 -> level_43 => exit:level_43 -> level_99
+    base ['FREE']
+    tip  None
+level_99:level_99 -> level_43 => exit:level_43 -> level_37
+    base ['Totem Shardx5 & Wand']
+    tip  None
+level_99:level_99 -> level_43 => exit:level_43 -> level_99
+    base ['FREE']
+    tip  None
+level_99:level_99 -> level_43 => loc:Level 043 - Totem of Lacste
+    base ['Totem Shardx5 & Wand']
+    tip  None
+level_99:level_99 -> level_43 => loc:Level 043 - Wand
+    base ['Ghost Spear & Totem Shardx5', 'Progressive Sword & Totem Shardx5']
+    tip  None
+level_20:level_20 -> level_51 => exit:level_51 -> level_20
+    base ['FREE']
+    tip  None
+level_20:level_20 -> level_51 => exit:level_51 -> level_50
+    base ['Progressive Swim']
+    tip  None
+level_20:level_20 -> level_51 => exit:level_51 -> level_52
+    base ['Progressive Swim']
+    tip  None
+level_50:level_50 -> level_51 => exit:level_51 -> level_20
+    base ['FREE']
+    tip  None
+level_50:level_50 -> level_51 => exit:level_51 -> level_99
+    base None
+    tip  ['FREE']
+level_52:level_52 -> level_51 => exit:level_51 -> level_20
+    base ['Progressive Swim']
+    tip  None
+level_52:level_52 -> level_51 => exit:level_51 -> level_99
+    base None
+    tip  ['Progressive Swim']
+level_99:level_99 -> level_51 => exit:level_51 -> level_50
+    base None
+    tip  ['Progressive Swim']
+level_99:level_99 -> level_51 => exit:level_51 -> level_52
+    base None
+    tip  ['Progressive Swim']
+level_99:level_99 -> level_51 => exit:level_51 -> level_99
+    base None
+    tip  ['FREE']
+level_30:level_30 -> level_53 => exit:level_53 -> level_30
+    base None
+    tip  ['FREE']
+level_30:level_30 -> level_53 => exit:level_53 -> level_48
+    base None
+    tip  ['Progressive Swim']
+level_30:level_30 -> level_53 => exit:level_53 -> level_54
+    base None
+    tip  ['Ghost Spear & Progressive Swim', 'Progressive Swim & Progressive Sword']
+level_30:level_30 -> level_53 => loc:L53 flag 2: lock@144,208 cleared
+    base None
+    tip  ['Ghost Spear & Progressive Swim', 'Progressive Swim & Progressive Sword']
+level_48:level_48 -> level_53 => exit:level_53 -> level_30
+    base None
+    tip  ['FREE']
+level_48:level_48 -> level_53 => exit:level_53 -> level_98
+    base ['FREE']
+    tip  None
+level_54:level_54 -> level_53 => exit:level_53 -> level_30
+    base None
+    tip  ['Ghost Spear & L53 flag 2: lock@144,208 cleared & Progressive Swim', 'L53 flag 2: lock@144,208 cleared & Progressive Swim & Progressive Sword']
+level_54:level_54 -> level_53 => exit:level_53 -> level_98
+    base ['Ghost Spear & L53 flag 2: lock@144,208 cleared & Progressive Swim', 'L53 flag 2: lock@144,208 cleared & Progressive Swim & Progressive Sword']
+    tip  None
+level_98:level_98 -> level_53 => exit:level_53 -> level_48
+    base ['Progressive Swim']
+    tip  None
+level_98:level_98 -> level_53 => exit:level_53 -> level_54
+    base ['Ghost Spear & Progressive Swim', 'Progressive Swim & Progressive Sword']
+    tip  None
+level_98:level_98 -> level_53 => exit:level_53 -> level_98
+    base ['FREE']
+    tip  None
+level_98:level_98 -> level_53 => loc:L53 flag 2: lock@144,208 cleared
+    base ['Ghost Spear & Progressive Swim', 'Progressive Swim & Progressive Sword']
+    tip  None
+level_12:level_12 -> level_96 => exit:level_96 -> level_12
+    base None
+    tip  ['FREE']
+level_12:level_12 -> level_96 => exit:level_96 -> level_82
+    base None
+    tip  ['Dark Suit & Ghost Spear', 'Dark Suit & Progressive Sword']
+level_7:level_7 -> level_96 => exit:level_96 -> level_7
+    base ['FREE']
+    tip  None
+level_7:level_7 -> level_96 => exit:level_96 -> level_82
+    base ['Dark Suit & Ghost Spear', 'Dark Suit & Progressive Sword']
+    tip  None
+level_82:level_82 -> level_96 => exit:level_96 -> level_12
+    base None
+    tip  ['FREE']
+level_82:level_82 -> level_96 => exit:level_96 -> level_7
+    base ['FREE']
+    tip  None
+level_16:level_16 -> level_98 => exit:level_98 -> level_16
+    base None
+    tip  ['Ghost Spear & L16 flag 0: rope@32,16 cleared', 'L16 flag 0: rope@32,16 cleared & Progressive Shieldx2', 'L16 flag 0: rope@32,16 cleared & Progressive Sword', 'L16 flag 0: rope@32,16 cleared & Wand']
+level_16:level_16 -> level_98 => exit:level_98 -> level_93
+    base None
+    tip  ['Progressive Swim']
+level_16:level_16 -> level_98 => loc:Level 098 - Chest
+    base None
+    tip  ['FREE']
+level_53:level_53 -> level_98 => exit:level_98 -> level_53
+    base ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+    tip  None
+level_53:level_53 -> level_98 => exit:level_98 -> level_93
+    base ['Progressive Swim']
+    tip  None
+level_53:level_53 -> level_98 => loc:Level 098 - Chest
+    base ['FREE']
+    tip  None
+level_93:level_93 -> level_98 => exit:level_98 -> level_16
+    base None
+    tip  ['Ghost Spear & L16 flag 0: rope@32,16 cleared', 'L16 flag 0: rope@32,16 cleared & Progressive Shieldx2', 'L16 flag 0: rope@32,16 cleared & Progressive Sword', 'L16 flag 0: rope@32,16 cleared & Wand']
+level_93:level_93 -> level_98 => exit:level_98 -> level_53
+    base ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+    tip  None
+level_102:level_102 -> level_99 => exit:level_99 -> level_102
+    base None
+    tip  ['FREE']
+level_102:level_102 -> level_99 => exit:level_99 -> level_51
+    base None
+    tip  ['Ghost Spear & L99 flag 0: lock@80,96 cleared', 'L99 flag 0: lock@80,96 cleared & Progressive Sword']
+level_102:level_102 -> level_99 => loc:L99 flag 0: lock@80,96 cleared
+    base None
+    tip  ['Ghost Spear & L99 flag 0: lock@80,96 cleared', 'L99 flag 0: lock@80,96 cleared & Progressive Sword']
+level_11:level_11 -> level_99 => exit:level_99 -> level_11
+    base ['FREE']
+    tip  None
+level_11:level_11 -> level_99 => exit:level_99 -> level_43
+    base ['Ghost Spear & L99 flag 0: lock@80,96 cleared', 'L99 flag 0: lock@80,96 cleared & Progressive Sword']
+    tip  None
+level_11:level_11 -> level_99 => loc:L99 flag 0: lock@80,96 cleared
+    base ['Ghost Spear & L99 flag 0: lock@80,96 cleared', 'L99 flag 0: lock@80,96 cleared & Progressive Sword']
+    tip  None
+level_43:level_43 -> level_99 => exit:level_99 -> level_11
+    base ['Ghost Spear', 'Progressive Sword']
+    tip  None
+level_43:level_43 -> level_99 => exit:level_99 -> level_43
+    base ['FREE']
+    tip  None
+level_43:level_43 -> level_99 => loc:L99 flag 0: lock@80,96 cleared
+    base ['Ghost Spear', 'Progressive Sword']
+    tip  None
+level_51:level_51 -> level_99 => exit:level_99 -> level_102
+    base None
+    tip  ['Ghost Spear', 'Progressive Sword']
+level_51:level_51 -> level_99 => exit:level_99 -> level_51
+    base None
+    tip  ['FREE']
+level_51:level_51 -> level_99 => loc:L99 flag 0: lock@80,96 cleared
+    base None
+    tip  ['Ghost Spear', 'Progressive Sword']
+level_19:level_19 -> level_100 => exit:level_100 -> level_101
+    base ['Ghost Spear', 'Progressive Sword']
+    tip  None
+level_19:level_19 -> level_100 => exit:level_100 -> level_19
+    base ['FREE']
+    tip  None
+level_5:level_5 -> level_100 => exit:level_100 -> level_101
+    base None
+    tip  ['Ghost Spear', 'Progressive Sword']
+level_5:level_5 -> level_100 => exit:level_100 -> level_5
+    base None
+    tip  ['Progressive Swim']
+level_100:level_100 -> level_101 => exit:level_101 -> level_15
+    base ['Ghost Spear & Ghost Sword Fusion & L101 flag 0: lightpole@144,64 cleared & Progressive Sword']
+    tip  None
+level_100:level_100 -> level_101 => exit:level_101 -> level_20
+    base None
+    tip  ['Ghost Spear & Ghost Sword Fusion & L101 flag 0: lightpole@144,64 cleared & Progressive Sword']
+level_100:level_100 -> level_101 => exit:level_101 -> level_32
+    base ['FREE']
+    tip  None
+level_100:level_100 -> level_101 => exit:level_101 -> level_7
+    base None
+    tip  ['FREE']
+level_106:level_106 -> level_101 => exit:level_101 -> level_15
+    base ['Ghost Spear & Ghost Sword Fusion & L101 flag 0: lightpole@144,64 cleared & Progressive Sword']
+    tip  None
+level_106:level_106 -> level_101 => exit:level_101 -> level_20
+    base None
+    tip  ['Ghost Spear & Ghost Sword Fusion & L101 flag 0: lightpole@144,64 cleared & Progressive Sword']
+level_106:level_106 -> level_101 => exit:level_101 -> level_32
+    base ['FREE']
+    tip  None
+level_106:level_106 -> level_101 => exit:level_101 -> level_7
+    base None
+    tip  ['FREE']
+level_109:level_109 -> level_101 => exit:level_101 -> level_15
+    base ['Ghost Spear & Ghost Sword Fusion & L101 flag 0: lightpole@144,64 cleared & Progressive Sword']
+    tip  None
+level_109:level_109 -> level_101 => exit:level_101 -> level_20
+    base None
+    tip  ['Ghost Spear & Ghost Sword Fusion & L101 flag 0: lightpole@144,64 cleared & Progressive Sword']
+level_109:level_109 -> level_101 => exit:level_101 -> level_32
+    base ['FREE']
+    tip  None
+level_109:level_109 -> level_101 => exit:level_101 -> level_7
+    base None
+    tip  ['FREE']
+level_15:level_15 -> level_101 => exit:level_101 -> level_110
+    base ['Fire & Fire Wand Fusion & Ghost Spear & Ghost Sword Fusion & Progressive Sword & Wand']
+    tip  None
+level_15:level_15 -> level_101 => exit:level_101 -> level_15
+    base ['L101 flag 0: lightpole@144,64 cleared']
+    tip  None
+level_15:level_15 -> level_101 => exit:level_101 -> level_32
+    base ['Ghost Spear & Ghost Sword Fusion & Progressive Sword']
+    tip  None
+level_15:level_15 -> level_101 => loc:L101 flag 0: lightpole@144,64 cleared
+    base ['Ghost Spear & Ghost Sword Fusion & Progressive Sword']
+    tip  None
+level_20:level_20 -> level_101 => exit:level_101 -> level_110
+    base None
+    tip  ['Fire & Fire Wand Fusion & Ghost Spear & Ghost Sword Fusion & Progressive Sword & Wand']
+level_20:level_20 -> level_101 => exit:level_101 -> level_20
+    base None
+    tip  ['L101 flag 0: lightpole@144,64 cleared']
+level_20:level_20 -> level_101 => exit:level_101 -> level_7
+    base None
+    tip  ['Ghost Spear & Ghost Sword Fusion & Progressive Sword']
+level_20:level_20 -> level_101 => loc:L101 flag 0: lightpole@144,64 cleared
+    base None
+    tip  ['Ghost Spear & Ghost Sword Fusion & Progressive Sword']
+level_32:level_32 -> level_101 => exit:level_101 -> level_110
+    base ['Fire & Fire Wand Fusion & Wand']
+    tip  None
+level_32:level_32 -> level_101 => exit:level_101 -> level_15
+    base ['Ghost Spear & Ghost Sword Fusion & L101 flag 0: lightpole@144,64 cleared & Progressive Sword']
+    tip  None
+level_32:level_32 -> level_101 => exit:level_101 -> level_32
+    base ['FREE']
+    tip  None
+level_32:level_32 -> level_101 => loc:L101 flag 0: lightpole@144,64 cleared
+    base ['Ghost Spear']
+    tip  None
+level_7:level_7 -> level_101 => exit:level_101 -> level_110
+    base None
+    tip  ['Fire & Fire Wand Fusion & Wand']
+level_7:level_7 -> level_101 => exit:level_101 -> level_20
+    base None
+    tip  ['Ghost Spear & Ghost Sword Fusion & L101 flag 0: lightpole@144,64 cleared & Progressive Sword']
+level_7:level_7 -> level_101 => exit:level_101 -> level_7
+    base None
+    tip  ['FREE']
+level_7:level_7 -> level_101 => loc:L101 flag 0: lightpole@144,64 cleared
+    base None
+    tip  ['Ghost Spear']
+level_103:level_103 -> level_102 => exit:level_102 -> level_16
+    base ['FREE']
+    tip  None
+level_103:level_103 -> level_102 => exit:level_102 -> level_31
+    base None
+    tip  ['FREE']
+level_107:level_107 -> level_102 => exit:level_102 -> level_5
+    base ['FREE']
+    tip  None
+level_107:level_107 -> level_102 => exit:level_102 -> level_99
+    base None
+    tip  ['FREE']
+level_16:level_16 -> level_102 => exit:level_102 -> level_103
+    base ['FREE']
+    tip  None
+level_16:level_16 -> level_102 => exit:level_102 -> level_16
+    base ['FREE']
+    tip  None
+level_31:level_31 -> level_102 => exit:level_102 -> level_103
+    base None
+    tip  ['FREE']
+level_31:level_31 -> level_102 => exit:level_102 -> level_31
+    base None
+    tip  ['FREE']
+level_5:level_5 -> level_102 => exit:level_102 -> level_107
+    base ['FREE']
+    tip  None
+level_5:level_5 -> level_102 => exit:level_102 -> level_5
+    base ['FREE']
+    tip  None
+level_99:level_99 -> level_102 => exit:level_102 -> level_107
+    base None
+    tip  ['FREE']
+level_99:level_99 -> level_102 => exit:level_102 -> level_99
+    base None
+    tip  ['FREE']
+MOVED ROUTES: 436

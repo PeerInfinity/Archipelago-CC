@@ -1,7 +1,7 @@
 CHANNEL: headless logic-only (no wasm: a node measurement of the maze certifier)
-BUILT: 115 levels, 308 regions, 2649161 B in 21498 ms
+BUILT: 115 levels, 308 regions, 2662322 B in 19062 ms
 PERMISSIVE: 1 — level_66/out_teleporter_72_64
-ARM new: 1 problems (derived-true/atlas-false 1, derived-false/atlas-true 0, other 0) / 13 accepted / 0 threw; 103 row(s) skip unadmitted landing points; clean 114/115 levels; 848 lines; wall 60269 ms
+ARM new: 1 problems (derived-true/atlas-false 1, derived-false/atlas-true 0, other 0) / 13 accepted / 0 threw; 104 row(s) skip unadmitted landing points; clean 114/115 levels; 851 lines; wall 56931 ms
   PROBLEM[new] level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false
   ACCEPTED[new] {"label":"level_0__r2c13 → level_0__r1c6","source":"level_0__r2c13","by":"Progressive Swim"}
   ACCEPTED[new] {"label":"level_39__r25c9 → level_39__r0c9","source":"level_39__r25c9","by":"L39 flag 8: wandlock@144,592 cleared"}
@@ -55,9 +55,10 @@ ARM new: 1 problems (derived-true/atlas-false 1, derived-false/atlas-true 0, oth
   SKIPPED[own event][new] level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 6,5): 1 of 4 points
   SKIPPED[unadmitted][new] level_24 → level_12__r40c4 (landing 3,8): 2 of 4 points
   SKIPPED[unadmitted][new] level_24 → level_23 (landing 3,8): 2 of 4 points
-  SKIPPED[own event][new] level_38__r0c9 @ L39 flag 8: wandlock@144,592 cleared (landing 9,1): 4 of 8 points
-  SKIPPED[unadmitted][new] level_38__r0c9 @ L39 flag 8: wandlock@144,592 cleared (landing 9,1): 4 of 8 points
-  SKIPPED[unadmitted][new] level_38__r0c9 → level_39__r25c9 (landing 9,1): 4 of 8 points
+  SKIPPED[own event][new] level_25__r7c6 @ L25 flag 0: chest@96,96 cleared (landing 6,7): 8 of 16 points
+  SKIPPED[own event][new] level_38__r0c9 @ L39 flag 8: wandlock@144,592 cleared (landing 9,1): 8 of 16 points
+  SKIPPED[unadmitted][new] level_38__r0c9 @ L39 flag 8: wandlock@144,592 cleared (landing 9,1): 8 of 16 points
+  SKIPPED[unadmitted][new] level_38__r0c9 → level_39__r25c9 (landing 9,1): 8 of 16 points
   SKIPPED[unadmitted][new] level_3__r0c4 → level_111 (landing 1,4): 16 of 32 points
   SKIPPED[unadmitted][new] level_3__r0c4 → level_2 (landing 1,4): 16 of 32 points
   SKIPPED[unadmitted][new] level_3__r0c4 → level_4 (landing 1,4): 16 of 32 points

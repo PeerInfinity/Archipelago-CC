@@ -1,0 +1,6 @@
+ROW DEL level_25__r7c6|@Level 025 - Chest {"rule":"True_"}
+ROW DEL level_25__r7c6|level_25__r7c6 -> level_28__r0c6 {"rule":"True_"}
+ROW DEL level_38__r8c9|@Level 038 - Chest {"rule":"True_"}
+ROW DEL level_38__r8c9|level_38__r8c9 -> level_37__r0c18 {"rule":"True_"}
+inputs {"payloadMd5":"89c51069226621f72a94ff8f2b168c69","engineMd5":"74ae60f575531492ed9eaec1839e1fe3","engineFiles":42,"witnessMd5":"2e4e3caad3c894a7e8877f255ae2de56"} -> {"payloadMd5":"04d24a3500b67ee08d34c780a03855de","engineMd5":"74ae60f575531492ed9eaec1839e1fe3","engineFiles":42,"witnessMd5":"2e4e3caad3c894a7e8877f255ae2de56"}
+counts 98 4 -> 94 4

@@ -11,11 +11,11 @@ CHANNEL: headless logic-only (no wasm: a node measurement of the maze certifier)
     at async main (file:///home/user/Archipelago-CC/scripts/procgen/probe-seedling-whole-game-certify.mjs:146:14)
     at async file:///home/user/Archipelago-CC/scripts/procgen/probe-seedling-whole-game-certify.mjs:115:41
 [discoveryState] [DiscoveryState] Constructed
-SOURCE: er — shuffled atlas seedling-4208d945 over rooms seedling-402c4685, 46 departure(s) moved, in 23746 ms
+SOURCE: er — shuffled atlas seedling-2b3bdb01 over rooms seedling-b156d8a1, 46 departure(s) moved, in 21072 ms
 DERIVED-RULE TABLE: 14 row(s) skipped by name (moved exits)
-BUILT: 115 levels, 308 regions, 2649391 B in 16365 ms
+BUILT: 115 levels, 308 regions, 2662552 B in 14938 ms
 PERMISSIVE: 1 — level_66/out_teleporter_72_64
-ARM new: 1 problems (derived-true/atlas-false 1, derived-false/atlas-true 0, other 0) / 13 accepted / 0 threw; 104 row(s) skip unadmitted landing points; clean 114/115 levels; 849 lines; wall 63625 ms
+ARM new: 1 problems (derived-true/atlas-false 1, derived-false/atlas-true 0, other 0) / 13 accepted / 0 threw; 105 row(s) skip unadmitted landing points; clean 114/115 levels; 852 lines; wall 54747 ms
   PROBLEM[new] level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false
   ACCEPTED[new] {"label":"level_0__r2c13 → level_0__r1c6","source":"level_0__r2c13","by":"Progressive Swim"}
   ACCEPTED[new] {"label":"level_39__r25c9 → level_39__r0c9","source":"level_39__r25c9","by":"L39 flag 8: wandlock@144,592 cleared"}
@@ -67,9 +67,10 @@ ARM new: 1 problems (derived-true/atlas-false 1, derived-false/atlas-true 0, oth
   SKIPPED[own event][new] level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 6,5): 2 of 8 points
   SKIPPED[unadmitted][new] level_24 → level_12__r40c4 (landing 3,8): 3 of 8 points
   SKIPPED[unadmitted][new] level_24 → level_16__r4c21 (landing 3,8): 3 of 8 points
-  SKIPPED[own event][new] level_38__r0c9 @ L39 flag 8: wandlock@144,592 cleared (landing 9,1): 4 of 8 points
-  SKIPPED[unadmitted][new] level_38__r0c9 @ L39 flag 8: wandlock@144,592 cleared (landing 9,1): 4 of 8 points
-  SKIPPED[unadmitted][new] level_38__r0c9 → level_39__r25c9 (landing 9,1): 4 of 8 points
+  SKIPPED[own event][new] level_25__r7c6 @ L25 flag 0: chest@96,96 cleared (landing 6,7): 8 of 16 points
+  SKIPPED[own event][new] level_38__r0c9 @ L39 flag 8: wandlock@144,592 cleared (landing 9,1): 8 of 16 points
+  SKIPPED[unadmitted][new] level_38__r0c9 @ L39 flag 8: wandlock@144,592 cleared (landing 9,1): 8 of 16 points
+  SKIPPED[unadmitted][new] level_38__r0c9 → level_39__r25c9 (landing 9,1): 8 of 16 points
   SKIPPED[unadmitted][new] level_3__r0c4 → level_111 (landing 1,4): 16 of 32 points
   SKIPPED[unadmitted][new] level_3__r0c4 → level_2 (landing 1,4): 16 of 32 points
   SKIPPED[unadmitted][new] level_3__r0c4 → level_4 (landing 1,4): 16 of 32 points
@@ -135,6 +136,5 @@ ARM new: 1 problems (derived-true/atlas-false 1, derived-false/atlas-true 0, oth
   SKIPPED[unadmitted][new] level_98 → level_16__r3c7 (landing 6,7): 48 of 96 points
   SKIPPED[unadmitted][new] level_98 → level_93__r5c7 (landing 6,7): 48 of 96 points
 PASS: arm new measured
-  DRIFT accepted: expected 16, measured 13
-FAIL: the ER arm drifted from scripts/procgen/seedling-er-whole-game-certify-expected.json (1 line(s))
-1 CHECK(S) FAILED
+PASS: the ER arm matches scripts/procgen/seedling-er-whole-game-certify-expected.json (1 / 13 / 0)
+ALL CHECKS PASSED
