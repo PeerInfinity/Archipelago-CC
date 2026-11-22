@@ -1,0 +1,2 @@
+  candidates k=0 after []: 0 (drives so far 222)
+NOPLAN {"weapon":"spear","seed":2,"orbit":"nw2","boot":{"level":112,"x":32,"y":208},"drives":222,"wallSec":2,"ok":false,"tried":{"c0":0},"budget":false}

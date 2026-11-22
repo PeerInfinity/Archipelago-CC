@@ -1,0 +1,9 @@
+  candidates k=0 after []: 6 (drives so far 245)
+  candidates k=1 after [{"t":336,"x":119,"y":36}]: 6 (drives so far 313)
+  candidates k=2 after [{"t":336,"x":119,"y":36},{"t":677,"x":33,"y":142}]: 0 (drives so far 1416)
+  candidates k=2 after [{"t":336,"x":119,"y":36},{"t":677,"x":59,"y":160}]: 0 (drives so far 2526)
+    finish {"t":1581,"x":145,"y":59}: OK
+    finish {"t":1581,"x":145,"y":55}: OK
+    finish {"t":1584,"x":143,"y":57}: OK
+  candidates k=2 after [{"t":336,"x":119,"y":36},{"t":665,"x":53,"y":157}]: 6 (drives so far 3220)
+PLAN {"weapon":"spear","seed":1,"orbit":"nw2","boot":{"level":112,"x":32,"y":208},"drives":3223,"wallSec":103,"ok":true,"shoves":[{"t":336,"x":119,"y":36},{"t":665,"x":53,"y":157},{"t":1581,"x":145,"y":59}],"introPress":2,"ticks":1852,"tagTick":1696,"exitFrom":1800,"model":{"level":113,"end":{"x":80,"y":136},"hits":[],"lava":[342,700,1587],"flags":["112:0","112:1"],"shovesLanded":9,"shoveTests":9,"rocks":150,"rocksOnPlayer":0,"grenades":9},"tried":{"c0":6,"c1":6,"c2":6}}

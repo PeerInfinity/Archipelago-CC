@@ -1,0 +1,341 @@
+{
+  "tape_version": 7,
+  "game": "seedling",
+  "name": "q3-shield-s101-t417-right",
+  "description": "rules-l112-owl-executor Q3: shield only ([\"shield\"]), seed 101; at t417 the unshoved Owl is at (76.2,100.2); the player stands at (54,100) and walks right into him for 14 ticks (shield bump); the model's one-knockback coast crosses lava 4 ticks after the push. Model note: no error.",
+  "boot": {
+    "level": 112,
+    "x": 32,
+    "y": 208
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 112,
+      "items": [
+        "shield"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [],
+    "keys": [],
+    "seal_parts": []
+  },
+  "rng": {
+    "seed": 101,
+    "split": true
+  },
+  "tick_count": 537,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 136
+    },
+    {
+      "key": "primary",
+      "from": 2,
+      "to": 3
+    },
+    {
+      "key": "right",
+      "from": 42,
+      "to": 45
+    },
+    {
+      "key": "right",
+      "from": 46,
+      "to": 50
+    },
+    {
+      "key": "right",
+      "from": 51,
+      "to": 55
+    },
+    {
+      "key": "right",
+      "from": 56,
+      "to": 58
+    },
+    {
+      "key": "left",
+      "from": 62,
+      "to": 64
+    },
+    {
+      "key": "right",
+      "from": 70,
+      "to": 71
+    },
+    {
+      "key": "left",
+      "from": 74,
+      "to": 75
+    },
+    {
+      "key": "right",
+      "from": 78,
+      "to": 79
+    },
+    {
+      "key": "left",
+      "from": 82,
+      "to": 83
+    },
+    {
+      "key": "right",
+      "from": 87,
+      "to": 88
+    },
+    {
+      "key": "left",
+      "from": 89,
+      "to": 102
+    },
+    {
+      "key": "left",
+      "from": 106,
+      "to": 107
+    },
+    {
+      "key": "left",
+      "from": 109,
+      "to": 110
+    },
+    {
+      "key": "right",
+      "from": 116,
+      "to": 117
+    },
+    {
+      "key": "left",
+      "from": 120,
+      "to": 121
+    },
+    {
+      "key": "right",
+      "from": 125,
+      "to": 132
+    },
+    {
+      "key": "right",
+      "from": 134,
+      "to": 170
+    },
+    {
+      "key": "down",
+      "from": 139,
+      "to": 140
+    },
+    {
+      "key": "down",
+      "from": 161,
+      "to": 164
+    },
+    {
+      "key": "down",
+      "from": 165,
+      "to": 167
+    },
+    {
+      "key": "down",
+      "from": 168,
+      "to": 169
+    },
+    {
+      "key": "left",
+      "from": 170,
+      "to": 192
+    },
+    {
+      "key": "down",
+      "from": 170,
+      "to": 199
+    },
+    {
+      "key": "right",
+      "from": 193,
+      "to": 196
+    },
+    {
+      "key": "left",
+      "from": 197,
+      "to": 199
+    },
+    {
+      "key": "up",
+      "from": 202,
+      "to": 233
+    },
+    {
+      "key": "left",
+      "from": 204,
+      "to": 233
+    },
+    {
+      "key": "down",
+      "from": 237,
+      "to": 238
+    },
+    {
+      "key": "right",
+      "from": 238,
+      "to": 269
+    },
+    {
+      "key": "up",
+      "from": 238,
+      "to": 272
+    },
+    {
+      "key": "left",
+      "from": 271,
+      "to": 272
+    },
+    {
+      "key": "down",
+      "from": 272,
+      "to": 302
+    },
+    {
+      "key": "right",
+      "from": 272,
+      "to": 302
+    },
+    {
+      "key": "up",
+      "from": 303,
+      "to": 306
+    },
+    {
+      "key": "left",
+      "from": 304,
+      "to": 335
+    },
+    {
+      "key": "down",
+      "from": 306,
+      "to": 337
+    },
+    {
+      "key": "right",
+      "from": 337,
+      "to": 339
+    },
+    {
+      "key": "left",
+      "from": 340,
+      "to": 357
+    },
+    {
+      "key": "up",
+      "from": 340,
+      "to": 357
+    },
+    {
+      "key": "down",
+      "from": 357,
+      "to": 371
+    },
+    {
+      "key": "right",
+      "from": 357,
+      "to": 371
+    },
+    {
+      "key": "left",
+      "from": 373,
+      "to": 376
+    },
+    {
+      "key": "up",
+      "from": 373,
+      "to": 376
+    },
+    {
+      "key": "down",
+      "from": 378,
+      "to": 380
+    },
+    {
+      "key": "right",
+      "from": 378,
+      "to": 380
+    },
+    {
+      "key": "right",
+      "from": 403,
+      "to": 442
+    },
+    {
+      "key": "up",
+      "from": 422,
+      "to": 442
+    },
+    {
+      "key": "left",
+      "from": 442,
+      "to": 452
+    },
+    {
+      "key": "down",
+      "from": 442,
+      "to": 453
+    },
+    {
+      "key": "right",
+      "from": 454,
+      "to": 457
+    },
+    {
+      "key": "up",
+      "from": 455,
+      "to": 457
+    },
+    {
+      "key": "down",
+      "from": 460,
+      "to": 462
+    },
+    {
+      "key": "left",
+      "from": 460,
+      "to": 462
+    },
+    {
+      "key": "up",
+      "from": 464,
+      "to": 465
+    },
+    {
+      "key": "left",
+      "from": 476,
+      "to": 490
+    },
+    {
+      "key": "up",
+      "from": 476,
+      "to": 537
+    },
+    {
+      "key": "right",
+      "from": 492,
+      "to": 493
+    },
+    {
+      "key": "right",
+      "from": 524,
+      "to": 537
+    }
+  ]
+}
+

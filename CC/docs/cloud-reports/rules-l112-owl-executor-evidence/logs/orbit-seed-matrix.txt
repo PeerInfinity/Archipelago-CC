@@ -1,0 +1,17 @@
+s1 nw2:0 se:0 nw:1 ne:0 sw:1
+s2 nw2:4D se:0 nw:1 ne:2 sw:4D
+s3 nw2:4D se:0 nw:1 ne:0 sw:2
+s4 nw2:1 se:0 nw:1 ne:0 sw:1
+s5 nw2:0 se:4D nw:4D ne:2 sw:2
+s6 nw2:4D se:0 nw:1 ne:0 sw:2D
+s7 nw2:2 se:0 nw:4D ne:4D sw:2
+s8 nw2:0 se:0 nw:1 ne:0 sw:1
+s9 nw2:4D se:0 nw:1 ne:4D sw:4D
+s10 nw2:0 se:1 nw:4D ne:4D sw:1
+s11 nw2:2 se:0 nw:2 ne:1D sw:2
+s12 nw2:4D se:0 nw:1 ne:0 sw:2
+s13 nw2:1 se:1 nw:4D ne:2 sw:2
+s14 nw2:2 se:1 nw:1 ne:0 sw:2
+s15 nw2:2 se:0 nw:1 ne:2 sw:2
+s16 nw2:0 se:0 nw:1 ne:0 sw:1
+s101 nw2:0 se:0 nw:2 ne:2 sw:1

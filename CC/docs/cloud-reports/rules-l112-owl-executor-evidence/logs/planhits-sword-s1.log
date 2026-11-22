@@ -1,0 +1,8 @@
+  candidates k=0 after []: 6 (drives so far 968)
+  candidates k=1 after [{"t":339,"x":106,"y":52}]: 6 (drives so far 1328)
+  candidates k=2 after [{"t":339,"x":106,"y":52},{"t":792,"x":51,"y":158}]: 0 (drives so far 1329)
+    finish {"t":1582,"x":157,"y":68}: t1820: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+    finish {"t":1585,"x":158,"y":71}: t1826: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+    finish {"t":1585,"x":159,"y":69}: t1826: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+  candidates k=2 after [{"t":339,"x":106,"y":52},{"t":798,"x":53,"y":155}]: 6 (drives so far 4621)
+PLAN {"weapon":"sword","seed":1,"orbit":"nw2","boot":{"level":112,"x":32,"y":208},"maxHits":2,"drives":4634,"wallSec":141,"ok":true,"shoves":[{"t":339,"x":106,"y":52},{"t":798,"x":53,"y":155},{"t":1884,"x":96,"y":61}],"introPress":2,"ticks":2239,"tagTick":2048,"exitFrom":2152,"model":{"level":113,"end":{"x":80,"y":136},"hits":["t337 owlBody","t592 owlRock"],"lava":[349,805,1939],"flags":["112:0","112:1"],"shovesLanded":11,"shoveTests":11,"rocks":206,"rocksOnPlayer":1,"grenades":13},"tried":{"c0":6,"c1":6,"c2":6}}

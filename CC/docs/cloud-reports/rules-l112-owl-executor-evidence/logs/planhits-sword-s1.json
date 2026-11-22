@@ -1,0 +1,65 @@
+{
+ "weapon": "sword",
+ "seed": 1,
+ "orbit": "nw2",
+ "boot": {
+  "level": 112,
+  "x": 32,
+  "y": 208
+ },
+ "maxHits": 2,
+ "drives": 4634,
+ "wallSec": 141,
+ "ok": true,
+ "shoves": [
+  {
+   "t": 339,
+   "x": 106,
+   "y": 52
+  },
+  {
+   "t": 798,
+   "x": 53,
+   "y": 155
+  },
+  {
+   "t": 1884,
+   "x": 96,
+   "y": 61
+  }
+ ],
+ "introPress": 2,
+ "ticks": 2239,
+ "tagTick": 2048,
+ "exitFrom": 2152,
+ "model": {
+  "level": 113,
+  "end": {
+   "x": 80,
+   "y": 136
+  },
+  "hits": [
+   "t337 owlBody",
+   "t592 owlRock"
+  ],
+  "lava": [
+   349,
+   805,
+   1939
+  ],
+  "flags": [
+   "112:0",
+   "112:1"
+  ],
+  "shovesLanded": 11,
+  "shoveTests": 11,
+  "rocks": 206,
+  "rocksOnPlayer": 1,
+  "grenades": 13
+ },
+ "tried": {
+  "c0": 6,
+  "c1": 6,
+  "c2": 6
+ }
+}

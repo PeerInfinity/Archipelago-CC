@@ -38,6 +38,9 @@ const SEED = Number(arg('seed', '101'));
 const ORBIT_NAME = arg('orbit', 'nw');
 const STEP = Number(arg('step', '3'));
 const MAX_CANDIDATES = Number(arg('max-candidates', '6'));
+/** `--max-hits=n`: accept a plan that takes up to n player hits (no death) — the hit-only arm of Q4. Default 0. */
+const MAX_HITS = Number(arg('max-hits', '0'));
+const tooHurt = (run) => run.playerHits.length > MAX_HITS || run.playerHits.some((h) => h.died);
 
 /** L111's teleporter to 112 (`playerx 32, playery 208`): the boot block IS the arrival. */
 const BOOT = { level: 112, x: 32, y: 208 };
@@ -218,6 +221,21 @@ function drive(shoves, presses, ticks, exitFrom = null, stopAtLevelChange = fals
         keys.push([...k]);
         try { run.advance(new Set(k)); } catch (e) { error = `t${t}: ${e.message.split('\n')[0].slice(0, 240)}`; break; }
         if (stopAtLevelChange && run.level !== 112) break;
+        // ⛔ `Pod.update:80-83`: a Player overlapping an "opened" pod makes it play "close", and 22 ticks later the
+        // "closed" pin snaps him onto the pod and hits him (`:68-74`). levelRun refuses a CLOSED pod cell but does not
+        // step the player-triggered close (game-measured: owl-spear-s2 v1, pinned at (120,56) at t1667). So the plan
+        // must never touch an opened pod's 16x16 cell: recorded here and refused like a hit.
+        if (run.level === 112 && !error) {
+            const b = pbox(run.state.x, run.state.y);
+            for (const pd of run.owlPods ?? []) {
+                if (pd.anim !== 'opened') continue;
+                if (overl(b, { x: pd.x - 8, y: pd.y - 8, right: pd.x + 8, bottom: pd.y + 8 })) {
+                    error = `t${t}: the player touches opened pod (${pd.x},${pd.y}) — Pod.as:80-83 would close it on him`;
+                    break;
+                }
+            }
+            if (error) break;
+        }
     }
     return { run, keys, error };
 }
@@ -273,11 +291,12 @@ function candidates(chosen, k) {
     const found = [];
     for (const block of blocks) {
         for (let i = 0; i < block.length; i += STEP) {
+            if (overBudget()) break;
             for (const s of stances(rows, block[i])) {
                 const list = [...chosen, { t: s.t, x: s.x, y: s.y }];
                 const { run, error } = drive(list, list.map((q) => q.t), Math.min(2400, s.t + 150));
-                if (error || run.finalBossLava.length < k + 1 || run.playerHits.length > 0) continue;
-                found.push({ s: { t: s.t, x: s.x, y: s.y }, at: run.finalBossLava[k].t });
+                if (error || run.finalBossLava.length < k + 1 || tooHurt(run)) continue;
+                found.push({ s: { t: s.t, x: s.x, y: s.y }, at: run.finalBossLava[k].t, hits: run.playerHits.length });
                 if (found.length >= MAX_CANDIDATES) break;
             }
             if (found.length >= MAX_CANDIDATES) break;
@@ -285,7 +304,7 @@ function candidates(chosen, k) {
         if (found.length >= MAX_CANDIDATES) break;
         if (found.length && k < 2) break; // the first block that has any: keep its candidates for backtracking
     }
-    found.sort((a, b) => a.at - b.at);
+    found.sort((a, b) => a.hits - b.hits || a.at - b.at);
     if (k === 2) for (const c of found.slice(0, 3)) {
         const f = finish([...chosen, c.s]);
         console.error(`    finish ${JSON.stringify(c.s)}: ${f.ok ? 'OK' : f.why}`);
@@ -299,19 +318,23 @@ function finish(triple) {
     const presses = triple.map((s) => s.t);
     const probe = drive(triple, presses, triple[2].t + 400);
     const tag = probe.run.finalBossKills.find((k) => k.what === 'tagsWritten');
-    if (!tag || probe.run.playerHits.length) return { ok: false, why: tag ? 'hit before exit' : 'no tags' };
+    if (!tag || tooHurt(probe.run)) return { ok: false, why: tag ? 'hit before exit' : 'no tags' };
     const exitFrom = tag.t + ROCKLOCK_FADE + 4;
     const d = drive(triple, presses, exitFrom + 400, exitFrom, true);
     const reached = d.run.level === 113;
-    if (d.error || !reached || d.run.playerHits.length) {
+    if (d.error || !reached || tooHurt(d.run)) {
         return { ok: false, why: d.error ?? (!reached ? `exit: still in ${d.run.level} at (${d.run.state.x.toFixed(1)},${d.run.state.y.toFixed(1)})` : 'hit'), d };
     }
     // a few ticks inside L113 so the arrival is observed
     const ticks = d.keys.length + 6;
     const full = drive(triple, presses, ticks, exitFrom);
-    return { ok: !full.error && full.run.playerHits.length === 0, why: full.error, d: full, tag: tag.t, exitFrom, ticks };
+    return { ok: !full.error && !tooHurt(full.run), why: full.error, d: full, tag: tag.t, exitFrom, ticks };
 }
 
+/** A wall-clock budget per (weapon, seed, orbit): past it the search reports NOPLAN with `budget: true`. */
+const BUDGET_MS = Number(arg('budget-sec', '900')) * 1000;
+const T_START = Date.now();
+const overBudget = () => Date.now() - T_START > BUDGET_MS;
 function search() {
     const c0 = candidates([], 0);
     for (const a of c0) {
@@ -324,7 +347,7 @@ function search() {
             }
         }
     }
-    return { triple: null, tried: { c0: c0.length } };
+    return { triple: null, tried: { c0: c0.length }, budget: overBudget() };
 }
 
 
@@ -491,41 +514,46 @@ if (arg('stage')) {
     }
     const rows = JSON.parse(readFileSync(arg('track'), 'utf8'));
     const row = rows.find((q) => q.name === arg('tape-name') || q.tape === arg('tape-name'));
-    const tr = row.bossTrack; // [tick, x, y, hits, anim, vx, vy]
+    // [tick, x, y, hits, anim, vx, vy]; two polls can land on ONE tick — keep the first, or a repeat reads as parked
+    const tr = row.bossTrack.filter((q, i, a) => i === 0 || q[0] !== a[i - 1][0]);
     const k = spec.pushes.length;
     const tHit = (tr.find((q) => q[3] >= k) ?? [0])[0];
-    // the barrage after hit k: >= 200 ticks parked; the armed leg is the walk after it
-    let parkFrom = null; let armedFrom = null;
+    // every armed leg after hit k: a walk that follows >= 200 parked ticks (a barrage; its pod tick re-arms him)
+    const legs = [];
+    let parkFrom = null;
     for (let i = 1; i < tr.length; i += 1) {
         if (tr[i][0] <= tHit) continue;
         const still = Math.abs(tr[i][1] - tr[i - 1][1]) < 1e-6 && Math.abs(tr[i][2] - tr[i - 1][2]) < 1e-6;
         if (still && parkFrom === null) parkFrom = tr[i - 1][0];
-        if (!still && parkFrom !== null) {
-            if (tr[i][0] - parkFrom >= 200) { armedFrom = tr[i][0]; break; }
-            parkFrom = null;
-        }
+        if (!still && parkFrom !== null) { if (tr[i][0] - parkFrom >= 200) legs.push(tr[i][0]); parkFrom = null; }
     }
-    console.log(`k=${k}: hit k at <= t${tHit}; armed walk from t${armedFrom}`);
+    console.log(`k=${k}: hit k at <= t${tHit}; armed legs from ${legs.map((t) => `t${t}`).join(', ')}`);
     const DIRS4 = { right: [1, 0], left: [-1, 0], down: [0, 1], up: [0, -1] };
     const solidAt = (x, y) => !!world.collidesSolid({ x: x - 6, y: y - 6, right: x + 6, bottom: y + 6 });
     const cands = [];
-    for (let i = 1; i < tr.length; i += 1) {
+    for (const armedFrom of legs) for (let i = 1; i < tr.length; i += 1) {
         const [t, x, y, h] = tr[i];
-        if (armedFrom === null || t < armedFrom + 10 || h !== k) continue;
+        // `--min-gap`: the approach (APPROACH ticks) should not start inside the barrage that precedes the leg
+        if (t < armedFrom + Number(arg('min-gap', '10')) || h !== k) continue;
         if (Math.abs(x - tr[i - 1][1]) < 1e-6 && Math.abs(y - tr[i - 1][2]) < 1e-6) break; // parked again
-        for (const [key, [ux, uy]] of Object.entries(DIRS4)) {
+        for (const [key, [ux, uy]] of Object.entries(DIRS4)) for (const off of [0, -3, 3, -5, 5]) {
+            // `off`: the contact point's offset ACROSS the push axis — `knockback` aims from the shot's (or the
+            // player's) point to his centre, so an off-centre contact pushes along a diagonal ray
+            const wx = -uy * off; const wy = ux * off;
             const wand = WEAPON === 'wand';
             // after the first lava hit `maxForce` is 2, and both items' shoves are clamped by it except the
             // Shield x1's direct `knockback(5)` (`Player.as:1705`, no `hit()`, so no clamp)
             const f = wand ? (k > 0 ? 2 : 3) : (WEAPON === 'shield2' && k > 0 ? 2 : 5);
-            const c = finalBossCoast({ x, y, px: x - (wand ? 8 : 10) * ux, py: y - (wand ? 8 : 10) * uy, force: f, hits: 1, solidAt });
+            const c = finalBossCoast({ x, y, px: x - (wand ? 8 : 10) * ux + wx, py: y - (wand ? 8 : 10) * uy + wy, force: f, hits: 1, solidAt });
             const lavaStep = c.steps.find((st) => finalBossLavaVerdict(world.tiles, st.x, st.y).hit);
             if (!lavaStep) continue;
-            const lead = wand ? 30 : 22;
-            const sx = Math.round(x - lead * ux); const sy = Math.round(y - lead * uy);
+            // the Shield waits ONE pixel short of contact (shield edge +5 vs his box edge 6) and pushes for the last
+            // `hold` ticks; a long walk-in meets him early, along his own walk direction (stage 2's first misses)
+            const lead = wand ? 30 : Number(arg('lead', '12'));
+            const sx = Math.round(x - lead * ux + wx); const sy = Math.round(y - lead * uy + wy);
             if (!passBase[Math.round(sy / G) * N + Math.round(sx / G)]) continue;
-            cands.push(wand ? { T: t, sx, sy, key, wand: true, wlead: 6, bx: x, by: y }
-                : { T: t, sx, sy, key, hold: Number(arg('hold', '14')), bx: x, by: y });
+            cands.push(wand ? { T: t, sx, sy, key, wand: true, wlead: 6, off, bx: x, by: y }
+                : { T: t, sx, sy, key, hold: Number(arg('hold', '3')), off, bx: x, by: y });
         }
     }
     const pick = [];
@@ -572,10 +600,11 @@ if (process.argv.includes('--trace')) {
 }
 const t0 = Date.now();
 const res = search();
-const report = { weapon: WEAPON, seed: SEED, orbit: ORBIT_NAME, boot: BOOT, drives, wallSec: 0 };
+const report = { weapon: WEAPON, seed: SEED, orbit: ORBIT_NAME, boot: BOOT, maxHits: MAX_HITS, drives, wallSec: 0 };
 if (!res.triple) {
     report.ok = false;
     report.tried = res.tried;
+    report.budget = !!res.budget;
     report.wallSec = Math.round((Date.now() - t0) / 1000);
     console.log('NOPLAN', JSON.stringify(report));
     if (arg('report')) writeFileSync(arg('report'), `${JSON.stringify(report, null, 1)}\n`);
@@ -599,7 +628,7 @@ const tape = parseTape({
 const rr = freshRun();
 for (let t = 0; t < tape.tick_count; t += 1) rr.advance(heldKeysAt(tape, t));
 Object.assign(report, {
-    ok: rr.level === 113 && rr.playerHits.length === 0 && rr.finalBossFlags.length === 2,
+    ok: rr.level === 113 && !tooHurt(rr) && rr.finalBossFlags.length === 2, maxHits: MAX_HITS,
     shoves: triple, introPress: INTRO_PRESS, ticks: tape.tick_count, tagTick: f.tag, exitFrom: f.exitFrom,
     model: {
         level: rr.level, end: { x: rr.state.x, y: rr.state.y }, hits: rr.playerHits.map((h) => `t${h.t} ${h.source}`),

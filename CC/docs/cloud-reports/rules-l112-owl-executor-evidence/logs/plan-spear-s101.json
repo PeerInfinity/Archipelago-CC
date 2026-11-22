@@ -1,0 +1,61 @@
+{
+ "weapon": "spear",
+ "seed": 101,
+ "orbit": "nw2",
+ "boot": {
+  "level": 112,
+  "x": 32,
+  "y": 208
+ },
+ "drives": 6717,
+ "wallSec": 210,
+ "ok": true,
+ "shoves": [
+  {
+   "t": 363,
+   "x": 105,
+   "y": 46
+  },
+  {
+   "t": 689,
+   "x": 41,
+   "y": 145
+  },
+  {
+   "t": 1447,
+   "x": 159,
+   "y": 73
+  }
+ ],
+ "introPress": 2,
+ "ticks": 1742,
+ "tagTick": 1576,
+ "exitFrom": 1680,
+ "model": {
+  "level": 113,
+  "end": {
+   "x": 80,
+   "y": 136
+  },
+  "hits": [],
+  "lava": [
+   367,
+   697,
+   1467
+  ],
+  "flags": [
+   "112:0",
+   "112:1"
+  ],
+  "shovesLanded": 7,
+  "shoveTests": 7,
+  "rocks": 195,
+  "rocksOnPlayer": 0,
+  "grenades": 14
+ },
+ "tried": {
+  "c0": 6,
+  "c1": 6,
+  "c2": 6
+ }
+}

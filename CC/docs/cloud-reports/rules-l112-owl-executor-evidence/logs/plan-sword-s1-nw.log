@@ -1,0 +1,7 @@
+  candidates k=0 after []: 6 (drives so far 1258)
+  candidates k=1 after [{"t":345,"x":99,"y":53}]: 1 (drives so far 2657)
+    finish {"t":1881,"x":103,"y":46}: OK
+    finish {"t":1887,"x":100,"y":50}: OK
+    finish {"t":1890,"x":95,"y":55}: OK
+  candidates k=2 after [{"t":345,"x":99,"y":53},{"t":739,"x":29,"y":134}]: 6 (drives so far 6074)
+PLAN {"weapon":"sword","seed":1,"orbit":"nw","boot":{"level":112,"x":32,"y":208},"maxHits":0,"drives":6077,"wallSec":165,"ok":true,"shoves":[{"t":345,"x":99,"y":53},{"t":739,"x":29,"y":134},{"t":1881,"x":103,"y":46}],"introPress":2,"ticks":2181,"tagTick":1999,"exitFrom":2103,"model":{"level":113,"end":{"x":80,"y":136},"hits":[],"lava":[351,747,1890],"flags":["112:0","112:1"],"shovesLanded":11,"shoveTests":11,"rocks":204,"rocksOnPlayer":0,"grenades":11},"tried":{"c0":6,"c1":1,"c2":6}}

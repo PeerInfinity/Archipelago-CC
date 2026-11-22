@@ -1,0 +1,13 @@
+  candidates k=0 after []: 6 (drives so far 306)
+  candidates k=1 after [{"t":342,"x":116,"y":35}]: 0 (drives so far 1771)
+  candidates k=1 after [{"t":363,"x":105,"y":46}]: 6 (drives so far 1854)
+  candidates k=2 after [{"t":363,"x":105,"y":46},{"t":677,"x":34,"y":139}]: 0 (drives so far 2957)
+  candidates k=2 after [{"t":363,"x":105,"y":46},{"t":677,"x":30,"y":139}]: 0 (drives so far 2958)
+  candidates k=2 after [{"t":363,"x":105,"y":46},{"t":680,"x":36,"y":140}]: 0 (drives so far 4061)
+  candidates k=2 after [{"t":363,"x":105,"y":46},{"t":680,"x":32,"y":140}]: 0 (drives so far 5165)
+  candidates k=2 after [{"t":363,"x":105,"y":46},{"t":686,"x":39,"y":143}]: 0 (drives so far 5920)
+    finish {"t":1447,"x":159,"y":73}: OK
+    finish {"t":1770,"x":114,"y":39}: OK
+    finish {"t":1770,"x":114,"y":35}: OK
+  candidates k=2 after [{"t":363,"x":105,"y":46},{"t":689,"x":41,"y":145}]: 6 (drives so far 6714)
+PLAN {"weapon":"spear","seed":101,"orbit":"nw2","boot":{"level":112,"x":32,"y":208},"drives":6717,"wallSec":210,"ok":true,"shoves":[{"t":363,"x":105,"y":46},{"t":689,"x":41,"y":145},{"t":1447,"x":159,"y":73}],"introPress":2,"ticks":1742,"tagTick":1576,"exitFrom":1680,"model":{"level":113,"end":{"x":80,"y":136},"hits":[],"lava":[367,697,1467],"flags":["112:0","112:1"],"shovesLanded":7,"shoveTests":7,"rocks":195,"rocksOnPlayer":0,"grenades":14},"tried":{"c0":6,"c1":6,"c2":6}}

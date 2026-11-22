@@ -1,0 +1,12 @@
+spear s1 orbit nw2 exit 0
+spear s2 orbit nw2 exit 2
+spear s2 orbit se exit 2
+spear s2 orbit nw exit 0
+spear s3 orbit nw2 exit 2
+spear s3 orbit se exit 2
+spear s3 orbit nw exit 0
+spear s4 orbit nw2 exit 0
+spear s5 orbit nw2 exit 0
+spear s6 orbit nw2 exit 0
+spear s7 orbit nw2 exit 0
+spear s8 orbit nw2 exit 0

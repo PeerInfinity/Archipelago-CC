@@ -1,0 +1,5 @@
+sword s2 orbit nw2 exit 2
+sword s2 orbit se exit 2
+sword s2 orbit nw exit 0
+sword s3 orbit nw2 exit 2
+sword s3 orbit se exit 2
