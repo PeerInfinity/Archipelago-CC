@@ -1,0 +1,123 @@
+## TIP
+frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json: removed 1 exit(s) level_26__r2c4 -> level_26__r13c8
+  as committed: beatable true (93 spheres, 92 locations)
+  without it:   beatable false — 3 location(s) never collected (Level 025 - Chest, L25 flag 0: chest@96,96 cleared, L28 flag 0: rope@160,64 cleared) (null spheres, 89 locations)
+  locations whose sphere moves or is lost: 6
+    L25 flag 0: chest@96,96 cleared: 3.4 -> LOST
+    L26 flag 0: rocklock@112,208 cleared: 3.5 -> 3.4
+    L28 flag 0: rope@160,64 cleared: 3.6 -> LOST
+    Level 020 - Shield: 3.7 -> 3.5
+    Level 025 - Chest: 3.8 -> LOST
+    Level 029 - Boss Key 1: 3.9 -> 3.6
+frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json: removed 1 exit(s) level_26__r2c4 -> level_26__r13c8
+  as committed: beatable true (93 spheres, 92 locations)
+  without it:   beatable false — 3 location(s) never collected (Level 025 - Chest, L25 flag 0: chest@96,96 cleared, L28 flag 0: rope@160,64 cleared) (null spheres, 89 locations)
+  locations whose sphere moves or is lost: 6
+    L25 flag 0: chest@96,96 cleared: 3.4 -> LOST
+    L26 flag 0: rocklock@112,208 cleared: 3.5 -> 3.4
+    L28 flag 0: rope@160,64 cleared: 3.6 -> LOST
+    Level 020 - Shield: 3.7 -> 3.5
+    Level 025 - Chest: 3.8 -> LOST
+    Level 029 - Boss Key 1: 3.9 -> 3.6
+frontend/presets/seedling_er/AP_1/AP_1_rules.json: removed 1 exit(s) level_26__r2c4 -> level_26__r13c8
+  as committed: beatable true (93 spheres, 92 locations)
+  without it:   beatable false — 83 location(s) never collected (Level 012 - Witch, L12 flag 4: bosslock@416,240 cleared, L12 flag 5: bosslock@432,240 cleared, L12 flag 10: shieldlocknorm@288,704 cleared, L12 flag 11: bosslock@112,192 cleared, …); the goal item The Seed never collected (null spheres, 9 locations)
+  locations whose sphere moves or is lost: 85
+    L25 flag 0: chest@96,96 cleared: 1.3 -> LOST
+    L26 flag 0: rocklock@112,208 cleared: 1.4 -> 1.3
+    L28 flag 0: rope@160,64 cleared: 1.5 -> LOST
+    Level 025 - Chest: 1.6 -> LOST
+    Level 036 - Chest: 1.7 -> 1.4
+    L18 flag 0: lock@144,112 cleared: 2.1 -> LOST
+    L30 flag 0: bosslock@64,32 cleared: 2.2 -> LOST
+    L30 flag 2: bosslock@224,208 cleared: 2.3 -> LOST
+    L31 flag 0: bosslock@192,432 cleared: 2.4 -> LOST
+    Level 017 - Chest: 2.5 -> LOST
+    Level 019 - Boss Key 0: 2.6 -> LOST
+    Level 019 - Shieldspire: 2.7 -> LOST
+    Level 030 - Torchpickup: 2.8 -> LOST
+    Level 106 - Ghostsword: 2.9 -> LOST
+    L12 flag 4: bosslock@416,240 cleared: 3.1 -> LOST
+    L12 flag 5: bosslock@432,240 cleared: 3.2 -> LOST
+    L19 flag 1: bosslock@48,32 cleared: 3.3 -> LOST
+    Level 032 - Bob Boss: 3.4 -> LOST
+    Level 032 - Times: 3.5 -> LOST
+    Level 039 - Totem Part 72,40: 3.6 -> LOST
+    Level 040 - Chest: 3.7 -> LOST
+    Level 040 - Totem Part 160,640: 3.8 -> LOST
+    L38 flag 1: chest@144,112 cleared: 4.1 -> LOST
+    L39 flag 8: wandlock@144,592 cleared: 4.2 -> LOST
+    L40 flag 12: wandlock@480,560 cleared: 4.3 -> LOST
+    Level 012 - Chest: 4.4 -> LOST
+    Level 038 - Chest: 4.5 -> LOST
+    Level 049 - Conch: 4.6 -> LOST
+    L53 flag 2: lock@144,208 cleared: 5.1 -> LOST
+    L60 flag 0: lock@128,80 cleared: 5.2 -> LOST
+    L62 flag 0: lightpole@120,200 cleared: 5.3 -> LOST
+    L63 flag 1: lightpole@64,88 cleared: 5.4 -> LOST
+    L99 flag 0: lock@80,96 cleared: 5.5 -> LOST
+    Level 015 - Chest: 5.6 -> LOST
+    Level 040 - Boss Key 2: 5.7 -> LOST
+    Level 046 - Chest: 5.8 -> LOST
+    Level 048 - Chest: 5.9 -> LOST
+    Level 055 - Boss Key 3: 5.10 -> LOST
+    Level 089 - Feather: 5.11 -> LOST
+    Level 090 - Chest: 5.12 -> LOST
+    L40 flag 7: wandlock@208,128 cleared: 6.1 -> LOST
+    L40 flag 8: bosslock@480,352 cleared: 6.2 -> LOST
+    L48 flag 1: bosslock@48,144 cleared: 6.3 -> LOST
+    L58 flag 1: yeti@56,56 cleared: 6.4 -> LOST
+    Level 041 - Totem Part 240,144: 6.5 -> LOST
+    Level 042 - Totem Part 184,152: 6.6 -> LOST
+    Level 057 - Tentacled Beast: 6.7 -> LOST
+    Level 064 - Ghostspear: 6.8 -> LOST
+    L101 flag 0: lightpole@144,64 cleared: 7.1 -> LOST
+    L112 flag 1: rocklock@112,16 cleared: 7.2 -> LOST
+    L114 flag 0: watcher@72,72 cleared: 7.3 -> LOST
+    L40 flag 1: wandlock@176,80 cleared: 7.4 -> LOST
+    L63 flag 6: lightpole@48,272 cleared: 7.5 -> LOST
+    L63 flag 7: lightpole@112,272 cleared: 7.6 -> LOST
+    L65 flag 0: lightpole@128,168 cleared: 7.7 -> LOST
+    Level 040 - Totem Part 64,144: 7.8 -> LOST
+    Level 067 - Boss Key 4: 7.9 -> LOST
+    Level 112 - Owl: 7.10 -> LOST
+    L113 flag 0: finaldoor@112,0 cleared: 8.1 -> LOST
+    L12 flag 12: bosslock@32,864 cleared: 8.2 -> LOST
+    Level 020 - Shield: 8.3 -> LOST
+    Level 043 - Wand: 8.4 -> LOST
+    Level 069 - Lights: 8.5 -> LOST
+    Level 115 - The Seed: 8.6 -> LOST
+    L12 flag 10: shieldlocknorm@288,704 cleared: 9.1 -> LOST
+    L12 flag 7: magicallock@32,864 cleared: 9.2 -> LOST
+    L20 flag 0: shieldlocknorm@176,16 cleared: 9.3 -> LOST
+    L20 flag 4: lock@32,80 cleared: 9.4 -> LOST
+    L68 flag 0: bosslock@16,32 cleared: 9.5 -> LOST
+    Level 012 - Witch: 9.6 -> LOST
+    Level 043 - Totem of Lacste: 9.7 -> LOST
+    Level 068 - Health: 9.8 -> LOST
+    Level 071 - Chest: 9.9 -> LOST
+    Level 074 - Darkshield: 9.10 -> LOST
+    L71 flag 2: shieldlock@288,256 cleared: 10.1 -> LOST
+    Level 079 - Darksuit: 10.2 -> LOST
+    L12 flag 11: bosslock@112,192 cleared: 11.1 -> LOST
+    L16 flag 0: rope@32,16 cleared: 11.2 -> LOST
+    Level 063 - Chest: 11.3 -> LOST
+    Level 080 - Chest: 11.4 -> LOST
+    Level 082 - King of Fire: 11.5 -> LOST
+    Level 098 - Chest: 11.6 -> LOST
+    Level 109 - Firewand: 11.7 -> LOST
+    L12 flag 3: bosslock@80,656 cleared: 12.1 -> LOST
+    L24 flag 0: burnabletree@32,128 cleared: 12.2 -> LOST
+## MAIN f9010498
+frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json: removed 1 exit(s) level_26__r2c4 -> level_26__r13c8
+  as committed: beatable true (90 spheres, 89 locations)
+  without it:   beatable true (90 spheres, 89 locations)
+  locations whose sphere moves or is lost: 0
+frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json: removed 1 exit(s) level_26__r2c4 -> level_26__r13c8
+  as committed: beatable true (90 spheres, 89 locations)
+  without it:   beatable true (90 spheres, 89 locations)
+  locations whose sphere moves or is lost: 0
+frontend/presets/seedling_er/AP_1/AP_1_rules.json: removed 1 exit(s) level_26__r2c4 -> level_26__r13c8
+  as committed: beatable true (90 spheres, 89 locations)
+  without it:   beatable true (90 spheres, 89 locations)
+  locations whose sphere moves or is lost: 0
