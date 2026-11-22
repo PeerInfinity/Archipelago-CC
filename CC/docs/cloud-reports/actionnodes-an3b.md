@@ -152,24 +152,12 @@ from the runtime (the registry entry adds `rt.liveState()`), routed from the pla
 | headless live path (`playLiveToGoal`) | 3 | **2** — pinned exactly; loop 1's lines equal the pure planner's verbatim |
 | in-app, Instant (`an-bot-plays-to-goal`) | 3 | **1** — see the known gap |
 
-**Known gap: Instant overshoots (⚖ planner ruling C).** The in-app rows run the queue at Instant (`freshQueue` sets
-`instantMode`). `loops/loopState.js` `_advanceActionProgress` (from line 3458) completes an action in ONE frame,
-whatever the mana: `deductMana` clamps the pool to 0, and `_processFrame` calls `_maybeCompleteCurrentAction` BEFORE
-`_maybeResetForOOM` (lines 1563 and 1567).
-
-So the replan's last entry COMPLETES and checks the goal in loop 1. That entry is the ⚖ Q1 attempt: Leave the Village,
-costing 40 with 10 mana left, which should drain into region XP and end the loop.
-
-AN-3a never met this, because its live path planned no attempt. `loops/loopState.js` is not edited here: an Instant
-fix changes every substrate's Loop-mode rows, so the planner gives it its own Loops slice.
-
-`an-bot-plays-to-goal` asserts:
-- the replan happened;
-- its reasoning is in the log;
-- the goal is reached in ≤ the pure planner's loop count;
-- the Q1 attempt is named in the log.
-
-The headless 2 = 2 is the exact pin.
+**Known gap: Instant overshoots — FIXED by LOOPS-I1** (`CC/docs/cloud-reports/loops-instant-oom.md`). At AN-3b's tip
+the in-app rows ran the queue at Instant, where Loops completed an action in one frame whatever the mana, so the
+replan's ⚖ Q1 attempt (Leave the Village, costing 40 with 10 mana left) checked the goal in loop 1. That is why
+`an-bot-plays-to-goal` asserted only "≤ the pure count" (⚖ planner ruling C). A Loops frame now spends at most the
+pool, so the attempt drains into region XP and ends the loop, as at normal speed. The row asserts the EXACT count: the
+pure planner's 2 and the headless live path's 2.
 
 **Sample reasoning logs.**
 
@@ -225,7 +213,7 @@ The node's state is read at the END of the Loops queue (Loop mode) or live (Loop
 | `an-click-performs-once` | ActionNodes / `fast` | The strip runs only `actionNodes.act`. **Region Graph** (a card-body click): a ready node away from the queue's end → nodeSelected once, the route, ONE act, nothing performed yet; again → no hop, one more act; a blocked node → refused by name with the unmet requirement, queue unchanged; at its limit → refused (`done`); the queue runs, no refusal, performed twice. **Region Map** (`clickAt`, its own settings): the route and ONE act, `panelId` `regionMap`. **Loop mode off**: performed at once, the pool paid the price, the player on the node |
 | `an-perform-all-button` | ActionNodes / `fast` | The button exactly on shown nodes with limit > 1. Its click is no node click. It queues the route + `limit` acts and the card says so. Pressed again: refused (`done`). The queue runs. Capped by mana: with the pool covering `limit − 1`, it queues `limit − 1` and names the cap |
 | `an-cards-after-reopen` | ActionNodes / `fast` | Close the Region Graph panel (no graph, no card), open a new one: a card per node, no duplicate, no world reload |
-| `an-bot-plays-to-goal` (updated) | Playback Bot / `playback-bot` | Ruling C: the replan happened and its reasoning is logged, the goal in ≤ the pure count, the Q1 attempt named |
+| `an-bot-plays-to-goal` (updated) | Playback Bot / `playback-bot` | Ruling C: the replan happened and its reasoning is logged, the goal in ≤ the pure count, the Q1 attempt named. LOOPS-I1 tightened it to EXACTLY the pure count (2) |
 
 `an-node-card`'s "no button" line now reads "no button on a limit-1 card". Its check node has limit 1.
 

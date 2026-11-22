@@ -38,24 +38,6 @@ const cancelOf = (name) => ({ ...LOOPS, selector: `.loop-action-entry:has(.loop-
 const dropEntry = (id, name, text) => [{
     step: { id, text, actions: [{ click: cancelOf(name) }], done: (ctx) => !hasEntry(ctx, name) },
 }];
-/**
- * One press of the run button, whatever it offers (Start / Resume / Restart) —
- * never while it says Pause (that would stop the run) or while it waits (off).
- * A new action may have resumed the queue already, so the press is optional.
- */
-const runQueue = (id, name, after) => ({
-    step: {
-        id,
-        text: `If the queue is not running already (a new action can resume it), press the run button — **Start**, **Resume** or **Restart**, whichever it says. ${after}`,
-        actions: [{ click: { ...runButton, selector: RUN_BUTTON_READY, optional: true } }],
-        done: (ctx) => hasEntry(ctx, name, { done: true }),
-        // The queue stopped (its button offers to restart) without it.
-        failed: (ctx) => (ctx.text(runButton) === 'Restart' && !hasEntry(ctx, name, { done: true })
-            ? `the queue ended: ${entries(ctx).map((e) => `${e.text.replace(/\s+/g, ' ').trim().slice(0, 40)}${e.done ? ' (done)' : ''}`).join('; ')}`
-            : null),
-        doneTimeoutMs: 60000,
-    },
-});
 /** A location or exit of the region whose name the panel shows (no longer ???). */
 const item = (list, name) => ({ ...LOOPS, selector: `${block} .${list} li.compact-item:not(.undiscovered) .compact-item-name`, text: name });
 const found = (ctx, list, name) => [...(ctx.query(LOOPS)?.querySelectorAll(`${block} .${list} li.compact-item:not(.undiscovered) .compact-item-name`) ?? [])]
@@ -167,7 +149,18 @@ export const LOOPS_ADVENTURE = Object.freeze({
                         done: (ctx) => hasEntry(ctx, `Check: ${GATE}`),
                     },
                 },
-                runQueue('run-check', `Check: ${GATE}`, 'The check is marked done, with the mana it left you, and the Black Key is yours.'),
+                {
+                    // ⛓ LOOPS-I1: the explores left this loop part-spent, and an action the pool cannot pay for
+                    // drains it and fails (as at normal speed). Until LOOPS-I1, Instant completed the check whatever the
+                    // mana, so a plain run passed. Restart gives the check a fresh loop, as the prose above asks.
+                    step: {
+                        id: 'run-check',
+                        text: `Press **Restart**: the queue starts again from the top with a fresh loop's mana, so the check is paid for in full. It is marked done, with the mana it left you, and the Black Key is yours.`,
+                        actions: [{ click: { ...LOOPS, selector: '#loop-ui-toggle-restart:not(:disabled)' } }],
+                        done: (ctx) => hasEntry(ctx, `Check: ${GATE}`, { done: true }),
+                        doneTimeoutMs: 60000,
+                    },
+                },
                 {
                     step: {
                         id: 'queue-move',
