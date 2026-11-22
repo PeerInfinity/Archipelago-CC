@@ -1,0 +1,1110 @@
+{
+ "root": "/home/user/Archipelago-CC",
+ "rooms": {
+  "5": {
+   "verdict": "free",
+   "condition": null,
+   "locks": [
+    "lock@48,112"
+   ],
+   "hazards": {
+    "tiles": [
+     1
+    ],
+    "hitters": [
+     "arrowtrap@32,48",
+     "arrowtrap@64,48",
+     "arrowtrap@16,16",
+     "arrowtrap@80,16"
+    ],
+    "spawners": []
+   },
+   "bodies": [
+    {
+     "at": "bob@16,64",
+     "class": "Bob",
+     "env": "measured:ceiling",
+     "free": true,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "bob@16,80",
+     "class": "Bob",
+     "env": "measured:ceiling",
+     "free": true,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "bob@48,80",
+     "class": "Bob",
+     "env": "measured:ceiling",
+     "free": true,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    }
+   ],
+   "why": [
+    "tape `f1-l5-lock-removal` (grants [], noDamage false: the three bobs die to the arrow traps at t124/t127/t166, the last leaves the world at t201, the game crosses lock@48,112 to L6 on t303) + the model's ceiling-kill arm (`resolveKillStrategy`, I50)"
+   ]
+  },
+  "18": {
+   "verdict": "gated",
+   "condition": "any(flag:hasDarkShield|flag:hasSpear|flag:hasSword|flag:hasWand)",
+   "locks": [
+    "lock@144,112"
+   ],
+   "hazards": {
+    "tiles": [],
+    "hitters": [],
+    "spawners": []
+   },
+   "bodies": [
+    {
+     "at": "spinner@48,96",
+     "class": "Spinner",
+     "env": "none",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "spinner@112,48",
+     "class": "Spinner",
+     "env": "none",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    }
+   ],
+   "why": []
+  },
+  "26": {
+   "verdict": "gated",
+   "condition": "any(flag:hasDarkShield|flag:hasSpear|flag:hasSword|flag:hasWand)",
+   "locks": [
+    "rocklock@112,208"
+   ],
+   "hazards": {
+    "tiles": [],
+    "hitters": [],
+    "spawners": []
+   },
+   "bodies": [
+    {
+     "at": "puncher@32,208",
+     "class": "Puncher",
+     "env": "none",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "puncher@80,168",
+     "class": "Puncher",
+     "env": "none",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    }
+   ],
+   "why": []
+  },
+  "39": {
+   "verdict": "undecided",
+   "condition": "any(flag:hasSpear|flag:hasSword)",
+   "locks": [
+    "wandlock@144,592"
+   ],
+   "hazards": {
+    "tiles": [
+     1
+    ],
+    "hitters": [
+     "pulser@64,96"
+    ],
+    "spawners": []
+   },
+   "bodies": [
+    {
+     "at": "spinner@112,88",
+     "class": "Spinner",
+     "env": "unmeasured:tile1+pulser@64,96",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "spinner@224,112",
+     "class": "Spinner",
+     "env": "unmeasured:tile1+pulser@64,96",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "spinner@224,208",
+     "class": "Spinner",
+     "env": "unmeasured:tile1+pulser@64,96",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    }
+   ],
+   "why": [
+    "spinner@112,88: an environmental arm nothing measured (tile1+pulser@64,96)",
+    "spinner@224,112: an environmental arm nothing measured (tile1+pulser@64,96)",
+    "spinner@224,208: an environmental arm nothing measured (tile1+pulser@64,96)"
+   ]
+  },
+  "53": {
+   "verdict": "gated",
+   "condition": "any(flag:hasDarkShield|flag:hasSpear|flag:hasSword|flag:hasWand)",
+   "locks": [
+    "lock@144,208"
+   ],
+   "hazards": {
+    "tiles": [
+     1
+    ],
+    "hitters": [],
+    "spawners": []
+   },
+   "bodies": [
+    {
+     "at": "jellyfish@144,192",
+     "class": "Jellyfish",
+     "env": "none",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "puncher@136,96",
+     "class": "Puncher",
+     "env": "unmeasured:tile1",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "jellyfish@184,160",
+     "class": "Jellyfish",
+     "env": "none",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "jellyfish@152,168",
+     "class": "Jellyfish",
+     "env": "none",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    }
+   ],
+   "why": []
+  },
+  "60": {
+   "verdict": "gated",
+   "condition": "any(flag:hasDarkShield|flag:hasSpear|flag:hasSword|flag:hasWand)",
+   "locks": [
+    "lock@128,80"
+   ],
+   "hazards": {
+    "tiles": [
+     1,
+     6
+    ],
+    "hitters": [],
+    "spawners": []
+   },
+   "bodies": [
+    {
+     "at": "jellyfish@120,112",
+     "class": "Jellyfish",
+     "env": "none",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "jellyfish@56,64",
+     "class": "Jellyfish",
+     "env": "none",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    }
+   ],
+   "why": []
+  },
+  "71": {
+   "verdict": "undecided",
+   "condition": "any(flag:hasSpear|flag:hasSword)",
+   "locks": [
+    "lock@112,192"
+   ],
+   "hazards": {
+    "tiles": [
+     6,
+     17
+    ],
+    "hitters": [],
+    "spawners": []
+   },
+   "bodies": [
+    {
+     "at": "lavarunner@64,224",
+     "class": "LavaRunner",
+     "env": "unmeasured:tile6",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "lavarunner@64,192",
+     "class": "LavaRunner",
+     "env": "unmeasured:tile6",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "lavarunner@72,208",
+     "class": "LavaRunner",
+     "env": "unmeasured:tile6",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "lavarunner@48,200",
+     "class": "LavaRunner",
+     "env": "unmeasured:tile6",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "lavarunner@80,224",
+     "class": "LavaRunner",
+     "env": "unmeasured:tile6",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    }
+   ],
+   "why": [
+    "lavarunner@64,224: an environmental arm nothing measured (tile6)",
+    "lavarunner@64,192: an environmental arm nothing measured (tile6)",
+    "lavarunner@72,208: an environmental arm nothing measured (tile6)",
+    "lavarunner@48,200: an environmental arm nothing measured (tile6)",
+    "lavarunner@80,224: an environmental arm nothing measured (tile6)"
+   ]
+  },
+  "78": {
+   "verdict": "undecided",
+   "condition": "any(flag:hasSpear|flag:hasSword)",
+   "locks": [
+    "lock@32,32"
+   ],
+   "hazards": {
+    "tiles": [
+     17
+    ],
+    "hitters": [
+     "lavachain@160,32"
+    ],
+    "spawners": []
+   },
+   "bodies": [
+    {
+     "at": "lavarunner@192,144",
+     "class": "LavaRunner",
+     "env": "unmeasured:lavachain@160,32",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "lavarunner@144,72",
+     "class": "LavaRunner",
+     "env": "unmeasured:lavachain@160,32",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "lavarunner@96,32",
+     "class": "LavaRunner",
+     "env": "unmeasured:lavachain@160,32",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "lavarunner@56,120",
+     "class": "LavaRunner",
+     "env": "unmeasured:lavachain@160,32",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "lavarunner@112,136",
+     "class": "LavaRunner",
+     "env": "unmeasured:lavachain@160,32",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "grenade@232,72",
+     "class": "Grenade",
+     "env": "self",
+     "free": true,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    }
+   ],
+   "why": [
+    "lavarunner@192,144: stands on lava it survives (reach undecided)",
+    "lavarunner@96,32: stands on lava it survives (reach undecided)",
+    "lavarunner@56,120: stands on lava it survives (reach undecided)",
+    "lavarunner@112,136: stands on lava it survives (reach undecided)",
+    "lavarunner@192,144: an environmental arm nothing measured (lavachain@160,32)",
+    "lavarunner@144,72: an environmental arm nothing measured (lavachain@160,32)",
+    "lavarunner@96,32: an environmental arm nothing measured (lavachain@160,32)",
+    "lavarunner@56,120: an environmental arm nothing measured (lavachain@160,32)",
+    "lavarunner@112,136: an environmental arm nothing measured (lavachain@160,32)"
+   ]
+  },
+  "98": {
+   "verdict": "gated",
+   "condition": "any(flag:hasDarkShield|flag:hasSpear|flag:hasSword|flag:hasWand)",
+   "locks": [
+    "lock@112,112"
+   ],
+   "hazards": {
+    "tiles": [
+     1
+    ],
+    "hitters": [
+     "iceturret@104,24"
+    ],
+    "spawners": []
+   },
+   "bodies": [
+    {
+     "at": "jellyfish@56,48",
+     "class": "Jellyfish",
+     "env": "unmeasured:iceturret@104,24",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "jellyfish@176,72",
+     "class": "Jellyfish",
+     "env": "unmeasured:iceturret@104,24",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "jellyfish@72,104",
+     "class": "Jellyfish",
+     "env": "unmeasured:iceturret@104,24",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "iceturret@104,24",
+     "class": "IceTurret",
+     "env": "none",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    }
+   ],
+   "why": []
+  },
+  "99": {
+   "verdict": "undecided",
+   "condition": "any(flag:hasSpear|flag:hasSword)",
+   "locks": [
+    "lock@80,96"
+   ],
+   "hazards": {
+    "tiles": [
+     17
+    ],
+    "hitters": [
+     "lavachain@80,64"
+    ],
+    "spawners": []
+   },
+   "bodies": [
+    {
+     "at": "lavarunner@192,64",
+     "class": "LavaRunner",
+     "env": "unmeasured:lavachain@80,64",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "lavarunner@160,32",
+     "class": "LavaRunner",
+     "env": "unmeasured:lavachain@80,64",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    },
+    {
+     "at": "lavarunner@176,64",
+     "class": "LavaRunner",
+     "env": "unmeasured:lavachain@80,64",
+     "free": false,
+     "items": [
+      "hasSword",
+      "hasSpear",
+      "hasWand",
+      "hasDarkShield"
+     ]
+    }
+   ],
+   "why": [
+    "lavarunner@192,64: stands on lava it survives (reach undecided)",
+    "lavarunner@160,32: stands on lava it survives (reach undecided)",
+    "lavarunner@176,64: stands on lava it survives (reach undecided)",
+    "lavarunner@192,64: an environmental arm nothing measured (lavachain@80,64)",
+    "lavarunner@160,32: an environmental arm nothing measured (lavachain@80,64)",
+    "lavarunner@176,64: an environmental arm nothing measured (lavachain@80,64)"
+   ]
+  }
+ },
+ "vanillaEqualsDelivered": {
+  "5": true,
+  "18": true,
+  "26": true,
+  "39": false,
+  "53": true,
+  "60": true,
+  "71": true,
+  "78": true,
+  "98": true,
+  "99": true
+ },
+ "wallsAudit": {
+  "5": {
+   "walls": 32,
+   "solidTile": 32,
+   "entity": {},
+   "unexplained": []
+  },
+  "18": {
+   "walls": 45,
+   "solidTile": 44,
+   "entity": {
+    "dungeonspire": 1
+   },
+   "unexplained": []
+  },
+  "26": {
+   "walls": 107,
+   "solidTile": 0,
+   "entity": {
+    "tree": 92,
+    "pole": 8,
+    "rock2": 5,
+    "rock": 1,
+    "dungeonspire": 1
+   },
+   "unexplained": []
+  },
+  "39": {
+   "walls": 248,
+   "solidTile": 239,
+   "entity": {
+    "pulser": 1,
+    "ruinedpillar": 8
+   },
+   "unexplained": []
+  },
+  "53": {
+   "walls": 126,
+   "solidTile": 126,
+   "entity": {},
+   "unexplained": []
+  },
+  "60": {
+   "walls": 2,
+   "solidTile": 2,
+   "entity": {},
+   "unexplained": []
+  },
+  "71": {
+   "walls": 108,
+   "solidTile": 107,
+   "entity": {
+    "dungeonspire": 1
+   },
+   "unexplained": []
+  },
+  "78": {
+   "walls": 5,
+   "solidTile": 5,
+   "entity": {},
+   "unexplained": []
+  },
+  "98": {
+   "walls": 92,
+   "solidTile": 91,
+   "entity": {
+    "iceturret": 1
+   },
+   "unexplained": []
+  },
+  "99": {
+   "walls": 102,
+   "solidTile": 102,
+   "entity": {},
+   "unexplained": []
+  }
+ },
+ "flood": {
+  "5": [],
+  "18": [
+   {
+    "at": "spinner@48,96",
+    "dies": [
+     1,
+     6,
+     17
+    ],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 63,
+    "untiled": []
+   },
+   {
+    "at": "spinner@112,48",
+    "dies": [
+     1,
+     6,
+     17
+    ],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 63,
+    "untiled": []
+   }
+  ],
+  "26": [
+   {
+    "at": "puncher@32,208",
+    "dies": [
+     1,
+     6,
+     17
+    ],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 92,
+    "untiled": []
+   },
+   {
+    "at": "puncher@80,168",
+    "dies": [
+     1,
+     6,
+     17
+    ],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 92,
+    "untiled": []
+   }
+  ],
+  "39": [
+   {
+    "at": "spinner@112,88",
+    "dies": [
+     1,
+     6,
+     17
+    ],
+    "presentFatal": [
+     1
+    ],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 196,
+    "untiled": []
+   },
+   {
+    "at": "spinner@224,112",
+    "dies": [
+     1,
+     6,
+     17
+    ],
+    "presentFatal": [
+     1
+    ],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 196,
+    "untiled": []
+   },
+   {
+    "at": "spinner@224,208",
+    "dies": [
+     1,
+     6,
+     17
+    ],
+    "presentFatal": [
+     1
+    ],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 196,
+    "untiled": []
+   }
+  ],
+  "53": [
+   {
+    "at": "jellyfish@144,192",
+    "dies": [],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 77,
+    "untiled": []
+   },
+   {
+    "at": "puncher@136,96",
+    "dies": [
+     1,
+     6,
+     17
+    ],
+    "presentFatal": [
+     1
+    ],
+    "reachedFatal": [
+     1
+    ],
+    "deathCells": {
+     "1": [
+      "7,9",
+      "1,10",
+      "3,11",
+      "4,11",
+      "2,11",
+      "5,11",
+      "1,11"
+     ]
+    },
+    "cells": 52,
+    "untiled": []
+   },
+   {
+    "at": "jellyfish@184,160",
+    "dies": [],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 77,
+    "untiled": []
+   },
+   {
+    "at": "jellyfish@152,168",
+    "dies": [],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 77,
+    "untiled": []
+   }
+  ],
+  "60": [
+   {
+    "at": "jellyfish@120,112",
+    "dies": [],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 130,
+    "untiled": []
+   },
+   {
+    "at": "jellyfish@56,64",
+    "dies": [],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 130,
+    "untiled": []
+   }
+  ],
+  "71": [
+   {
+    "at": "lavarunner@64,224",
+    "dies": [
+     1,
+     6
+    ],
+    "presentFatal": [
+     6
+    ],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 9,
+    "untiled": []
+   },
+   {
+    "at": "lavarunner@64,192",
+    "dies": [
+     1,
+     6
+    ],
+    "presentFatal": [
+     6
+    ],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 9,
+    "untiled": []
+   },
+   {
+    "at": "lavarunner@72,208",
+    "dies": [
+     1,
+     6
+    ],
+    "presentFatal": [
+     6
+    ],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 9,
+    "untiled": []
+   },
+   {
+    "at": "lavarunner@48,200",
+    "dies": [
+     1,
+     6
+    ],
+    "presentFatal": [
+     6
+    ],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 9,
+    "untiled": []
+   },
+   {
+    "at": "lavarunner@80,224",
+    "dies": [
+     1,
+     6
+    ],
+    "presentFatal": [
+     6
+    ],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 9,
+    "untiled": []
+   }
+  ],
+  "78": [
+   {
+    "at": "lavarunner@192,144",
+    "dies": [
+     1,
+     6
+    ],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 195,
+    "untiled": []
+   },
+   {
+    "at": "lavarunner@144,72",
+    "dies": [
+     1,
+     6
+    ],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 195,
+    "untiled": []
+   },
+   {
+    "at": "lavarunner@96,32",
+    "dies": [
+     1,
+     6
+    ],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 195,
+    "untiled": []
+   },
+   {
+    "at": "lavarunner@56,120",
+    "dies": [
+     1,
+     6
+    ],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 195,
+    "untiled": []
+   },
+   {
+    "at": "lavarunner@112,136",
+    "dies": [
+     1,
+     6
+    ],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 195,
+    "untiled": []
+   }
+  ],
+  "98": [
+   {
+    "at": "jellyfish@56,48",
+    "dies": [],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 87,
+    "untiled": []
+   },
+   {
+    "at": "jellyfish@176,72",
+    "dies": [],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 87,
+    "untiled": []
+   },
+   {
+    "at": "jellyfish@72,104",
+    "dies": [],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 87,
+    "untiled": []
+   },
+   {
+    "at": "iceturret@104,24",
+    "dies": [],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 87,
+    "untiled": []
+   }
+  ],
+  "99": [
+   {
+    "at": "lavarunner@192,64",
+    "dies": [
+     1,
+     6
+    ],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 77,
+    "untiled": [
+     "7,7"
+    ]
+   },
+   {
+    "at": "lavarunner@160,32",
+    "dies": [
+     1,
+     6
+    ],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 77,
+    "untiled": [
+     "7,7"
+    ]
+   },
+   {
+    "at": "lavarunner@176,64",
+    "dies": [
+     1,
+     6
+    ],
+    "presentFatal": [],
+    "reachedFatal": [],
+    "deathCells": {},
+    "cells": 77,
+    "untiled": [
+     "7,7"
+    ]
+   }
+  ]
+ }
+}

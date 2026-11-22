@@ -1,0 +1,12 @@
+regen-seedling --check: 10 step(s); python = /tmp/claude-0/-home-user-Archipelago-CC/4c68f06f-99a5-5edf-bd45-8c6472e94940/scratchpad/scratch-tree/.venv/bin/python; logs in .cache/regen-seedling/
+rules          OK [14.8s]
+partition      OK [5.8s]
+world          OK [6.5s]
+template       OK: Players/Templates/Seedling Playthrough.yaml matches a fresh build [3.7s]
+host-settings  OK [0.1s]
+seed1          OK: 4 files + the seedling_playthrough row match a fresh build [3.9s]
+maze           STALE: FAIL: frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json is not what the playthrough atlas compiles to — regenerate it [24.2s]
+er             OK [26.3s]
+sphere-order   OK [0.0s]
+census         OK: 2 SKIP row(s) in its output [1.5s]
+total 86.7s — 1 step(s) not OK

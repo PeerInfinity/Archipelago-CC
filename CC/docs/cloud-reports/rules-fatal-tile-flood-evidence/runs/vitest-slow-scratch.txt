@@ -1,0 +1,61 @@
+
+ RUN  v4.0.15 /tmp/claude-0/-home-user-Archipelago-CC/4c68f06f-99a5-5edf-bd45-8c6472e94940/scratchpad/scratch-tree
+
+ ❯ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.slow.test.js (2 tests | 1 failed) 111615ms
+     × native engine, every region 110319ms
+     ✓ the closure comparison still catches an in-world row the world disagrees with, both ways  1294ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.slow.test.js > seedling_playthrough_maze — every region certified against the atlas at every subset > native engine, every region
+AssertionError: expected [ …(100) ] to deeply equal [ …(100) ]
+
+- Expected
++ Received
+
+@@ -62,17 +62,17 @@
+    "level_63__r10c2 → level_61__r13c12 (landing 2,18) | 192/768",
+    "level_63__r10c2 → level_65__r0c2 (landing 2,18) | 192/768",
+    "level_64 → level_62 (landing 2,5) | 1/4",
+    "level_69 @ Level 069 - Lights (landing 3,8) | 1/8",
+    "level_69 → level_36 (landing 3,8) | 1/8",
+-   "level_71__r0c6 @ L71 flag 2: shieldlock@288,256 cleared (landing 14,18) | 8/48 [own event]",
+-   "level_71__r0c6 @ Level 071 - Chest (landing 18,16) | 24/48",
+-   "level_71__r0c6 @ L71 flag 2: shieldlock@288,256 cleared (landing 18,16) | 24/48",
+-   "level_71__r0c6 @ L71 flag 2: shieldlock@288,256 cleared (landing 18,16) | 8/48 [own event]",
+-   "level_71__r0c6 → level_75__r13c3 (landing 18,16) | 24/48",
+-   "level_71__r0c6 → level_80__r0c2 (landing 18,16) | 24/48",
+-   "level_71__r0c6 → level_72__r11c6 (landing 18,16) | 24/48",
++   "level_71__r0c6 @ L71 flag 2: shieldlock@288,256 cleared (landing 14,18) | 16/96 [own event]",
++   "level_71__r0c6 @ Level 071 - Chest (landing 18,16) | 48/96",
++   "level_71__r0c6 @ L71 flag 2: shieldlock@288,256 cleared (landing 18,16) | 48/96",
++   "level_71__r0c6 @ L71 flag 2: shieldlock@288,256 cleared (landing 18,16) | 16/96 [own event]",
++   "level_71__r0c6 → level_75__r13c3 (landing 18,16) | 48/96",
++   "level_71__r0c6 → level_80__r0c2 (landing 18,16) | 48/96",
++   "level_71__r0c6 → level_72__r11c6 (landing 18,16) | 48/96",
+    "level_82 @ Level 082 - King of Fire (landing 9,1) | 5/8",
+    "level_82 → level_96 (landing 9,1) | 5/8",
+    "level_83 → level_12__r42c28 (landing 2,3) | 20/64",
+    "level_83 → level_84__r2c4 (landing 2,3) | 20/64",
+    "level_89__r1c10 @ Level 089 - Feather (landing 13,1) | 1/3",
+
+ ❯ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.slow.test.js:143:133
+    141|         // struck by Fire from their flame stances), doubling those ro…
+    142|         // L12's entry pricing reads L0's landing rocks (`arrivalBlock…
+    143|         expect(skipped.map((k) => `${k.label} | ${k.points}/${k.of}${k…
+       |                                                                                                                                     ^
+    144|             'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 29/96',
+    145|             'level_0__r6c5 → level_1 (landing 5,7) | 45/96',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  03:15:28
+   Duration  130.09s (transform 3.34s, setup 193ms, import 18.17s, tests 111.62s, environment 0ms)
+
+
+real	2m10.859s
+user	2m27.812s
+sys	0m4.537s

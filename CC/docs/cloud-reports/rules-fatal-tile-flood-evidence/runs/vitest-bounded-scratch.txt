@@ -1,0 +1,51 @@
+
+ RUN  v4.0.15 /tmp/claude-0/-home-user-Archipelago-CC/4c68f06f-99a5-5edf-bd45-8c6472e94940/scratchpad/scratch-tree
+
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.test.js (11 tests) 505ms
+ ✓ scripts/procgen/seedlingDivergenceLegs.test.js (32 tests) 989ms
+ ✓ scripts/procgen/derivedRuleOverride.test.js (17 tests) 1343ms
+     ✓ MUTANT: a row put where the worlds read (the hand inputs) IS carried — the read-back can fail  597ms
+     ✓ the maze compile throws, naming the element and the input-side fix  580ms
+ ✓ scripts/procgen/refreshSeedlingDerivedRules.test.js (18 tests) 17ms
+ ❯ scripts/procgen/derivedRuleTableFresh.test.js (2 tests | 1 failed) 51ms
+     × payloadMd5 and engineMd5 match (else: regenerate it — the message says how) 50ms
+     ✓ the recipe a bump slice runs alone names the probe, the write, the same-packet commit and the review rule 0ms
+ ✓ frontend/modules/mazeRoom/tileSpike/countedRules.test.js (12 tests) 2143ms
+     ✓ the lattice prices a counted gate: minimal = two Shields, held to the engine at 0, 1 and 2  426ms
+     ✓ mixed levels: Or(two Shields, Wand) beside a one-Shield gate — the minimal points and the emitted rule  419ms
+     ✓ certifier: an AP Has(Wand, 2) against a world gate one Wand opens is a LOOSER-world problem at 1 Wand  311ms
+     ✓ certifier: an event whose own rule counts is never held below that count (L71 shieldlock)  717ms
+ ✓ frontend/modules/mazeRoom/tileSpike/certifyLavaPulls.test.js (11 tests) 2583ms
+     ✓ the scripted tile definition agrees with the native engine on every line (the pulls walked by both)  613ms
+     ✓ mutant control: a broken `pulled` helper makes the scripted arm disagree with the native one  399ms
+     ✓ certifies clean, natively and scripted alike; the crossing is priced as the atlas prices it  1091ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  scripts/procgen/derivedRuleTableFresh.test.js > the committed derived-rule table is fresh against its inputs > payloadMd5 and engineMd5 match (else: regenerate it — the message says how)
+AssertionError: STALE derived-rule table: the maze world payloads moved (payloadMd5 e705ea936f2ccf407f1046a4e5d11439 → 4624bcab266e1a56316c9c4b7ab79ab0): the derivation's input changed — regenerate: run alone. ONE COMMAND does steps (1)-(3) and the count check: `node scripts/procgen/refresh-seedling-derived-rules.mjs --dispatch --ref=<branch>` (or `--run=<id>` for a run already made; `--check` offline; docs/json/developer/procgen/seedling-derived-rules.md). By hand, in this order: (1) `gh workflow run seedling-probe.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f probes=probe-seedling-derived-rules.mjs`; (2) `gh run download <run> -R PeerInfinity/Archipelago-CC` and copy probe-seedling-derived-rules-log/seedling-playthrough-derived-rules.json over frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json; (3) the producer chain, `node scripts/procgen/regen-seedling.mjs --write` (make-seedling-playthrough-rules.mjs first, then partition, world, seed 1, the maze, ER, sphere order; a new atlas id also needs atlas_files.json); (4) COMMIT THE TABLE IN THE SAME PACKET as the change that staled it. If the regenerated table's VERDICTS move (its rows or exclusions, not only its `inputs` hashes), the packet owes a tile-primitives designer review before js-16 slots it. The engine closure: `node scripts/procgen/seedlingDerivedRuleTable.js --print-engine-closure`: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "STALE derived-rule table: the maze world payloads moved (payloadMd5 e705ea936f2ccf407f1046a4e5d11439 → 4624bcab266e1a56316c9c4b7ab79ab0): the derivation's input changed — regenerate: run alone. ONE COMMAND does steps (1)-(3) and the count check: `node scripts/procgen/refresh-seedling-derived-rules.mjs --dispatch --ref=<branch>` (or `--run=<id>` for a run already made; `--check` offline; docs/json/developer/procgen/seedling-derived-rules.md). By hand, in this order: (1) `gh workflow run seedling-probe.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f probes=probe-seedling-derived-rules.mjs`; (2) `gh run download <run> -R PeerInfinity/Archipelago-CC` and copy probe-seedling-derived-rules-log/seedling-playthrough-derived-rules.json over frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json; (3) the producer chain, `node scripts/procgen/regen-seedling.mjs --write` (make-seedling-playthrough-rules.mjs first, then partition, world, seed 1, the maze, ER, sphere order; a new atlas id also needs atlas_files.json); (4) COMMIT THE TABLE IN THE SAME PACKET as the change that staled it. If the regenerated table's VERDICTS move (its rows or exclusions, not only its `inputs` hashes), the packet owes a tile-primitives designer review before js-16 slots it. The engine closure: `node scripts/procgen/seedlingDerivedRuleTable.js --print-engine-closure`",
++ ]
+
+ ❯ scripts/procgen/derivedRuleTableFresh.test.js:17:41
+     15|         expect(table.rows.length).toBeGreaterThan(0);
+     16|         const stale = tableStaleness(table, JSON.parse(readFileSync(MA…
+     17|         expect(stale, stale.join('\n')).toEqual([]);
+       |                                         ^
+     18|     });
+     19|     it('the recipe a bump slice runs alone names the probe, the write,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 6 passed (7)
+      Tests  1 failed | 102 passed (103)
+   Start at  03:22:07
+   Duration  29.69s (transform 7.89s, setup 944ms, import 70.59s, tests 7.63s, environment 1ms)
+

@@ -1,0 +1,1 @@
+phase-2 walls vs final analyzer grid walls: 2470 cells over 10 kill-lock levels, 0 differ

@@ -1,0 +1,16 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.slow.test.js (2 tests) 200325ms
+     ✓ native engine, every region  199012ms
+     ✓ the closure comparison still catches an in-world row the world disagrees with, both ways  1311ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  03:17:48
+   Duration  219.25s (transform 3.52s, setup 252ms, import 18.52s, tests 200.33s, environment 0ms)
+
+
+real	3m39.993s
+user	4m2.958s
+sys	0m6.011s

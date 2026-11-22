@@ -1,0 +1,23 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.test.js (11 tests) 403ms
+ ✓ scripts/procgen/seedlingDivergenceLegs.test.js (32 tests) 808ms
+ ✓ frontend/modules/mazeRoom/tileSpike/countedRules.test.js (12 tests) 2128ms
+     ✓ the lattice prices a counted gate: minimal = two Shields, held to the engine at 0, 1 and 2  330ms
+     ✓ mixed levels: Or(two Shields, Wand) beside a one-Shield gate — the minimal points and the emitted rule  330ms
+     ✓ certifier: an AP Has(Wand, 2) against a world gate one Wand opens is a LOOSER-world problem at 1 Wand  373ms
+     ✓ certifier: an event whose own rule counts is never held below that count (L71 shieldlock)  885ms
+ ✓ scripts/procgen/refreshSeedlingDerivedRules.test.js (18 tests) 23ms
+ ✓ scripts/procgen/derivedRuleOverride.test.js (17 tests) 955ms
+     ✓ MUTANT: a row put where the worlds read (the hand inputs) IS carried — the read-back can fail  547ms
+ ✓ scripts/procgen/derivedRuleTableFresh.test.js (2 tests) 36ms
+ ✓ frontend/modules/mazeRoom/tileSpike/certifyLavaPulls.test.js (11 tests) 2523ms
+     ✓ the scripted tile definition agrees with the native engine on every line (the pulls walked by both)  695ms
+     ✓ certifies clean, natively and scripted alike; the crossing is priced as the atlas prices it  927ms
+
+ Test Files  7 passed (7)
+      Tests  103 passed (103)
+   Start at  03:21:40
+   Duration  26.89s (transform 6.77s, setup 854ms, import 69.07s, tests 6.88s, environment 1ms)
+

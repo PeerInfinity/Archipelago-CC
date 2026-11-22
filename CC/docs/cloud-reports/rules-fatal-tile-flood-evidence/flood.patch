@@ -1,0 +1,160 @@
+diff --git a/frontend/modules/flashPanel/seedlingPlaythroughOverlay.js b/frontend/modules/flashPanel/seedlingPlaythroughOverlay.js
+index b0946cd6..638a1daa 100644
+--- a/frontend/modules/flashPanel/seedlingPlaythroughOverlay.js
++++ b/frontend/modules/flashPanel/seedlingPlaythroughOverlay.js
+@@ -582,6 +582,72 @@ const tileTypesOf = (level) => {
+     return at;
+ };
+ 
++/** Every non-cliffside tile type at each cell, all layers (`"x,y"` -> Set). */
++const tileSetsOf = (level) => {
++    const at = new Map();
++    for (const layer of level?.layers ?? []) {
++        if (layer.name === 'cliffsides') continue;
++        for (const p of layer.tiles ?? []) {
++            const t = tileTypeForPlacement(p);
++            if (t === null) continue;
++            const k = `${p[0]},${p[1]}`;
++            if (!at.has(k)) at.set(k, new Set());
++            at.get(k).add(t);
++        }
++    }
++    return at;
++};
++
++/**
++ * ⛓ rules-fatal-tile-flood — the fatal tile types (`row.dies`) a counted body can reach: an 8-neighbour flood from every
++ * tile its 16x16 placement box touches, over every cell `wall(x, y)` does not name (the caller's ANALYZER-GRID walls: one
++ * source), stopping on a fatal tile (it dies there). Every move of an Enemy is a 1 px step refused by `collideTypes(solids)`
++ * (`Mobile.as:86-118`; knockback spends `v` the same way, `Enemy.as:247-255`), and every counted class's `solids` holds the
++ * base `Mobile.as:17` list, so a grid wall (a "Solid" tile, `Tile.as:24-27`, or an entity typed "Solid"/"Tree"/"Rope")
++ * stops it; a gated or sink cell is walked (permissive). A reached cell with no Tile entity widens to the fatal types one
++ * ring past its nearest tiled ring (`Enemy.as:133` `nearestToPoint("Tile")`).
++ */
++export function killLockFatalReach(level, e, row, wall, tileSets, tileSize = 16) {
++    const W = level.width;
++    const H = level.height;
++    const key = (x, y) => `${x},${y}`;
++    const fatalAt = (x, y) => [...(tileSets.get(key(x, y)) ?? [])].filter((t) => row.dies.includes(t));
++    const reached = new Set();
++    const seen = new Set();
++    const queue = [];
++    for (const px of [e.x, e.x + tileSize / 2, e.x + tileSize - 1]) {
++        for (const py of [e.y, e.y + tileSize / 2, e.y + tileSize - 1]) {
++            const x = Math.floor(px / tileSize);
++            const y = Math.floor(py / tileSize);
++            if (x < 0 || y < 0 || x >= W || y >= H || wall(x, y) || seen.has(key(x, y))) continue;
++            seen.add(key(x, y));
++            queue.push([x, y]);
++        }
++    }
++    while (queue.length) {
++        const [x, y] = queue.shift();
++        const f = fatalAt(x, y);
++        if (f.length) {
++            for (const t of f) reached.add(t);
++            continue;
++        }
++        if (!(tileSets.get(key(x, y))?.size)) {
++            const ring = (r) => { const o = []; for (let yy = y - r; yy <= y + r; yy += 1) for (let xx = x - r; xx <= x + r; xx += 1) if (tileSets.get(key(xx, yy))?.size) o.push([xx, yy]); return o; };
++            let r = 1;
++            while (r < Math.max(W, H) && ring(r).length === 0) r += 1;
++            for (const [xx, yy] of ring(r + 1)) for (const t of fatalAt(xx, yy)) reached.add(t);
++        }
++        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]) {
++            const nx = x + dx;
++            const ny = y + dy;
++            if (nx < 0 || ny < 0 || nx >= W || ny >= H || seen.has(key(nx, ny)) || wall(nx, ny)) continue;
++            seen.add(key(nx, ny));
++            queue.push([nx, ny]);
++        }
++    }
++    return [...reached].sort((a, b) => a - b);
++}
++
+ /** Is the disjunction `d` (flag names) implied by the conjunction `cnf` (an array of flag-name disjunctions)? */
+ const impliedBy = (cnf, d) => cnf.some((c) => c.every((f) => d.includes(f)));
+ 
+@@ -597,7 +663,7 @@ const impliedBy = (cnf, d) => cnf.some((c) => c.every((f) => d.includes(f)));
+  *   undecided — anything else: today's rule (`A_WEAPON`) is kept and the reason
+  *               is listed.
+  */
+-export function killLockRoomRuling(level) {
++export function killLockRoomRuling(level, { wall = null } = {}) {
+     const entities = level?.entities ?? [];
+     const locks = entities.filter((e) => LOCK_FAMILY.has(e.type) && Number(e.attrs?.tset) === -1);
+     if (locks.length === 0) return null;
+@@ -639,7 +705,9 @@ export function killLockRoomRuling(level) {
+             // is a REACH question this table cannot answer.
+             const on = tiles.get(`${Math.floor((e.x + 8) / 16)},${Math.floor((e.y + 8) / 16)}`);
+             if (on === 17 && !row.dies.includes(17)) undecided.push(`${at}: stands on lava it survives (reach undecided)`);
+-            const fatal = row.dies.filter((t) => present.has(t));
++            // ⛓ rules-fatal-tile-flood — with the caller's analyzer-grid walls, only the fatal tiles this body's own
++            // flood reaches (`killLockFatalReach`); without them, every fatal tile present in the level (as before).
++            const fatal = wall ? killLockFatalReach(level, e, row, wall, tileSetsOf(level)) : row.dies.filter((t) => present.has(t));
+             const envHits = hitters.filter((h) => !h.startsWith(`${e.type}@${e.x},${e.y}`));
+             if (fatal.length > 0 || envHits.length > 0) {
+                 body.env = `unmeasured:${[...fatal.map((t) => `tile${t}`), ...envHits].join('+')}`;
+@@ -665,10 +733,10 @@ export function killLockRoomRuling(level) {
+ }
+ 
+ /** `"<level>"` → the room ruling, over every level of the map. */
+-export function buildKillLockRulings(mapDoc) {
++export function buildKillLockRulings(mapDoc, { wallOf = null } = {}) {
+     const out = new Map();
+     for (const level of mapDoc?.levels ?? []) {
+-        const row = killLockRoomRuling(level);
++        const row = killLockRoomRuling(level, { wall: wallOf ? wallOf(level) : null });
+         if (row) out.set(level.level, row);
+     }
+     return out;
+diff --git a/scripts/procgen/make-seedling-playthrough-rules.mjs b/scripts/procgen/make-seedling-playthrough-rules.mjs
+index 2b14a4d7..8ebb070f 100644
+--- a/scripts/procgen/make-seedling-playthrough-rules.mjs
++++ b/scripts/procgen/make-seedling-playthrough-rules.mjs
+@@ -196,7 +196,12 @@ const GROUP_OPENERS = OV.buildGroupOpeners(MAP);
+ // lock whose level holds no in-level opener is priced by one of these or throws.
+ const SCRIPT_OPENERS = OV.buildScriptOpeners(MAP);
+ /** ⛓ RULES kill-locks — every kill-lock room's census and ruling (`OV.killLockRoomRuling`). */
+-const KILL_LOCKS = OV.buildKillLockRulings(MAP);
++// ⛓ rules-fatal-tile-flood: PHASE 1 is today's census (every fatal tile present), so whatever the module builds before the
++// analyzer grid exists sees exactly main's rulings; PHASE 2 (below `rawBaseGridFor`) re-prices each body over THAT grid's
++// walls. `FLOOD_RULINGS_JSON` (measurement only) injects the phase-2 rulings at phase 1, to show the order does not matter.
++const KILL_LOCKS = process.env.FLOOD_RULINGS_JSON
++    ? new Map(Object.entries(JSON.parse(fs.readFileSync(process.env.FLOOD_RULINGS_JSON, 'utf8'))).map(([k, v]) => [Number(k), v]))
++    : OV.buildKillLockRulings(MAP);
+ // ⛓ RULES block-path — who can hold each re-closing lock's button (the room's pushables; ⚖ enemies don't
+ // count). The grid builder prices an entry by the block paths where `seedlingBlockPaths.blockHolderVerdict`
+ // decides it.
+@@ -716,6 +721,15 @@ const rawBaseGridFor = (level, { directionalLocks, arrivals }) => {
+     const cellCharges = ropeChargesFor(level, base);
+     return stampNoHitGates(level, stampOffGridGatedSolids(level, cellCharges.length ? build({ cellCharges }) : base));
+ };
++// ⛓ rules-fatal-tile-flood — the kill-lock census, priced over the analyzer grid's walls (one source with the pull disc and
++// rule T: the same `rawBaseGridFor` call `playthroughLavaTrapPulls` makes). A kill-lock ruling turns a cell open or gated,
++// never into or out of `wall` (the census checks the phase-1 walls equal the final grid's).
++export const killLockWallOf = (level) => {
++    const g = rawBaseGridFor(level, { directionalLocks: DIRECTIONAL_LOCKS, arrivals: true });
++    const ox = g.origin?.x ?? 0;
++    const oy = g.origin?.y ?? 0;
++    return (x, y) => g.cells[(y - oy) * g.width + (x - ox)]?.kind === 'wall';
++};
+ /**
+  * ⛓⛓ RULES no-hit-directional — one level's directional no-hit gates (⚖ the user 2026-11-11, a per-room table FOR NOW,
+  * to be re-examined: `seedlingNoHitDirectionalGates.js`), checked against the level's own flyer bands and the witness
+@@ -3341,7 +3355,6 @@ export function compilePlaythroughRules(doc, { table = DERIVED_TABLE, rekey = nu
+     return { rules, report, layer, landingGates, ropes, override, disagrees, uncharged, stray, strayRockEvents, rulesText };
+ }
+ 
+-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
+ 
+ function main() {
+     const check = process.argv.includes('--check');
+@@ -3450,3 +3463,7 @@ function main() {
+         + `${quiet ? '' : pocketDoorsCharged.map((m) => `\n  ${m}`).join('')}`);
+     console.log(`${notes.length} analysis note(s)${quiet ? ' (suppressed; drop --quiet to read them)' : ''}`);
+ }
++
++// ⛓ rules-fatal-tile-flood — PHASE 2, at the end of the module so every declaration it touches is initialized.
++if (!process.env.FLOOD_RULINGS_JSON) for (const [k, v] of OV.buildKillLockRulings(MAP, { wallOf: killLockWallOf })) KILL_LOCKS.set(k, v);
++if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();

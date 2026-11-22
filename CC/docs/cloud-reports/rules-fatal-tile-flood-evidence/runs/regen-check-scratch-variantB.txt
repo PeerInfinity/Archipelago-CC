@@ -1,0 +1,12 @@
+regen-seedling --check: 10 step(s); python = /tmp/claude-0/-home-user-Archipelago-CC/4c68f06f-99a5-5edf-bd45-8c6472e94940/scratchpad/scratch-tree/.venv/bin/python; logs in .cache/regen-seedling/
+rules          REFUSED: STALE derived-rule table: the maze world payloads moved (payloadMd5 e705ea936f2ccf407f1046a4e5d11439 → 4624bcab266e1a56316c9c4b7ab79ab0): the derivation's input changed [14.4s]
+partition      OK [4.5s]
+world          OK [0.6s]
+template       OK: Players/Templates/Seedling Playthrough.yaml matches a fresh build [3.5s]
+host-settings  OK [0.1s]
+seed1          OK: 4 files + the seedling_playthrough row match a fresh build [3.5s]
+maze           OK [21.7s]
+er             OK [25.6s]
+sphere-order   OK [0.0s]
+census         OK: 2 SKIP row(s) in its output [1.7s]
+total 75.5s — 1 step(s) not OK

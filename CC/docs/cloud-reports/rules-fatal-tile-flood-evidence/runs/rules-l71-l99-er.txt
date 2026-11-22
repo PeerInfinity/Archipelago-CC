@@ -1,0 +1,42 @@
+== level_71__r0c6
+  exit -> level_71__r14c12 : {"rule":"Has","args":{"item_name":"Dark Suit"}}
+  exit -> level_71__r16c19 : {"rule":"Has","args":{"item_name":"Progressive Shield","count":2}}
+  exit -> level_75__r13c3 : {"rule":"True_"}
+  exit -> level_80__r0c2 : {"rule":"True_"}
+  exit -> level_72__r11c6 : {"rule":"True_"}
+  loc Level 071 - Chest : {"rule":"True_"}
+  loc L71 flag 2: shieldlock@288,256 cleared : {"rule":"Has","args":{"item_name":"Progressive Shield","count":2}}
+== level_71__r11c7
+  exit -> level_71__r0c6 : {"rule":"True_"}
+  exit -> level_71__r13c7 : {"rule":"Has","args":{"item_name":"Ghost Spear"}}
+== level_71__r13c7
+  exit -> level_71__r11c7 : {"rule":"Has","args":{"item_name":"Ghost Spear"}}
+  exit -> level_85 : {"rule":"True_"}
+== level_71__r14c12
+  exit -> level_71__r0c6 : {"rule":"Has","args":{"item_name":"Dark Suit"}}
+  exit -> level_82 : {"rule":"True_"}
+== level_71__r16c19
+  exit -> level_71__r0c6 : {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}},{"rule":"Has","args":{"item_name":"L71 flag 2: shieldlock@288,256 cleared"}}]}
+  exit -> level_76 : {"rule":"True_"}
+== level_99__r2c4
+  exit -> level_99__r7c5 : {"rule":"And","children":[{"rule":"Has","args":{"item_name":"L99 flag 0: lock@80,96 cleared"}},{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}]}
+  exit -> level_11 : {"rule":"True_"}
+== level_99__r2c7
+  exit -> level_99__r6c12 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}},{"rule":"Has","args":{"item_name":"Dark Suit"}}]}
+  exit -> level_99__r7c5 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}}]}
+  exit -> level_99__r8c10 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}}]}
+== level_99__r6c12
+  exit -> level_99__r2c7 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}},{"rule":"Has","args":{"item_name":"Dark Suit"}}]}
+  exit -> level_99__r7c5 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}}]}
+  exit -> level_99__r8c10 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}}]}
+== level_99__r7c5
+  exit -> level_99__r2c7 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}}]}
+  exit -> level_99__r6c12 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}}]}
+  exit -> level_99__r2c4 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}
+  exit -> level_99__r8c10 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}}]}
+  exit -> level_43__r13c7 : {"rule":"True_"}
+  loc L99 flag 0: lock@80,96 cleared : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}
+== level_99__r8c10
+  exit -> level_99__r2c7 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}}]}
+  exit -> level_99__r6c12 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}}]}
+  exit -> level_99__r7c5 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}}]}

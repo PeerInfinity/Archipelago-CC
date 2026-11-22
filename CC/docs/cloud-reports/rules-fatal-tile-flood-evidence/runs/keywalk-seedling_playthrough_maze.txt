@@ -1,0 +1,13 @@
+4 difference(s)
+/preset_sidecars/1/level_71__r0c6/playable_payload/obstacleLib/atlas_gate_1/clear_rule/children
+  - "len 2"
+  + "len 4"
+/preset_sidecars/1/level_71__r0c6/playable_payload/obstacleLib/atlas_gate_1/clear_rule/children/0/args/count
+  - "<absent>"
+  + 2
+/preset_sidecars/1/level_71__r0c6/playable_payload/obstacleLib/atlas_gate_1/clear_rule/children/0/args/item_name
+  - "Progressive Sword"
+  + "Progressive Shield"
+/preset_sidecars/1/level_71__r0c6/playable_payload/obstacleLib/atlas_gate_1/name
+  - "(Progressive Sword OR Ghost Spear)"
+  + "(Progressive Shield x2 OR Ghost Spear OR Progressive Sword OR Wand)"

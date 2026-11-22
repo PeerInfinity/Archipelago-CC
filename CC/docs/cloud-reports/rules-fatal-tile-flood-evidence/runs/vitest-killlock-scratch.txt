@@ -1,0 +1,15 @@
+
+ RUN  v4.0.15 /tmp/claude-0/-home-user-Archipelago-CC/4c68f06f-99a5-5edf-bd45-8c6472e94940/scratchpad/scratch-tree
+
+ ✓ frontend/modules/flashPanel/seedlingKillLocks.test.js (18 tests) 9ms
+ ✓ frontend/modules/flashPanel/seedlingObstacleEvents.test.js (58 tests) 39ms
+ ✓ frontend/modules/flashPanel/seedlingMountKeyLevelSet.test.js (12 tests) 306ms
+ ✓ scripts/procgen/seedlingPlaythroughObstacleEvents.test.js (21 tests) 11636ms
+ ✓ frontend/modules/mazeRoom/tileSpike/encounterKillArms.test.js (8 tests) 868ms
+     ✓ L53: no problem at the event's room; with opens_from stripped, OPEN_L53 returns (the pocket fires the event again)  749ms
+
+ Test Files  5 passed (5)
+      Tests  117 passed (117)
+   Start at  03:15:02
+   Duration  20.50s (transform 7.25s, setup 731ms, import 28.61s, tests 12.86s, environment 1ms)
+
