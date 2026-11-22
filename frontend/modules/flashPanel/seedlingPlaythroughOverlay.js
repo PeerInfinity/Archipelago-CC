@@ -1589,13 +1589,15 @@ export function lavaTrapPulls(level, tileSize = 16, options = {}) {
         // PROTOTYPE: every step into a PARTIAL tile across an edge the player can cross UNPULLED (`pullCrossing`): the
         // maze's `PASS_<dir>` (the choice). `width` = the unpulled px of the crossing, `of` = its length (term 3's list).
         const passes = [];
-        for (const t of partial) {
+        // IDLE ARM (Robert's steer, design-8 2026-11-21): the trap reels only a player who STANDS on an in-range tile, so
+        // every step into EVERY disc tile (always and partial) may walk through unpulled; the plain move is "step and stand".
+        for (const t of from) {
             if (solid?.(t[0], t[1])) continue;
             for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
                 const n = [t[0] + dx, t[1] + dy];
                 if (n[0] < 0 || n[1] < 0 || n[0] >= level.width || n[1] >= level.height || solid?.(n[0], n[1])) continue;
                 const c = pullCrossing(n, t, [tx, ty], [cx, cy], tileSize, solid);
-                if (c.width > 0) passes.push({ from: n, to: [...t], width: c.width, of: c.of });
+                passes.push({ from: n, to: [...t], width: c.width, of: c.of });
             }
         }
         out.push({ tile: [tx, ty], from, always, partial, yields: [], passes });
