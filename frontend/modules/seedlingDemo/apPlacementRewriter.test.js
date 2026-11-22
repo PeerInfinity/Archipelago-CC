@@ -19,11 +19,13 @@ import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
 
 import {
+    AP_CHEST_KIND,
     AP_ITEM_TYPE,
     AP_LOOK,
     AP_RECORD_SET_ID_BASE,
     ApPlacementError,
     LOOK_VOCABULARY,
+    apItemAttrs,
     buildPlacementTable,
     placementKey,
     referenceImpactOf,
@@ -385,7 +387,8 @@ describe('rewriteRecordSet — exactly the table, and not one byte more', () => 
             expect(e).toBeTruthy();
             expect(e.attrs.tag).toBe(String(entry.tag));
             expect(e.attrs.look).toBe(entry.look);
-            expect(Object.keys(e.attrs)).toEqual(['tag', 'look']);
+            // ⛓ rules-ap-chest-solid: a vanilla chest's location also says `kind="chest"`, LAST
+            expect(Object.keys(e.attrs)).toEqual(entry.entity.type === 'chest' ? ['tag', 'look', 'kind'] : ['tag', 'look']);
         }
         const vanilla = vanillaSet();
         for (const entry of rewrittenOf(table).filter((x) => x.tagSource === 'vanilla')) {
@@ -394,6 +397,39 @@ describe('rewriteRecordSet — exactly the table, and not one byte more', () => 
                     && x.type === entry.entity.type);
             expect(String(entry.tag)).toBe(String(old.attrs.tag));
         }
+    });
+
+    it('⛓ rules-ap-chest-solid — every vanilla CHEST location carries kind="chest" (p4h `APChest`), and nothing else does', () => {
+        const { table } = canonicalTable();
+        const vanilla = vanillaSet();
+        const { set } = rewriteRecordSet(vanilla, table);
+        const chests = rewrittenOf(table).filter((x) => x.entity.type === 'chest');
+        expect(chests).toHaveLength(R7_GOAL_LEDGER.filter((r) => r.kind === 'chest').length);
+        expect(chests.length).toBeGreaterThan(0);
+        let others = 0;
+        for (const entry of rewrittenOf(table)) {
+            const e = set.rooms[entry.level].source.record.entities
+                .find((x) => x.type === AP_ITEM_TYPE && x.x === entry.entity.x && x.y === entry.entity.y);
+            if (entry.entity.type === 'chest') {
+                expect(e.attrs).toEqual({ tag: String(entry.tag), look: entry.look, kind: AP_CHEST_KIND });
+            } else {
+                others += 1;
+                expect(e.attrs).not.toHaveProperty('kind');
+            }
+        }
+        expect(others).toBeGreaterThan(0);
+        // the OEL carries the attribute in the pinned order
+        for (const entry of chests) {
+            const oel = recordToOel(set.rooms[entry.level].source.record);
+            expect(oel).toContain(`<${AP_ITEM_TYPE} x="${entry.entity.x}" y="${entry.entity.y}" tag="${entry.tag}" look="${entry.look}" kind="chest"`);
+        }
+    });
+
+    it('⛓ rules-ap-chest-solid — `apItemAttrs`: the order is tag, look, kind; a non-chest row has no kind', () => {
+        expect(Object.keys(apItemAttrs(7, 'seal', 'chest'))).toEqual(['tag', 'look', 'kind']);
+        expect(apItemAttrs(7, 'seal', 'chest')).toEqual({ tag: '7', look: 'seal', kind: 'chest' });
+        expect(apItemAttrs(3, 'sword', 'sword')).toEqual({ tag: '3', look: 'sword' });
+        expect(apItemAttrs(3, 'ap', 'heartcontainer')).toEqual({ tag: '3', look: 'ap' });
     });
 
     it('does not mutate the set it was given', () => {

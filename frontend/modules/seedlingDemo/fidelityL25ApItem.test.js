@@ -54,7 +54,7 @@ describe('L25APITEM D1 — the room: the delivery\'s own apitem in place of each
             const i = l.entities.findIndex((e) => e.type === 'chest');
             expect(out.entities.filter((e, j) => j !== i)).toEqual(l.entities.filter((e, j) => j !== i));
             expect(out.entities[i]).toEqual({ type: 'apitem', x: l.entities[i].x, y: l.entities[i].y,
-                attrs: { tag: l.entities[i].attrs.tag, look: 'chest' } });
+                attrs: { tag: l.entities[i].attrs.tag, look: 'chest', kind: 'chest' } });
         }
         expect(MAP.levels.find((l) => l.level === 25).entities.some((e) => e.type === 'chest')).toBe(true);
     });

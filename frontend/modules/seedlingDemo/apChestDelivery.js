@@ -5,7 +5,10 @@
  * ⛓ WHAT THE GAME PLAYS. The randomizer's delivered set is `rewriteRecordSet(vanillaRecordSet(mapDoc), table)`
  * (`flashPanel/seedlingRandomizerWiring.js`): every rewritable ledger row's entity is replaced by
  * `{type: 'apitem', x: old.x, y: old.y, attrs: {tag, look}}` (`apPlacementRewriter.rewriteRecordSet`). For a chest
- * the tag is its vanilla `@tag` (`tagSource: 'vanilla'`). On the game that element builds `Pickups/APItem`:
+ * the tag is its vanilla `@tag` (`tagSource: 'vanilla'`), and ⛓ rules-ap-chest-solid: a chest's element also carries
+ * `kind: 'chest'` (`apPlacementRewriter.apItemAttrs`, order `tag`, `look`, `kind`). A p4h build constructs that as
+ * `Pickups/APChest` — Solid, opened only from the one-pixel line under it, as the vanilla `Chest`; the paragraph
+ * below is the p4g reading (the attribute is ignored there). On the game that element builds `Pickups/APItem`:
  * `super(_x + Tile.w/2, _y + Tile.h/2, graphic, null, false)` + `setHitbox(8, 8, 4, 4)` (`APItem.as:114-115`) — a
  * Mobile with no `type` (in no solids list), an 8×8 box at the cell's centre, taken on OVERLAP from any side
  * (`Pickup.as:78`, `collide("Player", x, y)`), never through `Chest.update`'s bottom line (`Chest.as:63`).
@@ -25,6 +28,7 @@
 
 import { R7_GOAL_LEDGER } from './r7Acceptance.js';
 import { entityForLedgerRow } from './seedlingAtlasDerivation.js';
+import { AP_ITEM_TYPE, apItemAttrs } from './apPlacementRewriter.js';
 
 /** The look a model-side chest apitem carries (the model draws nothing from it). */
 export const AP_CHEST_LOOK = 'chest';
@@ -76,7 +80,7 @@ export function deliveredChestDocument(mapDoc, ledger = R7_GOAL_LEDGER) {
                         + 'the rewriter would ALLOCATE one, and that allocation is the placement table\'s, not a model\'s');
                 }
                 replaced.push({ level: l.level, x: e.x, y: e.y, tag: Number(tag) });
-                return { type: 'apitem', x: e.x, y: e.y, attrs: { tag: String(tag), look: AP_CHEST_LOOK } };
+                return { type: AP_ITEM_TYPE, x: e.x, y: e.y, attrs: apItemAttrs(tag, AP_CHEST_LOOK, e.type) };
             }),
         };
     });
