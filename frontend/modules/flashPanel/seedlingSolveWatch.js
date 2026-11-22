@@ -43,9 +43,10 @@ const TELEPORTER_COLOUR = '#3fd8ce';
 export const GAME_TICKS_PER_SECOND = 30;
 
 /** A pass's name in words (`jsRuntimeSolver.ANYTIME_PASSES`); a pass not listed is shown by its own name. */
-export const PASS_LABELS = Object.freeze({ dashless: 'Plain walk', full: 'With dashes' });
+export const PASS_LABELS = Object.freeze({ dashless: 'Plain walk', full: 'With dashes', 'hit-avoid': 'Hit-avoiding' });
 /** What a running pass is looking for, in words. */
-const PASS_SEEKS = Object.freeze({ dashless: 'a plain walking route', full: 'sword-dash shortcuts' });
+const PASS_SEEKS = Object.freeze({ dashless: 'a plain walking route', full: 'sword-dash shortcuts',
+    'hit-avoid': 'a route that avoids the hit by waiting first' });
 
 /** A goal kind (`request.goal`, `solverGoal.kind`) as the place the sentence names. */
 export const GOAL_WORDS = Object.freeze({
@@ -180,6 +181,7 @@ export function headlineOf(state, memory) {
             sub = best.pass === 'full'
                 ? `Found a ${ticks}-tick route (${playSeconds(ticks)}) ${withDashes}`
                     + (Number.isFinite(plain) && plain > ticks ? `, ${plain - ticks} ticks faster than the plain walk (${plain}).` : '.')
+                : best.pass === 'hit-avoid' ? `Found a ${ticks}-tick hit-avoiding route (${playSeconds(ticks)})${waitsOf(best)}.`
                 : `Found a ${ticks}-tick route (${playSeconds(ticks)})${best.pass === 'dashless' ? ' without sword-dashes' : ''}.`;
         }
         return { phase, head: `✓ Solved in${took || ' ?'}`, sub };
@@ -194,6 +196,15 @@ export function headlineOf(state, memory) {
  * ⛓ THE PASS STEPPER — one step per pass the request names (`request.passes`; the running pass alone when the
  * request is not known): `{n, pass, label, status: done|now|skip|fail, text}`.
  */
+/**
+ * ⛓ hammer-phase FEWER-HITS (`jsRuntimeSolver.HIT_AVOID_PASS`): a plan the third pass found (`pass: 'hit-avoid'`)
+ * starts with `hitAvoidDelay` idle ticks, the wait that makes it hitless. The note names that wait, never a plain route.
+ */
+function waitsOf(best) {
+    const d = best?.hitAvoidDelay;
+    return Number.isFinite(d) && d > 0 ? `, waits ${d} tick${d === 1 ? '' : 's'} first` : '';
+}
+
 export function passStepsOf(state, memory) {
     const snap = state?.snapshot;
     if (!snap) return [];
