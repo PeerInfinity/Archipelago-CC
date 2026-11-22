@@ -28,6 +28,7 @@ import { PACK_TILE_BASES } from '../packConcepts/packConcepts.js';
 import { createStructure, parseStructureManifest, terrainGenerates, terrainOf } from '../packStructure/packStructure.js';
 import { effectiveContentStack, loadContentSet } from '../procgenPipeline/worldContent.js';
 import { recordingContext } from './drawOpRecorder.js';
+import { mazeCompositeStackOf } from './mazeCompositeMap.js';
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
 import { TILE_PX } from './mazeRoomRender.js';
 import { drawMazeTile, loadMazeTileArt, mazeTileKind } from './mazeTileArt.js';
@@ -184,5 +185,19 @@ describe('GEN-2 — the seam: both views draw each kind from the pack', () => {
             expect(drawMazeTile(ctx, tileArt, kind, 0, 0, TILE_PX, mazeTileKind(kind, { tileKinds })), kind).toBe('art');
             expect(ctx.__log.some((l) => l.startsWith(`drawImage({"key":"${c.art}"}`)), kind).toBe(true);
         }
+    });
+});
+
+describe('GEN-2 — the play views\' art stack takes the world\'s recorded "what exists" packs', () => {
+    const doc = (meta) => ({ procgen_metadata: { 1: meta } });
+    const room = { substrate: substrateRegistryEntry.id };
+    it('a world recording exists: [furniture] draws its maze rooms from the maze pack then furniture', () => {
+        expect(mazeCompositeStackOf(room, { rules: doc({ exists: [PACK_ID] }), playerId: '1' }))
+            .toEqual([substrateRegistryEntry.defaultContentPack, PACK_ID]);
+    });
+    it('under its theme (the one stack rule: defaults, exists, content); a world recording neither is unchanged', () => {
+        expect(mazeCompositeStackOf(room, { rules: doc({ exists: [PACK_ID], content: ['meta'] }), playerId: '1' }))
+            .toEqual([substrateRegistryEntry.defaultContentPack, PACK_ID, 'meta']);
+        expect(mazeCompositeStackOf(room, { rules: doc({}), playerId: '1' })).toEqual([substrateRegistryEntry.defaultContentPack]);
     });
 });

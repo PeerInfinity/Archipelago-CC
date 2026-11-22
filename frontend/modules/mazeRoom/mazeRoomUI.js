@@ -96,7 +96,9 @@ import { drawMazeTileKinds } from './mazeTileKindOverlay.js';
 import { placedTileKindDrift, placedTileKindRefusals } from './mazeTileKinds.js';
 import { drawMazeThings, mazeThingLines, thingAt } from './mazeThingOverlay.js';
 import { browserDecoder, browserRasteriser } from '../artLibrary/artLibrary.js';
-import { browserPackIo, documentContentOf, effectiveContentStack } from '../procgenPipeline/worldContent.js';
+import {
+    RECORDED_EXISTS_KEY, browserPackIo, documentContentOf, documentWorldSettingsOf, effectiveContentStack,
+} from '../procgenPipeline/worldContent.js';
 /**
  * ⛓ DEDUP M6 — the ONE pixel→tile conversion, DOM-free and unit-tested. The
  * lab page's canvas has used it since editor v3; the panel divided by the
@@ -3982,19 +3984,25 @@ export class MazeRoomUI {
      * it declares one) then the loaded slot's recorded `procgen_metadata[p].content` (⚠ a per-player map), through
      * `worldContent.effectiveContentStack` — the one stack rule, so a later pack wins per key by `mergeKeyed`. The
      * substrate set is the maze alone, as the region job's `attachJobContent` reads it (`[args.substrate]`).
+     * ⛓ GEN-2 — and the slot's recorded "what exists" packs (`procgen_metadata[p].exists`), under the content, as the
+     * one stack rule orders them: a tile kind the generator placed from such a pack draws from its art.
      */
     _tileArtStack() {
         let content = [];
+        let exists = [];
         if (Array.isArray(this._tileArtContentOverride)) {
             return effectiveContentStack({ substrateIds: [substrateRegistryEntry.id], content: this._tileArtContentOverride });
         }
         try {
             const { rules, player } = this._loadedRules();
-            if (rules && player !== null && player !== undefined) content = documentContentOf(rules, player);
+            if (rules && player !== null && player !== undefined) {
+                content = documentContentOf(rules, player);
+                exists = documentWorldSettingsOf(rules, player)[RECORDED_EXISTS_KEY];
+            }
         } catch (err) {
             console.warn(`[mazeRoom] tile art: the world's content list is unreadable (${err.message}); drawing without it`);
         }
-        return effectiveContentStack({ substrateIds: [substrateRegistryEntry.id], content });
+        return effectiveContentStack({ substrateIds: [substrateRegistryEntry.id], exists, content });
     }
 
     /**
