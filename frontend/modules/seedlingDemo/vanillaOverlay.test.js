@@ -472,7 +472,9 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
             // ⛓ rules-k-pursuit-resume: rule K + (b) on the line-cut pull disc (a lavarunner that outruns the player gates its
             //   leash cut at its kill-lock arm: L72/L74/L75 split, L71/L73/L78/L80 re-cut, the L98/L99 rename); re-recorded from
             //   the producers (391ef89a -> 5c3dd651; atlas id ea1ef5ba -> b856f0fc). The overlay fixture `--check`s byte-identical.
-            .toBe('5c3dd651d2aa811d4536995f5ebcfae1');
+            // ⛓ tile-pixel-pull-disc: the pixel pull disc + the hybrid passes (L78 r1c10 absorbed; L77/L78/L80 re-cut); re-recorded
+            //   from the producers (5c3dd651 -> e1c27106; atlas id b856f0fc -> 2597b8a6). The overlay fixture `--check`s byte-identical.
+            .toBe('e1c2710688ff91d493f6211baa0a0e9f');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

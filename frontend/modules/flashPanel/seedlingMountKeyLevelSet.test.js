@@ -35,9 +35,9 @@ const BASE = [
     ['frontend/presets/seedling_atlas/AP_1/AP_1_rules.json', 'd287026777994457', 'seedlingJsSave_88147be40519edef'],
     ['frontend/presets/seedling_atlas_host/AP_1/AP_1_rules.json', '112958cc5d97e6bc', 'seedlingJsSave_2082008aff958c93'],
     ['frontend/presets/seedling_atlas_location/AP_1/AP_1_rules.json', '20c0032352167969', 'seedlingJsSave_0f911d1fe45d1540'],
-    ['frontend/presets/seedling_er/AP_1/AP_1_rules.json', '16a2f41d66b6c6c0', 'seedlingJsSave_013f57c78fbca1fa'],
-    ['frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json', 'b980a716cf8305c5', 'seedlingJsSave_8dae974291b8e1cb'],
-    ['frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json', '70771818f2b21184', 'seedlingJsSave_4807a158125fe675'],
+    ['frontend/presets/seedling_er/AP_1/AP_1_rules.json', '5c5b081b668e7be5', 'seedlingJsSave_acc0d8f36acd7306'],
+    ['frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json', '3bfd551af826325f', 'seedlingJsSave_f76fb36ef81f52a7'],
+    ['frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json', 'c61a36e605af533c', 'seedlingJsSave_2b894fec7e492359'],
     ['frontend/presets/seedling_sphere_room/AP_1/AP_1_rules.json', 'f2647945cec94156', 'seedlingJsSave_3b35e90c86c174f1'],
     ['frontend/presets/seedling_spiral_room/AP_1/AP_1_rules.json', '1bf561d73a81adad', 'seedlingJsSave_41513aef0ee6808e'],
 ];

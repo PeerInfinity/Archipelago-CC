@@ -112,7 +112,7 @@ describe('mazeSeedlingLink — which rooms link back, over every committed prese
         // ⛓ rules-lavatrap-neck: roomless 150 -> 158, rule T splits L77 (level_77 -> r2c0 + r12c6 + r15c6: +2 sharing r2c0's
         //   world) and L78 (+6 sub-regions sharing r0c2's world), in the playthrough maze preset.
         // ⛓ rules-k-pursuit-resume: roomless 158 -> 190 — rule K + (b) (a lavarunner that outruns the player gates its leash cut at its kill-lock arm) splits L72 (+9 sub-regions), L74 (+4), L75 (+9) and re-cuts L73 (+3), L78 (+4), L80 (+3), L99 (+3), in the playthrough maze preset.
-        expect({ rooms, roomless }).toEqual({ rooms: 126, roomless: 190 });
+        expect({ rooms, roomless }).toEqual({ rooms: 126, roomless: 189 }); // ⛓ tile-pixel-pull-disc: the pixel pull disc absorbs L78 r1c10 (12 -> 11 L78 sub-regions): roomless 190 -> 189
     });
 
     it('a level split across several maze rooms: every one links to the same level, and says how many share it', () => {

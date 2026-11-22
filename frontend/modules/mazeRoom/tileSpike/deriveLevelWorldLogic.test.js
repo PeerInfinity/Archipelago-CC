@@ -213,7 +213,8 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
         // ⛓ rules-k-pursuit-resume: rule K re-cuts L78 (- r3c1, r4c4; + r3c12, r4c2, r5c12, r6c11, r8c8, r8c10) and L80's L79
         //   half (- r12c3; + r9c5, r12c4, r13c3 and the trap (2,14)'s own tile r14c2); none freed.
         const SPHERE910_WEAPON_GATED = ['level_76', 'level_77__r12c6', 'level_77__r15c6', 'level_77__r2c0', 'level_78__r0c16',
-            'level_78__r0c2', 'level_78__r1c10', 'level_78__r3c12', 'level_78__r3c9', 'level_78__r4c2', 'level_78__r5c12',
+            'level_78__r0c2', 'level_78__r3c12', // ⛓ tile-pixel-pull-disc: the pixel pull disc absorbs L78 r1c10 (12 -> 11 L78 sub-regions)
+            'level_78__r3c9', 'level_78__r4c2', 'level_78__r5c12',
             'level_78__r5c6', 'level_78__r6c11', 'level_78__r6c9', 'level_78__r8c10', 'level_78__r8c8', 'level_79__r0c4',
             'level_79__r8c4', 'level_80__r12c4', 'level_80__r13c3', 'level_80__r14c2', 'level_80__r16c1', 'level_80__r8c4',
             'level_80__r9c5'];

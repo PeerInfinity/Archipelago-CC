@@ -67,7 +67,7 @@ describe('maze converted load: which object is the level', () => {
         //   +8 sidecars, all room-less regions of their level's shared world.
         // ⛓ rules-k-pursuit-resume: 274/116/158 -> 306/116/190 — rule K + (b) (a lavarunner that outruns the player gates its leash cut at its kill-lock arm) splits L72 (+9 sub-regions), L74 (+4), L75 (+9) and re-cuts L73 (+3), L78 (+4), L80 (+3), L99 (+3): +32 sidecars, all room-less regions of their
         //   level's shared world.
-        expect([SIDECARS.length, ROOMS.length, SHARED.length]).toEqual([306, 116, 190]);
+        expect([SIDECARS.length, ROOMS.length, SHARED.length]).toEqual([305, 116, 189]); // ⛓ tile-pixel-pull-disc: the pixel pull disc absorbs L78 r1c10 (12 -> 11 L78 sub-regions): 306/116/190 -> 305/116/189
     });
     it('a sidecar envelope and its bare playable_payload load the same level', () => {
         const s = room('level_16');
