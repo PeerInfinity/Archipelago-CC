@@ -329,7 +329,8 @@
           "name": "Chest",
           "vanilla_item": "Seal"
         }
-      ]
+      ],
+      "rules": { "loc:Chest": { "rule": "Has", "args": { "item_name": "Dark Suit" } } }
     },
     "64": {
       "locations": [
@@ -431,7 +432,24 @@
           "name": "Chest",
           "vanilla_item": "Seal"
         }
-      ]
+      ],
+      "rules": {
+        "loc:Chest": {
+          "rule": "And",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+            {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+                { "rule": "Has", "args": { "item_name": "Wand" } },
+                { "rule": "Has", "args": { "item_name": "Progressive Shield", "count": 2 } }
+              ]
+            }
+          ]
+        }
+      }
     },
     "82": {
       "locations": [
@@ -578,6 +596,6 @@
       ]
     }
   },
-  "provenance": { "content_hash": "5897516c" },
-  "overlay_id": "seedling-vanilla-overlay-5897516c"
+  "provenance": { "content_hash": "ff57646b" },
+  "overlay_id": "seedling-vanilla-overlay-ff57646b"
 }

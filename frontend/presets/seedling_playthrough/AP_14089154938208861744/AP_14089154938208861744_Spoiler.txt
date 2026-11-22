@@ -60,8 +60,8 @@ L31 flag 0: bosslock@192,432 cleared: L31 flag 0: bosslock@192,432 cleared
 Level 032 - Bob Boss: Fire
 Level 032 - Times: Seal
 Level 036 - Chest: Seal
-Level 038 - Chest: Seal
 L39 flag 8: wandlock@144,592 cleared: L39 flag 8: wandlock@144,592 cleared
+Level 038 - Chest: Seal
 Level 039 - Totem Part 72,40: Totem Shard
 L40 flag 7: wandlock@208,128 cleared: L40 flag 7: wandlock@208,128 cleared
 Level 040 - Totem Part 64,144: Totem Shard
@@ -86,8 +86,8 @@ L58 flag 1: yeti@56,56 cleared: L58 flag 1: yeti@56,56 cleared
 L60 flag 0: lock@128,80 cleared: L60 flag 0: lock@128,80 cleared
 L63 flag 1: lightpole@64,88 cleared: L63 flag 1: lightpole@64,88 cleared
 L62 flag 0: lightpole@120,200 cleared: L62 flag 0: lightpole@120,200 cleared
-Level 063 - Chest: Seal
 L63 flag 7: lightpole@112,272 cleared: L63 flag 7: lightpole@112,272 cleared
+Level 063 - Chest: Seal
 L63 flag 6: lightpole@48,272 cleared: L63 flag 6: lightpole@48,272 cleared
 Level 064 - Ghostspear: Ghost Spear
 L65 flag 0: lightpole@128,168 cleared: L65 flag 0: lightpole@128,168 cleared

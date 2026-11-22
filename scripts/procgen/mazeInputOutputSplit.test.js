@@ -91,7 +91,8 @@ describe('which plain levels become level worlds: the item-axis test, not a list
         // points, inside the learner's memory bound (`LEVEL_WORLD_MAX_POINTS`) — the ONE level that bound admits past the rank
         // walk's 2^12; until then it was kept per sub-region "over the lattice cap 12".
         expect(levelWorlds.get('level_12')).toBe(true);
-        expect(report.maze_notes.filter((n) => n.kind === 'plain_level_world').length).toBe(19);
+        // ⛓ rules-ap-chest-solid: 19 -> 20, L11 (split in two by its one-sided AP chest) is a plain level world.
+        expect(report.maze_notes.filter((n) => n.kind === 'plain_level_world').length).toBe(20);
         expect([...levelWorlds.values()].filter((v) => v !== true)).toEqual([]);
     });
     it('the PLANTED compile takes the true compile\'s level-world decisions (a bound between L12\'s true and planted axes)', () => {

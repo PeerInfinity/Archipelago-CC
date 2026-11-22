@@ -190,10 +190,12 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
         // ⛓ tile-rules-automation-r-a5: + L40's r4c4 and r26c13 (its wand locks split L40; every L40 region stays weapon-gated here).
         const SPHERE53_WEAPON_GATED = ['level_39__r0c9', 'level_39__r2c11', 'level_40__r0c53', 'level_40__r23c29', 'level_40__r26c13',
             'level_40__r32c36', 'level_40__r36c35', 'level_40__r48c54', 'level_40__r4c4', 'level_43__r13c7', 'level_43__r3c8', 'level_43__r8c7'];
+        // ⛓ rules-ap-chest-solid: - level_63__r5c14 and (below) level_80__r8c1, the AP chests' own one-tile sub-regions (each chest cell
+        //   is a one-sided crossing now, its location bound beside the open side); nothing else moves.
         const SPHERE56_WEAPON_GATED = ['level_50', 'level_51__r14c6', 'level_51__r2c6', 'level_51__r3c10', 'level_51__r3c4', 'level_52__r0c7',
             'level_52__r2c2', 'level_52__r5c10', 'level_53__r14c9', 'level_53__r2c2', 'level_53__r9c10', 'level_54__r10c5', 'level_54__r13c9',
             'level_54__r16c8', 'level_54__r18c15', 'level_54__r18c19', 'level_54__r19c13', 'level_54__r1c8', 'level_54__r27c8', 'level_54__r8c11',
-            'level_55', 'level_56', 'level_61__r13c12', 'level_63__r10c2', 'level_63__r5c14', 'level_63__r6c15', 'level_63__r6c9',
+            'level_55', 'level_56', 'level_61__r13c12', 'level_63__r10c2', 'level_63__r6c15', 'level_63__r6c9',
             'level_93__r10c7', 'level_93__r5c7'];
         const SPHERE8_WEAPON_GATED = ['level_41__r4c15', 'level_41__r4c3', 'level_41__r7c15', 'level_42', 'level_57', 'level_58__r1c2',
             'level_58__r1c4', 'level_58__r2c1', 'level_58__r2c5', 'level_58__r3c3', 'level_58__r4c1', 'level_58__r6c5', 'level_65__r0c2',
@@ -206,8 +208,7 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
             'level_72__r6c17', 'level_72__r9c10', 'level_72__r9c12', 'level_72__r9c14', 'level_73__r0c4', 'level_73__r3c7',
             'level_73__r4c4', 'level_73__r5c7', 'level_73__r8c2', 'level_74__r1c7', 'level_74__r2c11', 'level_74__r2c2',
             'level_74__r8c18', 'level_75__r0c4', 'level_75__r10c4', 'level_75__r10c6', 'level_75__r11c3', 'level_75__r11c5',
-            'level_75__r13c3', 'level_75__r3c3', 'level_75__r8c4', 'level_75__r8c6', 'level_80__r0c2', 'level_80__r6c5',
-            'level_80__r8c1'];
+            'level_75__r13c3', 'level_75__r3c3', 'level_75__r8c4', 'level_75__r8c6', 'level_80__r0c2', 'level_80__r6c5'];
         // ⛓ rules-lavatrap-neck: rule T splits L77 (level_77 -> r2c0 / r12c6 / r15c6) and L78 (+ r1c10, r3c1, r3c9, r4c4, r5c6,
         //   r6c9) at their lava traps' sealing discs; every new sub-region stays behind the same weapon gate (+8, none freed).
         // ⛓ rules-k-pursuit-resume: rule K re-cuts L78 (- r3c1, r4c4; + r3c12, r4c2, r5c12, r6c11, r8c8, r8c10) and L80's L79

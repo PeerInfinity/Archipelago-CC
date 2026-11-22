@@ -30,7 +30,8 @@ const fsJson = async (url) => JSON.parse(readFileSync(fileURLToPath(url), 'utf8'
 const MAP = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
 const RECORD = patchedMapDocument(MAP).levels.find((r) => r.level === 38);
 const PLAYTHROUGH = JSON.parse(readFileSync(join(ROOT, 'frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json'), 'utf8'));
-const L38 = PLAYTHROUGH.preset_sidecars['1'].level_38.playable_payload;
+// ⛓ rules-ap-chest-solid: L38 is two sub-regions of one shared world (its chest opens only from below); the upper one carries it
+const L38 = PLAYTHROUGH.preset_sidecars['1'].level_38__r0c9.playable_payload;
 const LATCH_CELL = '13,14';
 const EV = 'L38 latch pressed';
 

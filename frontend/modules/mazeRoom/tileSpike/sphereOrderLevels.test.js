@@ -76,6 +76,13 @@ describe('L94 — a per-sub-region world floors its cliffside', () => {
     it('a per-sub-region world with no directional cell beside its ground carries no entry gates', () => {
         const rules = compile(['level_2', 'level_6', 'level_7', 'level_9', 'level_10', 'level_11']);
         for (const [name, sc] of Object.entries(rules.preset_sidecars['1'])) {
+            if (!sc.playable_payload) continue;
+            // ⛓ rules-ap-chest-solid: L11's AP chest (2,3) IS a directional cell now — the one-sided Solid, entered only by the
+            //   step north from the cell below — so its shared world (carried by r0c2) holds exactly that cell's three walled entries.
+            if (sc.playable_payload.atlas_region === 'level_11') {
+                expect(sc.playable_payload.entry_gates, name).toEqual(['E', 'S', 'W'].map((dir) => ({ x: 2, y: 3, dir, gate: null })));
+                continue;
+            }
             expect(sc.playable_payload.entry_gates, name).toBeUndefined();
         }
     });
@@ -164,15 +171,17 @@ describe('L38 — a cross-room press is a location on its button', () => {
         const out = certify(['level_37', 'level_38']);
         expect(out.problems).toEqual([]);
         expect(out.accepted).toEqual([]);
-        expect(out.lines.filter((l) => l.startsWith(`level_38@${PRESS}`))).not.toEqual([]);
-        for (const l of out.lines.filter((x) => x.startsWith(`level_38@${PRESS}`))) expect(l.slice(l.indexOf('=') + 1)).toBe(FREE);
+        // ⛓ rules-ap-chest-solid: L38 is two sub-regions (its chest opens only from below); the button is the upper one's, r0c9,
+        //   reached from L37's landing (r8c9) through the opened chest
+        expect(out.lines.filter((l) => l.startsWith(`level_38__r0c9@${PRESS}`))).not.toEqual([]);
+        for (const l of out.lines.filter((x) => x.startsWith(`level_38__r0c9@${PRESS}`))) expect(l.slice(l.indexOf('=') + 1)).toBe(FREE);
     });
 
     it('a mutant AP rule on the press (Wand) is caught: the world reaches the button without it', () => {
         const rules = structuredClone(compile(['level_37', 'level_38']));
-        rules.regions['1'].level_38.locations.find((l) => l.name === PRESS).access_rule = { rule: 'Has', args: { item_name: 'Wand' } };
+        rules.regions['1'].level_38__r0c9.locations.find((l) => l.name === PRESS).access_rule = { rule: 'Has', args: { item_name: 'Wand' } };
         const out = certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS });
-        expect(out.problems.some((p) => p.startsWith(`level_38 @ ${PRESS}`) || (p.includes(PRESS) && p.includes('derived true, atlas false')))).toBe(true);
+        expect(out.problems.some((p) => p.startsWith(`level_38__r0c9 @ ${PRESS}`) || (p.includes(PRESS) && p.includes('derived true, atlas false')))).toBe(true);
     });
 
     it('a button off the grid presses from the tile of its centre: L61\'s (176,40) → (11,3), one cell', () => {
@@ -192,7 +201,7 @@ describe('L38 — a cross-room press is a location on its button', () => {
     });
 
     it('the press sits on the ButtonRoom\'s own cell (32,48) → (2,3), granting the event', () => {
-        const items = compile(['level_37', 'level_38']).preset_sidecars['1'].level_38.playable_payload.items;
+        const items = compile(['level_37', 'level_38']).preset_sidecars['1'].level_38__r0c9.playable_payload.items;
         expect(items.filter((i) => i.locationName === PRESS)).toEqual([{ x: 2, y: 3, id: PRESS, locationName: PRESS }]);
     });
 });
@@ -208,7 +217,9 @@ describe('L38 — a cross-room press is a location on its button', () => {
  */
 describe('L39 — the press opens its target; the pocket\'s doors cost it', () => {
     const PRESS = 'L39 flag 8: wandlock@144,592 cleared';
-    const LV = ['level_38', 'level_39'];
+    // ⛓ rules-ap-chest-solid: + L37 — L38's lower half (its chest's open side) has no door but L37's, so without it the
+    //   certifier prices L38's upper half from no arrival (a partial-world framing row, not a rule)
+    const LV = ['level_37', 'level_38', 'level_39'];
     const payload = (rules, name) => rules.preset_sidecars['1'][name].playable_payload;
     const ruleAt = (p, x, y) => p.obstacleLib[p.obstacles.find((o) => o.x === x && o.y === y)?.id]?.clear_rule;
     const doorOf = (p, target) => p.exits.find((e) => e.targetRegion === target);
@@ -218,36 +229,41 @@ describe('L39 — the press opens its target; the pocket\'s doors cost it', () =
         const l39 = payload(rules, 'level_39__r0c9');
         const lock = l39.obstacleLib[l39.obstacles.find((o) => o.x === 9 && o.y === 37).id];
         expect(lock).toMatchObject({ opened_by: PRESS, clear_rule: { rule: 'Has', args: { item_name: PRESS } } });
-        const back = doorOf(l39, 'level_38');
+        const back = doorOf(l39, 'level_38__r0c9');
         expect(ruleAt(l39, back.x, back.y)).toEqual({ rule: 'Has', args: { item_name: PRESS } });
-        const l38 = payload(rules, 'level_38');
+        const l38 = payload(rules, 'level_38__r0c9');
         const into = doorOf(l38, 'level_39__r25c9');
         expect(JSON.stringify(ruleAt(l38, into.x, into.y))).toContain(PRESS);
         const out = certify(LV);
         expect(out.problems).toEqual([]);
-        expect(line(out, 'level_38->level_39__r25c9=')).toBe(JSON.stringify([[PRESS]]));
-        expect(line(out, 'level_39__r25c9->level_38=')).toBe(JSON.stringify([[PRESS]]));
+        // ⛓ rules-ap-chest-solid: r0c9 is entered only from r8c9 (internal) and from L39's landing, so its door is priced from there
+        expect(line(out, 'level_38__r0c9->level_39__r25c9<@9,1=')).toBe(JSON.stringify([[PRESS]]));
+        expect(line(out, 'level_39__r25c9->level_38__r0c9=')).toBe(JSON.stringify([[PRESS]]));
     }, 180_000);
 
-    it('a mutant world without the door gates walks the pocket round trip: both rows come back LOOSER', () => {
+    // ⛓ rules-ap-chest-solid: ONE row now. L38's upper half r0c9 is entered only from r8c9 (through the opened chest) and from
+    //   L39's landing, so its door into the pocket is priced from that landing (`<@9,1`, [[]] in the mutant against the rules'
+    //   [[press]]) — a row the certifier does not judge on a landing it does not admit — and only the way back is caught.
+    it('a mutant world without the door gates walks the pocket round trip: the way back comes back LOOSER', () => {
         const rules = structuredClone(compile(LV));
-        for (const [name, target] of [['level_39__r0c9', 'level_38'], ['level_38', 'level_39__r25c9']]) {
+        for (const [name, target] of [['level_39__r0c9', 'level_38__r0c9'], ['level_38__r0c9', 'level_39__r25c9']]) {
             const p = payload(rules, name);
             const d = doorOf(p, target);
             p.obstacles = p.obstacles.filter((o) => o.x !== d.x || o.y !== d.y);
         }
         const out = certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS });
         expect(out.problems.filter((p) => p.endsWith('holding []: derived true, atlas false')).sort()).toEqual([
-            'level_38 → level_39__r25c9 holding []: derived true, atlas false',
-            'level_39__r25c9 → level_38 holding []: derived true, atlas false',
+            'level_39__r25c9 → level_38__r0c9 holding []: derived true, atlas false',
         ]);
+        expect(out.lines).toContain('level_38__r0c9->level_39__r25c9<@9,1=[[]]');
     }, 180_000);
 });
 
 // ⛓ Since session tile-mechanisms-m2-w1 (⚖ "Fallback, build here") the ruling rides on the LOCK its puzzle opens — the door (32,30),
 // as `enter` gates both ways (`puzzleLocks.test.js`) — and on the piece cells that are crossings; the interior piece (30,30) is Fire alone.
 describe('L40 — the corpse\'s kill rides on its annotated lock and the crossing cells, from the rules\' own ruling', () => {
-    const LV = ['level_38', 'level_39', 'level_40'];
+    // ⛓ rules-ap-chest-solid: + L37 (L38's lower half is entered only from it; see L39 above)
+    const LV = ['level_37', 'level_38', 'level_39', 'level_40'];
     const AND = { rule: 'And', children: [{ rule: 'Has', args: { item_name: 'Fire' } }, { rule: 'Or', children: [
         { rule: 'Has', args: { item_name: 'Progressive Sword' } }, { rule: 'Has', args: { item_name: 'Ghost Spear' } }] }] };
     const l40 = (rules) => rules.preset_sidecars['1'].level_40__r0c53.playable_payload;

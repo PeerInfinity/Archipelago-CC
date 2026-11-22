@@ -668,8 +668,8 @@
             }
           },
           {
-            "name": "level_3__r8c6 -> level_11",
-            "connected_region": "level_11",
+            "name": "level_3__r8c6 -> level_11__r0c2",
+            "connected_region": "level_11__r0c2",
             "access_rule": {
               "rule": "True_"
             }
@@ -834,8 +834,8 @@
         "name": "level_10",
         "exits": [
           {
-            "name": "level_10 -> level_11",
-            "connected_region": "level_11",
+            "name": "level_10 -> level_11__r4c2",
+            "connected_region": "level_11__r4c2",
             "access_rule": {
               "rule": "True_"
             }
@@ -864,18 +864,41 @@
           }
         ]
       },
-      "level_11": {
-        "name": "level_11",
+      "level_11__r0c2": {
+        "name": "level_11__r0c2",
         "exits": [
           {
-            "name": "level_11 -> level_3__r8c6",
+            "name": "level_11__r0c2 -> level_11__r4c2",
+            "connected_region": "level_11__r4c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_11__r0c2 -> level_3__r8c6",
             "connected_region": "level_3__r8c6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_11__r4c2": {
+        "name": "level_11__r4c2",
+        "exits": [
+          {
+            "name": "level_11__r4c2 -> level_11__r0c2",
+            "connected_region": "level_11__r0c2",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_11 -> level_10",
+            "name": "level_11__r4c2 -> level_10",
             "connected_region": "level_10",
             "access_rule": {
               "rule": "True_"
@@ -2956,13 +2979,6 @@
             }
           },
           {
-            "name": "level_25__r2c7 -> level_28__r0c6",
-            "connected_region": "level_28__r0c6",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
             "name": "level_25__r2c7 -> level_22__r8c0",
             "connected_region": "level_22__r8c0",
             "access_rule": {
@@ -2970,21 +2986,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Level 025 - Chest",
-            "id": 30000009,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Seal",
-              "player": 1,
-              "advancement": true,
-              "type": "progression"
-            }
-          }
-        ]
+        "locations": []
       },
       "level_25__r3c2": {
         "name": "level_25__r3c2",
@@ -3025,6 +3027,40 @@
           }
         ],
         "locations": []
+      },
+      "level_25__r7c6": {
+        "name": "level_25__r7c6",
+        "exits": [
+          {
+            "name": "level_25__r7c6 -> level_25__r2c7",
+            "connected_region": "level_25__r2c7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_25__r7c6 -> level_28__r0c6",
+            "connected_region": "level_28__r0c6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 025 - Chest",
+            "id": 30000009,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
       },
       "level_26__r2c4": {
         "name": "level_26__r2c4",
@@ -3229,8 +3265,8 @@
             }
           },
           {
-            "name": "level_28__r0c6 -> level_25__r2c7",
-            "connected_region": "level_25__r2c7",
+            "name": "level_28__r0c6 -> level_25__r7c6",
+            "connected_region": "level_25__r7c6",
             "access_rule": {
               "rule": "True_"
             }
@@ -4039,8 +4075,8 @@
             }
           },
           {
-            "name": "level_37__r0c18 -> level_38",
-            "connected_region": "level_38",
+            "name": "level_37__r0c18 -> level_38__r8c9",
+            "connected_region": "level_38__r8c9",
             "access_rule": {
               "rule": "True_"
             }
@@ -4138,11 +4174,11 @@
         ],
         "locations": []
       },
-      "level_38": {
-        "name": "level_38",
+      "level_38__r0c9": {
+        "name": "level_38__r0c9",
         "exits": [
           {
-            "name": "level_38 -> level_39__r25c9",
+            "name": "level_38__r0c9 -> level_39__r25c9",
             "connected_region": "level_39__r25c9",
             "access_rule": {
               "rule": "Has",
@@ -4150,29 +4186,9 @@
                 "item_name": "L39 flag 8: wandlock@144,592 cleared"
               }
             }
-          },
-          {
-            "name": "level_38 -> level_37__r0c18",
-            "connected_region": "level_37__r0c18",
-            "access_rule": {
-              "rule": "True_"
-            }
           }
         ],
         "locations": [
-          {
-            "name": "Level 038 - Chest",
-            "id": 30000015,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Seal",
-              "player": 1,
-              "advancement": true,
-              "type": "progression"
-            }
-          },
           {
             "name": "L39 flag 8: wandlock@144,592 cleared",
             "id": null,
@@ -4206,8 +4222,42 @@
                 "y": 48
               }
             },
-            "side": "level_38",
+            "side": "level_38__r0c9",
             "across": []
+          }
+        ]
+      },
+      "level_38__r8c9": {
+        "name": "level_38__r8c9",
+        "exits": [
+          {
+            "name": "level_38__r8c9 -> level_38__r0c9",
+            "connected_region": "level_38__r0c9",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_38__r8c9 -> level_37__r0c18",
+            "connected_region": "level_37__r0c18",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 038 - Chest",
+            "id": 30000015,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
           }
         ]
       },
@@ -4312,8 +4362,8 @@
             }
           },
           {
-            "name": "level_39__r25c9 -> level_38",
-            "connected_region": "level_38",
+            "name": "level_39__r25c9 -> level_38__r0c9",
+            "connected_region": "level_38__r0c9",
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -9468,46 +9518,6 @@
           }
         ]
       },
-      "level_63__r5c14": {
-        "name": "level_63__r5c14",
-        "exits": [
-          {
-            "name": "level_63__r5c14 -> level_63__r6c15",
-            "connected_region": "level_63__r6c15",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Dark Suit"
-              }
-            }
-          },
-          {
-            "name": "level_63__r5c14 -> level_63__r6c9",
-            "connected_region": "level_63__r6c9",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Dark Suit"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Level 063 - Chest",
-            "id": 30000030,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Seal",
-              "player": 1,
-              "advancement": true,
-              "type": "progression"
-            }
-          }
-        ]
-      },
       "level_63__r6c9": {
         "name": "level_63__r6c9",
         "exits": [
@@ -9530,16 +9540,6 @@
                   }
                 }
               ]
-            }
-          },
-          {
-            "name": "level_63__r6c9 -> level_63__r5c14",
-            "connected_region": "level_63__r5c14",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Dark Suit"
-              }
             }
           },
           {
@@ -9636,16 +9636,6 @@
         "name": "level_63__r6c15",
         "exits": [
           {
-            "name": "level_63__r6c15 -> level_63__r5c14",
-            "connected_region": "level_63__r5c14",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Dark Suit"
-              }
-            }
-          },
-          {
             "name": "level_63__r6c15 -> level_63__r6c9",
             "connected_region": "level_63__r6c9",
             "access_rule": {
@@ -9656,7 +9646,24 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "Level 063 - Chest",
+            "id": 30000030,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
       },
       "level_63__r10c2": {
         "name": "level_63__r10c2",
@@ -26180,51 +26187,6 @@
             }
           },
           {
-            "name": "level_80__r0c2 -> level_80__r8c1",
-            "connected_region": "level_80__r8c1",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
             "name": "level_80__r0c2 -> level_71__r0c6",
             "connected_region": "level_71__r0c6",
             "access_rule": {
@@ -26246,147 +26208,6 @@
                 "item_name": "Dark Suit"
               }
             }
-          },
-          {
-            "name": "level_80__r6c5 -> level_80__r8c1",
-            "connected_region": "level_80__r8c1",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        ],
-        "locations": []
-      },
-      "level_80__r8c1": {
-        "name": "level_80__r8c1",
-        "exits": [
-          {
-            "name": "level_80__r8c1 -> level_80__r0c2",
-            "connected_region": "level_80__r0c2",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_80__r8c1 -> level_80__r6c5",
-            "connected_region": "level_80__r6c5",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
           }
         ],
         "locations": [
@@ -26394,7 +26215,45 @@
             "name": "Level 080 - Chest",
             "id": 30000038,
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "Seal",
@@ -31090,7 +30949,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-94cd96dd",
+      "atlas_id": "seedling-2b43d322",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -32304,12 +32163,12 @@
               "atlas_exit_id": "out_teleporter_64_0"
             },
             {
-              "exit_id": "level_3__r8c6 -> level_11",
+              "exit_id": "level_3__r8c6 -> level_11__r0c2",
               "x": 6,
               "y": 8,
               "side": null,
-              "exitName": "level_3__r8c6 -> level_11",
-              "targetRegion": "level_11",
+              "exitName": "level_3__r8c6 -> level_11__r0c2",
+              "targetRegion": "level_11__r0c2",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_96_128"
@@ -34246,12 +34105,12 @@
           },
           "exits": [
             {
-              "exit_id": "level_10 -> level_11",
+              "exit_id": "level_10 -> level_11__r4c2",
               "x": 3,
               "y": 1,
               "side": null,
-              "exitName": "level_10 -> level_11",
-              "targetRegion": "level_11",
+              "exitName": "level_10 -> level_11__r4c2",
+              "targetRegion": "level_11__r4c2",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_stairsup_48_16"
@@ -34287,41 +34146,93 @@
           }
         }
       },
-      "level_11": {
+      "level_11__r0c2": {
         "substrate": "maze",
+        "shared_world": "level_11",
         "playable_payload": {
           "width": 5,
           "height": 7,
-          "tiles": [1,1,0,1,1,1,1,0,1,1,1,1,0,1,1,1,1,0,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1],
+          "tiles": [1,1,0,1,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1],
           "entrance": {
             "x": 2,
-            "y": 0
+            "y": 1
           },
           "exits": [
             {
-              "exit_id": "level_11 -> level_3__r8c6",
+              "exit_id": "level_11__r0c2 -> level_3__r8c6",
               "x": 2,
               "y": 0,
               "side": null,
-              "exitName": "level_11 -> level_3__r8c6",
+              "exitName": "level_11__r0c2 -> level_3__r8c6",
               "targetRegion": "level_3__r8c6",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_32_0"
             },
             {
-              "exit_id": "level_11 -> level_10",
+              "exit_id": "level_11__r4c2 -> level_10",
               "x": 2,
               "y": 5,
               "side": null,
-              "exitName": "level_11 -> level_10",
+              "exitName": "level_11__r4c2 -> level_10",
               "targetRegion": "level_10",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_stairsdown_32_80"
             }
           ],
-          "obstacles": [],
+          "obstacles": [
+            {
+              "x": 1,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 5,
+              "id": "atlas_gate_0"
+            }
+          ],
           "items": [
             {
               "x": 2,
@@ -34330,7 +34241,73 @@
               "locationName": "Level 011 - Chest"
             }
           ],
-          "obstacleLib": {},
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Progressive Swim",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "entry_gates": [
+            {
+              "x": 2,
+              "y": 3,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 2,
+              "y": 3,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 2,
+              "y": 3,
+              "dir": "W",
+              "gate": null
+            }
+          ],
+          "shared_world": {
+            "key": "level_11",
+            "regions": [
+              "level_11__r0c2",
+              "level_11__r4c2"
+            ],
+            "rows": [
+              "..A..",
+              "..A..",
+              "..A..",
+              "..B..",
+              "..B..",
+              "..B..",
+              "....."
+            ],
+            "entrances": {
+              "level_11__r0c2": {
+                "x": 2,
+                "y": 1
+              },
+              "level_11__r4c2": {
+                "x": 2,
+                "y": 4
+              }
+            },
+            "links": {
+              "level_11__r0c2>level_11__r4c2": "level_11__r0c2 -> level_11__r4c2",
+              "level_11__r4c2>level_11__r0c2": "level_11__r4c2 -> level_11__r0c2"
+            }
+          },
           "atlas_region": "level_11",
           "level": 11,
           "tile_size": 16,
@@ -34339,6 +34316,10 @@
             "y": 0
           }
         }
+      },
+      "level_11__r4c2": {
+        "substrate": "maze",
+        "shared_world": "level_11"
       },
       "level_12__r0c19": {
         "substrate": "maze",
@@ -36231,6 +36212,24 @@
               "gate": null
             },
             {
+              "x": 20,
+              "y": 51,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 20,
+              "y": 51,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 20,
+              "y": 51,
+              "dir": "W",
+              "gate": null
+            },
+            {
               "x": 22,
               "y": 51,
               "dir": "W",
@@ -37799,6 +37798,20 @@
               }
             }
           },
+          "entry_gates": [
+            {
+              "x": 9,
+              "y": 6,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 9,
+              "y": 6,
+              "dir": "S",
+              "gate": null
+            }
+          ],
           "block_sinks": [
             {
               "x": 1,
@@ -38884,6 +38897,20 @@
             }
           ],
           "obstacleLib": {},
+          "entry_gates": [
+            {
+              "x": 8,
+              "y": 1,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 8,
+              "y": 1,
+              "dir": "W",
+              "gate": null
+            }
+          ],
           "atlas_region": "level_17",
           "level": 17,
           "tile_size": 16,
@@ -40124,11 +40151,11 @@
               "atlas_exit_id": "out_teleporter_0_96"
             },
             {
-              "exit_id": "level_25__r2c7 -> level_28__r0c6",
+              "exit_id": "level_25__r7c6 -> level_28__r0c6",
               "x": 6,
               "y": 8,
               "side": null,
-              "exitName": "level_25__r2c7 -> level_28__r0c6",
+              "exitName": "level_25__r7c6 -> level_28__r0c6",
               "targetRegion": "level_28__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
@@ -40249,13 +40276,26 @@
               "y": 5,
               "dir": "E",
               "gate": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 6,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 6,
+              "y": 6,
+              "dir": "W",
+              "gate": null
             }
           ],
           "shared_world": {
             "key": "level_25",
             "regions": [
               "level_25__r2c7",
-              "level_25__r3c2"
+              "level_25__r3c2",
+              "level_25__r7c6"
             ],
             "rows": [
               "..........",
@@ -40264,9 +40304,9 @@
               "..B..A.A..",
               "..B..A.A..",
               "..B..AAA..",
-              "BBB...AA..",
-              "......A...",
-              "......A..."
+              "BBB...CA..",
+              "......C...",
+              "......C..."
             ],
             "entrances": {
               "level_25__r2c7": {
@@ -40276,11 +40316,16 @@
               "level_25__r3c2": {
                 "x": 0,
                 "y": 6
+              },
+              "level_25__r7c6": {
+                "x": 6,
+                "y": 8
               }
             },
             "links": {
               "level_25__r2c7>level_25__r3c2": "level_25__r2c7 -> level_25__r3c2",
-              "level_25__r3c2>level_25__r2c7": "level_25__r3c2 -> level_25__r2c7"
+              "level_25__r3c2>level_25__r2c7": "level_25__r3c2 -> level_25__r2c7",
+              "level_25__r7c6>level_25__r2c7": "level_25__r7c6 -> level_25__r2c7"
             }
           },
           "atlas_region": "level_25",
@@ -40293,6 +40338,10 @@
         }
       },
       "level_25__r3c2": {
+        "substrate": "maze",
+        "shared_world": "level_25"
+      },
+      "level_25__r7c6": {
         "substrate": "maze",
         "shared_world": "level_25"
       },
@@ -40590,12 +40639,12 @@
               "atlas_exit_id": "out_teleporter_0_96"
             },
             {
-              "exit_id": "level_28__r0c6 -> level_25__r2c7",
+              "exit_id": "level_28__r0c6 -> level_25__r7c6",
               "x": 6,
               "y": 0,
               "side": null,
-              "exitName": "level_28__r0c6 -> level_25__r2c7",
-              "targetRegion": "level_25__r2c7",
+              "exitName": "level_28__r0c6 -> level_25__r7c6",
+              "targetRegion": "level_25__r7c6",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_96_0"
@@ -42812,6 +42861,20 @@
             }
           ],
           "obstacleLib": {},
+          "entry_gates": [
+            {
+              "x": 4,
+              "y": 3,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "dir": "W",
+              "gate": null
+            }
+          ],
           "atlas_region": "level_36",
           "level": 36,
           "tile_size": 16,
@@ -42856,12 +42919,12 @@
               "atlas_exit_id": "out_teleporter_32_304"
             },
             {
-              "exit_id": "level_37__r0c18 -> level_38",
+              "exit_id": "level_37__r0c18 -> level_38__r8c9",
               "x": 18,
               "y": 0,
               "side": null,
-              "exitName": "level_37__r0c18 -> level_38",
-              "targetRegion": "level_38",
+              "exitName": "level_37__r0c18 -> level_38__r8c9",
+              "targetRegion": "level_38__r8c9",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_288_0"
@@ -44951,7 +45014,7 @@
         "substrate": "maze",
         "shared_world": "level_37"
       },
-      "level_38": {
+      "level_38__r0c9": {
         "substrate": "maze",
         "shared_world": "level_38",
         "playable_payload": {
@@ -44960,26 +45023,26 @@
           "tiles": [1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,0,1,0,0,0,0,0,1,1,1,1,1,1,0,1,0,1,0,1,0,1,0,0,0,0,0,1,1,1,1,1,1,0,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0],
           "entrance": {
             "x": 9,
-            "y": 18
+            "y": 0
           },
           "exits": [
             {
-              "exit_id": "level_38 -> level_39__r25c9",
+              "exit_id": "level_38__r0c9 -> level_39__r25c9",
               "x": 9,
               "y": 0,
               "side": null,
-              "exitName": "level_38 -> level_39__r25c9",
+              "exitName": "level_38__r0c9 -> level_39__r25c9",
               "targetRegion": "level_39__r25c9",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_144_0"
             },
             {
-              "exit_id": "level_38 -> level_37__r0c18",
+              "exit_id": "level_38__r8c9 -> level_37__r0c18",
               "x": 9,
               "y": 19,
               "side": null,
-              "exitName": "level_38 -> level_37__r0c18",
+              "exitName": "level_38__r8c9 -> level_37__r0c18",
               "targetRegion": "level_37__r0c18",
               "targetExitId": null,
               "isTeleporter": true,
@@ -45322,10 +45385,19 @@
               "holds": "sw_0"
             }
           },
+          "entry_gates": [
+            {
+              "x": 9,
+              "y": 7,
+              "dir": "S",
+              "gate": null
+            }
+          ],
           "shared_world": {
             "key": "level_38",
             "regions": [
-              "level_38"
+              "level_38__r0c9",
+              "level_38__r8c9"
             ],
             "rows": [
               ".........A.........",
@@ -45335,27 +45407,33 @@
               ".AAAAAAAAAAAAAAAAA.",
               ".......AAAAA.......",
               "........AAA........",
-              ".........A.........",
-              ".........A.........",
-              "..AAAAA..A..AAAAA..",
-              "...AAAAA.A.AAAAA...",
-              "...A.A.A.A.AAAAA...",
-              "...A.A...A.....A...",
-              "A....A...A........A",
-              "A......AAAAAAAA...A",
-              "A..AAAAAAAAAAAAA..A",
-              "A..AAAAAAAAAAAAA..A",
-              "AA.AAAAAAAAAAAAA.AA",
-              "AA..AAAAAAAAAAA..AA",
-              "AA.......A.......AA"
+              ".........B.........",
+              ".........B.........",
+              ".........B.........",
+              ".........B.........",
+              ".........B.........",
+              ".........B.........",
+              ".........B.........",
+              ".......BBBBBBBB....",
+              "...BBBBBBBBBBBBB...",
+              "...BBBBBBBBBBBBB...",
+              "...BBBBBBBBBBBBB...",
+              "....BBBBBBBBBBB....",
+              ".........B........."
             ],
             "entrances": {
-              "level_38": {
+              "level_38__r0c9": {
+                "x": 9,
+                "y": 0
+              },
+              "level_38__r8c9": {
                 "x": 9,
                 "y": 18
               }
             },
-            "links": {}
+            "links": {
+              "level_38__r8c9>level_38__r0c9": "level_38__r8c9 -> level_38__r0c9"
+            }
           },
           "atlas_region": "level_38",
           "level": 38,
@@ -45365,6 +45443,10 @@
             "y": 0
           }
         }
+      },
+      "level_38__r8c9": {
+        "substrate": "maze",
+        "shared_world": "level_38"
       },
       "level_39__r0c9": {
         "substrate": "maze",
@@ -45390,12 +45472,12 @@
               "atlas_exit_id": "out_teleporter_144_0"
             },
             {
-              "exit_id": "level_39__r25c9 -> level_38",
+              "exit_id": "level_39__r25c9 -> level_38__r0c9",
               "x": 9,
               "y": 39,
               "side": null,
-              "exitName": "level_39__r25c9 -> level_38",
-              "targetRegion": "level_38",
+              "exitName": "level_39__r25c9 -> level_38__r0c9",
+              "targetRegion": "level_38__r0c9",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_144_624"
@@ -77117,7 +77199,6 @@
             "key": "level_63",
             "regions": [
               "level_63__r0c1",
-              "level_63__r5c14",
               "level_63__r6c9",
               "level_63__r6c15",
               "level_63__r10c2"
@@ -77128,38 +77209,34 @@
               "..A.A...............",
               "AAA.A...............",
               "..A.AA..............",
-              "..A..A........B.....",
-              "AAA.AAA..CCCC..D....",
-              "..AAA..C.C.CC..D....",
-              "..A....CCC.CC..D....",
-              "...........CC.......",
-              "..E........C........",
-              "..E........C........",
-              "..E........C........",
-              "EEE........C........",
-              "..E........C........",
-              "..EE...CCCCC........",
-              "..EE...CC...........",
-              "..E.....C...........",
-              "..E.....C...........",
-              "..E.....C..........."
+              "..A..A........C.....",
+              "AAA.AAA..BBBB..C....",
+              "..AAA..B.B.BB..C....",
+              "..A....BBB.BB..C....",
+              "...........BB.......",
+              "..D........B........",
+              "..D........B........",
+              "..D........B........",
+              "DDD........B........",
+              "..D........B........",
+              "..DD...BBBBB........",
+              "..DD...BB...........",
+              "..D.....B...........",
+              "..D.....B...........",
+              "..D.....B..........."
             ],
             "entrances": {
               "level_63__r0c1": {
                 "x": 1,
                 "y": 3
               },
-              "level_63__r5c14": {
-                "x": 14,
-                "y": 5
-              },
               "level_63__r6c9": {
                 "x": 8,
                 "y": 19
               },
               "level_63__r6c15": {
-                "x": 15,
-                "y": 6
+                "x": 14,
+                "y": 5
               },
               "level_63__r10c2": {
                 "x": 1,
@@ -77171,10 +77248,6 @@
               "level_63__r10c2>level_63__r0c1": "level_63__r10c2 -> level_63__r0c1",
               "level_63__r0c1>level_63__r6c9": "level_63__r0c1 -> level_63__r6c9",
               "level_63__r6c9>level_63__r0c1": "level_63__r6c9 -> level_63__r0c1",
-              "level_63__r5c14>level_63__r6c15": "level_63__r5c14 -> level_63__r6c15",
-              "level_63__r6c15>level_63__r5c14": "level_63__r6c15 -> level_63__r5c14",
-              "level_63__r5c14>level_63__r6c9": "level_63__r5c14 -> level_63__r6c9",
-              "level_63__r6c9>level_63__r5c14": "level_63__r6c9 -> level_63__r5c14",
               "level_63__r6c15>level_63__r6c9": "level_63__r6c15 -> level_63__r6c9",
               "level_63__r6c9>level_63__r6c15": "level_63__r6c9 -> level_63__r6c15"
             }
@@ -77187,10 +77260,6 @@
             "y": 0
           }
         }
-      },
-      "level_63__r5c14": {
-        "substrate": "maze",
-        "shared_world": "level_63"
       },
       "level_63__r6c9": {
         "substrate": "maze",
@@ -80107,6 +80176,18 @@
               "y": 12,
               "dir": "S",
               "gate": "atlas_gate_3"
+            },
+            {
+              "x": 10,
+              "y": 16,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 10,
+              "y": 16,
+              "dir": "W",
+              "gate": null
             },
             {
               "x": 18,
@@ -88853,6 +88934,14 @@
               }
             }
           },
+          "entry_gates": [
+            {
+              "x": 1,
+              "y": 8,
+              "dir": "E",
+              "gate": null
+            }
+          ],
           "pulls": [
             {
               "x": 2,
@@ -88934,7 +89023,6 @@
             "regions": [
               "level_80__r0c2",
               "level_80__r6c5",
-              "level_80__r8c1",
               "level_80__r8c4",
               "level_80__r9c5",
               "level_80__r12c4",
@@ -88951,18 +89039,18 @@
               "..........",
               ".....B....",
               "..........",
-              ".C..D.....",
-              ".....E....",
-              ".....E....",
+              ".B..C.....",
+              ".....D....",
+              ".....D....",
               "..........",
-              "....FF....",
-              "...G......",
-              "..H.......",
+              "....EE....",
+              "...F......",
+              "..G.......",
               "..........",
-              ".II.......",
-              "..II......",
-              "..II......",
-              "..II......"
+              ".HH.......",
+              "..HH......",
+              "..HH......",
+              "..HH......"
             ],
             "entrances": {
               "level_80__r0c2": {
@@ -88972,10 +89060,6 @@
               "level_80__r6c5": {
                 "x": 5,
                 "y": 6
-              },
-              "level_80__r8c1": {
-                "x": 1,
-                "y": 8
               },
               "level_80__r8c4": {
                 "x": 4,
@@ -89005,8 +89089,6 @@
             "links": {
               "level_80__r0c2>level_80__r6c5": "level_80__r0c2 -> level_80__r6c5",
               "level_80__r6c5>level_80__r0c2": "level_80__r6c5 -> level_80__r0c2",
-              "level_80__r0c2>level_80__r8c1": "level_80__r0c2 -> level_80__r8c1",
-              "level_80__r8c1>level_80__r0c2": "level_80__r8c1 -> level_80__r0c2",
               "level_80__r12c4>level_80__r13c3": "level_80__r12c4 -> level_80__r13c3",
               "level_80__r13c3>level_80__r12c4": "level_80__r13c3 -> level_80__r12c4",
               "level_80__r12c4>level_80__r14c2": "level_80__r12c4 -> level_80__r14c2",
@@ -89020,8 +89102,6 @@
               "level_80__r14c2>level_80__r9c5": "level_80__r14c2 -> level_80__r9c5",
               "level_80__r9c5>level_80__r14c2": "level_80__r9c5 -> level_80__r14c2",
               "level_80__r16c1>level_80__r14c2": "level_80__r16c1 -> level_80__r14c2",
-              "level_80__r6c5>level_80__r8c1": "level_80__r6c5 -> level_80__r8c1",
-              "level_80__r8c1>level_80__r6c5": "level_80__r8c1 -> level_80__r6c5",
               "level_80__r8c4>level_80__r6c5": "level_80__r8c4 -> level_80__r6c5",
               "level_80__r8c4>level_80__r9c5": "level_80__r8c4 -> level_80__r9c5",
               "level_80__r9c5>level_80__r8c4": "level_80__r9c5 -> level_80__r8c4",
@@ -89038,10 +89118,6 @@
         }
       },
       "level_80__r6c5": {
-        "substrate": "maze",
-        "shared_world": "level_80"
-      },
-      "level_80__r8c1": {
         "substrate": "maze",
         "shared_world": "level_80"
       },
@@ -91029,8 +91105,8 @@
           "height": 5,
           "tiles": [1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,0,1,1,1,0,0,0,0,1,1,1,1,0,1,1],
           "entrance": {
-            "x": 3,
-            "y": 1
+            "x": 1,
+            "y": 2
           },
           "exits": [
             {
@@ -92704,6 +92780,26 @@
             }
           ],
           "obstacleLib": {},
+          "entry_gates": [
+            {
+              "x": 3,
+              "y": 2,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 3,
+              "y": 2,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 3,
+              "y": 2,
+              "dir": "W",
+              "gate": null
+            }
+          ],
           "atlas_region": "level_90",
           "level": 90,
           "tile_size": 16,
@@ -98442,7 +98538,8 @@
           "new_accessible_regions": [
             "level_0__r7c6",
             "level_10",
-            "level_11",
+            "level_11__r0c2",
+            "level_11__r4c2",
             "level_13",
             "level_14",
             "level_15__r1c5",
@@ -98730,6 +98827,7 @@
             "level_24",
             "level_25__r2c7",
             "level_25__r3c2",
+            "level_25__r7c6",
             "level_26__r13c8",
             "level_26__r2c4",
             "level_27",
@@ -99132,7 +99230,8 @@
             "level_12__r40c4",
             "level_12__r42c28",
             "level_37__r0c18",
-            "level_38",
+            "level_38__r0c9",
+            "level_38__r8c9",
             "level_44__r0c4",
             "level_45__r0c7",
             "level_46__r0c11",
@@ -100413,7 +100512,6 @@
             "level_105",
             "level_106",
             "level_37__r9c36",
-            "level_63__r5c14",
             "level_63__r6c15",
             "level_71__r14c12",
             "level_79__r0c4",
@@ -100422,7 +100520,6 @@
             "level_80__r14c2",
             "level_80__r16c1",
             "level_80__r6c5",
-            "level_80__r8c1",
             "level_80__r8c4",
             "level_80__r9c5",
             "level_82",

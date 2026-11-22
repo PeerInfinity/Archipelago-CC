@@ -161,14 +161,16 @@ describe('latched-lock events: L19\'s Red Key boss lock', () => {
 });
 
 describe('L38\'s press opens L39: carried (⚖ "Carry + name"), produced on its button, its far side named', () => {
-    const LEVELS = ['level_38', 'level_39'];
+    // ⛓ rules-ap-chest-solid: + L37, and L38 is two sub-regions — its chest opens only from below, so the button's half r0c9
+    //   (L39's door) is entered from r8c9 (L37's door) through the opened chest; without L37, r8c9 has no arrival at all
+    const LEVELS = ['level_37', 'level_38', 'level_39'];
     const E = 'L39 flag 8: wandlock@144,592 cleared';
     const RULES = JSON.parse(buildPlaythroughMaze({ levels: LEVELS }).text);
     const REGIONS = RULES.regions['1'];
 
     it('the AP layer carries the event and both gates, equal to seedling_playthrough', () => {
-        expect(location(REGIONS, 'level_38', E).access_rule).toEqual(location(PLAYTHROUGH, 'level_38', E).access_rule);
-        for (const [from, to] of [['level_38', 'level_39__r25c9'], ['level_39__r25c9', 'level_38']]) {
+        expect(location(REGIONS, 'level_38__r0c9', E).access_rule).toEqual(location(PLAYTHROUGH, 'level_38__r0c9', E).access_rule);
+        for (const [from, to] of [['level_38__r0c9', 'level_39__r25c9'], ['level_39__r25c9', 'level_38__r0c9']]) {
             expect(exitRule(REGIONS, from, to), `${from} -> ${to}`).toEqual(has(E));
             expect(exitRule(REGIONS, from, to)).toEqual(exitRule(PLAYTHROUGH, from, to));
         }
@@ -178,11 +180,14 @@ describe('L38\'s press opens L39: carried (⚖ "Carry + name"), produced on its 
     // ⛓ session tile-primitives-sphere-order-6 (⚖ "Lock cell opened by event" + "Lay the producer's door gates"): L39's world
     // opens the wand lock by it, and both of the pocket's doors cost it, so every crossing that needs it certifies.
     it('the press is priced free in L38; L39\'s world opens its target by it, and both crossings cost it', () => {
-        const out = certify(RULES, ['level_38', 'level_39__r25c9']);
-        expect(out.lines).toContain(`level_38@${E}=[[]]`);
+        const out = certify(RULES, ['level_38__r8c9', 'level_38__r0c9', 'level_39__r25c9']);
+        // ⛓ rules-ap-chest-solid: r0c9 is entered from r8c9 (the walk up through the opened chest, free) and from L39's landing
+        //   (9,1), from which its press is priced
+        expect(out.lines).toContain('level_38__r8c9>level_38__r0c9=[[]]');
+        expect(out.lines).toContain(`level_38__r0c9@${E}<@9,1=[[]]`);
         expect(out.problems).toEqual([]);
-        expect(out.lines).toContain(`level_38->level_39__r25c9=${JSON.stringify([[E]])}`);
-        expect(out.lines).toContain(`level_39__r25c9->level_38=${JSON.stringify([[E]])}`);
+        expect(out.lines).toContain(`level_38__r0c9->level_39__r25c9<@9,1=${JSON.stringify([[E]])}`);
+        expect(out.lines).toContain(`level_39__r25c9->level_38__r0c9=${JSON.stringify([[E]])}`);
     });
 
     it('a press NO world opens by is named on the rows that need it (its target and doors stripped from the worlds)', () => {
@@ -194,9 +199,11 @@ describe('L38\'s press opens L39: carried (⚖ "Carry + name"), produced on its 
             p.obstacles = p.obstacles.filter((o) => !names.has(o.id));
             for (const id of names) delete p.obstacleLib[id].opened_by;
         }
-        const rows = certify(copy, ['level_38', 'level_39__r25c9']).problems;
+        const rows = certify(copy, ['level_38__r8c9', 'level_38__r0c9', 'level_39__r25c9']).problems;
         expect(rows.filter((p) => p.endsWith(
-            `needs "${E}", a press the maze world produces, but no world opens its target (wandlock@144,592 in L39) by it`)).length, JSON.stringify(rows)).toBe(2);
+            `needs "${E}", a press the maze world produces, but no world opens its target (wandlock@144,592 in L39) by it`)).length, JSON.stringify(rows)).toBe(1);
+        // ⛓ rules-ap-chest-solid: 2 -> 1 — the way INTO the pocket is priced from L39's landing now (r0c9 has no fresh arrival of
+        //   its own), a row the certifier does not judge; the way back (L39's pocket -> r0c9) is still named.
     });
 });
 

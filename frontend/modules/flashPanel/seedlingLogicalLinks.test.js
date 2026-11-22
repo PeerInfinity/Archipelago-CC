@@ -333,15 +333,16 @@ describe('a door fired from a SIBLING sub-region (no position read saw the seam)
 });
 
 describe('⛔ a departure beats an arrival row (measured live: the bot stalled in L3 after L11)', () => {
+    // ⛓ rules-ap-chest-solid: L11 is two sub-regions (its chest opens only from below); L3's door is the upper one's
     it('level_11 → level 3: the door, not `in_L3_…` (same target spawn, listed first)', () => {
-        const rows = world('level_11').exits.filter((e) => e.target_level === 3);
+        const rows = world('level_11__r0c2').exits.filter((e) => e.target_level === 3);
         expect(rows.some((e) => !e.targetRegion)).toBe(true);
         expect(rows.some((e) => e.targetRegion)).toBe(true);
-        const b = standing('level_11');
+        const b = standing('level_11__r0c2');
         b.onStateReport('playerPositionX', rows[0].target_spawn.x);
         b.onStateReport('playerPositionY', rows[0].target_spawn.y);
-        expect(moves(b.onStateReport('level', 3))).toEqual([expect.objectContaining({ sourceRegion: 'level_11',
-            targetRegion: 'level_3__r8c6', exitName: 'level_11 -> level_3__r8c6' })]);
+        expect(moves(b.onStateReport('level', 3))).toEqual([expect.objectContaining({ sourceRegion: 'level_11__r0c2',
+            targetRegion: 'level_3__r8c6', exitName: 'level_11__r0c2 -> level_3__r8c6' })]);
     });
 });
 

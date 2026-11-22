@@ -67,7 +67,9 @@ describe('L80 in the maze (L71 + L79 + L80)', () => {
         expect(out.lines).toEqual(expect.arrayContaining([
             'level_80__r16c1>level_80__r14c2=[["Dark Suit"]]',
             'level_80__r16c1>level_80__r6c5=[["Dark Suit","Ghost Spear"],["Dark Suit","Progressive Sword"],["Dark Suit","Wand"],["Dark Suit","Progressive Shield","Progressive Shield"]]',
-            'level_80__r8c1@Level 080 - Chest<level_80__r16c1=[["Dark Suit","Ghost Spear"],["Dark Suit","Progressive Sword"],["Dark Suit","Wand"],["Dark Suit","Progressive Shield","Progressive Shield"]]',
+            // ⛓ rules-ap-chest-solid: the chest's own one-tile sub-region r8c1 is gone (its cell is a one-sided crossing now); the
+            //   chest is bound beside its open side, r6c5, at the same price
+            'level_80__r6c5@Level 080 - Chest<level_80__r16c1=[["Dark Suit","Ghost Spear"],["Dark Suit","Progressive Sword"],["Dark Suit","Wand"],["Dark Suit","Progressive Shield","Progressive Shield"]]',
         ]));
     });
 
@@ -99,7 +101,8 @@ describe('L80 in the maze (L71 + L79 + L80)', () => {
         // ⛓ rules-k-pursuit-resume: 6 -> 9 — K's re-cut gives r16c1 three more members past the pull (r9c5, r13c3, r14c2);
         //   the cheapest set the atlas grants is now the suit with the arm, so every row reads holding the full set.
         expect(out.problems).toContain('level_80__r16c1 → level_80__r14c2 holding [Dark Suit,Ghost Spear,Progressive Shield,Progressive Sword,Wand]: derived false, atlas true');
-        expect(out.problems).toHaveLength(9);
+        // ⛓ rules-ap-chest-solid: 9 -> 8 — r16c1's member r8c1 (the chest's own one-tile sub-region) is gone.
+        expect(out.problems).toHaveLength(8);
     });
 });
 

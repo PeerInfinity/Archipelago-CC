@@ -222,6 +222,9 @@ describe('R-A3: the derived-rule table on a shuffled doc', () => {
  *   needs the lock's event (earned on the lower floor), which moves the binding's reach. ⚠ The DIRECTION inverted: at
  *   this rules state the mutant refuses FEWER draws than the guard, not more, so "more draws refused" above is no longer
  *   what is measured; it stays live (>= 35 of 40 differ) and never incomplete, which is what the row asserts.
+ * ⛓ rules-ap-chest-solid re-recorded 'placed' {on 9, off 6} -> {on 4, off 5}: a playthrough AP chest is a one-sided Solid,
+ *   so L11's stairs (a shuffled stair) stand in r4c2, entered from L3's side only round the chest by the Swim, which moves
+ *   the binding's reach. The direction is back to "the mutant refuses more"; still live, still never incomplete.
  */
 describe('E3\'s dead-end mutant over the real Seedling stairs graph (40 seeds)', () => {
     const E = { mod: null };
@@ -253,7 +256,7 @@ describe('E3\'s dead-end mutant over the real Seedling stairs graph (40 seeds)',
         E.mod = await imp('frontend/modules/procgenCore/entranceRandomizer.js');
         E.rng = (await imp('frontend/modules/mazeRoom/procgenRng.js')).rngFor;
     });
-    for (const [sweep, refused] of [['placed', { on: 9, off: 6 }], ['events', { on: 0, off: 0 }]]) {
+    for (const [sweep, refused] of [['placed', { on: 4, off: 5 }], ['events', { on: 0, off: 0 }]]) {
         it(`sweep '${sweep}': live, never incomplete, refusals ${refused.on} → ${refused.off}`, () => {
             const on = measure(sweep, true);
             const off = measure(sweep, false);

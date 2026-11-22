@@ -59,7 +59,7 @@ describe('maze link wires: the preset census', () => {
     it('the dangling tokens are named per room (L28, L38, L39 ×6, L40 ×3, L41 ×2)', () => {
         const dangling = ALL.map(([k, gs]) => [k, gs.filter((g) => g.dangling).map((g) => g.token)]).filter(([, t]) => t.length);
         expect(dangling).toEqual([
-            ['level_28__r0c6', ['sw_0']], ['level_38', ['sw_0']],
+            ['level_28__r0c6', ['sw_0']], ['level_38__r0c9', ['sw_0']], // ⛓ rules-ap-chest-solid: L38 split, its upper half carries the world
             ['level_39__r0c9', ['sw_0', 'sw_1', 'sw_2', 'sw_3', 'sw_4', 'sw_5']],
             ['level_40__r0c53', ['sw_2', 'sw_4', 'sw_5']], ['level_41__r4c3', ['sw_0', 'sw_1']],
         ]);

@@ -128,6 +128,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_11__r0c2 -> level_11__r4c2", player),
+        Has('Progressive Swim', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_12__r0c19 -> level_12__r0c37", player),
         Has('Red Key', 1)
     )
@@ -563,7 +568,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_38 -> level_39__r25c9", player),
+        multiworld.get_entrance("level_38__r0c9 -> level_39__r25c9", player),
         Has('L39 flag 8: wandlock@144,592 cleared', 1)
     )
 
@@ -583,7 +588,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_39__r25c9 -> level_38", player),
+        multiworld.get_entrance("level_39__r25c9 -> level_38__r0c9", player),
         Has('L39 flag 8: wandlock@144,592 cleared', 1)
     )
 
@@ -1968,23 +1973,8 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_63__r5c14 -> level_63__r6c15", player),
-        Has('Dark Suit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_63__r5c14 -> level_63__r6c9", player),
-        Has('Dark Suit', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("level_63__r6c9 -> level_63__r0c1", player),
         HasAll('Ghost Spear', 'L63 flag 1: lightpole@64,88 cleared')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_63__r6c9 -> level_63__r5c14", player),
-        Has('Dark Suit', 1)
     )
 
     world.set_rule(
@@ -1995,11 +1985,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_63__r6c9 -> level_65__r0c8", player),
         And(HasAny('L63 flag 7: lightpole@112,272 cleared', 'Ghost Spear'), HasAny('L65 flag 0: lightpole@128,168 cleared', 'Ghost Spear'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_63__r6c15 -> level_63__r5c14", player),
-        Has('Dark Suit', 1)
     )
 
     world.set_rule(
@@ -3713,28 +3698,8 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_80__r0c2 -> level_80__r8c1", player),
-        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
-    )
-
-    world.set_rule(
         multiworld.get_entrance("level_80__r6c5 -> level_80__r0c2", player),
         Has('Dark Suit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_80__r6c5 -> level_80__r8c1", player),
-        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_80__r8c1 -> level_80__r0c2", player),
-        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_80__r8c1 -> level_80__r6c5", player),
-        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
     world.set_rule(
@@ -4688,6 +4653,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Level 063 - Chest", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
         multiworld.get_location("L63 flag 6: lightpole@48,272 cleared", player),
         Has('Ghost Spear', 1)
     )
@@ -4710,6 +4680,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("L71 flag 2: shieldlock@288,256 cleared", player),
         Has('Progressive Shield', 2)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 080 - Chest", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
     world.set_rule(

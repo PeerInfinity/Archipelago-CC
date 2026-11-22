@@ -53,7 +53,13 @@ describe('a location INSIDE an item-gated solid is charged that solid', () => {
         const loc = locationOf('level_89', 'Level 089 - Feather');
         expect(loc.sub_region).toBe('r1c10');
         expect(loc.access_rule).toEqual(has('Progressive Swim'));
-        expect(locationsRebound).toEqual(['level_89/Level 089 - Feather: r9c6 → r1c10']);
+        // ⛓ rules-ap-chest-solid: + the two AP chests whose cell is now a one-sided crossing reached only through Dark Suit
+        // cells (L63's (14,5), L80's (1,8)): bound to the sub-region beside the open side, charged that crossing.
+        expect(locationsRebound).toEqual([
+            'level_63/Level 063 - Chest: r6c15 → r6c15',
+            'level_80/Level 080 - Chest: r6c5 → r6c5',
+            'level_89/Level 089 - Feather: r9c6 → r1c10',
+        ]);
         expect(permissiveBindings).not.toContain('level_89/Level 089 - Feather');
     });
 });
