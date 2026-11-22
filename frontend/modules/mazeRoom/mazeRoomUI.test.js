@@ -1488,6 +1488,48 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         expect(panel._loopsDrivenAction).toBeNull();
     });
 
+    // ⚖ LOOPS-I2: pool 100 at 100/n per tile ran out a step late for the n
+    // whose raw float sum keeps a ~1e-14 sliver; deductMana snaps it to 0.
+    describe('the out-of-mana reset fires on tile n, not n+1 (LOOPS-I2)', () => {
+        const rawSlivers = (n) => {
+            let p = 100;
+            for (let k = 0; k < n; k++) p = p - 100 / n;
+            return p > 0;
+        };
+        const SLIVERED = Array.from({ length: 59 }, (_, i) => i + 2).filter(rawSlivers);
+
+        it('the fixture slivers in raw float (the pin below has teeth)', () => {
+            expect(SLIVERED.length).toBeGreaterThan(0);
+        });
+
+        it.each(SLIVERED)('n = %i', (n) => {
+            const resets = [];
+            MazeRoomUI.setModuleApis({ eventBus: null, dispatcher: {
+                publish: (event, data) => {
+                    if (event === 'user:regionMove' && data?.fromReset) resets.push(event);
+                },
+            } });
+            try {
+                const gs = createGameStateSingleton(null);
+                gs.setStartRegions(['Menu']);
+                gs.currentMana = 100;
+                const panel = new MazeRoomUI(null, {});
+                panel.world = { manaEnabled: true, longestShortestPath: n, itemLocationNames: new Map() };
+                panel.currentRegionId = 'Forest';
+                panel.externalCheckedLocations = new Set();
+                panel._isLoopModeActive = false;
+                panel._costDataManager = makeStubCostDataManager({ regionCosts: { Forest: 100 } });
+                for (let k = 1; k < n; k++) panel._deductMazeStepMana({ x: 3, y: 3 });
+                expect(resets).toHaveLength(0);
+                panel._deductMazeStepMana({ x: 3, y: 3 });
+                expect(resets).toHaveLength(1);
+                expect(gs.getCurrentMana()).toBe(gs.getMaxMana());
+            } finally {
+                MazeRoomUI.setModuleApis(null);
+            }
+        });
+    });
+
     it('_deductMazeStepMana triggers loop reset when mana hits zero', () => {
         const dispatcherCalls = [];
         const dispatcher = {

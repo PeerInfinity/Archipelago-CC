@@ -863,7 +863,13 @@
             "id": "seedling-wasm-runtime-lab-apworld-door-set-starts-no-game",
             "enabled": true,
             "category": "Seedling wasm runtime",
-            "_comment": "lab-apworld-door-map. The wasm twin of seedling-js-runtime-lab-apworld-door-set-starts-no-game: door A with its atlas, applied, EMPTY levelSetCache → G's refusal, no game."
+            "_comment": "lab-apworld-door-map, updated by lab-apworld-door-play. The wasm twin of seedling-js-runtime-lab-apworld-door-set-starts-no-game: door A with its atlas and (i) NO level set, (ii) a level set tampered after its stamp (the host refuses it, holds nothing), applied, EMPTY levelSetCache → G's refusal, no game, both legs."
+        },
+        {
+            "id": "seedling-wasm-runtime-lab-apworld-door-set-plays-held-rooms",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "lab-apworld-door-play (⚖ Robert 2026-11-21, 'Play via APWorld door'). The wasm twin of seedling-js-runtime-lab-apworld-door-set-plays-held-rooms (WebGPU): door A WITH the tree set's level set, EMPTY levelSetCache → the lab panel holds it under the rules' hash → Apply → ▶ Start → the wasm game is delivered the held set (room 10 has the tree, botLevelSet.active = its id, mount key names it). Stops the game and closes the Flash panel at the end (J4)."
         },
         {
             "id": "seedling-wasm-runtime-solver-stop-button",
@@ -935,13 +941,19 @@
             "id": "seedling-js-runtime-lab-apworld-door-set-starts-no-game",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "lab-apworld-door-map (⚖ Robert 2026-11-21, 'Map via APWorld door'). The watch page's tree set handed over 'Open in APWorld Editor' (procgenLab:openInApworldEditor WITH its stamped atlas, to the Seedling lab panel), applied in the APWorld Editor, on an EMPTY levelSetCache: the atlas is cached, and the JS Flash panel still shows G's \"This set can't be played yet\" and starts nothing (the door carries no level set)."
+            "_comment": "lab-apworld-door-map (⚖ Robert 2026-11-21, 'Map via APWorld door'), updated by lab-apworld-door-play. The watch page's tree set handed over 'Open in APWorld Editor' (procgenLab:openInApworldEditor WITH its stamped atlas, to the Seedling lab panel), applied in the APWorld Editor, on an EMPTY levelSetCache, (i) carrying NO level set, (ii) carrying one tampered after its stamp (the host computes its hash, refuses it by name, holds nothing): the atlas is cached, and the JS Flash panel shows G's \"This set can't be played yet\" and starts nothing, both legs."
+        },
+        {
+            "id": "seedling-js-runtime-lab-apworld-door-set-plays-held-rooms",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "lab-apworld-door-play (⚖ Robert 2026-11-21, 'Play via APWorld door'). The tree set handed over door A WITH its atlas and its level set, EMPTY levelSetCache: the lab panel holds the set under the rules' content hash before the rules go over, Apply, and the JS Flash panel is delivered THAT set (its id, room 10's tree, the JS page's mounted room 10, the mount key names it); Edit ▸ then opens room 10 back in the lab with the same set id. Stops the game and closes the Flash panel at the end (J4)."
         },
         {
             "id": "seedling-js-runtime-lab-apworld-door-after-bundle-measured",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "lab-apworld-door-map. The SAME tree set first loaded through the bundle door (S4: the host holds it), then handed over door A and applied: the Flash panel's answer is LOGGED (OUTCOME …), not steered; asserted only that a load (if any) delivers the held set (room 10's tree), never vanilla rooms or another hash."
+            "_comment": "lab-apworld-door-map (door A carries the level set since lab-apworld-door-play). The SAME tree set first loaded through the bundle door (S4: the host holds it), then handed over door A and applied: the Flash panel's answer is LOGGED (OUTCOME …), not steered; asserted only that a load (if any) delivers the held set (room 10's tree), never vanilla rooms or another hash, and that the Flash panel is closed at the end (J4)."
         },
         {
             "id": "seedling-wasm-runtime-same-wiring-switch-loads-new-rooms",

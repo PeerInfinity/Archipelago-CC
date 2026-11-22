@@ -167,3 +167,121 @@ describe('LOOPS-I1 — Instant ends where normal speed ends', () => {
     }
   });
 });
+
+/**
+ * LOOPS-I2 — ⚖ Ruling A (Robert, 2026-11-21): an action is priced ONCE, at
+ * the region level it has when it starts, at every speed.
+ *
+ * The fixture explore costs 50 at level 0; from 80 XP the region levels up
+ * after 20 mana. Normal speed used to re-price every frame, so the rest of
+ * the action got cheaper (≈ 48.58 in all), and at pool 49 normal speed
+ * COMPLETED an action whose start price is 50, where Instant (and live play,
+ * blockModes "ONE ECONOMY") drained the pool and reset. With xpGainScale 5 it
+ * crosses two boundaries.
+ *
+ * The normal-speed frame is small (gameSpeed 10 × 10 ms → 0.02 mana), so a
+ * total the frame grid does not divide lands within one frame's spend; that
+ * is the tolerance on mana and XP. Completion, reset, level and the queue
+ * index must agree exactly.
+ */
+const CROSS_FRAME_MS = 10;
+const CROSS_FRAME_MANA = (10 * CROSS_FRAME_MS) / 5000; // deltaTime / 1000 × 20 / 100
+
+function runCrossing({ mana, speed, gainScale = 1, xp0 = 80 }) {
+  const { loopState, gs, bus } = makeWired();
+  if (gainScale !== 1) {
+    loopState.costDataManager = {
+      isLoaded: () => false,
+      getRegionXpGainScale: () => gainScale,
+      getRegionXpEffect: () => undefined,
+    };
+  }
+  gs.addCustomAction('explore');
+  gs.addCustomAction('explore');
+  gs.maxMana = 100;
+  gs.currentMana = mana;
+  const region = loopState.getActionQueue()[0].sourceRegion;
+  gs.addRegionXP(region, xp0);
+  loopState.gameSpeed = 10;
+  loopState.instantMode = speed === 'instant';
+  if (speed === 'blockInstant') loopState._currentBlockIsInstant = () => true;
+  let spent = 0;
+  const deduct = gs.deductMana.bind(gs);
+  gs.deductMana = (a) => { spent += a; return deduct(a); };
+  loopState.startProcessing();
+  let t = 1000;
+  let frames = 0;
+  const done = () => bus.events.some(e => e.name === 'loopState:actionCompleted'
+      || e.name === 'loopState:loopReset');
+  while (!done() && loopState.isProcessing && frames < 100000) {
+    loopState._processFrame(t);
+    t += CROSS_FRAME_MS;
+    frames += 1;
+  }
+  const names = bus.events.map(e => e.name);
+  const xp = loopState.getRegionXP(region);
+  return {
+    frames,
+    spent,
+    exact: {
+      completed: names.filter(n => n === 'loopState:actionCompleted').length,
+      reset: names.includes('loopState:loopReset'),
+      level: xp.level,
+      index: loopState.currentActionIndex,
+    },
+    xp: xp.xp,
+  };
+}
+
+describe('LOOPS-I2 — a level-crossing action costs its START price at every speed', () => {
+  const cases = [
+    { name: 'affordable (pool 100 → 50 spent, completes)', mana: 100, spent: 50, xp: 30,
+      want: { completed: 1, reset: false, level: 1, index: 1 } },
+    { name: 'unaffordable (pool 49 → drains, no completion, reset; per-frame re-pricing completed it)',
+      mana: 49, spent: 49, xp: 29,
+      want: { completed: 0, reset: true, level: 1, index: 0 } },
+    // XP × 5: 80 + 250 = 330 → L1 (100), L2 (+120), 110 into L2.
+    { name: 'two boundaries, affordable (xpGainScale 5, pool 100)', mana: 100, gainScale: 5,
+      spent: 50, xp: 110, want: { completed: 1, reset: false, level: 2, index: 1 } },
+    // 80 + 245 = 325 → L2, 105 in.
+    { name: 'two boundaries, unaffordable (xpGainScale 5, pool 49)', mana: 49, gainScale: 5,
+      spent: 49, xp: 105, want: { completed: 0, reset: true, level: 2, index: 0 } },
+  ];
+
+  for (const c of cases) {
+    const scale = c.gainScale ?? 1;
+    describe(c.name, () => {
+      it('normal speed (stepped) charges the start price', () => {
+        const normal = runCrossing({ mana: c.mana, speed: 'normal', gainScale: scale });
+        expect(normal.frames).toBeGreaterThan(FAST_FRAMES);
+        expect(normal.exact).toEqual(c.want);
+        expect(Math.abs(normal.spent - c.spent)).toBeLessThanOrEqual(CROSS_FRAME_MANA);
+        expect(Math.abs(normal.xp - c.xp)).toBeLessThanOrEqual(CROSS_FRAME_MANA * scale);
+      });
+      for (const speed of ['instant', 'blockInstant']) {
+        it(`${speed} ends where normal speed ends, in one working frame`, () => {
+          const normal = runCrossing({ mana: c.mana, speed: 'normal', gainScale: scale });
+          const fast = runCrossing({ mana: c.mana, speed, gainScale: scale });
+          expect(fast.frames).toBe(FAST_FRAMES);
+          expect(fast.exact).toEqual(normal.exact);
+          expect(fast.spent).toBe(c.spent);
+          expect(Math.abs(fast.spent - normal.spent)).toBeLessThanOrEqual(CROSS_FRAME_MANA);
+          expect(Math.abs(fast.xp - normal.xp)).toBeLessThanOrEqual(CROSS_FRAME_MANA * scale);
+        });
+      }
+    });
+  }
+
+  it('a fresh start re-prices: after the reset, the next attempt is priced at the NEW level', () => {
+    const { loopState, gs } = makeWired();
+    gs.addCustomAction('explore');
+    gs.addCustomAction('explore');
+    gs.currentMana = 49;
+    const action = loopState.getActionQueue()[0];
+    gs.addRegionXP(action.sourceRegion, 80);
+    expect(loopState._startedActionPrice(action, 0)).toBe(50);
+    gs.addRegionXP(action.sourceRegion, 20); // → level 1
+    expect(loopState._startedActionPrice(action, 40)).toBe(50); // mid-action: frozen
+    expect(loopState._startedActionPrice(action, 0)).toBeCloseTo(50 / 1.05, 12); // fresh start
+  });
+});
