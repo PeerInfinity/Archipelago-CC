@@ -1625,6 +1625,10 @@ export function projectLevelWorld(region, grid, ctx, entities) {
                 }
                 builder.floor(x, y);
                 if (own.rule) builder.gate(x, y, own.rule);
+                // ⛓ rules-ap-chest-solid: a LATCHED one-sided Solid with no occupancy rule (the AP chest: no item, `probe`,
+                // latched where a walled side holds a landing) takes the always-open gate, so its lock event binds to the cell
+                // (`bindWorldEvents`, mode 'latch') and its closed side costs that event (`levelWorldEntryGates`), as a BossLock's.
+                else if (cell.latch) builder.gate(x, y, { rule: 'True_' });
                 continue;
             }
             // sink / an unmapped puzzle entity (a chest, …). Walled; a location or exit standing on it is opened below.

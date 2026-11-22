@@ -2216,7 +2216,9 @@ export function playthroughLockEvents(doc, { existing = [] } = {}) {
             const ways = openersOf(lock, regionId).flatMap((o) => o.conditionSets).map((set) => {
                 const parts = set.map((c) => analyzerOptions.resolveCondition(c));
                 if (parts.some((p) => !p)) return null;
-                return parts.length === 0 ? null : simplifyRule(parts.length === 1 ? parts[0] : { rule: 'And', children: parts });
+                // ⛓ rules-ap-chest-solid: an opener whose step costs nothing (an AP chest reached free on its probe side) is
+                // the event's True_ — the event is still placed in that one sub-region, so it is earned by being there.
+                return parts.length === 0 ? { rule: 'True_' } : simplifyRule(parts.length === 1 ? parts[0] : { rule: 'And', children: parts });
             });
             if (ways.some((w) => w === null)) throw new Error(`lock events: ${lock.name}'s opening cost does not resolve to items`);
             return simplifyRule(ways.length === 1 ? ways[0] : { rule: 'Or', children: ways });

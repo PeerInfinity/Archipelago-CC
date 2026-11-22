@@ -45,6 +45,9 @@ export const FLAG_ACTIONS = Object.freeze({
         cite: 'Puzzlements/MagicalLock.as hit(_t): lockType 0 <= _t -> setPersistence(tag, false)' }),
     magicallockfire: Object.freeze({ action: 'broken by a fire-wand shot', item: 'hasFireWand',
         cite: 'Puzzlements/MagicalLock.as hit(_t): lockType 1 <= _t' }),
+    // ⛓ rules-ap-chest-solid: the AP chest's latch event (an opened chest stays open)
+    chest: Object.freeze({ action: 'opened by standing on the line under it', item: null,
+        cite: 'Pickups/APChest.as:75 open() -> :92 setPersistence(tag, false); check() :66-68 removes it on a later entry' }),
     lock: Object.freeze({ action: 'opened by its activation group (turnOff)', item: null,
         cite: 'Puzzlements/Lock.as turnOff(): setPersistence(tag, false); check() needs tSet < 0' }),
     wandlock: Object.freeze({ action: 'opened by its activation group (turnOff)', item: null,

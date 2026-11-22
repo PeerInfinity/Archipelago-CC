@@ -414,7 +414,10 @@ const TRANSCRIBED_ENTITY_SEMANTICS = Object.freeze({
     rocklock: M('rock-placement puzzle (RockLock extends Lock)', { class: 'RockLock' }),
     cover: M('Cover clears while something (a Chest) sits under it, and resets otherwise', { class: 'Cover' }),
     pushableblock: M('plain pushable block — solid, moved by walking into it; passability depends on push geometry', { class: 'PushableBlock' }),
-    chest: M('Chest is solid until opened (no item requirement, but an interaction)', { class: 'Chest' }),
+    // ⛓ rules-ap-chest-solid — `persistAttr: 'tag'`: an opened chest STAYS open on every later visit — `open()` clears its
+    // slot (`Chest.as:89`; `Pickups/APChest.as:92`) and `check()` removes it on a later entry while `tag >= 0`
+    // (`Chest.as:41-43`; `APChest.as:66-68`). Read only where a row also gives the cell `enter` gates.
+    chest: M('Chest is solid until opened (no item requirement, but an interaction)', { class: 'Chest', persistAttr: 'tag' }),
     fallrock: M('FallRock drops on a trigger and is solid where it lands', { class: 'FallRock' }),
     fallrocklarge: M('FallRockLarge drops on a trigger and is solid where it lands', { class: 'FallRockLarge', size: [2, 2] }),
     moonrock: M('Moonrock is solid until its puzzle clears', { class: 'Moonrock', size: [3, 3] }),
@@ -1145,7 +1148,7 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
             const enterOf = directionalLocks && semantics.probe
                 ? Object.fromEntries(['N', 'E', 'S', 'W'].filter((d) => d !== STEP_FROM[semantics.probe]).map((d) => [d, null]))
                 : null;
-            if (enterOf && semantics.pocketReentry && !semantics.persists) pocketWalled.set(i, Object.keys(enterOf));
+            if (enterOf && semantics.pocketReentry) pocketWalled.set(i, { dirs: Object.keys(enterOf), persists: Boolean(semantics.persists) });
             else if (enterOf || semantics.enter) otherEnter.add(i);
             // ⛓ RULES rules-fire-breaks-rocks — a row may also carry its own condition-valued `enter` gates (a rock's
             // flame is credited only from a side with a stance: `seedlingPlaythroughOverlay.rockFireRuling`).
@@ -1154,7 +1157,9 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
                 if (!gates) continue;
                 if (key === 'enter') {
                     cell.enter ??= {};
-                    if (semantics.persists) cell.latch = true;
+                    // ⛓ rules-ap-chest-solid: a `pocketReentry` row latches only where the pass below leaves a walled side
+                    // that holds a landing (no uniform latch).
+                    if (semantics.persists && !semantics.pocketReentry) cell.latch = true;
                 }
                 for (const [dir, cond] of Object.entries(gates)) {
                     if (cell[key][dir] === null) continue;
@@ -1372,13 +1377,20 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
     // do by opening it from the probe side: it is open behind them (`check()` removes an opened one on a later entry). The
     // re-closing locks' far-side rule above, for a lock that never re-closes. Without `arrivalTiles` every side is assumed
     // to have another way in, and stays walled. A cell another claim gave `enter` gates to is left as it is.
-    if (directionalLocks && options.arrivalTiles && pocketWalled.size > 0) {
-        const arrivals = new Set(options.arrivalTiles
+    // ⛓⛓ rules-ap-chest-solid (⚖ Robert 2026-11-22 "Make it exact") — **AND A SIDE THAT HOLDS A LANDING IS LATCHED**, when the
+    // row `persists` (the opened chest stays open: `APChest.as:92` clears its slot, `:66-68` removes it on a later entry).
+    // Only such a side: the cell is `latch`ed exactly when some walled entry comes from a standable neighbour whose side
+    // reaches a landing (the same test that keeps it walled), so a chest whose every far side is a pocket mints nothing.
+    // The analyzer then prices that entry as "the latched cell was opened" — the step INTO it from the probe side, i.e.
+    // reaching the probe cell (`APChest.as:75`) — and the rules mint it as a lock event (BossLock's path).
+    if (directionalLocks && pocketWalled.size > 0) {
+        const arrivals = options.arrivalTiles ? new Set(options.arrivalTiles
             .filter(([tx, ty]) => inside(tx - bounds.x, ty - bounds.y))
-            .map(([tx, ty]) => (ty - bounds.y) * width + (tx - bounds.x)));
+            .map(([tx, ty]) => (ty - bounds.y) * width + (tx - bounds.x))) : null;
         const DELTA = { N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] };
         const standable = (i) => !['wall', 'sink', 'manual'].includes(cells[i].kind);
         const sideHasArrival = (start, self) => {
+            if (!arrivals) return true;
             const seen = new Set([start, self]);
             const stack = [start];
             if (arrivals.has(start)) return true;
@@ -1398,7 +1410,7 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
             }
             return false;
         };
-        for (const [li, dirs] of pocketWalled) {
+        for (const [li, { dirs, persists }] of pocketWalled) {
             if (otherEnter.has(li)) continue;
             const x = li % width;
             const y = (li - x) / width;
@@ -1409,7 +1421,11 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
                 const ny = y - DELTA[dir][1];
                 if (!inside(nx, ny)) continue;
                 const n = ny * width + nx;
-                if (!standable(n) || sideHasArrival(n, li)) continue;
+                if (!standable(n)) continue;
+                if (sideHasArrival(n, li)) {
+                    if (persists) cells[li].latch = true;
+                    continue;
+                }
                 delete cells[li].enter[dir];
                 review.push({ tile: [x + bounds.x, y + bounds.y], reason: `one-sided solid: entry ${dir} re-opened, its side holds no landing` });
             }

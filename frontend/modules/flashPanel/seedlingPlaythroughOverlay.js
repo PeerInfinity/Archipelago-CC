@@ -781,11 +781,11 @@ export const PLAYTHROUGH_ENTITY_OVERLAY = Object.freeze({
     // the one-pixel line under its bottom edge while no other Solid overlaps it (`APChest.as:75` = `Chest.as:62-63`), then
     // `type = ""` (`APChest.as:89`): the cell is a passage once opened. That is the one-sided lock primitive the BossLock
     // already uses (`probe: 'S'`: under `directionalLocks` every ENTRY but the step north from the cell below is walled,
-    // leaving is free). No item, so no condition. NOT `persists` (no latch event is minted for it), but `pocketReentry`
-    // (`buildSeedlingRegionGrid`): a walled entry whose side holds no landing is free, since whoever stands there came
-    // through the chest and opened it; a side WITH a landing stays walled, also after an opening on an earlier visit
-    // (stricter than the game, which keeps it open). The Cover that may share the cell (`Cover.as:58`) is ruled OPEN
-    // below, so it adds no price.
+    // leaving is free). No item, so no condition. `pocketReentry` (`buildSeedlingRegionGrid`): a walled entry whose side
+    // holds no landing is free, since whoever stands there came through the chest and opened it; a side WITH a landing is
+    // LATCHED (the transcription's `persistAttr: 'tag'`: an opened chest stays open, `APChest.as:66-68,92`), so its entry
+    // costs the chest's lock event, minted by the rules where a return crosses it and priced as reaching the probe cell.
+    // The Cover that may share the cell (`Cover.as:58`) is ruled OPEN below, so it adds no price.
     chest: {
         kind: 'directional', probe: 'S', pocketReentry: true,
         cite: 'Pickups/APChest.as:57-58,75,89 (Seedling p4h-as3 0451516252) = Chest.as:29-30,62-63,77',
