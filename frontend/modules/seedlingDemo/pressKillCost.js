@@ -377,15 +377,16 @@ export function resetPressKillBombsCounts() {
  * took 237 s against 49 s, because a chaser closes on any player who stands; pricing the refuge's walk and wait the same
  * way, alone, moved nothing at step 67 (0 refuges refused; the death at t780 stands). Unmeasured behaviour is not shipped.
  *
- * ⛓ THE SWITCH — `PRESS_KILL_CHASERS`, OFF by default. `SEEDLING_PRESS_KILL_CHASERS=1` turns it on in a node process
- * (the page's worker has no `process`, so it is OFF there), and `withPressKillChasers(enabled, fn)` is for a test or a
- * witness. OFF, `safeStep` asks exactly what it asked before and no forecast is built: every walk is byte-identical.
+ * ⛓ THE SWITCH — `PRESS_KILL_CHASERS`, ON by default since the PKC flip (⚖ the user, 2026-11-20: *"Flip PKC alone, with
+ * FH (Recommended)"*, after L40-PAIR: it alone answers the L40 spinner corner, hitless, and moves nothing else).
+ * `SEEDLING_PRESS_KILL_CHASERS=0` turns it off in a node process or the page's solve worker (`solverEnvChannel`), and
+ * `withPressKillChasers(enabled, fn)` is for a test or a witness. OFF, `safeStep` asks exactly what it asked before and no forecast is built: every walk is byte-identical.
  * ON in a room with no chaser forecast (`run.chaserForecast()` null) it reads nothing more.
  */
 export const PRESS_KILL_CHASERS = {
-    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_CHASERS === '1',
+    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_CHASERS !== '0',
 };
-export const PRESS_KILL_CHASERS_DEFAULT = false;
+export const PRESS_KILL_CHASERS_DEFAULT = true;
 
 /** Run `fn` with `PRESS_KILL_CHASERS` set to `enabled`, restoring the previous value (`withPressKillCost`'s shape). */
 export function withPressKillChasers(enabled, fn) {

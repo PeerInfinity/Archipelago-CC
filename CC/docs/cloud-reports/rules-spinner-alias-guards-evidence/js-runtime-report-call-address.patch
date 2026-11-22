@@ -1,0 +1,71 @@
+diff -ruN a/frontend/modules/seedlingDemo/jsRuntimeCore.js b/frontend/modules/seedlingDemo/jsRuntimeCore.js
+--- a/frontend/modules/seedlingDemo/jsRuntimeCore.js	2026-11-22 03:03:13.016406936 +0000
++++ b/frontend/modules/seedlingDemo/jsRuntimeCore.js	2026-11-22 03:03:13.032763728 +0000
+@@ -276,6 +276,32 @@
+ }
+ 
+ /**
++ * ⛓ rules-spinner-alias-guards (out of scope, PROPOSED) — the REPORTS the game's `pendingCheck` makes for the run's
++ * clears. `Game.setPersistence` reports the CALL's address (`seq|<_l or Main.level>|<tag>|<o>`, Game.as:1906-1907),
++ * so a tag -1 write is reported as `{level, -1}` ONCE PER CALL while the table slot it lands on is `{level-1, 29}`
++ * (Main.as:222). Every other clear is reported at its own slot, once. `key` is the dedupe identity.
++ */
++export function liveReports(run) {
++    const out = [];
++    const oob = new Set();
++    for (const w of run.ledger('spinnerWrites') ?? []) {
++        if (!w.outOfBand || !Number.isInteger(w.level)) continue;
++        const key = `oob:${w.id}:${w.t}`;
++        if (oob.has(key)) continue;
++        oob.add(key);
++        out.push({ key, level: w.level, tag: -1, slot: { level: w.flag?.level, tag: w.flag?.tag } });
++    }
++    const slots = new Set((run.ledger('spinnerWrites') ?? []).filter((w) => w.outOfBand)
++        .map((w) => `${w.flag?.level}:${w.flag?.tag}`));
++    for (const c of liveClears(run)) {
++        const k = `${c.level}:${c.tag}`;
++        if (slots.has(k)) continue;   // reported above, at the call's address
++        out.push({ key: k, level: c.level, tag: c.tag, slot: { level: c.level, tag: c.tag } });
++    }
++    return out;
++}
++
++/**
+  * ⛓ J3 — where the walk stands to take the location a `(level, tag)` names in
+  * a real room: the entity holding that tag (of `type`, when the host knows
+  * it). A chest opens from BELOW, on its two-pixel stance band
+@@ -1145,8 +1171,8 @@
+      * collapse into one changed value and the first would be lost.
+      */
+     function reportClears(run) {
+-        for (const c of liveClears(run)) {
+-            const k = `${c.level}:${c.tag}`;
++        for (const c of liveReports(run)) {
++            const k = c.key;
+             if (reportedClears.has(k)) continue;
+             reportedClears.add(k);
+             pendingCheck = `${++pendingCheckSeq}|${c.level}|${c.tag}|0`;
+diff -ruN a/frontend/modules/seedlingDemo/jsRuntimeReportAddress.test.js b/frontend/modules/seedlingDemo/jsRuntimeReportAddress.test.js
+--- a/frontend/modules/seedlingDemo/jsRuntimeReportAddress.test.js	1970-01-01 00:00:00.000000000 +0000
++++ b/frontend/modules/seedlingDemo/jsRuntimeReportAddress.test.js	2026-11-22 03:03:13.037190461 +0000
+@@ -0,0 +1,20 @@
++// PROPOSED (rules-spinner-alias-guards, out of scope): the JS page reports a tag -1 write at the CALL's address,
++// once per call, as the game's pendingCheck does (Game.as:1906-1907); the table keeps the slot (Main.as:222).
++import { describe, expect, it } from 'vitest';
++import { liveClears, liveReports } from './jsRuntimeCore.js';
++
++const run = (ledgers) => ({ ledger: (name) => ledgers[name] ?? [], scratchClears: [] });
++// The r8-l18-spinner-press rows (rules-spinner-tag-alias evidence js-l18-spinner-press.json).
++const L18 = run({ spinnerWrites: [
++    { t: 2198, level: 18, id: 'spinner@48,96', flag: { level: 17, tag: 29, value: false }, outOfBand: true },
++    { t: 3278, level: 18, id: 'spinner@112,48', flag: { level: 17, tag: 29, value: false }, outOfBand: true },
++], earnedClears: [{ level: 18, tag: 0 }] });
++
++describe('liveReports — the game\'s report addresses', () => {
++    it('two L18 spinner deaths: two reports at {18,-1} (the wasm witness: 1|18|-1|0, 2|18|-1|0), then {18,0}', () => {
++        expect(liveReports(L18).map((r) => `${r.level}|${r.tag}`)).toEqual(['18|-1', '18|-1', '18|0']);
++    });
++    it('the TABLE is unchanged: the slot {17,29} stays a live clear', () => {
++        expect(liveClears(L18)).toEqual([{ level: 18, tag: 0 }, { level: 17, tag: 29 }]);
++    });
++});

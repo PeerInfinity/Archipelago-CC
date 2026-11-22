@@ -95,6 +95,7 @@
  */
 
 import { placementTagId } from './procgenSeedling.js';
+import { aliasReservedFor, aliasTargetsOf } from './outOfBandAliases.js';
 import {
     ITEM_FOR_KEY, ITEM_FOR_TAG, entityForLedgerRow, labelFor, levelName,
 } from './seedlingAtlasDerivation.js';
@@ -310,6 +311,9 @@ export function buildPlacementTable({ locationItemOf, ledger, rooms, selfPlayer,
     const table = new Map();
     const entries = [];
     const allocated = new Map();  // level -> tags handed out in it
+    // ⛓ rules-spinner-alias-guards (a): the `{N, 29}` slots a tag -1 writer in N+1 clears (`Main.as:222`) are
+    // never handed out — an apitem allocated there would be despawned by an unrelated kill before it is taken.
+    const aliasTargets = aliasTargetsOf([...byLevel.values()].map((v) => v.record));
     const placedOf = (location, ledgerId) => {
         const placed = locationItemOf(location);
         if (!placed || typeof placed.name !== 'string' || !Number.isInteger(placed.player)) {
@@ -359,7 +363,7 @@ export function buildPlacementTable({ locationItemOf, ledger, rooms, selfPlayer,
         let tagSource;
         if (vanillaTag === undefined) {
             const reserved = allocated.get(r.record.level) ?? [];
-            tag = placementTagId(r.record, reserved);
+            tag = placementTagId(r.record, [...reserved, ...aliasReservedFor(aliasTargets, r.record.level)]);
             allocated.set(r.record.level, [...reserved, tag]);
             tagSource = 'allocated';
         } else {

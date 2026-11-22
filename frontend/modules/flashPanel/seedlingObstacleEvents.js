@@ -59,6 +59,41 @@ export function parseObstacleEventId(id) {
     return m ? { level: Number(m[1]), tag: Number(m[2]) } : null;
 }
 
+/**
+ * ⛓ rules-spinner-alias-guards (b) — **NO EVENT ON A TAG −1 ALIAS SLOT.** A writer carrying tag −1 in level N+1 writes
+ * `levelPersistence[30(N+1) − 1]` = `{N, 29}` (`Main.as:222`, no bounds check; `Game.as:1902-1904`), so an event minted
+ * there would be collected by that writer's kill or break, an action its rule never prices. Refused BY NAME, with the
+ * writer(s) named.
+ *
+ * Pure like the rest of this module: `writers` is `seedlingDemo/outOfBandAliases.aliasWritersOf(map)` — `[{level, tag,
+ * from, id, as3}]`, `level`/`tag` the alias address — handed in by the producer.
+ *
+ * @param {object[]} events every event the producer will compile (`fields.event_id` = `flag:L<level>:<tag>`)
+ * @param {object[]} writers the map's tag −1 writers and the address each lands on
+ * @returns {object[]} `events`, unchanged, when none sits on an alias slot
+ */
+export function refuseAliasedEvents(events, writers) {
+    if (!Array.isArray(writers)) throw new Error('alias events: `writers` must be the map\'s tag -1 writers (an array)');
+    const at = new Map();
+    for (const w of writers) {
+        const k = obstacleEventId(w);
+        if (!at.has(k)) at.set(k, []);
+        at.get(k).push(`${w.id} (L${w.from}, ${w.as3})`);
+    }
+    const refused = [];
+    for (const e of events ?? []) {
+        const id = e?.fields?.event_id;
+        if (at.has(id)) {
+            refused.push(`"${e.name}" (${id}) sits on the slot the tag -1 write of ${at.get(id).join(', ')} clears — `
+                + 'Main.as:222 indexes level * 30 + tag with no bounds check, so -1 in level N+1 is {N,29}');
+        }
+    }
+    if (refused.length > 0) {
+        throw new Error(`alias events: ${refused.length} event(s) on a tag -1 alias slot refused —\n  ${refused.join('\n  ')}`);
+    }
+    return events;
+}
+
 /** The event's display name (also its event item's name). */
 export const obstacleEventName = ({ level, tag, cls, x, y }) => `L${level} flag ${tag}: ${cls}@${x},${y} cleared`;
 

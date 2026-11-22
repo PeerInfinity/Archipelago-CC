@@ -16,11 +16,13 @@
  *   m9 the level guard dropped (`r.level === level` -> true)          -> 'ROUTE: … another level …' and the view's other-level row red
  *   m10 the line's dash pattern by phase inverted                      -> 'the route on the map: dashed while running …' reds
  *   m11 the dash markers skipped                                       -> 'the route on the map: … ◆ …' reds
+ *   (hammer-phase FEWER-HITS flip, the third pass's label)
+ *   m12 `waitsOf` -> '' / the 'hit-avoid' branch dropped               -> 'HEADLINE: a hit-avoiding route …' reds
  */
 import { describe, expect, it } from 'vitest';
 
 import {
-    activeWords, effortOf, emptyWatch, goalTileOf, headlineOf, mapRoutesOf, observeWatch, passStepsOf, roomOf, routeOf, tryingNowOf,
+    activeWords, effortOf, emptyWatch, PASS_LABELS, goalTileOf, headlineOf, mapRoutesOf, observeWatch, passStepsOf, roomOf, routeOf, tryingNowOf,
     watchPhase, whyOf, WHY_TEMPLATES,
 } from './seedlingSolveWatch.js';
 import { SolveWatchView, legendText } from './seedlingSolveWatchView.js';
@@ -100,6 +102,15 @@ describe('⛓ WATCHER — the model', () => {
         expect(headlineOf(refused, fold([refused], () => 0))).toEqual({ phase: 'gave-up', head: '✗ Gave up after 0 ms',
             sub: 'Couldn\'t find a safe way to the exit on level 12.' });
         expect(headlineOf(null, emptyWatch()).head).toBe('solver: no solve yet');
+    });
+
+    it('HEADLINE: a hit-avoiding route (FEWER-HITS, `pass: \'hit-avoid\'`) is named as such, with its wait', () => {
+        const at = (hitAvoidDelay) => headlineOf(stateOf(snapAt(9, { outcome: 'solved',
+            best: { ok: true, ticks: 97, pass: 'hit-avoid', hitAvoidDelay } }), { final: true }), emptyWatch()).sub;
+        expect(at(1)).toBe('Found a 97-tick hit-avoiding route (3.2 s of play), waits 1 tick first.');
+        expect(at(3)).toBe('Found a 97-tick hit-avoiding route (3.2 s of play), waits 3 ticks first.');
+        expect(at(undefined)).toBe('Found a 97-tick hit-avoiding route (3.2 s of play).');
+        expect(PASS_LABELS['hit-avoid']).toBe('Hit-avoiding');
     });
 
     it('MEMORY: a new solve starts over; the plain walk\'s ticks are the dashless pass\'s best only', () => {

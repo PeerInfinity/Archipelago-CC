@@ -91,6 +91,53 @@ describe('GameState — loop-mode resource API', () => {
     it('returns the new currentMana', () => {
       expect(gs.deductMana(30)).toBe(70);
     });
+
+    // ⚖ LOOPS-I2: a pool spent down in n equal fractional spends keeps ~1e-14
+    // for about 2 n in 5 (raw float), and a `<= 0` depletion test then fires
+    // one spend late. deductMana snaps float noise to exactly 0.
+    describe('the sliver snap (LOOPS-I2)', () => {
+      const NS = Array.from({ length: 59 }, (_, i) => i + 2); // 2…60
+      const rawPoolAfter = (n) => {
+        let p = 100;
+        for (let k = 0; k < n; k++) p = p - 100 / n;
+        return p;
+      };
+      const slivered = NS.filter((n) => rawPoolAfter(n) > 0);
+
+      it('the fixture slivers in raw float (the pin below has teeth)', () => {
+        expect(slivered.length).toBeGreaterThan(0);
+      });
+
+      it.each(NS)('pool 100 spent in n = %i equal spends ends at EXACTLY 0, on spend n', (n) => {
+        gs.currentMana = 100;
+        for (let k = 1; k < n; k++) {
+          gs.deductMana(100 / n);
+          expect(gs.getCurrentMana()).toBeGreaterThan(0);
+        }
+        gs.deductMana(100 / n);
+        expect(gs.getCurrentMana()).toBe(0);
+      });
+
+      it('a deliberate small remainder is kept (0.01, the in-app tests\' "one step from empty")', () => {
+        gs.deductMana(gs.getCurrentMana() - 0.01);
+        expect(gs.getCurrentMana()).toBeCloseTo(0.01, 12);
+      });
+
+      it('debt mode is unchanged: the raw float result, slivers and debt alike', () => {
+        for (const n of slivered) {
+          const g = new GameState(makeBus());
+          g.setNoManaDepletionReset(true);
+          for (let k = 0; k < n; k++) g.deductMana(100 / n);
+          expect(g.getCurrentMana()).toBe(rawPoolAfter(n));
+          expect(g.getManaDebt()).toBe(0);
+        }
+        const g = new GameState(makeBus());
+        g.setNoManaDepletionReset(true);
+        g.deductMana(100 + 1e-12);
+        expect(g.getCurrentMana()).toBe(100 - (100 + 1e-12));
+        expect(g.getManaDebt()).toBe(Math.abs(100 - (100 + 1e-12)));
+      });
+    });
   });
 
   describe('refillMana', () => {

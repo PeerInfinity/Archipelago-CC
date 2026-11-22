@@ -1,0 +1,73 @@
+diff -ruN a/frontend/modules/seedlingDemo/levelWorld.js b/frontend/modules/seedlingDemo/levelWorld.js
+--- a/frontend/modules/seedlingDemo/levelWorld.js	2026-11-22 03:04:53.854935775 +0000
++++ b/frontend/modules/seedlingDemo/levelWorld.js	2026-11-22 03:04:53.875241520 +0000
+@@ -2839,11 +2839,32 @@
+     stairsdown: -1,         // Stairs.as:20
+ });
+ 
+-/** An entity's persistence tag: its class's forced value, else `tag`, else -1. */
++/**
++ * ⛓ rules-spinner-alias-guards (out of scope, PROPOSED for the fidelity arc) — the loader elements whose `Game.as`
++ * `xml.objects[0].<el>` line passes `o.@tag` RAW to an `int` parameter. An ABSENT attribute there is `int("")` = **0**,
++ * an in-band tag, not the -1 sentinel: only `optionalTag` (`bosskey`/`totempart`/`seed`, Game.as:1894-1900) and the
++ * teleporter's `String(o.@tag) == "" ? -1` (Game.as:2387) read absent as -1, and an element whose loader passes no
++ * `@tag` takes its constructor default. Pinned against `Game.as` by its unit test (the set is read, not chosen).
++ */
++export const LOADER_RAW_TAG = Object.freeze(new Set([
++    'adnanchar', 'apitem', 'bosslock', 'bosstotem', 'breakablerock', 'breakablerockghost', 'burnabletree',
++    'buttonroom', 'chest', 'conch', 'darkshield', 'darksuit', 'darktrap', 'fallrock', 'fallrocklarge', 'feather',
++    'finalboss', 'finaldoor', 'fire', 'firewand', 'forestchar', 'ghostspear', 'ghostsword', 'grasslock', 'health',
++    'hermit', 'introchar', 'karlore', 'lavaboss', 'lightbosscontroller', 'lightpole', 'lock', 'magicallock',
++    'magicallockfire', 'moonrock', 'oracle', 'rekcahdam', 'rocklock', 'rope', 'sandtrap', 'sensei', 'shield',
++    'shieldboss', 'shieldlock', 'shieldlocknorm', 'sign', 'spinner', 'sword', 'tentaclebeast', 'torchpickup', 'totem',
++    'wand', 'wandlock', 'watcher', 'witch', 'yeti',
++]));
++
++/**
++ * An entity's persistence tag: its class's forced value, else `tag`, else what the LOADER makes of an absent one
++ * (`int("")` = 0 for a raw `o.@tag`, else -1).
++ */
+ export function tagOf(type, attrs) {
+     const forced = FORCED_TAG[type];
+     if (forced !== undefined) return forced;
+-    return attrs?.tag === undefined ? -1 : Number(attrs.tag);
++    if (attrs?.tag === undefined || attrs.tag === '') return LOADER_RAW_TAG.has(type) ? 0 : -1;
++    return Number(attrs.tag);
+ }
+ 
+ /**
+diff -ruN a/frontend/modules/seedlingDemo/tagOfAbsentTag.test.js b/frontend/modules/seedlingDemo/tagOfAbsentTag.test.js
+--- a/frontend/modules/seedlingDemo/tagOfAbsentTag.test.js	1970-01-01 00:00:00.000000000 +0000
++++ b/frontend/modules/seedlingDemo/tagOfAbsentTag.test.js	2026-11-22 03:04:53.879053572 +0000
+@@ -0,0 +1,31 @@
++// PROPOSED (rules-spinner-alias-guards, out of scope; fidelity arc): `tagOf` reads an ABSENT `@tag` the way the
++// game's loader does. `o.@tag` passed raw to an `int` parameter is `int("")` = 0 (Game.as `xml.objects[0].<el>`).
++import { readFileSync } from 'node:fs';
++import { dirname, join } from 'node:path';
++import { fileURLToPath } from 'node:url';
++import { describe, expect, it } from 'vitest';
++import { FORCED_TAG, LOADER_RAW_TAG, tagOf } from './levelWorld.js';
++
++const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
++const GAME = readFileSync(join(ROOT, 'vendor/seedling/src/Game.as'), 'utf8');
++/** Every loader's text: its `for each (o in xml.objects[0].<el>)` up to the next one. */
++const loaders = () => {
++    const hits = [...GAME.matchAll(/for each \(o in xml\.objects\[0\]\.(\w+)\)/g)];
++    return hits.map((h, k) => [h[1], GAME.slice(h.index, k + 1 < hits.length ? hits[k + 1].index : h.index + 2000)]);
++};
++
++describe('tagOf — an absent @tag, as the loader reads it', () => {
++    it('LOADER_RAW_TAG is exactly the loaders that pass o.@tag raw (not optionalTag, not the teleporter form)', () => {
++        const raw = loaders().filter(([, body]) => /o\.@tag/.test(body) && !/optionalTag\(o\.@tag\)/.test(body)
++            && !/String\(o\.@tag\)\s*==\s*""/.test(body)).map(([el]) => el);
++        expect([...LOADER_RAW_TAG].sort()).toEqual([...new Set(raw)].sort());
++    });
++    it('absent → 0 on a raw loader (lock, spinner), -1 on optionalTag / teleporter, FORCED_TAG first', () => {
++        expect(tagOf('lock', {})).toBe(0);
++        expect(tagOf('spinner', undefined)).toBe(0);
++        expect(tagOf('bosskey', {})).toBe(-1);
++        expect(tagOf('teleporter', {})).toBe(-1);
++        expect(tagOf('moonrockpile', {})).toBe(FORCED_TAG.moonrockpile);
++        expect(tagOf('spinner', { tag: '-1' })).toBe(-1);
++    });
++});
