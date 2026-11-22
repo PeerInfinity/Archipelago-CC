@@ -1,0 +1,871 @@
+{
+ "base": null,
+ "suit": "Dark Suit",
+ "swim": "Progressive Swim",
+ "rows": [
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r6c11",
+   "set": "Ghost Spear",
+   "target": "11,6",
+   "planLength": 10,
+   "cells": [
+    {
+     "x": 16,
+     "y": 1,
+     "step": 0,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 16,
+     "y": 2,
+     "step": 1,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 31,
+     "tName": "igneousToLava",
+     "fatal": null,
+     "converts": true
+    },
+    {
+     "x": 16,
+     "y": 3,
+     "step": 2,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 31,
+     "tName": "igneousToLava",
+     "fatal": null,
+     "converts": true
+    },
+    {
+     "x": 16,
+     "y": 4,
+     "step": 3,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 31,
+     "tName": "igneousToLava",
+     "fatal": null,
+     "converts": true
+    },
+    {
+     "x": 15,
+     "y": 4,
+     "step": 4,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 15,
+     "y": 5,
+     "step": 5,
+     "maze": "obstacle atlas_gate_3 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+     "grid": {
+      "kind": "gated",
+      "conditions": [
+       {
+        "any": [
+         {
+          "flag": "hasSword"
+         },
+         {
+          "flag": "hasSpear"
+         },
+         {
+          "flag": "hasWand"
+         },
+         {
+          "flag": "hasDarkShield"
+         }
+        ]
+       }
+      ]
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 14,
+     "y": 5,
+     "step": 6,
+     "maze": "obstacle atlas_gate_3 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+     "grid": {
+      "kind": "gated",
+      "conditions": [
+       {
+        "any": [
+         {
+          "flag": "hasSword"
+         },
+         {
+          "flag": "hasSpear"
+         },
+         {
+          "flag": "hasWand"
+         },
+         {
+          "flag": "hasDarkShield"
+         }
+        ]
+       }
+      ]
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 13,
+     "y": 5,
+     "step": 7,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 13,
+     "y": 6,
+     "step": 8,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 12,
+     "y": 6,
+     "step": 9,
+     "maze": "obstacle atlas_gate_3 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+     "grid": {
+      "kind": "gated",
+      "conditions": [
+       {
+        "any": [
+         {
+          "flag": "hasSword"
+         },
+         {
+          "flag": "hasSpear"
+         },
+         {
+          "flag": "hasWand"
+         },
+         {
+          "flag": "hasDarkShield"
+         }
+        ]
+       }
+      ]
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 11,
+     "y": 6,
+     "step": 10,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    }
+   ]
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r6c11",
+   "set": "Progressive Sword",
+   "target": "11,6",
+   "planLength": 10,
+   "cells": [
+    {
+     "x": 16,
+     "y": 1,
+     "step": 0,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 16,
+     "y": 2,
+     "step": 1,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 31,
+     "tName": "igneousToLava",
+     "fatal": null,
+     "converts": true
+    },
+    {
+     "x": 16,
+     "y": 3,
+     "step": 2,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 31,
+     "tName": "igneousToLava",
+     "fatal": null,
+     "converts": true
+    },
+    {
+     "x": 16,
+     "y": 4,
+     "step": 3,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 31,
+     "tName": "igneousToLava",
+     "fatal": null,
+     "converts": true
+    },
+    {
+     "x": 15,
+     "y": 4,
+     "step": 4,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 15,
+     "y": 5,
+     "step": 5,
+     "maze": "obstacle atlas_gate_3 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+     "grid": {
+      "kind": "gated",
+      "conditions": [
+       {
+        "any": [
+         {
+          "flag": "hasSword"
+         },
+         {
+          "flag": "hasSpear"
+         },
+         {
+          "flag": "hasWand"
+         },
+         {
+          "flag": "hasDarkShield"
+         }
+        ]
+       }
+      ]
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 14,
+     "y": 5,
+     "step": 6,
+     "maze": "obstacle atlas_gate_3 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+     "grid": {
+      "kind": "gated",
+      "conditions": [
+       {
+        "any": [
+         {
+          "flag": "hasSword"
+         },
+         {
+          "flag": "hasSpear"
+         },
+         {
+          "flag": "hasWand"
+         },
+         {
+          "flag": "hasDarkShield"
+         }
+        ]
+       }
+      ]
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 13,
+     "y": 5,
+     "step": 7,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 13,
+     "y": 6,
+     "step": 8,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 12,
+     "y": 6,
+     "step": 9,
+     "maze": "obstacle atlas_gate_3 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+     "grid": {
+      "kind": "gated",
+      "conditions": [
+       {
+        "any": [
+         {
+          "flag": "hasSword"
+         },
+         {
+          "flag": "hasSpear"
+         },
+         {
+          "flag": "hasWand"
+         },
+         {
+          "flag": "hasDarkShield"
+         }
+        ]
+       }
+      ]
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 11,
+     "y": 6,
+     "step": 10,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    }
+   ]
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r6c11",
+   "set": "Wand",
+   "target": "11,6",
+   "planLength": 10,
+   "cells": [
+    {
+     "x": 16,
+     "y": 1,
+     "step": 0,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 16,
+     "y": 2,
+     "step": 1,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 31,
+     "tName": "igneousToLava",
+     "fatal": null,
+     "converts": true
+    },
+    {
+     "x": 16,
+     "y": 3,
+     "step": 2,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 31,
+     "tName": "igneousToLava",
+     "fatal": null,
+     "converts": true
+    },
+    {
+     "x": 16,
+     "y": 4,
+     "step": 3,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 31,
+     "tName": "igneousToLava",
+     "fatal": null,
+     "converts": true
+    },
+    {
+     "x": 15,
+     "y": 4,
+     "step": 4,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 15,
+     "y": 5,
+     "step": 5,
+     "maze": "obstacle atlas_gate_3 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+     "grid": {
+      "kind": "gated",
+      "conditions": [
+       {
+        "any": [
+         {
+          "flag": "hasSword"
+         },
+         {
+          "flag": "hasSpear"
+         },
+         {
+          "flag": "hasWand"
+         },
+         {
+          "flag": "hasDarkShield"
+         }
+        ]
+       }
+      ]
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 14,
+     "y": 5,
+     "step": 6,
+     "maze": "obstacle atlas_gate_3 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+     "grid": {
+      "kind": "gated",
+      "conditions": [
+       {
+        "any": [
+         {
+          "flag": "hasSword"
+         },
+         {
+          "flag": "hasSpear"
+         },
+         {
+          "flag": "hasWand"
+         },
+         {
+          "flag": "hasDarkShield"
+         }
+        ]
+       }
+      ]
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 13,
+     "y": 5,
+     "step": 7,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 13,
+     "y": 6,
+     "step": 8,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 12,
+     "y": 6,
+     "step": 9,
+     "maze": "obstacle atlas_gate_3 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+     "grid": {
+      "kind": "gated",
+      "conditions": [
+       {
+        "any": [
+         {
+          "flag": "hasSword"
+         },
+         {
+          "flag": "hasSpear"
+         },
+         {
+          "flag": "hasWand"
+         },
+         {
+          "flag": "hasDarkShield"
+         }
+        ]
+       }
+      ]
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 11,
+     "y": 6,
+     "step": 10,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    }
+   ]
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r6c11",
+   "set": "Progressive Shield×2",
+   "target": "11,6",
+   "planLength": 10,
+   "cells": [
+    {
+     "x": 16,
+     "y": 1,
+     "step": 0,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 16,
+     "y": 2,
+     "step": 1,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 31,
+     "tName": "igneousToLava",
+     "fatal": null,
+     "converts": true
+    },
+    {
+     "x": 16,
+     "y": 3,
+     "step": 2,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 31,
+     "tName": "igneousToLava",
+     "fatal": null,
+     "converts": true
+    },
+    {
+     "x": 16,
+     "y": 4,
+     "step": 3,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 31,
+     "tName": "igneousToLava",
+     "fatal": null,
+     "converts": true
+    },
+    {
+     "x": 15,
+     "y": 4,
+     "step": 4,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 15,
+     "y": 5,
+     "step": 5,
+     "maze": "obstacle atlas_gate_3 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+     "grid": {
+      "kind": "gated",
+      "conditions": [
+       {
+        "any": [
+         {
+          "flag": "hasSword"
+         },
+         {
+          "flag": "hasSpear"
+         },
+         {
+          "flag": "hasWand"
+         },
+         {
+          "flag": "hasDarkShield"
+         }
+        ]
+       }
+      ]
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 14,
+     "y": 5,
+     "step": 6,
+     "maze": "obstacle atlas_gate_3 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+     "grid": {
+      "kind": "gated",
+      "conditions": [
+       {
+        "any": [
+         {
+          "flag": "hasSword"
+         },
+         {
+          "flag": "hasSpear"
+         },
+         {
+          "flag": "hasWand"
+         },
+         {
+          "flag": "hasDarkShield"
+         }
+        ]
+       }
+      ]
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 13,
+     "y": 5,
+     "step": 7,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 13,
+     "y": 6,
+     "step": 8,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 12,
+     "y": 6,
+     "step": 9,
+     "maze": "obstacle atlas_gate_3 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+     "grid": {
+      "kind": "gated",
+      "conditions": [
+       {
+        "any": [
+         {
+          "flag": "hasSword"
+         },
+         {
+          "flag": "hasSpear"
+         },
+         {
+          "flag": "hasWand"
+         },
+         {
+          "flag": "hasDarkShield"
+         }
+        ]
+       }
+      ]
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    },
+    {
+     "x": 11,
+     "y": 6,
+     "step": 10,
+     "maze": "floor",
+     "grid": {
+      "kind": "open",
+      "conditions": []
+     },
+     "t": 16,
+     "tName": "igneousStone",
+     "fatal": null,
+     "converts": false
+    }
+   ]
+  }
+ ]
+}

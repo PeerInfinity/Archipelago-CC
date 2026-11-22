@@ -1,0 +1,6354 @@
+{
+ "base": "c1b250e6380746f579b509132868c0d7818de560",
+ "preset": "seedling_playthrough_maze/AP_1 (witness paths); the classifier census covers the producer grid all three presets compile from",
+ "witnessRows": 2900,
+ "inWorld": 2435,
+ "entry": 465,
+ "fatalCellsOnWitnessPaths": 105,
+ "byDisposition": {
+  "CROSSING": 49,
+  "ENTRY GATE": 52,
+  "ARRIVAL ON A PIT EXIT TILE": 4
+ },
+ "unexplained": [],
+ "fatal": [
+  {
+   "level": 0,
+   "kind": "entry",
+   "from": "level_0__r2c13",
+   "to": "level_0__r2c13 -> level_89__r11c12",
+   "set": "",
+   "cell": [
+    15,
+    0
+   ],
+   "pathIndex": 0,
+   "pathCells": 1,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "exit",
+   "grid": {
+    "kind": "gated",
+    "conditions": [
+     {
+      "flag": "canSwim"
+     }
+    ]
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 12,
+   "kind": "entry",
+   "from": "level_12__r0c37",
+   "to": "level_12__r0c37 -> level_21",
+   "set": "",
+   "cell": [
+    36,
+    43
+   ],
+   "pathIndex": 48,
+   "pathCells": 49,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 16,
+   "kind": "entry",
+   "from": "level_16__r1c9",
+   "to": "level_16__r1c9 -> level_17",
+   "set": "",
+   "cell": [
+    12,
+    3
+   ],
+   "pathIndex": 5,
+   "pathCells": 6,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 16,
+   "kind": "entry",
+   "from": "level_16__r1c9",
+   "to": "level_16__r1c9 -> level_17 #2",
+   "set": "",
+   "cell": [
+    13,
+    3
+   ],
+   "pathIndex": 6,
+   "pathCells": 7,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 16,
+   "kind": "entry",
+   "from": "level_16__r1c9",
+   "to": "level_16__r1c9 -> level_17 #3",
+   "set": "",
+   "cell": [
+    14,
+    3
+   ],
+   "pathIndex": 7,
+   "pathCells": 8,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 16,
+   "kind": "entry",
+   "from": "level_16__r1c9",
+   "to": "level_16__r1c9 -> level_17 #4",
+   "set": "",
+   "cell": [
+    12,
+    4
+   ],
+   "pathIndex": 6,
+   "pathCells": 7,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 16,
+   "kind": "entry",
+   "from": "level_16__r1c9",
+   "to": "level_16__r1c9 -> level_17 #6",
+   "set": "",
+   "cell": [
+    14,
+    4
+   ],
+   "pathIndex": 10,
+   "pathCells": 11,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 16,
+   "kind": "entry",
+   "from": "level_16__r1c9",
+   "to": "level_16__r1c9 -> level_17 #7",
+   "set": "",
+   "cell": [
+    13,
+    5
+   ],
+   "pathIndex": 8,
+   "pathCells": 9,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 30,
+   "kind": "entry",
+   "from": "level_30__r2c10",
+   "to": "level_30__r2c10 -> level_31__r5c24",
+   "set": "Fire",
+   "cell": [
+    3,
+    14
+   ],
+   "pathIndex": 8,
+   "pathCells": 9,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": [
+     {
+      "any": [
+       {
+        "flag": "hasSword"
+       },
+       {
+        "flag": "hasSpear"
+       },
+       {
+        "flag": "hasFire"
+       }
+      ]
+     }
+    ]
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 30,
+   "kind": "entry",
+   "from": "level_30__r2c10",
+   "to": "level_30__r2c10 -> level_31__r5c24",
+   "set": "Ghost Spear",
+   "cell": [
+    3,
+    14
+   ],
+   "pathIndex": 8,
+   "pathCells": 9,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": [
+     {
+      "any": [
+       {
+        "flag": "hasSword"
+       },
+       {
+        "flag": "hasSpear"
+       },
+       {
+        "flag": "hasFire"
+       }
+      ]
+     }
+    ]
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 30,
+   "kind": "entry",
+   "from": "level_30__r2c10",
+   "to": "level_30__r2c10 -> level_31__r5c24",
+   "set": "Progressive Sword",
+   "cell": [
+    3,
+    14
+   ],
+   "pathIndex": 8,
+   "pathCells": 9,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": [
+     {
+      "any": [
+       {
+        "flag": "hasSword"
+       },
+       {
+        "flag": "hasSpear"
+       },
+       {
+        "flag": "hasFire"
+       }
+      ]
+     }
+    ]
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 32,
+   "kind": "entry",
+   "from": "level_32",
+   "to": "level_32 -> level_30__r2c10",
+   "set": "Fire",
+   "cell": [
+    4,
+    0
+   ],
+   "pathIndex": 4,
+   "pathCells": 5,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": [
+     {
+      "flag": "hasFire"
+     }
+    ]
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 32,
+   "kind": "entry",
+   "from": "level_32",
+   "to": "level_32 -> level_30__r2c10 #2",
+   "set": "Fire",
+   "cell": [
+    5,
+    0
+   ],
+   "pathIndex": 5,
+   "pathCells": 6,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": [
+     {
+      "flag": "hasFire"
+     }
+    ]
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 40,
+   "kind": "entry",
+   "from": "level_40__r26c13",
+   "to": "level_40__r26c13 -> level_43__r13c7 #2",
+   "set": "",
+   "cell": [
+    14,
+    27
+   ],
+   "pathIndex": 57,
+   "pathCells": 58,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 40,
+   "kind": "entry",
+   "from": "level_40__r26c13",
+   "to": "level_40__r26c13 -> level_43__r13c7 #3",
+   "set": "",
+   "cell": [
+    15,
+    27
+   ],
+   "pathIndex": 60,
+   "pathCells": 61,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 40,
+   "kind": "entry",
+   "from": "level_40__r26c13",
+   "to": "level_40__r26c13 -> level_43__r13c7 #4",
+   "set": "",
+   "cell": [
+    23,
+    27
+   ],
+   "pathIndex": 68,
+   "pathCells": 69,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 40,
+   "kind": "entry",
+   "from": "level_40__r26c13",
+   "to": "level_40__r26c13 -> level_43__r13c7 #5",
+   "set": "",
+   "cell": [
+    24,
+    27
+   ],
+   "pathIndex": 71,
+   "pathCells": 72,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 40,
+   "kind": "entry",
+   "from": "level_40__r26c13",
+   "to": "level_40__r26c13 -> level_43__r13c7 #6",
+   "set": "",
+   "cell": [
+    14,
+    28
+   ],
+   "pathIndex": 56,
+   "pathCells": 57,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 40,
+   "kind": "entry",
+   "from": "level_40__r26c13",
+   "to": "level_40__r26c13 -> level_43__r13c7 #7",
+   "set": "",
+   "cell": [
+    15,
+    28
+   ],
+   "pathIndex": 61,
+   "pathCells": 62,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 40,
+   "kind": "entry",
+   "from": "level_40__r26c13",
+   "to": "level_40__r26c13 -> level_43__r13c7 #8",
+   "set": "",
+   "cell": [
+    23,
+    28
+   ],
+   "pathIndex": 69,
+   "pathCells": 70,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 40,
+   "kind": "entry",
+   "from": "level_40__r26c13",
+   "to": "level_40__r26c13 -> level_43__r13c7 #9",
+   "set": "",
+   "cell": [
+    24,
+    28
+   ],
+   "pathIndex": 72,
+   "pathCells": 73,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 40,
+   "kind": "entry",
+   "from": "level_40__r26c13",
+   "to": "level_40__r26c13 -> level_43__r13c7 #10",
+   "set": "",
+   "cell": [
+    14,
+    29
+   ],
+   "pathIndex": 55,
+   "pathCells": 56,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 40,
+   "kind": "entry",
+   "from": "level_40__r26c13",
+   "to": "level_40__r26c13 -> level_43__r13c7 #11",
+   "set": "",
+   "cell": [
+    15,
+    29
+   ],
+   "pathIndex": 60,
+   "pathCells": 61,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 40,
+   "kind": "entry",
+   "from": "level_40__r26c13",
+   "to": "level_40__r26c13 -> level_43__r13c7 #12",
+   "set": "",
+   "cell": [
+    14,
+    30
+   ],
+   "pathIndex": 54,
+   "pathCells": 55,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 40,
+   "kind": "entry",
+   "from": "level_40__r26c13",
+   "to": "level_40__r26c13 -> level_43__r13c7 #13",
+   "set": "",
+   "cell": [
+    15,
+    30
+   ],
+   "pathIndex": 57,
+   "pathCells": 58,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 43,
+   "kind": "entry",
+   "from": "level_43__r3c8",
+   "to": "level_43__r3c8 -> level_37__r0c18",
+   "set": "",
+   "cell": [
+    9,
+    4
+   ],
+   "pathIndex": 2,
+   "pathCells": 3,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 48,
+   "kind": "entry",
+   "from": "level_48__r2c10",
+   "to": "level_48__r2c10 -> level_49",
+   "set": "",
+   "cell": [
+    11,
+    3
+   ],
+   "pathIndex": 2,
+   "pathCells": 3,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_49",
+   "set": "",
+   "cell": [
+    2,
+    0
+   ],
+   "pathIndex": 0,
+   "pathCells": 1,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "exit",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    0
+   ],
+   "pathIndex": 0,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "exit",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    1
+   ],
+   "pathIndex": 1,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    2
+   ],
+   "pathIndex": 2,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    3
+   ],
+   "pathIndex": 3,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    4
+   ],
+   "pathIndex": 4,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    5
+   ],
+   "pathIndex": 5,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    6
+   ],
+   "pathIndex": 6,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    7
+   ],
+   "pathIndex": 7,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    8
+   ],
+   "pathIndex": 8,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    9
+   ],
+   "pathIndex": 9,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    10
+   ],
+   "pathIndex": 10,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    11
+   ],
+   "pathIndex": 11,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    12
+   ],
+   "pathIndex": 12,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    13
+   ],
+   "pathIndex": 13,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    14
+   ],
+   "pathIndex": 14,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    15
+   ],
+   "pathIndex": 15,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    16
+   ],
+   "pathIndex": 16,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    2,
+    17
+   ],
+   "pathIndex": 17,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    3,
+    17
+   ],
+   "pathIndex": 18,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    3,
+    18
+   ],
+   "pathIndex": 19,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 50,
+   "kind": "entry",
+   "from": "level_50",
+   "to": "level_50 -> level_51__r3c10",
+   "set": "",
+   "cell": [
+    3,
+    19
+   ],
+   "pathIndex": 20,
+   "pathCells": 21,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "exit",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r0c7",
+   "to": "level_52__r2c2",
+   "set": "",
+   "cell": [
+    7,
+    0
+   ],
+   "pathIndex": 0,
+   "pathCells": 6,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "exit",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r0c7",
+   "to": "level_52__r2c2",
+   "set": "",
+   "cell": [
+    7,
+    1
+   ],
+   "pathIndex": 1,
+   "pathCells": 6,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r0c7",
+   "to": "level_52__r2c2",
+   "set": "",
+   "cell": [
+    6,
+    1
+   ],
+   "pathIndex": 2,
+   "pathCells": 6,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r0c7",
+   "to": "level_52__r2c2",
+   "set": "",
+   "cell": [
+    5,
+    1
+   ],
+   "pathIndex": 3,
+   "pathCells": 6,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r0c7",
+   "to": "level_52__r2c2",
+   "set": "",
+   "cell": [
+    5,
+    3
+   ],
+   "pathIndex": 5,
+   "pathCells": 6,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r0c7",
+   "to": "level_52__r5c10",
+   "set": "",
+   "cell": [
+    7,
+    0
+   ],
+   "pathIndex": 0,
+   "pathCells": 9,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "exit",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r0c7",
+   "to": "level_52__r5c10",
+   "set": "",
+   "cell": [
+    7,
+    1
+   ],
+   "pathIndex": 1,
+   "pathCells": 9,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r0c7",
+   "to": "level_52__r5c10",
+   "set": "",
+   "cell": [
+    8,
+    1
+   ],
+   "pathIndex": 2,
+   "pathCells": 9,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r0c7",
+   "to": "level_52__r5c10",
+   "set": "",
+   "cell": [
+    8,
+    2
+   ],
+   "pathIndex": 3,
+   "pathCells": 9,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r0c7",
+   "to": "level_52__r5c10",
+   "set": "",
+   "cell": [
+    9,
+    2
+   ],
+   "pathIndex": 4,
+   "pathCells": 9,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r0c7",
+   "to": "level_52__r5c10",
+   "set": "",
+   "cell": [
+    10,
+    2
+   ],
+   "pathIndex": 5,
+   "pathCells": 9,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r0c7",
+   "to": "level_52__r5c10",
+   "set": "",
+   "cell": [
+    10,
+    5
+   ],
+   "pathIndex": 8,
+   "pathCells": 9,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r2c2",
+   "to": "level_52__r5c10",
+   "set": "",
+   "cell": [
+    0,
+    3
+   ],
+   "pathIndex": 0,
+   "pathCells": 7,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "exit",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r2c2",
+   "to": "level_52__r5c10",
+   "set": "",
+   "cell": [
+    1,
+    3
+   ],
+   "pathIndex": 1,
+   "pathCells": 7,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r2c2",
+   "to": "level_52__r5c10",
+   "set": "",
+   "cell": [
+    2,
+    3
+   ],
+   "pathIndex": 2,
+   "pathCells": 7,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r2c2",
+   "to": "level_52__r5c10",
+   "set": "",
+   "cell": [
+    3,
+    3
+   ],
+   "pathIndex": 3,
+   "pathCells": 7,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r2c2",
+   "to": "level_52__r5c10",
+   "set": "",
+   "cell": [
+    3,
+    4
+   ],
+   "pathIndex": 4,
+   "pathCells": 7,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "in-world",
+   "from": "level_52__r2c2",
+   "to": "level_52__r5c10",
+   "set": "",
+   "cell": [
+    3,
+    6
+   ],
+   "pathIndex": 6,
+   "pathCells": 7,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r0c7",
+   "to": "level_52__r0c7 -> level_54__r27c8",
+   "set": "",
+   "cell": [
+    7,
+    0
+   ],
+   "pathIndex": 0,
+   "pathCells": 1,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "exit",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r2c2",
+   "to": "level_52__r2c2 -> level_55",
+   "set": "",
+   "cell": [
+    0,
+    3
+   ],
+   "pathIndex": 0,
+   "pathCells": 1,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "exit",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_51__r14c6",
+   "set": "",
+   "cell": [
+    1,
+    7
+   ],
+   "pathIndex": 0,
+   "pathCells": 2,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_51__r14c6",
+   "set": "",
+   "cell": [
+    0,
+    7
+   ],
+   "pathIndex": 1,
+   "pathCells": 2,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "exit",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_56",
+   "set": "",
+   "cell": [
+    1,
+    7
+   ],
+   "pathIndex": 0,
+   "pathCells": 14,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_56",
+   "set": "",
+   "cell": [
+    2,
+    7
+   ],
+   "pathIndex": 1,
+   "pathCells": 14,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_56",
+   "set": "",
+   "cell": [
+    3,
+    7
+   ],
+   "pathIndex": 2,
+   "pathCells": 14,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_56",
+   "set": "",
+   "cell": [
+    4,
+    7
+   ],
+   "pathIndex": 3,
+   "pathCells": 14,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_56",
+   "set": "",
+   "cell": [
+    5,
+    7
+   ],
+   "pathIndex": 4,
+   "pathCells": 14,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_56",
+   "set": "",
+   "cell": [
+    6,
+    7
+   ],
+   "pathIndex": 5,
+   "pathCells": 14,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_56",
+   "set": "",
+   "cell": [
+    7,
+    7
+   ],
+   "pathIndex": 6,
+   "pathCells": 14,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_56",
+   "set": "",
+   "cell": [
+    8,
+    7
+   ],
+   "pathIndex": 7,
+   "pathCells": 14,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_56",
+   "set": "",
+   "cell": [
+    9,
+    7
+   ],
+   "pathIndex": 8,
+   "pathCells": 14,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_56",
+   "set": "",
+   "cell": [
+    10,
+    7
+   ],
+   "pathIndex": 9,
+   "pathCells": 14,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_56",
+   "set": "",
+   "cell": [
+    11,
+    7
+   ],
+   "pathIndex": 10,
+   "pathCells": 14,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_56",
+   "set": "",
+   "cell": [
+    12,
+    7
+   ],
+   "pathIndex": 11,
+   "pathCells": 14,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_56",
+   "set": "",
+   "cell": [
+    13,
+    7
+   ],
+   "pathIndex": 12,
+   "pathCells": 14,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "ENTRY GATE: water lifted to open by entryGateOf (make-seedling-playthrough-rules.mjs:491-517); every entrance into the level names Progressive Swim in all three presets"
+  },
+  {
+   "level": 52,
+   "kind": "entry",
+   "from": "level_52__r5c10",
+   "to": "level_52__r5c10 -> level_56",
+   "set": "",
+   "cell": [
+    14,
+    7
+   ],
+   "pathIndex": 13,
+   "pathCells": 14,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "exit",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 54,
+   "kind": "entry",
+   "from": "level_54__r1c8",
+   "to": "level_54__r1c8 -> level_53__r14c9",
+   "set": "",
+   "cell": [
+    9,
+    0
+   ],
+   "pathIndex": 0,
+   "pathCells": 1,
+   "t": 1,
+   "tName": "water",
+   "fatal": "water (Player.as:1456, !canSwim)",
+   "maze": "exit",
+   "grid": {
+    "kind": "gated",
+    "conditions": [
+     {
+      "flag": "canSwim"
+     }
+    ]
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 56,
+   "kind": "entry",
+   "from": "level_56",
+   "to": "level_56 -> level_57",
+   "set": "Blue Key,Ghost Spear",
+   "cell": [
+    6,
+    1
+   ],
+   "pathIndex": 1,
+   "pathCells": 2,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": [
+     {
+      "key": 3
+     }
+    ]
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 56,
+   "kind": "entry",
+   "from": "level_56",
+   "to": "level_56 -> level_57",
+   "set": "Blue Key,Progressive Sword",
+   "cell": [
+    6,
+    1
+   ],
+   "pathIndex": 1,
+   "pathCells": 2,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": [
+     {
+      "key": 3
+     }
+    ]
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 56,
+   "kind": "entry",
+   "from": "level_56",
+   "to": "level_56 -> level_57",
+   "set": "Blue Key,Wand",
+   "cell": [
+    6,
+    1
+   ],
+   "pathIndex": 1,
+   "pathCells": 2,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": [
+     {
+      "key": 3
+     }
+    ]
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 58,
+   "kind": "entry",
+   "from": "level_58__r1c4",
+   "to": "level_58__r1c4 -> level_46__r6c24",
+   "set": "L58 flag 1: yeti@56,56 cleared",
+   "cell": [
+    5,
+    1
+   ],
+   "pathIndex": 1,
+   "pathCells": 2,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 70,
+   "kind": "entry",
+   "from": "level_70",
+   "to": "level_70 -> level_69",
+   "set": "Ghost Spear",
+   "cell": [
+    2,
+    2
+   ],
+   "pathIndex": 2,
+   "pathCells": 3,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 70,
+   "kind": "entry",
+   "from": "level_70",
+   "to": "level_70 -> level_69",
+   "set": "Progressive Sword",
+   "cell": [
+    2,
+    2
+   ],
+   "pathIndex": 2,
+   "pathCells": 3,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 70,
+   "kind": "entry",
+   "from": "level_70",
+   "to": "level_70 -> level_69",
+   "set": "Wand",
+   "cell": [
+    2,
+    2
+   ],
+   "pathIndex": 2,
+   "pathCells": 3,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 71,
+   "kind": "in-world",
+   "from": "level_71__r14c12",
+   "to": "level_71__r0c6",
+   "set": "Dark Suit",
+   "cell": [
+    12,
+    13
+   ],
+   "pathIndex": 0,
+   "pathCells": 5,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "ARRIVAL ON A PIT EXIT TILE: the sub-region entrance is its pit exit; reach equals the floor neighbour's (q3-pit-arrivals.jsonl) or the row is the drop itself"
+  },
+  {
+   "level": 71,
+   "kind": "in-world",
+   "from": "level_71__r14c12",
+   "to": "level_71__r16c19",
+   "set": "Dark Suit,L71 flag 2: shieldlock@288,256 cleared",
+   "cell": [
+    12,
+    13
+   ],
+   "pathIndex": 0,
+   "pathCells": 11,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "ARRIVAL ON A PIT EXIT TILE: the sub-region entrance is its pit exit; reach equals the floor neighbour's (q3-pit-arrivals.jsonl) or the row is the drop itself"
+  },
+  {
+   "level": 71,
+   "kind": "in-world",
+   "from": "level_71__r14c12",
+   "to": "level_71__r16c19",
+   "set": "Dark Suit,Progressive Shield\u00d72",
+   "cell": [
+    12,
+    13
+   ],
+   "pathIndex": 0,
+   "pathCells": 11,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "ARRIVAL ON A PIT EXIT TILE: the sub-region entrance is its pit exit; reach equals the floor neighbour's (q3-pit-arrivals.jsonl) or the row is the drop itself"
+  },
+  {
+   "level": 71,
+   "kind": "entry",
+   "from": "level_71__r14c12",
+   "to": "level_71__r14c12 -> level_82",
+   "set": "",
+   "cell": [
+    12,
+    13
+   ],
+   "pathIndex": 0,
+   "pathCells": 1,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 83,
+   "kind": "entry",
+   "from": "level_83",
+   "to": "level_83 -> level_84__r2c4",
+   "set": "",
+   "cell": [
+    2,
+    1
+   ],
+   "pathIndex": 1,
+   "pathCells": 2,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 84,
+   "kind": "entry",
+   "from": "level_84__r0c0",
+   "to": "level_84__r0c0 -> level_85",
+   "set": "",
+   "cell": [
+    1,
+    1
+   ],
+   "pathIndex": 2,
+   "pathCells": 3,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 84,
+   "kind": "entry",
+   "from": "level_84__r2c4",
+   "to": "level_84__r2c4 -> level_85",
+   "set": "",
+   "cell": [
+    3,
+    1
+   ],
+   "pathIndex": 0,
+   "pathCells": 1,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 84,
+   "kind": "entry",
+   "from": "level_84__r2c4",
+   "to": "level_84__r2c4 -> level_85 #3",
+   "set": "",
+   "cell": [
+    3,
+    1
+   ],
+   "pathIndex": 0,
+   "pathCells": 2,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "ARRIVAL ON A PIT EXIT TILE: the sub-region entrance is its pit exit; reach equals the floor neighbour's (q3-pit-arrivals.jsonl) or the row is the drop itself"
+  },
+  {
+   "level": 84,
+   "kind": "entry",
+   "from": "level_84__r2c4",
+   "to": "level_84__r2c4 -> level_85 #3",
+   "set": "",
+   "cell": [
+    3,
+    2
+   ],
+   "pathIndex": 1,
+   "pathCells": 2,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 84,
+   "kind": "entry",
+   "from": "level_84__r3c0",
+   "to": "level_84__r3c0 -> level_85",
+   "set": "",
+   "cell": [
+    1,
+    3
+   ],
+   "pathIndex": 1,
+   "pathCells": 2,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 100,
+   "kind": "entry",
+   "from": "level_100__r4c10",
+   "to": "level_100__r4c10 -> level_101__r4c2",
+   "set": "",
+   "cell": [
+    18,
+    6
+   ],
+   "pathIndex": 10,
+   "pathCells": 11,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  },
+  {
+   "level": 110,
+   "kind": "entry",
+   "from": "level_110",
+   "to": "level_110 -> level_2",
+   "set": "",
+   "cell": [
+    4,
+    4
+   ],
+   "pathIndex": 8,
+   "pathCells": 9,
+   "t": 6,
+   "tName": "pit",
+   "fatal": "pit (Player.as:720-724, onGround)",
+   "maze": "exit",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "disposition": "CROSSING: the exit cell itself, last cell of the path (a pit drop / water edge IS the AP exit)"
+  }
+ ],
+ "suitlessIgneousRows": 159,
+ "igneousRevisits": 0,
+ "igneousIdle": 0,
+ "igneousEndsOn": 41,
+ "igneous": [
+  {
+   "level": 71,
+   "kind": "in-world",
+   "from": "level_71__r0c6",
+   "to": "level_71__r16c19",
+   "set": "L71 flag 2: shieldlock@288,256 cleared",
+   "igneousCells": [
+    [
+     17,
+     15
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 71,
+   "kind": "in-world",
+   "from": "level_71__r0c6",
+   "to": "level_71__r16c19",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     17,
+     15
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 71,
+   "kind": "in-world",
+   "from": "level_71__r11c7",
+   "to": "level_71__r16c19",
+   "set": "L71 flag 2: shieldlock@288,256 cleared",
+   "igneousCells": [
+    [
+     17,
+     15
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 71,
+   "kind": "in-world",
+   "from": "level_71__r11c7",
+   "to": "level_71__r16c19",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     17,
+     15
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 71,
+   "kind": "in-world",
+   "from": "level_71__r13c7",
+   "to": "level_71__r16c19",
+   "set": "Ghost Spear,L71 flag 2: shieldlock@288,256 cleared",
+   "igneousCells": [
+    [
+     17,
+     15
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 71,
+   "kind": "in-world",
+   "from": "level_71__r13c7",
+   "to": "level_71__r16c19",
+   "set": "Ghost Spear,Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     17,
+     15
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 71,
+   "kind": "entry",
+   "from": "level_71__r0c6",
+   "to": "Level 071 - Chest",
+   "set": "",
+   "igneousCells": [
+    [
+     11,
+     17
+    ],
+    [
+     12,
+     17
+    ],
+    [
+     13,
+     17
+    ],
+    [
+     17,
+     15
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 71,
+   "kind": "entry",
+   "from": "level_71__r0c6",
+   "to": "L71 flag 2: shieldlock@288,256 cleared",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     17,
+     15
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 71,
+   "kind": "entry",
+   "from": "level_71__r0c6",
+   "to": "level_71__r0c6 -> level_80__r0c2",
+   "set": "",
+   "igneousCells": [
+    [
+     17,
+     15
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r1c7",
+   "to": "level_74__r2c2",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     1
+    ],
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r1c7",
+   "to": "level_74__r2c2",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     1
+    ],
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r1c7",
+   "to": "level_74__r2c2",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     1
+    ],
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r1c7",
+   "to": "level_74__r2c2",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     1
+    ],
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r1c7",
+   "to": "level_74__r2c11",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     7,
+     1
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r1c7",
+   "to": "level_74__r2c11",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     7,
+     1
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r1c7",
+   "to": "level_74__r2c11",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     7,
+     1
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r1c7",
+   "to": "level_74__r2c11",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     7,
+     1
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r1c7",
+   "to": "level_74__r8c18",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     7,
+     1
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r1c7",
+   "to": "level_74__r8c18",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     7,
+     1
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r1c7",
+   "to": "level_74__r8c18",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     7,
+     1
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r1c7",
+   "to": "level_74__r8c18",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     7,
+     1
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c2",
+   "to": "level_74__r1c7",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c2",
+   "to": "level_74__r1c7",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c2",
+   "to": "level_74__r1c7",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c2",
+   "to": "level_74__r1c7",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c2",
+   "to": "level_74__r2c11",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c2",
+   "to": "level_74__r2c11",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c2",
+   "to": "level_74__r2c11",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c2",
+   "to": "level_74__r2c11",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c2",
+   "to": "level_74__r8c18",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c2",
+   "to": "level_74__r8c18",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c2",
+   "to": "level_74__r8c18",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c2",
+   "to": "level_74__r8c18",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c11",
+   "to": "level_74__r1c7",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     9,
+     1
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c11",
+   "to": "level_74__r1c7",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     9,
+     1
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c11",
+   "to": "level_74__r1c7",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     9,
+     1
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c11",
+   "to": "level_74__r1c7",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     9,
+     1
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c11",
+   "to": "level_74__r2c2",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c11",
+   "to": "level_74__r2c2",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c11",
+   "to": "level_74__r2c2",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c11",
+   "to": "level_74__r2c2",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c11",
+   "to": "level_74__r8c18",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     11,
+     2
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c11",
+   "to": "level_74__r8c18",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     11,
+     2
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c11",
+   "to": "level_74__r8c18",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     11,
+     2
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r2c11",
+   "to": "level_74__r8c18",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     11,
+     2
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r8c18",
+   "to": "level_74__r1c7",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     9,
+     1
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r8c18",
+   "to": "level_74__r1c7",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     9,
+     1
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r8c18",
+   "to": "level_74__r1c7",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     9,
+     1
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r8c18",
+   "to": "level_74__r1c7",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     9,
+     1
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r8c18",
+   "to": "level_74__r2c2",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r8c18",
+   "to": "level_74__r2c2",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r8c18",
+   "to": "level_74__r2c2",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r8c18",
+   "to": "level_74__r2c2",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r8c18",
+   "to": "level_74__r2c11",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r8c18",
+   "to": "level_74__r2c11",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r8c18",
+   "to": "level_74__r2c11",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 74,
+   "kind": "in-world",
+   "from": "level_74__r8c18",
+   "to": "level_74__r2c11",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     18,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 76,
+   "kind": "entry",
+   "from": "level_76",
+   "to": "level_76 -> level_71__r0c6",
+   "set": "",
+   "igneousCells": [
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     4,
+     7
+    ],
+    [
+     5,
+     7
+    ],
+    [
+     6,
+     7
+    ],
+    [
+     8,
+     5
+    ],
+    [
+     8,
+     6
+    ],
+    [
+     8,
+     7
+    ],
+    [
+     9,
+     7
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     10,
+     5
+    ],
+    [
+     10,
+     6
+    ],
+    [
+     10,
+     7
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 76,
+   "kind": "entry",
+   "from": "level_76",
+   "to": "level_76 -> level_77__r2c0",
+   "set": "",
+   "igneousCells": [
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     12,
+     2
+    ],
+    [
+     13,
+     2
+    ],
+    [
+     13,
+     3
+    ],
+    [
+     13,
+     4
+    ],
+    [
+     13,
+     5
+    ],
+    [
+     13,
+     6
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     15,
+     6
+    ],
+    [
+     16,
+     4
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     16,
+     6
+    ],
+    [
+     17,
+     4
+    ],
+    [
+     18,
+     4
+    ],
+    [
+     18,
+     5
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 77,
+   "kind": "in-world",
+   "from": "level_77__r2c0",
+   "to": "level_77__r12c6",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     2,
+     2
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     7,
+     8
+    ],
+    [
+     7,
+     9
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 77,
+   "kind": "in-world",
+   "from": "level_77__r2c0",
+   "to": "level_77__r15c6",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     2,
+     2
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     7,
+     8
+    ],
+    [
+     7,
+     9
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c2",
+   "to": "level_78__r8c10",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r0c2",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r1c10",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r3c9",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r3c12",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r3c12",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r3c12",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r3c12",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r4c2",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r5c6",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r5c12",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r5c12",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r5c12",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r5c12",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r6c9",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r6c11",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r6c11",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r6c11",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r6c11",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r8c8",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ],
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r8c8",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     10,
+     8
+    ],
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r8c8",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     10,
+     8
+    ],
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r8c8",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     10,
+     8
+    ],
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r8c10",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r8c10",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r8c10",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r0c16",
+   "to": "level_78__r8c10",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     16,
+     2
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     16,
+     4
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r3c9",
+   "to": "level_78__r8c10",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r3c12",
+   "to": "level_78__r8c8",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r3c12",
+   "to": "level_78__r8c8",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r3c12",
+   "to": "level_78__r8c8",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r3c12",
+   "to": "level_78__r8c8",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r4c2",
+   "to": "level_78__r8c10",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r5c6",
+   "to": "level_78__r8c10",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r5c12",
+   "to": "level_78__r8c8",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r5c12",
+   "to": "level_78__r8c8",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r5c12",
+   "to": "level_78__r8c8",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r5c12",
+   "to": "level_78__r8c8",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r6c9",
+   "to": "level_78__r8c10",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r6c11",
+   "to": "level_78__r8c8",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r6c11",
+   "to": "level_78__r8c8",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r6c11",
+   "to": "level_78__r8c8",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r0c16",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r0c16",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r0c16",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r3c12",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r3c12",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r3c12",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r5c12",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r5c12",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r5c12",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r6c11",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r6c11",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r6c11",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r8c10",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r8c10",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r8c10",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c8",
+   "to": "level_78__r8c10",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": true
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r0c2",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r0c16",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r0c16",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r0c16",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r0c16",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r1c10",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r3c9",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r3c12",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r3c12",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r3c12",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r3c12",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r4c2",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r5c6",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r5c12",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r5c12",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r5c12",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r5c12",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r6c9",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r6c11",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r6c11",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r6c11",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r6c11",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r8c8",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r8c8",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r8c8",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 78,
+   "kind": "in-world",
+   "from": "level_78__r8c10",
+   "to": "level_78__r8c8",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     10,
+     8
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 99,
+   "kind": "in-world",
+   "from": "level_99__r2c7",
+   "to": "level_99__r2c4",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 99,
+   "kind": "in-world",
+   "from": "level_99__r2c7",
+   "to": "level_99__r2c4",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 99,
+   "kind": "in-world",
+   "from": "level_99__r2c7",
+   "to": "level_99__r6c12",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 99,
+   "kind": "in-world",
+   "from": "level_99__r2c7",
+   "to": "level_99__r6c12",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 99,
+   "kind": "in-world",
+   "from": "level_99__r2c7",
+   "to": "level_99__r6c12",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 99,
+   "kind": "in-world",
+   "from": "level_99__r2c7",
+   "to": "level_99__r6c12",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 99,
+   "kind": "in-world",
+   "from": "level_99__r2c7",
+   "to": "level_99__r7c5",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 99,
+   "kind": "in-world",
+   "from": "level_99__r2c7",
+   "to": "level_99__r7c5",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 99,
+   "kind": "in-world",
+   "from": "level_99__r2c7",
+   "to": "level_99__r7c5",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 99,
+   "kind": "in-world",
+   "from": "level_99__r2c7",
+   "to": "level_99__r7c5",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 99,
+   "kind": "in-world",
+   "from": "level_99__r2c7",
+   "to": "level_99__r8c10",
+   "set": "Ghost Spear",
+   "igneousCells": [
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 99,
+   "kind": "in-world",
+   "from": "level_99__r2c7",
+   "to": "level_99__r8c10",
+   "set": "Progressive Sword",
+   "igneousCells": [
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 99,
+   "kind": "in-world",
+   "from": "level_99__r2c7",
+   "to": "level_99__r8c10",
+   "set": "Wand",
+   "igneousCells": [
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  },
+  {
+   "level": 99,
+   "kind": "in-world",
+   "from": "level_99__r2c7",
+   "to": "level_99__r8c10",
+   "set": "Progressive Shield\u00d72",
+   "igneousCells": [
+    [
+     7,
+     2
+    ]
+   ],
+   "revisits": [],
+   "idleOnIgneous": 0,
+   "endsOnIgneous": false
+  }
+ ]
+}

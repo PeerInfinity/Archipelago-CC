@@ -1,0 +1,4 @@
+{"region":"level_71__r14c12","set":["Dark Suit"],"pit":{"x":12,"y":13},"neighbour":{"x":12,"y":14},"regionsFromPit":3,"regionsFromNeighbour":3,"regionsOnlyFromPit":[]}
+{"region":"level_71__r14c12","set":["Dark Suit","L71 flag 2: shieldlock@288,256 cleared"],"pit":{"x":12,"y":13},"neighbour":{"x":12,"y":14},"regionsFromPit":4,"regionsFromNeighbour":4,"regionsOnlyFromPit":[]}
+{"region":"level_71__r14c12","set":["Dark Suit","Progressive Shield","Progressive Shield"],"pit":{"x":12,"y":13},"neighbour":{"x":12,"y":14},"regionsFromPit":4,"regionsFromNeighbour":4,"regionsOnlyFromPit":[]}
+{"region":"level_84__r2c4","set":[],"pit":{"x":3,"y":1},"neighbour":null}

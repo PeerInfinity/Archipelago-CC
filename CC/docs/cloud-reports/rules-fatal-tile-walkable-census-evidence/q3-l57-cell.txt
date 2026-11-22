@@ -1,0 +1,3 @@
+entrance { x: 6, y: 10 } obstacle {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}}]} locations [{"x":5,"y":3,"id":"Seal","locationName":"Level 057 - Tentacled Beast"}]
+no Swim cells reached 1 (5,3) reached: false
+all cells reached 103 (5,3) reached: true

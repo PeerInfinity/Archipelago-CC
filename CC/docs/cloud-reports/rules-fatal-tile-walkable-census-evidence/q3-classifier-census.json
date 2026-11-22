@@ -1,0 +1,4598 @@
+{
+ "suit": "Dark Suit",
+ "swim": "Progressive Swim",
+ "worlds": 115,
+ "tally": {
+  "water:refused": 5237,
+  "water:refused:exit": 12,
+  "pit:refused": 2746,
+  "pit:WALKABLE:exit": 40,
+  "pit:unknown-obstacle-kind:exit": 1,
+  "lava:refused": 1825,
+  "water:WALKABLE-WITHOUT-Progressive Swim:exit": 6,
+  "water:WALKABLE-WITHOUT-Progressive Swim": 115,
+  "igneousToLava:WALKABLE-WITHOUT-Dark Suit": 86,
+  "lava:refused:exit": 1
+ },
+ "walkableFatalOrConverting": [
+  {
+   "level": 12,
+   "world": "level_12__r0c19",
+   "cell": [
+    36,
+    43
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_12__r0c37 -> level_21",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 16,
+   "world": "level_16__r1c1",
+   "cell": [
+    12,
+    3
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_16__r1c9 -> level_17",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 16,
+   "world": "level_16__r1c1",
+   "cell": [
+    13,
+    3
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_16__r1c9 -> level_17 #2",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 16,
+   "world": "level_16__r1c1",
+   "cell": [
+    14,
+    3
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_16__r1c9 -> level_17 #3",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 16,
+   "world": "level_16__r1c1",
+   "cell": [
+    12,
+    4
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_16__r1c9 -> level_17 #4",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 16,
+   "world": "level_16__r1c1",
+   "cell": [
+    13,
+    4
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_16__r1c9 -> level_17 #5",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 16,
+   "world": "level_16__r1c1",
+   "cell": [
+    14,
+    4
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_16__r1c9 -> level_17 #6",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 16,
+   "world": "level_16__r1c1",
+   "cell": [
+    13,
+    5
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_16__r1c9 -> level_17 #7",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 30,
+   "world": "level_30__r0c4",
+   "cell": [
+    3,
+    14
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_30__r2c10 -> level_31__r5c24",
+   "grid": {
+    "kind": "sink",
+    "conditions": [
+     {
+      "any": [
+       {
+        "flag": "hasSword"
+       },
+       {
+        "flag": "hasSpear"
+       },
+       {
+        "flag": "hasFire"
+       }
+      ]
+     }
+    ]
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": "unknown-obstacle-kind"
+  },
+  {
+   "level": 32,
+   "world": "level_32",
+   "cell": [
+    4,
+    0
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_32 -> level_30__r2c10",
+   "grid": {
+    "kind": "sink",
+    "conditions": [
+     {
+      "flag": "hasFire"
+     }
+    ]
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 32,
+   "world": "level_32",
+   "cell": [
+    5,
+    0
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_32 -> level_30__r2c10 #2",
+   "grid": {
+    "kind": "sink",
+    "conditions": [
+     {
+      "flag": "hasFire"
+     }
+    ]
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 40,
+   "world": "level_40__r0c53",
+   "cell": [
+    14,
+    27
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_40__r26c13 -> level_43__r13c7 #2",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 40,
+   "world": "level_40__r0c53",
+   "cell": [
+    15,
+    27
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_40__r26c13 -> level_43__r13c7 #3",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 40,
+   "world": "level_40__r0c53",
+   "cell": [
+    23,
+    27
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_40__r26c13 -> level_43__r13c7 #4",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 40,
+   "world": "level_40__r0c53",
+   "cell": [
+    24,
+    27
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_40__r26c13 -> level_43__r13c7 #5",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 40,
+   "world": "level_40__r0c53",
+   "cell": [
+    14,
+    28
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_40__r26c13 -> level_43__r13c7 #6",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 40,
+   "world": "level_40__r0c53",
+   "cell": [
+    15,
+    28
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_40__r26c13 -> level_43__r13c7 #7",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 40,
+   "world": "level_40__r0c53",
+   "cell": [
+    23,
+    28
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_40__r26c13 -> level_43__r13c7 #8",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 40,
+   "world": "level_40__r0c53",
+   "cell": [
+    24,
+    28
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_40__r26c13 -> level_43__r13c7 #9",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 40,
+   "world": "level_40__r0c53",
+   "cell": [
+    14,
+    29
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_40__r26c13 -> level_43__r13c7 #10",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 40,
+   "world": "level_40__r0c53",
+   "cell": [
+    15,
+    29
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_40__r26c13 -> level_43__r13c7 #11",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 40,
+   "world": "level_40__r0c53",
+   "cell": [
+    14,
+    30
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_40__r26c13 -> level_43__r13c7 #12",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 40,
+   "world": "level_40__r0c53",
+   "cell": [
+    15,
+    30
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_40__r26c13 -> level_43__r13c7 #13",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 43,
+   "world": "level_43__r3c8",
+   "cell": [
+    9,
+    4
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_43__r3c8 -> level_37__r0c18",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 48,
+   "world": "level_48__r2c10",
+   "cell": [
+    11,
+    3
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_48__r2c10 -> level_49",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    0
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "exit level_50 -> level_49",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    1,
+    1
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    1
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    1,
+    2
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    2
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    2
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    1,
+    3
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    3
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    3
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    4,
+    3
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    1,
+    4
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    4
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    4
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    4,
+    4
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    1,
+    5
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    5
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    5
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    4,
+    5
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    1,
+    6
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    6
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    6
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    4,
+    6
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    4,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    8
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    8
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    4,
+    8
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    1,
+    9
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    9
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    9
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    4,
+    9
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    1,
+    10
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    10
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    10
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    4,
+    10
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    1,
+    11
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    11
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    11
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    4,
+    11
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    1,
+    12
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    12
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    12
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    4,
+    12
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    1,
+    13
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    13
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    13
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    4,
+    13
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    1,
+    14
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    14
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    14
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    4,
+    14
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    1,
+    15
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    15
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    15
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    1,
+    16
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    16
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    16
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    2,
+    17
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    17
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    4,
+    17
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    18
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    4,
+    18
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 50,
+   "world": "level_50",
+   "cell": [
+    3,
+    19
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "exit level_50 -> level_51__r3c10",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    7,
+    0
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "exit level_52__r0c7 -> level_54__r27c8",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    5,
+    1
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    6,
+    1
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    7,
+    1
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    8,
+    1
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    9,
+    1
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    2,
+    2
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    3,
+    2
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    8,
+    2
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    9,
+    2
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    10,
+    2
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    11,
+    2
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    0,
+    3
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "exit level_52__r2c2 -> level_55",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    1,
+    3
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    2,
+    3
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    3,
+    3
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    4,
+    3
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    5,
+    3
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    3,
+    4
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    4,
+    4
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    10,
+    5
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    11,
+    5
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    1,
+    6
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    2,
+    6
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    3,
+    6
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    4,
+    6
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    8,
+    6
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    9,
+    6
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    10,
+    6
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    11,
+    6
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    12,
+    6
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    13,
+    6
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    0,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "exit level_52__r5c10 -> level_51__r14c6",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    1,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    2,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    3,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    4,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    5,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    6,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    7,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    8,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    9,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    10,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    11,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    12,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    13,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    14,
+    7
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "exit level_52__r5c10 -> level_56",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    2,
+    8
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    3,
+    8
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    4,
+    8
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    5,
+    8
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    9,
+    8
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    10,
+    8
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    11,
+    8
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    12,
+    8
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 52,
+   "world": "level_52__r0c7",
+   "cell": [
+    13,
+    8
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 56,
+   "world": "level_56",
+   "cell": [
+    6,
+    1
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_56 -> level_57",
+   "grid": {
+    "kind": "sink",
+    "conditions": [
+     {
+      "key": 3
+     }
+    ]
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 57,
+   "world": "level_57",
+   "cell": [
+    5,
+    3
+   ],
+   "t": 1,
+   "tName": "water",
+   "maze": "obstacle atlas_gate_2 [(Progressive Sword OR Ghost Spear OR Wand)]",
+   "grid": {
+    "kind": "gated",
+    "conditions": [
+     {
+      "flag": "canSwim"
+     }
+    ]
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[1]",
+   "protector": "Progressive Swim",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 58,
+   "world": "level_58__r1c2",
+   "cell": [
+    5,
+    1
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_58__r1c4 -> level_46__r6c24",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 70,
+   "world": "level_70",
+   "cell": [
+    2,
+    2
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_70 -> level_69",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 71,
+   "world": "level_71__r0c6",
+   "cell": [
+    12,
+    13
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_71__r14c12 -> level_82",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 71,
+   "world": "level_71__r0c6",
+   "cell": [
+    17,
+    15
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 71,
+   "world": "level_71__r0c6",
+   "cell": [
+    11,
+    17
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 71,
+   "world": "level_71__r0c6",
+   "cell": [
+    12,
+    17
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 71,
+   "world": "level_71__r0c6",
+   "cell": [
+    13,
+    17
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 71,
+   "world": "level_71__r0c6",
+   "cell": [
+    16,
+    17
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 71,
+   "world": "level_71__r0c6",
+   "cell": [
+    11,
+    18
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 71,
+   "world": "level_71__r0c6",
+   "cell": [
+    12,
+    18
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    7,
+    1
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    8,
+    1
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    9,
+    1
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    5,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    6,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "obstacle atlas_gate_2 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+   "grid": {
+    "kind": "gated",
+    "conditions": [
+     {
+      "any": [
+       {
+        "flag": "hasSword"
+       },
+       {
+        "flag": "hasSpear"
+       },
+       {
+        "flag": "hasWand"
+       },
+       {
+        "flag": "hasDarkShield"
+       }
+      ]
+     }
+    ]
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    7,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    8,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    9,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "obstacle atlas_gate_2 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+   "grid": {
+    "kind": "gated",
+    "conditions": [
+     {
+      "any": [
+       {
+        "flag": "hasSword"
+       },
+       {
+        "flag": "hasSpear"
+       },
+       {
+        "flag": "hasWand"
+       },
+       {
+        "flag": "hasDarkShield"
+       }
+      ]
+     }
+    ]
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    10,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "obstacle atlas_gate_2 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+   "grid": {
+    "kind": "gated",
+    "conditions": [
+     {
+      "any": [
+       {
+        "flag": "hasSword"
+       },
+       {
+        "flag": "hasSpear"
+       },
+       {
+        "flag": "hasWand"
+       },
+       {
+        "flag": "hasDarkShield"
+       }
+      ]
+     }
+    ]
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    11,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    5,
+    3
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    6,
+    3
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    9,
+    3
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "obstacle atlas_gate_2 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+   "grid": {
+    "kind": "gated",
+    "conditions": [
+     {
+      "any": [
+       {
+        "flag": "hasSword"
+       },
+       {
+        "flag": "hasSpear"
+       },
+       {
+        "flag": "hasWand"
+       },
+       {
+        "flag": "hasDarkShield"
+       }
+      ]
+     }
+    ]
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    10,
+    3
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    11,
+    3
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    12,
+    3
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    11,
+    4
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 74,
+   "world": "level_74__r1c7",
+   "cell": [
+    18,
+    7
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "obstacle atlas_gate_2 [(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)]",
+   "grid": {
+    "kind": "gated",
+    "conditions": [
+     {
+      "any": [
+       {
+        "flag": "hasSword"
+       },
+       {
+        "flag": "hasSpear"
+       },
+       {
+        "flag": "hasWand"
+       },
+       {
+        "flag": "hasDarkShield"
+       }
+      ]
+     }
+    ]
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    10,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    11,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    12,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    13,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    2,
+    3
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    3,
+    3
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    4,
+    3
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    10,
+    3
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    13,
+    3
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    2,
+    4
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    4,
+    4
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    10,
+    4
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    13,
+    4
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    16,
+    4
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    17,
+    4
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    18,
+    4
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    2,
+    5
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    4,
+    5
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    8,
+    5
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    10,
+    5
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    13,
+    5
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    16,
+    5
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    18,
+    5
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    4,
+    6
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    8,
+    6
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    10,
+    6
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    13,
+    6
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    14,
+    6
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    15,
+    6
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    16,
+    6
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    4,
+    7
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    5,
+    7
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    6,
+    7
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    8,
+    7
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    9,
+    7
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 76,
+   "world": "level_76",
+   "cell": [
+    10,
+    7
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 77,
+   "world": "level_77__r2c0",
+   "cell": [
+    2,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 77,
+   "world": "level_77__r2c0",
+   "cell": [
+    7,
+    7
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 77,
+   "world": "level_77__r2c0",
+   "cell": [
+    7,
+    8
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 77,
+   "world": "level_77__r2c0",
+   "cell": [
+    7,
+    9
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 78,
+   "world": "level_78__r0c2",
+   "cell": [
+    15,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 78,
+   "world": "level_78__r0c2",
+   "cell": [
+    16,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 78,
+   "world": "level_78__r0c2",
+   "cell": [
+    15,
+    3
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 78,
+   "world": "level_78__r0c2",
+   "cell": [
+    16,
+    3
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 78,
+   "world": "level_78__r0c2",
+   "cell": [
+    16,
+    4
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 78,
+   "world": "level_78__r0c2",
+   "cell": [
+    10,
+    8
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 83,
+   "world": "level_83",
+   "cell": [
+    2,
+    1
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_83 -> level_84__r2c4",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 84,
+   "world": "level_84__r0c0",
+   "cell": [
+    1,
+    1
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_84__r0c0 -> level_85",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 84,
+   "world": "level_84__r0c0",
+   "cell": [
+    2,
+    1
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_84__r0c0 -> level_85 #2",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 84,
+   "world": "level_84__r0c0",
+   "cell": [
+    3,
+    1
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_84__r2c4 -> level_85",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 84,
+   "world": "level_84__r0c0",
+   "cell": [
+    1,
+    2
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_84__r0c0 -> level_85 #3",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 84,
+   "world": "level_84__r0c0",
+   "cell": [
+    2,
+    2
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_84__r2c4 -> level_85 #2",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 84,
+   "world": "level_84__r0c0",
+   "cell": [
+    3,
+    2
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_84__r2c4 -> level_85 #3",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 84,
+   "world": "level_84__r0c0",
+   "cell": [
+    1,
+    3
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_84__r3c0 -> level_85",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 84,
+   "world": "level_84__r0c0",
+   "cell": [
+    2,
+    3
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_84__r3c0 -> level_85 #2",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 84,
+   "world": "level_84__r0c0",
+   "cell": [
+    3,
+    3
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_84__r2c4 -> level_85 #4",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 85,
+   "world": "level_85",
+   "cell": [
+    3,
+    1
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 85,
+   "world": "level_85",
+   "cell": [
+    2,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 85,
+   "world": "level_85",
+   "cell": [
+    3,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 85,
+   "world": "level_85",
+   "cell": [
+    8,
+    3
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 85,
+   "world": "level_85",
+   "cell": [
+    7,
+    4
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 85,
+   "world": "level_85",
+   "cell": [
+    8,
+    4
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 85,
+   "world": "level_85",
+   "cell": [
+    2,
+    6
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 85,
+   "world": "level_85",
+   "cell": [
+    6,
+    7
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 85,
+   "world": "level_85",
+   "cell": [
+    7,
+    7
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 85,
+   "world": "level_85",
+   "cell": [
+    6,
+    8
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 85,
+   "world": "level_85",
+   "cell": [
+    7,
+    8
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 99,
+   "world": "level_99__r2c4",
+   "cell": [
+    7,
+    2
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 99,
+   "world": "level_99__r2c4",
+   "cell": [
+    9,
+    4
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 99,
+   "world": "level_99__r2c4",
+   "cell": [
+    10,
+    4
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 99,
+   "world": "level_99__r2c4",
+   "cell": [
+    10,
+    5
+   ],
+   "t": 31,
+   "tName": "igneousToLava",
+   "maze": "floor",
+   "grid": {
+    "kind": "open",
+    "conditions": []
+   },
+   "decider": "seedlingPlaythroughOverlay.js PLAYTHROUGH_TILE_OVERLAY[31] (IGNEOUS_IS_FREE)",
+   "protector": "Dark Suit",
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 100,
+   "world": "level_100__r2c3",
+   "cell": [
+    18,
+    6
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_100__r4c10 -> level_101__r4c2",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  },
+  {
+   "level": 110,
+   "world": "level_110",
+   "cell": [
+    4,
+    4
+   ],
+   "t": 6,
+   "tName": "pit",
+   "maze": "exit level_110 -> level_2",
+   "grid": {
+    "kind": "sink",
+    "conditions": []
+   },
+   "decider": "seedlingSemantics.js TILE_TYPE_SEMANTICS[6]",
+   "protector": null,
+   "walkableWithoutProtector": true
+  }
+ ]
+}

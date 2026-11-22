@@ -1,0 +1,43 @@
+== L78-r0c16tor6c11-wand-k20: first hits_timer arm t58, restart t88
+  (15,2) in range t13..t27 (15 frames) -> lava at t49
+  (16,2) in range t5..t17 (13 frames) -> lava at t41
+  (15,3) in range t22..t87 (66 frames) -> lava at t58; sample point ON it t58..t87
+  (16,3) in range t32..t87 (56 frames) -> lava at t68
+== L78-r0c16tor6c11-wand-k6: first hits_timer arm t58, restart t88
+  (15,2) in range t13..t27 (15 frames) -> lava at t49
+  (16,2) in range t5..t17 (13 frames) -> lava at t41
+  (15,3) in range t22..t87 (66 frames) -> lava at t58; sample point ON it t58..t87
+  (16,3) in range t32..t87 (56 frames) -> lava at t68
+== L78-r0c16tor6c11-firewand-k20: first hits_timer arm t58, restart t88
+  (15,2) in range t13..t27 (15 frames) -> lava at t49
+  (16,2) in range t5..t17 (13 frames) -> lava at t41
+  (15,3) in range t22..t87 (66 frames) -> lava at t58; sample point ON it t58..t87
+  (16,3) in range t32..t87 (56 frames) -> lava at t68
+== L78-r0c16tor6c11-firewand-k6: first hits_timer arm t58, restart t88
+  (15,2) in range t13..t27 (15 frames) -> lava at t49
+  (16,2) in range t5..t17 (12 frames) -> lava at t42
+  (15,3) in range t22..t87 (66 frames) -> lava at t58; sample point ON it t58..t87
+  (16,3) in range t32..t87 (56 frames) -> lava at t68
+== L78-r0c16tor6c11-wand-k20: first hits_timer arm t58, restart t88
+  (15,2) in range t13..t27 (15 frames) -> lava at t49
+  (16,2) in range t5..t17 (13 frames) -> lava at t41
+  (15,3) in range t22..t87 (66 frames) -> lava at t58; sample point ON it t58..t87
+  (16,3) in range t32..t87 (56 frames) -> lava at t68
+== L78-r0c16tor6c11-wand-k6: first hits_timer arm t58, restart t88
+  (15,2) in range t13..t27 (15 frames) -> lava at t49
+  (16,2) in range t5..t17 (13 frames) -> lava at t41
+  (15,3) in range t22..t87 (66 frames) -> lava at t58; sample point ON it t58..t87
+  (16,3) in range t32..t87 (56 frames) -> lava at t68
+== L78-r0c16tor6c11-walk2-wand: first hits_timer arm t137, restart t177
+  (16,2) in range t5..t23 (19 frames) -> lava at t41
+  (15,3) in range t57..t60 (4 frames) -> lava at tNone
+  (16,3) in range t18..t47 (30 frames) -> lava at t54
+  (16,4) in range t32..t52 (21 frames) -> lava at t68
+== L78-r0c16tor6c11-sw-a100-p14-sword: first hits_timer arm t174, restart tNone
+  (16,2) in range t5..t23 (19 frames) -> lava at t41
+  (16,3) in range t18..t37 (20 frames) -> lava at t54
+  (16,4) in range t32..t57 (26 frames) -> lava at t68
+== slack on the GAME YES exact-path run sw-a100-p14-sword: last tick the sample point (x,y+1) is on each igneous tile vs its conversion
+  (16,2) sample point on it t7..t20, converts t41: slack 21 frames
+  (16,3) sample point on it t21..t33, converts t54: slack 21 frames
+  (16,4) sample point on it t34..t54, converts t68: slack 14 frames
