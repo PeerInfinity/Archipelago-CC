@@ -211,10 +211,18 @@ function sourceRows({ repo, builds, pinning, row }) {
                 + 'which carries no history to measure descent in — the question cannot be put here');
             continue;
         }
+        // A candidate's source lives on a side branch of the fork (p4h: `p4h-as3`), which a checkout of the
+        // gitlink — CI's `fetch --unshallow` included — never fetches. So an ABSENT object is fetched ONCE, by
+        // its SHA, before the question is put; one that still cannot be had stays the FAIL below, by name.
+        let fetched = '';
+        if (!gitOk(sub, ['cat-file', '-e', `${c}^{commit}`])) {
+            const ok = gitOk(sub, ['fetch', '--quiet', 'origin', c]);
+            fetched = ok ? ' (fetched by SHA — it is on no branch the checkout carries)' : ' (absent, and fetching it by SHA failed)';
+        }
         const descends = gitOk(sub, ['merge-base', '--is-ancestor', gitlink, c]);
         row(descends ? 'PASS' : 'FAIL',
             `(iii-c) the candidate ${b.name}'s source.commit ${short(c)} ${descends ? 'DESCENDS' : 'does NOT descend'} `
-            + `from the gitlink ${short(gitlink)}` + (descends ? '' : ' (unrelated, or not in the submodule\'s history '
+            + `from the gitlink ${short(gitlink)}${fetched}` + (descends ? '' : ' (unrelated, or not in the submodule\'s history '
                 + 'at all — fetch it into the submodule, or rebuild the candidate on the default\'s source)'));
     }
 }

@@ -185,6 +185,41 @@ describe('check-seedling-source-pin', () => {
         }
     });
 
+    /**
+     * ⛓ CI's shape (measured red at d90d1acaae, run 45062282013): the candidate's source lives on a SIDE branch of the
+     * fork (p4h: `p4h-as3`), which a checkout of the gitlink never fetches, so the object is absent. The gate fetches
+     * it once by SHA and then measures descent; one that no fetch can have stays a named FAIL.
+     */
+    it('⛓ (iii-c) a candidate source ABSENT from the checkout (a side branch) is fetched by SHA, then measured', () => {
+        const { root, sub, shas } = fixture();
+        const upstream = join(root, 'upstream-fork');
+        forkRepo(upstream); // its shas may or may not equal the fixture's (timestamps) — so measure ITS shas
+        const up = { pin: git(upstream, 'rev-parse', 'main~1'), later: git(upstream, 'rev-parse', 'main') };
+        git(upstream, 'branch', '-q', '-f', 'cand', up.later);
+        git(upstream, 'branch', '-q', '-f', 'main', up.pin);
+        rmSync(sub, { recursive: true, force: true });
+        git(root, 'clone', '-q', '--no-local', '--single-branch', '-b', 'main', `file://${upstream}`, sub);
+        expect(() => git(sub, 'cat-file', '-e', `${up.later}^{commit}`), 'the precondition: the candidate is absent').toThrow();
+        const m = JSON.parse(readFileSync(join(root, BUILDS_JSON), 'utf8'));
+        for (const b of m.builds) if (b.role === 'default') b.source.commit = up.pin;
+        m.builds = m.builds.filter((b) => b.role !== 'demo' || b.source.repo !== FORK);
+        writeFileSync(join(root, BUILDS_JSON), JSON.stringify(m));
+        git(root, 'update-index', '--cacheinfo', `160000,${up.pin},vendor/seedling`);
+        git(root, 'commit', '-q', '--allow-empty', '-m', 'gitlink at the upstream pin');
+        withCandidate(root, up.later);
+        const res = checkSourcePin({ repo: root });
+        expect(row(res, 'iii-c')).toMatchObject({ kind: 'PASS' });
+        expect(row(res, 'iii-c').msg).toMatch(/DESCENDS from the gitlink .* \(fetched by SHA/);
+
+        withCandidate(root, 'e'.repeat(40));
+        const res2 = checkSourcePin({ repo: root });
+        const missing = res2.rows.filter((r) => r.msg.includes('(iii-c)') && r.msg.includes('eeeeeee'));
+        expect(missing).toHaveLength(1);
+        expect(missing[0]).toMatchObject({ kind: 'FAIL' });
+        expect(missing[0].msg).toMatch(/absent, and fetching it by SHA failed/);
+        expect(shas.pin).toBeTruthy();
+    });
+
     it('⛔ with a candidate, the DEFAULT\'s mismatch still reds (i), as without one', () => {
         const { root, shas } = fixture({ gitlink: 'later' });
         withCandidate(root, shas.later);
