@@ -201,6 +201,7 @@ import {
 import { STRIKE_SLOT, STRIKE_SLOT_COUNTS, pressIsBlade } from './strikeSlot.js';
 // ⛓ hammer-phase SPEAR-ARM: a spear-only slot's strike policy (`spearStrikePolicyFor`; a family file).
 import { SPEAR_ARM_COUNTS, spearArmSlot, spearStrikeGeometry } from './spearArm.js';
+import { tentacleWeaponArm } from './tbWeaponArms.js';
 import { STAGED_HUNT_SCAN_MEMO_COUNTS, newStagedHuntScanMemo, stagedScanEntry } from './stagedHuntScanMemo.js';
 import { OPP_PRESS_FALLBACK, OPP_PRESS_FALLBACK_COUNTS, oppPressFallbackSentence } from './oppPressFallback.js';
 import { auditOppFallbackRedo, oppFallbackHitsAudits, oppFallbackHitsSentence, playerHitsSince } from './oppFallbackHits.js';
@@ -22484,8 +22485,11 @@ function resolveTentacleBeastStrategy(run, obstacle) {
     }
     if (fight.beast.dead) return refuse(`fight ${obstacle.id}`, `${obstacle.id} is already dead`);
     const inv = run.progress('inventory') ?? {};
-    if (!inv.hasSword) {
-        return refuse(`fight ${obstacle.id}`, 'a tentacle dies to one sword hit while it sits; this run holds no sword');
+    // ⛓ TB-WEAPONS (`tbWeaponArms.TB_WEAPON_ARMS`, OFF: null, and the sword-only refusal below stands word for word).
+    const arm = inv.hasSword ? null : tentacleWeaponArm(inv, run.progress('inventorySlots'));
+    if (!inv.hasSword && (arm === null || arm.refusal)) {
+        return refuse(`fight ${obstacle.id}`, arm?.refusal
+            ?? 'a tentacle dies to one sword hit while it sits; this run holds no sword');
     }
     if (fight.streamRefusal) {
         return refuse(`fight ${obstacle.id}`, `the tentacles' placements are \`Math.random()\` draws, and the run's `
@@ -22496,6 +22500,7 @@ function resolveTentacleBeastStrategy(run, obstacle) {
         postCondition: 'mouth',
         target: { x: fight.beast.x, y: fight.beast.y },
         boss: obstacle.id,
+        ...(arm !== null ? { weapon: arm.weapon, slot: arm.slot, row: arm.row } : {}),
         rejected: [{
             option: 'route around the beast',
             why: `L57's only way on is ${obstacle.id}'s mouth, which the game adds only at the end of "dying", after `
@@ -22528,8 +22533,8 @@ function tentacleDeathWhy(r, at) {
     const d = CONTACT_FIDELITY.whirlpoolDrown ? (r.ledger('playerDeaths') ?? []).at(-1) : null;
     return d?.source === 'whirlpool' ? `the player drowned in ${d.id} ${at}` : `the player died ${at}`;
 }
-function playTentacleBeastPolicy(r, perTick, params, ctx, { settle = false } = {}) {
-    const mem = createTentacleBeastPolicy(params);
+function playTentacleBeastPolicy(r, perTick, params, ctx, { settle = false, row = null } = {}) {
+    const mem = createTentacleBeastPolicy(params, row);
     const deathsBefore = tentacleDeaths(r);
     // ⛓ fidelity HITLESS: the landed `Player.hit`s of this play (read by the ranking under `tentacleHitlessFirst`).
     const hitsBefore = (r.ledger('playerHits') ?? []).length;
@@ -22607,6 +22612,17 @@ function execTentacleBeast(run, perTick, resolved, ctx) {
     const tried = [];
     let params = TENTACLE_BEAST_POLICY_VARIANTS[0];
     let choice = null;
+    // ⛓ TB-WEAPONS (OFF: `resolved.row` is absent and nothing below reads it): the arm's slot is `Main.primary` before
+    // the first fork (a fork replays the equips), and its row is every play's.
+    const row = resolved.row ?? null;
+    const prior = row !== null ? run.progress('primary') : null;
+    if (row !== null) {
+        if (typeof ctx.fork !== 'function' || !CONTACT_FIDELITY.tentacleHitlessFirst) {
+            throw new SolverRefusal(`${ctx.what}: tentaclebeast ${resolved.boss}: the ${row.weapon} arm is chosen on forks `
+                + 'under `tentacleHitlessFirst`, and this solve has no fork or the switch is off', { obstacle });
+        }
+        if (prior !== resolved.slot) ctx.equip(resolved.slot);
+    }
     if (typeof ctx.fork === 'function' && CONTACT_FIDELITY.tentacleHitlessFirst) {
         /**
          * ⛓⛓ fidelity HITLESS (`CONTACT_FIDELITY.tentacleHitlessFirst`; OFF the first-without-a-death loop below,
@@ -22621,7 +22637,7 @@ function execTentacleBeast(run, perTick, resolved, ctx) {
             if (!f) break;
             let r;
             try {
-                r = playTentacleBeastPolicy(f, null, v, ctx, { settle: true });
+                r = playTentacleBeastPolicy(f, null, v, ctx, { settle: true, row });
             } catch (e) {
                 // A whirlpool's drown (`Player.drown()` from outside the player) is a DEATH the run refuses by name
                 // rather than steps (`levelRun.stepTentacleRuntimeNow`, bosskills D3): on a fork it rejects that
@@ -22633,6 +22649,13 @@ function execTentacleBeast(run, perTick, resolved, ctx) {
             tried.push({ params: { ...v }, ok: r.ok, spent: r.spent, why: r.why ?? null, hits: r.hits ?? null });
         }
         choice = chooseTentacleVariant(tried);
+        if (row !== null && choice !== null && choice.hits > 0) {
+            // ⛓ TB-WEAPONS: a new arm ships no plan that tanks a hit — the fewest-hits rule is the sword's alone.
+            throw new SolverRefusal(`${ctx.what}: no Tentacled Beast policy variant opens the mouth of ${resolved.boss} `
+                + `with the ${row.weapon} and no hit on a fork of this run — the best takes ${choice.hits} hit(s); `
+                + `${tried.map((t) => `${JSON.stringify(t.params)}: ${t.ok ? `${t.hits} hit(s), ${t.spent} t` : t.why}`).join('; ')}`,
+            { obstacle });
+        }
         if (choice === null) {
             throw new SolverRefusal(`${ctx.what}: no Tentacled Beast policy variant opens the mouth of ${resolved.boss} `
                 + `without a death on a fork of this run — ${tried.map((t) => `${JSON.stringify(t.params)}: ${t.why}`).join('; ')}`,
@@ -22654,7 +22677,7 @@ function execTentacleBeast(run, perTick, resolved, ctx) {
             { obstacle });
         }
     }
-    const r = playTentacleBeastPolicy(run, perTick, params, ctx, { settle: choice !== null });
+    const r = playTentacleBeastPolicy(run, perTick, params, ctx, { settle: choice !== null, row });
     if (!r.ok) {
         throw new SolverRefusal(`${ctx.what}: the Tentacled Beast policy ${JSON.stringify(params)} did not open the `
             + `mouth of ${resolved.boss}: ${r.why}`, { obstacle });
@@ -22664,8 +22687,9 @@ function execTentacleBeast(run, perTick, resolved, ctx) {
         throw new SolverRefusal(`${ctx.what}: the Tentacled Beast policy ${JSON.stringify(params)} took ${r.hits} hit(s) on `
             + `the run where its fork took ${choice.hits}`, { obstacle });
     }
+    if (row !== null && run.progress('primary') !== prior) ctx.equip(prior);
     return { verb: 'tentaclebeast', target: resolved.boss, from, ticks: perTick.length - from, params: { ...params },
-        tried, report: r.report, ...(choice !== null ? { choice } : {}) };
+        tried, report: r.report, ...(choice !== null ? { choice } : {}), ...(row !== null ? { weapon: row.weapon } : {}) };
 }
 
 function execFight(run, perTick, resolved, ctx) {

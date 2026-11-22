@@ -111,8 +111,26 @@ export function tentacleBeastSettleStep(mem, { view, p }) {
  * A fresh memory for one fight. `lastPress` keeps a swing from re-pressing inside its own window (a second press
  * restarts the window, `swordWindowReplace`).
  */
-export function createTentacleBeastPolicy(params = TENTACLE_BEAST_POLICY_VARIANTS[0]) {
-    return { params: { ...params }, lastPress: -1000, tick: 0, target: null, log: [] };
+export function createTentacleBeastPolicy(params = TENTACLE_BEAST_POLICY_VARIANTS[0], weapon = null) {
+    const mem = { params: { ...params }, lastPress: -1000, tick: 0, target: null, log: [] };
+    // ⛓ TB-WEAPONS (`tbWeaponArms.js`, OFF): a non-sword weapon's row (`tentacleWeaponRow`). No row = the sword's play.
+    if (weapon !== null) mem.weapon = weapon;
+    return mem;
+}
+
+/**
+ * ⛓ TB-WEAPONS — the strike spots for a weapon row: the sword's two (below, swinging up; the blind side), pushed out by
+ * the row's extra reach (`extent` past the sword's `REACH`), plus above, thrusting down (out of the swipe band, which
+ * lies on the tentacle's own row). The row's `lands` is asked of each spot, so a spot the press cannot reach is dropped.
+ */
+function weaponSpots(t, P, row) {
+    const off = P.gap + Math.max(0, row.extent - REACH);
+    const spots = [
+        { x: t.x, y: t.y + off, dir: 1 },
+        { x: t.right ? t.x - off - 4 : t.x + off + 4, y: t.y, dir: t.right ? 0 : 2 },
+        { x: t.x, y: t.y - off, dir: 3 },
+    ];
+    return spots.filter((s) => row.lands(s.x, s.y, s.dir, t));
 }
 
 /**
@@ -129,13 +147,14 @@ export function tentacleBeastPolicyStep(mem, { view, p, slashing }) {
         for (const k of walkKeys(p.x, p.y, view.beast.x, view.beast.y + 44)) keys.add(k);
         return keys;
     }
-    const canPress = !slashing && mem.tick - mem.lastPress > 7;
+    const row = mem.weapon ?? null;
+    const canPress = !slashing && mem.tick - mem.lastPress > (row === null ? 7 : row.period);
     // (1) a sitting tentacle a swing lands on from here, now: strike it.
     const live = view.tentacles.filter((t) => !t.destroy && t.anim === 'sit' && t.hitsTimer <= 0);
     if (canPress) {
         for (const t of live) {
             for (const dir of [0, 1, 2, 3]) {
-                if (swingLands(p.x, p.y, dir, t)) {
+                if (row === null ? swingLands(p.x, p.y, dir, t) : row.lands(p.x, p.y, dir, t)) {
                     keys.add(DIR_KEYS[dir]);
                     keys.add('primary');
                     mem.lastPress = mem.tick;
@@ -154,7 +173,7 @@ export function tentacleBeastPolicyStep(mem, { view, p, slashing }) {
     // (3) the nearest sitting tentacle with a safe strike spot: walk to the spot.
     let goal = null;
     for (const t of live) {
-        const spots = [
+        const spots = row !== null ? weaponSpots(t, P, row) : [
             { x: t.x, y: t.y + P.gap },                                   // below, swinging up
             { x: t.right ? t.x - P.gap - 4 : t.x + P.gap + 4, y: t.y },    // on its blind side
         ];
