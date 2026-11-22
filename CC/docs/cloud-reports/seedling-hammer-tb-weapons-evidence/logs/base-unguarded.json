@@ -1,0 +1,135 @@
+{
+ "knobs": "pat=halton",
+ "hash": "jiggle",
+ "rows": [
+  {
+   "staging": "tb-hitless-pit",
+   "arm": "spear",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": false,
+   "error": "levelRun: a fire press at tick 161 lands inside the window the press at tick 153 opened (`firing` is up through tick 163). `useItem`'s `if (!firing)` swallows it silently in the game. The cadence is 11.",
+   "ms": 48,
+   "keyHash": null
+  },
+  {
+   "staging": "tb-hitless-pit",
+   "arm": "wand",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": false,
+   "error": "levelRun: a fire press at tick 161 lands inside the window the press at tick 153 opened (`firing` is up through tick 163). `useItem`'s `if (!firing)` swallows it silently in the game. The cadence is 11.",
+   "ms": 8,
+   "keyHash": null
+  },
+  {
+   "staging": "tb-hitless-door",
+   "arm": "spear",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": false,
+   "error": "levelRun: a fire press at tick 85 lands inside the window the press at tick 77 opened (`firing` is up through tick 87). `useItem`'s `if (!firing)` swallows it silently in the game. The cadence is 11.",
+   "ms": 6,
+   "keyHash": null
+  },
+  {
+   "staging": "tb-hitless-door",
+   "arm": "wand",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": false,
+   "error": "levelRun: a fire press at tick 85 lands inside the window the press at tick 77 opened (`firing` is up through tick 87). `useItem`'s `if (!firing)` swallows it silently in the game. The cadence is 11.",
+   "ms": 6,
+   "keyHash": null
+  },
+  {
+   "staging": "tb-hitless-s2",
+   "arm": "spear",
+   "seeds": [
+    2,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 2,
+   "ok": true,
+   "level": 58,
+   "ticks": 4025,
+   "hits": [],
+   "deaths": 0,
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 1,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 1
+   },
+   "tried": [
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 6000,
+     "why": "the mouth is not open after 6000 ticks"
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 3825,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 6000,
+     "why": "the mouth is not open after 6000 ticks"
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 4028,
+     "why": "the player died at spent 4028"
+    },
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 2625,
+     "why": null
+    }
+   ],
+   "ms": 858,
+   "keyHash": 25229
+  },
+  {
+   "staging": "tb-hitless-s2",
+   "arm": "wand",
+   "seeds": [
+    2,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 2,
+   "ok": false,
+   "error": "solverBot(tb-hitless-s2-wand) clear-tag {57,0} tentaclebeast@80,48 -> tentaclebeast: no Tentacled Beast policy variant opens the mouth of tentaclebeast@80,48 without a death on a fork of this run \u2014 {\"gap\":10,\"margin\":3,\"whirl\":26,\"warn\":\"hit\"}: the mouth is not open after 6000 ticks; {\"gap\":12,\"margin\":4,\"whirl\":30,\"warn\":\"hit\"}: the mouth is not open after 6000 ticks; {\"gap\":8,\"margin\":2,\"whirl\":",
+   "ms": 620,
+   "keyHash": null
+  }
+ ]
+}

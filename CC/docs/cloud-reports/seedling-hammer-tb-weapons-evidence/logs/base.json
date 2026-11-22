@@ -1,0 +1,267 @@
+{
+ "knobs": "pat=halton",
+ "hash": "jiggle",
+ "rows": [
+  {
+   "staging": "tb-hitless-pit",
+   "arm": "sword",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": true,
+   "level": 58,
+   "ticks": 1389,
+   "hits": [],
+   "deaths": 0,
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 4,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 5
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1890,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2008,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1890,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1612,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1196,
+     "why": null
+    }
+   ],
+   "ms": 1008,
+   "keyHash": 7926
+  },
+  {
+   "staging": "tb-hitless-pit",
+   "arm": "spear",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": false,
+   "error": "solverBot(tb-hitless-pit-spear) clear-tag {57,0} tentaclebeast@80,48: 'tentaclebeast' cannot act on tentaclebeast@80,48 with this run's bag \u2014 a tentacle dies to one sword hit while it sits; this run holds no sword",
+   "ms": 1,
+   "keyHash": null
+  },
+  {
+   "staging": "tb-hitless-pit",
+   "arm": "wand",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": false,
+   "error": "solverBot(tb-hitless-pit-wand) clear-tag {57,0} tentaclebeast@80,48: 'tentaclebeast' cannot act on tentaclebeast@80,48 with this run's bag \u2014 a tentacle dies to one sword hit while it sits; this run holds no sword",
+   "ms": 0,
+   "keyHash": null
+  },
+  {
+   "staging": "tb-hitless-door",
+   "arm": "sword",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": true,
+   "level": 58,
+   "ticks": 977,
+   "hits": [],
+   "deaths": 0,
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 1,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 3
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1199,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 776,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 1819,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 2141,
+     "why": "the player died at spent 2141"
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1506,
+     "why": null
+    }
+   ],
+   "ms": 792,
+   "keyHash": 5454
+  },
+  {
+   "staging": "tb-hitless-door",
+   "arm": "spear",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": false,
+   "error": "solverBot(tb-hitless-door-spear) clear-tag {57,0} tentaclebeast@80,48: 'tentaclebeast' cannot act on tentaclebeast@80,48 with this run's bag \u2014 a tentacle dies to one sword hit while it sits; this run holds no sword",
+   "ms": 1,
+   "keyHash": null
+  },
+  {
+   "staging": "tb-hitless-door",
+   "arm": "wand",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": false,
+   "error": "solverBot(tb-hitless-door-wand) clear-tag {57,0} tentaclebeast@80,48: 'tentaclebeast' cannot act on tentaclebeast@80,48 with this run's bag \u2014 a tentacle dies to one sword hit while it sits; this run holds no sword",
+   "ms": 1,
+   "keyHash": null
+  },
+  {
+   "staging": "tb-hitless-s2",
+   "arm": "sword",
+   "seeds": [
+    2,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 2,
+   "ok": true,
+   "level": 58,
+   "ticks": 1850,
+   "hits": [],
+   "deaths": 0,
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 1,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 3
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 952,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1649,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 4272,
+     "why": "the player died at spent 4272"
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2430,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1747,
+     "why": null
+    }
+   ],
+   "ms": 807,
+   "keyHash": 10472
+  },
+  {
+   "staging": "tb-hitless-s2",
+   "arm": "spear",
+   "seeds": [
+    2,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 2,
+   "ok": false,
+   "error": "solverBot(tb-hitless-s2-spear) clear-tag {57,0} tentaclebeast@80,48: 'tentaclebeast' cannot act on tentaclebeast@80,48 with this run's bag \u2014 a tentacle dies to one sword hit while it sits; this run holds no sword",
+   "ms": 0,
+   "keyHash": null
+  },
+  {
+   "staging": "tb-hitless-s2",
+   "arm": "wand",
+   "seeds": [
+    2,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 2,
+   "ok": false,
+   "error": "solverBot(tb-hitless-s2-wand) clear-tag {57,0} tentaclebeast@80,48: 'tentaclebeast' cannot act on tentaclebeast@80,48 with this run's bag \u2014 a tentacle dies to one sword hit while it sits; this run holds no sword",
+   "ms": 1,
+   "keyHash": null
+  }
+ ]
+}

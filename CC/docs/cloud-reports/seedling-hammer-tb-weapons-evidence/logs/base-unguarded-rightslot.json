@@ -1,0 +1,236 @@
+{
+ "knobs": "pat=halton",
+ "hash": "jiggle",
+ "rows": [
+  {
+   "staging": "tb-hitless-pit",
+   "arm": "spear",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": true,
+   "level": 58,
+   "ticks": 5749,
+   "hits": [
+    "4208:tentacle"
+   ],
+   "deaths": 0,
+   "weapons": [
+    "spear"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "fewest-hits",
+    "variant": 0,
+    "hits": 1,
+    "tried": 5,
+    "hitless": 0
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 5548,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 5810,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 4317,
+     "why": "the player drowned in whirlpool#154 at spent 4317"
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 4912,
+     "why": "the player drowned in whirlpool#214 at spent 4912"
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 1930,
+     "why": "the player died at spent 1930"
+    }
+   ],
+   "ms": 1082,
+   "keyHash": 34538
+  },
+  {
+   "staging": "tb-hitless-pit",
+   "arm": "wand",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": false,
+   "error": "solverBot(tb-hitless-pit-wand) clear-tag {57,0} tentaclebeast@80,48 -> tentaclebeast: no Tentacled Beast policy variant opens the mouth of tentaclebeast@80,48 without a death on a fork of this run \u2014 {\"gap\":10,\"margin\":3,\"whirl\":26,\"warn\":\"hit\"}: the player died at spent 3140; {\"gap\":12,\"margin\":4,\"whirl\":30,\"warn\":\"hit\"}: the player died at spent 4491; {\"gap\":8,\"margin\":2,\"whirl\":24,\"warn\":\"hit\"}: the player died at spent 3062; {\"gap\":10,\"margin\":5,\"whirl\":34,\"warn\":\"sit\"}: the mouth is not open after 6000 ticks; {\"gap\":14,\"margin\":3,\"whirl\":26,\"warn\":\"sit\"}: the mouth is not open after 6000 ticks",
+   "ms": 521,
+   "keyHash": null
+  },
+  {
+   "staging": "tb-hitless-door",
+   "arm": "spear",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": true,
+   "level": 58,
+   "ticks": 1746,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "spear"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 1,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 1
+   },
+   "tried": [
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 704,
+     "why": "the player died at spent 704"
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1644,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 1214,
+     "why": "the player drowned in whirlpool#60 at spent 1214"
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 6000,
+     "why": "the mouth is not open after 6000 ticks"
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 2404,
+     "why": "the player drowned in whirlpool#135 at spent 2404"
+    }
+   ],
+   "ms": 404,
+   "keyHash": 11362
+  },
+  {
+   "staging": "tb-hitless-door",
+   "arm": "wand",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": false,
+   "error": "solverBot(tb-hitless-door-wand) clear-tag {57,0} tentaclebeast@80,48 -> tentaclebeast: no Tentacled Beast policy variant opens the mouth of tentaclebeast@80,48 without a death on a fork of this run \u2014 {\"gap\":10,\"margin\":3,\"whirl\":26,\"warn\":\"hit\"}: the player died at spent 2972; {\"gap\":12,\"margin\":4,\"whirl\":30,\"warn\":\"hit\"}: the player died at spent 4401; {\"gap\":8,\"margin\":2,\"whirl\":24,\"warn\":\"hit\"}: the player died at spent 2074; {\"gap\":10,\"margin\":5,\"whirl\":34,\"warn\":\"sit\"}: the player died at spent 2697; {\"gap\":14,\"margin\":3,\"whirl\":26,\"warn\":\"sit\"}: the mouth is not open after 6000 ticks",
+   "ms": 408,
+   "keyHash": null
+  },
+  {
+   "staging": "tb-hitless-s2",
+   "arm": "spear",
+   "seeds": [
+    2,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 2,
+   "ok": true,
+   "level": 58,
+   "ticks": 4025,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "spear"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 1,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 1
+   },
+   "tried": [
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 6000,
+     "why": "the mouth is not open after 6000 ticks"
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 3825,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 6000,
+     "why": "the mouth is not open after 6000 ticks"
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 4028,
+     "why": "the player died at spent 4028"
+    },
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 2625,
+     "why": null
+    }
+   ],
+   "ms": 739,
+   "keyHash": 25229
+  },
+  {
+   "staging": "tb-hitless-s2",
+   "arm": "wand",
+   "seeds": [
+    2,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 2,
+   "ok": false,
+   "error": "solverBot(tb-hitless-s2-wand) clear-tag {57,0} tentaclebeast@80,48 -> tentaclebeast: no Tentacled Beast policy variant opens the mouth of tentaclebeast@80,48 without a death on a fork of this run \u2014 {\"gap\":10,\"margin\":3,\"whirl\":26,\"warn\":\"hit\"}: the mouth is not open after 6000 ticks; {\"gap\":12,\"margin\":4,\"whirl\":30,\"warn\":\"hit\"}: the mouth is not open after 6000 ticks; {\"gap\":8,\"margin\":2,\"whirl\":24,\"warn\":\"hit\"}: the mouth is not open after 6000 ticks; {\"gap\":10,\"margin\":5,\"whirl\":34,\"warn\":\"sit\"}: the mouth is not open after 6000 ticks; {\"gap\":14,\"margin\":3,\"whirl\":26,\"warn\":\"sit\"}: the mouth is not open after 6000 ticks",
+   "ms": 654,
+   "keyHash": null
+  }
+ ]
+}
