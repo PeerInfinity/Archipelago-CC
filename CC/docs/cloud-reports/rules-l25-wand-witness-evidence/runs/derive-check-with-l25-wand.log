@@ -1,0 +1,31 @@
+WALLFLYER LEVELS [22,25,27]
+L22: flyers wallflyer@64,80 wallflyer@128,80 wallflyer@48,112 wallflyer@144,112; sides [[21,29],[25,30]]; table gates N
+  AGREE L22 [21,29] -> [25,30] (S): table free, derived free (LINE with no item) (60682583 lanes, 16 configs, 345965 ms)
+  AGREE L22 [25,30] -> [21,29] (N): table gated [hasSword, hasSpear, hasShield, hasWand], derived gated (NO LINE with no item) (573582 lanes, 2 configs, 3060 ms)
+    AGREE arm hasSword: table offers it (witness l22-25-29-sword), derived LINE (210 ms)
+    AGREE arm hasSpear: table offers it (witness l22-25-29-spear), derived LINE (81 ms)
+    AGREE arm hasShield: table offers it (witness l22-25-29-shield), derived LINE (194872 ms)
+    AGREE arm hasWand: table offers it (witness l22-25-21-wand), derived LINE (86 ms)
+    INFO L22 [25,30] -> [21,29] (N): derived arm darkshield gives a LINE; the table does not offer it (no witness arm of the table names it)
+L25: flyers wallflyer@48,48 wallflyer@64,48; sides [[22],[26],[28]]; table gates E
+  L25 [22] -> [28]: not joined even with no flyer: no wallflyer question
+  L25 [26] -> [28]: not joined even with no flyer: no wallflyer question
+  L25 [28] -> [22]: not joined even with no flyer: no wallflyer question
+  L25 [28] -> [26]: not joined even with no flyer: no wallflyer question
+  AGREE L25 [22] -> [26] (W): table free, derived free (LINE with no item) (384706 lanes, 3 configs, 1444 ms)
+  AGREE L25 [26] -> [22] (E): table gated [hasSword, hasSpear, hasShield, hasWand], derived gated (NO LINE with no item) (1083958 lanes, 2 configs, 4202 ms)
+    AGREE arm hasSword: table offers it (witness l25-26-22-sword), derived LINE (19 ms)
+    AGREE arm hasSpear: table offers it (witness l25-26-22-spear), derived LINE (19 ms)
+    AGREE arm hasShield: table offers it (witness l25-26-22-shield), derived LINE (8582 ms)
+    AGREE arm hasWand: table offers it (witness l25-26-22-wand), derived LINE (21 ms)
+    INFO L25 [26] -> [22] (E): derived arm darkshield gives a LINE; the table does not offer it (no witness arm of the table names it)
+L27: flyers wallflyer@192,48; sides [[26,28]]; table gates none
+ROW {"level":22,"from":[21,29],"to":[25,30],"dir":"S","table":"free","derived":"free","lanes":60682583,"configs":16,"ms":345965,"arms":{}}
+ROW {"level":22,"from":[25,30],"to":[21,29],"dir":"N","table":"gated","derived":"gated","lanes":573582,"configs":2,"ms":3060,"arms":{"hasSword":true,"hasSpear":true,"hasShield":true,"hasWand":true}}
+ROW {"level":25,"from":[22],"to":[26],"dir":"W","table":"free","derived":"free","lanes":384706,"configs":3,"ms":1444,"arms":{}}
+ROW {"level":25,"from":[26],"to":[22],"dir":"E","table":"gated","derived":"gated","lanes":1083958,"configs":2,"ms":4202,"arms":{"hasSword":true,"hasSpear":true,"hasShield":true,"hasWand":true}}
+PASS: the gate table agrees with the derivation on every wallflyer crossing (4 crossings, 2 info) — wall 559.0 s
+
+real	9m19.045s
+user	9m16.556s
+sys	0m1.116s
