@@ -6,7 +6,7 @@
 // ticks, the chosen variant and the end level. The seed is IRRELEVANT under the patterns: every arm is run on two
 // different seeds and the per-tick keys must be identical (the learnability check).
 //   DET_TB=pat=halton|hash [DET_HASH=jiggle|mix] node tb-arms.mjs [--arms=sword,spear] [--out=<json>]
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 const R = process.cwd();
 const D = join(R, 'frontend/modules', process.env.SEEDLING_DEMO_DIR || 'seedlingDemoDet');
@@ -29,6 +29,17 @@ const items = (arm, base) => ({ ...base, hasSword: arm === 'sword', hasSpear: ar
 // TB-WEAPONS: equip the ARM's own slot (the rules tool equipped slot 0, which with hasFire in the bag is the FIRE).
 const slotOf = (arm, it) => appendInventorySlots([], it).slots.indexOf(INVENTORY_ITEM_IDS[arm]);
 const SEEDS = (process.env.TB_SEEDS || '').split(',').filter(Boolean).map(Number);
+// TB-WEAPONS: `--tapes=<dir>` writes each solved plan as a tape (the staging + the plan's keys as spans + its equips).
+const TAPES = arg('tapes');
+const spansOf = (perTick) => {
+    const spans = []; const open = new Map();
+    perTick.forEach((keys, t) => {
+        for (const [k, from] of open) if (!keys.has(k)) { spans.push({ key: k, from, to: t }); open.delete(k); }
+        for (const k of keys) if (!open.has(k)) open.set(k, t);
+    });
+    for (const [k, from] of open) spans.push({ key: k, from, to: perTick.length });
+    return spans.sort((a, b) => a.from - b.from || a.key.localeCompare(b.key));
+};
 const rows = [];
 for (const name of STAGINGS) {
     const w = JSON.parse(readFileSync(join(W, `${name}.json`), 'utf8'));
@@ -46,6 +57,12 @@ for (const name of STAGINGS) {
                     const out = solveSegment({ run, goals, name: `${name}-${arm}`, boot: staging.boot,
                         forkRun: () => createRunForStaging(staging, SRC) });
                     const rec = out.records.find((r) => r.verb === 'tentaclebeast');
+                    if (TAPES) {
+                        mkdirSync(TAPES, { recursive: true });
+                        const planned = { ...tape, name: `${name}-${arm}-s${seed}`, inputs: spansOf(out.perTick),
+                            equips: [...(tape.equips ?? []), ...(out.equips ?? [])], tick_count: out.perTick.length };
+                        writeFileSync(join(TAPES, `${name}-${arm}-s${seed}.json`), `${JSON.stringify(planned, null, 1)}\n`);
+                    }
                     const weapons = [...new Set((run.ledger('presses') ?? []).map((q) => q.weapon))];
                     const hits = (run.ledger('playerHits') ?? []).map((h) => `${h.t}:${h.source}`);
                     return { ok: true, level: run.level, ticks: out.perTick.length, hits, deaths: run.playerDeaths.length, weapons,

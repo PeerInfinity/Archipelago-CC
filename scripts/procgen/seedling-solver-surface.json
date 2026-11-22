@@ -34,6 +34,7 @@
     "strategySwitch.js",
     "strikePolicy.js",
     "strikeSlot.js",
+    "tbWeaponArms.js",
     "tentacleBeastPolicy.js"
   ],
   "simulation": {
@@ -1196,10 +1197,10 @@
         "botDriverV2.js": 27,
         "director.js": 1,
         "lightsVerb.js": 5,
-        "solverBot.js": 173,
+        "solverBot.js": 176,
         "strikePolicy.js": 2
       },
-      "sites": 208,
+      "sites": 211,
       "seen": "both",
       "via": [
         "direct",
@@ -1236,7 +1237,7 @@
           "solverBot.js": 61
         },
         "inventorySlots": {
-          "solverBot.js": 26
+          "solverBot.js": 27
         },
         "keys": {
           "botDriverV2.js": 6,
@@ -1244,7 +1245,7 @@
         },
         "primary": {
           "botDriverV2.js": 1,
-          "solverBot.js": 29
+          "solverBot.js": 31
         },
         "primaryWeapon": {
           "botDriverV2.js": 3,
@@ -4462,11 +4463,11 @@
         "forcedHit.js": 6,
         "lightsVerb.js": 3,
         "pressEscapeExact.js": 2,
-        "solverBot.js": 155,
+        "solverBot.js": 156,
         "spearArm.js": 1,
         "strikePolicy.js": 3
       },
-      "sites": 198,
+      "sites": 199,
       "seen": "static",
       "via": [
         "import"
@@ -6249,9 +6250,10 @@
         "lightsVerb.js": 1,
         "solverBot.js": 28,
         "strikePolicy.js": 2,
+        "tbWeaponArms.js": 1,
         "tentacleBeastPolicy.js": 1
       },
-      "sites": 34,
+      "sites": 35,
       "seen": "static",
       "via": [
         "import"
@@ -7494,9 +7496,10 @@
       "form": "constant",
       "files": {
         "solverBot.js": 37,
-        "spearArm.js": 1
+        "spearArm.js": 1,
+        "tbWeaponArms.js": 1
       },
-      "sites": 38,
+      "sites": 39,
       "seen": "static",
       "via": [
         "import"
@@ -7621,9 +7624,10 @@
       "class": "seedling",
       "form": "geometry-query",
       "files": {
+        "tbWeaponArms.js": 1,
         "tentacleBeastPolicy.js": 1
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "static",
       "via": [
         "import"

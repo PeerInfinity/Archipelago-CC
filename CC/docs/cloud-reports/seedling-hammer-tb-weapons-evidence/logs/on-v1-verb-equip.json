@@ -1,0 +1,298 @@
+{
+ "knobs": "pat=halton",
+ "hash": "jiggle",
+ "rows": [
+  {
+   "staging": "tb-hitless-pit",
+   "arm": "spear",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": true,
+   "level": 58,
+   "ticks": 1936,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "spear"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 0,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 3
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1735,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 3417,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2268,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 3022,
+     "why": "the player drowned in whirlpool#129 at spent 3022"
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 2594,
+     "why": "the player died at spent 2594"
+    }
+   ],
+   "ms": 701,
+   "keyHash": 11757,
+   "perSeed": [
+    {
+     "seed": 418414780,
+     "ok": true,
+     "level": 58,
+     "ticks": 1936,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "spear"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 0,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 3
+     },
+     "ms": 701
+    },
+    {
+     "seed": 7,
+     "ok": false,
+     "error": "solverBot(tb-hitless-pit-spear) clear-tag {57,0} tentaclebeast@80,48 -> tentaclebeast: no Tentacled Beast policy variant opens the mouth of tentaclebeast@80,48 without a death on a fork of this run \u2014 {\"gap\":10,\"margin\":3,\"whirl\":26,\"warn\":\"hit\"}: the player drowned in whirlpool#90 at spent 2708; {\"gap\":12,\"margin\":4,\"whirl\":30,\"warn\":\"hit\"}: the mouth is not open after 6000 ticks; {\"gap\":8,\"margin\":2,\"whirl\":24,\"warn\":\"hit\"}: the player drowned in whirlpool#81 at spent 2123; {\"gap\":10,\"margin\":5,\"whirl\":34,\"warn\":\"sit\"}: the player died at spent 5210; {\"gap\":14,\"margin\":3,\"whirl\":26,\"warn\":\"sit\"}: the player died at spent 5098",
+     "ms": 648
+    }
+   ]
+  },
+  {
+   "staging": "tb-hitless-door",
+   "arm": "spear",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": true,
+   "level": 58,
+   "ticks": 2073,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "spear"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 0,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 3
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1872,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 3356,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2806,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2242,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 3338,
+     "why": "the player drowned in whirlpool#140 at spent 3338"
+    }
+   ],
+   "ms": 383,
+   "keyHash": 12568,
+   "perSeed": [
+    {
+     "seed": 418414780,
+     "ok": true,
+     "level": 58,
+     "ticks": 2073,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "spear"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 0,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 3
+     },
+     "ms": 383
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "level": 58,
+     "ticks": 1346,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "spear"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 1,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 3
+     },
+     "ms": 513
+    }
+   ]
+  },
+  {
+   "staging": "tb-hitless-s2",
+   "arm": "spear",
+   "seeds": [
+    2,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 2,
+   "ok": true,
+   "level": 58,
+   "ticks": 5289,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "spear"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 3,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 1
+   },
+   "tried": [
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 2566,
+     "why": "the player drowned in whirlpool#85 at spent 2566"
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 730,
+     "why": "the player died at spent 730"
+    },
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 3841,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 5089,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 3677,
+     "why": "the player died at spent 3677"
+    }
+   ],
+   "ms": 550,
+   "keyHash": 29705,
+   "perSeed": [
+    {
+     "seed": 2,
+     "ok": true,
+     "level": 58,
+     "ticks": 5289,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "spear"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 3,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 1
+     },
+     "ms": 550
+    },
+    {
+     "seed": 7,
+     "ok": false,
+     "error": "solverBot(tb-hitless-s2-spear) clear-tag {57,0} tentaclebeast@80,48 -> tentaclebeast: no Tentacled Beast policy variant opens the mouth of tentaclebeast@80,48 without a death on a fork of this run \u2014 {\"gap\":10,\"margin\":3,\"whirl\":26,\"warn\":\"hit\"}: the player drowned in whirlpool#90 at spent 2708; {\"gap\":12,\"margin\":4,\"whirl\":30,\"warn\":\"hit\"}: the mouth is not open after 6000 ticks; {\"gap\":8,\"margin\":2,\"whirl\":24,\"warn\":\"hit\"}: the player drowned in whirlpool#81 at spent 2123; {\"gap\":10,\"margin\":5,\"whirl\":34,\"warn\":\"sit\"}: the player died at spent 5210; {\"gap\":14,\"margin\":3,\"whirl\":26,\"warn\":\"sit\"}: the player died at spent 5098",
+     "ms": 619
+    }
+   ]
+  }
+ ]
+}

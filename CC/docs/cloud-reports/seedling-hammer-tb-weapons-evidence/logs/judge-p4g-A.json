@@ -1,0 +1,549 @@
+[
+ {
+  "tape": "tb-hitless-pit-spear-s418414780.json",
+  "name": "tb-hitless-pit-spear-s418414780",
+  "rng": {
+   "seed": 418414780,
+   "split": true,
+   "cosmetic": 0,
+   "fp": 1763053598
+  },
+  "grants": [],
+  "ticks": 2612,
+  "finished": true,
+  "wallSec": 91,
+  "end": {
+   "level": 57,
+   "x": 113.42274865974024,
+   "y": 96.12467898150896
+  },
+  "hits": 0,
+  "cleared": [
+   "0:1",
+   "10:0",
+   "12:3",
+   "16:0",
+   "19:1",
+   "30:0",
+   "30:2",
+   "31:0",
+   "39:8",
+   "40:8",
+   "5:0",
+   "8:0",
+   "8:1"
+  ],
+  "slash": {
+   "hits": 0,
+   "tests": 0
+  },
+  "dead_frames": 40,
+  "boss": null,
+  "hitPolls": [
+   {
+    "pollTick": 456,
+    "hits": 1,
+    "hits_timer": 18,
+    "hitTickAtMost": 454,
+    "player": {
+     "x": 110.84231476610968,
+     "y": 149.16263750976185,
+     "level": 57
+    },
+    "nearby": [
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 76,
+      "y": 171,
+      "anim": "rise",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 122,
+      "y": 146,
+      "anim": "hitting",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 85,
+      "y": 121,
+      "anim": "sink",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Player",
+      "x": 110.84231476610968,
+      "y": 149.16263750976185,
+      "anim": "swim-side-walk",
+      "type": "Player"
+     }
+    ],
+    "pods": []
+   },
+   {
+    "pollTick": 638,
+    "hits": 2,
+    "hits_timer": 19,
+    "hitTickAtMost": 637,
+    "player": {
+     "x": 111.24402533121032,
+     "y": 166.24829334343335,
+     "level": 57
+    },
+    "nearby": [
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 77,
+      "y": 150,
+      "anim": "rise",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 142,
+      "y": 173,
+      "anim": "rise",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Player",
+      "x": 111.24402533121032,
+      "y": 166.24829334343335,
+      "anim": "swim-side-walk",
+      "type": "Player"
+     }
+    ],
+    "pods": []
+   }
+  ],
+  "bossTrack": [],
+  "observations": 2613,
+  "model": {
+   "hits": [
+    {
+     "t": 455,
+     "source": "tentacle"
+    },
+    {
+     "t": 638,
+     "source": "tentacle"
+    },
+    {
+     "t": 697,
+     "source": "tentacle"
+    }
+   ],
+   "cleared": [],
+   "deaths": 1,
+   "end": {
+    "level": 57,
+    "x": 113.42274865974024,
+    "y": 96.12467898150896
+   },
+   "error": null
+  },
+  "firstDivergence": null,
+  "streamCompared": 2613,
+  "gameStreamMd5": "1be2e6cfbec8a3fa251f55a0ca007af7",
+  "gameStreamTail": [
+   {
+    "level": 57,
+    "y": 96.12467898150896,
+    "x": 113.42274865974024,
+    "t": 2610
+   },
+   {
+    "level": 57,
+    "y": 96.12467898150896,
+    "x": 113.42274865974024,
+    "t": 2611
+   },
+   {
+    "level": 57,
+    "y": 96.12467898150896,
+    "x": 113.42274865974024,
+    "t": 2612
+   }
+  ]
+ },
+ {
+  "tape": "tb-hitless-door-spear-s418414780.json",
+  "name": "tb-hitless-door-spear-s418414780",
+  "rng": {
+   "seed": 418414780,
+   "split": true,
+   "cosmetic": 0,
+   "fp": 1763053598
+  },
+  "grants": [],
+  "ticks": 2659,
+  "finished": true,
+  "wallSec": 94,
+  "end": {
+   "level": 57,
+   "x": 60.68226490283958,
+   "y": 98.44659379246137
+  },
+  "hits": 2,
+  "cleared": [
+   "0:1",
+   "10:0",
+   "12:3",
+   "16:0",
+   "19:1",
+   "30:0",
+   "30:2",
+   "31:0",
+   "39:8",
+   "40:8",
+   "5:0",
+   "8:0",
+   "8:1"
+  ],
+  "slash": {
+   "hits": 0,
+   "tests": 0
+  },
+  "dead_frames": 60,
+  "boss": null,
+  "hitPolls": [
+   {
+    "pollTick": 469,
+    "hits": 1,
+    "hits_timer": 19,
+    "hitTickAtMost": 468,
+    "player": {
+     "x": 96.47275890165909,
+     "y": 98.81719562459374,
+     "level": 57
+    },
+    "nearby": [
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 96,
+      "y": 110,
+      "anim": "hit",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Enemies::TentacleBeast",
+      "x": 104,
+      "y": 72,
+      "anim": "",
+      "type": "Solid"
+     },
+     {
+      "cls": "Player",
+      "x": 96.47275890165909,
+      "y": 98.81719562459374,
+      "anim": "swim-side-walk",
+      "type": "Player"
+     }
+    ],
+    "pods": []
+   },
+   {
+    "pollTick": 597,
+    "hits": 2,
+    "hits_timer": 19,
+    "hitTickAtMost": 596,
+    "player": {
+     "x": 72.66966079385656,
+     "y": 100.69941804865358,
+     "level": 57
+    },
+    "nearby": [
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 63,
+      "y": 111,
+      "anim": "sit",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 95,
+      "y": 103,
+      "anim": "sink",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Enemies::TentacleBeast",
+      "x": 104,
+      "y": 72,
+      "anim": "",
+      "type": "Solid"
+     },
+     {
+      "cls": "Player",
+      "x": 72.66966079385656,
+      "y": 100.69941804865358,
+      "anim": "swim-side-walk",
+      "type": "Player"
+     }
+    ],
+    "pods": []
+   }
+  ],
+  "bossTrack": [],
+  "observations": 2660,
+  "model": {
+   "hits": [
+    {
+     "t": 471,
+     "source": "tentacle"
+    },
+    {
+     "t": 597,
+     "source": "tentacle"
+    },
+    {
+     "t": 1388,
+     "source": "tentacle"
+    },
+    {
+     "t": 1890,
+     "source": "tentacle"
+    },
+    {
+     "t": 2034,
+     "source": "tentacle"
+    },
+    {
+     "t": 2342,
+     "source": "tentacle"
+    }
+   ],
+   "cleared": [],
+   "deaths": 3,
+   "end": {
+    "level": 57,
+    "x": 104,
+    "y": 69.3
+   },
+   "error": null
+  },
+  "firstDivergence": {
+   "t": 264,
+   "game": {
+    "level": 57,
+    "y": 81.10658377092325,
+    "x": 98.28071918990906,
+    "t": 264
+   },
+   "model": {
+    "t": 264,
+    "x": 98.03071918990906,
+    "y": 81.35658377092325,
+    "level": 57
+   }
+  },
+  "streamCompared": 2660,
+  "gameStreamMd5": "a8e38e2a8f3938d00027a07b10f561bd",
+  "gameStreamTail": [
+   {
+    "level": 57,
+    "y": 98.44659379246137,
+    "x": 60.68226490283958,
+    "t": 2657
+   },
+   {
+    "level": 57,
+    "y": 98.44659379246137,
+    "x": 60.68226490283958,
+    "t": 2658
+   },
+   {
+    "level": 57,
+    "y": 98.44659379246137,
+    "x": 60.68226490283958,
+    "t": 2659
+   }
+  ]
+ },
+ {
+  "tape": "tb-hitless-s2-spear-s2.json",
+  "name": "tb-hitless-s2-spear-s2",
+  "rng": {
+   "seed": 2,
+   "split": true,
+   "cosmetic": 0,
+   "fp": 0
+  },
+  "grants": [],
+  "ticks": 2612,
+  "finished": true,
+  "wallSec": 91,
+  "end": {
+   "level": 57,
+   "x": 120.20695429655737,
+   "y": 96.15676929895756
+  },
+  "hits": 0,
+  "cleared": [],
+  "slash": {
+   "hits": 0,
+   "tests": 0
+  },
+  "dead_frames": 40,
+  "boss": null,
+  "hitPolls": [
+   {
+    "pollTick": 305,
+    "hits": 1,
+    "hits_timer": 18,
+    "hitTickAtMost": 303,
+    "player": {
+     "x": 76.34995025277155,
+     "y": 144.24524548774502,
+     "level": 57
+    },
+    "nearby": [
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 80,
+      "y": 156,
+      "anim": "sit",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 47,
+      "y": 180,
+      "anim": "hit",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 93,
+      "y": 105,
+      "anim": "hit",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 49,
+      "y": 141,
+      "anim": "hitting",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Player",
+      "x": 76.34995025277155,
+      "y": 144.24524548774502,
+      "anim": "swim-side-walk",
+      "type": "Player"
+     }
+    ],
+    "pods": []
+   },
+   {
+    "pollTick": 333,
+    "hits": 2,
+    "hits_timer": 19,
+    "hitTickAtMost": 332,
+    "player": {
+     "x": 81.32434614271634,
+     "y": 147.73174914056494,
+     "level": 57
+    },
+    "nearby": [
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 48,
+      "y": 111,
+      "anim": "rise",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 116,
+      "y": 178,
+      "anim": "sit",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Enemies::Tentacle",
+      "x": 80,
+      "y": 156,
+      "anim": "hitting",
+      "type": "Enemy"
+     },
+     {
+      "cls": "Player",
+      "x": 81.32434614271634,
+      "y": 147.73174914056494,
+      "anim": "swim-side-walk",
+      "type": "Player"
+     }
+    ],
+    "pods": []
+   }
+  ],
+  "bossTrack": [],
+  "observations": 2613,
+  "model": {
+   "hits": [
+    {
+     "t": 304,
+     "source": "tentacle"
+    },
+    {
+     "t": 333,
+     "source": "tentacle"
+    },
+    {
+     "t": 396,
+     "source": "tentacle"
+    }
+   ],
+   "cleared": [],
+   "deaths": 1,
+   "end": {
+    "level": 57,
+    "x": 119.80256609716737,
+    "y": 96.18627041212721
+   },
+   "error": null
+  },
+  "firstDivergence": {
+   "t": 405,
+   "game": {
+    "level": 57,
+    "y": 172.75025253169414,
+    "x": 107.85025253169418,
+    "t": 405
+   },
+   "model": {
+    "t": 405,
+    "x": 107.15025253169418,
+    "y": 172.05025253169413,
+    "level": 57
+   }
+  },
+  "streamCompared": 2613,
+  "gameStreamMd5": "40404d46abb49f08b3bede39d8e26b0d",
+  "gameStreamTail": [
+   {
+    "level": 57,
+    "y": 96.15676929895756,
+    "x": 120.20695429655737,
+    "t": 2610
+   },
+   {
+    "level": 57,
+    "y": 96.15676929895756,
+    "x": 120.20695429655737,
+    "t": 2611
+   },
+   {
+    "level": 57,
+    "y": 96.15676929895756,
+    "x": 120.20695429655737,
+    "t": 2612
+   }
+  ]
+ }
+]

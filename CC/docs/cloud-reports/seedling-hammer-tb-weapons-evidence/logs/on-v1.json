@@ -1,0 +1,420 @@
+{
+ "knobs": "pat=halton",
+ "hash": "jiggle",
+ "rows": [
+  {
+   "staging": "tb-hitless-pit",
+   "arm": "sword",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": true,
+   "level": 58,
+   "ticks": 1389,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "sword"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 4,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 5
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1890,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2008,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1890,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1612,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1196,
+     "why": null
+    }
+   ],
+   "ms": 970,
+   "keyHash": 7926
+  },
+  {
+   "staging": "tb-hitless-pit",
+   "arm": "spear",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": true,
+   "level": 58,
+   "ticks": 1936,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "spear"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 0,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 3
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1735,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 3417,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2268,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 3022,
+     "why": "the player drowned in whirlpool#129 at spent 3022"
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 2594,
+     "why": "the player died at spent 2594"
+    }
+   ],
+   "ms": 580,
+   "keyHash": 11757
+  },
+  {
+   "staging": "tb-hitless-pit",
+   "arm": "wand",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": false,
+   "error": "solverBot(tb-hitless-pit-wand) clear-tag {57,0} tentaclebeast@80,48: 'tentaclebeast' cannot act on tentaclebeast@80,48 with this run's bag \u2014 a tentacle dies to one sword or spear hit while it sits, and to a wand shot in the game (`WandShot.checkEntity` \u2192 `Enemy.hit`); this run holds no sword and no spear, and the model's wand shot does not meet a tentacle (`levelRun.wandShotBlockerAt` has no tentacle arm), so no Wand play can be checked on a fork",
+   "ms": 1,
+   "keyHash": null
+  },
+  {
+   "staging": "tb-hitless-door",
+   "arm": "sword",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": true,
+   "level": 58,
+   "ticks": 977,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "sword"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 1,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 3
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1199,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 776,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 1819,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 2141,
+     "why": "the player died at spent 2141"
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1506,
+     "why": null
+    }
+   ],
+   "ms": 837,
+   "keyHash": 5454
+  },
+  {
+   "staging": "tb-hitless-door",
+   "arm": "spear",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": true,
+   "level": 58,
+   "ticks": 2073,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "spear"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 0,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 3
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1872,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 3356,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2806,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2242,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 3338,
+     "why": "the player drowned in whirlpool#140 at spent 3338"
+    }
+   ],
+   "ms": 391,
+   "keyHash": 12568
+  },
+  {
+   "staging": "tb-hitless-door",
+   "arm": "wand",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": false,
+   "error": "solverBot(tb-hitless-door-wand) clear-tag {57,0} tentaclebeast@80,48: 'tentaclebeast' cannot act on tentaclebeast@80,48 with this run's bag \u2014 a tentacle dies to one sword or spear hit while it sits, and to a wand shot in the game (`WandShot.checkEntity` \u2192 `Enemy.hit`); this run holds no sword and no spear, and the model's wand shot does not meet a tentacle (`levelRun.wandShotBlockerAt` has no tentacle arm), so no Wand play can be checked on a fork",
+   "ms": 1,
+   "keyHash": null
+  },
+  {
+   "staging": "tb-hitless-s2",
+   "arm": "sword",
+   "seeds": [
+    2,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 2,
+   "ok": true,
+   "level": 58,
+   "ticks": 1850,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "sword"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 1,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 3
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 952,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1649,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 4272,
+     "why": "the player died at spent 4272"
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2430,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1747,
+     "why": null
+    }
+   ],
+   "ms": 768,
+   "keyHash": 10472
+  },
+  {
+   "staging": "tb-hitless-s2",
+   "arm": "spear",
+   "seeds": [
+    2,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 2,
+   "ok": true,
+   "level": 58,
+   "ticks": 5289,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "spear"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 3,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 1
+   },
+   "tried": [
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 2566,
+     "why": "the player drowned in whirlpool#85 at spent 2566"
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 730,
+     "why": "the player died at spent 730"
+    },
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 3841,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 5089,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 3677,
+     "why": "the player died at spent 3677"
+    }
+   ],
+   "ms": 610,
+   "keyHash": 29705
+  },
+  {
+   "staging": "tb-hitless-s2",
+   "arm": "wand",
+   "seeds": [
+    2,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 2,
+   "ok": false,
+   "error": "solverBot(tb-hitless-s2-wand) clear-tag {57,0} tentaclebeast@80,48: 'tentaclebeast' cannot act on tentaclebeast@80,48 with this run's bag \u2014 a tentacle dies to one sword or spear hit while it sits, and to a wand shot in the game (`WandShot.checkEntity` \u2192 `Enemy.hit`); this run holds no sword and no spear, and the model's wand shot does not meet a tentacle (`levelRun.wandShotBlockerAt` has no tentacle arm), so no Wand play can be checked on a fork",
+   "ms": 1,
+   "keyHash": null
+  }
+ ]
+}

@@ -1,0 +1,2339 @@
+{
+ "game": "seedling",
+ "name": "tb-hitless-pit-spear-s418414780",
+ "boot": {
+  "level": 57,
+  "x": 96,
+  "y": 160
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [
+  {
+   "level": 5,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 1,
+   "note": ""
+  },
+  {
+   "level": 10,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 0,
+   "tag": 1
+  },
+  {
+   "level": 16,
+   "tag": 0
+  },
+  {
+   "level": 19,
+   "tag": 1
+  },
+  {
+   "level": 31,
+   "tag": 0
+  },
+  {
+   "level": 30,
+   "tag": 2
+  },
+  {
+   "level": 30,
+   "tag": 0
+  },
+  {
+   "level": 12,
+   "tag": 3
+  },
+  {
+   "level": 39,
+   "tag": 8
+  },
+  {
+   "level": 40,
+   "tag": 8
+  }
+ ],
+ "equips": [
+  {
+   "t": 0,
+   "slot": 1
+  }
+ ],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "keys": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "seal_parts": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13
+  ]
+ },
+ "rng": {
+  "seed": 418414780,
+  "split": true,
+  "cosmetic": 0,
+  "fp": 1763053598
+ },
+ "seam": {
+  "items": {
+   "hasSword": false,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": false,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasSpear": true,
+   "hasDarkShield": false,
+   "hasDarkSuit": false,
+   "hasDarkSword": false,
+   "hasFeather": true,
+   "hasTorch": true
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 3,
+  "first_use": false,
+  "extended": false,
+  "time": 8586,
+  "primary": 0,
+  "secondary": 0,
+  "grass_cut": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0,
+  "music": {
+   "set": "Room",
+   "index": 1
+  }
+ },
+ "tick_count": 2612,
+ "inputs": [
+  {
+   "key": "up",
+   "from": 0,
+   "to": 91
+  },
+  {
+   "key": "down",
+   "from": 91,
+   "to": 153
+  },
+  {
+   "key": "primary",
+   "from": 153,
+   "to": 154
+  },
+  {
+   "key": "up",
+   "from": 153,
+   "to": 154
+  },
+  {
+   "key": "down",
+   "from": 154,
+   "to": 159
+  },
+  {
+   "key": "primary",
+   "from": 159,
+   "to": 160
+  },
+  {
+   "key": "up",
+   "from": 159,
+   "to": 160
+  },
+  {
+   "key": "down",
+   "from": 160,
+   "to": 165
+  },
+  {
+   "key": "primary",
+   "from": 165,
+   "to": 166
+  },
+  {
+   "key": "up",
+   "from": 165,
+   "to": 166
+  },
+  {
+   "key": "down",
+   "from": 166,
+   "to": 167
+  },
+  {
+   "key": "right",
+   "from": 167,
+   "to": 168
+  },
+  {
+   "key": "up",
+   "from": 167,
+   "to": 168
+  },
+  {
+   "key": "down",
+   "from": 168,
+   "to": 169
+  },
+  {
+   "key": "right",
+   "from": 169,
+   "to": 171
+  },
+  {
+   "key": "primary",
+   "from": 171,
+   "to": 172
+  },
+  {
+   "key": "up",
+   "from": 171,
+   "to": 172
+  },
+  {
+   "key": "down",
+   "from": 172,
+   "to": 173
+  },
+  {
+   "key": "right",
+   "from": 173,
+   "to": 174
+  },
+  {
+   "key": "up",
+   "from": 173,
+   "to": 174
+  },
+  {
+   "key": "down",
+   "from": 174,
+   "to": 175
+  },
+  {
+   "key": "right",
+   "from": 175,
+   "to": 176
+  },
+  {
+   "key": "up",
+   "from": 175,
+   "to": 176
+  },
+  {
+   "key": "down",
+   "from": 176,
+   "to": 177
+  },
+  {
+   "key": "primary",
+   "from": 177,
+   "to": 178
+  },
+  {
+   "key": "up",
+   "from": 177,
+   "to": 178
+  },
+  {
+   "key": "down",
+   "from": 178,
+   "to": 180
+  },
+  {
+   "key": "right",
+   "from": 180,
+   "to": 182
+  },
+  {
+   "key": "up",
+   "from": 180,
+   "to": 182
+  },
+  {
+   "key": "down",
+   "from": 182,
+   "to": 183
+  },
+  {
+   "key": "primary",
+   "from": 183,
+   "to": 184
+  },
+  {
+   "key": "up",
+   "from": 183,
+   "to": 184
+  },
+  {
+   "key": "down",
+   "from": 184,
+   "to": 186
+  },
+  {
+   "key": "right",
+   "from": 186,
+   "to": 187
+  },
+  {
+   "key": "up",
+   "from": 186,
+   "to": 187
+  },
+  {
+   "key": "down",
+   "from": 187,
+   "to": 188
+  },
+  {
+   "key": "right",
+   "from": 188,
+   "to": 189
+  },
+  {
+   "key": "up",
+   "from": 188,
+   "to": 190
+  },
+  {
+   "key": "primary",
+   "from": 189,
+   "to": 190
+  },
+  {
+   "key": "down",
+   "from": 190,
+   "to": 192
+  },
+  {
+   "key": "right",
+   "from": 192,
+   "to": 193
+  },
+  {
+   "key": "up",
+   "from": 192,
+   "to": 193
+  },
+  {
+   "key": "down",
+   "from": 193,
+   "to": 194
+  },
+  {
+   "key": "right",
+   "from": 194,
+   "to": 196
+  },
+  {
+   "key": "up",
+   "from": 194,
+   "to": 196
+  },
+  {
+   "key": "down",
+   "from": 196,
+   "to": 198
+  },
+  {
+   "key": "right",
+   "from": 198,
+   "to": 199
+  },
+  {
+   "key": "up",
+   "from": 198,
+   "to": 199
+  },
+  {
+   "key": "down",
+   "from": 199,
+   "to": 200
+  },
+  {
+   "key": "right",
+   "from": 200,
+   "to": 201
+  },
+  {
+   "key": "up",
+   "from": 200,
+   "to": 201
+  },
+  {
+   "key": "down",
+   "from": 201,
+   "to": 202
+  },
+  {
+   "key": "right",
+   "from": 202,
+   "to": 204
+  },
+  {
+   "key": "up",
+   "from": 202,
+   "to": 204
+  },
+  {
+   "key": "down",
+   "from": 204,
+   "to": 205
+  },
+  {
+   "key": "right",
+   "from": 205,
+   "to": 224
+  },
+  {
+   "key": "left",
+   "from": 224,
+   "to": 242
+  },
+  {
+   "key": "up",
+   "from": 224,
+   "to": 225
+  },
+  {
+   "key": "down",
+   "from": 225,
+   "to": 242
+  },
+  {
+   "key": "up",
+   "from": 242,
+   "to": 258
+  },
+  {
+   "key": "right",
+   "from": 244,
+   "to": 247
+  },
+  {
+   "key": "left",
+   "from": 247,
+   "to": 299
+  },
+  {
+   "key": "up",
+   "from": 284,
+   "to": 299
+  },
+  {
+   "key": "down",
+   "from": 299,
+   "to": 300
+  },
+  {
+   "key": "left",
+   "from": 300,
+   "to": 312
+  },
+  {
+   "key": "up",
+   "from": 300,
+   "to": 312
+  },
+  {
+   "key": "down",
+   "from": 312,
+   "to": 331
+  },
+  {
+   "key": "right",
+   "from": 312,
+   "to": 331
+  },
+  {
+   "key": "left",
+   "from": 331,
+   "to": 337
+  },
+  {
+   "key": "up",
+   "from": 331,
+   "to": 337
+  },
+  {
+   "key": "down",
+   "from": 337,
+   "to": 359
+  },
+  {
+   "key": "right",
+   "from": 337,
+   "to": 345
+  },
+  {
+   "key": "primary",
+   "from": 345,
+   "to": 346
+  },
+  {
+   "key": "right",
+   "from": 346,
+   "to": 350
+  },
+  {
+   "key": "primary",
+   "from": 351,
+   "to": 352
+  },
+  {
+   "key": "primary",
+   "from": 357,
+   "to": 358
+  },
+  {
+   "key": "right",
+   "from": 359,
+   "to": 365
+  },
+  {
+   "key": "left",
+   "from": 365,
+   "to": 368
+  },
+  {
+   "key": "up",
+   "from": 365,
+   "to": 383
+  },
+  {
+   "key": "left",
+   "from": 373,
+   "to": 383
+  },
+  {
+   "key": "down",
+   "from": 383,
+   "to": 397
+  },
+  {
+   "key": "left",
+   "from": 397,
+   "to": 398
+  },
+  {
+   "key": "up",
+   "from": 397,
+   "to": 398
+  },
+  {
+   "key": "down",
+   "from": 398,
+   "to": 419
+  },
+  {
+   "key": "right",
+   "from": 399,
+   "to": 489
+  },
+  {
+   "key": "up",
+   "from": 419,
+   "to": 438
+  },
+  {
+   "key": "up",
+   "from": 456,
+   "to": 462
+  },
+  {
+   "key": "down",
+   "from": 462,
+   "to": 470
+  },
+  {
+   "key": "up",
+   "from": 475,
+   "to": 483
+  },
+  {
+   "key": "down",
+   "from": 489,
+   "to": 508
+  },
+  {
+   "key": "left",
+   "from": 489,
+   "to": 523
+  },
+  {
+   "key": "up",
+   "from": 508,
+   "to": 512
+  },
+  {
+   "key": "down",
+   "from": 523,
+   "to": 524
+  },
+  {
+   "key": "primary",
+   "from": 523,
+   "to": 524
+  },
+  {
+   "key": "right",
+   "from": 524,
+   "to": 529
+  },
+  {
+   "key": "up",
+   "from": 524,
+   "to": 529
+  },
+  {
+   "key": "down",
+   "from": 529,
+   "to": 530
+  },
+  {
+   "key": "primary",
+   "from": 529,
+   "to": 530
+  },
+  {
+   "key": "right",
+   "from": 530,
+   "to": 535
+  },
+  {
+   "key": "up",
+   "from": 530,
+   "to": 532
+  },
+  {
+   "key": "down",
+   "from": 535,
+   "to": 536
+  },
+  {
+   "key": "primary",
+   "from": 535,
+   "to": 536
+  },
+  {
+   "key": "right",
+   "from": 536,
+   "to": 541
+  },
+  {
+   "key": "down",
+   "from": 541,
+   "to": 542
+  },
+  {
+   "key": "primary",
+   "from": 541,
+   "to": 542
+  },
+  {
+   "key": "up",
+   "from": 542,
+   "to": 543
+  },
+  {
+   "key": "down",
+   "from": 547,
+   "to": 548
+  },
+  {
+   "key": "primary",
+   "from": 547,
+   "to": 548
+  },
+  {
+   "key": "up",
+   "from": 548,
+   "to": 549
+  },
+  {
+   "key": "down",
+   "from": 553,
+   "to": 554
+  },
+  {
+   "key": "primary",
+   "from": 553,
+   "to": 554
+  },
+  {
+   "key": "up",
+   "from": 554,
+   "to": 555
+  },
+  {
+   "key": "down",
+   "from": 559,
+   "to": 560
+  },
+  {
+   "key": "primary",
+   "from": 559,
+   "to": 560
+  },
+  {
+   "key": "right",
+   "from": 560,
+   "to": 586
+  },
+  {
+   "key": "up",
+   "from": 560,
+   "to": 566
+  },
+  {
+   "key": "down",
+   "from": 568,
+   "to": 569
+  },
+  {
+   "key": "down",
+   "from": 586,
+   "to": 622
+  },
+  {
+   "key": "left",
+   "from": 586,
+   "to": 614
+  },
+  {
+   "key": "right",
+   "from": 614,
+   "to": 624
+  },
+  {
+   "key": "down",
+   "from": 624,
+   "to": 625
+  },
+  {
+   "key": "primary",
+   "from": 624,
+   "to": 625
+  },
+  {
+   "key": "left",
+   "from": 625,
+   "to": 630
+  },
+  {
+   "key": "up",
+   "from": 625,
+   "to": 630
+  },
+  {
+   "key": "down",
+   "from": 630,
+   "to": 631
+  },
+  {
+   "key": "primary",
+   "from": 630,
+   "to": 631
+  },
+  {
+   "key": "left",
+   "from": 631,
+   "to": 636
+  },
+  {
+   "key": "up",
+   "from": 631,
+   "to": 636
+  },
+  {
+   "key": "down",
+   "from": 636,
+   "to": 637
+  },
+  {
+   "key": "primary",
+   "from": 636,
+   "to": 637
+  },
+  {
+   "key": "left",
+   "from": 637,
+   "to": 638
+  },
+  {
+   "key": "up",
+   "from": 637,
+   "to": 642
+  },
+  {
+   "key": "down",
+   "from": 642,
+   "to": 643
+  },
+  {
+   "key": "primary",
+   "from": 642,
+   "to": 643
+  },
+  {
+   "key": "up",
+   "from": 643,
+   "to": 648
+  },
+  {
+   "key": "down",
+   "from": 648,
+   "to": 649
+  },
+  {
+   "key": "primary",
+   "from": 648,
+   "to": 649
+  },
+  {
+   "key": "up",
+   "from": 649,
+   "to": 654
+  },
+  {
+   "key": "down",
+   "from": 654,
+   "to": 655
+  },
+  {
+   "key": "primary",
+   "from": 654,
+   "to": 655
+  },
+  {
+   "key": "up",
+   "from": 655,
+   "to": 660
+  },
+  {
+   "key": "down",
+   "from": 660,
+   "to": 672
+  },
+  {
+   "key": "primary",
+   "from": 660,
+   "to": 661
+  },
+  {
+   "key": "left",
+   "from": 661,
+   "to": 692
+  },
+  {
+   "key": "up",
+   "from": 678,
+   "to": 692
+  },
+  {
+   "key": "down",
+   "from": 692,
+   "to": 700
+  },
+  {
+   "key": "right",
+   "from": 692,
+   "to": 749
+  },
+  {
+   "key": "up",
+   "from": 700,
+   "to": 729
+  },
+  {
+   "key": "down",
+   "from": 737,
+   "to": 749
+  },
+  {
+   "key": "left",
+   "from": 749,
+   "to": 768
+  },
+  {
+   "key": "up",
+   "from": 749,
+   "to": 768
+  },
+  {
+   "key": "down",
+   "from": 768,
+   "to": 770
+  },
+  {
+   "key": "right",
+   "from": 768,
+   "to": 770
+  },
+  {
+   "key": "primary",
+   "from": 770,
+   "to": 771
+  },
+  {
+   "key": "up",
+   "from": 770,
+   "to": 771
+  },
+  {
+   "key": "left",
+   "from": 771,
+   "to": 772
+  },
+  {
+   "key": "primary",
+   "from": 776,
+   "to": 777
+  },
+  {
+   "key": "up",
+   "from": 776,
+   "to": 777
+  },
+  {
+   "key": "primary",
+   "from": 782,
+   "to": 783
+  },
+  {
+   "key": "up",
+   "from": 782,
+   "to": 783
+  },
+  {
+   "key": "down",
+   "from": 784,
+   "to": 790
+  },
+  {
+   "key": "right",
+   "from": 784,
+   "to": 805
+  },
+  {
+   "key": "up",
+   "from": 790,
+   "to": 799
+  },
+  {
+   "key": "primary",
+   "from": 799,
+   "to": 800
+  },
+  {
+   "key": "up",
+   "from": 800,
+   "to": 803
+  },
+  {
+   "key": "down",
+   "from": 805,
+   "to": 806
+  },
+  {
+   "key": "primary",
+   "from": 805,
+   "to": 806
+  },
+  {
+   "key": "right",
+   "from": 806,
+   "to": 810
+  },
+  {
+   "key": "down",
+   "from": 811,
+   "to": 812
+  },
+  {
+   "key": "primary",
+   "from": 811,
+   "to": 812
+  },
+  {
+   "key": "down",
+   "from": 817,
+   "to": 818
+  },
+  {
+   "key": "primary",
+   "from": 817,
+   "to": 818
+  },
+  {
+   "key": "up",
+   "from": 818,
+   "to": 833
+  },
+  {
+   "key": "right",
+   "from": 819,
+   "to": 837
+  },
+  {
+   "key": "down",
+   "from": 837,
+   "to": 850
+  },
+  {
+   "key": "left",
+   "from": 837,
+   "to": 852
+  },
+  {
+   "key": "down",
+   "from": 852,
+   "to": 885
+  },
+  {
+   "key": "right",
+   "from": 852,
+   "to": 884
+  },
+  {
+   "key": "primary",
+   "from": 884,
+   "to": 885
+  },
+  {
+   "key": "right",
+   "from": 885,
+   "to": 889
+  },
+  {
+   "key": "down",
+   "from": 889,
+   "to": 905
+  },
+  {
+   "key": "left",
+   "from": 889,
+   "to": 905
+  },
+  {
+   "key": "up",
+   "from": 905,
+   "to": 907
+  },
+  {
+   "key": "down",
+   "from": 907,
+   "to": 908
+  },
+  {
+   "key": "left",
+   "from": 907,
+   "to": 908
+  },
+  {
+   "key": "up",
+   "from": 908,
+   "to": 940
+  },
+  {
+   "key": "left",
+   "from": 909,
+   "to": 917
+  },
+  {
+   "key": "down",
+   "from": 940,
+   "to": 948
+  },
+  {
+   "key": "right",
+   "from": 940,
+   "to": 943
+  },
+  {
+   "key": "primary",
+   "from": 943,
+   "to": 944
+  },
+  {
+   "key": "right",
+   "from": 944,
+   "to": 949
+  },
+  {
+   "key": "down",
+   "from": 949,
+   "to": 950
+  },
+  {
+   "key": "primary",
+   "from": 949,
+   "to": 950
+  },
+  {
+   "key": "right",
+   "from": 950,
+   "to": 953
+  },
+  {
+   "key": "down",
+   "from": 955,
+   "to": 956
+  },
+  {
+   "key": "primary",
+   "from": 955,
+   "to": 956
+  },
+  {
+   "key": "down",
+   "from": 961,
+   "to": 962
+  },
+  {
+   "key": "primary",
+   "from": 961,
+   "to": 962
+  },
+  {
+   "key": "up",
+   "from": 962,
+   "to": 963
+  },
+  {
+   "key": "down",
+   "from": 963,
+   "to": 999
+  },
+  {
+   "key": "left",
+   "from": 963,
+   "to": 999
+  },
+  {
+   "key": "right",
+   "from": 999,
+   "to": 1036
+  },
+  {
+   "key": "up",
+   "from": 999,
+   "to": 1037
+  },
+  {
+   "key": "primary",
+   "from": 1036,
+   "to": 1037
+  },
+  {
+   "key": "down",
+   "from": 1037,
+   "to": 1042
+  },
+  {
+   "key": "right",
+   "from": 1037,
+   "to": 1042
+  },
+  {
+   "key": "primary",
+   "from": 1042,
+   "to": 1043
+  },
+  {
+   "key": "up",
+   "from": 1042,
+   "to": 1043
+  },
+  {
+   "key": "down",
+   "from": 1043,
+   "to": 1048
+  },
+  {
+   "key": "primary",
+   "from": 1048,
+   "to": 1049
+  },
+  {
+   "key": "up",
+   "from": 1048,
+   "to": 1049
+  },
+  {
+   "key": "down",
+   "from": 1049,
+   "to": 1054
+  },
+  {
+   "key": "primary",
+   "from": 1054,
+   "to": 1055
+  },
+  {
+   "key": "up",
+   "from": 1054,
+   "to": 1055
+  },
+  {
+   "key": "down",
+   "from": 1055,
+   "to": 1056
+  },
+  {
+   "key": "primary",
+   "from": 1060,
+   "to": 1061
+  },
+  {
+   "key": "up",
+   "from": 1060,
+   "to": 1061
+  },
+  {
+   "key": "down",
+   "from": 1061,
+   "to": 1062
+  },
+  {
+   "key": "primary",
+   "from": 1066,
+   "to": 1067
+  },
+  {
+   "key": "up",
+   "from": 1066,
+   "to": 1067
+  },
+  {
+   "key": "down",
+   "from": 1067,
+   "to": 1068
+  },
+  {
+   "key": "primary",
+   "from": 1072,
+   "to": 1073
+  },
+  {
+   "key": "up",
+   "from": 1072,
+   "to": 1073
+  },
+  {
+   "key": "down",
+   "from": 1073,
+   "to": 1089
+  },
+  {
+   "key": "left",
+   "from": 1073,
+   "to": 1089
+  },
+  {
+   "key": "primary",
+   "from": 1089,
+   "to": 1090
+  },
+  {
+   "key": "right",
+   "from": 1089,
+   "to": 1126
+  },
+  {
+   "key": "up",
+   "from": 1090,
+   "to": 1117
+  },
+  {
+   "key": "down",
+   "from": 1126,
+   "to": 1131
+  },
+  {
+   "key": "left",
+   "from": 1126,
+   "to": 1136
+  },
+  {
+   "key": "up",
+   "from": 1131,
+   "to": 1136
+  },
+  {
+   "key": "down",
+   "from": 1136,
+   "to": 1138
+  },
+  {
+   "key": "left",
+   "from": 1138,
+   "to": 1139
+  },
+  {
+   "key": "up",
+   "from": 1138,
+   "to": 1139
+  },
+  {
+   "key": "down",
+   "from": 1139,
+   "to": 1141
+  },
+  {
+   "key": "left",
+   "from": 1141,
+   "to": 1142
+  },
+  {
+   "key": "up",
+   "from": 1141,
+   "to": 1142
+  },
+  {
+   "key": "down",
+   "from": 1142,
+   "to": 1143
+  },
+  {
+   "key": "left",
+   "from": 1143,
+   "to": 1144
+  },
+  {
+   "key": "up",
+   "from": 1143,
+   "to": 1144
+  },
+  {
+   "key": "down",
+   "from": 1144,
+   "to": 1145
+  },
+  {
+   "key": "left",
+   "from": 1145,
+   "to": 1146
+  },
+  {
+   "key": "up",
+   "from": 1145,
+   "to": 1146
+  },
+  {
+   "key": "down",
+   "from": 1146,
+   "to": 1147
+  },
+  {
+   "key": "left",
+   "from": 1147,
+   "to": 1148
+  },
+  {
+   "key": "up",
+   "from": 1147,
+   "to": 1148
+  },
+  {
+   "key": "down",
+   "from": 1148,
+   "to": 1149
+  },
+  {
+   "key": "left",
+   "from": 1149,
+   "to": 1150
+  },
+  {
+   "key": "up",
+   "from": 1149,
+   "to": 1150
+  },
+  {
+   "key": "down",
+   "from": 1150,
+   "to": 1151
+  },
+  {
+   "key": "left",
+   "from": 1151,
+   "to": 1152
+  },
+  {
+   "key": "up",
+   "from": 1151,
+   "to": 1152
+  },
+  {
+   "key": "down",
+   "from": 1152,
+   "to": 1154
+  },
+  {
+   "key": "left",
+   "from": 1154,
+   "to": 1156
+  },
+  {
+   "key": "up",
+   "from": 1154,
+   "to": 1156
+  },
+  {
+   "key": "down",
+   "from": 1156,
+   "to": 1158
+  },
+  {
+   "key": "left",
+   "from": 1158,
+   "to": 1159
+  },
+  {
+   "key": "up",
+   "from": 1158,
+   "to": 1159
+  },
+  {
+   "key": "down",
+   "from": 1159,
+   "to": 1160
+  },
+  {
+   "key": "left",
+   "from": 1160,
+   "to": 1161
+  },
+  {
+   "key": "up",
+   "from": 1160,
+   "to": 1161
+  },
+  {
+   "key": "down",
+   "from": 1161,
+   "to": 1162
+  },
+  {
+   "key": "left",
+   "from": 1162,
+   "to": 1163
+  },
+  {
+   "key": "up",
+   "from": 1162,
+   "to": 1163
+  },
+  {
+   "key": "down",
+   "from": 1163,
+   "to": 1164
+  },
+  {
+   "key": "left",
+   "from": 1164,
+   "to": 1166
+  },
+  {
+   "key": "up",
+   "from": 1164,
+   "to": 1166
+  },
+  {
+   "key": "down",
+   "from": 1166,
+   "to": 1469
+  },
+  {
+   "key": "left",
+   "from": 1168,
+   "to": 1208
+  },
+  {
+   "key": "left",
+   "from": 1215,
+   "to": 1233
+  },
+  {
+   "key": "right",
+   "from": 1463,
+   "to": 1469
+  },
+  {
+   "key": "left",
+   "from": 1469,
+   "to": 1481
+  },
+  {
+   "key": "up",
+   "from": 1469,
+   "to": 1481
+  },
+  {
+   "key": "down",
+   "from": 1481,
+   "to": 1483
+  },
+  {
+   "key": "left",
+   "from": 1483,
+   "to": 1484
+  },
+  {
+   "key": "up",
+   "from": 1483,
+   "to": 1484
+  },
+  {
+   "key": "down",
+   "from": 1484,
+   "to": 1485
+  },
+  {
+   "key": "left",
+   "from": 1485,
+   "to": 1486
+  },
+  {
+   "key": "up",
+   "from": 1485,
+   "to": 1486
+  },
+  {
+   "key": "down",
+   "from": 1486,
+   "to": 1487
+  },
+  {
+   "key": "left",
+   "from": 1487,
+   "to": 1488
+  },
+  {
+   "key": "up",
+   "from": 1487,
+   "to": 1488
+  },
+  {
+   "key": "down",
+   "from": 1488,
+   "to": 1489
+  },
+  {
+   "key": "left",
+   "from": 1489,
+   "to": 1501
+  },
+  {
+   "key": "up",
+   "from": 1489,
+   "to": 1501
+  },
+  {
+   "key": "down",
+   "from": 1501,
+   "to": 1524
+  },
+  {
+   "key": "right",
+   "from": 1501,
+   "to": 1515
+  },
+  {
+   "key": "left",
+   "from": 1524,
+   "to": 1561
+  },
+  {
+   "key": "up",
+   "from": 1524,
+   "to": 1561
+  },
+  {
+   "key": "down",
+   "from": 1561,
+   "to": 1577
+  },
+  {
+   "key": "right",
+   "from": 1561,
+   "to": 1576
+  },
+  {
+   "key": "primary",
+   "from": 1576,
+   "to": 1577
+  },
+  {
+   "key": "left",
+   "from": 1577,
+   "to": 1582
+  },
+  {
+   "key": "up",
+   "from": 1577,
+   "to": 1582
+  },
+  {
+   "key": "down",
+   "from": 1582,
+   "to": 1583
+  },
+  {
+   "key": "primary",
+   "from": 1582,
+   "to": 1583
+  },
+  {
+   "key": "left",
+   "from": 1583,
+   "to": 1588
+  },
+  {
+   "key": "up",
+   "from": 1583,
+   "to": 1588
+  },
+  {
+   "key": "down",
+   "from": 1588,
+   "to": 1589
+  },
+  {
+   "key": "primary",
+   "from": 1588,
+   "to": 1589
+  },
+  {
+   "key": "left",
+   "from": 1589,
+   "to": 1590
+  },
+  {
+   "key": "up",
+   "from": 1589,
+   "to": 1594
+  },
+  {
+   "key": "down",
+   "from": 1594,
+   "to": 1595
+  },
+  {
+   "key": "primary",
+   "from": 1594,
+   "to": 1595
+  },
+  {
+   "key": "up",
+   "from": 1595,
+   "to": 1600
+  },
+  {
+   "key": "down",
+   "from": 1600,
+   "to": 1601
+  },
+  {
+   "key": "primary",
+   "from": 1600,
+   "to": 1601
+  },
+  {
+   "key": "up",
+   "from": 1601,
+   "to": 1606
+  },
+  {
+   "key": "down",
+   "from": 1606,
+   "to": 1607
+  },
+  {
+   "key": "primary",
+   "from": 1606,
+   "to": 1607
+  },
+  {
+   "key": "up",
+   "from": 1607,
+   "to": 1611
+  },
+  {
+   "key": "down",
+   "from": 1612,
+   "to": 1623
+  },
+  {
+   "key": "primary",
+   "from": 1612,
+   "to": 1613
+  },
+  {
+   "key": "right",
+   "from": 1613,
+   "to": 1660
+  },
+  {
+   "key": "up",
+   "from": 1623,
+   "to": 1656
+  },
+  {
+   "key": "down",
+   "from": 1660,
+   "to": 1668
+  },
+  {
+   "key": "left",
+   "from": 1660,
+   "to": 1668
+  },
+  {
+   "key": "right",
+   "from": 1668,
+   "to": 1693
+  },
+  {
+   "key": "up",
+   "from": 1668,
+   "to": 1697
+  },
+  {
+   "key": "primary",
+   "from": 1693,
+   "to": 1694
+  },
+  {
+   "key": "right",
+   "from": 1694,
+   "to": 1699
+  },
+  {
+   "key": "primary",
+   "from": 1699,
+   "to": 1700
+  },
+  {
+   "key": "up",
+   "from": 1699,
+   "to": 1700
+  },
+  {
+   "key": "right",
+   "from": 1700,
+   "to": 1705
+  },
+  {
+   "key": "down",
+   "from": 1705,
+   "to": 1727
+  },
+  {
+   "key": "left",
+   "from": 1705,
+   "to": 1727
+  },
+  {
+   "key": "right",
+   "from": 1727,
+   "to": 1764
+  },
+  {
+   "key": "up",
+   "from": 1727,
+   "to": 1737
+  },
+  {
+   "key": "down",
+   "from": 1764,
+   "to": 1799
+  },
+  {
+   "key": "left",
+   "from": 1764,
+   "to": 1824
+  },
+  {
+   "key": "down",
+   "from": 1808,
+   "to": 1844
+  },
+  {
+   "key": "right",
+   "from": 1844,
+   "to": 1881
+  },
+  {
+   "key": "up",
+   "from": 1844,
+   "to": 1899
+  },
+  {
+   "key": "left",
+   "from": 1881,
+   "to": 1899
+  },
+  {
+   "key": "down",
+   "from": 1899,
+   "to": 1900
+  },
+  {
+   "key": "left",
+   "from": 1900,
+   "to": 1916
+  },
+  {
+   "key": "up",
+   "from": 1900,
+   "to": 1903
+  },
+  {
+   "key": "down",
+   "from": 1911,
+   "to": 1937
+  },
+  {
+   "key": "up",
+   "from": 1937,
+   "to": 1938
+  },
+  {
+   "key": "down",
+   "from": 1938,
+   "to": 1939
+  },
+  {
+   "key": "up",
+   "from": 1939,
+   "to": 1940
+  },
+  {
+   "key": "down",
+   "from": 1940,
+   "to": 1941
+  },
+  {
+   "key": "up",
+   "from": 1941,
+   "to": 1942
+  },
+  {
+   "key": "down",
+   "from": 1942,
+   "to": 1943
+  },
+  {
+   "key": "up",
+   "from": 1943,
+   "to": 1944
+  },
+  {
+   "key": "down",
+   "from": 1944,
+   "to": 1945
+  },
+  {
+   "key": "up",
+   "from": 1945,
+   "to": 1946
+  },
+  {
+   "key": "down",
+   "from": 1946,
+   "to": 1947
+  },
+  {
+   "key": "up",
+   "from": 1947,
+   "to": 1948
+  },
+  {
+   "key": "down",
+   "from": 1948,
+   "to": 1949
+  },
+  {
+   "key": "up",
+   "from": 1949,
+   "to": 1950
+  },
+  {
+   "key": "down",
+   "from": 1950,
+   "to": 1951
+  },
+  {
+   "key": "up",
+   "from": 1951,
+   "to": 1952
+  },
+  {
+   "key": "down",
+   "from": 1952,
+   "to": 1953
+  },
+  {
+   "key": "up",
+   "from": 1953,
+   "to": 1954
+  },
+  {
+   "key": "down",
+   "from": 1954,
+   "to": 1955
+  },
+  {
+   "key": "up",
+   "from": 1955,
+   "to": 1956
+  },
+  {
+   "key": "down",
+   "from": 1956,
+   "to": 1957
+  },
+  {
+   "key": "up",
+   "from": 1957,
+   "to": 1958
+  },
+  {
+   "key": "down",
+   "from": 1958,
+   "to": 1959
+  },
+  {
+   "key": "up",
+   "from": 1959,
+   "to": 1960
+  },
+  {
+   "key": "down",
+   "from": 1960,
+   "to": 1961
+  },
+  {
+   "key": "up",
+   "from": 1961,
+   "to": 1978
+  },
+  {
+   "key": "right",
+   "from": 1962,
+   "to": 1980
+  },
+  {
+   "key": "down",
+   "from": 1980,
+   "to": 1982
+  },
+  {
+   "key": "right",
+   "from": 1982,
+   "to": 1983
+  },
+  {
+   "key": "down",
+   "from": 1983,
+   "to": 1984
+  },
+  {
+   "key": "right",
+   "from": 1984,
+   "to": 1985
+  },
+  {
+   "key": "up",
+   "from": 1984,
+   "to": 1985
+  },
+  {
+   "key": "down",
+   "from": 1985,
+   "to": 1986
+  },
+  {
+   "key": "right",
+   "from": 1986,
+   "to": 1987
+  },
+  {
+   "key": "down",
+   "from": 1987,
+   "to": 1988
+  },
+  {
+   "key": "right",
+   "from": 1988,
+   "to": 1989
+  },
+  {
+   "key": "up",
+   "from": 1988,
+   "to": 1989
+  },
+  {
+   "key": "down",
+   "from": 1989,
+   "to": 1991
+  },
+  {
+   "key": "right",
+   "from": 1991,
+   "to": 1992
+  },
+  {
+   "key": "up",
+   "from": 1991,
+   "to": 1992
+  },
+  {
+   "key": "down",
+   "from": 1992,
+   "to": 1993
+  },
+  {
+   "key": "right",
+   "from": 1993,
+   "to": 1994
+  },
+  {
+   "key": "up",
+   "from": 1993,
+   "to": 1994
+  },
+  {
+   "key": "down",
+   "from": 1994,
+   "to": 1996
+  },
+  {
+   "key": "right",
+   "from": 1996,
+   "to": 1997
+  },
+  {
+   "key": "up",
+   "from": 1996,
+   "to": 1997
+  },
+  {
+   "key": "down",
+   "from": 1997,
+   "to": 2010
+  },
+  {
+   "key": "left",
+   "from": 1999,
+   "to": 2024
+  },
+  {
+   "key": "down",
+   "from": 2015,
+   "to": 2024
+  },
+  {
+   "key": "right",
+   "from": 2024,
+   "to": 2028
+  },
+  {
+   "key": "up",
+   "from": 2028,
+   "to": 2029
+  },
+  {
+   "key": "down",
+   "from": 2029,
+   "to": 2030
+  },
+  {
+   "key": "left",
+   "from": 2029,
+   "to": 2030
+  },
+  {
+   "key": "up",
+   "from": 2030,
+   "to": 2031
+  },
+  {
+   "key": "down",
+   "from": 2031,
+   "to": 2032
+  },
+  {
+   "key": "left",
+   "from": 2031,
+   "to": 2032
+  },
+  {
+   "key": "up",
+   "from": 2032,
+   "to": 2035
+  },
+  {
+   "key": "down",
+   "from": 2035,
+   "to": 2036
+  },
+  {
+   "key": "left",
+   "from": 2035,
+   "to": 2036
+  },
+  {
+   "key": "up",
+   "from": 2036,
+   "to": 2039
+  },
+  {
+   "key": "down",
+   "from": 2039,
+   "to": 2040
+  },
+  {
+   "key": "left",
+   "from": 2039,
+   "to": 2040
+  },
+  {
+   "key": "up",
+   "from": 2040,
+   "to": 2043
+  },
+  {
+   "key": "down",
+   "from": 2043,
+   "to": 2044
+  },
+  {
+   "key": "left",
+   "from": 2043,
+   "to": 2044
+  },
+  {
+   "key": "up",
+   "from": 2044,
+   "to": 2046
+  },
+  {
+   "key": "down",
+   "from": 2046,
+   "to": 2047
+  },
+  {
+   "key": "left",
+   "from": 2046,
+   "to": 2047
+  },
+  {
+   "key": "up",
+   "from": 2047,
+   "to": 2059
+  },
+  {
+   "key": "primary",
+   "from": 2048,
+   "to": 2049
+  },
+  {
+   "key": "right",
+   "from": 2050,
+   "to": 2054
+  },
+  {
+   "key": "primary",
+   "from": 2054,
+   "to": 2055
+  },
+  {
+   "key": "right",
+   "from": 2055,
+   "to": 2060
+  },
+  {
+   "key": "primary",
+   "from": 2060,
+   "to": 2061
+  },
+  {
+   "key": "up",
+   "from": 2060,
+   "to": 2061
+  },
+  {
+   "key": "primary",
+   "from": 2066,
+   "to": 2067
+  },
+  {
+   "key": "up",
+   "from": 2066,
+   "to": 2067
+  },
+  {
+   "key": "down",
+   "from": 2068,
+   "to": 2077
+  },
+  {
+   "key": "left",
+   "from": 2068,
+   "to": 2077
+  },
+  {
+   "key": "up",
+   "from": 2077,
+   "to": 2083
+  },
+  {
+   "key": "down",
+   "from": 2083,
+   "to": 2084
+  },
+  {
+   "key": "up",
+   "from": 2084,
+   "to": 2085
+  },
+  {
+   "key": "down",
+   "from": 2085,
+   "to": 2086
+  },
+  {
+   "key": "up",
+   "from": 2086,
+   "to": 2103
+  },
+  {
+   "key": "left",
+   "from": 2087,
+   "to": 2124
+  },
+  {
+   "key": "down",
+   "from": 2124,
+   "to": 2132
+  },
+  {
+   "key": "right",
+   "from": 2124,
+   "to": 2132
+  },
+  {
+   "key": "up",
+   "from": 2132,
+   "to": 2133
+  },
+  {
+   "key": "down",
+   "from": 2133,
+   "to": 2134
+  },
+  {
+   "key": "right",
+   "from": 2133,
+   "to": 2134
+  },
+  {
+   "key": "up",
+   "from": 2134,
+   "to": 2136
+  },
+  {
+   "key": "down",
+   "from": 2136,
+   "to": 2180
+  },
+  {
+   "key": "right",
+   "from": 2136,
+   "to": 2162
+  },
+  {
+   "key": "primary",
+   "from": 2179,
+   "to": 2180
+  },
+  {
+   "key": "left",
+   "from": 2180,
+   "to": 2181
+  },
+  {
+   "key": "up",
+   "from": 2180,
+   "to": 2181
+  },
+  {
+   "key": "down",
+   "from": 2181,
+   "to": 2281
+  },
+  {
+   "key": "right",
+   "from": 2181,
+   "to": 2182
+  },
+  {
+   "key": "up",
+   "from": 2411,
+   "to": 2612
+  }
+ ],
+ "tape_version": 8
+}

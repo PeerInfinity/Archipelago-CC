@@ -1,0 +1,654 @@
+{
+ "knobs": "pat=halton",
+ "hash": "jiggle",
+ "rows": [
+  {
+   "staging": "tb-hitless-pit",
+   "arm": "sword",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": true,
+   "seed": 418414780,
+   "ok": true,
+   "level": 58,
+   "ticks": 1491,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "sword"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 0,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 4
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1364,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1999,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 2819,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 3523,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1661,
+     "why": null
+    }
+   ],
+   "ms": 735,
+   "keyHash": 8860,
+   "perSeed": [
+    {
+     "seed": 418414780,
+     "ok": true,
+     "level": 58,
+     "ticks": 1491,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "sword"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 0,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 4
+     },
+     "ms": 735
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "level": 58,
+     "ticks": 1491,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "sword"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 0,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 4
+     },
+     "ms": 437
+    }
+   ]
+  },
+  {
+   "staging": "tb-hitless-pit",
+   "arm": "spear",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": true,
+   "seed": 418414780,
+   "ok": true,
+   "level": 58,
+   "ticks": 2612,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "spear"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 2,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 1
+   },
+   "tried": [
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 6000,
+     "why": "the mouth is not open after 6000 ticks"
+    },
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 1987,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2411,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 2248,
+     "why": "the player died at spent 2248"
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 2968,
+     "why": "the player died at spent 2968"
+    }
+   ],
+   "ms": 377,
+   "keyHash": 17146,
+   "perSeed": [
+    {
+     "seed": 418414780,
+     "ok": true,
+     "level": 58,
+     "ticks": 2612,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "spear"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 2,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 1
+     },
+     "ms": 377
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "level": 58,
+     "ticks": 2612,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "spear"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 2,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 1
+     },
+     "ms": 296
+    }
+   ]
+  },
+  {
+   "staging": "tb-hitless-door",
+   "arm": "sword",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": true,
+   "seed": 418414780,
+   "ok": true,
+   "level": 58,
+   "ticks": 1149,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "sword"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 0,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 3
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 948,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 2,
+     "spent": 3249,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2503,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 2,
+     "spent": 2155,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2344,
+     "why": null
+    }
+   ],
+   "ms": 681,
+   "keyHash": 7013,
+   "perSeed": [
+    {
+     "seed": 418414780,
+     "ok": true,
+     "level": 58,
+     "ticks": 1149,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "sword"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 0,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 3
+     },
+     "ms": 681
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "level": 58,
+     "ticks": 1149,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "sword"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 0,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 3
+     },
+     "ms": 659
+    }
+   ]
+  },
+  {
+   "staging": "tb-hitless-door",
+   "arm": "spear",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": true,
+   "seed": 418414780,
+   "ok": true,
+   "level": 58,
+   "ticks": 2659,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "spear"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 0,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 1
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2458,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 2,
+     "spent": 5102,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 2986,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 2737,
+     "why": "the player died at spent 2737"
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 6000,
+     "why": "the mouth is not open after 6000 ticks"
+    }
+   ],
+   "ms": 282,
+   "keyHash": 17617,
+   "perSeed": [
+    {
+     "seed": 418414780,
+     "ok": true,
+     "level": 58,
+     "ticks": 2659,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "spear"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 0,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 1
+     },
+     "ms": 282
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "level": 58,
+     "ticks": 2659,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "spear"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 0,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 1
+     },
+     "ms": 288
+    }
+   ]
+  },
+  {
+   "staging": "tb-hitless-s2",
+   "arm": "sword",
+   "seeds": [
+    2,
+    7
+   ],
+   "sameOnBothSeeds": true,
+   "seed": 2,
+   "ok": true,
+   "level": 58,
+   "ticks": 1491,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "sword"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 0,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 4
+   },
+   "tried": [
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1364,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1999,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 2819,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 3523,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 1661,
+     "why": null
+    }
+   ],
+   "ms": 373,
+   "keyHash": 8860,
+   "perSeed": [
+    {
+     "seed": 2,
+     "ok": true,
+     "level": 58,
+     "ticks": 1491,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "sword"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 0,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 4
+     },
+     "ms": 373
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "level": 58,
+     "ticks": 1491,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "sword"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 0,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 4
+     },
+     "ms": 363
+    }
+   ]
+  },
+  {
+   "staging": "tb-hitless-s2",
+   "arm": "spear",
+   "seeds": [
+    2,
+    7
+   ],
+   "sameOnBothSeeds": true,
+   "seed": 2,
+   "ok": true,
+   "level": 58,
+   "ticks": 2612,
+   "hits": [],
+   "deaths": 0,
+   "weapons": [
+    "spear"
+   ],
+   "cleared": [
+    "57:0"
+   ],
+   "choice": {
+    "rule": "hitless",
+    "variant": 2,
+    "hits": 0,
+    "tried": 5,
+    "hitless": 1
+   },
+   "tried": [
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 6000,
+     "why": "the mouth is not open after 6000 ticks"
+    },
+    {
+     "ok": true,
+     "hits": 1,
+     "spent": 1987,
+     "why": null
+    },
+    {
+     "ok": true,
+     "hits": 0,
+     "spent": 2411,
+     "why": null
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 2248,
+     "why": "the player died at spent 2248"
+    },
+    {
+     "ok": false,
+     "hits": null,
+     "spent": 2968,
+     "why": "the player died at spent 2968"
+    }
+   ],
+   "ms": 252,
+   "keyHash": 17146,
+   "perSeed": [
+    {
+     "seed": 2,
+     "ok": true,
+     "level": 58,
+     "ticks": 2612,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "spear"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 2,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 1
+     },
+     "ms": 252
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "level": 58,
+     "ticks": 2612,
+     "hits": [],
+     "deaths": 0,
+     "weapons": [
+      "spear"
+     ],
+     "cleared": [
+      "57:0"
+     ],
+     "choice": {
+      "rule": "hitless",
+      "variant": 2,
+      "hits": 0,
+      "tried": 5,
+      "hitless": 1
+     },
+     "ms": 237
+    }
+   ]
+  }
+ ]
+}

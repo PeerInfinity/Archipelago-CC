@@ -1,0 +1,313 @@
+[
+ {
+  "tape": "tb-hitless-door-spear-s418414780.json",
+  "name": "tb-hitless-door-spear-s418414780",
+  "rng": {
+   "seed": 418414780,
+   "split": true,
+   "cosmetic": 0,
+   "fp": 1763053598
+  },
+  "grants": [],
+  "ticks": 2073,
+  "finished": true,
+  "wallSec": 73,
+  "end": {
+   "level": 58,
+   "x": 64,
+   "y": 104
+  },
+  "hits": 0,
+  "cleared": [
+   "0:1",
+   "10:0",
+   "12:3",
+   "16:0",
+   "19:1",
+   "30:0",
+   "30:2",
+   "31:0",
+   "39:8",
+   "40:8",
+   "57:0",
+   "5:0",
+   "8:0",
+   "8:1"
+  ],
+  "slash": {
+   "hits": 0,
+   "tests": 0
+  },
+  "dead_frames": 40,
+  "boss": null,
+  "hitPolls": [],
+  "bossTrack": [],
+  "observations": 2074,
+  "model": {
+   "hits": [],
+   "cleared": [
+    "57:0"
+   ],
+   "deaths": 0,
+   "end": {
+    "level": 58,
+    "x": 64,
+    "y": 104
+   },
+   "error": null
+  },
+  "firstDivergence": null,
+  "streamCompared": 2074,
+  "gameStreamMd5": "b0440017503387580c1a217561e620b3",
+  "gameStreamTail": [
+   {
+    "level": 57,
+    "y": 82.04248914696579,
+    "x": 103.30620787311419,
+    "t": 2071
+   },
+   {
+    "level": 57,
+    "y": 81.59248914696579,
+    "x": 103.30620787311419,
+    "t": 2072
+   },
+   {
+    "level": 58,
+    "y": 104,
+    "x": 64,
+    "t": 2073
+   }
+  ]
+ },
+ {
+  "tape": "tb-hitless-door-spear-s7.json",
+  "name": "tb-hitless-door-spear-s7",
+  "rng": {
+   "seed": 7,
+   "split": true,
+   "cosmetic": 0,
+   "fp": 1763053598
+  },
+  "grants": [],
+  "ticks": 1346,
+  "finished": true,
+  "wallSec": 48,
+  "end": {
+   "level": 58,
+   "x": 64,
+   "y": 104
+  },
+  "hits": 0,
+  "cleared": [
+   "0:1",
+   "10:0",
+   "12:3",
+   "16:0",
+   "19:1",
+   "30:0",
+   "30:2",
+   "31:0",
+   "39:8",
+   "40:8",
+   "57:0",
+   "5:0",
+   "8:0",
+   "8:1"
+  ],
+  "slash": {
+   "hits": 0,
+   "tests": 0
+  },
+  "dead_frames": 40,
+  "boss": null,
+  "hitPolls": [],
+  "bossTrack": [],
+  "observations": 1347,
+  "model": {
+   "hits": [],
+   "cleared": [
+    "57:0"
+   ],
+   "deaths": 0,
+   "end": {
+    "level": 58,
+    "x": 64,
+    "y": 104
+   },
+   "error": null
+  },
+  "firstDivergence": null,
+  "streamCompared": 1347,
+  "gameStreamMd5": "4709622afb88d0a8ad4823e5b170c354",
+  "gameStreamTail": [
+   {
+    "level": 57,
+    "y": 82.16370832712494,
+    "x": 103.28704923661739,
+    "t": 1344
+   },
+   {
+    "level": 57,
+    "y": 81.71370832712493,
+    "x": 103.28704923661739,
+    "t": 1345
+   },
+   {
+    "level": 58,
+    "y": 104,
+    "x": 64,
+    "t": 1346
+   }
+  ]
+ },
+ {
+  "tape": "tb-hitless-pit-spear-s418414780.json",
+  "name": "tb-hitless-pit-spear-s418414780",
+  "rng": {
+   "seed": 418414780,
+   "split": true,
+   "cosmetic": 0,
+   "fp": 1763053598
+  },
+  "grants": [],
+  "ticks": 1936,
+  "finished": true,
+  "wallSec": 68,
+  "end": {
+   "level": 58,
+   "x": 64,
+   "y": 104
+  },
+  "hits": 0,
+  "cleared": [
+   "0:1",
+   "10:0",
+   "12:3",
+   "16:0",
+   "19:1",
+   "30:0",
+   "30:2",
+   "31:0",
+   "39:8",
+   "40:8",
+   "57:0",
+   "5:0",
+   "8:0",
+   "8:1"
+  ],
+  "slash": {
+   "hits": 0,
+   "tests": 0
+  },
+  "dead_frames": 40,
+  "boss": null,
+  "hitPolls": [],
+  "bossTrack": [],
+  "observations": 1937,
+  "model": {
+   "hits": [],
+   "cleared": [
+    "57:0"
+   ],
+   "deaths": 0,
+   "end": {
+    "level": 58,
+    "x": 64,
+    "y": 104
+   },
+   "error": null
+  },
+  "firstDivergence": null,
+  "streamCompared": 1937,
+  "gameStreamMd5": "0210955f9d1c85e74c7b76150b08b61a",
+  "gameStreamTail": [
+   {
+    "level": 57,
+    "y": 82.23462373930485,
+    "x": 103.43941795314454,
+    "t": 1934
+   },
+   {
+    "level": 57,
+    "y": 81.78462373930485,
+    "x": 103.43941795314454,
+    "t": 1935
+   },
+   {
+    "level": 58,
+    "y": 104,
+    "x": 64,
+    "t": 1936
+   }
+  ]
+ },
+ {
+  "tape": "tb-hitless-s2-spear-s2.json",
+  "name": "tb-hitless-s2-spear-s2",
+  "rng": {
+   "seed": 2,
+   "split": true,
+   "cosmetic": 0,
+   "fp": 0
+  },
+  "grants": [],
+  "ticks": 5289,
+  "finished": true,
+  "wallSec": 181,
+  "end": {
+   "level": 58,
+   "x": 64,
+   "y": 104
+  },
+  "hits": 0,
+  "cleared": [
+   "57:0"
+  ],
+  "slash": {
+   "hits": 0,
+   "tests": 0
+  },
+  "dead_frames": 40,
+  "boss": null,
+  "hitPolls": [],
+  "bossTrack": [],
+  "observations": 5290,
+  "model": {
+   "hits": [],
+   "cleared": [
+    "57:0"
+   ],
+   "deaths": 0,
+   "end": {
+    "level": 58,
+    "x": 64,
+    "y": 104
+   },
+   "error": null
+  },
+  "firstDivergence": null,
+  "streamCompared": 5290,
+  "gameStreamMd5": "b9268755e5113f93c146156edd301f9d",
+  "gameStreamTail": [
+   {
+    "level": 57,
+    "y": 82.4411304393673,
+    "x": 104.10581921878317,
+    "t": 5287
+   },
+   {
+    "level": 57,
+    "y": 81.9911304393673,
+    "x": 104.10581921878317,
+    "t": 5288
+   },
+   {
+    "level": 58,
+    "y": 104,
+    "x": 64,
+    "t": 5289
+   }
+  ]
+ }
+]
