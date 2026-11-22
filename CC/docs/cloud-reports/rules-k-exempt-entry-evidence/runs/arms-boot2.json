@@ -1,0 +1,313 @@
+{
+ "trav-612-down-b2": {
+  "level": 77,
+  "boot": [
+   89,
+   192
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "down",
+    170
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "TRAVERSE: boot so the game places the player at the reel's release point (97,200) on (6,12), straight down column 6 to the (6,19) door [boot fix: the trace is boot+8]"
+ },
+ "trav-612-east-down-b2": {
+  "level": 77,
+  "boot": [
+   89,
+   192
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "right",
+    6
+   ],
+   [
+    "down",
+    170
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "TRAVERSE: (6,12), column 6 hugging its east wall [boot fix: the trace is boot+8]"
+ },
+ "trav-612-west-down-b2": {
+  "level": 77,
+  "boot": [
+   89,
+   192
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "left",
+    4
+   ],
+   [
+    "down",
+    170
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "TRAVERSE: (6,12), column 6 hugging its west side [boot fix: the trace is boot+8]"
+ },
+ "trav-612-wait60-down-b2": {
+  "level": 77,
+  "boot": [
+   89,
+   192
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    null,
+    60
+   ],
+   [
+    "down",
+    170
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "TRAVERSE: (6,12), stand 60 ticks (the runners come up), then down [boot fix: the trace is boot+8]"
+ },
+ "trav-612-wait150-down-b2": {
+  "level": 77,
+  "boot": [
+   89,
+   192
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    null,
+    150
+   ],
+   [
+    "down",
+    170
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "TRAVERSE: (6,12), stand 150 ticks, then down [boot fix: the trace is boot+8]"
+ },
+ "trav-612-westlava-b2": {
+  "level": 77,
+  "boot": [
+   89,
+   192
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "left",
+    28
+   ],
+   [
+    "down",
+    40
+   ],
+   [
+    "left+down",
+    30
+   ],
+   [
+    "down",
+    60
+   ],
+   [
+    "right+down",
+    50
+   ],
+   [
+    "down",
+    60
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "TRAVERSE: (6,12) -> (4,12) -> south through the west lava field -> back east to (6,18)/(6,19) (the 1a weave's shape, hand-timed) [boot fix: the trace is boot+8]"
+ },
+ "trav-612-eastlava-b2": {
+  "level": 77,
+  "boot": [
+   89,
+   192
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "right",
+    30
+   ],
+   [
+    "down",
+    40
+   ],
+   [
+    "right+down",
+    30
+   ],
+   [
+    "down",
+    50
+   ],
+   [
+    "left+down",
+    60
+   ],
+   [
+    "down",
+    60
+   ],
+   [
+    null,
+    20
+   ]
+  ],
+  "note": "TRAVERSE: (6,12) -> (8,12) -> south through the east lava -> back west to column 6 low [boot fix: the trace is boot+8]"
+ },
+ "l80-612-door-diag-b2": {
+  "level": 80,
+  "boot": [
+   73,
+   96
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "left+up",
+    60
+   ],
+   [
+    "up",
+    50
+   ],
+   [
+    null,
+    10
+   ]
+  ],
+  "note": "L80, Suit alone, booted on lavatrap@80,96's own tile (5,6) (exempt, inside lavarunner@80,32's zone): diagonally NW through the lava to (2,1)/(2,0), the L71 door [boot fix: boot (73,96) puts the player at (81,104) on (5,6), the release point offset the L77 reel shows]"
+ },
+ "l80-612-door-west-b2": {
+  "level": 80,
+  "boot": [
+   73,
+   96
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "left",
+    40
+   ],
+   [
+    "up",
+    110
+   ],
+   [
+    null,
+    10
+   ]
+  ],
+  "note": "west to column 2 in the lava, then straight north to the door [boot fix: boot (73,96) puts the player at (81,104) on (5,6), the release point offset the L77 reel shows]"
+ },
+ "l80-612-door-north-b2": {
+  "level": 80,
+  "boot": [
+   73,
+   96
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    "up",
+    50
+   ],
+   [
+    "left+up",
+    40
+   ],
+   [
+    "up",
+    40
+   ],
+   [
+    null,
+    10
+   ]
+  ],
+  "note": "north first (past the runner's spawn (5,2)), then NW to the door [boot fix: boot (73,96) puts the player at (81,104) on (5,6), the release point offset the L77 reel shows]"
+ },
+ "l80-612-door-wait60-b2": {
+  "level": 80,
+  "boot": [
+   73,
+   96
+  ],
+  "grants": [
+   "darksuit"
+  ],
+  "segs": [
+   [
+    null,
+    60
+   ],
+   [
+    "left",
+    40
+   ],
+   [
+    "up",
+    110
+   ],
+   [
+    null,
+    10
+   ]
+  ],
+  "note": "60 idle ticks on the trap tile, then west and north [boot fix: boot (73,96) puts the player at (81,104) on (5,6), the release point offset the L77 reel shows]"
+ }
+}

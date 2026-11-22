@@ -1,0 +1,51 @@
+trav-612-down-b2           hitsEnd=0 total=4 deaths=2 left=None reels=[] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(163, 0.3, [103.2, 249.1], [['LavaRunner', 106.5, 262.1, '', 0], ['LavaRunner', 103.5, 249.2, '', 0]]) samples=66
+    hit1 t130 [6, 15] [('LavaRunner', 92.28, 253.43, 8.3), ('LavaRunner', 107.56, 262.12, 18.77)]
+    hit2 t158 [6, 15] [('LavaRunner', 103.47, 249.19, 2.98), ('LavaRunner', 106.43, 262.12, 10.45)]
+    death respawn t90 last [6, 15] [{'cls': 'LavaRunner', 'x': 103.9, 'y': 247.93, 'd': 0.87, 'hits': 1, 'hits_timer': 0}]
+    death respawn t180 last [6, 15] [{'cls': 'LavaRunner', 'x': 102.48, 'y': 248.98, 'd': 0.91, 'hits': 1, 'hits_timer': 0}]
+trav-612-east-down-b2      hitsEnd=0 total=6 deaths=2 left=None reels=[] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(83, 0.5, [100.4, 243], [['LavaRunner', 112.1, 262.1, '', 0], ['LavaRunner', 100.2, 243.5, '', 0]]) samples=70
+    hit1 t49 [6, 15] [('LavaRunner', 101.98, 254.01, 6.44), ('LavaRunner', 114.39, 262.12, 12.23)]
+    hit2 t68 [6, 16] [('LavaRunner', 114.08, 262.12, 7.02), ('LavaRunner', 101.98, 253.55, 8.5)]
+    hit1 t130 [6, 15] [('LavaRunner', 93.9, 251.87, 6.12), ('LavaRunner', 106.62, 262.12, 18.26)]
+    hit2 t157 [6, 15] [('LavaRunner', 103.02, 249.19, 1.54), ('LavaRunner', 106.94, 262.12, 11.99)]
+    death respawn t90 last [6, 15] [{'cls': 'LavaRunner', 'x': 99.91, 'y': 242.49, 'd': 0.69, 'hits': 1, 'hits_timer': 0}]
+    death respawn t180 last [6, 15] [{'cls': 'LavaRunner', 'x': 120, 'y': 264, 'd': 22.82, 'hits': 0, 'hits_timer': 0}]
+trav-612-west-down-b2      hitsEnd=2 total=5 deaths=1 left=None reels=[] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(181, 0.5, [103.2, 248.3], [['LavaRunner', 106.5, 262.1, '', 0], ['LavaRunner', 103.3, 248.8, '', 0]]) samples=64
+    hit1 t49 [5, 14] [('LavaRunner', 88.05, 248.33, 9.2), ('LavaRunner', 100.5, 251.46, 15.8)]
+    hit2 t80 [5, 15] [('LavaRunner', 88.26, 242.55, 2.44), ('LavaRunner', 100.5, 240.97, 10.62)]
+    hit1 t149 [6, 15] [('LavaRunner', 91.68, 253.89, 12.03), ('LavaRunner', 108.43, 262.12, 22.18)]
+    hit2 t179 [6, 15] [('LavaRunner', 103.26, 248.78, 0.47), ('LavaRunner', 106.48, 262.12, 14.18)]
+    death respawn t112 last [5, 16] [{'cls': 'LavaRunner', 'x': 88.95, 'y': 256.48, 'd': 1.57, 'hits': 2, 'hits_timer': 1}]
+trav-612-wait60-down-b2    hitsEnd=0 total=4 deaths=2 left=None reels=[] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(213, 0.7, [103.2, 249.8], [['LavaRunner', 106.1, 262.1, '', 0], ['LavaRunner', 103, 249.2, '', 0]]) samples=82
+    hit1 t180 [6, 15] [('LavaRunner', 92.29, 253.45, 9.54), ('LavaRunner', 107.56, 262.12, 19.98)]
+    hit2 t209 [6, 15] [('LavaRunner', 103.47, 249.19, 2.98), ('LavaRunner', 106.54, 262.12, 10.48)]
+    death respawn t141 last [5, 14] [{'cls': 'LavaRunner', 'x': 93.45, 'y': 234.73, 'd': 0.6, 'hits': 1, 'hits_timer': 0}]
+    death respawn t231 last [6, 15] [{'cls': 'LavaRunner', 'x': 120, 'y': 264, 'd': 22.82, 'hits': 0, 'hits_timer': 0}]
+trav-612-wait150-down-b2   hitsEnd=0 total=4 deaths=2 left=None reels=[] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(305, 0.6, [103.2, 248.7], [['LavaRunner', 106.1, 262.1, '', 0], ['LavaRunner', 103, 249.2, '', 0]]) samples=108
+    hit1 t190 [6, 15] [('LavaRunner', 93.37, 252.4, 6.84), ('LavaRunner', 106.39, 262.12, 18.14)]
+    hit2 t209 [6, 15] [('LavaRunner', 105.9, 243.98, 2.78), ('LavaRunner', 93.9, 246.51, 9.93)]
+    death respawn t231 last [5, 14] [{'cls': 'LavaRunner', 'x': 93.45, 'y': 236.11, 'd': 1.93, 'hits': 1, 'hits_timer': 0}]
+    death respawn t321 last [6, 15] [{'cls': 'LavaRunner', 'x': 120, 'y': 264, 'd': 22.82, 'hits': 0, 'hits_timer': 0}]
+trav-612-westlava-b2       hitsEnd=1 total=4 deaths=1 left=None reels=[] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(164, 4.1, [41.1, 281.1], [['LavaRunner', 52.4, 266.6, '', 0], ['LavaRunner', 39.8, 277.2, '', 0]]) samples=87
+    hit1 t133 [2, 16] [('LavaRunner', 41.37, 258.9, 7.91), ('LavaRunner', 53.42, 252.29, 20.37)]
+    hit2 t167 [2, 17] [('LavaRunner', 40.12, 279.9, 4.19), ('LavaRunner', 52.36, 268.73, 17.09)]
+    hit1 t268 [6, 15] [('LavaRunner', 91.68, 253.89, 12.03), ('LavaRunner', 108.43, 262.12, 22.18)]
+    death respawn t231 last [4, 19] [{'cls': 'LavaRunner', 'x': 65.69, 'y': 307.2, 'd': 10.61, 'hits': 0, 'hits_timer': 0}]
+trav-612-eastlava-b2       hitsEnd=0 total=3 deaths=1 left=None reels=[(178, [7, 13], [6, 12])] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(215, 4.1, [92.1, 213.6], [['LavaRunner', 124.2, 262.1, '', 0], ['LavaRunner', 95.8, 211.9, '', 0]]) samples=88
+    hit1 t187 [6, 13] [('LavaRunner', 104.5, 216.22, 5.57), ('LavaTrap', 104, 200, 10.88)]
+    hit2 t216 [5, 13] [('LavaRunner', 93.19, 215.32, 1.78), ('LavaTrap', 104, 200, 18.98)]
+    death respawn t272 last [4, 15] [{'cls': 'LavaRunner', 'x': 87.53, 'y': 250.57, 'd': 9.82, 'hits': 0, 'hits_timer': 0}]
+l80-612-door-diag-b2       hitsEnd=1 total=1 deaths=0 left=None reels=[] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(120, 10.4, [31.5, 23.1], [['LavaRunner', 8, 152, '', 0], ['LavaRunner', 128, 216, '', 0], ['LavaRunner', 33.7, 33.2, '', 0], ['LavaRunner', 45.8, 34.6, '', 0]]) samples=39
+    hit1 t116 [1, 1] [('LavaRunner', 34.65, 36.51, 9.8), ('LavaRunner', 47, 35.44, 17.56)]
+l80-612-door-west-b2       hitsEnd=1 total=1 deaths=0 left=None reels=[(55, [3, 6], [5, 6])] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(160, 0.5, [81, 79.9], [['LavaRunner', 8, 152, '', 0], ['LavaRunner', 128, 216, '', 0], ['LavaRunner', 47.2, 96.8, '', 0], ['LavaRunner', 81.5, 80, '', 0]]) samples=54
+    hit1 t45 [3, 6] [('LavaRunner', 41.23, 103.89, 7.77), ('LavaTrap', 88, 104, 39.36)]
+l80-612-door-north-b2      hitsEnd=0 total=3 deaths=1 left=None reels=[] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(58, 0.7, [81, 79.9], [['LavaRunner', 8, 152, '', 0], ['LavaRunner', 128, 216, '', 0], ['LavaRunner', 46.5, 97.1, '', 0], ['LavaRunner', 81.3, 79.3, '', 0]]) samples=50
+    hit1 t41 [5, 4] [('LavaRunner', 84.68, 70.98, 6.42), ('LavaTrap', 88, 104, 28.62)]
+    hit2 t71 [4, 4] [('LavaRunner', 77.33, 75.12, 8.83), ('LavaRunner', 55.18, 89.14, 24.99)]
+    death respawn t102 last [3, 3] [{'cls': 'LavaRunner', 'x': 67.81, 'y': 61.84, 'd': 9.96, 'hits': 2, 'hits_timer': 2}]
+l80-612-door-wait60-b2     hitsEnd=2 total=5 deaths=1 left=None reels=[] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(220, 0.1, [81, 59.8], [['LavaRunner', 8, 152, '', 0], ['LavaRunner', 128, 216, '', 0], ['LavaRunner', 65.6, 81.5, '', 0], ['LavaRunner', 81.1, 59.7, '', 0]]) samples=70
+    hit1 t71 [4, 6] [('LavaRunner', 62.85, 103.28, 5.54), ('LavaRunner', 81.68, 90.86, 18.71)]
+    hit2 t99 [3, 6] [('LavaRunner', 62.66, 103.68, 0.54), ('LavaRunner', 76.37, 94.05, 16.59)]
+    hit1 t173 [5, 4] [('LavaRunner', 84.88, 69.67, 7.64), ('LavaTrap', 88, 104, 28.62)]
+    hit2 t201 [5, 4] [('LavaRunner', 81.05, 72.11, 0.1), ('LavaRunner', 56.04, 91.08, 31.3)]
+    death respawn t132 last [3, 6] [{'cls': 'LavaRunner', 'x': 52.3, 'y': 97.79, 'd': 0.45, 'hits': 2, 'hits_timer': 2}]

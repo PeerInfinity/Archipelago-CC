@@ -1,0 +1,19 @@
+l74-75-darkshield-now      hitsEnd=0 total=4 deaths=2 left=None reels=[] items={'hitsMax': 3} closest=(47, 7, [35.2, 114], [['LavaRunner', 216, 104, '', 0], ['LavaRunner', 31.4, 73.1, '', 0]]) samples=70
+    hit1 t25 [2, 7] [('Bulb', 46.16, 118.77, 10.23), ('LavaRunner', 30.91, 73.06, 41.45)]
+    hit2 t45 [2, 7] [('Bulb', 40.38, 118.14, 6.61), ('LavaRunner', 31.36, 73.06, 41.16)]
+    death respawn t83 last [1, 6] [{'cls': 'Bulb', 'x': 31.41, 'y': 118.11, 'd': 11.42, 'hits': 0, 'hits_timer': 0}]
+    death respawn t136 last [1, 6] []
+l74-75-darkshield-wait40   hitsEnd=0 total=4 deaths=3 left=None reels=[] items={'hitsMax': 3} closest=(61, 10.1, [30.3, 114.3], [['LavaRunner', 216, 104, '', 0], ['LavaRunner', 31.4, 73.1, '', 0]]) samples=82
+    hit1 t58 [1, 7] [('Bulb', 37.88, 121.05, 10.84), ('LavaRunner', 31.36, 73.06, 42.46)]
+    death respawn t94 last [1, 6] [{'cls': 'Bulb', 'x': 31.97, 'y': 118.22, 'd': 11.09, 'hits': 0, 'hits_timer': 0}]
+    death respawn t147 last [1, 6] []
+    death respawn t200 last [1, 6] []
+l74-75-darkshield-wait160  hitsEnd=0 total=2 deaths=1 left=None reels=[] items={'hitsMax': 3} closest=(237, 9.7, [71.4, 82.1], [['LavaRunner', 216, 104, '', 0], ['LavaRunner', 62.2, 79, '', 0]]) samples=104
+    hit1 t236 [4, 5] [('LavaRunner', 63.32, 79.48, 8.8), ('LavaRunner', 216, 104, 146.14)]
+    death respawn t328 last [5, 1] [{'cls': 'LavaRunner', 'x': 84.22, 'y': 54.39, 'd': 23.62, 'hits': 0, 'hits_timer': 0}]
+l74-75-darkshield-west     hitsEnd=0 total=1 deaths=1 left=None reels=[] items={'hitsMax': 3} closest=(92, 5.6, [39.3, 125.6], [['LavaRunner', 216, 104, '', 0], ['LavaRunner', 31.4, 73.1, '', 0]]) samples=55
+    death respawn t53 last [1, 6] []
+l80-612-door-diag          hitsEnd=0 total=0 deaths=0 left=None reels=[] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(19, 65.2, [87.8, 118.6], [['LavaRunner', 8, 152, '', 0], ['LavaRunner', 128, 216, '', 0], ['LavaRunner', 18.2, 104.6, '', 0], ['LavaRunner', 89.4, 53.4, '', 0]]) samples=71
+l80-612-door-west          hitsEnd=0 total=0 deaths=0 left=None reels=[] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(99, 65.3, [88.1, 118.7], [['LavaRunner', 8, 152, '', 0], ['LavaRunner', 128, 216, '', 0], ['LavaRunner', 8, 104, '', 0], ['LavaRunner', 89.4, 53.4, '', 0]]) samples=92
+l80-612-door-north         hitsEnd=0 total=0 deaths=0 left=None reels=[] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(99, 65.2, [87.8, 118.6], [['LavaRunner', 8, 152, '', 0], ['LavaRunner', 128, 216, '', 0], ['LavaRunner', 18.2, 104.6, '', 0], ['LavaRunner', 89.4, 53.4, '', 0]]) samples=80
+l80-612-door-wait60        hitsEnd=0 total=0 deaths=0 left=None reels=[] items={'hitsMax': 3, 'hasDarkSuit': True} closest=(19, 65.5, [88.1, 118.9], [['LavaRunner', 8, 152, '', 0], ['LavaRunner', 128, 216, '', 0], ['LavaRunner', 8, 104, '', 0], ['LavaRunner', 89.4, 53.4, '', 0]]) samples=124
