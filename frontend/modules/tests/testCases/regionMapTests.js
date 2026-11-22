@@ -25,6 +25,7 @@ import { MIN_ZOOM } from '../../procgenCore/mapCamera.js';
 import { seedlingCompositeMapStats } from '../../flashPanel/seedlingCompositeMap.js';
 import { worldToScreen } from '../../procgenCore/mapCamera.js';
 import { squareAt } from '../../regionMap/regionMapOverlay.js';
+import { ZOOM_BUTTON_FACTOR, ZOOM_BUTTON_PX } from '../../regionMap/regionMapUI.js';
 import { REGION_MAP_CLICK_ACTIONS_KEY, regionOfCell } from '../../regionMap/regionMapClickActions.js';
 import { defaultClickActions, withInitialValues } from '../../regionView/clickActions.js';
 import { resetLoopsToIdle } from './loopsPanelTests.js';
@@ -615,6 +616,94 @@ export async function testRegionMapClicksGenerated(testController) {
   return testController.getOverallResult();
 }
 
+/**
+ * zoom-links: the toolbar's + / −, a two-finger pinch and the neighbour lines, on procgen_topdown AP_1 (fast). The
+ * + press multiplies the zoom by ZOOM_BUTTON_FACTOR and − divides it back; a pinch of two synthetic pointers (distinct
+ * pointerIds) zooms by the finger-distance ratio and fires NO click; the links painted are the model's, cross-group
+ * and neighbour counted apart. Counts derived from the panel's own model (no preset pins).
+ */
+export async function testRegionMapZoomPinchLinks(testController) {
+  let s = null;
+  try {
+    s = await setUp(testController, GENERATED, { rulesPath: GENERATED_RULES });
+    if (!s.ready) return testController.getOverallResult();
+    await s.ctx.setSetting('moduleSettings.regionMap.showLinks', true);
+    await s.ctx.setSetting('moduleSettings.regionMap.followPlayer', true);
+    const p = panel();
+    p.follow = true;
+    p.controls.follow.checked = true;
+    const ok = await fitAllAndSettle(testController, 'fit all paints every cell');
+    testController.reportCondition('fit all paints every cell', ok);
+    p.follow = true;
+    p.controls.follow.checked = true;
+
+    // + then −, by the real buttons
+    const zoomOf = () => Number(p.canvas.dataset.zoom);
+    const z0 = dbg().camera.zoom;
+    const plus = p.root.querySelector('button.region-map-zoom-in');
+    const minus = p.root.querySelector('button.region-map-zoom-out');
+    testController.reportCondition('the toolbar has + and − buttons beside Fit all',
+      !!plus && !!minus && minus.previousElementSibling?.classList.contains('region-map-fit-all') && plus.previousElementSibling === minus);
+    const side = plus ? plus.getBoundingClientRect() : null;
+    testController.reportCondition(`the buttons are large enough to tap (${side?.width.toFixed(0)}×${side?.height.toFixed(0)} px ≥ ${ZOOM_BUTTON_PX - 1})`,
+      !!side && side.width >= ZOOM_BUTTON_PX - 1 && side.height >= ZOOM_BUTTON_PX - 1);
+    plus.click();
+    const zin = await testController.pollForCondition(() => Math.abs(zoomOf() - z0 * ZOOM_BUTTON_FACTOR) < 1e-9 * z0,
+      'the + press painted', 3000, 25);
+    testController.log(`ZOOM: fit ${z0.toPrecision(6)} → + ${zoomOf().toPrecision(6)} (×${(zoomOf() / z0).toFixed(4)})`);
+    testController.reportCondition(`+ multiplies the zoom by ${ZOOM_BUTTON_FACTOR.toFixed(4)} (${z0.toPrecision(4)} → ${zoomOf().toPrecision(4)})`, zin);
+    testController.reportCondition('a + press turns Follow off, as the wheel does', dbg().follow === false && p.controls.follow.checked === false);
+    testController.reportCondition('the press stamps canvas.dataset.zoomedAt', Number(p.canvas.dataset.zoomedAt) > 0);
+    minus.click();
+    const zout = await testController.pollForCondition(() => Math.abs(zoomOf() - z0) < 1e-9 * z0, 'the − press painted', 3000, 25);
+    testController.reportCondition(`− divides it back (${zoomOf().toPrecision(4)})`, zout);
+
+    // a two-finger pinch: fingers 100 px apart around the centre → 200 px apart
+    const r = p.canvas.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    const clicks = p.clickCount;
+    const zp = dbg().camera.zoom;
+    const ev = (type, id, x, y) => p.canvas.dispatchEvent(new PointerEvent(type, {
+      clientX: x, clientY: y, pointerId: id, pointerType: 'touch', isPrimary: id === 11, bubbles: true, button: 0,
+    }));
+    ev('pointerdown', 11, cx - 50, cy);
+    ev('pointerdown', 12, cx + 50, cy);
+    for (let k = 1; k <= 5; k += 1) {
+      ev('pointermove', 11, cx - 50 - 10 * k, cy);
+      ev('pointermove', 12, cx + 50 + 10 * k, cy);
+    }
+    ev('pointerup', 12, cx + 100, cy);
+    ev('pointerup', 11, cx - 100, cy);
+    await nextFrames(3);
+    const zr = dbg().camera.zoom / zp;
+    testController.log(`PINCH: 100 → 200 px apart: zoom ${zp.toPrecision(6)} → ${dbg().camera.zoom.toPrecision(6)} (×${zr.toFixed(4)}); `
+      + `pinches ${dbg().pinch.pinches}, pinch moves ${dbg().pinch.pinchMoves}`);
+    testController.reportCondition(`the pinch zoomed by the finger-distance ratio (×${zr.toFixed(4)} = ×2)`, Math.abs(zr - 2) < 1e-6);
+    testController.reportCondition(`the pinch fired no click (clicks ${clicks} → ${p.clickCount})`, p.clickCount === clicks && dbg().pinch.pointers === 0);
+
+    // the links: every one on screen after Fit all, the two kinds counted apart
+    await fitAllAndSettle(testController, 'fit all again');
+    await nextFrames(2);
+    const d = dbg();
+    const m = p.model;
+    const wantNb = m.neighbourLinks.length;
+    testController.log(`LINKS: ${d.lastPaint.links} cross-group (model ${m.links.length}), ${d.lastPaint.neighbourLinks} neighbour (model ${wantNb})`);
+    testController.reportCondition(`the neighbour lines are drawn (${d.lastPaint.neighbourLinks} = the model's ${wantNb}, > 0)`,
+      wantNb > 0 && d.lastPaint.neighbourLinks === wantNb && d.neighbourLinks === wantNb);
+    testController.reportCondition(`the cross-group lines are counted apart (${d.lastPaint.links} = ${m.links.length})`, d.lastPaint.links === m.links.length);
+    await s.ctx.setSetting('moduleSettings.regionMap.showLinks', false);
+    const off = await testController.pollForCondition(() => dbg().lastPaint.neighbourLinks === 0 && dbg().lastPaint.links === 0,
+      'Links off draws none', 3000, 25);
+    testController.reportCondition('the Links box turns the neighbour lines off too', off);
+  } catch (error) {
+    testController.reportCondition(`zoom/pinch/links row error-free: ${error.message}`, false);
+  } finally {
+    if (s) await tearDown(testController, s, { restoreWorld: true });
+  }
+  return testController.getOverallResult();
+}
+
 /** seedling_playthrough — the moves, a check, and the refusal of an inaccessible square (the Region Graph's). */
 export async function testRegionMapClicksSeedling(testController) {
   let s = null;
@@ -1191,6 +1280,14 @@ registerTest({
   testFunction: testRegionMapClassicWorld,
   enabled: false, // runs where a roster enrols it (the substrates config)
   description: 'The panel loads a world with no sidecars: the generic layout, one generic box per region, a square place for every location',
+});
+registerTest({
+  id: 'region-map-zoom-pinch-links',
+  name: 'Region Map: + / − zoom, a two-finger pinch, the neighbour lines',
+  category: 'Region Map',
+  testFunction: testRegionMapZoomPinchLinks,
+  enabled: false,
+  description: 'zoom-links: + and − zoom by ZOOM_BUTTON_FACTOR and untick Follow; a two-pointer pinch zooms by the distance ratio and fires no click; the neighbour lines drawn are the model\'s, counted apart from the cross-group links, under the Links box',
 });
 registerTest({
   id: 'region-map-seedling-paints',
