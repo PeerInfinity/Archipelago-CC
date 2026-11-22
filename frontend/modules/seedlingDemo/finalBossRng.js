@@ -432,6 +432,131 @@ export class OwlDrawStream {
 }
 
 /**
+ * `Pattern.vdc(n, b)` (Seedling `p4h-as3` 0ea17b675a, `src/Pattern.as`): the radical inverse of `n` in base `b`, in
+ * [0, 1), operation for operation — `r += (n % b) * f; n = int(n / b); f /= b;` — so the bits are the game's.
+ */
+export function vdc(n, b) {
+    let r = 0;
+    let f = 1 / b;
+    let m = n;
+    while (m > 0) {
+        r += (m % b) * f;
+        m = Math.trunc(m / b);
+        f /= b;
+    }
+    return r;
+}
+
+/**
+ * ⛓⛓⛓ THE p4h OWL (`bossdraws`, option A at all five L112 site families; slice seedling-fidelity-p4hport).
+ *
+ * The same site methods and the same per-site ledger as `OwlDrawStream` — so `levelRun`'s per-tick
+ * `owlTickDraws(phase)` assertion still holds, row for row — but no site reads the generator: each returns the
+ * pattern `FinalBoss.as`/`RockFall.as` compute at p4h (cites in the slice report, D1):
+ *   · `barrageRoll(rockfallTime)`: `rockfallTime % rockFrequency == 0`, on the ALREADY-decremented `rockfallTime`
+ *     (239 … 0), so ticks 6, 12, … 240 of each barrage drop a rock: exactly 40;
+ *   · `spawnX`/`spawnY`: `vdc(rockIndex, 2)` / `vdc(rockIndex, 3)` `* radius * 2 - radius` about the lagged point,
+ *     `rockIndex` incremented before the rock (the first rock is index 1) and reset at the pod snap (`podSnap`);
+ *   · `rockScale`: `vdc(k, 5) / 2 + 0.25` (the HIT box `32s × 16s`), `k` = the barrage rock's `rockIndex`, or
+ *     `i + 1` for death rock `i`;
+ *   · `grenadeRoll`: `walkTicks++` then `walkTicks % grenadeFrequency == 0`, `walkTicks` reset at the pod snap;
+ *   · `deathRockX`: `120 + (i + 0.5) / n * 8 - 4` for the arm's `i`-th rock.
+ * The counters are the boss's instance fields at p4h, so a NEW stream per build of the room is the game's own reset.
+ *
+ * ⛓ `Enemy.coins` STILL DRAWS `Math.random()` at p4h (the build's one, each grenade's ctor), and it decides nothing.
+ * A stream given a seed books it on its own `SeedlingRng`, so `state` stays the page's value where the seed premises
+ * hold; given none, `state` is null and every gameplay answer is unchanged — none reads it.
+ */
+export class OwlPatternStream {
+    /** @param {number|null} [seed] the run's seed, when the seeded position is known; null otherwise */
+    constructor(seed = null) {
+        this.rng = Number.isInteger(seed) && seed > 0 ? new SeedlingRng(seed) : null;
+        this.log = [];
+        this.counts = Object.fromEntries(Object.keys(OWL_DRAW_SITES).map((k) => [k, 0]));
+        /** `FinalBoss.rockIndex`: rocks of THIS barrage. */
+        this.rockIndex = 0;
+        /** `FinalBoss.walkTicks`: walk-arm ticks of THIS leg. */
+        this.walkTicks = 0;
+        /** The death arm's loop index `i`, and the scale key its next `rockScale` reads (`i + 1`). */
+        this.deathIndex = 0;
+        this.pendingDeathScale = null;
+    }
+
+    /** The generator's state where the seeded position is known, else null (no gameplay site reads it at p4h). */
+    get state() { return this.rng === null ? null : this.rng.state; }
+
+    get count() { return this.log.length; }
+
+    /** @private one site, booked; `raw` is the generator's number for the one site that still draws. */
+    _book(site, raw = null) {
+        if (!(site in OWL_DRAW_SITES)) throw new OwlRngError(`OwlPatternStream: "${site}" is not in OWL_DRAW_SITES`);
+        this.log.push({ site, raw });
+        this.counts[site] += 1;
+    }
+
+    barrageRoll(rockfallTime) {
+        if (!Number.isInteger(rockfallTime)) {
+            throw new OwlRngError(`OwlPatternStream.barrageRoll: needs the boss's decremented rockfallTime, got ${rockfallTime}`);
+        }
+        this._book('barrageRoll');
+        return rockfallTime % ROCK_FREQUENCY === 0;
+    }
+
+    spawnX(px, pvx) {
+        this._book('spawnX');
+        this.rockIndex += 1;
+        return px + pvx * ROCK_STEPS_AHEAD + vdc(this.rockIndex, 2) * ROCK_RADIUS * 2 - ROCK_RADIUS;
+    }
+
+    spawnY(py, pvy) {
+        this._book('spawnY');
+        return py + pvy * ROCK_STEPS_AHEAD + vdc(this.rockIndex, 3) * ROCK_RADIUS * 2 - ROCK_RADIUS;
+    }
+
+    rockScale() {
+        this._book('rockScale');
+        const k = this.pendingDeathScale ?? this.rockIndex;
+        this.pendingDeathScale = null;
+        return vdc(k, 5) / 2 + 0.25;
+    }
+
+    grenadeRoll() {
+        this._book('grenadeRoll');
+        this.walkTicks += 1;
+        return this.walkTicks % GRENADE_FREQUENCY === 0;
+    }
+
+    enemyCoins() {
+        const raw = this.rng === null ? null : this.rng.next();
+        this._book('enemyCoins', raw);
+        return raw === null ? null : as3Int(ENEMY_COINS_BASE + raw * ENEMY_COINS_SPAN);
+    }
+
+    deathRockX() {
+        this._book('deathRockX');
+        const i = this.deathIndex;
+        this.deathIndex += 1;
+        this.pendingDeathScale = i + 1;
+        return 120 + (i + 0.5) / DEATH_ROCKS * 8 - 4;
+    }
+
+    /** The pod snap (`rockfallTime = rockfallTimeMax`): `rockIndex = 0; walkTicks = 0;`. Books nothing. */
+    podSnap() {
+        this.rockIndex = 0;
+        this.walkTicks = 0;
+    }
+
+    levelBuild() {
+        this.enemyCoins();
+    }
+}
+
+/** The L112 stream a build plays: the patterns on `bossdraws`, else the seeded `OwlDrawStream`. */
+export function owlStreamForBuild({ bossDraws, seed }) {
+    return bossDraws ? new OwlPatternStream(seed) : new OwlDrawStream(seed);
+}
+
+/**
  * ⛔ THE REFUSAL THAT KEEPS THE TABLE HONEST.
  *
  * The schedule above is complete only for a run whose cosmetic draws are on

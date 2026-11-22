@@ -44,6 +44,7 @@
 
 import { FP_ELAPSED } from './chasers.js';
 import { SeedlingRng } from './rng.js';
+import { vdc } from './finalBossRng.js';
 
 export class TentacleBeastError extends Error {
     constructor(message) { super(message); this.name = 'TentacleBeastError'; }
@@ -146,6 +147,39 @@ export class TentacleDrawStream {
     get state() { return this.rng.state; }
 }
 
+/**
+ * ⛓⛓⛓ THE p4h BEAST (`bossdraws`, option A at both L57 site pairs; slice seedling-fidelity-p4hport).
+ *
+ * The same `draw(site)` and per-site `counts` as `TentacleDrawStream`, but the four gameplay sites return the
+ * pattern `TentacleBeast.as` computes at p4h (`p4h-as3` 0ea17b675a): `whirlIndex++` then `vdc(whirlIndex, 2)` /
+ * `vdc(whirlIndex, 3)` for a whirlpool candidate, `tentacleIndex++` then `vdc(tentacleIndex, 2)` / `vdc(…, 3)` for a
+ * tentacle candidate — the beast's own instance fields, so a new stream per build IS the game's reset. `spawn`
+ * also takes the patch's `break` on a failed whirlpool try (`pattern`). ⛓ `build`/`coins` (`Enemy.coins`) still draw
+ * `Math.random()` at p4h and decide nothing; this stream has no generator, so they book `0` and `state` is null.
+ */
+export class TentaclePatternStream {
+    constructor() {
+        this.pattern = true;
+        this.counts = { build: 0, whirlX: 0, whirlY: 0, tentacleX: 0, tentacleY: 0, coins: 0 };
+        this.n = 0;
+        /** `TentacleBeast.whirlIndex` / `tentacleIndex`: candidates tried this build. */
+        this.whirlIndex = 0;
+        this.tentacleIndex = 0;
+        this.draw('build');
+    }
+    draw(site) {
+        if (!(site in this.counts)) fail(`TentaclePatternStream: "${site}" is not a site`);
+        this.counts[site] += 1;
+        this.n += 1;
+        if (site === 'whirlX') { this.whirlIndex += 1; return vdc(this.whirlIndex, 2); }
+        if (site === 'whirlY') return vdc(this.whirlIndex, 3);
+        if (site === 'tentacleX') { this.tentacleIndex += 1; return vdc(this.tentacleIndex, 2); }
+        if (site === 'tentacleY') return vdc(this.tentacleIndex, 3);
+        return 0;
+    }
+    get state() { return null; }
+}
+
 /** The run's premises for the stream (`finalBossRng.assertOwlStreamPremises`'s, one room over). */
 export function tentacleStreamRefusal(rngBlock, { bootLevel, level, worldEntries, onlyThisRoom = false }) {
     if (!rngBlock || rngBlock.split !== true) {
@@ -207,7 +241,7 @@ export function whirlpoolRect(w) {
 }
 
 /** The fight's per-visit state, from the `.oel` placement (`tentaclebeast x=80 y=48 tag=0`). */
-export function createTentacleBeastFight(e, { seed }) {
+export function createTentacleBeastFight(e, { seed, bossDraws = false }) {
     return {
         id: `tentaclebeast@${e.x},${e.y}`,
         tag: Number.isInteger(e.tag) ? e.tag : -1,
@@ -220,7 +254,8 @@ export function createTentacleBeastFight(e, { seed }) {
             maxTentacles: TENTACLE_BEAST.maxTentacles,
             maxWhirlpools: TENTACLE_BEAST.maxWhirlpools,
         },
-        stream: seed === null ? null : new TentacleDrawStream(seed),
+        // ⛓ p4hport: on `bossdraws` the patterns, whatever the seed; otherwise the seeded stream, as before.
+        stream: bossDraws ? new TentaclePatternStream() : (seed === null ? null : new TentacleDrawStream(seed)),
         tentacles: [],
         whirlpools: [],
         /** The run-side records (the arena's runtime teleporter, …) levelRun keeps beside the fight. */
@@ -289,6 +324,8 @@ function spawn(fight, ctx) {
         const ypos = Math.trunc(S.draw('whirlY') * (B.spawnRect.height - wm.y - wm.height) + B.spawnRect.y + wm.y);
         if (near(xpos, ypos, vT, B.whirlpoolDist)) cont = false;
         if (cont && near(xpos, ypos, vW, B.whirlpoolDist)) cont = false;
+        // ⛓ p4h's `if (!cont) break;` — `cont` is never reset inside this loop, so no later try could pass anyway.
+        if (!cont && S.pattern === true) break;
         if (cont) {
             // `new Whirlpool(xpos - Tile.w, ypos - Tile.h, true)`: its ctor adds the tile back and runs `update()` once.
             const w = { id: `whirlpool#${++fight.seq}`, x: xpos, y: ypos, timer: WHIRLPOOL.grow + WHIRLPOOL.live + WHIRLPOOL.dies };

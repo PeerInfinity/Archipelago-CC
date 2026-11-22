@@ -80,7 +80,7 @@
  */
 
 import {
-    OwlDrawStream, ROCK_FREQUENCY, GRENADE_FREQUENCY, as3Int,
+    OwlDrawStream, ROCK_FREQUENCY, GRENADE_FREQUENCY, as3Int, owlStreamForBuild,
 } from './finalBossRng.js';
 /**
  * ⛓⛓⛓ R9 P3 (E) — **ONE TRANSCRIPTION OF `Point.length`, NOT TWO.** This file
@@ -558,7 +558,8 @@ export function stepFinalBoss(b, ctx) {
         // and `complete` is true: no updates, no callbacks, no draws.
         b.anim = '';
         b.animAge = null;
-        if (stream.barrageRoll()) {
+        // ⛓ p4h (`bossdraws`): the pattern reads the decremented `rockfallTime`; the seeded stream ignores it.
+        if (stream.barrageRoll(b.rockfallTime)) {
             phase = 'barrageSpawn';
             const argX = stream.spawnX(player.x, player.vx);
             const argY = stream.spawnY(player.y, player.vy);
@@ -611,6 +612,8 @@ export function stepFinalBoss(b, ctx) {
                 b.x = pod.x;
                 b.y = pod.y + 1;
                 b.rockfallTime = FINAL_BOSS.rockfallTimeMax;
+                // ⛓ p4h (`bossdraws`): `rockIndex = 0; walkTicks = 0;` — the patterns' counters (a no-op elsewhere).
+                stream.podSnap?.();
                 pod.open = false;
                 events.push({ what: 'barrageBegan', pod: b.cpod });
             }
@@ -1049,7 +1052,7 @@ export function finalBossCoast({
  * and nothing else in this room can get between them.
  */
 export function createOwlRoom({ tiles, seed, bossX = 72, bossY = 104, tag = 0,
-    solidAt = null, shake = 0 } = {}) {
+    solidAt = null, shake = 0, bossDraws = false } = {}) {
     if (!Array.isArray(tiles)) {
         throw new FinalBossError('createOwlRoom needs the level\'s `tiles`, in .oel order');
     }
@@ -1065,7 +1068,8 @@ export function createOwlRoom({ tiles, seed, bossX = 72, bossY = 104, tag = 0,
         }
         return false;
     });
-    const stream = new OwlDrawStream(seed);
+    // ⛓ p4h (`bossdraws`): the patterns (`OwlPatternStream`); otherwise the seeded stream, as before.
+    const stream = owlStreamForBuild({ bossDraws, seed });
     // ⛔ THE ROOM'S OWN CONSTRUCTION IS ON THE SEEDED STREAM. `Game.begin()`
     // is where `loadlevel` lives and it runs AFTER `Bot.botStart` reseeded,
     // so the two gameplay ctor draws L112 makes come first, in add order.

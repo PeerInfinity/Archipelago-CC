@@ -171,8 +171,9 @@ import {
     stepFinalBoss, stepOwlGrenade, stepRockFall,
 } from './finalBossFight.js';
 import {
-    OWL_LEVEL_BUILD_DRAWS, OwlDrawStream, assertOwlStreamPremises, owlTickDraws,
+    OWL_LEVEL_BUILD_DRAWS, OwlDrawStream, OwlPatternStream, assertOwlStreamPremises, owlTickDraws,
 } from './finalBossRng.js';
+import { declaresBossDraws } from './modelBuild.js';
 import {
     ICE_TURRET_CONTACT, createIceTurret, hitIceTurret, iceTurretRect, iceTurretSettled, stepIceTurret,
     bumpIceTurret,
@@ -878,6 +879,13 @@ export function createLevelRun({
      * `inventorySlots` / `playerDamage`: empty = every run before this slice.
      */
     stagedDeliveries = [],
+    /**
+     * ⛓⛓⛓ seedling-fidelity-p4hport — THE BUILD this run models, as its manifest `capabilities` (`modelBuild.js`).
+     * `null` (every caller that names none) is the default build's answer, p4g's. On a build declaring `bossdraws`
+     * (p4h) the Owl and the Tentacled Beast read their patterns: no seed premise, no boot-room / re-entry refusal, no
+     * stream carried across builds — every build of the room is the same fight.
+     */
+    capabilities = null,
 }) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
@@ -887,6 +895,8 @@ export function createLevelRun({
     // Undefined means the builder's own default, which is ALL roles — so
     // every pre-R0 caller keeps exactly the census it had.
     const worlds = new Map();
+    /** ⛓ p4hport: does the modelled build read the L57/L112 patterns? (`modelBuild.declaresBossDraws`) */
+    const bossDraws = declaresBossDraws(capabilities);
     /**
      * ⛓ THE ITEM MIRROR, DECLARED HERE BECAUSE A WORLD READS IT (R5).
      *
@@ -2175,7 +2185,8 @@ export function createLevelRun({
         const f = tentacleFightFor(level);
         if (f === null) return null;
         // `streamRefusal`: why the run's draw stream cannot be the game's here (null when it can) — the verb's gate.
-        const streamRefusal = f.stream === null ? (f.beast.dead ? null : 'has no declared seed for this room')
+        const streamRefusal = f.stream?.pattern === true ? null
+            : f.stream === null ? (f.beast.dead ? null : 'has no declared seed for this room')
             : tentacleStreamRefusal(rng, { bootLevel: boot.level, level, worldEntries,
                 onlyThisRoom: tentacleLevelsBuilt.size === 1 && tentacleLevelsBuilt.has(level) });
         return { ...tentacleBeastView(f), streamRefusal };
@@ -2225,14 +2236,16 @@ export function createLevelRun({
                 // rebuild's ctor pays its `coins` draw from wherever the stream stood (measured D3: seeds 2 and 3
                 // die in L57 and the game's state runs on). It is carried only while no OTHER room was built since
                 // the reseed — another room's build spends draws this schedule does not book.
-                const carried = tentacleStreams.get(n) ?? null;
+                // ⛓ p4hport (`bossdraws`): the patterns are the beast's own counters, so a build carries nothing.
+                const carried = bossDraws ? null : (tentacleStreams.get(n) ?? null);
                 fight = createTentacleBeastFight({ x: e[0].x, y: e[0].y, tag },
-                    { seed: !dead && carried === null && Number.isInteger(rng?.seed) && rng.seed > 0 ? rng.seed : null });
+                    { seed: !dead && carried === null && Number.isInteger(rng?.seed) && rng.seed > 0 ? rng.seed : null,
+                        bossDraws });
                 if (carried !== null) {
                     carried.draw('build');
                     if (!dead) fight.stream = carried;
                 }
-                if (fight.stream) tentacleStreams.set(n, fight.stream);
+                if (fight.stream && !bossDraws) tentacleStreams.set(n, fight.stream);
                 if (dead) {
                     // The ctor's dead arm: no tentacles, no whirlpools, activated, and the mouth at once.
                     Object.assign(fight.beast, { dead: true, activated: true, maxTentacles: 0, maxWhirlpools: 0, spr: null });
@@ -2399,7 +2412,30 @@ export function createLevelRun({
      * stream may open only while it is 0 (see `owlStreamFor`).
      */
     let worldEntries = 0;
+    /** ⛓ p4hport: on `bossdraws`, one pattern stream per BUILD of the Owl's room (keyed by the build's boss map). */
+    const owlPatternStreams = new WeakMap();
     const owlStreamFor = (n) => {
+        if (bossDraws) {
+            // ⛓⛓ p4h: `rockIndex`/`walkTicks` are FinalBoss instance fields, so every build (an entry, a re-entry, a
+            // death's rebuild) starts the same pattern. The generator still turns for `Enemy.coins` alone, which
+            // decides nothing: its position is booked only where p4g's premises would make it the seeded one.
+            owlStateFor(n);
+            const build = finalBossStates.get(n);
+            if (!owlPatternStreams.has(build)) {
+                const seeded = rng?.split === true && Number.isInteger(rng?.seed) && rng.seed > 0
+                    && n === boot.level && worldEntries === 0 && owlStreamLevel === null;
+                const s = new OwlPatternStream(seeded ? rng.seed : null);
+                s.levelBuild();
+                if (s.count !== OWL_LEVEL_BUILD_DRAWS) {
+                    throw new Error(`levelRun: the Owl pattern stream's level build booked ${s.count} sites and `
+                        + `\`OWL_LEVEL_BUILD_DRAWS\` is ${OWL_LEVEL_BUILD_DRAWS}.`);
+                }
+                owlPatternStreams.set(build, s);
+            }
+            owlStream = owlPatternStreams.get(build);
+            owlStreamLevel = n;
+            return owlStream;
+        }
         if (owlStream !== null) {
             if (owlStreamLevel !== n) {
                 throw new Error(`levelRun: the Owl's draw stream was opened in level `
@@ -18720,7 +18756,8 @@ export function createLevelRun({
             levelWidth: world.world.width,
             player: { x: state.x, y: state.y, fallFromCeiling: !!state.fall },
             setShake: () => { shake = applyShakeWriter(shake, 'tentacleRise'); },
-            streamRefusal: () => (f.stream === null ? 'has no declared seed for this room (or the room was built dead)'
+            streamRefusal: () => (f.stream?.pattern === true ? null
+                : f.stream === null ? 'has no declared seed for this room (or the room was built dead)'
                 : tentacleStreamRefusal(rng, { bootLevel: boot.level, level, worldEntries,
                     onlyThisRoom: tentacleLevelsBuilt.size === 1 && tentacleLevelsBuilt.has(level) })),
         });
@@ -24943,7 +24980,7 @@ export function createLevelRun({
                 // FlashPunk's Lehmer generator, a graphic's angle). L112's
                 // build draws `OWL_LEVEL_BUILD_SITES` on the SEEDED stream
                 // `owlStream` counts, after the respawn — not modelled.
-                if (owlStream !== null && level === owlStreamLevel) {
+                if (!bossDraws && owlStream !== null && level === owlStreamLevel) {
                     throw new Error(`levelRun: the player died (${pendingDeath.source}) at tick `
                         + `${pendingDeath.t} in level ${level}, the Owl's room. \`restartLevel()\` `
                         + 'rebuilds it, and the build\'s ctor draws land on the seeded stream '
