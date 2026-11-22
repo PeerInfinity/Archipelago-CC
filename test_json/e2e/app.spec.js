@@ -86,6 +86,12 @@ test.describe('Application End-to-End Tests', () => {
   if (process.env.TEST_MEASURE_BOT_STALL_MS) {
     APP_URL += `&measureBotStallMs=${encodeURIComponent(process.env.TEST_MEASURE_BOT_STALL_MS)}`;
   }
+  // MEASUREMENT-ONLY (remeasure-6): TEST_MEASURE_CAPTURE_REQUESTS=<jsonl path> → the walk's solve requests, one row
+  // per walk entry, appended there through the `__measureCaptureAppend` binding (exposed below, only when it is set).
+  const measureCapturePath = process.env.TEST_MEASURE_CAPTURE_REQUESTS || '';
+  if (measureCapturePath) {
+    APP_URL += '&measureCaptureRequests=1';
+  }
 
   test('run in-app tests and check results', async ({ page }) => {
     // Counted for the summary: a green run can hide a thrown handler, and the
@@ -161,6 +167,11 @@ test.describe('Application End-to-End Tests', () => {
     // (observed 4x). Phase 1 below already polls the
     // __playwrightTestsStarted__ flag, which is the real readiness
     // signal.
+    if (measureCapturePath) {
+      fs.mkdirSync(path.dirname(path.resolve(measureCapturePath)), { recursive: true });
+      await page.exposeFunction('__measureCaptureAppend', (line) => { fs.appendFileSync(measureCapturePath, `${line}\n`); });
+      console.log(`  - request capture: ${measureCapturePath} (TEST_MEASURE_CAPTURE_REQUESTS)`);
+    }
     await page.goto(APP_URL, { waitUntil: 'load', timeout: 60000 });
     console.log('PW DEBUG: Page navigation complete (load).');
 
