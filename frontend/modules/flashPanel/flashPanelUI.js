@@ -1628,11 +1628,6 @@ export class FlashPanelUI {
   }
 
   /**
-   * ⛓ PANEL LAYOUT — what applies to the loaded game: the title (its config's `game`), the progress line and the
-   * Solver section (Seedling only: its solver is the only one), each settings row's `when`, the runtime's choices
-   * (`auto` + what the wiring plays; `auto` names the runtime it picks) and the TP switch (a game that teleports).
-   */
-  /**
    * ⛓ RE3 (i) — does the wasm build this game plays DECLARE `sosave`? Read off `builds.json` (fetched once, before
    * boot; the panel re-renders when it lands), for the build the wiring names (`flash_panel.wasm` or the component's
    * `wasmPath`). False until the manifest is read, and for any build that does not declare it.
@@ -1660,6 +1655,11 @@ export class FlashPanelUI {
     return this._wasmManifestLoad;
   }
 
+  /**
+   * ⛓ PANEL LAYOUT — what applies to the loaded game: the title (its config's `game`), the progress line and the
+   * Solver section (Seedling only: its solver is the only one), each settings row's `when`, the runtime's choices
+   * (`auto` + what the wiring plays; `auto` names the runtime it picks) and the TP switch (a game that teleports).
+   */
   _renderGameScope() {
     if (!this.rootElement || !this._settingsControls) return;
     const game = this.gameConfig?.game ?? null;
