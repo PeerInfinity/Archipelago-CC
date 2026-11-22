@@ -1,0 +1,13 @@
+ROW {"spec":"bobkill1.json","case":"l25-26-22-wand","drop":[],"note":"Bob-first K1: from (50.8,92) shoot Bob2 (east) and Bob1 (up) alternately, backing west to keep them 10+ px ahead of the 16-px shot spawn, aiming at 6 hits each (Enemy.as:22 hitsMax 3, WandShot.as:29 damage 0.5)","set_id":"seedling-vanilla-record-23510f80","mounted":"seedling-vanilla-record-23510f80","observations":167,"sampled":167,"boot":{"level":25,"x":16,"y":96},"held":["hasWand"],"equip":null,"maxHits":2,"hitSamples":[{"t":93,"hits":1},{"t":130,"hits":2}],"levels":[25],"respawns":0,"final":{"t":166,"x":18.07668173644208,"y":98.0578401322011,"level":25},"crossed":false,"wallSeconds":9}
+EVENT t44 SHOT from player (50.8,92.2)
+EVENT t45 STRUCK Bob@(60.22,91.76) hits 0.5/3
+EVENT t55 SHOT from player (50.8,90.5)
+EVENT t59 STRUCK WallFlyer@(56,55) hits 0.5/3
+EVENT t77 SHOT from player (39.6,90.5)
+EVENT t91 SHOT from player (39.6,88.8)
+EVENT t93 HIT #1 player (37.5,90.6) near [Bob@45.66,91.49 Bob@45.43,83.49 Bob@45.83,91.49 Bob@45.61,83.49]
+EVENT t111 SHOT from player (32.8,99.8)
+EVENT t125 SHOT from player (32.8,98.1)
+EVENT t130 HIT #2 player (30.2,98.1) near [Bob@38.65,96.04 Bob@38.89,87.91 Bob@38.84,95.88 Bob@39.07,87.73]
+FAIL: l25-26-22-wand — lands in L22 holding [hasWand] with 2 hit(s) (Bob-first K1: from (50.8,92) shoot Bob2 (east) and Bob1 (up) alternately, backing west to keep them 10+ px ahead of the 16-px shot spawn, aiming at 6 hits each (Enemy.as:22 hitsMax 3, WandShot.as:29 damage 0.5))
+1 SPEC(S) DID NOT CROSS WITH NO HIT

@@ -1,0 +1,14 @@
+ROW {"spec":"e3.json","case":"l25-26-22-wand","drop":[],"note":"E3: row 5 low: shot up (west flyer), shot east (Bob2), cross west column; stop, shot up (east flyer), cross east column; corridor east, up column 7","set_id":"seedling-vanilla-record-23510f80","mounted":"seedling-vanilla-record-23510f80","observations":214,"sampled":214,"boot":{"level":25,"x":16,"y":96},"held":["hasWand"],"equip":null,"maxHits":1,"hitSamples":[{"t":64,"hits":1}],"levels":[25,22],"respawns":0,"final":{"t":213,"x":44.499999999999986,"y":136,"level":22},"crossed":false,"wallSeconds":11}
+EVENT t1 LEVEL -1→25
+EVENT t46 SHOT from player (47.6,90.3)
+EVENT t47 STRUCK Bob@(62.48,91.76) hits 0.5/3
+EVENT t56 SHOT from player (54.8,90.3)
+EVENT t57 LAUNCH WallFlyer#1 from (56,55) v=(0,4) player (55.9,90.3)
+EVENT t64 HIT #1 player (66.3,92.3) near [WallFlyer@56,83 Bob@59.07,91.54]
+EVENT t66 REST WallFlyer#1 at (56,89)
+EVENT t67 LAUNCH WallFlyer#0 from (72,55) v=(0,4) player (74.5,92.3)
+EVENT t76 REST WallFlyer#0 at (72,89)
+EVENT t76 SHOT from player (87.6,93.0)
+EVENT t178 LEVEL 25→22
+FAIL: l25-26-22-wand — lands in L22 holding [hasWand] with 1 hit(s) (E3: row 5 low: shot up (west flyer), shot east (Bob2), cross west column; stop, shot up (east flyer), cross east column; corridor east, up column 7)
+1 SPEC(S) DID NOT CROSS WITH NO HIT

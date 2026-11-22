@@ -1,0 +1,19 @@
+PAGE: seedling_bot_ap_p4g · delivered seedling-vanilla-record-23510f80
+# box lock: TAKEN by rules-l25-wand-witness witness2.mjs (browser, pid 3842) — head f96d6b662, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"spec":"l25-26-22-wand.json","case":"l25-26-22-wand","drop":[],"note":"l25-26-22-wand (hand-authored, segtape.mjs; = E5 with the tail trimmed to the door): row 5 at (50.8,92): shot east (Bob2 stunned), shot up (west flyer stunned at rest); cross the west column (its landing traps both Bobs); stop at x~68, shot up (east flyer stunned at rest); cross; corridor east, up column 7 to the L22 door","set_id":"seedling-vanilla-record-23510f80","mounted":"seedling-vanilla-record-23510f80","observations":201,"sampled":201,"boot":{"level":25,"x":16,"y":96},"held":["hasWand"],"equip":null,"maxHits":0,"hitSamples":[],"levels":[25,22],"respawns":0,"final":{"t":200,"x":25.700000000000003,"y":136,"level":22},"crossed":true,"wallSeconds":10}
+MOVERS@t0: [{"c":"Statue","x":208,"y":160,"vx":0,"vy":0,"d":0},{"c":"IntroCharacter","x":152,"y":296,"vx":0,"vy":0,"d":0},{"c":"Player","x":88,"y":136,"vx":0,"vy":0,"d":0,"a":"down-stand"}]
+EVENT t1 LEVEL -1→25
+EVENT t44 SHOT from player (50.8,92.2)
+EVENT t45 STRUCK Bob@(60.22,91.76) hits 0.5/3
+EVENT t59 SHOT from player (50.8,90.5)
+EVENT t63 STRUCK WallFlyer@(56,55) hits 0.5/3
+EVENT t64 LAUNCH WallFlyer#1 from (56,55) v=(0,4) player (54.9,90.5)
+EVENT t73 REST WallFlyer#1 at (56,89)
+EVENT t87 SHOT from player (67.2,88.8)
+EVENT t90 STRUCK WallFlyer@(72,55) hits 0.5/3
+EVENT t92 LAUNCH WallFlyer#0 from (72,55) v=(0,4) player (71.3,88.8)
+EVENT t101 REST WallFlyer#0 at (72,89)
+EVENT t189 LEVEL 25→22
+PASS: l25-26-22-wand — lands in L22 holding [hasWand] with 0 hit(s) (l25-26-22-wand (hand-authored, segtape.mjs; = E5 with the tail trimmed to the door): row 5 at (50.8,92): shot east (Bob2 stunned), shot up (west flyer stunned at rest); cross the west column (its landing traps both Bobs); stop at x~68, shot up (east flyer stunned at rest); cross; corridor east, up column 7 to the L22 door)
+ALL SPECS CROSSED WITH NO HIT

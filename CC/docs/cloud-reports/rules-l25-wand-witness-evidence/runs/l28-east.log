@@ -1,0 +1,14 @@
+ROW {"spec":"l28-east.json","case":"l25-26-28-wand","drop":[],"note":"L28 door, chest east face: the YES line to the corridor, then to cell (7,6) and hold left+down against the chest (the probe's CHEST_CASES l25-22-chest-east shape)","set_id":"seedling-vanilla-record-23510f80","mounted":"seedling-vanilla-record-23510f80","observations":206,"sampled":206,"boot":{"level":25,"x":16,"y":96},"held":["hasWand"],"equip":null,"maxHits":0,"hitSamples":[],"levels":[25],"respawns":0,"final":{"t":205,"x":114.1591615047903,"y":108.91772153436501,"level":25},"crossed":false,"wallSeconds":10}
+EVENT t1 LEVEL -1→25
+EVENT t44 SHOT from player (50.8,92.2)
+EVENT t45 STRUCK Bob@(60.22,91.76) hits 0.5/3
+EVENT t59 SHOT from player (50.8,90.5)
+EVENT t63 STRUCK WallFlyer@(56,55) hits 0.5/3
+EVENT t64 LAUNCH WallFlyer#1 from (56,55) v=(0,4) player (54.9,90.5)
+EVENT t73 REST WallFlyer#1 at (56,89)
+EVENT t87 SHOT from player (67.2,88.8)
+EVENT t90 STRUCK WallFlyer@(72,55) hits 0.5/3
+EVENT t92 LAUNCH WallFlyer#0 from (72,55) v=(0,4) player (71.3,88.8)
+EVENT t101 REST WallFlyer#0 at (72,89)
+FAIL: l25-26-28-wand — lands in L28 holding [hasWand] with 0 hit(s) (L28 door, chest east face: the YES line to the corridor, then to cell (7,6) and hold left+down against the chest (the probe's CHEST_CASES l25-22-chest-east shape))
+1 SPEC(S) DID NOT CROSS WITH NO HIT

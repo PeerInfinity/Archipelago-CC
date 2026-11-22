@@ -1,0 +1,12 @@
+ROW {"spec":"wait30.json","case":"l25-26-22-wand","drop":[],"note":"wait-out W30: stand 30 ticks at the L26 landing (the Bobs chase: Bob.as:21 runRange 80), then the YES line keys unchanged","set_id":"seedling-vanilla-record-23510f80","mounted":"seedling-vanilla-record-23510f80","observations":231,"sampled":231,"boot":{"level":25,"x":16,"y":96},"held":["hasWand"],"equip":null,"maxHits":2,"hitSamples":[{"t":76,"hits":1},{"t":100,"hits":2}],"levels":[25],"respawns":2,"final":{"t":230,"x":32.75,"y":104,"level":25},"crossed":false,"wallSeconds":12}
+EVENT t1 LEVEL -1→25
+EVENT t74 SHOT from player (50.8,92.2)
+EVENT t76 HIT #1 player (48.1,92.2) near [Bob@56.67,91.89 Bob@48.31,86.22 Bob@56.89,91.77 Bob@48.14,86.04]
+EVENT t89 SHOT from player (34.3,92.2)
+EVENT t90 STRUCK Bob@(56.77,91.84) hits 0.5/3
+EVENT t100 HIT #2 player (36.9,92.2) near [Bob@43.91,89.09 Bob@44.09,88.92]
+EVENT t117 SHOT from player (34.1,92.2)
+EVENT t173 HIT #1 player (48.4,88.1) near [Bob@50.4,82.24 Bob@50.57,82.06]
+EVENT t193 HIT #2 player (48.8,92.0) near [Bob@57.94,91.44 Bob@49.36,86.47 Bob@58.13,91.6 Bob@49.52,86.28]
+FAIL: l25-26-22-wand — lands in L22 holding [hasWand] with 2 hit(s) (wait-out W30: stand 30 ticks at the L26 landing (the Bobs chase: Bob.as:21 runRange 80), then the YES line keys unchanged)
+1 SPEC(S) DID NOT CROSS WITH NO HIT

@@ -1,0 +1,19 @@
+PAGE: seedling_bot_ap_p4g · delivered seedling-vanilla-record-23510f80
+# box lock: TAKEN by probe-seedling-wallflyer-nohit.mjs (browser, pid 5447) — head f96d6b662, 2 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"case":"l22-25-21-wand","hand":true,"set_id":"seedling-vanilla-record-23510f80","mounted":"seedling-vanilla-record-23510f80","observations":341,"boot":{"level":22,"x":16,"y":128},"held":["hasWand"],"model":{"skipped":"levelRun refuses a WandShot in a room holding a wallflyer (the shot's \"Enemy
+PASS: l22-25-21-wand: the game ran the tape to its end on the delivered set — 341 obs, seedling-vanilla-record-23510f80
+PASS: l22-25-21-wand: the GAME lands in L21 from L25's door holding [hasWand], with no hit taken — {"levels":[22,21],"maxHits":0,"respawns":0,"final":{"t":340,"x":88,"y":112.69999999999999,"level":21}}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"case":"l22-25-21-none","controlOf":"l22-25-21-wand","set_id":"seedling-vanilla-record-23510f80","mounted":"seedling-vanilla-record-23510f80","observations":341,"boot":{"level":22,"x":16,"y":128},"held":[],"model":{"skipped":"control of l22-25-21-wand"},"levels":[22],"maxHits":2,"respawns":2,"f
+PASS: l22-25-21-none (control of l22-25-21-wand): the game ran the tape to its end on the delivered set — 341 obs, seedling-vanilla-record-23510f80
+PASS: l22-25-21-none (control of l22-25-21-wand): the same keys holding [no item] do NOT cross cleanly on the GAME (a hit is taken), so the arm is what clears the line — {"levels":[22],"maxHits":2,"respawns":2,"final":{"t":340,"x":24,"y":130.14999999999998,"level":22}}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"case":"l25-26-22-wand","hand":true,"set_id":"seedling-vanilla-record-23510f80","mounted":"seedling-vanilla-record-23510f80","observations":201,"boot":{"level":25,"x":16,"y":96},"held":["hasWand"],"model":{"skipped":"levelRun refuses a WandShot in a room holding a wallflyer (the shot's \"Enemy\
+PASS: l25-26-22-wand: the game ran the tape to its end on the delivered set — 201 obs, seedling-vanilla-record-23510f80
+PASS: l25-26-22-wand: the GAME lands in L22 from L26's door holding [hasWand], with no hit taken — {"levels":[25,22],"maxHits":0,"respawns":0,"final":{"t":200,"x":25.700000000000003,"y":136,"level":22}}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"case":"l25-26-22-none","controlOf":"l25-26-22-wand","set_id":"seedling-vanilla-record-23510f80","mounted":"seedling-vanilla-record-23510f80","observations":201,"boot":{"level":25,"x":16,"y":96},"held":[],"model":{"skipped":"control of l25-26-22-wand"},"levels":[25],"maxHits":2,"respawns":1,"fi
+PASS: l25-26-22-none (control of l25-26-22-wand): the game ran the tape to its end on the delivered set — 201 obs, seedling-vanilla-record-23510f80
+PASS: l25-26-22-none (control of l25-26-22-wand): the same keys holding [no item] do NOT cross cleanly on the GAME (a hit is taken), so the arm is what clears the line — {"levels":[25],"maxHits":2,"respawns":1,"final":{"t":200,"x":34.14066356795525,"y":74.14665469730525,"level":25}}
+ALL CHECKS PASSED

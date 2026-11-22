@@ -1,0 +1,1 @@
+{"case":"l25-26-22-wand","ticks":65,"inputs":[{"key":"right","from":5,"to":23},{"key":"up","from":15,"to":23},{"key":"right","from":33,"to":34},{"key":"primary","from":34,"to":35}],"note":"measure: walk right along row 6/5, face east, one shot","segs":[["right",10],["up+right",8],["",10],["right",1],["primary",1],["",30]]}

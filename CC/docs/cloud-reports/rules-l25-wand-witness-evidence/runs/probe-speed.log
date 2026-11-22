@@ -1,0 +1,6 @@
+ROW {"spec":"probe-speed.json","case":"l25-26-22-wand","drop":[],"note":"measure: walk right along row 6/5, face east, one shot","set_id":"seedling-vanilla-record-23510f80","mounted":"seedling-vanilla-record-23510f80","observations":66,"sampled":66,"boot":{"level":25,"x":16,"y":96},"held":["hasWand"],"equip":null,"maxHits":0,"hitSamples":[],"levels":[25],"respawns":0,"final":{"t":65,"x":48.877611390091076,"y":90.90933611714813,"level":25},"crossed":false,"wallSeconds":5}
+EVENT t1 LEVEL -1→25
+EVENT t42 SHOT from player (48.9,90.9)
+EVENT t43 STRUCK Bob@(60.56,91.33) hits 0.5/3
+FAIL: l25-26-22-wand — lands in L22 holding [hasWand] with 0 hit(s) (measure: walk right along row 6/5, face east, one shot)
+1 SPEC(S) DID NOT CROSS WITH NO HIT
