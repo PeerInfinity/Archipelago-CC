@@ -28,7 +28,13 @@
  *         that DESCENDS from the gitlink (`merge-base --is-ancestor <gitlink>
  *         <candidate>`): the pinned tree is its ancestor, so the candidate is
  *         the default's source plus commits. Unrelated, or not in the
- *         submodule's history at all, is a named FAIL;
+ *         submodule's history at all, is a named FAIL. A source object the
+ *         checkout lacks is first fetched ONCE by its SHA: a candidate's source
+ *         can sit on a non-default Seedling branch (p4h: `p4h-as3`) until the
+ *         default flip merges it into Seedling main (P2 fast-forwards it), and
+ *         no checkout of the gitlink carries such a branch. The fetch is
+ *         read-only: it adds objects, never moves the vendor gitlink or the
+ *         checkout;
  *   (iv)  ⚖ js-6's pin ruling (slice seedling-tut-F2b-2, 2026-10-14): the
  *         in-browser recompiler the app ships (`swfrecomp-browser`, the
  *         submodule at BROWSER_SUBMODULE) was built from the SAME SWFRecomp-CC
