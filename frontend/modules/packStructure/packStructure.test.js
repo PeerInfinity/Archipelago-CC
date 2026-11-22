@@ -11,7 +11,7 @@ import { createPackConcepts } from '../packConcepts/packConcepts.js';
 import { CONTENT_LAYERS, loadContentSet } from '../procgenPipeline/worldContent.js';
 import {
     DEFAULT_TERRAIN_PASS, MODIFIES_PARTS, RESULT_WHEN, STRUCTURE_FIELDS, STRUCTURE_KINDS, TERRAIN_PASSES,
-    NEEDS_PASS, assertPresentsStructure, terrainOf, terrainPassOf, createStructure, parseModifiesPart, parseStructureId, parseStructureManifest,
+    NEEDS_PASS, assertPresentsStructure, terrainGenerates, terrainOf, terrainPassOf, createStructure, parseModifiesPart, parseStructureId, parseStructureManifest,
 } from './packStructure.js';
 import { createNumbers, numbersSelectionRefusal, parseNumbersManifest, parseValuePath } from './packNumbers.js';
 import { assertBindingsBind, createBindings, parseBindingsManifest } from './packBindings.js';
@@ -125,7 +125,9 @@ describe('⛓ PASS-1 — terrain: a tile kind\'s declared passability', () => {
     it.each([
         ['a value outside the set', (e) => { e['ground:terrain/rug'].pass = 'sink'; }, /entry "ground:terrain\/rug": pass "sink" is not one of walkable, blocked, needs, one-way/],
         ['no pass at all', (e) => { delete e['ground:terrain/rug'].pass; }, /entry "ground:terrain\/rug": pass undefined is not one of/],
-        ['a field a terrain does not take', (e) => { e['ground:terrain/rug'].opens = 'x'; }, /field "opens" is not one a terrain takes \(kind, src, pass, needs, dirs\)/],
+        ['a field a terrain does not take', (e) => { e['ground:terrain/rug'].opens = 'x'; }, /field "opens" is not one a terrain takes \(kind, src, pass, needs, dirs, generate\)/],
+        // ⛓ GEN-1 — `generate` is a boolean
+        ['generate that is not a boolean', (e) => { e['ground:terrain/rug'].generate = 'yes'; }, /entry "ground:terrain\/rug": generate must be true or false \(got "yes"\)/],
         // ⛓ PASS-3 — `dirs` exactly when the pass is `one-way`: distinct move directions, not all four
         ['one-way without dirs', (e) => { delete e['ground:terrain/ledge'].dirs; }, /entry "ground:terrain\/ledge": pass "one-way" needs `dirs`, a non-empty list of distinct move directions from N, S, E, W \(got undefined\)/],
         ['one-way with an empty list', (e) => { e['ground:terrain/ledge'].dirs = []; }, /pass "one-way" needs `dirs`.*\(got \[\]\)/],
@@ -163,6 +165,18 @@ describe('⛓ PASS-1 — terrain: a tile kind\'s declared passability', () => {
         // A terrain presented with no logic layer loaded is refused by name, never read as walkable.
         expect(() => terrainPassOf(words.get('ground:terrain/pillar'), null))
             .toThrow(/concept "ground:terrain\/pillar" presents "ground:terrain\/pillar", which no structure in the stack holds/);
+    });
+
+    it('⛓ GEN-1 — terrainGenerates: only a presented terrain entry that says generate: true', async () => {
+        const stack = await load(['ground']);
+        const structure = createStructure(stack);
+        const words = createPackConcepts(stack);
+        expect(terrainGenerates(words.get('ground:terrain/rug'), structure)).toBe(true);
+        expect(terrainGenerates(words.get('ground:terrain/pillar'), structure)).toBe(true);
+        expect(terrainGenerates(words.get('ground:terrain/pool'), structure)).toBe(false); // generate: false
+        expect(terrainGenerates(words.get('ground:terrain/ledge'), structure)).toBe(false); // absent
+        expect(terrainGenerates(words.get('ground:object/lamp'), structure)).toBe(false); // presents no terrain
+        expect(terrainGenerates(words.get('ground:terrain/rug'), null)).toBe(false); // no logic layer loaded
     });
 
     it('a concept that presents a terrain entry is of kind terrain (the Z.1 two-form presents)', async () => {

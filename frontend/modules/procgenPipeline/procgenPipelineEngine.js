@@ -56,7 +56,7 @@ import {
 } from '../procgenCore/itemIntroduction.js';
 import { goalContainerReportOfSidecars } from '../procgenCore/goalContainer.js';
 import { scheduleSphereIntroductions } from './sphereIntroductions.js';
-import { assertContentLoaded, RECORDED_CONTENT_KEY, recordedContentOf, recordedWorldSettingsOf } from './worldContent.js';
+import { assertContentLoaded, RECORDED_CONTENT_KEY, recordedContentOf, recordedRegionParamKeys, recordedWorldSettingsOf } from './worldContent.js';
 
 /** The registry entry for an id, or `undefined` (a library / atlas source id): the planner's lookup. */
 const registryEntryOf = (substrateId) => substrateRegistry.get(substrateId);
@@ -1230,6 +1230,8 @@ function buildSubstrateRegion({
     // ⛓ CONTENT SETS C3 — a region whose packs were never loaded is refused by name (no-op when none are needed).
     //   C4: a region needing only its default pack, handed no set, takes it from the preload cache.
     params = assertContentLoaded(params, substrate);
+    // ⛓ CONTENT SETS GEN-1 — the world's biome for a region that names none (see `generateRegionProcedural`).
+    if (biome == null) biome = adapter.regionBiomeOf?.({ params, regionId: region_id }) ?? null;
     if (typeof adapter.generateRegionCore !== 'function') {
         throw new Error(
             `Substrate '${substrate}' has no generateRegionCore — it is a `
@@ -3513,6 +3515,13 @@ function generateRegionProcedural(spec) {
     //   C4: a region needing only its default pack, handed no set, takes it from the preload cache.
     const contentParams = assertContentLoaded(spec.params, spec.substrate);
     if (contentParams !== spec.params) spec = { ...spec, params: contentParams };
+    // ⛓ CONTENT SETS GEN-1 — a region whose spec names no biome takes the world's, through the substrate's own
+    //   hook (the maze's `regionBiomeOf`: one biome, or a mix picked by hash of the seed and the region id; no rng
+    //   draw). No hook, or no world setting, leaves it null, so the sizing below and the core see what they saw.
+    if (spec.biome == null) {
+        const picked = adapter.regionBiomeOf?.({ params: spec.params, regionId: spec.region_id }) ?? null;
+        if (picked) spec = { ...spec, biome: picked };
+    }
 
     // Core exit specs — size-independent, so reused across retry-grow
     // attempts below.
@@ -5350,7 +5359,11 @@ export function recordedConceptsOf(regionParams) {
 export function rebuildRegionParams(meta, optsRegionParams) {
     const recorded = {
         ...recordedConceptsOf({ concepts: meta?.[RECORDED_CONCEPTS_KEY] }),
-        ...recordedContentOf({ [RECORDED_CONTENT_KEY]: meta?.[RECORDED_CONTENT_KEY], ...recordedWorldSettingsOf(meta) }),
+        ...recordedContentOf({
+            [RECORDED_CONTENT_KEY]: meta?.[RECORDED_CONTENT_KEY], ...recordedWorldSettingsOf(meta),
+            // ⛓ CONTENT SETS GEN-1 — a substrate's own recorded settings (the maze's biome) come back as they went.
+            ...Object.fromEntries(recordedRegionParamKeys().filter((k) => meta?.[k] !== undefined).map((k) => [k, meta[k]])),
+        }),
     };
     if (!Object.keys(recorded).length) return optsRegionParams ?? {};
     return { ...recorded, ...(optsRegionParams ?? {}) };

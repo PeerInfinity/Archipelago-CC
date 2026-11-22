@@ -44,6 +44,7 @@
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { loadPackStack, packsBaseUrl, parseRegistry, PACK_ID_PATTERN } from '../contentPacks/contentPacks.js';
 import { numbersSelectionRefusal } from '../packStructure/packNumbers.js';
+import { createStructure } from '../packStructure/packStructure.js';
 import { createPackConcepts } from '../packConcepts/packConcepts.js';
 import { createTextLibrary } from '../textLibrary/textLibrary.js';
 import { assertPresents } from '../procgenCore/contentRoles.js';
@@ -189,8 +190,10 @@ function defaultPacksOfMix(substrateIds, registry) {
 
 const setBrand = new WeakSet();
 
-function freezeContentSet(ids, concepts, text) {
-    const set = { ids: Object.freeze([...ids]), concepts, text };
+function freezeContentSet(ids, concepts, text, structure = null, structureIds = []) {
+    // ⛓ GEN-1 — `structure`: the LOGIC layer of the world's "what exists" packs only (`structureIds`), never a theme's
+    //   (⚖ Robert 2026-11-22, Q4; Z.1). Null when the world names none: the words setting never reads it.
+    const set = { ids: Object.freeze([...ids]), concepts, text, structure, structureIds: Object.freeze([...structureIds]) };
     // A saved envelope drops the set (its readers are functions) and keeps the ids it came from.
     Object.defineProperty(set, 'toJSON', { value: () => undefined, enumerable: false });
     Object.freeze(set);
@@ -233,14 +236,19 @@ export function browserPackIo({ win = globalThis, base = packsBaseUrl() } = {}) 
  * ⛔ An EMPTY stack returns `EMPTY_CONTENT_SET` without calling `readJson`.
  * A pack that cannot be read or parsed is refused by name (`ContentPackError`).
  */
-export async function loadContentSet(stack, { base, readJson, concepts = CONCEPTS } = {}) {
+export async function loadContentSet(stack, { base, readJson, concepts = CONCEPTS, exists = [] } = {}) {
     const ids = assertContentParam(stack);
     if (!ids.length) return EMPTY_CONTENT_SET;
     const io = readJson ? { base, readJson } : browserPackIo(base ? { base } : {});
     const loaded = await loadPackStack(ids, { ...io, only: CONTENT_LAYERS });
     const packConcepts = createPackConcepts(loaded);
     assertPresents(packConcepts, concepts);
-    return freezeContentSet(ids, packConcepts, createTextLibrary(loaded));
+    // ⛓ GEN-1 — the `structure` layer of the packs the world NAMES under `exists` (and only those): the tile kinds
+    //   the generator may place (`mazeRoom/mazeTileKindsGen.js`). Names none ⇒ nothing more is read.
+    const structureIds = assertPackListParam(RECORDED_EXISTS_KEY, exists).filter((id) => ids.includes(id));
+    const structure = structureIds.length
+        ? createStructure(await loadPackStack(structureIds, { ...io, only: ['structure'] })) : null;
+    return freezeContentSet(ids, packConcepts, createTextLibrary(loaded), structure, structureIds);
 }
 
 /**
@@ -326,7 +334,20 @@ export function recordedContentOf(regionParams) {
     }
     // ⛓ Z8 — the switch, when the regionParams carry it (only when it is not the world's default).
     if (NUMBERS_MODES.includes(regionParams?.[RECORDED_NUMBERS_MODE_KEY])) out[RECORDED_NUMBERS_MODE_KEY] = regionParams[RECORDED_NUMBERS_MODE_KEY];
+    // ⛓ CONTENT SETS GEN-1 — a substrate's own world settings, named by its entry's `recordedRegionParams` (the maze's
+    //   biome and tile numbers), when the regionParams carry them: its `buildRegionParams` adds a key only when it is
+    //   not the default, so a world that sets none records nothing.
+    for (const key of recordedRegionParamKeys()) {
+        if (regionParams?.[key] !== undefined && !(key in out)) out[key] = JSON.parse(JSON.stringify(regionParams[key]));
+    }
     return out;
+}
+
+/** ⛓ GEN-1 — the regionParams keys the registered substrates ask the drivers to record, in registry order, once each. */
+export function recordedRegionParamKeys(registry = substrateRegistry) {
+    const keys = [];
+    for (const entry of registry.getAll()) for (const k of entry.recordedRegionParams ?? []) if (!keys.includes(k)) keys.push(k);
+    return keys;
 }
 
 /**
@@ -341,7 +362,7 @@ export async function attachContentSet(regionParams, { substrateIds = [], ...io 
         substrateIds, exists: regionParams?.[RECORDED_EXISTS_KEY] ?? [], content: regionParams?.[RECORDED_CONTENT_KEY] ?? [],
     });
     if (!stack.length) return regionParams;
-    const contentSet = await loadContentSet(stack, io);
+    const contentSet = await loadContentSet(stack, { ...io, exists: regionParams?.[RECORDED_EXISTS_KEY] ?? [] });
     return { ...(regionParams ?? {}), [CONTENT_SET_KEY]: contentSet };
 }
 
