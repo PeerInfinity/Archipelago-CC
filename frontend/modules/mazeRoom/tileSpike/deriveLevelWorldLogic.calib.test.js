@@ -68,6 +68,7 @@ describe('seedling_playthrough_maze — scripted ≡ native on every region, one
 
     for (const [level, regions] of LEVELS) {
         it(`${level}: both engines, only the named OPEN rows, the same lines`, () => {
+            const p3t0 = Date.now(); // ⛔ MUTANT (tile-probe-median-mutant, never lands): EVERY level slowed x1.24
             const opts = { atlas: ATLAS, permissive: PERMISSIVE, regions };
             const native = certifyPlaythroughMaze(RULES, HELPERS, { ...opts, native: true });
             const scripted = certifyPlaythroughMaze(RULES, HELPERS, { ...opts, native: false });
@@ -75,6 +76,7 @@ describe('seedling_playthrough_maze — scripted ≡ native on every region, one
             expect(native.problems).toEqual(openIn(regions));
             expect(scripted.problems).toEqual(openIn(regions));
             expect(scripted.lines).toEqual(native.lines);
+            { const own = Date.now() - p3t0; while (Date.now() - p3t0 < 1.24 * own) { /* busy */ } }
         });
     }
 
