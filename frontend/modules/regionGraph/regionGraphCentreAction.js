@@ -16,6 +16,8 @@ export function centreGraphOn(ui, regionName) {
     const node = cy.getElementById(regionName);
     if (!node || (typeof node.empty === 'function' ? node.empty() : node.length === 0)) return false;
     cy.animate({ center: { eles: node }, zoom: Math.max(cy.zoom(), 1) }, { duration: 300 });
+    // ⛓ A DOM readout of the last centring (region-map tutorial, G3): a step's `done` reads no Cytoscape instance.
+    if (ui.rootElement?.dataset) Object.assign(ui.rootElement.dataset, { centredOn: regionName, centredAt: String(Date.now()) });
     return true;
 }
 

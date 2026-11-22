@@ -45,6 +45,7 @@ import {
 } from './regionMapClickActions.js';
 import { defaultClickActions } from '../regionView/clickActions.js';
 import { mountClickActionsStrip } from '../regionView/clickActionsUI.js';
+import { buildRegionMapPicker, setupRegionMapPicker } from './regionMapPicker.js';
 
 /** The tile size every level is baked at (the art's own); drawn scaled by the camera. */
 export const BAKE_TILE_PX = 16;
@@ -198,6 +199,10 @@ export class RegionMapUI {
             legend.appendChild(item);
         }
         bar.appendChild(legend);
+        // ⛓ "Go to" (region-map tutorial, G1): a click on a cell or square without the canvas, folded by default.
+        this.pickerEl = buildRegionMapPicker();
+        bar.appendChild(this.pickerEl);
+        this.picker = setupRegionMapPicker(this, this.pickerEl);
         this.info = el('div', 'region-map-info', { padding: '2px 6px', color: '#9ab', fontSize: '11px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' });
         // An overlay over the canvas (not a row above it): showing it must not resize the canvas.
         this.status = el('div', 'region-map-status', {
@@ -262,9 +267,11 @@ export class RegionMapUI {
                 const f = frameAt(this.frameList, w.x, w.y);
                 const q = squareAt(this._squares, p.x, p.y);
                 const visible = f && this._visibilityOf(f.key, this.view?.get()) !== 'hidden';
-                this.selected = visible ? f.key : null;
-                this._requestPaint();
-                if (visible) this.clickAt(f, q);
+                if (visible) this.clickCell(f, q);
+                else {
+                    this.selected = null;
+                    this._requestPaint();
+                }
             }
         };
         this._onWheel = (e) => {
@@ -616,6 +623,16 @@ export class RegionMapUI {
     }
 
     /**
+     * ⛓ What a pointer click on drawn cell `frame` does (and the "Go to" picker, `regionMapPicker.js`): select it, then
+     * `clickAt`. → `clickAt`'s promise.
+     */
+    clickCell(frame, square = null) {
+        this.selected = frame.key;
+        this._requestPaint();
+        return this.clickAt(frame, square);
+    }
+
+    /**
      * ⛓ A CLICK on cell `frame` — on location square `square` when there is one (`squareAt`), else on the cell's
      * region. The discovery settings are read at click time (async), then the click runs synchronously through the
      * registry (`runRegionMapClick`) over the panel's `clickActions` as they are at that moment.
@@ -676,6 +693,7 @@ export class RegionMapUI {
         const stats = { cells: 0, art: 0, generic: 0, fogged: 0, hidden: 0, links: 0, keys: [] };
         this._squares = [];
         if (!this.model || !vp.w) {
+            this.canvas.dataset.squares = '0';
             this._lastPaint = stats;
             this.counters.paints += 1;
             return;
@@ -717,6 +735,8 @@ export class RegionMapUI {
         this._drawMarkers(ctx, view);
         for (const f of shown) this._drawLabel(ctx, f);
         stats.squares = this._squares.length;
+        // ⛓ A DOM readout of the squares painted (region-map tutorial, G2b): a step's `done` reads no instance.
+        this.canvas.dataset.squares = String(stats.squares);
         stats.minSquareSide = this._squares.reduce((m, q) => Math.min(m, q.side), Infinity);
         this._lastPaint = stats;
         this.counters.paints += 1;
