@@ -340,7 +340,9 @@ export function deriveLevelWorldLogic(world, helpers, {
         searched += 1;
         states += full.states;
         const live = sw.regions.filter((to) => to !== from).map((to) => ({
-            from, to, minimal: [], witnesses: [], unreachable: owned(full.cells, to) === null,
+            // ⛓ nit (B): the full point prunes only where reach is MONOTONE in the inventory; a pull's gate can REMOVE cells
+            // (a forced reel), so a world with pulls never prunes on the full point
+            from, to, minimal: [], witnesses: [], unreachable: !world.pulls?.length && owned(full.cells, to) === null,
         }));
         pairs.push(...live);
         const open = live.filter((p) => !p.unreachable);
