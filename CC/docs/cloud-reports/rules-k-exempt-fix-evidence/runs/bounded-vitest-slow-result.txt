@@ -1,0 +1,3 @@
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.slow.test.js (2 tests) 214655ms
+ Test Files  1 passed (1)
+      Tests  2 passed (2)

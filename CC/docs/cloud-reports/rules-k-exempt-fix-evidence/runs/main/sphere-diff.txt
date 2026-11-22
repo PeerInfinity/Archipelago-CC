@@ -1,0 +1,3 @@
+sphere 10.1: regions -[] +['level_72__r16c0', 'level_72__r2c10', 'level_73__r1c6', 'level_73__r2c3', 'level_73__r2c5', 'level_74__r8c1', 'level_75__r2c5']; folded to levels -[] +[]
+sphere 11.7: regions -[] +['level_77__r18c6']; folded to levels -[] +[]
+SPHERE MOVES (beyond region names): 0

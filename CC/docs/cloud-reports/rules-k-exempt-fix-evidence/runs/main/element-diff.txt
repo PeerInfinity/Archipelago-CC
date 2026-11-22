@@ -1,0 +1,75 @@
+DEL L71 level_71__r0c6|level_71__r0c6 -> level_72__r11c6  exit:derived:landing 18,16 ->   label derived -> None
+ADD L71 level_71__r0c6|level_71__r0c6 -> level_72__r16c0   -> exit:derived:landing 18,16  label None -> derived
+ADD L72 level_72__r0c11|>level_72__r16c0   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L72 level_72__r0c11|>level_72__r2c10   -> pair:derived:entrance  label None -> derived
+CHG L72 level_72__r0c11|>level_72__r5c4  pair:derived:entrance -> pair:path-vs-edge:entrance  label derived -> path-vs-edge fields=ap,compare,derived,label
+CHG L72 level_72__r0c11|>level_72__r9c10  pair:path-vs-edge:entrance -> pair:path-vs-edge:entrance  label path-vs-edge -> path-vs-edge fields=derived
+CHG L72 level_72__r0c11|>level_72__r9c12  pair:path-vs-edge:entrance -> pair:path-vs-edge:entrance  label path-vs-edge -> path-vs-edge fields=derived
+DEL L72 level_72__r11c6|>level_72__r0c11  pair:path-vs-edge:entrance ->   label path-vs-edge -> None
+DEL L72 level_72__r11c6|>level_72__r10c8  pair:derived:entrance ->   label derived -> None
+DEL L72 level_72__r11c6|>level_72__r11c11  pair:derived:entrance ->   label derived -> None
+DEL L72 level_72__r11c6|>level_72__r5c4  pair:path-vs-edge:entrance ->   label path-vs-edge -> None
+DEL L72 level_72__r11c6|>level_72__r6c17  pair:path-vs-edge:entrance ->   label path-vs-edge -> None
+DEL L72 level_72__r11c6|>level_72__r9c10  pair:derived:entrance ->   label derived -> None
+DEL L72 level_72__r11c6|>level_72__r9c12  pair:path-vs-edge:entrance ->   label path-vs-edge -> None
+DEL L72 level_72__r11c6|>level_72__r9c14  pair:path-vs-edge:entrance ->   label path-vs-edge -> None
+DEL L72 level_72__r11c6|level_72__r11c6 -> level_71__r0c6  exit:derived:entrance ->   label derived -> None
+ADD L72 level_72__r16c0|>level_72__r0c11   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L72 level_72__r16c0|>level_72__r10c8   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L72 level_72__r16c0|>level_72__r11c11   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L72 level_72__r16c0|>level_72__r11c6   -> pair:derived:entrance  label None -> derived
+ADD L72 level_72__r16c0|>level_72__r2c10   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L72 level_72__r16c0|>level_72__r5c4   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L72 level_72__r16c0|>level_72__r6c17   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L72 level_72__r16c0|>level_72__r9c10   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L72 level_72__r16c0|>level_72__r9c12   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L72 level_72__r16c0|>level_72__r9c14   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L72 level_72__r16c0|level_72__r16c0 -> level_71__r0c6   -> exit:derived:entrance  label None -> derived
+ADD L73 level_73__r0c4|>level_73__r1c6   -> pair:derived:entrance  label None -> derived
+ADD L73 level_73__r0c4|>level_73__r2c3   -> pair:derived:entrance  label None -> derived
+ADD L73 level_73__r0c4|>level_73__r2c5   -> pair:derived:entrance  label None -> derived
+CHG L73 level_73__r0c4|>level_73__r4c4  pair:derived:entrance -> pair:derived:entrance  label derived -> derived fields=ap,derived
+ADD L73 level_73__r8c2|>level_73__r1c6   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L73 level_73__r8c2|>level_73__r2c3   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L73 level_73__r8c2|>level_73__r2c5   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+DEL L74 level_74__r2c2|>level_74__r1c7  pair:derived:entrance ->   label derived -> None
+DEL L74 level_74__r2c2|>level_74__r2c11  pair:path-vs-edge:entrance ->   label path-vs-edge -> None
+DEL L74 level_74__r2c2|>level_74__r8c18  pair:path-vs-edge:entrance ->   label path-vs-edge -> None
+CHG L74 level_74__r2c2|@Level 074 - Darkshield  location:derived:landing 1,8 -> location:path-vs-edge:from level_74__r8c18  label derived -> path-vs-edge fields=arrival,certifierLabel,compare,derived,label
+DEL L74 level_74__r2c2|level_74__r2c2 -> level_75__r0c4  exit:derived:landing 1,8 ->   label derived -> None
+ADD L74 level_74__r8c18|>level_74__r8c1   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L74 level_74__r8c1|>level_74__r1c7   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L74 level_74__r8c1|>level_74__r2c11   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L74 level_74__r8c1|>level_74__r2c2   -> pair:derived:entrance  label None -> derived
+ADD L74 level_74__r8c1|>level_74__r8c18   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L74 level_74__r8c1|level_74__r8c1 -> level_75__r0c4   -> exit:derived:landing 1,8  label None -> derived
+ADD L75 level_75__r0c4|>level_75__r2c5   -> pair:derived:entrance  label None -> derived
+CHG L75 level_75__r0c4|>level_75__r8c6  pair:path-vs-edge:entrance -> pair:path-vs-edge:entrance  label path-vs-edge -> path-vs-edge fields=ap,derived
+DEL L75 level_75__r0c4|level_75__r0c4 -> level_74__r2c2  exit:derived:entrance ->   label derived -> None
+ADD L75 level_75__r0c4|level_75__r0c4 -> level_74__r8c1   -> exit:derived:entrance  label None -> derived
+ADD L75 level_75__r13c3|>level_75__r2c5   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+DEL L77 level_77__r15c6|>level_77__r12c6  pair:derived:entrance ->   label derived -> None
+DEL L77 level_77__r15c6|>level_77__r2c0  pair:derived:entrance ->   label derived -> None
+DEL L77 level_77__r15c6|level_77__r15c6 -> level_78__r0c16  exit:derived:landing 6,18 ->   label derived -> None
+ADD L77 level_77__r18c6|>level_77__r12c6   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L77 level_77__r18c6|>level_77__r15c6   -> pair:derived:entrance  label None -> derived
+ADD L77 level_77__r18c6|>level_77__r2c0   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+ADD L77 level_77__r18c6|level_77__r18c6 -> level_78__r0c16   -> exit:derived:landing 6,18  label None -> derived
+ADD L77 level_77__r2c0|>level_77__r18c6   -> pair:path-vs-edge:entrance  label None -> path-vs-edge
+DEL L78 level_78__r0c16|level_78__r0c16 -> level_77__r15c6  exit:derived:entrance ->   label derived -> None
+ADD L78 level_78__r0c16|level_78__r0c16 -> level_77__r18c6   -> exit:derived:entrance  label None -> derived
+CHG L80 level_80__r0c2|>level_80__r6c5  pair:derived:entrance -> pair:derived:entrance  label derived -> derived fields=ap,derived
+PER LEVEL {('71', 'ADD'): 1, ('71', 'DEL'): 1, ('72', 'ADD'): 13, ('72', 'CHG'): 3, ('72', 'DEL'): 9, ('73', 'ADD'): 6, ('73', 'CHG'): 1, ('74', 'ADD'): 6, ('74', 'CHG'): 1, ('74', 'DEL'): 4, ('75', 'ADD'): 3, ('75', 'CHG'): 1, ('75', 'DEL'): 1, ('77', 'ADD'): 5, ('77', 'DEL'): 3, ('78', 'ADD'): 1, ('78', 'DEL'): 1, ('80', 'CHG'): 1}
+UNPRICED 572 -> 645 {'72': (56, 90), '73': (9, 21), '74': (6, 12), '75': (56, 72), '77': (2, 7)}
+SUMMARY keys moved:
+  arrivals.arrivalNodes: 244 -> 246
+  arrivals.regionsPerArrivalCount.2: 32 -> 33
+  arrivals.regionsPriced: 208 -> 209
+  labels.location.derived: 60 -> 59
+  labels.location.path-vs-edge: 13 -> 15
+  labels.pair.derived: 229 -> 230
+  labels.pair.path-vs-edge: 181 -> 196
+  routeA.classes.internal-only: 28 -> 29
+  unpriced: 572 -> 645
+  w0.location.equal: 62 -> 61
+  w0.location.stricter: 12 -> 13

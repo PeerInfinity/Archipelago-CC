@@ -1,0 +1,48 @@
+regen-seedling --write: 10 step(s); python = /home/user/Archipelago-CC/.venv/bin/python; logs in .cache/regen-seedling/
+rules          WROTE [17.1s]
+partition      WROTE [5.7s]
+world          WROTE [0.8s]
+template       WROTE [4.2s]
+host-settings  WROTE [0.1s]
+seed1          WROTE: byte-identical to before [3.7s]
+maze           WROTE [27.1s]
+er             WROTE [29.5s]
+sphere-order   WROTE [0.0s]
+census         STALE: FAIL  campaign-frontier.json: sources [1.9s]
+total 90.0s — 1 step(s) not OK
+
+git status --short:
+ M frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json
+?? CC/docs/cloud-reports/rules-k-exempt-fix-evidence/
+
+md5 of the committed artifacts these steps write (M = differs from HEAD):
+  8e550d31f06b0ecc9752df55074e794d    frontend/modules/flashPanel/atlases/seedling-playthrough.json
+  2314627550acbf6e9c3a0b0b0e697fda    frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json
+  3365790fdad75736297e726e07c79147    frontend/modules/flashPanel/atlases/seedling-subregion-partition.json
+  1b17f2efe5cd75081aba7aab28cc76a0    worlds/seedling_playthrough/Items.py
+  f69e60e44e70911cf0454fbec8db7e25    worlds/seedling_playthrough/Locations.py
+  336c1aa2edf2ad7763d3a8322d11c5f5    worlds/seedling_playthrough/Options.py
+  fbb3e0d3da57b41ff5d6aec86aa97772    worlds/seedling_playthrough/Regions.py
+  bce1b1726a41e88ff69e483fe299c98a    worlds/seedling_playthrough/Rules.py
+  43a072161ddb56bac218e8f2f14189df    worlds/seedling_playthrough/__init__.py
+  33f88919b8bbcfc24cc7594b8212f28a    worlds/seedling_playthrough/_ext/__init__.py
+  89052f0454ab87609e59416a37a166d7    worlds/seedling_playthrough/_ext/_game.py
+  4ab6afeafe0e88222f4aa97e19f018b6    worlds/seedling_playthrough/_ext/extra_rules.py
+  5654276f4bd9008852733c9984ab6b22    worlds/seedling_playthrough/_ext/world_mixin.py
+  c7349876715b4b12165c3a98ec518e77    worlds/seedling_playthrough/_spoiler_hook_client.py
+  718e53d0a07beea32341e99b70dafbce    worlds/seedling_playthrough/_worldgen_flash_panel.json
+  8eefdac938bbe500af19de442dd2d1c8    worlds/seedling_playthrough/_worldgen_options.json
+  cd22c9452641d285145599183ee3246b    worlds/seedling_playthrough/_worldgen_region_atlas.json
+  fe2433ff91a73cb46e7cbef204f2521a    worlds/seedling_playthrough/_worldgen_rules.json
+  154aa1ce3684f5190cbb91fc6b2cf318    worlds/seedling_playthrough/_worldgen_sidecars.json
+  54b1285b58e33842e810bf0f3f4a9531    worlds/seedling_playthrough/archipelago.json
+  d5e3a62f2954b5243b13698daa812ab4    worlds/seedling_playthrough/docs/en_Seedling Playthrough.md
+  5fb134be656a9ad523d41a28e72698d7    worlds/seedling_playthrough/docs/setup_en.md
+  2e77c99e55ef1c44d28fb6775f77a9f9    frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744.archipelago
+  39ca6d69dc29167ad2a80338c391065c    frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_Spoiler.txt
+  963e3d27daf1983c7af554df915168b2    frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json
+  618de9871d509d7edc6e569e3a492cc8    frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl
+  d9a6424e62f167d7429e7aae385a591f    frontend/presets/preset_files.json
+  750e2ad6dd4bac87df3339617f508d26    frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json
+  b3495d4999e176fd496c5fa74705cb12    frontend/presets/seedling_er/AP_1/AP_1_rules.json
+  4a9b7e8061aa23fda3048547f9dd78b3    frontend/modules/flashPanel/atlases/seedling-sphere-order.json

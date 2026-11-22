@@ -1,0 +1,7 @@
+level_75:level_75 -> level_74 => loc:Level 074 - Darkshield
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_76:level_76 -> level_77 => exit:level_77 -> level_78
+    base ['Dark Suit', 'Ghost Spear']
+    tip  ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Dark Suit & Wand', 'Ghost Spear']
+MOVED ROUTES: 2

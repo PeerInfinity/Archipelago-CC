@@ -1,0 +1,37 @@
+=== frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json
+[folded] 308 atlas-id stamp path(s): seedling-b856f0fc -> seedling-bc3ac9f3
+489 changed path(s); levels: L71:4, L72:202, L73:60, L74:35, L75:118, L77:46, L78:18, L80:6
+0 path(s) naming no level
+=== frontend/presets/seedling_er/AP_1/AP_1_rules.json
+[folded] 309 atlas-id stamp path(s): seedling-b856f0fc -> seedling-bc3ac9f3; seedling-cff09cce -> seedling-45fa51c5
+489 changed path(s); levels: L71:4, L72:202, L73:60, L74:35, L75:118, L77:46, L78:18, L80:6
+0 path(s) naming no level
+=== frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json
+[folded] 1 atlas-id stamp path(s): seedling-94cd96dd -> seedling-1f5a6638
+[folded] /sphere_log/68/player_data/1/new_accessible_regions as a set: -[] +['level_72__r16c0', 'level_72__r2c10', 'level_73__r1c6', 'level_73__r2c3', 'level_73__r2c5', 'level_74__r8c1', 'level_75__r2c5']
+[folded] /sphere_log/75/player_data/1/new_accessible_regions as a set: -[] +['level_77__r18c6']
+1489 changed path(s); levels: L71:5, L72:572, L73:156, L74:115, L75:304, L77:116, L78:27, L80:194
+0 path(s) naming no level
+=== frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json
+[folded] 307 atlas-id stamp path(s): seedling-b856f0fc -> seedling-bc3ac9f3
+399 changed path(s); levels: L71:4, L72:168, L73:52, L74:29, L75:95, L77:35, L78:10, L80:6
+0 path(s) naming no level
+=== frontend/modules/flashPanel/atlases/seedling-playthrough.json
+  /regions/72/subgraph/internal_exits/8/from
+  /regions/72/subgraph/internal_exits/8/to
+  /regions/72/subgraph/internal_exits/9/access_rule/children
+  /regions/72/subgraph/internal_exits/9/access_rule/children/0/args/item_name
+  /regions/72/subgraph/internal_exits/9/access_rule/children/1/args
+  /regions/72/subgraph/internal_exits/9/access_rule/children/1/children
+  /regions/72/subgraph/internal_exits/9/access_rule/children/1/rule
+  /regions/72/subgraph/internal_exits/9/access_rule/rule
+  /regions/72/subgraph/internal_exits/9/from
+  /regions/72/subgraph/internal_exits/9/to
+  /regions/72/subgraph/internal_exits/10/access_rule/children
+  /regions/72/subgraph/internal_exits/10/access_rule/children/0/args/item_name
+  /regions/72/subgraph/internal_exits/10/access_rule/children/1/args
+  /regions/72/subgraph/internal_exits/10/access_rule/children/1/children
+=== frontend/modules/flashPanel/atlases/seedling-subregion-partition.json
+[folded] 0 atlas-id stamp path(s): 
+2 changed path(s); levels: L0:2
+0 path(s) naming no level

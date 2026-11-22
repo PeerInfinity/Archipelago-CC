@@ -1,0 +1,36 @@
+L71 lavarunner@64,224 zone=9 cut=0 (a)unfollowed=[] chains=0
+L71 lavarunner@64,192 zone=9 cut=0 (a)unfollowed=[] chains=0
+L71 lavarunner@72,208 zone=9 cut=0 (a)unfollowed=[] chains=0
+L71 lavarunner@48,200 zone=9 cut=0 (a)unfollowed=[] chains=0
+L71 lavarunner@80,224 zone=9 cut=0 (a)unfollowed=[] chains=0
+L72 lavarunner@80,216 zone=74 cut=16 (a)unfollowed=[] chains=1
+  (b) one-doorway idents=["level_71"] 0,16:door[out_teleporter_0_256->level_71] ; 1,16:landing+door[in_L71_304_96->level_71]
+L72 lavarunner@136,88 zone=103 cut=29 (a)unfollowed=[] chains=0
+L72 lavarunner@216,240 zone=72 cut=18 (a)unfollowed=[] chains=0
+L73 lavarunner@32,24 zone=42 cut=8 (a)unfollowed=[] chains=1
+  (b) one-doorway idents=["level_74"] 4,0:door[out_teleporter_64_0->level_74] ; 4,1:landing+door[in_L74_288_144->level_74]
+L74 lavarunner@24,56 zone=55 cut=11 (a)unfollowed=[] chains=1
+  (b) one-doorway idents=["level_75"] 1,8:landing+door[in_L75_64_0->level_75] ; 1,9:door[out_teleporter_16_144->level_75]
+L74 lavarunner@208,96 zone=86 cut=22 (a)unfollowed=[] chains=0
+L75 lavarunner@8,112 zone=61 cut=16 (a)unfollowed=[] chains=0
+L75 lavarunner@104,64 zone=71 cut=15 (a)unfollowed=[] chains=1
+  (b) one-doorway idents=["level_74"] 4,0:door[out_teleporter_64_0->level_74] ; 4,1:landing+door[in_L74_16_144->level_74]
+L77 lavarunner@80,272 zone=72 cut=15 (a)unfollowed=[] chains=1
+  (b) one-doorway idents=["level_78"] 6,18:landing+door[in_L78_256_0->level_78] ; 6,19:door[out_teleporter_96_304->level_78]
+L77 lavarunner@112,256 zone=79 cut=20 (a)unfollowed=[] chains=1
+  (b) one-doorway idents=["level_78"] 6,18:landing+door[in_L78_256_0->level_78] ; 6,19:door[out_teleporter_96_304->level_78]
+L78 lavarunner@192,144 zone=52 cut=17 (a)unfollowed=[] chains=0
+L78 lavarunner@144,72 zone=93 cut=20 (a)unfollowed=[] chains=0
+L78 lavarunner@96,32 zone=76 cut=19 (a)unfollowed=[] chains=1
+  (b) one-doorway idents=["level_79"] 2,0:door[out_teleporter_32_0->level_79] ; 2,1:landing+door[in_L79_64_224->level_79]
+L78 lavarunner@56,120 zone=65 cut=13 (a)unfollowed=[] chains=0
+L78 lavarunner@112,136 zone=57 cut=17 (a)unfollowed=[] chains=0
+L80 lavarunner@80,32 zone=68 cut=3 (a)unfollowed=[] chains=1
+  (b) one-doorway idents=["level_71"] 2,0:door[out_teleporter_32_0->level_71] ; 2,1:landing+door[in_L71_224_304->level_71]
+L80 lavarunner@0,96 zone=36 cut=7 (a)unfollowed=[] chains=0
+L80 lavarunner@120,208 zone=42 cut=6 (a)unfollowed=[] chains=0
+L80 lavarunner@0,144 zone=18 cut=6 (a)unfollowed=[] chains=0
+L99 lavarunner@192,64 zone=36 cut=4 (a)unfollowed=[] chains=0
+L99 lavarunner@160,32 zone=33 cut=8 (a)unfollowed=[] chains=0
+L99 lavarunner@176,64 zone=40 cut=5 (a)unfollowed=[] chains=0
+TOTALS {"bodies":27,"unfollowedAny":0,"chains":8,"mixedChains":0,"exemptAdjPairs":8}

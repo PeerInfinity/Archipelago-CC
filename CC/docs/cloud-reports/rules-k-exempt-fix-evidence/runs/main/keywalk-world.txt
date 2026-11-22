@@ -1,0 +1,12 @@
+=== worlds/seedling_playthrough/_worldgen_rules.json
+[folded] 307 atlas-id stamp path(s): seedling-b856f0fc -> seedling-bc3ac9f3
+489 changed path(s); levels: L71:4, L72:202, L73:60, L74:35, L75:118, L77:46, L78:18, L80:6
+0 path(s) naming no level
+=== worlds/seedling_playthrough/_worldgen_region_atlas.json
+[folded] 1 atlas-id stamp path(s): seedling-b856f0fc -> seedling-bc3ac9f3
+0 changed path(s); levels: 
+0 path(s) naming no level
+=== worlds/seedling_playthrough/_worldgen_sidecars.json
+[folded] 306 atlas-id stamp path(s): seedling-b856f0fc -> seedling-bc3ac9f3
+17 changed path(s); levels: L71:2, L72:3, L73:3, L74:2, L75:3, L77:2, L78:2
+0 path(s) naming no level

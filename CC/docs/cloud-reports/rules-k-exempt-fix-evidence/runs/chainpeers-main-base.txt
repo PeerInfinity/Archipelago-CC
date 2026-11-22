@@ -1,0 +1,7 @@
+L72 chain [[0, 16], [1, 16]] idents=['level_71'] peer tiles=[(18, 6), (19, 6)] peer-4-connected=True
+L73 chain [[4, 0], [4, 1]] idents=['level_74'] peer tiles=[(18, 8), (18, 9)] peer-4-connected=True
+L74 chain [[1, 8], [1, 9]] idents=['level_75'] peer tiles=[(4, 0), (4, 1)] peer-4-connected=True
+L75 chain [[4, 0], [4, 1]] idents=['level_74'] peer tiles=[(1, 8), (1, 9)] peer-4-connected=True
+L77 chain [[6, 18], [6, 19]] idents=['level_78'] peer tiles=[(16, 0), (16, 1)] peer-4-connected=True
+L78 chain [[2, 0], [2, 1]] idents=['level_79'] peer tiles=[(4, 13), (4, 14)] peer-4-connected=True
+L80 chain [[2, 0], [2, 1]] idents=['level_71'] peer tiles=[(14, 18), (14, 19)] peer-4-connected=True

@@ -1,0 +1,17 @@
+ FAIL  scripts/procgen/mazeInputOutputSplit.test.js > which plain levels become level worlds: the item-axis test, not a list > every plain multi-sub-region level is one level world but one, kept per sub-region and saying why
+ FAIL  scripts/procgen/seedlingAtlasDoorCensus.test.js > census-seedling-atlas-doors — the committed playthrough atlas > the regions, the ones with a subgraph, their sub-regions, internal exits and Swim rows (counts pinned in the body)
+ FAIL  scripts/procgen/seedlingDivergenceLegs.test.js > the committed playthrough's leg list > ⛓ GOAL EVENTS: exactly these legs stage their goal rule's events (the Watcher, the darktraps, …); every other leg as before
+ FAIL  scripts/procgen/seedlingDivergenceLegs.test.js > ⛓ the committed leg list's DOOR-LESS sub-region legs (§5.126) — they only ADD > ⛔ THE PIN: every pre-existing (door) key is still emitted, in order, by a door leg; every link leg comes after them
+ FAIL  frontend/modules/flashPanel/seedlingAtlasArm.test.js > the sixth fact — `atlas`, decided by (iii)'s own count > the census is DATA: every committed preset, by its sidecars
+ FAIL  frontend/modules/flashPanel/seedlingMountKeyLevelSet.test.js > ⛔ level_set ABSENT → every committed Seedling preset's mount key (and JS save key) is byte-identical to the base > frontend/presets/seedling_er/AP_1/AP_1_rules.json
+ FAIL  frontend/modules/flashPanel/seedlingMountKeyLevelSet.test.js > ⛔ level_set ABSENT → every committed Seedling preset's mount key (and JS save key) is byte-identical to the base > frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json
+ FAIL  frontend/modules/flashPanel/seedlingMountKeyLevelSet.test.js > ⛔ level_set ABSENT → every committed Seedling preset's mount key (and JS save key) is byte-identical to the base > frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json
+ FAIL  frontend/modules/mazeRoom/mazeConvertedLink.test.js > maze converted link — the resolver over the real preset > every region resolves: a room opens itself, a room-less region opens the ONE room whose shared world lists it
+ FAIL  frontend/modules/mazeRoom/mazeConvertedLoad.test.js > maze converted load: which object is the level > the preset sidecars split into rooms and regions of a shared level world, as measured
+ FAIL  frontend/modules/mazeRoom/mazeSeedlingLink.test.js > mazeSeedlingLink — which rooms link back, over every committed preset > every region of every converted preset, room-less ones included, links to its opened room's level
+ FAIL  frontend/modules/seedlingDemo/levelSetExporter.test.js > the vanilla xml set derives the SAME atlas as the map extract > reproduces the regions, the boundary exits and the connections, 1:1
+ FAIL  frontend/modules/seedlingDemo/vanillaOverlay.test.js > ⛔ E5 — the committed fixture is the script's own output > ⛔⛔ the DERIVED names of the committed fixture EQUAL the playthrough atlas's, as a set
+ FAIL  frontend/modules/mazeRoom/tileSpike/certifyLavaPulls.test.js > L80 in the maze (L71 + L79 + L80) > mutant control: a broken `pulled` helper makes the scripted arm disagree with the native one
+ FAIL  frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.test.js > L0 + L13–L20 — the doors and the second level world > the rope cut is an event location in r1c1 (Sword | Spear | Fire), and it restores L17 and its Seal
+ Test Files  12 failed | 145 passed (157)
+      Tests  15 failed | 2631 passed (2646)
