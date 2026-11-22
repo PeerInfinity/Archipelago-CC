@@ -163,13 +163,46 @@ export const SINCE_BEGIN_CAPABILITY = 'sincebegin';
 export const BOSS_REPORT_CAPABILITY = 'bossreport';
 
 /**
+ * ⛓ RE3 (i) (slice sdc-wasm-save-host, ⚖ Robert 2026-11-22 "Same setting and Clear"): THE SAVE IS KEPT. A build
+ * declaring `sosave` carries the SWFRecomp-CC SharedObject host hook (master 746c39489: `Module.swfSharedObjectHost`,
+ * the exports `avm2_so_reload` / `avm2_so_flush_all`), so the panel can keep the game's `shrumsave` per room
+ * (`seedlingWasmSave.js`). The panel offers "Use the save" and "Clear this room's save" on wasm only for such a build:
+ * on one without it (p4g) a control would do nothing. Read BEFORE boot from the manifest; the calls themselves are
+ * also gated on the exports by name, so a manifest that over-claims degrades to no call rather than a throw.
+ */
+export const SO_SAVE_CAPABILITY = 'sosave';
+
+/**
+ * ⛓ THE p4h WORDS (built by rules-p4h-rc1 on Seedling `p4h-as3` @ 169247c4c4; declared by slice seedling-p4h-beside,
+ * 2026-11-22, with the build pinned as a non-default `candidate`). One line each: what a build declaring it does.
+ *
+ * - `secondaries`: the build reads a tape_version 13 `secondaries: [{t, slot}]` (the secondary-item presses, by tick;
+ *   `tapeFormat.js` holds the mirror). A build without it refuses tape_version 13.
+ * - `apchest`: an `<apitem kind="chest">` builds a Solid `Pickups::APChest` opened only from the line under it — and
+ *   that chest is listed in `botActivators().chests`, NOT in `botMobiles` (see `withApChestRows` in
+ *   `seedlingDemo/apChestRoster.js`).
+ * - `activators`: the build exposes `botActivators()`, a read-only readout of the room's locks, covers, buttons and
+ *   chests.
+ * - `checkpoint`: `botStatus` carries `checkpoint` and `checkpoint_at_load`.
+ * - `bossdraws`: the nine L57/L112 gameplay draws (FinalBoss, RockFall, TentacleBeast) are fixed patterns, not
+ *   `Math.random`, so a tape replays those bosses identically.
+ */
+export const SECONDARIES_CAPABILITY = 'secondaries';
+export const AP_CHEST_CAPABILITY = 'apchest';
+export const ACTIVATORS_CAPABILITY = 'activators';
+export const CHECKPOINT_CAPABILITY = 'checkpoint';
+export const BOSS_DRAWS_CAPABILITY = 'bossdraws';
+
+/**
  * ⛓ THE DECLARED VOCABULARY. A manifest entry may only name capabilities from
  * this list — otherwise `"apitm"` would silently mean "this build does not
  * have it" and the feature would vanish with no error anywhere.
  */
 export const WASM_BUILD_CAPABILITIES = Object.freeze(
     [AP_ITEM_CAPABILITY, ARM_CAPABILITY, HOLD_CAPABILITY, TAG_CAPABILITY,
-        FREEZE_CAPABILITY, SINCE_BEGIN_CAPABILITY, BOSS_REPORT_CAPABILITY]);
+        FREEZE_CAPABILITY, SINCE_BEGIN_CAPABILITY, BOSS_REPORT_CAPABILITY, SO_SAVE_CAPABILITY,
+        SECONDARIES_CAPABILITY, AP_CHEST_CAPABILITY, ACTIVATORS_CAPABILITY, CHECKPOINT_CAPABILITY,
+        BOSS_DRAWS_CAPABILITY]);
 
 /**
  * ⛓ SEEDLING JS J1 — THE JS RUNTIME'S OWN ANSWER (`flashPanel.runtime: 'js'`).
