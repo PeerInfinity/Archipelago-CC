@@ -139,6 +139,12 @@ is still caught in the same row, as its landing line `level_38__r0c9->level_39__
   every slow test naming seedling, divergence or a survey: **21 files, 261 tests, all pass** after one re-pin
   (`deriveLevelWorldLogic.slow`: L25's event row at L28's landing [own event] and L38's axis 4/8 → 8/16, skip rows 103 → 104).
 
+- **CI red at f884bf87c4** (run 45070831310): `seedlingCompositeMap.test.js` "locationTiles places … items and events" got
+  `{ item: 48, event: 41 }` where 38 was pinned. The 3 are the minted chest latch events (L11 flag 0, L25 flag 0, L38 flag 1). Each
+  chest stands in its own level, so none is residue. Re-pinned with a ⛓ comment. The list is widened again with every test that counts
+  playthrough events or locations, or reads a seedling preset or atlas: 106 more files, **2915 tests, all pass**
+  (`runs/latch/vitest-list-widened-events.txt`).
+
 ### Survey step 35 (runs 45063427840 / 45063430393): L26 `teleporter@144,208 → L28` refused
 
 **(b): the solver lacks the strategy (it exists, switched off). The rules are not looser.** The route now goes L25 → L26 → L28 because L25's
