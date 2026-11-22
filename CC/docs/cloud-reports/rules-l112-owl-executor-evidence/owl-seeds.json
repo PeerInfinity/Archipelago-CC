@@ -1,0 +1,1199 @@
+{
+ "note": "rules-l112-owl-executor Q4 per-seed table (owl-seeds.mjs). Boot at the L111 arrival (112, 32, 208), rng {seed, split: true}, one weapon granted, noDamage false. A NOPLAN is the executor's (no 0-hit plan found in the model); only a judged row is a game answer.",
+ "rows": [
+  {
+   "weapon": "spear",
+   "seed": 1,
+   "orbit": "nw2",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 336,
+      "x": 119,
+      "y": 36
+     },
+     {
+      "t": 665,
+      "x": 53,
+      "y": 157
+     },
+     {
+      "t": 1581,
+      "x": 145,
+      "y": 59
+     }
+    ],
+    "lavaHits": [
+     342,
+     700,
+     1587
+    ],
+    "tagTick": 1696,
+    "exitFrom": 1800,
+    "ticks": 1852,
+    "rocks": 150,
+    "grenades": 9,
+    "shoveTestsLanded": "9/9"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 1831,
+    "judgeLog": "q4-batch1.json"
+   },
+   "tape": "tapes/owl-spear-s1.json"
+  },
+  {
+   "weapon": "spear",
+   "seed": 101,
+   "orbit": "nw2",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 363,
+      "x": 105,
+      "y": 46
+     },
+     {
+      "t": 689,
+      "x": 41,
+      "y": 145
+     },
+     {
+      "t": 1447,
+      "x": 159,
+      "y": 73
+     }
+    ],
+    "lavaHits": [
+     367,
+     697,
+     1467
+    ],
+    "tagTick": 1576,
+    "exitFrom": 1680,
+    "ticks": 1742,
+    "rocks": 195,
+    "grenades": 14,
+    "shoveTestsLanded": "7/7"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 1722,
+    "judgeLog": "q2-spear-s101.json"
+   },
+   "tape": "tapes/owl-spear-s101.json"
+  },
+  {
+   "weapon": "spear",
+   "seed": 2,
+   "orbit": "nw",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 351,
+      "x": 111,
+      "y": 39
+     },
+     {
+      "t": 712,
+      "x": 55,
+      "y": 156
+     },
+     {
+      "t": 1909,
+      "x": 97,
+      "y": 56
+     }
+    ],
+    "lavaHits": [
+     356,
+     741,
+     1989
+    ],
+    "tagTick": 2098,
+    "exitFrom": 2202,
+    "ticks": 2268,
+    "rocks": 213,
+    "grenades": 13,
+    "shoveTestsLanded": "8/9"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 2248,
+    "judgeLog": "q4-batch3.json"
+   },
+   "tape": "tapes/owl-spear-s2.json"
+  },
+  {
+   "weapon": "spear",
+   "seed": 3,
+   "orbit": "nw",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 351,
+      "x": 111,
+      "y": 39
+     },
+     {
+      "t": 709,
+      "x": 53,
+      "y": 154
+     },
+     {
+      "t": 1924,
+      "x": 85,
+      "y": 64
+     }
+    ],
+    "lavaHits": [
+     356,
+     739,
+     1958
+    ],
+    "tagTick": 2067,
+    "exitFrom": 2171,
+    "ticks": 2228,
+    "rocks": 203,
+    "grenades": 18,
+    "shoveTestsLanded": "7/8"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 2208,
+    "judgeLog": "q4-batch3.json"
+   },
+   "tape": "tapes/owl-spear-s3.json"
+  },
+  {
+   "weapon": "spear",
+   "seed": 4,
+   "orbit": "nw2",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 336,
+      "x": 119,
+      "y": 36
+     },
+     {
+      "t": 677,
+      "x": 33,
+      "y": 142
+     },
+     {
+      "t": 1447,
+      "x": 153,
+      "y": 66
+     }
+    ],
+    "lavaHits": [
+     342,
+     686,
+     1452
+    ],
+    "tagTick": 1561,
+    "exitFrom": 1665,
+    "ticks": 1715,
+    "rocks": 158,
+    "grenades": 3,
+    "shoveTestsLanded": "8/9"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 1695,
+    "judgeLog": "q4-batch2.json"
+   },
+   "tape": "tapes/owl-spear-s4.json"
+  },
+  {
+   "weapon": "spear",
+   "seed": 5,
+   "orbit": "nw2",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 336,
+      "x": 119,
+      "y": 36
+     },
+     {
+      "t": 677,
+      "x": 59,
+      "y": 160
+     },
+     {
+      "t": 1880,
+      "x": 91,
+      "y": 66
+     }
+    ],
+    "lavaHits": [
+     342,
+     689,
+     1924
+    ],
+    "tagTick": 2033,
+    "exitFrom": 2137,
+    "ticks": 2233,
+    "rocks": 211,
+    "grenades": 15,
+    "shoveTestsLanded": "9/9"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 2213,
+    "judgeLog": "q4-batch4.json"
+   },
+   "tape": "tapes/owl-spear-s5.json"
+  },
+  {
+   "weapon": "spear",
+   "seed": 6,
+   "orbit": "nw2",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 348,
+      "x": 113,
+      "y": 38
+     },
+     {
+      "t": 687,
+      "x": 25,
+      "y": 130
+     },
+     {
+      "t": 1803,
+      "x": 106,
+      "y": 59
+     }
+    ],
+    "lavaHits": [
+     354,
+     696,
+     1840
+    ],
+    "tagTick": 1949,
+    "exitFrom": 2053,
+    "ticks": 2107,
+    "rocks": 206,
+    "grenades": 16,
+    "shoveTestsLanded": "7/7"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 2087,
+    "judgeLog": "q4-batch2.json"
+   },
+   "tape": "tapes/owl-spear-s6.json"
+  },
+  {
+   "weapon": "spear",
+   "seed": 7,
+   "orbit": "nw2",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 336,
+      "x": 119,
+      "y": 36
+     },
+     {
+      "t": 677,
+      "x": 33,
+      "y": 142
+     },
+     {
+      "t": 1447,
+      "x": 153,
+      "y": 66
+     }
+    ],
+    "lavaHits": [
+     342,
+     686,
+     1452
+    ],
+    "tagTick": 1561,
+    "exitFrom": 1665,
+    "ticks": 1715,
+    "rocks": 176,
+    "grenades": 12,
+    "shoveTestsLanded": "8/9"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 1695,
+    "judgeLog": "q4-batch2.json"
+   },
+   "tape": "tapes/owl-spear-s7.json"
+  },
+  {
+   "weapon": "spear",
+   "seed": 8,
+   "orbit": "nw2",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 336,
+      "x": 119,
+      "y": 36
+     },
+     {
+      "t": 665,
+      "x": 53,
+      "y": 157
+     },
+     {
+      "t": 1581,
+      "x": 145,
+      "y": 59
+     }
+    ],
+    "lavaHits": [
+     342,
+     700,
+     1587
+    ],
+    "tagTick": 1696,
+    "exitFrom": 1800,
+    "ticks": 1852,
+    "rocks": 151,
+    "grenades": 9,
+    "shoveTestsLanded": "9/9"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 1831,
+    "judgeLog": "q4-batch3.json"
+   },
+   "tape": "tapes/owl-spear-s8.json"
+  },
+  {
+   "weapon": "sword",
+   "seed": 1,
+   "orbit": "nw",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 345,
+      "x": 99,
+      "y": 53
+     },
+     {
+      "t": 739,
+      "x": 29,
+      "y": 134
+     },
+     {
+      "t": 1881,
+      "x": 103,
+      "y": 46
+     }
+    ],
+    "lavaHits": [
+     351,
+     747,
+     1890
+    ],
+    "tagTick": 1999,
+    "exitFrom": 2103,
+    "ticks": 2181,
+    "rocks": 204,
+    "grenades": 11,
+    "shoveTestsLanded": "11/11"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 2160,
+    "judgeLog": "q4-batch6.json"
+   },
+   "tape": "tapes/owl-sword-s1.json"
+  },
+  {
+   "weapon": "sword",
+   "seed": 101,
+   "orbit": "nw2",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 375,
+      "x": 86,
+      "y": 65
+     },
+     {
+      "t": 688,
+      "x": 35,
+      "y": 143
+     },
+     {
+      "t": 1562,
+      "x": 136,
+      "y": 54
+     }
+    ],
+    "lavaHits": [
+     378,
+     696,
+     1570
+    ],
+    "tagTick": 1679,
+    "exitFrom": 1783,
+    "ticks": 1836,
+    "rocks": 193,
+    "grenades": 11,
+    "shoveTestsLanded": "10/11"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 1816,
+    "judgeLog": "q1-sword-s101.json"
+   },
+   "tape": "tapes/owl-sword-s101.json"
+  },
+  {
+   "weapon": "sword",
+   "seed": 2,
+   "orbit": "nw",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 354,
+      "x": 94,
+      "y": 58
+     },
+     {
+      "t": 742,
+      "x": 29,
+      "y": 130
+     },
+     {
+      "t": 1887,
+      "x": 105,
+      "y": 52
+     }
+    ],
+    "lavaHits": [
+     359,
+     750,
+     1893
+    ],
+    "tagTick": 2002,
+    "exitFrom": 2106,
+    "ticks": 2185,
+    "rocks": 203,
+    "grenades": 13,
+    "shoveTestsLanded": "11/11"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 2165,
+    "judgeLog": "q4-batch5.json"
+   },
+   "tape": "tapes/owl-sword-s2.json"
+  },
+  {
+   "weapon": "sword",
+   "seed": 3,
+   "orbit": "nw",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 354,
+      "x": 94,
+      "y": 58
+     },
+     {
+      "t": 742,
+      "x": 29,
+      "y": 130
+     },
+     {
+      "t": 1887,
+      "x": 105,
+      "y": 52
+     }
+    ],
+    "lavaHits": [
+     359,
+     750,
+     1893
+    ],
+    "tagTick": 2002,
+    "exitFrom": 2106,
+    "ticks": 2185,
+    "rocks": 201,
+    "grenades": 15,
+    "shoveTestsLanded": "11/11"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 2165,
+    "judgeLog": "q4-batch7.json"
+   },
+   "tape": "tapes/owl-sword-s3.json"
+  },
+  {
+   "weapon": "sword",
+   "seed": 4,
+   "orbit": "nw",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 354,
+      "x": 97,
+      "y": 54
+     },
+     {
+      "t": 737,
+      "x": 42,
+      "y": 147
+     },
+     {
+      "t": 1527,
+      "x": 174,
+      "y": 84
+     }
+    ],
+    "lavaHits": [
+     360,
+     742,
+     1533
+    ],
+    "tagTick": 1642,
+    "exitFrom": 1746,
+    "ticks": 1824,
+    "rocks": 152,
+    "grenades": 8,
+    "shoveTestsLanded": "11/12"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 1804,
+    "judgeLog": "q4-batch9.json"
+   },
+   "tape": "tapes/owl-sword-s4.json"
+  },
+  {
+   "weapon": "sword",
+   "seed": 5,
+   "orbit": "nw2",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 432,
+      "x": 55,
+      "y": 95
+     },
+     {
+      "t": 1575,
+      "x": 151,
+      "y": 65
+     },
+     {
+      "t": 1917,
+      "x": 103,
+      "y": 60
+     }
+    ],
+    "lavaHits": [
+     438,
+     1581,
+     1922
+    ],
+    "tagTick": 2031,
+    "exitFrom": 2135,
+    "ticks": 2230,
+    "rocks": 211,
+    "grenades": 14,
+    "shoveTestsLanded": "8/8"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 2210,
+    "judgeLog": "q4-batch14.json"
+   },
+   "tape": "tapes/owl-sword-s5.json"
+  },
+  {
+   "weapon": "sword",
+   "seed": 6,
+   "orbit": "nw",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 345,
+      "x": 99,
+      "y": 53
+     },
+     {
+      "t": 739,
+      "x": 29,
+      "y": 134
+     },
+     {
+      "t": 1884,
+      "x": 105,
+      "y": 45
+     }
+    ],
+    "lavaHits": [
+     351,
+     747,
+     1893
+    ],
+    "tagTick": 2002,
+    "exitFrom": 2106,
+    "ticks": 2183,
+    "rocks": 204,
+    "grenades": 16,
+    "shoveTestsLanded": "11/11"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 2163,
+    "judgeLog": "q4-batch10.json"
+   },
+   "tape": "tapes/owl-sword-s6.json"
+  },
+  {
+   "weapon": "sword",
+   "seed": 7,
+   "orbit": "nw2",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 354,
+      "x": 92,
+      "y": 62
+     },
+     {
+      "t": 813,
+      "x": 53,
+      "y": 158
+     },
+     {
+      "t": 1986,
+      "x": 91,
+      "y": 66
+     }
+    ],
+    "lavaHits": [
+     362,
+     820,
+     2039
+    ],
+    "tagTick": 2148,
+    "exitFrom": 2252,
+    "ticks": 2329,
+    "rocks": 213,
+    "grenades": 20,
+    "shoveTestsLanded": "12/13"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 2309,
+    "judgeLog": "q4-batch12.json"
+   },
+   "tape": "tapes/owl-sword-s7.json"
+  },
+  {
+   "weapon": "sword",
+   "seed": 8,
+   "orbit": "nw",
+   "maxHits": 0,
+   "verdict": "0-hit YES",
+   "plan": {
+    "shoves": [
+     {
+      "t": 345,
+      "x": 99,
+      "y": 53
+     },
+     {
+      "t": 739,
+      "x": 29,
+      "y": 134
+     },
+     {
+      "t": 1881,
+      "x": 103,
+      "y": 46
+     }
+    ],
+    "lavaHits": [
+     351,
+     747,
+     1890
+    ],
+    "tagTick": 1999,
+    "exitFrom": 2103,
+    "ticks": 2181,
+    "rocks": 205,
+    "grenades": 11,
+    "shoveTestsLanded": "11/11"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 0,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [],
+    "firstDivergence": 2160,
+    "judgeLog": "q4-batch8.json"
+   },
+   "tape": "tapes/owl-sword-s8.json"
+  },
+  {
+   "weapon": "sword",
+   "seed": 1,
+   "orbit": "nw2",
+   "maxHits": 2,
+   "verdict": "hit-only YES (2)",
+   "plan": {
+    "shoves": [
+     {
+      "t": 339,
+      "x": 106,
+      "y": 52
+     },
+     {
+      "t": 798,
+      "x": 53,
+      "y": 155
+     },
+     {
+      "t": 1884,
+      "x": 96,
+      "y": 61
+     }
+    ],
+    "lavaHits": [
+     349,
+     805,
+     1939
+    ],
+    "tagTick": 2048,
+    "exitFrom": 2152,
+    "ticks": 2239,
+    "rocks": 206,
+    "grenades": 13,
+    "shoveTestsLanded": "11/11"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 2,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [
+     336,
+     591
+    ],
+    "firstDivergence": 2219,
+    "judgeLog": "q4-batch5.json"
+   },
+   "tape": "tapes/owl-sword-s1-hits.json"
+  },
+  {
+   "weapon": "sword",
+   "seed": 5,
+   "orbit": "nw2",
+   "maxHits": 2,
+   "verdict": "hit-only YES (2)",
+   "plan": {
+    "shoves": [
+     {
+      "t": 336,
+      "x": 102,
+      "y": 53
+     },
+     {
+      "t": 815,
+      "x": 50,
+      "y": 155
+     },
+     {
+      "t": 1586,
+      "x": 156,
+      "y": 83
+     }
+    ],
+    "lavaHits": [
+     356,
+     822,
+     1591
+    ],
+    "tagTick": 1700,
+    "exitFrom": 1804,
+    "ticks": 1855,
+    "rocks": 169,
+    "grenades": 11,
+    "shoveTestsLanded": "10/11"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 2,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [
+     337,
+     1582
+    ],
+    "firstDivergence": 1835,
+    "judgeLog": "q4-batch11.json"
+   },
+   "tape": "tapes/owl-sword-s5-hits.json"
+  },
+  {
+   "weapon": "sword",
+   "seed": 7,
+   "orbit": "nw2",
+   "maxHits": 2,
+   "verdict": "hit-only YES (2)",
+   "plan": {
+    "shoves": [
+     {
+      "t": 336,
+      "x": 104,
+      "y": 53
+     },
+     {
+      "t": 809,
+      "x": 54,
+      "y": 156
+     },
+     {
+      "t": 1934,
+      "x": 105,
+      "y": 56
+     }
+    ],
+    "lavaHits": [
+     355,
+     815,
+     2037
+    ],
+    "tagTick": 2146,
+    "exitFrom": 2250,
+    "ticks": 2325,
+    "rocks": 220,
+    "grenades": 18,
+    "shoveTestsLanded": "9/10"
+   },
+   "game": {
+    "finished": true,
+    "hitsAtEnd": 0,
+    "hitsTaken": 2,
+    "cleared": [
+     "112:0",
+     "112:1"
+    ],
+    "end": {
+     "level": 113,
+     "x": 80,
+     "y": 136
+    },
+    "hitTicksAtMost": [
+     336,
+     809
+    ],
+    "firstDivergence": 2305,
+    "judgeLog": "q4-batch13.json"
+   },
+   "tape": "tapes/owl-sword-s7-hits.json"
+  },
+  {
+   "weapon": "sword",
+   "seed": 5,
+   "orbit": "nw",
+   "maxHits": 0,
+   "verdict": "NOPLAN",
+   "plan": {
+    "tried": {
+     "c0": 0
+    },
+    "budget": false
+   },
+   "game": null,
+   "tape": null
+  },
+  {
+   "weapon": "sword",
+   "seed": 7,
+   "orbit": "se",
+   "maxHits": 0,
+   "verdict": "NOPLAN",
+   "plan": {
+    "tried": {
+     "c0": 0
+    },
+    "budget": false
+   },
+   "game": null,
+   "tape": null
+  }
+ ]
+}

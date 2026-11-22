@@ -1,0 +1,24 @@
+  candidates k=0 after []: 6 (drives so far 1006)
+  candidates k=1 after [{"t":336,"x":104,"y":49}]: 6 (drives so far 1042)
+  candidates k=2 after [{"t":336,"x":104,"y":49},{"t":763,"x":46,"y":141}]: 0 (drives so far 1043)
+  candidates k=2 after [{"t":336,"x":104,"y":49},{"t":763,"x":45,"y":143}]: 0 (drives so far 1044)
+  candidates k=2 after [{"t":336,"x":104,"y":49},{"t":763,"x":42,"y":142}]: 0 (drives so far 1045)
+  candidates k=2 after [{"t":336,"x":104,"y":49},{"t":763,"x":45,"y":145}]: 0 (drives so far 1046)
+  candidates k=2 after [{"t":336,"x":104,"y":49},{"t":763,"x":41,"y":143}]: 0 (drives so far 1047)
+  candidates k=2 after [{"t":336,"x":104,"y":49},{"t":763,"x":38,"y":141}]: 0 (drives so far 1048)
+  candidates k=1 after [{"t":336,"x":104,"y":53}]: 2 (drives so far 2446)
+  candidates k=2 after [{"t":336,"x":104,"y":53},{"t":788,"x":29,"y":134}]: 0 (drives so far 5684)
+    finish {"t":1590,"x":179,"y":104}: t1871: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+    finish {"t":1590,"x":179,"y":107}: t1871: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+    finish {"t":1590,"x":179,"y":102}: t1871: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+  candidates k=2 after [{"t":336,"x":104,"y":53},{"t":791,"x":36,"y":144}]: 6 (drives so far 7846)
+  candidates k=1 after [{"t":336,"x":102,"y":53}]: 6 (drives so far 8125)
+    finish {"t":1581,"x":169,"y":82}: t1818: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+    finish {"t":1581,"x":167,"y":78}: t1817: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+    finish {"t":1581,"x":170,"y":80}: t1817: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+  candidates k=2 after [{"t":336,"x":102,"y":53},{"t":815,"x":54,"y":156}]: 6 (drives so far 10618)
+    finish {"t":1586,"x":157,"y":85}: t1821: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+    finish {"t":1586,"x":159,"y":85}: t1824: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+    finish {"t":1586,"x":162,"y":85}: t1821: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+  candidates k=2 after [{"t":336,"x":102,"y":53},{"t":815,"x":50,"y":155}]: 6 (drives so far 12985)
+PLAN {"weapon":"sword","seed":5,"orbit":"nw2","boot":{"level":112,"x":32,"y":208},"maxHits":2,"drives":12994,"wallSec":376,"ok":true,"shoves":[{"t":336,"x":102,"y":53},{"t":815,"x":50,"y":155},{"t":1586,"x":156,"y":83}],"introPress":2,"ticks":1855,"tagTick":1700,"exitFrom":1804,"model":{"level":113,"end":{"x":80,"y":136},"hits":["t338 owlBody","t1583 owlBody"],"lava":[356,822,1591],"flags":["112:0","112:1"],"shovesLanded":10,"shoveTests":11,"rocks":169,"rocksOnPlayer":1,"grenades":11},"tried":{"c0":6,"c1":6,"c2":6}}

@@ -18,25 +18,30 @@ for (const f of readdirSync(L).filter((n) => n.endsWith('.json') && !n.startsWit
     for (const r of rows) if (r?.tape?.startsWith('owl-')) judged.set(r.tape, { ...r, log: f });
 }
 const rows = [];
-for (const f of readdirSync(L).filter((n) => /^plan-(sword|spear)-s\d+\.json$/.test(n)).sort()) {
+for (const f of readdirSync(L).filter((n) => /^plan(hits|nw|se)?-(sword|spear)-s\d+\.json$/.test(n)).sort()) {
     const p = JSON.parse(readFileSync(join(L, f), 'utf8'));
-    const tape = `owl-${p.weapon}-s${p.seed}.json`;
+    // `planhits-*`: the `--max-hits` variant (a hit-only line), its tape `owl-<w>-s<seed>-hits.json`
+    // `plannw-*`: a parallel orbit-nw run under its own names (`owl-<w>-s<seed>-nw.json`), so a sweep lane cannot clobber it
+    const tape = `owl-${p.weapon}-s${p.seed}${f.startsWith('planhits') ? '-hits' : f.startsWith('plannw') ? '-nw' : f.startsWith('planse') ? '-se' : ''}.json`;
     const g = judged.get(tape);
     let verdict;
     if (!p.ok) verdict = p.budget ? 'NOPLAN (budget)' : 'NOPLAN';
     else if (!g || g.error) verdict = g?.error ? `UNJUDGED (${g.error.slice(0, 80)})` : 'UNJUDGED';
     else {
         const killed = g.cleared?.includes('112:0') && g.cleared?.includes('112:1');
-        if (killed && g.hits === 0 && g.end?.level === 113) verdict = '0-hit YES';
-        else if (killed) verdict = `hit-only YES (${g.hits})${g.end?.level === 113 ? '' : `, ended in L${g.end?.level}`}`;
+        // ⚠ the status `hits` is the player's counter NOW, and entering L113 builds a new Game (it reads 0 there):
+        // the hits taken are the poll's increments, so count those
+        const taken = Math.max(g.hits ?? 0, ...(g.hitPolls ?? []).map((h) => h.hits), (g.hitPolls ?? []).length);
+        if (killed && taken === 0 && g.end?.level === 113) verdict = '0-hit YES';
+        else if (killed) verdict = `hit-only YES (${taken})${g.end?.level === 113 ? '' : `, ended in L${g.end?.level}`}`;
         else verdict = 'NO (game)';
     }
     rows.push({
-        weapon: p.weapon, seed: p.seed, orbit: p.orbit, verdict,
+        weapon: p.weapon, seed: p.seed, orbit: p.orbit, maxHits: p.maxHits ?? 0, verdict,
         plan: p.ok ? { shoves: p.shoves, lavaHits: p.model?.lava, tagTick: p.tagTick, exitFrom: p.exitFrom, ticks: p.ticks,
             rocks: p.model?.rocks, grenades: p.model?.grenades, shoveTestsLanded: `${p.model?.shovesLanded}/${p.model?.shoveTests}` }
             : { tried: p.tried, budget: !!p.budget },
-        game: g ? { finished: g.finished, hits: g.hits, cleared: g.cleared, end: g.end,
+        game: g ? { finished: g.finished, hitsAtEnd: g.hits, hitsTaken: Math.max(g.hits ?? 0, (g.hitPolls ?? []).length), cleared: g.cleared, end: g.end,
             hitTicksAtMost: (g.hitPolls ?? []).map((h) => h.hitTickAtMost), firstDivergence: g.firstDivergence?.t ?? null,
             judgeLog: g.log } : null,
         tape: existsSync(join(E, 'tapes', tape)) ? `tapes/${tape}` : null,

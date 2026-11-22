@@ -1,0 +1,3267 @@
+{
+ "seeds": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  101
+ ],
+ "tapes": [
+  {
+   "tape": "owl-spear-s1.json",
+   "plannedSeed": 1,
+   "zeroHitSeeds": [
+    1,
+    4,
+    8,
+    10,
+    16
+   ],
+   "hitOnlySeeds": [
+    "9(2)"
+   ],
+   "rows": [
+    {
+     "seed": 1,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 2,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t212 owlRock",
+      "t241 owlRock",
+      "t289 lava"
+     ],
+     "level": 112,
+     "error": "t318: levelRun: the player died (lava) at tick 319 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 3,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t212 owlRock"
+     ],
+     "level": 112,
+     "error": "t304: levelRun: the player is inside pod@112,48's 16x16 cell at tick 304 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 4,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 5,
+     "win": false,
+     "podTouches": 1,
+     "hits": 3,
+     "sources": [
+      "t1409 owlRock",
+      "t1593 owlBody",
+      "t1613 owlBody"
+     ],
+     "level": 112,
+     "error": "t1612: levelRun: the player died (owlBody) at tick 1613 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 6,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t449 owlRock",
+      "t484 owlRock",
+      "t520 owlRock"
+     ],
+     "level": 112,
+     "error": "t519: levelRun: the player died (owlRock) at tick 520 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 7,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t746 owlGrenade",
+      "t767 owlGrenade",
+      "t848 lava"
+     ],
+     "level": 112,
+     "error": "t877: levelRun: the player died (lava) at tick 878 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 8,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 9,
+     "win": true,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t1105 owlRock",
+      "t1127 owlRock"
+     ],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 10,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 11,
+     "win": false,
+     "podTouches": 1,
+     "hits": 3,
+     "sources": [
+      "t736 owlGrenade",
+      "t1104 owlRock",
+      "t1593 owlBody"
+     ],
+     "level": 112,
+     "error": "t1592: levelRun: the player died (owlBody) at tick 1593 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 12,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t212 owlRock"
+     ],
+     "level": 112,
+     "error": "t304: levelRun: the player is inside pod@112,48's 16x16 cell at tick 304 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 13,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t970 owlRock"
+     ],
+     "level": 112,
+     "error": "t1819: pinned by pod (120,56) — touched at t979 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 14,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t747 owlGrenade",
+      "t768 owlGrenade",
+      "t846 lava"
+     ],
+     "level": 112,
+     "error": "t875: levelRun: the player died (lava) at tick 876 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 15,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t217 owlRock"
+     ],
+     "level": 112,
+     "error": "t332: levelRun: the player is inside pod@112,48's 16x16 cell at tick 332 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 16,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t342 owlRock",
+      "t469 lava"
+     ],
+     "level": 112,
+     "error": "t498: levelRun: the player died (lava) at tick 499 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    }
+   ]
+  },
+  {
+   "tape": "owl-spear-s2.json",
+   "plannedSeed": 2,
+   "zeroHitSeeds": [
+    2,
+    6,
+    14
+   ],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 1,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t709 owlRock"
+     ],
+     "level": 112,
+     "error": "t896: pinned by pod (48,128) — touched at t736 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 2,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 3,
+     "win": false,
+     "podTouches": 2,
+     "hits": 2,
+     "sources": [
+      "t1866 owlRock",
+      "t2083 owlGrenade"
+     ],
+     "level": 112,
+     "error": null
+    },
+    {
+     "seed": 4,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t1903 owlRock"
+     ],
+     "level": 112,
+     "error": "t1906: levelRun: the player is inside pod@112,48's 16x16 cell at tick 1906 in level 112 with its animation \"closed\". `Pod.updat"
+    },
+    {
+     "seed": 5,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t167 owlRock"
+     ],
+     "level": 112,
+     "error": "t330: levelRun: the player is inside pod@112,48's 16x16 cell at tick 330 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 6,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 7,
+     "win": false,
+     "podTouches": 0,
+     "hits": 4,
+     "sources": [
+      "t159 owlRock",
+      "t188 owlRock",
+      "t268 lava",
+      "t288 owlRock"
+     ],
+     "level": 112,
+     "error": "t287: levelRun: the player died (owlRock) at tick 288 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 8,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t709 owlRock"
+     ],
+     "level": 112,
+     "error": "t896: pinned by pod (48,128) — touched at t736 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 9,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t1902 owlRock",
+      "t1922 owlBody",
+      "t1942 owlBody"
+     ],
+     "level": 112,
+     "error": "t1941: levelRun: the player died (owlBody) at tick 1942 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 10,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t166 owlRock",
+      "t341 owlBody"
+     ],
+     "level": 112,
+     "error": "t669: levelRun: the player is inside pod@40,120's 16x16 cell at tick 669 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 11,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t164 owlRock",
+      "t306 owlRock",
+      "t328 owlRock"
+     ],
+     "level": 112,
+     "error": "t327: levelRun: the player died (owlRock) at tick 328 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 12,
+     "win": false,
+     "podTouches": 2,
+     "hits": 2,
+     "sources": [
+      "t1866 owlRock",
+      "t2083 owlGrenade"
+     ],
+     "level": 112,
+     "error": null
+    },
+    {
+     "seed": 13,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t165 owlRock",
+      "t188 owlRock",
+      "t261 lava"
+     ],
+     "level": 112,
+     "error": "t290: levelRun: the player died (lava) at tick 291 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 14,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 15,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t1866 owlRock"
+     ],
+     "level": 112,
+     "error": "t1881: levelRun: the player is inside pod@112,48's 16x16 cell at tick 1881 in level 112 with its animation \"closed\". `Pod.updat"
+    },
+    {
+     "seed": 16,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t709 owlRock"
+     ],
+     "level": 112,
+     "error": "t896: pinned by pod (48,128) — touched at t736 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t159 owlRock"
+     ],
+     "level": 112,
+     "error": "t330: levelRun: the player is inside pod@112,48's 16x16 cell at tick 330 in level 112 with its animation \"closed\". `Pod.update"
+    }
+   ]
+  },
+  {
+   "tape": "owl-spear-s3.json",
+   "plannedSeed": 3,
+   "zeroHitSeeds": [
+    3,
+    4,
+    12,
+    14,
+    15
+   ],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 1,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t709 owlRock",
+      "t729 owlBody",
+      "t750 lava"
+     ],
+     "level": 112,
+     "error": "t779: levelRun: the player died (lava) at tick 780 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 2,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t706 owlRock"
+     ],
+     "level": 112,
+     "error": "t1013: pinned by pod (48,128) — touched at t892 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 3,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 4,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 5,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t167 owlRock"
+     ],
+     "level": 112,
+     "error": "t330: levelRun: the player is inside pod@112,48's 16x16 cell at tick 330 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 6,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t1924 owlRock"
+     ],
+     "level": 112,
+     "error": null
+    },
+    {
+     "seed": 7,
+     "win": false,
+     "podTouches": 0,
+     "hits": 4,
+     "sources": [
+      "t159 owlRock",
+      "t188 owlRock",
+      "t268 lava",
+      "t288 owlRock"
+     ],
+     "level": 112,
+     "error": "t287: levelRun: the player died (owlRock) at tick 288 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 8,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t709 owlRock",
+      "t729 owlBody",
+      "t750 lava"
+     ],
+     "level": 112,
+     "error": "t779: levelRun: the player died (lava) at tick 780 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 9,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t1918 owlRock"
+     ],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 10,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t166 owlRock",
+      "t341 owlBody"
+     ],
+     "level": 112,
+     "error": "t669: levelRun: the player is inside pod@40,120's 16x16 cell at tick 669 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 11,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t164 owlRock",
+      "t306 owlRock",
+      "t328 owlRock"
+     ],
+     "level": 112,
+     "error": "t327: levelRun: the player died (owlRock) at tick 328 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 12,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 13,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t165 owlRock",
+      "t188 owlRock",
+      "t261 lava"
+     ],
+     "level": 112,
+     "error": "t290: levelRun: the player died (lava) at tick 291 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 14,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 15,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 16,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t709 owlRock",
+      "t729 owlBody",
+      "t750 lava"
+     ],
+     "level": 112,
+     "error": "t779: levelRun: the player died (lava) at tick 780 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t159 owlRock"
+     ],
+     "level": 112,
+     "error": "t330: levelRun: the player is inside pod@112,48's 16x16 cell at tick 330 in level 112 with its animation \"closed\". `Pod.update"
+    }
+   ]
+  },
+  {
+   "tape": "owl-spear-s4.json",
+   "plannedSeed": 4,
+   "zeroHitSeeds": [
+    4,
+    7,
+    9,
+    10,
+    11,
+    13,
+    14
+   ],
+   "hitOnlySeeds": [
+    "5(1)"
+   ],
+   "rows": [
+    {
+     "seed": 1,
+     "win": false,
+     "podTouches": 2,
+     "hits": 1,
+     "sources": [
+      "t1377 owlRock"
+     ],
+     "level": 112,
+     "error": "t1451: pinned by pod (120,56) — touched at t1429 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 2,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t212 owlRock",
+      "t241 owlRock",
+      "t289 lava"
+     ],
+     "level": 112,
+     "error": "t318: levelRun: the player died (lava) at tick 319 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 3,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t212 owlRock"
+     ],
+     "level": 112,
+     "error": "t304: levelRun: the player is inside pod@112,48's 16x16 cell at tick 304 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 4,
+     "win": true,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 5,
+     "win": true,
+     "podTouches": 2,
+     "hits": 1,
+     "sources": [
+      "t863 owlRock"
+     ],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 6,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t449 owlRock",
+      "t484 owlRock",
+      "t520 owlRock"
+     ],
+     "level": 112,
+     "error": "t519: levelRun: the player died (owlRock) at tick 520 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 7,
+     "win": true,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 8,
+     "win": false,
+     "podTouches": 2,
+     "hits": 1,
+     "sources": [
+      "t1377 owlRock"
+     ],
+     "level": 112,
+     "error": "t1451: pinned by pod (120,56) — touched at t1429 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 9,
+     "win": true,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 10,
+     "win": true,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 11,
+     "win": true,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 12,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t212 owlRock"
+     ],
+     "level": 112,
+     "error": "t304: levelRun: the player is inside pod@112,48's 16x16 cell at tick 304 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 13,
+     "win": true,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 14,
+     "win": true,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 15,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t217 owlRock"
+     ],
+     "level": 112,
+     "error": "t332: levelRun: the player is inside pod@112,48's 16x16 cell at tick 332 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 16,
+     "win": false,
+     "podTouches": 2,
+     "hits": 1,
+     "sources": [
+      "t1377 owlRock"
+     ],
+     "level": 112,
+     "error": "t1451: pinned by pod (120,56) — touched at t1429 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t342 owlRock",
+      "t469 lava"
+     ],
+     "level": 112,
+     "error": "t498: levelRun: the player died (lava) at tick 499 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    }
+   ]
+  },
+  {
+   "tape": "owl-spear-s5.json",
+   "plannedSeed": 5,
+   "zeroHitSeeds": [
+    5
+   ],
+   "hitOnlySeeds": [
+    "4(1)",
+    "13(2)"
+   ],
+   "rows": [
+    {
+     "seed": 1,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t1264 owlRock",
+      "t1286 lava",
+      "t1307 owlRock"
+     ],
+     "level": 112,
+     "error": "t1338: levelRun: the player died (lava) at tick 1339 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build'"
+    },
+    {
+     "seed": 2,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t212 owlRock",
+      "t241 owlRock",
+      "t289 lava"
+     ],
+     "level": 112,
+     "error": "t318: levelRun: the player died (lava) at tick 319 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 3,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t212 owlRock"
+     ],
+     "level": 112,
+     "error": "t304: levelRun: the player is inside pod@112,48's 16x16 cell at tick 304 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 4,
+     "win": true,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t1928 owlGrenade"
+     ],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 5,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 6,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t449 owlRock",
+      "t484 owlRock",
+      "t520 owlRock"
+     ],
+     "level": 112,
+     "error": "t519: levelRun: the player died (owlRock) at tick 520 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 7,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t761 owlGrenade",
+      "t1106 owlRock",
+      "t1875 owlRock"
+     ],
+     "level": 112,
+     "error": "t1874: levelRun: the player died (owlRock) at tick 1875 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 8,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t1264 owlRock",
+      "t1286 lava",
+      "t1307 owlRock"
+     ],
+     "level": 112,
+     "error": "t1338: levelRun: the player died (lava) at tick 1339 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build'"
+    },
+    {
+     "seed": 9,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t1865 owlRock",
+      "t1885 owlBody",
+      "t1912 lava"
+     ],
+     "level": 112,
+     "error": "t1941: levelRun: the player died (lava) at tick 1942 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build'"
+    },
+    {
+     "seed": 10,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t968 owlRock",
+      "t1410 owlRock",
+      "t1833 owlRock"
+     ],
+     "level": 112,
+     "error": "t1832: levelRun: the player died (owlRock) at tick 1833 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 11,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t1002 owlRock",
+      "t1098 owlRock",
+      "t1274 owlRock"
+     ],
+     "level": 112,
+     "error": "t1273: levelRun: the player died (owlRock) at tick 1274 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 12,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t212 owlRock"
+     ],
+     "level": 112,
+     "error": "t304: levelRun: the player is inside pod@112,48's 16x16 cell at tick 304 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 13,
+     "win": true,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t1103 owlRock",
+      "t1931 owlGrenade"
+     ],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 14,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t762 owlGrenade",
+      "t1001 owlRock",
+      "t1032 owlRock"
+     ],
+     "level": 112,
+     "error": "t1031: levelRun: the player died (owlRock) at tick 1032 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 15,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t217 owlRock"
+     ],
+     "level": 112,
+     "error": "t332: levelRun: the player is inside pod@112,48's 16x16 cell at tick 332 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 16,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t1264 owlRock",
+      "t1286 lava",
+      "t1307 owlRock"
+     ],
+     "level": 112,
+     "error": "t1338: levelRun: the player died (lava) at tick 1339 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build'"
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t342 owlRock",
+      "t469 lava"
+     ],
+     "level": 112,
+     "error": "t498: levelRun: the player died (lava) at tick 499 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    }
+   ]
+  },
+  {
+   "tape": "owl-spear-s6.json",
+   "plannedSeed": 6,
+   "zeroHitSeeds": [
+    4,
+    6,
+    11
+   ],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 1,
+     "win": false,
+     "podTouches": 2,
+     "hits": 1,
+     "sources": [
+      "t684 owlRock"
+     ],
+     "level": 112,
+     "error": "t730: pinned by pod (48,128) — touched at t708 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 2,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t212 owlRock",
+      "t241 owlRock",
+      "t289 lava"
+     ],
+     "level": 112,
+     "error": "t318: levelRun: the player died (lava) at tick 319 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 3,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t212 owlRock"
+     ],
+     "level": 112,
+     "error": "t302: levelRun: the player is inside pod@112,48's 16x16 cell at tick 302 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 4,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 5,
+     "win": false,
+     "podTouches": 2,
+     "hits": 1,
+     "sources": [
+      "t685 owlRock"
+     ],
+     "level": 112,
+     "error": "t735: pinned by pod (48,128) — touched at t713 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 6,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 7,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t471 owlGrenade",
+      "t867 owlRock"
+     ],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 8,
+     "win": false,
+     "podTouches": 2,
+     "hits": 1,
+     "sources": [
+      "t684 owlRock"
+     ],
+     "level": 112,
+     "error": "t730: pinned by pod (48,128) — touched at t708 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 9,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t477 owlGrenade",
+      "t589 lava"
+     ],
+     "level": 112,
+     "error": "t618: levelRun: the player died (lava) at tick 619 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 10,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t340 owlRock"
+     ],
+     "level": 112,
+     "error": "t701: levelRun: the player is inside pod@40,120's 16x16 cell at tick 701 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 11,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 12,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t212 owlRock"
+     ],
+     "level": 112,
+     "error": "t302: levelRun: the player is inside pod@112,48's 16x16 cell at tick 302 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 13,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t339 owlRock"
+     ],
+     "level": 112,
+     "error": "t440: pinned by pod (120,56) — touched at t418 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 14,
+     "win": false,
+     "podTouches": 1,
+     "hits": 3,
+     "sources": [
+      "t472 owlGrenade",
+      "t561 owlRock",
+      "t593 owlRock"
+     ],
+     "level": 112,
+     "error": "t592: levelRun: the player died (owlRock) at tick 593 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 15,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t217 owlRock"
+     ],
+     "level": 112,
+     "error": "t701: levelRun: the player is inside pod@40,120's 16x16 cell at tick 701 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 16,
+     "win": false,
+     "podTouches": 2,
+     "hits": 1,
+     "sources": [
+      "t684 owlRock"
+     ],
+     "level": 112,
+     "error": "t730: pinned by pod (48,128) — touched at t708 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 1,
+     "hits": 3,
+     "sources": [
+      "t307 owlRock",
+      "t341 owlRock",
+      "t687 owlRock"
+     ],
+     "level": 112,
+     "error": "t686: levelRun: the player died (owlRock) at tick 687 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    }
+   ]
+  },
+  {
+   "tape": "owl-spear-s7.json",
+   "plannedSeed": 7,
+   "zeroHitSeeds": [
+    4,
+    7,
+    9,
+    10,
+    11,
+    13,
+    14
+   ],
+   "hitOnlySeeds": [
+    "5(1)"
+   ],
+   "rows": [
+    {
+     "seed": 1,
+     "win": false,
+     "podTouches": 2,
+     "hits": 1,
+     "sources": [
+      "t1377 owlRock"
+     ],
+     "level": 112,
+     "error": "t1451: pinned by pod (120,56) — touched at t1429 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 2,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t212 owlRock",
+      "t241 owlRock",
+      "t289 lava"
+     ],
+     "level": 112,
+     "error": "t318: levelRun: the player died (lava) at tick 319 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 3,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t212 owlRock"
+     ],
+     "level": 112,
+     "error": "t304: levelRun: the player is inside pod@112,48's 16x16 cell at tick 304 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 4,
+     "win": true,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 5,
+     "win": true,
+     "podTouches": 2,
+     "hits": 1,
+     "sources": [
+      "t863 owlRock"
+     ],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 6,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t449 owlRock",
+      "t484 owlRock",
+      "t520 owlRock"
+     ],
+     "level": 112,
+     "error": "t519: levelRun: the player died (owlRock) at tick 520 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 7,
+     "win": true,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 8,
+     "win": false,
+     "podTouches": 2,
+     "hits": 1,
+     "sources": [
+      "t1377 owlRock"
+     ],
+     "level": 112,
+     "error": "t1451: pinned by pod (120,56) — touched at t1429 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 9,
+     "win": true,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 10,
+     "win": true,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 11,
+     "win": true,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 12,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t212 owlRock"
+     ],
+     "level": 112,
+     "error": "t304: levelRun: the player is inside pod@112,48's 16x16 cell at tick 304 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 13,
+     "win": true,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 14,
+     "win": true,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 15,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t217 owlRock"
+     ],
+     "level": 112,
+     "error": "t332: levelRun: the player is inside pod@112,48's 16x16 cell at tick 332 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 16,
+     "win": false,
+     "podTouches": 2,
+     "hits": 1,
+     "sources": [
+      "t1377 owlRock"
+     ],
+     "level": 112,
+     "error": "t1451: pinned by pod (120,56) — touched at t1429 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t342 owlRock",
+      "t469 lava"
+     ],
+     "level": 112,
+     "error": "t498: levelRun: the player died (lava) at tick 499 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    }
+   ]
+  },
+  {
+   "tape": "owl-spear-s8.json",
+   "plannedSeed": 8,
+   "zeroHitSeeds": [
+    1,
+    4,
+    8,
+    10,
+    16
+   ],
+   "hitOnlySeeds": [
+    "9(2)"
+   ],
+   "rows": [
+    {
+     "seed": 1,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 2,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t212 owlRock",
+      "t241 owlRock",
+      "t289 lava"
+     ],
+     "level": 112,
+     "error": "t318: levelRun: the player died (lava) at tick 319 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 3,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t212 owlRock"
+     ],
+     "level": 112,
+     "error": "t304: levelRun: the player is inside pod@112,48's 16x16 cell at tick 304 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 4,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 5,
+     "win": false,
+     "podTouches": 1,
+     "hits": 3,
+     "sources": [
+      "t1409 owlRock",
+      "t1593 owlBody",
+      "t1613 owlBody"
+     ],
+     "level": 112,
+     "error": "t1612: levelRun: the player died (owlBody) at tick 1613 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 6,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t449 owlRock",
+      "t484 owlRock",
+      "t520 owlRock"
+     ],
+     "level": 112,
+     "error": "t519: levelRun: the player died (owlRock) at tick 520 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 7,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t746 owlGrenade",
+      "t767 owlGrenade",
+      "t848 lava"
+     ],
+     "level": 112,
+     "error": "t877: levelRun: the player died (lava) at tick 878 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 8,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 9,
+     "win": true,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t1105 owlRock",
+      "t1127 owlRock"
+     ],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 10,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 11,
+     "win": false,
+     "podTouches": 1,
+     "hits": 3,
+     "sources": [
+      "t736 owlGrenade",
+      "t1104 owlRock",
+      "t1593 owlBody"
+     ],
+     "level": 112,
+     "error": "t1592: levelRun: the player died (owlBody) at tick 1593 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 12,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t212 owlRock"
+     ],
+     "level": 112,
+     "error": "t304: levelRun: the player is inside pod@112,48's 16x16 cell at tick 304 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 13,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t970 owlRock"
+     ],
+     "level": 112,
+     "error": "t1819: pinned by pod (120,56) — touched at t979 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 14,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t747 owlGrenade",
+      "t768 owlGrenade",
+      "t846 lava"
+     ],
+     "level": 112,
+     "error": "t875: levelRun: the player died (lava) at tick 876 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 15,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t217 owlRock"
+     ],
+     "level": 112,
+     "error": "t332: levelRun: the player is inside pod@112,48's 16x16 cell at tick 332 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 16,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t342 owlRock",
+      "t469 lava"
+     ],
+     "level": 112,
+     "error": "t498: levelRun: the player died (lava) at tick 499 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    }
+   ]
+  },
+  {
+   "tape": "owl-spear-s101.json",
+   "plannedSeed": 101,
+   "zeroHitSeeds": [
+    5,
+    6,
+    101
+   ],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 1,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t321 owlRock"
+     ],
+     "level": 112,
+     "error": "t322: levelRun: the player is inside pod@112,48's 16x16 cell at tick 322 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 2,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t212 owlRock",
+      "t241 owlRock",
+      "t289 lava"
+     ],
+     "level": 112,
+     "error": "t318: levelRun: the player died (lava) at tick 319 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 3,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t212 owlRock",
+      "t344 owlBody",
+      "t387 owlBody"
+     ],
+     "level": 112,
+     "error": "t386: levelRun: the player died (owlBody) at tick 387 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 4,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t1002 owlRock"
+     ],
+     "level": 112,
+     "error": "t1711: levelRun: the player is inside pod@112,48's 16x16 cell at tick 1711 in level 112 with its animation \"closed\". `Pod.updat"
+    },
+    {
+     "seed": 5,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 6,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 7,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t719 owlGrenade",
+      "t968 owlRock",
+      "t996 owlRock"
+     ],
+     "level": 112,
+     "error": "t995: levelRun: the player died (owlRock) at tick 996 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 8,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t321 owlRock"
+     ],
+     "level": 112,
+     "error": "t322: levelRun: the player is inside pod@112,48's 16x16 cell at tick 322 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 9,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t969 owlRock",
+      "t997 owlRock"
+     ],
+     "level": 112,
+     "error": "t1711: levelRun: the player is inside pod@112,48's 16x16 cell at tick 1711 in level 112 with its animation \"closed\". `Pod.updat"
+    },
+    {
+     "seed": 10,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t561 owlRock"
+     ],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 11,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t712 owlGrenade",
+      "t969 owlRock"
+     ],
+     "level": 112,
+     "error": "t1711: levelRun: the player is inside pod@112,48's 16x16 cell at tick 1711 in level 112 with its animation \"closed\". `Pod.updat"
+    },
+    {
+     "seed": 12,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t212 owlRock",
+      "t344 owlBody",
+      "t387 owlBody"
+     ],
+     "level": 112,
+     "error": "t386: levelRun: the player died (owlBody) at tick 387 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 13,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t459 owlRock",
+      "t717 owlGrenade",
+      "t833 owlRock"
+     ],
+     "level": 112,
+     "error": "t832: levelRun: the player died (owlRock) at tick 833 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 14,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t720 owlGrenade",
+      "t834 owlRock",
+      "t962 owlRock"
+     ],
+     "level": 112,
+     "error": "t961: levelRun: the player died (owlRock) at tick 962 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 15,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t217 owlRock",
+      "t365 owlBody",
+      "t477 owlGrenade"
+     ],
+     "level": 112,
+     "error": "t476: levelRun: the player died (owlGrenade) at tick 477 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the b"
+    },
+    {
+     "seed": 16,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t321 owlRock"
+     ],
+     "level": 112,
+     "error": "t322: levelRun: the player is inside pod@112,48's 16x16 cell at tick 322 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 101,
+     "win": true,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    }
+   ]
+  },
+  {
+   "tape": "owl-sword-s1.json",
+   "plannedSeed": 1,
+   "zeroHitSeeds": [
+    1,
+    8,
+    16
+   ],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 1,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 2,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t347 owlRock",
+      "t513 owlGrenade"
+     ],
+     "level": 112,
+     "error": "t734: levelRun: the player is inside pod@40,120's 16x16 cell at tick 734 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 3,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t303 owlRock"
+     ],
+     "level": 112,
+     "error": "t309: levelRun: the player is inside pod@112,48's 16x16 cell at tick 309 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 4,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t348 owlRock",
+      "t391 owlBody",
+      "t411 owlBody"
+     ],
+     "level": 112,
+     "error": "t410: levelRun: the player died (owlBody) at tick 411 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 5,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t167 owlRock",
+      "t293 owlRock",
+      "t334 owlRock"
+     ],
+     "level": 112,
+     "error": "t333: levelRun: the player died (owlRock) at tick 334 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 6,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t1889 owlRock"
+     ],
+     "level": 112,
+     "error": "t1918: pinned by pod (120,56) — touched at t1896 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 7,
+     "win": false,
+     "podTouches": 0,
+     "hits": 4,
+     "sources": [
+      "t159 owlRock",
+      "t188 owlRock",
+      "t268 lava",
+      "t288 owlRock"
+     ],
+     "level": 112,
+     "error": "t287: levelRun: the player died (owlRock) at tick 288 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 8,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 9,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t1871 owlRock",
+      "t1937 owlBody"
+     ],
+     "level": 112,
+     "error": null
+    },
+    {
+     "seed": 10,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t166 owlRock",
+      "t297 owlRock",
+      "t323 lava"
+     ],
+     "level": 112,
+     "error": "t352: levelRun: the player died (lava) at tick 353 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 11,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t164 owlRock"
+     ],
+     "level": 112,
+     "error": "t315: levelRun: the player is inside pod@112,48's 16x16 cell at tick 315 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 12,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t303 owlRock"
+     ],
+     "level": 112,
+     "error": "t309: levelRun: the player is inside pod@112,48's 16x16 cell at tick 309 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 13,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t165 owlRock",
+      "t188 owlRock",
+      "t261 lava"
+     ],
+     "level": 112,
+     "error": "t290: levelRun: the player died (lava) at tick 291 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 14,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t302 owlRock",
+      "t502 owlGrenade"
+     ],
+     "level": 112,
+     "error": "t539: levelRun: the player is inside pod@40,120's 16x16 cell at tick 539 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 15,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t1880 owlRock"
+     ],
+     "level": 112,
+     "error": null
+    },
+    {
+     "seed": 16,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t159 owlRock",
+      "t296 owlRock",
+      "t341 owlRock"
+     ],
+     "level": 112,
+     "error": "t340: levelRun: the player died (owlRock) at tick 341 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    }
+   ]
+  },
+  {
+   "tape": "owl-sword-s2.json",
+   "plannedSeed": 2,
+   "zeroHitSeeds": [
+    2,
+    3,
+    6,
+    9,
+    12,
+    15
+   ],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 1,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t744 owlRock",
+      "t771 lava"
+     ],
+     "level": 112,
+     "error": "t800: levelRun: the player died (lava) at tick 801 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 2,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 3,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 4,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t740 owlRock"
+     ],
+     "level": 112,
+     "error": "t791: pinned by pod (48,128) — touched at t769 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 5,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t167 owlRock",
+      "t1943 owlGrenade"
+     ],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 6,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 7,
+     "win": false,
+     "podTouches": 0,
+     "hits": 4,
+     "sources": [
+      "t159 owlRock",
+      "t188 owlRock",
+      "t268 lava",
+      "t288 owlRock"
+     ],
+     "level": 112,
+     "error": "t287: levelRun: the player died (owlRock) at tick 288 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 8,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t744 owlRock",
+      "t771 lava"
+     ],
+     "level": 112,
+     "error": "t800: levelRun: the player died (lava) at tick 801 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 9,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 10,
+     "win": false,
+     "podTouches": 1,
+     "hits": 3,
+     "sources": [
+      "t166 owlRock",
+      "t312 owlRock",
+      "t365 lava"
+     ],
+     "level": 112,
+     "error": "t394: levelRun: the player died (lava) at tick 395 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 11,
+     "win": false,
+     "podTouches": 1,
+     "hits": 3,
+     "sources": [
+      "t164 owlRock",
+      "t347 owlRock",
+      "t1892 owlGrenade"
+     ],
+     "level": 112,
+     "error": "t1891: levelRun: the player died (owlGrenade) at tick 1892 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the "
+    },
+    {
+     "seed": 12,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 13,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t165 owlRock",
+      "t188 owlRock",
+      "t261 lava"
+     ],
+     "level": 112,
+     "error": "t290: levelRun: the player died (lava) at tick 291 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 14,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t1863 owlRock"
+     ],
+     "level": 112,
+     "error": "t1903: pinned by pod (120,56) — touched at t1881 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 15,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 16,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t744 owlRock",
+      "t771 lava"
+     ],
+     "level": 112,
+     "error": "t800: levelRun: the player died (lava) at tick 801 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t159 owlRock",
+      "t311 owlRock",
+      "t341 owlRock"
+     ],
+     "level": 112,
+     "error": "t340: levelRun: the player died (owlRock) at tick 341 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    }
+   ]
+  },
+  {
+   "tape": "owl-sword-s3.json",
+   "plannedSeed": 3,
+   "zeroHitSeeds": [
+    2,
+    3,
+    6,
+    9,
+    12,
+    15
+   ],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 1,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t744 owlRock",
+      "t771 lava"
+     ],
+     "level": 112,
+     "error": "t800: levelRun: the player died (lava) at tick 801 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 2,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 3,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 4,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t740 owlRock"
+     ],
+     "level": 112,
+     "error": "t791: pinned by pod (48,128) — touched at t769 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 5,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t167 owlRock",
+      "t1943 owlGrenade"
+     ],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 6,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 7,
+     "win": false,
+     "podTouches": 0,
+     "hits": 4,
+     "sources": [
+      "t159 owlRock",
+      "t188 owlRock",
+      "t268 lava",
+      "t288 owlRock"
+     ],
+     "level": 112,
+     "error": "t287: levelRun: the player died (owlRock) at tick 288 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 8,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t744 owlRock",
+      "t771 lava"
+     ],
+     "level": 112,
+     "error": "t800: levelRun: the player died (lava) at tick 801 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 9,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 10,
+     "win": false,
+     "podTouches": 1,
+     "hits": 3,
+     "sources": [
+      "t166 owlRock",
+      "t312 owlRock",
+      "t365 lava"
+     ],
+     "level": 112,
+     "error": "t394: levelRun: the player died (lava) at tick 395 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 11,
+     "win": false,
+     "podTouches": 1,
+     "hits": 3,
+     "sources": [
+      "t164 owlRock",
+      "t347 owlRock",
+      "t1892 owlGrenade"
+     ],
+     "level": 112,
+     "error": "t1891: levelRun: the player died (owlGrenade) at tick 1892 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the "
+    },
+    {
+     "seed": 12,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 13,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t165 owlRock",
+      "t188 owlRock",
+      "t261 lava"
+     ],
+     "level": 112,
+     "error": "t290: levelRun: the player died (lava) at tick 291 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 14,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t1863 owlRock"
+     ],
+     "level": 112,
+     "error": "t1903: pinned by pod (120,56) — touched at t1881 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 15,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 16,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t744 owlRock",
+      "t771 lava"
+     ],
+     "level": 112,
+     "error": "t800: levelRun: the player died (lava) at tick 801 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t159 owlRock",
+      "t311 owlRock",
+      "t341 owlRock"
+     ],
+     "level": 112,
+     "error": "t340: levelRun: the player died (owlRock) at tick 341 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    }
+   ]
+  },
+  {
+   "tape": "owl-sword-s101.json",
+   "plannedSeed": 101,
+   "zeroHitSeeds": [],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 1,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1575: pinned by pod (120,56) — touched at t1553 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 2,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t212 owlRock",
+      "t241 owlRock",
+      "t289 lava"
+     ],
+     "level": 112,
+     "error": "t318: levelRun: the player died (lava) at tick 319 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 3,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t212 owlRock",
+      "t312 lava"
+     ],
+     "level": 112,
+     "error": "t341: levelRun: the player died (lava) at tick 342 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 4,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t318 owlRock",
+      "t416 owlBody"
+     ],
+     "level": 112,
+     "error": "t1573: pinned by pod (120,56) — touched at t1551 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 5,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1575: pinned by pod (120,56) — touched at t1553 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 6,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t321 owlRock",
+      "t374 owlBody",
+      "t422 owlGrenade"
+     ],
+     "level": 112,
+     "error": "t421: levelRun: the player died (owlGrenade) at tick 422 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the b"
+    },
+    {
+     "seed": 7,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t320 owlRock",
+      "t373 owlBody"
+     ],
+     "level": 112,
+     "error": "t702: levelRun: the player is inside pod@40,120's 16x16 cell at tick 702 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 8,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1575: pinned by pod (120,56) — touched at t1553 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 9,
+     "win": false,
+     "podTouches": 2,
+     "hits": 3,
+     "sources": [
+      "t1241 owlRock",
+      "t1265 owlRock",
+      "t1563 owlBody"
+     ],
+     "level": 112,
+     "error": "t1562: levelRun: the player died (owlBody) at tick 1563 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 10,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t695 owlRock",
+      "t727 owlBody"
+     ],
+     "level": 112,
+     "error": "t1573: pinned by pod (120,56) — touched at t1551 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 11,
+     "win": false,
+     "podTouches": 2,
+     "hits": 1,
+     "sources": [
+      "t969 owlRock"
+     ],
+     "level": 112,
+     "error": "t1553: pinned by pod (120,56) — touched at t978 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 12,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t212 owlRock",
+      "t312 lava"
+     ],
+     "level": 112,
+     "error": "t341: levelRun: the player died (lava) at tick 342 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 13,
+     "win": false,
+     "podTouches": 1,
+     "hits": 3,
+     "sources": [
+      "t901 owlRock",
+      "t969 owlRock",
+      "t1238 owlRock"
+     ],
+     "level": 112,
+     "error": "t1237: levelRun: the player died (owlRock) at tick 1238 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 14,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1575: pinned by pod (120,56) — touched at t1553 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 15,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t217 owlRock",
+      "t609 owlGrenade",
+      "t639 owlGrenade"
+     ],
+     "level": 112,
+     "error": "t638: levelRun: the player died (owlGrenade) at tick 639 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the b"
+    },
+    {
+     "seed": 16,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1575: pinned by pod (120,56) — touched at t1553 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1575: pinned by pod (120,56) — touched at t1553 (Pod.as:80-83, approx)"
+    }
+   ]
+  },
+  {
+   "tape": "owl-spear-s2-v1-podtouch.json",
+   "plannedSeed": 2,
+   "zeroHitSeeds": [],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 1,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t709 owlRock"
+     ],
+     "level": 112,
+     "error": "t896: pinned by pod (48,128) — touched at t736 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 2,
+     "win": false,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1665: pinned by pod (120,56) — touched at t1612 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 3,
+     "win": false,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1665: pinned by pod (120,56) — touched at t1612 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 4,
+     "win": false,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1665: pinned by pod (120,56) — touched at t1612 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 5,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t167 owlRock"
+     ],
+     "level": 112,
+     "error": "t330: levelRun: the player is inside pod@112,48's 16x16 cell at tick 330 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 6,
+     "win": false,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1665: pinned by pod (120,56) — touched at t1612 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 7,
+     "win": false,
+     "podTouches": 0,
+     "hits": 4,
+     "sources": [
+      "t159 owlRock",
+      "t188 owlRock",
+      "t268 lava",
+      "t288 owlRock"
+     ],
+     "level": 112,
+     "error": "t287: levelRun: the player died (owlRock) at tick 288 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 8,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t709 owlRock"
+     ],
+     "level": 112,
+     "error": "t896: pinned by pod (48,128) — touched at t736 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 9,
+     "win": false,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1665: pinned by pod (120,56) — touched at t1612 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 10,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t166 owlRock",
+      "t341 owlBody"
+     ],
+     "level": 112,
+     "error": "t669: levelRun: the player is inside pod@40,120's 16x16 cell at tick 669 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 11,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t164 owlRock",
+      "t306 owlRock",
+      "t328 owlRock"
+     ],
+     "level": 112,
+     "error": "t327: levelRun: the player died (owlRock) at tick 328 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 12,
+     "win": false,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1665: pinned by pod (120,56) — touched at t1612 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 13,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t165 owlRock",
+      "t188 owlRock",
+      "t261 lava"
+     ],
+     "level": 112,
+     "error": "t290: levelRun: the player died (lava) at tick 291 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 14,
+     "win": false,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1665: pinned by pod (120,56) — touched at t1612 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 15,
+     "win": false,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1665: pinned by pod (120,56) — touched at t1612 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 16,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t709 owlRock"
+     ],
+     "level": 112,
+     "error": "t896: pinned by pod (48,128) — touched at t736 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t159 owlRock"
+     ],
+     "level": 112,
+     "error": "t330: levelRun: the player is inside pod@112,48's 16x16 cell at tick 330 in level 112 with its animation \"closed\". `Pod.update"
+    }
+   ]
+  },
+  {
+   "tape": "owl-spear-s3-v1-podtouch.json",
+   "plannedSeed": 3,
+   "zeroHitSeeds": [],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 1,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1647: pinned by pod (120,56) — touched at t1618 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 2,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t706 owlRock"
+     ],
+     "level": 112,
+     "error": "t760: pinned by pod (48,128) — touched at t738 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 3,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1647: pinned by pod (120,56) — touched at t1618 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 4,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1647: pinned by pod (120,56) — touched at t1618 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 5,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t167 owlRock"
+     ],
+     "level": 112,
+     "error": "t330: levelRun: the player is inside pod@112,48's 16x16 cell at tick 330 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 6,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t710 owlRock"
+     ],
+     "level": 112,
+     "error": "t892: pinned by pod (48,128) — touched at t745 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 7,
+     "win": false,
+     "podTouches": 0,
+     "hits": 4,
+     "sources": [
+      "t159 owlRock",
+      "t188 owlRock",
+      "t268 lava",
+      "t288 owlRock"
+     ],
+     "level": 112,
+     "error": "t287: levelRun: the player died (owlRock) at tick 288 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 8,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1647: pinned by pod (120,56) — touched at t1618 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 9,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1647: pinned by pod (120,56) — touched at t1618 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 10,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t166 owlRock",
+      "t341 owlBody"
+     ],
+     "level": 112,
+     "error": "t669: levelRun: the player is inside pod@40,120's 16x16 cell at tick 669 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 11,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t164 owlRock",
+      "t306 owlRock",
+      "t328 owlRock"
+     ],
+     "level": 112,
+     "error": "t327: levelRun: the player died (owlRock) at tick 328 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 12,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1647: pinned by pod (120,56) — touched at t1618 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 13,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t165 owlRock",
+      "t188 owlRock",
+      "t261 lava"
+     ],
+     "level": 112,
+     "error": "t290: levelRun: the player died (lava) at tick 291 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 14,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1647: pinned by pod (120,56) — touched at t1618 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 15,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1647: pinned by pod (120,56) — touched at t1618 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 16,
+     "win": false,
+     "podTouches": 2,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1647: pinned by pod (120,56) — touched at t1618 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t159 owlRock"
+     ],
+     "level": 112,
+     "error": "t330: levelRun: the player is inside pod@112,48's 16x16 cell at tick 330 in level 112 with its animation \"closed\". `Pod.update"
+    }
+   ]
+  },
+  {
+   "tape": "owl-spear-s5-v1-podtouch.json",
+   "plannedSeed": 5,
+   "zeroHitSeeds": [],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 1,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t1264 owlRock",
+      "t1286 lava",
+      "t1307 owlRock"
+     ],
+     "level": 112,
+     "error": "t1338: levelRun: the player died (lava) at tick 1339 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build'"
+    },
+    {
+     "seed": 2,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t212 owlRock",
+      "t241 owlRock",
+      "t289 lava"
+     ],
+     "level": 112,
+     "error": "t318: levelRun: the player died (lava) at tick 319 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    },
+    {
+     "seed": 3,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t212 owlRock"
+     ],
+     "level": 112,
+     "error": "t304: levelRun: the player is inside pod@112,48's 16x16 cell at tick 304 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 4,
+     "win": false,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1817: pinned by pod (120,56) — touched at t1550 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 5,
+     "win": false,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1817: pinned by pod (120,56) — touched at t1550 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 6,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t449 owlRock",
+      "t484 owlRock",
+      "t520 owlRock"
+     ],
+     "level": 112,
+     "error": "t519: levelRun: the player died (owlRock) at tick 520 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    },
+    {
+     "seed": 7,
+     "win": false,
+     "podTouches": 1,
+     "hits": 3,
+     "sources": [
+      "t761 owlGrenade",
+      "t1106 owlRock",
+      "t1591 owlBody"
+     ],
+     "level": 112,
+     "error": "t1590: levelRun: the player died (owlBody) at tick 1591 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 8,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t1264 owlRock",
+      "t1286 lava",
+      "t1307 owlRock"
+     ],
+     "level": 112,
+     "error": "t1338: levelRun: the player died (lava) at tick 1339 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build'"
+    },
+    {
+     "seed": 9,
+     "win": false,
+     "podTouches": 1,
+     "hits": 0,
+     "sources": [],
+     "level": 112,
+     "error": "t1817: pinned by pod (120,56) — touched at t1550 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 10,
+     "win": false,
+     "podTouches": 1,
+     "hits": 3,
+     "sources": [
+      "t968 owlRock",
+      "t1410 owlRock",
+      "t1578 owlBody"
+     ],
+     "level": 112,
+     "error": "t1577: levelRun: the player died (owlBody) at tick 1578 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 11,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t1002 owlRock",
+      "t1098 owlRock",
+      "t1274 owlRock"
+     ],
+     "level": 112,
+     "error": "t1273: levelRun: the player died (owlRock) at tick 1274 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 12,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t212 owlRock"
+     ],
+     "level": 112,
+     "error": "t304: levelRun: the player is inside pod@112,48's 16x16 cell at tick 304 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 13,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t1103 owlRock",
+      "t1598 owlBody"
+     ],
+     "level": 112,
+     "error": "t1598: pinned by pod (120,56) — touched at t1550 (Pod.as:80-83, approx)"
+    },
+    {
+     "seed": 14,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t762 owlGrenade",
+      "t1001 owlRock",
+      "t1032 owlRock"
+     ],
+     "level": 112,
+     "error": "t1031: levelRun: the player died (owlRock) at tick 1032 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the bui"
+    },
+    {
+     "seed": 15,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t217 owlRock"
+     ],
+     "level": 112,
+     "error": "t332: levelRun: the player is inside pod@112,48's 16x16 cell at tick 332 in level 112 with its animation \"closed\". `Pod.update"
+    },
+    {
+     "seed": 16,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t1264 owlRock",
+      "t1286 lava",
+      "t1307 owlRock"
+     ],
+     "level": 112,
+     "error": "t1338: levelRun: the player died (lava) at tick 1339 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build'"
+    },
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t342 owlRock",
+      "t469 lava"
+     ],
+     "level": 112,
+     "error": "t498: levelRun: the player died (lava) at tick 499 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    }
+   ]
+  }
+ ]
+}

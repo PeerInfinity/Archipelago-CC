@@ -1,0 +1,14 @@
+  candidates k=0 after []: 6 (drives so far 1326)
+  candidates k=1 after [{"t":354,"x":94,"y":58}]: 6 (drives so far 6710)
+  candidates k=2 after [{"t":354,"x":94,"y":58},{"t":1889,"x":105,"y":48}]: 0 (drives so far 6711)
+  candidates k=2 after [{"t":354,"x":94,"y":58},{"t":1904,"x":89,"y":61}]: 0 (drives so far 6712)
+  candidates k=2 after [{"t":354,"x":94,"y":58},{"t":1922,"x":79,"y":70}]: 0 (drives so far 6713)
+  candidates k=2 after [{"t":354,"x":94,"y":58},{"t":1919,"x":94,"y":64}]: 0 (drives so far 6714)
+  candidates k=2 after [{"t":354,"x":94,"y":58},{"t":1928,"x":76,"y":74}]: 0 (drives so far 6715)
+  candidates k=2 after [{"t":354,"x":94,"y":58},{"t":1943,"x":63,"y":94}]: 0 (drives so far 6716)
+  candidates k=1 after [{"t":354,"x":97,"y":54}]: 3 (drives so far 8119)
+    finish {"t":1527,"x":174,"y":84}: OK
+    finish {"t":1527,"x":177,"y":87}: OK
+    finish {"t":1850,"x":133,"y":54}: t2097: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+  candidates k=2 after [{"t":354,"x":97,"y":54},{"t":737,"x":42,"y":147}]: 6 (drives so far 11498)
+PLAN {"weapon":"sword","seed":4,"orbit":"nw","boot":{"level":112,"x":32,"y":208},"maxHits":0,"drives":11501,"wallSec":367,"ok":true,"shoves":[{"t":354,"x":97,"y":54},{"t":737,"x":42,"y":147},{"t":1527,"x":174,"y":84}],"introPress":2,"ticks":1824,"tagTick":1642,"exitFrom":1746,"model":{"level":113,"end":{"x":80,"y":136},"hits":[],"lava":[360,742,1533],"flags":["112:0","112:1"],"shovesLanded":11,"shoveTests":12,"rocks":152,"rocksOnPlayer":0,"grenades":8},"tried":{"c0":6,"c1":3,"c2":6}}
