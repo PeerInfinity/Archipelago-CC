@@ -464,3 +464,24 @@ describe('RE3 (i) — js-22 asks 1–2: a save fault never blocks the rooms, and
         expect(ctl.armed).toBe(true);
     });
 });
+
+describe('RE3 (i) — the CAPABILITY wins over the exports (planning-7)', () => {
+    it('a hook-bearing build whose manifest row lacks `sosave`: the hook is never installed, so nothing is prepared or armed', async () => {
+        const ui = readFileSync(new URL('./flashPanelUI.js', import.meta.url), 'utf8');
+        // the install site asks the manifest first; the exports are only the second gate
+        expect(ui).toMatch(/await this\._loadWasmManifest\(\);\s*if \(this\._initStale\(epoch, adapter\)\) return;\s*if \(this\._wasmSaveCapable\(\)\) this\._installWasmSave\(adapter\);/);
+        const { FlashPanelUI } = await import('./flashPanelUI.js');
+        const panel = Object.create(FlashPanelUI.prototype);
+        Object.assign(panel, {
+            componentState: { wasmPath: 'seedling_bot_ap_p4g/game.html' }, _panelLog: () => {},
+            _wasmManifest: { builds: [{ name: 'seedling_bot_ap_p4g', capabilities: ['apitem'] }] },
+            adapter: { id: 1 }, _apLoadKey: 'room A',
+        });
+        expect(panel._wasmSaveCapable()).toBe(false);
+        // never installed (the controller is never created, or is unsupported): the AP load prepares nothing
+        expect(await panel._prepareWasmSave(panel.adapter)).toBe(null);
+        panel._wasmSaveCtl = createWasmSaveController({ storage: memStorage(), timers: manualTimers() });
+        expect(await panel._prepareWasmSave(panel.adapter)).toBe(null); // not installed → not supported
+        expect(fakeModule().swfSharedObjectHost).toBeUndefined();
+    });
+});
