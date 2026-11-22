@@ -2427,6 +2427,12 @@
             "_comment": "loop-mode-bot S1: the Playback Bot plays a PLAIN rules.json directly (Adventure, loop mode off, no substrate, no controller): its own checks and moves, counted only when they land. Done = every sphere-log location checked. Fast batch."
         },
         {
+            "id": "playback-bot-tile-kinds-demo",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "Content sets GEN-2: the committed tile_kinds_demo preset (the \"Randomly placed tiles\" maze biome: the furniture pack's rugs and pillars in a scattered 2 : classic 1 mix over Adventure) played to the end by the bot through the maze controller, loop mode off; every sphere-log location checked, and the Maze Room panel's art stack takes the recorded exists pack. Batch playback-bot (on push)."
+        },
+        {
             "id": "playback-bot-walk-order",
             "enabled": true,
             "category": "Playback Bot",
