@@ -2163,6 +2163,12 @@
             "_comment": "region-map-tutorial G1 (2026-11-22): the Map's Go-to picker (regionMap/regionMapPicker.js) does what a canvas click does, on procgen_topdown AP_1: the same click record, bus record and path end under the default clickActions, and with the master switch off (a region and a square: the events, no action). Session-only settings. Fast batch. Reloads the world loaded before."
         },
         {
+            "id": "region-map-zoom-pinch-links",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "region-map zoom-links (2026-11-22): the toolbar's + / − (ZOOM_BUTTON_FACTOR around the centre, Follow unticks), a two-pointer synthetic pinch (distinct pointerIds: zoom x the distance ratio, no click) and the neighbour lines (lastPaint.neighbourLinks = the model's, apart from the cross-group links; off under Links), on procgen_topdown AP_1. Fast batch. Reloads the world loaded before."
+        },
+        {
             "id": "region-map-click-master-off",
             "enabled": true,
             "category": "Region Map",

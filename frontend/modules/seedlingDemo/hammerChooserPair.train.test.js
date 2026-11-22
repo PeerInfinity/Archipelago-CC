@@ -43,6 +43,7 @@ import { describe, expect, it } from 'vitest';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { ANYTIME_PASSES, solveAnytime } from './jsRuntimeSolver.js';
+import { withPressKillChasers } from './pressKillCost.js';
 import {
     CHOOSER_PAIR, CHOOSER_PAIR_COUNTS, CHOOSER_PAIR_DEFAULT, resetChooserPairCounts, solveSegment, withChooserPair,
 } from './solverBot.js';
@@ -68,8 +69,10 @@ function solveLeg(row, seam, on, nPasses = 1) {
         seam: { ...captured.staging.seam, time: seam } } });
     const { passes = ANYTIME_PASSES, source, ...tape } = req;
     resetChooserPairCounts();
-    const answer = withChooserPair(on, () => solveAnytime({ ...tape, source,
-        levelSource: levelSourceFromAtlas(source.records) }, { passes: passes.slice(0, nPasses) }));
+    // PRESS_KILL_CHASERS held OFF (ON by default since the PKC flip, 2026-11-20): ON, 853@5196's refusal is no longer the
+    // press kill's death (L40-PAIR §5, a text mover); these rows pin the CHOOSER pair.
+    const answer = withPressKillChasers(false, () => withChooserPair(on, () => solveAnytime({ ...tape, source,
+        levelSource: levelSourceFromAtlas(source.records) }, { passes: passes.slice(0, nPasses) })));
     return {
         ok: answer.ok, work: answer.work,
         message: answer.ok ? null : String(answer.message),
