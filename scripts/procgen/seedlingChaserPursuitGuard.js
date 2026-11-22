@@ -37,6 +37,22 @@
  * Only the lavarunner qualifies on the delivered map (1.25 > 1.17 on floor, 0.75 > 0.45 in lava). (c) (the step-rule
  * follow) and the race are NOT wired (rules-k-chaser-narrowing § Model check: strict at the contact margin).
  *
+ * ── EXEMPT ENTRY, (a) UNFOLLOWED ENTRY, (b) EXEMPT CHAINS (rules-k-exempt-fix; ⚖ Robert 2026-11-21 "Wire it") ─────────────
+ * The cut above skips `exempt` cells (`if (exempt.has(i)) continue`), so a player who ENTERS a leash zone AT an exempt cell
+ * (a landing inside the zone, a door, a LavaTrap's tile the reel drops the player on) crossed no cut: the report slice
+ * rules-k-exempt-entry measured 34 such cells on 8 levels, 3 reaching an uncharged goal, all GAME NO (L74 (1,8) →
+ * Darkshield 4/4, L77 (6,12) → L78 7/7, L80 (5,6) → the L71 door 4/4). Its Q5 rule, wired here, GENERAL (no level literal):
+ *   - an exempt cell stays uncharged; the step OFF it into the leash is charged: every non-exempt zone cell 4-adjacent to an
+ *     exempt zone cell joins the cut. Arrive-and-leave at the SAME doorway stays free (L77 (6,19): GAME YES 4/4), since the
+ *     doorway's own exempt cells are never charged;
+ *   - (a) the boundary test no longer asks that the outside cell be `followed`: a zone cell beside ANY player cell outside the
+ *     zone is cut (entering from a cell the body cannot reach still puts the player in its leash). 0 cells on the delivered map;
+ *   - (b) a 4-connected run of exempt zone cells is ONE doorway only when `doorwayOf` names one identity for all its cells
+ *     (the producer: the neighbouring level's doorway its atlas exits connect to; a trap tile is its own). A run joining two
+ *     doorways is a walk between them inside the leash: every exempt cell of it is charged (the strict side). The delivered
+ *     map holds 7 runs, each a door and its own landing, one doorway on both sides: none is charged.
+ * All three only ADD cut cells, so no row can loosen.
+ *
  * ── THE ARM ───────────────────────────────────────────────────────────────────────────────────────────────────────────
  * The kill-lock census's own (`seedlingPlaythroughOverlay.KILL_LOCK_BODY_CLASSES` + `KILL_ARM_CONDITION`, the arms the
  * producer reads off kill-lock bodies). A class no kill-lock room holds takes the same arms when `ENEMY_CLASSES[tag].kill`
@@ -185,15 +201,22 @@ export function killArmOf(tag, { bodyClasses = KILL_LOCK_BODY_CLASSES, armCondit
 
 // ── K's cut, with (b) ─────────────────────────────────────────────────────────────────────────────────────────────────
 
+/** The default `doorwayOf`: every exempt cell names one doorway, so no exempt run is ever a chain of two. */
+export const ONE_DOORWAY = () => ['doorway'];
+
 /**
  * One body's verdict on a grid: K's terms, (b), its leash zone and its cut. `centre` is its spawn centre
  * (`ENEMY_CLASSES[tag].ctor`, read by the caller); `exempt` = cell indices never charged (landings, doors, trap tiles).
- * `pursuit` = term (b)'s `pursuitFaster` (injectable for the unit rows' mutations).
+ * `pursuit` = term (b)'s `pursuitFaster` (injectable for the unit rows' mutations). `doorwayOf(i)` = the doorway
+ * identities of exempt cell `i` (the producer: the neighbouring doorway its atlas exits connect to, a trap tile its own);
+ * the default names one doorway for every cell. Returned beside `cut`: `unfollowed`, `exemptStep`, `chainCut` (the cells
+ * each rules-k-exempt-fix term added; all are in `cut`).
  */
 export function chaserGuardCells(body, {
     grid, tileTypes, centre, exempt = new Set(), profile = PLAYER_GUARD_PROFILE, classOf = guardClassOf, contactOf = contactHitsOf,
-    pursuit = pursuitFaster,
+    pursuit = pursuitFaster, doorwayOf = ONE_DOORWAY,
 }) {
+    const parts = { unfollowed: new Set(), exemptStep: new Set(), chainCut: new Set() };
     const cls = classOf(body.tag);
     const { width, height, cells } = grid;
     const candidate = cls.homing && cls.runRange > 0 && contactOf(body.tag);
@@ -213,28 +236,63 @@ export function chaserGuardCells(body, {
         for (let i = 0; i < cells.length; i += 1) {
             if (player(i) && cellPointDistance(i, centre, width) <= cls.runRange && followed(i)) zone.add(i);
         }
+        // The boundary: a zone cell beside a player cell OUTSIDE the zone. Term (a) of rules-k-exempt-fix: the outside cell
+        // need not be `followed` (the player enters from it all the same; the body follows once the player is in the zone).
+        // `unfollowed` records the cells only that widening adds (0 on the delivered map, the census).
+        const unfollowed = new Set();
         for (const i of zone) {
             if (exempt.has(i)) continue;
-            if (neighbours(i, width, height).some((n) => !zone.has(n) && player(n) && followed(n))) cut.add(i);
+            const out = neighbours(i, width, height).filter((n) => !zone.has(n) && player(n));
+            if (out.some(followed)) cut.add(i);
+            else if (out.length) { cut.add(i); unfollowed.add(i); }
         }
+        // EXEMPT ENTRY (rules-k-exempt-fix): the step OFF an exempt zone cell into the leash is a crossing. Every non-exempt
+        // zone cell 4-adjacent to an exempt zone cell joins the cut; the exempt cell itself stays uncharged.
+        const exemptStep = new Set();
+        for (const i of zone) {
+            if (!exempt.has(i)) continue;
+            for (const n of neighbours(i, width, height)) {
+                if (zone.has(n) && !exempt.has(n) && player(n) && !cut.has(n)) { cut.add(n); exemptStep.add(n); }
+            }
+        }
+        // EXEMPT CHAINS (term (b) of rules-k-exempt-fix): a 4-connected run of exempt zone cells is ONE doorway only when
+        // every cell names the same doorway (`doorwayOf`). A run that joins two doorways is a walk from one to the other
+        // inside the leash, not an arrive-and-leave: every exempt cell of it is charged (the strict side).
+        const chainCut = new Set();
+        const inRun = new Set();
+        for (const s of zone) {
+            if (!exempt.has(s) || inRun.has(s)) continue;
+            const run = [s];
+            inRun.add(s);
+            for (let k = 0; k < run.length; k += 1) {
+                for (const n of neighbours(run[k], width, height)) {
+                    if (zone.has(n) && exempt.has(n) && !inRun.has(n)) { inRun.add(n); run.push(n); }
+                }
+            }
+            if (run.length > 1 && new Set(run.flatMap((i) => doorwayOf(i))).size > 1) {
+                for (const i of run) { cut.add(i); chainCut.add(i); }
+            }
+        }
+        Object.assign(parts, { unfollowed, exemptStep, chainCut });
     }
     return {
         body: label(body), tag: body.tag, centre, nominal, walkSpeed: profile.walkSpeed, runRange: cls.runRange,
-        aggroKind: cls.aggroKind, terrainTypes, faster, terms, guards, zone, cut,
+        aggroKind: cls.aggroKind, terrainTypes, faster, terms, guards, zone, cut, ...parts,
         // K's cut (unfiltered) and (b)'s: (b) only removes.
         kCut: cut, bCut: guards ? cut : new Set(),
     };
 }
 
 /**
- * K with (b) over one level's grid (T already stamped on it). `room` = `{grid, tileTypes, bodies, centreOf(body), exempt}`.
+ * K with (b) over one level's grid (T already stamped on it). `room` = `{grid, tileTypes, bodies, centreOf(body), exempt,
+ * doorwayOf}`.
  * Returns the stamped grid, the guarding bodies (`guards`), the K candidates (b) dropped (`dropped`) and refusals.
  */
 export function stampChaserGuards(room, { armOf = killArmOf, ...opts } = {}) {
     // `grid` is the grid K MEASURES (the bodies' floods, the zones, the cuts): the one before T's gates, which a body's
     // flood would read as solid (`bodyRegion`: a conditioned non-terrain cell). `onto` (default `grid`) is the grid the arm is
     // STAMPED on: T's, so a T cell gains the arm beside T's gate.
-    const { grid, onto = grid, tileTypes, bodies, centreOf, exempt = new Set() } = room;
+    const { grid, onto = grid, tileTypes, bodies, centreOf, exempt = new Set(), doorwayOf = ONE_DOORWAY } = room;
     const { width } = grid;
     const cellsOf = (set) => [...set].sort((a, b) => a - b).map((i) => xy(i, width));
     const guards = [];
@@ -242,7 +300,7 @@ export function stampChaserGuards(room, { armOf = killArmOf, ...opts } = {}) {
     const refused = [];
     const armCells = new Map();
     for (const body of bodies) {
-        const v = chaserGuardCells(body, { grid, tileTypes, centre: centreOf(body), exempt, ...opts });
+        const v = chaserGuardCells(body, { grid, tileTypes, centre: centreOf(body), exempt, doorwayOf, ...opts });
         if (v.kCut.size && !v.guards) {
             dropped.push({ body: v.body, terrainTypes: v.terrainTypes, kCut: v.kCut.size, why: 'term (b): outrun on no tile of its flood' });
         }

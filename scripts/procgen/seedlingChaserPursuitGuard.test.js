@@ -225,3 +225,82 @@ describe('the delivered set (through the producer)', () => {
         }
     });
 });
+
+// ⛓⛓ rules-k-exempt-fix — the exempt entry (the step off an exempt zone cell), (a) unfollowed entry, (b) exempt chains.
+describe('rules-k-exempt-fix: entering the leash at an exempt cell is charged; arrive-and-leave is not', () => {
+    const at = (x, y) => y * 30 + x;
+    const reach = (out, from, to, held = []) => walks(out.grid, from, to, held);
+
+    it('EXEMPT ENTRY: a trap tile inside the zone (a reel drops the player there): the step off it is charged', () => {
+        const r = neck('.');
+        const b = body('lavarunner', 10, 1);
+        const trap = new Set([at(10, 1)]); // interior: every neighbour on the neck is a zone cell
+        const v = chaserGuardCells(b, { grid: r.grid, tileTypes: r.tileTypes, centre: centreOf(b), exempt: trap });
+        expect(v.zone.has(at(9, 1)) && v.zone.has(at(11, 1))).toBe(true);
+        expect([...v.exemptStep].sort((a, c) => a - c)).toEqual([at(9, 1), at(11, 1)]);
+        expect(v.cut.has(at(10, 1))).toBe(false); // the exempt cell itself stays uncharged
+        const out = stampChaserGuards({ ...r, bodies: [b], centreOf, exempt: trap });
+        // a goal inside the zone (3 tiles off the trap tile): before the fix the walk crossed no cut
+        expect(reach(out, [10, 1], [7, 1])).toBe(false);
+        expect(reach(out, [10, 1], [7, 1], [ARM])).toBe(true);
+    });
+
+    it('EXEMPT ENTRY at a doorway: walking in is charged, arrive-and-leave by the same door is free', () => {
+        const r = neck('.');
+        const b = body('lavarunner', 3, 1);
+        const v = verdict(r, b);
+        expect([...v.exemptStep]).toEqual([at(2, 1)]); // the step off the landing (1,1)
+        const out = stampChaserGuards({ ...r, bodies: [b], centreOf, exempt: EXEMPT });
+        expect(reach(out, [1, 1], [0, 1])).toBe(true); // arrive at (1,1), leave by the door (0,1): no arm
+        expect(reach(out, [1, 1], [4, 1])).toBe(false); // a goal inside the zone: was free before the fix
+        expect(reach(out, [1, 1], [4, 1], [ARM])).toBe(true);
+        // mutant: the step-off charge removed (the cut as before the fix) leaves the inside goal free
+        const before = new Set([...v.cut].filter((i) => !v.exemptStep.has(i)));
+        const g = stampOccupancy(r.grid, before, KILL_ARM_CONDITION);
+        expect(walks(g, [1, 1], [4, 1])).toBe(true);
+    });
+
+    it('(b) EXEMPT CHAIN: two exempt cells naming two doorways are charged; one doorway (a door and its own landing) is not', () => {
+        const r = neck('.');
+        const b = body('lavarunner', 3, 1);
+        const one = verdict(r, b);
+        expect(one.chainCut.size).toBe(0);
+        const twoDoors = (i) => [i === at(0, 1) ? 'door A' : 'door B'];
+        const two = chaserGuardCells(b, { grid: r.grid, tileTypes: r.tileTypes, centre: centreOf(b), exempt: EXEMPT, doorwayOf: twoDoors });
+        expect([...two.chainCut].sort((a, c) => a - c)).toEqual([at(0, 1), at(1, 1)]);
+        const out = stampChaserGuards({ ...r, bodies: [b], centreOf, exempt: EXEMPT, doorwayOf: twoDoors });
+        expect(reach(out, [1, 1], [0, 1])).toBe(false); // B's landing to A's door: a walk between two doorways inside the leash
+        expect(reach(out, [1, 1], [0, 1], [ARM])).toBe(true);
+        // the same identity on both cells (the producer's door + own landing): free again
+        const same = stampChaserGuards({ ...r, bodies: [b], centreOf, exempt: EXEMPT, doorwayOf: () => ['door A'] });
+        expect(reach(same, [1, 1], [0, 1])).toBe(true);
+    });
+
+    it('(a) UNFOLLOWED ENTRY: a zone cell entered from a player cell the body cannot reach is charged', () => {
+        // the neck with two lock-gated cells at x = 5, 6 (solid to the body: an entity condition, `bodyRegion`): (5,1) is in
+        // the zone (adjacent to the flood) but (6,1) is not `followed`, so the cut before the fix held no cell between them
+        const r = neck('.');
+        const lock = { flag: 'testLock' };
+        const g0 = { ...r.grid, cells: r.grid.cells.map((c, i) => (i === at(5, 1) || i === at(6, 1) ? { kind: 'gated', conditions: [lock] } : c)) };
+        const b = body('lavarunner', 2, 1);
+        const v = chaserGuardCells(b, { grid: g0, tileTypes: r.tileTypes, centre: centreOf(b), exempt: new Set() });
+        expect(v.zone.has(at(5, 1))).toBe(true);
+        expect(v.zone.has(at(6, 1))).toBe(false);
+        expect([...v.unfollowed]).toEqual([at(5, 1)]);
+        const out = stampChaserGuards({ grid: g0, tileTypes: r.tileTypes, bodies: [b], centreOf, exempt: new Set() });
+        expect(walks(out.grid, [20, 1], [3, 1], [key(lock)])).toBe(false);
+        expect(walks(out.grid, [20, 1], [3, 1], [key(lock), ARM])).toBe(true);
+    });
+});
+
+describe('rules-k-exempt-fix on the delivered set', () => {
+    it('L74: the landing (1,8) → the Darkshield (3,2) costs the arm (GAME NO 4/4); leaving by the L75 door does not', () => {
+        const level = PLAYTHROUGH_MAP.levels.find((l) => l.level === 74);
+        const grid = playthroughGridFor(level);
+        const ox = grid.origin?.x ?? 0, oy = grid.origin?.y ?? 0;
+        const held = [key({ flag: 'hasDarkSuit' })];
+        expect(walks(grid, [1 - ox, 8 - oy], [1 - ox, 9 - oy], held)).toBe(true);
+        expect(walks(grid, [1 - ox, 8 - oy], [3 - ox, 2 - oy], held)).toBe(false);
+        expect(walks(grid, [1 - ox, 8 - oy], [3 - ox, 2 - oy], [...held, ARM])).toBe(true);
+    });
+});

@@ -406,6 +406,64 @@ const arrivalTilesFor = (levelNumber) => {
     }
     return arrivalTilesByLevel.get(levelNumber) ?? [];
 };
+// ⛓⛓ rules-k-exempt-fix (term (b)): the DOORWAY each exit tile of a level belongs to, `"x,y" -> Set(identity)`, read off the
+// same quiet atlas. An exit's identity is the doorway on the OTHER side of its connection: the peer region and the
+// 4-connected run of that region's exit tiles the peer exit sits in (so a door and its own landing, whose peers are the
+// neighbour's landing and door, name one doorway; two doors into the same level do not). Rule K charges a run of exempt
+// cells inside a leash that names two doorways (`seedlingChaserPursuitGuard.chaserGuardCells`).
+let doorwayIdsByLevel = null;
+const doorwayIdsFor = (levelNumber) => {
+    if (!doorwayIdsByLevel) {
+        const { atlas } = derivePlaythroughLayer(LEVELS, { quiet: true });
+        const byRegion = new Map(atlas.regions.map((r) => [r.region_id, r]));
+        const tilesOf = (x) => [...(x.exit_tiles ?? []), ...(x.entrance_tile ? [x.entrance_tile] : [])];
+        // per region: exit tile "x,y" -> the representative (least) tile of its 4-connected run of exit tiles
+        const runOf = new Map();
+        const runKey = (regionId) => {
+            if (runOf.has(regionId)) return runOf.get(regionId);
+            const all = new Set(byRegion.get(regionId).exits.flatMap(tilesOf).map((t) => `${t[0]},${t[1]}`));
+            const rep = new Map();
+            for (const s of all) {
+                if (rep.has(s)) continue;
+                const run = [s];
+                rep.set(s, null);
+                for (let k = 0; k < run.length; k += 1) {
+                    const [x, y] = run[k].split(',').map(Number);
+                    for (const n of [`${x},${y - 1}`, `${x + 1},${y}`, `${x},${y + 1}`, `${x - 1},${y}`]) {
+                        if (all.has(n) && !rep.has(n)) { rep.set(n, null); run.push(n); }
+                    }
+                }
+                const least = run.map((t) => t.split(',').map(Number)).sort((a, b) => a[1] - b[1] || a[0] - b[0])[0].join(',');
+                for (const t of run) rep.set(t, least);
+            }
+            runOf.set(regionId, rep);
+            return rep;
+        };
+        const peer = new Map();
+        for (const c of atlas.vanilla_layout?.connections ?? []) {
+            peer.set(c.from.join('|'), c.to);
+            peer.set(c.to.join('|'), c.from);
+        }
+        doorwayIdsByLevel = new Map();
+        for (const region of atlas.regions) {
+            const ids = new Map();
+            for (const exit of region.exits) {
+                const p = peer.get(`${region.region_id}|${exit.exit_id}`);
+                const pexit = p && byRegion.get(p[0])?.exits.find((x) => x.exit_id === p[1]);
+                const id = pexit
+                    ? `${p[0]}@${runKey(p[0]).get(tilesOf(pexit).map((t) => `${t[0]},${t[1]}`)[0])}`
+                    : `${region.region_id}:${exit.exit_id}`;
+                for (const t of tilesOf(exit)) {
+                    const k = `${t[0]},${t[1]}`;
+                    if (!ids.has(k)) ids.set(k, new Set());
+                    ids.get(k).add(id);
+                }
+            }
+            doorwayIdsByLevel.set(region.map_ref, ids);
+        }
+    }
+    return doorwayIdsByLevel.get(levelNumber) ?? new Map();
+};
 // ⛓⛓ RULES rope-events — the ropes of the delivered set, and which are MINTED (every peer of the cut's group opens
 // something: `seedlingObstacleEvents.ropeVerdict`). A minted rope's silenced traps charge their LANES its event
 // (`ropeLaneCharges`), so a crossing of an armed lane costs the cut (⚖ the user, 2026-10-21: no tank-a-hit crossing).
@@ -593,7 +651,17 @@ function stampChaserGuards(level, grid, onto) {
         if (!ctor) throw new Error(`chaser guards: L${level.level} ${b.tag}@${b.x},${b.y} has no ENEMY_CLASSES ctor row`);
         return [b.x + ctor.dx, b.y + ctor.dy];
     };
-    const out = KG.stampChaserGuards({ grid, onto, tileTypes: HP.tileTypesOf(level, grid.width), bodies, centreOf, exempt });
+    // rules-k-exempt-fix (b): an exempt cell's doorway identities: its atlas exits' peer doorways (`doorwayIdsFor`), a
+    // LavaTrap's tile its own; an exempt cell with neither is its own doorway (so it chains with nothing: the strict side).
+    const trapCells = new Set(playthroughLavaTrapPulls(level).map((p) => toIndex(p.tile)));
+    const exitIds = doorwayIdsFor(level.level);
+    const doorwayOf = (i) => {
+        const [x, y] = [(i % grid.width) + (grid.origin?.x ?? 0), Math.floor(i / grid.width) + (grid.origin?.y ?? 0)];
+        const ids = [...(exitIds.get(`${x},${y}`) ?? [])];
+        if (trapCells.has(i)) ids.push(`trap@${x},${y}`);
+        return ids.length ? ids : [`cell@${x},${y}`];
+    };
+    const out = KG.stampChaserGuards({ grid, onto, tileTypes: HP.tileTypesOf(level, grid.width), bodies, centreOf, exempt, doorwayOf });
     if (out.refused.length) throw new Error(`chaser guards: L${level.level}: ${out.refused.join('; ')}`);
     if (out.guards.length || out.dropped.length) {
         playthroughChaserGuards.set(level.level, { guards: out.guards, dropped: out.dropped, charged: out.charged });
