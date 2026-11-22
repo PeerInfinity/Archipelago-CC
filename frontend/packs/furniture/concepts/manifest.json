@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "_comment": "The furniture pack's two tile kinds as pack concepts (content sets GEN-2): each presents its own terrain entry (structure layer), declares the maze `base` it falls back to with no art (TILE-1's chain), and names its shape recipe in this pack's art layer.",
+  "provenance": {
+    "sources": {
+      "gen2": {
+        "type": "model",
+        "model": "claude-opus-5-5",
+        "date": "2026-11-22",
+        "note": "the furniture pack, content sets GEN-2 (Co-Authored-By: Claude Opus 5.5). No approval of its names or shapes is recorded"
+      }
+    },
+    "default": "gen2"
+  },
+  "concepts": {
+    "furniture:terrain/rug": { "kind": "terrain", "name": "Rug", "description": "A woven rug on the floor. You can walk over it.", "base": "marker", "art": "furniture:terrain/rug", "presents": "furniture:terrain/rug" },
+    "furniture:terrain/pillar": { "kind": "terrain", "name": "Pillar", "description": "A stone pillar. You walk around it.", "base": "wall", "art": "furniture:terrain/pillar", "presents": "furniture:terrain/pillar" }
+  }
+}
