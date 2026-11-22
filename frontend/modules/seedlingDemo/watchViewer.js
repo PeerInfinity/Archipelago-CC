@@ -9960,8 +9960,8 @@ async function runEditor(params, lifetime) {
              */
             apworldEditor: {
                 available: () => hostBridge?.connected === true,
-                open: (rules) => hostBridge?.openInApworldEditor(
-                    rules, 'the Seedling watch page (SET arm)') === true,
+                open: (rules, atlases = []) => hostBridge?.openInApworldEditor(
+                    rules, 'the Seedling watch page (SET arm)', atlases) === true,
             },
             recordToOel,
             drawRoomStill,

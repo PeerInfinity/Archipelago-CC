@@ -860,6 +860,12 @@
             "_comment": "S4 seedling-custom-set-arm. The REAL wasm game (WebGPU, the seedling-wasm batch's launch), no rebuild: the watch page's bundle of the vanilla 116 + one tree in room 10, held by the host; the wasm AP load delivers ITS rooms through botLoadLevels — the delivered room 10 has the tree and botLevelSet.active is the delivered set."
         },
         {
+            "id": "seedling-wasm-runtime-lab-apworld-door-set-starts-no-game",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "lab-apworld-door-map. The wasm twin of seedling-js-runtime-lab-apworld-door-set-starts-no-game: door A with its atlas, applied, EMPTY levelSetCache → G's refusal, no game."
+        },
+        {
             "id": "seedling-wasm-runtime-solver-stop-button",
             "enabled": true,
             "category": "Seedling wasm runtime",
@@ -924,6 +930,18 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "S4 seedling-custom-set-arm (⚖ Robert Q4 'Open back in the lab'; lab-7's claim (d)). The held tree set on the JS runtime, the game teleported to room 10, Edit ▸ pressed: the lab's own announce (procgenLab:levelChanged) names room 10 open, the handed set_id, and room 10's record has the tree."
+        },
+        {
+            "id": "seedling-js-runtime-lab-apworld-door-set-starts-no-game",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "lab-apworld-door-map (⚖ Robert 2026-11-21, 'Map via APWorld door'). The watch page's tree set handed over 'Open in APWorld Editor' (procgenLab:openInApworldEditor WITH its stamped atlas, to the Seedling lab panel), applied in the APWorld Editor, on an EMPTY levelSetCache: the atlas is cached, and the JS Flash panel still shows G's \"This set can't be played yet\" and starts nothing (the door carries no level set)."
+        },
+        {
+            "id": "seedling-js-runtime-lab-apworld-door-after-bundle-measured",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "lab-apworld-door-map. The SAME tree set first loaded through the bundle door (S4: the host holds it), then handed over door A and applied: the Flash panel's answer is LOGGED (OUTCOME …), not steered; asserted only that a load (if any) delivers the held set (room 10's tree), never vanilla rooms or another hash."
         },
         {
             "id": "seedling-wasm-runtime-same-wiring-switch-loads-new-rooms",
@@ -2101,6 +2119,12 @@
             "enabled": true,
             "category": "Region Map: Seedling",
             "_comment": "lab-set-seedling-identity (2026-11-19): the Seedling watch page's set bundle, built through the page's own modules (watchSetIdentity.js deps + report compile + atlasAtDoor), over the vanilla rooms + the vanilla overlay: every room flash_seedling, no flash_panel block, a seedling-lab-<8 hex> atlas id not in atlas_files.json; loaded through the Presets panel's loadDocumentFile, the Region Map shows real extents in every cell, N/N squares on their tiles, and its warps. Batch playback-bot (on push). Counts derived at run time. Reloads the world loaded before."
+        },
+        {
+            "id": "region-map-lab-apworld-door-seedling-set",
+            "enabled": true,
+            "category": "Region Map: Seedling",
+            "_comment": "lab-apworld-door-map (⚖ Robert 2026-11-21, 'Map via APWorld door'): the watch page's compile of the vanilla rooms + overlay handed over door A (procgenLab:openInApworldEditor to the Seedling lab panel) and applied in the APWorld Editor. Control first (no atlas: the hook layout, no cell sized), then WITH the atlas: the lab panel files it in atlasCache before forwarding, and the Region Map shows real extents in every cell and N/N squares on their tiles. Batch playback-bot (on push). Counts derived at run time. Reloads the world loaded before."
         },
         {
             "id": "region-map-discovery",

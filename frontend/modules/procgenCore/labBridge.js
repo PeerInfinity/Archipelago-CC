@@ -199,11 +199,14 @@ export async function createLabBridge({ substrate, client, iframeId, page, log =
      * a second answer to *"what does this page hold"* on the far side of a
      * postMessage boundary, where the two answers could never be compared.
      *
+     * ⛓ lab-apworld-door-map — `atlases` (default `[]`): the region atlas(es) the page compiled `rules` from, carried
+     * the same way, so the host can file them in its `atlasCache` under the id the rules name.
+     *
      * @returns {boolean} whether the message went out (`false` = disposed).
      */
-    function openInApworldEditor(rules, source) {
+    function openInApworldEditor(rules, source, atlases = []) {
         return Boolean(publish(LAB_EVENTS.openInApworldEditor,
-            { ...address(), rules, source }, assertOpenInApworldEditor));
+            { ...address(), rules, source, atlases }, assertOpenInApworldEditor));
     }
 
     /* ── 3 + 4. READY ─────────────────────────────────────────────────── */
