@@ -39,7 +39,9 @@
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<…> --tip=<…> --moved=<level,level>
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<…> --tip=<…> --expect-flag=<level>   (a mutant's check)
  *   gh workflow run seedling-probe.yml --ref <branch> -f probes=probe-seedling-calib-levels.mjs -f args=--paired=<control sha>
+ *   gh workflow run seedling-probe.yml --ref <branch> -f probes=probe-seedling-calib-levels.mjs -f args="--paired=<sha> --paired-tip=<sha> --paired-order=concurrent"
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<paired run id>
+ *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<…> --tip=<…> --expect-median=slower   (a uniform mutant's check)
  *
  * ⛓ The normalisation replaces the old L12/L0 yardstick children, which timed one fixed level as the runner's speed: a
  * slice that moved that level moved its own yardstick. The median of ~100 levels does not move with any one of them.

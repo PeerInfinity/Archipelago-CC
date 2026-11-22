@@ -12314,8 +12314,11 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "compare",
                 "expect-flag",
+                "expect-median",
                 "moved",
                 "paired",
+                "paired-order",
+                "paired-tip",
                 "ref",
                 "tip"
             ],
