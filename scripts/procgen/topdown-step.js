@@ -209,7 +209,7 @@ async function loadArgsContent(args) {
     }, { substrateIds, ...nodePackIo() });
     return loadContentSet(effectiveContentStack({
         substrateIds, exists: contentListOf(args.params?.exists) ?? [], content: contentListOf(args.params?.content) ?? [],
-    }), nodePackIo());
+    }), { ...nodePackIo(), exists: contentListOf(args.params?.exists) ?? [] });
 }
 
 // --- main ---

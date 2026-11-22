@@ -1,5 +1,6 @@
 // navigationManager.js
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import { isRegionReachable } from '../regionView/regionViewModel.js';
 
 const logger = createUniversalLogger('regionUI:Navigation');
 
@@ -84,10 +85,7 @@ export class NavigationManager {
         isVisited: false,
         uid: `all_${name}`,
         mode: 'showAll',
-        isReachable:
-          snapshot.regionReachability?.[name] === true ||
-          snapshot.regionReachability?.[name] === 'reachable' ||
-          snapshot.regionReachability?.[name] === 'checked',
+        isReachable: isRegionReachable(snapshot, name),
       }));
     } else if (showPaths) {
       // Show full path (with truncation if needed)
@@ -114,10 +112,7 @@ export class NavigationManager {
           mode: 'navigation',
           instanceNumber: vr.instanceNumber,
           exitUsed: vr.exitUsed,
-          isReachable:
-            snapshot.regionReachability?.[vr.name] === true ||
-            snapshot.regionReachability?.[vr.name] === 'reachable' ||
-            snapshot.regionReachability?.[vr.name] === 'checked',
+          isReachable: isRegionReachable(snapshot, vr.name),
         };
       });
     } else {
@@ -131,10 +126,7 @@ export class NavigationManager {
           mode: 'navigation',
           instanceNumber: lastRegion.instanceNumber,
           exitUsed: lastRegion.exitUsed,
-          isReachable:
-            snapshot.regionReachability?.[lastRegion.name] === true ||
-            snapshot.regionReachability?.[lastRegion.name] === 'reachable' ||
-            snapshot.regionReachability?.[lastRegion.name] === 'checked',
+          isReachable: isRegionReachable(snapshot, lastRegion.name),
         }];
       }
     }

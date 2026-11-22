@@ -3,6 +3,7 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { evaluateRule } from '../shared/ruleEngine.js';
 import commonUI from '../commonUI/index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { isRegionReachable } from '../regionView/regionViewModel.js';
 import {
   debounce,
   renderLogicTree,
@@ -592,12 +593,8 @@ export class ExitUI {
       const parentRegionName = exit.parentRegion;
       const connectedRegionName = exit.connectedRegion;
 
-      // Get the parent region status, prioritizing regionReachability
-      const parentRegionStatus = snapshot.regionReachability?.[parentRegionName];
-      const parentRegionReachable =
-        parentRegionStatus === true ||
-        parentRegionStatus === 'reachable' ||
-        parentRegionStatus === 'checked';
+      // The parent region's reachability (regionView/regionViewModel.js)
+      const parentRegionReachable = isRegionReachable(snapshot, parentRegionName);
 
       // ADDED LOGGING HERE
       if (connectedRegionName) {
@@ -610,12 +607,8 @@ export class ExitUI {
         //);
       }
 
-      // Get the connected region status, prioritizing regionReachability
-      const connectedRegionStatus = snapshot.regionReachability?.[connectedRegionName];
-      const connectedRegionReachable =
-        connectedRegionStatus === true ||
-        connectedRegionStatus === 'reachable' ||
-        connectedRegionStatus === 'checked';
+      // The connected region's reachability
+      const connectedRegionReachable = isRegionReachable(snapshot, connectedRegionName);
 
 
       // Evaluate access rule
@@ -699,14 +692,8 @@ export class ExitUI {
     filteredExits.sort((a, b) => {
       if (sortMethod === 'accessibility') {
         // Determine status for A
-        const parentAReachable =
-          (snapshot.regionReachability?.[a.parentRegion]) === true ||
-          (snapshot.regionReachability?.[a.parentRegion]) === 'reachable' ||
-          (snapshot.regionReachability?.[a.parentRegion]) === 'checked';
-        const connectedAReachable =
-          (snapshot.regionReachability?.[a.connectedRegion]) === true ||
-          (snapshot.regionReachability?.[a.connectedRegion]) === 'reachable' ||
-          (snapshot.regionReachability?.[a.connectedRegion]) === 'checked';
+        const parentAReachable = isRegionReachable(snapshot, a.parentRegion);
+        const connectedAReachable = isRegionReachable(snapshot, a.connectedRegion);
         let ruleAPasses = true;
         if (a.access_rule)
           try {
@@ -728,14 +715,8 @@ export class ExitUI {
           statusA = 'parent_locked_rule_fails';
 
         // Determine status for B
-        const parentBReachable =
-          (snapshot.regionReachability?.[b.parentRegion]) === true ||
-          (snapshot.regionReachability?.[b.parentRegion]) === 'reachable' ||
-          (snapshot.regionReachability?.[b.parentRegion]) === 'checked';
-        const connectedBReachable =
-          (snapshot.regionReachability?.[b.connectedRegion]) === true ||
-          (snapshot.regionReachability?.[b.connectedRegion]) === 'reachable' ||
-          (snapshot.regionReachability?.[b.connectedRegion]) === 'checked';
+        const parentBReachable = isRegionReachable(snapshot, b.parentRegion);
+        const connectedBReachable = isRegionReachable(snapshot, b.connectedRegion);
         let ruleBPasses = true;
         if (b.access_rule)
           try {
@@ -890,18 +871,9 @@ export class ExitUI {
         const parentRegionName = exit.parentRegion;
         const connectedRegionName = exit.connectedRegion;
 
-        // Get region status using new regionReachability field with fallback
-        const parentRegionStatus = snapshot.regionReachability?.[parentRegionName];
-        const parentRegionReachable =
-          parentRegionStatus === true ||
-          parentRegionStatus === 'reachable' ||
-          parentRegionStatus === 'checked';
-          
-        const connectedRegionStatus = snapshot.regionReachability?.[connectedRegionName];
-        const connectedRegionReachable =
-          connectedRegionStatus === true ||
-          connectedRegionStatus === 'reachable' ||
-          connectedRegionStatus === 'checked';
+        // The two regions' reachability (regionView/regionViewModel.js)
+        const parentRegionReachable = isRegionReachable(snapshot, parentRegionName);
+        const connectedRegionReachable = isRegionReachable(snapshot, connectedRegionName);
         let rulePasses = true;
         if (exit.access_rule)
           try {

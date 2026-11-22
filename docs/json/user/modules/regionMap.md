@@ -20,7 +20,7 @@ The Region Map shows the loaded world as a flat map: each region is drawn as its
   | Light grey | Reachability is not shown (the accessibility colours are turned off, or the region is undiscovered) |
 
   A square never gets smaller than the **minimum square size** setting, however far you zoom out.
-- **Links.** Thin arrows link two *groups*. Blue arrows go down stairs or a pit, orange arrows go up, and green dashed arrows are warps (doorways and teleporters). The legend in the toolbar names each colour. Neighbouring cells inside a group get no lines: being next to each other already says they connect.
+- **Links.** Thin arrows link two *groups*. Blue arrows go down stairs or a pit, orange arrows go up, and green dashed arrows are warps (doorways and teleporters). Inside a group, a yellow line joins each pair of levels you walk between (an *edge transition*), from the door tile on one side to the door tile on the other where the world names them; two cells side by side that you cannot walk between get no line. The legend in the toolbar names each colour. On a world with no map of its own (a classic Archipelago world), every link between its regions is inside a group, so it is drawn as one of these lines, centre to centre.
 - **Markers.** The region you are in has a white outline, and the regions on your current path have a thin blue one. A hovered cell gets a light outline and a clicked cell a yellow one.
 - **Not on map.** A location the map cannot place on a tile is listed in a yellow line above the map. It is never dropped silently.
 
@@ -29,6 +29,8 @@ Hover over a cell to see its name and its counts (checked, accessible and inacce
 ## Moving around
 
 - **Drag** to pan, and use the **mouse wheel** to zoom around the cursor.
+- **+** and **−** (beside **Fit all**) zoom in and out on the middle of the view; each press is about three notches of the wheel.
+- On a phone or a touch screen, drag with one finger to pan and **pinch** with two fingers to zoom. A pinch only moves the map: it never zooms the page and never counts as a click.
 - **Centre on start** goes to the start region. **Fit all** shows the whole map.
 - **Follow player** keeps your current region in the middle of the view: the view glides there whenever you move. Panning or zooming by hand turns it off, and the checkbox shows that. Tick it again to turn it back on.
 
@@ -60,7 +62,7 @@ With discovery mode on, regions you have not discovered are not drawn. A region 
 |---|---|---|---|
 | Follow player | `followPlayer` | on | Keep the current region centred |
 | Show undiscovered | `showUndiscovered` | on | Discovery mode: draw fog cells for regions you can reach next |
-| Links | `showLinks` | on | Draw the arrows between groups |
+| Links | `showLinks` | on | Draw the links: the arrows between groups and the lines between neighbours |
 | Cells | `cellSize` | sized by level | **Sized by level**: one tile scale for every level, so a small level looks small. **Uniform**: every level scaled to fill the same square |
 | Grouping | `groupingRule` | R1 | How regions are grouped. **R1** groups everything joined by edge transitions |
 | — | `minSquarePx` | 6 | The smallest a location square gets on screen, in pixels |

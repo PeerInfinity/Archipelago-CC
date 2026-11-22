@@ -381,15 +381,17 @@ describe('the corpus census — printed, then pinned', () => {
          *              337); its own § Staleness link (`same-doc` 42 → 43).
          *   446 → 448  ActionNodes AN-3b (2026-11-20): action-nodes.md's opening paragraph now names what slice 3
          *              added → its own § The node states and the node card and § The bot planner (`same-doc` 43 → 45).
+         *   448 → 450  content sets GEN-1 (2026-11-22): maze.md's tile-kind paragraph → its own new § Region biomes
+         *              (`same-doc` 45 → 46), and substrate-registry.md's new `regionBiomeOf` row → it (`doc` 337 → 338).
          */
         expect(by).toEqual({
-            'same-doc': 45,
-            doc: 337,
+            'same-doc': 46,
+            doc: 338,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(448);
+        expect(CORPUS.length).toBe(450);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
@@ -405,7 +407,8 @@ describe('the corpus census — printed, then pinned', () => {
         //   playback-and-debugging.md § The playback bot (3 doc).
         //   332 → 337: rule-table-doc-command — seedling-derived-rules.md (its index row, 2 links out) and the two
         //   links in to it from maze.md and pipeline-presets.md (5 doc).
-        expect(docs).toHaveLength(337);
+        //   337 → 338: content sets GEN-1 — the registry's `regionBiomeOf` row → maze.md § Region biomes (1 doc).
+        expect(docs).toHaveLength(338);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

@@ -146,6 +146,8 @@ Implemented by `maze` (tile-grid helpers in `adapterPrimitives.js`), `text_adven
 | `placeFromRules` | Place gates, items and locations to satisfy the region's access rules. |
 | `extractPathsAndObstacles` | Extract the access rules the generated geometry enforces, to check them against the authored ones. |
 | `applyContentModules` | Optional post-build pass for content modules (the maze's hazards). |
+| `regionBiomeOf` | Optional. `({params, regionId}) → {id} \| null`: the biome of a region whose spec names none, from the world's own setting. The engine calls it in `generateRegionProcedural` (before the room is sized) and `buildSubstrateRegion`, so it names no substrate. The maze answers its `params.mazeBiome`: one biome, or a mix picked by hash of the seed and the region id (content sets GEN-1, `mazeRoom/mazeRegionBiomes.js`; [Maze § Region biomes](./maze.md#region-biomes-randomly-placed-tiles)). |
+| `recordedRegionParams` | Optional. The `regionParams` keys of the substrate's own world settings that every driver records in `procgen_metadata[p]` when they are present (`worldContent.recordedContentOf`), and that a rebuilt envelope reads back (`rebuildRegionParams`). The substrate's `buildRegionParams` adds a key only when it is not the default, so a world that sets none records nothing. The maze names `mazeBiome`, `mazeBiomeSeed` and `tileKinds`. |
 | `conceptRealisations` | Optional. The substrate's half of the concept library: `{<concept id>: {tier, art?, placements?}}`, which concepts it can realise and how, checked by `assertRealisations`. `placeFromRules` selects a gate's realisation by its rule over the world's offered concepts (`selectRealisation`). See [Concepts](./concepts.md). |
 | `contentRoles` | Optional. The kinds of content the substrate can show from a content pack, as `{<role>: {accepts: {kinds} or {presents}, needs?: {look?, art?, text?}, why}}`; a pack's concepts fill them. `assertContentRoles` checks it, and `candidatesForRole` lists the pack concepts that fill a role. The text adventure declares `gate` and `item` (a mechanic concept's prose slots) and `place` (a room's name and description). See [Concepts § Content roles](./concepts.md#content-roles). |
 | `defaultContentPack` | Optional. The substrate's built-in content pack, by id (a directory under `frontend/packs/`). A world's content stack starts with the default packs of the substrates in its mix, in registry order, and then adds the world's own `params.content` (`effectiveContentStack` in `procgenPipeline/worldContent.js`). See [Concepts § A world's content stack](./concepts.md#a-worlds-content-stack). |
@@ -314,7 +316,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**10 registered entries · 115 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**10 registered entries · 117 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -425,6 +427,8 @@ Groups are this document's own § headings, matched to a field by the section th
 | `generateRegionCore` | — | — | — | — | fn | — | fn | — | — | fn |
 | `placeFromItems` | — | — | — | — | fn | — | fn | — | — | fn |
 | `placeFromRules` | — | — | — | — | fn | — | fn | — | — | fn |
+| `recordedRegionParams` | — | — | — | — | — | — | mazeBiome, mazeBiomeSeed, tileKinds | — | — | — |
+| `regionBiomeOf` | — | — | — | — | — | — | fn | — | — | — |
 
 **Build-time — item introduction**
 
@@ -503,7 +507,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `backPortalGated` | — | fn | fn | fn | fn | — | — | — | — | — |
 | `buildLibraryRegionParams` | — | — | — | — | — | — | fn | — | — | — |
 | `buildRegionContract` | — | fn | — | — | — | — | — | — | — | — |
-| `buildRegionParams` | — | fn | fn | fn | fn | — | — | — | — | — |
+| `buildRegionParams` | — | fn | fn | fn | fn | — | fn | — | — | — |
 | `buildZoneSpecs` | — | fn | fn | fn | — | — | — | — | — | — |
 | `canHostExitGates` | — | fn | fn | fn | fn | — | — | — | — | — |
 | `canHostExitGatesBraid` | — | fn | — | — | — | — | — | — | — | — |
