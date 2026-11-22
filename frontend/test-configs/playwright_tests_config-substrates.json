@@ -2644,6 +2644,12 @@
             "_comment": "seedling-js-panel-restart. The JS row's Restart and teleport checks on the WASM runtime (WebGPU). Batch seedling-wasm."
         },
         {
+            "id": "seedling-wasm-runtime-p4h-candidate-smoke",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "seedling-p4h-beside (P1, ⚖ Robert 2026-11-22). The ONE row on the p4h CANDIDATE (seedling_bot_ap_p4h, pinned beside the default p4g): its standalone page boots, botStatus reads, botActivators() answers, and r9-l6-sword-dash-hit (L6, outside L57/L112) drains byte-identically on p4h and on the manifest's default. Batch seedling-wasm (WebGPU)."
+        },
+        {
             "id": "seedling-wasm-runtime-restart-no-walk-hand-walk",
             "enabled": true,
             "category": "Seedling wasm runtime",

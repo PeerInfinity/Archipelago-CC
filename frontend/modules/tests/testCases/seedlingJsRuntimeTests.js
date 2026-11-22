@@ -6000,3 +6000,106 @@ for (const [id, fn, rt, what] of [
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+// ── seedling-p4h-beside: THE p4h CANDIDATE, SMOKED BESIDE THE DEFAULT ─────────────────────────────────────────────
+
+/**
+ * ⛓ seedling-p4h-beside (P1, ⚖ Robert 2026-11-22) — the p4h build is pinned as a non-default `candidate`; p4g stays
+ * the default, and every row that runs by default runs on p4g. This ONE row drives the candidate: its standalone page
+ * boots, `botStatus` reads, `botActivators()` answers its shape, and ONE committed tape outside L57/L112 (the boss
+ * draws are p4h's only gameplay change) drains IDENTICALLY on p4h and on the manifest's default.
+ *
+ * ⛓ THIS LINE IS THE PIN (`check-seedling-wasm-pins.mjs`: a build is pinned iff a tracked file names it). The A/B
+ * partner is not named: it is the manifest's `role: "default"` entry, read at run time.
+ */
+const P4H_CANDIDATE_PAGE = './modules/flashPanel/wasm/seedling_bot_ap_p4h/game.html';
+const P4H_CANDIDATE_BUILD = P4H_CANDIDATE_PAGE.split('/').at(-2);
+const P4H_SMOKE_TAPE = './modules/seedlingDemo/fixtures/tapes/r9-l6-sword-dash-hit.json';
+
+/** One standalone wasm page: boot it, ▶ Start, run `tapeText`, and return what it read. The frame is removed after. */
+async function runTapeOnWasmBuild(tc, build, tapeText, { readActivators = false } = {}) {
+    const frame = document.createElement('iframe');
+    Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '480px', height: '480px',
+        opacity: '0.01', pointerEvents: 'none', border: '0' });
+    frame.src = `./modules/flashPanel/wasm/${build}/game.html`;
+    document.body.appendChild(frame);
+    try {
+        const win = await tc.pollForValue(() => {
+            try { return frame.contentWindow?.__runtimeReady ? frame.contentWindow : null; } catch { return null; }
+        }, `[${build}] the page's wasm runtime is up`, 120000, 250);
+        if (!win) return null;
+        win.document.getElementById('btn-start')?.click();
+        const g = await tc.pollForValue(() => {
+            const game = win.__swfBridge?.game;
+            return game && typeof game.botStatus === 'function' && typeof game.botLoadTape === 'function' ? game : null;
+        }, `[${build}] ▶ Start: the Bot callbacks appear`, 60000, 250);
+        if (!g) return null;
+        const parse = (v) => { try { return JSON.parse(v); } catch { return null; } };
+        const status0 = parse(g.botStatus());
+        const activators = readActivators && typeof g.botActivators === 'function' ? parse(g.botActivators()) : null;
+        const loaded = g.botLoadTape(tapeText);
+        const started = g.botStart();
+        const end = await tc.pollForValue(() => {
+            const st = parse(g.botStatus());
+            return st && (st.finished || (st.error ?? '') !== '') ? st : null;
+        }, `[${build}] the tape ran to its end`, 60000, 100);
+        const drain = typeof g.botDrain === 'function' ? g.botDrain() : null;
+        return { status0, activators, loaded, started, end, drain, hasActivators: typeof g.botActivators === 'function' };
+    } finally {
+        frame.remove();
+    }
+}
+
+async function seedlingWasmP4hCandidateSmoke(tc) {
+    const t0 = performance.now();
+    const manifest = await (await fetch('./modules/flashPanel/wasm/builds.json', { cache: 'no-store' })).json();
+    const candidate = manifest.builds.find((b) => b.name === P4H_CANDIDATE_BUILD) ?? null;
+    const def = manifest.builds.find((b) => b.role === 'default') ?? null;
+    tc.assertEqual('the manifest pins the p4h build as a non-default candidate', 'candidate', candidate?.role ?? null);
+    tc.assertEqual('the default is another build (p4g stays the default)', true, !!def && def.name !== P4H_CANDIDATE_BUILD);
+    if (!candidate || !def) return tc.getOverallResult();
+    const tapeText = await (await fetch(P4H_SMOKE_TAPE, { cache: 'no-store' })).text();
+    const tape = JSON.parse(tapeText);
+    tc.assertEqual('the A/B tape stays out of L57/L112 (the boss draws)', true, ![57, 112].includes(tape.boot.level));
+
+    const h = await runTapeOnWasmBuild(tc, P4H_CANDIDATE_BUILD, tapeText, { readActivators: true });
+    tc.reportCondition(`[${P4H_CANDIDATE_BUILD}] boots and runs a tape`, !!h);
+    if (!h) return tc.getOverallResult();
+    tc.assertEqual(`[${P4H_CANDIDATE_BUILD}] botStatus reads (a level and a tick)`, true,
+        Number.isInteger(h.status0?.level) && Number.isInteger(h.status0?.tick));
+    tc.assertEqual(`[${P4H_CANDIDATE_BUILD}] botActivators() answers {tick, activators: [], chests: []}`, 'true/true/true',
+        `${Number.isInteger(h.activators?.tick)}/${Array.isArray(h.activators?.activators)}/${Array.isArray(h.activators?.chests)}`);
+    tc.assertEqual(`[${P4H_CANDIDATE_BUILD}] the tape loaded and started`, 'ok/ok', `${h.loaded}/${h.started}`);
+    tc.assertEqual(`[${P4H_CANDIDATE_BUILD}] the tape finished with no error`, 'true/', `${h.end?.finished}/${h.end?.error ?? ''}`);
+
+    const g = await runTapeOnWasmBuild(tc, def.name, tapeText);
+    tc.reportCondition(`[${def.name}] boots and runs the same tape`, !!g);
+    if (!g) return tc.getOverallResult();
+    tc.assertEqual(`[${def.name}] (the default) declares no botActivators`, false, g.hasActivators);
+    tc.assertEqual(`[${def.name}] the tape finished with no error`, 'true/', `${g.end?.finished}/${g.end?.error ?? ''}`);
+    const same = typeof h.drain === 'string' && h.drain.length > 0 && h.drain === g.drain;
+    if (!same) {
+        tc.log(`A/B drains differ: ${P4H_CANDIDATE_BUILD} ${h.drain?.length ?? null} chars, ${def.name} ${g.drain?.length ?? null}; `
+            + `p4h ${String(h.drain).slice(0, 300)} … default ${String(g.drain).slice(0, 300)}`, 'error');
+    }
+    tc.assertEqual(`A/B: ${tape.name} (L${tape.boot.level}, ${tape.tick_count} ticks) drains IDENTICALLY on ${P4H_CANDIDATE_BUILD} and ${def.name}`,
+        true, same);
+    // ⛔ NOT `game_time`: the page keeps stepping after the tape finishes, so it moves with the poll's wall clock
+    // (measured: 4844 vs 4845 on one run). The end-of-tape clock is the drain's latched seam, compared above.
+    const pick = (st) => JSON.stringify([st?.level, st?.x, st?.y, st?.hits, st?.tick]);
+    tc.assertEqual('A/B: the end status agrees (level, x, y, hits, tick)', pick(g.end), pick(h.end));
+    tc.log(`p4h candidate smoke: ${((performance.now() - t0) / 1000).toFixed(1)} s`);
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-wasm-runtime-p4h-candidate-smoke',
+    name: 'Seedling wasm: the p4h candidate boots, reads, answers botActivators, and drains a tape as the default does',
+    description: 'seedling-p4h-beside: the candidate build seedling_bot_ap_p4h (pinned beside the default p4g) on its '
+        + 'standalone page — ▶ Start, botStatus parses, botActivators() answers {tick, activators, chests}; then one '
+        + 'committed tape outside L57/L112 (r9-l6-sword-dash-hit) runs on it and on the manifest\'s default, and the two '
+        + 'botDrain streams are byte-identical.',
+    testFunction: seedlingWasmP4hCandidateSmoke,
+    category: seedlingRuntimeCategory('seedling-wasm-runtime-p4h-candidate-smoke'),
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
