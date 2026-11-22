@@ -122,24 +122,29 @@ describe('chained pulls are refused by name, and no level of the whole game has 
  * (8,4) → (8,5) from outside both discs. The walk enters (9,6)'s first and the game reels the player onto it
  * (`probe-seedling-l78-pull-order.mjs`), so (6,5) YIELDS that step (the producer's `yields`) and L78 is one level world with all
  * three pulls. Main dropped them by name (`pull_ambiguous_dropped`).
+ * ⛓ tile-pixel-pull-disc: per pixel the discs reach their tiles' near edges, so (8,4) lies inside all three discs and the
+ * races sit one step further out, by the same first-range-entered rule: (6,5) yields (8,3) → (8,4) to (9,6), (9,3) yields
+ * (11,5) → (10,5) to (9,6), and (9,6) yields the lava step (7,8) → (7,7) to (6,5).
  */
 describe('L78: the step into two discs goes to the disc entered first', () => {
     const RULES = JSON.parse(buildPlaythroughMaze({ levels: ['level_77', 'level_78', 'level_79'] }).text);
     const pp = payloadOf(RULES, 'level_78');
     const regions = Object.keys(RULES.preset_sidecars['1']).filter((n) => n.startsWith('level_78'));
 
-    it('is ONE level world with its three pulls; (6,5) yields (8,4) → (8,5), and (9,6) the lava step (7,7) → (7,6)', () => {
+    it('is ONE level world with its three pulls; (6,5) yields (8,3) → (8,4), (9,3) (11,5) → (10,5), (9,6) the lava step (7,8) → (7,7)', () => {
         expect(pp, 'L78 is a level world').toBeDefined();
         expect(pp.pulls.map((p) => [p.x, p.y, p.yields ?? null])).toEqual([
-            [6, 5, [{ from: { x: 8, y: 4 }, to: { x: 8, y: 5 } }]], [9, 3, null], [9, 6, [{ from: { x: 7, y: 7 }, to: { x: 7, y: 6 } }]],
+            [6, 5, [{ from: { x: 8, y: 3 }, to: { x: 8, y: 4 } }]], [9, 3, [{ from: { x: 11, y: 5 }, to: { x: 10, y: 5 } }]],
+            [9, 6, [{ from: { x: 7, y: 8 }, to: { x: 7, y: 7 } }]],
         ]);
         const world = deserializeMazeWorld(pp);
         const suit = new Set(['Dark Suit']);
-        // holding the Dark Suit, the step down from (8,4) is reeled onto (9,6) — the trap the game chose
-        expect(pullAfterMove(world, { x: 8, y: 4 }, { x: 8, y: 5 }, suit)).toEqual({ x: 9, y: 6 });
-        expect(pullAfterMove(world, { x: 8, y: 4 }, { x: 8, y: 5 }, new Set())).toBeNull();
-        // the mirror, on the lava the suit walks: (7,7) → (7,6) enters (6,5)'s disc first (main named only the first such step)
-        expect(pullAfterMove(world, { x: 7, y: 7 }, { x: 7, y: 6 }, suit)).toEqual({ x: 6, y: 5 });
+        // holding the Dark Suit, the step down from (8,3) is reeled onto (9,6), whose range the walk enters first
+        expect(pullAfterMove(world, { x: 8, y: 3 }, { x: 8, y: 4 }, suit)).toEqual({ x: 9, y: 6 });
+        expect(pullAfterMove(world, { x: 8, y: 3 }, { x: 8, y: 4 }, new Set())).toBeNull();
+        expect(pullAfterMove(world, { x: 11, y: 5 }, { x: 10, y: 5 }, suit)).toEqual({ x: 9, y: 6 });
+        // the mirror, on the lava the suit walks: (7,8) → (7,7) enters (6,5)'s range first
+        expect(pullAfterMove(world, { x: 7, y: 8 }, { x: 7, y: 7 }, suit)).toEqual({ x: 6, y: 5 });
     });
 
     it('certifies clean, natively and scripted alike; the crossing is priced as the atlas prices it', () => {
@@ -167,6 +172,6 @@ describe('L78: the step into two discs goes to the disc entered first', () => {
         expect(notes).toEqual([]);
         const world = structuredClone(pp);
         delete world.pulls.find((p) => p.x === 6 && p.y === 5).yields;
-        expect(() => deserializeMazeWorld(world)).toThrow(/traps at \(6,5\) and \(9,6\) both grab a step from 8,4 into 8,5/);
+        expect(() => deserializeMazeWorld(world)).toThrow(/traps at \(6,5\) and \(9,6\) both grab a step from 8,3 into 8,4/);
     });
 });

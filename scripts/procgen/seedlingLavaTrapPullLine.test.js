@@ -7,10 +7,15 @@
  * `playthroughLavaTrapPulls` passes its grid's `wall` cells; rule T (`trapTongueCells`), the lifts and the maze read it.
  * Rows: the disc == the tongue disc on every committed level with a LavaTrap; the cuts by name; a wall cuts, a clear line
  * and a pit keep; the line test dropped (the mutant) reds the equality row; an omitted `solid` is refused.
+ *
+ * ⛓⛓ tile-pixel-pull-disc (⚖ Robert 2026-11-21 "Hybrid + direction check"): the disc is now PER PIXEL — a tile is in it
+ * when SOME origin the player can stand on in it passes the game's per-frame test (`pullsOrigin`: the range on the real
+ * origin, `pullLineClear` = `World.collideLine`'s DDA on the int origin). The row re-derives that from the grid, cell by
+ * cell of each tile's stand box, independently of `lavaTrapPulls`' own loop (`pullClass`).
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { lavaTrapPulls, pullLineClear, LAVATRAP_PULL } from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
+import { lavaTrapPulls, pullsOrigin, pullStandBox, LAVATRAP_PULL } from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
 import { trapTongueCells } from './seedlingTrapTongueGuard.js';
 import { BLOCKING } from './seedlingHolderParking.js';
 import {
@@ -23,11 +28,25 @@ const key = ([x, y]) => `${x},${y}`;
 const MAZE = JSON.parse(readFileSync(new URL('../../frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
 
 /**
- * THE ROW: for one level, `pulls` (a disc) is the game's tongue disc — every tile within chompRange whose centre-to-centre
- * line to the trap crosses no wall of the producer's grid — and rule T's charged cells are exactly that disc's player cells.
- * Returns the list of mismatches (empty = the row holds). The game's test is re-derived here from the grid, independently
- * of `lavaTrapPulls`' own loop.
+ * THE ROW: for one level, `pulls` (a disc) is the game's tongue disc — every tile with a standable origin the game would
+ * launch at (in range on the real origin, a clear DDA line from the int origin, past no wall of the producer's grid) — and
+ * rule T's charged cells are exactly that disc's player cells. Returns the list of mismatches (empty = the row holds).
+ * The game's test is re-derived here from the grid: per int px cell of the tile's stand box, `pullsOrigin` at the cell's
+ * point NEAREST the trap (the range is monotone in distance; the line is the int cell's), independently of `pullClass`.
  */
+function gamePulls(t, trap, wall) {
+    const [cx, cy] = [trap[0] * 16 + 8, trap[1] * 16 + 8];
+    const [x0, y0, x1, y1] = pullStandBox(t, 16, wall);
+    for (let j = Math.floor(y0); j < y1; j += 1) {
+        for (let i = Math.floor(x0); i < x1; i += 1) {
+            const px = Math.min(Math.max(cx, Math.max(i, x0)), Math.min(i + 1, x1) - 1e-9);
+            const py = Math.min(Math.max(cy, Math.max(j, y0)), Math.min(j + 1, y1) - 1e-9);
+            if (pullsOrigin([px, py], t, trap, 16, wall)) return true;
+        }
+    }
+    return false;
+}
+
 function discRow(level, pulls) {
     const grid = playthroughGridFor(level);
     const wall = (x, y) => grid.cells[y * grid.width + x]?.kind === 'wall';
@@ -38,9 +57,8 @@ function discRow(level, pulls) {
         for (let y = 0; y < level.height; y += 1) {
             for (let x = 0; x < level.width; x += 1) {
                 if (x === tx && y === ty) continue;
-                const d = Math.floor(Math.hypot((x - tx) * 16, (y - ty) * 16));
-                if (d > LAVATRAP_PULL.chompRange) continue;
-                if (pullLineClear([x, y], [tx, ty], 16, wall)) want.push(key([x, y]));
+                if (Math.hypot(Math.max(0, Math.abs(x - tx) - 1) * 16, Math.max(0, Math.abs(y - ty) - 1) * 16) > LAVATRAP_PULL.chompRange + 1) continue;
+                if (gamePulls([x, y], [tx, ty], wall)) want.push(key([x, y]));
             }
         }
         const have = p.from.map(key);
@@ -49,10 +67,10 @@ function discRow(level, pulls) {
         const tongue = [...trapTongueCells(p, { grid })].map((i) => key([i % grid.width, Math.floor(i / grid.width)])).sort();
         const players = have.filter((k) => { const [x, y] = k.split(',').map(Number); return !BLOCKING.has(grid.cells[y * grid.width + x].kind); }).sort();
         if (JSON.stringify(tongue) !== JSON.stringify(players)) bad.push(`L${level.level} (${p.tile}) tongue ${tongue} != disc ${players}`);
-        // the game's line, cell by cell: a T-charged cell must have a clear line (the old T's own test)
+        // the game's test, cell by cell: a T-charged cell must have an origin the game launches at (the old T's own test)
         for (const k of tongue) {
             const [x, y] = k.split(',').map(Number);
-            if (!pullLineClear([x, y], [tx, ty], 16, wall)) bad.push(`L${level.level} (${p.tile}) tongue cell ${k} has no clear line`);
+            if (!gamePulls([x, y], [tx, ty], wall)) bad.push(`L${level.level} (${p.tile}) tongue cell ${k} has no origin the game launches at`);
         }
     }
     return bad;
@@ -73,7 +91,7 @@ describe('the pull disc is the tongue disc (one line test)', () => {
         expect(red).toEqual([77, 78, 80]);
     });
 
-    it('the cuts, by name (the uncut disc minus the line-cut disc): L77 (6,10); L78 (11,6), (9,8); L80 (0,14), a wall tile', () => {
+    it('the cuts, by name (the uncut disc minus the line-cut disc, per pixel): L77 (5,10), (6,10), (7,10); L78 (11,5), (11,6), (11,7), (8,8), (9,8), (10,8); L80 (0,14), (0,15), wall tiles', () => {
         const cuts = {};
         for (const level of TRAP_LEVELS) {
             const raw = lavaTrapPulls(level, 16, { solid: null });
@@ -84,9 +102,16 @@ describe('the pull disc is the tongue disc (one line test)', () => {
                 if (gone.length) cuts[`L${level.level} (${p.tile})`] = gone;
             });
         }
-        expect(cuts).toEqual({ 'L77 (6,12)': ['6,10'], 'L78 (9,6)': ['11,6', '9,8'], 'L80 (2,14)': ['0,14'] });
-        // L80's (0,14) is a wall: no player stands there (the maze's `from` never carried it)
-        expect(playthroughGridFor(LEVELS.find((l) => l.level === 80)).cells[14 * 10 + 0].kind).toBe('wall');
+        // ⛓ tile-pixel-pull-disc: per pixel, the uncut disc reaches further (a tile's near edge), so the wall cuts more of it:
+        //   L77 (5,10)/(7,10) beside (6,10) behind the (5,11)/(6,11) walls; L78 (9,6)'s (11,5), (11,7) (a wall), (8,8), (10,8)
+        //   beside the centre-line cuts (11,6), (9,8); L80's (0,15) beside (0,14), both walls.
+        expect(cuts).toEqual({
+            'L77 (6,12)': ['5,10', '6,10', '7,10'],
+            'L78 (9,6)': ['11,5', '11,6', '11,7', '8,8', '9,8', '10,8'],
+            'L80 (2,14)': ['0,14', '0,15'],
+        });
+        // L80's (0,14) and (0,15) are walls: no player stands there (the maze's `from` never carried them)
+        for (const y of [14, 15]) expect(playthroughGridFor(LEVELS.find((l) => l.level === 80)).cells[y * 10 + 0].kind).toBe('wall');
     });
 
     it('L108\'s ferry keeps every hop: the pit between each pair is "Tile", not "Solid" (Tile.as:24-27), so nothing is cut', () => {
@@ -153,22 +178,24 @@ describe('the line test, synthetic', () => {
 
     it('`solid: null` is the uncut disc, by name; an omitted `solid` is refused', () => {
         const level = { width: 5, height: 5, entities: [{ type: 'lavatrap', x: 32, y: 32 }] };
-        expect(lavaTrapPulls(level, 16, { solid: null })[0].from).toHaveLength(12);
+        // ⛓ tile-pixel-pull-disc: per pixel the uncut disc holds every tile whose NEAR point is in range: 12 -> 20
+        expect(lavaTrapPulls(level, 16, { solid: null })[0].from).toHaveLength(20);
         expect(() => lavaTrapPulls(level)).toThrow(/pass `solid`/);
         expect(() => lavaTrapPulls(level, 16, { solid: 'walls' })).toThrow(/pass `solid`/);
     });
 
     it('the yields race reads the cut discs: a step into a disc only through a wall is no race', () => {
-        // the overlay's race (seedlingPlaythroughOverlay.test.js): traps (0,2) and (3,3) both take (2,2) from (2,1), and (0,2),
-        // whose disc the walk enters second, YIELDS that step. A wall at (1,2) cuts (2,2) from (0,2): no race is left there.
+        // the overlay's race (seedlingPlaythroughOverlay.test.js): traps (0,2) and (3,3) both take (2,1) from (2,0) (⛓
+        // tile-pixel-pull-disc: per pixel (2,1) is in both discs, so the race is one step further out), and (0,2), whose disc
+        // the walk enters second, YIELDS that step. A wall at (1,2) cuts (2,1) from (0,2): no race is left there.
         const at = (x, y) => ({ type: 'lavatrap', x: x * 16, y: y * 16 });
         const level = { width: 5, height: 6, entities: [at(0, 2), at(3, 3)] };
-        const step = { from: [2, 1], to: [2, 2] };
+        const step = { from: [2, 0], to: [2, 1] };
         const open = lavaTrapPulls(level, 16, { solid: null });
         expect(open[0].yields).toContainEqual(step);
         const walled = lavaTrapPulls(level, 16, { solid: (x, y) => x === 1 && y === 2 });
-        expect(walled[0].from.some((t) => t[0] === 2 && t[1] === 2)).toBe(false);
+        expect(walled[0].from.some((t) => t[0] === 2 && t[1] === 1)).toBe(false);
         expect(walled[0].yields).not.toContainEqual(step);
-        expect(walled[1].from.some((t) => t[0] === 2 && t[1] === 2)).toBe(true); // (3,3) still takes it, alone
+        expect(walled[1].from.some((t) => t[0] === 2 && t[1] === 1)).toBe(true); // (3,3) still takes it, alone
     });
 });

@@ -363,11 +363,14 @@ describe('the LavaTrap lift', () => {
     // ⛓ ONE step into two discs (session tile-primitives-sphere-order-10, ⚖ 2026-10-30 "First range entered"): the trap whose
     // disc the walk from centre to centre enters FIRST takes the step; the other `yields` it. `probe-seedling-l78-pull-order.mjs`
     // drove L78's on the game: reeled onto (9,6).
-    it('L78: (6,5) yields the step (8,4) → (8,5) to (9,6), whose disc the walk enters first (y 75.1 vs 79.9)', () => {
+    it('L78: each step into two discs from outside both goes to the disc the walk enters first', () => {
         const pulls = playthroughLavaTrapPulls(level(78));
-        // and its mirror on the lava, (7,7) → (7,6), the other way round (a step only the Dark Suit walks)
+        // ⛓ tile-pixel-pull-disc: per pixel the discs reach their tiles' near edges, so main's race step (8,4) → (8,5) (y 75.1
+        //   vs 79.9, game-witnessed by probe-seedling-l78-pull-order.mjs) is now INSIDE all three discs, and the races sit one
+        //   step further out, decided by the same first-range-entered rule: (6,5) yields (8,3) → (8,4), (9,3) yields
+        //   (11,5) → (10,5), and (9,6) yields the lava step (7,8) → (7,7) (a step only the Dark Suit walks).
         expect(pulls.map((p) => [p.tile, p.yields])).toEqual([
-            [[9, 3], []], [[6, 5], [{ from: [8, 4], to: [8, 5] }]], [[9, 6], [{ from: [7, 7], to: [7, 6] }]],
+            [[9, 3], [{ from: [11, 5], to: [10, 5] }]], [[6, 5], [{ from: [8, 3], to: [8, 4] }]], [[9, 6], [{ from: [7, 8], to: [7, 7] }]],
         ]);
     });
 
@@ -379,13 +382,13 @@ describe('the LavaTrap lift', () => {
         const at = (x, y) => ({ type: 'lavatrap', x: x * 16, y: y * 16 });
         // traps (1,3) and (3,3) mirror each other about the step (2,1) → (2,2): a tie
         expect(lavaTrapPulls({ width: 5, height: 6, entities: [at(1, 3), at(3, 3)] }, 16, { solid: null }).flatMap((p) => p.yields)).toEqual([]);
-        // traps (0,2) and (3,3) both take (2,2) from (2,1), (0,2) the NEARER to (2,2)'s centre on the line's axis but 32 px off
-        // it: the walk down enters (3,3)'s disc at y 27.1 px and (0,2)'s at y 31.9, so (0,2) yields
+        // traps (0,2) and (3,3) both take (2,1) from (2,0) (⛓ tile-pixel-pull-disc: per pixel (2,1)'s near edge is in both
+        // discs, so the race is the step INTO it), and the walk down enters (3,3)'s range first, so (0,2) yields
         const pulls = lavaTrapPulls({ width: 5, height: 6, entities: [at(0, 2), at(3, 3)] }, 16, { solid: null });
         const ins = (p, c) => p.from.some((t) => t[0] === c[0] && t[1] === c[1]);
-        expect(pulls.map((p) => [ins(p, [2, 2]), ins(p, [2, 1])])).toEqual([[true, false], [true, false]]);
-        // (and the mirror step (1,4) → (1,3), which (3,3) yields)
-        expect(pulls.map((p) => p.yields)).toEqual([[{ from: [2, 1], to: [2, 2] }], [{ from: [1, 4], to: [1, 3] }]]);
+        expect(pulls.map((p) => [ins(p, [2, 1]), ins(p, [2, 0])])).toEqual([[true, false], [true, false]]);
+        // (and the mirror step (1,5) → (1,4), which (3,3) yields)
+        expect(pulls.map((p) => p.yields)).toEqual([[{ from: [2, 0], to: [2, 1] }], [{ from: [1, 5], to: [1, 4] }]]);
     });
 });
 
