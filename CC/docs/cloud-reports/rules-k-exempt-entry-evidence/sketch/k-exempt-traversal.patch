@@ -1,0 +1,18 @@
+diff --git a/scripts/procgen/seedlingChaserPursuitGuard.js b/scripts/procgen/seedlingChaserPursuitGuard.js
+index 73d30a28..14c42e6c 100644
+--- a/scripts/procgen/seedlingChaserPursuitGuard.js
++++ b/scripts/procgen/seedlingChaserPursuitGuard.js
+@@ -217,6 +217,13 @@ export function chaserGuardCells(body, {
+             if (exempt.has(i)) continue;
+             if (neighbours(i, width, height).some((n) => !zone.has(n) && player(n) && followed(n))) cut.add(i);
+         }
++        // SKETCH (rules-k-exempt-entry, NOT FOR LANDING): an exempt cell stays uncharged (arriving there and leaving by the
++        // same exempt doorway is not a crossing), but the TRAVERSAL off it into the leash is: every non-exempt zone cell
++        // 4-adjacent to an exempt zone cell joins the cut. It only ADDS cut cells, so no row can loosen.
++        for (const i of zone) {
++            if (!exempt.has(i)) continue;
++            for (const n of neighbours(i, width, height)) if (zone.has(n) && !exempt.has(n) && player(n)) cut.add(n);
++        }
+     }
+     return {
+         body: label(body), tag: body.tag, centre, nominal, walkSpeed: profile.walkSpeed, runRange: cls.runRange,
