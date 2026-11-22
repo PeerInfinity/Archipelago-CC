@@ -67,9 +67,6 @@ const WALK_CATEGORY_BY_TUTORIAL = Object.freeze({
     'procgen-cloudberry': 'Tutorial walks: cloudberry',
     // P4a: the Cloudberry loop-mode walk runs there too (not in tutorials-procgen-loops, whose job does not fetch the site).
     'procgen-loop-mode-cloudberry': 'Tutorial walks: cloudberry',
-    // ⚖ The user, 2026-11-22 (archipelago-cc-23, session 84c8ab35): the Region Map tutorial walks Seedling Playthrough
-    // in "the Seedling tutorial batch". Its walk starts no game (no wasm).
-    'tracker-region-map': 'Tutorial walks: seedling',
 });
 const walkCategory = (tutorial) => WALK_CATEGORY_BY_TUTORIAL[tutorial.id] ?? WALK_CATEGORY_BY_TRACK[tutorial.track] ?? WALK_CATEGORY;
 const walkId = (id) => `tutorial-walk-${id}`;
