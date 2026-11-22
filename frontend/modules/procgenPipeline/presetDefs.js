@@ -1011,8 +1011,8 @@ export const SHIPPED_PRESETS = Object.freeze([
         id: 'shipped:tile-kinds-demo',
         label: "Top-down: randomly placed tiles (from the loaded world — load any game's preset first)",
         group: PRESET_GROUPS.topDown,
-        description: 'The "Randomly placed tiles" maze biome: every region of the loaded world becomes a 16×12 maze '
-            + 'room, and the world names the pack "furniture" under what exists (a rug you walk over, a pillar you '
+        description: 'The "Randomly placed tiles" maze biome: every region of the LOADED world (load any game\'s preset '
+            + 'first; a plain page load has Adventure loaded) becomes a 16×12 maze room, and the world names the pack "furniture" under what exists (a rug you walk over, a pillar you '
             + 'walk around). Each room draws its biome from the mix Randomly placed tiles 2 : classic 1, so some rooms '
             + 'are furnished and some are bare (on Adventure, seed 3: 6 furnished rooms, 4 rugs and 4 pillars each, and '
             + '3 bare ones). The kinds go only where the room\'s logic stays exactly as it was: the compiled rules equal '
