@@ -220,7 +220,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             //   L71 r0c6's two doors now land in level_75__r13c3 and level_72__r11c6 (the same landing, points and universe).
             'level_71__r0c6 → level_75__r13c3 (landing 18,16) | 24/48',
             'level_71__r0c6 → level_80__r0c2 (landing 18,16) | 24/48',
-            'level_71__r0c6 → level_72__r11c6 (landing 18,16) | 24/48',
+            // ⛓ rules-k-exempt-fix: RENAMED only — K charges the step off L72's L71 landing, so it is its own member r16c0.
+            'level_71__r0c6 → level_72__r16c0 (landing 18,16) | 24/48',
             'level_82 @ Level 082 - King of Fire (landing 9,1) | 5/8',
             'level_82 → level_96 (landing 9,1) | 5/8',
             'level_83 → level_12__r42c28 (landing 2,3) | 20/64',
