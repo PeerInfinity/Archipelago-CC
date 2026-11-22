@@ -744,6 +744,29 @@ describe('procgenLabPanel — a page\'s "open in the APWorld editor"', () => {
         levelSetCache.clear();
     });
 
+    /**
+     * ⛓ (js-22's J6 addition, accepted as a known limit) ONE VERSION PER SET ID: put overwrites by `set_id`, so a door-A
+     * hand-over of an EDITED version `X@H2` (which its rules name) replaces a bundle-held `X@H1` a running game was
+     * opened from. Pinned as it stands: the cache then holds H2 only, and the OLD rules' `heldLevelSetOf` answers the
+     * named mismatch, never a body. ⛔ A change to "one version per id" reds this row on purpose.
+     */
+    it('⛓ one version per set id: an edited version handed over door A replaces the held one; the old rules get the named mismatch', () => {
+        levelSetCache.clear();
+        const panel = mountPanel('seedling');
+        const v1 = SET('set-x', 'bundle version');
+        const v2 = SET('set-x', 'edited version');
+        levelSetCache.put('set-x', v1, { contentHash: REF(v1).content_hash });
+        handOverSets(panel, RULES_WITH_SETS(REF(v2)), [v2]);
+        expect(panel.lastLevelSetHandover).toMatchObject({ put: [REF(v2)], refused: [], evicted: [] });
+        expect(levelSetCache.ids()).toEqual(['set-x']);
+        expect(levelSetCache.get('set-x', REF(v2).content_hash).set).toBe(v2);
+        const old = heldLevelSetOf(RULES_WITH_SETS(REF(v1)), '1', levelSetCache);
+        expect(old).toMatchObject({ status: 'mismatch', set: null,
+            why: `the level set held as "set-x" has content hash ${REF(v2).content_hash}, not the ${REF(v1).content_hash} `
+                + 'the rules name — it is NOT served' });
+        levelSetCache.clear();
+    });
+
     it('⛔ a non-array `levelSets` is the protocol\'s refusal: nothing forwarded, nothing held, said on the panel', () => {
         levelSetCache.clear();
         const panel = mountPanel('seedling');
