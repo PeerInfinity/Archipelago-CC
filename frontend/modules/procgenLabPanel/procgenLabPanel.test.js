@@ -87,6 +87,9 @@ let PAGE_TO_HOST;
 let moduleIndex;
 let eventBus;
 let atlasCache;
+let levelSetCache;
+let levelSetContentHash;
+let heldLevelSetOf;
 
 beforeEach(async () => {
     globalThis.document = {
@@ -111,6 +114,8 @@ beforeEach(async () => {
     } = await import('./procgenLabPanelUI.js'));
     ({ LAB_EVENTS, PAGE_TO_HOST } = await import('../procgenCore/labProtocol.js'));
     ({ atlasCache } = await import('../procgenCore/atlasCache.js'));
+    ({ levelSetCache } = await import('../procgenCore/levelSetCache.js'));
+    ({ levelSetContentHash, heldLevelSetOf } = await import('../procgenCore/levelSetReference.js'));
     moduleIndex = await import('./index.js');
 });
 
@@ -587,6 +592,167 @@ describe('procgenLabPanel — a page\'s "open in the APWorld editor"', () => {
         expect(seen).toEqual([]);
         expect(atlasCache.size).toBe(0);
         expect(byRole(panel.getRootElement(), 'note').textContent).toMatch(/atlases must be an array/);
+    });
+
+    /* ── ⛓⛓ lab-apworld-door-play — the level set the rules name, held in the host levelSetCache ── */
+
+    const SET = (id, tag = 'a') => ({ set_id: id, schema_version: 1, rooms: [{ id: 0, tag }, { id: 1, tag }] });
+    const REF = (doc) => ({ set_id: doc.set_id, content_hash: levelSetContentHash(doc) });
+    const RULES_WITH_SETS = (...refs) => ({
+        game_name: 'Lab Set', regions: { 1: {} },
+        region_atlas: Object.fromEntries(refs.map((ref, i) => [String(i + 1),
+            { atlas_id: `atlas-${i + 1}`, game: 'g', ...(ref ? { level_set: ref } : {}) }])),
+    });
+    const handOverSets = (panel, rules, levelSets) => publishAs(LAB_EVENTS.openInApworldEditor, {
+        substrate: panel.substrate, iframeId: panel.iframeId, rules, source: 'the Seedling watch page (SET arm)',
+        atlases: [], ...(levelSets === undefined ? {} : { levelSets }),
+    }, `iframe_${panel.iframeId}`);
+    /** What the level-set cache answered for `ref` at the moment `apworldEditor:loadRules` went out. */
+    const setAtForward = (ref) => {
+        const at = [];
+        eventBus.subscribe('apworldEditor:loadRules', () => at.push(levelSetCache.get(ref.set_id, ref.content_hash)), 'test-observer');
+        return at;
+    };
+
+    /**
+     * ⛓⛓ VALIDATE → PUT → FORWARD. The Flash panel's load after Apply asks `heldLevelSetOf(rules)`, so the set must
+     * already be HELD under the rules' hash when `apworldEditor:loadRules` is published. MUTANT: move `_fileLevelSets`
+     * after the publish — `setAtForward` reads `absent` and reds.
+     */
+    it('⛓⛓ holds the handed level set under the rules\' content hash BEFORE forwarding the rules', () => {
+        levelSetCache.clear();
+        const panel = mountPanel('seedling');
+        const doc = SET('set-a');
+        const ref = REF(doc);
+        const at = setAtForward(ref);
+        const seen = watchForward();
+        handOverSets(panel, RULES_WITH_SETS(ref), [doc]);
+        expect(at.map((g) => g.status)).toEqual(['held']);
+        expect(at[0].set).toBe(doc);
+        expect(seen.map((s) => s.name)).toEqual(['apworldEditor:loadRules', 'ui:activatePanel']);
+        expect(panel.lastLevelSetHandover).toEqual({ put: [ref], refused: [], uncarried: [], evicted: [] });
+        const note = byRole(panel.getRootElement(), 'note');
+        expect(note.textContent).toMatch(/level set set-a held for the player$/);
+        expect(note.className).not.toMatch(/bad/);
+        levelSetCache.clear();
+    });
+
+    it('⛓ an absent `levelSets` is `[]`: the rules go over as before, nothing is held, the player is named uncarried', () => {
+        levelSetCache.clear();
+        const panel = mountPanel('seedling');
+        const seen = watchForward();
+        const ref = REF(SET('set-a'));
+        handOverSets(panel, RULES_WITH_SETS(ref), undefined);
+        expect(seen.map((s) => s.name)).toEqual(['apworldEditor:loadRules', 'ui:activatePanel']);
+        expect(levelSetCache.size).toBe(0);
+        expect(panel.lastLevelSetHandover).toEqual({ put: [], refused: [], uncarried: [{ player: '1', ...ref }], evicted: [] });
+    });
+
+    /**
+     * ⛔⛔ (J1) THE HOST COMPUTES THE HASH. A document whose `provenance.content_hash` is the rules' hash but whose rooms
+     * were edited, and one under another `set_id`: both REFUSED by name, never put, and the good set ALREADY held under
+     * that id is not shadowed; the rules still go. MUTANT: `putLevelSets(data.levelSets)` (no verdict) — the edited
+     * body replaces the held one and `get(...)` answers `mismatch`, red.
+     */
+    it('⛔ (J1) refuses an edited body that claims the rules\' hash, and a wrong set_id; never puts; no shadowing', () => {
+        levelSetCache.clear();
+        const panel = mountPanel('seedling');
+        const seen = watchForward();
+        const good = SET('set-a');
+        const ref = REF(good);
+        handOverSets(panel, RULES_WITH_SETS(ref), [good]);
+        const lying = { ...structuredClone(good), provenance: { content_hash: ref.content_hash } };
+        lying.rooms[0].tag = 'edited after the stamp';
+        handOverSets(panel, RULES_WITH_SETS(ref), [lying, SET('set-b')]);
+        expect(panel.lastLevelSetHandover.put).toEqual([]);
+        expect(panel.lastLevelSetHandover.refused.map((r) => r.set_id)).toEqual(['set-a', 'set-b']);
+        expect(panel.lastLevelSetHandover.refused[0].why).toMatch(/hashes to [0-9a-f]{8}, not the content hash the rules name/);
+        expect(panel.lastLevelSetHandover.refused[1].why).toMatch(/"set-b" is not one the rules name/);
+        expect(panel.lastLevelSetHandover.uncarried).toEqual([{ player: '1', ...ref }]);
+        expect(levelSetCache.get(ref.set_id, ref.content_hash).set).toBe(good);
+        expect(levelSetCache.has('set-b')).toBe(false);
+        expect(seen.filter((s) => s.name === 'apworldEditor:loadRules')).toHaveLength(2);
+        const note = byRole(panel.getRootElement(), 'note');
+        expect(note.textContent).toMatch(/⛔ level set REFUSED \(not held\)/);
+        expect(note.className).toMatch(/bad/);
+        levelSetCache.clear();
+    });
+
+    /**
+     * ⛓ (J3) MULTI-PLAYER, EACH ON ITS OWN. (i) Player 1 names A, player 2 names B; a good A and a tampered B are
+     * carried while a good B is ALREADY held: A is put, the tampered B is refused, the held B is untouched.
+     * (ii) Both players name `set-s` under two hashes: player 1's good version alone is put, player 2 is uncarried;
+     * with good documents for BOTH, neither is put (one set per id) and the earlier held one stays.
+     */
+    it('⛓ (J3) two players: a mismatch for one never puts or shadows the other\'s', () => {
+        levelSetCache.clear();
+        const panel = mountPanel('seedling');
+        const a = SET('set-a');
+        const b = SET('set-b');
+        levelSetCache.put('set-b', b, { contentHash: REF(b).content_hash });
+        const tamperedB = SET('set-b', 'tampered');
+        handOverSets(panel, RULES_WITH_SETS(REF(a), REF(b)), [a, tamperedB]);
+        expect(panel.lastLevelSetHandover.put).toEqual([REF(a)]);
+        expect(panel.lastLevelSetHandover.refused.map((r) => r.set_id)).toEqual(['set-b']);
+        expect(levelSetCache.get('set-a', REF(a).content_hash).set).toBe(a);
+        expect(levelSetCache.get('set-b', REF(b).content_hash).set).toBe(b);
+
+        levelSetCache.clear();
+        const s1 = SET('set-s', 'one');
+        const s2 = SET('set-s', 'two');
+        const rules = RULES_WITH_SETS(REF(s1), REF(s2));
+        handOverSets(panel, rules, [s1]);
+        expect(panel.lastLevelSetHandover.put).toEqual([REF(s1)]);
+        expect(panel.lastLevelSetHandover.uncarried).toEqual([{ player: '2', ...REF(s2) }]);
+        handOverSets(panel, rules, [s2, s1]);
+        expect(panel.lastLevelSetHandover.put).toEqual([]);
+        expect(panel.lastLevelSetHandover.refused).toHaveLength(2);
+        expect(levelSetCache.get('set-s', REF(s1).content_hash).set).toBe(s1);
+        levelSetCache.clear();
+    });
+
+    /**
+     * ⛓ (J2) MEASURED, AND PINNED AS IT STANDS (⚖ js-22, J2 = (A) accepted: "the app holds 4 sets; a 5th, from either
+     * door, drops the oldest, and that set must be re-opened"). The cache holds `LEVEL_SET_CACHE_LIMIT` (4) sets, FIFO
+     * by last put. A door-A put of a 5th id evicts the one put longest ago — whatever door put it, including the set a
+     * RUNNING game was loaded from (`held-1` here: the bundle's) — and the panel says which. What that set's two
+     * readers then answer, by name: Edit ▸'s `levelSetCache.get(set_id, hash)` (`flashPanelUI._editHeldSetRoom`) and a
+     * re-load's `heldLevelSetOf(rules)` (`flashPanelUI._customSetRefusal` → G, and the wiring). Neither serves a body.
+     * ⛔ A change to the cache's bound or eviction rule (js-22's backlog: live-set pinning) reds this row ON PURPOSE.
+     */
+    it('⛓ (J2) a good put into a FULL cache evicts the oldest put, and the panel names it', () => {
+        levelSetCache.clear();
+        const panel = mountPanel('seedling');
+        for (const id of ['held-1', 'held-2', 'held-3', 'held-4']) {
+            const d = SET(id);
+            levelSetCache.put(id, d, { contentHash: REF(d).content_hash });
+        }
+        const runningRef = REF(SET('held-1'));
+        expect(levelSetCache.limit).toBe(4);
+        const doc = SET('door-a');
+        handOverSets(panel, RULES_WITH_SETS(REF(doc)), [doc]);
+        expect(panel.lastLevelSetHandover.evicted).toEqual(['held-1']);
+        const editReads = levelSetCache.get(runningRef.set_id, runningRef.content_hash);
+        expect(editReads).toMatchObject({ status: 'absent', set: null, why: 'no level set with set_id "held-1" is held' });
+        const reloadReads = heldLevelSetOf(RULES_WITH_SETS(runningRef), '1', levelSetCache);
+        expect(reloadReads).toMatchObject({ status: 'absent', set: null, why: 'no level set with set_id "held-1" is held' });
+        expect(levelSetCache.ids()).toEqual(['held-2', 'held-3', 'held-4', 'door-a']);
+        expect(byRole(panel.getRootElement(), 'note').textContent).toMatch(/let go of held-1\)$/);
+        // the SAME set handed again moves it to the newest end and evicts nothing
+        handOverSets(panel, RULES_WITH_SETS(REF(doc)), [doc]);
+        expect(panel.lastLevelSetHandover.evicted).toEqual([]);
+        levelSetCache.clear();
+    });
+
+    it('⛔ a non-array `levelSets` is the protocol\'s refusal: nothing forwarded, nothing held, said on the panel', () => {
+        levelSetCache.clear();
+        const panel = mountPanel('seedling');
+        const seen = watchForward();
+        const doc = SET('set-a');
+        handOverSets(panel, RULES_WITH_SETS(REF(doc)), doc);
+        expect(seen).toEqual([]);
+        expect(levelSetCache.size).toBe(0);
+        expect(byRole(panel.getRootElement(), 'note').textContent).toMatch(/levelSets must be an array/);
     });
 });
 
