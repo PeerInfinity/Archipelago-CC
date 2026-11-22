@@ -163,7 +163,7 @@ export const TRACKER_REGION_MAP = Object.freeze({
                 {
                     step: {
                         id: 'centre-graph',
-                        text: `Choose the level **${CENTRE_REGION}**, then look at the **Region Graph**: it has centred on that region.`,
+                        text: `Choose the level **${CENTRE_REGION}**, then open the **Region Graph** tab: it is centred on that region. (A Graph that shares the Map's column centres when you bring its tab forward.)`,
                         actions: [
                             { activate: GRAPH },
                             { fill: { ...map('input.region-map-pick-region'), value: CENTRE_REGION } },
@@ -171,7 +171,8 @@ export const TRACKER_REGION_MAP = Object.freeze({
                         ],
                         done: (ctx) => {
                             const root = ctx.query({ ...GRAPH, selector: '.region-graph-panel-container' });
-                            return ctx.sinceStep(root?.dataset.centredAt) && root.dataset.centredOn === CENTRE_REGION;
+                            // The readout is written when the camera moves: a Graph whose tab was hidden centres when shown.
+                            return ctx.isPanelShowing(GRAPH) && ctx.sinceStep(root?.dataset.centredAt) && root.dataset.centredOn === CENTRE_REGION;
                         },
                     },
                 },

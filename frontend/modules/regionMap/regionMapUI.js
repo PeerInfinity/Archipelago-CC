@@ -81,6 +81,7 @@ export class RegionMapUI {
         // ⛓ CA-S3: what a click runs (`moduleSettings.regionMap.clickActions`); the defaults until the load lands.
         this.clickActions = defaultClickActions();
         this._statusTimer = null;
+        this._pendingCentre = null;
         this._anim = null;
         this._paintHandle = null;
         this._disposed = false;
@@ -398,6 +399,8 @@ export class RegionMapUI {
         this._lastCurrent = undefined;
         this.selected = null;
         this._reframe();
+        // ⛓ G4: a pending centre on a region the new map does not draw is dropped.
+        if (this._pendingCentre && !this._frameFor(this._pendingCentre)) this._pendingCentre = null;
         this.view?.refresh();
     }
 
@@ -472,6 +475,12 @@ export class RegionMapUI {
         this.canvas.width = Math.round(w * dpr);
         this.canvas.height = Math.round(h * dpr);
         this._placeCamera();
+        // ⛓ G4: a centre asked for while the panel was hidden, now that it has a size.
+        if (this._pendingCentre && w >= 2 && h >= 2) {
+            const name = this._pendingCentre;
+            this._pendingCentre = null;
+            this.centreOnRegion(name);
+        }
         this._requestPaint();
     }
 
@@ -525,18 +534,30 @@ export class RegionMapUI {
      */
     centreOnRegion(name) {
         if (!this.model || this._disposed) return false;
-        let f = this.frames.get(name) ?? null;
-        if (!f) {
-            const view = this.view?.get();
-            for (const [key, frame] of this.frames) {
-                const members = view?.displayGroups?.get(key)?.members ?? this.model?.cells.get(key)?.members ?? [];
-                if (members.includes(name)) { f = frame; break; }
-            }
-        }
+        const f = this._frameFor(name);
         if (!f) return false;
         this._manualCamera();
+        // ⛓ G4 (region-map tutorial): a HIDDEN panel (its tab not the active one) has a 0×0 viewport, and a camera
+        // focused on it gets zoom 0. Keep the name (the last wins); `_resize` centres on it once the viewport has a size.
+        if (this.vp.w < 2 || this.vp.h < 2) {
+            this._pendingCentre = name;
+            return true;
+        }
+        this._pendingCentre = null;
         this._animateTo(this._focusCamera(f));
         return true;
+    }
+
+    /** The frame that draws region `name`: its own cell, else the display group or cell it is a member of; or null. */
+    _frameFor(name) {
+        const own = this.frames.get(name);
+        if (own) return own;
+        const view = this.view?.get();
+        for (const [key, frame] of this.frames) {
+            const members = view?.displayGroups?.get(key)?.members ?? this.model?.cells.get(key)?.members ?? [];
+            if (members.includes(name)) return frame;
+        }
+        return null;
     }
 
     centreOnStart() {
