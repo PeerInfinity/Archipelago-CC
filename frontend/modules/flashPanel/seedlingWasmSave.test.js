@@ -391,3 +391,76 @@ describe('RE3 (i) — the panel gates the wasm save on the build\'s CAPABILITY (
         expect(panel._wasmSaveCapable()).toBe(false);
     });
 });
+
+describe('RE3 (i) — js-22 asks 1–2: a save fault never blocks the rooms, and never overwrites what it failed to restore', () => {
+    const loadWith = (hooks, order = []) => {
+        const delivery = {
+            attachBot() { return this; },
+            deliver() { order.push('deliver'); return { ok: true, chunks: 1, why: null }; },
+        };
+        const glue = { setDelivery() { return glue; }, setCheckBinding() { return glue; }, binding: null };
+        const logs = [];
+        return runSeedlingRandomizerLoad({
+            loaded: { tileSize: 16, set: { rooms: [1], start: { level: 0 } }, delivery, checkBinding: {} },
+            glue, overlay: { show() {}, hide() {}, setText() {}, remove() {} },
+            teleport: () => {}, bot: (n) => (n === 'botStatus' ? '{"level":0}' : '{"mobiles":[{"cls":"Player","x":88,"y":136}]}'),
+            waitFrame: async () => {}, sleep: async () => {},
+            now: (() => { let t = 0; return () => { t += 10; return t; }; })(),
+            log: (m) => logs.push(m),
+            ...hooks,
+        }).then((r) => ({ r, order, logs }));
+    };
+
+    it('beforeDeliver THROWS: recorded as save-reload {error}, logged by name, and the rooms are STILL delivered', async () => {
+        const { r, order, logs } = await loadWith({ beforeDeliver: () => { throw new Error('boom'); } });
+        expect(order).toEqual(['deliver']);
+        expect(r.ok).toBe(true);
+        expect(r.steps.find((s) => s.name === 'save-reload').detail).toEqual({ error: 'boom' });
+        expect(logs.some((l) => /the save's reload threw — boom/.test(l))).toBe(true);
+    });
+
+    it('afterDeliver THROWS: recorded as save-arm {error}, and the load goes on', async () => {
+        const { r } = await loadWith({ afterDeliver: () => { throw new Error('arm boom'); } });
+        expect(r.ok).toBe(true);
+        expect(r.steps.find((s) => s.name === 'save-arm').detail).toEqual({ error: 'arm boom' });
+        expect(r.steps.map((s) => s.name)).toContain('reset-end');
+    });
+
+    for (const [why, store, breakIt] of [
+        ['the reload answers 0', stored([1, 2]), (M) => { M[`_${WASM_SO_RELOAD}`] = () => 0; }],
+        ['the reload throws', stored([1, 2]), (M) => { M[`_${WASM_SO_RELOAD}`] = () => { throw new Error('decode'); }; }],
+        ['the entry is not JSON', '{nope', () => {}],
+        ['the entry has another version', JSON.stringify({ v: 99, objects: {} }), () => {}],
+    ]) {
+        it(`a stored save that was NOT restored (${why}): this load does not arm, and the stored bytes are left alone`, () => {
+            const storage = memStorage({ [wasmSaveKey('room A')]: store });
+            const timers = manualTimers();
+            const logs = [];
+            const ctl = createWasmSaveController({ storage, timers, log: (m) => logs.push(m) });
+            const Module = fakeModule();
+            breakIt(Module);
+            ctl.install(Module);
+            Module.getLocal();
+            ctl.prepareLoad({ on: true, roomKey: 'room A' });
+            ctl.beforeDeliver();
+            expect(ctl.afterDeliver()).toBe(false);
+            Module.play([9, 9]);
+            ctl.noteChange();
+            timers.runTimeouts();
+            timers.tickInterval();
+            ctl.flushNow();
+            ctl.dispose();
+            expect(ctl.armed).toBe(false);
+            expect(storage.map.get(wasmSaveKey('room A'))).toBe(store);
+            expect(storage.calls.filter(([op]) => op === 'set')).toEqual([]);
+            expect(logs.some((l) => /was NOT restored, so nothing is written over it/.test(l))).toBe(true);
+        });
+    }
+
+    it('NO stored save (null): the load arms as before', () => {
+        const { ctl } = setup();
+        expect(ctl.beforeDeliver()).toEqual({ reloaded: 0, tried: 0 });
+        expect(ctl.afterDeliver()).toBe(true);
+        expect(ctl.armed).toBe(true);
+    });
+});

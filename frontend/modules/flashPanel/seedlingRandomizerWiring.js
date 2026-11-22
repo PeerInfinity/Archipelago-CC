@@ -644,11 +644,22 @@ async function runSeedlingRandomizerLoadSteps({
     // ⛔ NO `await` FROM HERE TO `deliver()`: the settle's answer holds only in the turn it was read.
     // ⛓ RE3 (i) — and the wasm save's restore point (`seedlingWasmSave.js`): `beforeDeliver` is SYNC and runs in this
     // same turn, so the save it reloads into `SAVE_FILE.data` is the one the AP LevelSet's `reconcileSave` reads.
-    if (typeof beforeDeliver === 'function') step('save-reload', beforeDeliver());
+    // ⛔ A SAVE FAULT NEVER BLOCKS THE ROOMS: a throw is recorded and logged by name, and deliver() still runs.
+    if (typeof beforeDeliver === 'function') {
+        try { step('save-reload', beforeDeliver()); } catch (err) {
+            step('save-reload', { error: err?.message ?? String(err) });
+            log(`[ap placement] the save's reload threw — ${err?.message ?? err}; the rooms are delivered without it`, 'error');
+        }
+    }
     const result = loaded.delivery.deliver();
     step('deliver-end', { ok: result.ok, chunks: result.chunks, why: result.why });
     // ⛓ RE3 (i) — the AP set is mounted: only now may the wasm save be written (before, the save is the boot one).
-    if (result.ok && typeof afterDeliver === 'function') afterDeliver();
+    if (result.ok && typeof afterDeliver === 'function') {
+        try { afterDeliver(); } catch (err) {
+            step('save-arm', { error: err?.message ?? String(err) });
+            log(`[ap placement] arming the save threw — ${err?.message ?? err}; nothing is written this load`, 'error');
+        }
+    }
     if (!result.ok) {
         // ⛓ ER E5 — a shuffled world on the vanilla rooms is the wrong world, and the overlay (sticky) says so.
         const shuffledWorld = (loaded.entrances?.retargeted ?? 0) > 0;

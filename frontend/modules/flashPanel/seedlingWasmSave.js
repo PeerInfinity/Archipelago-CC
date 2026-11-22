@@ -110,6 +110,8 @@ export function createWasmSaveController({
     let on = false;
     let armed = false;
     let delivered = false;
+    // ⛔ a stored save that EXISTS and was not restored is never overwritten: this load does not arm (js-22 ask 2)
+    let restoreOk = true;
     let reloadAnswer = null; // {<runtime key>: base64} while a reload asks; null = "nothing" (boot)
     let objects = {};
     let lastWritten = null;
@@ -201,6 +203,7 @@ export function createWasmSaveController({
             on = isOn === true && supported && key !== null;
             objects = {};
             lastWritten = null;
+            restoreOk = true;
             if (!supported) return;
             if (isOn !== true) {
                 log('[wasm save] the save is off (Settings: "Use the save"): this room\'s save is neither read nor written');
@@ -213,13 +216,15 @@ export function createWasmSaveController({
                 objects = { ...save.objects };
                 lastWritten = raw;
             }
+            // a stored entry (readable or not) must be restored before anything is written over it
+            if (raw !== null) restoreOk = false;
         },
         /** SYNC, in the delivery's turn. Returns {reloaded: number, tried: number}. */
         beforeDeliver() {
             const result = { reloaded: 0, tried: 0 };
             if (!on || !supported) return result;
             const keys = Object.keys(objects);
-            if (keys.length === 0) return result;
+            if (keys.length === 0) return result; // nothing to restore (an unreadable entry stays unrestored)
             reloadAnswer = objects;
             try {
                 for (const rtKey of keys) {
@@ -233,14 +238,23 @@ export function createWasmSaveController({
             } finally {
                 reloadAnswer = null;
             }
+            restoreOk = result.tried > 0 && result.reloaded === result.tried;
             log(result.reloaded > 0 ? `[wasm save] restored this room's save (${key})`
                 : `[wasm save] this room's save (${key}) was NOT restored (the runtime took none of it)`,
             result.reloaded > 0 ? undefined : 'error');
             return result;
         },
+        /** Returns whether writes were armed (false: off, or a stored save that was not restored). */
         afterDeliver() {
             delivered = true;
-            if (on) arm();
+            if (!on) return false;
+            if (!restoreOk) {
+                log(`[wasm save] this room's stored save (${key}) was NOT restored, so nothing is written over it this `
+                    + 'load (it is left exactly as stored)', 'error');
+                return false;
+            }
+            arm();
+            return true;
         },
         noteChange() {
             if (!armed || !on || debounce !== null) return;
