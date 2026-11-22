@@ -336,16 +336,20 @@ export async function testControlButtons(testController) {
 export async function testNodeSelection(testController) {
   // A real pointer tap on a region node — mousedown + mouseup at its rendered
   // position, which Cytoscape turns into 'tap' — publishes
-  // regionGraph:nodeSelected { nodeId, data } and marks the node selected.
+  // regionView:regionClicked { panelId: 'regionGraph', regionName } and marks
+  // the node selected (CA-S5: regionGraph:nodeSelected, which this row heard
+  // before, is retired; the row checks it stays silent).
   // The only row through the canvas → tap → handler wiring (the picker calls
   // the handler directly). The tap also runs the panel's "On click"
   // actions (it may move the player), so the world loaded before is reloaded.
   const ctx = buildContext({ eventBus: testController.eventBus });
   const before = ctx.rulesSource();
-  let nodeSelectedEvent = null;
-  const unsubscribe = testController.eventBus.subscribe('regionGraph:nodeSelected', (data) => {
-    nodeSelectedEvent = data;
+  let clickedEvent = null;
+  const unsubscribe = testController.eventBus.subscribe('regionView:regionClicked', (data) => {
+    if (data?.panelId === 'regionGraph') clickedEvent = data;
   }, 'tests');
+  const retired = [];
+  const unsubscribeRetired = testController.eventBus.subscribe('regionGraph:nodeSelected', (data) => retired.push(data), 'tests');
   try {
     testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
     const built = await testController.pollForCondition(graphShowsWorld, 'the graph shows the current world', MAX_WAIT_TIME, 100);
@@ -367,15 +371,16 @@ export async function testNodeSelection(testController) {
     testController.reportCondition('the node is on screen inside the graph', !!top && container.contains(top));
     top.dispatchEvent(new MouseEvent('mousedown', { ...at, buttons: 1 }));
     top.dispatchEvent(new MouseEvent('mouseup', { ...at, buttons: 0 }));
-    const published = await testController.pollForCondition(() => nodeSelectedEvent?.nodeId === target.id(),
-      `regionGraph:nodeSelected for ${target.id()}`, 3000, 50);
-    testController.reportCondition(`tapping "${target.id()}" publishes regionGraph:nodeSelected for it`, published);
-    testController.reportCondition('the event carries the node data', nodeSelectedEvent?.data?.id === target.id());
+    const published = await testController.pollForCondition(() => clickedEvent?.regionName === target.id(),
+      `regionView:regionClicked for ${target.id()}`, 3000, 50);
+    testController.reportCondition(`tapping "${target.id()}" publishes regionView:regionClicked { panelId: 'regionGraph', regionName } for it`, published);
     testController.reportCondition('the tapped node is marked selected', cy.getElementById(target.id()).hasClass('selected'));
+    testController.reportCondition('no regionGraph:nodeSelected (retired in CA-S5)', retired.length === 0);
   } catch (error) {
     testController.reportCondition(`Node selection test error-free: ${error.message}`, false);
   } finally {
     unsubscribe?.();
+    unsubscribeRetired?.();
     await restoreWorld(testController, ctx, before, { always: true });
     ctx.dispose();
   }
@@ -384,7 +389,7 @@ export async function testNodeSelection(testController) {
 
 /**
  * The "Go to" picker (nodePicker.js): choosing a region does what tapping its
- * node does (regionGraph:nodeSelected for that node), and choosing a location
+ * node does (regionView:regionClicked from the Region Graph for that node), and choosing a location
  * checks it as a location-node tap does. The section starts folded. Reloads
  * the world loaded before, since the picks move the player and check a location.
  */
@@ -392,7 +397,9 @@ export async function testRegionGraphNodePicker(testController) {
   const ctx = buildContext({ eventBus: testController.eventBus });
   const before = ctx.rulesSource();
   let selected = null;
-  const unsubscribe = testController.eventBus.subscribe('regionGraph:nodeSelected', (data) => { selected = data; }, 'tests');
+  const unsubscribe = testController.eventBus.subscribe('regionView:regionClicked', (data) => {
+    if (data?.panelId === 'regionGraph') selected = data;
+  }, 'tests');
   try {
     testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
     // The controls (and the picker in them) are built once the panel's four
@@ -429,8 +436,8 @@ export async function testRegionGraphNodePicker(testController) {
 
     const region = listOf(PICKER.region).options[0].value;
     pick(PICKER.region, region);
-    const sawRegion = await testController.pollForCondition(() => selected?.nodeId === region,
-      `regionGraph:nodeSelected for ${region}`, 3000, 50);
+    const sawRegion = await testController.pollForCondition(() => selected?.regionName === region,
+      `regionView:regionClicked for ${region}`, 3000, 50);
     testController.reportCondition(`picking region "${region}" selects its node, as a tap does`, sawRegion);
     testController.reportCondition('the status names the region', status().includes(region));
 
@@ -618,7 +625,7 @@ export async function testRegionGraphClickDefault(testController) {
     if (!target) throw new Error(`no reachable region one exit from the path end (${await pathEnd()})`);
     const region = target.id();
     // Recorded from here: the row's own panel activation (the setup) is not the click's.
-    rec = recordEvents(testController, ['regionGraph:nodeSelected', 'ui:activatePanel', 'ui:navigateToRegion']);
+    rec = recordEvents(testController, ['regionGraph:nodeSelected', 'regionView:regionClicked', 'ui:activatePanel', 'ui:navigateToRegion']);
     target.emit('tap');
     const extended = await testController.pollForCondition(async () => (await pathEnd()) === region,
       `the path ends at ${region}`, 5000, 50);
@@ -628,8 +635,9 @@ export async function testRegionGraphClickDefault(testController) {
     testController.reportCondition('… and opens the Regions panel at it (ui:activatePanel regionsPanel, then ui:navigateToRegion)',
       opened && rec.seen.some(([n, d]) => n === 'ui:activatePanel' && d?.panelId === 'regionsPanel'));
     const order = rec.seen.map(([n]) => n);
-    testController.reportCondition(`regionGraph:nodeSelected is published first (${order.join(', ')})`,
-      order[0] === 'regionGraph:nodeSelected' && rec.seen[0][1]?.nodeId === region);
+    testController.reportCondition(`regionView:regionClicked { panelId: 'regionGraph', regionName } is published first (${order.join(', ')})`,
+      order[0] === 'regionView:regionClicked' && rec.seen[0][1]?.panelId === 'regionGraph' && rec.seen[0][1]?.regionName === region);
+    testController.reportCondition('no regionGraph:nodeSelected (retired in CA-S5)', !order.includes('regionGraph:nodeSelected'));
   } catch (error) {
     testController.reportCondition(`default click test error-free: ${error.message}`, false);
   } finally {
@@ -643,7 +651,8 @@ export async function testRegionGraphClickDefault(testController) {
 
 /**
  * The ⏸ MASTER SWITCH off (CA-S2): a tap moves nobody, edits no path, opens no Regions panel — but
- * `regionGraph:nodeSelected` is still published (it stays outside the click actions until S5). Sets its own state.
+ * `regionView:regionClicked` is still published (it reports the click, not what the click ran). Until CA-S5 retired it,
+ * this row waited on `regionGraph:nodeSelected`; it now checks that stays silent. Sets its own state.
  */
 export async function testRegionGraphClickMasterOff(testController) {
   const ctx = buildContext({ eventBus: testController.eventBus });
@@ -666,11 +675,14 @@ export async function testRegionGraphClickMasterOff(testController) {
     const { getGameStateSingleton } = await import('../../gameState/singleton.js');
     const pathBefore = JSON.stringify(getGameStateSingleton().getPath?.() ?? []);
     // Recorded from here: the row's own panel activation (the setup) is not the click's.
-    rec = recordEvents(testController, ['regionGraph:nodeSelected', 'ui:activatePanel', 'ui:navigateToRegion']);
+    rec = recordEvents(testController, ['regionGraph:nodeSelected', 'regionView:regionClicked', 'ui:activatePanel', 'ui:navigateToRegion']);
     target.emit('tap');
     const selected = await testController.pollForCondition(
-      () => rec.seen.some(([n, d]) => n === 'regionGraph:nodeSelected' && d?.nodeId === region), 'regionGraph:nodeSelected', 3000, 50);
-    testController.reportCondition(`master off: regionGraph:nodeSelected is still published for "${region}"`, selected);
+      () => rec.seen.some(([n, d]) => n === 'regionView:regionClicked' && d?.panelId === 'regionGraph' && d?.regionName === region),
+      'regionView:regionClicked', 3000, 50);
+    testController.reportCondition(`master off: regionView:regionClicked is still published for "${region}"`, selected);
+    testController.reportCondition('master off: no regionGraph:nodeSelected (retired in CA-S5)',
+      !rec.seen.some(([n]) => n === 'regionGraph:nodeSelected'));
     await new Promise((r) => setTimeout(r, 750)); // what a click would do, it would have done by now
     changed = !((await pathEnd()) === endBefore && JSON.stringify(getGameStateSingleton().getPath?.() ?? []) === pathBefore);
     testController.reportCondition(`master off: no move, no path edit (the path still ends at ${await pathEnd()})`, !changed);
@@ -890,7 +902,7 @@ registerTest({
   category: 'Region Graph',
   testFunction: testNodeSelection,
   //enabled: true,
-  description: 'A pointer tap (mousedown + mouseup) on a region node publishes regionGraph:nodeSelected { nodeId, data } and marks it selected'
+  description: 'A pointer tap (mousedown + mouseup) on a region node publishes regionView:regionClicked { panelId: \'regionGraph\', regionName } and marks it selected; no regionGraph:nodeSelected (retired)'
 });
 
 registerTest({
@@ -917,16 +929,16 @@ registerTest({
   category: 'Region Graph',
   testFunction: testRegionGraphClickDefault,
   enabled: false, // runs where a roster enrols it (the substrates config)
-  description: 'CA-S2: with the default click actions, a tap on an accessible region extends the path to it and opens the Regions panel at it; regionGraph:nodeSelected comes first'
+  description: 'CA-S2: with the default click actions, a tap on an accessible region extends the path to it and opens the Regions panel at it; regionView:regionClicked comes first'
 });
 
 registerTest({
   id: 'test_region_graph_click_master_off',
-  name: 'Region Graph: the ⏸ master switch off — no action, nodeSelected still published',
+  name: 'Region Graph: the ⏸ master switch off — no action, the click event still published',
   category: 'Region Graph',
   testFunction: testRegionGraphClickMasterOff,
   enabled: false, // runs where a roster enrols it (the substrates config)
-  description: 'CA-S2: with clickActions.enabled false, a tap moves nobody, edits no path and opens no Regions panel, but still publishes regionGraph:nodeSelected'
+  description: 'CA-S2: with clickActions.enabled false, a tap moves nobody, edits no path and opens no Regions panel, but still publishes regionView:regionClicked'
 });
 
 registerTest({

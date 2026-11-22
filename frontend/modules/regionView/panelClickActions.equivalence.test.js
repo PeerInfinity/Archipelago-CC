@@ -33,6 +33,12 @@
  *   I. the interleaving of independent listeners: apcalc / vibeCodingSim now hear the generic event, published before
  *      the actions, so they run before `discovery.discover`; the base ran Discovery first (both on one event). Each
  *      channel's own order is still compared.
+ *   S. (CA-S5) the `select` channel is RETIRED: the tip publishes no `regionGraph:nodeSelected` / `regionMap:nodeSelected`.
+ *      The BASE side's handlers are the tip's, so since CA-S5 the base side re-publishes the base's selection event
+ *      itself (`baseSelect`: `{ nodeId, data }`, on the base bus, immediately before the handler, which is where the
+ *      base's handler published it: before its generic event and its actions), and the base's listeners hear it as
+ *      before. Each region click's ONE base `select` entry is removed before the comparisons and counted (`tally.S`);
+ *      the tip's `select` channel must be empty. KEPT for its Flash / Discovery / apcalc / vibeCodingSim pins.
  */
 import { describe, it, expect, vi, afterAll } from 'vitest';
 import fs from 'node:fs';
@@ -192,7 +198,7 @@ function mapClick(target, settings, bundle, ui) {
     const h = withClickHandles({ ...ui.navigationManager._handles({ id: 'regionMap', publish: (n, d) => rec.onDispatch('map', n, d) }),
         eventBus: rec.bus });
     const discovery = { active: !!bundle.enableDiscoveryMode, settings: { ...bundle } };
-    if (target === 'region') runRegionMapClick(h, 'region', { regionName: 'Field', data: { id: 'Field' } }, settings, discovery);
+    if (target === 'region') runRegionMapClick(h, 'region', { regionName: 'Field' }, settings, discovery);
     else runRegionMapClick(h, 'location', { regionName: 'Field', locationName: 'chest' }, settings, discovery);
 }
 
@@ -203,6 +209,20 @@ const CLICKS = {
     'map region Field': (s, b) => mapClick('region', s.map, b, graphUi(s.graph, b)),
     'map location chest': (s, b) => mapClick('location', s.map, b, graphUi(s.graph, b)),
 };
+
+/**
+ * S (CA-S5): the base's selection publish, which the tip's handlers no longer make. The base's Region Graph published
+ * `regionGraph:nodeSelected` { nodeId, data: node.data() } first in a region click; its Region Map published
+ * `regionMap:nodeSelected` { nodeId, data } (its `clickAt` data; `{ id }` here, as this test clicks) first likewise.
+ */
+function baseSelect(click) {
+    if (click.startsWith('graph region ')) {
+        const id = click.slice('graph region '.length);
+        busBase.publish('regionGraph:nodeSelected', { nodeId: id, data: { id } });
+    } else if (click === 'map region Field') {
+        busBase.publish('regionMap:nodeSelected', { nodeId: 'Field', data: { id: 'Field' } });
+    }
+}
 
 /* ── the configs ──────────────────────────────────────────────────────── */
 const PRESETS = ['depgraph', 'vibecoding', 'apcalc', 'check-all-from-graph', 'metamath', 'textadventure'];
@@ -240,6 +260,7 @@ function run(side, click, cfg, bundle, boxAtClick, boxAtSeed) {
     tipFlash.teleportOnClickCheckbox.checked = boxAtClick;
     rec.log = [];
     rec.showAll = true;
+    if (side === 'base') baseSelect(click);
     CLICKS[click](settings, bundle);
     const log = rec.log.map(({ ch, name, args }) => ({ ch, name, args: JSON.parse(JSON.stringify(args)) }));
     return { log: log.filter((e) => e.ch !== 'generic'), generic: log.filter((e) => e.ch === 'generic'), settings };
@@ -249,7 +270,7 @@ const key = (e) => JSON.stringify(e);
 const byCh = (log, ch) => log.filter((e) => e.ch === ch).map(key);
 const CHANNELS = ['play', 'regions', 'select', 'discover', 'apcalc', 'vibe', 'flash'];
 
-const tally = { rows: 0, equal: 0, G: 0, F: 0, Fdetail: {}, I: 0, other: [] };
+const tally = { rows: 0, equal: 0, G: 0, F: 0, Fdetail: {}, I: 0, S: 0, other: [] };
 
 describe('CA-S4 equivalence: base d358d50e02 vs tip, Region Graph and Region Map clicks', () => {
     for (const [bName, bundle] of Object.entries(BUNDLES)) {
@@ -260,9 +281,15 @@ describe('CA-S4 equivalence: base d358d50e02 vs tip, Region Graph and Region Map
                     for (const boxAtSeed of [false, true]) {
                         for (const boxAtClick of [false, true]) {
                             const row = `${bName}/${cName}/${click}/seed:${boxAtSeed}/box:${boxAtClick}`;
-                            const b = run('base', click, cfg, bundle, boxAtClick, boxAtSeed);
+                            const bAll = run('base', click, cfg, bundle, boxAtClick, boxAtSeed);
                             const t = run('tip', click, cfg, bundle, boxAtClick, boxAtSeed);
                             tally.rows++;
+                            // S (CA-S5): the retired select publish — one per region click at base, none at the tip.
+                            const bSel = byCh(bAll.log, 'select');
+                            expect(bSel, `${row} [base select]`).toHaveLength(click.includes(' region ') ? 1 : 0);
+                            expect(byCh(t.log, 'select'), `${row} [tip select, retired]`).toEqual([]);
+                            tally.S += bSel.length;
+                            const b = { ...bAll, log: bAll.log.filter((e) => e.ch !== 'select') };
                             // G: the generic event. The Region Map published it at base already (CA-S3): equal. The
                             // Region Graph's handlers at base are the tip's WITHOUT its two generic publishes (the
                             // file's whole diff, pinned below), so the base side drops that one publish: the tip's
@@ -310,12 +337,16 @@ describe('CA-S4 equivalence: base d358d50e02 vs tip, Region Graph and Region Map
         const src = fs.readFileSync(new URL('../regionGraph/graphInteractionManager.js', import.meta.url), 'utf8');
         expect(src.match(/this\.eventBus\.publish\((REGION|LOCATION)_CLICKED/g)).toEqual(['this.eventBus.publish(LOCATION_CLICKED',
             'this.eventBus.publish(REGION_CLICKED']);
+        // CA-S5: and by the retired selection publish, which `baseSelect` re-makes on the base side.
+        expect(src).not.toMatch(/publishNodeSelected|NODE_SELECTED/);
     });
 
     it('the tally (the report\'s table)', () => {
         console.log('CA-S4 EQUIVALENCE', JSON.stringify(tally, null, 1));
         expect(tally.rows).toBe(3 * 7 * 5 * 2 * 2);
         expect(tally.other).toEqual([]);
+        // S: one per region click (Graph "Field", Graph "C", Map "Field") per bundle × config × box × seed.
+        expect(tally.S).toBe(3 * 7 * 3 * 2 * 2);
     });
 });
 

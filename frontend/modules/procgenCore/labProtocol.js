@@ -123,6 +123,17 @@ export const LAB_PAYLOAD_FIELDS = Object.freeze({
     [LAB_EVENTS.openInApworldEditor]: Object.freeze([...ADDRESS_FIELDS, 'rules', 'source']),
 });
 
+/**
+ * ⛓ lab-apworld-door-map — **THE ONE OPTIONAL FIELD, AND WHY IT IS ONE.** Every field above is REQUIRED (a default
+ * would be this file's value under the sender's name). `openInApworldEditor.atlases` is the exception on purpose: a
+ * payload WITHOUT it is exactly what every page sent before this slice, and its meaning is unambiguous — "no atlas to
+ * give", which the host treats as `[]` and forwards the rules as it always did. A frame from an older build therefore
+ * still opens its document; it only gets the generic map it always got. ⛔ PRESENT IS CHECKED like a required field.
+ */
+export const LAB_OPTIONAL_PAYLOAD_FIELDS = Object.freeze({
+    [LAB_EVENTS.openInApworldEditor]: Object.freeze(['atlases']),
+});
+
 /* ══════════════════════════════════════════════════════════════════════
  * THE SHARED REFUSALS
  * ══════════════════════════════════════════════════════════════════════ */
@@ -148,10 +159,11 @@ function assertFields(event, payload) {
                 + 'sender\'s name, and the receiver has no way to tell the two apart.');
         }
     }
+    const optional = LAB_OPTIONAL_PAYLOAD_FIELDS[event] ?? [];
     for (const key of Object.keys(payload)) {
-        if (!fields.includes(key)) {
+        if (!fields.includes(key) && !optional.includes(key)) {
             fail(`labProtocol: ${event} carries an unexpected field "${key}" (allowed: `
-                + `[${fields.join(', ')}]). An extra field is what a MISSPELLED one looks `
+                + `[${[...fields, ...optional].join(', ')}]). An extra field is what a MISSPELLED one looks `
                 + 'like on this boundary, and a receiver that ignored it would report only '
                 + 'the missing half.');
         }
@@ -324,7 +336,67 @@ export function assertOpenInApworldEditor(payload) {
             + 'hub files this document under, and an empty one is a document with no story '
             + 'about where it came from.');
     }
+    /**
+     * ⛓ lab-apworld-door-map — `atlases`: the region atlas(es) the page compiled `rules` FROM, so the host can put
+     * them in its `atlasCache` (the rules name an atlas by `region_atlas[p].atlas_id` and carry no body). Absent
+     * means `[]` (see `LAB_OPTIONAL_PAYLOAD_FIELDS`). ⛔ The FIELD's type is checked here and a wrong one refuses the
+     * whole payload, like every other field; ONE bad atlas inside a good array is the host's per-atlas refusal
+     * (`labAtlasRefusal`), which refuses that atlas and still forwards the rules.
+     */
+    if (Object.prototype.hasOwnProperty.call(payload, 'atlases') && !Array.isArray(payload.atlases)) {
+        fail(`labProtocol: ${e}.atlases must be an array of region atlases — got `
+            + `${summarizeValue(payload.atlases)}. Send [] (or leave it out) when the page has none.`);
+    }
     return payload;
+}
+
+/**
+ * A NON-THROWING one-line summary of a value for a refusal sentence. ⛔ `JSON.stringify` throws on a BigInt or a
+ * cyclic value, and a structured-cloned postMessage payload can carry either — so a refusal built on it would throw
+ * instead of refusing by name.
+ */
+export function summarizeValue(v, max = 80) {
+    if (v === null || v === undefined) return String(v);
+    if (Array.isArray(v)) return `an array of ${v.length}`;
+    if (typeof v === 'object') {
+        return typeof v.atlas_id === 'string' ? `an object with atlas_id ${JSON.stringify(v.atlas_id.slice(0, max))}`
+            : `an object with keys [${Object.keys(v).slice(0, 6).join(', ')}]`;
+    }
+    if (typeof v === 'string') return JSON.stringify(v.slice(0, max));
+    return `${typeof v} ${String(v).slice(0, max)}`;
+}
+
+/** The atlas ids `rules` names, one per player that names one, in player order (EVERY player, never the first). */
+export function atlasIdsNamedBy(rules) {
+    const out = [];
+    for (const ref of Object.values(rules?.region_atlas ?? {})) {
+        const id = ref?.atlas_id;
+        if (typeof id === 'string' && id !== '' && !out.includes(id)) out.push(id);
+    }
+    return out;
+}
+
+/**
+ * ⛓ lab-apworld-door-map — **WHY ONE HANDED-OVER ATLAS IS REFUSED, OR `null`.** Game-neutral and pure. An atlas is
+ * refused when it is not an object with a non-empty `atlas_id`, or when NO player of the rules handed over beside it
+ * names that id (`region_atlas[p].atlas_id`, every player checked): an atlas the rules do not name is one the Region
+ * Map would never read, and putting it would only shadow whatever else the host holds under that id. ⛓ The SHAPE
+ * test the bundle door applies to its `region-atlas` member (`documentBundle.classifyDocument`) is the host's to add;
+ * this file imports nothing.
+ *
+ * @returns {string|null}
+ */
+export function labAtlasRefusal(atlas, rules) {
+    if (!atlas || typeof atlas !== 'object' || Array.isArray(atlas)
+        || typeof atlas.atlas_id !== 'string' || atlas.atlas_id === '') {
+        return `not a region atlas (no non-empty atlas_id): ${summarizeValue(atlas)}`;
+    }
+    const named = atlasIdsNamedBy(rules);
+    if (!named.includes(atlas.atlas_id)) {
+        return `atlas ${JSON.stringify(atlas.atlas_id)} is not the one the rules name `
+            + `(region_atlas names ${named.length ? named.map((n) => JSON.stringify(n)).join(', ') : 'none'})`;
+    }
+    return null;
 }
 
 /**

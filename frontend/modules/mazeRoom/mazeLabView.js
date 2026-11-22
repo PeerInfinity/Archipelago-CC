@@ -2664,8 +2664,8 @@ export function main() {
              */
             apworldEditor: {
                 available: () => bridge?.connected === true,
-                open: (rules) => bridge?.openInApworldEditor(rules,
-                    heldWorld ? 'the maze lab (WORLD arm)' : 'the maze lab (SET arm)') === true,
+                open: (rules, atlases = []) => bridge?.openInApworldEditor(rules,
+                    heldWorld ? 'the maze lab (WORLD arm)' : 'the maze lab (SET arm)', atlases) === true,
             },
             compileRegionAtlas,
             validateRegionAtlas,

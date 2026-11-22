@@ -86,6 +86,7 @@ let LAB_EVENTS;
 let PAGE_TO_HOST;
 let moduleIndex;
 let eventBus;
+let atlasCache;
 
 beforeEach(async () => {
     globalThis.document = {
@@ -109,6 +110,7 @@ beforeEach(async () => {
         ProcgenLabPanelUI, LAB_PAGES, nextLabIframeId, standaloneUrlFrom,
     } = await import('./procgenLabPanelUI.js'));
     ({ LAB_EVENTS, PAGE_TO_HOST } = await import('../procgenCore/labProtocol.js'));
+    ({ atlasCache } = await import('../procgenCore/atlasCache.js'));
     moduleIndex = await import('./index.js');
 });
 
@@ -476,6 +478,115 @@ describe('procgenLabPanel — a page\'s "open in the APWorld editor"', () => {
         const note = byRole(panel.getRootElement(), 'note');
         expect(note.textContent).toMatch(/non-empty string/);
         expect(note.className).toMatch(/bad/);
+    });
+
+    /* ── ⛓⛓ lab-apworld-door-map — the atlas the rules name, filed in the host atlasCache ── */
+
+    const ATLAS = (id, regions = [{ region_id: 'r1' }]) => ({ atlas_id: id, regions });
+    const RULES_NAMING = (...ids) => ({
+        game_name: 'Lab Set', regions: { 1: {} },
+        region_atlas: Object.fromEntries(ids.map((id, i) => [String(i + 1), { atlas_id: id, game: 'g' }])),
+    });
+    const handOver = (panel, rules, atlases) => publishAs(LAB_EVENTS.openInApworldEditor, {
+        substrate: panel.substrate, iframeId: panel.iframeId,
+        rules, source: 'the Seedling watch page (SET arm)', ...(atlases === undefined ? {} : { atlases }),
+    }, `iframe_${panel.iframeId}`);
+    /** What the cache held for `id` at the moment `apworldEditor:loadRules` went out. */
+    const heldAtForward = (id) => {
+        const at = [];
+        eventBus.subscribe('apworldEditor:loadRules', () => at.push(atlasCache.get(id)), 'test-observer');
+        return at;
+    };
+
+    /**
+     * ⛓⛓ THE PUT PRECEDES THE FORWARD: the editor's Apply loads the rules, and the Region Map reads `hookCtxFor`
+     * at load, so the atlas must already be cached when `apworldEditor:loadRules` is published. ⛔ MUTANT: move
+     * `_fileAtlases` after the publish — `heldAtForward` reads `null` and reds. And a re-hand-over under the SAME
+     * id replaces the cached one (put overwrites).
+     */
+    it('⛓⛓ puts the handed atlas in the host atlasCache BEFORE forwarding the rules; a re-hand-over replaces it', () => {
+        atlasCache.clear();
+        const panel = mountPanel('seedling');
+        const at = heldAtForward('set-x');
+        const v1 = ATLAS('set-x');
+        const v2 = ATLAS('set-x', [{ region_id: 'r1' }, { region_id: 'r2' }]);
+        handOver(panel, RULES_NAMING('set-x'), [v1]);
+        handOver(panel, RULES_NAMING('set-x'), [v2]);
+        expect(at).toEqual([v1, v2]);
+        expect(atlasCache.get('set-x')).toBe(v2);
+        expect(panel.lastAtlasHandover).toEqual({ put: ['set-x'], refused: [] });
+        expect(byRole(panel.getRootElement(), 'note').textContent)
+            .toMatch(/region atlas set-x filed for the Region Map$/);
+        atlasCache.clear();
+    });
+
+    it('⛓ an absent `atlases` is `[]`: the rules are forwarded exactly as before and nothing is cached', () => {
+        atlasCache.clear();
+        const panel = mountPanel('seedling');
+        const seen = watchForward();
+        handOver(panel, RULES_NAMING('set-x'), undefined);
+        expect(seen.map((s) => s.name)).toEqual(['apworldEditor:loadRules', 'ui:activatePanel']);
+        expect(atlasCache.size).toBe(0);
+        expect(panel.lastAtlasHandover).toEqual({ put: [], refused: [] });
+    });
+
+    /**
+     * ⛔⛔ A REFUSED ATLAS IS NEVER PUT, IS NAMED, AND THE RULES STILL GO. Three refusals: an id no player of the
+     * rules names (checked over EVERY player — player 2's id is accepted, an unnamed one is not), a document that
+     * fails the bundle door's region-atlas shape test, and the good atlas already cached under that id is NOT
+     * shadowed by a bad one. MUTANT: put everything offered — the mismatched id lands in the cache and reds.
+     */
+    it('⛔ refuses an id-mismatched or malformed atlas by name, never caches it, and still forwards the rules', () => {
+        atlasCache.clear();
+        const panel = mountPanel('seedling');
+        const seen = watchForward();
+        const good = ATLAS('p2-atlas');
+        handOver(panel, RULES_NAMING('p1-atlas', 'p2-atlas'), [good]);
+        expect(panel.lastAtlasHandover).toEqual({ put: ['p2-atlas'], refused: [] });
+        const bad = { atlas_id: 'p2-atlas', regions: [{ name: 'no region_id' }] };
+        handOver(panel, RULES_NAMING('p1-atlas', 'p2-atlas'), [ATLAS('somebody-else'), bad]);
+        expect(panel.lastAtlasHandover.put).toEqual([]);
+        expect(panel.lastAtlasHandover.refused.map((r) => r.atlas_id)).toEqual(['somebody-else', 'p2-atlas']);
+        expect(panel.lastAtlasHandover.refused[0].why)
+            .toMatch(/"somebody-else" is not the one the rules name \(region_atlas names "p1-atlas", "p2-atlas"\)/);
+        expect(panel.lastAtlasHandover.refused[1].why).toMatch(/not a region atlas/);
+        expect(atlasCache.has('somebody-else')).toBe(false);
+        expect(atlasCache.get('p2-atlas')).toBe(good);
+        expect(seen.filter((s) => s.name === 'apworldEditor:loadRules')).toHaveLength(2);
+        const note = byRole(panel.getRootElement(), 'note');
+        expect(note.textContent).toMatch(/⛔ region atlas REFUSED \(not cached\)/);
+        expect(note.className).toMatch(/bad/);
+        atlasCache.clear();
+    });
+
+    /**
+     * ⛔ (cc-23's nit) A refusal sentence never throws: a structured-cloned payload can carry a CYCLIC object or a
+     * BigInt, on which `JSON.stringify` throws — the hand-over must still refuse those atlases by name and forward.
+     */
+    it('⛔ a cyclic or BigInt atlas is refused by name, not thrown on, and the rules still go', () => {
+        atlasCache.clear();
+        const panel = mountPanel('seedling');
+        const seen = watchForward();
+        const cyclic = { regions: [] };
+        cyclic.self = cyclic;
+        handOver(panel, RULES_NAMING('set-x'), [cyclic, 10n, { atlas_id: 'set-x', regions: [{ region_id: 'r', n: 1n }] }]);
+        expect(seen.map((s) => s.name)).toEqual(['apworldEditor:loadRules', 'ui:activatePanel']);
+        expect(panel.lastAtlasHandover.refused.map((r) => r.why)).toEqual([
+            'not a region atlas (the bundle door\'s test: atlas_id + regions[].region_id): an object with keys [regions, self]',
+            'not a region atlas (the bundle door\'s test: atlas_id + regions[].region_id): bigint 10',
+        ]);
+        expect(panel.lastAtlasHandover.put).toEqual(['set-x']);
+        atlasCache.clear();
+    });
+
+    it('⛔ a non-array `atlases` is the protocol\'s refusal: nothing forwarded, nothing cached, said on the panel', () => {
+        atlasCache.clear();
+        const panel = mountPanel('seedling');
+        const seen = watchForward();
+        handOver(panel, RULES_NAMING('set-x'), ATLAS('set-x'));
+        expect(seen).toEqual([]);
+        expect(atlasCache.size).toBe(0);
+        expect(byRole(panel.getRootElement(), 'note').textContent).toMatch(/atlases must be an array/);
     });
 });
 

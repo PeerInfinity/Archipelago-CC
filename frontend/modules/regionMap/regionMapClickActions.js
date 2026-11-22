@@ -22,7 +22,7 @@
  *
  * ⛓ THE EVENTS (design §4.3): every Map click publishes `regionView:regionClicked` / `regionView:locationClicked`
  * `{ panelId: 'regionMap', regionName, locationName? }`, whatever the click actions do (master off included).
- * `regionMap:nodeSelected` (a region click's selection) is published first, as before; it is not a click action.
+ * CA-S5 retired `regionMap:nodeSelected` (a region click's selection, published first until then): nothing heard it.
  */
 import {
     runClickActions, clickStatusOf, defaultClickActions, withoutPerPanelInitials, PANEL_ACTION_IDS,
@@ -30,7 +30,6 @@ import {
 } from '../regionView/clickActions.js';
 import { loadRegionGraphClickActions } from '../regionGraph/clickActionsSettings.js';
 import { setShowAllRegionsBox } from '../regions/regionsClickActions.js';
-import { publishNodeSelected } from '../regionView/regionActions.js';
 
 export const PANEL_ID = 'regionMap';
 export const REGION_MAP_CLICK_ACTIONS_KEY = 'moduleSettings.regionMap.clickActions';
@@ -40,8 +39,6 @@ export const REGION_MAP_ORIGINATORS = Object.freeze({
     check: 'regionMapCheck',
     bulkCheck: 'regionMapBulkCheck',
 });
-
-export const REGION_MAP_NODE_SELECTED = 'regionMap:nodeSelected';
 
 /** The generic click events (design §4.3), published by every map panel (named in `regionView/clickActions.js`). */
 export { REGION_CLICKED, LOCATION_CLICKED };
@@ -138,18 +135,16 @@ export function withClickHandles(h, { showAll = setShowAllRegionsBox } = {}) {
 }
 
 /**
- * ⛓ ONE MAP CLICK. A region click: `regionMap:nodeSelected` (with `data`), then the generic event, then the region
- * click actions. A location click: the generic event, then the location click actions.
+ * ⛓ ONE MAP CLICK. A region click: the generic event, then the region click actions. A location click: the generic event, then the location click actions.
  * @param {object} h  the panel's handles (`withClickHandles` applied)
  * @param {'region'|'location'} target
- * @param {{ regionName, locationName?, data? }} click
+ * @param {{ regionName, locationName? }} click
  * @param {object} settings  the Map's `clickActions`
  * @param {object} discovery  `{ active, settings }` (the checks' `disableLocationCheckUI` gate)
  * → { run: <runClickActions answer>, status: { text, from } | null }
  */
-export function runRegionMapClick(h, target, { regionName, locationName = undefined, data = null }, settings, discovery = {}) {
+export function runRegionMapClick(h, target, { regionName, locationName = undefined }, settings, discovery = {}) {
     if (target === 'region') {
-        publishNodeSelected(h, REGION_MAP_NODE_SELECTED, regionName, data ?? { id: regionName });
         h.eventBus.publish(REGION_CLICKED, { panelId: PANEL_ID, regionName });
     } else {
         h.eventBus.publish(LOCATION_CLICKED, { panelId: PANEL_ID, regionName, locationName });

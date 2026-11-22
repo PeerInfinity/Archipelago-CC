@@ -795,17 +795,17 @@ async function botPlaysToGoal(tc) {
         const sim = playLiveToGoal(rules);
         tc.log(`headless live path: goal in ${sim.loops.length} loop(s); in-app: ${loops}`);
         // ⛓ AN-3b, limit (b): the runner replans mid-loop when an item arrives (headless: live 2 = pure 2, pinned
-        // exactly in actionLoopBot.test.js). In-app the queue runs at Instant, where Loops COMPLETES an action started
-        // short of mana (loops/loopState.js _advanceActionProgress: completion runs before _maybeResetForOOM), so the
-        // replan's ⚖ Q1 attempt (it should drain and end the loop) can finish the goal a loop early. ⚖ planner
-        // ruling C (2026-11-20): assert the replan, the goal in ≤ the pure count, and the attempt named in the log;
-        // the Instant overshoot is a known gap for a Loops slice.
+        // exactly in actionLoopBot.test.js). In-app the queue runs at Instant. Since LOOPS-I1 a Loops frame spends at
+        // most the pool (loops/loopState.js _advanceActionProgress; pinned by loops/instantParity.test.js), so the
+        // replan's ⚖ Q1 attempt drains the pool into region XP and ends the loop, as at normal speed. The in-app
+        // count is therefore EXACTLY the pure planner's (⚖ planner ruling C's "≤" was the Instant-overshoot gap).
         const model = buildActionModel(await (await fetch(`./${rules.procgen_metadata[P].graph_path.replace(/^frontend\//, '')}`, { cache: 'no-store' })).json());
         const pure = playToGoal(model, { placements: placementsFromRules(rules, model, P) });
         tc.log(`pure planner: goal in ${pure.loops.length} loop(s); headless live: ${sim.loops.length}; in-app (Instant): ${loops}`);
         tc.assertEqual('the runner replanned mid-loop at least once', true, (bot.getLoopRunner?.()?.getReplanCount?.() ?? 0) >= 1);
         tc.assertEqual('a replan\'s reasoning is in the log', true, log.some((l) => /^loop \d+ \(replan\): /.test(l)));
-        tc.assertEqual(`the goal in ≤ the pure planner's ${pure.loops.length} loop(s) (in-app ${loops})`, true, loops >= 1 && loops <= pure.loops.length);
+        tc.assertEqual(`the goal in EXACTLY the pure planner's loop count (pure ${pure.loops.length})`, pure.loops.length, loops);
+        tc.assertEqual(`… and the headless live path's (live ${sim.loops.length})`, sim.loops.length, loops);
         tc.assertEqual('the Q1 attempt is named in the log', true, log.some((l) => /attempting /.test(l)));
         tc.assertEqual('no queue refusal', null, loopStateSingleton.lastActionRefusal);
     } finally {
@@ -860,7 +860,9 @@ async function clickPerformsOnce(tc) {
     const blocked = Object.values(payloads).find((p) => fromStart(p) && Object.keys(p.requires.resources).length);
     const once = Object.values(payloads).find((p) => fromStart(p) && p.limit === 1 && needsNothing(p) && p.kind !== 'start');
     const selected = [];
-    const off = tc.eventBus.subscribe('regionGraph:nodeSelected', (d) => selected.push(d?.nodeId), 'tests');
+    // CA-S5: regionGraph:nodeSelected is retired; the Graph's card click is heard on the generic event, filtered to the Graph
+    // (this row's later Region Map clickAt publishes it too, with panelId 'regionMap').
+    const off = tc.eventBus.subscribe('regionView:regionClicked', (d) => { if (d?.panelId === 'regionGraph') selected.push(d.regionName); }, 'tests');
     try {
         if (!await graphWithCards(tc, payloads)) return tc.getOverallResult();
         await ctx.setSetting(GRAPH_CLICK_ACTIONS, ACT_ONLY);
@@ -874,7 +876,7 @@ async function clickPerformsOnce(tc) {
         const route0 = at0 === block.start ? [`${block.start}>${ready.node_id}`] : [`${at0}>${block.start}`, `${block.start}>${ready.node_id}`];
         const r1 = clickCard(ready.node_id);
         tc.log(`click ${ready.name}: ${JSON.stringify(r1)}`);
-        tc.assertEqual(`click on ${ready.name}'s card: nodeSelected once`, JSON.stringify([ready.node_id]), JSON.stringify(selected));
+        tc.assertEqual(`click on ${ready.name}'s card: regionView:regionClicked once`, JSON.stringify([ready.node_id]), JSON.stringify(selected));
         tc.assertEqual(`${ready.name} (unreached by the queue): queued, ok`, true, r1?.ok === true && r1.loopMode === true);
         tc.assertEqual(`${ready.name}: the route from ${at0} to it, queued (the planning source appends in Loop mode)`, JSON.stringify(route0),
             JSON.stringify(movesOf(pathNow())));
@@ -962,7 +964,7 @@ async function performAllButton(tc) {
     const needsNothing = (p) => !Object.keys(p.requires.resources).length && !Object.keys(p.requires.stats).length;
     const rep = Object.values(payloads).find((p) => fromStart(p) && p.limit > 1 && needsNothing(p));
     const selected = [];
-    const off = tc.eventBus.subscribe('regionGraph:nodeSelected', (d) => selected.push(d?.nodeId), 'tests');
+    const off = tc.eventBus.subscribe('regionView:regionClicked', (d) => { if (d?.panelId === 'regionGraph') selected.push(d.regionName); }, 'tests');
     try {
         if (!await graphWithCards(tc, payloads)) return tc.getOverallResult();
         // The button exists exactly on the nodes whose limit is greater than 1 (and are shown, not a placeholder).
@@ -978,7 +980,7 @@ async function performAllButton(tc) {
         btn()?.click();
         const r = lastPerformResult();
         tc.log(`perform all ${rep.name}: ${JSON.stringify(r)}`);
-        tc.assertEqual('the button is not a node click (no nodeSelected)', '[]', JSON.stringify(selected));
+        tc.assertEqual('the button is not a node click (no regionView:regionClicked)', '[]', JSON.stringify(selected));
         tc.assertEqual(`${rep.name}: queued the route and ${rep.limit} acts`, true,
             r?.ok === true && r.times === 'remaining' && r.hops[0]?.from === at0 && r.hops.at(-1)?.to === rep.node_id
                 && movesOf(pathNow()).at(-1) === `${r.hops.at(-1).from}>${rep.node_id}` && actsIn(pathNow(), rep.node_id) === rep.limit);

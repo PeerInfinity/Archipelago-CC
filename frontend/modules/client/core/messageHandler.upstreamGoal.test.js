@@ -208,7 +208,7 @@ describe('what still decides', () => {
     expect(published('client:locationCheckRefused')[0].reason).toBe('not_accessible');
   });
 
-  it('already checked before the check (e.g. offline on a kept document): passed on, no report', async () => {
+  it('already checked before the check (e.g. offline on a kept document): passed on, no report (the offline push at connect is a separate step: messageHandler.offlineProgress.test.js)', async () => {
     arm();
     smState.reachability[GOAL] = 'checked';
     await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
@@ -284,7 +284,7 @@ describe('what still decides', () => {
     expect(goalFrames()).toHaveLength(1);
   });
 
-  it('offline: the check is passed up locally, nothing is reported', async () => {
+  it('offline: the check is passed up locally, nothing is reported (it is offered at the next connect: messageHandler.offlineProgress.test.js)', async () => {
     arm();
     connectionMock.isConnected.mockReturnValue(false);
     await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');

@@ -8,6 +8,8 @@
  *   - Discovery: `discovery/index.js:485-501` (`handleRegionClicked`; subscribed at `:285`);
  *   - apcalc: `apcalc/index.js:69-78`;
  *   - vibeCodingSim: `vibeCodingSim/index.js:85-92`.
+ * CA-S5 retired `regionGraph:nodeSelected` in the app; these listeners still hear it on the test's BASE bus, where the
+ * equivalence test re-publishes the base's selection event itself (`baseSelect`, delta S).
  */
 
 /** Flash at base: `self` = { teleportOnClickCheckbox, _teleportToRegion, _teleportToLocation }. */

@@ -27,6 +27,8 @@ The as-built report is `CC/docs/region-map/step3b-panel.md`.
 
 The raw rules come from `stateManager/index.js` `getLastRawJsonData()`, since the proxy's static data does not keep `preset_sidecars`.
 
+A custom world's atlas comes from `procgenCore/atlasCache.js` (`hookCtxFor`). Two host doors put one there before the rules load: the Presets panel's bundle (its `region-atlas` member) and a lab page's *Open in APWorld Editor* (the atlas the page hands over beside the rules, filed by `procgenLabPanel`). The in-app row for the second door is `region-map-lab-apworld-door-seedling-set` (`tests/testCases/labApworldDoorTests.js`).
+
 ## Painting
 
 - **Only the visible cells are drawn.** `visibleFrames` culls against `viewRect(camera)`.
@@ -66,10 +68,10 @@ A click (a pointer down and up with no drag) on a visible cell selects it, then 
 It saves a deep copy once as the Map's. A stored Map value is never overwritten, and a second load writes nothing. After that the two panels are independent. The Map's location choice is its own (since CA-S4 no strip mirrors `addLocationsToPath`). The copy leaves out the CA-S4 panel-owned actions (`withoutPerPanelInitials`): the Map's strip seeds its own first values, all off (⚖ user 2026-11-20T16:29:00Z: the Map's Flash teleport starts OFF).
 
 **Events.** Every click publishes, on this module's bus:
-- a region click: `regionMap:nodeSelected` `{ nodeId, data: { id, displayKey } }` (the selection), then `regionView:regionClicked` `{ panelId: 'regionMap', regionName }`;
+- a region click: `regionView:regionClicked` `{ panelId: 'regionMap', regionName }`;
 - a location click: `regionView:locationClicked` `{ panelId: 'regionMap', regionName, locationName }`.
 
-They are published before any action, and also when the ⏸ master switch is off. They are registered as publishers in `index.js` `register()`. The `regionView:*` pair is the generic click event of the mode-toggle design (§4.3). The Region Graph does not publish it yet.
+They are published before any action, and also when the ⏸ master switch is off. They are registered as publishers in `index.js` `register()`. The `regionView:*` pair is the generic click event of the mode-toggle design (§4.3); the Region Graph publishes it too (since CA-S4), with `panelId: 'regionGraph'`. CA-S5 retired `regionMap:nodeSelected`, which a region click published first until then: nothing heard it.
 
 ## Cell sizes
 

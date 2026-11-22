@@ -373,10 +373,10 @@ const seedlingHarness = ({
  * bridge asynchronously), and a fixed `true`/`false` could not show that.
  */
 const hostLink = ({ here = true, accepts = true } = {}) => {
-    const state = { here, seen: [], asked: 0 };
+    const state = { here, seen: [], atlases: [], asked: 0 };
     state.link = {
         available: () => { state.asked += 1; return state.here; },
-        open: (rules) => { state.seen.push(rules); return accepts; },
+        open: (rules, atlases) => { state.seen.push(rules); state.atlases.push(atlases); return accepts; },
     };
     return state;
 };
@@ -2424,6 +2424,65 @@ describe('⛓⛓⛓ lab-stale-handover — after an edit, every door carries the
             expect(json(member('rules'))).toBe(json(fresh.rules));
             expect(json(member('region-atlas'))).toBe(json(fresh.atlas));
         });
+        /**
+         * ⛓⛓ lab-apworld-door-map — **DOOR A CARRIES THE ATLAS THE RULES IT HANDS OVER NAME**, before and after an
+         * edit post-REPORT: one atlas, its id = `rules.region_atlas['1'].atlas_id`, and it is the bundle door's member
+         * for the same press state. MUTANT: `apworldEditor.open(rep.rules)` (no atlases) — `atlases` is undefined and
+         * every expectation below reds.
+         */
+        it(`${lab}: Open in APWorld Editor carries the atlas the handed-over rules name, after an edit too`, () => {
+            const { h, host, old } = setup();
+            click(h, 'editOpenApworldEditor');
+            expect(host.atlases[0]).toHaveLength(1);
+            expect(host.atlases[0][0]).toBe(old.atlas);
+            expect(host.atlases[0][0].atlas_id).toBe(host.seen[0].region_atlas['1'].atlas_id);
+            expect(globalThis.__editorSetApworldAtlasIds).toEqual([old.atlas.atlas_id]);
+            expect(L.edit(h).ok).toBe(true);
+            click(h, 'editOpenApworldEditor');
+            const fresh = h.ui.report();
+            expect(fresh).not.toBe(old);
+            expect(host.atlases[1]).toHaveLength(1);
+            expect(host.atlases[1][0]).toBe(fresh.atlas);
+            expect(host.atlases[1][0].atlas_id).toBe(host.seen[1].region_atlas['1'].atlas_id);
+            expect(json(host.atlases[1][0])).toBe(json(h.ui.runReport().atlas));
+        });
     }
+});
+
+describe('⛓⛓ lab-apworld-door-map — door A hands over `atlasAtDoor`\'s atlas, and a refusal there sends the rules anyway', () => {
+    /** ⛓ A STAMPING page (the Seedling watch page's shape): the door's copy, under the id the rules name. */
+    it('the atlas handed over is `atlasAtDoor`\'s answer for the report\'s atlas and rules', () => {
+        const host = hostLink();
+        const calls = [];
+        const h = mazeHarness({
+            apworldEditor: host.link,
+            atlasAtDoor: (atlas, rules) => {
+                calls.push({ atlas, rules });
+                return { ...structuredClone(atlas), description: 'the door\'s copy' };
+            },
+        });
+        connectAll(h, RING);
+        const rep = h.ui.runReport();
+        click(h, 'editOpenApworldEditor');
+        expect(calls).toHaveLength(1);
+        expect(calls[0].atlas).toBe(rep.atlas);
+        expect(calls[0].rules).toBe(host.seen[0]);
+        expect(host.atlases[0].map((a) => a.description)).toEqual(['the door\'s copy']);
+        expect(textOf(h, 'editSetNote')).toMatch(new RegExp(`with its region atlas ${rep.atlas.atlas_id}$`));
+    });
+    it('…and when `atlasAtDoor` throws, the RULES still go over, with no atlas, and the note names why', () => {
+        const host = hostLink();
+        const h = mazeHarness({
+            apworldEditor: host.link,
+            atlasAtDoor: () => { throw new Error('no compile on this page made that atlas'); },
+        });
+        connectAll(h, RING);
+        const rep = h.ui.runReport();
+        click(h, 'editOpenApworldEditor');
+        expect(host.seen).toEqual([rep.rules]);
+        expect(host.atlases).toEqual([[]]);
+        expect(globalThis.__editorSetApworldAtlasIds).toEqual([]);
+        expect(textOf(h, 'editSetNote')).toMatch(/no region atlas \(no compile on this page made that atlas\)$/);
+    });
 });
 

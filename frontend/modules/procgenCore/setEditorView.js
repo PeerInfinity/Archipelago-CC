@@ -219,7 +219,9 @@ const el = (doc, tag, className, text) => {
  *   bundle's refusal. The default is the identity, so a mount that never heard of it
  *   bundles exactly what it bundled before
  * @param {object} [o.apworldEditor] the REVERSE LINK (APWorld editor hub, H4c)
- *   — `{available: () => boolean, open: (rules) => boolean}`. ⛔ `null` (the
+ *   — `{available: () => boolean, open: (rules, atlases) => boolean}`. ⛓ lab-apworld-door-map: `atlases`
+ *   is `[atlasAtDoor(rep.atlas, rep.rules)]` (the SAME member the bundle door writes, so its id is the one
+ *   the rules name) or `[]` when the report has no atlas or `atlasAtDoor` refuses; the rules go either way. ⛔ `null` (the
  *   default) is the STANDALONE answer and the button stays HIDDEN, not
  *   disabled: a page with no host has no app to open the hub in, and a disabled
  *   control would advertise a door that does not exist here. ⚠ `available()` is
@@ -2172,7 +2174,7 @@ export function mountSetEditor({
     const apworldBtn = $('editOpenApworldEditor');
     if (apworldBtn) { apworldBtn.hidden = true; apworldBtn.disabled = true; }
     on('editOpenApworldEditor', () => {
-        pressScope('__editorSetApworldPresses', ['__editorSetApworldOut']);
+        pressScope('__editorSetApworldPresses', ['__editorSetApworldOut', '__editorSetApworldAtlasIds']);
         if (!apworldEditor || apworldEditor.available() !== true) {
             setNote('⛔ NOT OPENED — this page has no host to open the APWorld Editor in. '
                 + 'A lab page is a standalone document; the editor lives in the app.', true);
@@ -2183,11 +2185,33 @@ export function mountSetEditor({
             setNote(rep.download.rules.why, true);
             return;
         }
-        const sent = apworldEditor.open(rep.rules) === true;
+        /**
+         * ⛓ lab-apworld-door-map — **THE ATLAS TRAVELS WITH THE RULES, THROUGH THE BUNDLE'S OWN SEAM.** The rules
+         * name their atlas by `region_atlas[p].atlas_id` and carry no body, so the host's Region Map can draw the real
+         * map only if the atlas crosses too. `atlasAtDoor` is the call the bundle door makes for its `region-atlas`
+         * member (a stamping page returns the stamped copy the rules were compiled from), and `rep` is the same
+         * `currentReport() ?? runReport()` both doors read — so the atlas id handed over is ALWAYS the id in the
+         * rules handed over, after an edit too (lab-stale-handover). ⛔ A refusal there does NOT stop the hand-off:
+         * the rules go over as they always did, with no atlas, and the note says why.
+         */
+        let atlases = [];
+        let atlasWhy = null;
+        if (rep.atlas) {
+            try {
+                atlases = [atlasAtDoor(rep.atlas, rep.rules)];
+            } catch (e) {
+                if (!(e instanceof Error)) throw e;
+                atlasWhy = e.message;
+            }
+        }
+        const sent = apworldEditor.open(rep.rules, atlases) === true;
         globalThis.__editorSetApworldOut = rep.rules;
+        globalThis.__editorSetApworldAtlasIds = atlases.map((a) => a?.atlas_id ?? null);
         setNote(sent
             ? `OPENED in the APWorld Editor — ${rep.report.ap_regions} AP region(s), `
               + `${rep.report.exits} exit(s), ${rep.report.locations} location(s)`
+              + (atlases.length ? ` · with its region atlas ${atlases.map((a) => a.atlas_id).join(', ')}`
+                  : ` · no region atlas${atlasWhy ? ` (${atlasWhy})` : ''}`)
             : '⛔ NOT OPENED — the host link refused the hand-off.', !sent);
         render();
         onSetChange?.({ why: 'handoff' });
