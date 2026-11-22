@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+const [a,b]=process.argv.slice(2).map(f=>JSON.parse(fs.readFileSync(f,'utf8')));
+const ka=new Map(a.rows.map(r=>[r.key,r])), kb=new Map(b.rows.map(r=>[r.key,r]));
+for (const [k,r] of ka) if(!kb.has(k)) console.log('ROW DEL', k, JSON.stringify(r.rule));
+for (const [k,r] of kb) if(!ka.has(k)) console.log('ROW ADD', k, JSON.stringify(r.rule));
+for (const [k,r] of ka) if(kb.has(k) && JSON.stringify(r)!==JSON.stringify(kb.get(k))) console.log('ROW CHG', k, JSON.stringify(r.rule),'->',JSON.stringify(kb.get(k).rule), JSON.stringify(r.arrival)!==JSON.stringify(kb.get(k).arrival)?'(arrival moved)':'');
+const ea=new Map(a.excluded.map(r=>[r.key,r])), eb=new Map(b.excluded.map(r=>[r.key,r]));
+for (const k of ea.keys()) if(!eb.has(k)) console.log('EXCL DEL',k);
+for (const k of eb.keys()) if(!ea.has(k)) console.log('EXCL ADD',k, eb.get(k).why);
+console.log('inputs', JSON.stringify(a.inputs), '->', JSON.stringify(b.inputs));
+console.log('counts', a.rows.length, a.excluded.length, '->', b.rows.length, b.excluded.length);

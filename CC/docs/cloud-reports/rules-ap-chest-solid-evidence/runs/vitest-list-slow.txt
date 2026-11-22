@@ -1,0 +1,6 @@
+frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.slow.test.js
+frontend/modules/omsiSubstrateWrapper/omsiTestPresetProducers.slow.test.js
+frontend/modules/procgenPipeline/presetDefs.generate.slow.test.js
+frontend/modules/seedlingDemo/seedlingGenGoalChestPipeline.slow.test.js
+frontend/modules/seedlingDemo/seedlingGenKeyGateColours.slow.test.js
+frontend/modules/stateManager/core/sphereZeroCredit.slow.test.js

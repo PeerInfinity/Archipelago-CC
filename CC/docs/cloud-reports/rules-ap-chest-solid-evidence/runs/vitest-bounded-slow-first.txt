@@ -1,0 +1,6 @@
+ FAIL  frontend/modules/omsiSubstrateWrapper/omsiTestPresetProducers.slow.test.js > omsi_*_test preset producers — exit 0 cold, bytes equal the committed presets > generate-omsi-randomized-test-preset.mjs
+ FAIL  frontend/modules/omsiSubstrateWrapper/omsiTestPresetProducers.slow.test.js > omsi_*_test preset producers — exit 0 cold, bytes equal the committed presets > generate-omsi-scaled-test-preset.mjs
+ FAIL  frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.slow.test.js > seedling_playthrough_maze — every region certified against the atlas at every subset > native engine, every region
+ Test Files  2 failed | 4 passed (6)
+      Tests  3 failed | 79 passed (82)
+   Duration  414.88s (transform 5.40s, setup 447ms, import 21.83s, tests 391.96s, environment 1ms)
