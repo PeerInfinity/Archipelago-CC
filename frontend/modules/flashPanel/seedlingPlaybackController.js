@@ -751,6 +751,8 @@ export class SeedlingPlaybackController {
             getWin: () => this._getSurface?.()?.wasm?.getWin?.() ?? null,
             teleport: (p) => this._getSurface?.()?.wasm?.teleport?.(p) ?? false,
             getCheckBinding: () => this._getSurface?.()?.checkBinding ?? null,
+            // ⛓ seedling-p4h-beside — the running build's manifest `capabilities` (the adoption reads AP chests by them).
+            getCapabilities: () => this._getSurface?.()?.wasm?.capabilities ?? [],
             // ⛓ W7 — the glue query: may the engine hold the arrival it just saw (no redirect in flight)?
             getSwapState: () => this._getSurface?.()?.swapState?.() ?? null,
             // ⛓ ARRIVAL JITTER — push that teleport now (the door's room runs unheld until it lands).

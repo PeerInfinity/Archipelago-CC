@@ -131,6 +131,7 @@ const { buildPlacementTable, rewriteRecordSet } = await import(
 const { apMappingInvalidation, vanillaRecordSet } = await import(
     join(REPO, 'frontend/modules/seedlingDemo/levelSetExporter.js'));
 const { parseTape } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
+const { withApChestRows } = await import(join(REPO, 'frontend/modules/seedlingDemo/apChestRoster.js'));
 const { placementKey } = await import(
     join(REPO, 'frontend/modules/seedlingDemo/apPlacementRewriter.js'));
 /**
@@ -160,7 +161,8 @@ const { set: VANILLA_SET } = vanillaRecordSet(EMBED, MAP);
 // ⛓ R4b part 2 — whether PAGE_NAME reports the nine boss/encounter rows, read off the manifest (a build
 // without `bossreport` makes the load refuse them; this instrument measures the rewrite, so it binds them only
 // where the build would).
-const PAGE_BOSS_REPORT = (readJson('frontend/modules/flashPanel/wasm/builds.json').builds.find((b) => b.name === PAGE_NAME)?.capabilities ?? []).includes('bossreport');
+const PAGE_CAPABILITIES = readJson('frontend/modules/flashPanel/wasm/builds.json').builds.find((b) => b.name === PAGE_NAME)?.capabilities ?? [];
+const PAGE_BOSS_REPORT = PAGE_CAPABILITIES.includes('bossreport');
 const { table } = buildPlacementTable({
     locationItemOf: (n) => PLACED.get(n) ?? null,
     ledger: R7_GOAL_LEDGER, rooms: MAP.levels, selfPlayer: SELF_PLAYER, bossReport: PAGE_BOSS_REPORT,
@@ -444,7 +446,11 @@ const M1_STEPS = {
         }
         let mobiles = null;
         try { mobiles = JSON.parse(g.botMobiles()); } catch (e) { mobiles = null; }
-        return { loaded, started, mobiles, landed,
+        // ⛓ seedling-p4h-beside — p4h's \`botActivators\` (absent on p4g): an AP chest location is listed there, not
+        // in \`botMobiles\`. Read when exported; \`rosterOf\` takes its APChest rows only on a build declaring \`apchest\`.
+        let activators = null;
+        try { activators = typeof g.botActivators === 'function' ? JSON.parse(g.botActivators()) : null; } catch (e) { activators = null; }
+        return { loaded, started, mobiles, activators, landed,
             level: status ? status.level : null,
             status, waitedMs: Date.now() - t0,
             reports: window.__swfBridge.stateLog.slice() };
@@ -678,7 +684,13 @@ for (const s of SUBJECTS) {
  * `Pickup`'s constructor offsets it by a known half-tile (`_x + Tile.w/2`).
  */
 const TILE_HALF = 8;
-const rosterOf = (room) => (room?.mobiles?.mobiles ?? [])
+/**
+ * ⛓ seedling-p4h-beside (the chest readers): on a build declaring `apchest`, an `<apitem kind="chest">` is a
+ * `Pickups::APChest` in `botActivators().chests` and NOT a Mobile — so the roster is `botMobiles` ∪ those rows
+ * there (`withApChestRows`), and `botMobiles` alone on every other build (p4g, p4d).
+ */
+const rosterOf = (room) => withApChestRows(room?.mobiles?.mobiles ?? [],
+    { capabilities: PAGE_CAPABILITIES, activators: room?.activators ?? null })
     .map((m) => ({ cls: String(m.cls), at: `${m.x},${m.y}` }));
 const keysOf = (roster) => roster.map((m) => `${m.cls}@${m.at}`).sort();
 const atOf = (roster, at) => roster.find((m) => m.at === at) ?? null;

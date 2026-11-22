@@ -12,6 +12,7 @@ import { SolveWatchView } from './seedlingSolveWatchView.js';
 import { AP_ITEM_FOUND_EVENT, RULES_RELOADED_IN_PLACE_EVENT } from './seedlingRegionGlue.js';
 import {
   CUSTOM_SET_NOT_PLAYABLE, RANDOMIZER_ARMS, entranceShuffleRefusal, seedlingRandomizerEligibility, servedRegionAtlas,
+  buildNameFromWasmPath, capabilitiesOf,
 } from './seedlingRandomizerEligibility.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 // ⛓ J3 — import-free (it imports nothing), so the panel's closure gains one small file.
@@ -581,6 +582,8 @@ export class FlashPanelUI {
         deliveredSet: this._seedlingRealSet ?? null,
         getGame: () => this.adapter?._getFlash?.() ?? null,
         getWin: () => this.adapter?._getWin?.() ?? null,
+        // ⛓ seedling-p4h-beside — the running build's manifest `capabilities` (read at the AP load; [] until then).
+        capabilities: this._wasmBuildCapabilities ?? [],
         teleport: (p) => this.adapter?.teleport?.(p) ?? false,
         mapPath: this._atlasMapPath ?? null,
         // ⛓ O3 — the solve budget knob, work units (null until the setting is read: the engine's own default then).
@@ -1999,6 +2002,9 @@ export class FlashPanelUI {
       }
     }
     if (this.adapter !== adapter) return;
+    // ⛓ seedling-p4h-beside — what the running build declares (the wasm playback reads AP chests by `apchest`).
+    this._wasmBuildCapabilities = manifest
+      ? (capabilitiesOf(manifest, buildNameFromWasmPath(flashPanel?.wasm)).capabilities ?? []) : [];
 
     /**
      * ⛓⛓ SLICE G — ASKED AGAIN AT BRIDGE-READY. A rules load that lands while a game is still booting (an adapter,
