@@ -60,10 +60,10 @@ function solveLeg(leg, { avoid }) {
 }
 
 describe('FEWER-HITS — the switches', () => {
-    it('both are OFF by default, named on the env channel, and restored after a throw', () => {
-        expect(HIT_AVOID_PASS_DEFAULT).toBe(false);
+    it('HIT_AVOID_PASS ON by default since the FH flip (=0 opts out), FEWER_HITS_RANK OFF; named on the env channel, restored after a throw', () => {
+        expect(HIT_AVOID_PASS_DEFAULT).toBe(true);
         expect(FEWER_HITS_RANK_DEFAULT).toBe(false);
-        expect(HIT_AVOID_PASS.enabled).toBe(ENV.SEEDLING_HIT_AVOID_PASS === '1');
+        expect(HIT_AVOID_PASS.enabled).toBe(ENV.SEEDLING_HIT_AVOID_PASS !== '0');
         expect(FEWER_HITS_RANK.enabled).toBe(ENV.SEEDLING_FEWER_HITS_RANK === '1');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_HIT_AVOID_PASS');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FEWER_HITS_RANK');

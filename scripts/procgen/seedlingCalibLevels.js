@@ -99,3 +99,106 @@ export function compareLevels(tip, control, { moved = [], threshold, floorMs }) 
         onlyTip, onlyControl, unknownMoved,
     };
 }
+
+/**
+ * The band a MEDIAN ratio is judged against, from the medians of measured main-vs-main pairs. One pair's median m read
+ * the other way round is 1/m, so each pair's excess is max(m, 1/m) − 1. The band is the same rule as the per-level
+ * threshold: hi = 1 + 2 × the worst excess, lo = 1 / hi. `pairs` is how many pairs it rests on.
+ */
+export function medianBand(mainMedians) {
+    if (!mainMedians.length) throw new Error('a median band needs at least one main-vs-main pair');
+    if (!mainMedians.every((m) => m > 0 && Number.isFinite(m))) throw new Error(`a median is a positive ratio (got ${mainMedians.join(',')})`);
+    const worst = Math.max(...mainMedians.map((m) => Math.max(m, 1 / m)));
+    const hi = 1 + 2 * (worst - 1);
+    return { lo: 1 / hi, hi, worst, pairs: mainMedians.length };
+}
+
+/**
+ * The verdict on one comparison's median ratio. The per-level FLAG divides by the median, so a slowdown that hits EVERY
+ * level by the same factor moves only the median and flags nothing. This is the check that sees it: `outside` when the
+ * median leaves the main-vs-main band; `direction` is 'slower' (tip slower than control), 'faster' or 'inside'.
+ */
+export function medianVerdict(median, band) {
+    const direction = median > band.hi ? 'slower' : median < band.lo ? 'faster' : 'inside';
+    return { median, band, outside: direction !== 'inside', direction };
+}
+
+/**
+ * Several runs of ONE tree (a paired ABBA pass runs each tree twice) as one report: each level's ms is the mean of its
+ * runs (`runsMs` keeps each), its status `passed` only when every run passed (else the first other status); the other
+ * tests the same way, by title; `problems` the union. One report comes back as it was, plus `runsMs`.
+ */
+export function mergeReports(reps) {
+    if (!reps.length) throw new Error('mergeReports needs at least one report');
+    const mean = (xs) => (xs.every(Number.isFinite) ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length) : null);
+    const status = (ss) => ss.find((s) => s !== 'passed') ?? 'passed';
+    const levels = reps[0].levels.map((row, i) => {
+        const rows = reps.map((r) => r.levels[i]);
+        if (rows.some((x) => x?.level !== row.level)) throw new Error(`mergeReports: the runs list different levels at ${i}`);
+        return { level: row.level, ms: mean(rows.map((x) => x.ms)), status: status(rows.map((x) => x.status)), runsMs: rows.map((x) => x.ms) };
+    });
+    const titles = [...new Set(reps.flatMap((r) => r.others.map((t) => t.title)))];
+    const others = titles.map((title) => {
+        const ts = reps.map((r) => r.others.find((t) => t.title === title));
+        return { title, ms: mean(ts.map((t) => t?.ms ?? NaN)) ?? 0, status: status(ts.map((t) => t?.status ?? 'missing')) };
+    });
+    return { levels, others, problems: [...new Set(reps.flatMap((r) => r.problems))] };
+}
+
+/**
+ * An abbreviated SHA (4–39 hex digits): a paired run cannot fetch one into a one-commit-deep CI checkout (GitHub
+ * fetches a full SHA or a ref name only), so the probe refuses it by name instead of failing inside `git fetch`.
+ */
+export const isAbbreviatedSha = (ref) => /^[0-9a-f]{4,39}$/i.test(ref);
+
+/**
+ * Whether a comparison judges per-level FLAGs. Not in a PAIRED CONCURRENT run: the two trees share the runner's cores
+ * and reach the heavy levels at different moments, so its main-vs-main per-level spread is too close to the FLAG
+ * threshold to judge one level by. Its median is still judged. Every other comparison flags.
+ */
+export const flagsLevels = (paired) => !(paired && paired.order === 'concurrent');
+
+/**
+ * The `timeout-minutes` of one job in a workflow file's text (the job's key at two spaces' indent, then its first
+ * `timeout-minutes:` before the next job key), or null when the file does not say. A line reader, not a YAML parser:
+ * enough for a workflow whose job keys sit at two spaces, as every workflow here does.
+ */
+export function jobTimeoutMinutes(text, job) {
+    const lines = text.split('\n');
+    const start = lines.findIndex((l) => l === `  ${job}:`);
+    if (start < 0) return null;
+    for (const l of lines.slice(start + 1)) {
+        if (/^ {2}[A-Za-z0-9_-]+:\s*$/.test(l)) return null; // the next job
+        const m = /^ {4}timeout-minutes:\s*([0-9]+)\s*$/.exec(l);
+        if (m) return Number(m[1]);
+    }
+    return null;
+}
+
+/** A paired run's wall against its job's limit: the fraction used, and `warn` over `warnAt` (a fraction). */
+export function wallVerdict(wallS, limitS, warnAt) {
+    if (!(limitS > 0)) throw new Error(`a job limit is a positive number of seconds (got ${limitS})`);
+    const used = wallS / limitS;
+    return { used, warn: used > warnAt };
+}
+
+/**
+ * Whether an order's band FAILS a row yet: it rests on at least `rule.pairs` pairs, `rule.checkoutTip` of them in the
+ * default shape (`shape: 'checkout-tip'`, the tip in the job's own checkout). Below that it is PROVISIONAL (WARN only).
+ */
+export function bandFails(rows, rule) {
+    const checkoutTip = rows.filter((r) => r.shape === 'checkout-tip').length;
+    return { fails: rows.length >= rule.pairs && checkoutTip >= rule.checkoutTip, pairs: rows.length, checkoutTip };
+}
+
+/**
+ * The median verdict as a check row, ONE-SIDED: the probe exists to catch slowdowns, so only a median ABOVE the band
+ * fails; below it passes (a faster tip never blocks a landing; the WARN line says to check the control). The text
+ * names the side the median is actually on.
+ */
+export function medianRow(v, label) {
+    const where = { slower: 'above', faster: 'below', inside: 'inside' }[v.direction];
+    const band = `${v.band.lo.toFixed(3)}–${v.band.hi.toFixed(3)}`;
+    const why = { slower: 'a slowdown the main-vs-main noise never reached', faster: 'faster: never a failure', inside: 'main-vs-main noise' }[v.direction];
+    return { ok: v.direction !== 'slower', text: `the median ratio ${v.median.toFixed(3)} is ${where} the ${label} main-vs-main band ${band} (${v.band.pairs} pairs; ${why})` };
+}

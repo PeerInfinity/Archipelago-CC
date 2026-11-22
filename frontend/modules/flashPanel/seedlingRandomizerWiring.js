@@ -145,6 +145,9 @@ export const AP_ATLAS_MODULE_PATHS = Object.freeze({
     // ⛓ R9 slice P4E: the ONE tag allocator (`placementTagId`), for a build
     // declaring `tag`. Also inside the rewriter's closure already.
     procgenSeedling: 'modules/seedlingDemo/procgenSeedling.js',
+    // ⛓ rules-spinner-alias-guards (a): the alias slots a tag -1 writer clears (`Main.as:222`), reserved
+    // against that allocator. Its imports (`levelWorld`, `outOfBandLedger`) are already in this closure.
+    outOfBandAliases: 'modules/seedlingDemo/outOfBandAliases.js',
 });
 
 /**
@@ -1378,9 +1381,16 @@ export async function loadSeedlingAtlas({
      * tag written (below). ⛔ Without the capability nothing moves.
      */
     const tagging = tagCapable
-        ? { allocateTag: (await importModule(url(AP_ATLAS_MODULE_PATHS.procgenSeedling)))
-            .placementTagId,
-        optionalTagTypes: Object.keys(levelWorld.PICKUP_CLEARS_OPTIONAL_TAG ?? {}) }
+        ? await (async () => {
+            const { placementTagId } = await importModule(url(AP_ATLAS_MODULE_PATHS.procgenSeedling));
+            const aliases = await importModule(url(AP_ATLAS_MODULE_PATHS.outOfBandAliases));
+            const aliasTargets = aliases.aliasTargetsOf(mapDoc);
+            return {
+                allocateTag: (room, reserved) => placementTagId(room,
+                    [...reserved, ...aliases.aliasReservedFor(aliasTargets, room.level)]),
+                optionalTagTypes: Object.keys(levelWorld.PICKUP_CLEARS_OPTIONAL_TAG ?? {}),
+            };
+        })()
         : {};
     const byName = locations instanceof Map ? locations : new Map(Object.entries(locations ?? {}));
     const { table, entries, refused, census, retags } = buildAtlasCheckTable({

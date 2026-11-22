@@ -1734,7 +1734,7 @@ describe('version 12: HOLD-AFTER-LATCH (R9 slice P4E, ⚖ 72 (a′))', () => {
         // …and a non-holding tape's projection has NO `hold` key at all, so its
         // bytes (the latch cache's key) did not move at this bump.
         expect(gameVisibleTape(parseTape(v8()))).not.toHaveProperty('hold');
-        expect(GAME_VISIBLE_KEEPS).toEqual(['hold']);
+        expect(GAME_VISIBLE_KEEPS).toEqual(['hold', 'secondaries']);
     });
 
     it('`holdingWindowTape` re-versions and declares; `requiredTapeVersion` says 12', () => {
@@ -1832,7 +1832,7 @@ describe('version 13: the physics profile', () => {
         expect(gh.hold).toBe(true);
         expect(gh).not.toHaveProperty('profile');
         expect(GAME_VISIBLE_DROPS).toContain('profile');
-        expect(GAME_VISIBLE_KEEPS).toEqual(['hold']);
+        expect(GAME_VISIBLE_KEEPS).toEqual(['hold', 'secondaries']);
     });
 
     it('round-trips, and writes NO profile unless declared', () => {

@@ -13,15 +13,28 @@
  * build runs — so this gate holds them together:
  *
  *   (i)   the gitlink of `vendor/seedling` at HEAD EQUALS the `source.commit`
- *         of the build whose `role` is `default` (the build the host drives) —
- *         ⛓ or, when the manifest pins a `candidate` beside it (R9 slice P4E,
- *         the next default), THAT build's: the pinned tree must contain every
- *         build's source (row iii), and the candidate's is the newest;
+ *         of the build whose `role` is `default` (the build the host drives),
+ *         ALWAYS. ⛓ Until 2026-11-22 a pinned `candidate` took this row over
+ *         (R9 slice P4E: "the candidate's is the newest"). Now a candidate's
+ *         source is checked by DESCENT, not equality (⚖ js-22 2026-11-22, P1
+ *         p4h-beside: the vendor tree and swfrecomp-browser follow the build
+ *         everything runs by default) — row (iii-c);
  *   (ii)  the checked-out submodule IS at that gitlink (a checkout that drifted
  *         feeds every extractor a different tree than the one pinned);
- *   (iii) every OTHER build compiled from the fork has a `source.commit` that
- *         is an ANCESTOR of the gitlink — the pinned tree contains each
- *         build's source, so one submodule serves them all;
+ *   (iii) every OTHER non-candidate build compiled from the fork has a
+ *         `source.commit` that is an ANCESTOR of the gitlink — the pinned tree
+ *         contains each build's source, so one submodule serves them all;
+ *   (iii-c) every `candidate` compiled from the fork has a `source.commit`
+ *         that DESCENDS from the gitlink (`merge-base --is-ancestor <gitlink>
+ *         <candidate>`): the pinned tree is its ancestor, so the candidate is
+ *         the default's source plus commits. Unrelated, or not in the
+ *         submodule's history at all, is a named FAIL. A source object the
+ *         checkout lacks is first fetched ONCE by its SHA: a candidate's source
+ *         can sit on a non-default Seedling branch (p4h: `p4h-as3`) until the
+ *         default flip merges it into Seedling main (P2 fast-forwards it), and
+ *         no checkout of the gitlink carries such a branch. The fetch is
+ *         read-only: it adds objects, never moves the vendor gitlink or the
+ *         checkout;
  *   (iv)  ⚖ js-6's pin ruling (slice seedling-tut-F2b-2, 2026-10-14): the
  *         in-browser recompiler the app ships (`swfrecomp-browser`, the
  *         submodule at BROWSER_SUBMODULE) was built from the SAME SWFRecomp-CC
@@ -131,13 +144,14 @@ export function checkSourcePin({ repo }) {
 }
 
 /**
- * ⛓ P4E: a candidate, when there is one, is the build the submodule pins;
- * otherwise the default is. Two is a FAIL by name in row (i).
+ * ⛓ The DEFAULT is the build the submodule pins, always (⚖ js-22 2026-11-22, P1 p4h-beside; until then a candidate
+ * took it over — R9 slice P4E). Zero or two defaults is a FAIL by name in row (i). Candidates are row (iii-c)'s.
  */
 function pinningBuilds(builds) {
     const fromFork = builds.filter((b) => b.source?.repo === SEEDLING_REPO);
-    const pinRole = fromFork.some((b) => b.role === 'candidate') ? 'candidate' : 'default';
-    return { fromFork, pinRole, defaults: fromFork.filter((b) => b.role === pinRole) };
+    const pinRole = 'default';
+    return { fromFork, pinRole, defaults: fromFork.filter((b) => b.role === pinRole),
+        candidates: fromFork.filter((b) => b.role === 'candidate') };
 }
 
 /** Rows (i)–(iii): the `vendor/seedling` gitlink against the builds' AS3 sources. */
@@ -159,7 +173,7 @@ function sourceRows({ repo, builds, pinning, row }) {
         return;
     }
     const gitlink = m[1];
-    const { fromFork, pinRole, defaults } = pinning;
+    const { fromFork, pinRole, defaults, candidates } = pinning;
 
     // (i) the gitlink is the pinning build's source
     if (defaults.length !== 1) {
@@ -182,7 +196,7 @@ function sourceRows({ repo, builds, pinning, row }) {
 
     // (iii) every other fork build's source is contained in the pinned tree
     const shallow = git(sub, ['rev-parse', '--is-shallow-repository']) === 'true';
-    for (const b of fromFork.filter((x) => !defaults.includes(x))) {
+    for (const b of fromFork.filter((x) => !defaults.includes(x) && !candidates.includes(x))) {
         const c = b.source.commit;
         if (shallow) {
             row('SKIP', `(iii) ${b.name}'s source.commit ${short(c)}: the submodule is a SHALLOW clone, `
@@ -193,6 +207,29 @@ function sourceRows({ repo, builds, pinning, row }) {
         row(ancestor ? 'PASS' : 'FAIL',
             `(iii) ${b.name}'s source.commit ${short(c)} ${ancestor ? 'IS' : 'is NOT'} an ancestor of the gitlink `
             + `${short(gitlink)}` + (ancestor ? '' : ' (or is not in the submodule\'s history at all)'));
+    }
+
+    // (iii-c) every candidate DESCENDS from the pinned tree (⚖ js-22 2026-11-22: descent, not equality)
+    for (const b of candidates) {
+        const c = b.source.commit;
+        if (shallow) {
+            row('SKIP', `(iii-c) the candidate ${b.name}'s source.commit ${short(c)}: the submodule is a SHALLOW clone, `
+                + 'which carries no history to measure descent in — the question cannot be put here');
+            continue;
+        }
+        // A candidate's source lives on a side branch of the fork (p4h: `p4h-as3`), which a checkout of the
+        // gitlink — CI's `fetch --unshallow` included — never fetches. So an ABSENT object is fetched ONCE, by
+        // its SHA, before the question is put; one that still cannot be had stays the FAIL below, by name.
+        let fetched = '';
+        if (!gitOk(sub, ['cat-file', '-e', `${c}^{commit}`])) {
+            const ok = gitOk(sub, ['fetch', '--quiet', 'origin', c]);
+            fetched = ok ? ' (fetched by SHA — it is on no branch the checkout carries)' : ' (absent, and fetching it by SHA failed)';
+        }
+        const descends = gitOk(sub, ['merge-base', '--is-ancestor', gitlink, c]);
+        row(descends ? 'PASS' : 'FAIL',
+            `(iii-c) the candidate ${b.name}'s source.commit ${short(c)} ${descends ? 'DESCENDS' : 'does NOT descend'} `
+            + `from the gitlink ${short(gitlink)}${fetched}` + (descends ? '' : ' (unrelated, or not in the submodule\'s history '
+                + 'at all — fetch it into the submodule, or rebuild the candidate on the default\'s source)'));
     }
 }
 

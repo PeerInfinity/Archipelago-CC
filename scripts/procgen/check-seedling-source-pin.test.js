@@ -160,21 +160,72 @@ describe('check-seedling-source-pin', () => {
         writeFileSync(join(root, BUILDS_JSON), JSON.stringify(m));
     };
 
-    it('⛓ P4E: with a CANDIDATE, the gitlink pins ITS source and the default must be an ancestor', () => {
-        const { root, shas } = fixture({ gitlink: 'later' });
-        withCandidate(root, shas.later);
-        const res = checkSourcePin({ repo: root });
-        expect(kinds(res.rows)).toEqual(['PASS', 'PASS', 'PASS', 'PASS', 'PASS', 'PASS']);
-        expect(res.rows[0].msg).toMatch(/EQUALS the candidate build next_build's source\.commit/);
-        expect(res.rows.some((r) => /bot_build's source\.commit .* IS an ancestor/.test(r.msg))).toBe(true);
-    });
-
-    it('⛔ P4E: a candidate with the gitlink left at the DEFAULT → (i) FAIL', () => {
+    /**
+     * ⚖ js-22 2026-11-22 (P1 p4h-beside): a candidate's source is checked by DESCENT, not equality — the vendor tree
+     * and swfrecomp-browser follow the build everything runs by default. (R9 slice P4E had the candidate pin them.)
+     */
+    it('⛓ with a CANDIDATE, the gitlink still pins the DEFAULT, and the candidate DESCENDS from it (iii-c)', () => {
         const { root, shas } = fixture();
         withCandidate(root, shas.later);
         const res = checkSourcePin({ repo: root });
+        expect(res.rows.every((r) => r.kind === 'PASS')).toBe(true);
+        expect(res.rows[0].msg).toMatch(/EQUALS the default build bot_build's source\.commit/);
+        expect(row(res, 'iii-c').msg).toMatch(/candidate next_build's source\.commit .* DESCENDS from the gitlink/);
+        expect(spawnGate(root).status).toBe(0);
+    });
+
+    it('⛔ (iii-c) a candidate that does NOT descend from the gitlink → a named FAIL (an ancestor, and unrelated)', () => {
+        for (const which of ['demo', 'side']) {
+            const { root, shas } = fixture();
+            withCandidate(root, shas[which]);
+            const res = checkSourcePin({ repo: root });
+            expect(row(res, 'iii-c')).toMatchObject({ kind: 'FAIL' });
+            expect(row(res, 'iii-c').msg).toMatch(/candidate next_build's source\.commit .* does NOT descend from the gitlink/);
+            expect(spawnGate(root).status).toBe(1);
+        }
+    });
+
+    /**
+     * ⛓ CI's shape (measured red at d90d1acaae, run 45062282013): the candidate's source lives on a SIDE branch of the
+     * fork (p4h: `p4h-as3`), which a checkout of the gitlink never fetches, so the object is absent. The gate fetches
+     * it once by SHA and then measures descent; one that no fetch can have stays a named FAIL.
+     */
+    it('⛓ (iii-c) a candidate source ABSENT from the checkout (a side branch) is fetched by SHA, then measured', () => {
+        const { root, sub, shas } = fixture();
+        const upstream = join(root, 'upstream-fork');
+        forkRepo(upstream); // its shas may or may not equal the fixture's (timestamps) — so measure ITS shas
+        const up = { pin: git(upstream, 'rev-parse', 'main~1'), later: git(upstream, 'rev-parse', 'main') };
+        git(upstream, 'branch', '-q', '-f', 'cand', up.later);
+        git(upstream, 'branch', '-q', '-f', 'main', up.pin);
+        rmSync(sub, { recursive: true, force: true });
+        git(root, 'clone', '-q', '--no-local', '--single-branch', '-b', 'main', `file://${upstream}`, sub);
+        expect(() => git(sub, 'cat-file', '-e', `${up.later}^{commit}`), 'the precondition: the candidate is absent').toThrow();
+        const m = JSON.parse(readFileSync(join(root, BUILDS_JSON), 'utf8'));
+        for (const b of m.builds) if (b.role === 'default') b.source.commit = up.pin;
+        m.builds = m.builds.filter((b) => b.role !== 'demo' || b.source.repo !== FORK);
+        writeFileSync(join(root, BUILDS_JSON), JSON.stringify(m));
+        git(root, 'update-index', '--cacheinfo', `160000,${up.pin},vendor/seedling`);
+        git(root, 'commit', '-q', '--allow-empty', '-m', 'gitlink at the upstream pin');
+        withCandidate(root, up.later);
+        const res = checkSourcePin({ repo: root });
+        expect(row(res, 'iii-c')).toMatchObject({ kind: 'PASS' });
+        expect(row(res, 'iii-c').msg).toMatch(/DESCENDS from the gitlink .* \(fetched by SHA/);
+
+        withCandidate(root, 'e'.repeat(40));
+        const res2 = checkSourcePin({ repo: root });
+        const missing = res2.rows.filter((r) => r.msg.includes('(iii-c)') && r.msg.includes('eeeeeee'));
+        expect(missing).toHaveLength(1);
+        expect(missing[0]).toMatchObject({ kind: 'FAIL' });
+        expect(missing[0].msg).toMatch(/absent, and fetching it by SHA failed/);
+        expect(shas.pin).toBeTruthy();
+    });
+
+    it('⛔ with a candidate, the DEFAULT\'s mismatch still reds (i), as without one', () => {
+        const { root, shas } = fixture({ gitlink: 'later' });
+        withCandidate(root, shas.later);
+        const res = checkSourcePin({ repo: root });
         expect(res.rows[0]).toMatchObject({ kind: 'FAIL' });
-        expect(res.rows[0].msg).toMatch(/is NOT the candidate build next_build/);
+        expect(res.rows[0].msg).toMatch(/is NOT the default build bot_build's source\.commit/);
     });
 
     it('an UNINITIALISED submodule (both) is a REFUSAL: SKIP, exit 0, 0/0/2', () => {
@@ -238,22 +289,22 @@ describe('check-seedling-source-pin', () => {
         expect(spawnGate(root).status).toBe(1);
     });
 
-    it('(iv) CANDIDATE: with a candidate pinned, the release is held to THE CANDIDATE\'s recompiler', () => {
-        const { root, shas } = fixture({ gitlink: 'later' });
+    it('(iv) CANDIDATE: with a candidate pinned, the release is still held to THE DEFAULT\'s recompiler (⚖ js-22)', () => {
+        const { root, shas } = fixture();
         withCandidate(root, shas.later);
         const m = JSON.parse(readFileSync(join(root, BUILDS_JSON), 'utf8'));
         m.builds.find((b) => b.role === 'candidate').source.recompiler = RECOMP_LATER;
         writeFileSync(join(root, BUILDS_JSON), JSON.stringify(m));
         let res = checkSourcePin({ repo: root });
-        expect(row(res, 'iv')).toMatchObject({ kind: 'FAIL' });
-        expect(row(res, 'iv').msg).toMatch(/is NOT the candidate build next_build's source\.recompiler/);
+        expect(row(res, 'iv')).toMatchObject({ kind: 'PASS' });
+        expect(row(res, 'iv').msg).toMatch(/EQUALS the default build bot_build's source\.recompiler/);
         const rel = RELEASE_2();
         rel.source.commit = RECOMP_LATER;
         rel.source.buildInputsUnchanged.from = RECOMP_LATER;
         writeFileSync(join(root, RELEASE_JSON), JSON.stringify(rel));
         res = checkSourcePin({ repo: root });
-        expect(row(res, 'iv')).toMatchObject({ kind: 'PASS' });
-        expect(row(res, 'iv').msg).toMatch(/EQUALS the candidate build next_build's source\.recompiler/);
+        expect(row(res, 'iv')).toMatchObject({ kind: 'FAIL' });
+        expect(row(res, 'iv').msg).toMatch(/is NOT the default build bot_build's source\.recompiler/);
     });
 
     it('(iv) ABSENT: the browser submodule uninitialised → SKIP by name; rows (i)–(iii) still answer, exit 0', () => {

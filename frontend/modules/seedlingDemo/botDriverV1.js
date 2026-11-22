@@ -468,6 +468,11 @@ export function buildStagedTape({ staging, perTick, name, stampProfile = null })
     // admits (refused above otherwise). Unstamped, nothing below moves: every
     // committed solve's bytes are what they were.
     if (stampProfile) Object.assign(tape, { despawn: [], profile: stampProfile });
+    // ⛓ seedling-p4h-beside: a staging carrying `secondaries` (the inventory menu's C writes, folded only for a build
+    // declaring `secondaries`) is a v13 tape too — and v13 spells `despawn: []`, for the reason above.
+    if ((staging.secondaries ?? []).length > 0) {
+        Object.assign(tape, { despawn: [], secondaries: staging.secondaries.map((e) => ({ t: e.t, slot: e.slot })) });
+    }
     // ⛔ ASKED, never re-derived — `requiredTapeVersion` owns the rule and
     // this is the whole of slice 5's half of it. The floor is 8: the
     // vocabulary this assembly writes, so a v8 boot's bytes do not move.

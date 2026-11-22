@@ -5,9 +5,14 @@
 // the APWorld Editor's own Apply loads them (`files:jsonLoaded`), and the Region Map draws the real map.
 //
 // The FRAME half (the page really sends `atlases`, its id = the handed rules' id) is `check-procgen-lab-hosting.mjs`
-// claim 12; the page's payload rule is pinned in `setEditorView.test.js`. ⛔ This slice carries NO level set over door
-// A, so the Flash panel still starts nothing for a door-A set (rows 2–3); row 4 MEASURES what happens when the SAME set
-// was first handed over the bundle door (S4's licensed path) and changes nothing to steer it.
+// claim 12; the page's payload rule is pinned in `setEditorView.test.js`.
+// ⛓ lab-apworld-door-play (⚖ Robert 2026-11-21, "Play via APWorld door"): door A now ALSO carries the set's level-set
+// document (`levelSets`), the host holds it (validate, then `putLevelSets`) before the rules go over, and the Flash
+// panel plays the held set's rooms (rows 5–6, js + wasm; Edit ▸ in the js one). Rows 2–3 keep the REFUSAL: a hand-over
+// that carries no set, or a tampered one the host refuses, still starts nothing. Row 4 MEASURES the bundle-then-door-A
+// re-load, now with the set carried, and changes nothing to steer it.
+// ⛔ (J4) Every row that can start a game stops it and CLOSES the Flash panel before it ends; this file is LAST in
+// testDiscovery / init-bundled, so no older row starts from a state these rows left.
 //
 // Each row SETS its own state (⚖): both host caches cleared first and after, the runtime setting restored, the world
 // loaded before reloaded. ⛔ No preset-derived hard pins: every count is derived from the handed rules at run time.
@@ -22,6 +27,7 @@ import { getLastRawJsonData } from '../../stateManager/index.js';
 import { getPanelInstances } from '../../regionMap/index.js';
 import { getActivePanelInstance } from '../../flashPanel/index.js';
 import { CUSTOM_SET_NOT_PLAYABLE } from '../../flashPanel/seedlingRandomizerEligibility.js';
+import { seedlingMountKey } from '../../flashPanel/seedlingMountKey.js';
 import { writeBundle } from '../../presets/documentBundle.js';
 import { atlasCache } from '../../procgenCore/atlasCache.js';
 import { levelSetCache } from '../../procgenCore/levelSetCache.js';
@@ -88,7 +94,7 @@ async function buildWatchSet({ withTree = false } = {}) {
  * Seedling lab panel (the same handler a frame's postMessage reaches), then the APWorld Editor's own Apply. Resolves
  * true once the app's rules ARE the handed ones (the stateManager's rulesLoaded for this load).
  */
-async function handOverAndApply(tc, rules, atlases) {
+async function handOverAndApply(tc, rules, atlases, levelSets) {
   const lab = labPanelInstances().find((p) => p.substrate === 'seedling') ?? null;
   tc.reportCondition('the Seedling lab panel is mounted in the app (the host half of door A)', !!lab);
   if (!lab) return false;
@@ -97,7 +103,8 @@ async function handOverAndApply(tc, rules, atlases) {
   // routes by the payload's iframeId and never by publisher, so the row publishes as `tests` (apworldEditorTests' precedent).
   tc.eventBus.registerPublisher(LAB_EVENTS.openInApworldEditor, 'tests');
   tc.eventBus.publish(LAB_EVENTS.openInApworldEditor,
-    { substrate: 'seedling', iframeId: lab.iframeId, rules, source: SOURCE, atlases }, 'tests');
+    { substrate: 'seedling', iframeId: lab.iframeId, rules, source: SOURCE, atlases,
+      ...(levelSets === undefined ? {} : { levelSets }) }, 'tests');
   const held = await tc.pollForValue(() => {
     const p = hub();
     return p?.rulesDoc?.region_atlas?.['1']?.atlas_id === id && p.rulesDoc.game_name === rules.game_name ? p : null;
@@ -209,9 +216,23 @@ export async function testRegionMapLabApworldDoorSeedlingSet(tc) {
 
 /* ── rows 2–4: nothing pretends to play ── */
 
+/**
+ * Raise the Flash panel, OPENING it when no instance is mounted (an earlier door row closes the one it used, J4; a
+ * panel built now reads the rules already loaded). Returns whether one is mounted.
+ */
+async function raiseFlashPanel(tc) {
+  if (!getActivePanelInstance()) {
+    try { await panelManager.createPanelForComponent('flashPanel', 'Flash Panel', 2); } catch (e) { tc.log(`open Flash panel: ${e.message}`, 'error'); }
+  }
+  tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+  const ok = await tc.pollForCondition(() => !!getActivePanelInstance(), 'a Flash panel is mounted', 15000, 100);
+  tc.reportCondition('a Flash panel is mounted (opened if none was)', !!ok);
+  return !!ok;
+}
+
 /** Raise the Flash panel and wait for THIS load's answer: G's refusal box (a new one) or an AP load. */
 async function flashOutcome(tc, runtime, stale, ms = runtime === 'wasm' ? 120000 : 40000) {
-  tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+  await raiseFlashPanel(tc);
   return tc.pollForValue(() => {
     const panel = getActivePanelInstance();
     const box = document.querySelector('.flash-panel-custom-set-refusal');
@@ -228,10 +249,51 @@ const staleFlash = () => ({
   load: getActivePanelInstance()?._apLoadResult ?? null,
 });
 
+/** A world that is not the door's, so the Flash panel decides on the NEXT door-A load from scratch. */
+async function loadOtherWorld(tc, ctx, before) {
+  const other = typeof before === 'string' && before.startsWith('./presets/') && !before.includes('seedling') ? before : null;
+  if (other) await ctx.loadRulesPath(other);
+  else await ctx.loadPreset('adventure', 1);
+  await tc.stateManager.pingWorker?.('lab-apworld-door-other', 5000);
+}
+
 /**
- * ⛔ THE STILL-REFUSED CASE, on an EMPTY `levelSetCache` (the row clears it): the tree set handed over door A WITH its
- * atlas → Apply → the Flash panel starts no game and shows G's "This set can't be played yet", on `runtime`, even
- * though the atlas is now in the host cache. S4's arm reads `atlasCache` only alongside a HELD set.
+ * ⛓ (J4) STOP THE GAME AND CLOSE THE FLASH PANEL, then MEASURE that none is left running: no active instance, no
+ * adapter, no runtime iframe/embed on any stage. Returns the measurement line.
+ */
+async function closeFlashPanel(tc) {
+  try { await panelManager.destroyPanelByComponentType('flashPanel'); } catch (e) { tc.log(`close Flash panel: ${e.message}`); }
+  await new Promise((r) => setTimeout(r, 250));
+  const panel = getActivePanelInstance();
+  const stages = [...document.querySelectorAll('.flash-panel-swf')];
+  const frames = stages.reduce((n, st) => n + st.querySelectorAll('iframe, object, embed').length, 0);
+  return { ok: !panel && frames === 0, line: `instance=${panel ? 'yes' : 'none'}, adapter=${panel?.adapter ? 'yes' : 'none'}, `
+    + `stages=${stages.length}, runtime frames=${frames}` };
+}
+
+/** G's refusal for THIS load, asserted whole on `runtime` (box, status, nothing started). */
+async function assertRefused(tc, runtime, leg, stale) {
+  const out = await flashOutcome(tc, runtime, stale);
+  tc.assertEqual(`[${runtime}] [${leg}] the Flash panel REFUSED (G), it did not load`, 'refused', out?.kind ?? null);
+  tc.assertEqual(`[${runtime}] [${leg}] the status reads G's message`, CUSTOM_SET_NOT_PLAYABLE,
+    document.querySelector('.flash-panel-status')?.textContent ?? null);
+  tc.reportCondition(`[${runtime}] [${leg}] the box says "${CUSTOM_SET_NOT_PLAYABLE}" + a named reason (${out?.box?.textContent ?? ''})`,
+    (out?.box?.textContent ?? '').startsWith(CUSTOM_SET_NOT_PLAYABLE));
+  await new Promise((r) => setTimeout(r, 1500));
+  const panel = getActivePanelInstance();
+  const stage = document.querySelector('.flash-panel-swf');
+  tc.assertEqual(`[${runtime}] [${leg}] no game was started (no adapter, no iframe, no embed)`, '0/0/0',
+    `${panel?.adapter ? 1 : 0}/${stage?.querySelectorAll('iframe').length ?? -1}`
+      + `/${stage?.querySelectorAll('object, embed').length ?? -1}`);
+}
+
+/**
+ * ⛔ THE STILL-REFUSED CASES, on an EMPTY `levelSetCache` (the row clears it). lab-apworld-door-map's row, updated by
+ * lab-apworld-door-play: door A now CAN carry the set, so the refusal is kept for the two hand-overs that must still
+ * start nothing — (i) one that carries NO set (an older page; the atlas alone), (ii) one whose set was TAMPERED after
+ * its stamp (room 10's tree moved; its `provenance.content_hash` still says the rules' hash): the host computes the
+ * hash, REFUSES it by name and holds nothing. Both: the Flash panel shows G's "This set can't be played yet". Another
+ * world is loaded between the legs so the panel decides the second one from scratch.
  */
 const doorASetStartsNoGame = (runtime) => async (tc) => {
   const ctx = buildContext({ eventBus: tc.eventBus });
@@ -243,24 +305,37 @@ const doorASetStartsNoGame = (runtime) => async (tc) => {
     await settingsManager.updateSetting(RUNTIME_KEY, runtime, { persist: false });
     const built = await buildWatchSet({ withTree: true });
     const id = built.rules.region_atlas['1'].atlas_id;
+    const ref = built.rules.region_atlas['1'].level_set;
     tc.reportCondition(`[${runtime}] the handed rules carry the Seedling flash_panel and name a level set`,
-      !!built.rules.flash_panel && !!built.rules.region_atlas['1'].level_set);
+      !!built.rules.flash_panel && !!ref);
     tc.assertEqual(`[${runtime}] the host holds NO level set (the row's own state)`, 0, levelSetCache.size);
-    const stale = staleFlash();
-    if (!await handOverAndApply(tc, built.rules, [built.atlas])) return tc.getOverallResult();
-    tc.reportCondition(`[${runtime}] …and the door's atlas IS in the host cache (${id})`, atlasCache.has(id));
-    const out = await flashOutcome(tc, runtime, stale);
-    tc.assertEqual(`[${runtime}] the Flash panel REFUSED (G), it did not load`, 'refused', out?.kind ?? null);
-    tc.assertEqual(`[${runtime}] the status reads G's message`, CUSTOM_SET_NOT_PLAYABLE,
-      document.querySelector('.flash-panel-status')?.textContent ?? null);
-    tc.reportCondition(`[${runtime}] the box says "${CUSTOM_SET_NOT_PLAYABLE}" + a named reason (${out?.box?.textContent ?? ''})`,
-      (out?.box?.textContent ?? '').startsWith(CUSTOM_SET_NOT_PLAYABLE));
-    await new Promise((r) => setTimeout(r, 1500));
-    const panel = getActivePanelInstance();
-    const stage = document.querySelector('.flash-panel-swf');
-    tc.assertEqual(`[${runtime}] no game was started (no adapter, no iframe, no embed)`, '0/0/0',
-      `${panel?.adapter ? 1 : 0}/${stage?.querySelectorAll('iframe').length ?? -1}`
-        + `/${stage?.querySelectorAll('object, embed').length ?? -1}`);
+
+    // ── (i) no set carried ──
+    let stale = staleFlash();
+    let lab = await handOverAndApply(tc, built.rules, [built.atlas]);
+    if (!lab) return tc.getOverallResult();
+    tc.reportCondition(`[${runtime}] [no set] …the door's atlas IS in the host cache (${id})`, atlasCache.has(id));
+    tc.assertEqual(`[${runtime}] [no set] the host holds no set, and names the player uncarried`,
+      `0/${ref.set_id}`, `${levelSetCache.size}/${lab.lastLevelSetHandover?.uncarried?.[0]?.set_id ?? null}`);
+    await assertRefused(tc, runtime, 'no set', stale);
+
+    // ── (ii) a tampered set carried ──
+    await loadOtherWorld(tc, ctx, before);
+    const tampered = structuredClone(built.levelSet);
+    tc.assertEqual(`[${runtime}] [tampered] the tampered copy still DECLARES the rules' hash`, ref.content_hash,
+      tampered.provenance?.content_hash ?? null);
+    const tree = tampered.rooms[10].source.record.entities.find((e) => e.type === HELD_TREE.type && e.x === HELD_TREE.x);
+    tree.x += 16;
+    stale = staleFlash();
+    lab = await handOverAndApply(tc, built.rules, [built.atlas], [tampered]);
+    if (!lab) return tc.getOverallResult();
+    const handed = lab.lastLevelSetHandover ?? {};
+    tc.reportCondition(`[${runtime}] [tampered] the host REFUSED the set by name (${handed.refused?.[0]?.why ?? 'no refusal'})`,
+      handed.put?.length === 0 && handed.refused?.length === 1 && /not the content hash the rules name/.test(handed.refused[0].why));
+    tc.assertEqual(`[${runtime}] [tampered] the host cache is still EMPTY`, 0, levelSetCache.size);
+    tc.reportCondition(`[${runtime}] [tampered] the lab panel's note names the refusal`,
+      /level set REFUSED \(not held\)/.test(lab.noteEl?.textContent ?? ''));
+    await assertRefused(tc, runtime, 'tampered', stale);
   } catch (e) {
     tc.reportCondition(`[${runtime}] the door-A refusal row ran without throwing: ${e.message}`, false);
   } finally {
@@ -313,15 +388,12 @@ async function doorAAfterBundleMeasured(tc) {
      */
     for (const leg of ['a: straight after the bundle', 'b: after another world in between']) {
       if (leg.startsWith('b')) {
-        const other = typeof before === 'string' && before.startsWith('./presets/') && !before.includes('seedling')
-          ? before : null;
-        if (other) await ctx.loadRulesPath(other);
-        else await ctx.loadPreset('adventure', 1);
-        await tc.stateManager.pingWorker?.('lab-apworld-door-other', 5000);
+        await loadOtherWorld(tc, ctx, before);
         tc.assertEqual(`[${leg}] the host still HOLDS the set`, 'held', levelSetCache.get(ref.set_id, ref.content_hash).status);
       }
       const stale = staleFlash();
-      if (!await handOverAndApply(tc, built.rules, [built.atlas])) return tc.getOverallResult();
+      // ⛓ lab-apworld-door-play: door A now carries the set too (what the page sends)
+      if (!await handOverAndApply(tc, built.rules, [built.atlas], [built.levelSet])) return tc.getOverallResult();
       const out = await flashOutcome(tc, runtime, stale, 30000);
       const panel = out?.panel ?? getActivePanelInstance();
       const delivered = panel?._seedlingRealSet ?? null;
@@ -343,12 +415,136 @@ async function doorAAfterBundleMeasured(tc) {
   } catch (e) {
     tc.reportCondition(`the bundle-then-door-A row ran without throwing: ${e.message}`, false);
   } finally {
+    const closed = await closeFlashPanel(tc);
+    tc.log(`(J4) after the row: ${closed.line}`);
+    tc.reportCondition(`(J4) the row stopped its game and closed the Flash panel (${closed.line})`, closed.ok);
     clearCaches();
     try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
     await restoreWorld(tc, ctx, before);
   }
   return tc.getOverallResult();
 }
+
+/* ── rows 5–6: a set handed over door A WITH its level set plays the held set's rooms ── */
+
+/**
+ * ⛓⛓ lab-apworld-door-play — THE SLICE: on an EMPTY `levelSetCache`, the tree set handed over door A with its atlas
+ * AND its level set → the host holds the set under the rules' hash (before the rules go over) → Apply → the Flash
+ * panel boots `runtime`, delivered THE HELD SET: its id, room 10 with the tree, the runtime's own mounted set, and the
+ * mount key is the handed rules' (so it names the set's `level_set`). ⛔ STOP-checks: never vanilla rooms, never a set
+ * under another hash. On js, Edit ▸ then opens room 10 back in the lab with the same set id (S4's measure, for a set
+ * that arrived over door A). (J4) The game is stopped and the Flash panel closed before the row ends, and that is
+ * measured.
+ */
+const doorASetPlays = (runtime) => async (tc) => {
+  const ctx = buildContext({ eventBus: tc.eventBus });
+  const before = ctx.rulesSource();
+  let previous = 'auto';
+  try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+  let off = () => {};
+  try {
+    clearCaches();
+    await settingsManager.updateSetting(RUNTIME_KEY, runtime, { persist: false });
+    const built = await buildWatchSet({ withTree: true });
+    const ref = built.rules.region_atlas['1'].level_set;
+    tc.assertEqual(`[${runtime}] the host holds NO level set (the row's own state)`, 0, levelSetCache.size);
+    tc.reportCondition(`[${runtime}] the page's set is the one the rules name (${ref?.set_id})`,
+      built.levelSet.set_id === ref?.set_id && hasHeldTree(built.levelSet.rooms[10].source.record));
+    const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+    const staleLoad = getActivePanelInstance()?._apLoadResult ?? null;
+    const lab = await handOverAndApply(tc, built.rules, [built.atlas], [built.levelSet]);
+    if (!lab) return tc.getOverallResult();
+    tc.log(`[${runtime}] lab note: ${lab.noteEl?.textContent ?? ''}`);
+    tc.assertEqual(`[${runtime}] the lab panel HELD the door's set under the rules' hash`, `held/${ref.set_id}`,
+      `${levelSetCache.get(ref.set_id, ref.content_hash).status}/${lab.lastLevelSetHandover?.put?.[0]?.set_id ?? null}`);
+    if (!await raiseFlashPanel(tc)) return tc.getOverallResult();
+    const panel = await tc.pollForValue(() => {
+      const p = getActivePanelInstance();
+      return p?.transport === runtime && p.adapter && p.adapter !== staleAdapter && p._initRuntime === runtime ? p : null;
+    }, `[${runtime}] the Flash panel mounted the ${runtime} runtime (a fresh adapter)`, runtime === 'wasm' ? 60000 : 30000, 250);
+    tc.reportCondition(`[${runtime}] the Flash panel mounted the ${runtime} runtime (a fresh adapter)`, !!panel);
+    if (!panel) {
+      tc.log(`[${runtime}] status ${JSON.stringify(document.querySelector('.flash-panel-status')?.textContent)}; refusal box `
+        + `${JSON.stringify(document.querySelector('.flash-panel-custom-set-refusal')?.textContent ?? null)}`, 'error');
+      return tc.getOverallResult();
+    }
+    if (runtime === 'wasm') {
+      const start = await tc.pollForValue(() => {
+        if (panel.statusElement?.textContent !== 'click ▶ Start in the game') return null;
+        try { return document.getElementById(panel.flashObjectId)?.contentWindow?.document?.querySelector('#btn-start') ?? null; } catch { return null; }
+      }, '[wasm] the panel asks for ▶ Start', 120000, 250);
+      tc.reportCondition('[wasm] the panel asks for ▶ Start', !!start);
+      if (!start) return tc.getOverallResult();
+      start.click();
+    }
+    const done = await tc.pollForValue(() => (panel._apLoadResult && panel._apLoadResult !== staleLoad
+      && panel._seedlingRealSet ? panel._apLoadResult : null), `[${runtime}] the AP load ran`, runtime === 'wasm' ? 120000 : 60000, 250);
+    if (!done) {
+      tc.log(`[${runtime}] apLoad ${JSON.stringify(panel._apLoadResult ?? null)?.slice(0, 400)}; refusal `
+        + `${JSON.stringify(panel._apLoadRefusal ?? null)}; log: ${(document.querySelector('.flash-panel-log')?.textContent ?? '')
+          .split('\n').slice(-20).join(' | ')}`, 'error');
+    }
+    tc.reportCondition(`[${runtime}] the AP load delivered and reset (ok)`, !!done?.ok);
+    tc.assertEqual(`[${runtime}] no refusal (the set is HELD)`, null, panel._apLoadRefusal ?? null);
+    const delivered = panel._seedlingRealSet;
+    tc.assertEqual(`[${runtime}] STOP-check: the DELIVERED set is the held one (its id), not the original rooms`,
+      built.levelSet.set_id, delivered?.set_id ?? null);
+    tc.reportCondition(`[${runtime}] STOP-check: the delivered room 10 has the tree (the held set's own room)`,
+      hasHeldTree(delivered?.rooms?.[10]?.source?.record));
+    tc.assertEqual(`[${runtime}] STOP-check: the host serves it only under the hash the rules name`, 'held',
+      levelSetCache.get(ref.set_id, ref.content_hash).status);
+    let ls = null;
+    try { ls = JSON.parse(panel.adapter.bot('botLevelSet')); } catch { ls = null; }
+    tc.assertEqual(`[${runtime}] the RUNTIME mounted the delivered set (botLevelSet.active, its rooms)`,
+      `${built.levelSet.set_id}/${built.levelSet.rooms.length}`, `${ls?.active ?? null}/${ls?.rooms ?? ls?.table_levels ?? null}`);
+    const key = panel._apLoadKey;
+    let keyed = null;
+    try { keyed = JSON.parse(key)?.atlas?.level_set ?? null; } catch { keyed = null; }
+    tc.reportCondition(`[${runtime}] the mount key is the handed rules' and names the set (${JSON.stringify(keyed)})`,
+      key === seedlingMountKey({ rules: built.rules, playerId: tc.stateManager.getStaticData?.()?.playerId,
+        locations: tc.stateManager.getStaticData?.()?.locations })
+        && keyed?.set_id === ref.set_id && keyed?.content_hash === ref.content_hash);
+    if (runtime === 'js') {
+      const rt = document.getElementById(panel.flashObjectId)?.contentWindow?.__seedlingJsRuntime ?? null;
+      tc.reportCondition('[js] the JS page\'s mounted room 10 has the tree', hasHeldTree(rt?.mounted?.records?.get(10)));
+      // ── Edit ▸ (S4), for a set that arrived over door A: room 10 opens back in the lab, same set id ──
+      tc.assertEqual('[js] Edit ▸ is offered (a held set)', '', panel.editRoomButton?.style.display ?? null);
+      panel.adapter.teleport({ level: 10, x: 48, y: 48 });
+      const in10 = await tc.pollForCondition(() => {
+        try { return JSON.parse(panel.adapter.bot('botStatus'))?.level === 10; } catch { return false; }
+      }, '[js] the game is in room 10', 20000, 200);
+      tc.reportCondition('[js] the game is in room 10 (teleported, for Edit ▸)', !!in10);
+      if (in10) {
+        let announced = null;
+        const handler = (data) => {
+          const p = data?.payload;
+          if (p?.substrate === 'seedling' && p.room === 10 && p.record?.set) announced = p;
+        };
+        tc.eventBus.subscribe(LAB_EVENTS.levelChanged, handler, 'tests');
+        off = () => tc.eventBus.unsubscribe?.(LAB_EVENTS.levelChanged, handler, 'tests');
+        const answer = await panel._editHeldSetRoom();
+        tc.assertEqual('[js] Edit ▸ handed room 10 of the door-A set to the lab', `true/10/${ref.set_id}`,
+          `${answer?.ok}/${answer?.room}/${answer?.set_id}`);
+        const seen = answer?.ok ? await tc.pollForValue(() => announced, '[js] the lab announces room 10 open', 60000, 250) : null;
+        tc.assertEqual('[js] the lab opened room 10 of the SAME set (its own announce: set id)', ref.set_id,
+          seen?.record?.set?.set_id ?? null);
+        tc.reportCondition('[js] the lab\'s room 10 has the tree', hasHeldTree(seen?.record?.set?.rooms?.[10]?.source?.record));
+      }
+    }
+  } catch (e) {
+    tc.reportCondition(`[${runtime}] the door-A play row ran without throwing: ${e.message}`, false);
+  } finally {
+    off();
+    getActivePanelInstance()?._heldSetEditHandle?.close?.();
+    const closed = await closeFlashPanel(tc);
+    tc.log(`(J4) after the row: ${closed.line}`);
+    tc.reportCondition(`[${runtime}] (J4) the row stopped its game and closed the Flash panel (${closed.line})`, closed.ok);
+    clearCaches();
+    try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+    await restoreWorld(tc, ctx, before);
+  }
+  return tc.getOverallResult();
+};
 
 registerTest({
   id: 'region-map-lab-apworld-door-seedling-set',
@@ -367,9 +563,10 @@ for (const [id, fn, rt] of [
 ]) {
   registerTest({
     id,
-    name: `Seedling ${rt} runtime: a lab set handed over the APWorld door (atlas cached, no set held) starts no game`,
-    description: 'lab-apworld-door-map: the tree set handed over door A WITH its atlas, applied, on an EMPTY '
-      + `levelSetCache: the Flash panel shows "${CUSTOM_SET_NOT_PLAYABLE}" and starts nothing.`,
+    name: `Seedling ${rt} runtime: a lab set handed over the APWorld door without its level set, or with a tampered one, starts no game`,
+    description: 'lab-apworld-door-map, updated by lab-apworld-door-play: on an EMPTY levelSetCache, the tree set '
+      + 'handed over door A (i) with its atlas and NO level set, (ii) with a level set tampered after its stamp (the '
+      + `host refuses it, holds nothing): the Flash panel shows "${CUSTOM_SET_NOT_PLAYABLE}" and starts nothing.`,
     testFunction: fn,
     category: id.startsWith('seedling-js-') ? 'Seedling JS runtime' : 'Seedling wasm runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
@@ -379,9 +576,27 @@ for (const [id, fn, rt] of [
 registerTest({
   id: 'seedling-js-runtime-lab-apworld-door-after-bundle-measured',
   name: 'Seedling JS runtime: a set first loaded as a bundle, then handed over the APWorld door — measured',
-  description: 'lab-apworld-door-map: the tree set loaded through the bundle door (held), then handed over door A and '
-    + 'applied; the Flash panel\'s answer is LOGGED (OUTCOME …). Asserted only: no vanilla rooms, no other hash.',
+  description: 'lab-apworld-door-map (door A carries the set since lab-apworld-door-play): the tree set loaded through '
+    + 'the bundle door (held), then handed over door A and applied; the Flash panel\'s answer is LOGGED (OUTCOME …). '
+    + 'Asserted only: no vanilla rooms, no other hash, and the Flash panel closed at the end.',
   testFunction: doorAAfterBundleMeasured,
   category: 'Seedling JS runtime',
   enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+for (const [id, rt] of [
+  ['seedling-js-runtime-lab-apworld-door-set-plays-held-rooms', 'js'],
+  ['seedling-wasm-runtime-lab-apworld-door-set-plays-held-rooms', 'wasm'],
+]) {
+  registerTest({
+    id,
+    name: `Seedling ${rt === 'js' ? 'JS' : 'wasm'} runtime: a lab set handed over the APWorld door WITH its level set plays the held set's rooms`,
+    description: 'lab-apworld-door-play: on an EMPTY levelSetCache, the tree set handed over door A with its atlas and '
+      + 'its level set; the lab panel holds the set under the rules\' hash, Apply, and the Flash panel delivers THAT set '
+      + `(room 10 has the tree; the runtime's mounted set; the mount key names it)${rt === 'js' ? '; Edit ▸ opens room 10 back in the lab, same set id' : ''}. `
+      + 'The game is stopped and the Flash panel closed at the end.',
+    testFunction: doorASetPlays(rt),
+    category: rt === 'js' ? 'Seedling JS runtime' : 'Seedling wasm runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+  });
+}

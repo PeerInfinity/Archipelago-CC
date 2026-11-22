@@ -73,6 +73,8 @@ import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 import {
     BUNDLE_KINDS, DEFAULT_RULES_JSON_INDENT, writeBundle,
 } from '../presets/documentBundle.js';
+import { labLevelSetVerdicts, levelSetRefsNamedBy } from './labProtocol.js';
+import { levelSetContentHash } from './levelSetReference.js';
 
 export class SetEditorViewError extends Error {
     constructor(message) {
@@ -219,9 +221,12 @@ const el = (doc, tag, className, text) => {
  *   bundle's refusal. The default is the identity, so a mount that never heard of it
  *   bundles exactly what it bundled before
  * @param {object} [o.apworldEditor] the REVERSE LINK (APWorld editor hub, H4c)
- *   — `{available: () => boolean, open: (rules, atlases) => boolean}`. ⛓ lab-apworld-door-map: `atlases`
+ *   — `{available: () => boolean, open: (rules, atlases, levelSets) => boolean}`. ⛓ lab-apworld-door-map: `atlases`
  *   is `[atlasAtDoor(rep.atlas, rep.rules)]` (the SAME member the bundle door writes, so its id is the one
- *   the rules name) or `[]` when the report has no atlas or `atlasAtDoor` refuses; the rules go either way. ⛔ `null` (the
+ *   the rules name) or `[]` when the report has no atlas or `atlasAtDoor` refuses; the rules go either way.
+ *   ⛓ lab-apworld-door-play: `levelSets` is the `level-set` member(s) of the SAME `adapterFns.download(session)` the
+ *   bundle writes, kept only when its computed content hash and `set_id` are the ones the handed rules name
+ *   (`labLevelSetVerdicts`, the host's own rule); `[]` when the rules name none, and asked for only then. ⛔ `null` (the
  *   default) is the STANDALONE answer and the button stays HIDDEN, not
  *   disabled: a page with no host has no app to open the hub in, and a disabled
  *   control would advertise a door that does not exist here. ⚠ `available()` is
@@ -2174,7 +2179,8 @@ export function mountSetEditor({
     const apworldBtn = $('editOpenApworldEditor');
     if (apworldBtn) { apworldBtn.hidden = true; apworldBtn.disabled = true; }
     on('editOpenApworldEditor', () => {
-        pressScope('__editorSetApworldPresses', ['__editorSetApworldOut', '__editorSetApworldAtlasIds']);
+        pressScope('__editorSetApworldPresses',
+            ['__editorSetApworldOut', '__editorSetApworldAtlasIds', '__editorSetApworldLevelSetIds']);
         if (!apworldEditor || apworldEditor.available() !== true) {
             setNote('⛔ NOT OPENED — this page has no host to open the APWorld Editor in. '
                 + 'A lab page is a standalone document; the editor lives in the app.', true);
@@ -2204,15 +2210,49 @@ export function mountSetEditor({
                 atlasWhy = e.message;
             }
         }
-        const sent = apworldEditor.open(rep.rules, atlases) === true;
+        /**
+         * ⛓ lab-apworld-door-play — **AND THE LEVEL SET THE RULES NAME, SO THE SET PLAYS.** The rules name the set
+         * their rooms came from (`region_atlas[p].level_set = {set_id, content_hash}`) and carry no body; the player
+         * delivers those rooms only when the host HOLDS that exact set. The document is the `level-set` member of the
+         * SAME `adapterFns.download(session)` the bundle writes (validated, stamped once), and it travels only when
+         * its COMPUTED hash and id are the ones the handed rules name — `labLevelSetVerdicts`, the rule the host
+         * applies again before it holds anything — so the page never offers a different version of the set. Asked
+         * only when the rules name a set: a door whose rules name none sends `[]`, exactly as before.
+         * ⛔ A refusal does NOT stop the hand-off: the rules go over, the player refuses the set by name (slice G).
+         */
+        let levelSets = [];
+        let setWhy = null;
+        const setRefs = levelSetRefsNamedBy(rep.rules);
+        if (setRefs.length > 0) {
+            try {
+                const docs = adapterFns.download(session).members
+                    .filter((m) => m.kind === 'level-set').map((m) => m.doc);
+                const v = labLevelSetVerdicts(docs, rep.rules, { contentHashOf: levelSetContentHash });
+                levelSets = v.ok;
+                const missing = v.players.filter((p) => !p.carried);
+                if (missing.length) {
+                    setWhy = [...v.refused.map((r) => r.why),
+                        ...missing.map((p) => `no set this page writes is ${JSON.stringify(p.set_id)} @ ${p.content_hash} `
+                            + `(player ${p.player})`)].join('; ');
+                }
+            } catch (e) {
+                if (!(e instanceof Error)) throw e;
+                levelSets = [];
+                setWhy = e.message;
+            }
+        }
+        const sent = apworldEditor.open(rep.rules, atlases, levelSets) === true;
         globalThis.__editorSetApworldOut = rep.rules;
         globalThis.__editorSetApworldAtlasIds = atlases.map((a) => a?.atlas_id ?? null);
+        globalThis.__editorSetApworldLevelSetIds = levelSets.map((s) => s.set_id);
         setNote(sent
             ? `OPENED in the APWorld Editor — ${rep.report.ap_regions} AP region(s), `
               + `${rep.report.exits} exit(s), ${rep.report.locations} location(s)`
               + (atlases.length ? ` · with its region atlas ${atlases.map((a) => a.atlas_id).join(', ')}`
                   : ` · no region atlas${atlasWhy ? ` (${atlasWhy})` : ''}`)
-            : '⛔ NOT OPENED — the host link refused the hand-off.', !sent);
+              + (levelSets.length ? ` · with its level set ${levelSets.map((s) => s.set_id).join(', ')}` : '')
+              + (setWhy ? ` · ⛔ level set NOT carried (${setWhy})` : '')
+            : '⛔ NOT OPENED — the host link refused the hand-off.', !sent || setWhy !== null);
         render();
         onSetChange?.({ why: 'handoff' });
     });

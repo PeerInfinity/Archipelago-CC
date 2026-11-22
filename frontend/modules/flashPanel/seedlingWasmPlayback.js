@@ -127,6 +127,7 @@ import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.j
 import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { mountedRecordsOf, WALK_TAPE_PRODUCER } from '../seedlingDemo/wasmWalkTape.js';
 import { playerDamageFromStatus, stagedHitsMismatch } from '../seedlingDemo/playerDamage.js';
+import { readActivatorsFor, withApChestRows } from '../seedlingDemo/apChestRoster.js';
 import {
     deliveredItems, deliveredSaveArrays, deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, equipSlotRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites,
     liveSaveArrays, mergeSaveArrays, saveArraysOfWrites, saveDelta, slotsAfterDelivery, stageItems, stageSaveArrays,
@@ -231,7 +232,7 @@ export function createWasmPlayback({
     now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now()),
     onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetWork = SOLVER_BUDGET_WORK,
     getBudgetWork = null, getUpgradeWindowWork = null, getDelivery = null, backstopMs = SOLVE_BACKSTOP_MS, getBackstopMs = null,
-    getAxeDodgeAskPerPreview = null, getDashOnlyWindow = null, getDashShape = null,
+    getAxeDodgeAskPerPreview = null, getDashOnlyWindow = null, getDashShape = null, getCapabilities = () => [],
 }) {
     /** ⛓ O3 — the budget (work units) a solve starts with: the knob's live value, else the engine's own. */
     let ownBudget = budgetWork;
@@ -734,7 +735,18 @@ export function createWasmPlayback({
                 shadow = { x: one.state.x, y: one.state.y, direction: one.state.direction, hits: one.damage.hits };
             } catch (err) { return refused('staging', String(err?.message ?? err).split('\n')[0]); }
         }
-        const mobiles = J(game()?.botMobiles?.());
+        /**
+         * ⛓ seedling-p4h-beside (the chest readers) — the adoption's "every Mobile is an admitted inert NPC" clause
+         * sees an AP location as its `Pickups::APItem` row and refuses the room. On a build declaring `apchest` an AP
+         * chest location is a `Pickups::APChest` in `botActivators().chests` instead, absent from `botMobiles`, so
+         * its rows join the roster here (`withApChestRows`) and the clause refuses it the same way. p4g: unchanged.
+         */
+        let caps = [];
+        try { caps = getCapabilities?.() ?? []; } catch { caps = []; }
+        const rawMobiles = J(game()?.botMobiles?.());
+        const mobiles = rawMobiles && Array.isArray(rawMobiles.mobiles)
+            ? { ...rawMobiles, mobiles: withApChestRows(rawMobiles.mobiles, { capabilities: caps, activators: readActivatorsFor(game(), caps) }) }
+            : rawMobiles;
         let r = adoptionRefusal({ beginEntry: be, status: st, mobiles, record, shadow, state });
         // ⛓ §5.19 — the fade is waited out only when nothing ELSE refuses: a permanent clause refuses now.
         if (r?.clause === 'fade') r = adoptionRefusal({ beginEntry: be, status: st, mobiles, record, shadow, state, waitingOutFade: true }) ?? r;

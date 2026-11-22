@@ -172,6 +172,27 @@ export const SUPPORTED_TAPE_VERSIONS = Object.freeze(
 export const PROFILE_TAPE_VERSION = 13;
 
 /**
+ * ── Version 13 on the GAME: `secondaries` (the p4h build, `secondaries` capability) ──
+ *
+ * `secondaries: [{t, slot}]` writes `Main.secondary` at observation tick `t`, right after that tick's `equips` — the
+ * `equips` shape for the C slot. ⛓ GAME-VISIBLE: it is an instruction, so `gameVisibleTape` CARRIES it, and a
+ * projection carrying it is the game's tape_version 13 (the fork accepts 1..8, 12 and 13; `Bot.as`'s gate). The
+ * model's own v13 also carries the model-only `profile`; the two features share the number and never a field.
+ *
+ * ⛓ THE VALIDATION MIRRORS `Bot.as` (p4h-as3 2498270355): each entry an object with integer `t >= 0` and
+ * `slot >= 0`, no duplicate tick; the slot's UPPER bound is the game's late check (`drainEquipChecks`, against the
+ * live `Inventory.itemCount`), so it is not checked here, exactly as for `equips`. A secondary equal to
+ * `Main.primary` is allowed (the menu produces it: `Inventory.as:213-217`).
+ *
+ * ⛔ VALUE-SCOPED below 13, as `Bot.as` is: a tape below 13 carrying a NON-EMPTY `secondaries` is refused
+ * ("means secondaries: [] BY DEFINITION"); an empty one is accepted and dropped. ⛔ PRESENCE-SCOPED at 13, on
+ * `profile`'s precedent: a parsed tape carries the key ONLY when it declared a non-empty list, so no committed tape,
+ * projection or latch-cache key moves at this bump. Only a build declaring `secondaries` reads it; on any other
+ * build the director must not ship one (`watchManual`'s fold refuses by name there).
+ */
+export const SECONDARIES_TAPE_VERSION = 13;
+
+/**
  * ── Version 12: HOLD-AFTER-LATCH (R9 slice P4E, ⚖ 72 (a′)) ──────────────
  *
  * `hold: true` asks the GAME to freeze the room at this tape's seam latch —
@@ -1019,6 +1040,38 @@ export function inventorySlotsRefusal(slots, items) {
  * scanned `inventory_slots` readout by the differential — two sides, and
  * neither of them the tape repeating itself.
  */
+/**
+ * ⛓ v13 `secondaries` — `Bot.as`'s validation (p4h-as3 2498270355), message for message where it can be.
+ * @returns {Array<{t:number, slot:number}>} sorted by `t`; `[]` when undeclared or empty
+ */
+function parseSecondaries(raw, version) {
+    const v = raw.secondaries;
+    if (version < SECONDARIES_TAPE_VERSION) {
+        if (v !== undefined && v !== null && !(Array.isArray(v) && v.length === 0)) {
+            fail(`tape_version ${version} means secondaries: [] BY DEFINITION, got ${JSON.stringify(v)} — the build `
+                + 'that reads it is the one declaring the `secondaries` capability. Bump tape_version to '
+                + `${SECONDARIES_TAPE_VERSION} to declare one.`);
+        }
+        return [];
+    }
+    if (v === undefined || v === null) return [];
+    if (!Array.isArray(v)) fail(`secondaries must be an array on a tape_version ${version} tape, got ${JSON.stringify(v)}`);
+    const seen = new Set();
+    const out = v.map((e, i) => {
+        const where = `secondaries[${i}]`;
+        if (e === null || typeof e !== 'object' || Array.isArray(e)) fail(`${where} must be {t, slot}`);
+        requireInt(e.t, `${where}.t`);
+        requireInt(e.slot, `${where}.slot`);
+        if (e.t < 0) fail(`${where}.t must be >= 0, got ${e.t}`);
+        if (e.slot < 0) fail(`${where}.slot must be >= 0, got ${e.slot}`);
+        if (seen.has(e.t)) fail(`${where} duplicates tick ${e.t}`);
+        seen.add(e.t);
+        return { t: e.t, slot: e.slot };
+    });
+    out.sort((a, b) => a.t - b.t);
+    return out;
+}
+
 function parseEquips(raw) {
     if (!Array.isArray(raw.equips)) {
         fail('equips must be an array of {t, slot} on a tape_version 4 tape '
@@ -1912,6 +1965,8 @@ export function parseTape(input) {
             + 'to declare one.');
     }
     const profile = declaresProfile ? validateProfile(raw.profile, fail) : null;
+    // ⛓ v13 `secondaries` (the game's p4h field) — see SECONDARIES_TAPE_VERSION.
+    const secondaries = parseSecondaries(raw, version);
 
     const boot = raw.boot;
     if (boot === null || typeof boot !== 'object' || Array.isArray(boot)) {
@@ -2045,6 +2100,10 @@ export function parseTape(input) {
         hold,
         // ⛓ v13: present ONLY when declared (see PROFILE_TAPE_VERSION).
         ...(profile ? { profile } : {}),
+        // ⛓ v13 (game): present ONLY when declared non-empty (see SECONDARIES_TAPE_VERSION).
+        ...(secondaries.length ? {
+            secondaries: Object.freeze(secondaries.map((e) => Object.freeze({ t: e.t, slot: e.slot }))),
+        } : {}),
         tick_count: tickCount,
         inputs: Object.freeze(inputs.map((s) => Object.freeze(s))),
         ...(raw.name ? { name: String(raw.name) } : {}),
@@ -2143,7 +2202,7 @@ export const GAME_VISIBLE_DROPS = Object.freeze(
  * tape's projected bytes (and `solve-seedling-r9-campaign`'s latch-cache key
  * on them) do not move at this bump.
  */
-export const GAME_VISIBLE_KEEPS = Object.freeze(['hold']);
+export const GAME_VISIBLE_KEEPS = Object.freeze(['hold', 'secondaries']);
 
 /**
  * The window tape a CONTINUATION director hands on when the build can hold:
@@ -2186,9 +2245,12 @@ export function gameVisibleTape(tape) {
     // through `botStart`'s existing `rng`/`seam.time` writes and the game only
     // ever sees the ordinary declaration it has always seen.
     // ⛓ engine prep B1 D3: `profile` (v13) leaves too — model-only.
-    const { despawn, tick0, hold, profile, ...rest } = t;
+    const { despawn, tick0, hold, profile, secondaries, ...rest } = t;
+    // ⛓ p4h: a projection carrying `secondaries` is the game's tape_version 13 (it keeps `hold` when declared).
+    const secs = (secondaries ?? []).length > 0;
     return {
         ...rest,
+        ...(secs ? { despawn: [], secondaries: secondaries.map((e) => ({ t: e.t, slot: e.slot })) } : {}),
         /**
          * ⛓ P4E: a HOLDING projection is a real JS v12 tape too — the same
          * version number means the same thing on both sides. v10+ requires
@@ -2211,7 +2273,7 @@ export function gameVisibleTape(tape) {
         // measure.
         // ⛓ P4E: a HOLDING tape is the game's version 12 — v8's features plus
         // `hold`, which is exactly what is left after the drops above.
-        tape_version: hold ? HOLD_TAPE_VERSION : Math.min(t.tape_version, 8),
+        tape_version: secs ? SECONDARIES_TAPE_VERSION : hold ? HOLD_TAPE_VERSION : Math.min(t.tape_version, 8),
         /**
          * ⛔⛔⛔ ⚖ RULING 23 (user, 2026-08-21): *"a level run separately must
          * play identically to the same level reached from the start"* — so a
@@ -2264,6 +2326,7 @@ export function requiredTapeVersion(tape, floor = 8) {
     // ⛓ v13 `profile` outranks `hold` in the MODEL's version; the game's
     // projection is untouched by it (`gameVisibleTape`).
     if (tape.profile !== null && tape.profile !== undefined) return PROFILE_TAPE_VERSION;
+    if ((tape.secondaries ?? []).length > 0) return SECONDARIES_TAPE_VERSION;
     if (tape.hold === true) return HOLD_TAPE_VERSION;
     if (tape.tick0 !== null && tape.tick0 !== undefined) return 11;
     if ((tape.despawn ?? []).length > 0) return 10;
@@ -2359,6 +2422,9 @@ export function serializeTape(tape) {
         // Written ONLY for a v13 tape that declares it (the round-trip rule).
         ...(t.tape_version >= PROFILE_TAPE_VERSION && t.profile
             ? { profile: { id: t.profile.id, md5: t.profile.md5 } } : {}),
+        // Written ONLY for a v13 tape that declares a non-empty list (the round-trip rule).
+        ...(t.tape_version >= SECONDARIES_TAPE_VERSION && (t.secondaries ?? []).length
+            ? { secondaries: t.secondaries.map((e) => ({ t: e.t, slot: e.slot })) } : {}),
         tick_count: t.tick_count,
         inputs: t.inputs.map((s) => ({ key: s.key, from: s.from, to: s.to })),
     };

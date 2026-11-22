@@ -18,6 +18,13 @@
  *  · WRITTEN on each change the core announces (a persistence clear, an apitem, a boot — an item fold rides on one —
  *    a crossing, a slot write, ⛓ a host delivery written into the live run), debounced; and flushed when the binding is disposed or the page hides.
  *  · ⛔ The player's position is IN the save (`at`) and is NOT used: the AP start is the host's (the follow-up slice).
+ *  · ⛓ THE TIME OF DAY (save version 2, sdc-js-save-day-clock; ⚖ Robert 2026-11-22: "Keep it, and make JS match"): the
+ *    save holds the day clock (`time`, `Main.time`) and the restore brings it back, as the wasm save does. A version-1
+ *    save restores everything it has with a fresh start's clock (`jsRuntimeCore` `JS_SAVE_VERSIONS_READ`). The clock
+ *    running is not a change the core announces, so a FLUSH (the page hiding, the binding disposed) also writes when
+ *    only the clock moved since the last write (or since the restored save): what a reload reads is the time the page
+ *    was left, as the wasm save's flush-all on `pagehide` stores it. Not over a stored save the restore REFUSED (a
+ *    real change still writes, as before).
  *
  * ⛓ USE THE SAVE / CLEAR (slice `js-save-toggle-clear`, ⚖ Robert 2026-11-19: "a clear button, and also a checkbox for
  * whether to use the save at all. Let's have it default off for now."): `flashPanel.seedlingJsSave`, a boolean,
@@ -104,15 +111,18 @@ export function bindJsSave({ runtime, roomKey, storage = globalThis.localStorage
 
     let timer = null;
     let disposed = false;
-    const write = () => {
+    /** ⛓ sdc-js-save-day-clock — the day clock the stored save holds (the last write's, or the restored save's). */
+    let storedTime = restored?.ok ? (JSON.parse(raw).time ?? null) : null;
+    const write = (save = null) => {
         timer = null;
         let text;
-        try { text = JSON.stringify(runtime.exportSave()); } catch (err) {
+        try { text = JSON.stringify(save ?? runtime.exportSave()); } catch (err) {
             log(`[js save] could not read the game's save: ${err.message}`, 'error');
             return;
         }
         try {
             storage.setItem(key, text);
+            storedTime = JSON.parse(text).time ?? null;
         } catch (error) {
             report({ key, value: text, error, owner: JS_SAVE_OWNER });
             log(`[js save] the save was NOT written (${key}): ${error?.message ?? error}`, 'error');
@@ -120,14 +130,22 @@ export function bindJsSave({ runtime, roomKey, storage = globalThis.localStorage
     };
     const schedule = () => {
         if (disposed || timer !== null) return;
-        timer = timers.setTimeout(write, debounceMs);
+        timer = timers.setTimeout(() => write(), debounceMs);
     };
     const off = runtime.onSaveChange(schedule);
     return {
         key,
         restored,
         flush() {
-            if (timer === null) return;
+            if (timer === null) {
+                // ⛓ sdc-js-save-day-clock — nothing announced, but the clock may have moved: write it (never over a
+                // stored save the restore refused).
+                if (disposed || restored?.ok === false) return;
+                let save;
+                try { save = runtime.exportSave(); } catch { return; }
+                if (Number.isFinite(save?.time) && save.time !== storedTime) write(save);
+                return;
+            }
             timers.clearTimeout(timer);
             write();
         },
