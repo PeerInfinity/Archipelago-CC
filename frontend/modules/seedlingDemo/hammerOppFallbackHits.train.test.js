@@ -17,7 +17,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gunzipSync } from 'node:zlib';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll, afterAll } from 'vitest';
 
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
@@ -31,6 +31,15 @@ import { OPP_PRESS_FALLBACK_COUNTS, resetOppPressFallbackCounts, withOppPressFal
 import { withPressEscapeExact } from './pressEscapeExact.js';
 import { withOpportunisticStrike } from './pressKillCost.js';
 import { withChaserStagedHunt, withClearTagChain, withStanceBurn } from './solverBot.js';
+import { PRESS_KILL_CHASERS as __PRESS_KILL_CHASERS_HOLD } from './pressKillCost.js';
+
+// ⛓ `PRESS_KILL_CHASERS` held OFF for this whole file: it ships ON since the PKC + FH flip (⚖ the user, 2026-11-20). ON, leg
+// 871 (L39 -> L40 flag 12) SOLVES: 1287 t, 0 hits, 0 deaths, rows exact on a fresh run, flag 12 earned (sha edaf487e71ac;
+// pinned in `hammerBodyGate.train.test.js`). These rows predate the flip and pin other switches; held OFF they are
+// byte-for-byte their pre-flip selves. The flip's own effect is measured by its sweeps and survey.
+let __heldWas;
+beforeAll(() => { __heldWas = __PRESS_KILL_CHASERS_HOLD.enabled; __PRESS_KILL_CHASERS_HOLD.enabled = false; });
+afterAll(() => { __PRESS_KILL_CHASERS_HOLD.enabled = __heldWas; });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const TIMEOUT = 600_000;

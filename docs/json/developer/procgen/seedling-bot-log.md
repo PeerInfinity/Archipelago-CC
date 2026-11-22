@@ -28438,3 +28438,17 @@ kill there, and the player's stand-out after the last kill sits in `spinningaxe@
 main had 520 t and none. `KILLLOCK_STANDOUT_GUARD` (from the L98-L99 slice) drives that stand-out on a replay and refuses
 the attempt on a hit, so it now ships ON too (`!== '0'`). Step 227 then solves in 537 t with no hit.
 `hammerL98L99.train.test.js` pins both arms of the shipped defaults.
+
+### Seedling hammer-phase PKC + FH FLIP — `PRESS_KILL_CHASERS` and `HIT_AVOID_PASS` ON by default
+
+⚖ The user, 2026-11-20: *"Flip PKC alone, with FH (Recommended)"*, and for FEWER-HITS *"Flip it after landing
+(Recommended)"*. **PKC** (`pressKillCost.PRESS_KILL_CHASERS`): the press kill's per-tick step prefers a hammer-clear key set
+that is also chaser-clear. L40-PAIR measured that it alone answers the L40 spinner corner. L40 flag 12 and the Chest from L39
+solve hitless at arrival clocks 5241/5242, and p4g plays 1615/1615 ticks with 0 hits. It leaves every other clock, all 54
+spinner-room legs, every survey step and the c3/c4/c6 identity rows unchanged. `PRESS_ESCAPE_SHIELD_CLAIM` stays OFF: with or
+without PKC, it makes L43 clocks take hits. **FH** (`jsRuntimeSolver.HIT_AVOID_PASS`): when the plan in hand still takes a
+model hit, a third pass re-runs the first pass's search after 1..16 idle ticks. It takes L30's bosslock continuation (leg
+302) from 1 hit to 0 and never runs on a hitless plan. `FEWER_HITS_RANK` stays OFF (it moves nothing at seed 1). Both read
+`SEEDLING_<NAME> !== '0'` and run in the solve worker. The Solver section's note names a `hit-avoid` plan and its wait
+(`seedlingSolveWatch`). Rows that need a press kill's death as their witness (`hammerPressKillGuards` HO2,
+`hammerOpportunisticStrike` step 67, `hammerChooserPair.train` 853) hold PKC OFF.
