@@ -1,0 +1,24 @@
+fixture l78-k-sketch (uncut disc): 12 regions, axis [Dark Suit, Ghost Spear, Progressive Shield, Progressive Sword, Wand] = 48 points; pulls 3 (gate pull_6_5 | pull_9_3 | pull_9_6)
+  pairs 132, targets 2: (a) 11, (b) 11
+  (a) pair level_78__r0c2 → level_78__r6c11: full ✗, reaches at Ghost Spear / Ghost Spear+Progressive Shield / Ghost Spear+Progressive Sword / Ghost Spear+Wand
+  (b) pair level_78__r0c2 → level_78__r6c11: 54 S⊂S' flip(s), e.g. Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Shield ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Sword ✗
+  (a) pair level_78__r0c16 → level_78__r6c11: full ✗, reaches at Ghost Spear / Progressive Sword / Wand / Ghost Spear+Progressive Shield
+  (b) pair level_78__r0c16 → level_78__r6c11: 122 S⊂S' flip(s), e.g. Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Shield ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Sword ✗
+  (a) pair level_78__r1c10 → level_78__r6c11: full ✗, reaches at Ghost Spear / Ghost Spear+Progressive Shield / Ghost Spear+Progressive Sword / Ghost Spear+Wand
+  (b) pair level_78__r1c10 → level_78__r6c11: 54 S⊂S' flip(s), e.g. Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Shield ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Sword ✗
+  (a) pair level_78__r3c9 → level_78__r6c11: full ✗, reaches at Ghost Spear / Ghost Spear+Progressive Shield / Ghost Spear+Progressive Sword / Ghost Spear+Wand
+  (b) pair level_78__r3c9 → level_78__r6c11: 54 S⊂S' flip(s), e.g. Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Shield ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Sword ✗
+  (a) pair level_78__r3c12 → level_78__r6c11: full ✗, reaches at Ghost Spear / Progressive Sword / Wand / Ghost Spear+Progressive Shield
+  (b) pair level_78__r3c12 → level_78__r6c11: 122 S⊂S' flip(s), e.g. Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Shield ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Sword ✗
+  (a) pair level_78__r4c2 → level_78__r6c11: full ✗, reaches at Ghost Spear / Ghost Spear+Progressive Shield / Ghost Spear+Progressive Sword / Ghost Spear+Wand
+  (b) pair level_78__r4c2 → level_78__r6c11: 54 S⊂S' flip(s), e.g. Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Shield ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Sword ✗
+  (a) pair level_78__r5c6 → level_78__r6c11: full ✗, reaches at Ghost Spear / Ghost Spear+Progressive Shield / Ghost Spear+Progressive Sword / Ghost Spear+Wand
+  (b) pair level_78__r5c6 → level_78__r6c11: 54 S⊂S' flip(s), e.g. Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Shield ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Sword ✗
+  (a) pair level_78__r5c12 → level_78__r6c11: full ✗, reaches at Ghost Spear / Progressive Sword / Wand / Ghost Spear+Progressive Shield
+  (b) pair level_78__r5c12 → level_78__r6c11: 122 S⊂S' flip(s), e.g. Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Shield ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Sword ✗
+  (a) pair level_78__r6c9 → level_78__r6c11: full ✗, reaches at Ghost Spear / Ghost Spear+Progressive Shield / Ghost Spear+Progressive Sword / Ghost Spear+Wand
+  (b) pair level_78__r6c9 → level_78__r6c11: 54 S⊂S' flip(s), e.g. Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Shield ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Sword ✗
+  (a) pair level_78__r8c8 → level_78__r6c11: full ✗, reaches at Ghost Spear / Progressive Sword / Wand / Ghost Spear+Progressive Shield
+  (b) pair level_78__r8c8 → level_78__r6c11: 122 S⊂S' flip(s), e.g. Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Shield ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Sword ✗
+  (a) pair level_78__r8c10 → level_78__r6c11: full ✗, reaches at Ghost Spear / Progressive Sword / Wand / Ghost Spear+Progressive Shield
+  (b) pair level_78__r8c10 → level_78__r6c11: 122 S⊂S' flip(s), e.g. Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Shield ✗; Ghost Spear ✓ ⊂ Dark Suit+Ghost Spear+Progressive Sword ✗
