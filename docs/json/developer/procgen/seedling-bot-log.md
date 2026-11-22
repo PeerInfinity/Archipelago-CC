@@ -28452,3 +28452,14 @@ model hit, a third pass re-runs the first pass's search after 1..16 idle ticks. 
 `SEEDLING_<NAME> !== '0'` and run in the solve worker. The Solver section's note names a `hit-avoid` plan and its wait
 (`seedlingSolveWatch`). Rows that need a press kill's death as their witness (`hammerPressKillGuards` HO2,
 `hammerOpportunisticStrike` step 67, `hammerChooserPair.train` 853) hold PKC OFF.
+
+### Seedling hammer-phase ROCKLOCK + FADE FLIP — `ROCKLOCK_KILL`, `KILLLOCK_CLEAR_WRITE` and `FADE_MOVE` ON by default
+
+⚖ The user, 2026-11-22: *"Flip the pair, stack with FADE_MOVE (Recommended)"* and *"Build now, sweeps at 20:00
+(Recommended)"*. **The pair** (`solverBot.ROCKLOCK_KILL` + `solverBot.KILLLOCK_CLEAR_WRITE`, NEW-LOCKS): a `rocklock` whose
+`tset` is −1 is a kill-lock, so the kill work order takes it, and the clear-tag finishes on the run's own kill-lock write.
+L26's `rocklock@112,208` crossings then solve, 0 hits (ROCKLOCK-MAPPER's p4g plays). The AP-chest rules route reaches L26
+through it. **FADE_MOVE**: during a latched fade the player waits at a fork-certified hitless refuge instead of standing in
+reach. That takes the L12 keylock family hitless at OFF's length. `FADE_MOVE_ATTACK` stays OFF. Each switch reads
+`SEEDLING_<NAME> !== '0'`. `ROCKLOCK_KILL` also reads the page URL's opt-out (`pageSolverEnvSwitchOff`), because the
+main-thread goal mapper reads it too. The defaults rows are re-pinned.

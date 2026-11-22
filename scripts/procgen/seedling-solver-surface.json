@@ -28,6 +28,7 @@
     "pressNoFacing.js",
     "solveProgress.js",
     "solverBot.js",
+    "solverEnvChannel.js",
     "spaceTimeReach.js",
     "spearArm.js",
     "stagedHuntScanMemo.js",

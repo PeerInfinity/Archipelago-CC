@@ -55,9 +55,9 @@ function solveLeg(leg, on, attack = false) {
 }
 
 describe('FADE-MOVE — the switch', () => {
-    it('is OFF by default, named in the solver env channel, and withFadeMove restores it', () => {
-        expect(FADE_MOVE_DEFAULT).toBe(false);
-        expect(FADE_MOVE.enabled).toBe(ENV.SEEDLING_FADE_MOVE === '1');
+    it('is ON by default (the ROCKLOCK + FADE flip, 2026-11-22), named in the solver env channel, and withFadeMove restores it', () => {
+        expect(FADE_MOVE_DEFAULT).toBe(true);
+        expect(FADE_MOVE.enabled).toBe(ENV.SEEDLING_FADE_MOVE !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FADE_MOVE');
         const was = FADE_MOVE.enabled;
         expect(withFadeMove(!was, () => FADE_MOVE.enabled)).toBe(!was);

@@ -272,6 +272,7 @@ import { BOSS_TOTEM_POLICY_VARIANTS, createBossTotemPolicy, bossTotemPolicyStep 
 import {
     TENTACLE_BEAST_POLICY_VARIANTS, createTentacleBeastPolicy, tentacleBeastPolicyStep, tentacleBeastSettleStep,
 } from './tentacleBeastPolicy.js';
+import { pageSolverEnvSwitchOff } from './solverEnvChannel.js';
 
 /**
  * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.
@@ -3285,8 +3286,14 @@ export const NESTED_OPENER_DEPTH = 2;
  * world's solids for it (`killLockStands`). Nothing reads the level number or a coordinate. OFF: none of it is read.
  * `SEEDLING_ROCKLOCK_KILL=1` / `withRockLockKill(enabled, fn)`.
  */
-export const ROCKLOCK_KILL = { enabled: globalThis.process?.env?.SEEDLING_ROCKLOCK_KILL === '1' };
-export const ROCKLOCK_KILL_DEFAULT = false;
+// ⛓ ON by default since the ROCKLOCK + FADE flip (⚖ the user, 2026-11-22: *"Flip the pair, stack with FADE_MOVE
+// (Recommended)"*): `SEEDLING_ROCKLOCK_KILL=0` opts out in a node process or the worker, and the page URL's
+// `?seedlingSolverEnv=SEEDLING_ROCKLOCK_KILL=0` opts the main-thread goal mapper out too (`pageSolverEnvSwitchOff`, the
+// TALK flip's pattern), so the mapper and the worker read the same value.
+export const ROCKLOCK_KILL = {
+    enabled: globalThis.process?.env?.SEEDLING_ROCKLOCK_KILL !== '0' && !pageSolverEnvSwitchOff('SEEDLING_ROCKLOCK_KILL'),
+};
+export const ROCKLOCK_KILL_DEFAULT = true;
 
 /** Run `fn` with `ROCKLOCK_KILL` set to `enabled`, restoring the previous value. */
 export function withRockLockKill(enabled, fn) {
@@ -3314,8 +3321,9 @@ function rockLockKillRow(run, obstacle) {
  * L53's lock need). ON the order reads that row. OFF: `earnedClears` and the rope row alone, byte for byte.
  * `SEEDLING_KILLLOCK_CLEAR_WRITE=1` / `withKillLockClearWrite(enabled, fn)`.
  */
-export const KILLLOCK_CLEAR_WRITE = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_CLEAR_WRITE === '1' };
-export const KILLLOCK_CLEAR_WRITE_DEFAULT = false;
+// ⛓ ON by default since the ROCKLOCK + FADE flip (2026-11-22; the pair ROCKLOCK_KILL needs): `=0` opts out (worker).
+export const KILLLOCK_CLEAR_WRITE = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_CLEAR_WRITE !== '0' };
+export const KILLLOCK_CLEAR_WRITE_DEFAULT = true;
 
 /** Run `fn` with `KILLLOCK_CLEAR_WRITE` set to `enabled`, restoring the previous value. */
 export function withKillLockClearWrite(enabled, fn) {
@@ -23221,8 +23229,11 @@ function keylockStandWalk(run, resolved) {
  * (`FADE_MOVE_COUNTS.waits`) counts the covered waits either way, and counting changes no output.
  * `SEEDLING_FADE_MOVE=1` / `withFadeMove(enabled, fn)`.
  */
-export const FADE_MOVE = { enabled: globalThis.process?.env?.SEEDLING_FADE_MOVE === '1' };
-export const FADE_MOVE_DEFAULT = false;
+// ⛓ ON by default since the ROCKLOCK + FADE flip (⚖ the user, 2026-11-22: *"Build now, sweeps at 20:00
+// (Recommended)"*): the L12 keylock family waits out the fade hitless. `SEEDLING_FADE_MOVE=0` opts out (worker).
+// `FADE_MOVE_ATTACK` stays OFF.
+export const FADE_MOVE = { enabled: globalThis.process?.env?.SEEDLING_FADE_MOVE !== '0' };
+export const FADE_MOVE_DEFAULT = true;
 
 /** Run `fn` with `FADE_MOVE` set to `enabled`, restoring the previous value. */
 export function withFadeMove(enabled, fn) {

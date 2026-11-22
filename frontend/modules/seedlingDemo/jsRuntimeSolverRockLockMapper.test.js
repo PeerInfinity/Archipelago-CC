@@ -63,8 +63,8 @@ function mapLeg(leg, search) {
 }
 
 describe('ROCKLOCK-MAPPER — the switch (no new name)', () => {
-    it('`SEEDLING_ROCKLOCK_KILL` ships OFF and the page channel already knows it', () => {
-        expect(ROCKLOCK_KILL_DEFAULT).toBe(false);
+    it('`SEEDLING_ROCKLOCK_KILL` ships ON (the ROCKLOCK + FADE flip, 2026-11-22) and the page channel already knows it', () => {
+        expect(ROCKLOCK_KILL_DEFAULT).toBe(true);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_ROCKLOCK_KILL');
         expect(ROCKLOCK_EVENTS.map((e) => e.eventId)).toEqual(expect.arrayContaining(['flag:L26:0']));
     });
@@ -89,7 +89,7 @@ describe('ROCKLOCK-MAPPER — the switch (no new name)', () => {
 
     it('the mapper never leaves the module switch on, and the row stays non-enumerable', () => {
         onPage(ON, () => clearTagVerbOf('solid:rocklock'));
-        expect(ROCKLOCK_KILL.enabled).toBe(process.env.SEEDLING_ROCKLOCK_KILL === '1');
+        expect(ROCKLOCK_KILL.enabled).toBe(process.env.SEEDLING_ROCKLOCK_KILL !== '0');
         expect(Object.keys(OBSTACLE_STRATEGIES)).not.toContain('solid:rocklock');
     });
 });
