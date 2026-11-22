@@ -355,9 +355,20 @@ export function apItemsOf(record) {
  *   at        {level, x, y} | null   where the player stands, as constructor args — RECORDED, NOT USED YET (the AP
  *                                    start is the host's; resuming there is the follow-up slice)
  *   set       the mounted set's id, or null (a restore onto another set is refused by name)
+ *   time      number | null      ⛓ (version 2, sdc-js-save-day-clock; ⚖ Robert 2026-11-22: "Keep it, and make JS match")
+ *                                the day clock, `Main.time` (`Main.as:178`, `SAVE_FILE.data.time`; `Game.time` reads
+ *                                it): the run's `gameTime` when it counts, else null. A restore stages it as the next
+ *                                boot's `save.time`, the value a fresh page declares `PAGE_BOOT_TIME` for — so the
+ *                                reloaded run reads `time + BOOT_PRESWAP_FRAMES + LOAD_FADE_FRAMES` where a fresh one
+ *                                reads `PAGE_BOOT_TIME + …`, the wasm game's own arithmetic (its explicit-start reset
+ *                                is a `new Game` that keeps `Main.time`). Null / absent = a fresh start's clock.
  * ⛔ NO PLAYER DAMAGE: a reload is a fresh life.
+ * ⛓ VERSIONS READ: `JS_SAVE_VERSIONS_READ`. A version-1 save (no `time`) restores everything it has, with the clock a
+ * fresh start's; it is never refused for lacking `time`.
  */
-export const JS_SAVE_VERSION = 1;
+export const JS_SAVE_VERSION = 2;
+/** Every save version `restoreSave` reads (the current one last). */
+export const JS_SAVE_VERSIONS_READ = Object.freeze([1, JS_SAVE_VERSION]);
 
 /**
  * @param {object} [opts]
@@ -456,6 +467,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     let pendingDeliveries = [];
     /** ⛓ RE2 — a restored save's slot order, staged by the next non-tape boot (then null). */
     let restoredSlots = null;
+    /** ⛓ sdc-js-save-day-clock — a restored save's day clock (`Main.time`), staged by the next non-tape boot (then null). */
+    let restoredTime = null;
     /** ⛓ RE2 — the restore's own reboot in place: a fresh life, so it carries no damage. */
     let restoreBoot = false;
     /** ⛓ RE2 — a restored save no boot has staged yet. */
@@ -671,13 +684,15 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ RE2 — the first non-tape boot after a restore stages the SAVED slot order (filtered against the flags,
         // which the restore set in the same step), not the run it replaces.
         const slots = restoredSlots && !declared ? slotsHeld(restoredSlots, flags) : carriedSlots();
-        if (!declared) { restoredSlots = null; restorePending = false; }
+        // ⛓ sdc-js-save-day-clock — and the SAVED day clock (`Main.time`); null = `bootStaging`'s own (a fresh page's).
+        const time = restoredTime !== null && !declared ? restoredTime : undefined;
+        if (!declared) { restoredSlots = null; restoredTime = null; restorePending = false; }
         // The constructor writes the statics before it builds anything (a room the model refuses included).
         lastCtor = { x, y };
         // ⛓ PHASE B — a TAPE's boot (`botStart`) stages the tape's own declaration and nothing of the session's: the
         // game's `botStart` resets the persistence table and the save arrays to a fresh start and applies only what the
         // tape declares (`Bot.as:1708-1772`, ⚖ ruling 25). Absent (every other caller), the staging below is unchanged.
-        const staging = declared ? { ...declared } : bootStaging({ boot: { level, x, y }, items: { ...flags }, pins: [...JS_RUNTIME_PINS] });
+        const staging = declared ? { ...declared } : bootStaging({ boot: { level, x, y }, items: { ...flags }, pins: [...JS_RUNTIME_PINS], time });
         if (!declared) stageSession(staging, slots, playerDamage);
         // ⛓ seedling-js-replay-continuation — a NON-tape boot (the first frame, a teleport, an in-place reboot) ends
         // the tape chain: the next `botStart` rebuilds (see `botStart`'s bounded liberty).
@@ -1268,13 +1283,23 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             slots: slots ? { slots: [...slots.slots], primary: slots.primary, secondary: slots.secondary, firstUse: slots.firstUse } : null,
             flags: effective,
             at: run ? { level: run.level, x: run.state.x - 8, y: run.state.y - 8 } : null,
+            // ⛓ sdc-js-save-day-clock — a restore no boot has staged yet keeps ITS clock (as `slots` keeps its order).
+            time: restorePending ? restoredTime : savedClock(run),
         };
+    }
+
+    /** `Main.time` as the save holds it: the run's `Game.time` when its clock counts, else null (a fresh start's). */
+    function savedClock(run) {
+        const t = run?.gameTime ?? null;
+        return Number.isFinite(t) && t > 0 ? t : null;
     }
 
     /** Why `save` cannot be restored here, or null. */
     function saveRefusal(save) {
         if (!save || typeof save !== 'object') return 'the save is not an object';
-        if (save.version !== JS_SAVE_VERSION) return `the save is version ${save.version}, this runtime reads ${JS_SAVE_VERSION}`;
+        if (!JS_SAVE_VERSIONS_READ.includes(save.version)) {
+            return `the save is version ${save.version}, this runtime reads ${JS_SAVE_VERSIONS_READ.join(' or ')}`;
+        }
         const here = mounted?.set.set_id ?? null;
         if ((save.set ?? null) !== here) return `the save is for level set ${save.set ?? '(none)'}, and ${here ?? 'no set'} is mounted`;
         const pairs = (v) => Array.isArray(v) && v.every((p) => Array.isArray(p) && p.length === 2 && p.every(Number.isInteger));
@@ -1284,6 +1309,10 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         if (!ints(save.seals) || save.seals.length !== SAVE_SLOTS.seal_parts) return `seals must be ${SAVE_SLOTS.seal_parts} integers`;
         if (!save.flags || typeof save.flags !== 'object') return 'flags must be an object';
         if (save.slots !== null && save.slots !== undefined && !ints(save.slots.slots)) return 'slots.slots must be an integer list';
+        // ⛓ sdc-js-save-day-clock — absent (version 1) or null is a fresh start's clock, never a refusal.
+        if (save.time !== null && save.time !== undefined && !(Number.isFinite(save.time) && save.time > 0)) {
+            return 'time must be a positive number or null';
+        }
         return null;
     }
 
@@ -1320,6 +1349,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ seedling-early-delivery — what the host delivered stays (a save written before it arrived lacks it).
         reseatHostDeliveries();
         restoredSlots = save.slots ? { ...save.slots, slots: [...save.slots.slots] } : null;
+        // ⛓ sdc-js-save-day-clock — the day clock; a version-1 save (no `time`) boots a fresh start's.
+        restoredTime = Number.isFinite(save.time) ? save.time : null;
         restorePending = true;
         if (session) {
             restoreBoot = true;
@@ -1328,7 +1359,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ seedling-js-item-live-delivery — the restored ledgers supersede any delivery not yet handed to the run.
         pendingDeliveries = [];
         note({ type: 'save', restored: true, message: `[js runtime] save restored — ${carried.size} clear(s), `
-            + `${collected.size} apitem(s), ${heldKeys.size} key(s), ${sealLog().length} seal(s), ${heldTotems.size} totem part(s)` });
+            + `${collected.size} apitem(s), ${heldKeys.size} key(s), ${sealLog().length} seal(s), ${heldTotems.size} totem part(s), `
+            + `the clock ${restoredTime === null ? "a fresh start's" : `at ${restoredTime}`}` });
         return { ok: true };
     }
 
@@ -1597,6 +1629,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         collected.clear();
         reportedClears.clear();
         restoredSlots = null;
+        restoredTime = null;
         restoreBoot = false;
         restorePending = false;
         session = null;

@@ -17,12 +17,20 @@
  *   m6 `jsSaveKey` ignores the room               → "a different room's key is ignored" red (room B restores A's save),
  *                                                    and "the key is the room's…" red (two rooms collide)
  *   m7 the write's catch does not report          → "a failed write is reported" red (no report)
+ *   m8 `restoreSave` skips `time`                 → "a version-2 save brings back the day clock…" red (the reloaded
+ *                                                    clock is a fresh page's 4822, not 7844)
+ *   m9 `JS_SAVE_VERSIONS_READ` drops version 1     → "a version-1 save (no time) restores…" red (refused by version)
+ *   m10 `flush` writes only a pending change       → "a flush with nothing announced still writes the moved clock…" red
+ *                                                    (the stored time is the last boot's, 7822 → 4822)
+ *   m11 the clock flush ignores a refused restore  → "a REFUSED stored save is never overwritten…" red
  */
 import { readFileSync } from 'node:fs';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { createJsRuntime, JS_SAVE_VERSION } from './jsRuntimeCore.js';
+import { createJsRuntime, JS_SAVE_VERSION, JS_SAVE_VERSIONS_READ } from './jsRuntimeCore.js';
+import { PAGE_BOOT_TIME } from './gameClock.js';
+import { dayLightAlpha } from './seedlingNightSkin.js';
 import { WALK_STATES } from './jsRuntimeWalker.js';
 import { assembleGeneratedSeedlingSet } from './seedlingGeneratedSet.js';
 import { planLevelSetChunks } from './levelSetValidator.js';
@@ -50,7 +58,8 @@ const totemCall = (i) => ({ invocation: 'method_call', path: [{ class: 'Main' }]
 const cleared = (rt) => JSON.parse(rt.game.botStatus()).persistence_cleared;
 /** What localStorage would hand back. */
 const reloaded = (save) => JSON.parse(JSON.stringify(save));
-const withoutAt = ({ at, ...rest }) => rest;
+/** The save's progress: everything but the position (not used) and the day clock (it runs on after the reboot). */
+const withoutAt = ({ at, time, ...rest }) => rest;
 
 /** A fresh page on the vanilla map, at `at` (the host's start teleport). */
 function vanillaPage(at = START) {
@@ -193,6 +202,8 @@ describe('⛓⛓ RE2 — the JS save across a page reload', () => {
         const before = rt.exportSave();
         expect(rt.restoreSave({ version: 99 }).reason).toMatch(/version 99/);
         expect(rt.restoreSave({ ...before, carried: [[0, 'x']] }).reason).toMatch(/carried/);
+        expect(rt.restoreSave({ ...before, time: 0 }).reason).toMatch(/time must be a positive number or null/);
+        expect(rt.restoreSave({ ...before, time: '7000' }).reason).toMatch(/time must be/);
         expect(rt.exportSave()).toEqual(before);
         expect(rt.restorePending).toBe(false);
     });
@@ -274,5 +285,154 @@ describe('⛓⛓ RE2 — the host keeps the save: one localStorage key per room 
         expect(failure).toMatchObject({ key: bound.key, error: quota, owner: JS_SAVE_OWNER });
         expect(JSON.parse(failure.value).keys).toEqual([1]);
         expect(logs.some((m) => /NOT written/.test(m))).toBe(true);
+    });
+});
+
+describe('⛓ sdc-js-save-day-clock — the JS save brings back the time of day (⚖ Robert 2026-11-22: "Keep it, and make JS match")', () => {
+    /** Play `n` ticks standing still (the clock runs one `Game.time` a tick). */
+    const idle = (rt, n) => { for (let i = 0; i < n; i += 1) rt.tick(); };
+    /** What a fresh page's clock reads above `PAGE_BOOT_TIME` once booted (the pre-swap frame + the room fade). */
+    const freshOffset = () => vanillaPage().run.gameTime - PAGE_BOOT_TIME;
+
+    it('the version is 2 and the reader still reads 1', () => {
+        expect(JS_SAVE_VERSION).toBe(2);
+        expect(JS_SAVE_VERSIONS_READ).toEqual([1, 2]);
+    });
+
+    it('a version-2 save brings back the day clock: the reloaded run reads the saved `Main.time` plus a fresh boot\'s own offset, in the same day phase', () => {
+        const a = vanillaPage();
+        const offset = freshOffset();
+        expect(offset).toBeGreaterThan(0);
+        expect(a.run.gameTime).toBe(PAGE_BOOT_TIME + offset);   // a fresh page: midday (`Main.time`'s default)
+        idle(a, 3000);
+        const save = a.exportSave();
+        expect(save.time).toBe(a.run.gameTime);
+        expect(save.time).toBe(PAGE_BOOT_TIME + offset + 3000);
+        expect(dayLightAlpha(save.time, true)).toBeLessThan(1);  // twilight: a darker screen than the fresh page's
+        const b = vanillaPage();
+        expect(b.run.gameTime).toBe(PAGE_BOOT_TIME + offset);
+        expect(b.restoreSave(reloaded(save))).toEqual({ ok: true });
+        expect(b.exportSave().time).toBe(save.time);              // pending: the save still holds the restored clock
+        b.tick();                                                 // the restore's reboot in place
+        // the wasm game's arithmetic: its explicit-start reset is a `new Game` that keeps `Main.time`
+        expect(b.run.gameTime).toBe(save.time + offset);
+        expect(b.run.gameTime - save.time).toBe(offset);
+        // the same day phase (twilight), the screen as dark as when it was left, give or take the boot's own frames
+        expect(dayLightAlpha(b.run.gameTime, true)).toBeLessThan(1);
+        expect(Math.abs(dayLightAlpha(b.run.gameTime, true) - dayLightAlpha(save.time, true))).toBeLessThan(0.01);
+        // and the progress is the save's, exactly
+        expect(withoutAt(b.exportSave())).toEqual(withoutAt(save));
+        // a second reload round-trips again (the clock ran on: what the next save holds)
+        idle(b, 10);
+        const save2 = b.exportSave();
+        expect(save2.time).toBe(save.time + offset + 10);
+        const c = vanillaPage();
+        c.restoreSave(reloaded(save2));
+        c.tick();
+        expect(c.run.gameTime).toBe(save2.time + offset);
+    });
+
+    it('a version-1 save (no time) restores everything it has, with a fresh start\'s clock — never refused for lacking `time`', () => {
+        const a = vanillaPage();
+        a.queueItems([keyCall(0), keyCall(3), sealCall(0, 5), totemCall(2), flag('hasSword')]);
+        a.tick();
+        idle(a, 3000);
+        const { time, ...rest } = a.exportSave();
+        const v1 = reloaded({ ...rest, version: 1 });
+        expect('time' in v1).toBe(false);
+        const b = vanillaPage();
+        expect(b.restoreSave(v1)).toEqual({ ok: true });
+        expect(b.events.at(-1).message).toMatch(/the clock a fresh start's$/);
+        expect(b.exportSave().time).toBe(null);                   // pending: a fresh start's clock
+        b.tick();
+        expect(b.run.gameTime).toBe(PAGE_BOOT_TIME + freshOffset());
+        const after = b.exportSave();
+        expect(after.version).toBe(2);
+        expect(withoutAt(after)).toEqual(withoutAt({ ...v1, version: 2 }));
+        expect([...b.run.keys].sort()).toEqual([0, 3]);
+        // a null `time` (a version-2 save written with no counting clock) reads the same way
+        const c = vanillaPage();
+        expect(c.restoreSave(reloaded({ ...rest, time: null }))).toEqual({ ok: true });
+        c.tick();
+        expect(c.run.gameTime).toBe(PAGE_BOOT_TIME + freshOffset());
+    });
+
+    it('with no restore the clock is untouched: every boot is a fresh page\'s (the save OFF is today\'s run)', () => {
+        const a = vanillaPage();
+        const b = vanillaPage();
+        idle(a, 50);
+        idle(b, 50);
+        expect(a.run.gameTime).toBe(b.run.gameTime);
+        expect(a.run.gameTime).toBe(PAGE_BOOT_TIME + freshOffset() + 50);
+        // a teleport (a new Game) boots the default clock, as before this slice
+        a.queueItems([teleport(START)]);
+        a.tick();
+        expect(a.run.gameTime).toBe(PAGE_BOOT_TIME + freshOffset());
+    });
+
+    it('the restored clock is staged ONCE: the boot after the restore\'s reboot is a default one again', () => {
+        const a = vanillaPage();
+        idle(a, 3000);
+        const save = a.exportSave();
+        const b = vanillaPage();
+        b.restoreSave(reloaded(save));
+        b.tick();
+        expect(b.run.gameTime).toBe(save.time + freshOffset());
+        b.queueItems([teleport(START)]);
+        b.tick();
+        expect(b.run.gameTime).toBe(PAGE_BOOT_TIME + freshOffset());
+    });
+
+    it('a NEW SET drops a restored clock no boot has staged', () => {
+        const { rt, assembled } = generatedPage();
+        const save = { ...rt.exportSave(), time: 9000 };
+        expect(rt.restoreSave(save)).toEqual({ ok: true });
+        expect(rt.exportSave().time).toBe(9000);
+        const other = structuredClone(assembled.set);
+        other.set_id = `${other.set_id}-other`;
+        for (const c of planLevelSetChunks(other).chunks) rt.game.botLoadLevels(JSON.stringify(c));
+        expect(rt.restorePending).toBe(false);
+        expect(rt.exportSave().time).toBe(null);
+    });
+});
+
+describe('⛓ sdc-js-save-day-clock — the host writes the clock on a flush (the page hiding, the binding disposed)', () => {
+    const memoryStorage = (init = {}) => {
+        const m = new Map(Object.entries(init));
+        const sets = [];
+        return { getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => { sets.push(k); m.set(k, String(v)); }, map: m, sets };
+    };
+    const noTimers = { setTimeout: () => 1, clearTimeout: () => {} };
+
+    it('a flush with nothing announced still writes the moved clock, and the next page of the room reads it back', () => {
+        const storage = memoryStorage();
+        const a = vanillaPage();
+        const bound = bindJsSave({ runtime: a, roomKey: 'room A', storage, timers: noTimers });
+        for (let i = 0; i < 3000; i += 1) a.tick();             // only the clock moves: no change is announced
+        bound.flush();                                          // `pagehide`
+        const stored = JSON.parse(storage.getItem(jsSaveKey('room A')));
+        expect(stored.time).toBe(a.run.gameTime);
+        expect(storage.sets.length).toBe(1);
+        bound.flush();                                          // the clock has not moved since: nothing more
+        expect(storage.sets.length).toBe(1);
+        const b = vanillaPage();
+        const offset = b.run.gameTime - PAGE_BOOT_TIME;
+        expect(bindJsSave({ runtime: b, roomKey: 'room A', storage, timers: noTimers }).restored).toEqual({ ok: true });
+        b.tick();
+        expect(b.run.gameTime).toBe(stored.time + offset);
+    });
+
+    it('a REFUSED stored save is never overwritten by the clock alone (a flush, a dispose)', () => {
+        const a = vanillaPage();
+        for (let i = 0; i < 100; i += 1) a.tick();
+        const text = JSON.stringify({ ...a.exportSave(), version: 99 });
+        const storage = memoryStorage({ [jsSaveKey('room A')]: text });
+        const b = vanillaPage();
+        const bound = bindJsSave({ runtime: b, roomKey: 'room A', storage, timers: noTimers });
+        expect(bound.restored.ok).toBe(false);
+        for (let i = 0; i < 100; i += 1) b.tick();
+        bound.dispose();
+        expect(storage.getItem(jsSaveKey('room A'))).toBe(text);
+        expect(storage.sets).toEqual([]);
     });
 });
