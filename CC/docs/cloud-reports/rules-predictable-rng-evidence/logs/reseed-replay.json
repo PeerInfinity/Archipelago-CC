@@ -1,0 +1,671 @@
+[
+ {
+  "file": "frontend/modules/seedlingDemo/fixtures/tapes/r6-owl-control.json",
+  "name": "r6-owl-control",
+  "boot": {
+   "level": 112,
+   "x": 55,
+   "y": 101
+  },
+  "declaredSeed": 101,
+  "roomSeed": 125705577,
+  "committed": {
+   "seed": 101,
+   "finished": true,
+   "end": {
+    "level": 112,
+    "x": 36.916791863082835,
+    "y": 113.18358008074495
+   },
+   "hits": 1,
+   "maxHitsSeen": 1,
+   "deathRebuilds": 0,
+   "cleared": [],
+   "begins": [
+    [
+     112,
+     0,
+     101
+    ]
+   ],
+   "verdict": "end L112 hits 1 deaths 0 cleared []"
+  },
+  "perRoom": {
+   "seed": 125705577,
+   "finished": true,
+   "end": {
+    "level": 112,
+    "x": 36.916791863082835,
+    "y": 113.18358008074495
+   },
+   "hits": 1,
+   "maxHitsSeen": 1,
+   "deathRebuilds": 0,
+   "cleared": [],
+   "begins": [
+    [
+     112,
+     0,
+     125705577
+    ]
+   ],
+   "verdict": "end L112 hits 1 deaths 0 cleared []"
+  },
+  "changed": false
+ },
+ {
+  "file": "frontend/modules/seedlingDemo/fixtures/tapes/r6-owl-kill.json",
+  "name": "r6-owl-kill",
+  "boot": {
+   "level": 112,
+   "x": 55,
+   "y": 101
+  },
+  "declaredSeed": 101,
+  "roomSeed": 125705577,
+  "committed": {
+   "seed": 101,
+   "finished": true,
+   "end": {
+    "level": 112,
+    "x": 32.5097042200924,
+    "y": 50.884345475626326
+   },
+   "hits": 0,
+   "maxHitsSeen": 0,
+   "deathRebuilds": 0,
+   "cleared": [
+    "112:0",
+    "112:1"
+   ],
+   "begins": [
+    [
+     112,
+     0,
+     101
+    ]
+   ],
+   "verdict": "end L112 hits 0 deaths 0 cleared [112:0 112:1]"
+  },
+  "perRoom": {
+   "seed": 125705577,
+   "finished": true,
+   "end": {
+    "level": 112,
+    "x": 32.5097042200924,
+    "y": 50.884345475626326
+   },
+   "hits": 0,
+   "maxHitsSeen": 0,
+   "deathRebuilds": 0,
+   "cleared": [
+    "112:0",
+    "112:1"
+   ],
+   "begins": [
+    [
+     112,
+     0,
+     125705577
+    ]
+   ],
+   "verdict": "end L112 hits 0 deaths 0 cleared [112:0 112:1]"
+  },
+  "changed": false
+ },
+ {
+  "file": "frontend/modules/seedlingDemo/fixtures/tentaclebeast-witness/tb-death-s3.json",
+  "name": "tb-death-s3",
+  "boot": {
+   "level": 57,
+   "x": 96,
+   "y": 160
+  },
+  "declaredSeed": 3,
+  "roomSeed": 290847287,
+  "committed": {
+   "seed": 3,
+   "finished": true,
+   "end": {
+    "level": 57,
+    "x": 104,
+    "y": 168
+   },
+   "hits": 0,
+   "maxHitsSeen": 2,
+   "deathRebuilds": 1,
+   "cleared": [],
+   "begins": [
+    [
+     57,
+     0,
+     3
+    ],
+    [
+     57,
+     440,
+     1345367233
+    ]
+   ],
+   "verdict": "end L57 hits 2 deaths 1 cleared []"
+  },
+  "perRoom": {
+   "seed": 290847287,
+   "finished": true,
+   "end": {
+    "level": 57,
+    "x": 98.05870570943436,
+    "y": 112.45000000000053
+   },
+   "hits": 2,
+   "maxHitsSeen": 2,
+   "deathRebuilds": 0,
+   "cleared": [],
+   "begins": [
+    [
+     57,
+     0,
+     290847287
+    ]
+   ],
+   "verdict": "end L57 hits 2 deaths 0 cleared []"
+  },
+  "changed": true
+ },
+ {
+  "file": "frontend/modules/seedlingDemo/fixtures/tentaclebeast-witness/tb-enter-cleared.json",
+  "name": "tb-enter-cleared",
+  "boot": {
+   "level": 58,
+   "x": 56,
+   "y": 136
+  },
+  "declaredSeed": 1,
+  "roomSeed": 152757873,
+  "committed": {
+   "seed": 1,
+   "finished": true,
+   "end": {
+    "level": 57,
+    "x": 104,
+    "y": 72
+   },
+   "hits": 0,
+   "maxHitsSeen": 0,
+   "deathRebuilds": 0,
+   "cleared": [
+    "57:0"
+   ],
+   "begins": [
+    [
+     58,
+     0,
+     1
+    ],
+    [
+     57,
+     2,
+     1
+    ]
+   ],
+   "verdict": "end L57 hits 0 deaths 0 cleared [57:0]"
+  },
+  "perRoom": {
+   "seed": 152757873,
+   "finished": true,
+   "end": {
+    "level": 57,
+    "x": 104,
+    "y": 72
+   },
+   "hits": 0,
+   "maxHitsSeen": 0,
+   "deathRebuilds": 0,
+   "cleared": [
+    "57:0"
+   ],
+   "begins": [
+    [
+     58,
+     0,
+     152757873
+    ],
+    [
+     57,
+     2,
+     152757873
+    ]
+   ],
+   "verdict": "end L57 hits 0 deaths 0 cleared [57:0]"
+  },
+  "changed": false
+ },
+ {
+  "file": "frontend/modules/seedlingDemo/fixtures/tentaclebeast-witness/tb-hitless-door.json",
+  "name": "tb-hitless-door",
+  "boot": {
+   "level": 57,
+   "x": 96,
+   "y": 64
+  },
+  "declaredSeed": 418414780,
+  "roomSeed": 290847287,
+  "committed": {
+   "seed": 418414780,
+   "finished": true,
+   "end": {
+    "level": 58,
+    "x": 64,
+    "y": 104
+   },
+   "hits": 0,
+   "maxHitsSeen": 0,
+   "deathRebuilds": 0,
+   "cleared": [
+    "0:1",
+    "10:0",
+    "12:3",
+    "16:0",
+    "19:1",
+    "30:0",
+    "30:2",
+    "31:0",
+    "39:8",
+    "40:8",
+    "57:0",
+    "5:0",
+    "8:0",
+    "8:1"
+   ],
+   "begins": [
+    [
+     57,
+     0,
+     418414780
+    ],
+    [
+     58,
+     977,
+     1717332137
+    ]
+   ],
+   "verdict": "end L58 hits 0 deaths 0 cleared [0:1 10:0 12:3 16:0 19:1 30:0 30:2 31:0 39:8 40:8 57:0 5:0 8:0 8:1]"
+  },
+  "perRoom": {
+   "seed": 290847287,
+   "finished": true,
+   "end": {
+    "level": 57,
+    "x": 93.97653915852273,
+    "y": 154.079632288757
+   },
+   "hits": 1,
+   "maxHitsSeen": 1,
+   "deathRebuilds": 0,
+   "cleared": [
+    "0:1",
+    "10:0",
+    "12:3",
+    "16:0",
+    "19:1",
+    "30:0",
+    "30:2",
+    "31:0",
+    "39:8",
+    "40:8",
+    "5:0",
+    "8:0",
+    "8:1"
+   ],
+   "begins": [
+    [
+     57,
+     0,
+     290847287
+    ]
+   ],
+   "verdict": "end L57 hits 1 deaths 0 cleared [0:1 10:0 12:3 16:0 19:1 30:0 30:2 31:0 39:8 40:8 5:0 8:0 8:1]"
+  },
+  "changed": true
+ },
+ {
+  "file": "frontend/modules/seedlingDemo/fixtures/tentaclebeast-witness/tb-hitless-pit.json",
+  "name": "tb-hitless-pit",
+  "boot": {
+   "level": 57,
+   "x": 96,
+   "y": 160
+  },
+  "declaredSeed": 418414780,
+  "roomSeed": 290847287,
+  "committed": {
+   "seed": 418414780,
+   "finished": true,
+   "end": {
+    "level": 58,
+    "x": 64,
+    "y": 104
+   },
+   "hits": 0,
+   "maxHitsSeen": 0,
+   "deathRebuilds": 0,
+   "cleared": [
+    "0:1",
+    "10:0",
+    "12:3",
+    "16:0",
+    "19:1",
+    "30:0",
+    "30:2",
+    "31:0",
+    "39:8",
+    "40:8",
+    "57:0",
+    "5:0",
+    "8:0",
+    "8:1"
+   ],
+   "begins": [
+    [
+     57,
+     0,
+     418414780
+    ],
+    [
+     58,
+     1389,
+     364426708
+    ]
+   ],
+   "verdict": "end L58 hits 0 deaths 0 cleared [0:1 10:0 12:3 16:0 19:1 30:0 30:2 31:0 39:8 40:8 57:0 5:0 8:0 8:1]"
+  },
+  "perRoom": {
+   "seed": 290847287,
+   "finished": true,
+   "end": {
+    "level": 57,
+    "x": 141.68368634387892,
+    "y": 78.9308969681405
+   },
+   "hits": 0,
+   "maxHitsSeen": 2,
+   "deathRebuilds": 1,
+   "cleared": [
+    "0:1",
+    "10:0",
+    "12:3",
+    "16:0",
+    "19:1",
+    "30:0",
+    "30:2",
+    "31:0",
+    "39:8",
+    "40:8",
+    "5:0",
+    "8:0",
+    "8:1"
+   ],
+   "begins": [
+    [
+     57,
+     0,
+     290847287
+    ],
+    [
+     57,
+     528,
+     865144487
+    ]
+   ],
+   "verdict": "end L57 hits 2 deaths 1 cleared [0:1 10:0 12:3 16:0 19:1 30:0 30:2 31:0 39:8 40:8 5:0 8:0 8:1]"
+  },
+  "changed": true
+ },
+ {
+  "file": "frontend/modules/seedlingDemo/fixtures/tentaclebeast-witness/tb-hitless-s2.json",
+  "name": "tb-hitless-s2",
+  "boot": {
+   "level": 57,
+   "x": 96,
+   "y": 160
+  },
+  "declaredSeed": 2,
+  "roomSeed": 290847287,
+  "committed": {
+   "seed": 2,
+   "finished": true,
+   "end": {
+    "level": 58,
+    "x": 64,
+    "y": 104
+   },
+   "hits": 0,
+   "maxHitsSeen": 0,
+   "deathRebuilds": 0,
+   "cleared": [
+    "57:0"
+   ],
+   "begins": [
+    [
+     57,
+     0,
+     2
+    ],
+    [
+     58,
+     1850,
+     226766238
+    ]
+   ],
+   "verdict": "end L58 hits 0 deaths 0 cleared [57:0]"
+  },
+  "perRoom": {
+   "seed": 290847287,
+   "finished": true,
+   "end": {
+    "level": 57,
+    "x": 131.92254616198449,
+    "y": 81.25365012238885
+   },
+   "hits": 0,
+   "maxHitsSeen": 2,
+   "deathRebuilds": 1,
+   "cleared": [],
+   "begins": [
+    [
+     57,
+     0,
+     290847287
+    ],
+    [
+     57,
+     412,
+     1127637217
+    ]
+   ],
+   "verdict": "end L57 hits 2 deaths 1 cleared []"
+  },
+  "changed": true
+ },
+ {
+  "file": "frontend/modules/seedlingDemo/fixtures/tentaclebeast-witness/tb-idle-s1.json",
+  "name": "tb-idle-s1",
+  "boot": {
+   "level": 57,
+   "x": 96,
+   "y": 160
+  },
+  "declaredSeed": 1,
+  "roomSeed": 290847287,
+  "committed": {
+   "seed": 1,
+   "finished": true,
+   "end": {
+    "level": 57,
+    "x": 101.01058651110408,
+    "y": 112.45000000000053
+   },
+   "hits": 1,
+   "maxHitsSeen": 1,
+   "deathRebuilds": 0,
+   "cleared": [],
+   "begins": [
+    [
+     57,
+     0,
+     1
+    ]
+   ],
+   "verdict": "end L57 hits 1 deaths 0 cleared []"
+  },
+  "perRoom": {
+   "seed": 290847287,
+   "finished": true,
+   "end": {
+    "level": 57,
+    "x": 98.05870570943436,
+    "y": 112.45000000000053
+   },
+   "hits": 2,
+   "maxHitsSeen": 2,
+   "deathRebuilds": 0,
+   "cleared": [],
+   "begins": [
+    [
+     57,
+     0,
+     290847287
+    ]
+   ],
+   "verdict": "end L57 hits 2 deaths 0 cleared []"
+  },
+  "changed": true
+ },
+ {
+  "file": "frontend/modules/seedlingDemo/fixtures/tentaclebeast-witness/tb-policy-s2.json",
+  "name": "tb-policy-s2",
+  "boot": {
+   "level": 57,
+   "x": 96,
+   "y": 160
+  },
+  "declaredSeed": 2,
+  "roomSeed": 290847287,
+  "committed": {
+   "seed": 2,
+   "finished": true,
+   "end": {
+    "level": 57,
+    "x": 108.59619707449967,
+    "y": 188.8965272343491
+   },
+   "hits": 1,
+   "maxHitsSeen": 1,
+   "deathRebuilds": 0,
+   "cleared": [
+    "57:0"
+   ],
+   "begins": [
+    [
+     57,
+     0,
+     2
+    ]
+   ],
+   "verdict": "end L57 hits 1 deaths 0 cleared [57:0]"
+  },
+  "perRoom": {
+   "seed": 290847287,
+   "finished": true,
+   "end": {
+    "level": 57,
+    "x": 86.32909684770918,
+    "y": 188.97368485153495
+   },
+   "hits": 0,
+   "maxHitsSeen": 2,
+   "deathRebuilds": 1,
+   "cleared": [],
+   "begins": [
+    [
+     57,
+     0,
+     290847287
+    ],
+    [
+     57,
+     671,
+     1630115318
+    ]
+   ],
+   "verdict": "end L57 hits 2 deaths 1 cleared []"
+  },
+  "changed": true
+ },
+ {
+  "file": "frontend/modules/seedlingDemo/fixtures/tentaclebeast-witness/tb-solve-s2.json",
+  "name": "tb-solve-s2",
+  "boot": {
+   "level": 57,
+   "x": 96,
+   "y": 160
+  },
+  "declaredSeed": 2,
+  "roomSeed": 290847287,
+  "committed": {
+   "seed": 2,
+   "finished": true,
+   "end": {
+    "level": 58,
+    "x": 64,
+    "y": 104
+   },
+   "hits": 0,
+   "maxHitsSeen": 1,
+   "deathRebuilds": 0,
+   "cleared": [
+    "57:0"
+   ],
+   "begins": [
+    [
+     57,
+     0,
+     2
+    ],
+    [
+     58,
+     1047,
+     1320459270
+    ]
+   ],
+   "verdict": "end L58 hits 1 deaths 0 cleared [57:0]"
+  },
+  "perRoom": {
+   "seed": 290847287,
+   "finished": true,
+   "end": {
+    "level": 57,
+    "x": 80.87782538486337,
+    "y": 81.48123088133624
+   },
+   "hits": 0,
+   "maxHitsSeen": 2,
+   "deathRebuilds": 1,
+   "cleared": [],
+   "begins": [
+    [
+     57,
+     0,
+     290847287
+    ],
+    [
+     57,
+     671,
+     1630115318
+    ]
+   ],
+   "verdict": "end L57 hits 2 deaths 1 cleared []"
+  },
+  "changed": true
+ }
+]

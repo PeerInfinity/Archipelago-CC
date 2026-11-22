@@ -1,0 +1,32 @@
+# box lock: TAKEN by rules-predictable-rng reseed-replay (browser, pid 2391) — head c1b250e63, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW r6-owl-control seed 101 -> 125705577 | end L112 hits 1 deaths 0 cleared [] || end L112 hits 1 deaths 0 cleared [] same
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW r6-owl-kill seed 101 -> 125705577 | end L112 hits 0 deaths 0 cleared [112:0 112:1] || end L112 hits 0 deaths 0 cleared [112:0 112:1] same
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW tb-death-s3 seed 3 -> 290847287 | end L57 hits 2 deaths 1 cleared [] || end L57 hits 2 deaths 0 cleared [] CHANGED
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW tb-enter-cleared seed 1 -> 152757873 | end L57 hits 0 deaths 0 cleared [57:0] || end L57 hits 0 deaths 0 cleared [57:0] same
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW tb-hitless-door seed 418414780 -> 290847287 | end L58 hits 0 deaths 0 cleared [0:1 10:0 12:3 16:0 19:1 30:0 30:2 31:0 39:8 40:8 57:0 5:0 8:0 8:1] || end L57 hits 1 deaths 0 cleared [0:1 10:0 12:3 16:0 19:1 30:0 30:2 31:0 39:8 40:8 5:0 8:0 8:1] CHANGED
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW tb-hitless-pit seed 418414780 -> 290847287 | end L58 hits 0 deaths 0 cleared [0:1 10:0 12:3 16:0 19:1 30:0 30:2 31:0 39:8 40:8 57:0 5:0 8:0 8:1] || end L57 hits 2 deaths 1 cleared [0:1 10:0 12:3 16:0 19:1 30:0 30:2 31:0 39:8 40:8 5:0 8:0 8:1] CHANGED
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW tb-hitless-s2 seed 2 -> 290847287 | end L58 hits 0 deaths 0 cleared [57:0] || end L57 hits 2 deaths 1 cleared [] CHANGED
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW tb-idle-s1 seed 1 -> 290847287 | end L57 hits 1 deaths 0 cleared [] || end L57 hits 2 deaths 0 cleared [] CHANGED
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW tb-policy-s2 seed 2 -> 290847287 | end L57 hits 1 deaths 0 cleared [57:0] || end L57 hits 2 deaths 1 cleared [] CHANGED
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW tb-solve-s2 seed 2 -> 290847287 | end L58 hits 1 deaths 0 cleared [57:0] || end L57 hits 2 deaths 1 cleared [] CHANGED
+changed 7 of 10; wrote CC/docs/cloud-reports/rules-predictable-rng-evidence/logs/reseed-replay.json

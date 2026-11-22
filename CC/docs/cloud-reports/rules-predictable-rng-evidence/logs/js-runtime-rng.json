@@ -1,0 +1,193 @@
+[
+ {
+  "arm": "owl-seeded",
+  "boot": {
+   "level": 112,
+   "x": 32,
+   "y": 208
+  },
+  "rng": {
+   "seed": 101,
+   "split": true
+  },
+  "ticks": 1836,
+  "end": {
+   "level": 112,
+   "x": 117.12660731151368,
+   "y": 34.11126031201058
+  },
+  "hits": 0,
+  "flags": [
+   "112:0",
+   "112:1"
+  ]
+ },
+ {
+  "arm": "owl-seeded-again",
+  "boot": {
+   "level": 112,
+   "x": 32,
+   "y": 208
+  },
+  "rng": {
+   "seed": 101,
+   "split": true
+  },
+  "ticks": 1836,
+  "end": {
+   "level": 112,
+   "x": 117.12660731151368,
+   "y": 34.11126031201058
+  },
+  "hits": 0,
+  "flags": [
+   "112:0",
+   "112:1"
+  ]
+ },
+ {
+  "arm": "owl-normal-play(no rng block)",
+  "boot": {
+   "level": 112,
+   "x": 32,
+   "y": 208
+  },
+  "rng": null,
+  "refusedAt": 0,
+  "refusal": "the Owl fight in level 112 needs a tape_version 7 `rng` block",
+  "ticks": 0,
+  "end": {
+   "level": 112,
+   "x": 40,
+   "y": 216
+  },
+  "hits": 0,
+  "flags": []
+ },
+ {
+  "arm": "owl-seed0(inherit)",
+  "boot": {
+   "level": 112,
+   "x": 32,
+   "y": 208
+  },
+  "rng": {
+   "seed": 0,
+   "split": true
+  },
+  "refusedAt": 0,
+  "refusal": "the Owl fight in level 112 needs a declared `rng.seed` in 1..2147483647; got 0. Seed 0 means \"inherit the build's boot state\", which is an ORIGIN this model does not have — §90's reproducible-is-not-predictable, in the one room where it bites.",
+  "ticks": 0,
+  "end": {
+   "level": 112,
+   "x": 40,
+   "y": 216
+  },
+  "hits": 0,
+  "flags": []
+ },
+ {
+  "arm": "owl-walkin-from-L111",
+  "boot": {
+   "level": 111,
+   "x": 128,
+   "y": 64
+  },
+  "rng": {
+   "seed": 101,
+   "split": true
+  },
+  "refusedAt": 7,
+  "refusal": "levelRun: the Owl's draw stream would open in level 112 after a boot in level 111. `OwlDrawStream.levelBuild` charges only this room's own build, which is the seeded stream only when the room is built FIRST after `botStart`'s reseed; the walk in paid another build and its own gameplay draws (R4-swim D1), which this rung does not count.",
+  "ticks": 7,
+  "end": {
+   "level": 112,
+   "x": 40,
+   "y": 216
+  },
+  "hits": 0,
+  "flags": []
+ },
+ {
+  "arm": "tb-seeded",
+  "boot": {
+   "level": 57,
+   "x": 96,
+   "y": 160
+  },
+  "rng": {
+   "seed": 2,
+   "split": true,
+   "cosmetic": 0,
+   "fp": 0
+  },
+  "ticks": 1851,
+  "end": {
+   "level": 57,
+   "x": 104,
+   "y": 158.5
+  },
+  "hits": 0,
+  "flags": [],
+  "tentacleStreamRefusal": null
+ },
+ {
+  "arm": "tb-normal-play(no rng block)",
+  "boot": {
+   "level": 57,
+   "x": 96,
+   "y": 160
+  },
+  "rng": null,
+  "ticks": 1851,
+  "end": {
+   "level": 57,
+   "x": 104,
+   "y": 158.5
+  },
+  "hits": 0,
+  "flags": [],
+  "tentacleStreamRefusal": "has no declared seed for this room"
+ },
+ {
+  "arm": "tb-normal-play(no rng block, 20 ticks)",
+  "boot": {
+   "level": 57,
+   "x": 96,
+   "y": 160
+  },
+  "rng": null,
+  "ticks": 20,
+  "end": {
+   "level": 57,
+   "x": 104,
+   "y": 158.5
+  },
+  "hits": 0,
+  "flags": [],
+  "tentacleStreamRefusal": "has no declared seed for this room"
+ },
+ {
+  "arm": "tb-seeded(20 ticks)",
+  "boot": {
+   "level": 57,
+   "x": 96,
+   "y": 160
+  },
+  "rng": {
+   "seed": 2,
+   "split": true,
+   "cosmetic": 0,
+   "fp": 0
+  },
+  "ticks": 20,
+  "end": {
+   "level": 57,
+   "x": 104,
+   "y": 158.5
+  },
+  "hits": 0,
+  "flags": [],
+  "tentacleStreamRefusal": null
+ }
+]

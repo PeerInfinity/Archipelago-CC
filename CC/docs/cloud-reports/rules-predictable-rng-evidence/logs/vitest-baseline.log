@@ -1,0 +1,23 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/finalBossRng.test.js [2m([22m[2m23 tests[22m[2m)[22m[32m 62[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/rng.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 922[2mms[22m[39m
+     [33m[2m✓[22m[39m never enters state 0 — which is what frees 0 to mean "no seed" [33m 613[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/finalBossFight.test.js [2m([22m[2m31 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityTentacleBeast.test.js [2m([22m[2m37 tests[22m[2m)[22m[33m 10130[2mms[22m[39m
+     [33m[2m✓[22m[39m ON (tentacleHitlessFirst true): the verb opens the mouth with no death, {57,0} is earned, and the walk leaves into L58 — the plan is tb-hitless-s2 [33m 1245[2mms[22m[39m
+     [33m[2m✓[22m[39m ON (tentacleHitlessFirst false): the verb opens the mouth with no death, {57,0} is earned, and the walk leaves into L58 — the plan is tb-solve-s2 [33m 763[2mms[22m[39m
+     [33m[2m✓[22m[39m from t789 (report t787, "dying", no mouth yet) the walk idles, then leaves by the mouth: the witness's tape [33m 780[2mms[22m[39m
+     [33m[2m✓[22m[39m seed 2 (tb-solve-s2's staging): OFF commits variant 0 and its swipe at t393, the game's plan; ON a hitless one [33m 1837[2mms[22m[39m
+     [33m[2m✓[22m[39m seed 7: ON, a variant whose fork drowns at a whirlpool's centre is rejected as a death, and a hitless one wins [33m 716[2mms[22m[39m
+     [33m[2m✓[22m[39m door staging, seed 35: no variant is hitless — the fewest hits win (one swipe), the solve still completes [33m 1116[2mms[22m[39m
+     [33m[2m✓[22m[39m tb-hitless-pit: ON re-plans the witness's own tape (variant 4, 1389 t, 0 hits) [33m 983[2mms[22m[39m
+     [33m[2m✓[22m[39m tb-hitless-door: ON re-plans the witness's own tape (variant 1, 977 t, 0 hits) [33m 1023[2mms[22m[39m
+     [33m[2m✓[22m[39m tb-hitless-s2: ON re-plans the witness's own tape (variant 1, 1850 t, 0 hits) [33m 1263[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m104 passed[39m[22m[90m (104)[39m
+[2m   Start at [22m 04:56:23
+[2m   Duration [22m 12.60s[2m (transform 2.28s, setup 567ms, import 2.86s, tests 11.13s, environment 0ms)[22m
+
