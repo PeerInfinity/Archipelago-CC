@@ -1520,7 +1520,7 @@ export function clearManaTile(world, x, y) {
 }
 
 function assertInBounds(width, height, pt, label) {
-    if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height) {
+    if (!Number.isInteger(pt.x) || !Number.isInteger(pt.y) || pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height) {
         throw new Error(`${label} (${pt.x},${pt.y}) out of bounds for ${width}x${height}`);
     }
 }
