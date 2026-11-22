@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 31,
-        "headings": 1349,
+        "headings": 1350,
         "indexHeadings": 2,
-        "lines": 37125,
+        "lines": 37136,
         "pages": 4,
-        "words": 571179
+        "words": 571819
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -108,8 +108,8 @@ export const DOCS_INDEX = frz({
             "description": "The substrate-free editing machinery in `frontend/modules/procgenCore/`: the edit core and editor view that every level editor is built on, the adapter contract a substrate implements, the shared toolkit for `rules.json` and region-atlas documents, and the set editor that edits a whole collection of rooms.",
             "file": "editing-core.md",
             "h1": "Procgen Editing Core",
-            "headings": 22,
-            "lines": 226,
+            "headings": 23,
+            "lines": 237,
             "links": [
                 "architecture.md",
                 "maze-lab.md",
@@ -119,7 +119,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/editing-core.md",
-            "words": 4989
+            "words": 5629
         },
         {
             "description": "How Seedling rooms and level sets are edited: the room op vocabulary and its adapter, the set session that edits a whole level set with its overlay, the world session that joins several set documents, and the EDIT arm of `seedlingDemo/watch.html` that puts them on a page.",
