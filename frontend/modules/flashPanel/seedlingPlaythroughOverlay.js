@@ -42,6 +42,7 @@
 
 import { allOf, anyOf, entityClaims, entitySemantics, flag, key, tileTypeForPlacement } from './seedlingSemantics.js';
 import { PUSHABLE_KINDS } from './seedlingBlockPaths.js';
+import { PROFILE } from '../seedlingDemo/seedlingProfile.js';
 import { obstacleEventName, ropeEventCondition } from './seedlingObstacleEvents.js';
 
 /**
@@ -1570,21 +1571,22 @@ export function lavaTrapPulls(level, tileSize = 16, options = {}) {
         const cx = tx * tileSize + tileSize / 2;
         const cy = ty * tileSize + tileSize / 2;
         const from = [];
-        const reach = Math.ceil(LAVATRAP_PULL.chompRange / tileSize);
+        const always = [];
+        const partial = [];
+        // DRY RUN (tile-pixel-pull-disc): per tile, over the player ORIGINS that stand in it (`pullStandBox`), is it pulled
+        // everywhere, somewhere, or nowhere? `from` = somewhere (always + partial).
+        const reach = Math.ceil((LAVATRAP_PULL.chompRange + 1) / tileSize + 0.5);
         for (let y = ty - reach; y <= ty + reach; y += 1) {
             for (let x = tx - reach; x <= tx + reach; x += 1) {
                 if (x < 0 || y < 0 || x >= level.width || y >= level.height) continue;
                 if (x === tx && y === ty) continue;
-                const dx = (x * tileSize + tileSize / 2) - cx;
-                const dy = (y * tileSize + tileSize / 2) - cy;
-                // `FP.distance` is Euclidean and `d` is coerced to int before
-                // the comparison, so the boundary is a floor, not a round.
-                if (Math.floor(Math.sqrt(dx * dx + dy * dy)) > LAVATRAP_PULL.chompRange) continue;
-                if (solid && !pullLineClear([x, y], [tx, ty], tileSize, solid)) continue;
+                const cls = pullClass([x, y], [tx, ty], [cx, cy], tileSize, solid);
+                if (cls === 'never') continue;
                 from.push([x, y]);
+                (cls === 'always' ? always : partial).push([x, y]);
             }
         }
-        out.push({ tile: [tx, ty], from, yields: [] });
+        out.push({ tile: [tx, ty], from, always, partial, yields: [] });
     }
     out.sort((a, b) => (a.tile[1] - b.tile[1]) || (a.tile[0] - b.tile[0]));
     lavaTrapStepYields(out, level, tileSize);
@@ -1596,8 +1598,8 @@ export function lavaTrapPulls(level, tileSize = 16, options = {}) {
  * along the segment; the two end tiles never count (the player's own tile and the trap's). The one line test the pull
  * disc and rule T share (`LavaTrap.as:86-88`).
  */
-export function pullLineClear(a, b, tileSize, solid) {
-    const [ax, ay] = tileCentre(a, tileSize);
+export function pullLineClear(a, b, tileSize, solid, aPx = null) {
+    const [ax, ay] = aPx ?? tileCentre(a, tileSize);
     const [bx, by] = tileCentre(b, tileSize);
     const steps = Math.ceil(Math.hypot(bx - ax, by - ay));
     for (let s = 1; s < steps; s += 1) {
@@ -1607,6 +1609,48 @@ export function pullLineClear(a, b, tileSize, solid) {
         if (solid(x, y)) return false;
     }
     return true;
+}
+
+/**
+ * DRY RUN. The player ORIGINS that stand in tile `[x, y]`: the tile's square, less the hitbox's reach into a `solid`
+ * neighbour (`Player.as:295,432` setHitbox(w, h, originX, originY): the box spans [x - originX, x - originX + w) x
+ * [y - originY, y - originY + h)). `[x0, y0, x1, y1]`, half-open.
+ */
+export function pullStandBox([x, y], tileSize, solid) {
+    const wall = (u, v) => !!solid && solid(u, v);
+    return [
+        x * tileSize + (wall(x - 1, y) ? PROFILE.hitboxOriginX : 0),
+        y * tileSize + (wall(x, y - 1) ? PROFILE.hitboxOriginY : 0),
+        (x + 1) * tileSize - (wall(x + 1, y) ? PROFILE.hitboxWidth - PROFILE.hitboxOriginX : 0),
+        (y + 1) * tileSize - (wall(x, y + 1) ? PROFILE.hitboxHeight - PROFILE.hitboxOriginY : 0),
+    ];
+}
+
+/**
+ * DRY RUN. Is tile `t` pulled by the trap on tile `trap` (centre `c`) wherever the player stands in it ('always'), only
+ * from part of it ('partial'), or nowhere ('never')? Per integer pixel cell of `pullStandBox`: `FP.distance` on the REAL
+ * origin, int-coerced, `<= chompRange` (`LavaTrap.as:81-82`: hypot < chompRange + 1), and `collideLine("Solid")` from the
+ * trap to the int origin (`:88`, `World.as:411` takes ints) by `pullLineClear`.
+ */
+export function pullClass(t, trap, c, tileSize, solid) {
+    const R = LAVATRAP_PULL.chompRange + 1;
+    const [x0, y0, x1, y1] = pullStandBox(t, tileSize, solid);
+    let some = false;
+    let all = true;
+    for (let j = Math.floor(y0); j < y1; j += 1) {
+        for (let i = Math.floor(x0); i < x1; i += 1) {
+            const u0 = Math.max(i, x0); const u1 = Math.min(i + 1, x1);
+            const v0 = Math.max(j, y0); const v1 = Math.min(j + 1, y1);
+            const nx = Math.max(u0, Math.min(c[0], u1)) - c[0];
+            const ny = Math.max(v0, Math.min(c[1], v1)) - c[1];
+            const fx = Math.max(Math.abs(u0 - c[0]), Math.abs(u1 - c[0]));
+            const fy = Math.max(Math.abs(v0 - c[1]), Math.abs(v1 - c[1]));
+            const clear = !solid || pullLineClear(t, trap, tileSize, solid, [i, j]);
+            if (clear && Math.hypot(nx, ny) < R) some = true;
+            if (!clear || Math.hypot(fx, fy) >= R) all = false;
+        }
+    }
+    return all ? 'always' : some ? 'partial' : 'never';
 }
 
 /** The pixel centre of tile `[x, y]`. */
@@ -1643,7 +1687,9 @@ function lavaTrapStepYields(pulls, level, tileSize) {
                 if (takers.length < 2) continue;
                 const a = tileCentre(from, tileSize);
                 const b = tileCentre(to, tileSize);
-                const entries = takers.map((q) => rangeEntry(a, b, tileCentre(q.tile, tileSize)));
+                // DRY RUN: a centre line that never enters q's range (a partial tile whose centre is out of it) enters it last
+                const entries = takers.map((q) => rangeEntry(a, b, tileCentre(q.tile, tileSize))).map((e) => (Number.isNaN(e) ? Infinity : e));
+                if (globalThis.__PULL_RACE_LOG) globalThis.__PULL_RACE_LOG.push({ level: level.level, from: [...from], to: [...to], takers: takers.map((q) => q.tile), entries });
                 const first = Math.min(...entries);
                 // a tie at the first entry settles nothing: no trap yields, and the maze refuses the step by name
                 if (entries.filter((e) => e === first).length > 1) continue;
