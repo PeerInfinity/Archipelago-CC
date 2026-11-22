@@ -1016,6 +1016,15 @@ export function pullCatching(world, from, to, armed = null) {
     return pullsTaking(world.pulls, from, to, armed)[0] ?? null;
 }
 
+/**
+ * PULL PASSES: true iff ARMED, the move from `from` to `to` is taken by two or more traps (an armed trap takes any step
+ * into its disc; the `yields` race settles only steps from outside every disc, `lavaTrapStepYields`). Which tongue lands
+ * first is not settled (a witness item), so both steps refuse the move by name rather than pick one by list order.
+ */
+export function pullMoveContested(world, from, to, armed) {
+    return !!world.pulls && !!armed?.length && pullsTaking(world.pulls, from, to, armed).length > 1;
+}
+
 /** A step's key in a pull's `yields`. */
 const stepKey = (from, to) => `${posKey(from.x, from.y)}>${posKey(to.x, to.y)}`;
 
@@ -2211,6 +2220,7 @@ function stepCore(world, state, input, inventoryOverride, clearanceOpts) {
     const nx = state.player_pos.x + delta.dx;
     const ny = state.player_pos.y + delta.dy;
     if (!isFloor(world, nx, ny)) return null;
+    if (pullMoveContested(world, state.player_pos, { x: nx, y: ny }, state.pullArmed)) return null;
     const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
     const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken, state.latched);
     if (shutObstacleAt(world, state, nx, ny, inv, clearanceOpts) !== null) {
@@ -2426,6 +2436,9 @@ function whyRefused(world, state, input, inventoryOverride, clearanceOpts) {
     const ny = state.player_pos.y + delta.dy;
     if (nx < 0 || nx >= world.width || ny < 0 || ny >= world.height) return 'off the grid';
     if (!isFloor(world, nx, ny)) return `wall at (${nx},${ny})`;
+    if (pullMoveContested(world, state.player_pos, { x: nx, y: ny }, state.pullArmed)) {
+        return `moving into (${nx},${ny}) armed, two traps take the step — which reels first is not settled`;
+    }
     const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
     const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken, state.latched);
     const obstacleId = shutObstacleAt(world, state, nx, ny, inv, clearanceOpts);

@@ -43,7 +43,7 @@
 import { evaluateRule } from '../../shared/ruleEngine/index.js';
 import {
     INPUT_WAIT, TURN_PREFIX, USE_PREFIX, getObstacle, getItem, isFloor, posKey, copyInventory, holdInInventory, actionItems, actionUsable,
-    sinksBlock, footprintCells, blockStrikeCells, stanceStrikes, ropeLatch, pullCatching, pullPasses, armedAfter, pullArmedAt,
+    sinksBlock, footprintCells, blockStrikeCells, stanceStrikes, ropeLatch, pullCatching, pullPasses, armedAfter, pullArmedAt, pullMoveContested,
     blockEntryAt, blockKindAt, moveBlockIn, strikeDelta, awayDelta, sidedOpeners, openerEvents,
 } from '../mazeRoomEngine.js';
 
@@ -451,6 +451,10 @@ function scriptedStepCore(world, state, input, helpers, tileLib, { latch = true 
     if (!delta) return noInput;
     const nx = state.player_pos.x + delta.dx;
     const ny = state.player_pos.y + delta.dy;
+    // ⛓ PULL PASSES (the native move): armed, a step two traps take is refused by name (which reels first is not settled)
+    if (pullMoveContested(world, state.player_pos, { x: nx, y: ny }, state.pullArmed)) {
+        return { next: null, refused: { primitive: 'pull', cell: { x: nx, y: ny }, helper: null } };
+    }
     const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken, state.latched);
     const ctx = makeContext(helpers, inv);
     const target = tileAt(world, nx, ny, state.blocks, state.player_pos, state.broken, null, input);
