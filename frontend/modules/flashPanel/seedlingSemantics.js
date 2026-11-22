@@ -1125,6 +1125,10 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
     const STEP_FROM = { S: 'N', N: 'S', E: 'W', W: 'E' };
     const cells = new Array(width * height);
     const sinks = [];
+    // ⛓ rules-ap-chest-solid — the cells a `pocketReentry` probe walls (index -> its walled entry dirs), and the cells some
+    // OTHER claim gave `enter` gates to (those are never re-opened below).
+    const pocketWalled = new Map();
+    const otherEnter = new Set();
     for (let i = 0; i < cells.length; i += 1) {
         const cell = { kind: 'open', conditions: [], faces: {}, dirs: {}, manual: [], labels: [] };
         const x = i % width;
@@ -1141,6 +1145,8 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
             const enterOf = directionalLocks && semantics.probe
                 ? Object.fromEntries(['N', 'E', 'S', 'W'].filter((d) => d !== STEP_FROM[semantics.probe]).map((d) => [d, null]))
                 : null;
+            if (enterOf && semantics.pocketReentry && !semantics.persists) pocketWalled.set(i, Object.keys(enterOf));
+            else if (enterOf || semantics.enter) otherEnter.add(i);
             // ⛓ RULES rules-fire-breaks-rocks — a row may also carry its own condition-valued `enter` gates (a rock's
             // flame is credited only from a side with a stance: `seedlingPlaythroughOverlay.rockFireRuling`).
             for (const key of ['faces', 'dirs', 'enter']) {
@@ -1354,6 +1360,58 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
                     const ways = sets.map((set) => allOf(...set.map((k) => byKey.get(k))));
                     cell.enter[dir] = [anyOf(...ways)];
                 }
+            }
+        }
+    }
+
+    // ⛓⛓ rules-ap-chest-solid — **A ONE-SIDED SOLID NOBODY CAN BE BEHIND EXCEPT THROUGH IT.** A `pocketReentry` probe (the
+    // AP chest: `Pickups/APChest.as:75` opens it only from the line under it, `:89` makes it a passage, and no latch event is
+    // minted for it) walls every entry but the probe side's. A walled entry is let back in for free when its side holds
+    // none of the level's `arrivalTiles` — the area a step can stand on from that neighbour (gates and all, never through
+    // this cell) reaches no landing — because then whoever stands there came in through this cell, which they could only
+    // do by opening it from the probe side: it is open behind them (`check()` removes an opened one on a later entry). The
+    // re-closing locks' far-side rule above, for a lock that never re-closes. Without `arrivalTiles` every side is assumed
+    // to have another way in, and stays walled. A cell another claim gave `enter` gates to is left as it is.
+    if (directionalLocks && options.arrivalTiles && pocketWalled.size > 0) {
+        const arrivals = new Set(options.arrivalTiles
+            .filter(([tx, ty]) => inside(tx - bounds.x, ty - bounds.y))
+            .map(([tx, ty]) => (ty - bounds.y) * width + (tx - bounds.x)));
+        const DELTA = { N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] };
+        const standable = (i) => !['wall', 'sink', 'manual'].includes(cells[i].kind);
+        const sideHasArrival = (start, self) => {
+            const seen = new Set([start, self]);
+            const stack = [start];
+            if (arrivals.has(start)) return true;
+            while (stack.length) {
+                const i = stack.pop();
+                const x = i % width;
+                const y = (i - x) / width;
+                for (const [dx, dy] of Object.values(DELTA)) {
+                    const n = (y + dy) * width + (x + dx);
+                    if (!inside(x + dx, y + dy) || seen.has(n)) continue;
+                    // A landing the transcription walls (a door in a solid) still puts the player beside it.
+                    if (arrivals.has(n)) return true;
+                    if (!standable(n)) continue;
+                    seen.add(n);
+                    stack.push(n);
+                }
+            }
+            return false;
+        };
+        for (const [li, dirs] of pocketWalled) {
+            if (otherEnter.has(li)) continue;
+            const x = li % width;
+            const y = (li - x) / width;
+            for (const dir of dirs) {
+                if (cells[li].enter?.[dir] !== null) continue;
+                // A step INTO the cell moving `dir` comes from the neighbour on the opposite side.
+                const nx = x - DELTA[dir][0];
+                const ny = y - DELTA[dir][1];
+                if (!inside(nx, ny)) continue;
+                const n = ny * width + nx;
+                if (!standable(n) || sideHasArrival(n, li)) continue;
+                delete cells[li].enter[dir];
+                review.push({ tile: [x + bounds.x, y + bounds.y], reason: `one-sided solid: entry ${dir} re-opened, its side holds no landing` });
             }
         }
     }

@@ -775,9 +775,23 @@ export const PLAYTHROUGH_ENTITY_OVERLAY = Object.freeze({
     // --- choreography: free in logic, per the ruled policy --------------------
     cover: OPEN('Puzzlements/Cover.as:20,34,48',
         'a Cover clears while something sits under it — choreography, no item.'),
-    chest: OPEN('Chest.as:62-104',
-        'a Chest is a Solid until opened, and opening it needs no item — it is a '
-        + 'collide-line one pixel below the bottom edge. Choreography.'),
+    // ⛓ rules-ap-chest-solid (⚖ Robert 2026-10-27/10-30/11-11, launched 2026-11-22): a playthrough chest is delivered as
+    // `<apitem kind="chest">` (`apPlacementRewriter.apItemAttrs`), which the p4h build constructs as `Pickups/APChest`:
+    // `type = "Solid"` + `setHitbox(16, 16, 8, 8)` (`APChest.as:57-58`, as `Chest.as:29-30`), opened only for a player on
+    // the one-pixel line under its bottom edge while no other Solid overlaps it (`APChest.as:75` = `Chest.as:62-63`), then
+    // `type = ""` (`APChest.as:89`): the cell is a passage once opened. That is the one-sided lock primitive the BossLock
+    // already uses (`probe: 'S'`: under `directionalLocks` every ENTRY but the step north from the cell below is walled,
+    // leaving is free). No item, so no condition. NOT `persists` (no latch event is minted for it), but `pocketReentry`
+    // (`buildSeedlingRegionGrid`): a walled entry whose side holds no landing is free, since whoever stands there came
+    // through the chest and opened it; a side WITH a landing stays walled, also after an opening on an earlier visit
+    // (stricter than the game, which keeps it open). The Cover that may share the cell (`Cover.as:58`) is ruled OPEN
+    // below, so it adds no price.
+    chest: {
+        kind: 'directional', probe: 'S', pocketReentry: true,
+        cite: 'Pickups/APChest.as:57-58,75,89 (Seedling p4h-as3 0451516252) = Chest.as:29-30,62-63,77',
+        why: 'an AP chest is a Solid until opened, opened with no item but only from the one-pixel line under its bottom '
+            + 'edge: entered only by the step north from the cell below; every other entry is walled.',
+    },
     pushableblock: OPEN('Puzzlements/PushableBlock.as + Player.as:1092-1098',
         'the PLAIN block is moved by walking into it. No item, so no rule.'),
 

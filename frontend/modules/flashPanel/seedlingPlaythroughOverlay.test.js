@@ -107,9 +107,20 @@ describe('the overlay speaks only where the transcription refused', () => {
             expect(typeof row.cite, `"${tag}" has no cite`).toBe('string');
             expect(row.cite.length, `"${tag}"'s cite is empty`).toBeGreaterThan(0);
             expect(typeof row.why, `"${tag}" has no reading`).toBe('string');
-            expect(['open', 'wall', 'gated']).toContain(row.kind);
+            // ⛓ rules-ap-chest-solid: `directional` is the one-sided Solid (a `probe` side, no condition)
+            expect(['open', 'wall', 'gated', 'directional']).toContain(row.kind);
             if (row.kind === 'gated') expect(row.condition).toBeTruthy();
+            if (row.kind === 'directional') expect(['N', 'E', 'S', 'W']).toContain(row.probe);
         }
+    });
+
+    it('⛓ rules-ap-chest-solid — an AP chest is a Solid entered only by the step north from the cell below it', () => {
+        const row = PLAYTHROUGH_ENTITY_OVERLAY.chest;
+        expect(row).toMatchObject({ kind: 'directional', probe: 'S', pocketReentry: true });
+        expect(row.condition ?? null).toBeNull();
+        expect(row.persists ?? false).toBe(false);
+        expect(row.cite).toMatch(/APChest\.as:57-58/);
+        expect(row.cite).toMatch(/Chest\.as:29-30,62-63/);
     });
 
     it('the pixel-mask families are DECLARED rather than ruled — they go to the model', () => {
