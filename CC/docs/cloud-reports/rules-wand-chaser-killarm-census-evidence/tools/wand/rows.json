@@ -1,0 +1,22 @@
+{
+ "L72-71to73":      {"boot":"72:16:256",  "goal":"176:0:73", "pair":[]},
+ "L72-73to71":      {"boot":"72:176:16",  "goal":"0:256:71", "pair":[]},
+ "L73-72to74":      {"boot":"73:32:128",  "goal":"64:0:74",  "pair":["hasDarkSuit"]},
+ "L73-74to72":      {"boot":"73:64:16",   "goal":"32:144:72","pair":["hasDarkSuit"]},
+ "L74-73to75":      {"boot":"74:288:128", "goal":"16:144:75","pair":[]},
+ "L74-73toShield":  {"boot":"74:288:128", "goal":"tiles:3,2","pair":[]},
+ "L74-75to73":      {"boot":"74:16:128",  "goal":"288:144:73","pair":[]},
+ "L75-71to74":      {"boot":"75:64:208",  "goal":"64:0:74",  "pair":[]},
+ "L75-74to71":      {"boot":"75:64:16",   "goal":"64:224:71","pair":[]},
+ "L77-78to76":      {"boot":"77:96:288",  "goal":"0:32:76",  "pair":["hasDarkSuit"]},
+ "L77-76to78":      {"boot":"77:16:32",   "goal":"96:304:78","pair":["hasDarkSuit"]},
+ "L78-77to79":      {"boot":"78:256:16",  "goal":"32:0:79",  "pair":["hasDarkSuit"]},
+ "L78-79to77":      {"boot":"78:32:16",   "goal":"256:0:77", "pair":["hasDarkSuit"]},
+ "L78-r0c16tor6c11":{"boot":"78:256:16",  "goal":"tiles:11,6","pair":[]},
+ "L80-79to71":      {"boot":"80:40:288",  "goal":"32:0:71",  "pair":["hasDarkSuit"]},
+ "L80-71toChest":   {"boot":"80:32:16",   "goal":"tiles:1,8","pair":["hasDarkSuit"]},
+ "L80-79toChest":   {"boot":"80:40:288",  "goal":"tiles:1,8","pair":["hasDarkSuit"]},
+ "L99-r7c5tor2c7":  {"boot":"99:96:112",  "goal":"tiles:7,2","pair":[]},
+ "L99-r7c5tor6c12": {"boot":"99:96:112",  "goal":"tiles:12,6","pair":[]},
+ "L99-r7c5tor8c10": {"boot":"99:96:112",  "goal":"tiles:10,8","pair":[]}
+}

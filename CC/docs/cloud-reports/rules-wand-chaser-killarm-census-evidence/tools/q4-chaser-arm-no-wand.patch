@@ -1,0 +1,16 @@
+diff --git a/scripts/procgen/seedlingChaserPursuitGuard.js b/scripts/procgen/seedlingChaserPursuitGuard.js
+index 73d30a28..7440f3b8 100644
+--- a/scripts/procgen/seedlingChaserPursuitGuard.js
++++ b/scripts/procgen/seedlingChaserPursuitGuard.js
+@@ -172,7 +172,10 @@ export function pursuitFaster(tag, terrainTypes, { speedOf = bodySpeedOn, player
+ // ── the arm ───────────────────────────────────────────────────────────────────────────────────────────────────────────
+ 
+ /** A body's kill arm: `{arm, src}`, `{free: true}` (it removes itself), or `{refuse}` (none derivable). */
+-export function killArmOf(tag, { bodyClasses = KILL_LOCK_BODY_CLASSES, armCondition = KILL_ARM_CONDITION, enemyClasses = ENEMY_CLASSES } = {}) {
++// ⚠ THROWAWAY (rules-wand-chaser-killarm-census Q4): the CHASER arm without the Wand. The kill-lock census's own rows
++// (seedlingPlaythroughOverlay / seedlingKillLocks) keep KILL_ARM_CONDITION; only K's chaser charge reads this one.
++const CHASER_ARM_CONDITION = Object.freeze({ any: KILL_ARM_CONDITION.any.filter((c) => c.flag !== 'hasWand') });
++export function killArmOf(tag, { bodyClasses = KILL_LOCK_BODY_CLASSES, armCondition = CHASER_ARM_CONDITION, enemyClasses = ENEMY_CLASSES } = {}) {
+     const row = bodyClasses[tag];
+     if (!row) {
+         if (enemyClasses[tag]?.kill?.hits > 0) return { arm: armCondition, src: `ENEMY_CLASSES.${tag}.kill (Enemy.as:147-158)` };

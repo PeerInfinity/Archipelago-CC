@@ -1,0 +1,4 @@
+{
+ "p-L72-71-stand-right": {"boot": {"level":72,"x":16,"y":256}, "items":["hasWand"], "script":[["face","right"],["fireHold","",30,8]]},
+ "p-L72-71-stand-up":    {"boot": {"level":72,"x":16,"y":256}, "items":["hasWand"], "script":[["face","up"],["fireHold","",30,8]]}
+}
