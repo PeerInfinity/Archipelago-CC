@@ -1,17 +1,24 @@
 # Cloud report: rules-ap-chest-solid
 
-AP chests are now SOLID and open only from below, in the host's delivery (`kind="chest"`) and in the rules. The rules
-change is general and derived from `APChest.as`/`Chest.as` and the level data. It contains no level literal. Every route that moves
-is STRICTER, and all of them are on L11, L25 and L38. Seed 1 has no sphere move. engineMd5 is unchanged.
+AP chests are now SOLID and open only from below, in the host's delivery (`kind="chest"`) and in the rules. An opened chest
+is now EXACT as well: it stays open, as a minted "chest opened" latch event (§ Latch, the continuation). The rules change is general
+and derived from `APChest.as`/`Chest.as` and the level data. It contains no level literal. **Against main, every route is equal
+or STRICTER**, and the movers are on L11, L25 and L38 only. No location changes integer sphere at seed 1. engineMd5 is
+unchanged, and closure ∩ diff = ∅. The certifier is 1/13/0 on both arms, with OPEN_L63 the only problem.
 
-Three things are not the brief's expectation, and the planner must rule on each before landing (§ Stops and deviations):
-(1) the ER producer re-draws, although the committed draw stays beatable; (2) the certifier's ACCEPTED count goes from 16
-to 13 at L63, a chest level outside the four, with no route moved; (3) I re-recorded `fidelityL25ApItem`'s oracle on the p4g game
-instead of only reporting its red.
+The continuation (⚖ Robert: ER re-draw → "Accept the new draw"; the far side after an opening → "Make it exact") is in § Latch.
+It also covers § CI reds at 3574bda127 (4 tests), § Survey step 35 (L26), pin (B) and mutant (C). The first pass's sections below
+are kept, and where the latch moved a number, § Latch gives the current one.
+
+First-pass deviations, for the record: (1) the ER re-draw is now ruled accepted; (2) the certifier's ACCEPTED count goes
+from 16 to 13 at L63, a chest level outside the four, with no route moved; (3) I re-recorded `fidelityL25ApItem`'s oracle on the
+p4g game instead of only reporting its red.
 
 - Base: `git rev-parse origin/main` = `f9010498152183593cc700d51cf813a740d29bb0` (train: rules-spinner-alias-guards).
-- Branch: `claude/ap-chests-solid-below-gjlzor`. Commits: `2a4dd25a` host, `d2592a8d` rule, `d6107fc9` re-records,
-  `6b6399fc` + `fac04135` evidence, then this report.
+- Branch: `claude/ap-chests-solid-below-gjlzor`. First pass: `2a4dd25a` host, `d2592a8d` rule, `d6107fc9` re-records,
+  `6b6399fc` + `fac04135` evidence, `3574bda1` report. Continuation: the latch rule, its re-records and evidence, then this report
+  edit as the last commit. ⚠ The first report commit is already pushed, so amending it would need a force-push (forbidden here).
+  The report therefore has one edit commit on top, which is the last commit.
 - Evidence: `CC/docs/cloud-reports/rules-ap-chest-solid-evidence/` (tools in `tools/`, logs in `runs/`, key walks in
   `keywalk/`, route walks in `routes/`).
 
@@ -30,6 +37,122 @@ instead of only reporting its red.
 | engineMd5 base / tip | `74ae60f575531492ed9eaec1839e1fe3` / `74ae60f575531492ed9eaec1839e1fe3`, 42 files, identical closure lists | § engineMd5 |
 | `regen-seedling.mjs --check` | 10/10 OK (re-run with every submodule present) | `regen-check-tip.txt` |
 | Derived table | Re-derived locally, a fixed point. 99 rows / 6 excluded → 98 / 4. **VERDICT MOVES** (all `True_` rows): listed for `tile-primitives-design-8` | § Table |
+
+## Latch (the continuation: ⚖ "Make it exact")
+
+**1. Source first** (Seedling `p4h-as3` @169247c4c4, `src/Pickups/APChest.as`; the pinned `vendor/seedling` @ccdf189
+`src/Chest.as` for the vanilla line numbers):
+- (a) Opening: `APChest.as:89` `type = "";` (vanilla `Chest.as:77`). The fade then removes it at `:104` (`timerStep`).
+- (b) Persistence: `APChest.as:92` `Game.setPersistence(tag, false)` (vanilla `Chest.as:89`). `check()` at `APChest.as:66-68`
+  (`if (tag >= 0 && !Game.checkPersistence(tag)) FP.world.remove(this);`, vanilla `Chest.as:41-43`) removes an opened chest on
+  every later entry. **The opened state PERSISTS** across leaving and re-entering, for every `tag >= 0` (all 16 map chests carry one).
+  So a persisting latch is allowed, and it is used only where `persists` holds.
+
+**2. Shape**: BossLock's lock-event path, with no new geometry and no new rule kind. The transcription row `chest` gains
+`persistAttr: 'tag'` (`seedlingSemantics.js`), so `entitySemantics` reads `persists` off the placement's tag as for BossLock/ShieldLock.
+The grid cell is `latch`ed, the analyzer prices a closed-side entry as "the latched cell was opened" (RULES (A)), and the rules mint
+it as a lock event (`playthroughLockEvents` → `deriveLockEvents`) with the opener's sub-region as its place. Two producer-side
+supports: `FLAG_ACTIONS.chest` (`arrivalSolid.js`, the event's action text), and the lock-event rule of an opener whose step costs
+nothing is `True_` (`make-seedling-playthrough-rules.mjs`; before, it refused). No BossLock opener is free, so no BossLock row moves.
+
+**3. Mint only where needed.** The latch is set in the same pass that re-opens pocket sides (`buildSeedlingRegionGrid`,
+`pocketReentry`). For each walled entry from a standable neighbour, a side with no landing is re-opened (the first-pass rule),
+and a side that reaches a landing (the same `sideHasArrival` flood) latches the cell, but only if the row `persists`. So L40's
+alcove chest is never latched. The rules then mint an event only where the latch projection moves a row. **3 events are minted**:
+`L11 flag 0: chest@32,48 cleared` (in `level_11__r4c2`), `L25 flag 0: chest@96,96 cleared` (in `level_25__r7c6`) and
+`L38 flag 1: chest@144,112 cleared` (in `level_38__r8c9`). The other latched cells (L12, L15, L17, L36, L71, L80, L90) mint nothing,
+because no row moves there.
+
+**4. Condition**: each event's rule is the opener's step into the cell, i.e. reaching the probe cell. That is `True_` for all
+three, since each probe side is reached free inside its sub-region. The Cover over L38's chest is ruled OPEN, so `APChest.as:75`'s
+"no other Solid overlapping" adds no item. The gates it prices are:
+- `level_11__r0c2 -> level_11__r4c2`: `Or(Has(Progressive Swim), Has(L11 event))`
+- `level_25__r2c7 -> level_25__r7c6`: `Has(L25 event)`
+- `level_38__r0c9 -> level_38__r8c9`: `Has(L38 event)`
+
+**The maze binds the event** with no engine change. A latched directional cell with no occupancy rule now takes the always-open
+gate obstacle (`regionAtlasMazeProjection.js`, `builder.gate(x, y, {rule: 'True_'})`). `bindWorldEvents` hangs the event on it
+(mode 'latch', side = the probe sub-region), and `levelWorldEntryGates` prices the closed side `Has(<event>)`, exactly as for a
+BossLock. Without this, the certifier read 8/13/0 (`… which the maze world cannot produce (its chest is not in the maze world)`
+×7). With it, the certifier reads 1/13/0.
+
+**5. Direction, against main and against my previous tip** (route walk, `routes/latch/`; key walks, `keywalk/latch-vs-f9010498/` and
+`keywalk/latch-vs-3574bda1/`):
+
+| arrival → goal | main f9010498 | previous tip 3574bda1 | now |
+|---|---|---|---|
+| L3 → L11 `exit -> L10`, `Level 011 - Chest` | FREE | Swim | **Swim or L11 event** |
+| L22 → L25 `exit -> L28`, `Level 025 - Chest` | FREE | none | **L25 event** |
+| L26 → L25 `exit -> L28`, `Level 025 - Chest` | Spear / Shield / Sword | none | **(Spear / Shield / Sword) AND L25 event** |
+| L39 → L38 `exit -> L37`, `Level 038 - Chest` | FREE | none | **L38 event** |
+| L10 → L11, L28 → L25, L37 → L38 → the event locations | (new) | (new) | FREE |
+| L3 → L11, L22/L26 → L25, L39 → L38 → the event locations | (new) | (new) | the event itself (the same price as the row) |
+
+Against **main**, every existing row is EQUAL OR STRICTER (FREE → an event that has to be earned on the probe side). The only new rows are the
+three event locations. Against **my previous tip** they loosen, as ruled. Totals: 15 route rows move in `seedling_playthrough`,
+the seed-1 preset and the maze (`*-vs-main.txt`, `*-vs-tip1.txt`), and 15 in ER against the previous tip (436 against main: the accepted
+re-draw). Key walk against the previous tip: playthrough and seed 1 move only L11/L25/L38 (the event locations, the gate rules, items).
+The maze also moves payload on L12/L15/L71/L80: those latched cells take the always-open gate, with no event bound, so their entries
+stay walled and no route moves. No LOOSER-than-main row.
+
+**6. Evidence.**
+- **Table** (REGEN_RECIPE: `regen --write`, `probe-seedling-derived-rules.mjs --shards=2`, install, `regen --write`, the probe
+  again): a fixed point, 94 rows / 45 regions / 4 excluded. Against my previous tip (`runs/latch/derived-table-diff-vs-tip1.txt`):
+  **ROW DEL** `level_25__r7c6|@Level 025 - Chest`, `level_25__r7c6 -> level_28__r0c6`, `level_38__r8c9|@Level 038 - Chest` and
+  `level_38__r8c9 -> level_37__r0c18`, all `True_`. Their sub-regions now hold a minted event, so each element is a
+  sharedBinding (rules-4 ruling (a)) and leaves the table; its composed rule stands. Against main (`…-vs-main.txt`): 99/6 → 94/4. The 7
+  first-pass renames and drops remain, with no row ADDed for L25 r7c6 or L38 r8c9. No rule loosens.
+- **Seed 1** (`runs/latch/seed1-sphere-moves.txt`): no location changes integer sphere, against main or against my previous tip.
+  The three events enter at 0.1, 3.4 and 5.3. Inside those spheres the later sub-steps shift by one (`Level 011 - Chest` 0.2 → 0.3,
+  `Level 025 - Chest` 3.7 → 3.8, `Level 038 - Chest` 5.5 → 5.6, `Level 010 - Sword` 0.1 → 0.2, …). The spoiler gains the three event
+  lines (`L11 flag 0: chest@32,48 cleared: …` etc.).
+- **Certifier** (`cert-tip-*.txt`): vanilla `1 / 13 / 0`, 104 skip, 851 lines, ALL CHECKS PASSED. ER `1 / 13 / 0`, 105 skip, 852 lines,
+  `PASS: the ER arm matches … (1 / 13 / 0)`. The only problem is OPEN_L63's row.
+- **engineMd5** `74ae60f575531492ed9eaec1839e1fe3` (42 files), re-measured at the continuation's tip. The closure list is identical, and
+  (diff from base + untracked) ∩ closure = **0 files**. `regionAtlasMazeProjection.js` is not in the closure.
+- `regen-seedling.mjs --check` every step OK. `refresh-seedling-derived-rules.mjs --check` OK, `census-seedling-constants --check` PASS,
+  `generate-procgen-reference --check` all match.
+
+**7. Pin (B)**: `scripts/procgen/seedlingChestPullLines.test.js` (4 rows), named in `docs/json/developer/procgen/maze.md` § Pulls.
+For every LavaTrap of the playthrough map and every tile of its UNCUT disc, the trap→tile line (`pullLineClear`, the disc's
+own test) crosses no AP chest tile. The chests are read off the overlay (a `probe` row with no condition, placed by its hitbox), so a level
+edit reds it. The pin covers both the shut and the opened chest, because no line touches a chest cell either way. The rows also
+assert that the producer's disc equals the chest-as-Solid disc tile for tile, and a mutant (a chest planted on a line) is caught.
+No level literal.
+
+**8. Mutant (C)**: the "pocket doors stripped" row now catches 1 problem row, not 2. One is enough: the other door's loosening
+is still caught in the same row, as its landing line `level_38__r0c9->level_39__r25c9<@9,1` moving from the clean world's
+`[[press]]` to `[[]]`. That is asserted against the unmutated compile (`sphereOrderLevels.test.js`), so stripping either gate reds the row.
+
+### CI reds at 3574bda127 (run 45062565988): the 4 tests my list missed, each fixed with its reason
+
+- `fidelityBobIframe.test.js` ("both recordings name the build, the set and every tick"): the fixtures named the delivered set
+  `6d7e278d`, and the new bytes make it `93f13131`. Re-recorded by its own recipe, `probe-seedling-bobiframe.mjs --host=http://localhost:8000
+  --record` on `seedling_bot_ap_p4g` (box lock, dev server 8000): **ALL PASS**, both tapes sampled on every tick (1226/1226,
+  1222/1222), the ON model 0 px. Only the `delivered_set` line of each fixture moves (`runs/latch/bobiframe-record-p4g.txt`).
+- `seedlingDarkTrapGateCensus.test.js` (L63 sub-regions), `seedlingDivergenceLineCarry.test.js` and `seedlingDivergenceEdgeEvents.test.js`
+  (the L65 → L63 chest leg): the L63 rename, where `r5c14` is gone and the chest leg is `level_63__r6c15 <- in_L65_128_0 ~> …`. Names
+  only, with no semantic change.
+- The bounded list is widened with every test that reads the delivered set (`l25Sets`, `rewriteRecordSet`, `seedling-ap-record`,
+  `bobiframe`, `f2Preset`), the divergence leg list (`seedlingDivergence*`, `seedling-divergence-legs`), the dark-trap census, the
+  surveys and the maze preset: **242 files, 4955 tests, all pass** (`runs/latch/vitest-list-default.txt`). Slow tier, widened to
+  every slow test naming seedling, divergence or a survey: **21 files, 261 tests, all pass** after one re-pin
+  (`deriveLevelWorldLogic.slow`: L25's event row at L28's landing [own event] and L38's axis 4/8 → 8/16, skip rows 103 → 104).
+
+### Survey step 35 (runs 45063427840 / 45063430393): L26 `teleporter@144,208 → L28` refused
+
+**(b): the solver lacks the strategy (it exists, switched off). The rules are not looser.** The route now goes L25 → L26 → L28 because L25's
+chest and L28 door cost the chest's event from L22's side. That makes the route cross L26's `level_26__r2c4 -> level_26__r13c8`,
+which the old route never exercised. Its rule is `Or(Has(Progressive Shield, 2), Has(Ghost Spear), Has(Progressive Sword), Has(Wand))`,
+the encounter lock `rocklock@112,208` (tile (7,13), `tset: "-1"`, `tag: "0"`) priced at the arms that kill L26's two punchers (rules
+`rules-l26-rocklock-pocket`). The game: `RockLock.as:49-66` sets `if (tSet == -1 && totalEnemies() == 0) activate = true;`, and while
+`activate` holds, `type = ""` (the same test as `Lock.as:109-115`). So the row is the game's. `rock2@128,192` (8,12) is a wall the path does
+not need. The solver: `solverBot.js:787` gives `'solid:rocklock'` a strategy only under `ROCKLOCK_KILL` (`:3288`
+`ROCKLOCK_KILL = { enabled: …SEEDLING_ROCKLOCK_KILL === '1' }`, `:3289` `ROCKLOCK_KILL_DEFAULT = false`; `:3264-3287` names exactly
+L26's rocklock). Off, it has no row, so the planner sees `solid:rocklock` as an untraversable obstacle ("no walkable tile path"). The
+fix is the solver's switch, which is outside this slice. I did not wire it. With the latch, the L22 side of L25 still costs the chest's event,
+so the route still takes L26. **Not verified here:** the END survey's "+3-shifted REFUSED rows, nothing else new". I cannot read CI
+artifacts from this container, and I did not run the survey locally.
 
 ## The host change
 
@@ -71,10 +194,8 @@ The chest reuses the existing one-sided-Solid primitive, the BossLock's `probe` 
   rule, applied to a lock that never re-closes. With no `arrivalTiles`, every side stays walled. It fires at L40. Its fire
   alcove r48c54 sits above the chest and no landing enters it, so the walk back down through the opened chest is free.
   Without it the first run deleted `level_40__r48c54 -> level_40__r26c13` and the certifier raised 6 new L40 problems.
-- **Far side with a landing** (L11's L3 side, L25's L22/L26 side, L38's L39 side): this stays walled, even after an opening on an
-  earlier visit. That is STRICTER than the game, which keeps the chest open (`check()` removes it). The exact reading
-  would be a minted latch event per chest ("chest opened"), like the BossLock's lock events. I did not mint one, because it
-  would add event locations to every preset.
+- **Far side with a landing** (L11's L3 side, L25's L22/L26 side, L38's L39 side): in the first pass this stayed walled even after an
+  opening on an earlier visit, which is stricter than the game. **Superseded by § Latch**: it now costs the chest's minted lock event.
 - **Cover gate** (L38 (9,7)): `APChest.as:75` opens only while no other Solid overlaps it. The cover over L38's chest is ruled
   `OPEN` (choreography, `Cover.as:20,34,48`, activated by its tset), so under the puzzle policy the gate adds no price. It is named,
   not modelled.
@@ -311,8 +432,7 @@ it is not in `scripts/procgen/`.
    `seedling_bot_ap_p4g` (box lock, dev server 8000): 4 of 4 arms, the same tick, take and 0 px. Only the set id moved in the oracle. Its four
    arms still hold the p4g semantics.
 4. No LOOSER row, no engine-closure change, no level literal (the 3 L11/L25/L38 lists in the tests are measured pins, read off the overlay).
-5. Stricter than the game, by design: a far side with a landing (L11 from L3, L25 from L22/L26, L38 from L39) stays walled after an
-   earlier opening. The exact reading is a minted "chest opened" latch event, which was not done here.
+5. (First pass) A far side with a landing stayed walled after an earlier opening. Now exact: § Latch.
 
 ## What I did not run
 
