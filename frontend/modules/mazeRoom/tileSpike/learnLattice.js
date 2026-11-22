@@ -96,7 +96,8 @@ export function assertMonotoneWorld(world, items) {
  * S itself first. With no axis-gated pull there is one class and `pullUpSet` returns null: every walk is byte-identical.
  * `exclude`: an event target's own event is never raised (the target is judged on the axis without it, as everywhere).
  *
- * ⛔ REFUSED BY NAME: a gate that clears on an item OFF the axis (a token the world holds: the class would move with the
+ * ⛔ REFUSED BY NAME: the static census's refusals (`assertMonotoneWorld`, run here on every walk once a pull is routed), and
+ * a gate that clears on an item OFF the axis (a token the world holds: the class would move with the
  * world's state, not the inventory).
  */
 export function pullUpSet(world, axis) {
@@ -117,6 +118,8 @@ export function pullUpSet(world, axis) {
         if (items.size) gated.push({ x: p.x, y: p.y, gate: p.gate, items: [...items].sort() });
     }
     if (gated.length === 0) return null;
+    // The proof's premise (monotone WITHIN a class) is the static census above: asserted here, by name, on every walk.
+    assertMonotoneWorld(world, axis.map((a) => a.item));
     const sub = [...new Set(gated.flatMap((g) => g.items))].map((i) => index.get(i)).sort((a, b) => a - b);
     const pointOf = (d) => axis.flatMap(({ item, levels }, i) => (d[i] === 0 ? [] : Array(levels[d[i] - 1]).fill(item)));
     const classOf = (d) => {
