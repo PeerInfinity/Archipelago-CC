@@ -1,0 +1,164 @@
+diff --git a/src/Enemies/FinalBoss.as b/src/Enemies/FinalBoss.as
+index b9b4010..ecc9f53 100644
+--- a/src/Enemies/FinalBoss.as
++++ b/src/Enemies/FinalBoss.as
+@@ -35,6 +35,8 @@ package Enemies
+ 		private var pods:Vector.<Pod> = new Vector.<Pod>();
+ 		private var cpod:int = 0; // The pod that you're currently going to
+ 		private var hitThisSequence:Boolean = false;
++		private var rockIndex:int = 0; // Rocks dropped this barrage (Pattern's counter)
++		private var walkTicks:int = 0; // Walk ticks this leg (the grenade's counter)
+ 		
+ 		private var tag:int;
+ 		
+@@ -139,9 +141,10 @@ package Enemies
+ 				p = FP.world.nearestToEntity("Player", this) as Player;
+ 				if (p)
+ 				{
+-					if (!Math.floor(Math.random() * rockFrequency))
++					if (rockfallTime % rockFrequency == 0)
+ 					{
+-						FP.world.add(new RockFall(p.x + p.v.x * stepsAhead + Math.random() * radius * 2 - radius, p.y + p.v.y * stepsAhead + Math.random() * radius * 2 - radius));
++						rockIndex++;
++						FP.world.add(new RockFall(p.x + p.v.x * stepsAhead + Pattern.vdc(rockIndex, 2) * radius * 2 - radius, p.y + p.v.y * stepsAhead + Pattern.vdc(rockIndex, 3) * radius * 2 - radius, Pattern.vdc(rockIndex, 5) / 2 + 0.25));
+ 					}
+ 				}
+ 			}
+@@ -155,7 +158,8 @@ package Enemies
+ 			else if (v.length <= moveSpeed)
+ 			{
+ 				const grenadeFrequency:int = 40;
+-				if (!Math.floor(Math.random() * grenadeFrequency))
++				walkTicks++;
++				if (walkTicks % grenadeFrequency == 0)
+ 				{
+ 					FP.world.add(new Grenade(x - 8, y - 8, true, 30));
+ 				}
+@@ -176,6 +180,8 @@ package Enemies
+ 						x = pod.x;
+ 						y = pod.y+1;
+ 						rockfallTime = rockfallTimeMax;
++						rockIndex = 0;
++						walkTicks = 0;
+ 						pods[cpod].open = false;
+ 					}
+ 				}
+@@ -213,7 +219,7 @@ package Enemies
+ 					const n:int = 5;
+ 					for (var i:int = 0; i < n; i++)
+ 					{
+-						FP.world.add(new RockFall(120 + Math.random() * 8 - 4, i / n * Tile.h * 2));
++						FP.world.add(new RockFall(120 + (i + 0.5) / n * 8 - 4, i / n * Tile.h * 2, Pattern.vdc(i + 1, 5) / 2 + 0.25));
+ 					}
+ 					Button.activateAll(null, 0, true);
+ 					if (Game.checkPersistence(tag))
+diff --git a/src/Enemies/TentacleBeast.as b/src/Enemies/TentacleBeast.as
+index d9e232e..62d6fb2 100644
+--- a/src/Enemies/TentacleBeast.as
++++ b/src/Enemies/TentacleBeast.as
+@@ -30,6 +30,8 @@ package Enemies
+ 		public var maxWhirlpools:int = 1;
+ 		private var activated:Boolean = false;
+ 		private var dead:Boolean = false;
++		private var whirlIndex:int = 0; // Whirlpool candidates tried (Pattern's counter)
++		private var tentacleIndex:int = 0; // Tentacle candidates tried
+ 		
+ 		private var tag:int;
+ 		
+@@ -135,8 +137,9 @@ package Enemies
+ 					var created:int = 0;
+ 					while (FP.world.classCount(Whirlpool) + created < maxWhirlpools && tries <= 100)
+ 					{
+-						xpos = Math.random() * (spawnRect.width - whirlpoolMargin.x - whirlpoolMargin.width) + spawnRect.x + whirlpoolMargin.x;
+-						ypos = Math.random() * (spawnRect.height - whirlpoolMargin.y - whirlpoolMargin.height) + spawnRect.y + whirlpoolMargin.y;
++						whirlIndex++;
++						xpos = Pattern.vdc(whirlIndex, 2) * (spawnRect.width - whirlpoolMargin.x - whirlpoolMargin.width) + spawnRect.x + whirlpoolMargin.x;
++						ypos = Pattern.vdc(whirlIndex, 3) * (spawnRect.height - whirlpoolMargin.y - whirlpoolMargin.height) + spawnRect.y + whirlpoolMargin.y;
+ 						
+ 						for each (cTent in v)
+ 						{
+@@ -154,6 +157,10 @@ package Enemies
+ 								break;
+ 							}
+ 						}
++						if (!cont)
++						{
++							break; // `cont` is never reset in this loop, so no later try could pass: stop, and keep the next candidate for next tick
++						}
+ 						if (cont)
+ 						{
+ 							FP.world.add(new Whirlpool(xpos - Tile.w, ypos - Tile.h, true));
+@@ -164,8 +171,9 @@ package Enemies
+ 					cont = true;
+ 					if (FP.world.classCount(Tentacle) < maxTentacles)
+ 					{
+-						xpos = Math.random() * (spawnRect.width - tentacleMargin.x - tentacleMargin.width) + spawnRect.x + tentacleMargin.x;
+-						ypos = Math.random() * (spawnRect.height - tentacleMargin.y - tentacleMargin.height) + spawnRect.y + tentacleMargin.y;
++						tentacleIndex++;
++						xpos = Pattern.vdc(tentacleIndex, 2) * (spawnRect.width - tentacleMargin.x - tentacleMargin.width) + spawnRect.x + tentacleMargin.x;
++						ypos = Pattern.vdc(tentacleIndex, 3) * (spawnRect.height - tentacleMargin.y - tentacleMargin.height) + spawnRect.y + tentacleMargin.y;
+ 						
+ 						for each (cTent in v)
+ 						{
+diff --git a/src/Pattern.as b/src/Pattern.as
+new file mode 100644
+index 0000000..29d2148
+--- /dev/null
++++ b/src/Pattern.as
+@@ -0,0 +1,34 @@
++package
++{
++	/**
++	 * Pattern — fixed, seedless stand-ins for the boss rooms' gameplay draws
++	 * (rules-deterministic-boss-draws). L112 (FinalBoss, RockFall) and L57
++	 * (TentacleBeast) were the only rooms whose hits read `Math.random()`;
++	 * they now read a counter through `vdc`, so each fight is the same on
++	 * every entry and in every runtime (Flash, Ruffle, the recompiled wasm,
++	 * the JS model), with nothing to seed.
++	 */
++	public class Pattern
++	{
++		/**
++		 * The radical inverse of n in base b (van der Corput): n's base-b
++		 * digits mirrored about the point, in [0, 1). Successive n fill the
++		 * interval evenly, so a site keeps its range, mean and spread; two
++		 * coprime bases (2, 3) give an even 2-D cover (the Halton points).
++		 * Exact in any IEEE-754 host: one division per digit, no rounding
++		 * that differs between runtimes.
++		 */
++		public static function vdc(n:int, b:int):Number
++		{
++			var r:Number = 0;
++			var f:Number = 1 / b;
++			while (n > 0)
++			{
++				r += (n % b) * f;
++				n = int(n / b);
++				f /= b;
++			}
++			return r;
++		}
++	}
++}
+diff --git a/src/Scenery/RockFall.as b/src/Scenery/RockFall.as
+index ee6f773..bfd92f3 100644
+--- a/src/Scenery/RockFall.as
++++ b/src/Scenery/RockFall.as
+@@ -22,7 +22,7 @@ package Scenery
+ 		private var goto:int;
+ 		private var startingSpeed:Number = 6;
+ 		
+-		public function RockFall(_x:int, _y:int) 
++		public function RockFall(_x:int, _y:int, _scale:Number = 0.5) 
+ 		{
+ 			super(_x, _y - fallHeight, sprRockFall);
+ 			goto = _y;
+@@ -30,7 +30,7 @@ package Scenery
+ 			angleRate *= FP.choose(1, -1);
+ 			
+ 			sprRockFall.centerOO();
+-			sprRockFall.scale = Math.random() / 2 + 0.25;
++			sprRockFall.scale = _scale;
+ 			sprRockFall.scaleX = FP.choose(1, -1);
+ 			sprRockFall.add("break", [0, 1, 2, 3, 4, 5, 6, 7], 15);
+ 			

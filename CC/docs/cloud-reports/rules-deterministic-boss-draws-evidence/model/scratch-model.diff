@@ -1,0 +1,212 @@
+--- seedlingDemo/finalBossRng.js	2026-11-18 03:33:20.403339786 +0000
++++ seedlingDemoDet/finalBossRng.js	2026-11-22 05:33:38.910884978 +0000
+@@ -483,3 +483,88 @@
+     }
+     return true;
+ }
++
++// ══ rules-deterministic-boss-draws (SCRATCH COPY ONLY — never committed under frontend/) ══════════════════════════
++// The proposed AS3 patch's patterns, as a drop-in for `OwlDrawStream`: the same site methods, the same per-site ledger
++// (so `levelRun`'s per-tick draw-count assertion still holds), and NO generator. Knobs: env `DET_OWL`, a comma list of
++// `barrage=every|vdc`, `aim=halton|zero`, `scale=vdc5|mean`, `grenade=leg|room`, `death=strata|centre`.
++export function vdc(n, b) {
++    // `Pattern.vdc` in the patch, operation for operation (the radical inverse of n in base b).
++    let r = 0; let f = 1 / b; let m = n;
++    while (m > 0) { r += (m % b) * f; m = Math.trunc(m / b); f /= b; }
++    return r;
++}
++export const DET_OWL_DEFAULT = Object.freeze({ barrage: 'every', aim: 'halton', scale: 'vdc5', grenade: 'leg', death: 'strata' });
++/** Option H: `Game.shakeJiggle`'s hash (Game.as:1956) keyed on a FIGHT-LOCAL tick, a per-site salt in place of `axis`. */
++export function hashH(t, salt) {
++    if (HASHFN === 'mix') return mixH(t, salt); return ((Math.floor(t) * 2531 + salt * 1777) % 4093) / 4093; }
++/** Option H2: a fight-local MIXING hash (lowbias32 finalizer), int math only, so AS3 computes the same bits:
++ *  `imul32` is Math.imul written with 16-bit halves (every intermediate an exact double < 2^53). */
++export function imul32(a, b) { const al = a & 0xffff; const ah = (a >>> 16) & 0xffff; return ((al * b) + (((ah * b) & 0xffff) << 16)) | 0; }
++export function mixH(t, salt) {
++    let x = (Math.floor(t) + salt * 0x10000) | 0;
++    x ^= x >>> 16; x = imul32(x, 0x7feb352d); x ^= x >>> 15; x = imul32(x, 0x846ca68b); x ^= x >>> 16;
++    return (x >>> 0) / 4294967296;
++}
++
++const HASHFN = (typeof process !== 'undefined' && process.env.DET_HASH) || 'jiggle';
++export function detOwlKnobs(env = (typeof process !== 'undefined' ? process.env.DET_OWL : '') || '') {
++    const k = { ...DET_OWL_DEFAULT };
++    for (const kv of env.split(',').filter(Boolean)) { const [a, v] = kv.split('='); if (a === 'pat' && v === 'hash') { for (const x of Object.keys(k)) k[x] = 'hash'; } else k[a] = v; }
++    return k;
++}
++export class DetOwlStream extends OwlDrawStream {
++    constructor(seed = 0, knobs = detOwlKnobs()) {
++        super(seed);
++        this.knobs = knobs;
++        this.boss = null;            // set by stepFinalBoss (scratch) each tick
++        this.rockIndex = 0;          // FinalBoss.rockIndex: rocks of THIS barrage (reset at the pod snap)
++        this.walkTicks = 0;          // FinalBoss.walkTicks: walk-arm ticks of THIS leg (reset at the pod snap)
++        this.deathIndex = 0;
++        this.pendingScale = null;
++    }
++    _book(site) { this.log.push({ site, raw: null }); this.counts[site] += 1; }
++    barrageRoll() {
++        this._book('barrageRoll');
++        const t = this.boss.rockfallTime;                         // already decremented (FinalBoss.as:134)
++        if (t === FINAL_RT_MAX - 1) { this.rockIndex = 0; if (this.knobs.grenade === 'leg') this.walkTicks = 0; }
++        const tick = FINAL_RT_MAX - t;                            // 1..240: the barrage tick, from the pod start
++        this.barrageTick = tick;
++        if (this.knobs.barrage === 'hash') return !Math.floor(hashH(tick, 2) * ROCK_FREQUENCY);
++        if (this.knobs.barrage === 'vdc') return !Math.floor(vdc(tick, 2) * ROCK_FREQUENCY);
++        return t % ROCK_FREQUENCY === 0;
++    }
++    spawnX(px, pvx) {
++        this._book('spawnX');
++        this.rockIndex += 1;
++        const u = this.knobs.aim === 'hash' ? hashH(this.barrageTick, 3) : this.knobs.aim === 'zero' ? 0.5 : vdc(this.rockIndex, 2);
++        return px + pvx * ROCK_STEPS_AHEAD + u * ROCK_RADIUS * 2 - ROCK_RADIUS;
++    }
++    spawnY(py, pvy) {
++        this._book('spawnY');
++        const u = this.knobs.aim === 'hash' ? hashH(this.barrageTick, 4) : this.knobs.aim === 'zero' ? 0.5 : vdc(this.rockIndex, 3);
++        return py + pvy * ROCK_STEPS_AHEAD + u * ROCK_RADIUS * 2 - ROCK_RADIUS;
++    }
++    rockScale() {
++        this._book('rockScale');
++        const k = this.pendingScale ?? this.rockIndex;
++        this.pendingScale = null;
++        if (this.knobs.scale === 'hash') { const hk = this.pendingHashKey ?? this.barrageTick; this.pendingHashKey = null; return hashH(hk, 5) * ROCK_SCALE_SPAN + ROCK_SCALE_BASE; }
++        return this.knobs.scale === 'mean' ? ROCK_SCALE_BASE + ROCK_SCALE_SPAN / 2 : vdc(k, 5) * ROCK_SCALE_SPAN + ROCK_SCALE_BASE;
++    }
++    grenadeRoll() {
++        this._book('grenadeRoll');
++        this.walkTicks += 1;
++        if (this.knobs.grenade === 'hash') return !Math.floor(hashH(this.walkTicks, 6) * GRENADE_FREQUENCY);
++        return this.walkTicks % GRENADE_FREQUENCY === 0;
++    }
++    enemyCoins() { this._book('enemyCoins'); return 0; }
++    deathRockX() {
++        this._book('deathRockX');
++        const i = this.deathIndex; this.deathIndex += 1;
++        this.pendingScale = i + 1;
++        if (this.knobs.death === 'hash') { this.pendingHashKey = i + 1; return 120 + hashH(i + 1, 7) * 8 - 4; }
++        return this.knobs.death === 'centre' ? 120 : 120 + ((i + 0.5) / DEATH_ROCKS) * 8 - 4;
++    }
++}
++const FINAL_RT_MAX = 240;   // FinalBoss.as:31 rockfallTimeMax
+--- seedlingDemo/finalBossFight.js	2026-11-22 05:26:21.033588369 +0000
++++ seedlingDemoDet/finalBossFight.js	2026-11-22 05:31:30.467992608 +0000
+@@ -462,6 +462,7 @@
+         introRelease = false,
+     } = ctx;
+     const events = [];
++    if (stream && typeof stream === 'object' && 'boss' in stream) stream.boss = b;   // SCRATCH (deterministic patterns)
+     let introFreeze = false;
+     /**
+      * ⛓⛓⛓ R6 SLICE 6f: WHICH ROW OF `OWL_PHASE_SITES` THIS TICK TOOK.
+--- seedlingDemo/levelRun.js	2026-11-22 05:26:21.053588370 +0000
++++ seedlingDemoDet/levelRun.js	2026-11-22 05:32:41.755368984 +0000
+@@ -171,7 +171,7 @@
+     stepFinalBoss, stepOwlGrenade, stepRockFall,
+ } from './finalBossFight.js';
+ import {
+-    OWL_LEVEL_BUILD_DRAWS, OwlDrawStream, assertOwlStreamPremises, owlTickDraws,
++    OWL_LEVEL_BUILD_DRAWS, OwlDrawStream, DetOwlStream, assertOwlStreamPremises, owlTickDraws,
+ } from './finalBossRng.js';
+ import {
+     ICE_TURRET_CONTACT, createIceTurret, hitIceTurret, iceTurretRect, iceTurretSettled, stepIceTurret,
+@@ -2225,7 +2225,7 @@
+                 // rebuild's ctor pays its `coins` draw from wherever the stream stood (measured D3: seeds 2 and 3
+                 // die in L57 and the game's state runs on). It is carried only while no OTHER room was built since
+                 // the reseed — another room's build spends draws this schedule does not book.
+-                const carried = tentacleStreams.get(n) ?? null;
++                const carried = process.env.DET_TB_OFF ? (tentacleStreams.get(n) ?? null) : null;   // SCRATCH: every build restarts the patterns
+                 fight = createTentacleBeastFight({ x: e[0].x, y: e[0].y, tag },
+                     { seed: !dead && carried === null && Number.isInteger(rng?.seed) && rng.seed > 0 ? rng.seed : null });
+                 if (carried !== null) {
+@@ -2433,7 +2433,7 @@
+                 + 'reseed; the walk in paid another build and its own gameplay draws '
+                 + '(R4-swim D1), which this rung does not count.');
+         }
+-        owlStream = new OwlDrawStream(rng.seed);
++        owlStream = process.env.DET_OWL_OFF ? new OwlDrawStream(rng.seed) : new DetOwlStream(rng.seed);   // SCRATCH
+         owlStreamLevel = n;
+         // ⛔⛔ THE LEVEL BUILD IS ON THE SEEDED STREAM. `Bot.botStart` reseeds
+         // BELOW `FP.world = new Game(...)` — but `Game`'s constructor does not
+--- seedlingDemo/tentacleBeast.js	2026-11-18 03:33:20.611339794 +0000
++++ seedlingDemoDet/tentacleBeast.js	2026-11-22 05:33:38.911539525 +0000
+@@ -147,7 +147,32 @@
+ }
+ 
+ /** The run's premises for the stream (`finalBossRng.assertOwlStreamPremises`'s, one room over). */
++// ══ rules-deterministic-boss-draws (SCRATCH COPY ONLY): the patch's patterns as a drop-in for the stream. Each site keeps
++// its own counter on the beast (reset at every build: a new TentacleBeast). `DET_TB` knobs:
++//   pat=halton  a candidate is the Halton (2,3) point of the site's own counter over the site's rectangle (option A);
++//   pat=hash    option H: `Game.shakeJiggle`'s hash keyed on the beast's FIGHT-LOCAL spawn tick, salt 2..5 per site;
++//   whirl=tick  one whirlpool candidate per tick (the shipped loop's effective behaviour: `cont` never resets in it);
++//   whirl=scan  a working rejection loop (the first valid of <= 101 consecutive candidates; halton only).
++function vdcT(n, b) { let r = 0; let f = 1 / b; let m = n; while (m > 0) { r += (m % b) * f; m = Math.trunc(m / b); f /= b; } return r; }
++import { mixH as mixT } from './finalBossRng.js';
++export function hashT(t, salt) { if (((typeof process !== 'undefined' && process.env.DET_HASH) || 'jiggle') === 'mix') return mixT(t, salt); return ((Math.floor(t) * 2531 + salt * 1777) % 4093) / 4093; }
++export const DET_TB_KNOBS = (() => { const k = { pat: 'halton', whirl: 'tick' }; for (const kv of ((typeof process !== 'undefined' && process.env.DET_TB) || '').split(',').filter(Boolean)) { const [a, v] = kv.split('='); k[a] = v; } return k; })();
++export class DetTentacleStream {
++    constructor() { this.counts = { build: 0, whirlX: 0, whirlY: 0, tentacleX: 0, tentacleY: 0, coins: 0 }; this.n = 0; this.nW = 0; this.nT = 0; this.tick = 0; this.det = true; }
++    draw(site) {
++        this.counts[site] += 1; this.n += 1;
++        const H = DET_TB_KNOBS.pat === 'hash';
++        if (site === 'whirlX') { this.nW += 1; return H ? hashT(this.tick, 2) : vdcT(this.nW, 2); }
++        if (site === 'whirlY') return H ? hashT(this.tick, 3) : vdcT(this.nW, 3);
++        if (site === 'tentacleX') { this.nT += 1; return H ? hashT(this.tick, 4) : vdcT(this.nT, 2); }
++        if (site === 'tentacleY') return H ? hashT(this.tick, 5) : vdcT(this.nT, 3);
++        return 0;
++    }
++    get state() { return -1; }
++}
++
+ export function tentacleStreamRefusal(rngBlock, { bootLevel, level, worldEntries, onlyThisRoom = false }) {
++    if (!(typeof process !== 'undefined' && process.env.DET_TB_OFF)) return null;   // SCRATCH: no stream premises left
+     if (!rngBlock || rngBlock.split !== true) {
+         return 'needs `rng: { split: true }` — unsplit, the build\'s three `Rng.cos()` per Tile and every indexed sound '
+             + 'pick land on the gameplay stream, which this schedule does not carry';
+@@ -220,7 +245,7 @@
+             maxTentacles: TENTACLE_BEAST.maxTentacles,
+             maxWhirlpools: TENTACLE_BEAST.maxWhirlpools,
+         },
+-        stream: seed === null ? null : new TentacleDrawStream(seed),
++        stream: (typeof process !== 'undefined' && process.env.DET_TB_OFF) ? (seed === null ? null : new TentacleDrawStream(seed)) : new DetTentacleStream(),   // SCRATCH
+         tentacles: [],
+         whirlpools: [],
+         /** The run-side records (the arena's runtime teleporter, …) levelRun keeps beside the fight. */
+@@ -274,6 +299,7 @@
+     const why = ctx.streamRefusal();
+     if (why) fail(`the Tentacled Beast spawns at tick ${ctx.tick}, and the draw stream ${why}`);
+     const S = fight.stream;
++    if (S && S.det) S.tick += 1;   // SCRATCH: TentacleBeast.spawnTicks, the fight-local key of option H
+     const B = TENTACLE_BEAST;
+     // `getClass` / `classCount` read the class lists, which a `FP.world.remove` made THIS frame has not drained yet
+     // (`updateLists()` runs after the whole update): a body removed earlier in this frame still counts.
+@@ -289,6 +315,7 @@
+         const ypos = Math.trunc(S.draw('whirlY') * (B.spawnRect.height - wm.y - wm.height) + B.spawnRect.y + wm.y);
+         if (near(xpos, ypos, vT, B.whirlpoolDist)) cont = false;
+         if (cont && near(xpos, ypos, vW, B.whirlpoolDist)) cont = false;
++        if (!cont && S.det) { if (DET_TB_KNOBS.whirl === 'scan' && DET_TB_KNOBS.pat !== 'hash') { cont = true; tries += 1; continue; } break; }   // SCRATCH: the patch's `break`
+         if (cont) {
+             // `new Whirlpool(xpos - Tile.w, ypos - Tile.h, true)`: its ctor adds the tile back and runs `update()` once.
+             const w = { id: `whirlpool#${++fight.seq}`, x: xpos, y: ypos, timer: WHIRLPOOL.grow + WHIRLPOOL.live + WHIRLPOOL.dies };
+--- seedlingDemo/solverBot.js	2026-11-22 05:26:21.073588372 +0000
++++ seedlingDemoDet/solverBot.js	2026-11-22 05:35:12.758849271 +0000
+@@ -22484,7 +22484,7 @@
+     }
+     if (fight.beast.dead) return refuse(`fight ${obstacle.id}`, `${obstacle.id} is already dead`);
+     const inv = run.progress('inventory') ?? {};
+-    if (!inv.hasSword) {
++    if (!inv.hasSword && !inv.hasSpear) {   // SCRATCH: the Spear arm (levelRun steps the spear on a tentacle)
+         return refuse(`fight ${obstacle.id}`, 'a tentacle dies to one sword hit while it sits; this run holds no sword');
+     }
+     if (fight.streamRefusal) {
+--- seedlingDemo/tentacleBeastPolicy.js	2026-11-18 03:33:20.611339794 +0000
++++ seedlingDemoDet/tentacleBeastPolicy.js	2026-11-22 05:36:41.101211107 +0000
+@@ -129,7 +129,7 @@
+         for (const k of walkKeys(p.x, p.y, view.beast.x, view.beast.y + 44)) keys.add(k);
+         return keys;
+     }
+-    const canPress = !slashing && mem.tick - mem.lastPress > 7;
++    const canPress = !slashing && mem.tick - mem.lastPress > Number(process.env.DET_TB_PRESSGAP || 7);   // SCRATCH: the spear's fire window is 11
+     // (1) a sitting tentacle a swing lands on from here, now: strike it.
+     const live = view.tentacles.filter((t) => !t.destroy && t.anim === 'sit' && t.hitsTimer <= 0);
+     if (canPress) {
