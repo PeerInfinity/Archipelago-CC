@@ -1,0 +1,249 @@
+diff -ruN a/src/Bot.as b/src/Bot.as
+--- a/src/Bot.as	2026-11-22 04:53:23.624241755 +0000
++++ b/src/Bot.as	2026-11-22 04:54:23.623412351 +0000
+@@ -1891,6 +1891,10 @@
+ 			// SEGMENT does not start the cosmetic stream at the build's boot
+ 			// seed — it starts it where its predecessor left it.
+ 			Rng.split = rngSplit;
++			// rules-predictable-rng (b2) SKETCH: a tape declares the world seed and the entry policy (`rng.world`,
++			// `rng.per_entry`; parsed beside `rng.seed`, not written here). A non-tape page keeps what the host wrote.
++			PlayRng.worldSeed = rngWorld;
++			PlayRng.perEntry = rngPerEntry;
+ 			if (rngSeed != 0) Rng.setState(rngSeed);
+ 			if (rngSplit) Rng.setCosmeticState(rngCosmetic);
+ 			// ⛓ R7: FlashPunk's own Park-Miller LCG, the THIRD generator.
+diff -ruN a/src/Chest.as b/src/Chest.as
+--- a/src/Chest.as	2026-11-22 04:53:23.609814679 +0000
++++ b/src/Chest.as	2026-11-22 04:54:05.818230604 +0000
+@@ -84,7 +84,7 @@
+ 				var index:int = -1;
+ 				while (index < 0 || !SealController.getSealPart(index))
+ 				{
+-					index = Math.floor(Math.random() * SealController.SEALS);
++					index = Math.floor(PlayRng.draw(PlayRng.SEAL) * SealController.SEALS);
+ 				}
+ 				Game.setPersistence(tag, false);
+ 			}
+diff -ruN a/src/Enemies/Enemy.as b/src/Enemies/Enemy.as
+--- a/src/Enemies/Enemy.as	2026-11-22 04:53:23.589907563 +0000
++++ b/src/Enemies/Enemy.as	2026-11-22 04:54:05.817785925 +0000
+@@ -27,7 +27,7 @@
+ 		public var normalColor:uint = 0xFFFFFF;
+ 		public var hitByDarkStuff:Boolean = false;
+ 		
+-		private const coins:int = 4 + Math.random() * 4; //The number of coins to throw upon death
++		private const coins:int = 4 + Rng.cos() * 4; // rules-predictable-rng: dead value (dropCoins has no caller) — off the gameplay stream //The number of coins to throw upon death
+ 		private const healths:int = 1;
+ 		
+ 		public var canFallInPit:Boolean = true;
+diff -ruN a/src/Enemies/FinalBoss.as b/src/Enemies/FinalBoss.as
+--- a/src/Enemies/FinalBoss.as	2026-11-22 04:53:23.570163758 +0000
++++ b/src/Enemies/FinalBoss.as	2026-11-22 04:54:05.817186693 +0000
+@@ -139,9 +139,9 @@
+ 				p = FP.world.nearestToEntity("Player", this) as Player;
+ 				if (p)
+ 				{
+-					if (!Math.floor(Math.random() * rockFrequency))
++					if (!Math.floor(PlayRng.draw(PlayRng.OWL_BARRAGE) * rockFrequency))
+ 					{
+-						FP.world.add(new RockFall(p.x + p.v.x * stepsAhead + Math.random() * radius * 2 - radius, p.y + p.v.y * stepsAhead + Math.random() * radius * 2 - radius));
++						FP.world.add(new RockFall(p.x + p.v.x * stepsAhead + PlayRng.draw(PlayRng.OWL_AIM) * radius * 2 - radius, p.y + p.v.y * stepsAhead + PlayRng.draw(PlayRng.OWL_AIM) * radius * 2 - radius));
+ 					}
+ 				}
+ 			}
+@@ -155,7 +155,7 @@
+ 			else if (v.length <= moveSpeed)
+ 			{
+ 				const grenadeFrequency:int = 40;
+-				if (!Math.floor(Math.random() * grenadeFrequency))
++				if (!Math.floor(PlayRng.draw(PlayRng.OWL_GRENADE) * grenadeFrequency))
+ 				{
+ 					FP.world.add(new Grenade(x - 8, y - 8, true, 30));
+ 				}
+@@ -213,7 +213,7 @@
+ 					const n:int = 5;
+ 					for (var i:int = 0; i < n; i++)
+ 					{
+-						FP.world.add(new RockFall(120 + Math.random() * 8 - 4, i / n * Tile.h * 2));
++						FP.world.add(new RockFall(120 + PlayRng.draw(PlayRng.OWL_DEATH) * 8 - 4, i / n * Tile.h * 2));
+ 					}
+ 					Button.activateAll(null, 0, true);
+ 					if (Game.checkPersistence(tag))
+diff -ruN a/src/Enemies/Spinner.as b/src/Enemies/Spinner.as
+--- a/src/Enemies/Spinner.as	2026-11-22 04:53:23.596351243 +0000
++++ b/src/Enemies/Spinner.as	2026-11-22 04:54:05.817971936 +0000
+@@ -21,7 +21,7 @@
+ 		
+ 		public var moveSpeed:Number = 1;
+ 		private const runRange:int = 0; //Range at which the Spinner will run after the character
+-		private var coins:int = 4 + Math.random() * 4; //The number of coins to throw upon death
++		private var coins:int = 4 + Rng.cos() * 4; // rules-predictable-rng: dead value (dropCoins has no caller) — off the gameplay stream //The number of coins to throw upon death
+ 		private var hammerAngle:Number = 0;
+ 		
+ 		private const hitForce:Number = 4;
+diff -ruN a/src/Enemies/TentacleBeast.as b/src/Enemies/TentacleBeast.as
+--- a/src/Enemies/TentacleBeast.as	2026-11-22 04:53:23.583095985 +0000
++++ b/src/Enemies/TentacleBeast.as	2026-11-22 04:54:05.817623399 +0000
+@@ -135,8 +135,8 @@
+ 					var created:int = 0;
+ 					while (FP.world.classCount(Whirlpool) + created < maxWhirlpools && tries <= 100)
+ 					{
+-						xpos = Math.random() * (spawnRect.width - whirlpoolMargin.x - whirlpoolMargin.width) + spawnRect.x + whirlpoolMargin.x;
+-						ypos = Math.random() * (spawnRect.height - whirlpoolMargin.y - whirlpoolMargin.height) + spawnRect.y + whirlpoolMargin.y;
++						xpos = PlayRng.draw(PlayRng.TB_WHIRLPOOL) * (spawnRect.width - whirlpoolMargin.x - whirlpoolMargin.width) + spawnRect.x + whirlpoolMargin.x;
++						ypos = PlayRng.draw(PlayRng.TB_WHIRLPOOL) * (spawnRect.height - whirlpoolMargin.y - whirlpoolMargin.height) + spawnRect.y + whirlpoolMargin.y;
+ 						
+ 						for each (cTent in v)
+ 						{
+@@ -164,8 +164,8 @@
+ 					cont = true;
+ 					if (FP.world.classCount(Tentacle) < maxTentacles)
+ 					{
+-						xpos = Math.random() * (spawnRect.width - tentacleMargin.x - tentacleMargin.width) + spawnRect.x + tentacleMargin.x;
+-						ypos = Math.random() * (spawnRect.height - tentacleMargin.y - tentacleMargin.height) + spawnRect.y + tentacleMargin.y;
++						xpos = PlayRng.draw(PlayRng.TB_TENTACLE) * (spawnRect.width - tentacleMargin.x - tentacleMargin.width) + spawnRect.x + tentacleMargin.x;
++						ypos = PlayRng.draw(PlayRng.TB_TENTACLE) * (spawnRect.height - tentacleMargin.y - tentacleMargin.height) + spawnRect.y + tentacleMargin.y;
+ 						
+ 						for each (cTent in v)
+ 						{
+diff -ruN a/src/Enemies/WallFlyer.as b/src/Enemies/WallFlyer.as
+--- a/src/Enemies/WallFlyer.as	2026-11-22 04:53:23.603317851 +0000
++++ b/src/Enemies/WallFlyer.as	2026-11-22 04:54:05.818104235 +0000
+@@ -17,7 +17,7 @@
+ 		private var sprWallFlyer:Spritemap = new Spritemap(imgWallFlyer, 20, 16, endAnim);
+ 		
+ 		public var moveSpeed:Number = 4;
+-		private var coins:int = 4 + Math.random() * 4; //The number of coins to throw upon death
++		private var coins:int = 4 + Rng.cos() * 4; // rules-predictable-rng: dead value (dropCoins has no caller) — off the gameplay stream //The number of coins to throw upon death
+ 		private var attackRange:int = FP.screen.width; //The range at which the wall flyer will jump if the player is intersecting.
+ 		private var vTriggered:Point = new Point(); // The vector of motion of the wall flyer when it is triggered by the player.
+ 		
+diff -ruN a/src/Game.as b/src/Game.as
+--- a/src/Game.as	2026-11-22 04:53:23.557177235 +0000
++++ b/src/Game.as	2026-11-22 04:54:05.819345089 +0000
+@@ -739,6 +739,9 @@
+ 			//
+ 			// ⛔ It takes no draw, so it cannot move what it reports.
+ 			Bot.latchBeginEntry(level);
++			// rules-predictable-rng (b2) SKETCH: every gameplay stream restarts for THIS room, before `loadlevel`
++			// builds a single entity, so the build (grass blades) and the fight draw from (world, level, entry, site).
++			PlayRng.enterRoom(level);
+ 			/*if (Main.hasSealPart(SealController.SEALS - 2) == -1)
+ 			{
+ 				for (var i:int = 0; i < 15; i++)
+diff -ruN a/src/PlayRng.as b/src/PlayRng.as
+--- a/src/PlayRng.as	1970-01-01 00:00:00.000000000 +0000
++++ b/src/PlayRng.as	2026-11-22 04:53:50.550179059 +0000
+@@ -0,0 +1,88 @@
++package
++{
++	/**
++	 * PlayRng — SKETCH (rules-predictable-rng, design (b2)). NOT BUILT, NOT TESTED.
++	 *
++	 * Every GAMEPLAY draw site (the census: FinalBoss's barrage roll, rock aim, grenade roll and death rocks,
++	 * RockFall's hitbox scale, TentacleBeast's whirlpool and tentacle spawns, the chest's seal pick, the grass
++	 * blades) draws from its OWN stream, re-keyed at every room build from
++	 *
++	 *     (worldSeed, level, entry, site)
++	 *
++	 * so a site's n-th draw in a room is a pure function of those four and n. Nothing else on the page can move it:
++	 * not a sound, not a particle, not an Enemy constructed elsewhere, not the rooms walked before. And because the
++	 * generator is plain AS3 arithmetic (FlashPunk's own Park-Miller step, exact in a double: seed * 16807 < 2^53),
++	 * the same numbers come out in Flash, Ruffle, the recompiled wasm and a JS port. `Math.random()` and the
++	 * `swfmodern.Rng` hooks are not involved at all.
++	 *
++	 * `entry`: 0 for every build when `perEntry` is false (every entry of a room replays the same draws, so a player
++	 * can LEARN a room), or the count of builds of this level since boot when true (a death or re-entry draws
++	 * afresh, still predictable from the count). Which one is Robert's decision; the default here is false.
++	 *
++	 * `worldSeed`: written by the host before the first build (a bridge property, or a tape's `rng.world`); 1 when
++	 * nothing writes it, so a vanilla page is predictable too.
++	 */
++	public class PlayRng
++	{
++		public static var worldSeed:uint = 1;
++		public static var perEntry:Boolean = false;
++
++		/** The site names, ONE per gameplay call site. A new site is a new name: never share a stream. */
++		public static const OWL_BARRAGE:String = "owl.barrage";
++		public static const OWL_AIM:String = "owl.aim";
++		public static const OWL_ROCK_SCALE:String = "owl.rockScale";
++		public static const OWL_GRENADE:String = "owl.grenade";
++		public static const OWL_DEATH:String = "owl.death";
++		public static const TB_WHIRLPOOL:String = "tentacle.whirlpool";
++		public static const TB_TENTACLE:String = "tentacle.tentacle";
++		public static const SEAL:String = "chest.seal";
++		public static const GRASS:String = "tile.grass";
++
++		private static var level:int = -1;
++		private static var entry:int = 0;
++		private static var builds:Object = {};
++		private static var states:Object = {};
++
++		/** Called from `Game.begin()`, BEFORE `loadlevel`: every stream restarts for this room. */
++		public static function enterRoom(_level:int):void
++		{
++			var k:String = String(_level);
++			builds[k] = (builds[k] == undefined) ? 0 : int(builds[k]) + 1;
++			level = _level;
++			entry = perEntry ? int(builds[k]) : 0;
++			states = {};
++		}
++
++		/** One draw in [0, 1) from `site`'s stream in the current room. */
++		public static function draw(site:String):Number
++		{
++			var s:Number = states[site];
++			if (isNaN(s)) s = keyOf(site);
++			s = (s * 16807) % 2147483647;
++			states[site] = s;
++			return s / 2147483647;
++		}
++
++		/** The stream's draw count readout for a bot/witness (no draw). */
++		public static function readout():Object
++		{
++			var o:Object = { world: worldSeed, level: level, entry: entry, per_entry: perEntry, states: {} };
++			for (var k:String in states) o.states[k] = states[k];
++			return o;
++		}
++
++		/** FNV-1a over "world|level|entry|site", folded to 1..2147483646 (Park-Miller's orbit). */
++		private static function keyOf(site:String):Number
++		{
++			var str:String = worldSeed + "|" + level + "|" + entry + "|" + site;
++			var h:uint = 2166136261;
++			for (var i:int = 0; i < str.length; i++)
++			{
++				h ^= str.charCodeAt(i);
++				h = uint((h * 16777619) & 0xFFFFFFFF); // ⚠ sketch: Number product loses low bits past 2^53; a real build
++				                                       // splits the multiply (h * 0x193 + ((h * 0x100) << 16)) as int math.
++			}
++			return (h % 2147483646) + 1;
++		}
++	}
++}
+diff -ruN a/src/Scenery/RockFall.as b/src/Scenery/RockFall.as
+--- a/src/Scenery/RockFall.as	2026-11-22 04:53:23.576653620 +0000
++++ b/src/Scenery/RockFall.as	2026-11-22 04:54:05.817458460 +0000
+@@ -30,7 +30,7 @@
+ 			angleRate *= FP.choose(1, -1);
+ 			
+ 			sprRockFall.centerOO();
+-			sprRockFall.scale = Math.random() / 2 + 0.25;
++			sprRockFall.scale = PlayRng.draw(PlayRng.OWL_ROCK_SCALE) / 2 + 0.25;
+ 			sprRockFall.scaleX = FP.choose(1, -1);
+ 			sprRockFall.add("break", [0, 1, 2, 3, 4, 5, 6, 7], 15);
+ 			
+diff -ruN a/src/Scenery/Tile.as b/src/Scenery/Tile.as
+--- a/src/Scenery/Tile.as	2026-11-22 04:53:23.617009555 +0000
++++ b/src/Scenery/Tile.as	2026-11-22 04:54:05.818599065 +0000
+@@ -561,7 +561,7 @@
+ 		{
+ 			for (var i:int = 0; i < bladesOfGrass; i++)
+ 			{
+-				FP.world.add(new Grass(x + Tile.w * (Math.random() - 0.5), y + Tile.h * (Math.random() - 0.5)));
++				FP.world.add(new Grass(x + Tile.w * (PlayRng.draw(PlayRng.GRASS) - 0.5), y + Tile.h * (PlayRng.draw(PlayRng.GRASS) - 0.5)));
+ 			}
+ 		}
+ 		

@@ -1,0 +1,81 @@
+diff -ruN a/src/Enemies/Enemy.as b1/src/Enemies/Enemy.as
+--- a/src/Enemies/Enemy.as	2026-11-22 04:53:23.589907563 +0000
++++ b1/src/Enemies/Enemy.as	2026-11-22 04:54:23.647961624 +0000
+@@ -27,7 +27,7 @@
+ 		public var normalColor:uint = 0xFFFFFF;
+ 		public var hitByDarkStuff:Boolean = false;
+ 		
+-		private const coins:int = 4 + Math.random() * 4; //The number of coins to throw upon death
++		private const coins:int = 4 + Rng.cos() * 4; // rules-predictable-rng: dead value — off the gameplay stream //The number of coins to throw upon death
+ 		private const healths:int = 1;
+ 		
+ 		public var canFallInPit:Boolean = true;
+diff -ruN a/src/Enemies/Spinner.as b1/src/Enemies/Spinner.as
+--- a/src/Enemies/Spinner.as	2026-11-22 04:53:23.596351243 +0000
++++ b1/src/Enemies/Spinner.as	2026-11-22 04:54:23.648154693 +0000
+@@ -21,7 +21,7 @@
+ 		
+ 		public var moveSpeed:Number = 1;
+ 		private const runRange:int = 0; //Range at which the Spinner will run after the character
+-		private var coins:int = 4 + Math.random() * 4; //The number of coins to throw upon death
++		private var coins:int = 4 + Rng.cos() * 4; // rules-predictable-rng: dead value — off the gameplay stream //The number of coins to throw upon death
+ 		private var hammerAngle:Number = 0;
+ 		
+ 		private const hitForce:Number = 4;
+diff -ruN a/src/Enemies/WallFlyer.as b1/src/Enemies/WallFlyer.as
+--- a/src/Enemies/WallFlyer.as	2026-11-22 04:53:23.603317851 +0000
++++ b1/src/Enemies/WallFlyer.as	2026-11-22 04:54:23.648313202 +0000
+@@ -17,7 +17,7 @@
+ 		private var sprWallFlyer:Spritemap = new Spritemap(imgWallFlyer, 20, 16, endAnim);
+ 		
+ 		public var moveSpeed:Number = 4;
+-		private var coins:int = 4 + Math.random() * 4; //The number of coins to throw upon death
++		private var coins:int = 4 + Rng.cos() * 4; // rules-predictable-rng: dead value — off the gameplay stream //The number of coins to throw upon death
+ 		private var attackRange:int = FP.screen.width; //The range at which the wall flyer will jump if the player is intersecting.
+ 		private var vTriggered:Point = new Point(); // The vector of motion of the wall flyer when it is triggered by the player.
+ 		
+diff -ruN a/src/Game.as b1/src/Game.as
+--- a/src/Game.as	2026-11-22 04:53:23.557177235 +0000
++++ b1/src/Game.as	2026-11-22 04:54:23.647610916 +0000
+@@ -739,6 +739,8 @@
+ 			//
+ 			// ⛔ It takes no draw, so it cannot move what it reports.
+ 			Bot.latchBeginEntry(level);
++			// rules-predictable-rng (b1) SKETCH: the gameplay stream restarts for THIS room, before the build.
++			Rng.enterRoom(level);
+ 			/*if (Main.hasSealPart(SealController.SEALS - 2) == -1)
+ 			{
+ 				for (var i:int = 0; i < 15; i++)
+diff -ruN a/src/Rng.as b1/src/Rng.as
+--- a/src/Rng.as	2026-11-22 04:53:23.563561212 +0000
++++ b1/src/Rng.as	2026-11-22 04:54:23.646919717 +0000
+@@ -152,6 +152,29 @@
+ 			if (hooks != null) hooks.setState(v);
+ 		}
+ 
++		// ── rules-predictable-rng (b1) SKETCH: RESEED THE GAMEPLAY STREAM PER ROOM ─────────────────────
++		/** The multiworld's seed, written by the host (bridge) or a tape (`rng.world`); 0 = off (today's behaviour). */
++		public static var worldSeed:uint = 0;
++		/** false: every entry of a room replays one stream (learnable); true: the n-th build of a level gets its own. */
++		public static var perEntry:Boolean = false;
++		private static var builds:Object = {};
++
++		/**
++		 * Called from `Game.begin()` BEFORE `loadlevel`: the gameplay generator restarts at hash(world, level, entry).
++		 * ⚠ Needs the `swfmodern.Rng` hooks: a build without them (Flash, Ruffle) gets `setState`'s no-op, i.e. the
++		 * page's one global stream, exactly as today. That is (b1)'s whole limit; (b2) has none.
++		 */
++		public static function enterRoom(level:int):void
++		{
++			var k:String = String(level);
++			builds[k] = (builds[k] == undefined) ? 0 : int(builds[k]) + 1;
++			if (worldSeed == 0) return;
++			var str:String = worldSeed + "|" + level + "|" + (perEntry ? int(builds[k]) : 0);
++			var h:uint = 2166136261;
++			for (var i:int = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = uint((h * 16777619) & 0xFFFFFFFF); } // ⚠ sketch: split the multiply in a real build
++			setState((h % 2147483647) + 1);
++		}
++
+ 		/** Reseed the cosmetic stream. 0 means the build's own boot seed. */
+ 		public static function setCosmeticState(v:Number):void
+ 		{
