@@ -23,3 +23,7 @@ L78-79to77 wand k20 {"win":true,"i":0,"ticks":278,"end":{"x":254.4,"y":7.4},"hit
 L78-r0c16tor6c11 wand k6 {"win":false,"i":0,"ticks":1600,"end":{"x":254.7,"y":53.6},"hits":[],"kills":[]} 
 L78-r0c16tor6c11 wand k20 {"win":false,"i":0,"ticks":1600,"end":{"x":254.7,"y":53.6},"hits":[],"kills":[]} 
 L80-71toChest wand k6 {"win":false,"i":0,"ticks":200,"end":{"x":63.1,"y":107.7},"hits":["lavarunner@80,32@t15","lavarunner@0,96@t55","lavarunner@80,32@t159","lavarunner@0,96@t175"]," 
+L80-71toChest wand k20 {"win":false,"i":0,"ticks":1600,"end":{"x":9,"y":131.1},"hits":["lavarunner@80,32@t55","lavarunner@0,96@t63","lavarunner@80,32@t215","lavarunner@0,96@t223","lav 
+L80-79toChest wand k6 {"win":false,"i":0,"ticks":216,"end":{"x":39.2,"y":96.5},"hits":["lavarunner@0,96@t191"],"kills":[]} 
+L80-79toChest wand k20 {"win":false,"i":0,"ticks":488,"end":{"x":10.3,"y":116.3},"hits":["lavarunner@80,32@t343","lavarunner@0,144@t463","lavarunner@0,96@t487"],"kills":[]} 
+L99-r7c5tor2c7 wand k6 {"win":true,"i":0,"ticks":112,"end":{"x":117.7,"y":47.6},"hits":[],"kills":[]} {"win":true,"i":1,"ticks":112,"end":{"x":114.2,"y":47.4},"hits":[],"kills":[]} 
