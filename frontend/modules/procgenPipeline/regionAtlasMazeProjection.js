@@ -1512,6 +1512,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             pulls.push({
                 x, y, from: (e.from ?? []).map(local).filter(inGrid), gate: id, label: e.label ?? id,
                 yields: (e.yields ?? []).map((st) => ({ from: local(st.from), to: local(st.to) })).filter((st) => inGrid(st.from) && inGrid(st.to)),
+                passes: (e.passes ?? []).map((st) => ({ from: local(st.from), to: local(st.to) })).filter((st) => inGrid(st.from) && inGrid(st.to)),
             });
             continue;
         }
@@ -1894,16 +1895,21 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     // floor, and a disc cell no exit stands on (refused by name otherwise — the engine's `checkPulls` says why).
     // ⛓ ... and its `yields` (session tile-primitives-sphere-order-10, ⚖ 2026-10-30 "First range entered") keep the steps the
     // world walks: floor to floor, into the kept disc (the producer measures every step of the level, the lava's included).
-    const pullRows = pulls.map(({ x, y, from, gate, label, yields }) => {
+    const pullRows = pulls.map(({ x, y, from, gate, label, yields, passes = [] }) => {
         if (!builder.isFloor(x, y)) throw new Error(`atlas region "${regionId}": ${label} stands on a cell the level world walls`);
         const disc = from.filter(([fx, fy]) => builder.isFloor(fx, fy));
         const onExit = disc.find(([fx, fy]) => exitAt.has(keyOf(fx, fy)));
         if (onExit) throw new Error(`atlas region "${regionId}": ${label} grabs from the exit tile (${onExit}) — not settled`);
         const walked = yields.filter((st) => builder.isFloor(...st.from) && builder.isFloor(...st.to))
             .map((st) => ({ from: { x: st.from[0], y: st.from[1] }, to: { x: st.to[0], y: st.to[1] } }));
+        // ⛓ PROTOTYPE: the passable steps the world walks (floor to floor, into the kept disc).
+        const kept = new Set(disc.map(String));
+        const passed = passes.filter((st) => builder.isFloor(...st.from) && builder.isFloor(...st.to) && kept.has(String(st.to)))
+            .map((st) => ({ from: { x: st.from[0], y: st.from[1] }, to: { x: st.to[0], y: st.to[1] } }));
         return {
             x, y, from: disc.map(([fx, fy]) => ({ x: fx, y: fy })).sort((a, b) => (a.y - b.y) || (a.x - b.x)), gate,
             ...(walked.length > 0 ? { yields: walked } : {}),
+            ...(passed.length > 0 ? { passes: passed } : {}),
         };
     });
     // ⛓ ONE step into two discs from outside both that no yield settles (an exact tie of the producer's first-entered

@@ -1586,7 +1586,19 @@ export function lavaTrapPulls(level, tileSize = 16, options = {}) {
                 (cls === 'always' ? always : partial).push([x, y]);
             }
         }
-        out.push({ tile: [tx, ty], from, always, partial, yields: [] });
+        // PROTOTYPE: every step into a PARTIAL tile across an edge the player can cross UNPULLED (`pullCrossing`): the
+        // maze's `PASS_<dir>` (the choice). `width` = the unpulled px of the crossing, `of` = its length (term 3's list).
+        const passes = [];
+        for (const t of partial) {
+            if (solid?.(t[0], t[1])) continue;
+            for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+                const n = [t[0] + dx, t[1] + dy];
+                if (n[0] < 0 || n[1] < 0 || n[0] >= level.width || n[1] >= level.height || solid?.(n[0], n[1])) continue;
+                const c = pullCrossing(n, t, [tx, ty], [cx, cy], tileSize, solid);
+                if (c.width > 0) passes.push({ from: n, to: [...t], width: c.width, of: c.of });
+            }
+        }
+        out.push({ tile: [tx, ty], from, always, partial, yields: [], passes });
     }
     out.sort((a, b) => (a.tile[1] - b.tile[1]) || (a.tile[0] - b.tile[0]));
     lavaTrapStepYields(out, level, tileSize);
@@ -1653,6 +1665,34 @@ export function pullClass(t, trap, c, tileSize, solid) {
     return all ? 'always' : some ? 'partial' : 'never';
 }
 
+/**
+ * PROTOTYPE. The crossing from tile `n` into its neighbour `t` (a pull tile of the trap on `trap`, centre `c`): the origins
+ * on the shared edge both stand boxes allow, and how many px of it are UNPULLED (out of range, or a blocked line — the
+ * trap is armed there but does not launch, `LavaTrap.as:88-97`). Integer px cells, as `pullClass`.
+ */
+export function pullCrossing(n, t, trap, c, tileSize, solid) {
+    const R = LAVATRAP_PULL.chompRange + 1;
+    const a = pullStandBox(t, tileSize, solid);
+    const b = pullStandBox(n, tileSize, solid);
+    const vertical = n[0] !== t[0];
+    const edge = vertical ? Math.max(n[0], t[0]) * tileSize : Math.max(n[1], t[1]) * tileSize;
+    const lo = vertical ? Math.max(a[1], b[1]) : Math.max(a[0], b[0]);
+    const hi = vertical ? Math.min(a[3], b[3]) : Math.min(a[2], b[2]);
+    // the origin just inside `t` at the edge
+    const inT = vertical ? (t[0] > n[0] ? edge : edge - 1) : (t[1] > n[1] ? edge : edge - 1);
+    let width = 0;
+    for (let v = Math.floor(lo); v < hi; v += 1) {
+        const v0 = Math.max(v, lo); const v1 = Math.min(v + 1, hi);
+        const [px0, px1, py0, py1] = vertical ? [inT, inT + 1, v0, v1] : [v0, v1, inT, inT + 1];
+        const fx = Math.max(Math.abs(px0 - c[0]), Math.abs(px1 - c[0]));
+        const fy = Math.max(Math.abs(py0 - c[1]), Math.abs(py1 - c[1]));
+        const clear = !solid || pullLineClear(t, trap, tileSize, solid, vertical ? [inT, v] : [v, inT]);
+        // unpulled somewhere in this px cell: the line is blocked, or its far point is out of range
+        if (!clear || Math.hypot(fx, fy) >= R) width += v1 - v0;
+    }
+    return { width: +width.toFixed(2), of: +(hi - lo).toFixed(2) };
+}
+
 /** The pixel centre of tile `[x, y]`. */
 const tileCentre = ([x, y], tileSize) => [x * tileSize + tileSize / 2, y * tileSize + tileSize / 2];
 
@@ -1688,7 +1728,8 @@ function lavaTrapStepYields(pulls, level, tileSize) {
                 const a = tileCentre(from, tileSize);
                 const b = tileCentre(to, tileSize);
                 // DRY RUN: a centre line that never enters q's range (a partial tile whose centre is out of it) enters it last
-                const entries = takers.map((q) => rangeEntry(a, b, tileCentre(q.tile, tileSize))).map((e) => (Number.isNaN(e) ? Infinity : e));
+                // ... and an entry past `to`'s far edge (s > 1.5 on a one-tile step) is no entry on this step
+                const entries = takers.map((q) => rangeEntry(a, b, tileCentre(q.tile, tileSize))).map((e) => (Number.isNaN(e) || e > 1.5 ? Infinity : e));
                 if (globalThis.__PULL_RACE_LOG) globalThis.__PULL_RACE_LOG.push({ level: level.level, from: [...from], to: [...to], takers: takers.map((q) => q.tile), entries });
                 const first = Math.min(...entries);
                 // a tie at the first entry settles nothing: no trap yields, and the maze refuses the step by name
