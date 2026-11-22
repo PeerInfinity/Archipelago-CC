@@ -17326,6 +17326,23 @@
                         {
                           "rule": "Has",
                           "args": {
+                            "item_name": "Dark Suit"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
                             "item_name": "Progressive Sword"
                           }
                         },
@@ -17346,23 +17363,6 @@
                           "args": {
                             "item_name": "Progressive Shield",
                             "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
                           }
                         }
                       ]
@@ -17428,6 +17428,23 @@
                         {
                           "rule": "Has",
                           "args": {
+                            "item_name": "Dark Suit"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
                             "item_name": "Progressive Sword"
                           }
                         },
@@ -17451,23 +17468,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        }
-                      ]
                     }
                   ]
                 }
@@ -17478,45 +17478,10 @@
             "name": "level_77__r2c0 -> level_77__r12c6 #2",
             "connected_region": "level_77__r12c6",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
             }
           },
           {
@@ -17538,6 +17503,18 @@
             "access_rule": {
               "rule": "Or",
               "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
                 {
                   "rule": "And",
                   "children": [
@@ -17578,18 +17555,6 @@
                       ]
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
                 }
               ]
             }
@@ -17650,6 +17615,23 @@
                         {
                           "rule": "Has",
                           "args": {
+                            "item_name": "Dark Suit"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
                             "item_name": "Progressive Sword"
                           }
                         },
@@ -17673,23 +17655,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        }
-                      ]
                     }
                   ]
                 }
@@ -17708,6 +17673,18 @@
             "access_rule": {
               "rule": "Or",
               "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
                 {
                   "rule": "And",
                   "children": [
@@ -17748,18 +17725,6 @@
                       ]
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
                 }
               ]
             }
@@ -17830,6 +17795,23 @@
                         {
                           "rule": "Has",
                           "args": {
+                            "item_name": "Dark Suit"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
                             "item_name": "Progressive Sword"
                           }
                         },
@@ -17850,23 +17832,6 @@
                           "args": {
                             "item_name": "Progressive Shield",
                             "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
                           }
                         }
                       ]
@@ -17892,51 +17857,6 @@
           {
             "name": "level_78__r0c2 -> level_78__r0c16",
             "connected_region": "level_78__r0c16",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r0c2 -> level_78__r1c10",
-            "connected_region": "level_78__r1c10",
             "access_rule": {
               "rule": "And",
               "children": [
@@ -18460,108 +18380,6 @@
             }
           },
           {
-            "name": "level_78__r0c16 -> level_78__r1c10",
-            "connected_region": "level_78__r1c10",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
             "name": "level_78__r0c16 -> level_78__r3c12",
             "connected_region": "level_78__r3c12",
             "access_rule": {
@@ -18850,29 +18668,97 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Dark Suit"
+                      }
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Wand"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Shield",
+                            "count": 2
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Wand"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield",
-                    "count": 2
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Wand"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Shield",
+                            "count": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Dark Suit"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -19090,857 +18976,6 @@
         ],
         "locations": []
       },
-      "level_78__r1c10": {
-        "name": "level_78__r1c10",
-        "exits": [
-          {
-            "name": "level_78__r1c10 -> level_78__r0c16",
-            "connected_region": "level_78__r0c16",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r1c10 -> level_78__r0c2",
-            "connected_region": "level_78__r0c2",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r1c10 -> level_78__r3c12",
-            "connected_region": "level_78__r3c12",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r1c10 -> level_78__r3c9",
-            "connected_region": "level_78__r3c9",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r1c10 -> level_78__r3c9 #2",
-            "connected_region": "level_78__r3c9",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Dark Suit"
-              }
-            }
-          },
-          {
-            "name": "level_78__r1c10 -> level_78__r4c2",
-            "connected_region": "level_78__r4c2",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r1c10 -> level_78__r5c12",
-            "connected_region": "level_78__r5c12",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r1c10 -> level_78__r5c6",
-            "connected_region": "level_78__r5c6",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r1c10 -> level_78__r6c11",
-            "connected_region": "level_78__r6c11",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r1c10 -> level_78__r6c9",
-            "connected_region": "level_78__r6c9",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r1c10 -> level_78__r8c10",
-            "connected_region": "level_78__r8c10",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r1c10 -> level_78__r8c8",
-            "connected_region": "level_78__r8c8",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        ],
-        "locations": []
-      },
       "level_78__r3c9": {
         "name": "level_78__r3c9",
         "exits": [
@@ -20041,27 +19076,6 @@
                       }
                     }
                   ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r3c9 -> level_78__r1c10",
-            "connected_region": "level_78__r1c10",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
                 }
               ]
             }
@@ -20634,108 +19648,6 @@
             }
           },
           {
-            "name": "level_78__r3c12 -> level_78__r1c10",
-            "connected_region": "level_78__r1c10",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
             "name": "level_78__r3c12 -> level_78__r3c9",
             "connected_region": "level_78__r3c9",
             "access_rule": {
@@ -21035,29 +19947,97 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Dark Suit"
+                      }
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Wand"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Shield",
+                            "count": 2
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Wand"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield",
-                    "count": 2
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Wand"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Shield",
+                            "count": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Dark Suit"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -21431,108 +20411,6 @@
                   "args": {
                     "item_name": "Ghost Spear"
                   }
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r4c2 -> level_78__r1c10",
-            "connected_region": "level_78__r1c10",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        }
-                      ]
-                    }
-                  ]
                 }
               ]
             }
@@ -22266,62 +21144,6 @@
             }
           },
           {
-            "name": "level_78__r5c6 -> level_78__r1c10",
-            "connected_region": "level_78__r1c10",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
             "name": "level_78__r5c6 -> level_78__r3c12",
             "connected_region": "level_78__r3c12",
             "access_rule": {
@@ -22658,6 +21480,16 @@
             }
           },
           {
+            "name": "level_78__r5c6 -> level_78__r6c9 #2",
+            "connected_region": "level_78__r6c9",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
             "name": "level_78__r5c6 -> level_78__r8c10",
             "connected_region": "level_78__r8c10",
             "access_rule": {
@@ -22837,108 +21669,6 @@
                         "item_name": "Progressive Shield",
                         "count": 2
                       }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r5c12 -> level_78__r1c10",
-            "connected_region": "level_78__r1c10",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        }
-                      ]
                     }
                   ]
                 }
@@ -23527,62 +22257,6 @@
             }
           },
           {
-            "name": "level_78__r6c9 -> level_78__r1c10",
-            "connected_region": "level_78__r1c10",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
             "name": "level_78__r6c9 -> level_78__r3c12",
             "connected_region": "level_78__r3c12",
             "access_rule": {
@@ -23964,6 +22638,51 @@
             }
           },
           {
+            "name": "level_78__r6c9 -> level_78__r5c6 #2",
+            "connected_region": "level_78__r5c6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
             "name": "level_78__r6c9 -> level_78__r8c10",
             "connected_region": "level_78__r8c10",
             "access_rule": {
@@ -24077,85 +22796,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Wand"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield",
-                    "count": 2
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r6c11 -> level_78__r0c2",
-            "connected_region": "level_78__r0c2",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r6c11 -> level_78__r1c10",
-            "connected_region": "level_78__r1c10",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
                   "rule": "And",
                   "children": [
                     {
@@ -24252,35 +22892,148 @@
             }
           },
           {
+            "name": "level_78__r6c11 -> level_78__r0c2",
+            "connected_region": "level_78__r0c2",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
             "name": "level_78__r6c11 -> level_78__r3c12",
             "connected_region": "level_78__r3c12",
             "access_rule": {
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Dark Suit"
+                      }
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Wand"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Shield",
+                            "count": 2
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Wand"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield",
-                    "count": 2
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Wand"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Shield",
+                            "count": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Dark Suit"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -24872,108 +23625,6 @@
                         "item_name": "Progressive Shield",
                         "count": 2
                       }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_78__r8c8 -> level_78__r1c10",
-            "connected_region": "level_78__r1c10",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dark Suit"
-                      }
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wand"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Shield",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dark Suit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ghost Spear"
-                          }
-                        }
-                      ]
                     }
                   ]
                 }
@@ -25732,51 +24383,6 @@
             }
           },
           {
-            "name": "level_78__r8c10 -> level_78__r1c10",
-            "connected_region": "level_78__r1c10",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
             "name": "level_78__r8c10 -> level_78__r3c12",
             "connected_region": "level_78__r3c12",
             "access_rule": {
@@ -26412,45 +25018,10 @@
             "name": "level_80__r8c4 -> level_80__r6c5",
             "connected_region": "level_80__r6c5",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 2
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
             }
           },
           {
@@ -26685,6 +25256,51 @@
           },
           {
             "name": "level_80__r12c4 -> level_80__r14c2",
+            "connected_region": "level_80__r14c2",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_80__r12c4 -> level_80__r14c2 #2",
             "connected_region": "level_80__r14c2",
             "access_rule": {
               "rule": "And",
@@ -31090,7 +29706,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-94cd96dd",
+      "atlas_id": "seedling-0cac9523",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -84976,19 +83592,24 @@
               "id": "atlas_gate_0"
             },
             {
-              "x": 7,
+              "x": 4,
               "y": 11,
               "id": "atlas_gate_1"
+            },
+            {
+              "x": 7,
+              "y": 11,
+              "id": "atlas_gate_2"
             },
             {
               "x": 8,
               "y": 11,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 9,
               "y": 11,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 12,
@@ -85022,23 +83643,23 @@
             },
             {
               "x": 3,
-              "y": 12,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 4,
               "y": 12,
               "id": "atlas_gate_2"
             },
             {
-              "x": 5,
+              "x": 4,
               "y": 12,
               "id": "atlas_gate_3"
             },
             {
-              "x": 7,
+              "x": 5,
               "y": 12,
               "id": "atlas_gate_1"
+            },
+            {
+              "x": 7,
+              "y": 12,
+              "id": "atlas_gate_2"
             },
             {
               "x": 8,
@@ -85058,7 +83679,7 @@
             {
               "x": 11,
               "y": 12,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 12,
@@ -85083,17 +83704,17 @@
             {
               "x": 1,
               "y": 13,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 2,
               "y": 13,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 3,
               "y": 13,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 4,
@@ -85103,12 +83724,12 @@
             {
               "x": 5,
               "y": 13,
-              "id": "atlas_gate_3"
+              "id": "atlas_gate_1"
             },
             {
               "x": 6,
               "y": 13,
-              "id": "atlas_gate_3"
+              "id": "atlas_gate_1"
             },
             {
               "x": 7,
@@ -85118,12 +83739,12 @@
             {
               "x": 8,
               "y": 13,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 9,
               "y": 13,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 10,
@@ -85133,7 +83754,7 @@
             {
               "x": 11,
               "y": 13,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 12,
@@ -85158,12 +83779,12 @@
             {
               "x": 1,
               "y": 14,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 2,
               "y": 14,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 3,
@@ -85183,12 +83804,12 @@
             {
               "x": 6,
               "y": 14,
-              "id": "atlas_gate_3"
+              "id": "atlas_gate_1"
             },
             {
               "x": 9,
               "y": 14,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 10,
@@ -85203,7 +83824,7 @@
             {
               "x": 12,
               "y": 14,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 13,
@@ -85218,7 +83839,7 @@
             {
               "x": 0,
               "y": 15,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 1,
@@ -85228,7 +83849,7 @@
             {
               "x": 2,
               "y": 15,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 3,
@@ -85253,7 +83874,7 @@
             {
               "x": 10,
               "y": 15,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 11,
@@ -85263,7 +83884,7 @@
             {
               "x": 12,
               "y": 15,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 13,
@@ -85288,7 +83909,7 @@
             {
               "x": 2,
               "y": 16,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 3,
@@ -85323,7 +83944,7 @@
             {
               "x": 10,
               "y": 16,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 11,
@@ -85333,7 +83954,7 @@
             {
               "x": 12,
               "y": 16,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 13,
@@ -85358,7 +83979,7 @@
             {
               "x": 2,
               "y": 17,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 3,
@@ -85393,7 +84014,7 @@
             {
               "x": 10,
               "y": 17,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 11,
@@ -85403,7 +84024,7 @@
             {
               "x": 12,
               "y": 17,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 13,
@@ -85428,7 +84049,7 @@
             {
               "x": 2,
               "y": 18,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 3,
@@ -85458,7 +84079,7 @@
             {
               "x": 10,
               "y": 18,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 11,
@@ -85468,7 +84089,7 @@
             {
               "x": 12,
               "y": 18,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 13,
@@ -85498,7 +84119,7 @@
             {
               "x": 3,
               "y": 19,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 4,
@@ -85523,12 +84144,12 @@
             {
               "x": 10,
               "y": 19,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 11,
               "y": 19,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 12,
@@ -85578,6 +84199,32 @@
             },
             "atlas_gate_1": {
               "id": "atlas_gate_1",
+              "name": "(Dark Suit OR Ghost Spear)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Dark Suit"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_2": {
+              "id": "atlas_gate_2",
               "name": "(Dark Suit AND (Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2))",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -85626,8 +84273,8 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_2": {
-              "id": "atlas_gate_2",
+            "atlas_gate_3": {
+              "id": "atlas_gate_3",
               "name": "((Dark Suit OR Ghost Spear) AND (Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2))",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -85686,32 +84333,6 @@
               "display": {
                 "mode": "tree"
               }
-            },
-            "atlas_gate_3": {
-              "id": "atlas_gate_3",
-              "name": "(Dark Suit OR Ghost Spear)",
-              "clear_set_type": "rule",
-              "clear_rule": {
-                "rule": "Or",
-                "children": [
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "Dark Suit"
-                    }
-                  },
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "Ghost Spear"
-                    }
-                  }
-                ]
-              },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              }
             }
           },
           "pulls": [
@@ -85720,7 +84341,15 @@
               "y": 12,
               "from": [
                 {
+                  "x": 4,
+                  "y": 11
+                },
+                {
                   "x": 7,
+                  "y": 11
+                },
+                {
+                  "x": 8,
                   "y": 11
                 },
                 {
@@ -85740,6 +84369,10 @@
                   "y": 12
                 },
                 {
+                  "x": 4,
+                  "y": 13
+                },
+                {
                   "x": 5,
                   "y": 13
                 },
@@ -85752,11 +84385,381 @@
                   "y": 13
                 },
                 {
+                  "x": 8,
+                  "y": 13
+                },
+                {
+                  "x": 5,
+                  "y": 14
+                },
+                {
                   "x": 6,
                   "y": 14
                 }
               ],
-              "gate": "pull_6_12"
+              "gate": "pull_6_12",
+              "passes": [
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 10
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 11
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 11
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 11
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 11
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 10
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 11
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 11
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 11
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 10
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 11
+                  }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 11
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 11
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 11
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 11
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 11
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 11
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 13
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 11
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 13
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 13
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 14
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 13
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 14
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 13
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 13
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 13
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 14
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 14
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 14
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 15
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 14
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 14
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 14
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 15
+                  },
+                  "to": {
+                    "x": 6,
+                    "y": 14
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 14
+                  },
+                  "to": {
+                    "x": 6,
+                    "y": 14
+                  }
+                }
+              ],
+              "range": [
+                {
+                  "x": 5,
+                  "y": 10
+                },
+                {
+                  "x": 6,
+                  "y": 10
+                },
+                {
+                  "x": 7,
+                  "y": 10
+                },
+                {
+                  "x": 4,
+                  "y": 11
+                },
+                {
+                  "x": 7,
+                  "y": 11
+                },
+                {
+                  "x": 8,
+                  "y": 11
+                },
+                {
+                  "x": 4,
+                  "y": 12
+                },
+                {
+                  "x": 5,
+                  "y": 12
+                },
+                {
+                  "x": 7,
+                  "y": 12
+                },
+                {
+                  "x": 8,
+                  "y": 12
+                },
+                {
+                  "x": 4,
+                  "y": 13
+                },
+                {
+                  "x": 5,
+                  "y": 13
+                },
+                {
+                  "x": 6,
+                  "y": 13
+                },
+                {
+                  "x": 7,
+                  "y": 13
+                },
+                {
+                  "x": 8,
+                  "y": 13
+                },
+                {
+                  "x": 5,
+                  "y": 14
+                },
+                {
+                  "x": 6,
+                  "y": 14
+                }
+              ]
             }
           ],
           "shared_world": {
@@ -85778,7 +84781,7 @@
               ".......A.......",
               ".......A.......",
               "....AAAA.......",
-              "....A..........",
+              "...............",
               "......B........",
               "...............",
               "...............",
@@ -86000,6 +85003,11 @@
               "id": "atlas_gate_2"
             },
             {
+              "x": 10,
+              "y": 1,
+              "id": "atlas_gate_2"
+            },
+            {
               "x": 11,
               "y": 1,
               "id": "atlas_gate_3"
@@ -86092,7 +85100,7 @@
             {
               "x": 11,
               "y": 2,
-              "id": "atlas_gate_3"
+              "id": "atlas_gate_5"
             },
             {
               "x": 12,
@@ -86217,7 +85225,7 @@
             {
               "x": 4,
               "y": 4,
-              "id": "atlas_gate_3"
+              "id": "atlas_gate_5"
             },
             {
               "x": 5,
@@ -86252,7 +85260,7 @@
             {
               "x": 11,
               "y": 4,
-              "id": "atlas_gate_3"
+              "id": "atlas_gate_5"
             },
             {
               "x": 12,
@@ -86985,8 +85993,20 @@
               "y": 5,
               "from": [
                 {
+                  "x": 5,
+                  "y": 3
+                },
+                {
                   "x": 6,
                   "y": 3
+                },
+                {
+                  "x": 7,
+                  "y": 3
+                },
+                {
+                  "x": 4,
+                  "y": 4
                 },
                 {
                   "x": 5,
@@ -86998,6 +86018,10 @@
                 },
                 {
                   "x": 7,
+                  "y": 4
+                },
+                {
+                  "x": 8,
                   "y": 4
                 },
                 {
@@ -87017,6 +86041,10 @@
                   "y": 5
                 },
                 {
+                  "x": 4,
+                  "y": 6
+                },
+                {
                   "x": 5,
                   "y": 6
                 },
@@ -87029,12 +86057,296 @@
                   "y": 6
                 },
                 {
+                  "x": 8,
+                  "y": 6
+                },
+                {
+                  "x": 5,
+                  "y": 7
+                },
+                {
                   "x": 6,
+                  "y": 7
+                },
+                {
+                  "x": 7,
                   "y": 7
                 }
               ],
               "gate": "pull_6_5",
               "yields": [
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 4
+                  }
+                }
+              ],
+              "passes": [
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 2
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 2
+                  },
+                  "to": {
+                    "x": 6,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 6,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 6,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 2
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 5
+                  }
+                },
                 {
                   "from": {
                     "x": 8,
@@ -87044,6 +86356,338 @@
                     "x": 8,
                     "y": 5
                   }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 8
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 6,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 8
+                  },
+                  "to": {
+                    "x": 6,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 6,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 8
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 7
+                  }
+                }
+              ],
+              "range": [
+                {
+                  "x": 5,
+                  "y": 3
+                },
+                {
+                  "x": 6,
+                  "y": 3
+                },
+                {
+                  "x": 7,
+                  "y": 3
+                },
+                {
+                  "x": 4,
+                  "y": 4
+                },
+                {
+                  "x": 5,
+                  "y": 4
+                },
+                {
+                  "x": 6,
+                  "y": 4
+                },
+                {
+                  "x": 7,
+                  "y": 4
+                },
+                {
+                  "x": 8,
+                  "y": 4
+                },
+                {
+                  "x": 4,
+                  "y": 5
+                },
+                {
+                  "x": 5,
+                  "y": 5
+                },
+                {
+                  "x": 7,
+                  "y": 5
+                },
+                {
+                  "x": 8,
+                  "y": 5
+                },
+                {
+                  "x": 4,
+                  "y": 6
+                },
+                {
+                  "x": 5,
+                  "y": 6
+                },
+                {
+                  "x": 6,
+                  "y": 6
+                },
+                {
+                  "x": 7,
+                  "y": 6
+                },
+                {
+                  "x": 8,
+                  "y": 6
+                },
+                {
+                  "x": 5,
+                  "y": 7
+                },
+                {
+                  "x": 6,
+                  "y": 7
+                },
+                {
+                  "x": 7,
+                  "y": 7
                 }
               ]
             },
@@ -87052,8 +86696,20 @@
               "y": 3,
               "from": [
                 {
+                  "x": 8,
+                  "y": 1
+                },
+                {
                   "x": 9,
                   "y": 1
+                },
+                {
+                  "x": 10,
+                  "y": 1
+                },
+                {
+                  "x": 7,
+                  "y": 2
                 },
                 {
                   "x": 9,
@@ -87061,6 +86717,10 @@
                 },
                 {
                   "x": 10,
+                  "y": 2
+                },
+                {
+                  "x": 11,
                   "y": 2
                 },
                 {
@@ -87080,6 +86740,10 @@
                   "y": 3
                 },
                 {
+                  "x": 7,
+                  "y": 4
+                },
+                {
                   "x": 8,
                   "y": 4
                 },
@@ -87092,19 +86756,605 @@
                   "y": 4
                 },
                 {
+                  "x": 11,
+                  "y": 4
+                },
+                {
+                  "x": 8,
+                  "y": 5
+                },
+                {
                   "x": 9,
+                  "y": 5
+                },
+                {
+                  "x": 10,
                   "y": 5
                 }
               ],
-              "gate": "pull_9_3"
+              "gate": "pull_9_3",
+              "yields": [
+                {
+                  "from": {
+                    "x": 11,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 5
+                  }
+                }
+              ],
+              "passes": [
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 0
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 1
+                  }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 1
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 1
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 1
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 1
+                  }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 0
+                  },
+                  "to": {
+                    "x": 9,
+                    "y": 1
+                  }
+                },
+                {
+                  "from": {
+                    "x": 10,
+                    "y": 1
+                  },
+                  "to": {
+                    "x": 9,
+                    "y": 1
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 1
+                  },
+                  "to": {
+                    "x": 9,
+                    "y": 1
+                  }
+                },
+                {
+                  "from": {
+                    "x": 10,
+                    "y": 0
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 1
+                  }
+                },
+                {
+                  "from": {
+                    "x": 11,
+                    "y": 1
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 1
+                  }
+                },
+                {
+                  "from": {
+                    "x": 10,
+                    "y": 2
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 1
+                  }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 1
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 1
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 1
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 2
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 2
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 2
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 2
+                  }
+                },
+                {
+                  "from": {
+                    "x": 10,
+                    "y": 1
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 2
+                  }
+                },
+                {
+                  "from": {
+                    "x": 11,
+                    "y": 2
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 2
+                  }
+                },
+                {
+                  "from": {
+                    "x": 11,
+                    "y": 1
+                  },
+                  "to": {
+                    "x": 11,
+                    "y": 2
+                  }
+                },
+                {
+                  "from": {
+                    "x": 12,
+                    "y": 2
+                  },
+                  "to": {
+                    "x": 11,
+                    "y": 2
+                  }
+                },
+                {
+                  "from": {
+                    "x": 11,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 11,
+                    "y": 2
+                  }
+                },
+                {
+                  "from": {
+                    "x": 10,
+                    "y": 2
+                  },
+                  "to": {
+                    "x": 11,
+                    "y": 2
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 2
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 11,
+                    "y": 2
+                  },
+                  "to": {
+                    "x": 11,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 12,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 11,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 11,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 11,
+                    "y": 3
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 11,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 10,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 11,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 11,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 12,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 11,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 11,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 11,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 10,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 11,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 10,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 9,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 9,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 9,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 10,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 11,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 5
+                  }
+                }
+              ],
+              "range": [
+                {
+                  "x": 8,
+                  "y": 1
+                },
+                {
+                  "x": 9,
+                  "y": 1
+                },
+                {
+                  "x": 10,
+                  "y": 1
+                },
+                {
+                  "x": 7,
+                  "y": 2
+                },
+                {
+                  "x": 9,
+                  "y": 2
+                },
+                {
+                  "x": 10,
+                  "y": 2
+                },
+                {
+                  "x": 11,
+                  "y": 2
+                },
+                {
+                  "x": 7,
+                  "y": 3
+                },
+                {
+                  "x": 8,
+                  "y": 3
+                },
+                {
+                  "x": 10,
+                  "y": 3
+                },
+                {
+                  "x": 11,
+                  "y": 3
+                },
+                {
+                  "x": 7,
+                  "y": 4
+                },
+                {
+                  "x": 8,
+                  "y": 4
+                },
+                {
+                  "x": 9,
+                  "y": 4
+                },
+                {
+                  "x": 10,
+                  "y": 4
+                },
+                {
+                  "x": 11,
+                  "y": 4
+                },
+                {
+                  "x": 8,
+                  "y": 5
+                },
+                {
+                  "x": 9,
+                  "y": 5
+                },
+                {
+                  "x": 10,
+                  "y": 5
+                }
+              ]
             },
             {
               "x": 9,
               "y": 6,
               "from": [
                 {
+                  "x": 8,
+                  "y": 4
+                },
+                {
                   "x": 9,
                   "y": 4
+                },
+                {
+                  "x": 10,
+                  "y": 4
+                },
+                {
+                  "x": 7,
+                  "y": 5
                 },
                 {
                   "x": 8,
@@ -87127,6 +87377,10 @@
                   "y": 6
                 },
                 {
+                  "x": 7,
+                  "y": 7
+                },
+                {
                   "x": 8,
                   "y": 7
                 }
@@ -87136,12 +87390,360 @@
                 {
                   "from": {
                     "x": 7,
+                    "y": 8
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 7
+                  }
+                }
+              ],
+              "passes": [
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 9,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 10,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 9,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 9,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 10,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 11,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 10,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 9,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 10,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 11,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 10,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
                     "y": 7
                   },
                   "to": {
                     "x": 7,
                     "y": 6
                   }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 8
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 8
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 7
+                  }
+                }
+              ],
+              "range": [
+                {
+                  "x": 8,
+                  "y": 4
+                },
+                {
+                  "x": 9,
+                  "y": 4
+                },
+                {
+                  "x": 10,
+                  "y": 4
+                },
+                {
+                  "x": 7,
+                  "y": 5
+                },
+                {
+                  "x": 8,
+                  "y": 5
+                },
+                {
+                  "x": 9,
+                  "y": 5
+                },
+                {
+                  "x": 10,
+                  "y": 5
+                },
+                {
+                  "x": 11,
+                  "y": 5
+                },
+                {
+                  "x": 7,
+                  "y": 6
+                },
+                {
+                  "x": 8,
+                  "y": 6
+                },
+                {
+                  "x": 11,
+                  "y": 6
+                },
+                {
+                  "x": 7,
+                  "y": 7
+                },
+                {
+                  "x": 8,
+                  "y": 7
+                },
+                {
+                  "x": 8,
+                  "y": 8
+                },
+                {
+                  "x": 9,
+                  "y": 8
+                },
+                {
+                  "x": 10,
+                  "y": 8
                 }
               ]
             }
@@ -87151,7 +87753,6 @@
             "regions": [
               "level_78__r0c2",
               "level_78__r0c16",
-              "level_78__r1c10",
               "level_78__r3c9",
               "level_78__r3c12",
               "level_78__r4c2",
@@ -87164,14 +87765,14 @@
             ],
             "rows": [
               "..A.............B...",
-              "..A.......C.....B...",
+              "..A.............B...",
               "...............BB...",
-              ".........D..EE.BB...",
-              "..F............BB...",
-              "......G.....HH......",
-              ".........I.J.H......",
+              ".........C..DD.BB...",
+              "..E............BB...",
+              "......F.....GG......",
+              ".........H.I.G......",
               "....................",
-              "........K.LL........",
+              "........J.KK........",
               "...................."
             ],
             "entrances": {
@@ -87181,10 +87782,6 @@
               },
               "level_78__r0c16": {
                 "x": 16,
-                "y": 1
-              },
-              "level_78__r1c10": {
-                "x": 10,
                 "y": 1
               },
               "level_78__r3c9": {
@@ -87227,8 +87824,6 @@
             "links": {
               "level_78__r0c16>level_78__r0c2": "level_78__r0c16 -> level_78__r0c2",
               "level_78__r0c2>level_78__r0c16": "level_78__r0c2 -> level_78__r0c16",
-              "level_78__r0c16>level_78__r1c10": "level_78__r0c16 -> level_78__r1c10",
-              "level_78__r1c10>level_78__r0c16": "level_78__r1c10 -> level_78__r0c16",
               "level_78__r0c16>level_78__r3c12": "level_78__r0c16 -> level_78__r3c12",
               "level_78__r3c12>level_78__r0c16": "level_78__r3c12 -> level_78__r0c16",
               "level_78__r0c16>level_78__r3c9": "level_78__r0c16 -> level_78__r3c9",
@@ -87247,8 +87842,6 @@
               "level_78__r8c10>level_78__r0c16": "level_78__r8c10 -> level_78__r0c16",
               "level_78__r0c16>level_78__r8c8": "level_78__r0c16 -> level_78__r8c8",
               "level_78__r8c8>level_78__r0c16": "level_78__r8c8 -> level_78__r0c16",
-              "level_78__r0c2>level_78__r1c10": "level_78__r0c2 -> level_78__r1c10",
-              "level_78__r1c10>level_78__r0c2": "level_78__r1c10 -> level_78__r0c2",
               "level_78__r0c2>level_78__r3c12": "level_78__r0c2 -> level_78__r3c12",
               "level_78__r3c12>level_78__r0c2": "level_78__r3c12 -> level_78__r0c2",
               "level_78__r0c2>level_78__r3c9": "level_78__r0c2 -> level_78__r3c9",
@@ -87267,24 +87860,6 @@
               "level_78__r8c10>level_78__r0c2": "level_78__r8c10 -> level_78__r0c2",
               "level_78__r0c2>level_78__r8c8": "level_78__r0c2 -> level_78__r8c8",
               "level_78__r8c8>level_78__r0c2": "level_78__r8c8 -> level_78__r0c2",
-              "level_78__r1c10>level_78__r3c12": "level_78__r1c10 -> level_78__r3c12",
-              "level_78__r3c12>level_78__r1c10": "level_78__r3c12 -> level_78__r1c10",
-              "level_78__r1c10>level_78__r3c9": "level_78__r1c10 -> level_78__r3c9",
-              "level_78__r3c9>level_78__r1c10": "level_78__r3c9 -> level_78__r1c10",
-              "level_78__r1c10>level_78__r4c2": "level_78__r1c10 -> level_78__r4c2",
-              "level_78__r4c2>level_78__r1c10": "level_78__r4c2 -> level_78__r1c10",
-              "level_78__r1c10>level_78__r5c12": "level_78__r1c10 -> level_78__r5c12",
-              "level_78__r5c12>level_78__r1c10": "level_78__r5c12 -> level_78__r1c10",
-              "level_78__r1c10>level_78__r5c6": "level_78__r1c10 -> level_78__r5c6",
-              "level_78__r5c6>level_78__r1c10": "level_78__r5c6 -> level_78__r1c10",
-              "level_78__r1c10>level_78__r6c11": "level_78__r1c10 -> level_78__r6c11",
-              "level_78__r6c11>level_78__r1c10": "level_78__r6c11 -> level_78__r1c10",
-              "level_78__r1c10>level_78__r6c9": "level_78__r1c10 -> level_78__r6c9",
-              "level_78__r6c9>level_78__r1c10": "level_78__r6c9 -> level_78__r1c10",
-              "level_78__r1c10>level_78__r8c10": "level_78__r1c10 -> level_78__r8c10",
-              "level_78__r8c10>level_78__r1c10": "level_78__r8c10 -> level_78__r1c10",
-              "level_78__r1c10>level_78__r8c8": "level_78__r1c10 -> level_78__r8c8",
-              "level_78__r8c8>level_78__r1c10": "level_78__r8c8 -> level_78__r1c10",
               "level_78__r3c12>level_78__r3c9": "level_78__r3c12 -> level_78__r3c9",
               "level_78__r3c9>level_78__r3c12": "level_78__r3c9 -> level_78__r3c12",
               "level_78__r3c12>level_78__r4c2": "level_78__r3c12 -> level_78__r4c2",
@@ -87369,10 +87944,6 @@
         }
       },
       "level_78__r0c16": {
-        "substrate": "maze",
-        "shared_world": "level_78"
-      },
-      "level_78__r1c10": {
         "substrate": "maze",
         "shared_world": "level_78"
       },
@@ -88859,8 +89430,20 @@
               "y": 14,
               "from": [
                 {
+                  "x": 1,
+                  "y": 12
+                },
+                {
                   "x": 2,
                   "y": 12
+                },
+                {
+                  "x": 3,
+                  "y": 12
+                },
+                {
+                  "x": 0,
+                  "y": 13
                 },
                 {
                   "x": 1,
@@ -88875,23 +89458,321 @@
                   "y": 13
                 },
                 {
+                  "x": 4,
+                  "y": 13
+                },
+                {
                   "x": 3,
                   "y": 14
+                },
+                {
+                  "x": 1,
+                  "y": 16
                 },
                 {
                   "x": 2,
                   "y": 16
                 }
               ],
-              "gate": "pull_2_14"
+              "gate": "pull_2_14",
+              "passes": [
+                {
+                  "from": {
+                    "x": 1,
+                    "y": 11
+                  },
+                  "to": {
+                    "x": 1,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 2,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 1,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 1,
+                    "y": 13
+                  },
+                  "to": {
+                    "x": 1,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 0,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 1,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 2,
+                    "y": 11
+                  },
+                  "to": {
+                    "x": 2,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 2,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 1,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 2,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 11
+                  },
+                  "to": {
+                    "x": 3,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 3,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 13
+                  },
+                  "to": {
+                    "x": 3,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 2,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 3,
+                    "y": 12
+                  }
+                },
+                {
+                  "from": {
+                    "x": 0,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 0,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 1,
+                    "y": 13
+                  },
+                  "to": {
+                    "x": 0,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 1,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 1,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 0,
+                    "y": 13
+                  },
+                  "to": {
+                    "x": 1,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 3,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 13
+                  },
+                  "to": {
+                    "x": 3,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 12
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 13
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 13
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 13
+                  }
+                },
+                {
+                  "from": {
+                    "x": 2,
+                    "y": 16
+                  },
+                  "to": {
+                    "x": 1,
+                    "y": 16
+                  }
+                },
+                {
+                  "from": {
+                    "x": 2,
+                    "y": 17
+                  },
+                  "to": {
+                    "x": 2,
+                    "y": 16
+                  }
+                },
+                {
+                  "from": {
+                    "x": 1,
+                    "y": 16
+                  },
+                  "to": {
+                    "x": 2,
+                    "y": 16
+                  }
+                }
+              ],
+              "range": [
+                {
+                  "x": 1,
+                  "y": 12
+                },
+                {
+                  "x": 2,
+                  "y": 12
+                },
+                {
+                  "x": 3,
+                  "y": 12
+                },
+                {
+                  "x": 0,
+                  "y": 13
+                },
+                {
+                  "x": 1,
+                  "y": 13
+                },
+                {
+                  "x": 2,
+                  "y": 13
+                },
+                {
+                  "x": 3,
+                  "y": 13
+                },
+                {
+                  "x": 4,
+                  "y": 13
+                },
+                {
+                  "x": 3,
+                  "y": 14
+                },
+                {
+                  "x": 1,
+                  "y": 16
+                },
+                {
+                  "x": 2,
+                  "y": 16
+                }
+              ]
             },
             {
               "x": 5,
               "y": 6,
               "from": [
                 {
+                  "x": 4,
+                  "y": 4
+                },
+                {
                   "x": 5,
                   "y": 4
+                },
+                {
+                  "x": 6,
+                  "y": 4
+                },
+                {
+                  "x": 3,
+                  "y": 5
                 },
                 {
                   "x": 4,
@@ -88903,6 +89784,10 @@
                 },
                 {
                   "x": 6,
+                  "y": 5
+                },
+                {
+                  "x": 7,
                   "y": 5
                 },
                 {
@@ -88922,11 +89807,403 @@
                   "y": 6
                 },
                 {
+                  "x": 7,
+                  "y": 7
+                },
+                {
+                  "x": 4,
+                  "y": 8
+                },
+                {
                   "x": 5,
                   "y": 8
                 }
               ],
-              "gate": "pull_5_6"
+              "gate": "pull_5_6",
+              "passes": [
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 3
+                  },
+                  "to": {
+                    "x": 6,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 6,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 6,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 6,
+                    "y": 4
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 3,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 3,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 3,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 2,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 3,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 6,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 6,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 6,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 5
+                  }
+                },
+                {
+                  "from": {
+                    "x": 3,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 3,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 2,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 3,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 6
+                  }
+                },
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 6
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 7
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 8
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 8
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 9
+                  },
+                  "to": {
+                    "x": 4,
+                    "y": 8
+                  }
+                },
+                {
+                  "from": {
+                    "x": 5,
+                    "y": 9
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 8
+                  }
+                },
+                {
+                  "from": {
+                    "x": 4,
+                    "y": 8
+                  },
+                  "to": {
+                    "x": 5,
+                    "y": 8
+                  }
+                }
+              ],
+              "range": [
+                {
+                  "x": 4,
+                  "y": 4
+                },
+                {
+                  "x": 5,
+                  "y": 4
+                },
+                {
+                  "x": 6,
+                  "y": 4
+                },
+                {
+                  "x": 3,
+                  "y": 5
+                },
+                {
+                  "x": 4,
+                  "y": 5
+                },
+                {
+                  "x": 5,
+                  "y": 5
+                },
+                {
+                  "x": 6,
+                  "y": 5
+                },
+                {
+                  "x": 7,
+                  "y": 5
+                },
+                {
+                  "x": 3,
+                  "y": 6
+                },
+                {
+                  "x": 4,
+                  "y": 6
+                },
+                {
+                  "x": 6,
+                  "y": 6
+                },
+                {
+                  "x": 7,
+                  "y": 6
+                },
+                {
+                  "x": 7,
+                  "y": 7
+                },
+                {
+                  "x": 4,
+                  "y": 8
+                },
+                {
+                  "x": 5,
+                  "y": 8
+                }
+              ]
             }
           ],
           "shared_world": {
@@ -96761,7 +98038,29 @@
                   "y": 6
                 }
               ],
-              "gate": "pull_8_5"
+              "gate": "pull_8_5",
+              "passes": [
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 2
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 3
+                  }
+                }
+              ],
+              "range": [
+                {
+                  "x": 8,
+                  "y": 3
+                },
+                {
+                  "x": 8,
+                  "y": 6
+                }
+              ]
             },
             {
               "x": 8,
@@ -96776,7 +98075,29 @@
                   "y": 9
                 }
               ],
-              "gate": "pull_8_8"
+              "gate": "pull_8_8",
+              "passes": [
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 5
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 6
+                  }
+                }
+              ],
+              "range": [
+                {
+                  "x": 8,
+                  "y": 6
+                },
+                {
+                  "x": 8,
+                  "y": 9
+                }
+              ]
             },
             {
               "x": 8,
@@ -96795,7 +98116,43 @@
                   "y": 13
                 }
               ],
-              "gate": "pull_8_11"
+              "gate": "pull_8_11",
+              "passes": [
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 8
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 9
+                  }
+                },
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 14
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 13
+                  }
+                }
+              ],
+              "range": [
+                {
+                  "x": 8,
+                  "y": 9
+                },
+                {
+                  "x": 8,
+                  "y": 12
+                },
+                {
+                  "x": 8,
+                  "y": 13
+                }
+              ]
             }
           ],
           "shared_world": {
@@ -100342,7 +101699,6 @@
             "level_77__r2c0",
             "level_78__r0c16",
             "level_78__r0c2",
-            "level_78__r1c10",
             "level_78__r3c12",
             "level_78__r3c9",
             "level_78__r4c2",
