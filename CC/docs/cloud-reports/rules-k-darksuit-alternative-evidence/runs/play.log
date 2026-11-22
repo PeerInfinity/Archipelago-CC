@@ -1,0 +1,7 @@
+SET delivered: seedling-vanilla-record-23510f80
+# box lock: TAKEN by rules-arrival-chase-witness play.mjs (browser, pid 2035) — head f96d6b662, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only (asserted)
+ROW {"tape":"L75-71to74-suit","set":"seedling-vanilla-record-23510f80","ticks":200,"finished":true,"verdict":"left->L74@192","firstHit":null,"hitsInBoot":0,"restarts":0,"levels":[75,74],"end":{"level":74,"x":24,"y":136,"t":200},"lastInBoot":{"t":191,"x":62.92,"y":17.54,"mob":["LavaRunner(69.1,34.5)","LavaRunner(56.5,32.4)"]},"firstMob":["Grenade(80.0,128.0)","LavaRunner(112.0,72.0)","LavaRunner(16.0,120.0)"],"polled":1284}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"L75-74to71-suit-replay","set":"seedling-vanilla-record-23510f80","ticks":224,"finished":true,"verdict":"left->L71@216","firstHit":null,"hitsInBoot":0,"restarts":0,"levels":[75,71],"end":{"level":71,"x":104,"y":24,"t":224},"lastInBoot":{"t":215,"x":78.09,"y":221.54,"mob":["Grenade(80.0,169.8)","LavaRunner(77.8,157.6)","LavaRunner(66.8,190.6)"]},"firstMob":["Grenade(80.0,128.0)","LavaRunner(112.0,72.0)","LavaRunner(16.0,120.0)"],"polled":1366}

@@ -1,0 +1,33 @@
+L72-71to73-suit.game.json.gz
+  player:floor   ticks= 198 mean=1.438 meanMaxAxis=1.201 peak=2.110
+  runner:floor   ticks= 270 mean=1.219 meanMaxAxis=1.104 peak=4.707
+  runner:lava    ticks= 283 mean=0.783 meanMaxAxis=0.696 peak=4.752
+  player:lava    ticks= 162 mean=0.883 meanMaxAxis=0.766 peak=1.854
+L72-73to71-suit.game.json.gz
+  player:floor   ticks=  83 mean=1.454 meanMaxAxis=1.087 peak=2.149
+  runner:lava    ticks= 398 mean=0.656 meanMaxAxis=0.577 peak=1.300
+  runner:floor   ticks=  88 mean=1.231 meanMaxAxis=1.024 peak=1.345
+  player:lava    ticks= 287 mean=0.874 meanMaxAxis=0.699 peak=1.970
+L73-72to74-suit-push.game.json.gz
+  player:floor   ticks= 109 mean=1.108 meanMaxAxis=0.856 peak=2.170
+  runner:lava    ticks= 166 mean=0.544 meanMaxAxis=0.493 peak=0.849
+  player:lava    ticks= 107 mean=0.719 meanMaxAxis=0.581 peak=2.727
+  runner:floor   ticks=  15 mean=0.860 meanMaxAxis=0.860 peak=0.900
+L73-74to72-suit-push.game.json.gz
+  player:floor   ticks=  85 mean=0.402 meanMaxAxis=0.375 peak=2.048
+  runner:lava    ticks= 125 mean=0.325 meanMaxAxis=0.321 peak=1.273
+  player:lava    ticks=  42 mean=0.031 meanMaxAxis=0.031 peak=1.082
+L75-71to74-suit.game.json.gz
+  player:floor   ticks= 153 mean=1.393 meanMaxAxis=1.180 peak=2.174
+  player:lava    ticks=  27 mean=1.176 meanMaxAxis=1.022 peak=1.756
+  runner:lava    ticks= 114 mean=0.669 meanMaxAxis=0.589 peak=1.000
+  runner:floor   ticks= 147 mean=1.178 meanMaxAxis=1.105 peak=5.000
+L75-74to71-suit-replay.game.json.gz
+  player:floor   ticks= 214 mean=1.366 meanMaxAxis=1.122 peak=2.146
+  runner:lava    ticks= 129 mean=0.718 meanMaxAxis=0.611 peak=1.300
+  runner:floor   ticks= 254 mean=0.930 meanMaxAxis=0.861 peak=1.360
+l80chest-suit-from71-a.game.json.gz
+  player:floor   ticks=  20 mean=1.145 meanMaxAxis=1.145 peak=1.550
+  runner:lava    ticks= 212 mean=0.670 meanMaxAxis=0.585 peak=1.603
+  player:lava    ticks= 108 mean=0.553 meanMaxAxis=0.495 peak=2.500
+  runner:floor   ticks=  34 mean=1.222 meanMaxAxis=1.074 peak=1.300

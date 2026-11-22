@@ -1,0 +1,5 @@
+frontend/modules/flashPanel/atlases/seedling-playthrough.json
+frontend/modules/flashPanel/atlases/seedling-subregion-partition.json
+frontend/presets/seedling_er/AP_1/AP_1_rules.json
+frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json
+frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json

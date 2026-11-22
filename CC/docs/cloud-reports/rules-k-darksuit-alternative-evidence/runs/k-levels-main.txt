@@ -1,0 +1,148 @@
+L72 20x18 guards: lavarunner@80,216 cut=16 | lavarunner@136,88 cut=29 | lavarunner@216,240 cut=18
+legend: # wall  ~ lava  w water  . floor  z zone  K cut  R runner spawn  g gated(pre-K)  (lower case on lava: k cut-in-lava, l zone-lava)
+    01234567890123456789
+  0 ~~~~~~~~kk~.~~~~~~~~
+  1 ~~~~~kkkllkzk~~~~~~~
+  2 ~~~~klllllzzlk~~~~~~
+  3 ~~~~kllllzzzlk~~~~~~
+  4 ~~~~Kzzzzzlllk~~~~~~
+  5 ~~~kzlllllllllk~~~##
+  6 ~~~kzzlllRllzzk~~..#
+  7 ~~~~#zzzzzzzzK....##
+  8 ~~~~kKzzlllllk~~~..#
+  9 ~~kkklkkKlzlzk..~..~
+ 10 ~kll#lkkzkKkKkKKk..~
+ 11 klll##zzKKKzzzzzlK~~
+ 12 ll###zzzzKKzzzzzzzk~
+ 13 ll#lzzz####zzlllzlk~
+ 14 llllzR##lk#lllllllk~
+ 15 lzzzzll##lklllRllllk
+ 16 zzzllll#lkklllllllk~
+ 17 ~klllll#lkllllllllk~
+full-grid gated cells with K: 258
+L73 10x10 guards: lavarunner@32,24 cut=8
+legend: # wall  ~ lava  w water  . floor  z zone  K cut  R runner spawn  g gated(pre-K)  (lower case on lava: k cut-in-lava, l zone-lava)
+    0123456789
+  0 llllzllk~~
+  1 lll#zzzk~~
+  2 llRzzz###~
+  3 ll##z##z#~
+  4 ll##zzzK##
+  5 llzzzz#.##
+  6 k##KKK...~
+  7 ~#K......~
+  8 ~~.~.###.~
+  9 ~#.####~~~
+full-grid gated cells with K: 44
+L74 20x10 guards: lavarunner@24,56 cut=11 | lavarunner@208,96 cut=22
+legend: # wall  ~ lava  w water  . floor  z zone  K cut  R runner spawn  g gated(pre-K)  (lower case on lava: k cut-in-lava, l zone-lava)
+    01234567890123456789
+  0 llllllk~~~~~~~~~~~~~
+  1 lll##lk...~kkkkk~~~~
+  2 llzz#zK..KKzllllkk~~
+  3 lzzzzzzk~Kzzzzlllk~~
+  4 lzRzzzlkkllzzzllllk~
+  5 ll#zz#k~kllzzzzlllk~
+  6 ll##z#k~klllzRzlllk~
+  7 lzzzz#k~klllllzzzzK~
+  8 kzl##k~~kllllllll#z~
+  9 ~zk~~~~~~klllllllk.~
+full-grid gated cells with K: 139
+L75 10x15 guards: lavarunner@8,112 cut=16 | lavarunner@104,64 cut=15
+legend: # wall  ~ lava  w water  . floor  z zone  K cut  R runner spawn  g gated(pre-K)  (lower case on lava: k cut-in-lava, l zone-lava)
+    0123456789
+  0 ~~~kz#llll
+  1 ~~klz##lll
+  2 kkkKzzz#ll
+  3 llkzKzz#ll
+  4 lkzzlKlRll
+  5 llKzzz#lll
+  6 llKzlkllll
+  7 lRkzllklll
+  8 lllKzKzlll
+  9 llllkkKkkk
+ 10 llllzK.~~~
+ 11 lllzK.~~~~
+ 12 kkkK~~~~~~
+ 13 ~~~..~~~~~
+ 14 ~~~~.~~~~~
+full-grid gated cells with K: 120
+L77 15x20 guards: lavarunner@80,272 cut=15 | lavarunner@112,256 cut=20
+legend: # wall  ~ lava  w water  . floor  z zone  K cut  R runner spawn  g gated(pre-K)  (lower case on lava: k cut-in-lava, l zone-lava)
+    012345678901234
+  0 ~~~~~~~~~~~~~~~
+  1 ~~~~~~##~~~~~~~
+  2 ......##~~~~~~~
+  3 ~~~.#..##~~~~~~
+  4 ~~~.#...#~~~~~~
+  5 ~~#.#...~~~~~~~
+  6 ~~###~~.~~~~~~~
+  7 ~~~~~~~.~~~~~~~
+  8 ~~~~~~~.~~~~~~~
+  9 ~##~~~~.~~#~~~~
+ 10 ~##~....~~##~~~
+ 11 ~~~~.##kkk##~~~
+ 12 ~~~kKzzklllk~~~
+ 13 ~kkklzzlkklk~~~
+ 14 ~kklllz##kllk~~
+ 15 klklllz##lklk~~
+ 16 llklllzRllklk~~
+ 17 llkllRzlllklk~~
+ 18 llkll#zlllklk~~
+ 19 lllkl#zlllkk~~~
+full-grid gated cells with K: 237
+L78 20x10 guards: lavarunner@192,144 cut=17 | lavarunner@144,72 cut=20 | lavarunner@96,32 cut=19 | lavarunner@56,120 cut=13 | lavarunner@112,136 cut=17
+legend: # wall  ~ lava  w water  . floor  z zone  K cut  R runner spawn  g gated(pre-K)  (lower case on lava: k cut-in-lava, l zone-lava)
+    01234567890123456789
+  0 ~kzlllkllllkk~~~.~~~
+  1 ~kzllklllzzKlk~~.~~~
+  2 ~kzkklRl#zzKllk..~~~
+  3 kKKlkkkKzzzKzzk..~~~
+  4 lKzlKKKzKKKKKKK..~~~
+  5 llKKKzzzKRKKzzKKk~~~
+  6 llkkklzzKz#zKzklk~~~
+  7 llklkkkkK###Klkllk~~
+  8 llklRklkzKzzKklllk~~
+  9 llklllkRklllRllllk~~
+full-grid gated cells with K: 171
+L80 10x20 guards: lavarunner@80,32 cut=3 | lavarunner@0,96 cut=7 | lavarunner@120,208 cut=6 | lavarunner@0,144 cut=6
+legend: # wall  ~ lava  w water  . floor  z zone  K cut  R runner spawn  g gated(pre-K)  (lower case on lava: k cut-in-lava, l zone-lava)
+    0123456789
+  0 llzlllllll
+  1 kkzzllllll
+  2 llzKkRllll
+  3 llllklllll
+  4 kkkllkllll
+  5 lklkkkllll
+  6 RkllKzll#l
+  7 l######l##
+  8 lz##.K####
+  9 Rl##Kz#ll#
+ 10 ##~##zllll
+ 11 ~~~kllllll
+ 12 ~~~Kzzllll
+ 13 ~~KzllllRl
+ 14 ##.K##llll
+ 15 #######lll
+ 16 #..#####ll
+ 17 ~#..#~~###
+ 18 ~~..~~~~##
+ 19 ~~..~~~###
+full-grid gated cells with K: 129
+L99 15x13 guards: lavarunner@192,64 cut=4 | lavarunner@160,32 cut=8 | lavarunner@176,64 cut=5
+legend: # wall  ~ lava  w water  . floor  z zone  K cut  R runner spawn  g gated(pre-K)  (lower case on lava: k cut-in-lava, l zone-lava)
+    012345678901234
+  0 ..###########..
+  1 ..###########..
+  2 ####.K#zllR####
+  3 ###..K#zzlll###
+  4 ##...K#zzzzRR##
+  5 ##....KKzzzll##
+  6 ##...g###zzlz##
+  7 ##.....z#KKKK##
+  8 #####..KKKzzz##
+  9 ###......KKz###
+ 10 ####.......####
+ 11 ..###########..
+ 12 ..###########..
+full-grid gated cells with K: 25

@@ -1,0 +1,6 @@
+MOVE_SPEEDS[17] = 0.45 WATER_FRICTION = 0.5
+K (b) playerSpeedOn(17) = 0.4500  bodySpeedOn(lavarunner,17) = 0.7500
+player lava, boost=false: axis 0.4500  diagonal 0.9491 (per axis 0.6711)
+player lava, boost=true: axis 0.5171  diagonal 1.0253 (per axis 0.7250)
+lavarunner swim (moveSpeed 1): axis 0.7500 diagonal 0.7500
+lavarunner walk (moveSpeed 1.5): axis 1.2500 diagonal 1.2500

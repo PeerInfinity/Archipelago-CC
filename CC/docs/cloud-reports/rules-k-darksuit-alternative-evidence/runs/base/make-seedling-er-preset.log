@@ -1,0 +1,14 @@
+[centralRegistry] CentralRegistry initialized
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:251:25)
+    at new StateManagerProxy (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:119:10)
+    at file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async file:///home/user/Archipelago-CC/scripts/procgen/registerPipelineSubstrates.js:56:17
+    at async buildSeedlingErPreset (file:///home/user/Archipelago-CC/scripts/procgen/make-seedling-er-preset.mjs:51:5)
+    at async main (file:///home/user/Archipelago-CC/scripts/procgen/make-seedling-er-preset.mjs:96:45)
+    at async file:///home/user/Archipelago-CC/scripts/procgen/make-seedling-er-preset.mjs:78:36
+[discoveryState] [DiscoveryState] Constructed
+seedling_er: seed 1, 50 placements, 48 exit(s) moved, draws 1 (0 shuffle-refused, 0 unbeatable, 0 check-rejected), 90 sphere states; source atlas seedling-1b81916c
+wrote frontend/presets/seedling_er/AP_1/AP_1_rules.json
