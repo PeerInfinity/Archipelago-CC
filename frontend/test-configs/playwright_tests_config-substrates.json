@@ -2121,6 +2121,12 @@
             "_comment": "CLICK ACTIONS CA-S3 (2026-11-19): the Region Map's default clickActions (session-only), on procgen_topdown AP_1: a cell click extends the path to its region and opens the Regions panel at it (regions.open); regionView:regionClicked first (CA-S5 retired regionMap:nodeSelected); the strip sits at the top of the panel. Fast batch. Reloads the world loaded before."
         },
         {
+            "id": "region-map-go-to-equals-canvas-click",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "region-map-tutorial G1 (2026-11-22): the Map's Go-to picker (regionMap/regionMapPicker.js) does what a canvas click does, on procgen_topdown AP_1: the same click record, bus record and path end under the default clickActions, and with the master switch off (a region and a square: the events, no action). Session-only settings. Fast batch. Reloads the world loaded before."
+        },
+        {
             "id": "region-map-click-master-off",
             "enabled": true,
             "category": "Region Map",
@@ -2347,6 +2353,12 @@
             "enabled": true,
             "category": "Tutorial walks: cloudberry",
             "_comment": "Cloudberry P4a (2026-11-02): the walk row of procgen-loop-mode-cloudberry (the shipped Cloudberry demo generated in the panel with loop mode on, played to the end by the Playback Bot). Manual batch cloudberry, not tutorials-procgen-loops: only the cloudberry batch's job fetches the Cloudberry site."
+        },
+        {
+            "id": "tutorial-walk-tracker-region-map",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "region-map-tutorial (2026-11-22): the walk row of the in-progress tracker-region-map (the Region Map on seedling_playthrough seed 1; rules only, no game started). The ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling, per the user's 2026-11-22 option text; it boots no wasm."
         },
         {
             "id": "tutorial-walk-seedling-recompile",

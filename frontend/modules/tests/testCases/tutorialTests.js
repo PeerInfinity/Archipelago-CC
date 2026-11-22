@@ -32,6 +32,10 @@ import {
 } from '../../tutorials/tutorialExecutor.js';
 import { buildContext } from '../../tutorials/tutorialContext.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
+import { REGION_MAP_WALK } from '../../tutorials/content/tracker/regionMap.js';
+import { REGION_MAP_CLICK_ACTIONS_KEY } from '../../regionMap/regionMapClickActions.js';
+import { panelInstances as regionMapPanels } from '../../regionMap/regionMapSettings.js';
+import { LOCATION_CLICKED, REGION_CLICKED, defaultClickActions, withInitialValues } from '../../regionView/clickActions.js';
 
 const CATEGORY = 'Tutorials';
 const WALK_CATEGORY = 'Tutorial walks';
@@ -63,6 +67,9 @@ const WALK_CATEGORY_BY_TUTORIAL = Object.freeze({
     'procgen-cloudberry': 'Tutorial walks: cloudberry',
     // P4a: the Cloudberry loop-mode walk runs there too (not in tutorials-procgen-loops, whose job does not fetch the site).
     'procgen-loop-mode-cloudberry': 'Tutorial walks: cloudberry',
+    // ⚖ The user, 2026-11-22 (archipelago-cc-23, session 84c8ab35): the Region Map tutorial walks Seedling Playthrough
+    // in "the Seedling tutorial batch". Its walk starts no game (no wasm).
+    'tracker-region-map': 'Tutorial walks: seedling',
 });
 const walkCategory = (tutorial) => WALK_CATEGORY_BY_TUTORIAL[tutorial.id] ?? WALK_CATEGORY_BY_TRACK[tutorial.track] ?? WALK_CATEGORY;
 const walkId = (id) => `tutorial-walk-${id}`;
@@ -401,6 +408,53 @@ async function tutorialUrlRequestStartsTheTutorial(tc) {
  * outside step: its stand-in), each `done` waited for, and the result graded
  * by the ratchet against the tutorial's record (tutorialWalk.js).
  */
+/**
+ * ⛓ PER-TUTORIAL ROW HOOKS — what one walk ROW does around its walk: `before(tc, ctx)` pins the start state (session
+ * overrides through the row's own `ctx.setSetting`, put back by `ctx.restoreSettings()` however the walk ends) and
+ * may subscribe to the bus; `after(tc, state)` asserts what only a row can hear, once the walk completed;
+ * `state.dispose()` always runs. ⚖ In-app tests set their own initial state (the user, 2026-09-26).
+ */
+/** JSON with every object's keys sorted: two settings objects compare by content, not by key order. */
+const canonical = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x)
+    ? Object.fromEntries(Object.keys(x).sort().map((key) => [key, x[key]])) : x));
+
+const WALK_HOOKS = Object.freeze({
+    'tracker-region-map': {
+        async before(tc, ctx) {
+            // The Map's click actions at their defaults (with the panel actions' first values, all off), and Follow on.
+            const want = withInitialValues('regionMap', defaultClickActions()).settings;
+            await ctx.setSetting(REGION_MAP_CLICK_ACTIONS_KEY, want);
+            await ctx.setSetting('moduleSettings.regionMap.followPlayer', true);
+            for (const p of regionMapPanels) {
+                p.follow = true;
+                if (p.controls?.follow) p.controls.follow.checked = true;
+            }
+            const heard = [];
+            const unsubs = [REGION_CLICKED, LOCATION_CLICKED].map((name) => tc.eventBus.subscribe(name, (d) => {
+                if (d?.panelId === 'regionMap') heard.push({ name, regionName: d.regionName, locationName: d.locationName });
+            }, 'tests'));
+            return { want: canonical(want), heard, dispose: () => unsubs.forEach((u) => u?.()) };
+        },
+        async after(tc, { want, heard }) {
+            const { pathRegion, location, centreRegion } = REGION_MAP_WALK;
+            const saw = (name, pred) => heard.some((h) => h.name === name && pred(h));
+            tc.reportCondition(`the Map published ${REGION_CLICKED} {panelId: 'regionMap'} for ${pathRegion} and ${centreRegion} `
+                + `(${JSON.stringify(heard)})`, saw(REGION_CLICKED, (h) => h.regionName === pathRegion)
+                && saw(REGION_CLICKED, (h) => h.regionName === centreRegion));
+            tc.reportCondition(`the Map published ${LOCATION_CLICKED} {panelId: 'regionMap'} for ${location}`,
+                saw(LOCATION_CLICKED, (h) => h.locationName === location));
+            // ⛓ The last step put every option back: the Map's click actions as the row set them, Follow on.
+            // (The defaults with every panel action's first value, read now that every panel has registered its actions.)
+            const held = canonical(await settingsManager.getSetting(REGION_MAP_CLICK_ACTIONS_KEY, null));
+            const wantNow = canonical(withInitialValues('regionMap', defaultClickActions()).settings);
+            tc.reportCondition(`the Map's click actions are back at the defaults (held ${held}; want ${wantNow}; the row set ${want})`,
+                held === wantNow);
+            const p = [...regionMapPanels][0];
+            tc.reportCondition('the Map follows the player again', p?.follow === true && p?.controls?.follow?.checked === true);
+        },
+    },
+});
+
 async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
     // ⛓ A RUNTIME VARIANT (`runtime`: the Flash runtime the walk plays in) is a SESSION override, put back in `finally`:
     // the tutorial itself uses whichever runtime is set and never changes it (⚖ the user, 2026-10-26: "Work in both").
@@ -418,6 +472,8 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
     const loopModeBefore = loopModeActive();
     const ui = await freshPanel(tc, { autoAdvance: false, animateCursor: false, showOutline: false });
     if (!ui) return tc.getOverallResult();
+    const hook = WALK_HOOKS[tutorial.id] ?? null;
+    const hookState = hook ? await hook.before(tc, ctx) : null;
     // A bot step plays at test speed (botTestSpeed.js); the person's saved settings are untouched.
     const restoreSpeed = await startAppBotTestSpeed();
     let measure = null;
@@ -464,7 +520,12 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
         const verdict = ratchetVerdict(tutorial, outcome);
         tc.log?.(`${tutorial.id}: ${verdict.message}`);
         tc.reportCondition(`${tutorial.id} — ${verdict.message}`, verdict.ok);
+        if (hook && outcome.end === 'complete') await hook.after(tc, hookState);
     } finally {
+        hookState?.dispose?.();
+        if (hook) {
+            try { await ctx.restoreSettings(); } catch (e) { tc.log?.(`could not restore the row's settings: ${e.message}`); }
+        }
         measure?.stop(walkOutcome);
         await restoreSpeed();
         // A walk that ended early never reached its own restore step (a feature check's ctx.setSetting).
