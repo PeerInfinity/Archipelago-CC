@@ -6043,8 +6043,11 @@ async function runTapeOnWasmBuild(tc, build, tapeText, { readActivators = false 
             const st = parse(g.botStatus());
             return st && (st.finished || (st.error ?? '') !== '') ? st : null;
         }, `[${build}] the tape ran to its end`, 60000, 100);
+        // ⛓ The LATCHED end-of-tape clock (`seam["save.time"]`, written in the finish block), never the live `game_time`.
+        const latchedTime = typeof g.botSeam === 'function' ? (parse(g.botSeam())?.seam?.['save.time'] ?? null) : null;
         const drain = typeof g.botDrain === 'function' ? g.botDrain() : null;
-        return { status0, activators, loaded, started, end, drain, hasActivators: typeof g.botActivators === 'function' };
+        return { status0, activators, loaded, started, end, drain, latchedTime,
+            hasActivators: typeof g.botActivators === 'function' };
     } finally {
         frame.remove();
     }
@@ -6084,10 +6087,14 @@ async function seedlingWasmP4hCandidateSmoke(tc) {
     }
     tc.assertEqual(`A/B: ${tape.name} (L${tape.boot.level}, ${tape.tick_count} ticks) drains IDENTICALLY on ${P4H_CANDIDATE_BUILD} and ${def.name}`,
         true, same);
-    // ⛔ NOT `game_time`: the page keeps stepping after the tape finishes, so it moves with the poll's wall clock
-    // (measured: 4844 vs 4845 on one run). The end-of-tape clock is the drain's latched seam, compared above.
     const pick = (st) => JSON.stringify([st?.level, st?.x, st?.y, st?.hits, st?.tick]);
     tc.assertEqual('A/B: the end status agrees (level, x, y, hits, tick)', pick(g.end), pick(h.end));
+    // ⛔ The CLOCK is compared LATCHED: `botStatus.game_time` is live after `finished` (the page keeps stepping;
+    // measured 4844 vs 4845 on one run), while `botSeam().seam["save.time"]` is the end-of-tape value the finish
+    // latches on both builds (js-22, item (d)).
+    tc.assertEqual('A/B: the LATCHED end-of-tape clock seam["save.time"] agrees (a number on both builds)',
+        `true/${g.latchedTime}`, `${Number.isFinite(h.latchedTime)}/${h.latchedTime}`);
+    tc.log(`latched seam["save.time"]: ${P4H_CANDIDATE_BUILD} ${h.latchedTime}, ${def.name} ${g.latchedTime}`);
     tc.log(`p4h candidate smoke: ${((performance.now() - t0) / 1000).toFixed(1)} s`);
     return tc.getOverallResult();
 }
