@@ -1,15 +1,7 @@
 {
   "$comment": "⚖ USER RULING 2026-11-11: \"Add the directional gates for now, but make a note to reexamine this later.\" A PER-ROOM TABLE, licensed for now in place of a general derivation; read by seedlingNoHitDirectionalGates.js (whose header carries the ruling and the direction to re-examine). Each gate names a wallflyer band by its flyers (the tiles come from seedlingWallFlyerBands.wallFlyerBands, never typed here), the compass direction of movement that costs an arm (y grows down, so N is south to north), the witnessed arm set as engine flags, and its witnesses in scripts/procgen/seedling-wallflyer-nohit-plans.json: `notFound` (the no-item searches of the blocked direction that ended without a plan), `arms` (one game-verified no-hit plan per arm, blocked direction) and `free` (game-verified no-item plans of the reverse direction). A witness id missing from the plans file refuses the gate by name. `unwitnessed` names an arm a gate does NOT offer although the derivation says it disarms, with why and the follow-up, so it is not silently absent; the reader refuses an entry whose gate does not exist, whose arm the gate offers, or whose arm has a witness there.",
-  "reexamine": "TO BE RE-EXAMINED (the user, 2026-11-11). The general rule slice rules-no-hit-l22 suggested, not built: a band is passable with no item where the room offers a waiting spot off the ray at the far end of every flight. NOT FOUND is a search budget, never \"impossible\". Fire was not found; it is not an arm here. The Wand is an arm of L22 north only (game witness l22-25-21-wand, slice rules-nohit-wand-crosscheck, ⚖ Robert 2026-11-15 \"Wand L22 + CI cross-check\"); it is NOT an arm of L25 east, which `unwitnessed` names. The derivation `scripts/procgen/derive-seedling-wallflyer-nohit.mjs --check` cross-checks every gate's direction against the rooms' own physics; it is a CROSS-CHECK, never a rule source (it sees flyers only, and its verdicts are knife-edge).",
-  "unwitnessed": [
-    {
-      "level": 25,
-      "blocked": "E",
-      "arm": "hasWand",
-      "says": "NOT AN ARM HERE, BY CHOICE (design-6): the derivation says the Wand disarms both flyers at rest from the west (strike spot near (34,50) facing east), but no game witness crosses. Three hand tapes (slice rules-nohit-derivation, tapes l25-26-22-wand, -wand-a and the plan's first version) failed to the room's two Bobs and its pushable block, which the derivation does not model.",
-      "followUp": "a game witness of l25-26-22-wand (a Bob-aware walk through the east column below row 3); until then L25 east keeps the table's arm set"
-    }
-  ],
+  "reexamine": "TO BE RE-EXAMINED (the user, 2026-11-11). The general rule slice rules-no-hit-l22 suggested, not built: a band is passable with no item where the room offers a waiting spot off the ray at the far end of every flight. NOT FOUND is a search budget, never \"impossible\". Fire was not found; it is not an arm here. The Wand is an arm of L22 north (game witness l22-25-21-wand, slice rules-nohit-wand-crosscheck, ⚖ Robert 2026-11-15 \"Wand L22 + CI cross-check\") and of L25 east (game witness l25-26-22-wand, slice rules-l25-wand-witness: a Bob-aware hand line along row 5 that stuns one Bob and parks the struck flyers on both, ⚖ Robert 2026-11-21 \"Wire it\", slice rules-l25-wand-arm); `unwitnessed` is empty. The waiting-spot rule is necessary but not sufficient where chasers share the room: L25 turns on its Bobs (a parked flyer holds them) and its pushable block, which a general rule would have to model. The derivation `scripts/procgen/derive-seedling-wallflyer-nohit.mjs --check` cross-checks every gate's direction against the rooms' own physics; it is a CROSS-CHECK, never a rule source (it sees flyers only, and its verdicts are knife-edge).",
+  "unwitnessed": [],
   "gates": [
     {
       "level": 22,
@@ -28,10 +20,10 @@
       "band": ["wallflyer@48,48", "wallflyer@64,48"],
       "blocked": "E",
       "says": "west to east: from the L26 door to the L22/L28 doors, across the two flyer columns",
-      "arms": ["hasSword", "hasSpear", "hasShield"],
+      "arms": ["hasSword", "hasSpear", "hasShield", "hasWand"],
       "witness": {
         "notFound": ["l25-26-22-none"],
-        "arms": { "hasSword": "l25-26-22-sword", "hasSpear": "l25-26-22-spear", "hasShield": "l25-26-22-shield" },
+        "arms": { "hasSword": "l25-26-22-sword", "hasSpear": "l25-26-22-spear", "hasShield": "l25-26-22-shield", "hasWand": "l25-26-22-wand" },
         "free": ["l25-22-26-none", "l25-28-26-none"]
       }
     }
