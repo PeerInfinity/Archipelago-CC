@@ -2133,8 +2133,18 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_72__r0c11 -> level_72__r16c0", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r0c11 -> level_72__r2c10", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_72__r0c11 -> level_72__r5c4", player),
-        Or(Has('Progressive Shield', 2), HasAny('Dark Suit', 'Progressive Sword', 'Ghost Spear', 'Wand'))
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
     world.set_rule(
@@ -2158,8 +2168,58 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_72__r5c4 -> level_72__r0c11", player),
+        multiworld.get_entrance("level_72__r2c10 -> level_72__r0c11", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r2c10 -> level_72__r10c8", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r2c10 -> level_72__r11c11", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r2c10 -> level_72__r11c6", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r2c10 -> level_72__r16c0", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r2c10 -> level_72__r5c4", player),
         Or(Has('Progressive Shield', 2), HasAny('Dark Suit', 'Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r2c10 -> level_72__r6c17", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r2c10 -> level_72__r9c10", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r2c10 -> level_72__r9c12", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r2c10 -> level_72__r9c14", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r5c4 -> level_72__r0c11", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
     world.set_rule(
@@ -2175,6 +2235,16 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_72__r5c4 -> level_72__r11c6", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r5c4 -> level_72__r16c0", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r5c4 -> level_72__r2c10", player),
+        Or(Has('Progressive Shield', 2), HasAny('Dark Suit', 'Progressive Sword', 'Ghost Spear', 'Wand'))
     )
 
     world.set_rule(
@@ -2214,6 +2284,16 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_72__r6c17 -> level_72__r11c6", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r6c17 -> level_72__r16c0", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r6c17 -> level_72__r2c10", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
@@ -2258,6 +2338,16 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_72__r9c10 -> level_72__r16c0", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r9c10 -> level_72__r2c10", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_72__r9c10 -> level_72__r5c4", player),
         Has('Dark Suit', 1)
     )
@@ -2294,6 +2384,16 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_72__r9c12 -> level_72__r11c6", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r9c12 -> level_72__r16c0", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r9c12 -> level_72__r2c10", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
@@ -2338,6 +2438,16 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_72__r9c14 -> level_72__r16c0", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r9c14 -> level_72__r2c10", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_72__r9c14 -> level_72__r5c4", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
@@ -2370,6 +2480,16 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_72__r10c8 -> level_72__r11c6", player),
         Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r10c8 -> level_72__r16c0", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r10c8 -> level_72__r2c10", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
     world.set_rule(
@@ -2413,6 +2533,16 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_72__r11c6 -> level_72__r16c0", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r11c6 -> level_72__r2c10", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_72__r11c6 -> level_72__r5c4", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
@@ -2453,6 +2583,16 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_72__r11c11 -> level_72__r16c0", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r11c11 -> level_72__r2c10", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_72__r11c11 -> level_72__r5c4", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
@@ -2478,13 +2618,128 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_72__r16c0 -> level_72__r0c11", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r16c0 -> level_72__r10c8", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r16c0 -> level_72__r11c11", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r16c0 -> level_72__r11c6", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r16c0 -> level_72__r2c10", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r16c0 -> level_72__r5c4", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r16c0 -> level_72__r6c17", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r16c0 -> level_72__r9c10", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r16c0 -> level_72__r9c12", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_72__r16c0 -> level_72__r9c14", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r0c4 -> level_73__r1c6", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r0c4 -> level_73__r2c3", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r0c4 -> level_73__r2c5", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_73__r0c4 -> level_73__r4c4", player),
-        HasAny('Dark Suit', 'Progressive Sword', 'Ghost Spear')
+        Or(And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit')), HasAny('Progressive Sword', 'Ghost Spear'))
     )
 
     world.set_rule(
         multiworld.get_entrance("level_73__r0c4 -> level_73__r8c2", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r1c6 -> level_73__r0c4", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r1c6 -> level_73__r2c5", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r2c3 -> level_73__r0c4", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r2c3 -> level_73__r2c5", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r2c3 -> level_73__r4c4", player),
+        HasAny('Dark Suit', 'Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r2c3 -> level_73__r8c2", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r2c5 -> level_73__r0c4", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r2c5 -> level_73__r1c6", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r2c5 -> level_73__r2c3", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r2c5 -> level_73__r4c4", player),
+        HasAny('Progressive Sword', 'Ghost Spear')
     )
 
     world.set_rule(
@@ -2499,7 +2754,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_73__r4c4 -> level_73__r0c4", player),
+        Or(And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit')), HasAny('Progressive Sword', 'Ghost Spear'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r4c4 -> level_73__r2c3", player),
         HasAny('Dark Suit', 'Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_73__r4c4 -> level_73__r2c5", player),
+        HasAny('Progressive Sword', 'Ghost Spear')
     )
 
     world.set_rule(
@@ -2538,6 +2803,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_73__r8c2 -> level_73__r2c3", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_73__r8c2 -> level_73__r4c4", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
@@ -2558,6 +2828,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_74__r1c7 -> level_74__r8c1", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_74__r1c7 -> level_74__r8c18", player),
         Has('Dark Suit', 1)
     )
@@ -2570,6 +2845,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_74__r2c2 -> level_74__r2c11", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_74__r2c2 -> level_74__r8c1", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
     )
 
     world.set_rule(
@@ -2588,8 +2868,33 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_74__r2c11 -> level_74__r8c1", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_74__r2c11 -> level_74__r8c18", player),
         Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_74__r8c1 -> level_74__r1c7", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_74__r8c1 -> level_74__r2c11", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_74__r8c1 -> level_74__r2c2", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_74__r8c1 -> level_74__r8c18", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
     world.set_rule(
@@ -2604,6 +2909,11 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_74__r8c18 -> level_74__r2c2", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_74__r8c18 -> level_74__r8c1", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
@@ -2633,6 +2943,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_75__r0c4 -> level_75__r2c5", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_75__r0c4 -> level_75__r3c3", player),
         Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
     )
@@ -2644,6 +2959,51 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_75__r0c4 -> level_75__r8c6", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_75__r2c5 -> level_75__r0c4", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_75__r2c5 -> level_75__r10c4", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_75__r2c5 -> level_75__r10c6", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_75__r2c5 -> level_75__r11c3", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_75__r2c5 -> level_75__r11c5", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_75__r2c5 -> level_75__r13c3", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_75__r2c5 -> level_75__r3c3", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_75__r2c5 -> level_75__r8c4", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_75__r2c5 -> level_75__r8c6", player),
         Has('Dark Suit', 1)
     )
 
@@ -2675,6 +3035,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_75__r3c3 -> level_75__r13c3", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_75__r3c3 -> level_75__r2c5", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
     )
 
     world.set_rule(
@@ -2718,6 +3083,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_75__r8c4 -> level_75__r2c5", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_75__r8c4 -> level_75__r3c3", player),
         Or(Has('Progressive Shield', 2), HasAny('Dark Suit', 'Progressive Sword', 'Ghost Spear', 'Wand'))
     )
@@ -2729,7 +3099,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_75__r8c6 -> level_75__r0c4", player),
-        Has('Dark Suit', 1)
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
     world.set_rule(
@@ -2755,6 +3125,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_75__r8c6 -> level_75__r13c3", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_75__r8c6 -> level_75__r2c5", player),
+        Has('Dark Suit', 1)
     )
 
     world.set_rule(
@@ -2789,6 +3164,11 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_75__r10c4 -> level_75__r13c3", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_75__r10c4 -> level_75__r2c5", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
@@ -2833,6 +3213,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_75__r10c6 -> level_75__r2c5", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_75__r10c6 -> level_75__r3c3", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
@@ -2870,6 +3255,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_75__r11c3 -> level_75__r13c3", player),
         Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_75__r11c3 -> level_75__r2c5", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
     world.set_rule(
@@ -2913,6 +3303,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_75__r11c5 -> level_75__r2c5", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_75__r11c5 -> level_75__r3c3", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
@@ -2953,6 +3348,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_75__r13c3 -> level_75__r2c5", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_75__r13c3 -> level_75__r3c3", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
@@ -2983,13 +3383,23 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_77__r2c0 -> level_77__r18c6", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_77__r2c0 -> level_77__r12c6 #2", player),
         And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
     world.set_rule(
         multiworld.get_entrance("level_77__r12c6 -> level_77__r15c6", player),
-        Or(And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit')), HasAny('Dark Suit', 'Ghost Spear'))
+        Or(And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit')), And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), HasAny('Dark Suit', 'Ghost Spear')))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_77__r12c6 -> level_77__r18c6", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
     world.set_rule(
@@ -2999,7 +3409,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_77__r15c6 -> level_77__r12c6", player),
-        Or(And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit')), HasAny('Dark Suit', 'Ghost Spear'))
+        Or(And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit')), And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), HasAny('Dark Suit', 'Ghost Spear')))
     )
 
     world.set_rule(
@@ -3008,8 +3418,28 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_77__r15c6 -> level_77__r18c6", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_77__r15c6 -> level_77__r2c0", player),
         Or(And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit')), And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), HasAny('Dark Suit', 'Ghost Spear')))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_77__r18c6 -> level_77__r12c6", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_77__r18c6 -> level_77__r15c6", player),
+        Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_77__r18c6 -> level_77__r2c0", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
     world.set_rule(
@@ -3139,7 +3569,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_78__r1c10 -> level_78__r3c9", player),
-        HasAny('Dark Suit', 'Ghost Spear')
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), HasAny('Dark Suit', 'Ghost Spear'))
     )
 
     world.set_rule(
@@ -3194,7 +3624,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_78__r3c9 -> level_78__r1c10", player),
-        HasAny('Dark Suit', 'Ghost Spear')
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), HasAny('Dark Suit', 'Ghost Spear'))
     )
 
     world.set_rule(
@@ -3709,7 +4139,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_80__r0c2 -> level_80__r6c5", player),
-        Has('Dark Suit', 1)
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
     world.set_rule(
@@ -3719,7 +4149,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_80__r6c5 -> level_80__r0c2", player),
-        Has('Dark Suit', 1)
+        And(Or(Has('Progressive Shield', 2), HasAny('Progressive Sword', 'Ghost Spear', 'Wand')), Has('Dark Suit'))
     )
 
     world.set_rule(

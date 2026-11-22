@@ -10421,8 +10421,8 @@
             }
           },
           {
-            "name": "level_71__r0c6 -> level_72__r11c6",
-            "connected_region": "level_72__r11c6",
+            "name": "level_71__r0c6 -> level_72__r16c0",
+            "connected_region": "level_72__r16c0",
             "access_rule": {
               "rule": "True_"
             }
@@ -10723,10 +10723,10 @@
             }
           },
           {
-            "name": "level_72__r0c11 -> level_72__r5c4",
-            "connected_region": "level_72__r5c4",
+            "name": "level_72__r0c11 -> level_72__r16c0",
+            "connected_region": "level_72__r16c0",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
                 {
                   "rule": "Has",
@@ -10734,6 +10734,45 @@
                     "item_name": "Dark Suit"
                   }
                 },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r0c11 -> level_72__r2c10",
+            "connected_region": "level_72__r2c10",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
                 {
                   "rule": "Has",
                   "args": {
@@ -10758,6 +10797,51 @@
                     "item_name": "Progressive Shield",
                     "count": 2
                   }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r0c11 -> level_72__r5c4",
+            "connected_region": "level_72__r5c4",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -10917,12 +11001,226 @@
         ],
         "locations": []
       },
-      "level_72__r5c4": {
-        "name": "level_72__r5c4",
+      "level_72__r2c10": {
+        "name": "level_72__r2c10",
         "exits": [
           {
-            "name": "level_72__r5c4 -> level_72__r0c11",
+            "name": "level_72__r2c10 -> level_72__r0c11",
             "connected_region": "level_72__r0c11",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r2c10 -> level_72__r10c8",
+            "connected_region": "level_72__r10c8",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r2c10 -> level_72__r11c11",
+            "connected_region": "level_72__r11c11",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r2c10 -> level_72__r11c6",
+            "connected_region": "level_72__r11c6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r2c10 -> level_72__r16c0",
+            "connected_region": "level_72__r16c0",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r2c10 -> level_72__r5c4",
+            "connected_region": "level_72__r5c4",
             "access_rule": {
               "rule": "Or",
               "children": [
@@ -10956,6 +11254,237 @@
                     "item_name": "Progressive Shield",
                     "count": 2
                   }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r2c10 -> level_72__r6c17",
+            "connected_region": "level_72__r6c17",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r2c10 -> level_72__r9c10",
+            "connected_region": "level_72__r9c10",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r2c10 -> level_72__r9c12",
+            "connected_region": "level_72__r9c12",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r2c10 -> level_72__r9c14",
+            "connected_region": "level_72__r9c14",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_72__r5c4": {
+        "name": "level_72__r5c4",
+        "exits": [
+          {
+            "name": "level_72__r5c4 -> level_72__r0c11",
+            "connected_region": "level_72__r0c11",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -11091,6 +11620,91 @@
                       }
                     }
                   ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r5c4 -> level_72__r16c0",
+            "connected_region": "level_72__r16c0",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r5c4 -> level_72__r2c10",
+            "connected_region": "level_72__r2c10",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
                 }
               ]
             }
@@ -11292,6 +11906,96 @@
           {
             "name": "level_72__r6c17 -> level_72__r11c6",
             "connected_region": "level_72__r11c6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r6c17 -> level_72__r16c0",
+            "connected_region": "level_72__r16c0",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r6c17 -> level_72__r2c10",
+            "connected_region": "level_72__r2c10",
             "access_rule": {
               "rule": "And",
               "children": [
@@ -11622,6 +12326,96 @@
             }
           },
           {
+            "name": "level_72__r9c10 -> level_72__r16c0",
+            "connected_region": "level_72__r16c0",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r9c10 -> level_72__r2c10",
+            "connected_region": "level_72__r2c10",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
             "name": "level_72__r9c10 -> level_72__r5c4",
             "connected_region": "level_72__r5c4",
             "access_rule": {
@@ -11864,6 +12658,96 @@
           {
             "name": "level_72__r9c12 -> level_72__r11c6",
             "connected_region": "level_72__r11c6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r9c12 -> level_72__r16c0",
+            "connected_region": "level_72__r16c0",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r9c12 -> level_72__r2c10",
+            "connected_region": "level_72__r2c10",
             "access_rule": {
               "rule": "And",
               "children": [
@@ -12192,6 +13076,96 @@
             }
           },
           {
+            "name": "level_72__r9c14 -> level_72__r16c0",
+            "connected_region": "level_72__r16c0",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r9c14 -> level_72__r2c10",
+            "connected_region": "level_72__r2c10",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
             "name": "level_72__r9c14 -> level_72__r5c4",
             "connected_region": "level_72__r5c4",
             "access_rule": {
@@ -12451,6 +13425,96 @@
                     "item_name": "Progressive Shield",
                     "count": 2
                   }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r10c8 -> level_72__r16c0",
+            "connected_region": "level_72__r16c0",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r10c8 -> level_72__r2c10",
+            "connected_region": "level_72__r2c10",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -12789,6 +13853,85 @@
             }
           },
           {
+            "name": "level_72__r11c6 -> level_72__r16c0",
+            "connected_region": "level_72__r16c0",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r11c6 -> level_72__r2c10",
+            "connected_region": "level_72__r2c10",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
             "name": "level_72__r11c6 -> level_72__r5c4",
             "connected_region": "level_72__r5c4",
             "access_rule": {
@@ -13001,13 +14144,6 @@
                 }
               ]
             }
-          },
-          {
-            "name": "level_72__r11c6 -> level_71__r0c6",
-            "connected_region": "level_71__r0c6",
-            "access_rule": {
-              "rule": "True_"
-            }
           }
         ],
         "locations": []
@@ -13124,6 +14260,96 @@
                     "item_name": "Progressive Shield",
                     "count": 2
                   }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r11c11 -> level_72__r16c0",
+            "connected_region": "level_72__r16c0",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r11c11 -> level_72__r2c10",
+            "connected_region": "level_72__r2c10",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -13312,9 +14538,563 @@
         ],
         "locations": []
       },
+      "level_72__r16c0": {
+        "name": "level_72__r16c0",
+        "exits": [
+          {
+            "name": "level_72__r16c0 -> level_72__r0c11",
+            "connected_region": "level_72__r0c11",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r16c0 -> level_72__r10c8",
+            "connected_region": "level_72__r10c8",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r16c0 -> level_72__r11c11",
+            "connected_region": "level_72__r11c11",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r16c0 -> level_72__r11c6",
+            "connected_region": "level_72__r11c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r16c0 -> level_72__r2c10",
+            "connected_region": "level_72__r2c10",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r16c0 -> level_72__r5c4",
+            "connected_region": "level_72__r5c4",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r16c0 -> level_72__r6c17",
+            "connected_region": "level_72__r6c17",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r16c0 -> level_72__r9c10",
+            "connected_region": "level_72__r9c10",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r16c0 -> level_72__r9c12",
+            "connected_region": "level_72__r9c12",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r16c0 -> level_72__r9c14",
+            "connected_region": "level_72__r9c14",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_72__r16c0 -> level_71__r0c6",
+            "connected_region": "level_71__r0c6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
       "level_73__r0c4": {
         "name": "level_73__r0c4",
         "exits": [
+          {
+            "name": "level_73__r0c4 -> level_73__r1c6",
+            "connected_region": "level_73__r1c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_73__r0c4 -> level_73__r2c3",
+            "connected_region": "level_73__r2c3",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_73__r0c4 -> level_73__r2c5",
+            "connected_region": "level_73__r2c5",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
           {
             "name": "level_73__r0c4 -> level_73__r4c4",
             "connected_region": "level_73__r4c4",
@@ -13322,10 +15102,45 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Dark Suit"
+                      }
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Wand"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Shield",
+                            "count": 2
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -13392,6 +15207,355 @@
             "connected_region": "level_74__r8c18",
             "access_rule": {
               "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_73__r1c6": {
+        "name": "level_73__r1c6",
+        "exits": [
+          {
+            "name": "level_73__r1c6 -> level_73__r0c4",
+            "connected_region": "level_73__r0c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_73__r1c6 -> level_73__r2c5",
+            "connected_region": "level_73__r2c5",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_73__r2c3": {
+        "name": "level_73__r2c3",
+        "exits": [
+          {
+            "name": "level_73__r2c3 -> level_73__r0c4",
+            "connected_region": "level_73__r0c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_73__r2c3 -> level_73__r2c5",
+            "connected_region": "level_73__r2c5",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_73__r2c3 -> level_73__r4c4",
+            "connected_region": "level_73__r4c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_73__r2c3 -> level_73__r8c2",
+            "connected_region": "level_73__r8c2",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_73__r2c5": {
+        "name": "level_73__r2c5",
+        "exits": [
+          {
+            "name": "level_73__r2c5 -> level_73__r0c4",
+            "connected_region": "level_73__r0c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_73__r2c5 -> level_73__r1c6",
+            "connected_region": "level_73__r1c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_73__r2c5 -> level_73__r2c3",
+            "connected_region": "level_73__r2c3",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_73__r2c5 -> level_73__r4c4",
+            "connected_region": "level_73__r4c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -13481,11 +15645,94 @@
               "rule": "Or",
               "children": [
                 {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Dark Suit"
+                      }
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Wand"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Shield",
+                            "count": 2
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_73__r4c4 -> level_73__r2c3",
+            "connected_region": "level_73__r2c3",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
                   "rule": "Has",
                   "args": {
                     "item_name": "Dark Suit"
                   }
                 },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_73__r4c4 -> level_73__r2c5",
+            "connected_region": "level_73__r2c5",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
                 {
                   "rule": "Has",
                   "args": {
@@ -13780,6 +16027,51 @@
             }
           },
           {
+            "name": "level_73__r8c2 -> level_73__r2c3",
+            "connected_region": "level_73__r2c3",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
             "name": "level_73__r8c2 -> level_73__r4c4",
             "connected_region": "level_73__r4c4",
             "access_rule": {
@@ -13946,6 +16238,51 @@
             }
           },
           {
+            "name": "level_74__r1c7 -> level_74__r8c1",
+            "connected_region": "level_74__r8c1",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
             "name": "level_74__r1c7 -> level_74__r8c18",
             "connected_region": "level_74__r8c18",
             "access_rule": {
@@ -14041,6 +16378,40 @@
             }
           },
           {
+            "name": "level_74__r2c2 -> level_74__r8c1",
+            "connected_region": "level_74__r8c1",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
             "name": "level_74__r2c2 -> level_74__r8c18",
             "connected_region": "level_74__r8c18",
             "access_rule": {
@@ -14083,13 +16454,6 @@
                   ]
                 }
               ]
-            }
-          },
-          {
-            "name": "level_74__r2c2 -> level_75__r0c4",
-            "connected_region": "level_75__r0c4",
-            "access_rule": {
-              "rule": "True_"
             }
           }
         ],
@@ -14192,6 +16556,51 @@
             }
           },
           {
+            "name": "level_74__r2c11 -> level_74__r8c1",
+            "connected_region": "level_74__r8c1",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
             "name": "level_74__r2c11 -> level_74__r8c18",
             "connected_region": "level_74__r8c18",
             "access_rule": {
@@ -14223,6 +16632,188 @@
                   }
                 }
               ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_74__r8c1": {
+        "name": "level_74__r8c1",
+        "exits": [
+          {
+            "name": "level_74__r8c1 -> level_74__r1c7",
+            "connected_region": "level_74__r1c7",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_74__r8c1 -> level_74__r2c11",
+            "connected_region": "level_74__r2c11",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_74__r8c1 -> level_74__r2c2",
+            "connected_region": "level_74__r2c2",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_74__r8c1 -> level_74__r8c18",
+            "connected_region": "level_74__r8c18",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_74__r8c1 -> level_75__r0c4",
+            "connected_region": "level_75__r0c4",
+            "access_rule": {
+              "rule": "True_"
             }
           }
         ],
@@ -14278,6 +16869,51 @@
           {
             "name": "level_74__r8c18 -> level_74__r2c2",
             "connected_region": "level_74__r2c2",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_74__r8c18 -> level_74__r8c1",
+            "connected_region": "level_74__r8c1",
             "access_rule": {
               "rule": "And",
               "children": [
@@ -14559,6 +17195,40 @@
             }
           },
           {
+            "name": "level_75__r0c4 -> level_75__r2c5",
+            "connected_region": "level_75__r2c5",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
             "name": "level_75__r0c4 -> level_75__r3c3",
             "connected_region": "level_75__r3c3",
             "access_rule": {
@@ -14641,17 +17311,406 @@
             "name": "level_75__r0c4 -> level_75__r8c6",
             "connected_region": "level_75__r8c6",
             "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_75__r0c4 -> level_74__r8c1",
+            "connected_region": "level_74__r8c1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_75__r2c5": {
+        "name": "level_75__r2c5",
+        "exits": [
+          {
+            "name": "level_75__r2c5 -> level_75__r0c4",
+            "connected_region": "level_75__r0c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_75__r2c5 -> level_75__r10c4",
+            "connected_region": "level_75__r10c4",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_75__r2c5 -> level_75__r10c6",
+            "connected_region": "level_75__r10c6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_75__r2c5 -> level_75__r11c3",
+            "connected_region": "level_75__r11c3",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_75__r2c5 -> level_75__r11c5",
+            "connected_region": "level_75__r11c5",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_75__r2c5 -> level_75__r13c3",
+            "connected_region": "level_75__r13c3",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_75__r2c5 -> level_75__r3c3",
+            "connected_region": "level_75__r3c3",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_75__r2c5 -> level_75__r8c4",
+            "connected_region": "level_75__r8c4",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_75__r2c5 -> level_75__r8c6",
+            "connected_region": "level_75__r8c6",
+            "access_rule": {
               "rule": "Has",
               "args": {
                 "item_name": "Dark Suit"
               }
-            }
-          },
-          {
-            "name": "level_75__r0c4 -> level_74__r2c2",
-            "connected_region": "level_74__r2c2",
-            "access_rule": {
-              "rule": "True_"
             }
           }
         ],
@@ -14915,6 +17974,40 @@
                       }
                     }
                   ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_75__r3c3 -> level_75__r2c5",
+            "connected_region": "level_75__r2c5",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
                 }
               ]
             }
@@ -15281,6 +18374,51 @@
             }
           },
           {
+            "name": "level_75__r8c4 -> level_75__r2c5",
+            "connected_region": "level_75__r2c5",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
             "name": "level_75__r8c4 -> level_75__r3c3",
             "connected_region": "level_75__r3c3",
             "access_rule": {
@@ -15364,10 +18502,45 @@
             "name": "level_75__r8c6 -> level_75__r0c4",
             "connected_region": "level_75__r0c4",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Dark Suit"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
@@ -15582,6 +18755,16 @@
                   ]
                 }
               ]
+            }
+          },
+          {
+            "name": "level_75__r8c6 -> level_75__r2c5",
+            "connected_region": "level_75__r2c5",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
             }
           },
           {
@@ -15825,6 +19008,51 @@
           {
             "name": "level_75__r10c4 -> level_75__r13c3",
             "connected_region": "level_75__r13c3",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_75__r10c4 -> level_75__r2c5",
+            "connected_region": "level_75__r2c5",
             "access_rule": {
               "rule": "And",
               "children": [
@@ -16183,6 +19411,51 @@
             }
           },
           {
+            "name": "level_75__r10c6 -> level_75__r2c5",
+            "connected_region": "level_75__r2c5",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
             "name": "level_75__r10c6 -> level_75__r3c3",
             "connected_region": "level_75__r3c3",
             "access_rule": {
@@ -16511,6 +19784,51 @@
             }
           },
           {
+            "name": "level_75__r11c3 -> level_75__r2c5",
+            "connected_region": "level_75__r2c5",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
             "name": "level_75__r11c3 -> level_75__r3c3",
             "connected_region": "level_75__r3c3",
             "access_rule": {
@@ -16815,6 +20133,51 @@
             }
           },
           {
+            "name": "level_75__r11c5 -> level_75__r2c5",
+            "connected_region": "level_75__r2c5",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
             "name": "level_75__r11c5 -> level_75__r3c3",
             "connected_region": "level_75__r3c3",
             "access_rule": {
@@ -17097,6 +20460,51 @@
               "args": {
                 "item_name": "Dark Suit"
               }
+            }
+          },
+          {
+            "name": "level_75__r13c3 -> level_75__r2c5",
+            "connected_region": "level_75__r2c5",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
@@ -17475,6 +20883,51 @@
             }
           },
           {
+            "name": "level_77__r2c0 -> level_77__r18c6",
+            "connected_region": "level_77__r18c6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
             "name": "level_77__r2c0 -> level_77__r12c6 #2",
             "connected_region": "level_77__r12c6",
             "access_rule": {
@@ -17580,16 +21033,101 @@
                   ]
                 },
                 {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Wand"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Shield",
+                            "count": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Dark Suit"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_77__r12c6 -> level_77__r18c6",
+            "connected_region": "level_77__r18c6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
                   "rule": "Has",
                   "args": {
                     "item_name": "Dark Suit"
                   }
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -17750,16 +21288,56 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Wand"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Shield",
+                            "count": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Dark Suit"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -17772,6 +21350,40 @@
               "args": {
                 "item_name": "Dark Suit"
               }
+            }
+          },
+          {
+            "name": "level_77__r15c6 -> level_77__r18c6",
+            "connected_region": "level_77__r18c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
             }
           },
           {
@@ -17875,9 +21487,139 @@
                 }
               ]
             }
+          }
+        ],
+        "locations": []
+      },
+      "level_77__r18c6": {
+        "name": "level_77__r18c6",
+        "exits": [
+          {
+            "name": "level_77__r18c6 -> level_77__r12c6",
+            "connected_region": "level_77__r12c6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
           },
           {
-            "name": "level_77__r15c6 -> level_78__r0c16",
+            "name": "level_77__r18c6 -> level_77__r15c6",
+            "connected_region": "level_77__r15c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_77__r18c6 -> level_77__r2c0",
+            "connected_region": "level_77__r2c0",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_77__r18c6 -> level_78__r0c16",
             "connected_region": "level_78__r0c16",
             "access_rule": {
               "rule": "True_"
@@ -19081,8 +22823,8 @@
             }
           },
           {
-            "name": "level_78__r0c16 -> level_77__r15c6",
-            "connected_region": "level_77__r15c6",
+            "name": "level_78__r0c16 -> level_77__r18c6",
+            "connected_region": "level_77__r18c6",
             "access_rule": {
               "rule": "True_"
             }
@@ -19346,19 +23088,54 @@
             "name": "level_78__r1c10 -> level_78__r3c9",
             "connected_region": "level_78__r3c9",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Dark Suit"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -20049,19 +23826,54 @@
             "name": "level_78__r3c9 -> level_78__r1c10",
             "connected_region": "level_78__r1c10",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dark Suit"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Dark Suit"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -26173,10 +29985,45 @@
             "name": "level_80__r0c2 -> level_80__r6c5",
             "connected_region": "level_80__r6c5",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Dark Suit"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
@@ -26241,10 +30088,45 @@
             "name": "level_80__r6c5 -> level_80__r0c2",
             "connected_region": "level_80__r0c2",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Dark Suit"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
@@ -31090,7 +34972,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-94cd96dd",
+      "atlas_id": "seedling-1f5a6638",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -79150,12 +83032,12 @@
               "atlas_exit_id": "out_teleporter_224_304"
             },
             {
-              "exit_id": "level_71__r0c6 -> level_72__r11c6",
+              "exit_id": "level_71__r0c6 -> level_72__r16c0",
               "x": 19,
               "y": 6,
               "side": null,
-              "exitName": "level_71__r0c6 -> level_72__r11c6",
-              "targetRegion": "level_72__r11c6",
+              "exitName": "level_71__r0c6 -> level_72__r16c0",
+              "targetRegion": "level_72__r16c0",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_304_96"
@@ -80216,11 +84098,11 @@
           },
           "exits": [
             {
-              "exit_id": "level_72__r11c6 -> level_71__r0c6",
+              "exit_id": "level_72__r16c0 -> level_71__r0c6",
               "x": 0,
               "y": 16,
               "side": null,
-              "exitName": "level_72__r11c6 -> level_71__r0c6",
+              "exitName": "level_72__r16c0 -> level_71__r0c6",
               "targetRegion": "level_71__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
@@ -80480,6 +84362,11 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 11,
+              "y": 2,
+              "id": "atlas_gate_2"
+            },
+            {
               "x": 12,
               "y": 2,
               "id": "atlas_gate_0"
@@ -81287,7 +85174,12 @@
             {
               "x": 0,
               "y": 15,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 1,
+              "y": 15,
+              "id": "atlas_gate_2"
             },
             {
               "x": 5,
@@ -81353,6 +85245,11 @@
               "x": 19,
               "y": 15,
               "id": "atlas_gate_1"
+            },
+            {
+              "x": 2,
+              "y": 16,
+              "id": "atlas_gate_2"
             },
             {
               "x": 3,
@@ -81641,6 +85538,7 @@
             "key": "level_72",
             "regions": [
               "level_72__r0c11",
+              "level_72__r2c10",
               "level_72__r5c4",
               "level_72__r6c17",
               "level_72__r9c10",
@@ -81648,32 +85546,37 @@
               "level_72__r9c14",
               "level_72__r10c8",
               "level_72__r11c6",
-              "level_72__r11c11"
+              "level_72__r11c11",
+              "level_72__r16c0"
             ],
             "rows": [
               "...........A........",
               "...........A........",
-              "..........AA........",
-              ".........AAA........",
-              ".....AAAAA..........",
-              "....B...............",
-              "....BB......BB...CC.",
-              ".....BBBBBBBB.CCCC..",
-              "......BB.........CC.",
-              "..........D.E.FF.CC.",
-              "........G........CC.",
-              "......HH...IIIII....",
-              ".....HHHH..IIIIIII..",
-              "....HHH....II...I...",
-              "....HH..............",
-              ".HHHH...............",
-              "HHH.................",
+              "..........B.........",
+              ".........BBB........",
+              ".....BBBBB..........",
+              "....C...............",
+              "....CC......CC...DD.",
+              ".....CCCCCCCC.DDDD..",
+              "......CC.........DD.",
+              "..........E.F.GG.DD.",
+              "........H........DD.",
+              "......II...JJJJJ....",
+              ".....IIII..JJJJJJJ..",
+              "....III....JJ...J...",
+              "....II..............",
+              "..III...............",
+              "KK..................",
               "...................."
             ],
             "entrances": {
               "level_72__r0c11": {
                 "x": 11,
                 "y": 0
+              },
+              "level_72__r2c10": {
+                "x": 10,
+                "y": 2
               },
               "level_72__r5c4": {
                 "x": 4,
@@ -81700,12 +85603,16 @@
                 "y": 10
               },
               "level_72__r11c6": {
-                "x": 1,
-                "y": 16
+                "x": 6,
+                "y": 11
               },
               "level_72__r11c11": {
                 "x": 11,
                 "y": 11
+              },
+              "level_72__r16c0": {
+                "x": 1,
+                "y": 16
               }
             },
             "links": {
@@ -81715,6 +85622,10 @@
               "level_72__r11c11>level_72__r0c11": "level_72__r11c11 -> level_72__r0c11",
               "level_72__r0c11>level_72__r11c6": "level_72__r0c11 -> level_72__r11c6",
               "level_72__r11c6>level_72__r0c11": "level_72__r11c6 -> level_72__r0c11",
+              "level_72__r0c11>level_72__r16c0": "level_72__r0c11 -> level_72__r16c0",
+              "level_72__r16c0>level_72__r0c11": "level_72__r16c0 -> level_72__r0c11",
+              "level_72__r0c11>level_72__r2c10": "level_72__r0c11 -> level_72__r2c10",
+              "level_72__r2c10>level_72__r0c11": "level_72__r2c10 -> level_72__r0c11",
               "level_72__r0c11>level_72__r5c4": "level_72__r0c11 -> level_72__r5c4",
               "level_72__r5c4>level_72__r0c11": "level_72__r5c4 -> level_72__r0c11",
               "level_72__r0c11>level_72__r6c17": "level_72__r0c11 -> level_72__r6c17",
@@ -81729,6 +85640,10 @@
               "level_72__r11c11>level_72__r10c8": "level_72__r11c11 -> level_72__r10c8",
               "level_72__r10c8>level_72__r11c6": "level_72__r10c8 -> level_72__r11c6",
               "level_72__r11c6>level_72__r10c8": "level_72__r11c6 -> level_72__r10c8",
+              "level_72__r10c8>level_72__r16c0": "level_72__r10c8 -> level_72__r16c0",
+              "level_72__r16c0>level_72__r10c8": "level_72__r16c0 -> level_72__r10c8",
+              "level_72__r10c8>level_72__r2c10": "level_72__r10c8 -> level_72__r2c10",
+              "level_72__r2c10>level_72__r10c8": "level_72__r2c10 -> level_72__r10c8",
               "level_72__r10c8>level_72__r5c4": "level_72__r10c8 -> level_72__r5c4",
               "level_72__r5c4>level_72__r10c8": "level_72__r5c4 -> level_72__r10c8",
               "level_72__r10c8>level_72__r6c17": "level_72__r10c8 -> level_72__r6c17",
@@ -81741,6 +85656,10 @@
               "level_72__r9c14>level_72__r10c8": "level_72__r9c14 -> level_72__r10c8",
               "level_72__r11c11>level_72__r11c6": "level_72__r11c11 -> level_72__r11c6",
               "level_72__r11c6>level_72__r11c11": "level_72__r11c6 -> level_72__r11c11",
+              "level_72__r11c11>level_72__r16c0": "level_72__r11c11 -> level_72__r16c0",
+              "level_72__r16c0>level_72__r11c11": "level_72__r16c0 -> level_72__r11c11",
+              "level_72__r11c11>level_72__r2c10": "level_72__r11c11 -> level_72__r2c10",
+              "level_72__r2c10>level_72__r11c11": "level_72__r2c10 -> level_72__r11c11",
               "level_72__r11c11>level_72__r5c4": "level_72__r11c11 -> level_72__r5c4",
               "level_72__r5c4>level_72__r11c11": "level_72__r5c4 -> level_72__r11c11",
               "level_72__r11c11>level_72__r6c17": "level_72__r11c11 -> level_72__r6c17",
@@ -81751,6 +85670,10 @@
               "level_72__r9c12>level_72__r11c11": "level_72__r9c12 -> level_72__r11c11",
               "level_72__r11c11>level_72__r9c14": "level_72__r11c11 -> level_72__r9c14",
               "level_72__r9c14>level_72__r11c11": "level_72__r9c14 -> level_72__r11c11",
+              "level_72__r11c6>level_72__r16c0": "level_72__r11c6 -> level_72__r16c0",
+              "level_72__r16c0>level_72__r11c6": "level_72__r16c0 -> level_72__r11c6",
+              "level_72__r11c6>level_72__r2c10": "level_72__r11c6 -> level_72__r2c10",
+              "level_72__r2c10>level_72__r11c6": "level_72__r2c10 -> level_72__r11c6",
               "level_72__r11c6>level_72__r5c4": "level_72__r11c6 -> level_72__r5c4",
               "level_72__r5c4>level_72__r11c6": "level_72__r5c4 -> level_72__r11c6",
               "level_72__r11c6>level_72__r6c17": "level_72__r11c6 -> level_72__r6c17",
@@ -81761,6 +85684,28 @@
               "level_72__r9c12>level_72__r11c6": "level_72__r9c12 -> level_72__r11c6",
               "level_72__r11c6>level_72__r9c14": "level_72__r11c6 -> level_72__r9c14",
               "level_72__r9c14>level_72__r11c6": "level_72__r9c14 -> level_72__r11c6",
+              "level_72__r16c0>level_72__r2c10": "level_72__r16c0 -> level_72__r2c10",
+              "level_72__r2c10>level_72__r16c0": "level_72__r2c10 -> level_72__r16c0",
+              "level_72__r16c0>level_72__r5c4": "level_72__r16c0 -> level_72__r5c4",
+              "level_72__r5c4>level_72__r16c0": "level_72__r5c4 -> level_72__r16c0",
+              "level_72__r16c0>level_72__r6c17": "level_72__r16c0 -> level_72__r6c17",
+              "level_72__r6c17>level_72__r16c0": "level_72__r6c17 -> level_72__r16c0",
+              "level_72__r16c0>level_72__r9c10": "level_72__r16c0 -> level_72__r9c10",
+              "level_72__r9c10>level_72__r16c0": "level_72__r9c10 -> level_72__r16c0",
+              "level_72__r16c0>level_72__r9c12": "level_72__r16c0 -> level_72__r9c12",
+              "level_72__r9c12>level_72__r16c0": "level_72__r9c12 -> level_72__r16c0",
+              "level_72__r16c0>level_72__r9c14": "level_72__r16c0 -> level_72__r9c14",
+              "level_72__r9c14>level_72__r16c0": "level_72__r9c14 -> level_72__r16c0",
+              "level_72__r2c10>level_72__r5c4": "level_72__r2c10 -> level_72__r5c4",
+              "level_72__r5c4>level_72__r2c10": "level_72__r5c4 -> level_72__r2c10",
+              "level_72__r2c10>level_72__r6c17": "level_72__r2c10 -> level_72__r6c17",
+              "level_72__r6c17>level_72__r2c10": "level_72__r6c17 -> level_72__r2c10",
+              "level_72__r2c10>level_72__r9c10": "level_72__r2c10 -> level_72__r9c10",
+              "level_72__r9c10>level_72__r2c10": "level_72__r9c10 -> level_72__r2c10",
+              "level_72__r2c10>level_72__r9c12": "level_72__r2c10 -> level_72__r9c12",
+              "level_72__r9c12>level_72__r2c10": "level_72__r9c12 -> level_72__r2c10",
+              "level_72__r2c10>level_72__r9c14": "level_72__r2c10 -> level_72__r9c14",
+              "level_72__r9c14>level_72__r2c10": "level_72__r9c14 -> level_72__r2c10",
               "level_72__r5c4>level_72__r6c17": "level_72__r5c4 -> level_72__r6c17",
               "level_72__r6c17>level_72__r5c4": "level_72__r6c17 -> level_72__r5c4",
               "level_72__r5c4>level_72__r9c10": "level_72__r5c4 -> level_72__r9c10",
@@ -81792,6 +85737,10 @@
           }
         }
       },
+      "level_72__r2c10": {
+        "substrate": "maze",
+        "shared_world": "level_72"
+      },
       "level_72__r5c4": {
         "substrate": "maze",
         "shared_world": "level_72"
@@ -81821,6 +85770,10 @@
         "shared_world": "level_72"
       },
       "level_72__r11c11": {
+        "substrate": "maze",
+        "shared_world": "level_72"
+      },
+      "level_72__r16c0": {
         "substrate": "maze",
         "shared_world": "level_72"
       },
@@ -81878,12 +85831,12 @@
             {
               "x": 3,
               "y": 0,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 5,
               "y": 0,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 6,
@@ -81921,6 +85874,11 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 5,
+              "y": 1,
+              "id": "atlas_gate_2"
+            },
+            {
               "x": 7,
               "y": 1,
               "id": "atlas_gate_1"
@@ -81949,6 +85907,11 @@
               "x": 2,
               "y": 2,
               "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "id": "atlas_gate_2"
             },
             {
               "x": 9,
@@ -82349,6 +86312,9 @@
             "key": "level_73",
             "regions": [
               "level_73__r0c4",
+              "level_73__r1c6",
+              "level_73__r2c3",
+              "level_73__r2c5",
               "level_73__r3c7",
               "level_73__r4c4",
               "level_73__r5c7",
@@ -82356,20 +86322,32 @@
             ],
             "rows": [
               "....A.....",
-              "....AAA...",
-              "...AAA....",
-              ".......B..",
-              "....CCC...",
-              "..CCCC.D..",
-              "......DDD.",
-              "...DDDDDD.",
-              "..E.D...D.",
-              "..E......."
+              "....A.B...",
+              "...C.D....",
+              ".......E..",
+              "....FFF...",
+              "..FFFF.G..",
+              "......GGG.",
+              "...GGGGGG.",
+              "..H.G...G.",
+              "..H......."
             ],
             "entrances": {
               "level_73__r0c4": {
                 "x": 4,
                 "y": 0
+              },
+              "level_73__r1c6": {
+                "x": 6,
+                "y": 1
+              },
+              "level_73__r2c3": {
+                "x": 3,
+                "y": 2
+              },
+              "level_73__r2c5": {
+                "x": 5,
+                "y": 2
               },
               "level_73__r3c7": {
                 "x": 7,
@@ -82389,10 +86367,26 @@
               }
             },
             "links": {
+              "level_73__r0c4>level_73__r1c6": "level_73__r0c4 -> level_73__r1c6",
+              "level_73__r1c6>level_73__r0c4": "level_73__r1c6 -> level_73__r0c4",
+              "level_73__r0c4>level_73__r2c3": "level_73__r0c4 -> level_73__r2c3",
+              "level_73__r2c3>level_73__r0c4": "level_73__r2c3 -> level_73__r0c4",
+              "level_73__r0c4>level_73__r2c5": "level_73__r0c4 -> level_73__r2c5",
+              "level_73__r2c5>level_73__r0c4": "level_73__r2c5 -> level_73__r0c4",
               "level_73__r0c4>level_73__r4c4": "level_73__r0c4 -> level_73__r4c4",
               "level_73__r4c4>level_73__r0c4": "level_73__r4c4 -> level_73__r0c4",
               "level_73__r0c4>level_73__r8c2": "level_73__r0c4 -> level_73__r8c2",
               "level_73__r8c2>level_73__r0c4": "level_73__r8c2 -> level_73__r0c4",
+              "level_73__r1c6>level_73__r2c5": "level_73__r1c6 -> level_73__r2c5",
+              "level_73__r2c5>level_73__r1c6": "level_73__r2c5 -> level_73__r1c6",
+              "level_73__r2c3>level_73__r2c5": "level_73__r2c3 -> level_73__r2c5",
+              "level_73__r2c5>level_73__r2c3": "level_73__r2c5 -> level_73__r2c3",
+              "level_73__r2c3>level_73__r4c4": "level_73__r2c3 -> level_73__r4c4",
+              "level_73__r4c4>level_73__r2c3": "level_73__r4c4 -> level_73__r2c3",
+              "level_73__r2c3>level_73__r8c2": "level_73__r2c3 -> level_73__r8c2",
+              "level_73__r8c2>level_73__r2c3": "level_73__r8c2 -> level_73__r2c3",
+              "level_73__r2c5>level_73__r4c4": "level_73__r2c5 -> level_73__r4c4",
+              "level_73__r4c4>level_73__r2c5": "level_73__r4c4 -> level_73__r2c5",
               "level_73__r3c7>level_73__r4c4": "level_73__r3c7 -> level_73__r4c4",
               "level_73__r4c4>level_73__r3c7": "level_73__r4c4 -> level_73__r3c7",
               "level_73__r3c7>level_73__r5c7": "level_73__r3c7 -> level_73__r5c7",
@@ -82413,6 +86407,18 @@
             "y": 0
           }
         }
+      },
+      "level_73__r1c6": {
+        "substrate": "maze",
+        "shared_world": "level_73"
+      },
+      "level_73__r2c3": {
+        "substrate": "maze",
+        "shared_world": "level_73"
+      },
+      "level_73__r2c5": {
+        "substrate": "maze",
+        "shared_world": "level_73"
       },
       "level_73__r3c7": {
         "substrate": "maze",
@@ -82443,11 +86449,11 @@
           },
           "exits": [
             {
-              "exit_id": "level_74__r2c2 -> level_75__r0c4",
+              "exit_id": "level_74__r8c1 -> level_75__r0c4",
               "x": 1,
               "y": 9,
               "side": null,
-              "exitName": "level_74__r2c2 -> level_75__r0c4",
+              "exitName": "level_74__r8c1 -> level_75__r0c4",
               "targetRegion": "level_75__r0c4",
               "targetExitId": null,
               "isTeleporter": true,
@@ -82947,6 +86953,11 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 1,
+              "y": 7,
+              "id": "atlas_gate_2"
+            },
+            {
               "x": 6,
               "y": 7,
               "id": "atlas_gate_1"
@@ -83004,7 +87015,7 @@
             {
               "x": 2,
               "y": 8,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 5,
@@ -83282,6 +87293,7 @@
               "level_74__r1c7",
               "level_74__r2c2",
               "level_74__r2c11",
+              "level_74__r8c1",
               "level_74__r8c18"
             ],
             "rows": [
@@ -83292,9 +87304,9 @@
               ".BBBBB.....CCC......",
               "...BB......CCCC.....",
               "....B.......CCC.....",
-              ".BBBB.........CCCC..",
-              ".B................D.",
-              ".B................D."
+              "..BBB.........CCCC..",
+              ".D................E.",
+              ".D................E."
             ],
             "entrances": {
               "level_74__r1c7": {
@@ -83302,12 +87314,16 @@
                 "y": 1
               },
               "level_74__r2c2": {
-                "x": 1,
-                "y": 9
+                "x": 2,
+                "y": 2
               },
               "level_74__r2c11": {
                 "x": 11,
                 "y": 2
+              },
+              "level_74__r8c1": {
+                "x": 1,
+                "y": 9
               },
               "level_74__r8c18": {
                 "x": 18,
@@ -83319,14 +87335,22 @@
               "level_74__r2c11>level_74__r1c7": "level_74__r2c11 -> level_74__r1c7",
               "level_74__r1c7>level_74__r2c2": "level_74__r1c7 -> level_74__r2c2",
               "level_74__r2c2>level_74__r1c7": "level_74__r2c2 -> level_74__r1c7",
+              "level_74__r1c7>level_74__r8c1": "level_74__r1c7 -> level_74__r8c1",
+              "level_74__r8c1>level_74__r1c7": "level_74__r8c1 -> level_74__r1c7",
               "level_74__r1c7>level_74__r8c18": "level_74__r1c7 -> level_74__r8c18",
               "level_74__r8c18>level_74__r1c7": "level_74__r8c18 -> level_74__r1c7",
               "level_74__r2c11>level_74__r2c2": "level_74__r2c11 -> level_74__r2c2",
               "level_74__r2c2>level_74__r2c11": "level_74__r2c2 -> level_74__r2c11",
+              "level_74__r2c11>level_74__r8c1": "level_74__r2c11 -> level_74__r8c1",
+              "level_74__r8c1>level_74__r2c11": "level_74__r8c1 -> level_74__r2c11",
               "level_74__r2c11>level_74__r8c18": "level_74__r2c11 -> level_74__r8c18",
               "level_74__r8c18>level_74__r2c11": "level_74__r8c18 -> level_74__r2c11",
+              "level_74__r2c2>level_74__r8c1": "level_74__r2c2 -> level_74__r8c1",
+              "level_74__r8c1>level_74__r2c2": "level_74__r8c1 -> level_74__r2c2",
               "level_74__r2c2>level_74__r8c18": "level_74__r2c2 -> level_74__r8c18",
-              "level_74__r8c18>level_74__r2c2": "level_74__r8c18 -> level_74__r2c2"
+              "level_74__r8c18>level_74__r2c2": "level_74__r8c18 -> level_74__r2c2",
+              "level_74__r8c1>level_74__r8c18": "level_74__r8c1 -> level_74__r8c18",
+              "level_74__r8c18>level_74__r8c1": "level_74__r8c18 -> level_74__r8c1"
             }
           },
           "atlas_region": "level_74",
@@ -83343,6 +87367,10 @@
         "shared_world": "level_74"
       },
       "level_74__r2c11": {
+        "substrate": "maze",
+        "shared_world": "level_74"
+      },
+      "level_74__r8c1": {
         "substrate": "maze",
         "shared_world": "level_74"
       },
@@ -83363,12 +87391,12 @@
           },
           "exits": [
             {
-              "exit_id": "level_75__r0c4 -> level_74__r2c2",
+              "exit_id": "level_75__r0c4 -> level_74__r8c1",
               "x": 4,
               "y": 0,
               "side": null,
-              "exitName": "level_75__r0c4 -> level_74__r2c2",
-              "targetRegion": "level_74__r2c2",
+              "exitName": "level_75__r0c4 -> level_74__r8c1",
+              "targetRegion": "level_74__r8c1",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_64_0"
@@ -83444,7 +87472,7 @@
             {
               "x": 3,
               "y": 1,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 7,
@@ -83478,6 +87506,11 @@
             },
             {
               "x": 3,
+              "y": 2,
+              "id": "atlas_gate_2"
+            },
+            {
+              "x": 4,
               "y": 2,
               "id": "atlas_gate_2"
             },
@@ -84098,6 +88131,7 @@
             "key": "level_75",
             "regions": [
               "level_75__r0c4",
+              "level_75__r2c5",
               "level_75__r3c3",
               "level_75__r8c4",
               "level_75__r8c6",
@@ -84110,24 +88144,28 @@
             "rows": [
               "....A.....",
               "....A.....",
-              "....AAA...",
-              "...B.AA...",
-              "..BB......",
-              "...BBB....",
-              "...B......",
-              "...B......",
-              "....C.D...",
+              ".....BB...",
+              "...C.BB...",
+              "..CC......",
+              "...CCC....",
+              "...C......",
+              "...C......",
+              "....D.E...",
               "..........",
-              "....E.F...",
-              "...G.H....",
+              "....F.G...",
+              "...H.I....",
               "..........",
-              "...II.....",
-              "....I....."
+              "...JJ.....",
+              "....J....."
             ],
             "entrances": {
               "level_75__r0c4": {
                 "x": 4,
                 "y": 1
+              },
+              "level_75__r2c5": {
+                "x": 5,
+                "y": 2
               },
               "level_75__r3c3": {
                 "x": 3,
@@ -84173,6 +88211,8 @@
               "level_75__r11c5>level_75__r0c4": "level_75__r11c5 -> level_75__r0c4",
               "level_75__r0c4>level_75__r13c3": "level_75__r0c4 -> level_75__r13c3",
               "level_75__r13c3>level_75__r0c4": "level_75__r13c3 -> level_75__r0c4",
+              "level_75__r0c4>level_75__r2c5": "level_75__r0c4 -> level_75__r2c5",
+              "level_75__r2c5>level_75__r0c4": "level_75__r2c5 -> level_75__r0c4",
               "level_75__r0c4>level_75__r3c3": "level_75__r0c4 -> level_75__r3c3",
               "level_75__r3c3>level_75__r0c4": "level_75__r3c3 -> level_75__r0c4",
               "level_75__r0c4>level_75__r8c4": "level_75__r0c4 -> level_75__r8c4",
@@ -84187,6 +88227,8 @@
               "level_75__r11c5>level_75__r10c4": "level_75__r11c5 -> level_75__r10c4",
               "level_75__r10c4>level_75__r13c3": "level_75__r10c4 -> level_75__r13c3",
               "level_75__r13c3>level_75__r10c4": "level_75__r13c3 -> level_75__r10c4",
+              "level_75__r10c4>level_75__r2c5": "level_75__r10c4 -> level_75__r2c5",
+              "level_75__r2c5>level_75__r10c4": "level_75__r2c5 -> level_75__r10c4",
               "level_75__r10c4>level_75__r3c3": "level_75__r10c4 -> level_75__r3c3",
               "level_75__r3c3>level_75__r10c4": "level_75__r3c3 -> level_75__r10c4",
               "level_75__r10c4>level_75__r8c4": "level_75__r10c4 -> level_75__r8c4",
@@ -84199,6 +88241,8 @@
               "level_75__r11c5>level_75__r10c6": "level_75__r11c5 -> level_75__r10c6",
               "level_75__r10c6>level_75__r13c3": "level_75__r10c6 -> level_75__r13c3",
               "level_75__r13c3>level_75__r10c6": "level_75__r13c3 -> level_75__r10c6",
+              "level_75__r10c6>level_75__r2c5": "level_75__r10c6 -> level_75__r2c5",
+              "level_75__r2c5>level_75__r10c6": "level_75__r2c5 -> level_75__r10c6",
               "level_75__r10c6>level_75__r3c3": "level_75__r10c6 -> level_75__r3c3",
               "level_75__r3c3>level_75__r10c6": "level_75__r3c3 -> level_75__r10c6",
               "level_75__r10c6>level_75__r8c4": "level_75__r10c6 -> level_75__r8c4",
@@ -84209,6 +88253,8 @@
               "level_75__r11c5>level_75__r11c3": "level_75__r11c5 -> level_75__r11c3",
               "level_75__r11c3>level_75__r13c3": "level_75__r11c3 -> level_75__r13c3",
               "level_75__r13c3>level_75__r11c3": "level_75__r13c3 -> level_75__r11c3",
+              "level_75__r11c3>level_75__r2c5": "level_75__r11c3 -> level_75__r2c5",
+              "level_75__r2c5>level_75__r11c3": "level_75__r2c5 -> level_75__r11c3",
               "level_75__r11c3>level_75__r3c3": "level_75__r11c3 -> level_75__r3c3",
               "level_75__r3c3>level_75__r11c3": "level_75__r3c3 -> level_75__r11c3",
               "level_75__r11c3>level_75__r8c4": "level_75__r11c3 -> level_75__r8c4",
@@ -84217,18 +88263,28 @@
               "level_75__r8c6>level_75__r11c3": "level_75__r8c6 -> level_75__r11c3",
               "level_75__r11c5>level_75__r13c3": "level_75__r11c5 -> level_75__r13c3",
               "level_75__r13c3>level_75__r11c5": "level_75__r13c3 -> level_75__r11c5",
+              "level_75__r11c5>level_75__r2c5": "level_75__r11c5 -> level_75__r2c5",
+              "level_75__r2c5>level_75__r11c5": "level_75__r2c5 -> level_75__r11c5",
               "level_75__r11c5>level_75__r3c3": "level_75__r11c5 -> level_75__r3c3",
               "level_75__r3c3>level_75__r11c5": "level_75__r3c3 -> level_75__r11c5",
               "level_75__r11c5>level_75__r8c4": "level_75__r11c5 -> level_75__r8c4",
               "level_75__r8c4>level_75__r11c5": "level_75__r8c4 -> level_75__r11c5",
               "level_75__r11c5>level_75__r8c6": "level_75__r11c5 -> level_75__r8c6",
               "level_75__r8c6>level_75__r11c5": "level_75__r8c6 -> level_75__r11c5",
+              "level_75__r13c3>level_75__r2c5": "level_75__r13c3 -> level_75__r2c5",
+              "level_75__r2c5>level_75__r13c3": "level_75__r2c5 -> level_75__r13c3",
               "level_75__r13c3>level_75__r3c3": "level_75__r13c3 -> level_75__r3c3",
               "level_75__r3c3>level_75__r13c3": "level_75__r3c3 -> level_75__r13c3",
               "level_75__r13c3>level_75__r8c4": "level_75__r13c3 -> level_75__r8c4",
               "level_75__r8c4>level_75__r13c3": "level_75__r8c4 -> level_75__r13c3",
               "level_75__r13c3>level_75__r8c6": "level_75__r13c3 -> level_75__r8c6",
               "level_75__r8c6>level_75__r13c3": "level_75__r8c6 -> level_75__r13c3",
+              "level_75__r2c5>level_75__r3c3": "level_75__r2c5 -> level_75__r3c3",
+              "level_75__r3c3>level_75__r2c5": "level_75__r3c3 -> level_75__r2c5",
+              "level_75__r2c5>level_75__r8c4": "level_75__r2c5 -> level_75__r8c4",
+              "level_75__r8c4>level_75__r2c5": "level_75__r8c4 -> level_75__r2c5",
+              "level_75__r2c5>level_75__r8c6": "level_75__r2c5 -> level_75__r8c6",
+              "level_75__r8c6>level_75__r2c5": "level_75__r8c6 -> level_75__r2c5",
               "level_75__r3c3>level_75__r8c4": "level_75__r3c3 -> level_75__r8c4",
               "level_75__r8c4>level_75__r3c3": "level_75__r8c4 -> level_75__r3c3",
               "level_75__r3c3>level_75__r8c6": "level_75__r3c3 -> level_75__r8c6",
@@ -84245,6 +88301,10 @@
             "y": 0
           }
         }
+      },
+      "level_75__r2c5": {
+        "substrate": "maze",
+        "shared_world": "level_75"
       },
       "level_75__r3c3": {
         "substrate": "maze",
@@ -84348,11 +88408,11 @@
               "atlas_exit_id": "out_teleporter_0_32"
             },
             {
-              "exit_id": "level_77__r15c6 -> level_78__r0c16",
+              "exit_id": "level_77__r18c6 -> level_78__r0c16",
               "x": 6,
               "y": 19,
               "side": null,
-              "exitName": "level_77__r15c6 -> level_78__r0c16",
+              "exitName": "level_77__r18c6 -> level_78__r0c16",
               "targetRegion": "level_78__r0c16",
               "targetExitId": null,
               "isTeleporter": true,
@@ -85033,7 +89093,7 @@
             {
               "x": 5,
               "y": 12,
-              "id": "atlas_gate_3"
+              "id": "atlas_gate_2"
             },
             {
               "x": 7,
@@ -85108,7 +89168,7 @@
             {
               "x": 6,
               "y": 13,
-              "id": "atlas_gate_3"
+              "id": "atlas_gate_2"
             },
             {
               "x": 7,
@@ -85376,6 +89436,11 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 6,
+              "y": 17,
+              "id": "atlas_gate_4"
+            },
+            {
               "x": 7,
               "y": 17,
               "id": "atlas_gate_0"
@@ -85443,7 +89508,7 @@
             {
               "x": 7,
               "y": 18,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 8,
@@ -85508,7 +89573,7 @@
             {
               "x": 7,
               "y": 19,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 8,
@@ -85712,6 +89777,45 @@
               "display": {
                 "mode": "tree"
               }
+            },
+            "atlas_gate_4": {
+              "id": "atlas_gate_4",
+              "name": "(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Wand"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield",
+                      "count": 2
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
             }
           },
           "pulls": [
@@ -85764,7 +89868,8 @@
             "regions": [
               "level_77__r2c0",
               "level_77__r12c6",
-              "level_77__r15c6"
+              "level_77__r15c6",
+              "level_77__r18c6"
             ],
             "rows": [
               "...............",
@@ -85784,9 +89889,9 @@
               "...............",
               "......C........",
               "......C........",
-              "......C........",
-              "......C........",
-              "......C........"
+              "...............",
+              "......D........",
+              "......D........"
             ],
             "entrances": {
               "level_77__r2c0": {
@@ -85799,16 +89904,26 @@
               },
               "level_77__r15c6": {
                 "x": 6,
+                "y": 15
+              },
+              "level_77__r18c6": {
+                "x": 6,
                 "y": 19
               }
             },
             "links": {
               "level_77__r12c6>level_77__r15c6": "level_77__r12c6 -> level_77__r15c6",
               "level_77__r15c6>level_77__r12c6": "level_77__r15c6 -> level_77__r12c6",
+              "level_77__r12c6>level_77__r18c6": "level_77__r12c6 -> level_77__r18c6",
+              "level_77__r18c6>level_77__r12c6": "level_77__r18c6 -> level_77__r12c6",
               "level_77__r12c6>level_77__r2c0": "level_77__r12c6 -> level_77__r2c0",
               "level_77__r2c0>level_77__r12c6": "level_77__r2c0 -> level_77__r12c6",
+              "level_77__r15c6>level_77__r18c6": "level_77__r15c6 -> level_77__r18c6",
+              "level_77__r18c6>level_77__r15c6": "level_77__r18c6 -> level_77__r15c6",
               "level_77__r15c6>level_77__r2c0": "level_77__r15c6 -> level_77__r2c0",
-              "level_77__r2c0>level_77__r15c6": "level_77__r2c0 -> level_77__r15c6"
+              "level_77__r2c0>level_77__r15c6": "level_77__r2c0 -> level_77__r15c6",
+              "level_77__r18c6>level_77__r2c0": "level_77__r18c6 -> level_77__r2c0",
+              "level_77__r2c0>level_77__r18c6": "level_77__r2c0 -> level_77__r18c6"
             }
           },
           "atlas_region": "level_77",
@@ -85825,6 +89940,10 @@
         "shared_world": "level_77"
       },
       "level_77__r15c6": {
+        "substrate": "maze",
+        "shared_world": "level_77"
+      },
+      "level_77__r18c6": {
         "substrate": "maze",
         "shared_world": "level_77"
       },
@@ -85852,12 +89971,12 @@
               "atlas_exit_id": "out_teleporter_32_0"
             },
             {
-              "exit_id": "level_78__r0c16 -> level_77__r15c6",
+              "exit_id": "level_78__r0c16 -> level_77__r18c6",
               "x": 16,
               "y": 0,
               "side": null,
-              "exitName": "level_78__r0c16 -> level_77__r15c6",
-              "targetRegion": "level_77__r15c6",
+              "exitName": "level_78__r0c16 -> level_77__r18c6",
+              "targetRegion": "level_77__r18c6",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_256_0"
@@ -85877,7 +89996,7 @@
             {
               "x": 3,
               "y": 0,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 4,
@@ -85967,7 +90086,7 @@
             {
               "x": 3,
               "y": 1,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 4,
@@ -86082,7 +90201,7 @@
             {
               "x": 9,
               "y": 2,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_5"
             },
             {
               "x": 10,
@@ -86167,12 +90286,12 @@
             {
               "x": 8,
               "y": 3,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_5"
             },
             {
               "x": 10,
               "y": 3,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_5"
             },
             {
               "x": 11,
@@ -86312,12 +90431,12 @@
             {
               "x": 5,
               "y": 5,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_5"
             },
             {
               "x": 7,
               "y": 5,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_5"
             },
             {
               "x": 8,
@@ -86402,7 +90521,7 @@
             {
               "x": 6,
               "y": 6,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_5"
             },
             {
               "x": 7,
@@ -88075,12 +92194,12 @@
             {
               "x": 1,
               "y": 0,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 3,
               "y": 0,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 4,
@@ -88123,6 +92242,11 @@
               "id": "atlas_gate_1"
             },
             {
+              "x": 3,
+              "y": 1,
+              "id": "atlas_gate_2"
+            },
+            {
               "x": 4,
               "y": 1,
               "id": "atlas_gate_0"
@@ -88161,6 +92285,11 @@
               "x": 1,
               "y": 2,
               "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 2,
+              "id": "atlas_gate_2"
             },
             {
               "x": 3,
@@ -88375,7 +92504,7 @@
             {
               "x": 6,
               "y": 6,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 7,
@@ -88944,8 +93073,8 @@
             ],
             "rows": [
               "..A.......",
-              "..AA......",
               "..A.......",
+              "..........",
               "..........",
               "..........",
               "..........",
@@ -100157,12 +104286,17 @@
             "level_72__r10c8",
             "level_72__r11c11",
             "level_72__r11c6",
+            "level_72__r16c0",
+            "level_72__r2c10",
             "level_72__r5c4",
             "level_72__r6c17",
             "level_72__r9c10",
             "level_72__r9c12",
             "level_72__r9c14",
             "level_73__r0c4",
+            "level_73__r1c6",
+            "level_73__r2c3",
+            "level_73__r2c5",
             "level_73__r3c7",
             "level_73__r4c4",
             "level_73__r5c7",
@@ -100170,6 +104304,7 @@
             "level_74__r1c7",
             "level_74__r2c11",
             "level_74__r2c2",
+            "level_74__r8c1",
             "level_74__r8c18",
             "level_75__r0c4",
             "level_75__r10c4",
@@ -100177,6 +104312,7 @@
             "level_75__r11c3",
             "level_75__r11c5",
             "level_75__r13c3",
+            "level_75__r2c5",
             "level_75__r3c3",
             "level_75__r8c4",
             "level_75__r8c6",
@@ -100339,6 +104475,7 @@
             "level_76",
             "level_77__r12c6",
             "level_77__r15c6",
+            "level_77__r18c6",
             "level_77__r2c0",
             "level_78__r0c16",
             "level_78__r0c2",
