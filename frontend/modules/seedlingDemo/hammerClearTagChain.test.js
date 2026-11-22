@@ -15,7 +15,7 @@
  * (`hammerClearTagChain.train.test.js`).
  */
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll, afterAll } from 'vitest';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -28,6 +28,14 @@ import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCod
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { settleSolve, solveFromTape } from './jsRuntimeSolver.js';
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
+import { PRESS_KILL_CHASERS as __PRESS_KILL_CHASERS_HOLD } from './pressKillCost.js';
+
+// ⛓ `PRESS_KILL_CHASERS` held OFF for this whole file: it ships ON since the PKC + FH flip (⚖ the user, 2026-11-20). ON, the burn walk's press-kill death at t817 does not happen (the row pins that death as wall A1).
+// These rows predate the flip and pin other switches; held OFF they are byte-for-byte their pre-flip selves. The
+// flip's own effect is measured by its sweeps and survey.
+let __heldWas;
+beforeAll(() => { __heldWas = __PRESS_KILL_CHASERS_HOLD.enabled; __PRESS_KILL_CHASERS_HOLD.enabled = false; });
+afterAll(() => { __PRESS_KILL_CHASERS_HOLD.enabled = __heldWas; });
 import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const HERE = dirname(fileURLToPath(import.meta.url));

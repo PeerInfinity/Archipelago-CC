@@ -27,6 +27,7 @@ import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { SolverRefusal, deriveStrike, solveSegment, withStrikeEtaFloor } from './solverBot.js';
 import { progressKind } from './solveProgress.js';
+import { withPressKillChasers } from './pressKillCost.js';
 import {
     PRESS_KILL_REBOOT_GUARD, PRESS_KILL_REBOOT_GUARD_DEFAULT, PRESS_KILL_SHAKE_GUARD, PRESS_KILL_SHAKE_GUARD_DEFAULT,
     isShakeBandThrow, withPressKillRebootGuard, withPressKillShakeGuard,
@@ -120,8 +121,10 @@ describe('hammer-phase LB — the press kill guards', () => {
             return advance(k);
         };
         try {
-            withPressKillRebootGuard(on, () => solveSegment({ run, goals: [{ kind: 'collect-placement',
-                placement: { x: 880, y: 816 } }], name: 'lb-ho2', boot: staging.boot, dashMode: 'all' }));
+            // PRESS_KILL_CHASERS held OFF: ON by default since the PKC flip (2026-11-20), it steps the kill clear of the chaser,
+            // so the death this row needs as its witness never happens (L40-PAIR §5). The row keeps pinning its own switch.
+            withPressKillChasers(false, () => withPressKillRebootGuard(on, () => solveSegment({ run, goals: [{ kind: 'collect-placement',
+                placement: { x: 880, y: 816 } }], name: 'lb-ho2', boot: staging.boot, dashMode: 'all' })));
         } catch (e) {
             return { e, t: run.ticksCompleted, deaths: run.ledger('playerDeaths').map((d) => d.t) };
         }
