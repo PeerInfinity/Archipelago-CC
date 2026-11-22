@@ -3955,38 +3955,10 @@
             "name": "level_34 -> level_12__r0c37",
             "connected_region": "level_12__r0c37",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Wand"
-                  }
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Fire Wand Fusion"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Fire"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Wand"
+              }
             }
           }
         ],
@@ -9833,13 +9805,13 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Ghost Sword Fusion"
+                        "item_name": "Ghost Spear"
                       }
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Ghost Spear"
+                        "item_name": "Ghost Sword Fusion"
                       }
                     },
                     {
@@ -25916,13 +25888,6 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Shield",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Ghost Spear"
                   }
                 },
@@ -25936,6 +25901,13 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
                   }
                 }
               ]
@@ -28667,7 +28639,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-2602798d",
+      "atlas_id": "seedling-4e8c7649",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
