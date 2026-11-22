@@ -519,16 +519,25 @@ A level costing at least `FLOOR_MS` in the control whose normalised ratio is ove
 
 The two constants and their derivation from main-vs-main runs and a 2× mutant (run ids included) are in the probe's own comment, so no number is copied here. A slowdown smaller than the measured noise band, on one level, is invisible to one tip/control pair: run two of each rather than lower the threshold.
 
-**The median verdict.** Dividing by the median hides a slowdown that hits EVERY level by the same factor: it moves only the median, and no level is flagged. So the comparison also judges the median ratio itself, against the band of medians that main-vs-main pairs measured. It prints `MEASURED: median verdict <kind>: …` every time, and a `WARN:` line when the median is outside the band. The band depends on how the two sides ran:
-- **Unpaired** (two `seedling-probe.yml` jobs, as above): the two runners' speeds differ, and that difference is the median. The band is as wide as the runners differ, so the `WARN:` catches only a gross uniform slowdown, and it does not fail the run.
-- **Paired** (`-f args=--paired=<control sha>`): ONE job checks the control out as a second tree and runs the calib file in both, so both sides get the same runner. The job writes both sides (`calib-levels-control.json` beside `calib-levels.json`) and runs the comparison itself, so `--moved` and `--expect-flag` go to the run. `--paired-tip=<sha>` checks the tip out too. `--paired-order=sequential|abba|concurrent` picks how the two run: one after the other, A B B A (each tree twice, so a drift over the job cancels), or at once. `--paired-first=control|tip` picks which side starts. Each order has its own band. A median outside it is a failed check row once the band rests on `PAIRED_MIN_PAIRS` measured pairs; before that the band is PROVISIONAL and only warns. `--compare=<paired run id>` with no `--tip` compares the artifact again.
+**The median verdict.** Dividing by the median hides a slowdown that hits EVERY level by the same factor: it moves only the median, and no level is flagged. So the comparison also judges the median ratio itself, against the band of medians that main-vs-main pairs measured. It prints `MEASURED: median verdict <kind>: … is above|below|inside the … band` every time, and a `WARN:` line when the median is outside the band. The band depends on how the two sides ran:
+- **Unpaired** (two `seedling-probe.yml` jobs, as above): the two runners' speeds differ, and that difference is the median. The band is as wide as the runners differ, so a cross-job median is **WARN-only**: it catches only a gross uniform slowdown, and it never fails the run.
+- **Paired** (`-f args=--paired=<control sha>`, a full SHA): ONE job checks the control out as a second tree and runs the calib file in both, so both sides get the same runner. The job writes both sides (`calib-levels-control.json` beside `calib-levels.json`) and runs the comparison itself. `--paired-tip=<sha>` checks the tip out too, and `--paired-first=control|tip` picks which side starts. `--paired-order` picks how the two run:
+  - `concurrent` (the default): both at once, about one pass of wall. It judges the **median only**. The two trees share the runner's cores unevenly, so its per-level ratios are printed but never flagged, and `--expect-flag` is refused.
+  - `abba`: A B B A, each tree twice, so a drift over the job cancels. It judges the median and the per-level FLAG, but it takes four passes of wall. On main that is most of the job's timeout, so a genuinely slower tip may time out. Use it only when a slice asks for per-level precision.
+  - `sequential`: one after the other; its band is still PROVISIONAL.
+
+  A median outside an order's band is a failed check row once the band rests on `PAIRED_MIN_PAIRS` measured pairs; before that it only warns. The run prints its wall against the workflow job's `timeout-minutes`, with a `WARN:` over `WALL_WARN_AT` of it. `--compare=<paired run id>` with no `--tip` compares the artifact again.
 - `--expect-median=slower|faster|inside` expects a verdict, for a mutant (the uniform-slowdown mutant is the one the per-level `FLAG:` cannot see).
 
-A slice whose engine change makes every level slower ON PURPOSE (a legitimately slower median) runs paired with `--expect-median=slower`, and its packet names that, with the paired median and the run id. Then it reads as a measured cost, not a failure hidden by a flag.
+**The recipe for an engine mover:**
+1. A paired concurrent run against main, for the median.
+2. The unpaired compare with `--moved=<levels>` (two jobs, as above), for the per-level flags.
 
-The bands' medians are in the probe's comment, with their run ids and how many pairs each rests on (`UNPAIRED_MAIN_MEDIANS`, `PAIRED_MAIN_MEDIANS` per order). The per-level `FLAG:` and its threshold are unchanged by any of this.
+`abba` is used only on request, with the wall caveat above. A slice whose change makes every level slower ON PURPOSE runs the paired run with `--expect-median=slower`, and its packet names the paired median and the run id. Then it reads as a measured cost, not a failure hidden by a flag.
 
-**Content sets PASS-3 ran it** (part 0 taught the extractor and the autopather `entry_gates`, which moved `engineMd5`). Control: main (run 44639708960). Tip: `content-pass3` (run 44639705125). No level was flagged. The run records the median ratio, the normalised band and each level's time, and the slice's as-built quotes them.
+The bands' medians are in the probe's comment, with each run id, its order and how many pairs each band rests on (`UNPAIRED_MAIN_MEDIANS`, `PAIRED_MAIN_MEDIANS`), beside the band rule. The per-level `FLAG:` and its threshold are unchanged by any of this.
+
+**Content sets PASS-3 ran it** (part 0 taught the extractor and the autopather `entry_gates`, which moved `engineMd5`). Control: main (run 44639708960). Tip: `content-pass3` (run 44639705125). No level was flagged. The run records the median ratio, the normalised band and each level's time, and the slice's as-built quotes them. Its cross-job median was 1.238. The same engine commit re-measured PAIRED (control `a0196dab45`, tip `c51c4db84f`) read 0.991 concurrent and 0.994 abba. That is inside both bands, so the 1.238 was runner speed, not a slowdown.
 
 ## Registry entry
 

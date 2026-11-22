@@ -150,3 +150,34 @@ export function mergeReports(reps) {
  * fetches a full SHA or a ref name only), so the probe refuses it by name instead of failing inside `git fetch`.
  */
 export const isAbbreviatedSha = (ref) => /^[0-9a-f]{4,39}$/i.test(ref);
+
+/**
+ * Whether a comparison judges per-level FLAGs. Not in a PAIRED CONCURRENT run: the two trees share the runner's cores
+ * and reach the heavy levels at different moments, so its main-vs-main per-level spread is too close to the FLAG
+ * threshold to judge one level by. Its median is still judged. Every other comparison flags.
+ */
+export const flagsLevels = (paired) => !(paired && paired.order === 'concurrent');
+
+/**
+ * The `timeout-minutes` of one job in a workflow file's text (the job's key at two spaces' indent, then its first
+ * `timeout-minutes:` before the next job key), or null when the file does not say. A line reader, not a YAML parser:
+ * enough for a workflow whose job keys sit at two spaces, as every workflow here does.
+ */
+export function jobTimeoutMinutes(text, job) {
+    const lines = text.split('\n');
+    const start = lines.findIndex((l) => l === `  ${job}:`);
+    if (start < 0) return null;
+    for (const l of lines.slice(start + 1)) {
+        if (/^ {2}[A-Za-z0-9_-]+:\s*$/.test(l)) return null; // the next job
+        const m = /^ {4}timeout-minutes:\s*([0-9]+)\s*$/.exec(l);
+        if (m) return Number(m[1]);
+    }
+    return null;
+}
+
+/** A paired run's wall against its job's limit: the fraction used, and `warn` over `warnAt` (a fraction). */
+export function wallVerdict(wallS, limitS, warnAt) {
+    if (!(limitS > 0)) throw new Error(`a job limit is a positive number of seconds (got ${limitS})`);
+    const used = wallS / limitS;
+    return { used, warn: used > warnAt };
+}

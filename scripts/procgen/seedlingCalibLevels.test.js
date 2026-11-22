@@ -5,7 +5,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { compareLevels, isAbbreviatedSha, levelReport, median, medianBand, medianVerdict, mergeReports, presetLevels } from './seedlingCalibLevels.js';
+import { compareLevels, flagsLevels, isAbbreviatedSha, jobTimeoutMinutes, levelReport, median, medianBand, medianVerdict, mergeReports, presetLevels, wallVerdict } from './seedlingCalibLevels.js';
 
 const RULES = JSON.parse(readFileSync(new URL('../../frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
 
@@ -144,5 +144,45 @@ describe('isAbbreviatedSha (a paired run refuses a short SHA by name)', () => {
         expect(isAbbreviatedSha('3c602f965d2db8ef4c12d7d6f8cb96a837500448')).toBe(false);
         expect(isAbbreviatedSha('main')).toBe(false);
         expect(isAbbreviatedSha('tile-probe-median')).toBe(false);
+    });
+});
+
+describe('the recorded paired bands (the probe\'s PAIRED_MAIN_MEDIANS)', () => {
+    it('concurrent and abba rest on >= PAIRED_MIN_PAIRS pairs, each a run id; the x1.24 mutants are outside, PASS-3 inside', async () => {
+        const { PAIRED_MAIN_MEDIANS: P, PAIRED_MIN_PAIRS, DEFAULT_PAIRED_ORDER } = await import('./probe-seedling-calib-levels.mjs');
+        expect(DEFAULT_PAIRED_ORDER).toBe('concurrent');
+        for (const order of ['concurrent', 'abba']) expect(P[order].length).toBeGreaterThanOrEqual(PAIRED_MIN_PAIRS);
+        expect(P.sequential.length).toBeLessThan(PAIRED_MIN_PAIRS); // PROVISIONAL
+        for (const rows of Object.values(P)) for (const r of rows) expect(r.run).toBeGreaterThan(4e10);
+        const band = (order) => medianBand(P[order].map((r) => r.median));
+        expect(medianVerdict(1.197, band('concurrent')).direction).toBe('slower'); // mutant 44983304303
+        expect(medianVerdict(1.240, band('abba')).direction).toBe('slower'); // mutant 44983298644
+        expect(medianVerdict(0.991, band('concurrent')).outside).toBe(false); // PASS-3 44983283467
+        expect(medianVerdict(0.994, band('abba')).outside).toBe(false); // PASS-3 44983277762
+    });
+});
+
+describe('flagsLevels (a paired concurrent run judges the median only)', () => {
+    it('flags unpaired, abba and sequential; not concurrent', () => {
+        expect(flagsLevels(null)).toBe(true);
+        expect(flagsLevels({ order: 'abba' })).toBe(true);
+        expect(flagsLevels({ order: 'sequential' })).toBe(true);
+        expect(flagsLevels({ order: 'concurrent' })).toBe(false);
+    });
+});
+
+describe('jobTimeoutMinutes / wallVerdict (the paired wall against the job)', () => {
+    const wf = readFileSync(new URL('../../.github/workflows/seedling-probe.yml', import.meta.url), 'utf8');
+    it('reads the probe job\'s timeout from the workflow, not another job\'s', () => {
+        expect(jobTimeoutMinutes(wf, 'probe')).toBe(90);
+        expect(jobTimeoutMinutes(wf, 'plan')).toBe(5);
+        expect(jobTimeoutMinutes(wf, 'nope')).toBe(null);
+        expect(jobTimeoutMinutes('jobs:\n  a:\n    runs-on: x\n  b:\n    timeout-minutes: 7\n', 'a')).toBe(null);
+    });
+    it('warns over 80%: the x1.24 mutant abba (4753 s) does, a concurrent pass (1173 s) does not', () => {
+        expect(wallVerdict(4753, 5400, 0.8)).toMatchObject({ warn: true });
+        expect(wallVerdict(1173, 5400, 0.8)).toMatchObject({ warn: false });
+        expect(wallVerdict(4320, 5400, 0.8).warn).toBe(false); // exactly 80% is not over it
+        expect(() => wallVerdict(1, 0, 0.8)).toThrow();
     });
 });

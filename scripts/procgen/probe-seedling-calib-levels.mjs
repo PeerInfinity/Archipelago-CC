@@ -29,8 +29,10 @@
  *     file in both, on the same runner, so the runner's speed cancels. Its band is narrow, and a median outside it is
  *     a FAILED check row. The job writes both sides and runs the comparison itself (so `--moved`, `--expect-flag` and
  *     `--expect-median` go to the run too). `--paired-tip=<ref>` checks the tip out as a tree as well (default: this
- *     checkout); `--paired-order=sequential|abba|concurrent` and `--paired-first=control|tip` say how (`pairedRun`).
- *     Until an order's band rests on PAIRED_MIN_PAIRS pairs it is PROVISIONAL and warns only.
+ *     checkout); `--paired-order=concurrent|abba|sequential` and `--paired-first=control|tip` say how (`pairedRun`).
+ *     Concurrent (the default) judges the MEDIAN only: its per-level ratios are printed, never flagged. abba judges
+ *     both, at ~4 passes of wall. Until an order's band rests on PAIRED_MIN_PAIRS pairs it is PROVISIONAL and warns
+ *     only. The paired wall is printed against the workflow job's timeout, with a `WARN:` over WALL_WARN_AT.
  *     A paired artifact compares again with `--compare=<run id>` and no `--tip`.
  * `--expect-median=slower|faster|inside` adds a check row for an expected median verdict (a mutant's check), either kind.
  *
@@ -39,7 +41,7 @@
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<control run id or json> --tip=<tip run id or json>
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<…> --tip=<…> --moved=<level,level>
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<…> --tip=<…> --expect-flag=<level>   (a mutant's check)
- *   gh workflow run seedling-probe.yml --ref <branch> -f probes=probe-seedling-calib-levels.mjs -f args=--paired=<control sha>
+ *   gh workflow run seedling-probe.yml --ref <branch> -f probes=probe-seedling-calib-levels.mjs -f args=--paired=<control sha>   (concurrent: the median)
  *   gh workflow run seedling-probe.yml --ref <branch> -f probes=probe-seedling-calib-levels.mjs -f args="--paired=<sha> --paired-tip=<sha> --paired-order=abba --paired-first=tip"
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<paired run id>
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<…> --tip=<…> --expect-median=slower   (a uniform mutant's check)
@@ -53,7 +55,7 @@ import { tmpdir, cpus } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { compareLevels, isAbbreviatedSha, levelReport, medianBand, medianVerdict, mergeReports, presetLevels } from './seedlingCalibLevels.js';
+import { compareLevels, flagsLevels, isAbbreviatedSha, jobTimeoutMinutes, levelReport, medianBand, medianVerdict, mergeReports, presetLevels, wallVerdict } from './seedlingCalibLevels.js';
 
 argvHelp(import.meta.url);
 
@@ -86,13 +88,35 @@ export const THRESHOLD = 1.5;
  *   UNPAIRED (two jobs): 43779970506, 43779978397, 43779985847 (all at 27bc98c8b6) and 43785541082 (0b8dc816f1, the
  *     same tree but for the probe's own files), every pair: 0.961 1.574 1.588 0.843 0.868 0.545. Worst 1.835 → band
  *     0.375–2.670. The runners alone differ by up to 1.84×, so a uniform slowdown under that is invisible to two jobs.
- *   PAIRED (one job, both sides), one list PER `--paired-order` (each order has its own noise): none measured yet.
- *     A band on fewer than PAIRED_MIN_PAIRS pairs is PROVISIONAL: it prints a `WARN:` and fails nothing; with no pair the
- *     paired verdict is not given at all.
+ *   PAIRED (one job, both sides = main 3c602f965d, the probe at 18f18376ba; session tile-probe-median, 2026-11-22),
+ *     one list PER `--paired-order`, since each order has its own noise. Each row is a seedling-probe run, its median,
+ *     and the side that started. Same band rule. A band on PAIRED_MIN_PAIRS (3) or more pairs is a FAILED check row
+ *     when the median is outside it. Under 3 it is PROVISIONAL: a `WARN:` only. With no pair, no verdict.
+ *       concurrent (4 pairs) → band 0.984–1.016, a failing row; the default order (~1,200 s of the 5,400 s job).
+ *       abba       (3 pairs) → band 0.953–1.049, a failing row; 3,387–4,347 s, and 4,753 s for a ×1.24 tip.
+ *       sequential (2 pairs) → band 0.943–1.060, PROVISIONAL.
+ *     The ×1.24 uniform mutant (044b24e5b9) read 1.240 abba (44983298644) and 1.197 concurrent (44983304303): both
+ *     outside, and no per-level FLAG. Concurrent under-reads it because the control finishes first.
  */
 export const UNPAIRED_MAIN_MEDIANS = [0.961, 1.574, 1.588, 0.843, 0.868, 0.545];
-export const PAIRED_MAIN_MEDIANS = { sequential: [], abba: [], concurrent: [] };
+export const PAIRED_MAIN_MEDIANS = {
+    concurrent: [{ run: 44983231138, median: 1.001, first: 'control' }, { run: 44983236757, median: 0.992, first: 'control' },
+        { run: 44983248084, median: 1.008, first: 'tip' }, { run: 44983253719, median: 0.994, first: 'tip' }],
+    abba: [{ run: 44983214066, median: 0.991, first: 'control' }, { run: 44983220060, median: 0.976, first: 'control' },
+        { run: 44983225887, median: 0.992, first: 'tip' }],
+    sequential: [{ run: 44983258675, median: 0.978, first: 'control' }, { run: 44983263697, median: 1.030, first: 'tip' }],
+};
 export const PAIRED_MIN_PAIRS = 3;
+export const DEFAULT_PAIRED_ORDER = 'concurrent';
+
+/**
+ * A paired run's wall against its job's limit, which is read from the workflow (`seedling-probe.yml`'s `probe` job,
+ * `timeout-minutes`), never typed; `WARN:` over WALL_WARN_AT of it. The wall is the probe's own (trees, passes,
+ * comparison). The job's checkout, npm ci and Playwright steps come before it and are not in it.
+ */
+export const WALL_WARN_AT = 0.8;
+const WORKFLOW = '.github/workflows/seedling-probe.yml';
+const WORKFLOW_JOB = 'probe';
 
 const arg = (k) => process.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3);
 const list = (s) => (s ? s.split(',').map((x) => x.trim()).filter(Boolean) : []);
@@ -204,11 +228,12 @@ function runSide(side, raw, log) {
  *   sequential — first, then second (drift inside the job lands on one side);
  *   abba       — first, second, second, first: each tree runs twice, each level's ms is the mean of its two runs, so a
  *                drift linear in time cancels (four passes: the job's 90 min bounds it, so the wall is printed);
- *   concurrent — both at once (the runner's cores are shared; `nproc` and the CPU model are printed).
+ *   concurrent — both at once, the DEFAULT (the runner's cores are shared; `nproc` and the CPU model are printed). It
+ *                judges the median only: the two trees contend unevenly, so its per-level ratios are not flagged.
  * `--paired-first=control|tip` (default control) says which side starts, so a slot bias can be measured both ways.
  */
 async function pairedRun(controlRef) {
-    const order = arg('paired-order') ?? 'sequential';
+    const order = arg('paired-order') ?? DEFAULT_PAIRED_ORDER;
     if (!['sequential', 'abba', 'concurrent'].includes(order)) throw new Error(`--paired-order is sequential, abba or concurrent (got ${order})`);
     const first = arg('paired-first') ?? 'control';
     if (!['control', 'tip'].includes(first)) throw new Error(`--paired-first is control or tip (got ${first})`);
@@ -221,12 +246,14 @@ async function pairedRun(controlRef) {
     const S = { control: { ...control, tag: 'control', runs: [] }, tip: { ...tip, tag: 'tip', runs: [] } };
     for (const s of Object.values(S)) Object.assign(s, await treeInputs(s.dir));
     const [A, B] = first === 'control' ? [S.control, S.tip] : [S.tip, S.control];
+    const minutes = existsSync(resolve(REPO, WORKFLOW)) ? jobTimeoutMinutes(readFileSync(resolve(REPO, WORKFLOW), 'utf8'), WORKFLOW_JOB) : null;
+    const limitS = minutes ? minutes * 60 : null;
     console.log(`MEASURED: paired control ${control.ref} @ ${control.sha}; tip ${tip.ref} @ ${tip.sha}; order ${order}, ${first} first; nproc ${cpus().length} (${cpus()[0]?.model ?? '?'}); trees ready in ${((Date.now() - t0) / 1000).toFixed(1)} s`);
     const one = async (s) => {
         const k = s.runs.length + 1;
         const raw = resolve(OUT, `calib-vitest-${s.tag}-${k}.json`);
         const res = await runSide(s, raw, resolve(OUT, `calib-vitest-${s.tag}-${k}.log`));
-        console.log(`MEASURED: paired ${s.tag} pass ${k} rc=${res.status} wall ${res.wallS.toFixed(1)} s (at +${((Date.now() - t0) / 1000).toFixed(0)} s)`);
+        console.log(`MEASURED: paired ${s.tag} pass ${k} rc=${res.status} wall ${res.wallS.toFixed(1)} s (at +${((Date.now() - t0) / 1000).toFixed(0)} s${limitS ? ` of the job's ${limitS} s` : ''})`);
         s.runs.push({ raw, res });
     };
     if (order === 'concurrent') await Promise.all([one(A), one(B)]);
@@ -246,7 +273,16 @@ async function pairedRun(controlRef) {
     writeFileSync(resolve(OUT, CONTROL_FILE), `${JSON.stringify(docs[0], null, 1)}\n`);
     writeFileSync(resolve(OUT, OUT_FILE), `${JSON.stringify(docs[1], null, 1)}\n`);
     console.log(`MEASURED: wrote ${CONTROL_FILE} @ ${control.sha} and ${OUT_FILE} @ ${tip.sha} (paired, ${pairId}, ${order}, ${first} first); job wall so far ${((Date.now() - t0) / 1000).toFixed(1)} s`);
+    wallLines((Date.now() - t0) / 1000, limitS, minutes);
     compareDocs({ ...docs[0], source: `paired control (${pairId})` }, { ...docs[1], source: `paired tip (${pairId})` });
+}
+
+/** The paired run's total wall against the job limit, and a `WARN:` over WALL_WARN_AT of it. */
+function wallLines(wallS, limitS, minutes) {
+    if (!limitS) { console.log(`MEASURED: paired wall ${wallS.toFixed(1)} s; the job limit is not known (no timeout-minutes for job '${WORKFLOW_JOB}' in ${WORKFLOW})`); return; }
+    const w = wallVerdict(wallS, limitS, WALL_WARN_AT);
+    console.log(`MEASURED: paired wall ${wallS.toFixed(1)} s = ${(100 * w.used).toFixed(1)}% of the job's ${limitS} s (${WORKFLOW} job '${WORKFLOW_JOB}' timeout-minutes ${minutes}; the job's setup steps are not in it)`);
+    if (w.warn) console.log(`WARN: paired wall ${wallS.toFixed(1)} s is over ${100 * WALL_WARN_AT}% of the job's ${limitS} s: a slower tip may time out (use --paired-order=concurrent)`);
 }
 
 /**
@@ -292,7 +328,9 @@ function compareDocs(control, tip) {
         const red = [...side.levels.filter((x) => x.status !== 'passed').map((x) => x.level), ...side.others.filter((t) => t.status !== 'passed').map((t) => t.title)];
         check(red.length === 0, `the ${name} run is green on every test (red: ${red.join(' | ') || 'none'})`);
     }
-    const c = compareLevels(tip, control, { moved, threshold: THRESHOLD, floorMs: FLOOR_MS });
+    const samePair = control.paired && tip.paired && control.paired.pairId === tip.paired.pairId ? control.paired : null;
+    const flags = flagsLevels(samePair);
+    const c = compareLevels(tip, control, { moved, threshold: flags ? THRESHOLD : Infinity, floorMs: FLOOR_MS });
     check(c.onlyTip.length === 0 && c.onlyControl.length === 0, `both runs time the same levels (tip only: ${c.onlyTip.join(',') || 'none'}; control only: ${c.onlyControl.join(',') || 'none'})`);
     check(c.unknownMoved.length === 0, `every --moved level is a level (unknown: ${c.unknownMoved.join(',') || 'none'})`);
     for (const r of [...c.rows].sort((a, b) => b.norm - a.norm)) {
@@ -300,8 +338,13 @@ function compareDocs(control, tip) {
     }
     console.log(`MEASURED: median ratio ${c.median.toFixed(3)} over ${c.referenceCount} reference levels (≥ ${FLOOR_MS} ms in the control, not moved); their normalised spread ${c.spread.min.toFixed(3)}–${c.spread.max.toFixed(3)}, ${c.unflaggedSpread ? `${c.unflaggedSpread.min.toFixed(3)}–${c.unflaggedSpread.max.toFixed(3)}` : 'none'} without the flagged ones; threshold ${THRESHOLD}`);
     for (const l of c.flagged) console.log(`FLAG: ${l} normalised ${c.rows.find((r) => r.level === l).norm.toFixed(3)} > ${THRESHOLD}`);
-    const same = c.flagged.length === expect.length && expect.every((l) => c.flagged.includes(l));
-    check(same, `the flagged levels are ${expect.length ? `exactly the expected ${expect.join(',')}` : 'none'} (flagged: ${c.flagged.join(',') || 'none'})`);
+    if (!flags) {
+        console.log(`MEASURED: per-level FLAG not judged: a paired concurrent run's per-level ratios are printed, not flagged (its main-vs-main per-level spread reached 0.592–1.423, too near ${THRESHOLD}); per-level flags come from the unpaired compare with --moved, or --paired-order=abba`);
+        check(expect.length === 0, `no --expect-flag on a paired concurrent run, which judges the median only (got: ${expect.join(',') || 'none'})`);
+    } else {
+        const same = c.flagged.length === expect.length && expect.every((l) => c.flagged.includes(l));
+        check(same, `the flagged levels are ${expect.length ? `exactly the expected ${expect.join(',')}` : 'none'} (flagged: ${c.flagged.join(',') || 'none'})`);
+    }
     medianCheck(c.median, control, tip, expectMedian);
 }
 
@@ -312,7 +355,7 @@ function compareDocs(control, tip) {
 function medianCheck(med, control, tip, expectMedian) {
     const kind = control.paired && tip.paired && control.paired.pairId === tip.paired.pairId ? 'paired' : 'unpaired';
     const order = kind === 'paired' ? control.paired.order : null;
-    const medians = kind === 'paired' ? (PAIRED_MAIN_MEDIANS[order] ?? []) : UNPAIRED_MAIN_MEDIANS;
+    const medians = kind === 'paired' ? (PAIRED_MAIN_MEDIANS[order] ?? []).map((p) => p.median) : UNPAIRED_MAIN_MEDIANS;
     const label = kind === 'paired' ? `paired ${order}` : kind;
     const provisional = kind === 'paired' && medians.length < PAIRED_MIN_PAIRS;
     let v = null;
@@ -320,7 +363,8 @@ function medianCheck(med, control, tip, expectMedian) {
     else {
         v = medianVerdict(med, medianBand(medians));
         const band = `${v.band.lo.toFixed(3)}–${v.band.hi.toFixed(3)}`;
-        console.log(`MEASURED: median verdict ${label}: median ratio ${med.toFixed(3)} is ${v.direction} the ${label} main-vs-main band ${band} (${v.band.pairs} pairs, worst ${v.band.worst.toFixed(3)})${provisional ? ` PROVISIONAL: under ${PAIRED_MIN_PAIRS} pairs, so it warns only` : ''}${kind === 'unpaired' ? `; two jobs on two runners, so a uniform change inside the band is not visible (--paired sees one)` : ''}`);
+        const where = { slower: 'above', faster: 'below', inside: 'inside' }[v.direction];
+        console.log(`MEASURED: median verdict ${label}: median ratio ${med.toFixed(3)} is ${where} the ${label} main-vs-main band ${band} (${v.band.pairs} pairs, worst ${v.band.worst.toFixed(3)})${provisional ? ` PROVISIONAL: under ${PAIRED_MIN_PAIRS} pairs, so it warns only` : ''}${kind === 'unpaired' ? `; two jobs on two runners, so a uniform change inside the band is not visible (--paired sees one)` : ''}`);
         if (v.outside) console.log(`WARN: median ratio ${med.toFixed(3)} is outside the ${label} main-vs-main band ${band}: every level is ${v.direction} together, which the per-level FLAG normalises away${kind === 'unpaired' ? '; separate jobs, so re-run it PAIRED before believing it' : ''}`);
         if (kind === 'paired' && !provisional && expectMedian === undefined) check(!v.outside, `the median ratio ${med.toFixed(3)} is inside the ${label} main-vs-main band ${band} (${v.band.pairs} pairs)`);
     }
