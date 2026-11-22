@@ -27,3 +27,8 @@ L80-71toChest wand k20 {"win":false,"i":0,"ticks":1600,"end":{"x":9,"y":131.1},"
 L80-79toChest wand k6 {"win":false,"i":0,"ticks":216,"end":{"x":39.2,"y":96.5},"hits":["lavarunner@0,96@t191"],"kills":[]} 
 L80-79toChest wand k20 {"win":false,"i":0,"ticks":488,"end":{"x":10.3,"y":116.3},"hits":["lavarunner@80,32@t343","lavarunner@0,144@t463","lavarunner@0,96@t487"],"kills":[]} 
 L99-r7c5tor2c7 wand k6 {"win":true,"i":0,"ticks":112,"end":{"x":117.7,"y":47.6},"hits":[],"kills":[]} {"win":true,"i":1,"ticks":112,"end":{"x":114.2,"y":47.4},"hits":[],"kills":[]} 
+L99-r7c5tor2c7 wand k20 {"win":true,"i":0,"ticks":128,"end":{"x":114,"y":47.7},"hits":[],"kills":[]} {"win":true,"i":1,"ticks":128,"end":{"x":123.5,"y":47.3},"hits":[],"kills":[]} 
+L99-r7c5tor6c12 wand k6 {"win":true,"i":0,"ticks":88,"end":{"x":192.7,"y":110.8},"hits":[],"kills":[]} {"win":true,"i":1,"ticks":88,"end":{"x":199.3,"y":110.9},"hits":[],"kills":[]} 
+L99-r7c5tor6c12 wand k20 {"win":true,"i":0,"ticks":88,"end":{"x":192.7,"y":110.8},"hits":[],"kills":[]} {"win":true,"i":1,"ticks":88,"end":{"x":199.3,"y":110.9},"hits":[],"kills":[]} 
+L99-r7c5tor8c10 wand k6 {"win":true,"i":0,"ticks":56,"end":{"x":160.9,"y":137.5},"hits":[],"kills":[]} {"win":true,"i":1,"ticks":55,"end":{"x":160,"y":129.9},"hits":[],"kills":[]} 
+L99-r7c5tor8c10 wand k20 {"win":true,"i":0,"ticks":55,"end":{"x":160.6,"y":143.8},"hits":[],"kills":[]} {"win":true,"i":1,"ticks":55,"end":{"x":160.3,"y":138.9},"hits":[],"kills":[]} 
