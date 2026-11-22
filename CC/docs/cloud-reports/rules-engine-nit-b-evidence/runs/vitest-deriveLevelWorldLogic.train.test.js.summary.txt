@@ -1,0 +1,5 @@
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.train.test.js (1 test) 667412ms
+     ✓ scripted tile definition on the sample — and it agrees with the native one  667410ms
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Duration  686.97s (transform 3.34s, setup 219ms, import 19.22s, tests 667.41s, environment 0ms)

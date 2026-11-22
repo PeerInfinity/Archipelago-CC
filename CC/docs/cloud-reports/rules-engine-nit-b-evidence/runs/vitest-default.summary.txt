@@ -1,0 +1,133 @@
+ ✓ scripts/procgen/seedlingDivergenceLegs.test.js (32 tests) 751ms
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.test.js (11 tests) 594ms
+ ✓ frontend/modules/mazeRoom/mazeTileNeeds.test.js (11 tests) 60ms
+ ✓ frontend/modules/mazeRoom/mazeTileOneWay.test.js (9 tests) 57ms
+ ✓ frontend/modules/mazeRoom/mazeTilePass.test.js (9 tests) 64ms
+ ✓ frontend/modules/seedlingDemo/levelSetExporter.test.js (45 tests) 9543ms
+     ✓ prints a byte-identical STDOUT twice, carrying the id the function stamps  661ms
+     ✓ REFUSES every generation flag by name, and still refuses `fixtures/`  727ms
+     ✓ writes a set with ZERO xml rooms and chunks with ZERO record rooms  489ms
+     ✓ --bundle writes a DETERMINISTIC zip beside the plain files, chunks excluded  2570ms
+     ✓ --minify shrinks what is written and leaves STDOUT alone  2536ms
+     ✓ REFUSES --bundle / --minify with no --out-dir, because neither touches STDOUT  506ms
+     ✓ reproduces the regions, the boundary exits and the connections, 1:1  1126ms
+ ✓ frontend/modules/procgenPipeline/regionAtlasLevelWorld.test.js (20 tests) 28380ms
+     ✓ every region projects — the ghost rocks bind a rule strike (And of the fusion's items)  3885ms
+     ✓ the CLASS beyond the preset: shoot=0 traps arm while pressed (L4), L67's shoot=1 trap has no rope, L39's refused rope is no row  713ms
+     ✓ the projected L16 lane = the cells the atlas charged with the rope's event + the door tiles it leaves open  12724ms
+     ✓ is byte-identical to its compile (make-seedling-playthrough-maze.mjs --check)  10486ms
+ ✓ frontend/modules/mazeRoom/mazeContent.test.js (24 tests) 54ms
+ ✓ frontend/modules/flashPanel/seedlingAtlasArm.test.js (25 tests) 2137ms
+     ✓ seedling_atlas_location is a FUNCTION of SEEDLING_ATLAS_LOCATION_STATE (the committed bytes, rebuilt headless)  1455ms
+ ✓ frontend/modules/mazeRoom/tileSpike/certifyEventLocations.test.js (26 tests) 37851ms
+     ✓ certifies: L1 lands on the rock only once it is broken, and the event is priced by the strike  2570ms
+     ✓ a mutant event rule (True_) is caught  2409ms
+     ✓ certifies with no problem: the event priced from beside the tree, the landing in it only once burnt  11156ms
+     ✓ mutants are caught: the gate dropped (the game lands IN the tree), and the event made free  21350ms
+ ✓ frontend/modules/mazeRoom/tileSpike/sphereOrderLevels.test.js (35 tests) 120372ms
+     ✓ L2 + L3 compile and certify clean; the ghost action needs Fusion, Spear and Sword  16391ms
+     ✓ L7 + L8 + L9: L8 → L9 is free in the world, as AP says; the levels certify clean  575ms
+     ✓ L0 + L86 certify clean; L86 -> L0 is free and its Chest is reached empty-handed  3620ms
+     ✓ L12 certifies clean; the doorway's second lock is Red Key from r0c19, the stacked locks each their own item  14496ms
+     ✓ the touched lock is a dead-end gate in its world; the stacked cell carries both events  319ms
+     ✓ L30 + L32 certify clean; Bob Boss spills to (5,7), each priced by the weapon from the landing  2584ms
+     ✓ L37 + L38 certify clean; the press for L39's wand lock is reached empty-handed  324ms
+     ✓ the wand lock (9,37) is opened by the press alone; both doors are gated on it; L38 + L39 certify clean  5592ms
+     ✓ the door (32,30) and every L40 crossing cell gated on Fire take Fire AND a weapon, the interior piece Fire alone; L38–L40 certify clean  40767ms
+     ✓ a mutant world with the cells back at Fire alone is caught LOOSER, as before the ruling  19254ms
+     ✓ L37 + L43 certify clean; Wand and Totem of Lacste each need Totem Shard ×5  513ms
+     ✓ L61–L64 certify clean; each press is reached empty-handed on its ButtonRoom's cell  3848ms
+     ✓ L62's pole: its DarkTrap (7,13) is one obstacle, opened by the L63 press or a thrust from a stance on either side  3655ms
+     ✓ L63's in-room poles are produced and carried: each event is a thrust from its stances, priced Ghost Spear  4186ms
+     ✓ L89 + L91 + L92: the world climbs the fall on Swim×2, as the rules now charge; the cut's door-tile arrival is the one row  386ms
+     ✓ L100–L102 certify clean; the event is r4c2's, a thrust from its stance (Ghost Spear)  553ms
+     ✓ a mutant pole entry with no side is caught: the event goes back to the DarkTrap's sub-region  332ms
+     ✓ the cut certifies with no problem; the world prices the water approach And(rock, Swim), as the rules now do  811ms
+     ✓ the cut certifies with no problem; the finaldoor event costs the Watcher's talk  786ms
+ ✓ frontend/modules/mazeRoom/mazeLatchButtons.test.js (32 tests) 171ms
+ ✓ frontend/modules/mazeRoom/mazeSeedlingLink.test.js (12 tests) 371ms
+ ✓ frontend/modules/mazeRoom/tileSpike/tileStep.test.js (29 tests) 1307ms
+ ✓ scripts/procgen/seedlingErMode.test.js (19 tests) 58728ms
+     ✓ vanilla through the mode's compile hook is AP_1, byte for byte  5966ms
+     ✓ sweep 'placed': live, never incomplete, refusals 9 → 6  12352ms
+     ✓ sweep 'events': live, never incomplete, refusals 0 → 0  13802ms
+ ✓ frontend/modules/mazeRoom/mazeSidedOpeners.test.js (27 tests) 39ms
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveTileLogic.test.js (23 tests) 1996ms
+     ✓ derives the AP rules (plain room; a rock on the block's path = the L15 shape)  427ms
+     ✓ the path-extracted logic agrees with the derived logic (T1/T2 fixed)  369ms
+ ✓ frontend/modules/mazeRoom/mazeThings.test.js (13 tests) 100ms
+ ✓ frontend/modules/mazeRoom/mazeTileArt.test.js (11 tests) 416ms
+     ✓ over every playable payload of the playthrough preset (116)  393ms
+ ✓ scripts/procgen/seedlingErSource.test.js (26 tests) 96808ms
+     ✓ the permissive bound is read off the compile's own layer and equals vanilla's (the bindings are the rooms build's)  11908ms
+     ✓ resumed after shuffle on COLD hooks, it compiles the committed preset and never re-pools, re-classifies or re-compiles vanilla  23286ms
+     ✓ MUTANT: a resume whose pooled atlas is not this tree's build is refused by the Seedling hooks  8011ms
+ ✓ frontend/modules/mazeRoom/tileSpike/learnLattice.test.js (24 tests) 1150ms
+     ✓ through the derive: a 12-door corridor walks rank (no learner call), a 13-door one learns — same answer shape  936ms
+ ✓ frontend/modules/mazeRoom/tileSpike/countedRules.test.js (12 tests) 1541ms
+     ✓ certifier: an event whose own rule counts is never held below that count (L71 shieldlock)  573ms
+ ✓ frontend/modules/mazeRoom/mazeTileFallback.test.js (14 tests) 146ms
+ ✓ frontend/modules/mazeRoom/mazeTileKindEditor.test.js (6 tests) 31ms
+ ✓ frontend/modules/mazeRoom/mazeLavaPulls.test.js (17 tests) 20ms
+ ✓ frontend/modules/mazeRoom/mazeTileKind.test.js (11 tests) 25ms
+ ✓ frontend/modules/mazeRoom/mazeTileKinds.test.js (19 tests) 30ms
+ ✓ scripts/procgen/derivedRuleOverride.test.js (17 tests) 1030ms
+     ✓ MUTANT: a row put where the worlds read (the hand inputs) IS carried — the read-back can fail  755ms
+ ✓ scripts/procgen/seedlingErDoorCensus.test.js (9 tests) 14673ms
+ ✓ frontend/modules/mazeRoom/mazeWeaponFootprints.test.js (16 tests) 47ms
+ ✓ frontend/modules/mazeRoom/tileSpike/puzzleLocks.test.js (14 tests) 1972ms
+     ✓ the grid: the lock's cell gates both moves through it; the interior piece (30,30) reverts; the crossing piece and the tree keep the ruling  1743ms
+ ✓ frontend/modules/mazeRoom/mazeConvertedLoad.test.js (18 tests) 242ms
+ ✓ frontend/modules/mazeRoom/mazeConvertedLink.test.js (15 tests) 78ms
+ ✓ frontend/modules/mazeRoom/tileSpike/certifyLavaPulls.test.js (11 tests) 5200ms
+     ✓ certifies clean (main: r16c1 → r12c3, r8c1 → r6c4 and r8c4 → r6c4 "not priced")  344ms
+     ✓ the scripted tile definition agrees with the native engine on every line (the pulls walked by both)  1283ms
+     ✓ mutant control: a broken `pulled` helper makes the scripted arm disagree with the native one  459ms
+     ✓ certifies clean, natively and scripted alike; the crossing is priced as the atlas prices it  2808ms
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.pullUpSet.test.js (11 tests) 63ms
+ ✓ scripts/procgen/refreshSeedlingDerivedRules.test.js (18 tests) 12ms
+ ✓ frontend/modules/flashPanel/flashSeedlingAtlasKnob.test.js (7 tests) 1730ms
+ ✓ frontend/modules/mazeRoom/tileSpike/derivedRuleRows.test.js (16 tests) 21ms
+ ✓ frontend/modules/mazeRoom/mazeLevelWorld.test.js (9 tests) 38ms
+ ✓ frontend/modules/mazeRoom/tileSpike/latchSandwich.test.js (15 tests) 108ms
+ ✓ scripts/procgen/wholeGameTools.test.js (15 tests) 10ms
+ ✓ frontend/modules/mazeRoom/tileSpike/waterExits.test.js (13 tests) 8510ms
+     ✓ L89 r11c12 → r1c10 needs two Swims in the world, as AP says; the level certifies clean  312ms
+     ✓ L54 (every crossing had been "not priced") certifies clean  385ms
+     ✓ level_53 (9,13) is floor carrying the grid's own gate, and the level certifies clean  539ms
+     ✓ level_71 (7,12) is floor carrying the grid's own gate, and the level certifies clean  433ms
+     ✓ certifies clean, r11c19 striking its event rock from the arrival exit  2494ms
+     ✓ its door to L86, in building1's doorway, is reached and priced  3282ms
+     ✓ certifies clean alone, and with L46 the talk is priced (the yeti)  410ms
+ ✓ scripts/procgen/derivedRulesProbe.test.js (16 tests) 12144ms
+     ✓ as ONE level world (the preset since tile-l12-one-world) none of its lock rows is copied; the two HAND sentinels stay  1082ms
+     ✓ the certifier AGREES on the Witch either way; only the echo label says the agreement is by construction  10518ms
+     ✓ a sentinel compile leaves the producer's cached event layer alone: the true compile after it is unchanged  382ms
+ ✓ frontend/modules/mazeRoom/tileSpike/encounterKillArms.test.js (8 tests) 1086ms
+     ✓ L53: no problem at the event's room; with opens_from stripped, OPEN_L53 returns (the pocket fires the event again)  962ms
+ ✓ frontend/modules/mazeRoom/tileSpike/certifyPocketTalk.test.js (8 tests) 20315ms
+     ✓ one named problem (r0c1 is entered on its dead end, east of the parked block); the pocket rows are excused or skipped by name  9993ms
+     ✓ mutant: admit the pocket crossing free and the pocket arrival's pairs are problems again (the excuse is the admission)  10248ms
+ ✓ frontend/modules/mazeRoom/mazeTileKindOverlay.test.js (7 tests) 12ms
+ ✓ scripts/procgen/regenSeedling.test.js (11 tests) 8ms
+ ✓ frontend/modules/flashPanel/seedlingMountKeyLevelSet.test.js (12 tests) 324ms
+ ✓ frontend/modules/mazeRoom/tileSpike/certifyInternalOnly.test.js (8 tests) 30455ms
+     ✓ L67 r3c2 (entered only from r6c11) is priced from r6c11; its own fresh-arrival rows are gone  18140ms
+     ✓ a member with an AP entrance from outside its world keeps fresh-arrival pricing (L19 r1c1, from L20)  444ms
+     ✓ L89's Feather (bound to its cheapest way, r1c10 by Swim) AGREES: no problem, nothing accepted, no permissive location  3122ms
+     ✓ a STRICTER Feather row is a problem, accepted only by a permissive name  5690ms
+     ✓ a LOOSER row on a permissive location is still a problem  2935ms
+ ✓ frontend/modules/mazeRoom/tileSpike/certifyLandingArrivals.test.js (8 tests) 67ms
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.pullDiscNit.test.js (3 tests) 744ms
+     ✓ UNCUT disc (main before the line test): every pair into r6c11 is unreachable — sound under upward closure, pinned  394ms
+     ✓ LINE-CUT disc (lavaTrapPulls now): the pair derives, and the suit-less arms are among its minimal sets  346ms
+ ✓ frontend/modules/mazeRoom/tileSpike/certifyLandingGates.test.js (5 tests) 150ms
+ ✓ scripts/procgen/derivedRuleTableFresh.test.js (2 tests) 37ms
+ ✓ frontend/modules/mazeRoom/tileSpike/certifyLandingCells.test.js (6 tests) 51ms
+ ✓ frontend/modules/mazeRoom/tileSpike/compactReach.test.js (5 tests) 19641ms
+     ✓ L40 laid (latches)  11825ms
+     ✓ a world with ropes (level_0__r1c6)  7424ms
+     ✓ MUTANT (the lazy re-search at the EMPTY inventory) goes RED on L40 laid and on the rope world  382ms
+ Test Files  55 passed (55)
+      Tests  845 passed (845)
+   Duration  286.84s (transform 9.97s, setup 3.78s, import 312.36s, tests 481.51s, environment 6ms)
