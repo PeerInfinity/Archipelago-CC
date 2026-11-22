@@ -47,6 +47,7 @@
  */
 
 import { resolveBiome } from './mazeRoomBiomeLibrary.js';
+import { engineBiomeOf } from './mazeRegionBiomes.js';
 
 /** ⛓ The square-lattice site-percolation threshold (Newman & Ziff 2000). */
 export const SQUARE_SITE_PERCOLATION = 0.592746;
@@ -62,7 +63,9 @@ export function mazeRoomIsOpen(params = {}, { exits = 0, biome = null } = {}) {
     if (exits === 0) return true;
     let resolved;
     try {
-        resolved = resolveBiome(biome);
+        // ⛓ CONTENT SETS GEN-1 — a region biome (`scattered`) is sized as its base: the engine builds the base, and its
+        //   tile kinds take only free cells, after sizing.
+        resolved = resolveBiome(engineBiomeOf(biome));
     } catch {
         return false;
     }
