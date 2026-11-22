@@ -1,0 +1,49 @@
+{
+ "seeds": [
+  101
+ ],
+ "tapes": [
+  {
+   "tape": "det-owl-sword-H.json",
+   "plannedSeed": 101,
+   "zeroHitSeeds": [],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t133 owlRock",
+      "t352 owlBody",
+      "t739 owlRock"
+     ],
+     "level": 112,
+     "error": "t738: levelRun: the player died (owlRock) at tick 739 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    }
+   ]
+  },
+  {
+   "tape": "det-owl-spear-H.json",
+   "plannedSeed": 101,
+   "zeroHitSeeds": [],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t133 owlRock",
+      "t350 owlBody",
+      "t824 owlRock"
+     ],
+     "level": 112,
+     "error": "t823: levelRun: the player died (owlRock) at tick 824 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the buil"
+    }
+   ]
+  }
+ ]
+}

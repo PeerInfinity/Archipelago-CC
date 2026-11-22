@@ -1,0 +1,114 @@
+{
+ "seeds": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  101
+ ],
+ "tapes": [
+  {
+   "tape": "det-owl-sword-B-scale-mean.json",
+   "plannedSeed": 101,
+   "zeroHitSeeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    101
+   ],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 1,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 2,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 3,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 4,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 5,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 6,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 7,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 8,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    },
+    {
+     "seed": 101,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+{
+ "seeds": [
+  101
+ ],
+ "tapes": [
+  {
+   "tape": "det-owl-sword-H.json",
+   "plannedSeed": 101,
+   "zeroHitSeeds": [],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 1,
+     "hits": 2,
+     "sources": [
+      "t166 owlRock",
+      "t1939 owlGrenade"
+     ],
+     "level": 113,
+     "error": null
+    }
+   ]
+  },
+  {
+   "tape": "det-owl-spear-H.json",
+   "plannedSeed": 101,
+   "zeroHitSeeds": [],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 0,
+     "hits": 3,
+     "sources": [
+      "t166 owlRock",
+      "t353 owlBody",
+      "t397 owlGrenade"
+     ],
+     "level": 112,
+     "error": "t396: levelRun: the player died (owlGrenade) at tick 397 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the b"
+    }
+   ]
+  }
+ ]
+}

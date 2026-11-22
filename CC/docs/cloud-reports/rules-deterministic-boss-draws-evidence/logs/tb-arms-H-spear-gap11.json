@@ -1,0 +1,51 @@
+{
+ "knobs": "pat=hash",
+ "hash": "jiggle",
+ "rows": [
+  {
+   "staging": "tb-hitless-pit",
+   "arm": "spear",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": false,
+   "error": "solverBot(tb-hitless-pit-spear) clear-tag {57,0} tentaclebeast@80,48 -> tentaclebeast: no Tentacled Beast policy variant opens the mouth of tentaclebeast@80,48 without a death on a fork of this run — {\"gap\":10,\"margin\":3,\"whirl\":26,\"warn\":\"hit\"}: the player died at spent 1360; {\"gap\":12,\"margin\":4,\"whirl\":30,\"warn\":\"hit\"}: the player died at spent 404; {\"gap\":8,\"margin\":2,\"whirl\":24,\"warn\":\"hit\"}:",
+   "ms": 1189,
+   "keyHash": null,
+   "keys": null
+  },
+  {
+   "staging": "tb-hitless-door",
+   "arm": "spear",
+   "seeds": [
+    418414780,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 418414780,
+   "ok": false,
+   "error": "solverBot(tb-hitless-door-spear) clear-tag {57,0} tentaclebeast@80,48 -> tentaclebeast: no Tentacled Beast policy variant opens the mouth of tentaclebeast@80,48 without a death on a fork of this run — {\"gap\":10,\"margin\":3,\"whirl\":26,\"warn\":\"hit\"}: the player died at spent 2314; {\"gap\":12,\"margin\":4,\"whirl\":30,\"warn\":\"hit\"}: the player died at spent 314; {\"gap\":8,\"margin\":2,\"whirl\":24,\"warn\":\"hit\"}",
+   "ms": 432,
+   "keyHash": null,
+   "keys": null
+  },
+  {
+   "staging": "tb-hitless-s2",
+   "arm": "spear",
+   "seeds": [
+    2,
+    7
+   ],
+   "sameOnBothSeeds": false,
+   "seed": 2,
+   "ok": false,
+   "error": "solverBot(tb-hitless-s2-spear) clear-tag {57,0} tentaclebeast@80,48 -> tentaclebeast: no Tentacled Beast policy variant opens the mouth of tentaclebeast@80,48 without a death on a fork of this run — {\"gap\":10,\"margin\":3,\"whirl\":26,\"warn\":\"hit\"}: the player died at spent 1914; {\"gap\":12,\"margin\":4,\"whirl\":30,\"warn\":\"hit\"}: the mouth is not open after 6000 ticks; {\"gap\":8,\"margin\":2,\"whirl\":24,\"warn",
+   "ms": 763,
+   "keyHash": null,
+   "keys": null
+  }
+ ]
+}

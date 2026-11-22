@@ -1,6 +1,6 @@
 --- seedlingDemo/finalBossRng.js	2026-11-18 03:33:20.403339786 +0000
-+++ seedlingDemoDet/finalBossRng.js	2026-11-22 05:33:38.910884978 +0000
-@@ -483,3 +483,88 @@
++++ seedlingDemoDet/finalBossRng.js	2026-11-22 05:49:36.742820425 +0000
+@@ -483,3 +483,90 @@
      }
      return true;
  }
@@ -18,6 +18,7 @@
 +export const DET_OWL_DEFAULT = Object.freeze({ barrage: 'every', aim: 'halton', scale: 'vdc5', grenade: 'leg', death: 'strata' });
 +/** Option H: `Game.shakeJiggle`'s hash (Game.as:1956) keyed on a FIGHT-LOCAL tick, a per-site salt in place of `axis`. */
 +export function hashH(t, salt) {
++    t += DET_PHASE;   // the global-`Game.time` variant: the fight-local key plus the arrival frame's phase
 +    if (HASHFN === 'mix') return mixH(t, salt); return ((Math.floor(t) * 2531 + salt * 1777) % 4093) / 4093; }
 +/** Option H2: a fight-local MIXING hash (lowbias32 finalizer), int math only, so AS3 computes the same bits:
 + *  `imul32` is Math.imul written with 16-bit halves (every intermediate an exact double < 2^53). */
@@ -29,6 +30,7 @@
 +}
 +
 +const HASHFN = (typeof process !== 'undefined' && process.env.DET_HASH) || 'jiggle';
++const DET_PHASE = Number((typeof process !== 'undefined' && process.env.DET_PHASE) || 0);
 +export function detOwlKnobs(env = (typeof process !== 'undefined' ? process.env.DET_OWL : '') || '') {
 +    const k = { ...DET_OWL_DEFAULT };
 +    for (const kv of env.split(',').filter(Boolean)) { const [a, v] = kv.split('='); if (a === 'pat' && v === 'hash') { for (const x of Object.keys(k)) k[x] = 'hash'; } else k[a] = v; }

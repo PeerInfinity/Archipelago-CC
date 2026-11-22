@@ -1,0 +1,45 @@
+{
+ "seeds": [
+  101
+ ],
+ "tapes": [
+  {
+   "tape": "det-owl-sword-H.json",
+   "plannedSeed": 101,
+   "zeroHitSeeds": [
+    101
+   ],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 101,
+     "win": true,
+     "podTouches": 0,
+     "hits": 0,
+     "sources": [],
+     "level": 113,
+     "error": null
+    }
+   ]
+  },
+  {
+   "tape": "det-owl-spear-H.json",
+   "plannedSeed": 101,
+   "zeroHitSeeds": [],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 0,
+     "hits": 1,
+     "sources": [
+      "t707 owlRock"
+     ],
+     "level": 112,
+     "error": "t795: levelRun: the player is inside pod@40,120's 16x16 cell at tick 795 in level 112 with its animation \"closed\". `Pod.update"
+    }
+   ]
+  }
+ ]
+}

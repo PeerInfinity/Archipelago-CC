@@ -1,0 +1,10 @@
+  candidates k=0 after []: 6 (drives so far 307)
+  candidates k=1 after [{"t":336,"x":119,"y":36}]: 6 (drives so far 391)
+  candidates k=2 after [{"t":336,"x":119,"y":36},{"t":677,"x":59,"y":160}]: 0 (drives so far 796)
+  candidates k=2 after [{"t":336,"x":119,"y":36},{"t":683,"x":37,"y":145}]: 0 (drives so far 1900)
+  candidates k=2 after [{"t":336,"x":119,"y":36},{"t":665,"x":53,"y":157}]: 0 (drives so far 3002)
+    finish {"t":1578,"x":147,"y":60}: t1812: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+    finish {"t":1581,"x":145,"y":59}: t1819: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+    finish {"t":1889,"x":90,"y":67}: OK
+  candidates k=2 after [{"t":336,"x":119,"y":36},{"t":662,"x":51,"y":156}]: 6 (drives so far 3818)
+PLAN {"weapon":"spear","seed":101,"orbit":"nw2","boot":{"level":112,"x":32,"y":208},"maxHits":0,"drives":3825,"wallSec":104,"ok":true,"shoves":[{"t":336,"x":119,"y":36},{"t":662,"x":51,"y":156},{"t":1889,"x":90,"y":67}],"introPress":2,"ticks":2200,"tagTick":2017,"exitFrom":2121,"model":{"level":113,"end":{"x":80,"y":136},"hits":[],"lava":[342,709,1908],"flags":["112:0","112:1"],"shovesLanded":9,"shoveTests":9,"rocks":205,"rocksOnPlayer":0,"grenades":13},"tried":{"c0":6,"c1":6,"c2":6}}

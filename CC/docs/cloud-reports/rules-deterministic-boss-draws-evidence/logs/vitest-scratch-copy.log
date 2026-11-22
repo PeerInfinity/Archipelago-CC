@@ -1,0 +1,449 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemoDet/finalBossFight.test.js (31 tests) 24ms
+ ✓ frontend/modules/seedlingDemoDet/finalBossRng.test.js (23 tests) 73ms
+ ✓ frontend/modules/seedlingDemoDet/rng.test.js (13 tests) 1391ms
+     ✓ never enters state 0 — which is what frees 0 to mean "no seed"  787ms
+     ✓ keeps the orbit below 2^31, which is what bounds a declarable seed  426ms
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js (37 tests | 20 failed) 7419ms
+     ✓ ships ON (flipped) 1ms
+     ✓ a tentacle's life is rise 16, sit 37, hit 16, hitting 4, sink 13 (86 updates); the beast rises in 46, dies in 61 1ms
+     × the beast is the ctor point (x + 24, y + 24), asleep, eight tentacles and one whirlpool owed 15ms
+     ✓ the stream is the runtime LFSR on the declared seed, the build's one draw first (D1: placements per seed) 1ms
+     × the stream's premises, refused by name: a declared seed, `split: true`, and this room the only one built 2ms
+     ✓ the swipe is a 66x8 rect on the tentacle's facing side (`Rectangle(66 * int(!right), 6, 66, 8)`) 1ms
+     ✓ a sword lands only on a sitting tentacle (`canHit`), once (`hitsMax` 1), and starts its cut 0ms
+     ✓ there are eight, each recorded on p4g 0ms
+     × tb-death-s3: every one of 600 ticks — the player, the beast, every tentacle, the generator 117ms
+     × tb-enter-cleared: every one of 121 ticks — the player, the beast, every tentacle, the generator 24ms
+     × tb-hitless-door: every one of 971 ticks — the player, the beast, every tentacle, the generator 147ms
+     × tb-hitless-pit: every one of 1390 ticks — the player, the beast, every tentacle, the generator 127ms
+     × tb-hitless-s2: every one of 1846 ticks — the player, the beast, every tentacle, the generator 157ms
+     × tb-idle-s1: every one of 600 ticks — the player, the beast, every tentacle, the generator 35ms
+     × tb-policy-s2: every one of 908 ticks — the player, the beast, every tentacle, the generator 66ms
+     × tb-solve-s2: every one of 1047 ticks — the player, the beast, every tentacle, the generator 62ms
+     ✓ tb-death-s3: the game dies and rebuilds the room, and the stream runs on (no re-seed) 1ms
+     ✓ tb-solve-s2: the game writes {57,0} and leaves through the mouth into L58 0ms
+     × ON (tentacleHitlessFirst true): the verb opens the mouth with no death, {57,0} is earned, and the walk leaves into L58 — the plan is tb-hitless-s2 1135ms
+     × ON (tentacleHitlessFirst false): the verb opens the mouth with no death, {57,0} is earned, and the walk leaves into L58 — the plan is tb-solve-s2 398ms
+     ✓ OFF: the clear-tag refuses, and the refusal names the missing strategy row 2ms
+     × ON, unsplit: the clear-tag refuses, and the refusal names the stream's premise 71ms
+     ✓ ON, at the build (no advance): the mouth (96,64) → L58 (56,96) stands 9ms
+     ✓ OFF, and ON with the beast alive: no mouth at the build 2ms
+     ✓ ON, the revisit walk: into L58 at t162 at (64,104), as the game 15ms
+     × from t789 (report t787, "dying", no mouth yet) the walk idles, then leaves by the mouth: the witness's tape 30ms
+     ✓ is ON by default (flipped) 0ms
+     ✓ the ranking: hitless, then fewest hits, then ticks, then list order; a death never wins; none ok → null 1ms
+     × seed 2 (tb-solve-s2's staging): OFF commits variant 0 and its swipe at t393, the game's plan; ON a hitless one 599ms
+     × seed 7: ON, a variant whose fork drowns at a whirlpool's centre is rejected as a death, and a hitless one wins 760ms
+     × door staging, seed 35: no variant is hitless — the fewest hits win (one swipe), the solve still completes 1169ms
+     ✓ tb-hitless-pit: the game takes no hit, writes {57,0} and leaves into L58 0ms
+     × tb-hitless-pit: ON re-plans the witness's own tape (variant 4, 1389 t, 0 hits) 773ms
+     ✓ tb-hitless-door: the game takes no hit, writes {57,0} and leaves into L58 0ms
+     × tb-hitless-door: ON re-plans the witness's own tape (variant 1, 977 t, 0 hits) 1036ms
+     ✓ tb-hitless-s2: the game takes no hit, writes {57,0} and leaves into L58 1ms
+     × tb-hitless-s2: ON re-plans the witness's own tape (variant 1, 1850 t, 0 hits) 657ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 20 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > bosskills D3 — the transcription (`Enemies/TentacleBeast.as`, `Enemies/Tentacle.as`) > the beast is the ctor point (x + 24, y + 24), asleep, eight tentacles and one whirlpool owed
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:66:39
+     64|         expect([f.beast.x, f.beast.y, f.beast.activated, f.beast.maxTe…
+     65|             .toEqual([104, 72, false, 8, 1]);
+     66|         expect(f.stream.counts.build).toBe(1);
+       |                                       ^
+     67|         expect(TENTACLE_BEAST.distActivate).toBe(48);
+     68|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > bosskills D3 — the transcription (`Enemies/TentacleBeast.as`, `Enemies/Tentacle.as`) > the stream's premises, refused by name: a declared seed, `split: true`, and this room the only one built
+TypeError: .toMatch() expects to receive a string, but got object
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:96:14
+     94|         expect(tentacleStreamRefusal(ok, { bootLevel: 57, level: 57, w…
+     95|         expect(tentacleStreamRefusal({ seed: 1, split: false }, { boot…
+     96|             .toMatch(/split: true/);
+       |              ^
+     97|         expect(tentacleStreamRefusal({ seed: 0, split: true }, { bootL…
+     98|             .toMatch(/declared `rng.seed`/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > bosskills D3 — the game witnesses, at 0 px (the switch ON) > tb-death-s3: every one of 600 ticks — the player, the beast, every tentacle, the generator
+AssertionError: expected [ …(6) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "t 0: rng game 1207959553 model -1",
++   "t 1: rng game 1207959553 model -1",
++   "t 2: rng game 1207959553 model -1",
++   "t 3: rng game 1207959553 model -1",
++   "t 4: rng game 1207959553 model -1",
++   "t 5: rng game 1207959553 model -1",
++ ]
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:172:37
+    170|                 if (g.rngState !== s.rngState) bad.push(`t ${g.t}: rng…
+    171|             }
+    172|             expect(bad.slice(0, 6)).toEqual([]);
+       |                                     ^
+    173|         }, 120000);
+    174|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > bosskills D3 — the game witnesses, at 0 px (the switch ON) > tb-enter-cleared: every one of 121 ticks — the player, the beast, every tentacle, the generator
+AssertionError: expected [ …(6) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "t 2: rng game 1207959552 model -1",
++   "t 3: rng game 1207959552 model -1",
++   "t 4: rng game 1207959552 model -1",
++   "t 5: rng game 1207959552 model -1",
++   "t 6: rng game 1207959552 model -1",
++   "t 7: rng game 1207959552 model -1",
++ ]
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:172:37
+    170|                 if (g.rngState !== s.rngState) bad.push(`t ${g.t}: rng…
+    171|             }
+    172|             expect(bad.slice(0, 6)).toEqual([]);
+       |                                     ^
+    173|         }, 120000);
+    174|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > bosskills D3 — the game witnesses, at 0 px (the switch ON) > tb-hitless-door: every one of 971 ticks — the player, the beast, every tentacle, the generator
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > bosskills D3 — the game witnesses, at 0 px (the switch ON) > tb-hitless-pit: every one of 1390 ticks — the player, the beast, every tentacle, the generator
+AssertionError: expected [ …(6) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "t 0: rng game 209207390 model -1",
++   "t 1: rng game 209207390 model -1",
++   "t 2: rng game 209207390 model -1",
++   "t 3: rng game 209207390 model -1",
++   "t 4: rng game 209207390 model -1",
++   "t 5: rng game 209207390 model -1",
++ ]
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:172:37
+    170|                 if (g.rngState !== s.rngState) bad.push(`t ${g.t}: rng…
+    171|             }
+    172|             expect(bad.slice(0, 6)).toEqual([]);
+       |                                     ^
+    173|         }, 120000);
+    174|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > bosskills D3 — the game witnesses, at 0 px (the switch ON) > tb-hitless-s2: every one of 1846 ticks — the player, the beast, every tentacle, the generator
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > bosskills D3 — the game witnesses, at 0 px (the switch ON) > tb-policy-s2: every one of 908 ticks — the player, the beast, every tentacle, the generator
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > bosskills D3 — the game witnesses, at 0 px (the switch ON) > tb-solve-s2: every one of 1047 ticks — the player, the beast, every tentacle, the generator
+AssertionError: expected [ 't 0: rng game 1 model -1', …(5) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "t 0: rng game 1 model -1",
++   "t 1: rng game 1 model -1",
++   "t 2: rng game 1 model -1",
++   "t 3: rng game 1 model -1",
++   "t 4: rng game 1 model -1",
++   "t 5: rng game 1 model -1",
++ ]
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:172:37
+    170|                 if (g.rngState !== s.rngState) bad.push(`t ${g.t}: rng…
+    171|             }
+    172|             expect(bad.slice(0, 6)).toEqual([]);
+       |                                     ^
+    173|         }, 120000);
+    174|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > bosskills D3 — the game witnesses, at 0 px (the switch ON) > tb-idle-s1: every one of 600 ticks — the player, the beast, every tentacle, the generator
+AssertionError: expected [ …(6) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "t 0: rng game 1207959552 model -1",
++   "t 1: rng game 1207959552 model -1",
++   "t 2: rng game 1207959552 model -1",
++   "t 3: rng game 1207959552 model -1",
++   "t 4: rng game 1207959552 model -1",
++   "t 5: rng game 1207959552 model -1",
++ ]
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:172:37
+    170|                 if (g.rngState !== s.rngState) bad.push(`t ${g.t}: rng…
+    171|             }
+    172|             expect(bad.slice(0, 6)).toEqual([]);
+       |                                     ^
+    173|         }, 120000);
+    174|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > bosskills D3 — the solver (`solid:tentaclebeast` → `tentaclebeast`) > ON (tentacleHitlessFirst true): the verb opens the mouth with no death, {57,0} is earned, and the walk leaves into L58 — the plan is tb-hitless-s2
+AssertionError: expected 1491 to be 1850 // Object.is equality
+
+- Expected
++ Received
+
+- 1850
++ 1491
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:212:40
+    210|             expect(run.playerDeaths.length).toBe(0);
+    211|             // HITLESS's witnesses are recorded one tick past the solv…
+    212|             expect(out.perTick.length).toBe(witnesses.find((x) => x.na…
+       |                                        ^
+    213|         });
+    214|     }, 120000);
+ ❯ withContactFidelity frontend/modules/seedlingDemoDet/contactFidelity.js:2721:15
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:204:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > bosskills D3 — the solver (`solid:tentaclebeast` → `tentaclebeast`) > ON (tentacleHitlessFirst false): the verb opens the mouth with no death, {57,0} is earned, and the walk leaves into L58 — the plan is tb-solve-s2
+AssertionError: expected 1325 to be 1047 // Object.is equality
+
+- Expected
++ Received
+
+- 1047
++ 1325
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:212:40
+    210|             expect(run.playerDeaths.length).toBe(0);
+    211|             // HITLESS's witnesses are recorded one tick past the solv…
+    212|             expect(out.perTick.length).toBe(witnesses.find((x) => x.na…
+       |                                        ^
+    213|         });
+    214|     }, 120000);
+ ❯ withContactFidelity frontend/modules/seedlingDemoDet/contactFidelity.js:2721:15
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:204:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > bosskills D3 — the solver (`solid:tentaclebeast` → `tentaclebeast`) > ON, unsplit: the clear-tag refuses, and the refusal names the stream's premise
+AssertionError: expected null to be an instance of SolverRefusal
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:237:19
+    235|             try { solveSegment({ run, goals: goals.slice(0, 1), name: …
+    236|         });
+    237|         expect(e).toBeInstanceOf(SolverRefusal);
+       |                   ^
+    238|         expect(e.message).toMatch(/split: true/);
+    239|     }, 120000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > bossfork D1b — a reach-exit at the mouth waits out "dying" (`awaitTentacleMouth`) > from t789 (report t787, "dying", no mouth yet) the walk idles, then leaves by the mouth: the witness's tape
+AssertionError: expected [ 'under', null, null ] to deeply equal [ 'dying', null, { tag: +0 } ]
+
+- Expected
++ Received
+
+  [
+-   "dying",
++   "under",
++   null,
+    null,
+-   {
+-     "tag": 0,
+-   },
+  ]
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:316:55
+    314|             for (let t = 0; t < 789; t += 1) run.advance(per[t]);
+    315|             const f = run.entities('tentacleBeastFight');
+    316|             expect([f.beast.anim, f.mouth, f.report]).toEqual(['dying'…
+       |                                                       ^
+    317|             const out = solveSegment({ run, goals: [{ kind: 'reach-exi…
+    318|                 boot: staging.boot, prefix: per.slice(0, 789) });
+ ❯ withContactFidelity frontend/modules/seedlingDemoDet/contactFidelity.js:2721:15
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:312:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > fidelity HITLESS — the Tentacled Beast's fork prefers a variant that takes no hit (`tentacleHitlessFirst`) > seed 2 (tb-solve-s2's staging): OFF commits variant 0 and its swipe at t393, the game's plan; ON a hitless one
+AssertionError: expected [ 1325, [], 1, undefined ] to deeply equal [ 1047, [ '393:tentacle' ], 1, …(1) ]
+
+- Expected
++ Received
+
+  [
+-   1047,
+-   [
+-     "393:tentacle",
+-   ],
++   1325,
++   [],
+    1,
+    undefined,
+  ]
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:378:90
+    376|     it('seed 2 (tb-solve-s2\'s staging): OFF commits variant 0 and its…
+    377|         const off = solveAt(2, false);
+    378|         expect([off.out.perTick.length, off.hits, off.rec.tried.length…
+       |                                                                                          ^
+    379|         expect(w.samples.at(-1).hits).toBe(1);
+    380|         const on = solveAt(2, true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > fidelity HITLESS — the Tentacled Beast's fork prefers a variant that takes no hit (`tentacleHitlessFirst`) > seed 7: ON, a variant whose fork drowns at a whirlpool's centre is rejected as a death, and a hitless one wins
+AssertionError: expected { params: { gap: 12, …(3) }, …(4) } to match object { ok: false, hits: null }
+(7 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "hits": null,
+-   "ok": false,
++   "hits": 0,
++   "ok": true,
+  }
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:392:33
+    390|     it('seed 7: ON, a variant whose fork drowns at a whirlpool\'s cent…
+    391|         const on = solveAt(7, true);
+    392|         expect(on.rec.tried[1]).toMatchObject({ ok: false, hits: null …
+       |                                 ^
+    393|         // ⛓ RESIDUE's flip (`whirlpoolDrown` ON by default): the drow…
+    394|         expect(on.rec.tried[1].why).toMatch(/^the player drowned in wh…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > fidelity HITLESS — the Tentacled Beast's fork prefers a variant that takes no hit (`tentacleHitlessFirst`) > door staging, seed 35: no variant is hitless — the fewest hits win (one swipe), the solve still completes
+AssertionError: expected { rule: 'hitless', variant: +0, …(3) } to deeply equal { rule: 'fewest-hits', …(4) }
+
+- Expected
++ Received
+
+  {
+-   "hitless": 0,
+-   "hits": 1,
+-   "rule": "fewest-hits",
++   "hitless": 3,
++   "hits": 0,
++   "rule": "hitless",
+    "tried": 5,
+-   "variant": 3,
++   "variant": 0,
+  }
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:411:31
+    409|             return { run, out, rec: out.records.find((r) => r.verb ===…
+    410|         });
+    411|         expect(on.rec.choice).toEqual({ rule: 'fewest-hits', variant: …
+       |                               ^
+    412|         expect(on.rec.tried.map((t) => t.hits)).toEqual([1, 2, 1, 1, 1…
+    413|         expect([(on.run.ledger('playerHits') ?? []).map((h) => `${h.t}…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > fidelity HITLESS D2 — the hitless solves, witnessed on the game at 0 px > tb-hitless-pit: ON re-plans the witness's own tape (variant 4, 1389 t, 0 hits)
+AssertionError: expected [ 1491, 58, +0 ] to deeply equal [ 1389, 58, +0 ]
+
+- Expected
++ Received
+
+  [
+-   1389,
++   1491,
+    58,
+    0,
+  ]
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:466:94
+    464|             const w = witnesses.find((x) => x.name === name);
+    465|             const { out, run, rec } = replanOf(w.tape);
+    466|             expect([out.perTick.length, run.level, (run.ledger('player…
+       |                                                                                              ^
+    467|             expect(rec.choice).toMatchObject({ rule: 'hitless', varian…
+    468|             expect([...out.perTick.map((k) => [...k].sort().join('+'))…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > fidelity HITLESS D2 — the hitless solves, witnessed on the game at 0 px > tb-hitless-door: ON re-plans the witness's own tape (variant 1, 977 t, 0 hits)
+AssertionError: expected [ 1149, 58, +0 ] to deeply equal [ 977, 58, +0 ]
+
+- Expected
++ Received
+
+  [
+-   977,
++   1149,
+    58,
+    0,
+  ]
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:466:94
+    464|             const w = witnesses.find((x) => x.name === name);
+    465|             const { out, run, rec } = replanOf(w.tape);
+    466|             expect([out.perTick.length, run.level, (run.ledger('player…
+       |                                                                                              ^
+    467|             expect(rec.choice).toMatchObject({ rule: 'hitless', varian…
+    468|             expect([...out.perTick.map((k) => [...k].sort().join('+'))…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/20]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js > fidelity HITLESS D2 — the hitless solves, witnessed on the game at 0 px > tb-hitless-s2: ON re-plans the witness's own tape (variant 1, 1850 t, 0 hits)
+AssertionError: expected [ 1491, 58, +0 ] to deeply equal [ 1850, 58, +0 ]
+
+- Expected
++ Received
+
+  [
+-   1850,
++   1491,
+    58,
+    0,
+  ]
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityTentacleBeast.test.js:466:94
+    464|             const w = witnesses.find((x) => x.name === name);
+    465|             const { out, run, rec } = replanOf(w.tape);
+    466|             expect([out.perTick.length, run.level, (run.ledger('player…
+       |                                                                                              ^
+    467|             expect(rec.choice).toMatchObject({ rule: 'hitless', varian…
+    468|             expect([...out.perTick.map((k) => [...k].sort().join('+'))…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/20]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  20 failed | 84 passed (104)
+   Start at  06:00:58
+   Duration  11.92s (transform 4.20s, setup 957ms, import 5.68s, tests 8.91s, environment 0ms)
+

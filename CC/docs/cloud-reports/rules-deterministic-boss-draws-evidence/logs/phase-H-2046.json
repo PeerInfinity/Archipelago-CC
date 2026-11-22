@@ -1,0 +1,46 @@
+{
+ "seeds": [
+  101
+ ],
+ "tapes": [
+  {
+   "tape": "det-owl-sword-H.json",
+   "plannedSeed": 101,
+   "zeroHitSeeds": [],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 0,
+     "hits": 2,
+     "sources": [
+      "t538 owlGrenade",
+      "t633 lava"
+     ],
+     "level": 112,
+     "error": "t662: levelRun: the player died (lava) at tick 663 in level 112, the Owl's room. `restartLevel()` rebuilds it, and the build's"
+    }
+   ]
+  },
+  {
+   "tape": "det-owl-spear-H.json",
+   "plannedSeed": 101,
+   "zeroHitSeeds": [],
+   "hitOnlySeeds": [],
+   "rows": [
+    {
+     "seed": 101,
+     "win": false,
+     "podTouches": 1,
+     "hits": 1,
+     "sources": [
+      "t824 owlRock"
+     ],
+     "level": 112,
+     "error": null
+    }
+   ]
+  }
+ ]
+}

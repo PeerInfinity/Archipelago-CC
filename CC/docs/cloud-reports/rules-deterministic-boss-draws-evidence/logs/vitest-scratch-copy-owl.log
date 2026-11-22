@@ -1,0 +1,219 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityOwlSuit.test.js (7 tests | 2 failed) 482ms
+     ✓ ships OFF, appended after darkSuitBossRetaliation, with a worker env name 2ms
+     ✓ OFF: the named `byEnemy` refusal; with `darkSuitBossRetaliation` ON it carries wave 48's D1 text 89ms
+     ✓ ON: billed in the step; the shove is `knockback(1, p)` into `v`, and that tick's phase reads the new `|v|` 19ms
+     ✓ ON with `darkSuitBossRetaliation` ON as well: the same rows (this key declares the Owl by itself) 39ms
+     ✓ the same inputs without the suit: the tick is a walk and the Owl's `v` is his own, ON as OFF 25ms
+     × the pod snap: the AS3 bills the PRE-snap point, so the lethal contact lands a tick later ON 275ms
+     × a rock-spawn tick: OFF refuses; ON bills, and the barrage aim reads the knocked-back `p.v` 31ms
+ ✓ frontend/modules/seedlingDemoDet/fidelityDarkSuitBosses.test.js (11 tests) 1053ms
+ ✓ frontend/modules/seedlingDemoDet/seedlingOwlIntro.test.js (6 tests) 2638ms
+     ✓ r6-owl-kill: the row is up for exactly the intro frames (0–2), then gone after the X release  389ms
+     ✓ (a) the digest, the clears, the stream and the end state are unmoved by a read every tick  2149ms
+ ✓ frontend/modules/seedlingDemoDet/fidelityShakeExact.test.js (13 tests) 4655ms
+     ✓ the unsplit L42 game witness (rebootshake-l42-part0-damage) — ON, still banded, and the band holds the game  2267ms
+     ✓ ON: every sampled camera is the game's — a point at 0 px, or a kept band holding it  846ms
+     ✓ OFF: the band, which still holds the game (the 10-10 ruling's face)  1109ms
+ ✓ frontend/modules/seedlingDemoDet/jsRuntimeBossWiring.test.js (8 tests) 24ms
+ ❯ frontend/modules/seedlingDemoDet/fidelityResidue.test.js (24 tests | 6 failed) 46053ms
+     ✓ is ON by default (flipped), behind `drillTimedPass` (ON) 1ms
+     ✓ ON: from the L25 arrival to the L26 door — SOLVED 182 t, 0 hits, the exit a certified pass of 111 t  10045ms
+     ✓ ON: from the L25 arrival to the L25 door — SOLVED 134 t, 0 hits, the exit a certified pass of 63 t  730ms
+     ✓ ON: from the L26 arrival to the L26 door — REFUSED at the cut by name: the one stand that holds leaves no way out  10530ms
+     ✓ ON: from the L26 arrival to the L25 door — REFUSED at the cut by name: the one stand that holds leaves no way out  9965ms
+     ✓ OFF (byte-identical): the exit after the cut refuses at its first gate — the residue TIMEDPASS named 222ms
+     ✓ ON: a cut with no exit after it plans what OFF plans (no way out is asked) — L25, 70 t  649ms
+     ✓ ON: a Sword run is untouched — the exit walk after the kill and the cut is OFF's, tick for tick  601ms
+     ✓ residue-l28-fire-l25-exit-l26: recorded on the default build, hit-free, and across the door 1ms
+     ✓ residue-l28-fire-l25-exit-l25: recorded on the default build, hit-free, and across the door 1ms
+     ✓ residue-l28-fire-l25-exit-l26: the model (both keys ON) reproduces the game on every sampled tick 45ms
+     ✓ residue-l28-fire-l25-exit-l25: the model (both keys ON) reproduces the game on every sampled tick 43ms
+     ✓ residue-l28-fire-l25-exit-l26: the solver still plans the recorded tape  6834ms
+     ✓ residue-l28-fire-l25-exit-l25: the solver still plans the recorded tape  588ms
+     ✓ every exit witness file exists 0ms
+     ✓ is ON by default (flipped) 0ms
+     × the fight ends with whirlpool#78 at (107,116), timer 174 — growing for 84 updates more, then live for 60 144ms
+     × WAIT prices the disc from the update it is live; TRANSIT the ETA's own; the box is a volume; OFF nothing 147ms
+     × OFF: seed 15 THROWS the drown as a plain Error (bosskills D3) — not a refusal 1269ms
+     × ON: seed 15 SOLVES — the walk stalls out whirlpool#78 (DODGE's whirlpool arm), no death, into L58 1057ms
+     ✓ at the defaults (HITLESS ON, its settle) seed 15 plans what OFF plans, tick for tick  2867ms
+     ✓ is recorded on the default build; the game holds the player still for the drown and kills it at t2202 1ms
+     × ON: the model reproduces the game on every sampled tick, and the death is a `playerDeaths` row 132ms
+     × OFF: the model refuses the first `drown()` call by name (t2183) — the residue HITLESS named 176ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityOwlSuit.test.js > OWLSUIT — no suit: the order moves a measured value > the pod snap: the AS3 bills the PRE-snap point, so the lethal contact lands a tick later ON
+AssertionError: expected [ Array(440) ] to have a length of 424 but got 440
+
+- Expected
++ Received
+
+- 424
++ 440
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityOwlSuit.test.js:139:25
+    137|         // the two runs agree on every Owl tick before it (OFF dies on…
+    138|         expect(off.owl.slice(0, snap.t)).toEqual(on.owl.slice(0, snap.…
+    139|         expect(off.owl).toHaveLength(snap.t);
+       |                         ^
+    140|         const rows = (r) => r.hits.map((h) => [h.t, h.source, h.hits]);
+    141|         expect(rows(off)).toEqual([[277, 'owlRock', 1], [403, 'owlBody…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityOwlSuit.test.js > OWLSUIT — no suit: the order moves a measured value > a rock-spawn tick: OFF refuses; ON bills, and the barrage aim reads the knocked-back `p.v`
+TypeError: .toMatch() expects to receive a string, but got object
+ ❯ frontend/modules/seedlingDemoDet/fidelityOwlSuit.test.js:149:28
+    147|     it('a rock-spawn tick: OFF refuses; ON bills, and the barrage aim …
+    148|         const off = stage(ROCK, false);
+    149|         expect(off.thrown).toMatch(ROCK_REFUSAL);
+       |                            ^
+    150|         const on = stage(ROCK, true);
+    151|         expect(on.thrown).toBe(null);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityResidue.test.js > fidelity RESIDUE D-B — the pull, priced (door staging, seed 15, HITLESS OFF: the fight leaves three alive) > the fight ends with whirlpool#78 at (107,116), timer 174 — growing for 84 updates more, then live for 60
+AssertionError: expected [ Array(1) ] to deeply equal [ { id: 'whirlpool#78', …(3) }, …(2) ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "id": "whirlpool#78",
+-     "timer": 174,
+-     "x": 107,
+-     "y": 116,
+-   },
+-   {
+-     "id": "whirlpool#77",
+-     "timer": 132,
+-     "x": 165,
+-     "y": 153,
+-   },
+-   {
+-     "id": "whirlpool#76",
+-     "timer": 86,
+-     "x": 50,
++     "id": "whirlpool#43",
++     "timer": 78,
++     "x": 170,
+      "y": 174,
+    },
+  ]
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityResidue.test.js:211:63
+    209|         const { run, error } = fight();
+    210|         expect(error).toBeNull();
+    211|         expect(run.entities('tentacleBeastFight').whirlpools).toEqual([
+       |                                                               ^
+    212|             { id: 'whirlpool#78', x: 107, y: 116, timer: 174 }, { id: …
+    213|             { id: 'whirlpool#76', x: 50, y: 174, timer: 86 }]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityResidue.test.js > fidelity RESIDUE D-B — the pull, priced (door staging, seed 15, HITLESS OFF: the fight leaves three alive) > WAIT prices the disc from the update it is live; TRANSIT the ETA's own; the box is a volume; OFF nothing
+AssertionError: expected [] to deeply equal [ 'whirlpool#78' ]
+
+- Expected
++ Received
+
+- [
+-   "whirlpool#78",
+- ]
++ []
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityResidue.test.js:222:42
+    220|         expect(at(107, 116, 0, 'wait')).toEqual([]);           // the …
+    221|         expect(at(107, 116, 84, 'wait')).toEqual([]);          // …and…
+    222|         expect(at(107, 116, 85, 'wait')).toEqual(['whirlpool#78']);
+       |                                          ^
+    223|         expect(at(107, 116, 104, 'transit')).toEqual(['whirlpool#78']);
+    224|         expect(at(107, 116, 145, 'transit')).toEqual([]);      // +145…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityResidue.test.js > fidelity RESIDUE D-B — the solver (HITLESS OFF: the walk to the mouth meets a live whirlpool) > OFF: seed 15 THROWS the drown as a plain Error (bosskills D3) — not a refusal
+AssertionError: expected null not to be null
+ ❯ frontend/modules/seedlingDemoDet/fidelityResidue.test.js:241:29
+    239|     it('OFF: seed 15 THROWS the drown as a plain Error (bosskills D3) …
+    240|         const r = solve57(15, { hitless: false, drown: false });
+    241|         expect(r.error).not.toBeNull();
+       |                             ^
+    242|         expect(r.error).not.toBeInstanceOf(SolverRefusal);
+    243|         expect(r.error.message).toMatch(/whirlpool#78 pulls the player…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityResidue.test.js > fidelity RESIDUE D-B — the solver (HITLESS OFF: the walk to the mouth meets a live whirlpool) > ON: seed 15 SOLVES — the walk stalls out whirlpool#78 (DODGE's whirlpool arm), no death, into L58
+AssertionError: expected [ 58, 1071, +0 ] to deeply equal [ 58, 2416, +0 ]
+
+- Expected
++ Received
+
+  [
+    58,
+-   2416,
++   1071,
+    0,
+  ]
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityResidue.test.js:248:90
+    246|         const r = solve57(15, { hitless: false, drown: true });
+    247|         expect(r.error).toBeNull();
+    248|         expect([r.run.level, r.out.perTick.length, r.run.ledger('playe…
+       |                                                                                          ^
+    249|     }, 180000);
+    250|     it('at the defaults (HITLESS ON, its settle) seed 15 plans what OF…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityResidue.test.js > fidelity RESIDUE D-B — the game witness (p4g): a walk into a live whirlpool, drowned, at 0 px > ON: the model reproduces the game on every sampled tick, and the death is a `playerDeaths` row
+AssertionError: expected [ …(6) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "t 0: rng game 1207959559 model -1",
++   "t 1: rng game 1207959559 model -1",
++   "t 2: rng game 1207959559 model -1",
++   "t 3: rng game 1207959559 model -1",
++   "t 4: rng game 1207959559 model -1",
++   "t 5: rng game 1207959559 model -1",
++ ]
+
+ ❯ frontend/modules/seedlingDemoDet/fidelityResidue.test.js:309:33
+    307|             if (g.rngState !== s.rngState) bad.push(`t ${g.t}: rng gam…
+    308|         }
+    309|         expect(bad.slice(0, 6)).toEqual([]);
+       |                                 ^
+    310|         expect(m.deaths).toEqual([{ t: 2202, level: 57, source: 'whirl…
+    311|             respawn: { x: 104, y: 72 } }]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  frontend/modules/seedlingDemoDet/fidelityResidue.test.js > fidelity RESIDUE D-B — the game witness (p4g): a walk into a live whirlpool, drowned, at 0 px > OFF: the model refuses the first `drown()` call by name (t2183) — the residue HITLESS named
+TypeError: .toMatch() expects to receive a string, but got object
+ ❯ frontend/modules/seedlingDemoDet/fidelityResidue.test.js:315:25
+    313|     it('OFF: the model refuses the first `drown()` call by name (t2183…
+    314|         const m = model(false);
+    315|         expect(m.error).toMatch(/^levelRun: whirlpool#78 pulls the pla…
+       |                         ^
+    316|         expect(m.deaths).toEqual([]);
+    317|     }, 120000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  2 failed | 4 passed (6)
+      Tests  8 failed | 61 passed (69)
+   Start at  06:01:26
+   Duration  52.98s (transform 7.96s, setup 1.15s, import 14.61s, tests 54.90s, environment 1ms)
+

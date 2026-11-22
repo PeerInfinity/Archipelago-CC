@@ -1,0 +1,20 @@
+  candidates k=0 after []: 6 (drives so far 247)
+  candidates k=1 after [{"t":345,"x":93,"y":62}]: 0 (drives so far 1446)
+  candidates k=1 after [{"t":339,"x":96,"y":59}]: 1 (drives so far 1803)
+  candidates k=2 after [{"t":339,"x":96,"y":59},{"t":842,"x":21,"y":130}]: 0 (drives so far 2662)
+  candidates k=1 after [{"t":342,"x":90,"y":61}]: 0 (drives so far 3935)
+  candidates k=1 after [{"t":345,"x":89,"y":62}]: 4 (drives so far 4298)
+  candidates k=2 after [{"t":345,"x":89,"y":62},{"t":844,"x":48,"y":153}]: 0 (drives so far 5217)
+  candidates k=2 after [{"t":345,"x":89,"y":62},{"t":844,"x":26,"y":131}]: 0 (drives so far 6136)
+  candidates k=2 after [{"t":345,"x":89,"y":62},{"t":844,"x":48,"y":157}]: 0 (drives so far 7055)
+    finish {"t":1939,"x":117,"y":40}: t2226: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+    finish {"t":1939,"x":99,"y":58}: t2245: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+    finish {"t":1936,"x":105,"y":56}: t2272: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+  candidates k=2 after [{"t":345,"x":89,"y":62},{"t":844,"x":22,"y":131}]: 6 (drives so far 7824)
+  candidates k=1 after [{"t":339,"x":92,"y":59}]: 1 (drives so far 8198)
+    finish {"t":1940,"x":99,"y":58}: t2219: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+    finish {"t":1937,"x":97,"y":56}: t2242: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+    finish {"t":1940,"x":95,"y":58}: t2241: the player touches opened pod (120,56) — Pod.as:80-83 would close it on him
+  candidates k=2 after [{"t":339,"x":92,"y":59},{"t":842,"x":26,"y":131}]: 6 (drives so far 8976)
+  candidates k=1 after [{"t":342,"x":94,"y":61}]: 0 (drives so far 10181)
+NOPLAN {"weapon":"spear","seed":101,"orbit":"nw2","boot":{"level":112,"x":32,"y":208},"maxHits":0,"drives":10181,"wallSec":364,"ok":false,"tried":{"c0":6},"budget":false}
