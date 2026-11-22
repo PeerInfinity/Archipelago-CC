@@ -91,7 +91,10 @@ describe('which plain levels become level worlds: the item-axis test, not a list
         // points, inside the learner's memory bound (`LEVEL_WORLD_MAX_POINTS`) — the ONE level that bound admits past the rank
         // walk's 2^12; until then it was kept per sub-region "over the lattice cap 12".
         expect(levelWorlds.get('level_12')).toBe(true);
-        expect(report.maze_notes.filter((n) => n.kind === 'plain_level_world').length).toBe(19);
+        // ⛓ rules-k-exempt-fix: 19 -> 18. L74 is still ONE level world, but no longer by this test: K's step off the L75 landing
+        // splits its doorway member r8c1, whose crossings share exit tile (2,9), so it projects as a level world by colliding crossings.
+        expect(report.maze_notes.filter((n) => n.kind === 'plain_level_world').length).toBe(18);
+        expect(report.maze_notes.some((n) => n.kind === 'colliding_crossings' && n.region_id === 'level_74')).toBe(true);
         expect([...levelWorlds.values()].filter((v) => v !== true)).toEqual([]);
     });
     it('the PLANTED compile takes the true compile\'s level-world decisions (a bound between L12\'s true and planted axes)', () => {

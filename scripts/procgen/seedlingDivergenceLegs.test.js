@@ -290,20 +290,25 @@ describe('the committed playthrough\'s leg list', () => {
         //   shifted by -2 and from 621 by -7 — rule K (a lavarunner that outruns the player gates its leash cut) splits L72, L74
         //   and L75 into walk-in members and re-keys L73 r3c7 -> r8c2 and L99 r2c7 -> r7c5: 17 one-region door legs go, 10 re-keyed
         //   ones come (fixtures/divergence-door-leg-keys.json, re-recorded by its `rerecord` recipe).
+        // ⛓ rules-k-exempt-fix: the SAME legs by key (67 goal-event legs, the same keys and events), ids 611-908 shifted by
+        //   -1 and the link legs from 909 by +1 — the step off an exempt cell into a leash splits the doorways:
+        //   3 door legs re-key to their landing members (L72 r11c6 -> r16c0, L74 r2c2 -> r8c1, L77 r15c6 -> r18c6), the L74
+        //   Darkshield door leg from the L75 landing goes, and two Darkshield link legs come (from r8c1 and r8c18; fixture by its
+        //   `rerecord` recipe).
         expect(by).toEqual({
             'flag:L0:4': [45], 'flag:L0:1': [97, 108, 119, 130, 141, 152, 163], 'flag:L24:0': [180],
             'flag:L16:0': [206, 208, 210, 212, 214, 216, 218], 'flag:L39:8': [348],
             'flag:L62:0': [515, 520, 525, 530, 535, 566], 'flag:L63:1': [517, 522, 527, 532, 537, 541, 546, 551, 556],
             'flag:L63:6': [569, 571], 'flag:L63:7': [572],
-            'flag:L71:2': [614, 616], 'flag:L12:7+flag:L12:12': [632], 'flag:L101:0': [740],
-            'flag:L112:1': [784, 785, 791, 792, 798, 799, 805, 806, 812, 813],
-            'flag:L114:0': [786, 787, 788, 793, 794, 795, 800, 801, 802, 807, 808, 814, 815],
-            'flag:L113:0': [823, 824, 825, 826],
+            'flag:L71:2': [613, 615], 'flag:L12:7+flag:L12:12': [631], 'flag:L101:0': [739],
+            'flag:L112:1': [783, 784, 790, 791, 797, 798, 804, 805, 811, 812],
+            'flag:L114:0': [785, 786, 787, 792, 793, 794, 799, 800, 801, 806, 807, 813, 814],
+            'flag:L113:0': [822, 823, 824, 825],
         });
         // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
         for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);
         // the Watcher's talk (`flag:L114:0`) is in another level than the FinalDoor's L113: otherLevel
-        expect(legs[802].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
+        expect(legs[801].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
         // the Or: no Ghost Spear at sphere 5.x, so the lit pole stages; L63's pole for an L62 exit is otherLevel
         expect(legs[515].sphere.inventory).not.toContain('Ghost Spear');
         expect(legs[517].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);

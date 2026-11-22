@@ -938,7 +938,9 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
         //   L77 <-> L79 necks): L77 splits into 3 sub-regions (+6 rows), L78 gains 6 (+33 rows).
         // ⛓ rules-k-pursuit-resume: 355 -> 489, rule K + (b) gates the leash cuts of the lavarunners that outrun the player
         //   (sub-regions/rows per level: L72 +9/+36, L73 +3/+6, L74 +4/+6, L75 +9/+36, L78 +4/+36, L80 +3/+8, L99 +3/+6).
-        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(489);   // merged: no-hit's 4 + Fire's 4 + L99's 1; chaser guard -1
+        // ⛓ rules-k-exempt-fix: 489 -> 532, rule K charges the step off an exempt cell into a leash (sub-regions/rows: L72
+        //   +2/+19, L73 +3/+8, L74 +1/+4, L75 +1/+9, L77 +1/+3).
+        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(532);   // merged: no-hit's 4 + Fire's 4 + L99's 1; chaser guard -1
         expect(fromXml.atlas.regions.filter((r) => r.subgraph)).toHaveLength(0);
         const exitKeys = new Set(committed.regions.flatMap((r) => (r.exits ?? [])
             .flatMap((e) => Object.keys(e))));

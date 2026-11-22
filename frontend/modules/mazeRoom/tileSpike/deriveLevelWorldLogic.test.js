@@ -207,7 +207,9 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
             'level_73__r4c4', 'level_73__r5c7', 'level_73__r8c2', 'level_74__r1c7', 'level_74__r2c11', 'level_74__r2c2',
             'level_74__r8c18', 'level_75__r0c4', 'level_75__r10c4', 'level_75__r10c6', 'level_75__r11c3', 'level_75__r11c5',
             'level_75__r13c3', 'level_75__r3c3', 'level_75__r8c4', 'level_75__r8c6', 'level_80__r0c2', 'level_80__r6c5',
-            'level_80__r8c1'];
+            'level_80__r8c1',
+            // ⛓ rules-k-exempt-fix: K charges the step off an exempt cell into a leash, so the doorways split off (none freed)
+            'level_72__r16c0', 'level_72__r2c10', 'level_73__r1c6', 'level_73__r2c3', 'level_73__r2c5', 'level_74__r8c1', 'level_75__r2c5'];
         // ⛓ rules-lavatrap-neck: rule T splits L77 (level_77 -> r2c0 / r12c6 / r15c6) and L78 (+ r1c10, r3c1, r3c9, r4c4, r5c6,
         //   r6c9) at their lava traps' sealing discs; every new sub-region stays behind the same weapon gate (+8, none freed).
         // ⛓ rules-k-pursuit-resume: rule K re-cuts L78 (- r3c1, r4c4; + r3c12, r4c2, r5c12, r6c11, r8c8, r8c10) and L80's L79
@@ -216,7 +218,9 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
             'level_78__r0c2', 'level_78__r1c10', 'level_78__r3c12', 'level_78__r3c9', 'level_78__r4c2', 'level_78__r5c12',
             'level_78__r5c6', 'level_78__r6c11', 'level_78__r6c9', 'level_78__r8c10', 'level_78__r8c8', 'level_79__r0c4',
             'level_79__r8c4', 'level_80__r12c4', 'level_80__r13c3', 'level_80__r14c2', 'level_80__r16c1', 'level_80__r8c4',
-            'level_80__r9c5'];
+            'level_80__r9c5',
+            // ⛓ rules-k-exempt-fix: L77's L78 doorway (r18c6) splits off r15c6 (none freed)
+            'level_77__r18c6'];
         // ⛓ rules-k-pursuit-resume: rule K cuts L99's lower floor at its lavarunners' leashes (+ r6c12, r7c5 the L98 stairs, r8c10).
         const SPHERE102_WEAPON_GATED = ['level_100__r2c3', 'level_100__r4c10', 'level_101__r0c6', 'level_101__r4c2',
             'level_101__r4c9', 'level_102__r5c3', 'level_102__r5c9', 'level_103', 'level_104', 'level_105', 'level_106', 'level_82',

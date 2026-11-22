@@ -87,8 +87,16 @@ describe('L80 in the maze (L71 + L79 + L80)', () => {
         //   move, and the certifier's native replay stops on it (`step` -> null) — the mutant is still caught, by a throw
         //   instead of a disagreeing row (main: 'r16c1 → r12c3 holding [Dark Suit]: derived false'). The native lines are the
         //   real helpers' (non-empty).
+        // ⛓ rules-k-exempt-fix: K charges the step off L80's trap tile (5,6), so the broken arm's witnesses no longer step
+        //   where the native engine refuses: it runs, and it is caught by DISAGREEING (the lift r16c1 -> r6c5 / r0c2 / r8c1
+        //   prices [] where the native engine prices the Dark Suit and the arm) and by its own witness replay (a broken pull
+        //   replays the r0c2 -> r6c5 witness to (7,6), not the trap tile (5,6)).
         expect(native.lines.length).toBeGreaterThan(0);
-        expect(() => certifyPlaythroughMaze(RULES, broken, { native: false, atlas: ATLAS, regions })).toThrow(/player_pos/);
+        const out = certifyPlaythroughMaze(RULES, broken, { native: false, atlas: ATLAS, regions });
+        expect([...out.lines].sort()).not.toEqual([...native.lines].sort());
+        expect(out.lines).toContain('level_80__r16c1>level_80__r6c5=[]');
+        expect(native.lines.some((l) => l.startsWith('level_80__r16c1>level_80__r6c5=[["Dark Suit"'))).toBe(true);
+        expect(out.problems.some((p) => /level_80__r0c2 → level_80__r6c5: witness .* replays to 7,6, not 5,6/.test(p))).toBe(true);
     });
 
     it('mutant control: with the pulls stripped from the world the lifts are not priced again', () => {

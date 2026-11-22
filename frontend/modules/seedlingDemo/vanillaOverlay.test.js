@@ -472,7 +472,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
             // ⛓ rules-k-pursuit-resume: rule K + (b) on the line-cut pull disc (a lavarunner that outruns the player gates its
             //   leash cut at its kill-lock arm: L72/L74/L75 split, L71/L73/L78/L80 re-cut, the L98/L99 rename); re-recorded from
             //   the producers (391ef89a -> 5c3dd651; atlas id ea1ef5ba -> b856f0fc). The overlay fixture `--check`s byte-identical.
-            .toBe('5c3dd651d2aa811d4536995f5ebcfae1');
+            // ⛓ rules-k-exempt-fix: rule K charges the step off an exempt cell into a leash (L72-L75, L77 split their doorways
+            //   off; internal exits and sub-region names only); re-recorded from the producers (5c3dd651 -> 8e550d31; atlas id
+            //   b856f0fc -> bc3ac9f3). The overlay fixture is byte-identical (E5's fresh-build row).
+            .toBe('8e550d31f06b0ecc9752df55074e794d');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
