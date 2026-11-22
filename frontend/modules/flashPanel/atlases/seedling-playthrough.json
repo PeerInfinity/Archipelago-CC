@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-402c4685",
+  "atlas_id": "seedling-b156d8a1",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "402c4685" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "b156d8a1" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -769,7 +769,13 @@
             "to": "r4c2",
             "bidirectional": false,
             "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Swim" } },
+                { "rule": "CanReachRegion", "args": { "region_name": "level_11__r4c2" } }
+              ]
+            }
           },
           { "from": "r4c2", "to": "r0c2", "bidirectional": false, "source": "analyzer" }
         ]
@@ -2100,6 +2106,13 @@
         "internal_exits": [
           { "from": "r2c7", "to": "r3c2", "bidirectional": false, "source": "analyzer" },
           {
+            "from": "r2c7",
+            "to": "r7c6",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "CanReachRegion", "args": { "region_name": "level_25__r7c6" } }
+          },
+          {
             "from": "r3c2",
             "to": "r2c7",
             "bidirectional": false,
@@ -2969,6 +2982,13 @@
       "subgraph": {
         "sub_regions": ["r0c9","r8c9"],
         "internal_exits": [
+          {
+            "from": "r0c9",
+            "to": "r8c9",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "CanReachRegion", "args": { "region_name": "level_38__r8c9" } }
+          },
           { "from": "r8c9", "to": "r0c9", "bidirectional": false, "source": "analyzer" }
         ]
       }

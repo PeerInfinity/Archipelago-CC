@@ -79,8 +79,12 @@ describe('L94 — a per-sub-region world floors its cliffside', () => {
             if (!sc.playable_payload) continue;
             // ⛓ rules-ap-chest-solid: L11's AP chest (2,3) IS a directional cell now — the one-sided Solid, entered only by the
             //   step north from the cell below — so its shared world (carried by r0c2) holds exactly that cell's three walled entries.
+            // ⛓ and, the LATCH: L3's side holds a landing, so those three entries cost the chest's lock event (one rule gate).
             if (sc.playable_payload.atlas_region === 'level_11') {
-                expect(sc.playable_payload.entry_gates, name).toEqual(['E', 'S', 'W'].map((dir) => ({ x: 2, y: 3, dir, gate: null })));
+                const p = sc.playable_payload;
+                expect(p.entry_gates.map(({ x, y, dir }) => `${x},${y},${dir}`), name).toEqual(['2,3,E', '2,3,S', '2,3,W']);
+                expect([...new Set(p.entry_gates.map((g) => p.obstacleLib[g.gate]?.clear_rule))])
+                    .toEqual([{ rule: 'Has', args: { item_name: 'L11 flag 0: chest@32,48 cleared' } }]);
                 continue;
             }
             expect(sc.playable_payload.entry_gates, name).toBeUndefined();
@@ -255,7 +259,10 @@ describe('L39 — the press opens its target; the pocket\'s doors cost it', () =
         expect(out.problems.filter((p) => p.endsWith('holding []: derived true, atlas false')).sort()).toEqual([
             'level_39__r25c9 → level_38__r0c9 holding []: derived true, atlas false',
         ]);
+        // (C) ONE ROW IS ENOUGH: the other door's loosening is still CAUGHT, as its landing line moving from the clean world's
+        // [[press]] to [[]] — asserted here against the unmutated compile, so stripping either gate reds this row.
         expect(out.lines).toContain('level_38__r0c9->level_39__r25c9<@9,1=[[]]');
+        expect(certify(LV).lines).toContain(`level_38__r0c9->level_39__r25c9<@9,1=${JSON.stringify([[PRESS]])}`);
     }, 180_000);
 });
 

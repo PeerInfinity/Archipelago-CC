@@ -29,6 +29,7 @@ L0 flag 1: breakablerock@288,176 cleared: L0 flag 1: breakablerock@288,176 clear
 L0 flag 4: breakablerock@80,112 cleared: L0 flag 4: breakablerock@80,112 cleared
 Level 010 - Sword: Progressive Sword
 Level 011 - Chest: Seal
+L11 flag 0: chest@32,48 cleared: L11 flag 0: chest@32,48 cleared
 Level 012 - Witch: Progressive Sword
 L12 flag 4: bosslock@416,240 cleared: L12 flag 4: bosslock@416,240 cleared
 L12 flag 5: bosslock@432,240 cleared: L12 flag 5: bosslock@432,240 cleared
@@ -50,6 +51,7 @@ L20 flag 0: shieldlocknorm@176,16 cleared: L20 flag 0: shieldlocknorm@176,16 cle
 L20 flag 4: lock@32,80 cleared: L20 flag 4: lock@32,80 cleared
 L24 flag 0: burnabletree@32,128 cleared: L24 flag 0: burnabletree@32,128 cleared
 Level 025 - Chest: Seal
+L25 flag 0: chest@96,96 cleared: L25 flag 0: chest@96,96 cleared
 L26 flag 0: rocklock@112,208 cleared: L26 flag 0: rocklock@112,208 cleared
 L28 flag 0: rope@160,64 cleared: L28 flag 0: rope@160,64 cleared
 Level 029 - Boss Key 1: Green Key
@@ -62,6 +64,7 @@ Level 032 - Times: Seal
 Level 036 - Chest: Seal
 L39 flag 8: wandlock@144,592 cleared: L39 flag 8: wandlock@144,592 cleared
 Level 038 - Chest: Seal
+L38 flag 1: chest@144,112 cleared: L38 flag 1: chest@144,112 cleared
 Level 039 - Totem Part 72,40: Totem Shard
 L40 flag 7: wandlock@208,128 cleared: L40 flag 7: wandlock@208,128 cleared
 Level 040 - Totem Part 64,144: Totem Shard
@@ -121,6 +124,7 @@ Playthrough:
 
 }
 1: {
+  L11 flag 0: chest@32,48 cleared: L11 flag 0: chest@32,48 cleared
   Level 010 - Sword: Progressive Sword
   Level 011 - Chest: Seal
   Level 086 - Chest: Seal
@@ -141,6 +145,7 @@ Playthrough:
   L12 flag 4: bosslock@416,240 cleared: L12 flag 4: bosslock@416,240 cleared
   L12 flag 5: bosslock@432,240 cleared: L12 flag 5: bosslock@432,240 cleared
   L19 flag 1: bosslock@48,32 cleared: L19 flag 1: bosslock@48,32 cleared
+  L25 flag 0: chest@96,96 cleared: L25 flag 0: chest@96,96 cleared
   L26 flag 0: rocklock@112,208 cleared: L26 flag 0: rocklock@112,208 cleared
   L28 flag 0: rope@160,64 cleared: L28 flag 0: rope@160,64 cleared
   Level 020 - Shield: Progressive Shield
@@ -161,6 +166,7 @@ Playthrough:
 6: {
   L12 flag 3: bosslock@80,656 cleared: L12 flag 3: bosslock@80,656 cleared
   L24 flag 0: burnabletree@32,128 cleared: L24 flag 0: burnabletree@32,128 cleared
+  L38 flag 1: chest@144,112 cleared: L38 flag 1: chest@144,112 cleared
   L39 flag 8: wandlock@144,592 cleared: L39 flag 8: wandlock@144,592 cleared
   Level 012 - Chest: Seal
   Level 038 - Chest: Seal

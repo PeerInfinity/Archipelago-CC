@@ -939,7 +939,7 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
         //   L77 <-> L79 necks): L77 splits into 3 sub-regions (+6 rows), L78 gains 6 (+33 rows).
         // ⛓ rules-k-pursuit-resume: 355 -> 489, rule K + (b) gates the leash cuts of the lavarunners that outrun the player
         //   (sub-regions/rows per level: L72 +9/+36, L73 +3/+6, L74 +4/+6, L75 +9/+36, L78 +4/+36, L80 +3/+8, L99 +3/+6).
-        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(489);   // merged: no-hit's 4 + Fire's 4 + L99's 1; chaser guard -1
+        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(491);   // merged: no-hit's 4 + Fire's 4 + L99's 1; chaser guard -1; rules-ap-chest-solid latch: + L25's and L38's far-side re-entry
         expect(fromXml.atlas.regions.filter((r) => r.subgraph)).toHaveLength(0);
         const exitKeys = new Set(committed.regions.flatMap((r) => (r.exits ?? [])
             .flatMap((e) => Object.keys(e))));
@@ -949,7 +949,7 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
             .flatMap((e) => Object.keys(e))));
         expect([...derivedExitKeys].sort()).toEqual(
             ['entrance_tile', 'exit_id', 'exit_tiles', 'kind']);
-        expect(committed.atlas_id).toBe('seedling-402c4685');   // ⛓ rules-ap-chest-solid: a playthrough chest is a one-sided Solid (probe S), re-recorded from the producers (b856f0fc -> 402c4685).
+        expect(committed.atlas_id).toBe('seedling-b156d8a1');   // ⛓ rules-ap-chest-solid: a playthrough chest is a one-sided Solid (probe S), re-recorded from the producers (b856f0fc -> b156d8a1).
         expect(fromXml.atlas.atlas_id).toBe('seedling');   // D1 §20.6: DELIBERATELY unstamped
     }, 60000);
 

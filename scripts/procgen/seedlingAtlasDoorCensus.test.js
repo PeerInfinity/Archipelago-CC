@@ -137,8 +137,8 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // ⛓ rules-lavatrap-neck: rule T gates L77's and L78's lavatrap discs.
         // ⛓ rules-remerge-lavatrap: rule T re-merged onto main (train 146); re-recorded from the producers (5ca88dfe -> ea1ef5ba).
         // ⛓ rules-k-pursuit-resume: rule K + (b) on the line-cut pull disc; re-recorded from the producers (ea1ef5ba -> b856f0fc).
-        // ⛓ rules-ap-chest-solid: an AP chest opens only from below (probe S); re-recorded from the producers (b856f0fc -> 402c4685).
-        expect(c.atlasId).toBe('seedling-402c4685');
+        // ⛓ rules-ap-chest-solid: an AP chest opens only from below (probe S); re-recorded from the producers (b856f0fc -> b156d8a1).
+        expect(c.atlasId).toBe('seedling-b156d8a1');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
@@ -160,7 +160,9 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // ⛓ rules-ap-chest-solid: 60 -> 62 regions with a subgraph (L11, L38), 251 -> 254 sub-regions (L11 +2, L38 +2, L25 +1,
         //   L63 -1, L80 -1: a chest cell is a one-sided crossing, never a sub-region), internal exits 489 unmoved, Swim rows 207 -> 208
         //   (L11's way round its chest from above costs the Swim).
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 62, 254, 489, 208]);
+        // ⛓ rules-ap-chest-solid, the LATCH: internal exits 489 -> 491 — the far side of L25's and L38's chests re-enters on the
+        //   latch (RULES (A) `CanReachRegion` rows, r2c7 -> r7c6 and r0c9 -> r8c9; the compiler swaps each for the chest's event).
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 62, 254, 491, 208]);
         // ⛓ rules-ap-chest-solid: 23 -> 24, L11 (its way round the one-sided chest from L3's side is a swim row).
         expect(c.swimLevels).toHaveLength(24);
         // ⛓ rules-k-pursuit-resume: the second most common internal rule is now K's lava crossing, the Dark Suit AND the
@@ -168,7 +170,8 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // ⛓ rules-ap-chest-solid: Swim 166 -> 167 (L11's way round its chest); K's row 75 -> 73 (L80's two rows into the chest's
         //   one-tile sub-region r8c1, which is a one-sided crossing now; the chest's own price is unmoved, routeWalk).
         expect(c.byRule.slice(0, 2)).toEqual([
-            { rule: 'Has(Progressive Swim)', count: 167 },
+            // ⛓ rules-ap-chest-solid, the LATCH: 167 -> 166, L11's way round its chest is Or(Swim, the latch) now
+            { rule: 'Has(Progressive Swim)', count: 166 },
             { rule: 'And(Has(Dark Suit), Or(Has(Progressive Sword), Has(Ghost Spear), Has(Wand), Has(Progressive Shield, 2)))', count: 73 },
         ]);
         expect(c.byRule.find((r) => r.rule === 'Has(Progressive Swim, 2)').count).toBe(32);

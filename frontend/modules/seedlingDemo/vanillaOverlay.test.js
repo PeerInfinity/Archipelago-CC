@@ -477,8 +477,9 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
             //   the producers (391ef89a -> 5c3dd651; atlas id ea1ef5ba -> b856f0fc). The overlay fixture `--check`s byte-identical.
             // ⛓ rules-ap-chest-solid: a playthrough AP chest is a one-sided Solid (probe S + pocketReentry): L11 and L38 split,
             //   L25 gains its chest pocket, L63's and L80's chests are bound through their Dark Suit stance; re-recorded from the
-            //   producers (5c3dd651 -> 853cae84; atlas id b856f0fc -> 402c4685).
-            .toBe('853cae8437a94bd76e468f39411ff7f0');
+            //   producers (5c3dd651 -> 853cae84; atlas id b856f0fc -> b156d8a1).
+            // ⛓ rules-ap-chest-solid, the LATCH (a far side with a landing re-enters on the chest's event): 853cae84 -> a0f53c3c.
+            .toBe('a0f53c3c0746031ee1113d389853890f');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

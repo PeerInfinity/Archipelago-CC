@@ -169,9 +169,12 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             // ⛓ rules-ap-chest-solid: L38 splits at its one-sided chest; its upper half r0c9 has no fresh arrival of its own (it is
             // entered from r8c9 through the opened chest), so its rows are priced from L39's landing (9,1), whose unadmitted points
             // are skipped by name: the press (and its [own event]) and the door into L39's pocket. 100 → 103.
-            'level_38__r0c9 @ L39 flag 8: wandlock@144,592 cleared (landing 9,1) | 4/8',
-            'level_38__r0c9 @ L39 flag 8: wandlock@144,592 cleared (landing 9,1) | 4/8 [own event]',
-            'level_38__r0c9 → level_39__r25c9 (landing 9,1) | 4/8',
+            // ⛓ and the LATCH: L25's chest event is priced from r7c6's L28 landing (6,7); its own event's points are skipped
+            // [own event], as L24's tree. L38's chest event joins r0c9's item axis (4/8 -> 8/16). 103 -> 104.
+            'level_25__r7c6 @ L25 flag 0: chest@96,96 cleared (landing 6,7) | 8/16 [own event]',
+            'level_38__r0c9 @ L39 flag 8: wandlock@144,592 cleared (landing 9,1) | 8/16',
+            'level_38__r0c9 @ L39 flag 8: wandlock@144,592 cleared (landing 9,1) | 8/16 [own event]',
+            'level_38__r0c9 → level_39__r25c9 (landing 9,1) | 8/16',
             // ⛓ tile-lay-l40-latches: L40's two r0c53 presses, priced from r0c53's second landing (53,1): the points holding
             // the press's own event are skipped [own event] (as L24's tree). L40 flag 12's press stands in r48c54, which no AP
             // exit lands in (walked in from another member), so it has no landing row. 102 → 104.

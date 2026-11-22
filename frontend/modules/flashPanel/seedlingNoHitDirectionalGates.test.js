@@ -195,6 +195,11 @@ describe('the committed rules carry the gates and nothing else in those rooms', 
                 for (const e of REGIONS[r].exits ?? []) if (!isTrue(e.access_rule)) priced.push({ from: r, to: e.connected_region, rule: e.access_rule });
                 for (const l of REGIONS[r].locations ?? []) expect(isTrue(l.access_rule), `${r} @ ${l.name}`).toBe(true);
             }
+            // ⛓ rules-ap-chest-solid, the LATCH: a re-entry into a one-sided Solid's pocket costs the chest's lock event (read off the
+            //   rule: an item named for a chest), never the gate's arms; it is not this table's crossing.
+            const latchRow = (p) => JSON.stringify(p.rule).includes(': chest@');
+            expect(priced.filter(latchRow).length, `L${gate.level}`).toBe(oneSided(gate.level));
+            priced.splice(0, priced.length, ...priced.filter((p) => !latchRow(p)));
             expect(priced, `L${gate.level}`).toHaveLength(1);
             expect(regions).toContain(priced[0].to);
             expect(priced[0].from).not.toBe(priced[0].to);

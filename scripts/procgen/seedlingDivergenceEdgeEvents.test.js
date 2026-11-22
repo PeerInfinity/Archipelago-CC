@@ -233,7 +233,8 @@ describe('⛓ the committed playthrough\'s list: OFF byte-identical, ON adds exa
         expect(stagers.map((l) => [l.key, l.edgeEvents])).toEqual([
             ['level_62 <- in_L64_32_96 -> exit:out_teleporter_240_304', ['flag:L62:0']],
             ['level_64 <- in_L62_112_64 -> location:Level 064 - Ghostspear', ['flag:L62:0']],
-            ['level_63__r5c14 <- in_L65_128_0 ~> level_63__r6c9 -> location:Level 063 - Chest', ['flag:L63:7']],
+            // ⛓ rules-ap-chest-solid: the chest is bound in r6c15 (beside its open side), no longer its own r5c14
+            ['level_63__r6c15 <- in_L65_128_0 ~> level_63__r6c9 -> location:Level 063 - Chest', ['flag:L63:7']],
         ]);
         // each staged event is held in its sphere's inventory (no invented state)
         const flagOf = (inv, eventId) => inv.some((n) => n.startsWith(`L${eventId.split(':')[1].slice(1)} flag ${eventId.split(':')[2]}:`));

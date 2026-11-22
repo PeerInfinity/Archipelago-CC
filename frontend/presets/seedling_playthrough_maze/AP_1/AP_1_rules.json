@@ -871,10 +871,21 @@
             "name": "level_11__r0c2 -> level_11__r4c2",
             "connected_region": "level_11__r4c2",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Swim"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L11 flag 0: chest@32,48 cleared"
+                  }
+                }
+              ]
             }
           },
           {
@@ -918,6 +929,38 @@
               "advancement": true,
               "type": "progression"
             }
+          },
+          {
+            "name": "L11 flag 0: chest@32,48 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L11 flag 0: chest@32,48 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L11:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 11,
+              "tag": 0,
+              "class": "chest",
+              "x": 32,
+              "y": 48
+            },
+            "action": {
+              "verb": "opened by standing on the line under it",
+              "item": null
+            },
+            "side": "level_11__r4c2",
+            "across": [
+              "level_11__r0c2"
+            ]
           }
         ]
       },
@@ -2979,6 +3022,16 @@
             }
           },
           {
+            "name": "level_25__r2c7 -> level_25__r7c6",
+            "connected_region": "level_25__r7c6",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L25 flag 0: chest@96,96 cleared"
+              }
+            }
+          },
+          {
             "name": "level_25__r2c7 -> level_22__r8c0",
             "connected_region": "level_22__r8c0",
             "access_rule": {
@@ -3059,6 +3112,38 @@
               "advancement": true,
               "type": "progression"
             }
+          },
+          {
+            "name": "L25 flag 0: chest@96,96 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L25 flag 0: chest@96,96 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L25:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 25,
+              "tag": 0,
+              "class": "chest",
+              "x": 96,
+              "y": 96
+            },
+            "action": {
+              "verb": "opened by standing on the line under it",
+              "item": null
+            },
+            "side": "level_25__r7c6",
+            "across": [
+              "level_25__r2c7"
+            ]
           }
         ]
       },
@@ -4178,6 +4263,16 @@
         "name": "level_38__r0c9",
         "exits": [
           {
+            "name": "level_38__r0c9 -> level_38__r8c9",
+            "connected_region": "level_38__r8c9",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L38 flag 1: chest@144,112 cleared"
+              }
+            }
+          },
+          {
             "name": "level_38__r0c9 -> level_39__r25c9",
             "connected_region": "level_39__r25c9",
             "access_rule": {
@@ -4258,6 +4353,38 @@
               "advancement": true,
               "type": "progression"
             }
+          },
+          {
+            "name": "L38 flag 1: chest@144,112 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L38 flag 1: chest@144,112 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L38:1",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 38,
+              "tag": 1,
+              "class": "chest",
+              "x": 144,
+              "y": 112
+            },
+            "action": {
+              "verb": "opened by standing on the line under it",
+              "item": null
+            },
+            "side": "level_38__r8c9",
+            "across": [
+              "level_38__r0c9"
+            ]
           }
         ]
       },
@@ -30488,6 +30615,17 @@
         "type": "Event",
         "max_count": 1
       },
+      "L11 flag 0: chest@32,48 cleared": {
+        "name": "L11 flag 0: chest@32,48 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "L12 flag 3: bosslock@80,656 cleared": {
         "name": "L12 flag 3: bosslock@80,656 cleared",
         "id": null,
@@ -30576,6 +30714,17 @@
         "type": "Event",
         "max_count": 1
       },
+      "L25 flag 0: chest@96,96 cleared": {
+        "name": "L25 flag 0: chest@96,96 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "L26 flag 0: rocklock@112,208 cleared": {
         "name": "L26 flag 0: rocklock@112,208 cleared",
         "id": null,
@@ -30611,6 +30760,17 @@
       },
       "L31 flag 0: bosslock@192,432 cleared": {
         "name": "L31 flag 0: bosslock@192,432 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L38 flag 1: chest@144,112 cleared": {
+        "name": "L38 flag 1: chest@144,112 cleared",
         "id": null,
         "groups": [
           "Event"
@@ -30885,6 +31045,7 @@
       "L71 flag 2: shieldlock@288,256 cleared": 1,
       "L112 flag 1: rocklock@112,16 cleared": 1,
       "L113 flag 0: finaldoor@112,0 cleared": 1,
+      "L11 flag 0: chest@32,48 cleared": 1,
       "L12 flag 3: bosslock@80,656 cleared": 1,
       "L12 flag 4: bosslock@416,240 cleared": 1,
       "L12 flag 5: bosslock@432,240 cleared": 1,
@@ -30893,10 +31054,12 @@
       "L18 flag 0: lock@144,112 cleared": 1,
       "L19 flag 1: bosslock@48,32 cleared": 1,
       "L20 flag 0: shieldlocknorm@176,16 cleared": 1,
+      "L25 flag 0: chest@96,96 cleared": 1,
       "L26 flag 0: rocklock@112,208 cleared": 1,
       "L30 flag 0: bosslock@64,32 cleared": 1,
       "L30 flag 2: bosslock@224,208 cleared": 1,
       "L31 flag 0: bosslock@192,432 cleared": 1,
+      "L38 flag 1: chest@144,112 cleared": 1,
       "L40 flag 8: bosslock@480,352 cleared": 1,
       "L48 flag 1: bosslock@48,144 cleared": 1,
       "L53 flag 2: lock@144,208 cleared": 1,
@@ -30949,7 +31112,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-2b43d322",
+      "atlas_id": "seedling-56dd7292",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -34208,6 +34371,11 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 2,
+              "y": 3,
+              "id": "atlas_gate_1~L11 flag 0: chest@32,48 cleared"
+            },
+            {
               "x": 3,
               "y": 3,
               "id": "atlas_gate_0"
@@ -34256,6 +34424,51 @@
               "display": {
                 "mode": "tree"
               }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "True_",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "True_"
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1~L11 flag 0: chest@32,48 cleared": {
+              "id": "atlas_gate_1~L11 flag 0: chest@32,48 cleared",
+              "name": "True_: L11 flag 0: chest@32,48 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "True_"
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "events": [
+                {
+                  "name": "L11 flag 0: chest@32,48 cleared",
+                  "side": "level_11__r4c2"
+                }
+              ]
+            },
+            "atlas_gate_2": {
+              "id": "atlas_gate_2",
+              "name": "L11 flag 0: chest@32,48 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "L11 flag 0: chest@32,48 cleared"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
             }
           },
           "entry_gates": [
@@ -34263,19 +34476,19 @@
               "x": 2,
               "y": 3,
               "dir": "E",
-              "gate": null
+              "gate": "atlas_gate_2"
             },
             {
               "x": 2,
               "y": 3,
               "dir": "S",
-              "gate": null
+              "gate": "atlas_gate_2"
             },
             {
               "x": 2,
               "y": 3,
               "dir": "W",
-              "gate": null
+              "gate": "atlas_gate_2"
             }
           ],
           "shared_world": {
@@ -34511,7 +34724,7 @@
             {
               "x": 26,
               "y": 24,
-              "id": "atlas_gate_8"
+              "id": "atlas_gate_9"
             },
             {
               "x": 34,
@@ -35029,6 +35242,11 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 20,
+              "y": 51,
+              "id": "atlas_gate_6"
+            },
+            {
               "x": 23,
               "y": 51,
               "id": "atlas_gate_0"
@@ -35056,7 +35274,7 @@
             {
               "x": 2,
               "y": 53,
-              "id": "atlas_gate_7"
+              "id": "atlas_gate_8"
             },
             {
               "x": 7,
@@ -35071,7 +35289,7 @@
             {
               "x": 2,
               "y": 54,
-              "id": "atlas_gate_6~L12 flag 7: magicallock@32,864 cleared~L12 flag 12: bosslock@32,864 cleared"
+              "id": "atlas_gate_7~L12 flag 7: magicallock@32,864 cleared~L12 flag 12: bosslock@32,864 cleared"
             },
             {
               "x": 7,
@@ -35216,6 +35434,18 @@
             },
             "atlas_gate_6": {
               "id": "atlas_gate_6",
+              "name": "True_",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "True_"
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_7": {
+              "id": "atlas_gate_7",
               "name": "((Wand OR (Fire Wand Fusion AND Wand AND Fire)) AND Yellow Key)",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -35268,8 +35498,8 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_7": {
-              "id": "atlas_gate_7",
+            "atlas_gate_8": {
+              "id": "atlas_gate_8",
               "name": "(Yellow Key AND (Wand OR (Fire Wand Fusion AND Wand AND Fire)))",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -35322,8 +35552,8 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_8": {
-              "id": "atlas_gate_8",
+            "atlas_gate_9": {
+              "id": "atlas_gate_9",
               "name": "Wand",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -35337,8 +35567,8 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_6~L12 flag 7: magicallock@32,864 cleared~L12 flag 12: bosslock@32,864 cleared": {
-              "id": "atlas_gate_6~L12 flag 7: magicallock@32,864 cleared~L12 flag 12: bosslock@32,864 cleared",
+            "atlas_gate_7~L12 flag 7: magicallock@32,864 cleared~L12 flag 12: bosslock@32,864 cleared": {
+              "id": "atlas_gate_7~L12 flag 7: magicallock@32,864 cleared~L12 flag 12: bosslock@32,864 cleared",
               "name": "((Wand OR (Fire Wand Fusion AND Wand AND Fire)) AND Yellow Key): L12 flag 7: magicallock@32,864 cleared + L12 flag 12: bosslock@32,864 cleared",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -35574,8 +35804,8 @@
                 }
               ]
             },
-            "atlas_gate_9": {
-              "id": "atlas_gate_9",
+            "atlas_gate_10": {
+              "id": "atlas_gate_10",
               "name": "L12 flag 11: bosslock@112,192 cleared",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -35589,8 +35819,8 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_10": {
-              "id": "atlas_gate_10",
+            "atlas_gate_11": {
+              "id": "atlas_gate_11",
               "name": "L12 flag 4: bosslock@416,240 cleared",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -35604,8 +35834,8 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_11": {
-              "id": "atlas_gate_11",
+            "atlas_gate_12": {
+              "id": "atlas_gate_12",
               "name": "L12 flag 5: bosslock@432,240 cleared",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -35619,8 +35849,8 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_12": {
-              "id": "atlas_gate_12",
+            "atlas_gate_13": {
+              "id": "atlas_gate_13",
               "name": "L12 flag 3: bosslock@80,656 cleared",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -35634,8 +35864,8 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_13": {
-              "id": "atlas_gate_13",
+            "atlas_gate_14": {
+              "id": "atlas_gate_14",
               "name": "L12 flag 10: shieldlocknorm@288,704 cleared",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -35649,8 +35879,8 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_14": {
-              "id": "atlas_gate_14",
+            "atlas_gate_15": {
+              "id": "atlas_gate_15",
               "name": "(L12 flag 7: magicallock@32,864 cleared AND L12 flag 12: bosslock@32,864 cleared)",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -35681,55 +35911,55 @@
               "x": 7,
               "y": 12,
               "dir": "S",
-              "gate": "atlas_gate_9"
-            },
-            {
-              "x": 26,
-              "y": 15,
-              "dir": "S",
               "gate": "atlas_gate_10"
             },
             {
               "x": 26,
               "y": 15,
+              "dir": "S",
+              "gate": "atlas_gate_11"
+            },
+            {
+              "x": 26,
+              "y": 15,
               "dir": "W",
-              "gate": "atlas_gate_10"
+              "gate": "atlas_gate_11"
             },
             {
               "x": 27,
               "y": 15,
               "dir": "E",
-              "gate": "atlas_gate_11"
+              "gate": "atlas_gate_12"
             },
             {
               "x": 27,
               "y": 15,
               "dir": "S",
-              "gate": "atlas_gate_11"
+              "gate": "atlas_gate_12"
             },
             {
               "x": 5,
               "y": 41,
               "dir": "E",
-              "gate": "atlas_gate_12"
+              "gate": "atlas_gate_13"
             },
             {
               "x": 5,
               "y": 41,
               "dir": "W",
-              "gate": "atlas_gate_12"
+              "gate": "atlas_gate_13"
             },
             {
               "x": 18,
               "y": 44,
               "dir": "N",
-              "gate": "atlas_gate_13"
+              "gate": "atlas_gate_14"
             },
             {
               "x": 18,
               "y": 44,
               "dir": "W",
-              "gate": "atlas_gate_13"
+              "gate": "atlas_gate_14"
             },
             {
               "x": 0,
@@ -36641,7 +36871,7 @@
               "x": 2,
               "y": 54,
               "dir": "S",
-              "gate": "atlas_gate_14"
+              "gate": "atlas_gate_15"
             },
             {
               "x": 5,
@@ -37367,6 +37597,11 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 9,
+              "y": 6,
+              "id": "atlas_gate_1"
+            },
+            {
               "x": 1,
               "y": 7,
               "id": "atlas_gate_0"
@@ -37482,6 +37717,18 @@
                 "args": {
                   "item_name": "Progressive Swim"
                 }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "True_",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "True_"
               },
               "color": "#b06eb8",
               "display": {
@@ -40173,7 +40420,13 @@
               "atlas_exit_id": "out_teleporter_144_32"
             }
           ],
-          "obstacles": [],
+          "obstacles": [
+            {
+              "x": 6,
+              "y": 6,
+              "id": "atlas_gate_0~L25 flag 0: chest@96,96 cleared"
+            }
+          ],
           "items": [
             {
               "x": 6,
@@ -40185,6 +40438,36 @@
           "obstacleLib": {
             "atlas_gate_0": {
               "id": "atlas_gate_0",
+              "name": "True_",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "True_"
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_0~L25 flag 0: chest@96,96 cleared": {
+              "id": "atlas_gate_0~L25 flag 0: chest@96,96 cleared",
+              "name": "True_: L25 flag 0: chest@96,96 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "True_"
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "events": [
+                {
+                  "name": "L25 flag 0: chest@96,96 cleared",
+                  "side": "level_25__r7c6"
+                }
+              ]
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
               "name": "(Progressive Sword OR Ghost Spear OR Progressive Shield)",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -40214,6 +40497,21 @@
               "display": {
                 "mode": "tree"
               }
+            },
+            "atlas_gate_2": {
+              "id": "atlas_gate_2",
+              "name": "L25 flag 0: chest@96,96 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "L25 flag 0: chest@96,96 cleared"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
             }
           },
           "blocks": [
@@ -40227,67 +40525,67 @@
               "x": 3,
               "y": 3,
               "dir": "E",
-              "gate": "atlas_gate_0"
+              "gate": "atlas_gate_1"
             },
             {
               "x": 4,
               "y": 3,
               "dir": "E",
-              "gate": "atlas_gate_0"
+              "gate": "atlas_gate_1"
             },
             {
               "x": 5,
               "y": 3,
               "dir": "E",
-              "gate": "atlas_gate_0"
+              "gate": "atlas_gate_1"
             },
             {
               "x": 3,
               "y": 4,
               "dir": "E",
-              "gate": "atlas_gate_0"
+              "gate": "atlas_gate_1"
             },
             {
               "x": 4,
               "y": 4,
               "dir": "E",
-              "gate": "atlas_gate_0"
+              "gate": "atlas_gate_1"
             },
             {
               "x": 5,
               "y": 4,
               "dir": "E",
-              "gate": "atlas_gate_0"
+              "gate": "atlas_gate_1"
             },
             {
               "x": 3,
               "y": 5,
               "dir": "E",
-              "gate": "atlas_gate_0"
+              "gate": "atlas_gate_1"
             },
             {
               "x": 4,
               "y": 5,
               "dir": "E",
-              "gate": "atlas_gate_0"
+              "gate": "atlas_gate_1"
             },
             {
               "x": 5,
               "y": 5,
               "dir": "E",
-              "gate": "atlas_gate_0"
+              "gate": "atlas_gate_1"
             },
             {
               "x": 6,
               "y": 6,
               "dir": "S",
-              "gate": null
+              "gate": "atlas_gate_2"
             },
             {
               "x": 6,
               "y": 6,
               "dir": "W",
-              "gate": null
+              "gate": "atlas_gate_2"
             }
           ],
           "shared_world": {
@@ -40324,6 +40622,7 @@
             },
             "links": {
               "level_25__r2c7>level_25__r3c2": "level_25__r2c7 -> level_25__r3c2",
+              "level_25__r2c7>level_25__r7c6": "level_25__r2c7 -> level_25__r7c6",
               "level_25__r3c2>level_25__r2c7": "level_25__r3c2 -> level_25__r2c7",
               "level_25__r7c6>level_25__r2c7": "level_25__r7c6 -> level_25__r2c7"
             }
@@ -45053,262 +45352,267 @@
             {
               "x": 9,
               "y": 0,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_3"
+            },
+            {
+              "x": 9,
+              "y": 7,
+              "id": "atlas_gate_0~L38 flag 1: chest@144,112 cleared"
             },
             {
               "x": 2,
               "y": 9,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 3,
               "y": 9,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 4,
               "y": 9,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 5,
               "y": 9,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 6,
               "y": 9,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 12,
               "y": 9,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 13,
               "y": 9,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 14,
               "y": 9,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 15,
               "y": 9,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 16,
               "y": 9,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 3,
               "y": 10,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 4,
               "y": 10,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 5,
               "y": 10,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 6,
               "y": 10,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 7,
               "y": 10,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 11,
               "y": 10,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 12,
               "y": 10,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 13,
               "y": 10,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 14,
               "y": 10,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 15,
               "y": 10,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 3,
               "y": 11,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 5,
               "y": 11,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 7,
               "y": 11,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 11,
               "y": 11,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 12,
               "y": 11,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 13,
               "y": 11,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 14,
               "y": 11,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 15,
               "y": 11,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 3,
               "y": 12,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 15,
               "y": 12,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 0,
-              "y": 13,
-              "id": "atlas_gate_0"
-            },
-            {
-              "x": 5,
               "y": 13,
               "id": "atlas_gate_1"
             },
             {
+              "x": 5,
+              "y": 13,
+              "id": "atlas_gate_2"
+            },
+            {
               "x": 18,
               "y": 13,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 0,
               "y": 14,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 18,
               "y": 14,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 0,
               "y": 15,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 18,
               "y": 15,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 0,
               "y": 16,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 18,
               "y": 16,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 0,
               "y": 17,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 1,
               "y": 17,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 17,
               "y": 17,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 18,
               "y": 17,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 0,
               "y": 18,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 1,
               "y": 18,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 17,
               "y": 18,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 18,
               "y": 18,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 0,
               "y": 19,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 1,
               "y": 19,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 17,
               "y": 19,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             },
             {
               "x": 18,
               "y": 19,
-              "id": "atlas_gate_0"
+              "id": "atlas_gate_1"
             }
           ],
           "items": [
@@ -45328,6 +45632,18 @@
           "obstacleLib": {
             "atlas_gate_0": {
               "id": "atlas_gate_0",
+              "name": "True_",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "True_"
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
               "name": "Progressive Swim",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -45341,8 +45657,8 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_1": {
-              "id": "atlas_gate_1",
+            "atlas_gate_2": {
+              "id": "atlas_gate_2",
               "name": "Fire",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -45356,14 +45672,47 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_2": {
-              "id": "atlas_gate_2",
+            "atlas_gate_3": {
+              "id": "atlas_gate_3",
               "name": "L39 flag 8: wandlock@144,592 cleared",
               "clear_set_type": "rule",
               "clear_rule": {
                 "rule": "Has",
                 "args": {
                   "item_name": "L39 flag 8: wandlock@144,592 cleared"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_0~L38 flag 1: chest@144,112 cleared": {
+              "id": "atlas_gate_0~L38 flag 1: chest@144,112 cleared",
+              "name": "True_: L38 flag 1: chest@144,112 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "True_"
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "events": [
+                {
+                  "name": "L38 flag 1: chest@144,112 cleared",
+                  "side": "level_38__r8c9"
+                }
+              ]
+            },
+            "atlas_gate_4": {
+              "id": "atlas_gate_4",
+              "name": "L38 flag 1: chest@144,112 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "L38 flag 1: chest@144,112 cleared"
                 }
               },
               "color": "#b06eb8",
@@ -45390,7 +45739,7 @@
               "x": 9,
               "y": 7,
               "dir": "S",
-              "gate": null
+              "gate": "atlas_gate_4"
             }
           ],
           "shared_world": {
@@ -45432,6 +45781,7 @@
               }
             },
             "links": {
+              "level_38__r0c9>level_38__r8c9": "level_38__r0c9 -> level_38__r8c9",
               "level_38__r8c9>level_38__r0c9": "level_38__r8c9 -> level_38__r0c9"
             }
           },
@@ -79924,6 +80274,11 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 10,
+              "y": 16,
+              "id": "atlas_gate_2"
+            },
+            {
               "x": 11,
               "y": 16,
               "id": "atlas_gate_0"
@@ -79951,7 +80306,7 @@
             {
               "x": 18,
               "y": 16,
-              "id": "atlas_gate_2~L71 flag 2: shieldlock@288,256 cleared"
+              "id": "atlas_gate_3~L71 flag 2: shieldlock@288,256 cleared"
             },
             {
               "x": 14,
@@ -80072,6 +80427,18 @@
             },
             "atlas_gate_2": {
               "id": "atlas_gate_2",
+              "name": "True_",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "True_"
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_3": {
+              "id": "atlas_gate_3",
               "name": "Progressive Shield x2",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -80086,8 +80453,8 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_2~L71 flag 2: shieldlock@288,256 cleared": {
-              "id": "atlas_gate_2~L71 flag 2: shieldlock@288,256 cleared",
+            "atlas_gate_3~L71 flag 2: shieldlock@288,256 cleared": {
+              "id": "atlas_gate_3~L71 flag 2: shieldlock@288,256 cleared",
               "name": "Progressive Shield x2: L71 flag 2: shieldlock@288,256 cleared",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -80120,8 +80487,8 @@
                 }
               ]
             },
-            "atlas_gate_3": {
-              "id": "atlas_gate_3",
+            "atlas_gate_4": {
+              "id": "atlas_gate_4",
               "name": "Ghost Spear",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -80135,8 +80502,8 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_4": {
-              "id": "atlas_gate_4",
+            "atlas_gate_5": {
+              "id": "atlas_gate_5",
               "name": "L71 flag 2: shieldlock@288,256 cleared",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -80169,13 +80536,13 @@
               "x": 7,
               "y": 12,
               "dir": "N",
-              "gate": "atlas_gate_3"
+              "gate": "atlas_gate_4"
             },
             {
               "x": 7,
               "y": 12,
               "dir": "S",
-              "gate": "atlas_gate_3"
+              "gate": "atlas_gate_4"
             },
             {
               "x": 10,
@@ -80193,7 +80560,7 @@
               "x": 18,
               "y": 16,
               "dir": "W",
-              "gate": "atlas_gate_4"
+              "gate": "atlas_gate_5"
             }
           ],
           "shared_world": {
@@ -88484,6 +88851,11 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 1,
+              "y": 8,
+              "id": "atlas_gate_3"
+            },
+            {
               "x": 5,
               "y": 8,
               "id": "atlas_gate_2"
@@ -88927,6 +89299,18 @@
                     }
                   }
                 ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_3": {
+              "id": "atlas_gate_3",
+              "name": "True_",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "True_"
               },
               "color": "#b06eb8",
               "display": {
@@ -98531,6 +98915,7 @@
             "resolved_items": {}
           },
           "new_accessible_locations": [
+            "L11 flag 0: chest@32,48 cleared",
             "Level 010 - Sword",
             "Level 011 - Chest",
             "Level 086 - Chest"
@@ -98565,6 +98950,27 @@
     {
       "type": "state_update",
       "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "L11 flag 0: chest@32,48 cleared": 1
+            },
+            "resolved_items": {
+              "L11 flag 0: chest@32,48 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L11 flag 0: chest@32,48 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -98611,7 +99017,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.2",
+      "sphere_index": "0.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -98632,7 +99038,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.3",
+      "sphere_index": "0.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -98810,6 +99216,7 @@
             "L12 flag 4: bosslock@416,240 cleared",
             "L12 flag 5: bosslock@432,240 cleared",
             "L19 flag 1: bosslock@48,32 cleared",
+            "L25 flag 0: chest@96,96 cleared",
             "L26 flag 0: rocklock@112,208 cleared",
             "L28 flag 0: rope@160,64 cleared",
             "Level 020 - Shield",
@@ -98937,6 +99344,27 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "L25 flag 0: chest@96,96 cleared": 1
+            },
+            "resolved_items": {
+              "L25 flag 0: chest@96,96 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L25 flag 0: chest@96,96 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "3.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "L26 flag 0: rocklock@112,208 cleared": 1
             },
             "resolved_items": {
@@ -98953,7 +99381,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "3.5",
+      "sphere_index": "3.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -98980,7 +99408,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "3.6",
+      "sphere_index": "3.7",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -99009,7 +99437,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "3.7",
+      "sphere_index": "3.8",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -99030,7 +99458,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "3.8",
+      "sphere_index": "3.9",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -99221,6 +99649,7 @@
           "new_accessible_locations": [
             "L12 flag 3: bosslock@80,656 cleared",
             "L24 flag 0: burnabletree@32,128 cleared",
+            "L38 flag 1: chest@144,112 cleared",
             "L39 flag 8: wandlock@144,592 cleared",
             "Level 012 - Chest",
             "Level 038 - Chest",
@@ -99316,6 +99745,27 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "L38 flag 1: chest@144,112 cleared": 1
+            },
+            "resolved_items": {
+              "L38 flag 1: chest@144,112 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L38 flag 1: chest@144,112 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "5.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "L39 flag 8: wandlock@144,592 cleared": 1
             },
             "resolved_items": {
@@ -99344,7 +99794,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "5.4",
+      "sphere_index": "5.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -99365,7 +99815,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "5.5",
+      "sphere_index": "5.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -99386,7 +99836,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "5.6",
+      "sphere_index": "5.7",
       "player_data": {
         "1": {
           "new_inventory_details": {

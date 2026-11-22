@@ -98,7 +98,8 @@ describe('the census on the delivered set (seed 1)', () => {
 
     it('L63 under (b): the foothold becomes its own EMPTY sub-region r5c5, and the struck block still prices its entry f1', () => {
         const l63 = census.regions.find((r) => r.region === 'level_63');
-        expect(l63.all.subs).toEqual(['r0c1', 'r0c4', 'r5c5', 'r5c14', 'r6c9', 'r6c15', 'r10c2', 'r18c2', 'r18c8']);
+        // ⛓ rules-ap-chest-solid: - r5c14, the AP chest's own one-tile sub-region (its cell is a one-sided crossing now)
+        expect(l63.all.subs).toEqual(['r0c1', 'r0c4', 'r5c5', 'r6c9', 'r6c15', 'r10c2', 'r18c2', 'r18c8']);
         expect(l63.all.pieceTiles.r5c5).toEqual(['5,5', '5,6', '6,6']);
         expect(l63.all.empty).toContain('r5c5');
         expect(census.variants.V3.notes).toContain('V3 level_63 pushableblockspear@112,96: r6c9 -> r5c5 needs L63 flag 1: lightpole@64,88 cleared');
