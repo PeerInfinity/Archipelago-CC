@@ -3,6 +3,7 @@ import { RegionUI } from './regionUI.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { isRegionReachable } from '../regionView/regionViewModel.js';
 import eventBus from '../../app/core/eventBus.js';
 import { registerClickAction, unregisterClickAction } from '../regionView/clickActions.js';
 import { REGIONS_OPEN_ACTION, REGIONS_SCROLL_TO_ACTION } from './regionsClickActions.js';
@@ -197,18 +198,10 @@ function handleExitClicked(data, propagationOptions) {
   }
 
   // Check parent region reachability
-  const parentRegionStatus = snapshot.regionReachability?.[sourceRegion];
-  const parentRegionReachable =
-    parentRegionStatus === true ||
-    parentRegionStatus === 'reachable' ||
-    parentRegionStatus === 'checked';
+  const parentRegionReachable = isRegionReachable(snapshot, sourceRegion);
 
   // Check connected region reachability
-  const connectedRegionStatus = snapshot.regionReachability?.[destinationRegion];
-  const connectedRegionReachable =
-    connectedRegionStatus === true ||
-    connectedRegionStatus === 'reachable' ||
-    connectedRegionStatus === 'checked';
+  const connectedRegionReachable = isRegionReachable(snapshot, destinationRegion);
 
   // Evaluate access rule
   let rulePasses = true;
