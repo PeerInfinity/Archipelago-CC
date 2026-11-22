@@ -79,7 +79,7 @@ export async function l30keylockPlan(x, { rescan, waitPriced, orbit }) {
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
-    const { withKillStanceTargetRescan, withKeylockWaitPriced } = await import(join(MODULE, 'solverBot.js'));
+    const { withKillStanceTargetRescan, withKeylockWaitPriced, withFadeMove } = await import(join(MODULE, 'solverBot.js'));
     const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
     const staging = await l30keylockStaging(x, w);
     const levelSource = atlasLevelSource();
@@ -98,11 +98,14 @@ export async function l30keylockPlan(x, { rescan, waitPriced, orbit }) {
     let refusal = null;
     try {
         const over = orbit === undefined ? {} : { chaserOrbitKill: orbit };
-        solved = await withContactFidelity(over, () => withKillStanceTargetRescan(rescan, () => withKeylockWaitPriced(
-            waitPriced, () => twoPassSolve({
+        // ⛓ `FADE_MOVE` held OFF: it ships ON since the ROCKLOCK + FADE flip (⚖ the user, 2026-11-22); ON, the BEFORE
+        // walk waits the keylock fade out at a refuge and takes fewer hits. Held OFF, every committed tape here is the
+        // pre-flip one byte for byte.
+        solved = await withFadeMove(false, () => withContactFidelity(over, () => withKillStanceTargetRescan(rescan,
+            () => withKeylockWaitPriced(waitPriced, () => twoPassSolve({
                 makeRun, goals: w.goals.map((g) => JSON.parse(JSON.stringify(g))), name: `survey-step-${w.step}`,
                 boot: staging.boot, persistence: staging.persistence, log: () => {},
-            }))));
+            })))));
     } catch (e) {
         refusal = e;
     }
