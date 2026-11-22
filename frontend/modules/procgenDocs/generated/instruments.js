@@ -12315,6 +12315,7 @@ export const INSTRUMENTS = frz({
                 "compare",
                 "expect-flag",
                 "moved",
+                "paired",
                 "ref",
                 "tip"
             ],
@@ -12336,7 +12337,31 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "expect-median"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "moved"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "paired"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "paired-order"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "paired-tip"
                 },
                 {
                     "how": [

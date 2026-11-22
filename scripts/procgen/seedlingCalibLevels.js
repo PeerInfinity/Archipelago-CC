@@ -99,3 +99,26 @@ export function compareLevels(tip, control, { moved = [], threshold, floorMs }) 
         onlyTip, onlyControl, unknownMoved,
     };
 }
+
+/**
+ * The band a MEDIAN ratio is judged against, from the medians of measured main-vs-main pairs. One pair's median m read
+ * the other way round is 1/m, so each pair's excess is max(m, 1/m) − 1. The band is the same rule as the per-level
+ * threshold: hi = 1 + 2 × the worst excess, lo = 1 / hi. `pairs` is how many pairs it rests on.
+ */
+export function medianBand(mainMedians) {
+    if (!mainMedians.length) throw new Error('a median band needs at least one main-vs-main pair');
+    if (!mainMedians.every((m) => m > 0 && Number.isFinite(m))) throw new Error(`a median is a positive ratio (got ${mainMedians.join(',')})`);
+    const worst = Math.max(...mainMedians.map((m) => Math.max(m, 1 / m)));
+    const hi = 1 + 2 * (worst - 1);
+    return { lo: 1 / hi, hi, worst, pairs: mainMedians.length };
+}
+
+/**
+ * The verdict on one comparison's median ratio. The per-level FLAG divides by the median, so a slowdown that hits EVERY
+ * level by the same factor moves only the median and flags nothing. This is the check that sees it: `outside` when the
+ * median leaves the main-vs-main band; `direction` is 'slower' (tip slower than control), 'faster' or 'inside'.
+ */
+export function medianVerdict(median, band) {
+    const direction = median > band.hi ? 'slower' : median < band.lo ? 'faster' : 'inside';
+    return { median, band, outside: direction !== 'inside', direction };
+}

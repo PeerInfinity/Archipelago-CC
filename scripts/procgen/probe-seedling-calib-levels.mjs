@@ -19,22 +19,38 @@
  * name. `PASS:` when the flagged set is empty, or, with `--expect-flag=<a,b>`, exactly that set (a mutant's check).
  * The comparison is arithmetic over two artifacts, so it runs anywhere; only RUN mode belongs on CI.
  *
+ * THE MEDIAN VERDICT: the per-level FLAG divides by the median, so a slowdown that hits EVERY level by the same factor
+ * moves only the median and flags nothing. So the median ratio itself is judged against the band of medians that
+ * main-vs-main pairs measured (`medianBand`, its data below), and a `WARN:` line names a median outside it. Two
+ * kinds of pair, two bands:
+ *   - UNPAIRED (two CI jobs, one per side): the two runners differ in speed, and that difference IS the median. Its
+ *     band is wide, so the WARN catches only a gross uniform slowdown, and it is a warning, not a failed check.
+ *   - PAIRED (`--paired=<control ref>` in RUN mode): ONE job checks out the control as a second tree and runs the calib
+ *     file in both, on the same runner, so the runner's speed cancels. Its band is narrow, and a median outside it is
+ *     a FAILED check row. The job writes both sides and runs the comparison itself (so `--moved`, `--expect-flag` and
+ *     `--expect-median` go to the run too). `--paired-tip=<ref>` checks the tip out as a tree as well (default: this
+ *     checkout); `--paired-order=sequential|concurrent` runs the two one after the other (control first) or at once.
+ *     A paired artifact compares again with `--compare=<run id>` and no `--tip`.
+ * `--expect-median=slower|faster|inside` adds a check row for an expected median verdict (a mutant's check), either kind.
+ *
  * Run:
  *   gh workflow run seedling-probe.yml --ref <branch> -f probes=probe-seedling-calib-levels.mjs
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<control run id or json> --tip=<tip run id or json>
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<…> --tip=<…> --moved=<level,level>
  *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<…> --tip=<…> --expect-flag=<level>   (a mutant's check)
+ *   gh workflow run seedling-probe.yml --ref <branch> -f probes=probe-seedling-calib-levels.mjs -f args=--paired=<control sha>
+ *   node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<paired run id>
  *
  * ⛓ The normalisation replaces the old L12/L0 yardstick children, which timed one fixed level as the runner's speed: a
  * slice that moved that level moved its own yardstick. The median of ~100 levels does not move with any one of them.
  */
-import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { spawn, spawnSync } from 'node:child_process';
+import { closeSync, existsSync, mkdirSync, mkdtempSync, openSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir, cpus } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { compareLevels, levelReport, presetLevels } from './seedlingCalibLevels.js';
+import { compareLevels, levelReport, medianBand, medianVerdict, presetLevels } from './seedlingCalibLevels.js';
 
 argvHelp(import.meta.url);
 
@@ -44,6 +60,7 @@ const CALIB_CONFIG = 'vitest.calib.config.js';
 const PRESET = 'frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json';
 const OUT = resolve(REPO, 'test-results/seedling-probe');
 const OUT_FILE = 'calib-levels.json';
+const CONTROL_FILE = 'calib-levels-control.json'; // a PAIRED run's control side (its tip side is OUT_FILE)
 
 /**
  * The flag rule, from measured main-vs-main runs (session tile-p3-probe; runs 43779970506, 43779978397, 43779985847,
@@ -60,6 +77,17 @@ const OUT_FILE = 'calib-levels.json';
 export const FLOOR_MS = 100;
 export const THRESHOLD = 1.5;
 
+/**
+ * The medians main-vs-main pairs measured (tip median ratio, either way round: `medianBand` folds m and 1/m), one per
+ * pair of runs of the same code, and the band `medianBand` derives from them (hi = 1 + 2 × the worst excess).
+ *   UNPAIRED (two jobs): 43779970506, 43779978397, 43779985847 (all at 27bc98c8b6) and 43785541082 (0b8dc816f1, the
+ *     same tree but for the probe's own files), every pair: 0.961 1.574 1.588 0.843 0.868 0.545. Worst 1.835 → band
+ *     0.375–2.670. The runners alone differ by up to 1.84×, so a uniform slowdown under that is invisible to two jobs.
+ *   PAIRED (one job, both sides): PROVISIONAL, none measured yet; with no pair the paired verdict is not given.
+ */
+export const UNPAIRED_MAIN_MEDIANS = [0.961, 1.574, 1.588, 0.843, 0.868, 0.545];
+export const PAIRED_MAIN_MEDIANS = [];
+
 const arg = (k) => process.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3);
 const list = (s) => (s ? s.split(',').map((x) => x.trim()).filter(Boolean) : []);
 let fails = 0;
@@ -67,61 +95,170 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}: ${msg}`); if 
 const headSha = () => process.env.GITHUB_SHA
     || spawnSync('git', ['rev-parse', 'HEAD'], { cwd: REPO, encoding: 'utf8' }).stdout.trim();
 
-async function runMode() {
-    console.log('CHANNEL: headless logic-only (P3 timing probe: the calib file, one test per level; no browser)');
-    const { default: config } = await import(pathToFileURL(resolve(REPO, CALIB_CONFIG)).href);
-    const limitMs = config.test.testTimeout;
-    const levels = presetLevels(JSON.parse(readFileSync(resolve(REPO, PRESET), 'utf8')));
-    mkdirSync(OUT, { recursive: true });
-    const raw = resolve(OUT, 'calib-vitest.json');
-    const t0 = Date.now();
-    const r = spawnSync('npx', ['vitest', 'run', '--config', CALIB_CONFIG, CALIB_FILE,
-        '--reporter=default', '--reporter=json', `--outputFile.json=${raw}`], { cwd: REPO, stdio: 'inherit' });
-    const wallS = (Date.now() - t0) / 1000;
+const pre = (tag) => (tag ? `${tag} ` : '');
+const vitestArgs = (raw) => ['vitest', 'run', '--config', CALIB_CONFIG, CALIB_FILE,
+    '--reporter=default', '--reporter=json', `--outputFile.json=${raw}`];
+
+/** A tree's limit (its own `vitest.calib.config.js`, never typed) and its preset's levels. */
+async function treeInputs(dir) {
+    const { default: config } = await import(pathToFileURL(resolve(dir, CALIB_CONFIG)).href);
+    return { limitMs: config.test.testTimeout, levels: presetLevels(JSON.parse(readFileSync(resolve(dir, PRESET), 'utf8'))) };
+}
+
+/**
+ * One finished calib run, read out of vitest's JSON report at `raw`: its check rows and `MEASURED:` lines (each
+ * prefixed by `tag`, a paired side's name; '' prints RUN mode's rows as they always were), and the doc to write.
+ */
+function readRun({ raw, r, wallS, levels, limitMs, sha, tag = '' }) {
     if (!existsSync(raw)) {
-        check(false, `vitest wrote its JSON report (rc=${r.status} signal=${r.signal}, none at ${raw})`);
-        return;
+        check(false, `${pre(tag)}vitest wrote its JSON report (rc=${r.status} signal=${r.signal}, none at ${raw})`);
+        return null;
     }
     const rep = levelReport(JSON.parse(readFileSync(raw, 'utf8')), levels);
-    check(rep.problems.length === 0, `every one of the preset's ${levels.length} levels has exactly one test (${rep.problems.join('; ') || 'none off'})`);
-    for (const row of rep.levels) check(row.status === 'passed', `${row.level} ${row.status} ${row.ms ?? '-'} ms`);
-    for (const t of rep.others) check(t.status === 'passed', `${t.title} ${t.status} ${t.ms} ms`);
+    check(rep.problems.length === 0, `${pre(tag)}every one of the preset's ${levels.length} levels has exactly one test (${rep.problems.join('; ') || 'none off'})`);
+    for (const row of rep.levels) check(row.status === 'passed', `${pre(tag)}${row.level} ${row.status} ${row.ms ?? '-'} ms`);
+    for (const t of rep.others) check(t.status === 'passed', `${pre(tag)}${t.title} ${t.status} ${t.ms} ms`);
     const all = [...rep.levels.filter((x) => Number.isFinite(x.ms)).map((x) => ({ name: x.level, ms: x.ms })),
         ...rep.others.map((t) => ({ name: t.title, ms: t.ms }))].sort((a, b) => b.ms - a.ms);
     const heaviest = all[0];
-    check(heaviest && heaviest.ms < limitMs, `the heaviest test is inside the config's testTimeout (${heaviest?.name} ${heaviest?.ms} ms < ${limitMs} ms)`);
-    for (const row of [...rep.levels].filter((x) => Number.isFinite(x.ms)).sort((a, b) => b.ms - a.ms)) console.log(`MEASURED: level ${row.level} ms=${row.ms}`);
+    check(heaviest && heaviest.ms < limitMs, `${pre(tag)}the heaviest test is inside the config's testTimeout (${heaviest?.name} ${heaviest?.ms} ms < ${limitMs} ms)`);
+    for (const row of [...rep.levels].filter((x) => Number.isFinite(x.ms)).sort((a, b) => b.ms - a.ms)) console.log(`MEASURED: ${pre(tag)}level ${row.level} ms=${row.ms}`);
     const sum = rep.levels.reduce((a, x) => a + (x.ms ?? 0), 0);
-    console.log(`MEASURED: calib file rc=${r.status} wall ${wallS.toFixed(1)} s, level tests sum ${(sum / 1000).toFixed(1)} s, ${rep.levels.length} levels + ${rep.others.length} other tests, nproc ${cpus().length}`);
-    if (heaviest) console.log(`MEASURED: heaviest test ${heaviest.name} ${(heaviest.ms / 1000).toFixed(1)} s of the ${limitMs / 1000} s testTimeout (${(100 * (1 - heaviest.ms / limitMs)).toFixed(1)}% headroom)`);
-    const doc = { probe: 'probe-seedling-calib-levels', headSha: headSha(), limitMs, wallS, rc: r.status, nproc: cpus().length,
+    console.log(`MEASURED: ${pre(tag)}calib file rc=${r.status} wall ${wallS.toFixed(1)} s, level tests sum ${(sum / 1000).toFixed(1)} s, ${rep.levels.length} levels + ${rep.others.length} other tests, nproc ${cpus().length}`);
+    if (heaviest) console.log(`MEASURED: ${pre(tag)}heaviest test ${heaviest.name} ${(heaviest.ms / 1000).toFixed(1)} s of the ${limitMs / 1000} s testTimeout (${(100 * (1 - heaviest.ms / limitMs)).toFixed(1)}% headroom)`);
+    return { probe: 'probe-seedling-calib-levels', headSha: sha, limitMs, wallS, rc: r.status, nproc: cpus().length,
         levels: rep.levels, others: rep.others };
+}
+
+async function runMode() {
+    console.log('CHANNEL: headless logic-only (P3 timing probe: the calib file, one test per level; no browser)');
+    if (arg('paired') !== undefined) return pairedRun(arg('paired'));
+    const { limitMs, levels } = await treeInputs(REPO);
+    mkdirSync(OUT, { recursive: true });
+    const raw = resolve(OUT, 'calib-vitest.json');
+    const t0 = Date.now();
+    const r = spawnSync('npx', vitestArgs(raw), { cwd: REPO, stdio: 'inherit' });
+    const doc = readRun({ raw, r, wallS: (Date.now() - t0) / 1000, levels, limitMs, sha: headSha() });
+    if (!doc) return;
     writeFileSync(resolve(OUT, OUT_FILE), `${JSON.stringify(doc, null, 1)}\n`);
-    console.log(`MEASURED: wrote ${OUT_FILE} (${rep.levels.length} levels) at ${doc.headSha}`);
+    console.log(`MEASURED: wrote ${OUT_FILE} (${doc.levels.length} levels) at ${doc.headSha}`);
     check(r.status === 0, `the calib file is green (rc=${r.status})`);
 }
 
-/** A side of a comparison: a path to a calib-levels.json, or a run id whose artifact `gh run download` fetches. */
-function loadSide(spec, label) {
+const git = (args, cwd = REPO) => spawnSync('git', args, { cwd, encoding: 'utf8' });
+const NO_SUBMODULE = ['frontend/modules/flashPanel/wasm']; // the Seedling binaries (358 MB): the logic-only calib file never reads them
+
+/**
+ * A second tree for one side of a PAIRED run: `ref` resolved here or fetched from origin (a CI checkout is one commit
+ * deep), a detached worktree under `dir`, its submodules but the wasm builds, and its own `npm ci` (its own lockfile).
+ */
+function prepareTree(ref, dir, label) {
+    let sha = git(['rev-parse', '--verify', '--quiet', `${ref}^{commit}`]).stdout.trim();
+    if (!sha) {
+        const f = git(['fetch', '--no-tags', '--depth=1', 'origin', ref]);
+        if (f.status !== 0) throw new Error(`${label}: git fetch origin ${ref} failed: ${f.stderr.trim()}`);
+        sha = git(['rev-parse', 'FETCH_HEAD']).stdout.trim();
+    }
+    const w = git(['worktree', 'add', '--detach', dir, sha]);
+    if (w.status !== 0) throw new Error(`${label}: git worktree add ${dir} ${sha} failed: ${w.stderr.trim()}`);
+    const paths = git(['config', '-f', '.gitmodules', '--get-regexp', '\\.path$'], dir).stdout.split('\n')
+        .map((l) => l.split(' ')[1]).filter((p) => p && !NO_SUBMODULE.includes(p));
+    if (paths.length) {
+        let s = git(['submodule', 'update', '--init', '--depth=1', '--', ...paths], dir);
+        if (s.status !== 0) s = git(['submodule', 'update', '--init', '--', ...paths], dir);
+        if (s.status !== 0) throw new Error(`${label}: git submodule update failed: ${s.stderr.trim()}`);
+    }
+    const n = spawnSync('npm', ['ci', '--no-audit', '--no-fund'], { cwd: dir, encoding: 'utf8' });
+    if (n.status !== 0) throw new Error(`${label}: npm ci failed (rc=${n.status}): ${(n.stderr || '').trim().split('\n').slice(-3).join(' | ')}`);
+    return { dir, sha, ref };
+}
+
+/** One side's calib run as a child whose output goes to `log` (two at once would interleave on the console). */
+function runSide(side, raw, log) {
+    return new Promise((done) => {
+        const fd = openSync(log, 'w');
+        const t0 = Date.now();
+        const c = spawn('npx', vitestArgs(raw), { cwd: side.dir, stdio: ['ignore', fd, fd] });
+        const end = (status, signal) => { closeSync(fd); done({ status, signal, wallS: (Date.now() - t0) / 1000 }); };
+        c.on('error', () => end(null, 'spawn-error'));
+        c.on('close', end);
+    });
+}
+
+/**
+ * PAIRED: the control (and, with `--paired-tip`, the tip) checked out as trees beside this one, the calib file run in
+ * both inside ONE job, so the runner's speed is the same on both sides; then the comparison, here.
+ */
+async function pairedRun(controlRef) {
+    const order = arg('paired-order') ?? 'sequential';
+    if (!['sequential', 'concurrent'].includes(order)) throw new Error(`--paired-order is sequential or concurrent (got ${order})`);
+    const tipRef = arg('paired-tip');
+    mkdirSync(OUT, { recursive: true });
+    const work = mkdtempSync(join(process.env.RUNNER_TEMP || tmpdir(), 'calib-paired-'));
+    const t0 = Date.now();
+    const control = prepareTree(controlRef, join(work, 'control'), 'control');
+    const tip = tipRef ? prepareTree(tipRef, join(work, 'tip'), 'tip') : { dir: REPO, sha: headSha(), ref: 'this checkout' };
+    console.log(`MEASURED: paired control ${control.ref} @ ${control.sha}; tip ${tip.ref} @ ${tip.sha}; order ${order}; trees ready in ${((Date.now() - t0) / 1000).toFixed(1)} s`);
+    const sides = [['control', control], ['tip', tip]];
+    for (const [, side] of sides) Object.assign(side, await treeInputs(side.dir), {
+        raw: resolve(OUT, `calib-vitest-${side === control ? 'control' : 'tip'}.json`),
+        log: resolve(OUT, `calib-vitest-${side === control ? 'control' : 'tip'}.log`),
+    });
+    const runs = order === 'concurrent'
+        ? await Promise.all(sides.map(([, s]) => runSide(s, s.raw, s.log)))
+        : [await runSide(control, control.raw, control.log), await runSide(tip, tip.raw, tip.log)];
+    const pairId = process.env.GITHUB_RUN_ID ? `run ${process.env.GITHUB_RUN_ID}` : `local ${new Date(t0).toISOString()}`;
+    const docs = sides.map(([tag, s], i) => {
+        const doc = readRun({ raw: s.raw, r: runs[i], wallS: runs[i].wallS, levels: s.levels, limitMs: s.limitMs, sha: s.sha, tag });
+        if (doc) doc.paired = { pairId, order, side: tag, controlSha: control.sha, tipSha: tip.sha };
+        return doc;
+    });
+    for (const [i, [tag]] of sides.entries()) check(runs[i].status === 0, `${tag} the calib file is green (rc=${runs[i].status})`);
+    if (!docs[0] || !docs[1]) return;
+    writeFileSync(resolve(OUT, CONTROL_FILE), `${JSON.stringify(docs[0], null, 1)}\n`);
+    writeFileSync(resolve(OUT, OUT_FILE), `${JSON.stringify(docs[1], null, 1)}\n`);
+    console.log(`MEASURED: wrote ${CONTROL_FILE} @ ${control.sha} and ${OUT_FILE} @ ${tip.sha} (paired, ${pairId}, ${order}); wall ${((Date.now() - t0) / 1000).toFixed(1)} s`);
+    compareDocs({ ...docs[0], source: `paired control (${pairId})` }, { ...docs[1], source: `paired tip (${pairId})` });
+}
+
+/**
+ * A side of a comparison: a path to a calib-levels.json (or to a directory holding one), or a run id whose artifact
+ * `gh run download` fetches. `file` picks which side of a PAIRED artifact (the control is CONTROL_FILE).
+ */
+const downloaded = new Map();
+function loadSide(spec, label, file = OUT_FILE) {
     if (/^[0-9]+$/.test(spec)) {
-        const dir = mkdtempSync(join(tmpdir(), `calib-levels-${spec}-`));
-        const r = spawnSync('gh', ['run', 'download', spec, '-p', '*-log', '-D', dir], { cwd: REPO, encoding: 'utf8' });
-        if (r.status !== 0) throw new Error(`${label}: gh run download ${spec} failed: ${(r.stderr || '').trim()}`);
+        if (!downloaded.has(spec)) {
+            const dir = mkdtempSync(join(tmpdir(), `calib-levels-${spec}-`));
+            const r = spawnSync('gh', ['run', 'download', spec, '-p', '*-log', '-D', dir], { cwd: REPO, encoding: 'utf8' });
+            if (r.status !== 0) throw new Error(`${label}: gh run download ${spec} failed: ${(r.stderr || '').trim()}`);
+            downloaded.set(spec, dir);
+        }
         const found = [];
-        const walk = (d) => { for (const f of readdirSync(d)) { const p = join(d, f); if (statSync(p).isDirectory()) walk(p); else if (f === OUT_FILE) found.push(p); } };
-        walk(dir);
-        if (found.length !== 1) throw new Error(`${label}: run ${spec} holds ${found.length} ${OUT_FILE} files (want 1)`);
+        const walk = (d) => { for (const f of readdirSync(d)) { const p = join(d, f); if (statSync(p).isDirectory()) walk(p); else if (f === file) found.push(p); } };
+        walk(downloaded.get(spec));
+        if (found.length !== 1) throw new Error(`${label}: run ${spec} holds ${found.length} ${file} files (want 1)`);
         return { ...JSON.parse(readFileSync(found[0], 'utf8')), source: `run ${spec}` };
     }
-    return { ...JSON.parse(readFileSync(resolve(spec), 'utf8')), source: spec };
+    const path = existsSync(spec) && statSync(spec).isDirectory() ? join(spec, file) : spec;
+    return { ...JSON.parse(readFileSync(resolve(path), 'utf8')), source: path };
 }
 
 function compareMode() {
     console.log('CHANNEL: headless logic-only (P3 timing probe: compare two calib-levels.json; runs nothing)');
-    const control = loadSide(arg('compare'), 'control');
-    const tip = loadSide(arg('tip') ?? '', 'tip');
+    // No --tip: the one spec is a PAIRED run (or its directory), holding both sides.
+    const pairedSpec = arg('tip') === undefined;
+    const control = loadSide(arg('compare'), 'control', pairedSpec ? CONTROL_FILE : OUT_FILE);
+    const tip = loadSide(pairedSpec ? arg('compare') : arg('tip'), 'tip');
+    compareDocs(control, tip);
+}
+
+/** The comparison of two loaded sides: the per-level FLAG rows, then the median verdict. */
+function compareDocs(control, tip) {
     const moved = list(arg('moved'));
     const expect = arg('expect-flag') !== undefined ? list(arg('expect-flag')) : [];
+    const expectMedian = arg('expect-median');
+    if (expectMedian !== undefined && !['slower', 'faster', 'inside'].includes(expectMedian)) throw new Error(`--expect-median is slower, faster or inside (got ${expectMedian})`);
     console.log(`MEASURED: control ${control.source} @ ${control.headSha} wall ${control.wallS?.toFixed?.(1)} s; tip ${tip.source} @ ${tip.headSha} wall ${tip.wallS?.toFixed?.(1)} s`);
     for (const [name, side] of [['control', control], ['tip', tip]]) {
         const red = [...side.levels.filter((x) => x.status !== 'passed').map((x) => x.level), ...side.others.filter((t) => t.status !== 'passed').map((t) => t.title)];
@@ -137,6 +274,26 @@ function compareMode() {
     for (const l of c.flagged) console.log(`FLAG: ${l} normalised ${c.rows.find((r) => r.level === l).norm.toFixed(3)} > ${THRESHOLD}`);
     const same = c.flagged.length === expect.length && expect.every((l) => c.flagged.includes(l));
     check(same, `the flagged levels are ${expect.length ? `exactly the expected ${expect.join(',')}` : 'none'} (flagged: ${c.flagged.join(',') || 'none'})`);
+    medianCheck(c.median, control, tip, expectMedian);
+}
+
+/**
+ * The MEDIAN verdict (the header says why). Paired when both sides carry the same `paired.pairId` (one job ran both);
+ * otherwise unpaired, and judged against the cross-job band.
+ */
+function medianCheck(med, control, tip, expectMedian) {
+    const kind = control.paired && tip.paired && control.paired.pairId === tip.paired.pairId ? 'paired' : 'unpaired';
+    const medians = kind === 'paired' ? PAIRED_MAIN_MEDIANS : UNPAIRED_MAIN_MEDIANS;
+    let v = null;
+    if (!medians.length) console.log(`MEASURED: median verdict not given: no ${kind} main-vs-main pair is on record yet (${kind.toUpperCase()}_MAIN_MEDIANS)`);
+    else {
+        v = medianVerdict(med, medianBand(medians));
+        const band = `${v.band.lo.toFixed(3)}–${v.band.hi.toFixed(3)}`;
+        console.log(`MEASURED: median verdict ${kind}: median ratio ${med.toFixed(3)} is ${v.direction} the ${kind} main-vs-main band ${band} (${v.band.pairs} pairs, worst ${v.band.worst.toFixed(3)})${kind === 'unpaired' ? `; two jobs on two runners, so a uniform change inside the band is not visible (--paired sees one)` : ''}`);
+        if (v.outside) console.log(`WARN: median ratio ${med.toFixed(3)} is outside the ${kind} main-vs-main band ${band}: every level is ${v.direction} together, which the per-level FLAG normalises away${kind === 'unpaired' ? '; separate jobs, so re-run it PAIRED before believing it' : ''}`);
+        if (kind === 'paired' && expectMedian === undefined) check(!v.outside, `the median ratio ${med.toFixed(3)} is inside the paired main-vs-main band ${band} (${v.band.pairs} pairs)`);
+    }
+    if (expectMedian !== undefined) check(v?.direction === expectMedian, `the ${kind} median verdict is the expected ${expectMedian} (${v ? v.direction : 'no band on record'})`);
 }
 
 async function main() {

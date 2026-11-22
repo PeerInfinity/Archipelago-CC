@@ -5,7 +5,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { compareLevels, levelReport, median, presetLevels } from './seedlingCalibLevels.js';
+import { compareLevels, levelReport, median, medianBand, medianVerdict, presetLevels } from './seedlingCalibLevels.js';
 
 const RULES = JSON.parse(readFileSync(new URL('../../frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
 
@@ -83,5 +83,37 @@ describe('compareLevels', () => {
     it('refuses a threshold that cannot flag, and a comparison with no reference level', () => {
         expect(() => compareLevels(control, control, { threshold: 1, floorMs: 0 })).toThrow();
         expect(() => compareLevels(control, control, { threshold: 1.5, floorMs: 1e9 })).toThrow();
+    });
+});
+
+describe('medianBand / medianVerdict (the median verdict)', () => {
+    const control = side({ a: 10000, b: 20000, c: 40000, d: 80000, e: 160000 });
+    const times = (f) => side(Object.fromEntries(control.levels.map((l) => [l.level, Math.round(l.ms * f)])));
+    it('folds each pair both ways round: the band is 1 + 2 x the worst excess, and its inverse', () => {
+        const b = medianBand([1.05, 0.95]);
+        expect(b.worst).toBeCloseTo(1 / 0.95);
+        expect(b.hi).toBeCloseTo(1 + 2 * (1 / 0.95 - 1));
+        expect(b.lo).toBeCloseTo(1 / b.hi);
+        expect(b.pairs).toBe(2);
+        expect(() => medianBand([])).toThrow();
+        expect(() => medianBand([0])).toThrow();
+    });
+    it('a uniform x1.24 tip flags no level, and its median is outside a same-runner band: slower', () => {
+        const c = compareLevels(times(1.24), control, { threshold: 1.5, floorMs: 1000 });
+        expect(c.flagged).toEqual([]); // the blind spot: every level moved together, so none moved against the median
+        expect(c.median).toBeCloseTo(1.24, 3);
+        const v = medianVerdict(c.median, medianBand([1.03, 0.98, 1.02]));
+        expect(v).toMatchObject({ outside: true, direction: 'slower' });
+        expect(medianVerdict(1 / 1.24, medianBand([1.03, 0.98, 1.02]))).toMatchObject({ outside: true, direction: 'faster' });
+    });
+    it('a main-vs-main median inside the band is not outside it', () => {
+        const band = medianBand([1.03, 0.98, 1.02]);
+        for (const m of [1, 1.03, 0.98, 1 / 1.03]) expect(medianVerdict(m, band)).toMatchObject({ outside: false, direction: 'inside' });
+    });
+    it('the cross-job band the probe carries is wider than x1.24, so two jobs cannot see it', async () => {
+        const { UNPAIRED_MAIN_MEDIANS } = await import('./probe-seedling-calib-levels.mjs');
+        const v = medianVerdict(1.24, medianBand(UNPAIRED_MAIN_MEDIANS));
+        expect(v.outside).toBe(false);
+        expect(v.band.hi).toBeGreaterThan(1.24);
     });
 });
