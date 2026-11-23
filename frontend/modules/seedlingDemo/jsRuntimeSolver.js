@@ -66,7 +66,8 @@ import {
 } from './solverBot.js';
 import { pageSolverEnvSwitchOff, pageSolverEnvSwitchOn } from './solverEnvChannel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
-import { TILE_SIZE } from './levelWorld.js';
+import { TILE_SIZE, combatPlacementOf } from './levelWorld.js';
+import { killLocksIn } from './combat.js';
 // ⛓ PANEL-ROUTE — read once per recorder: is a progress hook installed (the worker's tap)? Never written here.
 import { activeProgress } from './solveProgress.js';
 // ⛓ LIGHTS WIRING — the fight's exit, as the model's world build makes it (a leaf module: no imports).
@@ -775,7 +776,7 @@ export function solverGoalFor(goal, { run, resolved, placement = null, levelSour
         return { goal: { kind: 'encounter', at: { x: at.x, y: at.y }, drop: { item: drop.item },
             then: arena && CONTACT_FIDELITY.apReportBosses !== true ? 'reach-pit' : null } };
     }
-    if (goal?.kind === 'location' && goal.event) return eventSolverGoal(goal, run);
+    if (goal?.kind === 'location' && goal.event) return eventSolverGoal(goal, run, levelSource);
     if (goal?.kind === 'location') {
         if (!placement) return { walker: 'the location names no entity of the room' };
         return { goal: { kind: 'collect-placement', placement: { x: placement.x, y: placement.y } } };
@@ -966,7 +967,7 @@ export const EVENT_CLEAR_TAG_REFUSAL = (goal, reason, why) => `"${goal.name ?? g
  *
  * @returns {{goal: object}|{walker: string, refusal: {kind: 'clear-tag', reason: string, flag: object, id: string}}}
  */
-function eventSolverGoal(goal, run) {
+function eventSolverGoal(goal, run, levelSource = null) {
     const ev = goal.event;
     const flag = { level: ev.tag.level, tag: ev.tag.tag };
     const out = { kind: 'clear-tag', tag: flag, at: { x: ev.at.x, y: ev.at.y },
@@ -987,7 +988,23 @@ function eventSolverGoal(goal, run) {
         return refused('no-verb', verb ? `${key} selects '${verb}', which no clear-tag executor is registered for`
             : `no strategy row exists for ${key} — the catalogue names no verb that clears it`);
     }
+    // ⛓ ROCKLOCK + FADE flip: `solid:rocklock`'s row is `hold`, which the solver refines PER INSTANCE
+    // (`refineStrategy`: a `tset == -1` kill-lock is `kill`; any other rocklock has no verb). The pre-check asks the
+    // same question of the level record when the caller has one, so it never maps a goal the worker refuses `no-verb`.
+    if (key === 'solid:rocklock' && !crossRoom && !rockLockIsKillLock(ev.obstacle, flag.level, levelSource)) {
+        return refused('no-verb', `no strategy row exists for ${key} — the catalogue names no verb that clears it`
+            + ' (this rocklock is not a kill-lock: its opener is its activation group)');
+    }
     return { goal: out };
+}
+
+/** Is `id` (`rocklock@x,y`) one of level `level`'s kill-locks? Unknown (no level source / record) answers true: the
+ *  worker's own refinement then decides, as before. */
+function rockLockIsKillLock(id, level, levelSource) {
+    if (typeof levelSource !== 'function' || typeof id !== 'string') return true;
+    const record = levelSource(level);
+    if (!record) return true;
+    return killLocksIn(record, { placementOf: combatPlacementOf }).some((l) => `${l.tag}@${l.x},${l.y}` === id);
 }
 
 /** The session's tape replayed into a fresh run — a shadow, NOT yet checked against anything. */

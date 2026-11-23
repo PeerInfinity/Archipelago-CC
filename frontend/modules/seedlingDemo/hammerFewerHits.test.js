@@ -16,7 +16,15 @@
  *   fewer-hits ranking reads the counts with its switch OFF   -> 'OFF: …' rows red
  */
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll, afterAll } from 'vitest';
+import { FADE_MOVE as __FADE_MOVE_HOLD } from './solverBot.js';
+
+// ⛓ `FADE_MOVE` held OFF for this whole file: it ships ON since the ROCKLOCK + FADE flip (⚖ the user, 2026-11-22).
+// ON, L30 t57's dashless pass is already hitless (103 t, was 1 hit), so the hit-avoid pass has nothing to do. These rows pin other switches;
+// held OFF they are byte for byte their pre-flip selves.
+let __fadeWas;
+beforeAll(() => { __fadeWas = __FADE_MOVE_HOLD.enabled; __FADE_MOVE_HOLD.enabled = false; });
+afterAll(() => { __FADE_MOVE_HOLD.enabled = __fadeWas; });
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
