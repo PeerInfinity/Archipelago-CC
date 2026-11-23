@@ -21066,11 +21066,127 @@ function preLockStance(run, lock, contacts) {
  * success is byte-identical. With no rewind (or `mode: 'whole'`) the refusal goes out un-retried and the caller that
  * can build a fresh run re-solves the whole segment instead (`twoPassSolve`, `procgenOracle.solve`).
  */
+/**
+ * ⛓ hammer-phase KILL880 (`PRESS_KILL_HOLD`, OFF) — **A PRESS KILL CORNERED ON ITS WAY OUT OF A STAND IS REDONE AFTER A
+ * LONGER STAND.**
+ *
+ * The HAMMER-PHASE rung (F1c) holds the kill's approach walk only near the corner it previews (walk-offsets `c − 1 … 0`,
+ * holds of `1 … maxTicks`, one hammer period), and only while a walk is in flight. A body that PATROLS toward the stand
+ * the player just left is a corner that the walk meets head-on a few ticks out, with no offset left to hold at, so the
+ * rung tries nothing and `safeStep` refuses *"There is no step out"* (`HAMMER_SAFETY`). MEASURED (seed 1, re-measure-6
+ * P1 19:1, L40 Chest; `kill880` report §3): the kill stands still t545–635 after its first press, walks down the
+ * one-tile shaft from t636 toward its (knocked-back) target and meets the other patrolling body's hammer at t654.
+ * The same line held 100 ticks longer where it stood, then asked again, solves with 0 hits.
+ *
+ * ON (a segment that can rewind, no deadline tripped): when the press kill refuses `HAMMER_SAFETY` — after every
+ * fallback already inside it (`OPP_PRESS_FALLBACK`, `HAMMER_FIGHT_FALLBACK`) — the kill's LAST STAND is found on its own
+ * keys (the last tick in `[kill start, refusal)` with no key held; the stand ends on the tick after it). If the walk out
+ * of it is what refused (the stand ended before the refusal), the segment is REWOUND to the stand's end, the player
+ * idles `k × HAMMER_PHASE_RUNG.horizon` more ticks there (`k` = 1 … `maxPeriods`: whole hammer periods, so the line's
+ * phase at the walk's restart is the phase the stand ended on, and only the bodies' patrol has moved), and the kill is
+ * admitted again on the held run (`derivePressKill`, from the admission's own inputs) and redone. The first redo that
+ * kills with no player hit since the rewind is kept. An idle tick that is hit, dies or crosses a door ends the search
+ * (a longer idle contains it); a redo that refuses or is hit is UNDONE. All refused → the original refusal is thrown,
+ * plus one sentence. Nothing reads a level, a coordinate or an entity id. OFF: never asked.
+ * `SEEDLING_PRESS_KILL_HOLD=1` / `withPressKillHold(enabled, fn)`. Worker thread (the solve).
+ */
+export const PRESS_KILL_HOLD = { enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_HOLD === '1',
+    /** The idles tried at the stand, in whole hammer periods: 1 … maxPeriods. */
+    maxPeriods: 4 };
+export const PRESS_KILL_HOLD_DEFAULT = false;
+/** Per-run rows (ON only): one per refusal answered, `{t, stand, refusedAt, tries: [{wait, verdict, why}], verdict}`. */
+export const PRESS_KILL_HOLD_COUNTS = { rows: [] };
+
+/** Run `fn` with `PRESS_KILL_HOLD` set to `enabled`, restoring the previous value. */
+export function withPressKillHold(enabled, fn) {
+    return withSwitch(PRESS_KILL_HOLD, enabled, fn);
+}
+
+/** The tick a kill's last stand ends on (its last no-key tick in `[from, keys.length)`, plus one), or null. */
+export function lastStandEnd(keys, from) {
+    for (let i = keys.length - 1; i >= from; i -= 1) if (keys[i].size === 0) return i + 1;
+    return null;
+}
+
+/** `PRESS_KILL_HOLD`'s retry around the press kill's own dispatch (see the switch). */
+function execKillByPressHold(run, perTick, resolved, ctx, dispatch) {
+    const t0 = perTick.length;
+    try {
+        return dispatch(run, resolved);
+    } catch (e) {
+        if (!(e instanceof SolverBotError) || e.code !== HAMMER_SAFETY || activeDeadline?.first) throw e;
+        const stand = lastStandEnd(perTick, t0);
+        const row = { t: t0, stand, refusedAt: perTick.length, tries: [], verdict: 'refused' };
+        PRESS_KILL_HOLD_COUNTS.rows.push(row);
+        if (stand === null || stand >= perTick.length) {
+            row.why = stand === null ? 'the kill never stood' : 'the refusal is on the stand itself';
+            throw e;
+        }
+        const admission = PRESS_ADMISSIONS.get(resolved.plans) ?? null;
+        for (let k = 1; k <= PRESS_KILL_HOLD.maxPeriods; k += 1) {
+            if (activeDeadline?.first) break;
+            const wait = k * HAMMER_PHASE_RUNG.horizon;
+            const { run: fresh, undo } = ctx.rewind.to(stand);
+            const clock0 = fresh.ticksCompleted;
+            const h0 = (fresh.ledger('playerHits') ?? []).length;
+            const d0 = (fresh.ledger('playerDeaths') ?? []).length;
+            let idleWhy = null;
+            for (let i = 0; i < wait && idleWhy === null; i += 1) {
+                perTick.push(NO_HELD_PREVIEW);
+                if (fresh.advance(NO_HELD_PREVIEW).transition) idleWhy = 'the idle crossed a door';
+                else if ((fresh.ledger('playerHits') ?? []).length > h0
+                    || (fresh.ledger('playerDeaths') ?? []).length > d0) idleWhy = `the idle is hit at its tick ${i + 1}`;
+            }
+            if (idleWhy !== null) {
+                undo();
+                row.tries.push({ wait, verdict: 'idle', why: idleWhy });
+                break;
+            }
+            try {
+                const press = admission === null ? null : derivePressKill(fresh, admission.bodies, admission.contacts);
+                const again = press?.first ? { ...resolved, first: press.first, plans: press.plans } : resolved;
+                const record = dispatch(fresh, again);
+                const hits = playerHitsSince(ctx.rewind.replay(perTick.length), clock0);
+                if (hits.length > 0) {
+                    undo();
+                    row.tries.push({ wait, verdict: 'hit', why: `the redo killed with ${hits.length} player hit(s)` });
+                    continue;
+                }
+                row.tries.push({ wait, verdict: 'solved', why: null });
+                row.verdict = 'solved';
+                ctx.rewind.note({ ...row, how: 'press-kill-hold' });
+                return { ...record, pressKillHold: row };
+            } catch (e2) {
+                if (e2 instanceof PendingDeclaration || e2?.undeclaredKillLock) {
+                    row.tries.push({ wait, verdict: 'solved', why: e2?.undeclaredKillLock ? 'undeclaredKillLock' : e2.name });
+                    row.verdict = 'solved';
+                    ctx.rewind.note({ ...row, how: 'press-kill-hold' });
+                    throw e2;
+                }
+                undo();
+                if (!(e2 instanceof SolverBotError) && !(e2 instanceof SolverRefusal)) throw e2;
+                row.tries.push({ wait, verdict: 'refused', why: String(e2?.message ?? e2).split('\n')[0].slice(0, 200) });
+            }
+        }
+        const out = new SolverBotError(`${e.message} The stand hold (\`PRESS_KILL_HOLD\`) rewound to the kill's last `
+            + `stand (t${stand}) and idled ${row.tries.map((x) => `${x.wait} (${x.verdict})`).join(', ') || 'nothing'}; `
+            + 'no redo killed hitless.', { code: e.code, boundTicks: e.boundTicks });
+        for (const k of ['fightFallback', 'oppPressFallback']) if (e[k]) out[k] = e[k];
+        out.pressKillHold = row;
+        throw out;
+    }
+}
+
 function execKillByPress(run, perTick, resolved, ctx) {
     // ⛓ the exactness gate's kill-start probe (`REWIND_PROBE`): read only, inert unless a sink is set
     if (REWIND_PROBE.sink !== null && ctx.rewind) {
         const t = perTick.length;
         REWIND_PROBE.sink({ t, kind: 'kill-start', live: run, rewound: () => ctx.rewind.replay(t) });
+    }
+    // ⛓ hammer-phase KILL880 (`PRESS_KILL_HOLD`, OFF): the dispatch below, retried after a longer stand
+    if (PRESS_KILL_HOLD.enabled && ctx.rewind) {
+        return execKillByPressHold(run, perTick, resolved, ctx, (r, res) => (OPP_PRESS_FALLBACK.enabled
+            && OPPORTUNISTIC_STRIKE.enabled ? execKillByPressOppFallback : execKillByPressFightFallback)(r, perTick, res, ctx));
     }
     // ⛓ hammer-phase L40-FLIP-BUILD (`OPP_PRESS_FALLBACK`): OPP's refused kill redone once with OPP off (`oppPressFallback.js`)
     if (OPP_PRESS_FALLBACK.enabled && OPPORTUNISTIC_STRIKE.enabled && ctx.rewind) {
