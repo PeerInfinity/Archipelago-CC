@@ -109,7 +109,7 @@ describe('NESTEDFREEZE — a pickup collected on a button\'s frame A (staged on 
         expect(off.starts).toEqual([[25, 'feather']]);
         expect(off.spans.slice(1)).toEqual([[25, 'freeze', 172], [25, 'ceremony', 150]]);
         // wave 56's interim, unchanged with this key OFF
-        expect(run(s, { freezeSpanUpdates: true }).thrown).toMatch(/^levelRun: a button-dropped fallrock at tick 24 .*INSIDE the rock's span/);
+        expect(run(s, { freezeSpanUpdates: true, [KEY]: false }).thrown).toMatch(/^levelRun: a button-dropped fallrock at tick 24 .*INSIDE the rock's span/);
         const on = run(s, { [KEY]: true });
         expect(on.thrown).toBe(null);
         // T = A (the frame-A advance), the rock stepped alone inside phase A, no dead frame of its own
