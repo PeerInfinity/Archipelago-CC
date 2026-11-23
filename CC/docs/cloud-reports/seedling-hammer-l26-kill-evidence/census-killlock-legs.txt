@@ -1,0 +1,72 @@
+L5: 5 legs
+    level_5__r1c1 <- in_L12_96_240 -> exit:out_stairsup_16_16 
+    level_5__r1c5 <- in_L4_64_16 -> exit:out_teleporter_48_112 
+    level_5__r1c5 <- in_L4_64_16 -> exit:out_stairsup_80_16 
+    level_5__r1c5 <- in_L6_32_0 -> exit:out_teleporter_48_112 
+    level_5__r1c5 <- in_L6_32_0 -> exit:out_stairsup_80_16 
+L26: 7 legs
+    level_26__r2c4 <- in_L25_0_96 -> exit:out_teleporter_64_304 
+    level_26__r2c4 <- in_L25_0_96 -> exit:out_teleporter_144_32 
+    level_26__r2c4 <- in_L25_0_96 -> location:L26 flag 0: rocklock@112,208 cleared 
+    level_26__r2c4 <- in_L27_32_0 -> exit:out_teleporter_64_304 
+    level_26__r2c4 <- in_L27_32_0 -> exit:out_teleporter_144_32 
+    level_26__r2c4 <- in_L27_32_0 -> location:L26 flag 0: rocklock@112,208 cleared 
+    level_26__r13c8 <- in_L28_0_96 -> exit:out_teleporter_144_208 
+L53: 8 legs
+    level_53__r2c2 <- in_L48_0_112 -> exit:out_stairsdown_32_144 
+    level_53__r2c2 <- in_L48_0_112 -> exit:out_teleporter_208_64 
+    level_53__r2c2 <- in_L51_176_144 -> exit:out_stairsdown_32_144 
+    level_53__r2c2 <- in_L51_176_144 -> exit:out_teleporter_208_64 
+    level_53__r14c9 <- in_L54_144_0 -> exit:out_teleporter_144_240 
+    level_53__r9c10 <- in_L48_0_112 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared 
+    level_53__r9c10 <- in_L51_176_144 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared 
+    level_53__r9c10 <- in_L54_144_0 ~> level_53__r14c9 -> location:L53 flag 2: lock@144,208 cleared SKIP
+L60: 3 legs
+    level_60__r5c0 <- in_L59_304_128 -> exit:out_teleporter_0_80 
+    level_60__r5c0 <- in_L59_304_128 -> location:L60 flag 0: lock@128,80 cleared 
+    level_60__r5c9 <- in_L61_0_160 -> exit:out_teleporter_160_80 
+L71: 29 legs
+    level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0 
+    level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304 
+    level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_304_96 
+    level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest 
+    level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared 
+    level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_96_0 
+    level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_224_304 
+    level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_304_96 
+    level_71__r0c6 <- in_L75_64_224 -> location:Level 071 - Chest 
+    level_71__r0c6 <- in_L75_64_224 -> location:L71 flag 2: shieldlock@288,256 cleared 
+    level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_96_0 
+    level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_224_304 
+    level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_304_96 
+    level_71__r0c6 <- in_L76_0_80 -> location:Level 071 - Chest 
+    level_71__r0c6 <- in_L76_0_80 -> location:L71 flag 2: shieldlock@288,256 cleared SKIP
+    level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_96_0 
+    level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_224_304 
+    level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_304_96 
+    level_71__r0c6 <- in_L80_32_0 -> location:Level 071 - Chest 
+    level_71__r0c6 <- in_L80_32_0 -> location:L71 flag 2: shieldlock@288,256 cleared 
+    level_71__r13c7 <- in_L85_80_0 -> exit:out_teleporter_16_304 
+    level_71__r14c12 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_pit_10_17 
+    level_71__r14c12 <- in_L75_64_224 ~> level_71__r0c6 -> exit:out_pit_10_17 
+    level_71__r14c12 <- in_L76_0_80 ~> level_71__r0c6 -> exit:out_pit_10_17 
+    level_71__r14c12 <- in_L80_32_0 ~> level_71__r0c6 -> exit:out_pit_10_17 
+    level_71__r16c19 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_teleporter_304_256 
+    level_71__r16c19 <- in_L75_64_224 ~> level_71__r0c6 -> exit:out_teleporter_304_256 
+    level_71__r16c19 <- in_L76_0_80 ~> level_71__r0c6 -> exit:out_teleporter_304_256 
+    level_71__r16c19 <- in_L80_32_0 ~> level_71__r0c6 -> exit:out_teleporter_304_256 
+L78: 2 legs
+    level_78__r0c2 <- in_L79_64_224 -> exit:out_teleporter_32_0 
+    level_78__r0c16 <- in_L77_96_304 -> exit:out_teleporter_256_0 
+L98: 6 legs
+    level_98 <- in_L93_112_80 -> exit:out_stairsup_112_112 
+    level_98 <- in_L93_112_80 -> exit:out_teleporter_112_192 
+    level_98 <- in_L93_112_80 -> location:Level 098 - Chest 
+    level_98 <- in_L99_112_112 -> exit:out_stairsup_112_112 
+    level_98 <- in_L99_112_112 -> exit:out_teleporter_112_192 
+    level_98 <- in_L99_112_112 -> location:Level 098 - Chest 
+L99: 3 legs
+    level_99__r2c4 <- in_L100_48_96 -> exit:out_stairsup_48_96 
+    level_99__r7c5 <- in_L98_112_112 -> exit:out_stairsdown_112_112 
+    level_99__r7c5 <- in_L98_112_112 -> location:L99 flag 0: lock@80,96 cleared 
+total 63 of 908
