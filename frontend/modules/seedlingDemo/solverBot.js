@@ -2126,6 +2126,54 @@ export function previewLean(run, from, key) {
 }
 
 /**
+ * ⛓ hammer-phase FACE 1 (`BURN_STANCE_AVOID`, OFF) — **A BURN STANCE THE AVOID RUNG CAN REACH IS ASKED FIRST.**
+ *
+ * `resolveBurnStrategy` takes the NEAREST tile whose fire press reaches the tree and whose corridor plans statically
+ * (`stanceReaches`). The walk there then climbs the combat ladder against the room as it stands, and the nearest stance
+ * can be the one a live body stands on: its own tile inside that body's danger volume, so AVOID plans no corridor, and
+ * DETOUR and the forced crossing are refused BY NAME (`coveredGoalOf`) — the ladder EXHAUSTS while another tile of the
+ * same tree is open. The rope verb already answers this shape (`rankRopeStances`: "the nearest stance can be the
+ * dangerous one"); this is the same ranking for the burn verb's candidates.
+ *
+ * ON: the candidates are re-ordered, STABLY — first every one the AVOID rung's own plan reaches (`planWaypoints` with the
+ * danger map's volumes forbidden, `dangerVolumes(run, 0)` as `extraVolumes`), then the rest, each group in the nearest-
+ * first order. The resolver's every other test (the fire audit, the lean, `stanceReaches`) is unchanged, so a stance
+ * is still only ever one it would have accepted OFF. Nothing reads a level, a coordinate or an enemy class.
+ * OFF: never asked; the candidate list is the base's. `SEEDLING_BURN_STANCE_AVOID=1` / `withBurnStanceAvoid(enabled,
+ * fn)`. Worker thread (the solve).
+ */
+export const BURN_STANCE_AVOID = { enabled: globalThis.process?.env?.SEEDLING_BURN_STANCE_AVOID === '1' };
+export const BURN_STANCE_AVOID_DEFAULT = false;
+/** Per-run rows (ON only): one per re-ranked resolution, `{tree, order: [{x, y, avoids}]}`. */
+export const BURN_STANCE_AVOID_TRACE = { sink: null };
+
+/** Run `fn` with `BURN_STANCE_AVOID` set to `enabled`, restoring the previous value. */
+export function withBurnStanceAvoid(enabled, fn) {
+    return withSwitch(BURN_STANCE_AVOID, enabled, fn);
+}
+
+/** `candidates` with the ones the AVOID rung's plan reaches first (stable within each group). */
+function rankBurnStancesByAvoid(run, tree, candidates, contacts) {
+    if (candidates.length < 2) return candidates;
+    const vols = dangerVolumes(run, 0);
+    const avoids = (c) => {
+        try {
+            planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
+                solverPlanOpts(run, contacts, { extraVolumes: vols }));
+            return true;
+        } catch (e) {
+            if (!(e instanceof BotDriverV2Error)) throw e;
+            return false;
+        }
+    };
+    const marked = candidates.map((c) => ({ c, avoids: avoids(c) }));
+    const ranked = [...marked.filter((m) => m.avoids), ...marked.filter((m) => !m.avoids)];
+    BURN_STANCE_AVOID_TRACE.sink?.({ tree: tree.id, t: run.ticksCompleted,
+        order: ranked.map((m) => ({ x: m.c.x, y: m.c.y, avoids: m.avoids })) }, run);
+    return ranked.map((m) => m.c);
+}
+
+/**
  * ⛓⛓⛓ SEEDLING FIDELITY BURN — RESOLVE the `burn` work order: a
  * `burnabletree` on the frontier of a corridor.
  *
@@ -2211,7 +2259,9 @@ function resolveBurnStrategy(run, obstacle, contacts, blocked = []) {
     // the cell".
     const overPit = (run.world.pitTiles ?? []).some((pt) => rectsOverlapInclusive(tree.rect, pt.rect));
     const overExit = (run.world.teleporters ?? []).some((tp) => rectsOverlapInclusive(tree.rect, tp.rect));
-    const candidates = burnStanceCandidates(run, tree, burnWindowTiles(tree));
+    const candidates = BURN_STANCE_AVOID.enabled
+        ? rankBurnStancesByAvoid(run, tree, burnStanceCandidates(run, tree, burnWindowTiles(tree)), contacts)
+        : burnStanceCandidates(run, tree, burnWindowTiles(tree));
     const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
     let unreached = 0;
     let missed = 0;
