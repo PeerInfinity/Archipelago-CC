@@ -1,0 +1,5 @@
+36  L29 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 029 - Boss Key 1 (sphere 3.3) → Green Key) then reach-exit(stairsdown@112,32 → L31)
+167  L43 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 043 - Wand (sphere 10.1) → Wand) then reach-exit(teleporter@144,64 → L37)
+174  L43 visit 2  boot=staged:r8-solve-11  goals: clear-tag(Level 043 - Totem of Lacste (sphere 11.2) → Seal — the kill's report {43,5} (`totem`)) then reach-exit(teleporter@144,64 → L37)
+191  L74 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 074 - Darkshield (sphere 11.5) → Progressive Shield) then reach-exit(teleporter@16,144 → L75)
+232  L103 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,64 → L104)
