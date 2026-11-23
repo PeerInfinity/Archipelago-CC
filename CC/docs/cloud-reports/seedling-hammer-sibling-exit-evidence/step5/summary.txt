@@ -1,0 +1,11 @@
+MOVER {"key": "level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_7_2", "off": {"ticks": 371, "replayHits": 1, "hitIds": ["17:bob@96,32"], "ms": 1240}, "on": {"ticks": 355, "replayHits": 0, "hitIds": [], "ms": 27194}, "chosen": "level_16__r1c9 -> level_17 #3", "landing": {"x": 144, "y": 32}}
+MOVER {"key": "level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_7_3", "off": {"ticks": 381, "replayHits": 1, "hitIds": ["17:bob@96,32"], "ms": 1127}, "on": {"ticks": 355, "replayHits": 0, "hitIds": [], "ms": 25664}, "chosen": "level_16__r1c9 -> level_17 #3", "landing": {"x": 144, "y": 32}}
+MOVER {"key": "level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_7_2", "off": {"ticks": 149, "replayHits": 1, "hitIds": ["17:bob@96,32"], "ms": 208}, "on": {"ticks": 195, "replayHits": 0, "hitIds": [], "ms": 3970}, "chosen": "level_16__r1c9 -> level_17 #3", "landing": {"x": 144, "y": 32}}
+MOVER {"key": "level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_7_3", "off": {"ticks": 174, "replayHits": 1, "hitIds": ["17:bob@96,32"], "ms": 429}, "on": {"ticks": 195, "replayHits": 0, "hitIds": [], "ms": 3887}, "chosen": "level_16__r1c9 -> level_17 #3", "landing": {"x": 144, "y": 32}}
+legs 160; OFF legs with a hit 4; legs whose siblings were solved ON 4; movers 4; legs that GAINED a hit ON 0 []
+OFF hit legs:
+  level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_7_2
+  level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_7_3
+  level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_7_2
+  level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_7_3
+extra wall ON-OFF ms: median -1.0, max 25954; over the legs that solved siblings: [3458, 3762, 24537, 25954]

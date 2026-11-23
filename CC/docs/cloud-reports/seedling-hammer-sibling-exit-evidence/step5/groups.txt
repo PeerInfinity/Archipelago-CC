@@ -1,0 +1,21 @@
+level_0__r7c6 -> level_94__r2c16|level_0__r7c6 -> level_94__r2c16 #2
+level_12__r0c19 -> level_95|level_12__r0c19 -> level_95 #2
+level_16__r1c9 -> level_17|level_16__r1c9 -> level_17 #2|level_16__r1c9 -> level_17 #3|level_16__r1c9 -> level_17 #4|level_16__r1c9 -> level_17 #5|level_16__r1c9 -> level_17 #6|level_16__r1c9 -> level_17 #7
+level_24 -> level_12__r40c4|level_24 -> level_12__r40c4 #2
+level_32 -> level_30__r2c10|level_32 -> level_30__r2c10 #2
+level_40__r26c13 -> level_43__r13c7|level_40__r26c13 -> level_43__r13c7 #10|level_40__r26c13 -> level_43__r13c7 #11|level_40__r26c13 -> level_43__r13c7 #12|level_40__r26c13 -> level_43__r13c7 #13|level_40__r26c13 -> level_43__r13c7 #2|level_40__r26c13 -> level_43__r13c7 #3|level_40__r26c13 -> level_43__r13c7 #4|level_40__r26c13 -> level_43__r13c7 #5|level_40__r26c13 -> level_43__r13c7 #6|level_40__r26c13 -> level_43__r13c7 #7|level_40__r26c13 -> level_43__r13c7 #8|level_40__r26c13 -> level_43__r13c7 #9
+level_59 -> level_95|level_59 -> level_95 #2
+level_80__r16c1 -> level_79__r0c4|level_80__r16c1 -> level_79__r0c4 #2
+level_84__r0c0 -> level_85|level_84__r0c0 -> level_85 #2|level_84__r0c0 -> level_85 #3
+level_84__r2c4 -> level_85|level_84__r2c4 -> level_85 #2|level_84__r2c4 -> level_85 #3|level_84__r2c4 -> level_85 #4
+level_84__r3c0 -> level_85|level_84__r3c0 -> level_85 #2
+level_87__r1c3 -> level_88|level_87__r1c3 -> level_88 #2
+level_88 -> level_87__r1c3|level_88 -> level_87__r1c3 #2
+level_94__r2c16 -> level_0__r7c6|level_94__r2c16 -> level_0__r7c6 #2
+level_95 -> level_59|level_95 -> level_59 #2
+level_95 -> level_12__r0c19|level_95 -> level_12__r0c19 #2
+level_113 -> level_114|level_113 -> level_114 #2
+level_113 -> level_112__r0c7|level_113 -> level_112__r0c7 #2
+level_113 -> level_115__r9c4|level_113 -> level_115__r9c4 #2
+level_114 -> level_113|level_114 -> level_113 #2
+level_115__r9c4 -> level_113|level_115__r9c4 -> level_113 #2
