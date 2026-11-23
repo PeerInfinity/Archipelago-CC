@@ -1,0 +1,38 @@
+365	level_40__r26c13 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+366	level_40__r26c13 <- in_L39_144_0 -> exit:out_teleporter_480_912
+367	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_20
+368	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_20
+369	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_13_20
+370	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_14_20
+371	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_21
+372	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_21
+373	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_13_21
+374	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_14_21
+375	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_22
+376	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_22
+377	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_23
+378	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_23
+379	level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+380	level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest
+381	level_40__r26c13 <- in_L43_176_464 -> exit:out_stairsdown_320_576
+382	level_40__r26c13 <- in_L43_176_464 -> exit:out_teleporter_480_912
+383	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_20
+384	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_20
+385	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_13_20
+386	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_14_20
+387	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_21
+388	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_21
+389	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_13_21
+390	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_14_21
+391	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_22
+392	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_22
+393	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_23
+394	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_23
+395	level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+396	level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Chest
+860	level_40__r23c29 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 8: bosslock@480,352 cleared
+861	level_40__r23c29 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 8: bosslock@480,352 cleared
+862	level_40__r32c36 <- in_L39_144_0 ~> level_40__r26c13 -> location:Level 040 - Boss Key 2
+863	level_40__r32c36 <- in_L43_176_464 ~> level_40__r26c13 -> location:Level 040 - Boss Key 2
+864	level_40__r48c54 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+865	level_40__r48c54 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
