@@ -6089,12 +6089,20 @@ async function seedlingWasmP4hCandidateSmoke(tc) {
         true, same);
     const pick = (st) => JSON.stringify([st?.level, st?.x, st?.y, st?.hits, st?.tick]);
     tc.assertEqual('A/B: the end status agrees (level, x, y, hits, tick)', pick(g.end), pick(h.end));
-    // ⛔ The CLOCK is compared LATCHED: `botStatus.game_time` is live after `finished` (the page keeps stepping;
-    // measured 4844 vs 4845 on one run), while `botSeam().seam["save.time"]` is the end-of-tape value the finish
-    // latches on both builds (js-22, item (d)).
-    tc.assertEqual('A/B: the LATCHED end-of-tape clock seam["save.time"] agrees (a number on both builds)',
-        `true/${g.latchedTime}`, `${Number.isFinite(h.latchedTime)}/${h.latchedTime}`);
-    tc.log(`latched seam["save.time"]: ${P4H_CANDIDATE_BUILD} ${h.latchedTime}, ${def.name} ${g.latchedTime}`);
+    // ⛔ The CLOCK is compared as the ELAPSED TAPE clock: the latched end-of-tape `seam["save.time"]` minus
+    // `botStatus().arm.armed_at` (`Game.time` on the frame the tape armed, Bot.as:1916). `botStatus.game_time` is
+    // live after `finished` (measured 4844 vs 4845); and the ABSOLUTE latched value includes the frames the page
+    // ran before the tape armed, which follow wall time — measured 4844 (p4g) vs 4843 (p4h) under load 4.4 with
+    // drains and end status identical (TT 45082790472, js-22). The difference is the build property; the
+    // absolute values are printed only.
+    const elapsed = (r) => {
+        const at = r.end?.arm?.armed_at;
+        return Number.isFinite(r.latchedTime) && Number.isFinite(at) && at >= 0 ? r.latchedTime - at : null;
+    };
+    tc.assertEqual('A/B: the ELAPSED tape clock seam["save.time"] − arm.armed_at agrees (a number on both builds)',
+        `true/${elapsed(g)}`, `${Number.isFinite(elapsed(h))}/${elapsed(h)}`);
+    tc.log(`tape clock: ${P4H_CANDIDATE_BUILD} save.time ${h.latchedTime} − armed_at ${h.end?.arm?.armed_at} = ${elapsed(h)}; `
+        + `${def.name} save.time ${g.latchedTime} − armed_at ${g.end?.arm?.armed_at} = ${elapsed(g)}`);
     tc.log(`p4h candidate smoke: ${((performance.now() - t0) / 1000).toFixed(1)} s`);
     return tc.getOverallResult();
 }
