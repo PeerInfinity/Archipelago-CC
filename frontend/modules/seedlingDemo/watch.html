@@ -1084,6 +1084,18 @@
       <span id="editLoadFileNote" class="note"></span>
     </div>
     <!--
+      ⛓⛓ DOCUMENT LIBRARY B3 — **RECENT SETS.** The sets this page saved into the browser's document
+      library by itself (a numbered version at each save point: room CLOSE, REPORT, a download, the
+      hand-over to the app; a rolling DRAFT while editing). Nothing is read until this is pressed, and a
+      fresh page restores nothing. Open reads a version BY ITS FINGERPRINT and loads it through the same
+      door as the box above (`takeLevelSet`).
+    -->
+    <div class="line">
+      <button id="editLoadRecent" type="button">Recent sets…</button>
+      <span id="editRecentNote" class="note"></span>
+    </div>
+    <div id="editRecentList"></div>
+    <!--
       ⛓⛓⛓ EDITOR v3 C2 — **`set-room`: THE FOURTH BASE BECOMES LAUNCHABLE**
       (plan §3.2). A level-set document loaded into the box above is HELD on the
       page and its rooms are offered here; picking one resolves that room's
@@ -1132,6 +1144,10 @@
     </div>
     <div class="line">
       <span id="editSetNote" class="note"></span>
+    </div>
+    <div class="line">
+      <!-- ⛓ DOCUMENT LIBRARY B3: what the last library save said ("Saved: version N of …", "Draft saved", "NOT saved — …"). -->
+      <span id="editLibraryStatus" class="note"></span>
     </div>
     <!-- ⛓⛓ Seedling editor E1 — SOLVE IN EDIT: what the SOLVE button below asks the oracle.
          The GOAL is one of this room's own (a pickup, AP item or chest; an exit back into the
