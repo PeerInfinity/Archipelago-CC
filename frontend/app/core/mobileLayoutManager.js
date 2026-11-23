@@ -135,10 +135,25 @@ class MobileLayoutManager {
       this.columnActivePanels = [null];
     }
 
-    // Add any panels not in the layout presets to the middle column (or first if only one)
+    // Add any panels not in the layout presets to the middle column (or first if only one).
+    // ⛓ region-map-link-ends: an unlisted panel whose moduleInfo names `mobileAfter` (a componentType) goes right
+    // after that panel, in that panel's column, when the preset lists it; otherwise the middle column's tail as
+    // before. Mobile only: the presets (and so every desktop layout) are untouched.
     const middleColumn = Math.floor(this.columnCount / 2);
-    for (const componentType of this.panels.keys()) {
-      if (!orderedPanels.includes(componentType)) {
+    // The anchored ones are placed last, so an unlisted anchor is already in its column whatever the registration order.
+    const unlisted = [...this.panels.keys()].filter((componentType) => !orderedPanels.includes(componentType));
+    const anchored = (t) => !!this.panels.get(t)?.mobileAfter;
+    for (const componentType of [...unlisted.filter((t) => !anchored(t)), ...unlisted.filter(anchored)]) {
+      const after = this.panels.get(componentType)?.mobileAfter;
+      const column = after ? this.columnPanels.findIndex((c) => c.includes(after)) : -1;
+      if (column !== -1) {
+        const list = this.columnPanels[column];
+        // After the anchor and any panel already placed after it the same way, so several keep their order.
+        let at = list.indexOf(after) + 1;
+        while (at < list.length && this.panels.get(list[at])?.mobileAfter === after) at += 1;
+        list.splice(at, 0, componentType);
+        orderedPanels.splice(orderedPanels.indexOf(after) + 1, 0, componentType);
+      } else {
         orderedPanels.push(componentType);
         this.columnPanels[middleColumn].push(componentType);
       }
@@ -345,6 +360,7 @@ class MobileLayoutManager {
       title: title || componentType,
       icon: moduleInfo.icon,
       column: moduleInfo.column || 0,
+      mobileAfter: typeof moduleInfo.mobileAfter === 'string' ? moduleInfo.mobileAfter : null,
       tabElement: null
     });
 
