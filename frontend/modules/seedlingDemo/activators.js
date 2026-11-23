@@ -281,6 +281,30 @@ const clampAlpha = (v) => (v < 0 ? 0 : (v > 1 ? 1 : v));
  * float question and reading it off `1 / fade` gives 100 for the lock and
  * 10 for the cover — one of which is wrong.
  */
+/**
+ * ⛓⛓ seedling-fidelity-p4hfix — `RockLock.update`'s fade (`Puzzlements/RockLock.as:56-67`), for the one publisher that
+ * reaches a RockLock: the Owl's death arm, `Button.activateAll(null, 0, true)` (`Enemies/FinalBoss.as:225`).
+ *
+ *     if (activate) { if (alpha > 0) { alpha -= 0.01; if (alpha <= 0) { type = ""; alpha = 0; setPersistence(tag, false); } } }
+ *
+ * Decrement THEN test, in the same update (unlike `Lock`'s `activationStep`, whose zero is seen one update later), and
+ * through `Image.alpha`'s clamp. `s` is the activator-state row (`{alpha, open, held}`); returns true on the update that
+ * turns it off. There is no occupancy guard and no re-close while `activate` holds: the `else if` (`:69-74`) is the
+ * inactive arm.
+ */
+export const ROCK_LOCK_FADE = 0.01;
+export function rockLockFadeStep(s) {
+    if (s.open || !(s.alpha > 0)) return false;
+    s.alpha = clampAlpha(s.alpha - ROCK_LOCK_FADE);
+    s.held += 1;
+    if (s.alpha <= 0) {
+        s.alpha = 0;
+        s.open = true;
+        return true;
+    }
+    return false;
+}
+
 export function opensOnTick(fade) {
     let alpha = 1;
     if (fade === 0.1) {

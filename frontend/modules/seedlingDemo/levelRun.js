@@ -56,7 +56,8 @@ import {
 } from './endingChain.js';
 import {
     RESPONDERS, createActivatorState, fallRocksArmedBy, opensOnTick, openActivatorIds,
-    openActivatorIdsBeforeLatestStep, latchAtBuild, pressedGroups, presserDown, ropePublish, stepActivators,
+    openActivatorIdsBeforeLatestStep, latchAtBuild, pressedGroups, presserDown, ropePublish, rockLockFadeStep,
+    stepActivators,
 } from './activators.js';
 import {
     FALL_ROCK, createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
@@ -11233,6 +11234,44 @@ export function createLevelRun({
      *   (`canInventory()` is false while `Game.talking`, and the else-arm
      *   `inventory.open = false` IS `Game.freezeObjects = false`).
      */
+    /**
+     * ⛓⛓⛓ seedling-fidelity-p4hfix — `Button.activateAll(_exclude, t, true)` (`Puzzlements/Button.as:50-61`) as it
+     * reaches a `RockLock` (`Puzzlements/RockLock.as`): every RockLock of group `t` in this build gets `activate = true`,
+     * and from its NEXT update it fades (`rockLockFadeStep`) and turns `type = ""` on the 100th. The one caller is the
+     * Owl's death arm (`FinalBoss.as:225`, `t` 0): L112's `rocklock@112,16 {tset 0, tag 1}` is the exit column's
+     * wall, and before this the model kept it shut for the rest of the visit (the p4h witnesses: the game's player
+     * climbs past y 32 at t2207 of `det-owl-sword-A`, the model's held at 34.566).
+     *
+     * The state is a row in the room's activator state (`activatorStates`, which the run's digest already carries), so
+     * `openActivatorIds` reports it and every `liveSolidOpts` reader sees the wall go; `levelWorld.liveRectOf` takes a
+     * rocklock out by that id. A rebuild (`freshActivatorState`) drops it, and `RockLock.check()` then removes the lock
+     * on its cleared tag. The turn-off's `Game.setPersistence(tag, false)` is the flag the arm already wrote
+     * (`setPersistence(tag + 1, false)`, the same `(112, 1)`), so it books nothing new.
+     *
+     * ⛔ INTERIM: called on `bossDraws` only (license: the p4g arm byte-identical). The AS3 is the same on p4g; no p4g
+     * tape walks the exit column after a kill, and lifting the gate is a hand-over.
+     */
+    function armRockLocksForGroup(group) {
+        const st = activatorStateFor(level);
+        for (const e of levelSource(level).entities ?? []) {
+            if (e.type !== 'rocklock' || Number(e.attrs?.tset ?? -1) !== group) continue;
+            if (!world.solids.some((so) => so.tag === 'rocklock' && so.x === e.x && so.y === e.y)) continue;
+            const id = `rocklock@${e.x},${e.y}`;
+            // A second `activate = true` is a re-assignment: the fade lives in `update()`.
+            if (st.byId.has(id)) continue;
+            st.byId.set(id, { alpha: 1, open: false, held: 0, touched: false, rockLock: { armedAt: ticksCompleted, openedAt: null } });
+        }
+    }
+    /** ⛓ p4hfix: one `RockLock.update` of every armed row (`armRockLocksForGroup`), from the update after the arm. */
+    function stepArmedRockLocksNow() {
+        const st = activatorStates.get(level);
+        if (!st) return;
+        for (const s of st.byId.values()) {
+            if (!s.rockLock || s.open || ticksCompleted <= s.rockLock.armedAt) continue;
+            if (rockLockFadeStep(s)) s.rockLock.openedAt = ticksCompleted;
+        }
+    }
+
     function stepOwlNow({ held: heldPrimary, wasHeld: wasHeldPrimary }) {
         const { bosses, pods } = owlStateFor(level);
         if (bosses.size === 0) return { frozen: false };
@@ -11248,6 +11287,9 @@ export function createLevelRun({
             owlGrenades = [...owlPendingGrenades, ...owlGrenades];
             owlPendingGrenades = [];
         }
+        // ⛓⛓ seedling-fidelity-p4hfix: the room's RockLock updates BEFORE the Owl (`Game.as:2355` adds it after
+        // `finalboss` at `:2284`, and `addUpdate` prepends), so its fade runs here, above his step.
+        if (bossDraws) stepArmedRockLocksNow();
         const frozenByCeremony = ceremony !== null;
         const drawsBefore = stream.count;
         const playerBox = playerBoxAt(state.x, state.y);
@@ -11543,6 +11585,10 @@ export function createLevelRun({
                     owlPendingRocks.push(createRockFall(argX, (i / 5) * 32, scale,
                         { id: `deathrock${i}@${ticksCompleted}` }));
                 }
+                // ⛓⛓ seedling-fidelity-p4hfix: `Button.activateAll(null, 0, true)` (`FinalBoss.as:225`), between the
+                // rocks and the flags. ⛔ INTERIM GATE: the line is the same on p4g; it is gated on `bossDraws` only
+                // because this slice's license keeps the p4g arm byte-identical (see `armRockLocksForGroup`).
+                if (bossDraws) armRockLocksForGroup(0);
                 for (const tag of [b.tag, b.tag + 1]) {
                     const flag = outOfBandFlagFor(level, tag);
                     finalBossFlags.set(ledgerKey(flag), { ...flag, id: b.id, level });
@@ -24663,7 +24709,17 @@ export function createLevelRun({
             // ⚠ THE OPPOSITE OF A TELEPORT, whose old player DOES take a last
             // (never observed) step. Two deferred `FP.world =` writes, two
             // different final ticks, and the difference is one `if`.
-            let next = pendingDeath ? state : stepV2(state, acting, stepOpts);
+            //
+            // ⛓⛓ seedling-fidelity-p4hfix: ...BUT THE MIXER STILL TAKES ITS FRAME. `Music.pinStep()` is `Bot.update`'s,
+            // above the armed check, on EVERY frame (`Bot.as:3089-3094`), and `Player.update`'s `dying` skips only the
+            // player's own move. `stepV2` is where the model steps the Swim channel (`playerPhysicsV2`), so a death tick
+            // that skips it dropped one frame of the channel the reboot carries — measured on the p4h witnesses
+            // (`tb-solve-s2` t406 and three more: the stroke boost, `moveSpeeds[state] + 0.25 * (Swim position < 0.1)`
+            // (`Player.as:548`), one tick late after the rebuild). ⛔ INTERIM GATE: the frame is owed on p4g too; it is
+            // gated on `bossDraws` only because this slice's license keeps the p4g arm byte-identical (a hand-over).
+            let next = pendingDeath
+                ? (bossDraws && state.swim ? { ...state, swim: stepChannel({ ...state.swim }) } : state)
+                : stepV2(state, acting, stepOpts);
             // ── ⛓⛓⛓ R3-swim: A DEATH FROM INSIDE `Player.update` ────────
             //
             // The pit (`checkFallingInPit`'s `else die()`) and the drown

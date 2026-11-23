@@ -4420,6 +4420,9 @@ export function buildLevelWorld(levelRecord, {
         // because it is per-tick state and this module builds static
         // geometry.
         if (o.openActivators && s.activatorId && o.openActivators.has(s.activatorId)) return null;
+        // ⛓ seedling-fidelity-p4hfix: a `RockLock` an `activateAll` faded out (`RockLock.as:56-67`). It is no
+        // `ACTIVATOR_RESPONDERS` member (nothing presses it); the run's activator state carries the row by this id.
+        if (o.openActivators && s.tag === 'rocklock' && o.openActivators.has(`rocklock@${s.x},${s.y}`)) return null;
         // ⛔ R6 slice 2: a `MagicalLock` whose destroy animation has WRAPPED.
         // Like a broken rock and unlike a lock-with-a-tSet, it leaves the
         // list entirely (`animEnd` is a bare `FP.world.remove`). ⚠ AND IT
