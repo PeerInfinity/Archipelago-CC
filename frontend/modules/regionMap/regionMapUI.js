@@ -33,7 +33,8 @@ import { GROUPING_RULES } from '../procgenCore/regionLayout.js';
 import { hookCtxFor } from '../procgenCore/atlasCache.js';
 import { COLORS, compositeMapPainterFor, drawGenericRegion } from '../procgenCore/compositeMapRenderer.js';
 import { buildRegionMapModel } from './regionMapModel.js';
-import { cellFrames, frameAt, framesBounds, tileCentre, visibleFrames } from './regionMapFrames.js';
+import { WORLD_TILE_PX, cellFrames, frameAt, framesBounds, visibleFrames } from './regionMapFrames.js';
+import { atLeast, linkShape } from './regionMapLinkGeometry.js';
 import {
     centreOn, easeCamera, fitCamera, panBy, screenToWorld, viewRect, worldToScreen, zoomAround,
 } from '../procgenCore/mapCamera.js';
@@ -53,6 +54,17 @@ export const BAKE_TILE_PX = 16;
 const OWNER = 'regionMap';
 const FOLLOW_EASE_MS = 350;
 const LINK_COLORS = Object.freeze({ down: '#7fb3ff', up: '#ffb37f', join: '#e6c84a', warp: '#6fd08c' });
+/**
+ * ⛓ THE GAP MARK (link-ends): the line across the gutter between two adjacent cells. The gutter is `GUTTER_PX` (32)
+ * world px, so ≈ 1–3 screen px at Fit all on Seedling: the mark is at least `GAP_MARK_MIN_PX` long (stretched about the
+ * gap's middle, so it runs a little into both borders), `GAP_HEAD_MIN_PX` when it carries an arrowhead, and one level
+ * tile thick, between `GAP_MARK_MIN_WIDTH_PX` and `GAP_MARK_MAX_WIDTH_PX`. Solid (`GAP_MARK_ALPHA`): it crosses no art.
+ */
+export const GAP_MARK_MIN_PX = 8;
+export const GAP_HEAD_MIN_PX = 12;
+export const GAP_MARK_MIN_WIDTH_PX = 3;
+export const GAP_MARK_MAX_WIDTH_PX = 6;
+export const GAP_MARK_ALPHA = 0.9;
 /** The toolbar legend, one swatch per `procgenCore/regionLayout.js` LINK_KINDS kind (region-map placement (A)). */
 const LINK_LEGEND = Object.freeze([
     ['join', 'edge transition'], ['down', 'down'], ['up', 'up'], ['warp', 'warp (door / teleporter)'],
@@ -757,7 +769,9 @@ export class RegionMapUI {
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.fillStyle = BG;
         ctx.fillRect(0, 0, vp.w, vp.h);
-        const stats = { cells: 0, art: 0, generic: 0, fogged: 0, hidden: 0, links: 0, neighbourLinks: 0, keys: [] };
+        const stats = {
+            cells: 0, art: 0, generic: 0, fogged: 0, hidden: 0, links: 0, neighbourLinks: 0, gapMarks: 0, edgeLines: 0, arrowheads: 0, keys: [],
+        };
         // ⛓ A DOM readout of the zoom painted (zoom-links): a step's `done` reads no instance.
         this.canvas.dataset.zoom = String(cam.zoom);
         this._squares = [];
@@ -902,45 +916,59 @@ export class RegionMapUI {
 
     _drawLinks(ctx, view, stats) {
         const rect = viewRect(this.camera, this.vp);
-        const pt = (key, tile) => {
-            const f = this.frames.get(key);
-            if (!f) return null;
-            if (tile) return tileCentre(f, tile[0], tile[1]);
-            return { x: f.x + f.w / 2, y: f.y + f.h / 2 };
-        };
-        ctx.lineWidth = 1.5;
-        // Half-transparent: a link between two far groups crosses other levels' art.
-        ctx.globalAlpha = 0.55;
-        // ⛓ zoom-links (⚖ the user 2026-11-22T20:24:34Z, "Draw lines between neighbours"): the in-group links too,
-        // in the same style; counted apart (`neighbourLinks`) from the links between groups (`links`).
+        // ⛓ link-ends (⚖ the user 2026-11-22T21:55:35Z): `linkShape` says where each line starts and ends — a mark
+        // across the GAP between two adjacent cells, else a line clipped to both cells' borders — and whether it has an
+        // arrowhead (every kind but `join`). Counted apart: `links` (between groups) / `neighbourLinks` (in a group),
+        // and `gapMarks`, `edgeLines`, `arrowheads` across both.
+        const zoom = this.camera.zoom;
+        // ⛓ zoom-links (⚖ the user 2026-11-22T20:24:34Z, "Draw lines between neighbours"): the in-group links too.
         const all = [...this.model.links, ...(this.model.neighbourLinks ?? [])];
         for (const l of all) {
             if (this._visibilityOf(l.from, view) === 'hidden' || this._visibilityOf(l.to, view) === 'hidden') continue;
-            const a = pt(l.from, l.a);
-            const b = pt(l.to, l.b);
-            if (!a || !b) continue;
-            if (Math.max(a.x, b.x) < rect.x0 || Math.min(a.x, b.x) > rect.x1 || Math.max(a.y, b.y) < rect.y0 || Math.min(a.y, b.y) > rect.y1) continue;
-            const sa = worldToScreen(this.camera, this.vp, a.x, a.y);
-            const sb = worldToScreen(this.camera, this.vp, b.x, b.y);
+            const shape = linkShape(l, this.frames);
+            if (!shape) continue;
+            const { seg } = shape;
+            if (Math.max(seg.x0, seg.x1) < rect.x0 || Math.min(seg.x0, seg.x1) > rect.x1
+                || Math.max(seg.y0, seg.y1) < rect.y0 || Math.min(seg.y0, seg.y1) > rect.y1) continue;
+            let sa = worldToScreen(this.camera, this.vp, seg.x0, seg.y0);
+            let sb = worldToScreen(this.camera, this.vp, seg.x1, seg.y1);
+            const gap = shape.form === 'gap';
+            if (gap) {
+                // A gutter is GUTTER_PX × zoom on screen (≈ 1–3 px at Fit all on Seedling): a floor on its length.
+                const s2 = atLeast({ x0: sa.x, y0: sa.y, x1: sb.x, y1: sb.y }, shape.head ? GAP_HEAD_MIN_PX : GAP_MARK_MIN_PX, shape.axis);
+                sa = { x: s2.x0, y: s2.y0 };
+                sb = { x: s2.x1, y: s2.y1 };
+            }
             ctx.strokeStyle = LINK_COLORS[l.kind] ?? LINK_COLORS.join;
             ctx.fillStyle = ctx.strokeStyle;
-            ctx.setLineDash?.(l.kind === 'warp' ? [4, 4] : []);
+            // A gap mark is short and crosses no art: drawn solid and thicker. A long line is half-transparent: a link
+            // between two far cells crosses other levels' art.
+            ctx.globalAlpha = gap ? GAP_MARK_ALPHA : 0.55;
+            ctx.lineWidth = gap ? Math.max(GAP_MARK_MIN_WIDTH_PX, Math.min(GAP_MARK_MAX_WIDTH_PX, WORLD_TILE_PX * zoom)) : 1.5;
+            ctx.setLineDash?.(l.kind === 'warp' && !gap ? [4, 4] : []);
             ctx.beginPath();
             ctx.moveTo(sa.x, sa.y);
             ctx.lineTo(sb.x, sb.y);
             ctx.stroke();
             ctx.setLineDash?.([]);
-            const ang = Math.atan2(sb.y - sa.y, sb.x - sa.x);
-            ctx.beginPath();
-            ctx.moveTo(sb.x, sb.y);
-            ctx.lineTo(sb.x - 8 * Math.cos(ang - 0.4), sb.y - 8 * Math.sin(ang - 0.4));
-            ctx.lineTo(sb.x - 8 * Math.cos(ang + 0.4), sb.y - 8 * Math.sin(ang + 0.4));
-            ctx.closePath();
-            ctx.fill();
+            if (shape.head) {
+                const ang = Math.atan2(sb.y - sa.y, sb.x - sa.x);
+                const hl = gap ? Math.min(8, Math.hypot(sb.x - sa.x, sb.y - sa.y) * 0.6) : 8;
+                ctx.beginPath();
+                ctx.moveTo(sb.x, sb.y);
+                ctx.lineTo(sb.x - hl * Math.cos(ang - 0.4), sb.y - hl * Math.sin(ang - 0.4));
+                ctx.lineTo(sb.x - hl * Math.cos(ang + 0.4), sb.y - hl * Math.sin(ang + 0.4));
+                ctx.closePath();
+                ctx.fill();
+                stats.arrowheads += 1;
+            }
+            if (gap) stats.gapMarks += 1;
+            else stats.edgeLines += 1;
             if (l.neighbour) stats.neighbourLinks += 1;
             else stats.links += 1;
         }
         ctx.globalAlpha = 1;
+        ctx.lineWidth = 1;
     }
 
     _drawMarkers(ctx, view) {

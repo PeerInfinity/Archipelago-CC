@@ -2169,6 +2169,12 @@
             "_comment": "region-map zoom-links (2026-11-22): the toolbar's + / − (ZOOM_BUTTON_FACTOR around the centre, Follow unticks), a two-pointer synthetic pinch (distinct pointerIds: zoom x the distance ratio, no click) and the neighbour lines (lastPaint.neighbourLinks = the model's, apart from the cross-group links; off under Links), on procgen_topdown AP_1. Fast batch. Reloads the world loaded before."
         },
         {
+            "id": "region-map-mobile-tab",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "region-map-link-ends (2026-11-22): the Region Map's mobile tab sits right after the Region Graph's (moduleInfo.mobileAfter, mobileLayoutManager.determinePanelOrder), on every layout preset, from the registry's moduleInfo. On a --layout=mobile boot it also taps the live tab and waits for a paint. Fast batch. Loads nothing."
+        },
+        {
             "id": "region-map-click-master-off",
             "enabled": true,
             "category": "Region Map",
