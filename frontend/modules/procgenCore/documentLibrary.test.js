@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { computeContentHash, stampIdentity } from './contentIdentity.js';
 import {
-    HOLD_STALE_MS, KEEP_SAVED_PER_LINEAGE, LibraryReadError, LibraryWriteError, NO_ID_KEY, READ_REFUSAL, SAVE_POINTS,
+    DRAFT_MAX_AGE_MS, HOLD_STALE_MS, KEEP_SAVED_PER_LINEAGE, LibraryReadError, LibraryWriteError, NO_ID_KEY, READ_REFUSAL, SAVE_POINTS,
     WRITE_REFUSAL, canonicalOf, createDocumentLibrary, docKey,
 } from './documentLibrary.js';
 import { createMemoryBackend } from './documentLibraryMemory.js';
@@ -547,7 +547,8 @@ describe('documentLibrary — holds and cleanup (⚖ Q3: last 10 + in use; ⚖ Q
         expect((await lib.get(getOf(shared))).status).toBe('held');
     });
 
-    it('cleanup never deletes a head, a lineage, or a draft (drafts leave only by collapse)', async () => {
+    it('cleanup never deletes a head, a lineage, or a draft younger than DRAFT_MAX_AGE_MS', async () => {
+        expect(HOLD_STALE_MS * 1000).toBeLessThan(DRAFT_MAX_AGE_MS); // the clock below stays inside the draft window
         const { lib, clock } = makeLib();
         const one = await lib.saveVersion(saveReq(setDoc(['solo'])));
         const d = await lib.saveVersion({ ...saveReq(setDoc(['dr'])), lineageId: one.lineage_id, draft: true, savedBecause: 'draft', source: SOURCE_B });
@@ -576,6 +577,172 @@ describe('documentLibrary — holds and cleanup (⚖ Q3: last 10 + in use; ⚖ Q
         expect(e.status).toBe('ok');
         expect(e.counts).toEqual({ docs: 3, entries: 1, lineages: 1, holds: 0 });
         expect(e.bodyBytes).toBeGreaterThan(0);
+    });
+});
+
+describe('documentLibrary — B2: deleteLineage, deleteDrafts, inventory (the Storage panel\'s calls)', () => {
+    const draftReq = (lid, set, source = SOURCE_A) => ({ ...saveReq(set), lineageId: lid, draft: true, savedBecause: 'draft', source });
+    const setKey = (d) => docKey('set_id', d.set_id, d.provenance.content_hash);
+    const ovKey = () => { const o = overlayDoc(); return docKey('overlay_id', o.overlay_id, o.provenance.content_hash); };
+
+    it('deleteLineage on an unheld lineage removes its entries, its lineage and its unnamed docs; a doc another lineage names is KEPT', async () => {
+        const { lib, backend } = makeLib();
+        const a1 = await lib.saveVersion(saveReq(setDoc(['a1'])));
+        await lib.saveVersion({ ...saveReq(setDoc(['a2'])), lineageId: a1.lineage_id });
+        await lib.saveVersion(draftReq(a1.lineage_id, setDoc(['a-draft'])));
+        const b1 = await lib.saveVersion(saveReq(setDoc(['b1']))); // shares the overlay
+        const r = await lib.deleteLineage(a1.lineage_id);
+        expect(r.status).toBe('deleted');
+        expect(r.deletedEntries).toHaveLength(3);
+        // the overlay and the rules are named by lineage b too, so only a's three set bodies go
+        expect([...r.deletedDocs].sort()).toEqual([setKey(setDoc(['a1'])), setKey(setDoc(['a2'])), setKey(setDoc(['a-draft']))].sort());
+        expect(backend.raw('docs').has(docKey(null, null, computeContentHash(rulesDoc(), { idKey: NO_ID_KEY })))).toBe(true);
+        expect((await lib.lineages()).lineages.map((l) => l.lineage_id)).toEqual([b1.lineage_id]);
+        expect((await lib.get(getOf(setDoc(['b1'])))).status).toBe('held');
+        expect(backend.raw('docs').has(ovKey())).toBe(true);
+        expect((await lib.get(getOf(setDoc(['a1'])))).status).toBe('absent');
+        expect(await lib.deleteLineage(a1.lineage_id)).toEqual({ status: 'absent' });
+    });
+
+    it('deleteLineage is REFUSED by name while any entry has a live hold (a game hold, a pin), from any tab; nothing is deleted', async () => {
+        const { lib, clock } = makeLib();
+        const a1 = await lib.saveVersion(saveReq(setDoc(['h1'])));
+        const a2 = await lib.saveVersion({ ...saveReq(setDoc(['h2'])), lineageId: a1.lineage_id });
+        const game = await lib.hold(a1.entry_id, { kind: 'game', tab_id: 'otherTab', what: 'running game' });
+        const r = await lib.deleteLineage(a1.lineage_id);
+        expect(r).toEqual({ status: 'refused', why: 'held', lineage_id: a1.lineage_id, label: 'Demo',
+            heldBy: [{ hold_id: game.hold_id, entry_id: a1.entry_id, kind: 'game', tab_id: 'otherTab', what: 'running game' }] });
+        expect((await lib.entriesOf(a1.lineage_id)).entries).toHaveLength(2);
+        // stale → deletable; a pin is live without heartbeats
+        clock.advance(HOLD_STALE_MS);
+        const pin = await lib.hold(a2.entry_id, { kind: 'pin', tab_id: 'pinTab' });
+        expect((await lib.deleteLineage(a1.lineage_id)).heldBy.map((h) => h.kind)).toEqual(['pin']);
+        await lib.release(pin.hold_id);
+        const d = await lib.deleteLineage(a1.lineage_id);
+        expect(d.status).toBe('deleted');
+        expect(await lib.heartbeat(game.hold_id)).toEqual({ status: 'gone' }); // the stale hold went with it
+    });
+
+    it('deleteDrafts removes every unheld draft and its unnamed docs, keeps held drafts (named), versions and lineages', async () => {
+        const { lib } = makeLib();
+        const a1 = await lib.saveVersion(saveReq(setDoc(['v'])));
+        const dA = await lib.saveVersion(draftReq(a1.lineage_id, setDoc(['dA'])));
+        const dB = await lib.saveVersion(draftReq(a1.lineage_id, setDoc(['dB']), SOURCE_B));
+        const b1 = await lib.saveVersion(saveReq(setDoc(['w'])));
+        const dC = await lib.saveVersion(draftReq(b1.lineage_id, setDoc(['v']), SOURCE_B)); // names a version's doc
+        const pin = await lib.hold(dB.entry_id, { kind: 'pin', tab_id: 'builder' });
+        const r = await lib.deleteDrafts();
+        expect(r.status).toBe('deleted');
+        expect(r.deletedEntries).toEqual([dA.entry_id, dC.entry_id].sort());
+        expect(r.kept).toEqual([{ hold_id: pin.hold_id, entry_id: dB.entry_id, kind: 'pin', tab_id: 'builder', what: null }]);
+        expect(r.deletedDocs).toEqual([setKey(setDoc(['dA']))]);
+        expect((await lib.get(getOf(setDoc(['v'])))).status).toBe('held');
+        expect((await lib.lineages()).lineages).toHaveLength(2);
+        expect((await lib.getEntry(a1.entry_id)).status).toBe('held');
+        // scoped to one lineage
+        await lib.release(pin.hold_id);
+        const dB2 = await lib.saveVersion(draftReq(b1.lineage_id, setDoc(['x'])));
+        expect((await lib.deleteDrafts({ lineageId: a1.lineage_id })).deletedEntries).toEqual([dB.entry_id]);
+        expect((await lib.getEntry(dB2.entry_id)).status).toBe('held');
+    });
+
+    it('deleteLineage / deleteDrafts / inventory answer unavailable, refuse bad arguments by name', async () => {
+        const { lib, backend } = makeLib();
+        await expect(refusalCode(() => lib.deleteLineage(''))).resolves.toBe(`LibraryWriteError:${WRITE_REFUSAL.lineageShape}`);
+        await expect(refusalCode(() => lib.deleteDrafts({ lineageId: 3 }))).resolves.toBe(`LibraryWriteError:${WRITE_REFUSAL.lineageShape}`);
+        await expect(refusalCode(() => lib.deleteDrafts('all'))).resolves.toBe(`LibraryWriteError:${WRITE_REFUSAL.optionsShape}`);
+        backend.unavailable('no indexedDB in this browser context');
+        const want = { status: 'unavailable', why: 'no indexedDB in this browser context' };
+        expect(await lib.deleteLineage('L')).toEqual(want);
+        expect(await lib.deleteDrafts()).toEqual(want);
+        expect(await lib.inventory()).toEqual(want);
+    });
+
+    it('a refused commit (quota) answers failed and deletes nothing', async () => {
+        const { lib, backend } = makeLib();
+        const a1 = await lib.saveVersion(saveReq(setDoc(['q'])));
+        backend.failNextCommit(Object.assign(new Error('full'), { name: 'QuotaExceededError' }));
+        expect((await lib.deleteLineage(a1.lineage_id)).status).toBe('failed');
+        expect((await lib.getEntry(a1.entry_id)).status).toBe('held');
+    });
+
+    it('inventory lists each lineage with versions, drafts, old drafts, distinct bytes and LIVE holds of any tab', async () => {
+        const { lib, clock } = makeLib();
+        const a1 = await lib.saveVersion(saveReq(setDoc(['i1'])));
+        await lib.saveVersion({ ...saveReq(setDoc(['i2'])), lineageId: a1.lineage_id });
+        const d = await lib.saveVersion(draftReq(a1.lineage_id, setDoc(['i-draft'])));
+        const g = await lib.hold(a1.entry_id, { kind: 'game', tab_id: 'tab2', what: 'play' });
+        const inv = await lib.inventory();
+        expect(inv.status).toBe('ok');
+        const [row] = inv.lineages;
+        expect(row).toMatchObject({ lineage_id: a1.lineage_id, label: 'Demo', versions: 2, drafts: 1, oldDrafts: 0 });
+        expect(row.liveHolds).toEqual([{ hold_id: g.hold_id, entry_id: a1.entry_id, kind: 'game', tab_id: 'tab2', what: 'play' }]);
+        expect(row.bytes).toBe((await lib.estimate()).bodyBytes); // one lineage: every doc, each counted once
+        clock.advance(DRAFT_MAX_AGE_MS);
+        const later = (await lib.inventory()).lineages[0];
+        expect(later.liveHolds).toEqual([]); // the game hold is stale now
+        expect(later.oldDrafts).toBe(1);
+        expect(d.status).toBe('saved');
+    });
+});
+
+describe('documentLibrary — ⚖ Q2: cleanup deletes a DRAFT older than DRAFT_MAX_AGE_MS (7 days), never a numbered version', () => {
+    const draftReq = (lid, set, source = SOURCE_A) => ({ ...saveReq(set), lineageId: lid, draft: true, savedBecause: 'draft', source });
+    const setKey = (d) => docKey('set_id', d.set_id, d.provenance.content_hash);
+
+    it('the window is seven days', () => {
+        expect(DRAFT_MAX_AGE_MS).toBe(7 * 24 * 60 * 60 * 1000);
+    });
+
+    it('a draft at 7 days − 1 ms is kept; at 7 days + 1 ms it is deleted with its unnamed docs, shared docs kept', async () => {
+        const { lib, clock, backend } = makeLib();
+        const v = await lib.saveVersion(saveReq(setDoc(['base'])));
+        const t0 = clock.now();
+        const d = await lib.saveVersion(draftReq(v.lineage_id, setDoc(['dead-tab'])));
+        expect((await lib.cleanup({ now: t0 + DRAFT_MAX_AGE_MS - 1 })).deletedEntries).toEqual([]);
+        const c = await lib.cleanup({ now: t0 + DRAFT_MAX_AGE_MS + 1 });
+        expect(c.deletedEntries).toEqual([d.entry_id]);
+        expect(c.deletedDocs).toEqual([setKey(setDoc(['dead-tab']))]); // overlay + rules are named by the version
+        expect(backend.raw('docs').size).toBe(3);
+        expect((await lib.getEntry(v.entry_id)).status).toBe('held');
+        expect((await lib.lineages()).lineages).toHaveLength(1); // the lineage stays (a writer may still save into it)
+    });
+
+    it('an old HELD draft is kept (a pin; a heartbeating game hold from another tab)', async () => {
+        const { lib, clock } = makeLib();
+        const v = await lib.saveVersion(saveReq(setDoc(['b'])));
+        const d1 = await lib.saveVersion(draftReq(v.lineage_id, setDoc(['p'])));
+        const d2 = await lib.saveVersion(draftReq(v.lineage_id, setDoc(['g']), SOURCE_B));
+        await lib.hold(d1.entry_id, { kind: 'pin', tab_id: 'x' });
+        const g = await lib.hold(d2.entry_id, { kind: 'game', tab_id: 'tabB' });
+        clock.advance(DRAFT_MAX_AGE_MS + 1);
+        await lib.heartbeat(g.hold_id);
+        expect((await lib.cleanup({ now: clock.now() })).deletedEntries).toEqual([]);
+        clock.advance(HOLD_STALE_MS); // the game hold goes stale; the pin stays durable
+        expect((await lib.cleanup({ now: clock.now() })).deletedEntries).toEqual([d2.entry_id]);
+    });
+
+    it('an old numbered version and the head are kept; another lineage\'s young draft is kept', async () => {
+        const { lib, clock } = makeLib();
+        const v1 = await lib.saveVersion(saveReq(setDoc(['n1'])));
+        const v2 = await lib.saveVersion({ ...saveReq(setDoc(['n2'])), lineageId: v1.lineage_id });
+        const old = await lib.saveVersion(draftReq(v1.lineage_id, setDoc(['old'])));
+        clock.advance(DRAFT_MAX_AGE_MS * 3);
+        const other = await lib.saveVersion(saveReq(setDoc(['o1'])));
+        const young = await lib.saveVersion(draftReq(other.lineage_id, setDoc(['young']), SOURCE_B));
+        const c = await lib.cleanup({ now: clock.now() + 1 });
+        expect(c.deletedEntries).toEqual([old.entry_id]);
+        for (const e of [v1, v2, other, young]) expect((await lib.getEntry(e.entry_id)).status).toBe('held');
+        expect((await lib.lineages()).lineages.find((l) => l.lineage_id === v1.lineage_id).head).toBe(v2.entry_id);
+    });
+
+    it('a save in the lineage runs the same rule (B3\'s writers clean on save)', async () => {
+        const { lib, clock } = makeLib();
+        const v = await lib.saveVersion(saveReq(setDoc(['s1'])));
+        const d = await lib.saveVersion(draftReq(v.lineage_id, setDoc(['sd']), SOURCE_B));
+        clock.advance(DRAFT_MAX_AGE_MS);
+        const s = await lib.saveVersion({ ...saveReq(setDoc(['s2'])), lineageId: v.lineage_id });
+        expect(s.deleted).toEqual([d.entry_id]);
     });
 });
 
@@ -643,7 +810,7 @@ describe('documentLibrary — source pins', () => {
         ]);
     });
 
-    it('nothing outside the library\'s own tests and its in-app row imports the library', () => {
+    it('nothing outside the library\'s own tests, its in-app row and the Storage panel imports the library', () => {
         const users = [];
         const walk = (dir) => {
             for (const name of readdirSync(dir)) {
@@ -661,6 +828,8 @@ describe('documentLibrary — source pins', () => {
             'modules/procgenCore/documentLibrary.test.js',
             'modules/procgenCore/documentLibraryIdb.js',
             'modules/procgenCore/documentLibraryMemory.js',
+            // B2: the Storage panel reads it by a document-relative dynamic import (it stays out of the bundle)
+            'modules/storagePanel/storagePanelUI.js',
             'modules/tests/testCases/documentLibraryTests.js',
         ]);
     });

@@ -78,6 +78,13 @@ export const HOLD_STALE_MS = 10 * 60_000;
  * `pageshow`.
  */
 export const HOLD_HEARTBEAT_MS = 10_000;
+/**
+ * A DRAFT older than this, with no live hold, is deleted by the cleanup rule
+ * (⚖ Robert, B2 Q2: "By hand + auto after 7 days"). A tab closed without a
+ * save point leaves its rolling draft behind; this is what removes it. A
+ * NUMBERED version is never deleted for its age (⚖ Q3: last 10 + in use + head).
+ */
+export const DRAFT_MAX_AGE_MS = 7 * 24 * 60 * 60_000;
 
 /**
  * Why a version was written (⚖ ruling Q1: "Save points"). A DRAFT is written
@@ -132,6 +139,7 @@ export const WRITE_REFUSAL = Object.freeze({
     holdIdShape: 'write-hold-id-shape',
     entryIdShape: 'write-entry-id-shape',
     nowShape: 'write-now-shape',
+    optionsShape: 'write-options-shape',
 });
 
 export class LibraryReadError extends Error {
@@ -334,6 +342,14 @@ export function holdIsLive(hold, now) {
     return now - hold.heartbeat_at < HOLD_STALE_MS;
 }
 
+/** Is this draft past `DRAFT_MAX_AGE_MS` at `now`? (The same boundary style as `holdIsLive`: old at ≥.) */
+export function draftIsOld(entry, now) {
+    return entry.draft === true && now - entry.saved_at >= DRAFT_MAX_AGE_MS;
+}
+
+/** A live hold, named for a refusal: what holds it and from which tab. */
+const holdName = (h) => ({ hold_id: h.hold_id, entry_id: h.entry_id, kind: h.holder.kind, tab_id: h.holder.tab_id, what: h.holder.what ?? null });
+
 /**
  * @param {{backend: object, now?: () => number, randomId?: () => string}} options
  */
@@ -361,7 +377,9 @@ export function createDocumentLibrary({ backend, now = Date.now, randomId = defa
         const deleted = [];
         const touchedDocs = new Set();
         for (const e of entries) {
-            if (e.draft || keep.has(e.entry_id)) continue; // drafts leave only by collapse (see saveVersion)
+            if (keep.has(e.entry_id)) continue;
+            // A draft leaves by collapse (see saveVersion) or, here, once older than DRAFT_MAX_AGE_MS (⚖ Q2).
+            if (e.draft && !draftIsOld(e, at)) continue;
             const holds = await tx.getAll('holds', { index: 'by_entry', value: e.entry_id });
             if (holds.some((h) => holdIsLive(h, at))) continue;
             for (const h of holds) await tx.delete('holds', h.hold_id);
@@ -622,5 +640,109 @@ export function createDocumentLibrary({ backend, now = Date.now, randomId = defa
         return { status: 'ok', ...r.value, browser };
     }
 
-    return { saveVersion, get, getEntry, entriesOf, lineages, hold, heartbeat, release, cleanup, estimate };
+    /**
+     * Every lineage with its versions, drafts, distinct body bytes and LIVE holds
+     * (any tab's: the holds store is read, not this page's memory), for a
+     * listing. Metadata only; no body is parsed.
+     */
+    async function inventory() {
+        const at = now();
+        const r = await run(ALL_STORES, 'readonly', async (tx) => {
+            const [lins, entries, holds, docs] = await Promise.all([
+                tx.getAll('lineages'), tx.getAll('entries'), tx.getAll('holds'), tx.getAll('docs'),
+            ]);
+            const docBytes = new Map(docs.map((d) => [d.key, d.size_bytes ?? 0]));
+            const liveByEntry = new Map();
+            for (const h of holds) {
+                if (!holdIsLive(h, at)) continue;
+                if (!liveByEntry.has(h.entry_id)) liveByEntry.set(h.entry_id, []);
+                liveByEntry.get(h.entry_id).push(holdName(h));
+            }
+            const out = lins.sort((a, b) => a.created_at - b.created_at || (a.lineage_id < b.lineage_id ? -1 : 1)).map((l) => {
+                const mine = entries.filter((e) => e.lineage_id === l.lineage_id);
+                const keys = new Set(mine.flatMap((e) => e.member_keys));
+                return {
+                    lineage_id: l.lineage_id, label: l.label, head: l.head, created_at: l.created_at,
+                    versions: mine.filter((e) => !e.draft).length,
+                    drafts: mine.filter((e) => e.draft).length,
+                    oldDrafts: mine.filter((e) => draftIsOld(e, at)).length,
+                    bytes: [...keys].reduce((sum, k) => sum + (docBytes.get(k) ?? 0), 0),
+                    liveHolds: mine.flatMap((e) => liveByEntry.get(e.entry_id) ?? []),
+                };
+            });
+            return { status: 'ok', at, lineages: out };
+        });
+        return r.ok ? r.value : r.answer;
+    }
+
+    /**
+     * Delete one lineage: its entries, their stale holds, the lineage record, and
+     * every document no remaining entry names — in ONE readwrite transaction that
+     * re-reads the holds. REFUSED, by name, when any of its entries has a LIVE
+     * hold (a pin, or a game/world hold heartbeating within HOLD_STALE_MS) from
+     * ANY tab: `{status: 'refused', why: 'held', heldBy: [{entry_id, kind, tab_id, what}]}`.
+     * ⚠ A tab still editing this lineage gets `write-lineage-unknown` on its next
+     * save (the writer's job to handle: mint a new lineage).
+     */
+    async function deleteLineage(lineageId) {
+        if (!isNonEmptyString(lineageId)) throw new LibraryWriteError(WRITE_REFUSAL.lineageShape, 'deleteLineage takes a lineage id');
+        const at = now();
+        const r = await run(ALL_STORES, 'readwrite', async (tx) => {
+            const lineage = await tx.get('lineages', lineageId);
+            if (!lineage) return { status: 'absent' };
+            const entries = await tx.getAll('entries', { index: 'by_lineage', value: lineageId });
+            const heldBy = [];
+            const stale = [];
+            for (const e of entries) {
+                for (const h of await tx.getAll('holds', { index: 'by_entry', value: e.entry_id })) {
+                    if (holdIsLive(h, at)) heldBy.push(holdName(h));
+                    else stale.push(h.hold_id);
+                }
+            }
+            if (heldBy.length) return { status: 'refused', why: 'held', lineage_id: lineageId, label: lineage.label, heldBy };
+            const touched = new Set();
+            for (const id of stale) await tx.delete('holds', id);
+            for (const e of entries) {
+                await tx.delete('entries', e.entry_id);
+                for (const k of e.member_keys) touched.add(k);
+            }
+            await tx.delete('lineages', lineageId);
+            const deletedDocs = await sweepDocs(tx, touched);
+            return { status: 'deleted', lineage_id: lineageId, deletedEntries: entries.map((e) => e.entry_id).sort(), deletedDocs };
+        });
+        return r.ok ? r.value : r.answer;
+    }
+
+    /**
+     * Delete DRAFTS (by hand: the Storage panel's "Clear leftover drafts", ⚖ Q2):
+     * every draft with no live hold, or only those of `lineageId`, in ONE
+     * readwrite transaction; documents no remaining entry names are swept. A held
+     * draft is KEPT and named in `kept`. Numbered versions and lineages are never
+     * touched.
+     */
+    async function deleteDrafts(options = {}) {
+        if (!isPlainObject(options)) throw new LibraryWriteError(WRITE_REFUSAL.optionsShape, 'deleteDrafts takes {lineageId?}');
+        const { lineageId = null } = options;
+        if (!(lineageId === null || isNonEmptyString(lineageId))) throw new LibraryWriteError(WRITE_REFUSAL.lineageShape, 'deleteDrafts: lineageId must be a lineage id or null');
+        const at = now();
+        const r = await run(ALL_STORES, 'readwrite', async (tx) => {
+            const all = lineageId === null ? await tx.getAll('entries') : await tx.getAll('entries', { index: 'by_lineage', value: lineageId });
+            const touched = new Set();
+            const deleted = [];
+            const kept = [];
+            for (const e of all) {
+                if (!e.draft) continue;
+                const holds = await tx.getAll('holds', { index: 'by_entry', value: e.entry_id });
+                const live = holds.filter((h) => holdIsLive(h, at));
+                if (live.length) { kept.push(...live.map(holdName)); continue; }
+                await dropIfUnheld(tx, e, at, touched);
+                deleted.push(e.entry_id);
+            }
+            const deletedDocs = await sweepDocs(tx, touched);
+            return { status: 'deleted', deletedEntries: deleted.sort(), deletedDocs, kept };
+        });
+        return r.ok ? r.value : r.answer;
+    }
+
+    return { saveVersion, get, getEntry, entriesOf, lineages, hold, heartbeat, release, cleanup, estimate, inventory, deleteLineage, deleteDrafts };
 }

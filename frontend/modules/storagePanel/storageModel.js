@@ -6,7 +6,8 @@
  */
 import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
-const MATCHERS = ['key', 'prefix', 'pattern'];
+/** `idb` names an IndexedDB database (storageKinds.js); the other three match localStorage keys. */
+const MATCHERS = ['key', 'prefix', 'pattern', 'idb'];
 const KINDS = new Set(Object.values(STORAGE_KINDS));
 
 /** The view's sections, in the order they are drawn: what no module owns FIRST. */
@@ -41,15 +42,16 @@ export const SECTIONS = Object.freeze([
 
 /**
  * Why a declaration is malformed, or null. `where` names it in the message.
- * Shape: exactly one of key / prefix / pattern (a non-empty string; a pattern
- * must compile), `kind` one of STORAGE_KINDS, a non-empty `label`; optional
+ * Shape: exactly one of key / prefix / pattern / idb (a non-empty string; a
+ * pattern must compile), `kind` one of STORAGE_KINDS, a non-empty `label`; optional
  * `clearAll` (a family button's text, prefix/pattern only) and `clearsWith`
- * (extra keys that family's button also removes).
+ * (extra keys that family's button also removes). An `idb` declaration takes
+ * neither: the panel clears a database through its own row, never by keys.
  */
 export function declarationError(decl, where = 'declaration') {
     if (!decl || typeof decl !== 'object') return `${where}: not an object`;
     const matchers = MATCHERS.filter((m) => decl[m] !== undefined);
-    if (matchers.length !== 1) return `${where}: needs exactly one of key / prefix / pattern (has ${matchers.length})`;
+    if (matchers.length !== 1) return `${where}: needs exactly one of key / prefix / pattern / idb (has ${matchers.length})`;
     const m = matchers[0];
     if (typeof decl[m] !== 'string' || decl[m] === '') return `${where}: ${m} must be a non-empty string`;
     if (m === 'pattern') {
@@ -57,6 +59,9 @@ export function declarationError(decl, where = 'declaration') {
     }
     if (!KINDS.has(decl.kind)) return `${where}: kind must be one of ${[...KINDS].join(', ')} (is ${JSON.stringify(decl.kind)})`;
     if (typeof decl.label !== 'string' || !decl.label.trim()) return `${where}: label must be a non-empty string`;
+    if (m === 'idb' && (decl.clearAll !== undefined || decl.clearsWith !== undefined)) {
+        return `${where}: an idb declaration takes no clearAll / clearsWith (a database is cleared through its own row)`;
+    }
     if (decl.clearAll !== undefined) {
         if (m === 'key') return `${where}: clearAll is for a key family (prefix / pattern)`;
         if (typeof decl.clearAll !== 'string' || !decl.clearAll.trim()) return `${where}: clearAll must be a non-empty string`;
@@ -117,11 +122,16 @@ export function ownerOf(key, declarations) {
             if (d.value === key) return d;
         } else if (d.match === 'prefix') {
             if (key.startsWith(d.value) && (!prefix || d.value.length > prefix.value.length)) prefix = d;
-        } else if (!pattern && d.regex.test(key)) {
+        } else if (d.match === 'pattern' && !pattern && d.regex.test(key)) {
             pattern = d;
         }
     }
     return prefix || pattern;
+}
+
+/** The `idb` declarations (database names), in declaration order. They own no localStorage key. */
+export function idbDeclarations(declarations) {
+    return declarations.filter((d) => d.match === 'idb');
 }
 
 /**
@@ -202,5 +212,57 @@ export function confirmText(what, keys, sizeOf, currentModeKey) {
         text += ' It includes the current mode\'s saved settings: this page keeps the settings it already '
             + 'loaded (and saves the next one you change); the removal takes effect on reload.';
     }
+    return text;
+}
+
+/* ── the document library row (an `idb` declaration the panel can read) ── */
+
+/** "game in tab t1 (running game)": one live hold, by name. */
+export function holdText(h) {
+    return `${h.kind} in tab ${h.tab_id}${h.what ? ` (${h.what})` : ''}`;
+}
+
+/** "2 versions, 1 draft" */
+export function versionsText(versions, drafts) {
+    return `${versions} version${versions === 1 ? '' : 's'}, ${drafts} draft${drafts === 1 ? '' : 's'}`;
+}
+
+/**
+ * The library's rows from `inventory()`'s lineages: one per lineage, with its
+ * label (or its id when it has none), counts, distinct body bytes, and the
+ * live holds that would refuse its Clear, by name.
+ */
+export function libraryRows(lineages) {
+    return lineages.map((l) => ({
+        lineageId: l.lineage_id,
+        label: l.label || l.lineage_id,
+        counts: versionsText(l.versions, l.drafts),
+        bytes: l.bytes,
+        versions: l.versions,
+        drafts: l.drafts,
+        held: l.liveHolds.length > 0,
+        heldText: l.liveHolds.length ? `In use: ${l.liveHolds.map(holdText).join('; ')}` : '',
+    }));
+}
+
+/** Why a lineage Clear was refused, from `deleteLineage`'s `{status: 'refused', heldBy}`. */
+export function refusalText(label, answer) {
+    return `Not cleared: "${label}" is in use (${answer.heldBy.map(holdText).join('; ')}). `
+        + 'Close what uses it, or wait until its hold goes stale, then Clear again.';
+}
+
+/**
+ * A library Clear's confirmation, in confirmText's wording: what, how much,
+ * "This cannot be undone."
+ */
+export function libraryConfirmText(what, { versions = 0, drafts = 0, bytes = null, draftsOnly = false } = {}) {
+    const parts = [];
+    if (!draftsOnly) parts.push(`${versions} saved version${versions === 1 ? '' : 's'}`);
+    parts.push(`${drafts} draft${drafts === 1 ? '' : 's'}`);
+    let text = `${what}: remove ${parts.join(' and ')}${bytes !== null ? ` (${formatChars(bytes)} bytes)` : ''} `
+        + "from this site's document library? This cannot be undone.";
+    text += draftsOnly
+        ? ' A draft that something is using is kept. A tab still editing saves its draft again at its next change.'
+        : ' A set that something is using is refused, not cleared.';
     return text;
 }

@@ -31,6 +31,20 @@ The Unknown section comes first because that is where space usually goes missing
 
 Every clear asks first, saying how many keys and how many characters it will remove. A clear cannot be undone.
 
+## Lab sets (the document library)
+
+The sets you make in the Procgen Lab are kept in a separate browser database, `archipelago-cc-document-library`, not in local storage. The panel shows it under **Your data**, in the *Procgen Lab* group. If nothing has been saved yet, the line says so, and the panel does not create the database.
+
+- **The status line** shows two different sizes:
+  - **bytes of saved documents** is the library's own stored text;
+  - **this site's whole browser storage (estimate)** is the browser's own figure for everything this site stores, including other databases and caches.
+
+  It also says whether the browser has made the storage persistent (**granted**) or may remove it when space runs low (**best-effort**).
+- **One row per set**, showing its name, how many numbered versions and drafts it has, and its size.
+- **Clear** on a row removes that set, with all its versions and drafts. It asks first. A set that something is using, such as a running game or a loaded world in this tab or in any other open tab, is **not** cleared: the row says what is using it and in which tab.
+- **Clear leftover drafts** removes every draft that nothing is using. A draft is the rolling copy an open lab tab keeps while you edit. A tab closed without saving leaves its draft behind. It asks first.
+- **Drafts older than 7 days are cleared by themselves** each time the panel draws (opening it, or **Refresh**), unless something is using them. The panel says how many it cleared. Numbered versions are never cleared because of their age.
+
 The page keeps whatever it has already loaded. If you clear the current mode's saved settings, this page still has them in memory, and the next setting you change is saved again. The removal takes effect when you reload.
 
 ## When the banner appears
@@ -59,12 +73,14 @@ export const moduleInfo = {
 ```
 
 - Write one entry per line (a test reads them from the source).
-- Use exactly one of `key`, `prefix` or `pattern` in each entry.
+- Use exactly one of `key`, `prefix`, `pattern` or `idb` in each entry. `idb` names an IndexedDB database, for example `{ idb: 'archipelago-cc-document-library', kind: STORAGE_KINDS.user, label: '…' }`. It is declared once, by the module that owns it (the document library is declared by `procgenLabPanel` for every writer).
 - A family may add `clearAll` (the text of a button that clears the whole family) and `clearsWith` (extra keys that button also removes).
 
 `frontend/modules/storagePanel/storageDeclarationPins.test.js` fails on a malformed entry, a key declared twice, or a declared key that no source file writes. A key a module writes but does not declare shows up under **Unknown**.
 
-A write that can fail should catch the error and call `reportStorageWriteFailure({ key, value, error, owner })` from `app/core/storageQuota.js`. That is what raises the banner.
+`storageCensus.test.js` also holds the IndexedDB names both ways. It fails when a source opens a database that is neither declared nor on its short allow-list (each allow-list entry has a reason), and when a declared database is opened nowhere.
+
+A write that can fail should catch the error and call `reportStorageWriteFailure({ key, value, error, owner })` from `app/core/storageQuota.js`. That is what raises the banner. A document-library save that answers `{status: 'failed', why}` calls `reportLibraryWriteFailure({ why, bytes, owner, database })` instead. It raises the same banner for a full quota, and returns `null` for any other failure, which the caller reports itself.
 
 ## Appendix: the same table from the console
 
