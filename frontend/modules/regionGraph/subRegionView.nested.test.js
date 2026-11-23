@@ -153,6 +153,11 @@ describe('⛓ nested: counts per preset', () => {
         expect(COUNTS.seedling.membersInside + COUNTS.seedling.groupsOfOne).toBe(regions.size);
         expect(COUNTS.seedling).toEqual({ parents: 60, membersInside: 251, groupsOfOne: 56 });
     });
+    it('seedling_atlas (the in-app row\'s world) draws 2 boxes, 8 members inside, 3 groups of one', () => {
+        const { regions } = load('seedling_atlas/AP_1/AP_1_rules.json');
+        const { ui } = build(regions, 'nested');
+        expect(countsOf(ui.cy)).toEqual({ parents: 2, membersInside: 8, groupsOfOne: 3 });
+    });
     for (const [name, rel] of [['alttp', ALTTP], ['procgen_maze', MAZE]]) {
         it(`${name}: no sub-regions → 0 boxes, and the element set equals separate's at all 3 states`, () => {
             const rules = kit.loadRules(rel);

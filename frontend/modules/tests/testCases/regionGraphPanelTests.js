@@ -540,13 +540,16 @@ export async function testRegionGraphLocationNodesSurviveRebuild(testController)
 /* ── region-graph-groups-a: subRegionView = nested (option A) ───────────── */
 
 /**
- * ⛓ subRegionView = nested on seedling_playthrough. The row SETS the setting itself (session-only, `ctx.setSetting`) and
+ * ⛓ subRegionView = nested on seedling_atlas (the smallest preset with sub-regions; seedling_playthrough's counts are
+ * pinned by subRegionView.nested.test.js — loading its 307 regions cost the fast batch ~20 s). The row SETS the setting itself (session-only, `ctx.setSetting`) and
  * RESTORES it at the end (`ctx.restoreSettings`: the override is cleared, the stored value / schema default applies), and
  * checks the graph is back to no boxes: a leaked `nested` would change every later Region Graph row.
  * The box count is DERIVED at run time (the same fold, `multiMemberGroups`, over the loaded rules and the live substrate
  * registry), never a preset pin. Then a tap on a box runs nothing, and a tap on a member runs its click action (the
  * default actions: the path extends to it), once.
  */
+/** The row's world: seedling_atlas (11 regions, 2 levels split into sub-regions) — the smallest preset with boxes. */
+const NESTED_RULES = './presets/seedling_atlas/AP_1/AP_1_rules.json';
 export async function testRegionGraphSubRegionNested(testController) {
   const ctx = buildContext({ eventBus: testController.eventBus });
   const before = ctx.rulesSource();
@@ -554,9 +557,9 @@ export async function testRegionGraphSubRegionNested(testController) {
   let moved = false;
   const boxes = () => graphCy()?.nodes().filter((n) => isRegionGroupNode(n)) ?? null;
   try {
-    if (!await ctx.isPresetLoaded('seedling_playthrough', 1)) { await ctx.loadPreset('seedling_playthrough', 1); moved = true; }
+    if (ctx.rulesSource() !== NESTED_RULES) { await ctx.loadRulesPath(NESTED_RULES); moved = true; }
     testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
-    const built = await testController.pollForCondition(graphShowsWorld, 'the graph shows seedling_playthrough', MAX_WAIT_TIME, 100);
+    const built = await testController.pollForCondition(graphShowsWorld, 'the graph shows seedling_atlas', MAX_WAIT_TIME, 100);
     if (!built) throw new Error('the graph did not build');
     const startView = await settingsManager.getSetting(SUB_REGION_VIEW_KEY);
     testController.reportCondition(`subRegionView starts at the schema default "separate" (it is "${startView}")`, startView === 'separate');
@@ -581,7 +584,7 @@ export async function testRegionGraphSubRegionNested(testController) {
     const membersExpected = [...expected.values()].reduce((a, m) => a + m.length, 0);
     testController.reportCondition(`every member is inside its box: ${inside} = ${membersExpected}`, inside === membersExpected
       && [...expected].every(([key, members]) => members.every((m) => cy.getElementById(m).parent().id() === groupNodeId(key))));
-    testController.log(`[subRegionView] seedling_playthrough nested: boxes=${boxes().length} inside=${inside} groupsOfOne=${regionNodes(cy).length - inside} switchMs=${switchMs}`);
+    testController.log(`[subRegionView] seedling_atlas nested: boxes=${boxes().length} inside=${inside} groupsOfOne=${regionNodes(cy).length - inside} switchMs=${switchMs}`);
 
     // Clicks: the default actions (session-only).
     const { defaultClickActions } = await import('../../regionView/clickActions.js');
@@ -1043,7 +1046,7 @@ registerTest({
   category: 'Region Graph',
   testFunction: testRegionGraphSubRegionNested,
   enabled: false, // runs where a roster enrols it (the substrates config)
-  description: 'region-graph-groups-a: on seedling_playthrough, subRegionView = nested (session-only) draws one box per display group of 2+ with its members inside; a box tap runs nothing, a member tap runs its click action; the setting is restored and the boxes go'
+  description: 'region-graph-groups-a: on seedling_atlas (2 boxes), subRegionView = nested (session-only) draws one box per display group of 2+ with its members inside; a box tap runs nothing, a member tap runs its click action; the setting is restored and the boxes go'
 });
 
 registerTest({
