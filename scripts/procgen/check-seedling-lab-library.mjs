@@ -178,8 +178,8 @@ async function main() {
                 `${requested.length} requests, library ones: ${json(lib)}`);
             const state = await page.evaluate(() => ({ readout: typeof window.__labLibrary, status: document.getElementById('editLibraryStatus')?.textContent }));
             check(state.readout === 'undefined' && state.status === '', '0 — …and no writer is running, and the status line is empty', json(state));
-            for (const n of Object.values(DBS)) {
-                check(!(await dbListed(page, n)), `0 — the per-run database is ABSENT at the start (${n.slice(-12)})`);
+            for (const [part, n] of Object.entries(DBS)) {
+                check(!(await dbListed(page, n)), `0 — the per-run database is ABSENT at the start (${part})`, n);
             }
             await page.close();
         }
@@ -383,7 +383,8 @@ async function main() {
             await until(b, () => window.__labLibrary?.opened?.entry_id, null, 'tab B to open v1');
             await edit(a);
             const v2a = await press(a, 'editSetReport');
-            await b.evaluate(() => { const s = document.getElementById('editSetRoom'); s.value = '2'; s.dispatchEvent(new Event('change')); });
+            // ⛓ B's edit differs from A's (two rooms added, not one), so the two forks hold different sets
+            await edit(b);
             await edit(b);
             const v3b = await press(b, 'editSetReport');
             const all = await libRead(a, DBS.fork, { kind: 'entries', lineageId: v1f.lineage_id });
@@ -391,8 +392,9 @@ async function main() {
             const tabs = await Promise.all([a, b].map((p) => p.evaluate(() => window.__labLibrary.tabId)));
             check(v2a.seq === 2 && v3b.seq === 3 && v2a.parent === v1f.entry_id && v3b.parent === v1f.entry_id
                 && v2a.lineage_id === v1f.lineage_id && v3b.lineage_id === v1f.lineage_id && tabs[0] !== tabs[1]
-                && kept.length === 3 && setOf(v2a).content_hash !== setOf(v3b).content_hash,
-            '5 — TWO TABS on v1 FORK: A saves v2, B saves v3, both parent v1, all three kept, nothing overwritten',
+                && json(kept.map((k) => k[0])) === json([v1f.seq, v2a.seq, v3b.seq])
+                && setOf(v2a).content_hash !== setOf(v3b).content_hash,
+            '5 — TWO TABS on v1 FORK: A saves v2, B saves v3, both parent v1, every version kept, nothing overwritten',
             json(kept));
             await a.close();
             await b.close();
