@@ -18,6 +18,7 @@ tip, the preset-identity proof, and one merge of main after train 195).
 | 4 | `b12240f28d` | The in-app row `playback-bot-tile-kinds-demo` (batch `playback-bot`) |
 | 5 | `aed5e95796` | The generated reference, regenerated (docs-index word counts; the producer's instrument row) |
 | 6 | `5ddff90d4e` | The preset's description names the LOADED world (`presetDefs.test.js`'s top-down pin; red in JSUT at `aed5e95796`) |
+| 7 | `f8f03cef2a` | The Maze Room panel unbinds a room the newly loaded document does not have (`mazeRoomUI._unbindStaleRegion`, the visualizer's `regionId`); the demo row re-focuses the bot panel; `mazeRoomUI.test.js` pins (§ 6b) |
 
 ## 1. The pack
 
@@ -183,6 +184,50 @@ field from the served rules (`page.route`); the payload is untouched. The fix be
 | Bounded vitest | the sweep (§ 3); `procgenDocs` + `lintGateLabels` 511 passed; the new files 13 + 9 + the stack rows |
 | Committed presets moved | none besides the new one (`git diff --stat origin/content-gen1 -- frontend/presets` = `tile_kinds_demo` + its `preset_files.json` row) |
 | Gitlinks changed | 0 |
+
+## 6b. The red the first tip met: the Maze Room panel stayed bound to the demo's room
+
+**TT 45086916866 at `44a49fe250`: the `playback-bot` batch ran out of its 600 s budget.** 9 of 18 rows finished.
+`playback-bot-tile-kinds-demo` passed in 72 s, then `playback-bot-walk-order` (plain Adventure, direct play) went STUCK
+on all three walk orders it reached, each with every location checked and the bot still "walking to Chalice Home
+(9/9)". On main, walk-order passes in about 2.5 s right after `direct-play-adventure`.
+
+**The cause, measured** (by reproducing the pair locally, then probing the bot, the dispatcher and the panel):
+1. For a plain preset the bot resolves the MAZE controller whenever the Maze Room panel is mounted (the registry
+   entry's `getPlaybackController`). On main the panel is mounted at that point too, but with **no world and no
+   region**, so its `walkTo` refuses and the bot direct-plays.
+2. After the demo row, the panel stayed bound to the demo's last room, YellowCastle. A plain document adopts no region,
+   so nothing unbound it. Walk-order's targets were then walked on that stale room, resolved by name. The demo is
+   top-down over Adventure, so the room carries Adventure's region and location names.
+3. The visualizer's `freshStart()` (the bot's `reset`) re-armed that room's playthrough, and `instant` played it.
+   That published `system:locationCheck` for Chalice Home and Inside Yellow Castle into the Adventure world, so the
+   bot's own final check was never sent.
+   - Generated worlds (`region_<x>_<y>`) share no names with Adventure, which is why main never showed this.
+
+**The fix is on the APP side, not the walk-order side.**
+- `mazeRoomUI._unbindStaleRegion`, run on every `stateManager:rawJsonDataLoaded`: a document with no sidecar for the
+  panel's bound region returns the panel and its visualizer to their unbound state, exactly what walk-order meets on
+  main.
+- A reload of the same world, or the APWorld editor's regenerate, keeps the binding. A standalone world (no region) is
+  never touched.
+- The visualizer gains a `regionId` getter.
+- Pinned in `mazeRoomUI.test.js` (3 rows). The demo row also re-focuses the bot panel at cleanup.
+- **Why not walk-order:** in-app tests set their own initial state, but walk-order already does (it loads its own
+  world and resets the bot). The state that leaked was the panel's binding to a document that is no longer loaded.
+  That is a defect for a person too: load a top-down preset over Adventure, play a room, load Adventure, and the bot
+  walks the old room. No test should have to undo it.
+- **Why not close the panel at cleanup:** `ui:activatePanel` does not recreate a closed panel, and the Maze Room panel
+  is in the default layout that later rows (loop-mode-maze) activate.
+
+**Proof** (local, roster order): `npm test -- --mode=test-substrates --batch=playback-bot` gave **18/18**, with
+walk-order 6.2 s right after the demo row's 71.8 s. `check-batch-headroom`: **HEADROOM OK, 291.7 s of 600 s (49 %)**.
+
+**Could the row be shorter?** Its time is the bot's legs, ~2.9 s each, and the legs are set by the SOURCE: Adventure's
+9 sphere-log locations plus 16 routing hops.
+- Fewer legs needs a smaller source world (another committed preset), which changes the demo.
+- Smaller rooms (8×6) give 1 pillar a room instead of 4, which defeats the demo, and I have no measure that they walk
+  faster (per-leg time did not depend on panel focus, and the visualizer's `instant()` is instant).
+- So it stays at 72 s, 25 % of the batch.
 
 ## 7. Follow-ups
 
