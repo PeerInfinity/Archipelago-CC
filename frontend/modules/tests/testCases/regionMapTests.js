@@ -150,6 +150,21 @@ export async function testRegionMapSeedlingPaints(testController) {
     const all = await fitAllAndSettle(testController, 'fit all paints all N cells');
     testController.reportCondition(`fit all paints all N cells (${dbg().lastPaint.cells})`, all && dbg().lastPaint.cells === layout.positions.size);
     testController.reportCondition(`every cell is drawn by its substrate's painter (${dbg().lastPaint.art} art)`, dbg().lastPaint.art === dbg().lastPaint.cells);
+    // ⛓ art-ends (⚖ the user 2026-11-23T01:20:20.902Z): a line ends at its door tile when it has one, else on the
+    // level art's border. The wanted counts are linkShape's own `ends` over the model; Seedling has door tiles.
+    {
+      const p = panel();
+      const ends = { tile: 0, art: 0, centre: 0 };
+      for (const l of [...p.model.links, ...p.model.neighbourLinks]) {
+        const q = linkShape(l, p.frames);
+        if (q?.form === 'line') for (const e of [q.ends.from, q.ends.to]) ends[e] += 1;
+      }
+      const lp = dbg().lastPaint;
+      testController.log(`ART ENDS: ${lp.tileEnds} at a door tile (want ${ends.tile}), ${lp.artEnds} on the art (want ${ends.art}), `
+        + `${lp.centreEnds} at a centre (want ${ends.centre}), ${lp.shortHeads} heads longer than their line`);
+      testController.reportCondition(`line ends: door tile / art border / centre as linkShape says (${lp.tileEnds}/${lp.artEnds}/${lp.centreEnds} = ${ends.tile}/${ends.art}/${ends.centre}, tiles > 0)`,
+        ends.tile > 0 && lp.tileEnds === ends.tile && lp.artEnds === ends.art && lp.centreEnds === ends.centre);
+    }
 
     // the art bakes for the visible cells: nothing pending, nothing failed
     const baked = await testController.pollForCondition(() => {

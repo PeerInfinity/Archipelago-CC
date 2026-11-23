@@ -65,6 +65,18 @@ export const GAP_HEAD_MIN_PX = 12;
 export const GAP_MARK_MIN_WIDTH_PX = 3;
 export const GAP_MARK_MAX_WIDTH_PX = 6;
 export const GAP_MARK_ALPHA = 0.9;
+/**
+ * ⛓ THE DOOR RING (art-ends): a line that ends at a door tile (`linkShape` `ends.* === 'tile'`) runs over its level's
+ * art, and the tile is ≈ 1.6 screen px at Fit all on Seedling. So that end gets a hollow ring centred on the tile: radius
+ * three quarters of a tile on screen, between `DOOR_RING_MIN_R_PX` and `DOOR_RING_MAX_R_PX`, a dark halo under a
+ * `DOOR_RING_WIDTH_PX` stroke in the link's colour. Hollow, so it does not hide the door (or read as a location square).
+ * A `to` end with an arrowhead gets NO ring: the head marks that door, its tip on the tile's centre, outlined dark.
+ */
+export const DOOR_RING_MIN_R_PX = 3.5;
+export const DOOR_RING_MAX_R_PX = 9;
+export const DOOR_RING_WIDTH_PX = 1.5;
+/** A line's arrowhead length in screen px (a gap mark's is shortened to fit its mark). */
+export const LINE_HEAD_PX = 8;
 /** The toolbar legend, one swatch per `procgenCore/regionLayout.js` LINK_KINDS kind (region-map placement (A)). */
 const LINK_LEGEND = Object.freeze([
     ['join', 'edge transition'], ['down', 'down'], ['up', 'up'], ['warp', 'warp (door / teleporter)'],
@@ -770,7 +782,8 @@ export class RegionMapUI {
         ctx.fillStyle = BG;
         ctx.fillRect(0, 0, vp.w, vp.h);
         const stats = {
-            cells: 0, art: 0, generic: 0, fogged: 0, hidden: 0, links: 0, neighbourLinks: 0, gapMarks: 0, edgeLines: 0, arrowheads: 0, keys: [],
+            cells: 0, art: 0, generic: 0, fogged: 0, hidden: 0, links: 0, neighbourLinks: 0, gapMarks: 0, edgeLines: 0, arrowheads: 0,
+            tileEnds: 0, artEnds: 0, centreEnds: 0, shortHeads: 0, keys: [],
         };
         // ⛓ A DOM readout of the zoom painted (zoom-links): a step's `done` reads no instance.
         this.canvas.dataset.zoom = String(cam.zoom);
@@ -917,9 +930,12 @@ export class RegionMapUI {
     _drawLinks(ctx, view, stats) {
         const rect = viewRect(this.camera, this.vp);
         // ⛓ link-ends (⚖ the user 2026-11-22T21:55:35Z): `linkShape` says where each line starts and ends — a mark
-        // across the GAP between two adjacent cells, else a line clipped to both cells' borders — and whether it has an
+        // across the GAP between two adjacent cells, else a line ending at the door tiles or the ART's borders — and whether it has an
         // arrowhead (every kind but `join`). Counted apart: `links` (between groups) / `neighbourLinks` (in a group),
         // and `gapMarks`, `edgeLines`, `arrowheads` across both.
+        // ⛓ art-ends (⚖ the user 2026-11-23T01:20:20.902Z): a line ends at its door tile (a ring there) or on the level
+        // ART's border; `tileEnds` / `artEnds` / `centreEnds` count a line's two ends, `shortHeads` the heads longer
+        // than their line.
         const zoom = this.camera.zoom;
         // ⛓ zoom-links (⚖ the user 2026-11-22T20:24:34Z, "Draw lines between neighbours"): the in-group links too.
         const all = [...this.model.links, ...(this.model.neighbourLinks ?? [])];
@@ -951,15 +967,47 @@ export class RegionMapUI {
             ctx.lineTo(sb.x, sb.y);
             ctx.stroke();
             ctx.setLineDash?.([]);
+            if (!gap) {
+                // ⛓ art-ends: a door-tile end gets a ring (the tile itself is a pixel or two at Fit all).
+                for (const [which, pt] of [['from', sa], ['to', sb]]) {
+                    const e = shape.ends?.[which];
+                    const tilePx = this.frames.get(l[which])?.tilePx ?? WORLD_TILE_PX;
+                    const r = Math.max(DOOR_RING_MIN_R_PX, Math.min(DOOR_RING_MAX_R_PX, tilePx * zoom * 0.75));
+                    if (e === 'tile') stats.tileEnds += 1;
+                    else if (e === 'art') stats.artEnds += 1;
+                    else stats.centreEnds += 1;
+                    // A headed `to` end: the arrowhead marks the door (its tip on the tile's centre), no ring under it.
+                    if (e !== 'tile' || (which === 'to' && shape.head)) continue;
+                    ctx.globalAlpha = 1;
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, r, 0, Math.PI * 2);
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = DOOR_RING_WIDTH_PX + 2;
+                    ctx.stroke();
+                    ctx.strokeStyle = ctx.fillStyle;
+                    ctx.lineWidth = DOOR_RING_WIDTH_PX;
+                    ctx.stroke();
+                }
+                ctx.globalAlpha = 0.55;
+            }
             if (shape.head) {
                 const ang = Math.atan2(sb.y - sa.y, sb.x - sa.x);
-                const hl = gap ? Math.min(8, Math.hypot(sb.x - sa.x, sb.y - sa.y) * 0.6) : 8;
+                const len = Math.hypot(sb.x - sa.x, sb.y - sa.y);
+                const hl = gap ? Math.min(LINE_HEAD_PX, len * 0.6) : LINE_HEAD_PX;
+                // A line shorter than its head: the head covers the whole line (reported, not restyled).
+                if (!gap && len < hl) stats.shortHeads += 1;
                 ctx.beginPath();
                 ctx.moveTo(sb.x, sb.y);
                 ctx.lineTo(sb.x - hl * Math.cos(ang - 0.4), sb.y - hl * Math.sin(ang - 0.4));
                 ctx.lineTo(sb.x - hl * Math.cos(ang + 0.4), sb.y - hl * Math.sin(ang + 0.4));
                 ctx.closePath();
                 ctx.fill();
+                if (!gap && shape.ends?.to === 'tile') {
+                    // Over the art: a dark outline so the head reads on any tile colour.
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
                 stats.arrowheads += 1;
             }
             if (gap) stats.gapMarks += 1;

@@ -2,7 +2,10 @@
  * Region Map link-ends census (region-map-link-ends): for every committed preset, the link SET the model draws
  * (`model.links` + `model.neighbourLinks`, as JSON, with its md5) and, with the panel's own `linkShape`, how many are
  * drawn as a GAP mark (adjacent cells) or a clipped LINE, how many carry an arrowhead, and the non-join links between
- * adjacent cells, per kind.
+ * adjacent cells, per kind. Since region-map art-ends, also each LINE's two ends: at a door tile (`tileEnds`), clipped to
+ * the level art's border (`artEnds`), or still at the art's centre (`centreEnds`, with the links listed in
+ * `centreList`), the door tiles outside their own level's art (`tileOutsideArt`, expected 0), and the ends whose link
+ * names a door tile but whose level's extent is estimated, so they clip to the art (`tileOnEstimated`).
  *
  *   node scripts/dev/census-region-map-link-ends.mjs [--root=<dir holding frontend/>] [--out=<file.json>] [--sets]
  *
@@ -52,7 +55,7 @@ for (const game of readdirSync(presetsDir).sort()) {
         };
         if (geom) {
             const frames = cellFrames(model.layout.positions, new Map([...model.cells].map(([k, c]) => [k, c.extent])), 'level');
-            const c = { gap: 0, line: 0, heads: 0, gapJoin: 0, gapHeaded: {}, lineJoin: 0, crossGroupJoin: 0, none: 0 };
+            const c = { gap: 0, line: 0, heads: 0, gapJoin: 0, gapHeaded: {}, lineJoin: 0, crossGroupJoin: 0, none: 0, tileEnds: 0, artEnds: 0, centreEnds: 0, tileOutsideArt: 0, tileOnEstimated: 0, centreList: [] };
             for (const l of [...model.links, ...(model.neighbourLinks ?? [])]) {
                 const s = geom.linkShape(l, frames);
                 if (!s) { c.none += 1; continue; }
@@ -62,6 +65,16 @@ for (const game of readdirSync(presetsDir).sort()) {
                 if (s.form === 'gap' && s.head) c.gapHeaded[l.kind] = (c.gapHeaded[l.kind] ?? 0) + 1;
                 if (s.form === 'line' && l.kind === 'join') c.lineJoin += 1;
                 if (!l.neighbour && l.kind === 'join') c.crossGroupJoin += 1;
+                if (s.form === 'line' && s.ends) {
+                    for (const [w, x, y] of [['from', s.seg.x0, s.seg.y0], ['to', s.seg.x1, s.seg.y1]]) {
+                        const e = s.ends[w];
+                        c[`${e}Ends`] += 1;
+                        if (e === 'centre') c.centreList.push(`${l.from} -> ${l.to} (${w})`);
+                        const f = frames.get(l[w]);
+                        if ((w === 'from' ? l.a : l.b) && e !== 'tile') c.tileOnEstimated += 1;
+                        if (e === 'tile' && (x < f.x || x > f.x + f.w || y < f.y || y > f.y + f.h)) c.tileOutsideArt += 1;
+                    }
+                }
             }
             row.shapes = c;
         }
@@ -72,7 +85,7 @@ for (const game of readdirSync(presetsDir).sort()) {
 const ids = Object.keys(out);
 const total = ids.reduce((t, id) => {
     const s = out[id].shapes;
-    if (s) for (const k of ['gap', 'line', 'heads', 'gapJoin', 'lineJoin', 'crossGroupJoin', 'none']) t[k] = (t[k] ?? 0) + s[k];
+    if (s) for (const k of ['gap', 'line', 'heads', 'gapJoin', 'lineJoin', 'crossGroupJoin', 'none', 'tileEnds', 'artEnds', 'centreEnds', 'tileOutsideArt', 'tileOnEstimated']) t[k] = (t[k] ?? 0) + s[k];
     return t;
 }, {});
 const summary = { root: ROOT, presets: ids.length, errors: ids.filter((id) => out[id].error).length, total };
