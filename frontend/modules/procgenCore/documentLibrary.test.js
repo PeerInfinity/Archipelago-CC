@@ -810,7 +810,7 @@ describe('documentLibrary — source pins', () => {
         ]);
     });
 
-    it('nothing outside the library\'s own tests, its in-app row and the Storage panel imports the library', () => {
+    it('nothing outside the library\'s own tests, its in-app row, the Storage panel and the Seedling lab writer imports the library', () => {
         const users = [];
         const walk = (dir) => {
             for (const name of readdirSync(dir)) {
@@ -828,6 +828,11 @@ describe('documentLibrary — source pins', () => {
             'modules/procgenCore/documentLibrary.test.js',
             'modules/procgenCore/documentLibraryIdb.js',
             'modules/procgenCore/documentLibraryMemory.js',
+            // B3: the Seedling lab's writer (the page imports it dynamically at the first save; the engine runs in its worker)
+            'modules/seedlingDemo/watchLibrary.js',
+            'modules/seedlingDemo/watchLibraryCore.js',
+            'modules/seedlingDemo/watchLibraryCore.test.js',
+            'modules/seedlingDemo/watchLibraryEngine.js',
             // B2: the Storage panel reads it by a document-relative dynamic import (it stays out of the bundle)
             'modules/storagePanel/storagePanelUI.js',
             'modules/tests/testCases/documentLibraryTests.js',
