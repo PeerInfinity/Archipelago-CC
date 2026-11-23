@@ -2169,6 +2169,12 @@
             "_comment": "region-map zoom-links (2026-11-22): the toolbar's + / − (ZOOM_BUTTON_FACTOR around the centre, Follow unticks), a two-pointer synthetic pinch (distinct pointerIds: zoom x the distance ratio, no click) and the neighbour lines (lastPaint.neighbourLinks = the model's, apart from the cross-group links; off under Links), on procgen_topdown AP_1. Fast batch. Reloads the world loaded before."
         },
         {
+            "id": "region-map-mobile-tab",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "region-map-link-ends (2026-11-22): the Region Map's mobile tab sits right after the Region Graph's (moduleInfo.mobileAfter, mobileLayoutManager.determinePanelOrder), on every layout preset, from the registry's moduleInfo. On a --layout=mobile boot it also taps the live tab and waits for a paint. Fast batch. Loads nothing."
+        },
+        {
             "id": "region-map-click-master-off",
             "enabled": true,
             "category": "Region Map",
@@ -2528,6 +2534,12 @@
             "enabled": true,
             "category": "Rule Converter",
             "_comment": "helper-script P4: the Rule Converter's Exact engine — real exporter analyzer + world_generator under Pyodide (CDN, booted on the first Convert). A helper script both ways through the Convert buttons, and the loaded alttp_worldgen preset's 36 helpers round-trip with its options. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
+            "id": "document-library-idb",
+            "enabled": true,
+            "category": "Document library",
+            "_comment": "lab-document-library-b1 (lab arc slice B1, declared enrolment): the shared document library's IndexedDB backend, which nothing in the app imports yet. Its own database (absent at the start, deleted at the end); two versions saved, read back by fingerprint through a fresh library. The modules load by a document-relative URL, so the row runs the same on the bundled boot. Category unclaimed by testBatches.js, so batch fast (on push)."
         },
         {
             "id": "seedling-js-runtime-solver-cuts-rope-event",

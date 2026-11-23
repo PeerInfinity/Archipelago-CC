@@ -103,7 +103,7 @@ export const TRACKER_REGION_MAP = Object.freeze({
                 {
                     step: {
                         id: 'groups',
-                        text: 'Levels you walk between, off one edge and into the next, sit side by side as a **group**, and a **yellow** line joins each pair of neighbours you walk between (the *edge transition* in the legend). Links join the groups: blue goes **down**, orange goes **up**. A **warp** (a door or a teleporter) is a dashed green link, never a neighbour. The legend in the controls names them, and **Links** turns them all off.',
+                        text: 'Levels you walk between, off one edge and into the next, sit side by side as a **group**, and a short **yellow** line in the gap between two squares joins neighbours you walk between (the *edge transition* in the legend; it has no arrowhead, since you can walk both ways). Arrows join the groups, and end at the edge of the square they point to: blue goes **down**, orange goes **up**. A **warp** (a door or a teleporter) is a dashed green arrow, never a neighbour. The legend in the controls names them, and **Links** turns them all off.',
                         done: (ctx) => ctx.query(map('.region-map-show-links input[type="checkbox"]'))?.checked === true
                             && ctx.exists(map('.region-map-link-legend-join')) && ctx.exists(map('.region-map-link-legend-warp'))
                             && /\b\d+ group\(s\)/.test(ctx.text(info)),
