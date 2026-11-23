@@ -473,9 +473,23 @@
       "_comment": "local-storage V1 (2026-09-27): the Storage panel (declared keys, sections Unknown-first, Clear per row/section) and the quota notice. ⚖ RULED: each row sets its own state and restores the origin; the quota row is LAST in its group. Enrolled here (defaultEnabledState is false)."
     },
     {
-      "id": "settings-save-quota-error-notifies",
+      "id": "storage-panel-document-library-row",
       "enabled": true,
       "order": 58,
+      "category": "Storage",
+      "_comment": "lab arc B2 (2026-11-22): the document library under Your data (its database, sizes, persisted, one row per lineage), Clear per lineage (a confirm; Cancel deletes nothing; a held one refused by name), Clear leftover drafts, and the panel-open cleanup (\u2696 Q2: a draft 8 days old goes, 6 days stays). Its OWN database (librarySource seam), absent at the start, deleted at the end. Before the quota row, which stays LAST."
+    },
+    {
+      "id": "storage-panel-document-library-other-tab-hold",
+      "enabled": true,
+      "order": 59,
+      "category": "Storage",
+      "_comment": "lab arc B2, js-22 K2 (2026-11-22): TWO pages on one origin. Page A (a same-origin srcdoc frame, its own document and connection) holds a lineage and an 8-day-old draft; this page's panel Clear on that lineage is refused naming A's tab, and its panel-open cleanup leaves A's held draft. Its own database, absent at the start, deleted at the end."
+    },
+    {
+      "id": "settings-save-quota-error-notifies",
+      "enabled": true,
+      "order": 60,
       "category": "Storage",
       "_comment": "local-storage V1 (2026-09-27): the Storage panel (declared keys, sections Unknown-first, Clear per row/section) and the quota notice. ⚖ RULED: each row sets its own state and restores the origin; the quota row is LAST in its group. Enrolled here (defaultEnabledState is false)."
     },
@@ -485,7 +499,7 @@
       "description": "A rules file the worker cannot load (C5: region.exits = 5) shows a named error (game, player, phase, message), ensureReady settles at once, and a later good load boots.",
       "functionName": "rulesLoadFailedNamedTest",
       "enabled": true,
-      "order": 59,
+      "order": 61,
       "category": "Core"
     }
   ]

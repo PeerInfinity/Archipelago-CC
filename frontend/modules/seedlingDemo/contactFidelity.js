@@ -2275,6 +2275,33 @@ export const CONTACT_FIDELITY = {
      * byte-identical. `SEEDLING_FREEZE_EDGE_FRAMES=0|1`. ⛔ OFF by default (no flip licence).
      */
     freezeEdgeFrames: false,
+    /**
+     * fidelity RELEASETICK D2 (wave 55) — A TEXTED CEREMONY'S FINISHING TICK: THE RELEASE FRAME'S ONE UNFROZEN UPDATE.
+     * The finishing tick stands for two game frames. The close C: `NPC.talk()`'s last page lowers `Game.freezeObjects`
+     * through the `talking` setter (`NPCs/NPC.as:207-214,250-263`) and removes the NPC deferred, and `Pickup.update`
+     * re-raises it (`Pickups/Pickup.as:57-60,95`: `myText` is still set). The release R: `NPC.removed()` has nulled
+     * `myText` (`:71-85`), so `pick_up`'s `!myText` arm lowers the flag and calls `removeSelf()` (`Pickup.as:106-112`).
+     * The pickups (`Game.as:2330-2351`) update before the beam tower (`:2297`), the ice turret (`:2296`), the turret
+     * (`:2295`) and the drill (`:2290`; `addUpdate` prepends), so the four are FROZEN on C and UNFROZEN on R. The model
+     * stepped each once, frozen, in its main slot (`ceremony` still set): C's update, and R's was missing (wave 54's
+     * measured hand-over, `t23-C:[true]`). ON the ceremony branch's finishing arm takes R's update
+     * (`stepCeremonyReleaseFamiliesNow`): the runtime adds frozen (spits, blasts), then the flag held down for the call:
+     * the tower, the ice turret, the turrets (with wave 50's slot, `turretHitPlayerNow`) and the drills, in the game's
+     * order, below the chasers' C (`stepCeremonyReleaseFrameNow`) and above the chasers' and the player's R (the tick's
+     * fall-through). A text-less pickup has no C and is untouched (its R is F+150: `pickupTickFreeze` for the turrets,
+     * T's step for the other three); a Seed keeps the flag up and is untouched. C is the observed frame and R a dead one
+     * (`setTemp` raises `Game.talking`, so `Game.as:1044-1051` lowers the flag at the end of every dialogue frame but
+     * not C's): phase A's 149 dead frames and R are the measured 150. ⚠ With a `Game.time` the tower's anim is already
+     * unknown here (phase A is not stepped for it, pre-existing); R's step keeps it so.
+     * The rope rock's player release step needs no key: the pull frame is itself frozen for the player (the pull runs
+     * inside `Player.update` above `super.update()`), so the model's pull-tick step IS the release frame's
+     * (game-witnessed, `rockbutton-l28-livefall`, Δ 0). Composes with `freezeEdgeFrames` (its tower skip is on the hold
+     * ticks, this is the finishing tick), `frozenTickUngated`, `pickupTickFreeze`, `dialogueFrameFreeze` (their
+     * predicates are asked by the main slots only) and `turretSuitRetaliation`. No shipped room holds a texted ceremony
+     * beside one of the four. OFF: byte-identical. `SEEDLING_FREEZE_RELEASE_TICK=0|1`. ⛔ OFF by default (no flip
+     * licence).
+     */
+    freezeReleaseTick: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2708,6 +2735,9 @@ if (globalThis.process?.env?.SEEDLING_FROZEN_TICK_UNGATED === '0') CONTACT_FIDEL
 // ⛓ fidelity CEREMONYTOWER D2: `SEEDLING_FREEZE_EDGE_FRAMES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FREEZE_EDGE_FRAMES === '1') CONTACT_FIDELITY.freezeEdgeFrames = true;
 if (globalThis.process?.env?.SEEDLING_FREEZE_EDGE_FRAMES === '0') CONTACT_FIDELITY.freezeEdgeFrames = false;
+// ⛓ fidelity RELEASETICK D2: `SEEDLING_FREEZE_RELEASE_TICK=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FREEZE_RELEASE_TICK === '1') CONTACT_FIDELITY.freezeReleaseTick = true;
+if (globalThis.process?.env?.SEEDLING_FREEZE_RELEASE_TICK === '0') CONTACT_FIDELITY.freezeReleaseTick = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

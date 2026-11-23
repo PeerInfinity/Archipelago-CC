@@ -203,6 +203,8 @@ The unit of that choice is a **block**: one visit to one region, i.e. the run of
 
 All four cost the same. A region visit is priced by what happens in it, not by who performed it — playing a block by hand, recording it, replaying the recording, and letting the Bot do it all charge the same mana and earn the same XP. There is no cheaper way to do the same content, and no penalty for automating it.
 
+An action's price is fixed when it starts, at the region's level at that moment, at every speed. The XP the action earns as it runs can level the region up, but that makes the *next* action cheaper, not the rest of this one.
+
 ### Instant
 
 **Instant** is a separate checkbox next to the radios, not a fifth mode. It applies to Playback and Bot blocks: instead of animating, the block resolves in a single frame.

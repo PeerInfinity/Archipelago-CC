@@ -38,7 +38,9 @@ import { describe, expect, it } from 'vitest';
 
 import { loadAtlasSchema, loadRulesSchema } from './jsonSchemaFiles.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
-import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
+import { stampAtlasIdentity, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
+import { labSetIdentity } from '../seedlingDemo/watchSetIdentity.js';
+import { levelSetContentHash } from './levelSetReference.js';
 import { createLifetime } from './pageLifetime.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { buildLevelSet } from '../seedlingDemo/levelSetExporter.js';
@@ -274,8 +276,14 @@ const generatedSet = (n = ROOMS, setId = 'set-editor-view-test') => buildLevelSe
 
 const seedlingHarness = ({
     rooms = ROOMS, onSetChange = null, embeds = [], apworldEditor = null, overviewMapOn = false,
-    loadZip = null,
+    loadZip = null, labIdentity = false,
 } = {}) => {
+    /**
+     * ⛓ lab-apworld-door-play — `labIdentity: true` mounts with the WATCH PAGE's own compile hooks
+     * (`labSetIdentity`: the stamped atlas + `region_atlas[p].level_set`), so the rules name a level set the way the
+     * real page's do. ⛔ `false` by default: every older row drives the plain compile it always did.
+     */
+    const lab = labIdentity ? labSetIdentity({ compileRegionAtlas, stampAtlasIdentity }) : null;
     const adapter = createSeedlingSetAdapter(DEPS);
     /**
      * ⛓ A ROOM SESSION STUB — the mount reads `{room, ops}` and
@@ -326,7 +334,8 @@ const seedlingHarness = ({
         session,
         adapter,
         deps: DEPS,
-        compileRegionAtlas,
+        compileRegionAtlas: lab ? lab.compileRegionAtlas : compileRegionAtlas,
+        ...(lab ? { atlasAtDoor: lab.atlasAtDoor } : {}),
         validateRegionAtlas,
         atlasSchema: ATLAS_SCHEMA,
         drawRoomStill: (canvas, roomRecord) => {
@@ -373,10 +382,13 @@ const seedlingHarness = ({
  * bridge asynchronously), and a fixed `true`/`false` could not show that.
  */
 const hostLink = ({ here = true, accepts = true } = {}) => {
-    const state = { here, seen: [], asked: 0 };
+    const state = { here, seen: [], atlases: [], levelSets: [], asked: 0 };
     state.link = {
         available: () => { state.asked += 1; return state.here; },
-        open: (rules) => { state.seen.push(rules); return accepts; },
+        open: (rules, atlases, levelSets) => {
+            state.seen.push(rules); state.atlases.push(atlases); state.levelSets.push(levelSets);
+            return accepts;
+        },
     };
     return state;
 };
@@ -2424,6 +2436,119 @@ describe('⛓⛓⛓ lab-stale-handover — after an edit, every door carries the
             expect(json(member('rules'))).toBe(json(fresh.rules));
             expect(json(member('region-atlas'))).toBe(json(fresh.atlas));
         });
+        /**
+         * ⛓⛓ lab-apworld-door-map — **DOOR A CARRIES THE ATLAS THE RULES IT HANDS OVER NAME**, before and after an
+         * edit post-REPORT: one atlas, its id = `rules.region_atlas['1'].atlas_id`, and it is the bundle door's member
+         * for the same press state. MUTANT: `apworldEditor.open(rep.rules)` (no atlases) — `atlases` is undefined and
+         * every expectation below reds.
+         */
+        it(`${lab}: Open in APWorld Editor carries the atlas the handed-over rules name, after an edit too`, () => {
+            const { h, host, old } = setup();
+            click(h, 'editOpenApworldEditor');
+            expect(host.atlases[0]).toHaveLength(1);
+            expect(host.atlases[0][0]).toBe(old.atlas);
+            expect(host.atlases[0][0].atlas_id).toBe(host.seen[0].region_atlas['1'].atlas_id);
+            expect(globalThis.__editorSetApworldAtlasIds).toEqual([old.atlas.atlas_id]);
+            expect(L.edit(h).ok).toBe(true);
+            click(h, 'editOpenApworldEditor');
+            const fresh = h.ui.report();
+            expect(fresh).not.toBe(old);
+            expect(host.atlases[1]).toHaveLength(1);
+            expect(host.atlases[1][0]).toBe(fresh.atlas);
+            expect(host.atlases[1][0].atlas_id).toBe(host.seen[1].region_atlas['1'].atlas_id);
+            expect(json(host.atlases[1][0])).toBe(json(h.ui.runReport().atlas));
+        });
     }
 });
 
+describe('⛓⛓ lab-apworld-door-map — door A hands over `atlasAtDoor`\'s atlas, and a refusal there sends the rules anyway', () => {
+    /** ⛓ A STAMPING page (the Seedling watch page's shape): the door's copy, under the id the rules name. */
+    it('the atlas handed over is `atlasAtDoor`\'s answer for the report\'s atlas and rules', () => {
+        const host = hostLink();
+        const calls = [];
+        const h = mazeHarness({
+            apworldEditor: host.link,
+            atlasAtDoor: (atlas, rules) => {
+                calls.push({ atlas, rules });
+                return { ...structuredClone(atlas), description: 'the door\'s copy' };
+            },
+        });
+        connectAll(h, RING);
+        const rep = h.ui.runReport();
+        click(h, 'editOpenApworldEditor');
+        expect(calls).toHaveLength(1);
+        expect(calls[0].atlas).toBe(rep.atlas);
+        expect(calls[0].rules).toBe(host.seen[0]);
+        expect(host.atlases[0].map((a) => a.description)).toEqual(['the door\'s copy']);
+        expect(textOf(h, 'editSetNote')).toMatch(new RegExp(`with its region atlas ${rep.atlas.atlas_id}$`));
+    });
+    it('…and when `atlasAtDoor` throws, the RULES still go over, with no atlas, and the note names why', () => {
+        const host = hostLink();
+        const h = mazeHarness({
+            apworldEditor: host.link,
+            atlasAtDoor: () => { throw new Error('no compile on this page made that atlas'); },
+        });
+        connectAll(h, RING);
+        const rep = h.ui.runReport();
+        click(h, 'editOpenApworldEditor');
+        expect(host.seen).toEqual([rep.rules]);
+        expect(host.atlases).toEqual([[]]);
+        expect(globalThis.__editorSetApworldAtlasIds).toEqual([]);
+        expect(textOf(h, 'editSetNote')).toMatch(/no region atlas \(no compile on this page made that atlas\)$/);
+    });
+});
+
+
+describe('⛓⛓ lab-apworld-door-play — door A carries the level set the handed rules name, after an edit too', () => {
+    const refOf = (rules) => rules.region_atlas['1'].level_set;
+    /**
+     * ⛓⛓ THE SET'S COMPUTED HASH IS THE HANDED RULES' `content_hash`, before and after an edit post-REPORT, and it is
+     * the bundle's `level-set` member for the same press state. MUTANT: `apworldEditor.open(rep.rules, atlases)` (no
+     * sets) — `levelSets` is undefined and every expectation below reds.
+     */
+    it('seedling (watch-page compile): one set, its hash = the rules\' content_hash, its id = the rules\' set_id', async () => {
+        const host = hostLink();
+        const h = seedlingHarness({ apworldEditor: host.link, labIdentity: true, loadZip: async () => loadJSZipNode() });
+        click(h, 'editSetReport');
+        const old = h.ui.report();
+        click(h, 'editOpenApworldEditor');
+        expect(host.levelSets[0]).toHaveLength(1);
+        const [set0] = host.levelSets[0];
+        expect(set0.set_id).toBe(refOf(host.seen[0]).set_id);
+        expect(levelSetContentHash(set0)).toBe(refOf(host.seen[0]).content_hash);
+        expect(globalThis.__editorSetApworldLevelSetIds).toEqual([set0.set_id]);
+        expect(textOf(h, 'editSetNote')).toMatch(new RegExp(`with its level set ${set0.set_id}$`));
+        expect(host.seen[0]).toBe(old.rules);
+        await pressDownload(h, 'editDownloadBundle', '__editorSetBundlePresses', '__editorSetBundleKinds');
+        const back = await readBundle(globalThis.__editorSetBundleOut, { jszip: loadJSZipNode() });
+        expect(json(back.members.find((m) => m.kind === 'level-set').doc)).toBe(json(set0));
+
+        // ⛓ an edit to the SET'S BODY after REPORT (a room opened, edited and CLOSED into the set — one `replace-room`)
+        h.openRoom(1);
+        h.ui.render();
+        click(h, 'editRoomClose');
+        click(h, 'editOpenApworldEditor');
+        expect(h.ui.report()).not.toBe(old);
+        const [set1] = host.levelSets[1];
+        const ref1 = refOf(host.seen[1]);
+        expect(ref1.content_hash).not.toBe(refOf(host.seen[0]).content_hash);
+        expect(set1.set_id).toBe(ref1.set_id);
+        expect(levelSetContentHash(set1)).toBe(ref1.content_hash);
+        expect(json(host.seen[1])).toBe(json(h.ui.runReport().rules));
+    });
+    /** ⛔ Rules that name no set (the plain compile; the maze lab) send `[]`, and the note says nothing new. */
+    it('rules that name no level set: `[]`, exactly as before (seedling plain compile, maze)', () => {
+        for (const make of [(o) => seedlingHarness(o), (o) => mazeHarness(o)]) {
+            const host = hostLink();
+            const h = make({ apworldEditor: host.link });
+            if (make.toString().includes('maze')) connectAll(h, RING);
+            const rep = h.ui.runReport();
+            click(h, 'editOpenApworldEditor');
+            expect(Object.values(host.seen[0].region_atlas ?? {}).some((r) => r.level_set)).toBe(false);
+            expect(host.levelSets).toEqual([[]]);
+            expect(globalThis.__editorSetApworldLevelSetIds).toEqual([]);
+            expect(textOf(h, 'editSetNote')).not.toMatch(/level set/);
+            expect(rep.download.rules.allowed).toBe(true);
+        }
+    });
+});

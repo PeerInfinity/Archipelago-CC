@@ -1,0 +1,89 @@
+{
+  "phone": {
+    "canvas": {
+      "x": 12,
+      "y": 198,
+      "w": 366,
+      "h": 634
+    },
+    "before": {
+      "scale": 1,
+      "pageX": 0,
+      "pageY": 0,
+      "docScroll": 0,
+      "panelScroll": 0,
+      "hostScroll": 0,
+      "zoom": 0.02672855313700384,
+      "camX": 4136,
+      "camY": 64,
+      "clicks": 0,
+      "pinch": {
+        "pinches": 0,
+        "pinchMoves": 0,
+        "pointers": 0
+      }
+    },
+    "afterPinch": {
+      "scale": 1,
+      "pageX": 0,
+      "pageY": 0,
+      "docScroll": 0,
+      "panelScroll": 0,
+      "hostScroll": 0,
+      "zoom": 0.08018565941101152,
+      "camX": 4136,
+      "camY": 64,
+      "clicks": 0,
+      "pinch": {
+        "pinches": 1,
+        "pinchMoves": 16,
+        "pointers": 0
+      }
+    },
+    "afterDrag": {
+      "scale": 1,
+      "pageX": 0,
+      "pageY": 0,
+      "docScroll": 0,
+      "panelScroll": 0,
+      "hostScroll": 0,
+      "zoom": 0.08018565941101152,
+      "camX": 5133.68463073852,
+      "camY": 1261.2215568862275,
+      "clicks": 0,
+      "pinch": {
+        "pinches": 1,
+        "pinchMoves": 16,
+        "pointers": 0
+      }
+    },
+    "afterControl": {
+      "scale": 2.463437795639038,
+      "pageX": 0,
+      "pageY": 0,
+      "docScroll": 0,
+      "panelScroll": 0,
+      "hostScroll": 0,
+      "zoom": 0.08018565941101152,
+      "camX": 5133.68463073852,
+      "camY": 1261.2215568862275,
+      "clicks": 0,
+      "pinch": {
+        "pinches": 1,
+        "pinchMoves": 16,
+        "pointers": 0
+      }
+    },
+    "verdicts": {
+      "pageScaleStays1AfterCanvasPinch": true,
+      "mapZoomChangedByPinch": true,
+      "pinchZoomRatio": 3,
+      "noClickFromPinch": true,
+      "noScrollFromPinch": true,
+      "dragPannedMap": true,
+      "dragDidNotScrollPage": true,
+      "noClickFromDrag": true,
+      "controlPinchOffCanvasMovesPageScale": true
+    }
+  }
+}

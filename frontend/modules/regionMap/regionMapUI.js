@@ -15,7 +15,7 @@
  * so zooming never re-bakes.
  *
  * The camera: `screen = (world − camera) · zoom + viewport / 2` (`procgenCore/mapCamera.js`). Drag pans, the wheel
- * zooms around the cursor. A click (no drag) SELECTS the cell under it and runs the panel's click actions
+ * zooms around the cursor, the toolbar's + / − zoom around the centre, and two fingers pinch (`pinch.js`). A click (no drag) SELECTS the cell under it and runs the panel's click actions
  * (`regionMapClickActions.js`, CA-S3: the shared registry over `moduleSettings.regionMap.clickActions`, edited by the
  * "On click" strip at the top of the panel): a location square → the LOCATION actions; elsewhere in a cell → the
  * REGION actions.
@@ -33,7 +33,8 @@ import { GROUPING_RULES } from '../procgenCore/regionLayout.js';
 import { hookCtxFor } from '../procgenCore/atlasCache.js';
 import { COLORS, compositeMapPainterFor, drawGenericRegion } from '../procgenCore/compositeMapRenderer.js';
 import { buildRegionMapModel } from './regionMapModel.js';
-import { cellFrames, frameAt, framesBounds, tileCentre, visibleFrames } from './regionMapFrames.js';
+import { WORLD_TILE_PX, cellFrames, frameAt, framesBounds, visibleFrames } from './regionMapFrames.js';
+import { atLeast, linkShape } from './regionMapLinkGeometry.js';
 import {
     centreOn, easeCamera, fitCamera, panBy, screenToWorld, viewRect, worldToScreen, zoomAround,
 } from '../procgenCore/mapCamera.js';
@@ -45,17 +46,50 @@ import {
 } from './regionMapClickActions.js';
 import { defaultClickActions } from '../regionView/clickActions.js';
 import { mountClickActionsStrip } from '../regionView/clickActionsUI.js';
+import { buildRegionMapPicker, setupRegionMapPicker } from './regionMapPicker.js';
+import { createCanvasGesture } from './pinch.js';
 
 /** The tile size every level is baked at (the art's own); drawn scaled by the camera. */
 export const BAKE_TILE_PX = 16;
 const OWNER = 'regionMap';
 const FOLLOW_EASE_MS = 350;
 const LINK_COLORS = Object.freeze({ down: '#7fb3ff', up: '#ffb37f', join: '#e6c84a', warp: '#6fd08c' });
+/**
+ * ⛓ THE GAP MARK (link-ends): the line across the gutter between two adjacent cells. The gutter is `GUTTER_PX` (32)
+ * world px, so ≈ 1–3 screen px at Fit all on Seedling: the mark is at least `GAP_MARK_MIN_PX` long (stretched about the
+ * gap's middle, so it runs a little into both borders), `GAP_HEAD_MIN_PX` when it carries an arrowhead, and one level
+ * tile thick, between `GAP_MARK_MIN_WIDTH_PX` and `GAP_MARK_MAX_WIDTH_PX`. Solid (`GAP_MARK_ALPHA`): it crosses no art.
+ */
+export const GAP_MARK_MIN_PX = 8;
+export const GAP_HEAD_MIN_PX = 12;
+export const GAP_MARK_MIN_WIDTH_PX = 3;
+export const GAP_MARK_MAX_WIDTH_PX = 6;
+export const GAP_MARK_ALPHA = 0.9;
+/**
+ * ⛓ THE DOOR RING (art-ends): a line that ends at a door tile (`linkShape` `ends.* === 'tile'`) runs over its level's
+ * art, and the tile is ≈ 1.6 screen px at Fit all on Seedling. So that end gets a hollow ring centred on the tile: radius
+ * three quarters of a tile on screen, between `DOOR_RING_MIN_R_PX` and `DOOR_RING_MAX_R_PX`, a dark halo under a
+ * `DOOR_RING_WIDTH_PX` stroke in the link's colour. Hollow, so it does not hide the door (or read as a location square).
+ * A `to` end with an arrowhead gets NO ring: the head marks that door, its tip on the tile's centre, outlined dark.
+ */
+export const DOOR_RING_MIN_R_PX = 3.5;
+export const DOOR_RING_MAX_R_PX = 9;
+export const DOOR_RING_WIDTH_PX = 1.5;
+/** A line's arrowhead length in screen px (a gap mark's is shortened to fit its mark). */
+export const LINE_HEAD_PX = 8;
 /** The toolbar legend, one swatch per `procgenCore/regionLayout.js` LINK_KINDS kind (region-map placement (A)). */
 const LINK_LEGEND = Object.freeze([
     ['join', 'edge transition'], ['down', 'down'], ['up', 'up'], ['warp', 'warp (door / teleporter)'],
 ]);
 const BG = '#0b0b10';
+/** The wheel's zoom rate: a wheel event zooms by `exp(−deltaY · WHEEL_ZOOM_RATE)` (one 100-px notch ≈ ×1.16). */
+const WHEEL_ZOOM_RATE = 0.0015;
+/** One press of the toolbar's + / − is this many wheel notches (100 px of deltaY each). */
+export const ZOOM_BUTTON_NOTCHES = 3;
+/** The zoom factor of one + press (− divides by it): `exp(3 · 100 · 0.0015)` = ×1.568. */
+export const ZOOM_BUTTON_FACTOR = Math.exp(ZOOM_BUTTON_NOTCHES * 100 * WHEEL_ZOOM_RATE);
+/** The + / − buttons' side (CSS px): large enough to tap (WCAG 2.5.8's 24 px minimum, with room to spare). */
+export const ZOOM_BUTTON_PX = 32;
 
 const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
 
@@ -80,6 +114,7 @@ export class RegionMapUI {
         // ⛓ CA-S3: what a click runs (`moduleSettings.regionMap.clickActions`); the defaults until the load lands.
         this.clickActions = defaultClickActions();
         this._statusTimer = null;
+        this._pendingCentre = null;
         this._anim = null;
         this._paintHandle = null;
         this._disposed = false;
@@ -191,6 +226,17 @@ export class RegionMapUI {
         // only unticks the box (`_manualCamera`), it does not rewrite the saved setting.
         button('region-map-centre-start', 'Centre on start', () => this.centreOnStart());
         button('region-map-fit-all', 'Fit all', () => this.fitAll());
+        // ⛓ zoom-links (⚖ the user 2026-11-22T20:18:07Z, "a way to zoom … that also works on mobile"): + / − beside
+        // Fit all, each one ZOOM_BUTTON_FACTOR around the viewport centre. Sized to tap; the rest of the bar is unchanged.
+        for (const [cls, text, sign, label] of [
+            ['region-map-zoom-out', '−', -1, 'Zoom out'], ['region-map-zoom-in', '+', 1, 'Zoom in']]) {
+            const b = button(cls, text, () => this.zoomStep(sign));
+            Object.assign(b.style, {
+                minWidth: `${ZOOM_BUTTON_PX}px`, height: `${ZOOM_BUTTON_PX}px`, fontSize: '18px', lineHeight: '1', padding: '0',
+            });
+            b.title = label;
+            b.setAttribute('aria-label', label);
+        }
         const legend = el('span', 'region-map-link-legend', { display: 'inline-flex', gap: '8px', alignItems: 'center', color: '#9ab', fontSize: '11px' });
         for (const [kind, text] of LINK_LEGEND) {
             const item = el('span', `region-map-link-legend-${kind}`, { display: 'inline-flex', alignItems: 'center', gap: '3px' });
@@ -198,6 +244,10 @@ export class RegionMapUI {
             legend.appendChild(item);
         }
         bar.appendChild(legend);
+        // ⛓ "Go to" (region-map tutorial, G1): a click on a cell or square without the canvas, folded by default.
+        this.pickerEl = buildRegionMapPicker();
+        bar.appendChild(this.pickerEl);
+        this.picker = setupRegionMapPicker(this, this.pickerEl);
         this.info = el('div', 'region-map-info', { padding: '2px 6px', color: '#9ab', fontSize: '11px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' });
         // An overlay over the canvas (not a row above it): showing it must not resize the canvas.
         this.status = el('div', 'region-map-status', {
@@ -231,53 +281,69 @@ export class RegionMapUI {
         this.container.element?.appendChild(this.root);
 
         const c = this.canvas;
+        // ⛓ zoom-links: the canvas gesture (`pinch.js`, pure) by pointerId — one pointer drags (a mouse exactly as
+        // before), two pinch (zoom around the midpoint + pan by its movement). A gesture that pinched never clicks.
+        this._gesture = createCanvasGesture();
+        this.pinchStats = { pinches: 0, pinchMoves: 0 };
         this._onPointerDown = (e) => {
-            this._drag = { x: e.clientX, y: e.clientY, moved: false };
+            const p = this._local(e);
+            const g = this._gesture;
+            g.down(e.pointerId, p.x, p.y);
+            if (g.count === 2) this.pinchStats.pinches += 1;
             try { c.setPointerCapture?.(e.pointerId); } catch { /* a synthetic pointer (the in-app rows) has none */ }
             c.style.cursor = 'grabbing';
         };
         this._onPointerMove = (e) => {
             const p = this._local(e);
-            if (this._drag) {
-                const dx = e.clientX - this._drag.x;
-                const dy = e.clientY - this._drag.y;
-                if (!this._drag.moved && Math.hypot(dx, dy) < 3) return;
-                if (!this._drag.moved) this._manualCamera();
-                this._drag.moved = true;
-                this._drag.x = e.clientX;
-                this._drag.y = e.clientY;
-                this.camera = panBy(this.camera, dx, dy);
+            const g = this._gesture;
+            if (g.active) {
+                const step = g.move(e.pointerId, p.x, p.y);
+                if (!step) return;
+                if (step.kind === 'pan') {
+                    if (step.first) this._manualCamera();
+                    this.camera = panBy(this.camera, step.dx, step.dy);
+                } else {
+                    this._manualCamera();
+                    this.pinchStats.pinchMoves += 1;
+                    this.camera = zoomAround(panBy(this.camera, step.dx, step.dy), this.vp, step.cx, step.cy, step.factor);
+                }
                 this._requestPaint();
                 return;
             }
             this._hoverAt(p.x, p.y);
         };
         this._onPointerUp = (e) => {
-            const d = this._drag;
-            this._drag = null;
-            c.style.cursor = 'grab';
-            if (d && !d.moved) {
+            const { click } = this._gesture.up(e.pointerId);
+            if (!this._gesture.active) c.style.cursor = 'grab';
+            if (click) {
                 const p = this._local(e);
                 const w = screenToWorld(this.camera, this.vp, p.x, p.y);
                 const f = frameAt(this.frameList, w.x, w.y);
                 const q = squareAt(this._squares, p.x, p.y);
                 const visible = f && this._visibilityOf(f.key, this.view?.get()) !== 'hidden';
-                this.selected = visible ? f.key : null;
-                this._requestPaint();
-                if (visible) this.clickAt(f, q);
+                if (visible) this.clickCell(f, q);
+                else {
+                    this.selected = null;
+                    this._requestPaint();
+                }
             }
+        };
+        this._onPointerCancel = () => {
+            this._gesture.reset();
+            c.style.cursor = 'grab';
         };
         this._onWheel = (e) => {
             e.preventDefault();
             const p = this._local(e);
             this._manualCamera();
-            this.camera = zoomAround(this.camera, this.vp, p.x, p.y, Math.exp(-e.deltaY * 0.0015));
+            this.camera = zoomAround(this.camera, this.vp, p.x, p.y, Math.exp(-e.deltaY * WHEEL_ZOOM_RATE));
             this._requestPaint();
         };
         this._onLeave = () => { this.hover = null; this.tooltip.style.display = 'none'; this._requestPaint(); };
         c.addEventListener('pointerdown', this._onPointerDown);
         c.addEventListener('pointermove', this._onPointerMove);
         c.addEventListener('pointerup', this._onPointerUp);
+        c.addEventListener('pointercancel', this._onPointerCancel);
         c.addEventListener('pointerleave', this._onLeave);
         c.addEventListener('wheel', this._onWheel, { passive: false });
         if (typeof ResizeObserver === 'function') {
@@ -391,6 +457,8 @@ export class RegionMapUI {
         this._lastCurrent = undefined;
         this.selected = null;
         this._reframe();
+        // ⛓ G4: a pending centre on a region the new map does not draw is dropped.
+        if (this._pendingCentre && !this._frameFor(this._pendingCentre)) this._pendingCentre = null;
         this.view?.refresh();
     }
 
@@ -465,6 +533,12 @@ export class RegionMapUI {
         this.canvas.width = Math.round(w * dpr);
         this.canvas.height = Math.round(h * dpr);
         this._placeCamera();
+        // ⛓ G4: a centre asked for while the panel was hidden, now that it has a size.
+        if (this._pendingCentre && w >= 2 && h >= 2) {
+            const name = this._pendingCentre;
+            this._pendingCentre = null;
+            this.centreOnRegion(name);
+        }
         this._requestPaint();
     }
 
@@ -518,18 +592,30 @@ export class RegionMapUI {
      */
     centreOnRegion(name) {
         if (!this.model || this._disposed) return false;
-        let f = this.frames.get(name) ?? null;
-        if (!f) {
-            const view = this.view?.get();
-            for (const [key, frame] of this.frames) {
-                const members = view?.displayGroups?.get(key)?.members ?? this.model?.cells.get(key)?.members ?? [];
-                if (members.includes(name)) { f = frame; break; }
-            }
-        }
+        const f = this._frameFor(name);
         if (!f) return false;
         this._manualCamera();
+        // ⛓ G4 (region-map tutorial): a HIDDEN panel (its tab not the active one) has a 0×0 viewport, and a camera
+        // focused on it gets zoom 0. Keep the name (the last wins); `_resize` centres on it once the viewport has a size.
+        if (this.vp.w < 2 || this.vp.h < 2) {
+            this._pendingCentre = name;
+            return true;
+        }
+        this._pendingCentre = null;
         this._animateTo(this._focusCamera(f));
         return true;
+    }
+
+    /** The frame that draws region `name`: its own cell, else the display group or cell it is a member of; or null. */
+    _frameFor(name) {
+        const own = this.frames.get(name);
+        if (own) return own;
+        const view = this.view?.get();
+        for (const [key, frame] of this.frames) {
+            const members = view?.displayGroups?.get(key)?.members ?? this.model?.cells.get(key)?.members ?? [];
+            if (members.includes(name)) return frame;
+        }
+        return null;
     }
 
     centreOnStart() {
@@ -543,6 +629,18 @@ export class RegionMapUI {
     fitAll() {
         this._manualCamera();
         this.camera = fitCamera(this._visibleBounds(), this.vp);
+        this._requestPaint();
+    }
+
+    /**
+     * The toolbar's + (`sign` 1) / − (`sign` −1): zoom by ZOOM_BUTTON_FACTOR around the viewport centre, inside
+     * `mapCamera`'s limits, turning Follow off as the wheel does. Stamps `canvas.dataset.zoomedAt` (a step's `done`).
+     */
+    zoomStep(sign) {
+        this._manualCamera();
+        const f = sign < 0 ? 1 / ZOOM_BUTTON_FACTOR : ZOOM_BUTTON_FACTOR;
+        this.camera = zoomAround(this.camera, this.vp, this.vp.w / 2, this.vp.h / 2, f);
+        this.canvas.dataset.zoomedAt = String(Date.now());
         this._requestPaint();
     }
 
@@ -616,6 +714,16 @@ export class RegionMapUI {
     }
 
     /**
+     * ⛓ What a pointer click on drawn cell `frame` does (and the "Go to" picker, `regionMapPicker.js`): select it, then
+     * `clickAt`. → `clickAt`'s promise.
+     */
+    clickCell(frame, square = null) {
+        this.selected = frame.key;
+        this._requestPaint();
+        return this.clickAt(frame, square);
+    }
+
+    /**
      * ⛓ A CLICK on cell `frame` — on location square `square` when there is one (`squareAt`), else on the cell's
      * region. The discovery settings are read at click time (async), then the click runs synchronously through the
      * registry (`runRegionMapClick`) over the panel's `clickActions` as they are at that moment.
@@ -673,9 +781,15 @@ export class RegionMapUI {
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.fillStyle = BG;
         ctx.fillRect(0, 0, vp.w, vp.h);
-        const stats = { cells: 0, art: 0, generic: 0, fogged: 0, hidden: 0, links: 0, keys: [] };
+        const stats = {
+            cells: 0, art: 0, generic: 0, fogged: 0, hidden: 0, links: 0, neighbourLinks: 0, gapMarks: 0, edgeLines: 0, arrowheads: 0,
+            tileEnds: 0, artEnds: 0, centreEnds: 0, shortHeads: 0, keys: [],
+        };
+        // ⛓ A DOM readout of the zoom painted (zoom-links): a step's `done` reads no instance.
+        this.canvas.dataset.zoom = String(cam.zoom);
         this._squares = [];
         if (!this.model || !vp.w) {
+            this.canvas.dataset.squares = '0';
             this._lastPaint = stats;
             this.counters.paints += 1;
             return;
@@ -717,6 +831,8 @@ export class RegionMapUI {
         this._drawMarkers(ctx, view);
         for (const f of shown) this._drawLabel(ctx, f);
         stats.squares = this._squares.length;
+        // ⛓ A DOM readout of the squares painted (region-map tutorial, G2b): a step's `done` reads no instance.
+        this.canvas.dataset.squares = String(stats.squares);
         stats.minSquareSide = this._squares.reduce((m, q) => Math.min(m, q.side), Infinity);
         this._lastPaint = stats;
         this.counters.paints += 1;
@@ -813,41 +929,94 @@ export class RegionMapUI {
 
     _drawLinks(ctx, view, stats) {
         const rect = viewRect(this.camera, this.vp);
-        const pt = (key, tile) => {
-            const f = this.frames.get(key);
-            if (!f) return null;
-            if (tile) return tileCentre(f, tile[0], tile[1]);
-            return { x: f.x + f.w / 2, y: f.y + f.h / 2 };
-        };
-        ctx.lineWidth = 1.5;
-        // Half-transparent: a link between two far groups crosses other levels' art.
-        ctx.globalAlpha = 0.55;
-        for (const l of this.model.links) {
+        // ⛓ link-ends (⚖ the user 2026-11-22T21:55:35Z): `linkShape` says where each line starts and ends — a mark
+        // across the GAP between two adjacent cells, else a line ending at the door tiles or the ART's borders — and whether it has an
+        // arrowhead (every kind but `join`). Counted apart: `links` (between groups) / `neighbourLinks` (in a group),
+        // and `gapMarks`, `edgeLines`, `arrowheads` across both.
+        // ⛓ art-ends (⚖ the user 2026-11-23T01:20:20.902Z): a line ends at its door tile (a ring there) or on the level
+        // ART's border; `tileEnds` / `artEnds` / `centreEnds` count a line's two ends, `shortHeads` the heads longer
+        // than their line.
+        const zoom = this.camera.zoom;
+        // ⛓ zoom-links (⚖ the user 2026-11-22T20:24:34Z, "Draw lines between neighbours"): the in-group links too.
+        const all = [...this.model.links, ...(this.model.neighbourLinks ?? [])];
+        for (const l of all) {
             if (this._visibilityOf(l.from, view) === 'hidden' || this._visibilityOf(l.to, view) === 'hidden') continue;
-            const a = pt(l.from, l.a);
-            const b = pt(l.to, l.b);
-            if (!a || !b) continue;
-            if (Math.max(a.x, b.x) < rect.x0 || Math.min(a.x, b.x) > rect.x1 || Math.max(a.y, b.y) < rect.y0 || Math.min(a.y, b.y) > rect.y1) continue;
-            const sa = worldToScreen(this.camera, this.vp, a.x, a.y);
-            const sb = worldToScreen(this.camera, this.vp, b.x, b.y);
+            const shape = linkShape(l, this.frames);
+            if (!shape) continue;
+            const { seg } = shape;
+            if (Math.max(seg.x0, seg.x1) < rect.x0 || Math.min(seg.x0, seg.x1) > rect.x1
+                || Math.max(seg.y0, seg.y1) < rect.y0 || Math.min(seg.y0, seg.y1) > rect.y1) continue;
+            let sa = worldToScreen(this.camera, this.vp, seg.x0, seg.y0);
+            let sb = worldToScreen(this.camera, this.vp, seg.x1, seg.y1);
+            const gap = shape.form === 'gap';
+            if (gap) {
+                // A gutter is GUTTER_PX × zoom on screen (≈ 1–3 px at Fit all on Seedling): a floor on its length.
+                const s2 = atLeast({ x0: sa.x, y0: sa.y, x1: sb.x, y1: sb.y }, shape.head ? GAP_HEAD_MIN_PX : GAP_MARK_MIN_PX, shape.axis);
+                sa = { x: s2.x0, y: s2.y0 };
+                sb = { x: s2.x1, y: s2.y1 };
+            }
             ctx.strokeStyle = LINK_COLORS[l.kind] ?? LINK_COLORS.join;
             ctx.fillStyle = ctx.strokeStyle;
-            ctx.setLineDash?.(l.kind === 'warp' ? [4, 4] : []);
+            // A gap mark is short and crosses no art: drawn solid and thicker. A long line is half-transparent: a link
+            // between two far cells crosses other levels' art.
+            ctx.globalAlpha = gap ? GAP_MARK_ALPHA : 0.55;
+            ctx.lineWidth = gap ? Math.max(GAP_MARK_MIN_WIDTH_PX, Math.min(GAP_MARK_MAX_WIDTH_PX, WORLD_TILE_PX * zoom)) : 1.5;
+            ctx.setLineDash?.(l.kind === 'warp' && !gap ? [4, 4] : []);
             ctx.beginPath();
             ctx.moveTo(sa.x, sa.y);
             ctx.lineTo(sb.x, sb.y);
             ctx.stroke();
             ctx.setLineDash?.([]);
-            const ang = Math.atan2(sb.y - sa.y, sb.x - sa.x);
-            ctx.beginPath();
-            ctx.moveTo(sb.x, sb.y);
-            ctx.lineTo(sb.x - 8 * Math.cos(ang - 0.4), sb.y - 8 * Math.sin(ang - 0.4));
-            ctx.lineTo(sb.x - 8 * Math.cos(ang + 0.4), sb.y - 8 * Math.sin(ang + 0.4));
-            ctx.closePath();
-            ctx.fill();
-            stats.links += 1;
+            if (!gap) {
+                // ⛓ art-ends: a door-tile end gets a ring (the tile itself is a pixel or two at Fit all).
+                for (const [which, pt] of [['from', sa], ['to', sb]]) {
+                    const e = shape.ends?.[which];
+                    const tilePx = this.frames.get(l[which])?.tilePx ?? WORLD_TILE_PX;
+                    const r = Math.max(DOOR_RING_MIN_R_PX, Math.min(DOOR_RING_MAX_R_PX, tilePx * zoom * 0.75));
+                    if (e === 'tile') stats.tileEnds += 1;
+                    else if (e === 'art') stats.artEnds += 1;
+                    else stats.centreEnds += 1;
+                    // A headed `to` end: the arrowhead marks the door (its tip on the tile's centre), no ring under it.
+                    if (e !== 'tile' || (which === 'to' && shape.head)) continue;
+                    ctx.globalAlpha = 1;
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, r, 0, Math.PI * 2);
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = DOOR_RING_WIDTH_PX + 2;
+                    ctx.stroke();
+                    ctx.strokeStyle = ctx.fillStyle;
+                    ctx.lineWidth = DOOR_RING_WIDTH_PX;
+                    ctx.stroke();
+                }
+                ctx.globalAlpha = 0.55;
+            }
+            if (shape.head) {
+                const ang = Math.atan2(sb.y - sa.y, sb.x - sa.x);
+                const len = Math.hypot(sb.x - sa.x, sb.y - sa.y);
+                const hl = gap ? Math.min(LINE_HEAD_PX, len * 0.6) : LINE_HEAD_PX;
+                // A line shorter than its head: the head covers the whole line (reported, not restyled).
+                if (!gap && len < hl) stats.shortHeads += 1;
+                ctx.beginPath();
+                ctx.moveTo(sb.x, sb.y);
+                ctx.lineTo(sb.x - hl * Math.cos(ang - 0.4), sb.y - hl * Math.sin(ang - 0.4));
+                ctx.lineTo(sb.x - hl * Math.cos(ang + 0.4), sb.y - hl * Math.sin(ang + 0.4));
+                ctx.closePath();
+                ctx.fill();
+                if (!gap && shape.ends?.to === 'tile') {
+                    // Over the art: a dark outline so the head reads on any tile colour.
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+                stats.arrowheads += 1;
+            }
+            if (gap) stats.gapMarks += 1;
+            else stats.edgeLines += 1;
+            if (l.neighbour) stats.neighbourLinks += 1;
+            else stats.links += 1;
         }
         ctx.globalAlpha = 1;
+        ctx.lineWidth = 1;
     }
 
     _drawMarkers(ctx, view) {
@@ -886,6 +1055,8 @@ export class RegionMapUI {
             tiles: this.model ? Object.fromEntries([...this.model.cells].map(([k, c]) => [k, c.tiles.map((t) => t.location)])) : {},
             unplaced: this.model?.unplaced.map((u) => u.location) ?? [],
             links: this.model?.links.length ?? 0,
+            neighbourLinks: this.model?.neighbourLinks?.length ?? 0,
+            pinch: { ...this.pinchStats, pointers: this._gesture?.count ?? 0 },
             camera: { ...this.camera },
             viewport: { ...this.vp },
             follow: this.follow,
@@ -930,6 +1101,7 @@ export class RegionMapUI {
         c.removeEventListener('pointerdown', this._onPointerDown);
         c.removeEventListener('pointermove', this._onPointerMove);
         c.removeEventListener('pointerup', this._onPointerUp);
+        c.removeEventListener('pointercancel', this._onPointerCancel);
         c.removeEventListener('pointerleave', this._onLeave);
         c.removeEventListener('wheel', this._onWheel);
     }

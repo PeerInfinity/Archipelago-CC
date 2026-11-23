@@ -14,7 +14,7 @@
  * `spinner@192,144`'s hammer at t1222. ON the walk's own spinner rows price the struck spinner where the dash left it:
  * that plan is refused, and a seam where OFF's plan is hitless answers the same plan ON.
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll, afterAll } from 'vitest';
 import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set (fidelity-18's request)
 import { readFileSync } from 'node:fs';
 import { gunzipSync } from 'node:zlib';
@@ -36,6 +36,15 @@ import { L40BK2_D1_SWITCHES, L40BK2_D2_SWITCHES, L40BK2_WITNESS_DIR, l40Bk2Pocke
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { afterWitness, afterWitnessReplay, sortedInputs } from './fidelityAfterRows.js';
 import { l40LatchModelSamples } from './fidelityL40Latch.js';
+import { PRESS_KILL_CHASERS as __PRESS_KILL_CHASERS_HOLD } from './pressKillCost.js';
+
+// ⛓ `PRESS_KILL_CHASERS` held OFF for this whole file: it ships ON since the PKC + FH flip (⚖ the user, 2026-11-20). ON (the default since the PKC + FH flip), the chain
+// ends at kill(spinner@880,848) by press 'no step out' at (743.68,762.93) (HAMMER_PHASE_RUNG); still refused.
+// These rows predate the flip and pin other switches; held OFF they are byte-for-byte their pre-flip selves. The
+// flip's own effect is measured by its sweeps and survey.
+let __heldWas;
+beforeAll(() => { __heldWas = __PRESS_KILL_CHASERS_HOLD.enabled; __PRESS_KILL_CHASERS_HOLD.enabled = false; });
+afterAll(() => { __PRESS_KILL_CHASERS_HOLD.enabled = __heldWas; });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 

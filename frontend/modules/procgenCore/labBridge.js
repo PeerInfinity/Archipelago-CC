@@ -199,11 +199,17 @@ export async function createLabBridge({ substrate, client, iframeId, page, log =
      * a second answer to *"what does this page hold"* on the far side of a
      * postMessage boundary, where the two answers could never be compared.
      *
+     * ⛓ lab-apworld-door-map — `atlases` (default `[]`): the region atlas(es) the page compiled `rules` from, carried
+     * the same way, so the host can file them in its `atlasCache` under the id the rules name.
+     * ⛓ lab-apworld-door-play — `levelSets` (default `[]`): the level-set document(s) the rules name
+     * (`region_atlas[p].level_set`), carried the same way, so the host can hold them for the player as the bundle
+     * door does. The HOST checks each one's content hash against the rules before it holds it.
+     *
      * @returns {boolean} whether the message went out (`false` = disposed).
      */
-    function openInApworldEditor(rules, source) {
+    function openInApworldEditor(rules, source, atlases = [], levelSets = []) {
         return Boolean(publish(LAB_EVENTS.openInApworldEditor,
-            { ...address(), rules, source }, assertOpenInApworldEditor));
+            { ...address(), rules, source, atlases, levelSets }, assertOpenInApworldEditor));
     }
 
     /* ── 3 + 4. READY ─────────────────────────────────────────────────── */

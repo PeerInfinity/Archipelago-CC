@@ -34,6 +34,9 @@ import { TAGS_PER_LEVEL } from './breakableRocks.js';
 // because the alternative, an injected renderer, puts a MISSING render one
 // forgotten argument away from shipping a room the game cannot read.
 import { recordToOel } from './procgenLevelOel.js';
+// ⛓ rules-spinner-alias-guards (a): the END-OF-BUILD alias refusal. Its imports (`levelWorld`,
+// `outOfBandLedger`) are already in this graph through `procgenLevelOel`.
+import { aliasCollisionMessage, aliasCollisionsOf } from './outOfBandAliases.js';
 
 export const LEVEL_SET_SCHEMA_VERSION = 1;
 
@@ -1266,6 +1269,26 @@ export function validateLevelSet(set, options = {}) {
         if (readers && readers.length === 0) {
             warn(`named_rooms.watcher_text names room ${wtLevel} "${rooms[wtLevel]?.name}", where nothing carries tag 0 — FinalDoor.as:50 reads that slot to decide whether the Watcher is dealt with, and in vanilla room 114 authors it as <watcher tag="0">. Here the door asks a slot nothing in that room sets.`);
         }
+    }
+
+    // --- tag -1 alias slots (rules-spinner-alias-guards (a)) ---
+    // ⛔ A tag -1 writer in room N+1 writes `levelPersistence[30(N+1) - 1]` = room N's LAST slot (Main.as:222, no
+    // bounds check). A room built before its successor cannot know that, so the set is checked HERE, once every
+    // room exists: anything in room N addressed at a slot a writer in N+1 clears is refused by name. The writers
+    // and the arithmetic are `outOfBandAliases`' (one derivation, shared with the allocator and the rules
+    // producer). An unread (`embed`) room contributes nothing, and is already named as unchecked above.
+    const aliasRecords = [];
+    for (const [i, doc] of parsed) {
+        if (!doc) continue;
+        const src = rooms[i].source;
+        const entities = roomSourceKind(src) === 'record' && Array.isArray(src.record.entities)
+            ? src.record.entities
+            : doc.tags.filter((t) => Number.isInteger(t.tag))
+                .map((t) => ({ type: t.element, x: '?', y: '?', attrs: { tag: String(t.tag) } }));
+        aliasRecords.push({ level: i, entities });
+    }
+    for (const hit of aliasCollisionsOf(aliasRecords)) {
+        err(`rooms[${hit.level}] "${rooms[hit.level].name}": ${aliasCollisionMessage(hit)}`);
     }
 
     // --- the debug warps (§8.2a #6 composed with §8.3) ---

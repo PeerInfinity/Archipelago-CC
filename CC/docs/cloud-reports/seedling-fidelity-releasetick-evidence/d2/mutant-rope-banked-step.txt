@@ -1,0 +1,11 @@
+MUTANT rope-banked-step: dropRock banks one pendingFreeSteps (the brief's proposed change for gap 2)
+predicted: the rope witness row (the model leaves the game's stream after the cut); W54's rope rows compare OFF vs ON under one setting and may stay green
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityFreezeReleaseTick.test.js > RELEASETICK — the rope rock's release frame (game-witnessed: no key needed) > the model's player matches the game's exactly through and after the cut, ON and OFF alike
+AssertionError: t156: expected [ 143.66637071237923, …(1) ] to deeply equal [ Array(2) ]
+ FAIL  frontend/modules/seedlingDemo/fidelityRockButton.test.js > ROCKBUTTON D1 — `fallRockHoldsButton` (ON since the flip, ⚖ user 2026-11-12) > ON: all three witnesses reproduce at 0 px (player, level, hits, L28 flags)
+AssertionError: rockbutton-l28-livefall: expected [ …(174) ] to deeply equal []
+ FAIL  frontend/modules/seedlingDemo/fidelityRockButton.test.js > ROCKBUTTON D1 — `fallRockHoldsButton` (ON since the flip, ⚖ user 2026-11-12) > OFF: byte-identical to the base — the button reads up, the lock never opens, the walk stalls at 226.04
+AssertionError: expected 338 to be 164 // Object.is equality
+      Tests  3 failed | 37 passed (40)
+restored: 0

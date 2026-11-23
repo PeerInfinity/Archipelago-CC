@@ -798,7 +798,7 @@ export async function prepareRunFromState(bundle, { io = {}, ...opts } = {}) {
     // ⛓ CONTENT SETS PL-1 — a `params.numbers` pack for another substrate or another `exists` is refused by name
     //   before anything is built (Z.5). Names none ⇒ reads nothing.
     await assertWorldNumbers(state?.params, { substrateIds: worldContentSubstrateIds(state, opts), ...io });
-    const contentSet = await loadContentSet(worldContentStackOf(state, opts), io);
+    const contentSet = await loadContentSet(worldContentStackOf(state, opts), { ...io, exists: state?.params?.exists ?? [] });
     return buildRunFromState(bundle, { ...opts, defaults, contentSet });
 }
 

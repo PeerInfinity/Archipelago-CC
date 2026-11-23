@@ -14,7 +14,15 @@
  * flag's write are read from that run. Leg 910 (the held retry, the heaviest) is `hammerNewLocks.train.test.js`.
  */
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll, afterAll } from 'vitest';
+import { KILLLOCK_STANCE_AS_FORECAST as __SAF_HOLD } from './solverBot.js';
+
+// ⛓ `KILLLOCK_STANCE_AS_FORECAST` held OFF for this whole file: it ships ON since the ROCKLOCK + FADE flip took it in
+// (⚖ the user, 2026-11-22). ON, these kill-lock plans change ticks only, still 0 hits (L26 289 ALL 315 → 318 t, the L28 door 357 → 354 t; L53 911 under LINE_STANCE 606 → 574 t). These rows pin
+// NEW-LOCKS' switches; held OFF they are byte for byte their pre-flip selves.
+let __safWas;
+beforeAll(() => { __safWas = __SAF_HOLD.enabled; __SAF_HOLD.enabled = false; });
+afterAll(() => { __SAF_HOLD.enabled = __safWas; });
 
 import {
     KILLLOCK_CHASER_REWIND, KILLLOCK_CLEAR_WRITE, KILLLOCK_CLEAR_WRITE_DEFAULT, KILLLOCK_LINE_STANCE,
@@ -29,10 +37,10 @@ const ENV = globalThis.process?.env ?? {};
 
 describe('hammer-phase NEW-LOCKS — the switches', () => {
     // ⚖ the user 2026-11-14 ("Land, LINE_STANCE OFF"): LINE_STANCE left the kill-lock flip — under it survey step 227 tanked 2 axe hits
-    it('all three ship OFF (`SEEDLING_<NAME>=1` turns each on in node; the page channel knows the names)', () => {
-        expect([KILLLOCK_CLEAR_WRITE_DEFAULT, ROCKLOCK_KILL_DEFAULT, KILLLOCK_LINE_STANCE_DEFAULT]).toEqual([false, false, false]);
-        expect(KILLLOCK_CLEAR_WRITE.enabled).toBe(ENV.SEEDLING_KILLLOCK_CLEAR_WRITE === '1');
-        expect(ROCKLOCK_KILL.enabled).toBe(ENV.SEEDLING_ROCKLOCK_KILL === '1');
+    it('CLEAR_WRITE + ROCKLOCK_KILL ship ON since the ROCKLOCK + FADE flip (2026-11-22; `=0` opts out), LINE_STANCE OFF; the page channel knows the names', () => {
+        expect([KILLLOCK_CLEAR_WRITE_DEFAULT, ROCKLOCK_KILL_DEFAULT, KILLLOCK_LINE_STANCE_DEFAULT]).toEqual([true, true, false]);
+        expect(KILLLOCK_CLEAR_WRITE.enabled).toBe(ENV.SEEDLING_KILLLOCK_CLEAR_WRITE !== '0');
+        expect(ROCKLOCK_KILL.enabled).toBe(ENV.SEEDLING_ROCKLOCK_KILL !== '0');
         expect(KILLLOCK_LINE_STANCE.enabled).toBe(ENV.SEEDLING_KILLLOCK_LINE_STANCE === '1');
         for (const n of ['SEEDLING_KILLLOCK_CLEAR_WRITE', 'SEEDLING_ROCKLOCK_KILL', 'SEEDLING_KILLLOCK_LINE_STANCE']) {
             expect(SOLVER_ENV_NAMES).toContain(n);

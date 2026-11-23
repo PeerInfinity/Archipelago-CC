@@ -1,0 +1,12 @@
+legs 922 (seedling-divergence-legs.mjs --out, at the head; wave 54 counted 924 at its base)
+method: d1/rooms.json names every room where freezeReleaseTick can step something: a texted pickup ceremony
+  (placed or runtime) beside a beam tower, ice turret, turret or drill. Rooms: NONE.
+  L29 (bosskey keyType 1), L40 (bosskey keyType 2, two totemparts): text-less -> untouched by the key.
+  L103: a Watcher seed beside two beam towers -> the Seed arm (removeSelf keeps the flag up) -> untouched.
+L29 text-less key beside turrets: 7 legs
+L40 text-less key + totem parts beside the ice turret: 50 legs
+L103 Watcher seed beside towers: 4 legs
+L28 rope rock (no key: the pull-tick step is the release step): 8 legs
+L39 rope rock (likewise): 3 legs
+legs where ON can step something: 0  (gap 1: no room; gap 2: no code path)
+runtime confirmation: d3/census-probe.txt (a throw at the R step whenever a family is in the room): 0 hits over 294 tapes and the acceptance batch

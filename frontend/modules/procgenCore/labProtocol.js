@@ -123,6 +123,19 @@ export const LAB_PAYLOAD_FIELDS = Object.freeze({
     [LAB_EVENTS.openInApworldEditor]: Object.freeze([...ADDRESS_FIELDS, 'rules', 'source']),
 });
 
+/**
+ * ⛓ lab-apworld-door-map — **THE ONE OPTIONAL FIELD, AND WHY IT IS ONE.** Every field above is REQUIRED (a default
+ * would be this file's value under the sender's name). `openInApworldEditor.atlases` is the exception on purpose: a
+ * payload WITHOUT it is exactly what every page sent before this slice, and its meaning is unambiguous — "no atlas to
+ * give", which the host treats as `[]` and forwards the rules as it always did. A frame from an older build therefore
+ * still opens its document; it only gets the generic map it always got. ⛔ PRESENT IS CHECKED like a required field.
+ * ⛓ lab-apworld-door-play — `levelSets` is the second, for the same reason: absent ≡ `[]`, "no set to give", and the
+ * player then refuses the set by name (slice G) exactly as it did before sets travelled.
+ */
+export const LAB_OPTIONAL_PAYLOAD_FIELDS = Object.freeze({
+    [LAB_EVENTS.openInApworldEditor]: Object.freeze(['atlases', 'levelSets']),
+});
+
 /* ══════════════════════════════════════════════════════════════════════
  * THE SHARED REFUSALS
  * ══════════════════════════════════════════════════════════════════════ */
@@ -148,10 +161,11 @@ function assertFields(event, payload) {
                 + 'sender\'s name, and the receiver has no way to tell the two apart.');
         }
     }
+    const optional = LAB_OPTIONAL_PAYLOAD_FIELDS[event] ?? [];
     for (const key of Object.keys(payload)) {
-        if (!fields.includes(key)) {
+        if (!fields.includes(key) && !optional.includes(key)) {
             fail(`labProtocol: ${event} carries an unexpected field "${key}" (allowed: `
-                + `[${fields.join(', ')}]). An extra field is what a MISSPELLED one looks `
+                + `[${[...fields, ...optional].join(', ')}]). An extra field is what a MISSPELLED one looks `
                 + 'like on this boundary, and a receiver that ignored it would report only '
                 + 'the missing half.');
         }
@@ -324,7 +338,165 @@ export function assertOpenInApworldEditor(payload) {
             + 'hub files this document under, and an empty one is a document with no story '
             + 'about where it came from.');
     }
+    /**
+     * ⛓ lab-apworld-door-map — `atlases`: the region atlas(es) the page compiled `rules` FROM, so the host can put
+     * them in its `atlasCache` (the rules name an atlas by `region_atlas[p].atlas_id` and carry no body). Absent
+     * means `[]` (see `LAB_OPTIONAL_PAYLOAD_FIELDS`). ⛔ The FIELD's type is checked here and a wrong one refuses the
+     * whole payload, like every other field; ONE bad atlas inside a good array is the host's per-atlas refusal
+     * (`labAtlasRefusal`), which refuses that atlas and still forwards the rules.
+     */
+    if (Object.prototype.hasOwnProperty.call(payload, 'atlases') && !Array.isArray(payload.atlases)) {
+        fail(`labProtocol: ${e}.atlases must be an array of region atlases — got `
+            + `${summarizeValue(payload.atlases)}. Send [] (or leave it out) when the page has none.`);
+    }
+    /**
+     * ⛓ lab-apworld-door-play — `levelSets`: the level-set DOCUMENT(S) the rules name per player
+     * (`region_atlas[p].level_set = {set_id, content_hash}`; the rules carry no body), so the host can hold them the
+     * way the bundle door does. Absent means `[]`. ⛔ The FIELD's type refuses the whole payload; ONE bad set inside a
+     * good array is the host's per-set refusal (`labLevelSetVerdicts`), which refuses that set and still forwards.
+     */
+    if (Object.prototype.hasOwnProperty.call(payload, 'levelSets') && !Array.isArray(payload.levelSets)) {
+        fail(`labProtocol: ${e}.levelSets must be an array of level-set documents — got `
+            + `${summarizeValue(payload.levelSets)}. Send [] (or leave it out) when the page has none.`);
+    }
     return payload;
+}
+
+/**
+ * A NON-THROWING one-line summary of a value for a refusal sentence. ⛔ `JSON.stringify` throws on a BigInt or a
+ * cyclic value, and a structured-cloned postMessage payload can carry either — so a refusal built on it would throw
+ * instead of refusing by name.
+ */
+export function summarizeValue(v, max = 80) {
+    if (v === null || v === undefined) return String(v);
+    if (Array.isArray(v)) return `an array of ${v.length}`;
+    if (typeof v === 'object') {
+        if (typeof v.atlas_id === 'string') return `an object with atlas_id ${JSON.stringify(v.atlas_id.slice(0, max))}`;
+        if (typeof v.set_id === 'string') return `an object with set_id ${JSON.stringify(v.set_id.slice(0, max))}`;
+        return `an object with keys [${Object.keys(v).slice(0, 6).join(', ')}]`;
+    }
+    if (typeof v === 'string') return JSON.stringify(v.slice(0, max));
+    return `${typeof v} ${String(v).slice(0, max)}`;
+}
+
+/** The atlas ids `rules` names, one per player that names one, in player order (EVERY player, never the first). */
+export function atlasIdsNamedBy(rules) {
+    const out = [];
+    for (const ref of Object.values(rules?.region_atlas ?? {})) {
+        const id = ref?.atlas_id;
+        if (typeof id === 'string' && id !== '' && !out.includes(id)) out.push(id);
+    }
+    return out;
+}
+
+/**
+ * ⛓ lab-apworld-door-map — **WHY ONE HANDED-OVER ATLAS IS REFUSED, OR `null`.** Game-neutral and pure. An atlas is
+ * refused when it is not an object with a non-empty `atlas_id`, or when NO player of the rules handed over beside it
+ * names that id (`region_atlas[p].atlas_id`, every player checked): an atlas the rules do not name is one the Region
+ * Map would never read, and putting it would only shadow whatever else the host holds under that id. ⛓ The SHAPE
+ * test the bundle door applies to its `region-atlas` member (`documentBundle.classifyDocument`) is the host's to add;
+ * this file imports nothing.
+ *
+ * @returns {string|null}
+ */
+export function labAtlasRefusal(atlas, rules) {
+    if (!atlas || typeof atlas !== 'object' || Array.isArray(atlas)
+        || typeof atlas.atlas_id !== 'string' || atlas.atlas_id === '') {
+        return `not a region atlas (no non-empty atlas_id): ${summarizeValue(atlas)}`;
+    }
+    const named = atlasIdsNamedBy(rules);
+    if (!named.includes(atlas.atlas_id)) {
+        return `atlas ${JSON.stringify(atlas.atlas_id)} is not the one the rules name `
+            + `(region_atlas names ${named.length ? named.map((n) => JSON.stringify(n)).join(', ') : 'none'})`;
+    }
+    return null;
+}
+
+const isNonEmptyString = (s) => typeof s === 'string' && s !== '';
+
+/**
+ * ⛓ lab-apworld-door-play — the level-set references `rules` names, ONE PER PLAYER that names one, in player order:
+ * `[{player, set_id, content_hash}]` (`region_atlas[p].level_set`; every player read, never the first). Two players
+ * may name the same `set_id`; each is its own row.
+ */
+export function levelSetRefsNamedBy(rules) {
+    const out = [];
+    for (const [player, slot] of Object.entries(rules?.region_atlas ?? {})) {
+        const ref = slot?.level_set;
+        if (ref && isNonEmptyString(ref.set_id) && isNonEmptyString(ref.content_hash)) {
+            out.push({ player, set_id: ref.set_id, content_hash: ref.content_hash });
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓ lab-apworld-door-play — **WHICH HANDED-OVER LEVEL SETS THE HOST MAY HOLD, AND WHY EACH OTHER ONE IS REFUSED.**
+ * Game-neutral and pure; the content hash is INJECTED (`contentHashOf`, the host passes
+ * `levelSetReference.levelSetContentHash`, the one spelling) so this file still imports nothing.
+ *
+ * A carried document is `ok` only when its COMPUTED content hash and its `set_id` are both the ones some player of
+ * THESE rules names (`levelSetRefsNamedBy`). ⛔ A hash or id the document declares ABOUT ITSELF
+ * (`provenance.content_hash`) is never read: a body edited after its stamp must not pass as the stamped one.
+ * ⛔ Each player is checked on its own: a refused document never removes another player's good one.
+ * ⛔ The host holds ONE set per `set_id` (`levelSetCache`, put overwrites), so when the rules name one `set_id` under
+ * two content hashes and good documents for both are carried, putting both would leave only the last one — that id is
+ * refused for every document carrying it, by name, and nothing under it is put.
+ *
+ * @param {Array} docs   the payload's `levelSets` (absent → `[]`)
+ * @param {object} rules the rules handed over beside them
+ * @param {{contentHashOf: (doc) => string}} o
+ * @returns {{ok: object[], refused: Array<{set_id: string|null, why: string}>,
+ *   players: Array<{player: string, set_id: string, content_hash: string, carried: boolean}>}}
+ */
+export function labLevelSetVerdicts(docs, rules, { contentHashOf } = {}) {
+    if (typeof contentHashOf !== 'function') {
+        throw new Error('labProtocol: labLevelSetVerdicts needs `contentHashOf` injected (the host\'s '
+            + '`levelSetContentHash`); this file imports nothing');
+    }
+    const refs = levelSetRefsNamedBy(rules);
+    const named = refs.length
+        ? refs.map((r) => `player ${r.player}: ${JSON.stringify(r.set_id)} @ ${r.content_hash}`).join(', ') : 'none';
+    const good = [];
+    const refused = [];
+    for (const doc of docs ?? []) {
+        if (!doc || typeof doc !== 'object' || Array.isArray(doc) || !isNonEmptyString(doc.set_id)
+            || !Array.isArray(doc.rooms)) {
+            refused.push({ set_id: null, why: `not a level set (no non-empty set_id, or no rooms array): ${summarizeValue(doc)}` });
+            continue;
+        }
+        let hash;
+        try {
+            hash = contentHashOf(doc);
+        } catch (err) {
+            refused.push({ set_id: doc.set_id, why: `set ${JSON.stringify(doc.set_id)} could not be hashed: ${err?.message ?? String(err)}` });
+            continue;
+        }
+        const hits = refs.filter((r) => r.set_id === doc.set_id && r.content_hash === hash);
+        if (hits.length === 0) {
+            const sameId = refs.filter((r) => r.set_id === doc.set_id);
+            refused.push({ set_id: doc.set_id, why: sameId.length
+                ? `set ${JSON.stringify(doc.set_id)} hashes to ${hash}, not the content hash the rules name for it `
+                    + `(${sameId.map((r) => `player ${r.player}: ${r.content_hash}`).join(', ')}) — a different version of the set`
+                : `set ${JSON.stringify(doc.set_id)} is not one the rules name (level_set names ${named})` });
+            continue;
+        }
+        if (!good.some((g) => g.doc.set_id === doc.set_id && g.hash === hash)) good.push({ doc, hash });
+    }
+    const ok = [];
+    for (const g of good) {
+        const rivals = good.filter((o) => o.doc.set_id === g.doc.set_id && o.hash !== g.hash);
+        if (rivals.length) {
+            refused.push({ set_id: g.doc.set_id, why: `the rules name set ${JSON.stringify(g.doc.set_id)} under `
+                + `${rivals.length + 1} content hashes (${[g, ...rivals].map((o) => o.hash).join(', ')}), and the host `
+                + 'holds one set per id — none of them is put' });
+        } else {
+            ok.push(g.doc);
+        }
+    }
+    const players = refs.map((r) => ({ ...r,
+        carried: good.some((g) => g.doc.set_id === r.set_id && g.hash === r.content_hash && ok.includes(g.doc)) }));
+    return { ok, refused, players };
 }
 
 /**

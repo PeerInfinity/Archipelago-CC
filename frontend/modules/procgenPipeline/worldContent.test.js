@@ -231,7 +231,11 @@ describe('loadContentSet — the load', () => {
         const set = await loadContentSet(['trial', 'later'], io);
         expect(Object.isFrozen(set)).toBe(true);
         expect(isContentSet(set)).toBe(true);
-        expect(Object.keys(set)).toEqual(['ids', 'concepts', 'text']);
+        // ⛓ CONTENT SETS GEN-1 — and the logic layer of the world's "what exists" packs: none named, none read.
+        expect(Object.keys(set)).toEqual(['ids', 'concepts', 'text', 'structure', 'structureIds']);
+        expect(set.structure).toBeNull();
+        expect(set.structureIds).toEqual([]);
+        expect(io.read.some((u) => u.includes('/structure/'))).toBe(false);
         expect(set.ids).toEqual(['trial', 'later']);
         expect(set.concepts.presenting('guardian').key).toBe('trial:character/the-gate');
         expect(set.text.string('trial:gate/blocked')).toBe(FIXTURE.later.text.strings['trial:gate/blocked']);

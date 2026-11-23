@@ -1061,9 +1061,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 115,
+        "fields": 117,
         "fieldsRead": 42,
-        "fieldsUnread": 70,
+        "fieldsUnread": 72,
         "statements": 32,
         "substrates": 10
     },
@@ -5838,6 +5838,8 @@ export const CAPABILITIES = frz({
         "priceRegions",
         "procgenParamsFromPayload",
         "recordablePipelineConfig",
+        "recordedRegionParams",
+        "regionBiomeOf",
         "regionEditStatus",
         "regionGeometry",
         "regionSourceDefault",

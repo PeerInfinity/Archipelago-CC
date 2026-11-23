@@ -860,6 +860,18 @@
             "_comment": "S4 seedling-custom-set-arm. The REAL wasm game (WebGPU, the seedling-wasm batch's launch), no rebuild: the watch page's bundle of the vanilla 116 + one tree in room 10, held by the host; the wasm AP load delivers ITS rooms through botLoadLevels — the delivered room 10 has the tree and botLevelSet.active is the delivered set."
         },
         {
+            "id": "seedling-wasm-runtime-lab-apworld-door-set-starts-no-game",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "lab-apworld-door-map, updated by lab-apworld-door-play. The wasm twin of seedling-js-runtime-lab-apworld-door-set-starts-no-game: door A with its atlas and (i) NO level set, (ii) a level set tampered after its stamp (the host refuses it, holds nothing), applied, EMPTY levelSetCache → G's refusal, no game, both legs."
+        },
+        {
+            "id": "seedling-wasm-runtime-lab-apworld-door-set-plays-held-rooms",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "lab-apworld-door-play (⚖ Robert 2026-11-21, 'Play via APWorld door'). The wasm twin of seedling-js-runtime-lab-apworld-door-set-plays-held-rooms (WebGPU): door A WITH the tree set's level set, EMPTY levelSetCache → the lab panel holds it under the rules' hash → Apply → ▶ Start → the wasm game is delivered the held set (room 10 has the tree, botLevelSet.active = its id, mount key names it). Stops the game and closes the Flash panel at the end (J4)."
+        },
+        {
             "id": "seedling-wasm-runtime-solver-stop-button",
             "enabled": true,
             "category": "Seedling wasm runtime",
@@ -924,6 +936,24 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "S4 seedling-custom-set-arm (⚖ Robert Q4 'Open back in the lab'; lab-7's claim (d)). The held tree set on the JS runtime, the game teleported to room 10, Edit ▸ pressed: the lab's own announce (procgenLab:levelChanged) names room 10 open, the handed set_id, and room 10's record has the tree."
+        },
+        {
+            "id": "seedling-js-runtime-lab-apworld-door-set-starts-no-game",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "lab-apworld-door-map (⚖ Robert 2026-11-21, 'Map via APWorld door'), updated by lab-apworld-door-play. The watch page's tree set handed over 'Open in APWorld Editor' (procgenLab:openInApworldEditor WITH its stamped atlas, to the Seedling lab panel), applied in the APWorld Editor, on an EMPTY levelSetCache, (i) carrying NO level set, (ii) carrying one tampered after its stamp (the host computes its hash, refuses it by name, holds nothing): the atlas is cached, and the JS Flash panel shows G's \"This set can't be played yet\" and starts nothing, both legs."
+        },
+        {
+            "id": "seedling-js-runtime-lab-apworld-door-set-plays-held-rooms",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "lab-apworld-door-play (⚖ Robert 2026-11-21, 'Play via APWorld door'). The tree set handed over door A WITH its atlas and its level set, EMPTY levelSetCache: the lab panel holds the set under the rules' content hash before the rules go over, Apply, and the JS Flash panel is delivered THAT set (its id, room 10's tree, the JS page's mounted room 10, the mount key names it); Edit ▸ then opens room 10 back in the lab with the same set id. Stops the game and closes the Flash panel at the end (J4)."
+        },
+        {
+            "id": "seedling-js-runtime-lab-apworld-door-after-bundle-measured",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "lab-apworld-door-map (door A carries the level set since lab-apworld-door-play). The SAME tree set first loaded through the bundle door (S4: the host holds it), then handed over door A and applied: the Flash panel's answer is LOGGED (OUTCOME …), not steered; asserted only that a load (if any) delivers the held set (room 10's tree), never vanilla rooms or another hash, and that the Flash panel is closed at the end (J4)."
         },
         {
             "id": "seedling-wasm-runtime-same-wiring-switch-loads-new-rooms",
@@ -2103,6 +2133,12 @@
             "_comment": "lab-set-seedling-identity (2026-11-19): the Seedling watch page's set bundle, built through the page's own modules (watchSetIdentity.js deps + report compile + atlasAtDoor), over the vanilla rooms + the vanilla overlay: every room flash_seedling, no flash_panel block, a seedling-lab-<8 hex> atlas id not in atlas_files.json; loaded through the Presets panel's loadDocumentFile, the Region Map shows real extents in every cell, N/N squares on their tiles, and its warps. Batch playback-bot (on push). Counts derived at run time. Reloads the world loaded before."
         },
         {
+            "id": "region-map-lab-apworld-door-seedling-set",
+            "enabled": true,
+            "category": "Region Map: Seedling",
+            "_comment": "lab-apworld-door-map (⚖ Robert 2026-11-21, 'Map via APWorld door'): the watch page's compile of the vanilla rooms + overlay handed over door A (procgenLab:openInApworldEditor to the Seedling lab panel) and applied in the APWorld Editor. Control first (no atlas: the hook layout, no cell sized), then WITH the atlas: the lab panel files it in atlasCache before forwarding, and the Region Map shows real extents in every cell and N/N squares on their tiles. Batch playback-bot (on push). Counts derived at run time. Reloads the world loaded before."
+        },
+        {
             "id": "region-map-discovery",
             "enabled": true,
             "category": "Region Map: Seedling",
@@ -2119,6 +2155,24 @@
             "enabled": true,
             "category": "Region Map",
             "_comment": "CLICK ACTIONS CA-S3 (2026-11-19): the Region Map's default clickActions (session-only), on procgen_topdown AP_1: a cell click extends the path to its region and opens the Regions panel at it (regions.open); regionView:regionClicked first (CA-S5 retired regionMap:nodeSelected); the strip sits at the top of the panel. Fast batch. Reloads the world loaded before."
+        },
+        {
+            "id": "region-map-go-to-equals-canvas-click",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "region-map-tutorial G1 (2026-11-22): the Map's Go-to picker (regionMap/regionMapPicker.js) does what a canvas click does, on procgen_topdown AP_1: the same click record, bus record and path end under the default clickActions, and with the master switch off (a region and a square: the events, no action). Session-only settings. Fast batch. Reloads the world loaded before."
+        },
+        {
+            "id": "region-map-zoom-pinch-links",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "region-map zoom-links (2026-11-22): the toolbar's + / − (ZOOM_BUTTON_FACTOR around the centre, Follow unticks), a two-pointer synthetic pinch (distinct pointerIds: zoom x the distance ratio, no click) and the neighbour lines (lastPaint.neighbourLinks = the model's, apart from the cross-group links; off under Links), on procgen_topdown AP_1. Fast batch. Reloads the world loaded before."
+        },
+        {
+            "id": "region-map-mobile-tab",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "region-map-link-ends (2026-11-22): the Region Map's mobile tab sits right after the Region Graph's (moduleInfo.mobileAfter, mobileLayoutManager.determinePanelOrder), on every layout preset, from the registry's moduleInfo. On a --layout=mobile boot it also taps the live tab and waits for a paint. Fast batch. Loads nothing."
         },
         {
             "id": "region-map-click-master-off",
@@ -2257,6 +2311,12 @@
             "enabled": true,
             "category": "Tutorial walks: tracker",
             "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-region-graph; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-region-map",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "region-map-tutorial (2026-11-22): the walk row of the READY tutorial tracker-region-map (⚖ the user, 2026-11-23, \"Mark READY\"; in progress until then) (the Region Map on seedling_playthrough seed 1; rules only, no game started). The ratchet requires every step to work. Manual batch tutorials-tracker (⚖ the user 2026-11-22T02:05:41Z, \"Tracker batch\": it boots no wasm, so it needs no WebGPU)."
         },
         {
             "id": "tutorial-walk-tracker-dungeons",
@@ -2474,6 +2534,12 @@
             "enabled": true,
             "category": "Rule Converter",
             "_comment": "helper-script P4: the Rule Converter's Exact engine — real exporter analyzer + world_generator under Pyodide (CDN, booted on the first Convert). A helper script both ways through the Convert buttons, and the loaded alttp_worldgen preset's 36 helpers round-trip with its options. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
+            "id": "document-library-idb",
+            "enabled": true,
+            "category": "Document library",
+            "_comment": "lab-document-library-b1 (lab arc slice B1, declared enrolment): the shared document library's IndexedDB backend, which nothing in the app imports yet. Its own database (absent at the start, deleted at the end); two versions saved, read back by fingerprint through a fresh library. The modules load by a document-relative URL, so the row runs the same on the bundled boot. Category unclaimed by testBatches.js, so batch fast (on push)."
         },
         {
             "id": "seedling-js-runtime-solver-cuts-rope-event",

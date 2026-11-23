@@ -97,7 +97,10 @@ const {
     deriveTalkEvents, crossRoomPrerequisitesOf,
     poleKillsOf, POLE_LIGHT_ARM, POLE_GHOST_ARM, poleThrustStances, poleSwingStances, inRoomPolesOf, deriveInRoomPoleEvents,
     ropesOf, ropeVerdict, deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges, encounterLockSides,
+    refuseAliasedEvents,
 } = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
+// ⛓ rules-spinner-alias-guards (b): the map's tag -1 writers and the alias slot each clears (one derivation).
+const { aliasWritersOf } = await imp('frontend/modules/seedlingDemo/outOfBandAliases.js');
 const { arrowLane, arrowTrapEntityPoint } = await imp('frontend/modules/seedlingDemo/arrowTrap.js');
 const { contactRect, ENEMY_CLASSES } = await imp('frontend/modules/seedlingDemo/combat.js');
 const { spearHitRect, spearRect, pressRectTouches } = await imp('frontend/modules/seedlingDemo/presses.js');
@@ -3290,6 +3293,8 @@ export function compilePlaythroughRules(doc, { table = DERIVED_TABLE, rekey = nu
     const { obstacle, locks, buttons, poles, talks } = layer;
     const landingGates = playthroughLandingGates(doc);
     const ropes = playthroughRopeEvents(doc);
+    // ⛓ rules-spinner-alias-guards (b): no event on a slot a tag -1 writer clears (Main.as:222) — refused by name.
+    refuseAliasedEvents([...layer.events, ...ropes.events], aliasWritersOf(MAP));
     const { rules, report } = compileRegionAtlas(doc, {
         mapDoc: MAP,
         gameName,

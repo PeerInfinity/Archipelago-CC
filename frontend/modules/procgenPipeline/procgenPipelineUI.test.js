@@ -23,7 +23,7 @@ import { MAZE_CONCEPT_REALISATIONS } from '../mazeRoom/mazeConcepts.js';
 import { TEXT_ADVENTURE_CONCEPT_REALISATIONS }
     from '../textAdventureSubstrateWrapper/textAdventureConceptRealisations.js';
 import { DOCUMENT_KEY_EDITORS } from '../apworldEditor/documentKeys.js';
-import { MAZE_ARRIVAL_ROW_CLASS } from '../mazeRoom/mazeProcgenParams.js';
+import { MAZE_ARRIVAL_ROW_CLASS, MAZE_BIOME_ROW_CLASS, mazeBiomeRows } from '../mazeRoom/mazeProcgenParams.js';
 
 /**
  * ⛓ APWORLD EDITOR HUB H3 — three suites LEFT this file with the code they
@@ -523,7 +523,9 @@ const PARAMETER_KEYS_BEFORE_R1 = Object.freeze({
  * `withoutConceptsRow` move), and its own rows follow them.
  */
 function withoutArrivalRow(el) {
-    el.children = el.children.filter((c) => !String(c.className).includes(MAZE_ARRIVAL_ROW_CLASS));
+    // ⛓ CONTENT SETS GEN-1 — the *Maze biome* block is newer still, spliced out the same way; its own rows follow.
+    el.children = el.children.filter((c) => !String(c.className).includes(MAZE_ARRIVAL_ROW_CLASS)
+        && !String(c.className).includes(MAZE_BIOME_ROW_CLASS));
     for (const c of el.children) withoutArrivalRow(c);
     return el;
 }
@@ -739,6 +741,54 @@ describe('TUTORIAL BUGS — *Maze rooms play as* (`mazeArrival`) on the maze hoo
         });
         expect(bag.mazeArrival).toBe('region');
         expect(calls).toBe(1);
+    });
+});
+
+describe('CONTENT SETS GEN-1 — *Maze biome* (`mazeBiome`, `tileKinds`) on the maze hook', () => {
+    const biomeBlock = (wrap) => wrap.children.find((c) => String(c.className).includes(MAZE_BIOME_ROW_CLASS));
+    const buttons = (el) => (el.children ?? []).flatMap((c) => [...(c.tagName === 'BUTTON' ? [c] : []), ...buttons(c)]);
+
+    it('one row, classic, by default, and nothing written until it is edited; picking scattered writes the id and shows its three numbers', () => {
+        const entry = substrateRegistry.get('maze');
+        const bag = { ...entry.defaultProcgenParams };
+        let calls = 0;
+        withFakeDocument(() => {
+            const block = biomeBlock(entry.renderProcgenParams({ params: bag, onChange: () => { calls += 1; } }));
+            let [select, ...rest] = controls(block);
+            expect(rest).toEqual([]);
+            expect(select.dataset.paramKey).toBe('mazeBiome');
+            expect(select.value).toBe('classic');
+            expect(select.children.map((o) => o.value)).toContain('scattered');
+            expect('mazeBiome' in bag).toBe(false);
+            select.value = 'scattered';
+            select.fire('change');
+            expect(bag.mazeBiome).toBe('scattered');
+            const numbers = controls(block).filter((c) => c.type === 'number');
+            expect(numbers.map((c) => c.dataset.paramKey)).toEqual(['tileKinds.percent', 'tileKinds.cap', 'tileKinds.min']);
+            expect(numbers.map((c) => c.value)).toEqual(['5', '8', '1']);
+            numbers[1].value = '99';
+            numbers[1].fire('change');
+            expect(bag.tileKinds).toEqual({ cap: 32 });
+            [select] = controls(block);
+            expect(select.value).toBe('scattered');
+        });
+        expect(calls).toBe(2);
+    });
+
+    it('+ biome makes a mix (each row a biome and a weight); − takes a row out; one row left is the single id', () => {
+        const entry = substrateRegistry.get('maze');
+        const bag = { ...entry.defaultProcgenParams };
+        withFakeDocument(() => {
+            const block = biomeBlock(entry.renderProcgenParams({ params: bag, onChange: () => {} }));
+            buttons(block).find((b) => b.textContent === '+ biome').fire('click');
+            expect(bag.mazeBiome).toEqual([{ id: 'classic', weight: 1 }, { id: mazeBiomeRows(bag)[1].id, weight: 1 }]);
+            const weight = controls(block).find((c) => c.type === 'number');
+            weight.value = '3';
+            weight.fire('change');
+            expect(bag.mazeBiome[0]).toEqual({ id: 'classic', weight: 3 });
+            buttons(block).find((b) => b.textContent === '−').fire('click');
+            expect(typeof bag.mazeBiome).toBe('string');
+        });
     });
 });
 

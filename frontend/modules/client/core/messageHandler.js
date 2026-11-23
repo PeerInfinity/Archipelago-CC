@@ -216,8 +216,9 @@ export class MessageHandler {
     this._offlinePassChain = Promise.resolve();
     this._offlinePassWaiting = false;
     // A step of a pass that has not finished after this long is left behind (tried again next pass): measured
-    // live (MW-P3, ~1 play in 3), a gate's worker ping occasionally never settles, and one such call held the
-    // whole push. Above the ping's own 5 s timeout.
+    // live (MW-P3, ~1 play in 3), a gate's worker ping occasionally never settled, and one such call held the
+    // whole push. Above the ping's own 5 s timeout. The cause (two id counters sharing the proxy's pendingQueries)
+    // is fixed in stateManagerProxy.js; the bound stays as a guard: a step also awaits more than the ping.
     this._offlineStepTimeoutMs = OFFLINE_STEP_TIMEOUT_MS;
     this._clientRulesSources = new Set();
     // `${seed}|${slot}` of every slot whose goal this page session reported: an ID-less goal the server never

@@ -25,6 +25,11 @@ import { MIN_ZOOM } from '../../procgenCore/mapCamera.js';
 import { seedlingCompositeMapStats } from '../../flashPanel/seedlingCompositeMap.js';
 import { worldToScreen } from '../../procgenCore/mapCamera.js';
 import { squareAt } from '../../regionMap/regionMapOverlay.js';
+import { linkShape } from '../../regionMap/regionMapLinkGeometry.js';
+import mobileLayoutManager from '../../../app/core/mobileLayoutManager.js';
+import { completeModuleInfo } from '../../../app/initialization/completeModuleInfo.js';
+import { lookupModuleInfo } from '../../quickLaunch/quickLaunchCatalog.js';
+import { ZOOM_BUTTON_FACTOR, ZOOM_BUTTON_PX } from '../../regionMap/regionMapUI.js';
 import { REGION_MAP_CLICK_ACTIONS_KEY, regionOfCell } from '../../regionMap/regionMapClickActions.js';
 import { defaultClickActions, withInitialValues } from '../../regionView/clickActions.js';
 import { resetLoopsToIdle } from './loopsPanelTests.js';
@@ -145,6 +150,21 @@ export async function testRegionMapSeedlingPaints(testController) {
     const all = await fitAllAndSettle(testController, 'fit all paints all N cells');
     testController.reportCondition(`fit all paints all N cells (${dbg().lastPaint.cells})`, all && dbg().lastPaint.cells === layout.positions.size);
     testController.reportCondition(`every cell is drawn by its substrate's painter (${dbg().lastPaint.art} art)`, dbg().lastPaint.art === dbg().lastPaint.cells);
+    // ⛓ art-ends (⚖ the user 2026-11-23T01:20:20.902Z): a line ends at its door tile when it has one, else on the
+    // level art's border. The wanted counts are linkShape's own `ends` over the model; Seedling has door tiles.
+    {
+      const p = panel();
+      const ends = { tile: 0, art: 0, centre: 0 };
+      for (const l of [...p.model.links, ...p.model.neighbourLinks]) {
+        const q = linkShape(l, p.frames);
+        if (q?.form === 'line') for (const e of [q.ends.from, q.ends.to]) ends[e] += 1;
+      }
+      const lp = dbg().lastPaint;
+      testController.log(`ART ENDS: ${lp.tileEnds} at a door tile (want ${ends.tile}), ${lp.artEnds} on the art (want ${ends.art}), `
+        + `${lp.centreEnds} at a centre (want ${ends.centre}), ${lp.shortHeads} heads longer than their line`);
+      testController.reportCondition(`line ends: door tile / art border / centre as linkShape says (${lp.tileEnds}/${lp.artEnds}/${lp.centreEnds} = ${ends.tile}/${ends.art}/${ends.centre}, tiles > 0)`,
+        ends.tile > 0 && lp.tileEnds === ends.tile && lp.artEnds === ends.art && lp.centreEnds === ends.centre);
+    }
 
     // the art bakes for the visible cells: nothing pending, nothing failed
     const baked = await testController.pollForCondition(() => {
@@ -615,6 +635,104 @@ export async function testRegionMapClicksGenerated(testController) {
   return testController.getOverallResult();
 }
 
+/**
+ * zoom-links: the toolbar's + / −, a two-finger pinch and the neighbour lines, on procgen_topdown AP_1 (fast). The
+ * + press multiplies the zoom by ZOOM_BUTTON_FACTOR and − divides it back; a pinch of two synthetic pointers (distinct
+ * pointerIds) zooms by the finger-distance ratio and fires NO click; the links painted are the model's, cross-group
+ * and neighbour counted apart. Counts derived from the panel's own model (no preset pins).
+ */
+export async function testRegionMapZoomPinchLinks(testController) {
+  let s = null;
+  try {
+    s = await setUp(testController, GENERATED, { rulesPath: GENERATED_RULES });
+    if (!s.ready) return testController.getOverallResult();
+    await s.ctx.setSetting('moduleSettings.regionMap.showLinks', true);
+    await s.ctx.setSetting('moduleSettings.regionMap.followPlayer', true);
+    const p = panel();
+    p.follow = true;
+    p.controls.follow.checked = true;
+    const ok = await fitAllAndSettle(testController, 'fit all paints every cell');
+    testController.reportCondition('fit all paints every cell', ok);
+    p.follow = true;
+    p.controls.follow.checked = true;
+
+    // + then −, by the real buttons
+    const zoomOf = () => Number(p.canvas.dataset.zoom);
+    const z0 = dbg().camera.zoom;
+    const plus = p.root.querySelector('button.region-map-zoom-in');
+    const minus = p.root.querySelector('button.region-map-zoom-out');
+    testController.reportCondition('the toolbar has + and − buttons beside Fit all',
+      !!plus && !!minus && minus.previousElementSibling?.classList.contains('region-map-fit-all') && plus.previousElementSibling === minus);
+    const side = plus ? plus.getBoundingClientRect() : null;
+    testController.reportCondition(`the buttons are large enough to tap (${side?.width.toFixed(0)}×${side?.height.toFixed(0)} px ≥ ${ZOOM_BUTTON_PX - 1})`,
+      !!side && side.width >= ZOOM_BUTTON_PX - 1 && side.height >= ZOOM_BUTTON_PX - 1);
+    plus.click();
+    const zin = await testController.pollForCondition(() => Math.abs(zoomOf() - z0 * ZOOM_BUTTON_FACTOR) < 1e-9 * z0,
+      'the + press painted', 3000, 25);
+    testController.log(`ZOOM: fit ${z0.toPrecision(6)} → + ${zoomOf().toPrecision(6)} (×${(zoomOf() / z0).toFixed(4)})`);
+    testController.reportCondition(`+ multiplies the zoom by ${ZOOM_BUTTON_FACTOR.toFixed(4)} (${z0.toPrecision(4)} → ${zoomOf().toPrecision(4)})`, zin);
+    testController.reportCondition('a + press turns Follow off, as the wheel does', dbg().follow === false && p.controls.follow.checked === false);
+    testController.reportCondition('the press stamps canvas.dataset.zoomedAt', Number(p.canvas.dataset.zoomedAt) > 0);
+    minus.click();
+    const zout = await testController.pollForCondition(() => Math.abs(zoomOf() - z0) < 1e-9 * z0, 'the − press painted', 3000, 25);
+    testController.reportCondition(`− divides it back (${zoomOf().toPrecision(4)})`, zout);
+
+    // a two-finger pinch: fingers 100 px apart around the centre → 200 px apart
+    const r = p.canvas.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    const clicks = p.clickCount;
+    const zp = dbg().camera.zoom;
+    const ev = (type, id, x, y) => p.canvas.dispatchEvent(new PointerEvent(type, {
+      clientX: x, clientY: y, pointerId: id, pointerType: 'touch', isPrimary: id === 11, bubbles: true, button: 0,
+    }));
+    ev('pointerdown', 11, cx - 50, cy);
+    ev('pointerdown', 12, cx + 50, cy);
+    for (let k = 1; k <= 5; k += 1) {
+      ev('pointermove', 11, cx - 50 - 10 * k, cy);
+      ev('pointermove', 12, cx + 50 + 10 * k, cy);
+    }
+    ev('pointerup', 12, cx + 100, cy);
+    ev('pointerup', 11, cx - 100, cy);
+    await nextFrames(3);
+    const zr = dbg().camera.zoom / zp;
+    testController.log(`PINCH: 100 → 200 px apart: zoom ${zp.toPrecision(6)} → ${dbg().camera.zoom.toPrecision(6)} (×${zr.toFixed(4)}); `
+      + `pinches ${dbg().pinch.pinches}, pinch moves ${dbg().pinch.pinchMoves}`);
+    testController.reportCondition(`the pinch zoomed by the finger-distance ratio (×${zr.toFixed(4)} = ×2)`, Math.abs(zr - 2) < 1e-6);
+    testController.reportCondition(`the pinch fired no click (clicks ${clicks} → ${p.clickCount})`, p.clickCount === clicks && dbg().pinch.pointers === 0);
+
+    // the links: every one on screen after Fit all, the two kinds counted apart
+    await fitAllAndSettle(testController, 'fit all again');
+    await nextFrames(2);
+    const d = dbg();
+    const m = p.model;
+    const wantNb = m.neighbourLinks.length;
+    testController.log(`LINKS: ${d.lastPaint.links} cross-group (model ${m.links.length}), ${d.lastPaint.neighbourLinks} neighbour (model ${wantNb})`);
+    testController.reportCondition(`the neighbour lines are drawn (${d.lastPaint.neighbourLinks} = the model's ${wantNb}, > 0)`,
+      wantNb > 0 && d.lastPaint.neighbourLinks === wantNb && d.neighbourLinks === wantNb);
+    testController.reportCondition(`the cross-group lines are counted apart (${d.lastPaint.links} = ${m.links.length})`, d.lastPaint.links === m.links.length);
+    // ⛓ link-ends: how the lines END — a gap mark between adjacent cells, else a line clipped to the borders; an
+    // arrowhead on every kind but join. The wanted counts are the geometry module's own answer over the model.
+    const shapes = [...m.links, ...m.neighbourLinks].map((l) => linkShape(l, p.frames)).filter(Boolean);
+    const want = { gap: shapes.filter((q) => q.form === 'gap').length, line: shapes.filter((q) => q.form === 'line').length,
+      heads: shapes.filter((q) => q.head).length };
+    testController.log(`LINK ENDS: ${d.lastPaint.gapMarks} gap marks (want ${want.gap}), ${d.lastPaint.edgeLines} edge-clipped lines `
+      + `(want ${want.line}), ${d.lastPaint.arrowheads} arrowheads (want ${want.heads})`);
+    testController.reportCondition(`every link is drawn as a gap mark or a border-clipped line, as linkShape says (${d.lastPaint.gapMarks}/${d.lastPaint.edgeLines} = ${want.gap}/${want.line})`,
+      want.gap > 0 && d.lastPaint.gapMarks === want.gap && d.lastPaint.edgeLines === want.line);
+    testController.reportCondition(`no arrowhead on a join (${d.lastPaint.arrowheads} drawn = ${want.heads} non-join links)`, d.lastPaint.arrowheads === want.heads);
+    await s.ctx.setSetting('moduleSettings.regionMap.showLinks', false);
+    const off = await testController.pollForCondition(() => dbg().lastPaint.neighbourLinks === 0 && dbg().lastPaint.links === 0,
+      'Links off draws none', 3000, 25);
+    testController.reportCondition('the Links box turns the neighbour lines off too', off);
+  } catch (error) {
+    testController.reportCondition(`zoom/pinch/links row error-free: ${error.message}`, false);
+  } finally {
+    if (s) await tearDown(testController, s, { restoreWorld: true });
+  }
+  return testController.getOverallResult();
+}
+
 /** seedling_playthrough — the moves, a check, and the refusal of an inaccessible square (the Region Graph's). */
 export async function testRegionMapClicksSeedling(testController) {
   let s = null;
@@ -895,6 +1013,76 @@ export async function testRegionMapClickLocationCheck(testController) {
 }
 
 /**
+ * ⛓ "GO TO" ≡ A CANVAS CLICK (region-map tutorial, G1: `regionMap/regionMapPicker.js`). The same target clicked on the
+ * canvas and chosen in the picker give the same click record (`lastClick` but its counter), the same bus record
+ * (`regionView:*Clicked`, `ui:navigateToRegion`) and the same path end: a region under the default actions; then, with
+ * the master switch off, a region and a location square (the events are published, no action runs).
+ */
+export async function testRegionMapGoToEqualsCanvasClick(testController) {
+  let s = null;
+  let restorePlayer = null;
+  let checked = [];
+  const sameRecord = (c) => (c ? JSON.stringify({ ...c, n: 0 }) : null);
+  const busOf = (seen) => JSON.stringify(seen.filter(([n]) => n !== 'ui:activatePanel'));
+  /** One leg: `act()` makes the click; → { click, bus, pathEnd } */
+  const leg = async (act) => {
+    const rec = recordEvents(testController, CLICK_EVENTS);
+    try {
+      const click = await act();
+      await new Promise((res) => setTimeout(res, 300)); // the route's dispatch and the Regions panel's navigation
+      return { click: sameRecord(click), bus: busOf(rec.seen), pathEnd: pathEndRegion() };
+    } finally { rec.stop(); }
+  };
+  try {
+    const got = await clickRowSetUp(testController, defaultClickActions(), 'On click: extend path · Regions — location: check',
+      { target: true });
+    ({ s, checked } = got);
+    const { t } = got;
+    if (!s.ready || !t) return testController.getOverallResult();
+    testController.reportCondition('the picker starts folded', panel().pickerEl.open === false);
+    restorePlayer = savePlayer();
+    const canvasLeg = await leg(() => clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key}`));
+    restorePlayer();
+    const pickerLeg = await leg(() => panel().picker.goToRegion(t.key));
+    restorePlayer();
+    testController.reportCondition(`a region: the picker's click record equals the canvas click's (${pickerLeg.click} vs ${canvasLeg.click})`,
+      !!canvasLeg.click && pickerLeg.click === canvasLeg.click);
+    testController.reportCondition(`… the same bus record (${pickerLeg.bus})`, canvasLeg.bus.includes('regionView:regionClicked') && pickerLeg.bus === canvasLeg.bus);
+    testController.reportCondition(`… the same path end (${pickerLeg.pathEnd})`, pickerLeg.pathEnd === canvasLeg.pathEnd && pickerLeg.pathEnd === t.region);
+
+    // Master off: a click (canvas or picker) publishes its event and runs nothing.
+    await s.ctx.setSetting(REGION_MAP_CLICK_ACTIONS_KEY, { ...defaultClickActions(), enabled: false });
+    await testController.pollForCondition(() => dbg()?.clickActions?.enabled === false, 'the panel holds master off', 3000, 25);
+    await focusCell(testController, t.key);
+    const point = cellPointOffSquares(t.key);
+    const offCanvas = await leg(() => clickCanvas(testController, point.x, point.y, `cell ${t.key} (master off)`));
+    const offPicker = await leg(() => panel().picker.goToRegion(t.key));
+    testController.reportCondition(`master off, a region: equal records, nothing ran (${offPicker.click})`,
+      offPicker.click === offCanvas.click && JSON.parse(offPicker.click ?? '{}').result?.ran === false && offPicker.bus === offCanvas.bus
+      && offPicker.bus.includes('regionView:regionClicked'));
+    await fitAllAndSettle(testController, 'fit all (a square)');
+    const q = dbg().squares.find((x) => squarePoint(x.location));
+    if (q) await focusCell(testController, q.key);
+    const at = q ? squarePoint(q.location) : null;
+    testController.reportCondition(`a location square on screen (${q?.location ?? 'none'})`, !!at);
+    if (at) {
+      const sqCanvas = await leg(() => clickCanvas(testController, at.x, at.y, `square ${q.location} (master off)`));
+      const sqPicker = await leg(() => panel().picker.goToLocation(q.location));
+      testController.reportCondition(`master off, a location: equal records and bus records (${sqPicker.bus})`,
+        !!sqCanvas.click && sqPicker.click === sqCanvas.click && JSON.parse(sqPicker.click).target === 'location'
+        && sqPicker.bus === sqCanvas.bus && sqPicker.bus.includes('regionView:locationClicked'));
+    }
+  } catch (error) {
+    testController.reportCondition(`go-to ≡ canvas click row error-free: ${error.message}`, false);
+  } finally {
+    restorePlayer?.();
+    await reloadIfChecked(testController, s?.ctx, checked, { before: s?.before, restoreWorld: true });
+    if (s) await tearDown(testController, s, { restoreWorld: true });
+  }
+  return testController.getOverallResult();
+}
+
+/**
  * The Map's settings are its OWN (⚖ R4): an edit of the Region Graph's strip (its ⏸ master switch, pressed and pressed
  * back — the Graph's real save path) leaves the Map's `clickActions` unchanged, in the panel and in storage.
  */
@@ -1114,6 +1302,60 @@ export async function testRegionMapWatchSetBundle(testController) {
   });
 }
 
+/**
+ * region-map-link-ends: the Region Map's MOBILE tab sits right after the Region Graph's (⚖ the user 2026-11-22T21:55Z,
+ * "Yes, add it"). Any boot: the mobile tab order computed the way `mobileLayoutManager.determinePanelOrder` computes it,
+ * from the registry's own moduleInfo (as `layoutManager.js` `setupMobileLayout` registers it) and the served layout
+ * presets, on every preset. On a MOBILE boot (`npm test -- --layout=mobile`) also the live tab bar: the tab is next to
+ * the Region Graph's, a tap shows the panel, and it paints.
+ */
+export async function testRegionMapMobileTab(testController) {
+  try {
+    const presets = await (await fetch('./layout-configs/layout_presets.json', { cache: 'no-store' })).json();
+    const registry = [...centralRegistry.getAllPanelComponents()];
+    const info = lookupModuleInfo('regionMapPanel', centralRegistry.getAllPanelComponents().get('regionMapPanel')) ?? {};
+    testController.reportCondition(`the Region Map's moduleInfo names mobileAfter = regionGraphPanel (${JSON.stringify(info.mobileAfter ?? null)})`,
+      info.mobileAfter === 'regionGraphPanel');
+    // A scratch manager with the singleton's own methods: the live one (if any) is never touched.
+    const scratch = Object.create(Object.getPrototypeOf(mobileLayoutManager));
+    const results = [];
+    for (const id of Object.keys(presets)) {
+      Object.assign(scratch, { panels: new Map(), layoutPresets: presets, activeLayoutId: id, columnCount: 0 });
+      for (const [type, entry] of registry) {
+        scratch.registerPanel(type, entry.componentClass, type, completeModuleInfo(type, lookupModuleInfo(type, entry) ?? {}));
+      }
+      scratch.determinePanelOrder();
+      const col = scratch.columnPanels.find((c) => c.includes('regionMapPanel')) ?? [];
+      const ok = scratch.panelOrder.filter((t) => t === 'regionMapPanel').length === 1
+        && col[col.indexOf('regionGraphPanel') + 1] === 'regionMapPanel';
+      results.push(`${id}:${ok ? 'next' : 'NOT'}`);
+    }
+    testController.log(`MOBILE ORDER per preset: ${results.join(' ')}`);
+    testController.reportCondition(`on every layout preset the Region Map tab follows the Region Graph's, once (${results.length} presets)`,
+      results.length > 0 && results.every((r) => r.endsWith(':next')));
+
+    const mobile = document.body.classList.contains('mobile-layout-active');
+    testController.log(`boot layout: ${mobile ? 'MOBILE' : 'desktop'} (${window.innerWidth} × ${window.innerHeight})`);
+    if (!mobile) return testController.getOverallResult();
+    const m = mobileLayoutManager;
+    const before = m.activePanel;
+    m.showPanel('regionGraphPanel');
+    const tabs = () => [...document.querySelectorAll('.mobile-tab-bar .mobile-tab')].map((t) => t.dataset.componentType);
+    const t = tabs();
+    testController.log(`LIVE TABS (Region Graph's column): ${t.join(', ')}`);
+    testController.reportCondition('the live tab bar shows the Region Map tab right after the Region Graph\'s',
+      t[t.indexOf('regionGraphPanel') + 1] === 'regionMapPanel' && t.filter((x) => x === 'regionMapPanel').length === 1);
+    document.querySelector('.mobile-tab[data-component-type="regionMapPanel"]')?.click();
+    const shown = await testController.pollForCondition(() => m.activePanel === 'regionMapPanel'
+      && (getPanelInstances()[0]?.getDebugState()?.lastPaint?.cells ?? 0) > 0, 'the Region Map shows and paints', 20000, 50);
+    testController.reportCondition('a tap on the tab shows the Region Map, and it paints', shown);
+    if (before && m.panels.has(before)) m.showPanel(before);
+  } catch (error) {
+    testController.reportCondition(`mobile tab row error-free: ${error.message}`, false);
+  }
+  return testController.getOverallResult();
+}
+
 registerTest({
   id: 'region-map-classic-world',
   name: 'Region Map: a classic AP world (no grid_cell, no hook)',
@@ -1121,6 +1363,22 @@ registerTest({
   testFunction: testRegionMapClassicWorld,
   enabled: false, // runs where a roster enrols it (the substrates config)
   description: 'The panel loads a world with no sidecars: the generic layout, one generic box per region, a square place for every location',
+});
+registerTest({
+  id: 'region-map-zoom-pinch-links',
+  name: 'Region Map: + / − zoom, a two-finger pinch, the neighbour lines',
+  category: 'Region Map',
+  testFunction: testRegionMapZoomPinchLinks,
+  enabled: false,
+  description: 'zoom-links: + and − zoom by ZOOM_BUTTON_FACTOR and untick Follow; a two-pointer pinch zooms by the distance ratio and fires no click; the neighbour lines drawn are the model\'s, counted apart from the cross-group links, under the Links box; link-ends: gap marks / border-clipped lines / arrowheads as linkShape says',
+});
+registerTest({
+  id: 'region-map-mobile-tab',
+  name: 'Region Map: the mobile tab sits next to the Region Graph\'s',
+  category: 'Region Map',
+  testFunction: testRegionMapMobileTab,
+  enabled: false,
+  description: 'link-ends: from the registry\'s moduleInfo and the served presets, the mobile tab order puts the Region Map right after the Region Graph on every preset; on a --layout=mobile boot, the live tab is there and a tap shows and paints the panel',
 });
 registerTest({
   id: 'region-map-seedling-paints',
@@ -1177,6 +1435,14 @@ registerTest({
   testFunction: testRegionMapClickLocationCheck,
   enabled: false,
   description: 'CA-S3: the location action "check it now": a green square click checks it and publishes regionView:locationClicked',
+});
+registerTest({
+  id: 'region-map-go-to-equals-canvas-click',
+  name: 'Region Map: "Go to" does what a canvas click does',
+  category: 'Region Map',
+  testFunction: testRegionMapGoToEqualsCanvasClick,
+  enabled: false,
+  description: 'region-map tutorial (G1): the same cell or square, clicked on the canvas and chosen in the Go-to picker: the same click record, bus record and path end (default actions; master off, a region and a square)',
 });
 registerTest({
   id: 'region-map-click-settings-independent',

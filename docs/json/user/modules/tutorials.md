@@ -69,6 +69,10 @@ Tutorials are grouped by what they teach; procgen is the project's core use. Eac
 
 - **APCalc: generate a world** ([guide](../tutorials/apcalc-generator.md)) — Generate a new APCalc map with the APCalc Generator, play it, and package it as a .apworld. `?tutorial=apcalc-generator`
 
+### Tracking a game
+
+- **Tracking: the Region Map** ([guide](../tutorials/tracker-region-map.md)) — See a Seedling world as its real map: levels in groups, locations as squares on their tiles, and clicks that move and check. `?tutorial=tracker-region-map`
+
 ### Needs a terminal
 
 Each of these runs a command in a terminal partway through. The panel can do every step before that one, and its test checks those steps. At the terminal step, copy the command and run it yourself. The test cannot run a terminal, so it does not check the steps after that one. The panel lists these in a collapsed section.
