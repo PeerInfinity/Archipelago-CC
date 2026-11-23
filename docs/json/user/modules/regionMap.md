@@ -4,7 +4,7 @@ The Region Map shows the loaded world as a flat map: each region is drawn as its
 
 **Opening it:** pick **Region Map** from the panel menu (*Analysis Panels*). It is not in any layout preset, so it appears only when you open it. On the mobile layout it has its own tab, right after the **Region Graph**'s.
 
-**Tutorial:** *Tracking: the Region Map* walks through it on Seedling Playthrough: open the app with `?tutorial=tracker-region-map`, or start it from the [Tutorial panel](tutorials.md). It is still in progress.
+**Tutorial:** *Tracking: the Region Map* walks through it on Seedling Playthrough: open the app with `?tutorial=tracker-region-map`, or start it from the [Tutorial panel](tutorials.md). Its [guide](../tutorials/tracker-region-map.md) is the same walk as text.
 
 ## What you see
 

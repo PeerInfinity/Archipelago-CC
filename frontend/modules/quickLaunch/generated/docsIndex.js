@@ -1206,6 +1206,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "*Seedling* is a Flash game. Flash is gone from browsers, so this project recompiles the game: SWFRecomp turns its SWF into C, and the C into WebAssembly, which any browser runs. The builds the app…"
     },
     {
+        "path": "docs/json/user/tutorials/tracker-region-map.md",
+        "title": "Tracking: the Region Map",
+        "section": "user/tutorials",
+        "summary": "The Region Map draws a world as a map: one cell per level, laid out the way you walk between them, with each location as a square on its own tile. It is the map beside the Region Graph: the same…"
+    },
+    {
         "path": "docs/json/user/tutorials/tracker-track-a-game.md",
         "title": "Track a game",
         "section": "user/tutorials",
@@ -1325,6 +1331,7 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/user/tutorials/seedling-bot.md",
                     "docs/json/user/tutorials/seedling-multiworld.md",
                     "docs/json/user/tutorials/seedling-recompile.md",
+                    "docs/json/user/tutorials/tracker-region-map.md",
                     "docs/json/user/tutorials/tracker-track-a-game.md"
                 ],
                 "single": false
