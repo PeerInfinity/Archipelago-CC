@@ -1,0 +1,43 @@
+    0123456789
+  0 #.#.#.#.#.
+  1 ..........
+  2 #.#.....@T
+  3 .....iPPPP
+  4 #.......PP
+  5 ........#.
+  6 ##......#.
+  7 #.........
+  8 #.......#.
+  9 ..........
+ 10 #....X#.#.
+ 11 ......i...
+ 12 #.......#P
+ 13 ..X....R.T
+ 14 #.......#.
+ 15 ..........
+ 16 #.......#.
+ 17 ..........
+ 18 #.#..i#.#.
+ 19 ....T#....
+pole 144 48 {}
+pole 128 48 {}
+pole 112 48 {}
+pole 96 48 {}
+pole 80 48 {}
+dungeonspire 80 288 {}
+puncher 32 208 {}
+puncher 80 168 {}
+teleporter 64 304 {"to":"27","playerx":"32","playery":"16","show":"0","tag":"-1","invert":"0"}
+teleporter 144 32 {"to":"25","playerx":"16","playery":"96","show":"0","tag":"-1","invert":"0"}
+teleporter 144 208 {"to":"28","playerx":"16","playery":"96","show":"0","tag":"-1","invert":"0"}
+pole 144 192 {}
+rock2 80 304 {}
+rock 0 96 {}
+rock2 0 112 {}
+rock2 16 96 {}
+rock2 128 192 {}
+rock2 128 80 {}
+pole 128 64 {}
+pole 144 64 {}
+rocklock 112 208 {"tset":"-1","tag":"0"}
+solids: tree:{"x":128,"y":0,"w":32,"h":32,"right":160,"bottom":32} tree:{"x":96,"y":0,"w":32,"h":32,"right":128,"bottom":32} tree:{"x":64,"y":0,"w":32,"h":32,"right":96,"bottom":32} tree:{"x":32,"y":0,"w":32,"h":32,"right":64,"bottom":32} tree:{"x":0,"y":0,"w":32,"h":32,"right":32,"bottom":32} tree:{"x":0,"y":32,"w":32,"h":32,"right":32,"bottom":64} tree:{"x":0,"y":64,"w":32,"h":32,"right":32,"bottom":96} tree:{"x":0,"y":128,"w":32,"h":32,"right":32,"bottom":160} tree:{"x":0,"y":160,"w":32,"h":32,"right":32,"bottom":192} tree:{"x":0,"y":192,"w":32,"h":32,"right":32,"bottom":224} tree:{"x":0,"y":224,"w":32,"h":32,"right":32,"bottom":256} tree:{"x":0,"y":256,"w":32,"h":32,"right":32,"bottom":288} tree:{"x":0,"y":288,"w":32,"h":32,"right":32,"bottom":320} tree:{"x":32,"y":288,"w":32,"h":32,"right":64,"bottom":320} tree:{"x":128,"y":288,"w":32,"h":32,"right":160,"bottom":320} tree:{"x":96,"y":288,"w":32,"h":32,"right":128,"bottom":320} tree:{"x":128,"y":256,"w":32,"h":32,"right":160,"bottom":288} tree:{"x":128,"y":224,"w":32,"h":32,"right":160,"bottom":256} tree:{"x":128,"y":128,"w":32,"h":32,"right":160,"bottom":160} pole:{"x":144,"y":48,"w":16,"h":16,"right":160,"bottom":64} pole:{"x":128,"y":48,"w":16,"h":16,"right":144,"bottom":64} pole:{"x":112,"y":48,"w":16,"h":16,"right":128,"bottom":64} pole:{"x":96,"y":48,"w":16,"h":16,"right":112,"bottom":64} pole:{"x":80,"y":48,"w":16,"h":16,"right":96,"bottom":64} tree:{"x":32,"y":32,"w":32,"h":32,"right":64,"bottom":64} dungeonspire:{"x":80,"y":288,"w":16,"h":16,"right":96,"bottom":304} tree:{"x":96,"y":160,"w":32,"h":32,"right":128,"bottom":192} tree:{"x":128,"y":96,"w":32,"h":32,"right":160,"bottom":128} tree:{"x":128,"y":160,"w":32,"h":32,"right":160,"bottom":192} pole:{"x":144,"y":192,"w":16,"h":16,"right":160,"bottom":208} rock2:{"x":80,"y":304,"w":16,"h":16,"right":96,"bottom":320} rock:{"x":0,"y":96,"w":16,"h":16,"right":16,"bottom":112} rock2:{"x":0,"y":112,"w":16,"h":16,"right":16,"bottom":128} rock2:{"x":16,"y":96,"w":16,"h":16,"right":32,"bottom":112} rock2:{"x":128,"y":192,"w":16,"h":16,"right":144,"bottom":208} rock2:{"x":128,"y":80,"w":16,"h":16,"right":144,"bottom":96} pole:{"x":128,"y":64,"w":16,"h":16,"right":144,"bottom":80} pole:{"x":144,"y":64,"w":16,"h":16,"right":160,"bottom":80} rocklock:{"x":112,"y":208,"w":16,"h":16,"right":128,"bottom":224}

@@ -1,0 +1,27 @@
+page-SHIELD2-YES-a.json ['hasShield', 'hasDarkShield'] ticks 926 samples 926 end L 28 maxhits 0 clears ['26:0'] firstHit None
+page-SHIELD2-YES-b.json ['hasShield', 'hasDarkShield'] ticks 926 samples 926 end L 28 maxhits 0 clears ['26:0'] firstHit None
+page-WAND-YES-a.json ['hasWand'] ticks 970 samples 969 end L 28 maxhits 0 clears ['26:0'] firstHit None
+page-WAND-YES-b.json ['hasWand'] ticks 970 samples 969 end L 28 maxhits 0 clears ['26:0'] firstHit None
+page-s-i0-b10-x70.json ['hasShield', 'hasDarkShield'] ticks 942 samples 943 end L 28 maxhits 0 clears ['26:0'] firstHit None
+page-s-i0-b9-x42.json ['hasShield', 'hasDarkShield'] ticks 926 samples 926 end L 28 maxhits 0 clears ['26:0'] firstHit None
+page-s-i1-b9-x70.json ['hasShield', 'hasDarkShield'] ticks 899 samples 899 end L 28 maxhits 0 clears ['26:0'] firstHit None
+page-spear-swordplan-a.json ['hasSpear'] ticks 688 samples 689 end L 28 maxhits 0 clears ['26:0'] firstHit None
+page-spear-swordplan-b.json ['hasSpear'] ticks 688 samples 689 end L 28 maxhits 0 clears ['26:0'] firstHit None
+page-sword+shield1-a.json ['hasSword', 'hasShield'] ticks 688 samples 689 end L 28 maxhits 0 clears ['26:0'] firstHit None
+page-sword+shield1-b.json ['hasSword', 'hasShield'] ticks 688 samples 689 end L 28 maxhits 0 clears ['26:0'] firstHit None
+page-sword-a.json ['hasSword'] ticks 688 samples 689 end L 28 maxhits 0 clears ['26:0'] firstHit None
+page-sword-b.json ['hasSword'] ticks 688 samples 689 end L 28 maxhits 0 clears ['26:0'] firstHit None
+page-w1-e15.json ['hasWand'] ticks 501 samples 502 end L 26 maxhits 1 clears [] firstHit [375, 26, 120.44159135223363, 105.43738202695668]
+page-w1-e16.json ['hasWand'] ticks 525 samples 526 end L 26 maxhits 2 clears [] firstHit [307, 26, 120.44159135223363, 100.69213746182454]
+page-w1a.json ['hasWand'] ticks 541 samples 542 end L 26 maxhits 2 clears [] firstHit [307, 26, 120.44159135223363, 100.69213746182454]
+page-w2-up12.json ['hasWand'] ticks 426 samples 427 end L 26 maxhits 1 clears [] firstHit [388, 26, 120.44159135223363, 86.60482099340437]
+page-w2-up8.json ['hasWand'] ticks 426 samples 427 end L 26 maxhits 1 clears [] firstHit [382, 26, 120.44159135223363, 91.1565921003636]
+page-w3-up10.json ['hasWand'] ticks 426 samples 426 end L 26 maxhits 0 clears [] firstHit None
+page-w3-up8.json ['hasWand'] ticks 426 samples 427 end L 26 maxhits 0 clears [] firstHit None
+page-w4-walk.json ['hasWand'] ticks 562 samples 562 end L 26 maxhits 0 clears [] firstHit None
+page-w5.json ['hasWand'] ticks 827 samples 821 end L 26 maxhits 2 clears [] firstHit [588, 26, 40.45756480443611, 148.87039353131237]
+page-w6.json ['hasWand'] ticks 835 samples 836 end L 26 maxhits 1 clears [] firstHit [709, 26, 41.79287376051025, 152.7667913681428]
+page-w7.json ['hasWand'] ticks 970 samples 971 end L 26 maxhits 1 clears ['26:0'] firstHit [709, 26, 41.79287376051025, 143.41679136814287]
+page-w8-up18.json ['hasWand'] ticks 970 samples 971 end L 26 maxhits 0 clears ['26:0'] firstHit None
+page-wand-swordplan-a.json ['hasWand'] ticks 688 samples 689 end L 25 maxhits 2 clears [] firstHit [337, 26, 112.44960194218382, 89.37683478638651]
+page-wand-swordplan-b.json ['hasWand'] ticks 688 samples 689 end L 25 maxhits 2 clears [] firstHit [337, 26, 112.44960194218382, 89.37683478638651]

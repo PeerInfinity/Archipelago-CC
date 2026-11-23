@@ -1,0 +1,1 @@
+[{"copy": [0, 140]}, {"hold": "down", "n": 1}, {"fire": {"every": 15, "count": 14}}, {"hold": "up", "n": 10}, {"hold": "down", "n": 2}, {"idle": 3}, {"fire": {"every": 15, "count": 4}}, {"hold": "left", "n": 34}, {"hold": "down", "n": 38}, {"hold": "left", "n": 34}, {"idle": 30}]
