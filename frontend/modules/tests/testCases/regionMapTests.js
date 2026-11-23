@@ -25,6 +25,10 @@ import { MIN_ZOOM } from '../../procgenCore/mapCamera.js';
 import { seedlingCompositeMapStats } from '../../flashPanel/seedlingCompositeMap.js';
 import { worldToScreen } from '../../procgenCore/mapCamera.js';
 import { squareAt } from '../../regionMap/regionMapOverlay.js';
+import { linkShape } from '../../regionMap/regionMapLinkGeometry.js';
+import mobileLayoutManager from '../../../app/core/mobileLayoutManager.js';
+import { completeModuleInfo } from '../../../app/initialization/completeModuleInfo.js';
+import { lookupModuleInfo } from '../../quickLaunch/quickLaunchCatalog.js';
 import { ZOOM_BUTTON_FACTOR, ZOOM_BUTTON_PX } from '../../regionMap/regionMapUI.js';
 import { REGION_MAP_CLICK_ACTIONS_KEY, regionOfCell } from '../../regionMap/regionMapClickActions.js';
 import { defaultClickActions, withInitialValues } from '../../regionView/clickActions.js';
@@ -692,6 +696,16 @@ export async function testRegionMapZoomPinchLinks(testController) {
     testController.reportCondition(`the neighbour lines are drawn (${d.lastPaint.neighbourLinks} = the model's ${wantNb}, > 0)`,
       wantNb > 0 && d.lastPaint.neighbourLinks === wantNb && d.neighbourLinks === wantNb);
     testController.reportCondition(`the cross-group lines are counted apart (${d.lastPaint.links} = ${m.links.length})`, d.lastPaint.links === m.links.length);
+    // ⛓ link-ends: how the lines END — a gap mark between adjacent cells, else a line clipped to the borders; an
+    // arrowhead on every kind but join. The wanted counts are the geometry module's own answer over the model.
+    const shapes = [...m.links, ...m.neighbourLinks].map((l) => linkShape(l, p.frames)).filter(Boolean);
+    const want = { gap: shapes.filter((q) => q.form === 'gap').length, line: shapes.filter((q) => q.form === 'line').length,
+      heads: shapes.filter((q) => q.head).length };
+    testController.log(`LINK ENDS: ${d.lastPaint.gapMarks} gap marks (want ${want.gap}), ${d.lastPaint.edgeLines} edge-clipped lines `
+      + `(want ${want.line}), ${d.lastPaint.arrowheads} arrowheads (want ${want.heads})`);
+    testController.reportCondition(`every link is drawn as a gap mark or a border-clipped line, as linkShape says (${d.lastPaint.gapMarks}/${d.lastPaint.edgeLines} = ${want.gap}/${want.line})`,
+      want.gap > 0 && d.lastPaint.gapMarks === want.gap && d.lastPaint.edgeLines === want.line);
+    testController.reportCondition(`no arrowhead on a join (${d.lastPaint.arrowheads} drawn = ${want.heads} non-join links)`, d.lastPaint.arrowheads === want.heads);
     await s.ctx.setSetting('moduleSettings.regionMap.showLinks', false);
     const off = await testController.pollForCondition(() => dbg().lastPaint.neighbourLinks === 0 && dbg().lastPaint.links === 0,
       'Links off draws none', 3000, 25);
@@ -1273,6 +1287,60 @@ export async function testRegionMapWatchSetBundle(testController) {
   });
 }
 
+/**
+ * region-map-link-ends: the Region Map's MOBILE tab sits right after the Region Graph's (⚖ the user 2026-11-22T21:55Z,
+ * "Yes, add it"). Any boot: the mobile tab order computed the way `mobileLayoutManager.determinePanelOrder` computes it,
+ * from the registry's own moduleInfo (as `layoutManager.js` `setupMobileLayout` registers it) and the served layout
+ * presets, on every preset. On a MOBILE boot (`npm test -- --layout=mobile`) also the live tab bar: the tab is next to
+ * the Region Graph's, a tap shows the panel, and it paints.
+ */
+export async function testRegionMapMobileTab(testController) {
+  try {
+    const presets = await (await fetch('./layout-configs/layout_presets.json', { cache: 'no-store' })).json();
+    const registry = [...centralRegistry.getAllPanelComponents()];
+    const info = lookupModuleInfo('regionMapPanel', centralRegistry.getAllPanelComponents().get('regionMapPanel')) ?? {};
+    testController.reportCondition(`the Region Map's moduleInfo names mobileAfter = regionGraphPanel (${JSON.stringify(info.mobileAfter ?? null)})`,
+      info.mobileAfter === 'regionGraphPanel');
+    // A scratch manager with the singleton's own methods: the live one (if any) is never touched.
+    const scratch = Object.create(Object.getPrototypeOf(mobileLayoutManager));
+    const results = [];
+    for (const id of Object.keys(presets)) {
+      Object.assign(scratch, { panels: new Map(), layoutPresets: presets, activeLayoutId: id, columnCount: 0 });
+      for (const [type, entry] of registry) {
+        scratch.registerPanel(type, entry.componentClass, type, completeModuleInfo(type, lookupModuleInfo(type, entry) ?? {}));
+      }
+      scratch.determinePanelOrder();
+      const col = scratch.columnPanels.find((c) => c.includes('regionMapPanel')) ?? [];
+      const ok = scratch.panelOrder.filter((t) => t === 'regionMapPanel').length === 1
+        && col[col.indexOf('regionGraphPanel') + 1] === 'regionMapPanel';
+      results.push(`${id}:${ok ? 'next' : 'NOT'}`);
+    }
+    testController.log(`MOBILE ORDER per preset: ${results.join(' ')}`);
+    testController.reportCondition(`on every layout preset the Region Map tab follows the Region Graph's, once (${results.length} presets)`,
+      results.length > 0 && results.every((r) => r.endsWith(':next')));
+
+    const mobile = document.body.classList.contains('mobile-layout-active');
+    testController.log(`boot layout: ${mobile ? 'MOBILE' : 'desktop'} (${window.innerWidth} × ${window.innerHeight})`);
+    if (!mobile) return testController.getOverallResult();
+    const m = mobileLayoutManager;
+    const before = m.activePanel;
+    m.showPanel('regionGraphPanel');
+    const tabs = () => [...document.querySelectorAll('.mobile-tab-bar .mobile-tab')].map((t) => t.dataset.componentType);
+    const t = tabs();
+    testController.log(`LIVE TABS (Region Graph's column): ${t.join(', ')}`);
+    testController.reportCondition('the live tab bar shows the Region Map tab right after the Region Graph\'s',
+      t[t.indexOf('regionGraphPanel') + 1] === 'regionMapPanel' && t.filter((x) => x === 'regionMapPanel').length === 1);
+    document.querySelector('.mobile-tab[data-component-type="regionMapPanel"]')?.click();
+    const shown = await testController.pollForCondition(() => m.activePanel === 'regionMapPanel'
+      && (getPanelInstances()[0]?.getDebugState()?.lastPaint?.cells ?? 0) > 0, 'the Region Map shows and paints', 20000, 50);
+    testController.reportCondition('a tap on the tab shows the Region Map, and it paints', shown);
+    if (before && m.panels.has(before)) m.showPanel(before);
+  } catch (error) {
+    testController.reportCondition(`mobile tab row error-free: ${error.message}`, false);
+  }
+  return testController.getOverallResult();
+}
+
 registerTest({
   id: 'region-map-classic-world',
   name: 'Region Map: a classic AP world (no grid_cell, no hook)',
@@ -1287,7 +1355,15 @@ registerTest({
   category: 'Region Map',
   testFunction: testRegionMapZoomPinchLinks,
   enabled: false,
-  description: 'zoom-links: + and − zoom by ZOOM_BUTTON_FACTOR and untick Follow; a two-pointer pinch zooms by the distance ratio and fires no click; the neighbour lines drawn are the model\'s, counted apart from the cross-group links, under the Links box',
+  description: 'zoom-links: + and − zoom by ZOOM_BUTTON_FACTOR and untick Follow; a two-pointer pinch zooms by the distance ratio and fires no click; the neighbour lines drawn are the model\'s, counted apart from the cross-group links, under the Links box; link-ends: gap marks / border-clipped lines / arrowheads as linkShape says',
+});
+registerTest({
+  id: 'region-map-mobile-tab',
+  name: 'Region Map: the mobile tab sits next to the Region Graph\'s',
+  category: 'Region Map',
+  testFunction: testRegionMapMobileTab,
+  enabled: false,
+  description: 'link-ends: from the registry\'s moduleInfo and the served presets, the mobile tab order puts the Region Map right after the Region Graph on every preset; on a --layout=mobile boot, the live tab is there and a tap shows and paints the panel',
 });
 registerTest({
   id: 'region-map-seedling-paints',
