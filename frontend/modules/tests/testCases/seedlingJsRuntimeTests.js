@@ -3531,6 +3531,25 @@ for (const [id, name, fn, description] of [
 }
 
 /**
+ * ⛓ seedling-p4h-capability-plumbing — the p4h model-build row (its body is beside the p4h smoke row, below) is
+ * REGISTERED HERE, right after the cross-atlas row, on purpose: like that row it ends on `atlasPresetOn(ATLAS_PATH)`'s
+ * panel, and measured, a row that does leaves the lab-apworld door-set rows red when it runs JUST BEFORE them
+ * (`…door-set-starts-no-game`: "the Flash panel answered this load" STUCK — the cross-atlas row does it too, locally
+ * at df7e0374b8). Registered here, the rows that already follow the cross-atlas row follow it as well.
+ */
+registerTest({
+    id: 'seedling-wasm-runtime-p4h-model-build',
+    name: 'Seedling wasm: the panel tells the model which build runs (p4h: boss draws; the default: none)',
+    description: 'seedling-p4h-capability-plumbing: the atlas preset booted on the p4h candidate (its flash_panel.wasm '
+        + 'rewritten) and then on the manifest\'s default; each time the surface\'s modelCapabilities is the build\'s '
+        + 'manifest row and the controller\'s wasm playback engine answers modelBuild() = that list with bossDraws true on '
+        + 'p4h, false on the default.',
+    testFunction: seedlingWasmP4hModelBuild,
+    category: seedlingRuntimeCategory('seedling-wasm-runtime-p4h-model-build'),
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
  * ⛓ GRAPHICS G6 — the effects switch in a real browser: `jsRuntime.html?graphics=seedling` (room mode; lights and
  * effects ON by default under a stack) mounted STANDALONE in the row's own iframe and driven through its own
  * `__swfBridge`: to `Game(61, 104, 144)` (Dungeon 6's rain), where `set({ effects: 'off' })` LIVE leaves no drop
@@ -6160,18 +6179,6 @@ async function seedlingWasmP4hModelBuild(tc) {
         tc.assertEqual(`[${def.name}] (the default) the model answers declaresBossDraws === false`, false, g?.bossDraws ?? null);
     });
 }
-
-registerTest({
-    id: 'seedling-wasm-runtime-p4h-model-build',
-    name: 'Seedling wasm: the panel tells the model which build runs (p4h: boss draws; the default: none)',
-    description: 'seedling-p4h-capability-plumbing: the atlas preset booted on the p4h candidate (its flash_panel.wasm '
-        + 'rewritten) and then on the manifest\'s default; each time the surface\'s modelCapabilities is the build\'s '
-        + 'manifest row and the controller\'s wasm playback engine answers modelBuild() = that list with bossDraws true on '
-        + 'p4h, false on the default.',
-    testFunction: seedlingWasmP4hModelBuild,
-    category: seedlingRuntimeCategory('seedling-wasm-runtime-p4h-model-build'),
-    enabled: false, // off by default — runs only in the test-substrates mode
-});
 
 registerTest({
     id: 'seedling-wasm-runtime-p4h-candidate-smoke',
