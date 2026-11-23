@@ -383,15 +383,17 @@ describe('the corpus census — printed, then pinned', () => {
          *              added → its own § The node states and the node card and § The bot planner (`same-doc` 43 → 45).
          *   448 → 450  content sets GEN-1 (2026-11-22): maze.md's tile-kind paragraph → its own new § Region biomes
          *              (`same-doc` 45 → 46), and substrate-registry.md's new `regionBiomeOf` row → it (`doc` 337 → 338).
+         *   450 → 452  document library B3 (2026-11-23): editing-core.md § The document library → seedling-editor.md
+         *              § Saving to the library, and that section → editing-core.md § The document library (`doc` 338 → 340).
          */
         expect(by).toEqual({
             'same-doc': 46,
-            doc: 338,
+            doc: 340,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(450);
+        expect(CORPUS.length).toBe(452);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
@@ -408,7 +410,8 @@ describe('the corpus census — printed, then pinned', () => {
         //   332 → 337: rule-table-doc-command — seedling-derived-rules.md (its index row, 2 links out) and the two
         //   links in to it from maze.md and pipeline-presets.md (5 doc).
         //   337 → 338: content sets GEN-1 — the registry's `regionBiomeOf` row → maze.md § Region biomes (1 doc).
-        expect(docs).toHaveLength(338);
+        //   338 → 340: document library B3 — editing-core.md ↔ seedling-editor.md § Saving to the library (2 doc).
+        expect(docs).toHaveLength(340);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);
