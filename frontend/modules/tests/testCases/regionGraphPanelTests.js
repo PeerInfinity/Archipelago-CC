@@ -4,6 +4,9 @@ import { buildContext } from '../../tutorials/tutorialContext.js';
 import { PICKER } from '../../regionGraph/nodePicker.js';
 import { locationState, isRegionReachable } from '../../regionView/regionViewModel.js';
 import settingsManager from '../../../app/core/settingsManager.js';
+import { getLastRawJsonData } from '../../stateManager/index.js';
+import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
+import { SUB_REGION_VIEW_KEY, multiMemberGroups, isRegionGroupNode, groupNodeId } from '../../regionGraph/subRegionGroups.js';
 
 const PANEL_ID = 'regionGraphPanel';
 const MAX_WAIT_TIME = 10000;
@@ -534,6 +537,117 @@ export async function testRegionGraphLocationNodesSurviveRebuild(testController)
   return testController.getOverallResult();
 }
 
+/* ── region-graph-groups-a: subRegionView = nested (option A) ───────────── */
+
+/**
+ * ⛓ subRegionView = nested on seedling_playthrough. The row SETS the setting itself (session-only, `ctx.setSetting`) and
+ * RESTORES it at the end (`ctx.restoreSettings`: the override is cleared, the stored value / schema default applies), and
+ * checks the graph is back to no boxes: a leaked `nested` would change every later Region Graph row.
+ * The box count is DERIVED at run time (the same fold, `multiMemberGroups`, over the loaded rules and the live substrate
+ * registry), never a preset pin. Then a tap on a box runs nothing, and a tap on a member runs its click action (the
+ * default actions: the path extends to it), once.
+ */
+export async function testRegionGraphSubRegionNested(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  let rec = null;
+  let moved = false;
+  const boxes = () => graphCy()?.nodes().filter((n) => isRegionGroupNode(n)) ?? null;
+  try {
+    if (!await ctx.isPresetLoaded('seedling_playthrough', 1)) { await ctx.loadPreset('seedling_playthrough', 1); moved = true; }
+    testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    const built = await testController.pollForCondition(graphShowsWorld, 'the graph shows seedling_playthrough', MAX_WAIT_TIME, 100);
+    if (!built) throw new Error('the graph did not build');
+    const startView = await settingsManager.getSetting(SUB_REGION_VIEW_KEY);
+    testController.reportCondition(`subRegionView starts at the schema default "separate" (it is "${startView}")`, startView === 'separate');
+    testController.reportCondition(`separate draws no box (${boxes()?.length})`, boxes()?.length === 0);
+
+    const regions = stateManagerProxySingleton.getStaticData().regions;
+    const last = getLastRawJsonData();
+    const expected = multiMemberGroups(regions.keys(), { rules: last?.rawJsonData,
+      playerId: String(last?.selectedPlayerInfo?.playerId ?? '1'), registry: substrateRegistry });
+    if (expected.size === 0) throw new Error('the fold found no group of 2+ (is the Seedling substrate registered?)');
+
+    // Switch: a moduleSettings.regionGraph.* write rebuilds the graph.
+    const probe = regionNodes(graphCy())[0];
+    const t0 = performance.now();
+    await ctx.setSetting(SUB_REGION_VIEW_KEY, 'nested');
+    const nested = await testController.pollForCondition(() => !!probe?.removed() && graphShowsWorld() && boxes()?.length === expected.size,
+      `the graph rebuilt with ${expected.size} boxes`, MAX_WAIT_TIME, 50);
+    const switchMs = Math.round(performance.now() - t0);
+    testController.reportCondition(`nested draws one box per display group of 2+: ${boxes()?.length} = ${expected.size} (switch ${switchMs} ms)`, nested);
+    const cy = graphCy();
+    const inside = regionNodes(cy).filter((n) => n.isChild()).length;
+    const membersExpected = [...expected.values()].reduce((a, m) => a + m.length, 0);
+    testController.reportCondition(`every member is inside its box: ${inside} = ${membersExpected}`, inside === membersExpected
+      && [...expected].every(([key, members]) => members.every((m) => cy.getElementById(m).parent().id() === groupNodeId(key))));
+    testController.log(`[subRegionView] seedling_playthrough nested: boxes=${boxes().length} inside=${inside} groupsOfOne=${regionNodes(cy).length - inside} switchMs=${switchMs}`);
+
+    // Clicks: the default actions (session-only).
+    const { defaultClickActions } = await import('../../regionView/clickActions.js');
+    await ctx.setSetting(CLICK_ACTIONS, defaultClickActions());
+    await testController.pollForCondition(() => stripSummary().startsWith('On click:'), 'the strip shows the click actions', 5000, 50);
+    rec = recordEvents(testController, ['regionView:regionClicked']);
+    const box = boxes()[0];
+    box.emit('tap');
+    await new Promise((r) => setTimeout(r, 300));
+    testController.reportCondition(`a tap on box "${box.data('groupKey')}" runs no click (${rec.seen.length} regionClicked)`, rec.seen.length === 0);
+
+    const member = await nearestReachableMember(testController, cy);
+    if (!member) throw new Error(`no reachable member region within reach of the path end (${await pathEnd()})`);
+    const region = member.id();
+    member.emit('tap');
+    const extended = await testController.pollForCondition(async () => (await pathEnd()) === region,
+      `the path ends at ${region}`, 5000, 50);
+    testController.reportCondition(`a tap on member "${region}" (in box "${member.parent().data('groupKey')}") runs its click action: the path extends to it`, extended);
+    testController.reportCondition(`… and the click is published once, for the member (${rec.seen.map(([, d]) => d?.regionName).join(', ')})`,
+      rec.seen.length === 1 && rec.seen[0][1]?.regionName === region);
+    moved = true;
+  } catch (error) {
+    testController.reportCondition(`subRegionView nested test error-free: ${error.message}`, false);
+  } finally {
+    rec?.stop();
+    await ctx.restoreSettings();
+    const restored = await settingsManager.getSetting(SUB_REGION_VIEW_KEY);
+    const back = await testController.pollForCondition(() => graphShowsWorld() && boxes()?.length === 0,
+      'the graph rebuilt with no box', MAX_WAIT_TIME, 50);
+    testController.reportCondition(`restored: subRegionView reads "${restored}" again and the graph draws no box`, restored === 'separate' && back);
+    await restoreWorld(testController, ctx, before, { always: moved });
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
+/**
+ * The nearest REACHABLE region inside a box (a compound child), not the path end, walking out from the path end along
+ * the graph's ACCESSIBLE edges (a two-way edge both ways, a one-way edge forward), sorted per ring for a stable pick.
+ * Reachability is read from the snapshot. Polled: the first snapshot can arrive after the build.
+ */
+async function nearestReachableMember(testController, cy) {
+  let found = null;
+  await testController.pollForCondition(async () => {
+    const end = await pathEnd();
+    const snapshot = stateManagerProxySingleton.getLatestStateSnapshot?.();
+    if (!cy.getElementById(end)?.length || !snapshot) return false;
+    const seen = new Set([end]);
+    let ring = [end];
+    while (ring.length && !found) {
+      const next = new Set();
+      for (const id of ring) {
+        cy.getElementById(id).connectedEdges('.accessible').forEach((e) => {
+          const s = e.source().id(); const t = e.target().id();
+          const to = s === id ? t : (e.data('isBidirectional') ? s : null);
+          if (to && !seen.has(to) && isRegionReachable(snapshot, to)) { seen.add(to); next.add(to); }
+        });
+      }
+      ring = [...next].sort();
+      found = ring.map((id) => cy.getElementById(id)).find((n) => n.isChild() && !n.hasClass('discovery-hidden')) ?? null;
+    }
+    return !!found;
+  }, 'a reachable member region near the path end', MAX_WAIT_TIME, 100);
+  return found;
+}
+
 /* ── CA-S2: the "On click" strip and the click actions ─────────────────── */
 
 const CLICK_ACTIONS = 'moduleSettings.regionGraph.clickActions';
@@ -921,6 +1035,15 @@ registerTest({
   testFunction: testRegionGraphLocationNodesSurviveRebuild,
   enabled: false, // runs where a roster enrols it (the substrates config)
   description: 'force-show written through the settings draws the location nodes, and a later moduleSettings.regionGraph.* write (which rebuilds the graph) leaves them drawn'
+});
+
+registerTest({
+  id: 'test_region_graph_sub_region_nested',
+  name: 'Region Graph: sub-regions nested in region boxes (subRegionView = nested)',
+  category: 'Region Graph',
+  testFunction: testRegionGraphSubRegionNested,
+  enabled: false, // runs where a roster enrols it (the substrates config)
+  description: 'region-graph-groups-a: on seedling_playthrough, subRegionView = nested (session-only) draws one box per display group of 2+ with its members inside; a box tap runs nothing, a member tap runs its click action; the setting is restored and the boxes go'
 });
 
 registerTest({

@@ -2253,6 +2253,12 @@
             "_comment": "REGION GRAPH CHECKS (2026-11-18): the location-node rebuild bug. force-show written through the settings draws the location nodes, and a later moduleSettings.regionGraph.* write (which rebuilds the graph) leaves them drawn; restores both settings. On push (fast batch)."
         },
         {
+            "id": "test_region_graph_sub_region_nested",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "REGION GRAPH GROUPS A (2026-11-23): on seedling_playthrough, subRegionView = nested (set session-only by the row, restored at its end) draws one compound box per display group of 2+ (count DERIVED from the same fold at run time), members inside; a box tap runs no click, a member tap runs its click action (default actions: the path extends to it) once; restored, the graph draws no box. Runs right before test_region_graph_click_default. Reloads the world loaded before. On push (fast batch)."
+        },
+        {
             "id": "test_region_graph_click_default",
             "enabled": true,
             "category": "Region Graph",
