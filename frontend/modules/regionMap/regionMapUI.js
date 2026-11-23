@@ -38,7 +38,9 @@ import { atLeast, linkShape } from './regionMapLinkGeometry.js';
 import {
     centreOn, easeCamera, fitCamera, panBy, screenToWorld, viewRect, worldToScreen, zoomAround,
 } from '../procgenCore/mapCamera.js';
-import { SQUARE_COLORS, frameSquares, squareAt, squareColorKey } from './regionMapOverlay.js';
+import {
+    DOOR_RING_WIDTH_PX, LABEL_MIN_CELL_PX, SQUARE_COLORS, doorRingRadius, frameSquares, labelFontPx, squareAt, squareColorKey,
+} from './regionMapOverlay.js';
 import { REGION_MAP_SETTING_DEFAULTS, SETTINGS_PREFIX, moduleHandles, panelInstances } from './regionMapSettings.js';
 import {
     PANEL_ID, REGION_MAP_CLICK_ACTIONS_KEY, loadRegionMapClickActions, regionOfCell, runRegionMapClick,
@@ -67,14 +69,15 @@ export const GAP_MARK_MAX_WIDTH_PX = 6;
 export const GAP_MARK_ALPHA = 0.9;
 /**
  * ⛓ THE DOOR RING (art-ends): a line that ends at a door tile (`linkShape` `ends.* === 'tile'`) runs over its level's
- * art, and the tile is ≈ 1.6 screen px at Fit all on Seedling. So that end gets a hollow ring centred on the tile: radius
- * three quarters of a tile on screen, between `DOOR_RING_MIN_R_PX` and `DOOR_RING_MAX_R_PX`, a dark halo under a
+ * art. So that end gets a hollow ring centred on the tile, a dark halo (`DOOR_RING_WIDTH_PX` + 2) under a
  * `DOOR_RING_WIDTH_PX` stroke in the link's colour. Hollow, so it does not hide the door (or read as a location square).
  * A `to` end with an arrowhead gets NO ring: the head marks that door, its tip on the tile's centre, outlined dark.
+ *
+ * The ring's size: `doorRingRadius` (regionMapOverlay) — never larger than its tile, skipped when too small.
  */
-export const DOOR_RING_MIN_R_PX = 3.5;
-export const DOOR_RING_MAX_R_PX = 9;
-export const DOOR_RING_WIDTH_PX = 1.5;
+export {
+    DOOR_RING_HALO_HALF_PX, DOOR_RING_MAX_R_PX, DOOR_RING_SKIP_R_PX, DOOR_RING_WIDTH_PX, doorRingRadius,
+} from './regionMapOverlay.js';
 /** A line's arrowhead length in screen px (a gap mark's is shortened to fit its mark). */
 export const LINE_HEAD_PX = 8;
 /** The toolbar legend, one swatch per `procgenCore/regionLayout.js` LINK_KINDS kind (region-map placement (A)). */
@@ -783,7 +786,7 @@ export class RegionMapUI {
         ctx.fillRect(0, 0, vp.w, vp.h);
         const stats = {
             cells: 0, art: 0, generic: 0, fogged: 0, hidden: 0, links: 0, neighbourLinks: 0, gapMarks: 0, edgeLines: 0, arrowheads: 0,
-            tileEnds: 0, artEnds: 0, centreEnds: 0, shortHeads: 0, keys: [],
+            tileEnds: 0, artEnds: 0, centreEnds: 0, shortHeads: 0, doorRings: 0, doorRingsSkipped: 0, ringR: null, keys: [],
         };
         // ⛓ A DOM readout of the zoom painted (zoom-links): a step's `done` reads no instance.
         this.canvas.dataset.zoom = String(cam.zoom);
@@ -878,10 +881,11 @@ export class RegionMapUI {
     _drawLabel(ctx, f) {
         const cam = this.camera;
         const cw = f.cell.w * cam.zoom;
-        if (cw < 60) return;
+        if (cw < LABEL_MIN_CELL_PX) return;
         const c = worldToScreen(cam, this.vp, f.cell.x, f.cell.y);
         const cell = this.model.cells.get(f.key);
-        const size = Math.max(9, Math.min(13, cw / 14));
+        // ⛓ the geometry `genericLocationTiles` keeps its squares clear of (regionMapOverlay `labelBottomPx`)
+        const size = labelFontPx(cw);
         ctx.font = `${size}px sans-serif`;
         const text = f.key.length > 40 ? `${f.key.slice(0, 39)}…` : f.key;
         const tw = Math.min(ctx.measureText(text).width, cw - 4);
@@ -972,12 +976,16 @@ export class RegionMapUI {
                 for (const [which, pt] of [['from', sa], ['to', sb]]) {
                     const e = shape.ends?.[which];
                     const tilePx = this.frames.get(l[which])?.tilePx ?? WORLD_TILE_PX;
-                    const r = Math.max(DOOR_RING_MIN_R_PX, Math.min(DOOR_RING_MAX_R_PX, tilePx * zoom * 0.75));
+                    const r = doorRingRadius(tilePx * zoom);
                     if (e === 'tile') stats.tileEnds += 1;
                     else if (e === 'art') stats.artEnds += 1;
                     else stats.centreEnds += 1;
                     // A headed `to` end: the arrowhead marks the door (its tip on the tile's centre), no ring under it.
                     if (e !== 'tile' || (which === 'to' && shape.head)) continue;
+                    // ⛓ never larger than the tile: too small → no ring at all (`doorRingRadius`).
+                    if (r == null) { stats.doorRingsSkipped += 1; continue; }
+                    stats.doorRings += 1;
+                    stats.ringR = r;
                     ctx.globalAlpha = 1;
                     ctx.beginPath();
                     ctx.arc(pt.x, pt.y, r, 0, Math.PI * 2);
