@@ -105,7 +105,7 @@ describe('the arrowhead rule and the shape of a link', () => {
     it('diagonal neighbours (corner) are not adjacent: a clipped line', () => {
         expect(linkShape({ from: 'A', to: 'D', kind: 'join' }, frames).form).toBe('line');
     });
-    it('not adjacent: a line clipped to both borders, centre to centre with no doors', () => {
+    it('not adjacent: a line clipped to both ARTS (here equal to the cells), centre to centre with no doors', () => {
         const s = linkShape({ from: 'A', to: 'C', kind: 'warp', a: null, b: null }, frames);
         const fa = frames.get('A').cell;
         const fc = frames.get('C').cell;

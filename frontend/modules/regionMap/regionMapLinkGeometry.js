@@ -8,7 +8,8 @@
  * adjacent, I would like the arrow to end at the edge of the square, not the middle of the square, if possible."*
  * And at 21:55Z, "No arrowhead on joins": an edge transition (`join`) has no arrowhead; down / up / warp keep theirs.
  *
- * "The square" is the CELL (`f.cell`): the rectangle the panel strokes in `COLORS.cellBorder`, the one a reader sees.
+ * Adjacency is on the CELL (`f.cell`): the rectangle the panel strokes in `COLORS.cellBorder`. A LINE between cells that
+ * are not adjacent ends at the level ART or at the door tile (region-map art-ends; see `linkShape`).
  *
  * ⛓ THE ADJACENCY RULE (`cellsAdjacent`): two cells are adjacent when they face each other across ONE gap of at most
  * `tol` world px (default `GUTTER_PX`, the gutter between two neighbouring slots; the gap between GROUPS is
@@ -88,13 +89,14 @@ export function segmentInRect(p, q, r) {
 }
 
 /**
- * The line from `p` (in the source cell `ra`) toward `q` (in the target `rb`), cut so it starts where it LEAVES the
- * source cell and ends where it ENTERS the target cell. The direction is p→q's, unchanged. A point outside its own
+ * The line from `p` (in the source rectangle `ra`) toward `q` (in the target `rb`), cut so it starts where it LEAVES
+ * `ra` and ends where it ENTERS `rb`; a null rectangle leaves that end uncut. The direction is p→q's, unchanged. A point outside its own
  * cell is kept as it is. If the cut would leave nothing (overlapping cells), the uncut segment is returned.
  * @returns {{x0:number,y0:number,x1:number,y1:number, clipped:boolean}}
  */
 export function clipBetweenRects(p, q, ra, rb) {
-    const at = (t) => ({ x: p.x + (q.x - p.x) * t, y: p.y + (q.y - p.y) * t });
+    // t = 0 / 1 return p / q themselves (an unclipped end is EXACTLY its point: a door tile's centre).
+    const at = (t) => (t <= 0 ? { x: p.x, y: p.y } : t >= 1 ? { x: q.x, y: q.y } : { x: p.x + (q.x - p.x) * t, y: p.y + (q.y - p.y) * t });
     const sa = ra ? segmentInRect(p, q, ra) : null;
     const sb = rb ? segmentInRect(p, q, rb) : null;
     const tStart = sa && sa[0] <= EPS ? sa[1] : 0;
@@ -108,11 +110,30 @@ export function clipBetweenRects(p, q, ra, rb) {
 /** ⛓ An arrowhead on a link of this kind? Every kind but `join` (⚖ "No arrowhead on joins"). */
 export const linkHasArrowhead = (kind) => (kind ?? 'join') !== 'join';
 
+/** The drawn level ART's rectangle (`f.x / y / w / h`), as opposed to the cell around it (`f.cell`). */
+export const artRect = (f) => ({ x: f.x, y: f.y, w: f.w, h: f.h });
+
 /**
  * ⛓⛓ **THE ONE ANSWER FOR A LINK'S DRAWN SHAPE** — the panel draws it, the census counts it.
+ *
+ * Adjacent cells (`cellsAdjacent` on `f.cell`): a GAP mark, unchanged since link-ends.
+ *
+ * Otherwise a LINE (⚖ the user, session 84c8ab35, 2026-11-23T01:20:20.902Z: *"End lines at the art. Also, if the arrows
+ * have a known source or destination tile, then the arrow should start or end at that tile, if possible."*):
+ *   · each end's AIM point is its door tile's CENTRE (`link.a` in `from`'s level, `link.b` in `to`'s: the link's OWN
+ *     exit and its reciprocal, as the model reads them — never "the nearest" of several), else its art's centre;
+ *     A door tile counts only on a frame whose extent is real (not `ext.estimated`): see below;
+ *   · an end WITH a door tile is that tile's centre: not clipped (the line runs over its own level's art to the door);
+ *   · an end WITHOUT one is clipped to its level's ART rectangle (`artRect`, not `f.cell`), on the straight line
+ *     between the two aim points. So a tile → no-tile link runs from the tile toward the other art's centre and stops
+ *     on that art's border; no-tile → tile runs from where the line leaves its own art to the tile.
+ *   · the arrowhead (down / up / warp) has its tip at the `to` end: the door tile's centre, or the art's border.
+ * `ends.from` / `ends.to`: 'tile' (a door tile's centre), 'art' (clipped to the art's border) or 'centre' (no tile
+ * and nothing to clip: the art centre, kept — the census lists these).
  * @param {{from:string,to:string,kind?:string,a?:number[]|null,b?:number[]|null}} link
  * @param {Map<string,object>} frames  `cellFrames` output
- * @returns {null|{form:'gap'|'line', seg:{x0,y0,x1,y1}, head:boolean, axis?:'x'|'y'}}  null when an end has no frame
+ * @returns {null|{form:'gap'|'line', seg:{x0,y0,x1,y1}, head:boolean, axis?:'x'|'y', ends?:{from:string,to:string}}}
+ *   null when an end has no frame
  */
 export function linkShape(link, frames, tol = GUTTER_PX) {
     const fa = frames.get(link.from);
@@ -125,8 +146,19 @@ export function linkShape(link, frames, tol = GUTTER_PX) {
     const adj = cellsAdjacent(fa.cell, fb.cell, tol);
     if (adj) return { form: 'gap', seg: gapSegment(adj, da, db), head, axis: adj.axis };
     const centre = (f) => ({ x: f.x + f.w / 2, y: f.y + f.h / 2 });
-    const { clipped: _c, ...seg } = clipBetweenRects(da ?? centre(fa), db ?? centre(fb), fa.cell, fb.cell);
-    return { form: 'line', seg, head };
+    // A door tile is only a place on a level whose extent is REAL: an `estimated` frame (no extent from the substrate,
+    // drawn as a `DEFAULT_EXTENT` square) has no true spot for it, so that end is clipped to the art instead.
+    const ta = da && !fa.ext?.estimated ? da : null;
+    const tb = db && !fb.ext?.estimated ? db : null;
+    const p = ta ?? centre(fa);
+    const q = tb ?? centre(fb);
+    const { clipped: _c, ...seg } = clipBetweenRects(p, q, ta ? null : artRect(fa), tb ? null : artRect(fb));
+    const moved = (x, y, r) => Math.abs(x - r.x) > EPS || Math.abs(y - r.y) > EPS;
+    const ends = {
+        from: ta ? 'tile' : moved(seg.x0, seg.y0, p) ? 'art' : 'centre',
+        to: tb ? 'tile' : moved(seg.x1, seg.y1, q) ? 'art' : 'centre',
+    };
+    return { form: 'line', seg, head, ends };
 }
 
 /**
