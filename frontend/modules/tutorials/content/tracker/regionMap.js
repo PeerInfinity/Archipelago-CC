@@ -25,6 +25,8 @@ const stripSummary = map('.region-map-click-strip-host .click-actions-strip-summ
 const actionBox = (id) => map(`.region-map-click-strip-host input[type="checkbox"][data-action-id="${id}"]`);
 const pick = map('details.region-map-pick');
 const pickStatus = map('.region-map-pick-status');
+const zoomIn = map('button.region-map-zoom-in');
+const zoomOut = map('button.region-map-zoom-out');
 
 /** The strip's collapsed summary with the default click actions (CA-S5 §7). */
 export const DEFAULT_SUMMARY = 'On click: extend path · Regions — location: check';
@@ -84,15 +86,24 @@ export const TRACKER_REGION_MAP = Object.freeze({
                 {
                     step: {
                         id: 'fit-all',
-                        text: 'Drag to pan and scroll to zoom. Press **Fit all** for the whole map. Moving the view yourself turns **Follow player** off.',
+                        text: 'Drag to pan. To zoom, scroll the mouse wheel, press **+** and **−** beside **Fit all**, or, on a phone or a touch screen, pinch with two fingers. Press **Fit all** for the whole map. Moving the view yourself turns **Follow player** off.',
                         actions: [{ click: map('button.region-map-fit-all') }],
                         done: (ctx) => ctx.query(follow)?.checked === false,
                     },
                 },
                 {
                     step: {
+                        id: 'zoom-buttons',
+                        text: 'Press **+** to zoom in on the middle of the view, then **−** to zoom back out. Each press is a few notches of the wheel.',
+                        actions: [{ click: zoomIn }, { click: zoomOut }],
+                        // The panel stamps the press (`canvas.dataset.zoomedAt`) and paints its zoom (`dataset.zoom`).
+                        done: (ctx) => ctx.sinceStep(ctx.query(canvas)?.dataset.zoomedAt) && Number(ctx.query(canvas)?.dataset.zoom) > 0,
+                    },
+                },
+                {
+                    step: {
                         id: 'groups',
-                        text: 'Levels you walk between, off one edge and into the next, sit side by side as a **group**. Links join the groups: blue goes **down**, orange goes **up**. A **warp** (a door or a teleporter) is a dashed green link, never a neighbour. The legend in the controls names them, and **Links** turns them off.',
+                        text: 'Levels you walk between, off one edge and into the next, sit side by side as a **group**, and a **yellow** line joins each pair of neighbours you walk between (the *edge transition* in the legend). Links join the groups: blue goes **down**, orange goes **up**. A **warp** (a door or a teleporter) is a dashed green link, never a neighbour. The legend in the controls names them, and **Links** turns them all off.',
                         done: (ctx) => ctx.query(map('.region-map-show-links input[type="checkbox"]'))?.checked === true
                             && ctx.exists(map('.region-map-link-legend-join')) && ctx.exists(map('.region-map-link-legend-warp'))
                             && /\b\d+ group\(s\)/.test(ctx.text(info)),

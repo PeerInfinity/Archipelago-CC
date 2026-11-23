@@ -305,7 +305,10 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
             + 'that concept\'s item. `pass: "one-way"` (PASS-3) carries `dirs`, the move directions that may enter, '
             + 'and the cell holds an `entry_gates` row of `gate: null` for every other direction. So no rule, location or '
             + 'reachability reader sees the '
-            + 'field itself: they see the wall. Written by the maze editor (`setTileKind`); drawn through the tile '
+            + 'field itself: they see the wall. Written by the maze editor (`setTileKind`), or by the generator in a '
+            + 'room of the "Randomly placed tiles" biome (content sets GEN-1, `mazeTileKindsGen.js`: walkable and blocked '
+            + 'kinds a "what exists" pack opts in, each kept only where the compiled rules stay exactly as they were); '
+            + 'drawn through the tile '
             + 'fallback chain. `serializeMazeWorld` OMITS the key when there are none, and `pass` when it is walkable, '
             + 'so a world without kinds, or with walkable ones only, is byte-equal (`mazeTileKinds.js`).',
         schema: Object.freeze({

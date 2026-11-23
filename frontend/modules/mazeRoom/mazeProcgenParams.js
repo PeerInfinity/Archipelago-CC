@@ -32,6 +32,10 @@
  */
 
 import { fieldRow, numberField } from '../procgenCore/regionGenerationForm.js';
+import { BIOMES } from '../procgenCore/skeletonKinds.js';
+import {
+    MAZE_BIOME_KEY, REGION_BIOMES, TILE_KINDS_DOMAINS, TILE_KINDS_KEY, mazeBiomeIds, placesTileKinds,
+} from './mazeRegionBiomes.js';
 
 // ── Panel parameter defaults ────────────────────────────────────────
 export const DEFAULT_MAZE_PROCGEN_PARAMS = Object.freeze({
@@ -67,6 +71,109 @@ export const MAZE_ARRIVALS = Object.freeze(['zone', 'region']);
 
 /** ⛓ The class the *Maze rooms play as* row carries (the R1 pins splice it out by it). */
 export const MAZE_ARRIVAL_ROW_CLASS = 'procgen-pipeline-maze-arrival-row';
+
+/** ⛓ CONTENT SETS GEN-1 — the class the *Maze biome* block carries (the R1 pins splice it out by it, as the arrival row). */
+export const MAZE_BIOME_ROW_CLASS = 'procgen-pipeline-maze-biome-row';
+
+/** The rows the *Maze biome* list editor shows for a bag: one `{id, weight}` per row (`classic` alone by default). */
+export function mazeBiomeRows(params) {
+    const v = params?.[MAZE_BIOME_KEY];
+    if (typeof v === 'string' && v) return [{ id: v, weight: 1 }];
+    if (Array.isArray(v) && v.length) return v.map((r) => (typeof r === 'string' ? { id: r, weight: 1 } : { id: r?.id, weight: r?.weight ?? 1 }));
+    return [{ id: 'classic', weight: 1 }];
+}
+
+/**
+ * ⛓⛓ CONTENT SETS GEN-1 (⚖ Robert 2026-11-22: "controlled by the biome, and the generation settings"; Q8 "A
+ * per-room mix") — **THE MAZE BIOME, A SMALL LIST EDITOR.** One row = one biome for every maze room; two or more =
+ * a mix, each room picked by hash of the seed and its name, by weight. Writes `params.mazeBiome` (one id for one row,
+ * else `[{id, weight}]`; `classic` alone is the default and records nothing). While a row's biome places tile kinds
+ * ("Randomly placed tiles"), its three numbers show, written to `params.tileKinds`. A bad setting (a biome twice)
+ * is refused by name when the world is generated, never here.
+ */
+function renderMazeBiomeBlock(params, onChange) {
+    const wrap = document.createElement('div');
+    wrap.className = MAZE_BIOME_ROW_CLASS;
+    const nameOf = (id) => REGION_BIOMES[id]?.name ?? BIOMES[id]?.name ?? id;
+    const draw = () => {
+        if (typeof wrap.replaceChildren === 'function') wrap.replaceChildren();
+        else for (const c of [...wrap.children]) c.remove();
+        const rows = mazeBiomeRows(params);
+        const write = (next) => {
+            params[MAZE_BIOME_KEY] = next.length === 1 ? next[0].id : next.map((r) => ({ id: r.id, weight: r.weight }));
+            onChange();
+            draw();
+        };
+        rows.forEach((row, i) => {
+            const line = document.createElement('div');
+            line.className = 'procgen-pipeline-maze-biome';
+            const select = document.createElement('select');
+            select.dataset.paramKey = MAZE_BIOME_KEY;
+            for (const id of mazeBiomeIds()) {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = nameOf(id);
+                select.appendChild(option);
+            }
+            select.value = row.id;
+            select.addEventListener('change', () => write(rows.map((r, j) => (j === i ? { ...r, id: select.value } : r))));
+            line.appendChild(select);
+            if (rows.length > 1) {
+                const weight = document.createElement('input');
+                weight.type = 'number';
+                weight.min = '1';
+                weight.step = '1';
+                weight.title = 'weight: how often a room gets this biome, against the other rows';
+                weight.value = String(row.weight);
+                weight.addEventListener('change', () => {
+                    const w = Math.max(1, Math.floor(Number(weight.value) || 1));
+                    write(rows.map((r, j) => (j === i ? { ...r, weight: w } : r)));
+                });
+                line.appendChild(weight);
+                const remove = document.createElement('button');
+                remove.type = 'button';
+                remove.textContent = '−';
+                remove.title = 'remove this biome from the mix';
+                remove.addEventListener('click', () => write(rows.filter((_, j) => j !== i)));
+                line.appendChild(remove);
+            }
+            wrap.appendChild(fieldRow(i === 0 ? 'Maze biome' : '',
+                i === 0 ? 'The wall style (and what is added after it) of every procedural maze room. Add rows for a '
+                    + 'per-room mix: each room picks one by hash of the seed and its name, by weight.' : null, line));
+        });
+        const add = document.createElement('button');
+        add.type = 'button';
+        add.className = 'procgen-pipeline-maze-biome-add';
+        add.textContent = '+ biome';
+        add.title = 'add a biome to the mix';
+        add.addEventListener('click', () => {
+            const unused = mazeBiomeIds().find((id) => !rows.some((r) => r.id === id));
+            if (unused) write([...rows, { id: unused, weight: 1 }]);
+        });
+        wrap.appendChild(add);
+        const placing = rows.map((r) => r.id).find(placesTileKinds);
+        if (placing) {
+            const own = REGION_BIOMES[placing].tileKinds;
+            for (const [key, d] of Object.entries(TILE_KINDS_DOMAINS)) {
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.min = String(d.min);
+                input.max = String(d.max);
+                input.step = '1';
+                input.dataset.paramKey = `${TILE_KINDS_KEY}.${key}`;
+                input.value = String(params[TILE_KINDS_KEY]?.[key] ?? own[key]);
+                input.addEventListener('change', () => {
+                    const v = Math.min(d.max, Math.max(d.min, Math.floor(Number(input.value) || d.min)));
+                    params[TILE_KINDS_KEY] = { ...(params[TILE_KINDS_KEY] ?? {}), [key]: v };
+                    onChange();
+                });
+                wrap.appendChild(fieldRow(`Tile kinds: ${key}`, `${nameOf(placing)}: ${d.why}`, input));
+            }
+        }
+    };
+    draw();
+    return wrap;
+}
 
 /**
  * The hazard sub-fields shown while hazards are enabled: count per region, max
@@ -123,6 +230,7 @@ export function renderMazeProcgenParams({ params, onChange = () => {} } = {}) {
         + 'regions start at the exit that leads back to where you came from (the logic does not model that yet). '
         + 'The APWorld Editor can set it per room.', arrival));
     arrivalRow.className = `${arrivalRow.className} ${MAZE_ARRIVAL_ROW_CLASS}`;
+    wrap.appendChild(renderMazeBiomeBlock(params, onChange));
     const hazardInput = document.createElement('input');
     hazardInput.type = 'checkbox';
     hazardInput.checked = !!params.enableHazards;

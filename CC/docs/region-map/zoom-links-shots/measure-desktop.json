@@ -1,0 +1,30 @@
+{
+  "seedling_fit": {
+    "cross": 55,
+    "neighbour": 83,
+    "drawnCross": 55,
+    "drawnNeighbour": 83
+  },
+  "seedling_neighbours_view": {
+    "cross": 55,
+    "neighbour": 83,
+    "drawnCross": 34,
+    "drawnNeighbour": 46
+  },
+  "toolbar": {
+    "x": 12,
+    "y": 38,
+    "width": 1576,
+    "height": 41,
+    "plus": {
+      "w": 32,
+      "h": 32
+    }
+  },
+  "alttp_fit": {
+    "cross": 0,
+    "neighbour": 297,
+    "drawnCross": 0,
+    "drawnNeighbour": 297
+  }
+}
