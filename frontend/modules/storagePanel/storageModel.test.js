@@ -154,7 +154,7 @@ describe('the document library row (pure half)', () => {
     });
     it("a library Clear's confirm says what, how much, and that it cannot be undone (confirmText's wording)", () => {
         expect(libraryConfirmText('Clear "Demo"', { versions: 2, drafts: 1, bytes: 1234 }))
-            .toMatch(/^Clear "Demo": remove 2 saved versions and 1 draft \(1,234 bytes\) from this site's document library\? This cannot be undone\. A set that something is using is refused/);
+            .toMatch(/^Clear "Demo": remove 2 saved versions and 1 draft \(1,234 bytes\) from this site's document library\? This cannot be undone\. A set that something is using is refused, not cleared\. A tab still editing this set will save its next change as a new set\.$/);
         expect(libraryConfirmText('Clear leftover drafts', { drafts: 3, draftsOnly: true }))
             .toMatch(/^Clear leftover drafts: remove 3 drafts from this site's document library\? This cannot be undone\. A draft that something is using is kept/);
     });

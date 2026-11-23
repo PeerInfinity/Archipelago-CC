@@ -263,6 +263,7 @@ export function libraryConfirmText(what, { versions = 0, drafts = 0, bytes = nul
         + "from this site's document library? This cannot be undone.";
     text += draftsOnly
         ? ' A draft that something is using is kept. A tab still editing saves its draft again at its next change.'
-        : ' A set that something is using is refused, not cleared.';
+        : ' A set that something is using is refused, not cleared.'
+            + ' A tab still editing this set will save its next change as a new set.';
     return text;
 }

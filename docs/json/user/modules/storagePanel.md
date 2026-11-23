@@ -41,7 +41,7 @@ The sets you make in the Procgen Lab are kept in a separate browser database, `a
 
   It also says whether the browser has made the storage persistent (**granted**) or may remove it when space runs low (**best-effort**).
 - **One row per set**, showing its name, how many numbered versions and drafts it has, and its size.
-- **Clear** on a row removes that set, with all its versions and drafts. It asks first. A set that something is using, such as a running game or a loaded world in this tab or in any other open tab, is **not** cleared: the row says what is using it and in which tab.
+- **Clear** on a row removes that set, with all its versions and drafts. It asks first. A set that something is using, such as a running game or a loaded world in this tab or in any other open tab, is **not** cleared: the row says what is using it and in which tab. A lab tab that is still editing a cleared set saves its next change as a new set.
 - **Clear leftover drafts** removes every draft that nothing is using. A draft is the rolling copy an open lab tab keeps while you edit. A tab closed without saving leaves its draft behind. It asks first.
 - **Drafts older than 7 days are cleared by themselves** each time the panel draws (opening it, or **Refresh**), unless something is using them. The panel says how many it cleared. Numbered versions are never cleared because of their age.
 
