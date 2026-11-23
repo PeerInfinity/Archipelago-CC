@@ -243,10 +243,10 @@ const loadLibModules = () => (libModules ??= Promise.all([
 
 /**
  * List the library's sets into `listEl`, with an Open per version and per draft.
- * @param {{listEl: object, noteEl: object, onOpen: Function, doc?: object}} o
+ * @param {{lifetime: object, listEl: object, noteEl: object, onOpen: Function, doc?: object}} o
  *   `onOpen({set, overlay, lineageId, parent, draft})` loads through the page's LOAD door → boolean
  */
-export async function showRecentSets({ listEl, noteEl, onOpen, doc = globalThis.document }) {
+export async function showRecentSets({ lifetime, listEl, noteEl, onOpen, doc = globalThis.document }) {
     const out = readout();
     const [{ createDocumentLibrary }, { createIdbBackend, libraryDatabaseExists }] = await loadLibModules();
     listEl.textContent = '';
@@ -294,7 +294,8 @@ export async function showRecentSets({ listEl, noteEl, onOpen, doc = globalThis.
                 b.type = 'button';
                 b.textContent = text;
                 b.dataset.entry = entry.entry_id;
-                b.addEventListener('click', () => openEntry(entry, r.lineage_id, say, onOpen));
+                // ⛔ through the arm's lifetime, like every listener of this page (`watchLifetime.test.js`)
+                lifetime.on(b, 'click', () => openEntry(entry, r.lineage_id, say, onOpen));
                 line.appendChild(b);
             };
             if (r.newest) openBtn(`Open version ${r.newest.seq}`, { ...r.newest, draft: false });

@@ -10154,6 +10154,7 @@ async function runEditor(params, lifetime) {
         const m = await import('./watchLibrary.js');
         if (!lifetime.alive()) return;
         await m.showRecentSets({
+            lifetime,
             listEl: $('editRecentList'),
             noteEl: $('editRecentNote'),
             onOpen: ({ set, overlay, lineageId, parent }) => {
