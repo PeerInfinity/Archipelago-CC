@@ -23647,6 +23647,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "argOf"
                     ],
+                    "name": "arrival-override"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
                     "name": "carry-earned"
                 },
                 {
