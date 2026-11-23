@@ -261,8 +261,10 @@ describe('levelRun on bossdraws: a death\'s rebuild of L57 restarts the beast\'s
         }
         return { deaths: run.playerDeaths.map((d) => [d.t, d.source]),
             spawns: run.tentacleBeastEvents.filter((e) => e.kind === 'whirlpool' || e.kind === 'tentacle')
-                .map((e) => [e.t, e.kind, e.x, e.y]) };
+                .map((e) => [e.t, e.kind, e.x, e.y]),
+            rngState: run.entities('tentacleBeastFight')?.rngState ?? null };
     });
+    const drop = ({ rngState, ...rest }) => rest;
 
     it('two drowns one period apart, and the second build spawns the first build\'s candidates, shifted', () => {
         const a = walk(DOOR.rng.seed);
@@ -272,7 +274,16 @@ describe('levelRun on bossdraws: a death\'s rebuild of L57 restarts the beast\'s
         const second = a.spawns.filter((e) => e[0] > d1 && e[0] <= d2).map(([t, ...r]) => [t - d1, ...r]);
         expect(d2 - d1).toBe(d1);
         expect(second).toEqual(first);
-        expect(walk(7)).toEqual(a);   // and the seed decides nothing
+        expect(drop(walk(7))).toEqual(drop(a));   // and the seed decides nothing
+    });
+
+    it('the page generator is CARRIED across the rebuild: it turns only for Enemy.coins (each build, each tentacle)', () => {
+        const a = walk(DOOR.rng.seed);
+        const builds = a.deaths.length + 1;
+        const tentacles = a.spawns.filter((e) => e[1] === 'tentacle').length;
+        const g = new SeedlingRng(DOOR.rng.seed);
+        for (let i = 0; i < builds + tentacles; i += 1) g.next();
+        expect(a.rngState).toBe(g.state);
     });
 });
 

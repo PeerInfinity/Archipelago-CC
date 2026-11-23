@@ -453,7 +453,7 @@ frontend/modules/seedlingDemo/finalBossFight.js|finalBossCoast|hb2adf150|0|0,phy
 frontend/modules/seedlingDemo/finalBossFight.js|finalBossCoast|h616edd73|0|0,physics,bound,,maxForce >= 0 clamp test
 frontend/modules/seedlingDemo/finalBossFight.js|createOwlRoom|createOwlRoom|72,physics,magnitude,,finalboss@64;96 entity point x
 frontend/modules/seedlingDemo/finalBossFight.js|createOwlRoom|createOwlRoom|104,physics,magnitude,,finalboss@64;96 entity point y
-frontend/modules/seedlingDemo/finalBossFight.js|createOwlRoom|h7022acb1|0|0,rule,sentinel,,default persistence tag
+frontend/modules/seedlingDemo/finalBossFight.js|createOwlRoom|h1cc8298e|0|0,rule,sentinel,,default persistence tag
 frontend/modules/seedlingDemo/finalBossFight.js|stepOwlRoom|stepOwlRoom|40,physics,magnitude,,REVIEW: default player position when the caller passes none; a test convenience
 frontend/modules/seedlingDemo/finalBossFight.js|stepOwlRoom|stepOwlRoom|216,physics,magnitude,,REVIEW: default player position when the caller passes none; a test convenience
 frontend/modules/seedlingDemo/finalBossFight.js|stepOwlRoom|stepOwlRoom|5,rule,count,,five death rocks
@@ -2005,6 +2005,19 @@ frontend/modules/seedlingDemo/tentacleBeast.js|tentacleSwipeRect|tentacleSwipeRe
 frontend/modules/seedlingDemo/tentacleBeast.js|whirlpoolRect|whirlpoolRect,rule,derivation,Puzzlements/Whirlpool.as:spinRate,the whirlpool box arithmetic (bosskills D3)
 frontend/modules/seedlingDemo/levelWorld.js|withRuntimeTeleporters|withRuntimeTeleporters,structural,,,an empty runtime-teleporter list is a no-op (bosskills D3)
 frontend/modules/seedlingDemo/levelRun.js|terrainAt|h424d5e72|0|0,rule,sentinel,,tile type default when no walkable tile
+frontend/modules/flashPanel/seedlingRandomizerEligibility.js|*|*,structural,,,a manifest reader (capability words / build-name parsing / gate order) reached through modelBuild.js (p4hport); decides no simulation value
+frontend/modules/seedlingDemo/finalBossRng.js|vdc|vdc,rule,derivation,,src/Pattern.as:vdc: p4h Pattern.vdc digit loop (r = 0; f = 1 / b; while n > 0)
+frontend/modules/seedlingDemo/finalBossRng.js|OwlPatternStream|OwlPatternStream.constructor,structural,,,p4h counter / ledger init (rockIndex walkTicks deathIndex)
+frontend/modules/seedlingDemo/finalBossRng.js|OwlPatternStream|OwlPatternStream._book,structural,,,per-site counter increment
+frontend/modules/seedlingDemo/finalBossRng.js|OwlPatternStream|OwlPatternStream.barrageRoll,rule,sentinel,,Enemies/FinalBoss.as (p4h) barrage: rockfallTime % rockFrequency == 0
+frontend/modules/seedlingDemo/finalBossRng.js|OwlPatternStream|OwlPatternStream.spawnX,rule,derivation,,Enemies/FinalBoss.as (p4h) aim x: rockIndex++ then vdc(rockIndex 2); ROCK_RADIUS * 2 scatter width
+frontend/modules/seedlingDemo/finalBossRng.js|OwlPatternStream|OwlPatternStream.spawnY,rule,derivation,,Enemies/FinalBoss.as (p4h) aim y: vdc(rockIndex 3); ROCK_RADIUS * 2 scatter width
+frontend/modules/seedlingDemo/finalBossRng.js|OwlPatternStream|OwlPatternStream.rockScale,rule,magnitude,,Scenery/RockFall.as (p4h) _scale: vdc(k 5) / 2 + 0.25: the HIT box 32s x 16s
+frontend/modules/seedlingDemo/finalBossRng.js|OwlPatternStream|OwlPatternStream.grenadeRoll,rule,count,,Enemies/FinalBoss.as (p4h) grenade: walkTicks++ then walkTicks % grenadeFrequency == 0
+frontend/modules/seedlingDemo/finalBossRng.js|OwlPatternStream|OwlPatternStream.deathRockX,rule,magnitude,,Enemies/FinalBoss.as (p4h) death rocks: 120 + (i + 0.5) / n * 8 - 4; next scale key i + 1
+frontend/modules/seedlingDemo/finalBossRng.js|OwlPatternStream|OwlPatternStream.podSnap,rule,sentinel,,Enemies/FinalBoss.as (p4h) pod snap: rockIndex = 0; walkTicks = 0
+frontend/modules/seedlingDemo/tentacleBeast.js|TentaclePatternStream|TentaclePatternStream.constructor,structural,,,p4h per-site counters and whirlIndex / tentacleIndex init
+frontend/modules/seedlingDemo/tentacleBeast.js|TentaclePatternStream|TentaclePatternStream.draw,rule,derivation,,Enemies/TentacleBeast.as (p4h) candidates: whirlIndex++ / tentacleIndex++ then the Halton (2 3) point; coins/build book 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

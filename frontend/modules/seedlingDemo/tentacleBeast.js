@@ -155,11 +155,14 @@ export class TentacleDrawStream {
  * `vdc(whirlIndex, 3)` for a whirlpool candidate, `tentacleIndex++` then `vdc(tentacleIndex, 2)` / `vdc(…, 3)` for a
  * tentacle candidate — the beast's own instance fields, so a new stream per build IS the game's reset. `spawn`
  * also takes the patch's `break` on a failed whirlpool try (`pattern`). ⛓ `build`/`coins` (`Enemy.coins`) still draw
- * `Math.random()` at p4h and decide nothing; this stream has no generator, so they book `0` and `state` is null.
+ * `Math.random()` at p4h and decide nothing: given the page's generator (levelRun, where p4g's seed premises hold) they
+ * turn it, so `state` is the game's; given none they book `0` and `state` is null.
  */
 export class TentaclePatternStream {
-    constructor() {
+    /** @param {{rng?: SeedlingRng|null}} [o] the page's generator where its position is known (it books `build`/`coins`) */
+    constructor({ rng = null } = {}) {
         this.pattern = true;
+        this.rng = rng;
         this.counts = { build: 0, whirlX: 0, whirlY: 0, tentacleX: 0, tentacleY: 0, coins: 0 };
         this.n = 0;
         /** `TentacleBeast.whirlIndex` / `tentacleIndex`: candidates tried this build. */
@@ -175,9 +178,9 @@ export class TentaclePatternStream {
         if (site === 'whirlY') return vdc(this.whirlIndex, 3);
         if (site === 'tentacleX') { this.tentacleIndex += 1; return vdc(this.tentacleIndex, 2); }
         if (site === 'tentacleY') return vdc(this.tentacleIndex, 3);
-        return 0;
+        return this.rng === null ? 0 : this.rng.next();
     }
-    get state() { return null; }
+    get state() { return this.rng === null ? null : this.rng.state; }
 }
 
 /** The run's premises for the stream (`finalBossRng.assertOwlStreamPremises`'s, one room over). */
@@ -241,7 +244,7 @@ export function whirlpoolRect(w) {
 }
 
 /** The fight's per-visit state, from the `.oel` placement (`tentaclebeast x=80 y=48 tag=0`). */
-export function createTentacleBeastFight(e, { seed, bossDraws = false }) {
+export function createTentacleBeastFight(e, { seed, bossDraws = false, generator = null }) {
     return {
         id: `tentaclebeast@${e.x},${e.y}`,
         tag: Number.isInteger(e.tag) ? e.tag : -1,
@@ -255,7 +258,7 @@ export function createTentacleBeastFight(e, { seed, bossDraws = false }) {
             maxWhirlpools: TENTACLE_BEAST.maxWhirlpools,
         },
         // ⛓ p4hport: on `bossdraws` the patterns, whatever the seed; otherwise the seeded stream, as before.
-        stream: bossDraws ? new TentaclePatternStream() : (seed === null ? null : new TentacleDrawStream(seed)),
+        stream: bossDraws ? new TentaclePatternStream({ rng: generator }) : (seed === null ? null : new TentacleDrawStream(seed)),
         tentacles: [],
         whirlpools: [],
         /** The run-side records (the arena's runtime teleporter, …) levelRun keeps beside the fight. */

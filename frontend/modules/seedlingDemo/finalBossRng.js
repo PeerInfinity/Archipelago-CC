@@ -464,13 +464,17 @@ export function vdc(n, b) {
  * The counters are the boss's instance fields at p4h, so a NEW stream per build of the room is the game's own reset.
  *
  * ⛓ `Enemy.coins` STILL DRAWS `Math.random()` at p4h (the build's one, each grenade's ctor), and it decides nothing.
- * A stream given a seed books it on its own `SeedlingRng`, so `state` stays the page's value where the seed premises
- * hold; given none, `state` is null and every gameplay answer is unchanged — none reads it.
+ * A stream given a seed (or the page's generator, carried from an earlier build of the same room) books it there, so
+ * `state` stays the page's value where p4g's seed premises hold; given none, `state` is null and every gameplay answer
+ * is unchanged — none reads it.
  */
 export class OwlPatternStream {
-    /** @param {number|null} [seed] the run's seed, when the seeded position is known; null otherwise */
+    /**
+     * @param {number|SeedlingRng|null} [seed] the run's seed, or the page's generator carried from an earlier build,
+     *   when the position is known; null otherwise
+     */
     constructor(seed = null) {
-        this.rng = Number.isInteger(seed) && seed > 0 ? new SeedlingRng(seed) : null;
+        this.rng = seed instanceof SeedlingRng ? seed : (Number.isInteger(seed) && seed > 0 ? new SeedlingRng(seed) : null);
         this.log = [];
         this.counts = Object.fromEntries(Object.keys(OWL_DRAW_SITES).map((k) => [k, 0]));
         /** `FinalBoss.rockIndex`: rocks of THIS barrage. */

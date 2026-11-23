@@ -174,6 +174,7 @@ import {
     OWL_LEVEL_BUILD_DRAWS, OwlDrawStream, OwlPatternStream, assertOwlStreamPremises, owlTickDraws,
 } from './finalBossRng.js';
 import { declaresBossDraws } from './modelBuild.js';
+import { SeedlingRng } from './rng.js';
 import {
     ICE_TURRET_CONTACT, createIceTurret, hitIceTurret, iceTurretRect, iceTurretSettled, stepIceTurret,
     bumpIceTurret,
@@ -2211,6 +2212,8 @@ export function createLevelRun({
     /** The draw stream per beast room, kept across rebuilds (`tentacleFightFor`), and the levels built this run. */
     const tentacleStreams = new Map();
     const tentacleLevelsBuilt = new Set();
+    /** ⛓ p4hport: the page's generator per beast room on `bossdraws` (the patterns themselves are per build). */
+    const tentaclePageRngs = new Map();
     /** The mouth Teleporter, in `levelWorld`'s teleporter shape (`VanillaSet.as:142`: L58 at (56, 96)). */
     const TENTACLE_MOUTH_TO = Object.freeze({ level: 58, x: 56, y: 96 });
     const tentacleMouthRowsFor = (n) => {
@@ -2236,11 +2239,20 @@ export function createLevelRun({
                 // rebuild's ctor pays its `coins` draw from wherever the stream stood (measured D3: seeds 2 and 3
                 // die in L57 and the game's state runs on). It is carried only while no OTHER room was built since
                 // the reseed — another room's build spends draws this schedule does not book.
-                // ⛓ p4hport (`bossdraws`): the patterns are the beast's own counters, so a build carries nothing.
+                // ⛓ p4hport (`bossdraws`): the patterns are the beast's own counters, so a build carries none of them;
+                // only the page's generator (`Enemy.coins`, which decides nothing) carries, where p4g's premises hold.
                 const carried = bossDraws ? null : (tentacleStreams.get(n) ?? null);
+                let generator = null;
+                if (bossDraws) {
+                    const known = tentacleStreamRefusal(rng, { bootLevel: boot.level, level: n, worldEntries,
+                        onlyThisRoom: tentacleLevelsBuilt.size === 1 && tentacleLevelsBuilt.has(n) }) === null;
+                    generator = known ? (tentaclePageRngs.get(n) ?? new SeedlingRng(rng.seed)) : null;
+                    if (generator) tentaclePageRngs.set(n, generator); else tentaclePageRngs.delete(n);
+                    if (dead && generator) generator.next();   // the dead build's ctor still pays its `coins`
+                }
                 fight = createTentacleBeastFight({ x: e[0].x, y: e[0].y, tag },
                     { seed: !dead && carried === null && Number.isInteger(rng?.seed) && rng.seed > 0 ? rng.seed : null,
-                        bossDraws });
+                        bossDraws, generator: dead ? null : generator });
                 if (carried !== null) {
                     carried.draw('build');
                     if (!dead) fight.stream = carried;
@@ -2412,6 +2424,10 @@ export function createLevelRun({
      * stream may open only while it is 0 (see `owlStreamFor`).
      */
     let worldEntries = 0;
+    /** ⛓ p4hport: the levels built since the boot (the boot's own first), for the page generator's carry on `bossdraws`. */
+    const roomsBuilt = new Set([boot?.level]);
+    /** ⛓ p4hport: the page's generator as the Owl's builds left it, where its position is known (`bossdraws` only). */
+    let owlPageRng = null;
     /** ⛓ p4hport: on `bossdraws`, one pattern stream per BUILD of the Owl's room (keyed by the build's boss map). */
     const owlPatternStreams = new WeakMap();
     const owlStreamFor = (n) => {
@@ -2422,9 +2438,13 @@ export function createLevelRun({
             owlStateFor(n);
             const build = finalBossStates.get(n);
             if (!owlPatternStreams.has(build)) {
-                const seeded = rng?.split === true && Number.isInteger(rng?.seed) && rng.seed > 0
-                    && n === boot.level && worldEntries === 0 && owlStreamLevel === null;
-                const s = new OwlPatternStream(seeded ? rng.seed : null);
+                // the position is known while this room is the only one built since the reseed (a death's rebuild
+                // carries the page's generator on, as p4g's TB carry does); a walk-in's is not.
+                const known = rng?.split === true && Number.isInteger(rng?.seed) && rng.seed > 0
+                    && n === boot.level && roomsBuilt.size === 1;
+                if (!known) owlPageRng = null;
+                else if (owlPageRng === null) owlPageRng = new SeedlingRng(rng.seed);
+                const s = new OwlPatternStream(owlPageRng);
                 s.levelBuild();
                 if (s.count !== OWL_LEVEL_BUILD_DRAWS) {
                     throw new Error(`levelRun: the Owl pattern stream's level build booked ${s.count} sites and `
@@ -5991,6 +6011,7 @@ export function createLevelRun({
     const enterWorld = ({ toLevel, fromLevel, carriedSwim, arrivalFor, ctor, reboot = false }) => {
         level = toLevel;
         worldEntries += 1;
+        roomsBuilt.add(toLevel);
         // A `Game` is constructed here, so this is where `Lock.check()` runs
         // and where a flag the player turned off finally removes its lock.
         applyEarnedClears(level);

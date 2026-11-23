@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 31,
         "headings": 1349,
         "indexHeadings": 2,
-        "lines": 37125,
+        "lines": 37126,
         "pages": 4,
-        "words": 571179
+        "words": 571197
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -425,10 +425,10 @@ export const DOCS_INDEX = frz({
             "file": "seedling-constants.md",
             "h1": "Seedling Constants Census",
             "headings": 16,
-            "lines": 734,
+            "lines": 735,
             "links": [],
             "path": "docs/json/developer/procgen/seedling-constants.md",
-            "words": 10899
+            "words": 10917
         },
         {
             "description": "The derived-rule table (`frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json`) holds the access rules that the maze worlds derive from Seedling's tiles, for the elements where that derivation is exact.",
