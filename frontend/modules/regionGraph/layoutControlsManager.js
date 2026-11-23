@@ -3,6 +3,7 @@ import { pickerHTML, setupNodePicker } from './nodePicker.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { isRegionGroupNode, SUB_REGION_VIEW_KEY, SUB_REGION_VIEW_SCHEMA, SUB_REGION_VIEW_LABELS } from './subRegionGroups.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -42,6 +43,15 @@ export class LayoutControlsManager {
           <label style="display: block; margin: 3px 0;">
             <span style="margin-right: 5px;">Scroll zoom sensitivity:</span>
             <input type="number" id="wheelSensitivity" min="0.1" max="5" step="0.1" value="1" style="width: 60px; padding: 2px;">
+          </label>
+        </details>
+        <details open class="rg-sub-regions" style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
+          <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">Sub-regions:</summary>
+          <label style="display: block; margin: 3px 0;">
+            <span style="margin-right: 5px;">Draw as:</span>
+            <select id="subRegionView" style="padding: 2px;">
+              ${SUB_REGION_VIEW_SCHEMA.enum.map((v) => `<option value="${v}">${SUB_REGION_VIEW_LABELS[v] ?? v}</option>`).join('')}
+            </select>
           </label>
         </details>
         <details open style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
@@ -189,6 +199,20 @@ export class LayoutControlsManager {
     // Sync edge label visibility flag
     const forceHideEdgeLabelsEl = this.ui.controlPanel.querySelector('#forceHideEdgeLabels');
     this.ui.edgeLabelsHidden = !!forceHideEdgeLabelsEl?.checked;
+
+    // ⛓ Sub-regions (region-graph-groups-a): the select writes the setting; the panel's settings:changed handler
+    // reloads it and REBUILDS the graph (`RegionGraphUI` rebuilds on any moduleSettings.regionGraph.* write).
+    const subRegionSelect = this.ui.controlPanel.querySelector('#subRegionView');
+    if (subRegionSelect) {
+      if (this.ui.subRegionView) subRegionSelect.value = this.ui.subRegionView;
+      subRegionSelect.addEventListener('change', async (e) => {
+        try {
+          await settingsManager.updateSetting(SUB_REGION_VIEW_KEY, e.target.value);
+        } catch (error) {
+          logger.warn(`Failed to save setting ${SUB_REGION_VIEW_KEY}:`, error);
+        }
+      });
+    }
 
     // Setup change handler for discovery checkbox to trigger graph rebuild
     const showUndiscoveredCheckbox = this.ui.controlPanel.querySelector('#graph-show-undiscovered');
@@ -476,7 +500,8 @@ export class LayoutControlsManager {
     const layout = this.ui.gridLayout;
     if (!layout || layout.size === 0) return null;
 
-    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player'));
+    // A group box is sized by its members and placed by them: it takes no grid cell.
+    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player') && !isRegionGroupNode(n));
     const avgNodeWidth = nodes.reduce((sum, n) => {
       const bb = n.boundingBox({ includeLabels: true });
       return sum + bb.w;
@@ -523,7 +548,8 @@ export class LayoutControlsManager {
    * with computed positions that guarantee no edge connects same-row nodes.
    */
   buildHierarchyLayout() {
-    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player'));
+    // A group box has no depth of its own (its members do): it takes no row slot.
+    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player') && !isRegionGroupNode(n));
 
     // Group nodes by depth
     const depthGroups = new Map();
@@ -610,7 +636,7 @@ export class LayoutControlsManager {
     const adjList = new Map();
 
     // Initialize all nodes
-    this.ui.cy.nodes().filter(n => !n.hasClass('hidden') && !n.hasClass('player')).forEach(node => {
+    this.ui.cy.nodes().filter(n => !n.hasClass('hidden') && !n.hasClass('player') && !isRegionGroupNode(n)).forEach(node => {
       const id = node.id();
       inDegree.set(id, 0);
       adjList.set(id, []);
@@ -663,8 +689,10 @@ export class LayoutControlsManager {
   saveNodePositions() {
     this.ui.nodePositions.clear();
     // Location nodes are drawn around their region, never laid out; saving
-    // them would make the next rebuild's size check re-run the layout.
-    this.ui.cy.nodes().not('.location-node').forEach(node => {
+    // them would make the next rebuild's size check re-run the layout. A
+    // group box (subRegionView = nested) is placed by its members: saving it
+    // would leak a position no `separate` graph has.
+    this.ui.cy.nodes().not('.location-node').filter(n => !isRegionGroupNode(n)).forEach(node => {
       this.ui.nodePositions.set(node.id(), {
         x: node.position('x'),
         y: node.position('y')
@@ -674,7 +702,7 @@ export class LayoutControlsManager {
 
   exportNodePositions() {
     const positions = {};
-    this.ui.cy.nodes().forEach(node => {
+    this.ui.cy.nodes().filter(n => !isRegionGroupNode(n)).forEach(node => {
       positions[node.id()] = {
         x: Math.round(node.position('x')),
         y: Math.round(node.position('y'))

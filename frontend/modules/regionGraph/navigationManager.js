@@ -5,6 +5,7 @@ import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import * as actions from '../regionView/regionActions.js';
+import { isRegionGroupNode } from './subRegionGroups.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -40,7 +41,7 @@ export class NavigationManager {
     this.ui.updateStatus(text);
     setTimeout(() => {
       if (this.ui.cy) {
-        const nodeCount = this.ui.cy.nodes().length;
+        const nodeCount = this.ui.cy.nodes().filter((n) => !isRegionGroupNode(n)).length;
         const edgeCount = this.ui.cy.edges().length;
         this.ui.updateStatus(`Loaded ${nodeCount} regions, ${edgeCount} connections`);
       }
@@ -77,8 +78,8 @@ export class NavigationManager {
     // Update node labels to include path counts
     if (this.ui.cy) {
       this.ui.cy.nodes().forEach(node => {
-        // Skip location nodes and player nodes - only update region nodes
-        if (node.hasClass('location-node') || node.hasClass('player')) {
+        // Skip location nodes, player nodes and group boxes - only update region nodes
+        if (node.hasClass('location-node') || node.hasClass('player') || isRegionGroupNode(node)) {
           return;
         }
 

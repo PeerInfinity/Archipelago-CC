@@ -2,6 +2,7 @@ import { RegionGraphUI } from './regionGraphUI.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import eventBus from '../../app/core/eventBus.js';
 import { clickActionsSchemaEntry } from './clickActionsSettings.js';
+import { SUB_REGION_VIEW_SCHEMA } from './subRegionGroups.js';
 import { makeRegionGraphCentreAction } from './regionGraphCentreAction.js';
 import {
   registerClickAction, unregisterClickAction, REGION_CLICKED, LOCATION_CLICKED, PANEL_ACTION_IDS,
@@ -155,6 +156,8 @@ export function register(registrationApi) {
         label: 'Location visibility',
       },
       wheelSensitivity: { type: 'number', default: 1, label: 'Wheel sensitivity' },
+      // ⛓ region-graph-groups-a: how a region's sub-regions draw (`separate` | `nested`; B and C add values).
+      subRegionView: { ...SUB_REGION_VIEW_SCHEMA, enum: [...SUB_REGION_VIEW_SCHEMA.enum] },
     },
   });
 }
