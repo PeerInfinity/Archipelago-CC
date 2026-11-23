@@ -20290,6 +20290,38 @@ export function resetKillLockChaserRewindCounts() {
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE L26-KILL — **THE KILL-LOCK ARM'S STANCE IS WALKED AS IT WAS FORECAST**
+ * (`KILLLOCK_STANCE_AS_FORECAST`, OFF).
+ *
+ * ⚖ The user approved the slice on 2026-11-22 (*"Slice it now (Recommended)"*: measure first, switch-guarded OFF).
+ * `deriveKillByChaser` prices each stance on ONE forecast: the planner's corridor walked by `previewWalk` under the
+ * one strike policy and NO dash plan, then the wait. The combat ladder's chaser arm walks the stance it picked
+ * undashed (`KILL_STANCE_AS_FORECAST`, ON since 2026-10-10), but this arm's attempt (`killLockChaserAttempt`) still
+ * called `walkTo` bare, so `planSwordDash` dashed the corridor: a walk nobody forecast, arriving at another tick
+ * with the bodies elsewhere. MEASURED (the chest route's survey step 35, L26 arrival (8,2), Sword + Shield, two
+ * punchers counted by `rocklock@112,208`): the scan scores (120,232), (104,248), (120,248) for `puncher@80,168`;
+ * the dashed drive reaches (104,231) at t151 against the forecast's ~270, the other puncher closes in the same
+ * dwell, and all 5 rewound attempts are hit (dwell ticks 55–67). The same survey child at `--dash=none` solves
+ * (474 t, 0 hits, L28); with this switch at the default dash mode the arm's own second stance kills both (508 t,
+ * 0 hits, L28).
+ * ⇒ ON: the attempt's stance walk is `walkTo(…, {undashed: true})`, so the drive is the preview the stance was scored
+ * on. The dwell, its strike policy and the re-derivation are unchanged. Nothing reads a level or a coordinate.
+ * OFF: no key is added to the walk (byte-identical). `SEEDLING_KILLLOCK_STANCE_AS_FORECAST=1` /
+ * `withKillLockStanceAsForecast(enabled, fn)`.
+ */
+export const KILLLOCK_STANCE_AS_FORECAST = {
+    // ⛓ ON by default since the ROCKLOCK + FADE flip took it in (⚖ the user, 2026-11-22: *"Add it ON to tonight's stack
+    // (Recommended)"*): survey step 35 on the chest route solves hitless. `=0` opts out (worker).
+    enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_STANCE_AS_FORECAST !== '0',
+};
+export const KILLLOCK_STANCE_AS_FORECAST_DEFAULT = true;
+
+/** Run `fn` with `KILLLOCK_STANCE_AS_FORECAST` set to `enabled`, restoring the previous value. */
+export function withKillLockStanceAsForecast(enabled, fn) {
+    return withSwitch(KILLLOCK_STANCE_AS_FORECAST, enabled, fn);
+}
+
+/**
  * ⛓ L53-KILLLOCK: ONE attempt of the kill-lock chaser arm on `hunted` from `hunt` (the walk to the stance, the
  * re-derivation from where it arrived, the guarded dwell) — the OFF turn's own steps, in its order, with the switch's
  * tolerance and dying grace. Returns the phase; throws the refusal the step met.
@@ -20301,7 +20333,9 @@ function killLockChaserAttempt(run, perTick, resolved, ctx, hunted, first) {
     const hits0 = run.ledger('playerHits').length;
     for (let a = 0; a < CHASER_KILL_REDERIVE && hunt.stance
         && !hasArrived(run.state, hunt.stance, DEFAULT_TOLERANCE); a += 1) {
-        ctx.walkTo(ctx.goal, hunt.stance, { what: `${ctx.what} -> chaser kill (${hunted.id}) stance` });
+        ctx.walkTo(ctx.goal, hunt.stance, { what: `${ctx.what} -> chaser kill (${hunted.id}) stance`,
+            // ⛓ L26-KILL (`KILLLOCK_STANCE_AS_FORECAST`, OFF: no key): the stance is walked as it was forecast
+            ...(KILLLOCK_STANCE_AS_FORECAST.enabled ? { undashed: true } : {}) });
         if (!(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id)) break;
         if (hasArrived(run.state, hunt.stance, DEFAULT_TOLERANCE)) break;
         hunt = deriveKillByChaser(run, hunted, contacts, { dashMode, tolerance: DEFAULT_TOLERANCE });

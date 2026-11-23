@@ -28463,3 +28463,9 @@ through it. **FADE_MOVE**: during a latched fade the player waits at a fork-cert
 reach. That takes the L12 keylock family hitless at OFF's length. `FADE_MOVE_ATTACK` stays OFF. Each switch reads
 `SEEDLING_<NAME> !== '0'`. `ROCKLOCK_KILL` also reads the page URL's opt-out (`pageSolverEnvSwitchOff`), because the
 main-thread goal mapper reads it too. The defaults rows are re-pinned.
+
+The flip also takes in L26-KILL's `KILLLOCK_STANCE_AS_FORECAST`, ON by default (⚖ the user, 2026-11-22: *"Add it ON to
+tonight's stack (Recommended)"*). The kill-lock chaser arm walks to its stance undashed, as the stance forecast priced
+it. Walking there dashed arrived about 120 ticks early, inside the second puncher's dwell. On the AP-chest route, survey
+step 35 (L26 from the L25 arrival) solves in 508 t with 0 hits into L28, and the p4g game agrees. Other kill-lock rooms
+change ticks only, with 0 hits. `SEEDLING_KILLLOCK_STANCE_AS_FORECAST=0` opts out (worker).

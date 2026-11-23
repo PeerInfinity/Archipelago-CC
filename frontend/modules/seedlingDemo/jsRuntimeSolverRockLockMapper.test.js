@@ -20,7 +20,15 @@
  */
 import { readFileSync } from 'node:fs';
 
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { KILLLOCK_STANCE_AS_FORECAST as __SAF_HOLD } from './solverBot.js';
+
+// ⛓ `KILLLOCK_STANCE_AS_FORECAST` held OFF for this whole file: it ships ON since the ROCKLOCK + FADE flip took it in
+// (⚖ the user, 2026-11-22). ON, these kill-lock plans change ticks only, still 0 hits (mapper 286 428 → 430 t, 289 315 → 318 t). These rows pin
+// NEW-LOCKS' switches; held OFF they are byte for byte their pre-flip selves.
+let __safWas;
+beforeAll(() => { __safWas = __SAF_HOLD.enabled; __SAF_HOLD.enabled = false; });
+afterAll(() => { __SAF_HOLD.enabled = __safWas; });
 
 import { atlasEventGoal, runtimeEventsOf } from '../flashPanel/seedlingPlaybackController.js';
 import {
