@@ -1,0 +1,3 @@
+{"step": "24", "level": 16, "a": {"verdict": "SOLVED", "ticks": 273, "hits": 1, "deaths": 0}, "b": {"verdict": "SOLVED", "ticks": 311, "hits": 0, "deaths": 0}, "goalsSame": true, "siblingExit": "level_16__r1c9 -> level_17 #3", "arrivalOverride": null}
+{"step": "25", "level": 17, "a": {"verdict": "SOLVED", "ticks": 63, "hits": 0, "deaths": 0}, "b": {"verdict": "SOLVED", "ticks": 76, "hits": 0, "deaths": 0}, "goalsSame": true, "siblingExit": null, "arrivalOverride": {"from": {"x": 112, "y": 32}, "to": {"x": 144, "y": 32}}}
+steps 39 vs 39: per-step key equal 37, whole row equal (no wall clock) 37, movers 2, steps that GAINED a hit/death 0 []

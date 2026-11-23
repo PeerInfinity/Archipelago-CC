@@ -33,6 +33,10 @@
       "frontend/modules/seedlingDemo/hammerNewLocks.train.test.js": {
         "by": "seedling-hammer-new-locks, cloud box (4 cores, under a concurrent page sweep), 2026-11-10",
         "ms": 14400
+      },
+      "frontend/modules/seedlingDemo/siblingExitWitness.train.test.js": {
+        "by": "seedling-hammer-sibling-exit, cloud box (4 cores, idle), 2026-11-23",
+        "ms": 72910
       }
     }
   },
@@ -62,6 +66,7 @@
     "frontend/modules/mazeRoom/tileSpike/learnLattice.train.test.js": 55,
     "frontend/modules/seedlingDemo/hammerKeylockTurret.train.test.js": 35,
     "frontend/modules/seedlingDemo/hammerNewLocks.train.test.js": 15,
-    "scripts/procgen/extract-seedling-map.train.test.js": 1
+    "scripts/procgen/extract-seedling-map.train.test.js": 1,
+    "frontend/modules/seedlingDemo/siblingExitWitness.train.test.js": 73
   }
 }
