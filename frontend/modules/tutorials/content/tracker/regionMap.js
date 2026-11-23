@@ -6,7 +6,8 @@
  *
  * A step reaches the Map's cells through its "Go to" picker (`regionMap/regionMapPicker.js`): the canvas cannot be
  * clicked by a step, and the picker does exactly what a click does. Every option the tutorial changes it puts back in
- * its last step. In progress: its walk row measures `firstFailingStep`. Shape: ../../tutorialShape.js.
+ * its last step. Ready (⚖ the user, 2026-11-23, "Mark READY"): its walk row must complete every step. Shape:
+ * ../../tutorialShape.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
  */
@@ -49,9 +50,8 @@ export const TRACKER_REGION_MAP = Object.freeze({
     title: 'Tracking: the Region Map',
     summary: 'See a Seedling world as its real map: levels in groups, locations as squares on their tiles, and clicks that move and check.',
     track: 'tracker',
-    status: 'in-progress',
-    firstFailingStep: null,
-    doc: null,
+    status: 'ready', // ⚖ the user, 2026-11-23 ("Mark READY", after the art-ends shots)
+    doc: 'docs/json/user/tutorials/tracker-region-map.md',
     intro: [
         { prose: 'The **Region Map** draws a world as a map: one cell per level, laid out the way you walk between them, with each location as a square on its own tile. It is the map beside the **Region Graph**: the same reachability colours, the same clicks.' },
         { prose: `It uses *${PLAYTHROUGH.title}*, the whole of the original *Seedling* as an Archipelago world, because its levels carry the game's own map. Only the world's rules are loaded; no game is started.` },
