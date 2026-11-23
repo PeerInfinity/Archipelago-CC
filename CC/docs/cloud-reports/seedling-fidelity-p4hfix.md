@@ -95,7 +95,7 @@ The setup was the port's: an uncommitted vitest setup calling `setModelBuildDefa
   - `generate-procgen-reference.mjs --check`: 7 modules and 5 regions match;
   - the constants census `--check`: PASS;
   - the solver surface `--check`: GREEN, 374 rows. It had said DIFFERS on line numbers only; it was rewritten with `--write` in `fae51eda`.
-- **CI:** the `JavaScript Unit Tests` push run 45112867189 at `fae51eda` was QUEUED when this report was committed; read it with `node scripts/procgen/ci-vitest-summary.mjs fae51edaf457af05e1e4215560962976112f3325`. A follow-up commit records the result when it lands.
+- **CI:** the `JavaScript Unit Tests` push run 45112867189 at `fae51eda` was still QUEUED after 40 minutes of `--wait` (every shard and the slow tier `queued`), so NO suite number is quoted from it. The planner reads it with `node scripts/procgen/ci-vitest-summary.mjs fae51edaf457af05e1e4215560962976112f3325`.
 - **For the planner (I cannot dispatch, 403):** `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref claude/p4h-model-fidelity-gaps-4w88kb -f train_only=true` at `fae51eda`. The slice touches `levelRun` and `levelWorld`, so the train tier's pins should be quoted.
 
 ## What the brief got wrong (measured)
