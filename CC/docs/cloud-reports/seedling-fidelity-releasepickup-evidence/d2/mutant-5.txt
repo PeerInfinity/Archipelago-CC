@@ -1,0 +1,3 @@
+     × T on the tower's first stepped tick: OFF (T and dialogue keys ON) claims an anim 150 frames stale; ON fixes or refuses 49ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 78 passed (79)
