@@ -7864,6 +7864,8 @@ export function previewWalk(run, wps, tolerance = 0,
     }
     // ⛓ hammer-phase D1 — every sample is a previewed player state: the progress tile map's unit
     if (activeProgress !== null) progressPreview(run, samples);
+    // ⛓ hammer-phase SPINNER880 — the preview meter's count (`PREVIEW_METER`, OFF ⇒ not reached)
+    if (PREVIEW_METER.enabled) meterPreviewStates(samples.length);
     return { samples, startTick, truncated, stood: standFor, plannedStruck };
 }
 
@@ -28878,6 +28880,67 @@ export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
 export const WALK_CHECK_TICKS = 32;
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE SPINNER880 — **THE PREVIEW METER: PREVIEWED STATES ARE WORK** (`PREVIEW_METER`, OFF;
+ * `SEEDLING_PREVIEW_METER=1`). ⚖ The user, 2026-11-23: *"One slice for both (Recommended)"* — the L40 corner and why
+ * its solves burn wall time without spending work.
+ *
+ * ⛔ WHAT IT FIXES, MEASURED (`profile-seedling-solve-wall.mjs`, `CC/docs/cloud-reports/seedling-hammer-spinner880.md`):
+ * a work unit is one `shouldStop` ask, and a segment's drive asks the `walk` site once every `WALK_CHECK_TICKS` ticks.
+ * The press kill re-derives its strike EVERY driven tick (`deriveStrike`, whose per-cell `previewWalk`s are the cost),
+ * so on a busy room one walk unit stood for 10–23 s of node wall: whole-game P1 19:1 spent 98 % of its 182 s in 16 such
+ * gaps (work 112), P1 26:11 97 % of its 904 s in 48 (work 642: a 640 cut the page's 300 s backstop kills first). In
+ * both, 93 % of the kill's samples are `deriveStrike` → `previewWalk`: 917 k and 9.95 M previewed states, unmetered.
+ *
+ * ⇒ ON, every state `previewWalk` samples under a FINE deadline (`fineCheckpoints`) is counted on that deadline, and
+ * the drive's `walk` site is asked once more for every `statesPerUnit` of them (`previewUnitDue`): the budget and the
+ * held retry see the preview's wall, and a trip refuses by name exactly as the walk site's own trip does. No deadline,
+ * or one that did not opt into fine checkpoints ⇒ nothing is counted and nothing is asked. A count, never the clock.
+ *
+ * `statesPerUnit` = 1024: a previewed state is one player step (~0.07–0.12 ms on the 4-core cloud box, measured on the
+ * two requests above), and a walk unit is `WALK_CHECK_TICKS` driven ticks at ~2–3 ms each on L40 (the constant's own
+ * note), so ~1024 previewed states cost about one walk unit's wall. A row may set it.
+ */
+export const PREVIEW_METER = { enabled: globalThis.process?.env?.SEEDLING_PREVIEW_METER === '1', statesPerUnit: 1024 };
+export const PREVIEW_METER_DEFAULT = false;
+
+/** The meter's instrument: states counted, units asked, and the asks that tripped. */
+export const PREVIEW_METER_COUNTS = { states: 0, asked: 0, tripped: 0 };
+
+/** Run `fn` with `PREVIEW_METER` set to `enabled`, restoring the previous value (also on a throw). */
+export function withPreviewMeter(enabled, fn) {
+    const was = PREVIEW_METER.enabled;
+    PREVIEW_METER.enabled = enabled === true;
+    try { return fn(); } finally { PREVIEW_METER.enabled = was; }
+}
+
+/** ⛓ PREVIEW_METER — `n` previewed states, counted on the active FINE deadline (none ⇒ nothing). */
+function meterPreviewStates(n) {
+    const d = activeDeadline;
+    if (d === null || d.fine !== true) return;
+    d.previewStates = (d.previewStates ?? 0) + n;
+    PREVIEW_METER_COUNTS.states += n;
+}
+
+/**
+ * ⛓ PREVIEW_METER — the drive's extra `walk` asks: one per `statesPerUnit` previewed states not yet charged. `true`
+ * when an ask tripped (the caller refuses by name, as the walk site's own trip does).
+ */
+function previewUnitDue() {
+    const d = activeDeadline;
+    if (d === null || d.fine !== true) return false;
+    const k = PREVIEW_METER.statesPerUnit;
+    while ((d.previewStates ?? 0) - (d.previewCharged ?? 0) >= k) {
+        d.previewCharged = (d.previewCharged ?? 0) + k;
+        PREVIEW_METER_COUNTS.asked += 1;
+        if (fineDeadlineReached('walk')) {
+            PREVIEW_METER_COUNTS.tripped += 1;
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
  * ⛓⛓ SEEDLING FIDELITY BOBSOLDIER2, D3 — **THE FORK'S REPLAY, ON THE RUN'S OWN CLOCK** (`solveSegment`'s `fork`).
  *
  * A fork is `perTick` (the prefix and every tick this segment drove) replayed onto a fresh run, with the
@@ -29496,6 +29559,11 @@ function solveSegmentUnder({
             if ((activeDeadline !== null || activeProgress !== null) && tapeTick > prefix.length
                 && (tapeTick - prefix.length) % WALK_CHECK_TICKS === 0 && fineDeadlineReached('walk')) {
                 refuseWalkDeadline(`after ${tapeTick - prefix.length} tick(s) of the segment's drive`);
+            }
+            // ⛓ hammer-phase SPINNER880 — the previews' share of the work clock (`PREVIEW_METER`, OFF ⇒ not reached)
+            if (PREVIEW_METER.enabled && tapeTick > prefix.length && previewUnitDue()) {
+                refuseWalkDeadline(`after ${tapeTick - prefix.length} tick(s) of the segment's drive, on the `
+                    + `previewed states the drive spent (PREVIEW_METER: one ask per ${PREVIEW_METER.statesPerUnit})`);
             }
             const deaths0 = DRIVE_DEATH_REFUSED.enabled ? inner.ledger('playerDeaths').length : 0;
             const out = advanceNamingRefusals(inner, held); // ⛓ housekeep D1: a coded throw named on its way out
