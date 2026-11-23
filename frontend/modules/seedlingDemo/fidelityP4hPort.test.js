@@ -308,3 +308,25 @@ describe('the Owl plans (option A) replay on the p4h model', () => {
         });
     }
 });
+
+describe('the L57 Sword plans (option A, model-made) replay on the p4h model', () => {
+    // Each is the solver's own `tentaclebeast` plan at a committed witness's staging, asked as p4h, emitted open-loop
+    // (fixtures/p4h-tb-plans). UNWITNESSED: the planner's local pass judges them on seedling_bot_ap_p4h.
+    for (const name of ['tb-hitless-pit-p4h.json', 'tb-hitless-door-p4h.json', 'tb-hitless-s2-p4h.json']) {
+        it(`${name}: no hit, no death, {57,0} earned, into L58 — the same on two seeds`, () => {
+            const tape = JSON.parse(readFileSync(join(HERE, 'fixtures/p4h-tb-plans', name), 'utf8'));
+            const play = (seed) => withContactFidelity({ tentacleBeastFight: true, tentacleHitlessFirst: true }, () => {
+                const t = parseTape(JSON.stringify({ ...tape, rng: { ...tape.rng, seed } }));
+                const run = createRunForStaging(stagingFromTape(t), atlasLevelSource(), { capabilities: P4H_CAPS });
+                for (let i = 0; i < t.tick_count; i += 1) run.advance(heldKeysAt(t, i));
+                return { level: run.level, hits: run.playerHits.length, deaths: run.playerDeaths.length,
+                    clears: run.earnedClears.map((c) => `${c.level}:${c.tag}`),
+                    spawns: run.tentacleBeastEvents.map((e) => [e.t, e.kind, e.x ?? null, e.y ?? null]) };
+            });
+            const a = play(tape.rng.seed);
+            expect(a).toMatchObject({ level: 58, hits: 0, deaths: 0 });
+            expect(a.clears).toContain('57:0');
+            expect(play(7)).toEqual(a);
+        });
+    }
+});
