@@ -1,0 +1,2 @@
+REPLAY: leg 26 request 11 (budget 640): 1 distinct answer(s) over 1, 1 distinct trace(s)
+LIVE: the page's worker answered {"ok":false,"kind":"budget","work":null,"passes":null,"answer":"8761d26fb8d6","message":"cancelled"}

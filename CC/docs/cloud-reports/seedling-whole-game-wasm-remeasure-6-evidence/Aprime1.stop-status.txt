@@ -1,0 +1,1 @@
+error: level_40__r26c13: the bot cannot walk to location "Level 040 - Chest" — the wasm playback failed: the solve exceeded the backstop on this machine (300 s) on location in level 40 (terminated; the solve's own budget is 640 work units)
