@@ -78,6 +78,8 @@ import { CONTACT_FIDELITY, contactFidelityStamp, normalizeContactFidelity, withC
 import { axeDodgeAskStamp, withAxeDodgeAsk } from './axeDodgeAskHook.js';
 import { DASH_ONLY_WINDOW, dashOnlyWindowStamp, withDashOnlyWindow } from './dashOnlyWindowHook.js';
 import { dashShapeRead, dashShapeStamp, withDashShape } from './dashShapeHook.js';
+// ⛓ SIBLING-EXIT — the sibling choice (a leaf module beside `solverEnvChannel`).
+import { attachSiblingSolverGoals, siblingExitNote, solveWithSiblings } from './siblingExitChoice.js';
 
 /** Refutations of one goal's plans before the goal FAILS, by name (§2.2 step 5). */
 export const MAX_REFUTATIONS = 3;
@@ -651,6 +653,11 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => 
             return solveAnytime(rest, { passes, clock, onPass: (one, best, index) => onPass(stamp(one), stamp(best), index) });
         });
         return stamp(out);
+    }
+    // ⛓ SIBLING-EXIT (`siblingExitChoice.js`, OFF: no goal carries siblings) — the named exit, then, only if its plan
+    // takes a hit, each AP-equivalent sibling from the same request; the chosen solve's answer, stamped `siblingExit`.
+    if (Array.isArray(request.solverGoal?.siblings) && request.solverGoal.siblings.length > 0) {
+        return solveWithSiblings(request, (r, hear) => solveAnytime(r, { passes, clock, onPass: hear }), onPass);
     }
     let best = null;
     let last = null;
@@ -1228,6 +1235,13 @@ export const billedHitsOf = (plan) => (plan?.forcedHits ?? []).reduce((n, f) => 
 
 /** ⛓ FORCED-HIT CONSUMER — the note's tail for a plan that billed a forced crossing ('' for any other plan). */
 export function forcedHitNote(plan) {
+    // ⛓ SIBLING-EXIT — the shipped plan's sibling choice, by name (both runtimes' notes read this line; OFF: no stamp).
+    const sib = siblingExitNote(plan);
+    if (sib) return `; ${sib}${forcedHitNoteOf(plan)}`;
+    return forcedHitNoteOf(plan);
+}
+
+function forcedHitNoteOf(plan) {
     if (!plan?.forcedHits?.length) return '';
     const d = plan.damage;
     return `; forced hit: ${billedHitsOf(plan)} hit(s) billed over ${plan.forcedHits.length} crossing(s)`
@@ -1349,12 +1363,14 @@ export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
  * @param {number} [deps.backstopMs]  the wall-clock backstop (`SOLVE_BACKSTOP_MS`): past it the goal FAILS by name
  * @param {(goal:object) => ({x:number, y:number}|null)} deps.placementOf  a location's entity (OEL)
  * @param {(e:object) => void} [deps.onEvent]  `{type, message, …}` per solve / refutation / decline
+ * @param {((run:object, goal:object) => object)|null} [deps.resolveExit]  ⛓ SIBLING-EXIT — an exit goal's cell
+ *   resolution (`jsRuntimeWalker.exitResolutionOf`), for the siblings a goal carries; null = siblings are not mapped
  */
 export function createRuntimeSolver({
     getSession, getLevelSource, getRecords = () => null, placementOf = () => null,
     onEvent = () => {}, maxRefutations = MAX_REFUTATIONS, clock = () => Date.now(), solveService = null,
     budgetWork = SOLVER_BUDGET_WORK, loadBudgetMs = LOAD_BUDGET_MS, upgradeWindowWork: windowWork = SOLVER_UPGRADE_WINDOW_WORK,
-    backstopMs = SOLVE_BACKSTOP_MS,
+    backstopMs = SOLVE_BACKSTOP_MS, resolveExit = null,
 } = {}) {
     let enabled = false;
     let plan = null;
@@ -1602,7 +1618,9 @@ export function createRuntimeSolver({
                     return { failed: `the solver's plan was refuted ${refutations} time(s) — last: ${lastRefutation}` };
                 }
                 try {
-                    start(run, goal, mapped.goal);
+                    // ⛓ SIBLING-EXIT — a goal carrying AP-equivalent siblings (ON only) hands each, mapped, to the solve.
+                    start(run, goal, attachSiblingSolverGoals(goal, mapped.goal, (g) => (resolveExit
+                        ? solverGoalFor(g, { run, resolved: resolveExit(run, g), levelSource: getLevelSource() }).goal ?? null : null)));
                 } catch (err) {
                     if (err instanceof ShadowDivergence) return { failed: err.message };
                     throw err;

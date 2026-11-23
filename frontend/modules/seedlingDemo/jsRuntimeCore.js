@@ -146,7 +146,7 @@ import { HITBOX } from './playerPhysicsV1.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { BUILD_SPAWN, heldKeysAt, INVENTORY_ITEM_IDS, ITEM_PROPERTIES, parseTape, SAVE_SLOTS } from './tapeFormat.js';
 import { stagingFromTape } from './tapeRunner.js';
-import { createRuntimeWalker, goalTiles, WALK_STATES } from './jsRuntimeWalker.js';
+import { createRuntimeWalker, exitResolutionOf, goalTiles, WALK_STATES } from './jsRuntimeWalker.js';
 import { createRuntimeSolver } from './jsRuntimeSolver.js';
 import { VANILLA_RECORD_SET_ID_BASE } from './levelSetExporter.js';
 import { encounterReportServed, locationGoalServed } from './wasmPlayback.js';
@@ -526,6 +526,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         getRecords: () => roomSource()?.records ?? null,
         placementOf: (goal) => locationEntityOf(roomRecord(goal.level), goal.tag, goal.entityType ?? null),
         onEvent: (e) => note({ type: 'solver', solver: e.type, message: e.message }),
+        // ⛓ SIBLING-EXIT — the siblings a goal carries (ON only) are mapped by the arrival mapper's own cell rule.
+        resolveExit: exitResolutionOf,
     });
     /** ⛓ S1 — `instant`: play the solver's planned keys in one burst (a page tick each). */
     let instant = false;

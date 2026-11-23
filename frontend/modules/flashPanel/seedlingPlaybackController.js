@@ -110,6 +110,8 @@ import SEEDLING_PLAYTHROUGH_ATLAS_DOC from './atlases/seedling-playthrough.json'
 // ⛓ LIGHTS WIRING — import-free (the model's switches as data; the panel's closure already holds it through
 // `seedlingContactSettings.js`): a wired boss fight is walked only while its switch is ON (`BOUND_BOSS_FIGHTS`).
 import { CONTACT_FIDELITY } from '../seedlingDemo/contactFidelity.js';
+// ⛓ SIBLING-EXIT — the AP-equivalent sibling exits (switch OFF: no map or goal carries them; a leaf module).
+import { SIBLING_EXIT_CHOICE, apSiblingExitsOf } from '../seedlingDemo/siblingExitChoice.js';
 
 /** The substrate this controller walks (the default instance; J3 builds a second for the atlas rooms). */
 export const SEEDLING_PLAYBACK_SUBSTRATE = 'flash_seedling_gen';
@@ -217,6 +219,12 @@ export function resolveSeedlingAtlasGoal(target, atlas, { liveLevel = null, regi
             if (!exit) continue;
             if (!Array.isArray(exit.exit_tiles) || exit.exit_tiles.length === 0) {
                 return { refused: `the atlas exit "${name}" marks no exit tiles to walk onto` };
+            }
+            // ⛓ SIBLING-EXIT (ON only) — the route's exit, with its AP-equivalent siblings for the solve to weigh.
+            const siblings = SIBLING_EXIT_CHOICE.enabled ? atlas?.siblingExits?.get?.(exit.exitName) ?? null : null;
+            if (siblings?.length) {
+                return { goal: { kind: 'exit', level: payload.level, tiles: exit.exit_tiles, name,
+                    siblings: siblings.map((x) => ({ name: x.name, tiles: x.tiles.map((t) => [...t]) })) } };
             }
             return { goal: { kind: 'exit', level: payload.level, tiles: exit.exit_tiles, name } };
         }
@@ -528,17 +536,20 @@ export function realRoomPlaybackMap(loaded, rawRules, { atlases = [SEEDLING_PLAY
     const player = roomPlayerOf(playerId);
     const regions = new Map(atlasRoomRegions(rawRules, player).map(({ region }) => [region,
         rawRules.preset_sidecars[player][region].playable_payload]));
+    // ⛓ SIBLING-EXIT (ON only) — every door's AP-equivalent siblings, read off the rules (OFF: the map is today's).
+    const siblings = SIBLING_EXIT_CHOICE.enabled ? { siblingExits: apSiblingExitsOf(rawRules, player, regions) } : {};
     if (loaded.arm === RANDOMIZER_ARMS.ATLAS) {
         const ev = runtimeEventsOf(rawRules, player);
         return { arm: RANDOMIZER_ARMS.ATLAS, entries: loaded.entries ?? [], refused: ev.refused.length ? [...(loaded.refused ?? []), ...ev.refused] : loaded.refused ?? [],
-            events: ev.events, regions, links: realRoomLinks(rawRules, regions) };
+            events: ev.events, regions, links: realRoomLinks(rawRules, regions), ...siblings };
     }
     // The vanilla arm's result carries no `arm` field (its shape predates the other two): it is the arm
     // whose load DELIVERED a rewritten set.
     if (!loaded.set) return null;
-    return vanillaArmPlaybackMap({ entries: loaded.entries ?? [], encounters: loaded.encounters ?? [],
+    const map = vanillaArmPlaybackMap({ entries: loaded.entries ?? [], encounters: loaded.encounters ?? [],
         reports: loaded.reports ?? [], set: loaded.set, regions, rules: rawRules, playerId: player,
         ...rulesAtlasOf(rawRules, atlases, player) });
+    return siblings.siblingExits ? { ...map, ...siblings } : map;
 }
 
 const ROOMS_OF = Object.freeze({ flash_seedling_gen: 'generated rooms', flash_seedling: 'atlas rooms' });

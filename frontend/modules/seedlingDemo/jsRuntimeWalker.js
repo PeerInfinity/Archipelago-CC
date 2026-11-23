@@ -202,6 +202,19 @@ export function nearestPitAt(world, tiles, from) {
 }
 
 /**
+ * ⛓ SIBLING-EXIT — an exit goal's cell resolution for the SOLVER mapping (`solverGoalFor`'s `resolved`), the rule
+ * `wasmArrival.arrivalSolverGoal` applies: the live teleporter on its cells nearest the player, else its pit tile.
+ * Used for the AP-equivalent siblings a goal carries (`siblingExitChoice.attachSiblingSolverGoals`); never a walk.
+ */
+export function exitResolutionOf(run, goal) {
+    const tiles = goalTiles(goal);
+    const hit = nearestTeleporterAt(run?.world, tiles, run?.state);
+    if (hit) return { allowTeleporter: hit.index };
+    const pit = nearestPitAt(run?.world, tiles, run?.state);
+    return pit ? { allowTeleporter: null, pit: { tx: pit.tx, ty: pit.ty } } : { allowTeleporter: null };
+}
+
+/**
  * The waypoint this tick drives toward: the first one not yet reached, else the last.
  *
  * ⛓ fidelity wave 16 (`CONTACT_FIDELITY.waypointSlide`) — "reached" is `botDriverV2.waypointReached`, the predicate

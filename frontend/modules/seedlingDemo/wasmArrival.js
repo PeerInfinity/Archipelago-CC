@@ -49,6 +49,7 @@ import { SEAM_BOOT_SPEC, SEAM_PREBUILD_FIELDS, SEAM_SIGNATURE, segmentBootFromLa
 import { createRunForStaging } from './tapeRunner.js';
 import { liveOf, replayTape, solverGoalFor } from './jsRuntimeSolver.js';
 import { goalTiles, nearestPitAt, nearestTeleporterAt } from './jsRuntimeWalker.js';
+import { attachSiblingSolverGoals } from './siblingExitChoice.js';
 import { JS_RUNTIME_PINS, locationEntityOf } from './jsRuntimeCore.js';
 import { ITEM_PROPERTIES, PIN_NAMES } from './tapeFormat.js';
 
@@ -448,7 +449,11 @@ export function arrivalSolverGoal(goal, { staging, levelSource, record, run: giv
     // ⛓ EVENT GOALS — nor does an event location (→ `clear-tag`).
     const placement = goal.kind === 'location' && !goal.encounter && !goal.event
         ? locationEntityOf(record, goal.tag, goal.entityType ?? null) : null;
-    return solverGoalFor(goal, { run, resolved, placement, generated: false, levelSource });
+    const mapped = solverGoalFor(goal, { run, resolved, placement, generated: false, levelSource });
+    // ⛓ SIBLING-EXIT — a goal carrying AP-equivalent siblings (ON only) hands each, mapped on the same run, to the solve.
+    if (!mapped.goal || !Array.isArray(goal.siblings) || goal.siblings.length === 0) return mapped;
+    return { ...mapped, goal: attachSiblingSolverGoals(goal, mapped.goal,
+        (g) => arrivalSolverGoal(g, { staging, levelSource, record, run }).goal ?? null) };
 }
 
 /**
