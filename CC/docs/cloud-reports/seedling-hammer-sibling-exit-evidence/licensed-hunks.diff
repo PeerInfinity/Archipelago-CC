@@ -1,0 +1,245 @@
+diff --git a/frontend/modules/flashPanel/seedlingPlaybackController.js b/frontend/modules/flashPanel/seedlingPlaybackController.js
+index 83cfed4e..15af391c 100644
+--- a/frontend/modules/flashPanel/seedlingPlaybackController.js
++++ b/frontend/modules/flashPanel/seedlingPlaybackController.js
+@@ -110,6 +110,8 @@ import SEEDLING_PLAYTHROUGH_ATLAS_DOC from './atlases/seedling-playthrough.json'
+ // ⛓ LIGHTS WIRING — import-free (the model's switches as data; the panel's closure already holds it through
+ // `seedlingContactSettings.js`): a wired boss fight is walked only while its switch is ON (`BOUND_BOSS_FIGHTS`).
+ import { CONTACT_FIDELITY } from '../seedlingDemo/contactFidelity.js';
++// ⛓ SIBLING-EXIT — the AP-equivalent sibling exits (switch OFF: no map or goal carries them; a leaf module).
++import { SIBLING_EXIT_CHOICE, apSiblingExitsOf } from '../seedlingDemo/siblingExitChoice.js';
+ 
+ /** The substrate this controller walks (the default instance; J3 builds a second for the atlas rooms). */
+ export const SEEDLING_PLAYBACK_SUBSTRATE = 'flash_seedling_gen';
+@@ -218,6 +220,12 @@ export function resolveSeedlingAtlasGoal(target, atlas, { liveLevel = null, regi
+             if (!Array.isArray(exit.exit_tiles) || exit.exit_tiles.length === 0) {
+                 return { refused: `the atlas exit "${name}" marks no exit tiles to walk onto` };
+             }
++            // ⛓ SIBLING-EXIT (ON only) — the route's exit, with its AP-equivalent siblings for the solve to weigh.
++            const siblings = SIBLING_EXIT_CHOICE.enabled ? atlas?.siblingExits?.get?.(exit.exitName) ?? null : null;
++            if (siblings?.length) {
++                return { goal: { kind: 'exit', level: payload.level, tiles: exit.exit_tiles, name,
++                    siblings: siblings.map((x) => ({ name: x.name, tiles: x.tiles.map((t) => [...t]) })) } };
++            }
+             return { goal: { kind: 'exit', level: payload.level, tiles: exit.exit_tiles, name } };
+         }
+         // ⛓ VANILLA MAP — a rules exit between two sub-regions of ONE level is a LOGICAL link (it carries a
+@@ -528,17 +536,20 @@ export function realRoomPlaybackMap(loaded, rawRules, { atlases = [SEEDLING_PLAY
+     const player = roomPlayerOf(playerId);
+     const regions = new Map(atlasRoomRegions(rawRules, player).map(({ region }) => [region,
+         rawRules.preset_sidecars[player][region].playable_payload]));
++    // ⛓ SIBLING-EXIT (ON only) — every door's AP-equivalent siblings, read off the rules (OFF: the map is today's).
++    const siblings = SIBLING_EXIT_CHOICE.enabled ? { siblingExits: apSiblingExitsOf(rawRules, player, regions) } : {};
+     if (loaded.arm === RANDOMIZER_ARMS.ATLAS) {
+         const ev = runtimeEventsOf(rawRules, player);
+         return { arm: RANDOMIZER_ARMS.ATLAS, entries: loaded.entries ?? [], refused: ev.refused.length ? [...(loaded.refused ?? []), ...ev.refused] : loaded.refused ?? [],
+-            events: ev.events, regions, links: realRoomLinks(rawRules, regions) };
++            events: ev.events, regions, links: realRoomLinks(rawRules, regions), ...siblings };
+     }
+     // The vanilla arm's result carries no `arm` field (its shape predates the other two): it is the arm
+     // whose load DELIVERED a rewritten set.
+     if (!loaded.set) return null;
+-    return vanillaArmPlaybackMap({ entries: loaded.entries ?? [], encounters: loaded.encounters ?? [],
++    const map = vanillaArmPlaybackMap({ entries: loaded.entries ?? [], encounters: loaded.encounters ?? [],
+         reports: loaded.reports ?? [], set: loaded.set, regions, rules: rawRules, playerId: player,
+         ...rulesAtlasOf(rawRules, atlases, player) });
++    return siblings.siblingExits ? { ...map, ...siblings } : map;
+ }
+ 
+ const ROOMS_OF = Object.freeze({ flash_seedling_gen: 'generated rooms', flash_seedling: 'atlas rooms' });
+diff --git a/scripts/procgen/survey-seedling-route.mjs b/scripts/procgen/survey-seedling-route.mjs
+index 632d5b4b..c009869f 100644
+--- a/scripts/procgen/survey-seedling-route.mjs
++++ b/scripts/procgen/survey-seedling-route.mjs
+@@ -199,6 +199,14 @@ import { parseDashMode, dashModeNote } from './dashMode.js';
+ 
+ import { argvHelp } from './argvHelp.js';
+ import { seedlingSurveyDir, throughSurveyDir } from './seedlingSurveyDir.js';
++/**
++ * ⛓ SIBLING-EXIT (`SEEDLING_SIBLING_EXIT_CHOICE=1`, OFF: nothing below runs and no row gains a field) — under
++ * `--through`, the crossing "the door AP's path took" also offers its AP-equivalent siblings (same region, same
++ * `connected_region`, same rule OBJECT: `siblingExitChoice.apSiblingExitsOf`); a step whose crossing plan takes a hit
++ * solves each sibling and ships the choice (`chooseSiblingExit`), and the next step arrives where the chosen one lands
++ * (the parent hands it to that step's child as `--arrival-override=<x>,<y>`).
++ */
++import { SIBLING_EXIT_CHOICE, apSiblingExitsOf, chooseSiblingExit } from '../../frontend/modules/seedlingDemo/siblingExitChoice.js';
+ import { DEFAULT_SURVEY_PRESET, assertPresetId, deliveredMapDocument, presetRulesPath, sphereOrderFor } from './surveyPreset.js';
+ 
+ argvHelp(import.meta.url);
+@@ -219,6 +227,14 @@ const argOf = (k, dflt) => {
+ };
+ const STEP = argOf('step', null);
+ const ONLY = argOf('only', null);
++/** ⛓ SIBLING-EXIT (ON only) — the parent's hand-over: this step arrives where the previous step's chosen sibling lands. */
++const ARRIVAL_OVERRIDE = (() => {
++    const v = argOf('arrival-override', null);
++    if (v === null) return null;
++    const [x, y] = v.split(',').map(Number);
++    if (!Number.isInteger(x) || !Number.isInteger(y)) { console.error(`ERROR: --arrival-override=${v} is not <x>,<y>`); process.exit(2); }
++    return { x, y };
++})();
+ /**
+  * ⛓ STRATEGY SWITCH r1 — `--disable=<name>[,<name>…]`: every step solved with those strategies switched off
+  * (`twoPassSolve`'s `disable`; the flag is ON by default, and with `SEEDLING_STRATEGY_SWITCH=0` every step REFUSES by
+@@ -622,6 +638,26 @@ function hopEdge(from, to, hop) {
+     }
+ }
+ 
++/**
++ * ⛓ SIBLING-EXIT (ON, `--through` only) — the AP-equivalent siblings of the exit AP's path took out of `from`, each
++ * resolved to its own crossing by `hopEdge` (a sibling with no edge is dropped). `[]` OFF, or when it has none.
++ */
++let SIBLINGS_BY_EXIT = null;
++function crossingSiblings(from, to, hop) {
++    if (!SIBLING_EXIT_CHOICE.enabled || !THROUGH || !hop?.name) return [];
++    SIBLINGS_BY_EXIT ??= apSiblingExitsOf(apRules, '1', new Map(Object.entries(apRules.preset_sidecars?.['1'] ?? {})
++        .map(([r, side]) => [r, side?.playable_payload])));
++    const out = [];
++    for (const sib of SIBLINGS_BY_EXIT.get(hop.name) ?? []) {
++        const { edge } = hopEdge(from, to, { region: hop.region, name: sib.name });
++        if (!edge) continue;
++        out.push({ name: sib.name, kind: edge.kind === 'pit' ? 'reach-pit' : 'reach-exit',
++            ...(edge.kind === 'pit' ? { pit: { ...edge.pit } } : { exit: { ...edge.exit } }),
++            arrival: edge.arrival ? { x: edge.arrival.x, y: edge.arrival.y } : null, via: edge.via });
++    }
++    return out;
++}
++
+ // ─────────────────────────────────────────────────────────────────────
+ // 2. THE ROUTE — three BFS legs over AP's own region graph
+ // ─────────────────────────────────────────────────────────────────────
+@@ -1144,7 +1180,10 @@ function buildSteps(visits, legs, id) {
+                 //   (the solver falls through after the drop); a second
+                 //   reach-pit goal would ask for the fall twice.
+             } else if (edge?.kind === 'pit') {
+-                goals.push({ kind: 'reach-pit', pit: { ...edge.pit }, why: `${edge.via} → L${next.level}` });
++                // ⛓ SIBLING-EXIT (ON only) — the crossing carries its AP-equivalent siblings.
++                const siblings = crossingSiblings(v.level, next.level, v.exitOut);
++                goals.push({ kind: 'reach-pit', pit: { ...edge.pit }, why: `${edge.via} → L${next.level}`,
++                    ...(siblings.length ? { exitName: v.exitOut.name, siblings } : {}) });
+             } else if (edge) {
+                 // ⛓ fidelity BOSSFORK D3 (ON only: OFF no edge is `tentaclebeast@`): the mouth stands only once the beast
+                 //   is dead, so its crossing is the fight first, unless this visit's goals already clear its report —
+@@ -1153,7 +1192,10 @@ function buildSteps(visits, legs, id) {
+                 if (mouthFight && !goals.some((g) => g.kind === 'clear-tag' && g.obstacle === mouthFight.obstacle)) {
+                     goals.push(mouthFight);
+                 }
+-                goals.push({ kind: 'reach-exit', exit: edge.exit, why: `${edge.via} → L${next.level}` });
++                // ⛓ SIBLING-EXIT (ON only) — the crossing carries its AP-equivalent siblings.
++                const siblings = crossingSiblings(v.level, next.level, v.exitOut);
++                goals.push({ kind: 'reach-exit', exit: edge.exit, why: `${edge.via} → L${next.level}`,
++                    ...(siblings.length ? { exitName: v.exitOut.name, siblings } : {}) });
+             }
+         }
+         const prev = visits[i - 1];
+@@ -1768,6 +1810,53 @@ async function solveOneStep(step) {
+         };
+     }
+ 
++    /**
++     * ⛓ SIBLING-EXIT (ON only: no goal carries `siblings` OFF) — the crossing's plan takes a hit: each AP-equivalent
++     * sibling is solved from the same boot with the crossing goal swapped, replayed the same way, and the step ships
++     * `chooseSiblingExit`'s choice. The row names it (`siblingExit`), with every sibling's verdict.
++     */
++    let siblingExit = null;
++    const crossingGoal = solvable.at(-1);
++    if (solved && replay && Array.isArray(crossingGoal?.siblings) && crossingGoal.siblings.length > 0) {
++        const hurt = replay.hits > 0 || replay.deaths > 0;
++        const rows = [{ name: crossingGoal.exitName, ok: true, ticks: solved.out.perTick.length, hits: replay.hits,
++            deaths: replay.deaths, via: crossingGoal.why }];
++        const tried = [{ solved, replay }];
++        if (hurt) {
++            for (const sib of crossingGoal.siblings) {
++                const sibGoals = [...goals.slice(0, -1), sib.kind === 'reach-pit'
++                    ? { kind: 'reach-pit', pit: { ...sib.pit } } : { kind: 'reach-exit', exit: { ...sib.exit } }];
++                let alt = null;
++                let why = null;
++                try {
++                    // eslint-disable-next-line no-await-in-loop
++                    alt = await twoPassSolve({ makeRun, goals: sibGoals, name: `survey-step-${step.step}-sibling`, boot: staging.boot,
++                        dashMode: DASH_MODE, persistence: staging.persistence, log: () => {}, ...(DISABLE ? { disable: DISABLE } : {}) });
++                } catch (e) { why = e.message.split('\n')[0]; }
++                let rep = null;
++                if (alt) {
++                    const run = makeRun(alt.persistence);
++                    const equipsAt = new Map((alt.out.equips ?? []).map((e) => [e.t, e.slot]));
++                    alt.out.perTick.forEach((held, t) => {
++                        if (equipsAt.has(t)) run.equipNow(equipsAt.get(t));
++                        run.advance(held);
++                    });
++                    rep = { hits: run.playerHits.length, deaths: run.playerDeaths.length, endLevel: run.level,
++                        transitions: (run.transitions ?? []).map((t) => `${t.from}->${t.to}@${t.t}`),
++                        earnedClears: (run.earnedClears ?? []).map((c) => `{${c.level},${c.tag}}`) };
++                }
++                tried.push({ solved: alt, replay: rep });
++                rows.push({ name: sib.name, ok: !!alt, ticks: alt ? alt.out.perTick.length : null, hits: rep?.hits ?? null,
++                    deaths: rep?.deaths ?? null, via: sib.via, ...(why ? { refusal: why } : {}) });
++            }
++        }
++        const choice = chooseSiblingExit(rows);
++        const chosen = crossingGoal.siblings[choice.index - 1] ?? null;
++        siblingExit = { named: crossingGoal.exitName, chosen: choice.chosen, why: choice.why, rows,
++            ...(chosen ? { arrival: chosen.arrival, namedTicks: solved.out.perTick.length, namedHits: replay.hits } : {}) };
++        if (choice.index > 0) ({ solved, replay } = tried[choice.index]);
++    }
++
+     if (solved) {
+         const walk = buildStagedTape({
+             staging: { ...staging, persistence: solved.persistence,
+@@ -1820,6 +1909,8 @@ async function solveOneStep(step) {
+          */
+         agreesWithKnown: known && solved
+             ? solved.out.perTick.length === committedTape(known).tick_count : null,
++        ...(siblingExit ? { siblingExit } : {}),
++        ...(step.arrivalOverride ? { arrivalOverride: step.arrivalOverride } : {}),
+     };
+ }
+ 
+@@ -1915,6 +2006,11 @@ assertBootSourcesOnDisk();
+ if (STEP !== null) {
+     const step = allSteps.find((s) => String(s.step) === String(STEP));
+     if (!step) throw new Error(`no route step ${STEP} (the survey has ${allSteps.length})`);
++    // ⛓ SIBLING-EXIT (ON only) — the previous step shipped a sibling: this step arrives where that one lands.
++    if (ARRIVAL_OVERRIDE) {
++        step.arrivalOverride = { from: step.arrival ? { ...step.arrival } : null, to: { ...ARRIVAL_OVERRIDE } };
++        step.arrival = { ...ARRIVAL_OVERRIDE };
++    }
+     const result = await solveOneStep(step);
+     console.log(`##SURVEY##${JSON.stringify(result)}`);
+     process.exit(0);
+@@ -2178,8 +2274,12 @@ for (const s of addendum) {
+ }
+ 
+ const rows = [];
+-for (const step of [...route.steps, ...addendum]) {
++/** ⛓ SIBLING-EXIT (ON only) — `step id → {x, y}`: where the previous step's chosen sibling lands. */
++const arrivalOverrides = new Map();
++const surveyOrder = [...route.steps, ...addendum];
++for (const step of surveyOrder) {
+     if (wanted && !wanted.has(String(step.step))) continue;
++    const override = arrivalOverrides.get(String(step.step)) ?? null;
+     process.stdout.write(`\n== step ${step.step} — L${step.level} ... `);
+     const started = Date.now();
+     // eslint-disable-next-line no-await-in-loop
+@@ -2188,7 +2288,8 @@ for (const step of [...route.steps, ...addendum]) {
+             ...(THROUGH ? [`--through=${THROUGH}`, `--route=${ROUTE_MODE}`] : []),
+             ...(PRESET !== DEFAULT_SURVEY_PRESET ? [`--preset=${PRESET}`] : []),
+             ...(CARRY_EARNED !== null ? [`--carry-earned=${resolvePath(CARRY_EARNED)}`] : []),
+-            ...(DISABLE ? [`--disable=${DISABLE.join(',')}`] : [])], {
++            ...(DISABLE ? [`--disable=${DISABLE.join(',')}`] : []),
++            ...(override ? [`--arrival-override=${override.x},${override.y}`] : [])], {
+             cwd: REPO, timeout: TIMEOUT_S * 1000, maxBuffer: 64 * 1024 * 1024, killSignal: 'SIGKILL',
+         }, (err, stdout, stderr) => {
+             const marked = String(stdout).split('\n').find((l) => l.startsWith('##SURVEY##'));
+@@ -2224,6 +2325,11 @@ for (const step of [...route.steps, ...addendum]) {
+      */
+     res.family = familyOf(res.refusal, res.replay);
+     rows.push(res);
++    if (res.siblingExit?.arrival && res.siblingExit.chosen !== res.siblingExit.named) {
++        const at = surveyOrder.indexOf(step);
++        const next = surveyOrder[at + 1];
++        if (next && route.steps.includes(next) === route.steps.includes(step)) arrivalOverrides.set(String(next.step), res.siblingExit.arrival);
++    }
+     console.log(res.verdict === 'SOLVED'
+         ? `SOLVED ${res.ticks} ticks, ${res.traceRows} decision(s), ${res.replans} re-plan(s), `
+           + `${res.replay.hits} hit(s), ${res.passes.length} pass(es) — ${res.ms} ms`

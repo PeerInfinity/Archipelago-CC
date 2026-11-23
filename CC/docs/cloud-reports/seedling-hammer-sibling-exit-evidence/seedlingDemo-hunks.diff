@@ -1,0 +1,150 @@
+diff --git a/frontend/modules/seedlingDemo/jsRuntimeCore.js b/frontend/modules/seedlingDemo/jsRuntimeCore.js
+index bfe23d9c..e54fcfd2 100644
+--- a/frontend/modules/seedlingDemo/jsRuntimeCore.js
++++ b/frontend/modules/seedlingDemo/jsRuntimeCore.js
+@@ -146,7 +146,7 @@ import { HITBOX } from './playerPhysicsV1.js';
+ import { playerBoxAt } from './playerPhysicsV2.js';
+ import { BUILD_SPAWN, heldKeysAt, INVENTORY_ITEM_IDS, ITEM_PROPERTIES, parseTape, SAVE_SLOTS } from './tapeFormat.js';
+ import { stagingFromTape } from './tapeRunner.js';
+-import { createRuntimeWalker, goalTiles, WALK_STATES } from './jsRuntimeWalker.js';
++import { createRuntimeWalker, exitResolutionOf, goalTiles, WALK_STATES } from './jsRuntimeWalker.js';
+ import { createRuntimeSolver } from './jsRuntimeSolver.js';
+ import { VANILLA_RECORD_SET_ID_BASE } from './levelSetExporter.js';
+ import { encounterReportServed, locationGoalServed } from './wasmPlayback.js';
+@@ -526,6 +526,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
+         getRecords: () => roomSource()?.records ?? null,
+         placementOf: (goal) => locationEntityOf(roomRecord(goal.level), goal.tag, goal.entityType ?? null),
+         onEvent: (e) => note({ type: 'solver', solver: e.type, message: e.message }),
++        // ⛓ SIBLING-EXIT — the siblings a goal carries (ON only) are mapped by the arrival mapper's own cell rule.
++        resolveExit: exitResolutionOf,
+     });
+     /** ⛓ S1 — `instant`: play the solver's planned keys in one burst (a page tick each). */
+     let instant = false;
+diff --git a/frontend/modules/seedlingDemo/jsRuntimeSolver.js b/frontend/modules/seedlingDemo/jsRuntimeSolver.js
+index 4e2e3056..0575083b 100644
+--- a/frontend/modules/seedlingDemo/jsRuntimeSolver.js
++++ b/frontend/modules/seedlingDemo/jsRuntimeSolver.js
+@@ -78,6 +78,8 @@ import { CONTACT_FIDELITY, contactFidelityStamp, normalizeContactFidelity, withC
+ import { axeDodgeAskStamp, withAxeDodgeAsk } from './axeDodgeAskHook.js';
+ import { DASH_ONLY_WINDOW, dashOnlyWindowStamp, withDashOnlyWindow } from './dashOnlyWindowHook.js';
+ import { dashShapeRead, dashShapeStamp, withDashShape } from './dashShapeHook.js';
++// ⛓ SIBLING-EXIT — the sibling choice (a leaf module beside `solverEnvChannel`).
++import { attachSiblingSolverGoals, siblingExitNote, solveWithSiblings } from './siblingExitChoice.js';
+ 
+ /** Refutations of one goal's plans before the goal FAILS, by name (§2.2 step 5). */
+ export const MAX_REFUTATIONS = 3;
+@@ -652,6 +654,11 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () =>
+         });
+         return stamp(out);
+     }
++    // ⛓ SIBLING-EXIT (`siblingExitChoice.js`, OFF: no goal carries siblings) — the named exit, then, only if its plan
++    // takes a hit, each AP-equivalent sibling from the same request; the chosen solve's answer, stamped `siblingExit`.
++    if (Array.isArray(request.solverGoal?.siblings) && request.solverGoal.siblings.length > 0) {
++        return solveWithSiblings(request, (r, hear) => solveAnytime(r, { passes, clock, onPass: hear }), onPass);
++    }
+     let best = null;
+     let last = null;
+     const rows = [];
+@@ -1228,6 +1235,13 @@ export const billedHitsOf = (plan) => (plan?.forcedHits ?? []).reduce((n, f) =>
+ 
+ /** ⛓ FORCED-HIT CONSUMER — the note's tail for a plan that billed a forced crossing ('' for any other plan). */
+ export function forcedHitNote(plan) {
++    // ⛓ SIBLING-EXIT — the shipped plan's sibling choice, by name (both runtimes' notes read this line; OFF: no stamp).
++    const sib = siblingExitNote(plan);
++    if (sib) return `; ${sib}${forcedHitNoteOf(plan)}`;
++    return forcedHitNoteOf(plan);
++}
++
++function forcedHitNoteOf(plan) {
+     if (!plan?.forcedHits?.length) return '';
+     const d = plan.damage;
+     return `; forced hit: ${billedHitsOf(plan)} hit(s) billed over ${plan.forcedHits.length} crossing(s)`
+@@ -1349,12 +1363,14 @@ export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
+  * @param {number} [deps.backstopMs]  the wall-clock backstop (`SOLVE_BACKSTOP_MS`): past it the goal FAILS by name
+  * @param {(goal:object) => ({x:number, y:number}|null)} deps.placementOf  a location's entity (OEL)
+  * @param {(e:object) => void} [deps.onEvent]  `{type, message, …}` per solve / refutation / decline
++ * @param {((run:object, goal:object) => object)|null} [deps.resolveExit]  ⛓ SIBLING-EXIT — an exit goal's cell
++ *   resolution (`jsRuntimeWalker.exitResolutionOf`), for the siblings a goal carries; null = siblings are not mapped
+  */
+ export function createRuntimeSolver({
+     getSession, getLevelSource, getRecords = () => null, placementOf = () => null,
+     onEvent = () => {}, maxRefutations = MAX_REFUTATIONS, clock = () => Date.now(), solveService = null,
+     budgetWork = SOLVER_BUDGET_WORK, loadBudgetMs = LOAD_BUDGET_MS, upgradeWindowWork: windowWork = SOLVER_UPGRADE_WINDOW_WORK,
+-    backstopMs = SOLVE_BACKSTOP_MS,
++    backstopMs = SOLVE_BACKSTOP_MS, resolveExit = null,
+ } = {}) {
+     let enabled = false;
+     let plan = null;
+@@ -1602,7 +1618,9 @@ export function createRuntimeSolver({
+                     return { failed: `the solver's plan was refuted ${refutations} time(s) — last: ${lastRefutation}` };
+                 }
+                 try {
+-                    start(run, goal, mapped.goal);
++                    // ⛓ SIBLING-EXIT — a goal carrying AP-equivalent siblings (ON only) hands each, mapped, to the solve.
++                    start(run, goal, attachSiblingSolverGoals(goal, mapped.goal, (g) => (resolveExit
++                        ? solverGoalFor(g, { run, resolved: resolveExit(run, g), levelSource: getLevelSource() }).goal ?? null : null)));
+                 } catch (err) {
+                     if (err instanceof ShadowDivergence) return { failed: err.message };
+                     throw err;
+diff --git a/frontend/modules/seedlingDemo/jsRuntimeWalker.js b/frontend/modules/seedlingDemo/jsRuntimeWalker.js
+index e60b9f8a..5453c6f3 100644
+--- a/frontend/modules/seedlingDemo/jsRuntimeWalker.js
++++ b/frontend/modules/seedlingDemo/jsRuntimeWalker.js
+@@ -201,6 +201,19 @@ export function nearestPitAt(world, tiles, from) {
+     return best;
+ }
+ 
++/**
++ * ⛓ SIBLING-EXIT — an exit goal's cell resolution for the SOLVER mapping (`solverGoalFor`'s `resolved`), the rule
++ * `wasmArrival.arrivalSolverGoal` applies: the live teleporter on its cells nearest the player, else its pit tile.
++ * Used for the AP-equivalent siblings a goal carries (`siblingExitChoice.attachSiblingSolverGoals`); never a walk.
++ */
++export function exitResolutionOf(run, goal) {
++    const tiles = goalTiles(goal);
++    const hit = nearestTeleporterAt(run?.world, tiles, run?.state);
++    if (hit) return { allowTeleporter: hit.index };
++    const pit = nearestPitAt(run?.world, tiles, run?.state);
++    return pit ? { allowTeleporter: null, pit: { tx: pit.tx, ty: pit.ty } } : { allowTeleporter: null };
++}
++
+ /**
+  * The waypoint this tick drives toward: the first one not yet reached, else the last.
+  *
+diff --git a/frontend/modules/seedlingDemo/solverEnvChannel.js b/frontend/modules/seedlingDemo/solverEnvChannel.js
+index c63cccd3..cc9395fe 100644
+--- a/frontend/modules/seedlingDemo/solverEnvChannel.js
++++ b/frontend/modules/seedlingDemo/solverEnvChannel.js
+@@ -91,7 +91,7 @@ export const SOLVER_ENV_NAMES = Object.freeze([
+     'SEEDLING_REMOVED_BODY_BLOCKS', 'SEEDLING_RESTING_HOLDER', 'SEEDLING_ROCKLOCK_KILL', 'SEEDLING_ROCK_GONE_FENCEPOST',
+     'SEEDLING_ROPE_CUT_ANY_WEAPON', 'SEEDLING_ROPE_CUT_VERB',
+     'SEEDLING_SEAL_DOOR_APPROACH', 'SEEDLING_SECONDARY_USE', 'SEEDLING_SHAKE_BAND_MOOT', 'SEEDLING_SHAKE_EXACT_SPLIT',
+-    'SEEDLING_SHOVED_BODY_LOOKAHEAD',
++    'SEEDLING_SHOVED_BODY_LOOKAHEAD', 'SEEDLING_SIBLING_EXIT_CHOICE',
+     'SEEDLING_SPEAR_ARM', 'SEEDLING_SPEAR_BRIDGE_VERB', 'SEEDLING_SPEAR_GAME_TEST', 'SEEDLING_SPINNER_LOCK_LAG',
+     'SEEDLING_SPINNER_POINT_EXACT', 'SEEDLING_SPINNER_REMOVE_READ', 'SEEDLING_SPINNER_ROSTER_GONE',
+     'SEEDLING_SPINNER_SWING_LOS', 'SEEDLING_SPINNING_AXE_PLAYER_HIT',
+diff --git a/frontend/modules/seedlingDemo/wasmArrival.js b/frontend/modules/seedlingDemo/wasmArrival.js
+index ccecaf6f..90086fc3 100644
+--- a/frontend/modules/seedlingDemo/wasmArrival.js
++++ b/frontend/modules/seedlingDemo/wasmArrival.js
+@@ -49,6 +49,7 @@ import { SEAM_BOOT_SPEC, SEAM_PREBUILD_FIELDS, SEAM_SIGNATURE, segmentBootFromLa
+ import { createRunForStaging } from './tapeRunner.js';
+ import { liveOf, replayTape, solverGoalFor } from './jsRuntimeSolver.js';
+ import { goalTiles, nearestPitAt, nearestTeleporterAt } from './jsRuntimeWalker.js';
++import { attachSiblingSolverGoals } from './siblingExitChoice.js';
+ import { JS_RUNTIME_PINS, locationEntityOf } from './jsRuntimeCore.js';
+ import { ITEM_PROPERTIES, PIN_NAMES } from './tapeFormat.js';
+ 
+@@ -448,7 +449,11 @@ export function arrivalSolverGoal(goal, { staging, levelSource, record, run: giv
+     // ⛓ EVENT GOALS — nor does an event location (→ `clear-tag`).
+     const placement = goal.kind === 'location' && !goal.encounter && !goal.event
+         ? locationEntityOf(record, goal.tag, goal.entityType ?? null) : null;
+-    return solverGoalFor(goal, { run, resolved, placement, generated: false, levelSource });
++    const mapped = solverGoalFor(goal, { run, resolved, placement, generated: false, levelSource });
++    // ⛓ SIBLING-EXIT — a goal carrying AP-equivalent siblings (ON only) hands each, mapped on the same run, to the solve.
++    if (!mapped.goal || !Array.isArray(goal.siblings) || goal.siblings.length === 0) return mapped;
++    return { ...mapped, goal: attachSiblingSolverGoals(goal, mapped.goal,
++        (g) => arrivalSolverGoal(g, { staging, levelSource, record, run }).goal ?? null) };
+ }
+ 
+ /**
