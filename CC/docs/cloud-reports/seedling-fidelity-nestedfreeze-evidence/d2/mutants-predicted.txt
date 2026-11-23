@@ -1,0 +1,15 @@
+Mutants of levelRun.js at b519de0b (each applied, run over the 4 files below, then restored with `git checkout`).
+Files: fidelityNestedRockCeremony, fidelityFreezeSpanUpdates, fidelityRockButton, fidelityPickupFreeze (all under
+frontend/modules/seedlingDemo/).
+
+M1 the union spends the rock's own frames too (`spendFrozen(frames)` in the nested return).
+   predicted red: texted, text-less, every-family, composition (the clock moves by 172).            = 4 rows
+M2 the frame-A ask never takes the union (`nestedRockCeremonyAtFrameANow` returns false at its top).
+   predicted red: texted, text-less, every-family, composition (OFF's or wave 56's answer).         = 4 rows
+M3 the nested loop steps the families too (the `continue` block removed).
+   predicted red: every-family, composition (the turrets take 172 more frames); texted and text-less stay green
+   (they read the clock, the ledgers and the player, which the span's family steps do not move).    = 2 rows
+M4 the detection never resolves the rocks (the `startNestedRockSpanNow()` call removed).
+   predicted red: texted (the contact tick's runFrozenTick refuses the dangling fall-through), text-less (no fall
+   at all), every-family, composition.                                                               = 4 rows
+M3 prediction MISSED: predicted 2 rows (every-family, composition), measured 1 (composition). With this key alone every family step of the rock span is a no-op: stepRockSpanShootersNow and stepRockReleaseBodiesNow are behind freezeEdgeFrames, stepChasersFrozenNow behind frozenTickUngated, stepDrillGraphicsFrozen behind drillTimedPass+drillLive, and the pushables' step is guarded on its own line (not removed by M3). Only the composition row (all eight ON) can see the span's family steps.
