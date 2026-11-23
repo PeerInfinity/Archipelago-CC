@@ -101,8 +101,9 @@
  */
 
 import {
-    arrivalSolveRequest, arrivalSolverGoal, continuationSolveRequest, isArrival, stagingFromWasmArrival,
+    arrivalSolveRequest, arrivalSolverGoal, capabilitiesField, continuationSolveRequest, isArrival, stagingFromWasmArrival,
 } from '../seedlingDemo/wasmArrival.js';
+import { declaresBossDraws } from '../seedlingDemo/modelBuild.js';
 import {
     adoptedClockStaging, heldArrivalClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, crossLevelEnd, crossingArrivalVerdict, endsHeld, exactDeclarationRefusal, legEndRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, latchExpired, latchWatch, locationGoalServed, encounterReportServed, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
@@ -233,7 +234,20 @@ export function createWasmPlayback({
     onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetWork = SOLVER_BUDGET_WORK,
     getBudgetWork = null, getUpgradeWindowWork = null, getDelivery = null, backstopMs = SOLVE_BACKSTOP_MS, getBackstopMs = null,
     getAxeDodgeAskPerPreview = null, getDashOnlyWindow = null, getDashShape = null, getCapabilities = () => [],
+    getModelCapabilities = null,
 }) {
+    /**
+     * ⛓ seedling-p4h-capability-plumbing — THE BUILD EVERY MODEL HERE IS BUILT FOR: the running build's manifest
+     * `capabilities` as the panel read them (`getModelCapabilities`), passed untouched to every shadow, mapping run,
+     * delivery model and solve request this engine makes. ⛔ NOT `getCapabilities` (the adoption's reader, `[]` until
+     * the AP load): an unknown build is null here, and null is the default build's (p4g's) answer (`modelBuild.js`).
+     * Read at each construction, like the other knobs; absent dep (every row before this slice) = null.
+     */
+    const modelCaps = () => {
+        let v = null;
+        try { v = getModelCapabilities?.() ?? null; } catch { v = null; }
+        return Array.isArray(v) ? v : null;
+    };
     /** ⛓ O3 — the budget (work units) a solve starts with: the knob's live value, else the engine's own. */
     let ownBudget = budgetWork;
     const baseBudget = () => {
@@ -731,7 +745,7 @@ export function createWasmPlayback({
                 // STAGED from it (`playerDamageFromStatus`), never refused. A running i-frame still refuses
                 // (`adoptionRefusal`): it counts down with the frames, so the shadow would depend on N.
                 if (st.hits) staging = { ...staging, player_damage: playerDamageFromStatus(st) };
-                const one = replayTape({ staging, perTick: [new Set()], levelSource, scratchPersistence: true });
+                const one = replayTape({ staging, perTick: [new Set()], levelSource, scratchPersistence: true, capabilities: modelCaps() });
                 shadow = { x: one.state.x, y: one.state.y, direction: one.state.direction, hits: one.damage.hits };
             } catch (err) { return refused('staging', String(err?.message ?? err).split('\n')[0]); }
         }
@@ -912,7 +926,8 @@ export function createWasmPlayback({
             // ⛓ WALK IDENTITY (a) — the held clock is the one the plan's first tick sees: the shadow is put on it.
             let modelTime = null;
             try {
-                modelTime = replayTape({ staging: room.staging, perTick: room.shipped.map((h) => new Set(h)), levelSource, scratchPersistence: true }).gameTime;
+                modelTime = replayTape({ staging: room.staging, perTick: room.shipped.map((h) => new Set(h)), levelSource, scratchPersistence: true,
+                    capabilities: modelCaps() }).gameTime;
             } catch { modelTime = null; }
             const clock = adoptedClockStaging({ staging: room.staging, modelTime, liveTime: st.game_time });
             stats.adoptClock.push({ level: room.level, begin: room.staging?.seam?.time ?? null, model: modelTime, live: st.game_time ?? null,
@@ -1236,7 +1251,7 @@ export function createWasmPlayback({
         if (started) { fail(started); return; }
         // ⛓ the walker INSTRUMENT (`producer: 'walker'`): the goal as the controller resolved it, the same staging.
         const request = { producer: WALK_TAPE_PRODUCER, staging, goal: { ...goal }, name: `wasm-walk-${goal.kind}-${goal.level}`,
-            scratchPersistence: true, levelSource, source: { records } };
+            scratchPersistence: true, levelSource, source: { records }, ...capabilitiesField(modelCaps()) };
         startSolve(request, { staging, arrivalStatus: st, continuation: false });
     }
 
@@ -1270,10 +1285,11 @@ export function createWasmPlayback({
             let mapped;
             let request;
             try {
-                mapped = arrivalSolverGoal(goal, { staging: r.staging, levelSource, record });
+                const capabilities = modelCaps();
+                mapped = arrivalSolverGoal(goal, { staging: r.staging, levelSource, record, capabilities });
                 if (mapped.goal) {
                     request = arrivalSolveRequest({ staging: r.staging, solverGoal: mapped.goal, levelSource, records,
-                        name: `wasm-${goal.kind}-${goal.level}`, scratchPersistence: true });
+                        name: `wasm-${goal.kind}-${goal.level}`, scratchPersistence: true, capabilities });
                 }
             } catch (err) {
                 fail(`the model refused to build level ${goal.level} from the arrival: ${String(err?.message ?? err).split('\n')[0]}`);
@@ -1307,7 +1323,9 @@ export function createWasmPlayback({
             // solver's forks all start the continuation on the game's boost window. ⛓ `ship()` re-reads the pin: the
             // hold runs on while the solver thinks. No `sound` pin, or no open channel at the seam → nothing is replayed
             // or stepped, and the request is the one it always was.
-            const hs = continuationHoldSeam({ staging: r.staging, shipped: r.shipped, levelSource, equips: roomEquips(r), roomHolds: r.holds ?? [], status: st });
+            const capabilities = modelCaps();
+            const hs = continuationHoldSeam({ staging: r.staging, shipped: r.shipped, levelSource, equips: roomEquips(r), roomHolds: r.holds ?? [], status: st,
+                capabilities });
             const { holds } = hs;
             if (hs.seam) {
                 held = { level: r.level, ...hs.seam, outcome: 'solved' };
@@ -1315,10 +1333,10 @@ export function createWasmPlayback({
                 if (held.refusal) log(`[wasm playback] the hold seam in level ${r.level} at tick ${held.t} was not stepped — ${held.refusal}`, 'warn');
             }
             c = continuationSolveRequest({ staging: r.staging, shipped: [...r.shipped, ...lead], goal, levelSource, records, record,
-                name: `wasm-continue-${goal.kind}-${goal.level}`, equips: roomEquips(r), holds });
+                name: `wasm-continue-${goal.kind}-${goal.level}`, equips: roomEquips(r), holds, capabilities });
             if (lead.length) {
                 const before = replayTape({ staging: r.staging, perTick: r.shipped.map((h) => new Set(h)), levelSource, scratchPersistence: true,
-                    equips: roomEquips(r), holds });
+                    equips: roomEquips(r), holds, capabilities });
                 heldRow = { level: before.level, x: before.state.x, y: before.state.y, deaths: before.playerDeaths.length, primary: before.primary };
                 heldDamage = before.damage;
                 heldCtor = { ...before.worldCtor };
@@ -1377,7 +1395,7 @@ export function createWasmPlayback({
         }
         let modelTime = null;
         try {
-            modelTime = replayTape({ staging: r.staging, perTick: [], levelSource, scratchPersistence: true }).gameTime;
+            modelTime = replayTape({ staging: r.staging, perTick: [], levelSource, scratchPersistence: true, capabilities: modelCaps() }).gameTime;
         } catch { modelTime = null; }
         const clock = heldArrivalClockStaging({ staging: r.staging, modelTime, liveTime: st.game_time });
         stats.arrivalClock.push({ level: r.level, begin: r.staging?.seam?.time ?? null, model: modelTime, live: st.game_time ?? null,
@@ -1491,7 +1509,7 @@ export function createWasmPlayback({
         const g = game();
         const full = [...f.shippedBefore];
         const refusal = deliveryRefusal({ staging: f.stagingBefore, shipped: full, items: f.items, status: f.statusAt, levelSource,
-            equips: equipsMap(f.equipsBefore) });
+            equips: equipsMap(f.equipsBefore), capabilities: modelCaps() });
         if (refusal) {
             log(`[wasm playback] the interrupted plan cannot resume with the delivered item (${refusal.clause}: ${refusal.why})`, 'warn');
             return false;
@@ -2206,7 +2224,8 @@ export function createWasmPlayback({
         const prefix = [...room.shipped.slice(0, room.shipped.length - plan.solution.length), ...plan.solution.slice(0, k).map((h) => [...h])];
         // ⛓ WASM EQUIPS — the selections the prefix made (an equip AT the frozen tick has not fired: the game drained k ticks).
         const prefixEquips = (room.equips ?? []).filter((e) => e.t < prefix.length);
-        const refusal = deliveryRefusal({ staging: room.staging, shipped: prefix, items, save, status: st, levelSource, equips: equipsMap(prefixEquips) });
+        const refusal = deliveryRefusal({ staging: room.staging, shipped: prefix, items, save, status: st, levelSource, equips: equipsMap(prefixEquips),
+            capabilities: modelCaps() });
         if (refusal) { try { g.botHold('off'); } catch { /* gone */ } deferDelivery(refusal, 'playing'); return; }
         const heldKeys = keysHeldAtReset({ status: st, solution: plan.solution });
         const leg = play;
@@ -2256,7 +2275,8 @@ export function createWasmPlayback({
         const items = predicted(st);
         const save = predictedSave(st);
         const added = deliveredSaveArrays({ staging: room.staging, status: st, save });
-        const refusal = deliveryRefusal({ staging: room.staging, shipped: room.shipped, items, save, status: st, levelSource, equips: roomEquips(room) });
+        const refusal = deliveryRefusal({ staging: room.staging, shipped: room.shipped, items, save, status: st, levelSource, equips: roomEquips(room),
+            capabilities: modelCaps() });
         const atArrival = room.shipped.length === 0 || (room.adopted && room.shipped.length === 1 && room.shipped[0].length === 0);
         if (refusal && !atArrival) { deferDelivery(refusal, phase); return; }
         const row = { level: room.level, goal: goal?.name ?? goal?.kind ?? null, phase, tick: room.shipped.length, items: itemDelta(st.items, items),
@@ -2416,6 +2436,15 @@ export function createWasmPlayback({
         get generated() { return generated; },
         /** The tape producer: `'solver'`, or the `'walker'` INSTRUMENT. */
         get producer() { return walkerInstrument ? WALK_TAPE_PRODUCER : 'solver'; },
+        /**
+         * ⛓ seedling-p4h-capability-plumbing — the build this engine's models are built for NOW: `capabilities` (the
+         * panel's reading, null = unknown → the default build) and `bossDraws` (`modelBuild.declaresBossDraws` of it —
+         * the value every `createLevelRun` here computes from the same argument).
+         */
+        modelBuild() {
+            const capabilities = modelCaps();
+            return { capabilities: capabilities ? [...capabilities] : null, bossDraws: declaresBossDraws(capabilities) };
+        },
         status() {
             return { phase, goal, generated, producer: walkerInstrument ? WALK_TAPE_PRODUCER : 'solver', queued: queued?.goal ?? null, ticks: play?.ticks ?? null,
                 drained: play?.progress?.ticks ?? null, divergence: play?.divergence ?? null, recoveries,

@@ -425,15 +425,18 @@ export function arrivalStagingWitness(staging, { seam, status, state }) {
  * name (`closed — the run stands LATCHED …`). W4's walker-prefix composite
  * (the worker's `step-off` producer) is gone.
  *
+ * ⛓ seedling-p4h-capability-plumbing — `capabilities`: the page's RUNNING build (its manifest row's), the build the
+ * fresh run is built for when no `run` is given; null = the default build's (p4g's) answer.
+ *
  * @returns {{goal: object}|{walker: string}}  `walker` = the solver has no goal for it, named
  */
-export function arrivalSolverGoal(goal, { staging, levelSource, record, run: given = null }) {
+export function arrivalSolverGoal(goal, { staging, levelSource, record, run: given = null, capabilities = null }) {
     if (goal?.level !== staging.boot.level) {
         return { walker: `the goal is in level ${goal?.level}, the arrival in level ${staging.boot.level} — `
             + 'the bot plans ONE goal in ONE room (⚖ Q5)' };
     }
     // ⛓ W7 — a continuation maps its goal on the SHADOW (where the held player stands), not the arrival.
-    const run = given ?? createRunForStaging(staging, levelSource);
+    const run = given ?? createRunForStaging(staging, levelSource, { capabilities });
     let resolved = null;
     if (goal.kind === 'exit') {
         const tiles = goalTiles(goal);
@@ -458,10 +461,15 @@ export function arrivalSolverGoal(goal, { staging, levelSource, record, run: giv
  * ⛓ W2 — `scratchPersistence` is the S3 page's mode (a kill lock the model
  * opens is written by the model, as `Lock.turnOff` writes it in the game);
  * W1's default (false) is kept for its fixture rows.
+ *
+ * ⛓ seedling-p4h-capability-plumbing — `capabilities`: the page's RUNNING build (its manifest row's). The `live` run is
+ * built for it, and the request CARRIES it (`capabilities`) so the worker's shadow and forks model the same build
+ * (`jsRuntimeSolver.solveFromTape`). null = no field on the request (the request every caller made before this slice):
+ * the worker answers for the default build (p4g).
  */
 export function arrivalSolveRequest({ staging, solverGoal, levelSource, records, name = 'wasm-arrival-solve',
-    scratchPersistence = false }) {
-    const fresh = createRunForStaging(staging, levelSource);
+    scratchPersistence = false, capabilities = null }) {
+    const fresh = createRunForStaging(staging, levelSource, { capabilities });
     return {
         staging,
         perTick: [],
@@ -472,8 +480,15 @@ export function arrivalSolveRequest({ staging, solverGoal, levelSource, records,
         equips: null,
         levelSource,
         source: { records },
+        ...capabilitiesField(capabilities),
     };
 }
+
+/**
+ * ⛓ seedling-p4h-capability-plumbing — the request's `capabilities` field: present only when the page named a build
+ * (a copy: the request is structured-cloned, and the manifest row is not the request's to alias). null → no field.
+ */
+export const capabilitiesField = (capabilities) => (Array.isArray(capabilities) ? { capabilities: [...capabilities] } : {});
 
 /**
  * ⛓ W7 — a CONTINUATION's request (plan `seedling-wasm-solver-plan.md` §2.4):
@@ -490,13 +505,14 @@ export function arrivalSolveRequest({ staging, solverGoal, levelSource, records,
  *   ordinary continuation (the solver steps off it from the shadow).
  */
 export function continuationSolveRequest({ staging, shipped, goal, levelSource, records, record, name = 'wasm-continuation',
-    equips = null, holds = null }) {
+    equips = null, holds = null, capabilities = null }) {
     const perTick = shipped.map((h) => new Set(h));
     // ⛓ HOLD SEAM — `holds` (room tick → the engine frames a hold ran before it): replayed by the shadow AND the worker.
     const hd = holds && holds.size ? new Map(holds) : null;
     // ⛓ WASM EQUIPS — `equips` (room tick → slot): the slots the shipped tapes selected, re-made at their ticks.
     const eq = equips && equips.size ? new Map(equips) : null;
-    const shadow = replayTape({ staging, perTick, levelSource, scratchPersistence: true, equips: eq, holds: hd });
+    // ⛓ seedling-p4h-capability-plumbing — the shadow, the goal's mapping run and the request model the page's build.
+    const shadow = replayTape({ staging, perTick, levelSource, scratchPersistence: true, equips: eq, holds: hd, capabilities });
     const live = liveOf(shadow);
     // The held check compares the selected slot too (`wasmPlayback.shadowMismatch`).
     const shadowRow = { ...live.row, primary: shadow.primary };
@@ -506,7 +522,7 @@ export function continuationSolveRequest({ staging, shipped, goal, levelSource, 
     // ⛓ DELIVERY DEFERRAL — the spawn pair the host's `atBootPosition` reads after the prefix (`wasmPlayback.bootAtCtor`).
     const shadowCtor = { ...shadow.worldCtor };
     const mapped = arrivalSolverGoal(goal, { staging, levelSource, record,
-        run: replayTape({ staging, perTick, levelSource, scratchPersistence: true, equips: eq, holds: hd }) });
+        run: replayTape({ staging, perTick, levelSource, scratchPersistence: true, equips: eq, holds: hd, capabilities }) });
     if (!mapped.goal) return { shadowRow, shadowDamage, shadowCtor, mapped, refusal: `the solver has no goal for ${goal?.name ?? goal?.kind}: ${mapped.walker}` };
     return {
         shadowRow,
@@ -514,6 +530,6 @@ export function continuationSolveRequest({ staging, shipped, goal, levelSource, 
         shadowCtor,
         mapped,
         request: { staging, perTick, live, solverGoal: mapped.goal, name, scratchPersistence: true, equips: eq, levelSource,
-            source: { records }, ...(hd ? { holds: hd } : {}) },
+            source: { records }, ...(hd ? { holds: hd } : {}), ...capabilitiesField(capabilities) },
     };
 }

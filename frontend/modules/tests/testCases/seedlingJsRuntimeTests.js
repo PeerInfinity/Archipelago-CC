@@ -2734,7 +2734,7 @@ async function seedlingLoopBotCleanup() {
  * with the game running and gameState at `startRegion`. Returns `{panel, win, rt?}` (rt = the JS page's core), or null.
  * ⛔ The wasm game needs a WebGPU adapter: the `seedling-js` batch launches Chromium with one (`testBatches.js`).
  */
-async function atlasPresetOn(tc, runtime, presetPath, startRegion) {
+async function atlasPresetOn(tc, runtime, presetPath, startRegion, { editRules = null } = {}) {
     if (runtime === 'js') {
         const staleAdapter = getActivePanelInstance()?.adapter ?? null;
         await settingsManager.updateSetting(RUNTIME_KEY, 'js', { persist: false });
@@ -2756,6 +2756,9 @@ async function atlasPresetOn(tc, runtime, presetPath, startRegion) {
     const logLinesBefore = getActivePanelInstance()?.logElement?.childElementCount ?? 0;
     await settingsManager.updateSetting(RUNTIME_KEY, 'wasm', { persist: false });
     const rulesJson = await (await fetch(presetPath)).json();
+    // ⛓ seedling-p4h-capability-plumbing — a row may rewrite the rules before the load (the p4h row names another build);
+    // absent = the preset as committed (every other caller).
+    if (editRules) editRules(rulesJson);
     const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
     tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: presetPath });
     await loaded;
@@ -6098,6 +6101,77 @@ async function seedlingWasmP4hCandidateSmoke(tc) {
     tc.log(`p4h candidate smoke: ${((performance.now() - t0) / 1000).toFixed(1)} s`);
     return tc.getOverallResult();
 }
+
+// ── seedling-p4h-capability-plumbing: THE PANEL TELLS THE MODEL WHICH BUILD RUNS ─────────────────────────────────
+
+/**
+ * ⛓ seedling-p4h-capability-plumbing — the panel → controller → engine path, on the p4h CANDIDATE and then on the
+ * manifest's default. The atlas preset is loaded with its `flash_panel.wasm` pointed at the candidate's page (the
+ * build is the rules' word, as in production), the game booted (▶ Start) and the AP load bound; then:
+ *   · the surface's `wasm.modelCapabilities` is the candidate's manifest row (the panel's reading, `capabilitiesOf`);
+ *   · the playback controller's engine, built for this game the way a walk builds it (`_engineFor`), answers
+ *     `modelBuild()` = that list and `bossDraws: true` — `modelBuild.declaresBossDraws` of the argument every
+ *     `createLevelRun` the engine makes receives (the vitest `capabilityPlumbing.test.js` pins that reach);
+ * and the same reads on the committed preset (the default, p4g) answer P4G's list and `bossDraws: false`. Ending on
+ * the default leaves the panel where every other row expects it.
+ */
+const P4H_MODEL_BUILD = 'seedling_bot_ap_p4h';
+
+async function p4hModelBuildArm(tc, manifest, buildName) {
+    const row = manifest.builds.find((b) => b.name === buildName) ?? null;
+    const label = `[${buildName}]`;
+    tc.reportCondition(`${label} the manifest lists the build`, !!row);
+    if (!row) return false;
+    const wasmPage = `${buildName}/game.html`;
+    const up = await atlasPresetOn(tc, 'wasm', ATLAS_PATH, OVERWORLD, {
+        editRules: (rules) => { rules.flash_panel['1'] = { ...rules.flash_panel['1'], wasm: wasmPage }; },
+    });
+    tc.reportCondition(`${label} the atlas preset booted on this build and bound its AP load`, !!up);
+    if (!up) return false;
+    let page = null;
+    try { page = up.win?.location?.pathname ?? null; } catch { page = null; }
+    tc.assertEqual(`${label} the panel's game page is this build's`, true, typeof page === 'string' && page.endsWith(`/wasm/${wasmPage}`));
+    const surface = up.panel.seedlingPlaybackSurface();
+    tc.assertEqual(`${label} the surface's modelCapabilities = the manifest row's`, JSON.stringify(row.capabilities),
+        JSON.stringify(surface?.wasm?.modelCapabilities ?? null));
+    const controller = substrateRegistry.get('flash_seedling')?.getPlaybackController?.() ?? null;
+    tc.reportCondition(`${label} the playback controller is registered`, !!controller);
+    if (!controller) return false;
+    const engine = await tc.pollForValue(() => controller._engineFor(controller._getSurface()) ?? null,
+        `${label} the controller built the wasm playback engine for this game`, 60000, 250);
+    tc.reportCondition(`${label} the wasm playback engine is built`, !!engine);
+    if (!engine) return false;
+    const model = engine.modelBuild();
+    tc.assertEqual(`${label} the engine builds its models for the running build: modelBuild() = {row, bossDraws}`,
+        JSON.stringify({ capabilities: row.capabilities, bossDraws: row.capabilities.includes('bossdraws') }), JSON.stringify(model));
+    tc.log(`${label} modelBuild() ${JSON.stringify(model)}`);
+    return model;
+}
+
+async function seedlingWasmP4hModelBuild(tc) {
+    const manifest = await (await fetch('./modules/flashPanel/wasm/builds.json', { cache: 'no-store' })).json();
+    const def = manifest.builds.find((b) => b.role === 'default') ?? null;
+    tc.assertEqual('the default is another build (p4g stays the default)', true, !!def && def.name !== P4H_MODEL_BUILD);
+    if (!def) return tc.getOverallResult();
+    return withRuntimeRestored(tc, async () => {
+        const h = await p4hModelBuildArm(tc, manifest, P4H_MODEL_BUILD);
+        tc.assertEqual(`[${P4H_MODEL_BUILD}] the model answers declaresBossDraws === true`, true, h?.bossDraws ?? null);
+        const g = await p4hModelBuildArm(tc, manifest, def.name);
+        tc.assertEqual(`[${def.name}] (the default) the model answers declaresBossDraws === false`, false, g?.bossDraws ?? null);
+    });
+}
+
+registerTest({
+    id: 'seedling-wasm-runtime-p4h-model-build',
+    name: 'Seedling wasm: the panel tells the model which build runs (p4h: boss draws; the default: none)',
+    description: 'seedling-p4h-capability-plumbing: the atlas preset booted on the p4h candidate (its flash_panel.wasm '
+        + 'rewritten) and then on the manifest\'s default; each time the surface\'s modelCapabilities is the build\'s '
+        + 'manifest row and the controller\'s wasm playback engine answers modelBuild() = that list with bossDraws true on '
+        + 'p4h, false on the default.',
+    testFunction: seedlingWasmP4hModelBuild,
+    category: seedlingRuntimeCategory('seedling-wasm-runtime-p4h-model-build'),
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
 
 registerTest({
     id: 'seedling-wasm-runtime-p4h-candidate-smoke',

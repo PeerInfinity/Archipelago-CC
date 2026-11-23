@@ -245,9 +245,11 @@ export function withMenuWrites(staging, run, { secondariesCapable = false } = {}
 export function createManualSession({
     levelSource, staging, name = 'manual', scratchPersistence = false, declared = false,
     secondariesCapable = () => false,
+    // ⛓ seedling-p4h-capability-plumbing — the build the session models (`modelBuild.js`); null = the default's (p4g).
+    capabilities = null,
 }) {
     const honest = declared ? staging : solveStaging(staging);
-    const run = createRunForStaging(honest, levelSource, { scratchPersistence });
+    const run = createRunForStaging(honest, levelSource, { scratchPersistence, capabilities });
     const perTick = [];
     const observations = [];
     const samples = [];

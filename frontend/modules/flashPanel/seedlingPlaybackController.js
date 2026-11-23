@@ -753,6 +753,9 @@ export class SeedlingPlaybackController {
             getCheckBinding: () => this._getSurface?.()?.checkBinding ?? null,
             // ⛓ seedling-p4h-beside — the running build's manifest `capabilities` (the adoption reads AP chests by them).
             getCapabilities: () => this._getSurface?.()?.wasm?.capabilities ?? [],
+            // ⛓ seedling-p4h-capability-plumbing — the same build's capabilities FOR THE MODEL (null = unknown → the default
+            // build's answer, p4g): every shadow, delivery model and solve request the engine makes is built for them.
+            getModelCapabilities: () => this._getSurface?.()?.wasm?.modelCapabilities ?? null,
             // ⛓ W7 — the glue query: may the engine hold the arrival it just saw (no redirect in flight)?
             getSwapState: () => this._getSurface?.()?.swapState?.() ?? null,
             // ⛓ ARRIVAL JITTER — push that teleport now (the door's room runs unheld until it lands).

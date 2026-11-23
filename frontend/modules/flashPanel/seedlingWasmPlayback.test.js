@@ -31,6 +31,7 @@ import { DASH_SHAPE_DEFAULTS, applyDashShape, dashShapeRead } from '../seedlingD
 import { LOAD_FADE_FRAMES } from '../seedlingDemo/gameClock.js';
 import { replayTape } from '../seedlingDemo/jsRuntimeSolver.js';
 import { resolveSeedlingGoal } from './seedlingPlaybackController.js';
+import { P4G_CAPABILITIES } from '../seedlingDemo/modelBuild.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
@@ -193,6 +194,7 @@ function engineOver(arrival, opts = {}) {
         ...(opts.getDashShape ? { getDashShape: opts.getDashShape } : {}),
         ...(opts.backstopMs ? { backstopMs: opts.backstopMs } : {}),
         ...(opts.getBackstopMs ? { getBackstopMs: opts.getBackstopMs } : {}),
+        ...(opts.getModelCapabilities ? { getModelCapabilities: opts.getModelCapabilities } : {}),
         onNote: (n) => notes.push(n), onFailed: (r, x) => { failures.push(r); failExtras.push(x ?? null); }, onDone: (d) => dones.push(d),
     });
     return { engine, game, timers, teleports, windows, notes, failures, failExtras, dones, service, swap };
@@ -2430,5 +2432,48 @@ describe('⛓ SOLVER LIMIT OFF — Stop, no work limit and the backstop knob on 
         expect(e.failures[1]).toMatch(/^the solve exceeded the backstop on this machine \(5 s\)/);
         knob = null; // unset → the engine's own (300 s)
         expect(e.engine.backstopMs).toBe(300000);
+    });
+});
+
+/**
+ * ⛓ seedling-p4h-capability-plumbing — the engine builds every model for the build the panel says is running
+ * (`getModelCapabilities`, the panel surface's `wasm.modelCapabilities`): the arrival's request and the continuation's
+ * carry it, `modelBuild()` reads it back; absent (every engine before this slice) = no field, null = p4g.
+ */
+describe('the running build reaches the engine\'s models (p4h capability plumbing)', () => {
+    const P4H = readJson('frontend/modules/flashPanel/wasm/builds.json').builds.find((b) => b.name === 'seedling_bot_ap_p4h').capabilities;
+    const chestThenDoor = (opts) => {
+        const e = engineOver(A, opts);
+        e.engine.walkTo(CHEST);
+        for (let i = 0; i < 400 && e.engine.status().phase !== 'playing'; i++) e.timers.run(1);
+        e.engine.walkTo(DOOR);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.service.seen).toHaveLength(2);
+        return e;
+    };
+    const plans = (e) => e.service.seen.map((s) => ({ solution: s.result.plan.solution.map((k) => [...k].sort()), expected: s.result.plan.expected }));
+
+    it('no reader: no request names a build, and modelBuild() answers null / no boss draws', () => {
+        const e = chestThenDoor({});
+        expect(e.service.seen.map((s) => 'capabilities' in s.request)).toEqual([false, false]);
+        expect(e.engine.modelBuild()).toEqual({ capabilities: null, bossDraws: false });
+    });
+    it('p4g (the default): both requests carry P4G_CAPABILITIES, and the plans are the no-reader plans, key for key', () => {
+        const none = chestThenDoor({});
+        const e = chestThenDoor({ getModelCapabilities: () => [...P4G_CAPABILITIES] });
+        expect(e.service.seen.map((s) => s.request.capabilities)).toEqual([[...P4G_CAPABILITIES], [...P4G_CAPABILITIES]]);
+        expect(e.engine.modelBuild()).toEqual({ capabilities: [...P4G_CAPABILITIES], bossDraws: false });
+        expect(plans(e)).toEqual(plans(none));
+        expect(e.game.tapes).toEqual(none.game.tapes);
+    });
+    it('p4h: both requests carry p4h\'s list, and modelBuild() answers bossDraws true', () => {
+        const e = chestThenDoor({ getModelCapabilities: () => P4H });
+        expect(e.service.seen.map((s) => s.request.capabilities)).toEqual([P4H, P4H]);
+        expect(e.engine.modelBuild()).toEqual({ capabilities: P4H, bossDraws: true });
+    });
+    it('a reader that throws or answers a non-array is null (the default build), never a crash', () => {
+        expect(engineOver(A, { getModelCapabilities: () => { throw new Error('gone'); } }).engine.modelBuild()).toEqual({ capabilities: null, bossDraws: false });
+        expect(engineOver(A, { getModelCapabilities: () => 'bossdraws' }).engine.modelBuild()).toEqual({ capabilities: null, bossDraws: false });
     });
 });

@@ -312,8 +312,10 @@ export function weaponWitness(run) {
  * @param {object} o.status   `botStatus` NOW (before the write): `items`, `inventory_slots`, `primary`, `secondary`
  * @param {object} o.levelSource
  * @param {Map<number, number>} [o.equips]  the slot selections those keys shipped with (room tick → slot)
+ * @param {string[]|null} [o.capabilities]  ⛓ seedling-p4h-capability-plumbing — the page's RUNNING build (its manifest
+ *   row's), the build both models are built for; null = the default build's (p4g's) answer
  */
-export function deliveryRefusal({ staging, shipped, items, save = null, status, levelSource, equips = null }) {
+export function deliveryRefusal({ staging, shipped, items, save = null, status, levelSource, equips = null, capabilities = null }) {
     const no = (clause, why) => ({ clause, why });
     const before = status?.items ?? {};
     const delta = itemDelta(before, items);
@@ -328,8 +330,8 @@ export function deliveryRefusal({ staging, shipped, items, save = null, status, 
     let withItem;
     let without;
     try {
-        withItem = createRunForStaging(stageItems(staging, deliveredItems(before, items), { save: added }), levelSource, { scratchPersistence: true });
-        without = createRunForStaging(staging, levelSource, { scratchPersistence: true });
+        withItem = createRunForStaging(stageItems(staging, deliveredItems(before, items), { save: added }), levelSource, { scratchPersistence: true, capabilities });
+        without = createRunForStaging(staging, levelSource, { scratchPersistence: true, capabilities });
     } catch (err) { return no('build', `the room does not build with ${names} staged: ${String(err?.message ?? err).split('\n')[0]}`); }
     if (witness(withItem) !== witness(without)) {
         return no('build', `the room staged with ${names} is not the room the game built without it (its first row differs)`);

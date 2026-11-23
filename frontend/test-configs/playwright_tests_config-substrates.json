@@ -2662,6 +2662,12 @@
             "_comment": "seedling-p4h-beside (P1, ⚖ Robert 2026-11-22). The ONE row on the p4h CANDIDATE (seedling_bot_ap_p4h, pinned beside the default p4g): its standalone page boots, botStatus reads, botActivators() answers, and r9-l6-sword-dash-hit (L6, outside L57/L112) drains byte-identically on p4h and on the manifest's default. Batch seedling-wasm (WebGPU)."
         },
         {
+            "id": "seedling-wasm-runtime-p4h-model-build",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "seedling-p4h-capability-plumbing (rides P2, ⚖ Robert 2026-11-23). The panel → controller → engine path tells the model which build runs: the atlas preset booted on the p4h candidate (its flash_panel.wasm rewritten) answers modelCapabilities = p4h's manifest row and engine.modelBuild().bossDraws true; booted on the manifest's default (p4g) it answers P4G's row and false. Batch seedling-wasm (WebGPU)."
+        },
+        {
             "id": "seedling-wasm-runtime-restart-no-walk-hand-walk",
             "enabled": true,
             "category": "Seedling wasm runtime",

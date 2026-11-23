@@ -521,7 +521,8 @@ export function hitAvoidPass({ tape, pass, budgetWork = null, windowWork = null,
     const shouldStop = budgeted ? () => { const n = work.tick(); if (n > stopAt) { cut ??= n > budgetWork ? 'budget' : 'window'; return true; } return false; } : null;
     const { live: _live, ...rest } = tape;
     const run = replayTape({ staging: rest.staging, perTick: rest.perTick, levelSource: rest.levelSource,
-        scratchPersistence: rest.scratchPersistence ?? false, equips: rest.equips ?? null, holds: rest.holds ?? null });
+        scratchPersistence: rest.scratchPersistence ?? false, equips: rest.equips ?? null, holds: rest.holds ?? null,
+        capabilities: rest.capabilities ?? null });
     const hits0 = modelHitCount(run);
     const deaths0 = run.playerDeaths.length;
     const idleRows = [rowOf(run)];
@@ -990,9 +991,13 @@ function eventSolverGoal(goal, run) {
     return { goal: out };
 }
 
-/** The session's tape replayed into a fresh run — a shadow, NOT yet checked against anything. */
-export function replayTape({ staging, perTick, levelSource, scratchPersistence = false, equips = null, holds = null }) {
-    const shadow = createRunForStaging(staging, levelSource, { scratchPersistence });
+/**
+ * The session's tape replayed into a fresh run — a shadow, NOT yet checked against anything.
+ * ⛓ seedling-p4h-capability-plumbing — `capabilities`: the BUILD the run models (`modelBuild.js`), passed through to
+ * `createRunForStaging` untouched; null (every caller that names none) = the default build's (p4g's) answer.
+ */
+export function replayTape({ staging, perTick, levelSource, scratchPersistence = false, equips = null, holds = null, capabilities = null }) {
+    const shadow = createRunForStaging(staging, levelSource, { scratchPersistence, capabilities });
     perTick.forEach((h, i) => {
         // ⛓ HOLD SEAM — the engine frames a hold ran BEFORE tick i (the game held, its swim channel stepping).
         if (holds?.get(i)) shadow.stepHeldFrames(holds.get(i));
@@ -1015,9 +1020,11 @@ export function replayTape({ staging, perTick, levelSource, scratchPersistence =
  * here, at their index, on the first `prefixLength` advances — the same fold `replayTape` makes. Each call is
  * a new run: nothing mutable is shared with the shadow or with another fork.
  */
-export function forkRunFor({ staging, levelSource, scratchPersistence = false, equips = null, prefixLength = 0, holds = null }) {
+export function forkRunFor({ staging, levelSource, scratchPersistence = false, equips = null, prefixLength = 0, holds = null,
+    capabilities = null }) {
     return () => {
-        const run = createRunForStaging(staging, levelSource, { scratchPersistence });
+        // ⛓ seedling-p4h-capability-plumbing — every fork models the shadow's build (`replayTape`'s `capabilities`).
+        const run = createRunForStaging(staging, levelSource, { scratchPersistence, capabilities });
         if (!(equips?.size > 0) && !(holds?.size > 0)) return run;
         let advanced = 0;
         return new Proxy(run, {
@@ -1127,9 +1134,11 @@ function recordingRun(run, { skip = 0, expected = [] } = {}) {
  */
 export function solveFromTape({ staging, perTick, live, levelSource, solverGoal, name = 'js-runtime-solve',
     scratchPersistence = false, equips = null, clock = () => Date.now(), dashMode = DEFAULT_DASH_MODE, adds = null,
-    shouldStop = null, fineCheckpoints = false, holds = null }) {
+    shouldStop = null, fineCheckpoints = false, holds = null, capabilities = null }) {
     const t0 = clock();
-    const shadow = assertShadow(replayTape({ staging, perTick, levelSource, scratchPersistence, equips, holds }), live, perTick.length);
+    // ⛓ seedling-p4h-capability-plumbing — `capabilities` is the request's (the page's running build; absent on every
+    // request made before this slice and on every non-wasm caller → null → p4g). The shadow and every fork model it.
+    const shadow = assertShadow(replayTape({ staging, perTick, levelSource, scratchPersistence, equips, holds, capabilities }), live, perTick.length);
     const replayMs = clock() - t0;
     // ⛓ ANYTIME — a pass whose added strategy the run cannot use would replay the pass before it exactly.
     const available = adds ? PASS_STRATEGIES[adds] : null;
@@ -1141,7 +1150,7 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
     // ⛓⛓ FF-HARNESS — every fork records too (its own rows, past the prefix it replays from boot), so the run a
     // rewound segment ends on (`out.liveRun`) has its recording to hand.
     const forkRecs = new WeakMap();
-    const forkOf = forkRunFor({ staging, levelSource, scratchPersistence, equips, prefixLength: perTick.length, holds });
+    const forkOf = forkRunFor({ staging, levelSource, scratchPersistence, equips, prefixLength: perTick.length, holds, capabilities });
     const forkRun = () => {
         const { run: fork, rec } = recordingRun(forkOf(), { skip: perTick.length });
         forkRecs.set(fork, rec);

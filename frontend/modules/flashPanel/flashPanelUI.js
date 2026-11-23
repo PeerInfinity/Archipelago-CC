@@ -584,6 +584,9 @@ export class FlashPanelUI {
         getWin: () => this.adapter?._getWin?.() ?? null,
         // ⛓ seedling-p4h-beside — the running build's manifest `capabilities` (read at the AP load; [] until then).
         capabilities: this._wasmBuildCapabilities ?? [],
+        // ⛓ seedling-p4h-capability-plumbing — the SAME row's capabilities as the MODEL reads them: null until the AP load
+        // and for a build the manifest does not list (null = the default build's answer, p4g — `modelBuild.js`), never `[]`.
+        modelCapabilities: this._wasmModelCapabilities ?? null,
         teleport: (p) => this.adapter?.teleport?.(p) ?? false,
         mapPath: this._atlasMapPath ?? null,
         // ⛓ O3 — the solve budget knob, work units (null until the setting is read: the engine's own default then).
@@ -2003,8 +2006,10 @@ export class FlashPanelUI {
     }
     if (this.adapter !== adapter) return;
     // ⛓ seedling-p4h-beside — what the running build declares (the wasm playback reads AP chests by `apchest`).
-    this._wasmBuildCapabilities = manifest
-      ? (capabilitiesOf(manifest, buildNameFromWasmPath(flashPanel?.wasm)).capabilities ?? []) : [];
+    const runningCapabilities = manifest ? capabilitiesOf(manifest, buildNameFromWasmPath(flashPanel?.wasm)).capabilities : null;
+    this._wasmBuildCapabilities = runningCapabilities ?? [];
+    // ⛓ seedling-p4h-capability-plumbing — and for the model (the wasm playback engine's every run): unknown stays null.
+    this._wasmModelCapabilities = Array.isArray(runningCapabilities) ? [...runningCapabilities] : null;
 
     /**
      * ⛓⛓ SLICE G — ASKED AGAIN AT BRIDGE-READY. A rules load that lands while a game is still booting (an adapter,

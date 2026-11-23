@@ -99,7 +99,7 @@ const rowOf = (run) => ({ level: run.level, x: run.state.x, y: run.state.y, deat
  *   walker: object, end: string}}
  */
 export function walkTapeFromStaging({ staging, levelSource, records, goal, scratchPersistence = true,
-    maxTicks = WALK_TAPE_MAX_TICKS, clock = () => Date.now() }) {
+    maxTicks = WALK_TAPE_MAX_TICKS, clock = () => Date.now(), capabilities = null }) {
     const t0 = clock();
     if (!goal || !['location', 'exit'].includes(goal.kind)) {
         throw new WalkTapeRefusal(`the walker producer takes a location or an exit goal, not ${JSON.stringify(goal)}`);
@@ -131,7 +131,8 @@ export function walkTapeFromStaging({ staging, levelSource, records, goal, scrat
         : { ...staging, persistence: staging.persistence.filter((c) => !isApItemClear(c)) };
     let session;
     try {
-        session = createManualSession({ levelSource, staging: modelStaging, name: `wasm-walk-${goal.kind}-${goal.level}`, scratchPersistence });
+        session = createManualSession({ levelSource, staging: modelStaging, name: `wasm-walk-${goal.kind}-${goal.level}`, scratchPersistence,
+            capabilities });
     } catch (err) {
         throw new WalkTapeRefusal(`the model refused to boot level ${goal.level} at the arrival: ${String(err.message).split('\n')[0]}`);
     }

@@ -60,12 +60,12 @@ export function holdsMap(rows) {
  * `seam` null, no shadow replayed here, `holds` the room's own (the request unchanged).
  * @returns {{seam: ?{t: number, model: object, game: ?object, n: number, refusal: ?string}, holds: ?Map<number, number>}}
  */
-export function continuationHoldSeam({ staging, shipped, levelSource, equips = null, roomHolds = [], status }) {
+export function continuationHoldSeam({ staging, shipped, levelSource, equips = null, roomHolds = [], status, capabilities = null }) {
     const t = shipped.length;
     let seam = null;
     if ((staging?.pins ?? []).includes('sound')) {
         const model = replayTape({ staging, perTick: shipped.map((h) => new Set(h)), levelSource, scratchPersistence: true,
-            equips, holds: holdsMap(roomHolds) }).state.swim;
+            equips, holds: holdsMap(roomHolds), capabilities }).state.swim;
         if (model?.open) {
             const m = heldSwimFrames({ channel: model, status, pins: staging.pins });
             seam = { t, model: { ...model }, game: m.game, n: m.n, refusal: m.refusal ?? null };
