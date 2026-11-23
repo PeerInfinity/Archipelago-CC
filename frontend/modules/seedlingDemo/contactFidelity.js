@@ -2302,6 +2302,39 @@ export const CONTACT_FIDELITY = {
      * licence).
      */
     freezeReleaseTick: false,
+    /**
+     * fidelity RELEASEPICKUP D2 (wave 56) — THE UPDATES INSIDE A FREEZE'S DEAD SPAN THAT THE MODEL DID NOT TAKE: THE
+     * BEAM TOWER'S GRAPHIC THROUGH A TEXTED PICKUP'S PHASE A, AND (AN INTERIM REFUSAL) A PICKUP THE GAME COLLECTS
+     * INSIDE A ROCK'S SPAN.
+     * (1) The tower. `BeamTower.update` returns at its first line under `Game.freezeObjects`
+     * (`Puzzlements/BeamTower.as:54-57`), but `World.update` runs every entity's graphic outside that gate
+     * (`net/flashpunk/World.as:58`), so through phase A's 149 dead frames (`Pickups/Pickup.as:57-60,95-98`; the pickups,
+     * `Game.as:2330-2351`, update before the tower, `:2297`) its Spritemap plays on and `animEnd` turns it: a pure
+     * function of the frame count, no `y` drift, no beam test. The model stepped the turrets and the bombs through the
+     * lump and not the tower, so with a `Game.time` its `lastClock` test failed from T on and a tower room with a texted
+     * pickup refused rather than modelled. ON the lump steps every tower 149 frames frozen
+     * (`stepBeamTowersThroughPhaseANow`, beside `stepShootersThroughFreeze`) for a TEXTED ceremony (placed, or the
+     * runtime Seed, DarkSword and Fire), and claims the anim KNOWN only where every other frame of the ceremony steps
+     * the tower exactly once: `pickupTickFreeze` (T's one frozen step), `freezeEdgeFrames` (one per dialogue frame) and
+     * `freezeReleaseTick` (R's unfrozen step, whose `lastClock` the finishing tick's frozen C step is relabelled one
+     * frame back for: the clock reads R's `Game.time` there). Without all three the lump still steps the anim and marks
+     * it UNKNOWN (OFF the jump test does, except where the tower has no step before T: a ceremony on the room's first
+     * tick, where OFF claims an anim 150 frames stale). A text-less pickup is not lumped: its F+150 is UNFROZEN for the
+     * tower and T's main-slot step stands for it at T's anim phase (wave 51's stand-in), so a lump would count right and
+     * test the beam at the wrong phase — named, not modelled.
+     * (2) The pickups. `Pickup.update`'s `collide("Player")` has NO freeze gate (only `super.update()`, `Mobile`'s move,
+     * has one: `Mobile.as:31-41`), so the game asks every pickup on EVERY frame of a rock's span, not only on its release
+     * frame R: a pickup under the player at R was under it from the span's first frame (the player does not move through
+     * the span) and is collected THERE, and its ceremony then runs INSIDE the rock's span (`pick_up` re-raises the flag
+     * after the rock every frame, so R does not release: two concurrent freezes, which the model does not hold — the
+     * STOP). The model's own detection already asked every span position but two: a button's frame A (the player's
+     * post-move position, which the next detection meets only after the release step) and the wand's landing snap. ON
+     * either one with a pickup under the player is REFUSED by name (`assertNoPickupInRockSpanNow`): avoidance as a
+     * named INTERIM. No shipped rock room puts a pickup there. Composes with `freezeReleaseTick`, `freezeEdgeFrames`,
+     * `frozenTickUngated`, `pickupTickFreeze`, `dialogueFrameFreeze` and `turretSuitRetaliation` (no predicate is
+     * asked). OFF: byte-identical. `SEEDLING_FREEZE_SPAN_UPDATES=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    freezeSpanUpdates: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2738,6 +2771,9 @@ if (globalThis.process?.env?.SEEDLING_FREEZE_EDGE_FRAMES === '0') CONTACT_FIDELI
 // ⛓ fidelity RELEASETICK D2: `SEEDLING_FREEZE_RELEASE_TICK=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FREEZE_RELEASE_TICK === '1') CONTACT_FIDELITY.freezeReleaseTick = true;
 if (globalThis.process?.env?.SEEDLING_FREEZE_RELEASE_TICK === '0') CONTACT_FIDELITY.freezeReleaseTick = false;
+// ⛓ fidelity RELEASEPICKUP D2: `SEEDLING_FREEZE_SPAN_UPDATES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FREEZE_SPAN_UPDATES === '1') CONTACT_FIDELITY.freezeSpanUpdates = true;
+if (globalThis.process?.env?.SEEDLING_FREEZE_SPAN_UPDATES === '0') CONTACT_FIDELITY.freezeSpanUpdates = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
