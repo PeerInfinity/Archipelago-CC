@@ -726,7 +726,10 @@ async function startRequestCapture(getBot) {
                     const text = r.ok ? JSON.stringify((r.plan?.solution ?? []).map((k) => [...k])) : String(r.message ?? '');
                     // eslint-disable-next-line no-await-in-loop
                     result = { ok: r.ok ?? null, kind: r.kind ?? null, work: r.work ?? r.plan?.work ?? null, passes: r.passes ?? r.plan?.passes ?? null,
-                        answer: await sha12(text), message: r.ok ? null : text.slice(0, 300) };
+                        answer: await sha12(text), message: r.ok ? null : text.slice(0, 300),
+                        // remeasure-7: the switches the WORKER installed (its own stamp, `stampSolverEnv`; null at defaults)
+                        solverEnv: r.solverEnv ?? r.plan?.solverEnv ?? null };
+                    if (total === 0) console.log(`[MEASURE capture] first answer's worker solverEnv=${JSON.stringify(result.solverEnv)}`);
                 }
                 const row = rows.get(p.id) ?? { key: p.key, requests: [] };
                 rows.set(p.id, row);
