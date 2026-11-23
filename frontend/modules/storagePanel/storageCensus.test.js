@@ -4,8 +4,8 @@
  * EMPTY Unknown section — and the census's known orphans stay Unknown.
  */
 import { describe, expect, it } from 'vitest';
-import { normalizeDeclarations, ownerOf, buildView } from './storageModel.js';
-import { readSourceDeclarations } from './sourceDeclarations.js';
+import { idbDeclarations, normalizeDeclarations, ownerOf, buildView } from './storageModel.js';
+import { idbCensus, idbOpensInText, readSourceDeclarations, readSourceIdbOpens } from './sourceDeclarations.js';
 
 /** The census (§37.2), one concrete key per row — a family appears as one member. */
 export const CENSUS_KEYS = [
@@ -59,5 +59,57 @@ describe('storage census coverage', () => {
         const view = buildView(CENSUS_KEYS.map((key) => ({ key, chars: key.length })), declarations, 5242880);
         expect(view.sections[0].id).toBe('unknown');
         expect(view.sections[0].count).toBe(0);
+    });
+});
+
+/**
+ * IndexedDB databases opened OUTSIDE the app's module boot, which the Storage
+ * panel does not list: name → reason. Each must still be opened in source
+ * (a stale entry is RED) and must not also be declared.
+ */
+export const IDB_ALLOWED_UNDECLARED = {
+    // B1 D7: the standalone bounce demo page (modules/bounceDemo/djReal/index.html, never mounted by the app)
+    // caches the original SWF it fetched in its own database; it refetches it when the database is gone.
+    bounceDjReal: 'standalone page bounceDemo/djReal/index.html: its cached copy of the fetched SWF (refetched when absent)',
+};
+
+describe('storage census — IndexedDB, both ways', () => {
+    const { declarations } = normalizeDeclarations(readSourceDeclarations());
+    const declared = idbDeclarations(declarations).map((d) => d.value);
+    const opened = readSourceIdbOpens();
+
+    it('the census reads the tree: it finds the document library and the bounce demo page opening their databases', () => {
+        expect(opened.map((o) => `${o.path} → ${o.name}`).sort()).toEqual([
+            'modules/bounceDemo/djReal/index.html → bounceDjReal',
+            'modules/procgenCore/documentLibraryIdb.js → archipelago-cc-document-library',
+        ]);
+    });
+
+    it('every database the sources open is declared or allow-listed, every declared one is opened, nothing unresolved', () => {
+        expect(idbCensus({ opened, declared, allowed: IDB_ALLOWED_UNDECLARED }))
+            .toEqual({ unresolved: [], undeclared: [], unopened: [], staleAllowed: [] });
+    });
+
+    it('the library database is declared exactly once, by procgenLabPanel, as user data', () => {
+        expect(idbDeclarations(declarations).map((d) => [d.moduleId, d.value, d.kind]))
+            .toEqual([['procgenLabPanel', 'archipelago-cc-document-library', 'user']]);
+    });
+
+    it('RED both ways on synthetic inputs: an undeclared open, a declared name nobody opens, a stale allow-list entry', () => {
+        const o = (name, path = 'x.js') => ({ path, arg: `'${name}'`, name });
+        expect(idbCensus({ opened: [o('a'), o('b')], declared: ['a'] }).undeclared).toEqual(['b']);
+        expect(idbCensus({ opened: [o('a')], declared: ['a', 'gone'] }).unopened).toEqual(['gone']);
+        expect(idbCensus({ opened: [o('a')], declared: ['a'], allowed: { old: 'r', a: 'r' } }).staleAllowed).toEqual(['a', 'old']);
+        expect(idbCensus({ opened: [{ path: 'y.js', arg: 'makeName()', name: null }], declared: [] }).unresolved)
+            .toEqual(['y.js: open(makeName())']);
+    });
+
+    it('the scanner resolves a literal, a same-file binding, a default parameter bound to an exported constant; else unresolved', () => {
+        const exported = (n) => (n === 'LIB' ? 'lib-db' : null);
+        expect(idbOpensInText("indexedDB.open('lit-db', 1)").map((r) => r.name)).toEqual(['lit-db']);
+        expect(idbOpensInText("const N = 'bound-db';\nindexedDB.open(N, 1)").map((r) => r.name)).toEqual(['bound-db']);
+        expect(idbOpensInText('function f({ dbName = LIB } = {}) { factory.open(dbName, 1); }', exported).map((r) => r.name)).toEqual(['lib-db']);
+        expect(idbOpensInText('indexedDB.open(nameFrom(x), 1)').map((r) => r.name)).toEqual([null]);
+        expect(idbOpensInText('function f({ dbName = OTHER } = {}) { factory.open(dbName); }', exported).map((r) => r.name)).toEqual([null]);
     });
 });

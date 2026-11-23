@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { isQuotaExceededError, localStorageUsage, onStorageWriteFailure, reportStorageWriteFailure } from './storageQuota.js';
+import {
+    isQuotaExceededError, localStorageUsage, onStorageWriteFailure, reportLibraryWriteFailure, reportStorageWriteFailure,
+} from './storageQuota.js';
 
 function storageOf(entries) {
     const keys = Object.keys(entries);
@@ -70,5 +72,43 @@ describe('reportStorageWriteFailure', () => {
         offs.push(onStorageWriteFailure((n) => seen.push(n.key)));
         reportStorageWriteFailure({ key: 'k', chars: 1, error: quotaError({ name: 'QuotaExceededError' }) });
         expect(seen).toEqual(['k']);
+    });
+});
+
+describe('reportLibraryWriteFailure (the IndexedDB variant, lab arc B2)', () => {
+    const offs = [];
+    afterEach(() => { offs.splice(0).forEach((off) => off()); vi.restoreAllMocks(); });
+
+    it("a quota failure (the library's {failed, why} answer) → ONE notice to the listener, kind idb, naming the database", () => {
+        const seen = [];
+        offs.push(onStorageWriteFailure((n) => seen.push(n)));
+        const notice = reportLibraryWriteFailure({ why: 'QuotaExceededError: the quota has been exceeded', bytes: 530331,
+            owner: 'Lab', database: 'lib-db' });
+        expect(seen).toEqual([notice]);
+        expect(notice).toMatchObject({ kind: 'idb', key: 'lib-db', owner: 'Lab', attemptedBytes: 530331 });
+        expect(notice.message).toContain('Lab: saving to the document library (530,331 bytes) was NOT saved');
+    });
+
+    it('a quota error object is recognised too (name or legacy code)', () => {
+        const seen = [];
+        offs.push(onStorageWriteFailure((n) => seen.push(n.kind)));
+        reportLibraryWriteFailure({ error: quotaError({ name: 'QuotaExceededError' }) });
+        reportLibraryWriteFailure({ error: quotaError({ code: 22 }) });
+        expect(seen).toEqual(['idb', 'idb']);
+    });
+
+    it("a non-quota failure → null and no listener called (the caller's own NOT-saved handling)", () => {
+        const seen = [];
+        offs.push(onStorageWriteFailure((n) => seen.push(n)));
+        expect(reportLibraryWriteFailure({ why: 'AbortError: the transaction was aborted' })).toBe(null);
+        expect(reportLibraryWriteFailure({ why: 'unavailable: no indexedDB', error: new TypeError('x') })).toBe(null);
+        expect(reportLibraryWriteFailure()).toBe(null);
+        expect(seen).toEqual([]);
+    });
+
+    it('no listener → console.warn carries the message', () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        reportLibraryWriteFailure({ why: 'QuotaExceededError: full' });
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('was NOT saved'));
     });
 });
