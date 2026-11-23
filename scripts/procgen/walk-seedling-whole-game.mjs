@@ -16,6 +16,7 @@
  *   node scripts/procgen/walk-seedling-whole-game.mjs [--seed=1] [--runtime=wasm|js]
  *        [--budget-s=10800] [--stall-s=300] [--skip-refusals=0] [--port=8000]
  *        [--wait-for-box=<sec>] [--min=N] [--log=<path>] [--python=python] [--capture-requests=<jsonl>]
+ *        [--solver-env=NAME=V,NAME=V]
  *
  *   From the tree root, the venv active, a dev server on --port (default: the harness's, 8000).
  *   --seed=N         the Seedling Playthrough seed the walk plays (default 1, the committed preset).
@@ -32,6 +33,9 @@
  *   --capture-requests=<jsonl>  MEASUREMENT-ONLY (TEST_MEASURE_CAPTURE_REQUESTS): every solve request the wasm
  *                    engine's worker got, with the page's answer, one row per walk entry, in the input format of
  *                    replay-seedling-solve-request.mjs ({id: entry, key: location, requests: [{i, request, passes, result}]}).
+ *   --solver-env=NAME=V,NAME=V  MEASUREMENT-ONLY (TEST_MEASURE_SOLVER_ENV, remeasure-7): the page's
+ *                    `?seedlingSolverEnv=` (`solverEnvChannel.js`; entries joined with `;`), so the solve worker
+ *                    installs those SEEDLING_* switches. Unset = nothing is passed (byte-identical).
  *   --min=N          exit 1 when fewer than N checks were reached (for later use). Otherwise: exit 0 ALWAYS —
  *                    this is a measure, not a gate; a run that measured nothing says so on its line.
  *                    (A bad argument or a failed seed generation exits 2: nothing was measured.)
@@ -51,7 +55,7 @@ const GAME_DIR = 'seedling_playthrough';
 const TEMPLATE = 'Templates/Seedling Playthrough.yaml';
 
 export function parseArgs(argv) {
-    const o = { seed: 1, runtime: null, budgetS: 10800, stallS: 300, skipRefusals: 0, port: null, waitForBox: null, min: null, log: null, python: 'python', captureRequests: null };
+    const o = { seed: 1, runtime: null, budgetS: 10800, stallS: 300, skipRefusals: 0, port: null, waitForBox: null, min: null, log: null, python: 'python', captureRequests: null, solverEnv: null };
     for (const a of argv) {
         const eq = a.indexOf('=');
         const k = eq === -1 ? a : a.slice(0, eq);
@@ -69,6 +73,12 @@ export function parseArgs(argv) {
             case '--log': o.log = v; break;
             case '--python': o.python = v; break;
             case '--capture-requests': if (!v) throw new Error('--capture-requests takes a path'); o.captureRequests = v; break;
+            case '--solver-env': {
+                const parts = String(v ?? '').split(',').map((x) => x.trim()).filter(Boolean);
+                if (!parts.length || parts.some((x) => !/^SEEDLING_[A-Z0-9_]+=.+$/.test(x))) throw new Error('--solver-env takes SEEDLING_NAME=VALUE[,SEEDLING_NAME=VALUE]');
+                o.solverEnv = parts.join(';');
+                break;
+            }
             default: throw new Error(`unknown argument ${a}`);
         }
     }
@@ -90,6 +100,7 @@ export function measureEnv(o) {
     if (o.runtime) env.TEST_MEASURE_FLASH_RUNTIME = o.runtime;
     if (o.skipRefusals > 0) env.TEST_MEASURE_SKIP_REFUSALS = String(o.skipRefusals);
     if (o.captureRequests) env.TEST_MEASURE_CAPTURE_REQUESTS = path.resolve(ROOT, o.captureRequests);
+    if (o.solverEnv) env.TEST_MEASURE_SOLVER_ENV = o.solverEnv;
     return env;
 }
 
