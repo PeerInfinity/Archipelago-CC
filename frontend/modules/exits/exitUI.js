@@ -747,13 +747,11 @@ export class ExitUI {
         }
         return a.name.localeCompare(b.name); // Fallback to name sort for same accessibility
       } else if (sortMethod === 'accessibility_original') {
-        // Determine status for A (same as 'accessibility' sort)
-        const parentAReachable =
-          (snapshot.regionReachability?.[a.parentRegion]) === true ||
-          (snapshot.regionReachability?.[a.parentRegion]) === 'checked';
-        const connectedAReachable =
-          (snapshot.regionReachability?.[a.connectedRegion]) === true ||
-          (snapshot.regionReachability?.[a.connectedRegion]) === 'checked';
+        // Determine status for A (same as 'accessibility' sort; only the tie-break below differs). The regions'
+        // reachability through isRegionReachable: this sort used to test `=== true || === 'checked'` and so read
+        // every 'reachable' region as locked (region-view-findings).
+        const parentAReachable = isRegionReachable(snapshot, a.parentRegion);
+        const connectedAReachable = isRegionReachable(snapshot, a.connectedRegion);
         let ruleAPasses = true;
         if (a.access_rule)
           try {
@@ -774,12 +772,8 @@ export class ExitUI {
           statusA = 'parent_locked_rule_fails';
 
         // Determine status for B (same as 'accessibility' sort)
-        const parentBReachable =
-          (snapshot.regionReachability?.[b.parentRegion]) === true ||
-          (snapshot.regionReachability?.[b.parentRegion]) === 'checked';
-        const connectedBReachable =
-          (snapshot.regionReachability?.[b.connectedRegion]) === true ||
-          (snapshot.regionReachability?.[b.connectedRegion]) === 'checked';
+        const parentBReachable = isRegionReachable(snapshot, b.parentRegion);
+        const connectedBReachable = isRegionReachable(snapshot, b.connectedRegion);
         let ruleBPasses = true;
         if (b.access_rule)
           try {
