@@ -40,8 +40,9 @@ const goalOf = (eventId) => {
     return atlasEventGoal(e, sideLevel(e));
 };
 /** `solverGoalFor` with a run standing in `level` (the arrival's room unless said otherwise). */
-const mapIn = (goal, level = goal.level) => solverGoalFor(goal, { run: { level }, resolved: null });
 const SRC = atlasLevelSource();
+// ⛓ the page passes its level source (`wasmArrival`), so the rocklock pre-check can ask the instance (ROCKLOCK + FADE flip).
+const mapIn = (goal, level = goal.level) => solverGoalFor(goal, { run: { level }, resolved: null, levelSource: SRC });
 const refusalOf = (fn) => {
     try { fn(); } catch (e) { if (e instanceof SolverRefusal) return e; throw e; }
     return null;

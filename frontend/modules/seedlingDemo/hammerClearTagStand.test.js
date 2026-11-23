@@ -17,7 +17,15 @@
  * (t433, t474); ON its walk's probe meets the punch, the kill runs first, and it takes none. Leg 105 is OFF's either way.
  */
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll, afterAll } from 'vitest';
+import { FADE_MOVE as __FADE_MOVE_HOLD } from './solverBot.js';
+
+// ⛓ `FADE_MOVE` held OFF for this whole file: it ships ON since the ROCKLOCK + FADE flip (⚖ the user, 2026-11-22).
+// ON, L35 leg 127's OFF arm waits the keylock fade out and takes 0 punches (was 2: t433, t474). These rows pin other switches;
+// held OFF they are byte for byte their pre-flip selves.
+let __fadeWas;
+beforeAll(() => { __fadeWas = __FADE_MOVE_HOLD.enabled; __FADE_MOVE_HOLD.enabled = false; });
+afterAll(() => { __FADE_MOVE_HOLD.enabled = __fadeWas; });
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
