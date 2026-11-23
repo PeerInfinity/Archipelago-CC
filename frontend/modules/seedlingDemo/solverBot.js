@@ -2126,54 +2126,6 @@ export function previewLean(run, from, key) {
 }
 
 /**
- * ⛓ hammer-phase FACE 1 (`BURN_STANCE_AVOID`, OFF) — **A BURN STANCE THE AVOID RUNG CAN REACH IS ASKED FIRST.**
- *
- * `resolveBurnStrategy` takes the NEAREST tile whose fire press reaches the tree and whose corridor plans statically
- * (`stanceReaches`). The walk there then climbs the combat ladder against the room as it stands, and the nearest stance
- * can be the one a live body stands on: its own tile inside that body's danger volume, so AVOID plans no corridor, and
- * DETOUR and the forced crossing are refused BY NAME (`coveredGoalOf`) — the ladder EXHAUSTS while another tile of the
- * same tree is open. The rope verb already answers this shape (`rankRopeStances`: "the nearest stance can be the
- * dangerous one"); this is the same ranking for the burn verb's candidates.
- *
- * ON: the candidates are re-ordered, STABLY — first every one the AVOID rung's own plan reaches (`planWaypoints` with the
- * danger map's volumes forbidden, `dangerVolumes(run, 0)` as `extraVolumes`), then the rest, each group in the nearest-
- * first order. The resolver's every other test (the fire audit, the lean, `stanceReaches`) is unchanged, so a stance
- * is still only ever one it would have accepted OFF. Nothing reads a level, a coordinate or an enemy class.
- * OFF: never asked; the candidate list is the base's. `SEEDLING_BURN_STANCE_AVOID=1` / `withBurnStanceAvoid(enabled,
- * fn)`. Worker thread (the solve).
- */
-export const BURN_STANCE_AVOID = { enabled: globalThis.process?.env?.SEEDLING_BURN_STANCE_AVOID === '1' };
-export const BURN_STANCE_AVOID_DEFAULT = false;
-/** Per-run rows (ON only): one per re-ranked resolution, `{tree, order: [{x, y, avoids}]}`. */
-export const BURN_STANCE_AVOID_TRACE = { sink: null };
-
-/** Run `fn` with `BURN_STANCE_AVOID` set to `enabled`, restoring the previous value. */
-export function withBurnStanceAvoid(enabled, fn) {
-    return withSwitch(BURN_STANCE_AVOID, enabled, fn);
-}
-
-/** `candidates` with the ones the AVOID rung's plan reaches first (stable within each group). */
-function rankBurnStancesByAvoid(run, tree, candidates, contacts) {
-    if (candidates.length < 2) return candidates;
-    const vols = dangerVolumes(run, 0);
-    const avoids = (c) => {
-        try {
-            planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
-                solverPlanOpts(run, contacts, { extraVolumes: vols }));
-            return true;
-        } catch (e) {
-            if (!(e instanceof BotDriverV2Error)) throw e;
-            return false;
-        }
-    };
-    const marked = candidates.map((c) => ({ c, avoids: avoids(c) }));
-    const ranked = [...marked.filter((m) => m.avoids), ...marked.filter((m) => !m.avoids)];
-    BURN_STANCE_AVOID_TRACE.sink?.({ tree: tree.id, t: run.ticksCompleted,
-        order: ranked.map((m) => ({ x: m.c.x, y: m.c.y, avoids: m.avoids })) }, run);
-    return ranked.map((m) => m.c);
-}
-
-/**
  * ⛓⛓⛓ SEEDLING FIDELITY BURN — RESOLVE the `burn` work order: a
  * `burnabletree` on the frontier of a corridor.
  *
@@ -2259,9 +2211,7 @@ function resolveBurnStrategy(run, obstacle, contacts, blocked = []) {
     // the cell".
     const overPit = (run.world.pitTiles ?? []).some((pt) => rectsOverlapInclusive(tree.rect, pt.rect));
     const overExit = (run.world.teleporters ?? []).some((tp) => rectsOverlapInclusive(tree.rect, tp.rect));
-    const candidates = BURN_STANCE_AVOID.enabled
-        ? rankBurnStancesByAvoid(run, tree, burnStanceCandidates(run, tree, burnWindowTiles(tree)), contacts)
-        : burnStanceCandidates(run, tree, burnWindowTiles(tree));
+    const candidates = burnStanceCandidates(run, tree, burnWindowTiles(tree));
     const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
     let unreached = 0;
     let missed = 0;
@@ -3143,6 +3093,45 @@ export const CHASER_PASS_COUNTS = { tries: [] };
 /** Run `fn` with `CHASER_PASS` set to `enabled`, restoring the previous value. */
 export function withChaserPass(enabled, fn) {
     return withSwitch(CHASER_PASS, enabled, fn);
+}
+
+/**
+ * ⛓ hammer-phase FACE 1 (`GOAL_START_WAIT`, OFF) — **A CLEAR-TAG GOAL WHOSE COMBAT LADDER IS EXHAUSTED IS ASKED AGAIN
+ * AFTER THE PLAYER IDLES WHERE THE GOAL BEGAN.**
+ *
+ * Every rung of the ladder asks its question NOW: the walk, the stance scan, the forecast all start on the tick the goal
+ * starts. A room whose bodies MOVE WITHOUT THE PLAYER (a patrolling body walks its own route whatever the player does)
+ * can refuse every rung at that tick and admit a hitless line a little later, when the patrol is elsewhere. No rung
+ * waits for that: TIME is a last-mile tool, and the stance scan's forecast waits only at the stance. MEASURED (seed 1,
+ * re-measure-6 A1 26:9, L40 flag 12): the ladder EXHAUSTS on all 91 arrival clocks of a period, and the same request
+ * with the arrival idled 50 ticks first solves hitless (`face1` report §3).
+ *
+ * ON: when the clear-tag goal refuses with the combat ladder EXHAUSTED (and no deadline has tripped), the segment is
+ * REWOUND to the goal's first tick (the B3 rewind, `rewind.to`), the player idles `waits[k]` ticks there (no keys), and
+ * the goal is asked again — over `waits` in order, the first that solves is kept. An idle that takes a hit, dies, or
+ * crosses a level edge is not asked further (no later wait is either: a longer idle contains it). The segment's per-goal
+ * state (trace rows, records, the walk logs, exemptions, the strategy bound) is cut back with the keys, so a kept retry
+ * reads as if it were the first ask. Every wait refused → the FIRST refusal is re-thrown, unchanged. A wait is only
+ * ever a prefix of no keys; the goal's own answer is the ladder's, so the no-hit rules are the same rules.
+ * Nothing reads a level, a coordinate or an enemy class. No rewind (no `forkRun`) → never asked.
+ * OFF: never asked. `SEEDLING_GOAL_START_WAIT=1` / `withGoalStartWait(enabled, fn)`. Worker thread (the solve).
+ */
+export const GOAL_START_WAIT = { enabled: globalThis.process?.env?.SEEDLING_GOAL_START_WAIT === '1',
+    /** The idles tried, in order (ticks). */
+    waits: [50, 100, 200, 400, 800] };
+export const GOAL_START_WAIT_DEFAULT = false;
+/** Per-run rows (ON only): one per ask, `{t, wait, ok, why}`. */
+export const GOAL_START_WAIT_COUNTS = { tries: [] };
+
+/** Run `fn` with `GOAL_START_WAIT` set to `enabled`, restoring the previous value. */
+export function withGoalStartWait(enabled, fn) {
+    return withSwitch(GOAL_START_WAIT, enabled, fn);
+}
+
+/** Is `e` the combat ladder's EXHAUSTED refusal (the one `GOAL_START_WAIT` re-asks)? */
+export function isLadderExhausted(e) {
+    return e instanceof SolverRefusal && typeof e.message === 'string'
+        && e.message.includes('the combat ladder is EXHAUSTED');
 }
 
 /**
@@ -35998,6 +35987,65 @@ function solveSegmentUnder({
             ...(drillPass ? { drillPass } : {}) });
     };
 
+    /**
+     * ⛓ hammer-phase FACE 1 (`GOAL_START_WAIT`, OFF) — `execClearTag`, re-asked after an idle at the goal's first
+     * tick when its combat ladder EXHAUSTS (see the switch). The per-goal state is cut back with the rewind.
+     */
+    const execClearTagWaiting = (goal) => {
+        const t0 = perTick.length;
+        const logs = [rows, records, grazes, dangerQueries, hypothesisLedger, dashWalks, fineLatticeWalks, phaseDriveLeft,
+            lapseNarrowWalks, forcedHits, rewinds];
+        const lengths = logs.map((a) => a.length);
+        const sets = [[exemptions, new Set(exemptions)], [refusedOrders, new Set(refusedOrders)]];
+        // the progress frames the refused ask left open (an exception unwound past them) are closed with its reason
+        const seg = activeProgress?.seg ?? null;
+        const depth = seg?.stack?.length ?? 0;
+        let first = null;
+        try {
+            execClearTag(goal);
+            return;
+        } catch (e) {
+            if (!isLadderExhausted(e) || rewind === null || activeDeadline?.first) throw e;
+            first = e;
+        }
+        for (const wait of GOAL_START_WAIT.waits) {
+            if (activeDeadline?.first) break;
+            if (seg !== null && seg === (activeProgress?.seg ?? null) && seg.stack.length > depth) {
+                progressLeave(seg.stack[depth], first);
+            }
+            rewind.to(t0);
+            logs.forEach((a, i) => { a.length = lengths[i]; });
+            for (const [set, was] of sets) { set.clear(); for (const v of was) set.add(v); }
+            applied = [];
+            openerChain = [];
+            goalPlanExtra = {};
+            goalRides = new Set();
+            const h0 = (run.ledger('playerHits') ?? []).length;
+            const d0 = (run.ledger('playerDeaths') ?? []).length;
+            let idleWhy = null;
+            for (let i = 0; i < wait && idleWhy === null; i += 1) {
+                perTick.push(NO_HELD_PREVIEW);
+                const { transition } = run.advance(NO_HELD_PREVIEW);
+                if (transition) idleWhy = `the idle crossed to level ${transition.to_level}`;
+                else if ((run.ledger('playerHits') ?? []).length > h0
+                    || (run.ledger('playerDeaths') ?? []).length > d0) idleWhy = `the idle is hit at its tick ${i + 1}`;
+            }
+            if (idleWhy !== null) {
+                GOAL_START_WAIT_COUNTS.tries.push({ t: t0, wait, ok: false, why: idleWhy });
+                break;
+            }
+            try {
+                execClearTag(goal);
+                GOAL_START_WAIT_COUNTS.tries.push({ t: t0, wait, ok: true, why: null });
+                return;
+            } catch (e) {
+                GOAL_START_WAIT_COUNTS.tries.push({ t: t0, wait, ok: false, why: String(e?.message ?? e).slice(0, 200) });
+                if (!(e instanceof SolverRefusal)) throw e;
+            }
+        }
+        throw first;
+    };
+
     // ── the goals, in order ───────────────────────────────────────────
     let dropKillGoal = 0;
     for (const goal of goals) {
@@ -36213,7 +36261,8 @@ function solveSegmentUnder({
             continue;
         }
         if (goal.kind === 'clear-tag') {
-            execClearTag(goal);
+            if (GOAL_START_WAIT.enabled) execClearTagWaiting(goal);
+            else execClearTag(goal);
             continue;
         }
         if (goal.kind === 'encounter') {
