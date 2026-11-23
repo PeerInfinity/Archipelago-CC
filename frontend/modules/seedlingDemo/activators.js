@@ -283,7 +283,7 @@ const clampAlpha = (v) => (v < 0 ? 0 : (v > 1 ? 1 : v));
  */
 /**
  * ⛓⛓ seedling-fidelity-p4hfix — `RockLock.update`'s fade (`Puzzlements/RockLock.as:56-67`), for the one publisher that
- * reaches a RockLock: the Owl's death arm, `Button.activateAll(null, 0, true)` (`Enemies/FinalBoss.as:225`).
+ * reaches a RockLock: the Owl's death arm, `Button.activateAll(null, 0, true)` (`Enemies/FinalBoss.as:224 (p4h; :218 at p4g)`).
  *
  *     if (activate) { if (alpha > 0) { alpha -= 0.01; if (alpha <= 0) { type = ""; alpha = 0; setPersistence(tag, false); } } }
  *

@@ -18,7 +18,7 @@
  * The two defects these rows found (the report's D1/D2, `CC/docs/cloud-reports/seedling-fidelity-p4hfix.md`):
  *   · a hit-death tick dropped that frame's Swim-channel step (`Bot.as:3089-3094`), so the stroke boost came a tick
  *     late after the rebuild (`tb-solve-s2`, `tb-policy-s2`, `tb-hitless-pit`, `whirlpool-drown-s15`);
- *   · the Owl's death arm never published `Button.activateAll(null, 0, true)` (`FinalBoss.as:225`) to the exit
+ *   · the Owl's death arm never published `Button.activateAll(null, 0, true)` (`FinalBoss.as:224 (p4h; :218 at p4g)`) to the exit
  *     column's `rocklock@112,16`, whose fade (`RockLock.as:56-67`) opens it.
  *
  * Mutants (predicted, then run by copy + edit + restore; the report's table): W1 the death tick's Swim step removed →

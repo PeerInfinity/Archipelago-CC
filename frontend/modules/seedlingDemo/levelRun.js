@@ -11238,7 +11238,7 @@ export function createLevelRun({
      * ⛓⛓⛓ seedling-fidelity-p4hfix — `Button.activateAll(_exclude, t, true)` (`Puzzlements/Button.as:50-61`) as it
      * reaches a `RockLock` (`Puzzlements/RockLock.as`): every RockLock of group `t` in this build gets `activate = true`,
      * and from its NEXT update it fades (`rockLockFadeStep`) and turns `type = ""` on the 100th. The one caller is the
-     * Owl's death arm (`FinalBoss.as:225`, `t` 0): L112's `rocklock@112,16 {tset 0, tag 1}` is the exit column's
+     * Owl's death arm (`FinalBoss.as:224 (p4h; :218 at p4g)`, `t` 0): L112's `rocklock@112,16 {tset 0, tag 1}` is the exit column's
      * wall, and before this the model kept it shut for the rest of the visit (the p4h witnesses: the game's player
      * climbs past y 32 at t2207 of `det-owl-sword-A`, the model's held at 34.566).
      *
@@ -11585,7 +11585,7 @@ export function createLevelRun({
                     owlPendingRocks.push(createRockFall(argX, (i / 5) * 32, scale,
                         { id: `deathrock${i}@${ticksCompleted}` }));
                 }
-                // ⛓⛓ seedling-fidelity-p4hfix: `Button.activateAll(null, 0, true)` (`FinalBoss.as:225`), between the
+                // ⛓⛓ seedling-fidelity-p4hfix: `Button.activateAll(null, 0, true)` (`FinalBoss.as:224 (p4h; :218 at p4g)`), between the
                 // rocks and the flags. ⛔ INTERIM GATE: the line is the same on p4g; it is gated on `bossDraws` only
                 // because this slice's license keeps the p4g arm byte-identical (see `armRockLocksForGroup`).
                 if (bossDraws) armRockLocksForGroup(0);
