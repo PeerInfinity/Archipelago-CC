@@ -88,6 +88,11 @@ test.describe('Application End-to-End Tests', () => {
   }
   // MEASUREMENT-ONLY (remeasure-6): TEST_MEASURE_CAPTURE_REQUESTS=<jsonl path> → the walk's solve requests, one row
   // per walk entry, appended there through the `__measureCaptureAppend` binding (exposed below, only when it is set).
+  // MEASUREMENT-ONLY (remeasure-7): TEST_MEASURE_SOLVER_ENV=<NAME=V;NAME=V> → the page's `?seedlingSolverEnv=`
+  // (`solverEnvChannel.js`), which the solve worker installs as its `process.env`. Unset → no param (byte-identical).
+  if (process.env.TEST_MEASURE_SOLVER_ENV) {
+    APP_URL += `&seedlingSolverEnv=${encodeURIComponent(process.env.TEST_MEASURE_SOLVER_ENV)}`;
+  }
   const measureCapturePath = process.env.TEST_MEASURE_CAPTURE_REQUESTS || '';
   if (measureCapturePath) {
     APP_URL += '&measureCaptureRequests=1';
@@ -171,6 +176,10 @@ test.describe('Application End-to-End Tests', () => {
       fs.mkdirSync(path.dirname(path.resolve(measureCapturePath)), { recursive: true });
       await page.exposeFunction('__measureCaptureAppend', (line) => { fs.appendFileSync(measureCapturePath, `${line}\n`); });
       console.log(`  - request capture: ${measureCapturePath} (TEST_MEASURE_CAPTURE_REQUESTS)`);
+    }
+    if (process.env.TEST_MEASURE_SOLVER_ENV) {
+      // remeasure-7: every worker the page builds, by URL — the solve worker's carries the installed spec.
+      page.on('worker', (w) => { console.log(`[MEASURE worker] ${w.url()}`); });
     }
     await page.goto(APP_URL, { waitUntil: 'load', timeout: 60000 });
     console.log('PW DEBUG: Page navigation complete (load).');
