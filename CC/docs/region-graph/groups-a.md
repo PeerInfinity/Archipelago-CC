@@ -309,4 +309,4 @@ pin moved: `moduleDocsPins`, `tutorials.test.js` and `docsBase` are green with t
   - `tests/testCases/regionGraphPanelTests.js`;
   - `playwright_tests_config-substrates.json`;
   - `docs/json/user/modules/regionGraph.md`.
-- No `NewDocs/` path is cited. `seedling-bot-log.md` and `architecture.md` are untouched.
+- No gitignored planning path is cited. `seedling-bot-log.md` and `architecture.md` are untouched.
