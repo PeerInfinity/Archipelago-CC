@@ -644,6 +644,36 @@ export class MazeRoomUI {
     }
 
     /**
+     * ⛓ CONTENT SETS GEN-2 — **A NEW DOCUMENT WITHOUT THE PANEL'S ROOM UNBINDS THAT ROOM.** In playback the panel (and
+     * its playthrough visualizer) stay bound to the region `_adoptLoadedRegion` gave them until another region is
+     * adopted. A document that has no sidecar for that region (a plain preset: Adventure) adopts none, so the old
+     * room stayed bound, and the Playback Bot — whose controller for a non-procgen preset is the maze's whenever the
+     * panel is mounted — walked the NEW world's targets on the OLD room: tiles resolved by name in it, its `reset`
+     * (the visualizer's `freshStart()`) re-armed its playthrough and `instant` played it, publishing
+     * `system:locationCheck` for the old room's locations into the new world. Measured: `playback-bot-tile-kinds-demo`
+     * (top-down over Adventure: its rooms carry Adventure's region and location names) then `playback-bot-walk-order`
+     * (plain Adventure) — Chalice Home checked behind the bot's back, its own last check never sent, and every walk
+     * order STUCK. Unbinding returns the panel to its state before any region was adopted (no world, no region: what
+     * walk-order meets on main), where a walk the maze cannot take falls to the bot's direct play. A document that
+     * still has the region (a reload of the same world, the APWorld editor's regenerate) keeps it, and a standalone
+     * world (no region) is never touched.
+     */
+    _unbindStaleRegion(rulesJson, player) {
+        const region = this.currentRegionId ?? this._visualizer?.regionId ?? null;
+        if (!region) return;
+        if (rulesJson?.preset_sidecars?.[String(player ?? '1')]?.[region]) return;
+        this._visualizer?.stop();
+        this._visualizer?.setWorld(null, null);
+        this.world = null;
+        this.state = null;
+        this.currentRegionId = null;
+        this.arrivalDoorId = null;
+        this.externalInventory = null;
+        this.externalCheckedLocations = null;
+        this.message = '';
+    }
+
+    /**
      * Cache the raw rules.json content so the savedQueueStore can key
      * its buckets by a stable content-hash. Subscribes to
      * stateManager:rawJsonDataLoaded so the cache stays in sync when
@@ -659,6 +689,7 @@ export class MazeRoomUI {
             // the boot rules), so the panel keeps its own copy.
             this._cachedRulesPlayer = playerOfRawPayload(payload);
             if (this._seedlingArt?.status !== 'loading') this._seedlingArt = null;
+            this._unbindStaleRegion(payload?.rawJsonData ?? null, this._cachedRulesPlayer);
         };
         eventBus.subscribe('stateManager:rawJsonDataLoaded', handler, 'mazeRoom');
         this._unsubRulesLoaded =

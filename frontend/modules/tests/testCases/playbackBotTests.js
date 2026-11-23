@@ -326,6 +326,7 @@ async function playbackBotTileKindsDemoTest(testController) {
   } finally {
     bot.stop();
     await restoreSpeed();
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
   }
   return testController.getOverallResult();
 }
