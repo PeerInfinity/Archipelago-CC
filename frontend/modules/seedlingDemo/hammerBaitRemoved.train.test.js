@@ -9,7 +9,15 @@
  * re-plans from the pit's edge and drops into L43 at t688 hitless, then refuses aiming at a stance in the room it left.
  */
 
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { KILLLOCK_STANCE_AS_FORECAST as __SAF_HOLD } from './solverBot.js';
+
+// ⛓ `KILLLOCK_STANCE_AS_FORECAST` held OFF for this whole file: it ships ON since the ROCKLOCK + FADE flip took it in
+// (⚖ the user, 2026-11-22). ON, L99 east's plan is 647 t (was 649), still hitless into L100. These rows pin other switches; held OFF they are byte for byte their
+// pre-flip selves. The flip's own effect is measured by its sweeps and survey.
+let __safWas;
+beforeAll(() => { __safWas = __SAF_HOLD.enabled; __SAF_HOLD.enabled = false; });
+afterAll(() => { __SAF_HOLD.enabled = __safWas; });
 
 import { BAIT_TARGET_GONE_COUNTS, withBaitTargetGone, withChaserPass, withKillLockLineStance } from './solverBot.js';
 import { createRunForStaging } from './tapeRunner.js';
