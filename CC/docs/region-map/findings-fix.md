@@ -157,23 +157,34 @@ classes:
   Exits or Locations sort.
 
 ### Gates
-The code tip is `d32ac33915`. origin/main had not moved from `ad56c5aaa9` (an ancestor), so no merge was needed and
-the gate SHA is the tip. Each run below is at headSha `d32ac33915fe560ce466ad6e60719e2a75e03cad`.
+The code commit is `d32ac33915`. Before packeting, origin/main had moved to `178b2c16c0` (region-map link-ends: no
+file in common). It was merged at **`756ec1887d`**, the gate SHA. The slice's diff against main is still the 4 files
+of this slice. Each run below is at headSha `756ec1887db77cfbff0779ea7db8ee3f660efd2d`.
 
 | Run | What | Result |
 |---|---|---|
-| 45097618756 | JavaScript Unit Tests (push) | success, every job. Default tier 1,420 files / 29,826 tests vs base run 45084612582 at `ad56c5aaa9` (1,419 / 29,822): **+F 1, +T 4**, the new file's 4 rows. Slow tier 37 / 446 both sides. 0 failed |
-| 45097618750 | unittests (push) | success |
-| 45097625158 | TT, `test-templates.yml` (dispatch) | success, all 9 jobs. Regression 60/60 |
+| 45103637165 | JavaScript Unit Tests (push) | success, every job. Default tier 1,422 files / 29,857 tests vs main `178b2c16c0` (run 45093512701: 1,421 / 29,853): **+F 1, +T 4**, the new file's 4 rows. Slow tier 37 / 446 both sides. 0 failed |
+| 45103637113 | unittests (push) | success |
+| 45103636236 | TT, `test-templates.yml` (dispatch) | success, all 9 jobs. Regression 60/60 |
 
-- **Headroom:**
-  - fast 319.5 s of 600 (53%); main `ad56c5aaa9` (run 45093186107) 316.5 s: **+3.0 s**.
-  - fast-bundled 336.7 s (56%); main 322.0 s: **+14.7 s**.
+- **Headroom** at the merge, vs main `178b2c16c0` (TT run 45101294334):
+  - fast 319.8 s of 600 (53%); main 313.8 s: **+6.0 s**.
+  - fast-bundled 323.2 s (54%); main 332.5 s: **−9.3 s**.
   - Both are under the 70% / +20 s stop.
+- **The pre-merge runs**, at `d32ac33915` (JSUT 45097618756, unittests 45097618750, TT 45097625158), were all green.
+  Headroom there: fast 319.5 s, fast-bundled 336.7 s.
+- **One noisy reading, recorded.** At the first report commit `f14216feef` (docs only, so the same code as
+  `d32ac33915`), TT 45101189891 read fast **336.6 s**: +20.1 s over the then-main `ad56c5aaa9` (316.5 s), just
+  past the stop line. The same code read 319.5 s at `d32ac33915` and 319.8 s at the merge. A docs-only commit
+  cannot move a browser batch, so it is runner noise.
 - **Closure:** `seedlingDerivedRuleTable.js --print-engine-closure` engineMd5 `74ae60f575531492ed9eaec1839e1fe3`
-  (42 files) at base and at the tip. Closure ∩ diff = ∅. 0 gitlinks.
-- **Bounded vitest** (⚖ 52), at the tip: `regionView/`, `exits/`, `locations/`, `regions/`, `commonUI/` (16 files,
-  181 tests), plus `moduleImportOrder` and `quickLaunchImportOrder` (2 files, 65 tests). All green. No other test
+  (42 files) at base, at `d32ac33915` and at the merge. Closure ∩ diff = ∅. 0 gitlinks.
+- **Bounded vitest** (⚖ 52):
+  - at `d32ac33915`: `regionView/`, `exits/`, `locations/`, `regions/`, `commonUI/` (16 files, 181 tests), plus
+    `moduleImportOrder` and `quickLaunchImportOrder` (2 files, 65 tests);
+  - at the merge: the same 18 files, 247 tests.
+
+  All green. No other test
   imports `exitUI.js`.
 - **Local `npm test -- --mode=test-regression`:** 60/60.
 
