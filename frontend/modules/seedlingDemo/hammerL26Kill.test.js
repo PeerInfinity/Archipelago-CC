@@ -64,9 +64,9 @@ async function solveStep35({ asForecast, dashMode } = {}) {
 }
 
 describe('hammer-phase L26-KILL — the switch', () => {
-    it('ships OFF (=1 turns it on); the page channel carries the name', () => {
-        expect(KILLLOCK_STANCE_AS_FORECAST_DEFAULT).toBe(false);
-        expect(KILLLOCK_STANCE_AS_FORECAST.enabled).toBe(ENV.SEEDLING_KILLLOCK_STANCE_AS_FORECAST === '1');
+    it('ships ON since the ROCKLOCK + FADE flip (=0 opts out); the page channel carries the name', () => {
+        expect(KILLLOCK_STANCE_AS_FORECAST_DEFAULT).toBe(true);
+        expect(KILLLOCK_STANCE_AS_FORECAST.enabled).toBe(ENV.SEEDLING_KILLLOCK_STANCE_AS_FORECAST !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_KILLLOCK_STANCE_AS_FORECAST');
     });
 

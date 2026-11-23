@@ -14,7 +14,15 @@
  * flag's write are read from that run. Leg 910 (the held retry, the heaviest) is `hammerNewLocks.train.test.js`.
  */
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll, afterAll } from 'vitest';
+import { KILLLOCK_STANCE_AS_FORECAST as __SAF_HOLD } from './solverBot.js';
+
+// ⛓ `KILLLOCK_STANCE_AS_FORECAST` held OFF for this whole file: it ships ON since the ROCKLOCK + FADE flip took it in
+// (⚖ the user, 2026-11-22). ON, these kill-lock plans change ticks only, still 0 hits (L26 289 ALL 315 → 318 t, the L28 door 357 → 354 t; L53 911 under LINE_STANCE 606 → 574 t). These rows pin
+// NEW-LOCKS' switches; held OFF they are byte for byte their pre-flip selves.
+let __safWas;
+beforeAll(() => { __safWas = __SAF_HOLD.enabled; __SAF_HOLD.enabled = false; });
+afterAll(() => { __SAF_HOLD.enabled = __safWas; });
 
 import {
     KILLLOCK_CHASER_REWIND, KILLLOCK_CLEAR_WRITE, KILLLOCK_CLEAR_WRITE_DEFAULT, KILLLOCK_LINE_STANCE,

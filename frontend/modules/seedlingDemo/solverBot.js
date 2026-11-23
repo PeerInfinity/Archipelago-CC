@@ -20310,9 +20310,11 @@ export function resetKillLockChaserRewindCounts() {
  * `withKillLockStanceAsForecast(enabled, fn)`.
  */
 export const KILLLOCK_STANCE_AS_FORECAST = {
-    enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_STANCE_AS_FORECAST === '1',
+    // ⛓ ON by default since the ROCKLOCK + FADE flip took it in (⚖ the user, 2026-11-22: *"Add it ON to tonight's stack
+    // (Recommended)"*): survey step 35 on the chest route solves hitless. `=0` opts out (worker).
+    enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_STANCE_AS_FORECAST !== '0',
 };
-export const KILLLOCK_STANCE_AS_FORECAST_DEFAULT = false;
+export const KILLLOCK_STANCE_AS_FORECAST_DEFAULT = true;
 
 /** Run `fn` with `KILLLOCK_STANCE_AS_FORECAST` set to `enabled`, restoring the previous value. */
 export function withKillLockStanceAsForecast(enabled, fn) {
