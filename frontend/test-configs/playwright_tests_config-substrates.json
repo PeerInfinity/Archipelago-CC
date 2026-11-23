@@ -2316,7 +2316,7 @@
             "id": "tutorial-walk-tracker-region-map",
             "enabled": true,
             "category": "Tutorial walks: tracker",
-            "_comment": "region-map-tutorial (2026-11-22): the walk row of the in-progress tracker-region-map (the Region Map on seedling_playthrough seed 1; rules only, no game started). The ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker (⚖ the user 2026-11-22T02:05:41Z, \"Tracker batch\": it boots no wasm, so it needs no WebGPU)."
+            "_comment": "region-map-tutorial (2026-11-22): the walk row of the READY tutorial tracker-region-map (⚖ the user, 2026-11-23, \"Mark READY\"; in progress until then) (the Region Map on seedling_playthrough seed 1; rules only, no game started). The ratchet requires every step to work. Manual batch tutorials-tracker (⚖ the user 2026-11-22T02:05:41Z, \"Tracker batch\": it boots no wasm, so it needs no WebGPU)."
         },
         {
             "id": "tutorial-walk-tracker-dungeons",
