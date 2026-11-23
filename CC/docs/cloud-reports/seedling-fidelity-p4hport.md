@@ -246,7 +246,7 @@ Run as p4h (the uncommitted setup file) over 28 files: **28 rows red in 4 files*
   - `generate-procgen-reference.mjs --check`: 7 modules and 5 regions match;
   - the constants census `--check`: PASS (after `--write` and `--profile-rows`);
   - the solver surface `--check`: GREEN, 374 rows.
-- **CI.** The `JavaScript Unit Tests` push run at `06fbefdd` (the last code head) is run 45087521252. It was STILL RUNNING when this report was committed: shard 1/3 had finished; shard 2/3 and the slow tier were in progress; shard 3/3 was queued. Read it with `node scripts/procgen/ci-vitest-summary.mjs 06fbefdde846b82be82e25a3f8719fb541382245 --wait`. A follow-up commit records the verdict if this session sees it.
+- **CI.** The `JavaScript Unit Tests` push run 45087521252 at `06fbefdd` (the last code head) is **GREEN**: the unfiltered vitest suite passed 29752, skipped 0 and failed 0 (shards 1–3 all `success`); the slow tier passed 438 and failed 0.
 - **For the planner (I cannot dispatch, 403).** `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref claude/seedling-js-p4h-port-0bnbbr -f train_only=true` at `06fbefdd`. The slice touches `levelRun`, `tentacleBeast` and the fidelity models, so the train tier's solverBot hammer/fidelity pins should be quoted.
 
 ## Residue
