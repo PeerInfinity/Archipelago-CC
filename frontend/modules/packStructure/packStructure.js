@@ -56,7 +56,8 @@ export const STRUCTURE_FIELDS = Object.freeze({
     boon: Object.freeze(['kind', 'src', 'modifies', 'results']),
     task: Object.freeze(['kind', 'src', 'place', 'time', 'requires', 'results', 'limit', 'after', 'tags']),
     // ⛓ PASS-1: a tile kind's declared passability; ⛓ PASS-2 `needs`; ⛓ PASS-3 `dirs`.
-    terrain: Object.freeze(['kind', 'src', 'pass', 'needs', 'dirs']),
+    // ⛓ GEN-1: `generate` — the generator may place this kind (⚖ Robert 2026-11-22, Q3: a pack opts each kind in).
+    terrain: Object.freeze(['kind', 'src', 'pass', 'needs', 'dirs', 'generate']),
 });
 
 /** C3: when a result applies. `each` is the default. */
@@ -226,6 +227,11 @@ function checkTerrain(at, e) {
     } else if ('dirs' in e) {
         fail(`${at}: dirs ${JSON.stringify(e.dirs)} is only for pass "one-way" (this entry's pass is "${e.pass}")`);
     }
+    // ⛓ GEN-1 — `generate: true` opts the kind in to the generator (`mazeRoom/mazeTileKindsGen.js`); absent or false,
+    //   only the editor places it.
+    if ('generate' in e && typeof e.generate !== 'boolean') {
+        fail(`${at}: generate must be true or false (got ${JSON.stringify(e.generate)}): it says whether the generator may place the kind`);
+    }
 }
 
 /** Validate one pack's structure manifest; refuses by name. Returns it. */
@@ -330,6 +336,18 @@ export function terrainOf(concept, structure) {
     // ⛓ PASS-3 — `dirs` in the engine's order, so two spellings of one declaration compare equal.
     if (entry.pass === ONE_WAY_PASS) return { pass: entry.pass, dirs: TERRAIN_DIRS.filter((d) => entry.dirs.includes(d)) };
     return { pass: entry.pass };
+}
+
+/**
+ * ⛓ GEN-1 — **MAY THE GENERATOR PLACE THIS CONCEPT'S KIND?** True only when the concept presents a terrain entry the
+ * stack's structure holds and that entry says `generate: true` (⚖ Robert 2026-11-22, Q3). A concept presenting no
+ * terrain, or an entry the structure does not hold, is never placed by the generator (and never refused here: the
+ * editor's own lookup reports an unreadable pass).
+ */
+export function terrainGenerates(concept, structure) {
+    const id = concept?.presents;
+    if (!presentsStructure(id) || parseStructureId(id)?.kind !== 'terrain') return false;
+    return structure?.get(id)?.generate === true;
 }
 
 /**

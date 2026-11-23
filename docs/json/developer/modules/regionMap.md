@@ -19,7 +19,7 @@ The as-built report is `CC/docs/region-map/step3b-panel.md`.
 | `regionMapOverlay.js` | **Pure.** The location squares (centred on the tile, never under `minSquarePx`), the colour rule (`squareColorKey`), generic square places, and square hit-testing. |
 | `regionMapClickActions.js` | What a click runs (CA-S3): `loadRegionMapClickActions` (the first-run copy), `saveRegionMapClickActions`, the schema entry, `runRegionMapClick` (the selection, the generic event, then `runClickActions`), `withClickHandles`, `regionOfCell`, the originators and event names. |
 | `regionMapUI.js` | The panel: its DOM, the settings, the "On click" strip, the camera, pointer input and painting. |
-| `regionMapPicker.js` | The "Go to" picker (region-map tutorial, G1): a folded `details.region-map-pick` in the toolbar with a region box and a location box. Choosing calls the panel's `clickCell` (the pointer-up path), then `centreOnRegion`. Lists only drawn cells and their visible locations (`pickableCells`, `pickableLocations`). The Map's twin of `regionGraph/nodePicker.js`. |
+| `regionMapPicker.js` | The "Go to" picker (region-map tutorial, G1): a folded `details.region-map-pick` in the toolbar with a region box and a location box. Choosing calls the panel's `clickCell` (the pointer-up path), then `centreOnRegion`. Lists only drawn cells and their visible locations (`pickableCells`, `pickableLocations`). The Map's twin of `regionGraph/nodePicker.js`: both are wired by `regionView/goToPicker.js` (`setupGoToPicker`); the markup, the lists and what a choice does stay here. |
 
 ## Two rates
 
@@ -94,7 +94,7 @@ They are published before any action, and also when the ⏸ master switch is off
   - `regionMap/regionMap.test.js` covers frames, the cull, the camera, squares and colours, the settings, and the model over three presets. Every count is derived from the preset itself.
   - `regionMap/regionMapClickActions.test.js` covers the first-run copy (all three sources, idempotent, a stored Map value kept), independence, the events and the schema.
   - `regionMap/regionMapClicks.equivalence.test.js` measures the adopted click path against step 4's reader, kept verbatim as `legacyRegionMapClicks.testkit.js`.
-  - `regionMap/regionMapPicker.test.js` covers the Go-to picker's lists (drawn cells, visible locations) and that a choice calls `clickCell` with the cell's frame (and `{ location }` for a square), then centres.
+  - `regionMap/regionMapPicker.test.js` covers the Go-to picker's lists (drawn cells, visible locations) and that a choice calls `clickCell` with the cell's frame (and `{ location }` for a square), then centres. `regionMap/regionMapPicker.markup.test.js` pins the markup byte for byte (by digest) and the focus refresh, a blank box and a click that throws.
 - **In-app** (`tests/testCases/regionMapTests.js`):
   - Category **Region Map** (fast batch): `region-map-classic-world`, `region-map-clicks-generated`, `region-map-click-default`, `region-map-click-master-off`, `region-map-click-location-check`, `region-map-go-to-equals-canvas-click` and `region-map-click-settings-independent`.
   - Category **Region Map: Seedling** (playback-bot batch, on push): `region-map-seedling-paints`, `region-map-follow-player`, `region-map-discovery`, `region-map-clicks-seedling`, `region-map-clicks-loop-mode` and `region-map-custom-set-atlas`.

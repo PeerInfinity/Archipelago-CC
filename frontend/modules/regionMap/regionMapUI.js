@@ -15,7 +15,7 @@
  * so zooming never re-bakes.
  *
  * The camera: `screen = (world − camera) · zoom + viewport / 2` (`procgenCore/mapCamera.js`). Drag pans, the wheel
- * zooms around the cursor. A click (no drag) SELECTS the cell under it and runs the panel's click actions
+ * zooms around the cursor, the toolbar's + / − zoom around the centre, and two fingers pinch (`pinch.js`). A click (no drag) SELECTS the cell under it and runs the panel's click actions
  * (`regionMapClickActions.js`, CA-S3: the shared registry over `moduleSettings.regionMap.clickActions`, edited by the
  * "On click" strip at the top of the panel): a location square → the LOCATION actions; elsewhere in a cell → the
  * REGION actions.
@@ -46,6 +46,7 @@ import {
 import { defaultClickActions } from '../regionView/clickActions.js';
 import { mountClickActionsStrip } from '../regionView/clickActionsUI.js';
 import { buildRegionMapPicker, setupRegionMapPicker } from './regionMapPicker.js';
+import { createCanvasGesture } from './pinch.js';
 
 /** The tile size every level is baked at (the art's own); drawn scaled by the camera. */
 export const BAKE_TILE_PX = 16;
@@ -57,6 +58,14 @@ const LINK_LEGEND = Object.freeze([
     ['join', 'edge transition'], ['down', 'down'], ['up', 'up'], ['warp', 'warp (door / teleporter)'],
 ]);
 const BG = '#0b0b10';
+/** The wheel's zoom rate: a wheel event zooms by `exp(−deltaY · WHEEL_ZOOM_RATE)` (one 100-px notch ≈ ×1.16). */
+const WHEEL_ZOOM_RATE = 0.0015;
+/** One press of the toolbar's + / − is this many wheel notches (100 px of deltaY each). */
+export const ZOOM_BUTTON_NOTCHES = 3;
+/** The zoom factor of one + press (− divides by it): `exp(3 · 100 · 0.0015)` = ×1.568. */
+export const ZOOM_BUTTON_FACTOR = Math.exp(ZOOM_BUTTON_NOTCHES * 100 * WHEEL_ZOOM_RATE);
+/** The + / − buttons' side (CSS px): large enough to tap (WCAG 2.5.8's 24 px minimum, with room to spare). */
+export const ZOOM_BUTTON_PX = 32;
 
 const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
 
@@ -193,6 +202,17 @@ export class RegionMapUI {
         // only unticks the box (`_manualCamera`), it does not rewrite the saved setting.
         button('region-map-centre-start', 'Centre on start', () => this.centreOnStart());
         button('region-map-fit-all', 'Fit all', () => this.fitAll());
+        // ⛓ zoom-links (⚖ the user 2026-11-22T20:18:07Z, "a way to zoom … that also works on mobile"): + / − beside
+        // Fit all, each one ZOOM_BUTTON_FACTOR around the viewport centre. Sized to tap; the rest of the bar is unchanged.
+        for (const [cls, text, sign, label] of [
+            ['region-map-zoom-out', '−', -1, 'Zoom out'], ['region-map-zoom-in', '+', 1, 'Zoom in']]) {
+            const b = button(cls, text, () => this.zoomStep(sign));
+            Object.assign(b.style, {
+                minWidth: `${ZOOM_BUTTON_PX}px`, height: `${ZOOM_BUTTON_PX}px`, fontSize: '18px', lineHeight: '1', padding: '0',
+            });
+            b.title = label;
+            b.setAttribute('aria-label', label);
+        }
         const legend = el('span', 'region-map-link-legend', { display: 'inline-flex', gap: '8px', alignItems: 'center', color: '#9ab', fontSize: '11px' });
         for (const [kind, text] of LINK_LEGEND) {
             const item = el('span', `region-map-link-legend-${kind}`, { display: 'inline-flex', alignItems: 'center', gap: '3px' });
@@ -237,32 +257,41 @@ export class RegionMapUI {
         this.container.element?.appendChild(this.root);
 
         const c = this.canvas;
+        // ⛓ zoom-links: the canvas gesture (`pinch.js`, pure) by pointerId — one pointer drags (a mouse exactly as
+        // before), two pinch (zoom around the midpoint + pan by its movement). A gesture that pinched never clicks.
+        this._gesture = createCanvasGesture();
+        this.pinchStats = { pinches: 0, pinchMoves: 0 };
         this._onPointerDown = (e) => {
-            this._drag = { x: e.clientX, y: e.clientY, moved: false };
+            const p = this._local(e);
+            const g = this._gesture;
+            g.down(e.pointerId, p.x, p.y);
+            if (g.count === 2) this.pinchStats.pinches += 1;
             try { c.setPointerCapture?.(e.pointerId); } catch { /* a synthetic pointer (the in-app rows) has none */ }
             c.style.cursor = 'grabbing';
         };
         this._onPointerMove = (e) => {
             const p = this._local(e);
-            if (this._drag) {
-                const dx = e.clientX - this._drag.x;
-                const dy = e.clientY - this._drag.y;
-                if (!this._drag.moved && Math.hypot(dx, dy) < 3) return;
-                if (!this._drag.moved) this._manualCamera();
-                this._drag.moved = true;
-                this._drag.x = e.clientX;
-                this._drag.y = e.clientY;
-                this.camera = panBy(this.camera, dx, dy);
+            const g = this._gesture;
+            if (g.active) {
+                const step = g.move(e.pointerId, p.x, p.y);
+                if (!step) return;
+                if (step.kind === 'pan') {
+                    if (step.first) this._manualCamera();
+                    this.camera = panBy(this.camera, step.dx, step.dy);
+                } else {
+                    this._manualCamera();
+                    this.pinchStats.pinchMoves += 1;
+                    this.camera = zoomAround(panBy(this.camera, step.dx, step.dy), this.vp, step.cx, step.cy, step.factor);
+                }
                 this._requestPaint();
                 return;
             }
             this._hoverAt(p.x, p.y);
         };
         this._onPointerUp = (e) => {
-            const d = this._drag;
-            this._drag = null;
-            c.style.cursor = 'grab';
-            if (d && !d.moved) {
+            const { click } = this._gesture.up(e.pointerId);
+            if (!this._gesture.active) c.style.cursor = 'grab';
+            if (click) {
                 const p = this._local(e);
                 const w = screenToWorld(this.camera, this.vp, p.x, p.y);
                 const f = frameAt(this.frameList, w.x, w.y);
@@ -275,17 +304,22 @@ export class RegionMapUI {
                 }
             }
         };
+        this._onPointerCancel = () => {
+            this._gesture.reset();
+            c.style.cursor = 'grab';
+        };
         this._onWheel = (e) => {
             e.preventDefault();
             const p = this._local(e);
             this._manualCamera();
-            this.camera = zoomAround(this.camera, this.vp, p.x, p.y, Math.exp(-e.deltaY * 0.0015));
+            this.camera = zoomAround(this.camera, this.vp, p.x, p.y, Math.exp(-e.deltaY * WHEEL_ZOOM_RATE));
             this._requestPaint();
         };
         this._onLeave = () => { this.hover = null; this.tooltip.style.display = 'none'; this._requestPaint(); };
         c.addEventListener('pointerdown', this._onPointerDown);
         c.addEventListener('pointermove', this._onPointerMove);
         c.addEventListener('pointerup', this._onPointerUp);
+        c.addEventListener('pointercancel', this._onPointerCancel);
         c.addEventListener('pointerleave', this._onLeave);
         c.addEventListener('wheel', this._onWheel, { passive: false });
         if (typeof ResizeObserver === 'function') {
@@ -574,6 +608,18 @@ export class RegionMapUI {
         this._requestPaint();
     }
 
+    /**
+     * The toolbar's + (`sign` 1) / − (`sign` −1): zoom by ZOOM_BUTTON_FACTOR around the viewport centre, inside
+     * `mapCamera`'s limits, turning Follow off as the wheel does. Stamps `canvas.dataset.zoomedAt` (a step's `done`).
+     */
+    zoomStep(sign) {
+        this._manualCamera();
+        const f = sign < 0 ? 1 / ZOOM_BUTTON_FACTOR : ZOOM_BUTTON_FACTOR;
+        this.camera = zoomAround(this.camera, this.vp, this.vp.w / 2, this.vp.h / 2, f);
+        this.canvas.dataset.zoomedAt = String(Date.now());
+        this._requestPaint();
+    }
+
     /* ── THE LIVE HALF ───────────────────────────────────────────────── */
 
     _onView() {
@@ -711,7 +757,9 @@ export class RegionMapUI {
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.fillStyle = BG;
         ctx.fillRect(0, 0, vp.w, vp.h);
-        const stats = { cells: 0, art: 0, generic: 0, fogged: 0, hidden: 0, links: 0, keys: [] };
+        const stats = { cells: 0, art: 0, generic: 0, fogged: 0, hidden: 0, links: 0, neighbourLinks: 0, keys: [] };
+        // ⛓ A DOM readout of the zoom painted (zoom-links): a step's `done` reads no instance.
+        this.canvas.dataset.zoom = String(cam.zoom);
         this._squares = [];
         if (!this.model || !vp.w) {
             this.canvas.dataset.squares = '0';
@@ -863,7 +911,10 @@ export class RegionMapUI {
         ctx.lineWidth = 1.5;
         // Half-transparent: a link between two far groups crosses other levels' art.
         ctx.globalAlpha = 0.55;
-        for (const l of this.model.links) {
+        // ⛓ zoom-links (⚖ the user 2026-11-22T20:24:34Z, "Draw lines between neighbours"): the in-group links too,
+        // in the same style; counted apart (`neighbourLinks`) from the links between groups (`links`).
+        const all = [...this.model.links, ...(this.model.neighbourLinks ?? [])];
+        for (const l of all) {
             if (this._visibilityOf(l.from, view) === 'hidden' || this._visibilityOf(l.to, view) === 'hidden') continue;
             const a = pt(l.from, l.a);
             const b = pt(l.to, l.b);
@@ -886,7 +937,8 @@ export class RegionMapUI {
             ctx.lineTo(sb.x - 8 * Math.cos(ang + 0.4), sb.y - 8 * Math.sin(ang + 0.4));
             ctx.closePath();
             ctx.fill();
-            stats.links += 1;
+            if (l.neighbour) stats.neighbourLinks += 1;
+            else stats.links += 1;
         }
         ctx.globalAlpha = 1;
     }
@@ -927,6 +979,8 @@ export class RegionMapUI {
             tiles: this.model ? Object.fromEntries([...this.model.cells].map(([k, c]) => [k, c.tiles.map((t) => t.location)])) : {},
             unplaced: this.model?.unplaced.map((u) => u.location) ?? [],
             links: this.model?.links.length ?? 0,
+            neighbourLinks: this.model?.neighbourLinks?.length ?? 0,
+            pinch: { ...this.pinchStats, pointers: this._gesture?.count ?? 0 },
             camera: { ...this.camera },
             viewport: { ...this.vp },
             follow: this.follow,
@@ -971,6 +1025,7 @@ export class RegionMapUI {
         c.removeEventListener('pointerdown', this._onPointerDown);
         c.removeEventListener('pointermove', this._onPointerMove);
         c.removeEventListener('pointerup', this._onPointerUp);
+        c.removeEventListener('pointercancel', this._onPointerCancel);
         c.removeEventListener('pointerleave', this._onLeave);
         c.removeEventListener('wheel', this._onWheel);
     }

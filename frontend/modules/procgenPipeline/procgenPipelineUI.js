@@ -4146,7 +4146,7 @@ export class ProcgenPipelineUI {
         await assertWorldNumbers(this.params,
             { substrateIds: worldContentSubstrateIds(this, { resolvedLibraries: this.regionLibraries }), ...io });
         this.contentSet = await loadContentSet(
-            worldContentStackOf(this, { resolvedLibraries: this.regionLibraries }), io);
+            worldContentStackOf(this, { resolvedLibraries: this.regionLibraries }), { ...io, exists: this.params?.exists ?? [] });
         for (const st of [this._stepState, this._tdState, this._spiralState]) {
             // eslint-disable-next-line no-await-in-loop
             if (st) await attachEnvelopeContent(st, io);
