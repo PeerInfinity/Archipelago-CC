@@ -15114,10 +15114,11 @@ function strikeScanBox(cells, floor, reach) {
  * `?seedlingSolverEnv=SEEDLING_STRIKE_PREVIEW_LEAN=1`), `withStrikePreviewLean(enabled, fn)` for a row or a witness.
  * It runs where `deriveStrike` runs (the solve worker, and node); no main-thread mapper reads it.
  */
+// ⚖ ON in the LEAN/KTA flip (⚖ the user 2026-11-24: "Flip the clean two (Recommended)"): `SEEDLING_STRIKE_PREVIEW_LEAN=0` opts out.
 export const STRIKE_PREVIEW_LEAN = {
-    enabled: globalThis.process?.env?.SEEDLING_STRIKE_PREVIEW_LEAN === '1',
+    enabled: globalThis.process?.env?.SEEDLING_STRIKE_PREVIEW_LEAN !== '0',
 };
-export const STRIKE_PREVIEW_LEAN_DEFAULT = false;
+export const STRIKE_PREVIEW_LEAN_DEFAULT = true;
 
 /** Run `fn` with `STRIKE_PREVIEW_LEAN` set to `enabled`, restoring the previous value. */
 export function withStrikePreviewLean(enabled, fn) {
@@ -18350,8 +18351,9 @@ export function resetKeylockTurretCounts() {
  * through the solver env channel: the decision is on the worker thread, inside the frontier loop), and
  * `withKeylockTurretArrival(enabled, fn)` is for a test or a witness. OFF, nothing below is asked: byte-identical.
  */
-export const KEYLOCK_TURRET_ARRIVAL = { enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET_ARRIVAL === '1' };
-export const KEYLOCK_TURRET_ARRIVAL_DEFAULT = false;
+// ⚖ ON in the LEAN/KTA flip (⚖ the user 2026-11-24: "Flip the clean two (Recommended)"): `SEEDLING_KEYLOCK_TURRET_ARRIVAL=0` opts out.
+export const KEYLOCK_TURRET_ARRIVAL = { enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET_ARRIVAL !== '0' };
+export const KEYLOCK_TURRET_ARRIVAL_DEFAULT = true;
 
 /** Run `fn` with `KEYLOCK_TURRET_ARRIVAL` set to `enabled`, restoring the previous value. */
 export function withKeylockTurretArrival(enabled, fn) {
