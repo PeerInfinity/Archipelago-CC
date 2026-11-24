@@ -182,7 +182,7 @@ export async function testRegionMapSeedlingPaints(testController) {
     testController.reportCondition(`repaints are coalesced (${d.counters.paints} paints ≤ ${d.counters.paintRequests} requests)`,
       d.counters.paints <= d.counters.paintRequests);
 
-    // the squares: exactly the visible levels' tiles, every location of the world placed, ≥ min at the minimum zoom
+    // the squares: exactly the visible levels' tiles, every location of the world placed, capped by the tile at the minimum zoom
     const want = Object.values(rawRules().rules.regions[rawRules().playerId] ?? {}).reduce((n, r) => n + (r.locations?.length ?? 0), 0);
     const placed = Object.values(d.tiles).reduce((n, t) => n + t.length, 0);
     testController.reportCondition(`every location is placed (${placed}/${want}; not on map: ${d.unplaced.length})`, placed + d.unplaced.length === want);
@@ -193,8 +193,12 @@ export async function testRegionMapSeedlingPaints(testController) {
     await nextFrames(3);
     const min = dbg().settings.minSquarePx;
     const sq = dbg().squares;
-    testController.reportCondition(`at the minimum zoom every square is ≥ ${min} px (smallest ${Math.min(...sq.map((q) => q.side)).toFixed(1)}, ${sq.length} squares)`,
-      sq.length > 0 && sq.every((q) => q.side >= min));
+    // ⛓ tiled-squares-cap (⚖ the user, session 84c8ab35, 2026-11-23/24): a tiled square is never larger than its tile,
+    // and never under a 1 px dot; `minSquarePx` holds only up to the tile. → side = clamp(min(min, tile), 1, max(1, tile)).
+    const tileOf = (q) => panel().frames.get(q.key).tilePx * dbg().camera.zoom;
+    testController.reportCondition(`at the minimum zoom every square is ≤ max(its tile, 1 px) and ≥ max(1 px, min(${min} px, its tile)) `
+      + `(smallest ${Math.min(...sq.map((q) => q.side)).toFixed(2)}, tile ${tileOf(sq[0] ?? { key: d.lastPaint.keys[0] }).toFixed(3)} px, ${sq.length} squares)`,
+      sq.length > 0 && sq.every((q) => q.side <= Math.max(1, tileOf(q)) + 1e-9 && q.side >= Math.max(1, Math.min(min, tileOf(q))) - 1e-9));
     testController.reportCondition('event squares are drawn as events', sq.some((q) => q.kind === 'event') && sq.some((q) => q.kind === 'item'));
 
     // the cell-size toggle changes the frames: uniform = one square for every cell
@@ -1386,7 +1390,7 @@ registerTest({
   category: 'Region Map: Seedling',
   testFunction: testRegionMapSeedlingPaints,
   enabled: false,
-  description: 'N cells = the layout\'s display regions; the art bakes; squares = the visible levels\' tiles, ≥ the minimum at the minimum zoom; the cell-size toggle changes the frames',
+  description: 'N cells = the layout\'s display regions; the art bakes; squares = the visible levels\' tiles, ≤ their tile (a 1 px dot at least) at the minimum zoom; the cell-size toggle changes the frames',
 });
 registerTest({
   id: 'region-map-follow-player',

@@ -898,7 +898,9 @@ export class RegionMapUI {
     _drawSquares(ctx, f, view) {
         const cell = this.model.cells.get(f.key);
         if (!cell?.tiles?.length) return;
-        const squares = frameSquares(f, cell.tiles, this.camera, this.vp, this.settings.minSquarePx);
+        // ⛓ tiled-squares-cap: a substrate-tiled cell's squares never outgrow their tile (a 1 px dot at the least).
+        const squares = frameSquares(f, cell.tiles, this.camera, this.vp, this.settings.minSquarePx,
+            { capToTile: cell.tileSource === 'substrate' });
         for (const q of squares) {
             const loc = view?.locations?.get(q.location);
             if (loc?.visibility === 'hidden') continue;
