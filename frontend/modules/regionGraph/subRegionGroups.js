@@ -271,7 +271,9 @@ export function mergedEdgeHoverText(exits, states = []) {
     return [head, ...exits.map((e, i) => {
         const st = states[i];
         const mark = st == null ? '·' : st.traversable ? '✓' : '✗';
-        return `${mark} ${e.name} (${e.from} → ${e.to})`;
+        // The ends, unless the exit's own name already says them (Seedling's "a -> b").
+        const named = e.name.includes(e.from) && e.name.includes(e.to);
+        return named ? `${mark} ${e.name}` : `${mark} ${e.name} (${e.from} → ${e.to})`;
     })].join('\n');
 }
 
@@ -348,6 +350,6 @@ export const GROUP_STYLES = Object.freeze([
 ]);
 
 /** The merged-node / merged-edge hover box (one per panel; `GraphInteractionManager` fills and places it). */
-export const HOVER_BOX_STYLE = 'position:absolute; z-index:50; pointer-events:none; display:none; max-width:320px; '
+export const HOVER_BOX_STYLE = 'position:absolute; z-index:50; pointer-events:none; display:none; max-width:460px; '
     + 'white-space:pre; overflow:hidden; text-overflow:ellipsis; background:rgba(20,20,26,0.95); color:#eee; '
     + 'border:1px solid #666; border-radius:4px; padding:4px 6px; font:11px/1.35 monospace;';

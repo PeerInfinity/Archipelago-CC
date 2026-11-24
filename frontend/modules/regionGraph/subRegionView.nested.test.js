@@ -301,7 +301,10 @@ describe('⛓ the setting', () => {
         settingsStore.set(groupsMod.SUB_REGION_VIEW_KEY, 'nested');
         await RegionGraphUI.prototype.loadDisplaySettings.call(fake);
         expect(fake.subRegionView).toBe('nested');
-        settingsStore.set(groupsMod.SUB_REGION_VIEW_KEY, 'merged'); // a value this build does not draw yet
+        settingsStore.set(groupsMod.SUB_REGION_VIEW_KEY, 'merged'); // groups-b's value: drawn since it landed
+        await RegionGraphUI.prototype.loadDisplaySettings.call(fake);
+        expect(fake.subRegionView).toBe('merged');
+        settingsStore.set(groupsMod.SUB_REGION_VIEW_KEY, 'collapsible'); // a value this build does not draw yet
         await RegionGraphUI.prototype.loadDisplaySettings.call(fake);
         expect(fake.subRegionView).toBe('separate');
     });

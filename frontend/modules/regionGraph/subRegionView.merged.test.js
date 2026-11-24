@@ -272,6 +272,8 @@ describe('⛓ merged: counts per preset, and worlds without sub-regions', () => 
         expect(node.hasClass('region')).toBe(false);
         expect(node.data('regionName')).toBeUndefined();
         expect(G.mergedNodeHoverText('k', ['a', 'b'])).toBe('k: 2 sub-regions\n• a\n• b');
+        expect(G.mergedEdgeHoverText([{ name: 'p', from: 'a', to: 'b' }, { name: 'a -> c', from: 'a', to: 'c' }],
+            [{ traversable: true }, { traversable: false }])).toBe('2 exits\n✓ p (a → b)\n✗ a -> c');
     });
 });
 
@@ -298,7 +300,7 @@ describe('⛓ merged: a merged edge\'s STATE', () => {
                 mixedSeen++;
                 const text = gim.hoverTextOf(e).split('\n');
                 expect(text[0]).toBe(`${own.length} exits`);
-                e.data('exits').forEach((x, i) => expect(text[i + 1]).toBe(`${own[i] ? '✓' : '✗'} ${x.name} (${x.from} → ${x.to})`));
+                e.data('exits').forEach((x, i) => expect(text[i + 1].startsWith(`${own[i] ? '✓' : '✗'} ${x.name}`)).toBe(true));
             }
         });
         expect(mixedSeen).toBeGreaterThan(0);

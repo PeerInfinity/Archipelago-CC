@@ -102,6 +102,9 @@ export class GraphInteractionManager {
     // with its own state (`hoverTextOf`).
     this.ui.cy.on('mouseover', `node.${MERGED_CLASS}, edge[exits]`, (evt) => this.showHover(evt.target, evt.originalEvent));
     this.ui.cy.on('mouseout', `node.${MERGED_CLASS}, edge[exits]`, () => this.hideHover());
+    // Leaving the canvas on an element fires no mouseout, and a pan / zoom moves the element from under the box.
+    this.ui.cy.on('pan zoom', () => this.hideHover());
+    this.ui.graphContainer?.addEventListener?.('mouseleave', () => this.hideHover());
 
     // Update location nodes when region nodes are dragged
     this.ui.cy.on('drag', 'node.region', (evt) => {
@@ -290,8 +293,8 @@ export class GraphInteractionManager {
     this.hoverBox.textContent = text;
     const x = originalEvent?.clientX ?? 0;
     const y = originalEvent?.clientY ?? 0;
-    this.hoverBox.style.left = `${Math.max(0, Math.min(x + 14, (globalThis.innerWidth ?? 1e9) - 330))}px`;
-    this.hoverBox.style.top = `${y + 14}px`;
+    this.hoverBox.style.left = `${Math.max(0, Math.min(x + 24, (globalThis.innerWidth ?? 1e9) - 470))}px`;
+    this.hoverBox.style.top = `${y + 24}px`;
     this.hoverBox.style.display = 'block';
     this.hoverBox.dataset.for = ele.id();
   }
