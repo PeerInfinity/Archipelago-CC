@@ -1,0 +1,26 @@
+PAGE: seedling_bot_ap_p4h · capabilities ["arm","apitem","hold","tag","freeze","sincebegin","bossreport","secondaries","apchest","activators","checkpoint","bossdraws","sosave"] · delivered seedling-ap-record-93f13131
+# box lock: TAKEN by probe-seedling-apchest.mjs (browser, pid 2497) — head 5453e9b55, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: l25-side: the model's p4h replay is the game's stream — {"compared":21,"worst":0,"first":null}
+PASS: l25-side: the slot 25,0 is cleared iff the model opens the chest — game false, predicted openTick null
+ROW {"plan":"l25-side","slot":"25,0","predicted":{"openTick":null},"modelOpenTick":null,"game":{"mounted":"seedling-ap-record-93f13131","observations":21,"cleared":false,"hits":0,"end":{"level":25,"x":114.50000000000001,"y":104}},"positions":{"compared":21,"worst":0,"first":null}}
+PASS: l25-above: the model's p4h replay is the game's stream — {"compared":21,"worst":0,"first":null}
+PASS: l25-above: the slot 25,0 is cleared iff the model opens the chest — game false, predicted openTick null
+ROW {"plan":"l25-above","slot":"25,0","predicted":{"openTick":null},"modelOpenTick":null,"game":{"mounted":"seedling-ap-record-93f13131","observations":21,"cleared":false,"hits":0,"end":{"level":25,"x":104,"y":92.99999999999999}},"positions":{"compared":21,"worst":0,"first":null}}
+PASS: l25-below: the model's p4h replay is the game's stream — {"compared":41,"worst":0,"first":null}
+PASS: l25-below: the slot 25,0 is cleared iff the model opens the chest — game true, predicted openTick 6
+PASS: l25-below@TAKE/BEFORE: the clear lands on the model's open tick 6 — {"take":{"ticks":6,"cleared":true},"before":{"ticks":5,"cleared":false}}
+ROW {"plan":"l25-below","slot":"25,0","predicted":{"openTick":6,"passageTick":6,"fadeEndTick":65},"modelOpenTick":6,"game":{"mounted":"seedling-ap-record-93f13131","observations":41,"cleared":true,"hits":0,"end":{"level":25,"x":104,"y":82.4}},"positions":{"compared":41,"worst":0,"first":null},"take":{"ticks":6,"cleared":true},"before":{"ticks":5,"cleared":false}}
+PASS: l11-below: the model's p4h replay is the game's stream — {"compared":21,"worst":0,"first":null}
+PASS: l11-below: the slot 11,0 is cleared iff the model opens the chest — game true, predicted openTick 6
+PASS: l11-below@TAKE/BEFORE: the clear lands on the model's open tick 6 — {"take":{"ticks":6,"cleared":true},"before":{"ticks":5,"cleared":false}}
+ROW {"plan":"l11-below","slot":"11,0","predicted":{"openTick":6,"passageTick":6,"fadeEndTick":65},"modelOpenTick":6,"game":{"mounted":"seedling-ap-record-93f13131","observations":21,"cleared":true,"hits":0,"end":{"level":11,"x":40,"y":49.1}},"positions":{"compared":21,"worst":0,"first":null},"take":{"ticks":6,"cleared":true},"before":{"ticks":5,"cleared":false}}
+PASS: l38-covered: the model's p4h replay is the game's stream — {"compared":31,"worst":0,"first":null}
+PASS: l38-covered: the slot 38,1 is cleared iff the model opens the chest — game false, predicted openTick null
+ROW {"plan":"l38-covered","slot":"38,1","predicted":{"openTick":null},"modelOpenTick":null,"game":{"mounted":"seedling-ap-record-93f13131","observations":31,"cleared":false,"hits":0,"end":{"level":38,"x":152,"y":130.5}},"positions":{"compared":31,"worst":0,"first":null}}
+SKIP: l38-cover-button — modelOnly (MODEL ONLY: L38 with buttonroom@144,128 swapped for a `button tset 0`; the stand presses the cover open)
+PASS: l25-survey: on this build the survey tape (a north-east touch) takes nothing — {"cleared":false,"observations":109}
+PASS: l25-survey: the model's replay is the game's stream — {"compared":109,"worst":0,"first":null}
+ROW {"plan":"l25-survey","slot":"25,0","game":{"cleared":false,"observations":109},"positions":{"compared":109,"worst":0,"first":null}}
+ALL CHECKS PASSED
+rc=0

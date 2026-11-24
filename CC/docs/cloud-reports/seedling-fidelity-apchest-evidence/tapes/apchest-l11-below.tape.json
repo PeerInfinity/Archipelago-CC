@@ -1,0 +1,123 @@
+{
+ "tape_version": 8,
+ "game": "seedling",
+ "boot": {
+  "level": 11,
+  "x": 32,
+  "y": 64
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [
+  {
+   "level": 0,
+   "tag": 1,
+   "note": ""
+  },
+  {
+   "level": 5,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 1,
+   "note": ""
+  },
+  {
+   "level": 10,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 16,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 19,
+   "tag": 1,
+   "note": ""
+  }
+ ],
+ "despawn": [],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [
+   0
+  ],
+  "seal_parts": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ]
+ },
+ "rng": {
+  "seed": 418414780,
+  "split": true,
+  "cosmetic": 0,
+  "fp": 1763053598
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": false,
+   "hasWand": false,
+   "hasFireWand": false,
+   "canSwim": false,
+   "hasSpear": false,
+   "hasDarkShield": false,
+   "hasDarkSuit": false,
+   "hasDarkSword": false,
+   "hasFeather": false,
+   "hasTorch": false
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 3,
+  "first_use": false,
+  "extended": false,
+  "time": 8586,
+  "primary": 0,
+  "secondary": 0,
+  "grass_cut": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0,
+  "music": {
+   "set": "Room",
+   "index": 1
+  }
+ },
+ "tick0": null,
+ "hold": false,
+ "tick_count": 20,
+ "inputs": [
+  {
+   "key": "up",
+   "from": 0,
+   "to": 20
+  }
+ ],
+ "name": "apchest-l11-below"
+}

@@ -1,0 +1,175 @@
+{
+  "source": "probe-seedling-apchest.mjs",
+  "build": "seedling_bot_ap_p4h",
+  "capabilities": [
+    "arm",
+    "apitem",
+    "hold",
+    "tag",
+    "freeze",
+    "sincebegin",
+    "bossreport",
+    "secondaries",
+    "apchest",
+    "activators",
+    "checkpoint",
+    "bossdraws",
+    "sosave"
+  ],
+  "delivered_set": "seedling-ap-record-93f13131",
+  "rows": [
+    {
+      "plan": "l25-side",
+      "slot": "25,0",
+      "predicted": {
+        "openTick": null
+      },
+      "modelOpenTick": null,
+      "game": {
+        "mounted": "seedling-ap-record-93f13131",
+        "observations": 21,
+        "cleared": false,
+        "hits": 0,
+        "end": {
+          "level": 25,
+          "x": 114.50000000000001,
+          "y": 104
+        }
+      },
+      "positions": {
+        "compared": 21,
+        "worst": 0,
+        "first": null
+      }
+    },
+    {
+      "plan": "l25-above",
+      "slot": "25,0",
+      "predicted": {
+        "openTick": null
+      },
+      "modelOpenTick": null,
+      "game": {
+        "mounted": "seedling-ap-record-93f13131",
+        "observations": 21,
+        "cleared": false,
+        "hits": 0,
+        "end": {
+          "level": 25,
+          "x": 104,
+          "y": 92.99999999999999
+        }
+      },
+      "positions": {
+        "compared": 21,
+        "worst": 0,
+        "first": null
+      }
+    },
+    {
+      "plan": "l25-below",
+      "slot": "25,0",
+      "predicted": {
+        "openTick": 6,
+        "passageTick": 6,
+        "fadeEndTick": 65
+      },
+      "modelOpenTick": 6,
+      "game": {
+        "mounted": "seedling-ap-record-93f13131",
+        "observations": 41,
+        "cleared": true,
+        "hits": 0,
+        "end": {
+          "level": 25,
+          "x": 104,
+          "y": 82.4
+        }
+      },
+      "positions": {
+        "compared": 41,
+        "worst": 0,
+        "first": null
+      },
+      "take": {
+        "ticks": 6,
+        "cleared": true
+      },
+      "before": {
+        "ticks": 5,
+        "cleared": false
+      }
+    },
+    {
+      "plan": "l11-below",
+      "slot": "11,0",
+      "predicted": {
+        "openTick": 6,
+        "passageTick": 6,
+        "fadeEndTick": 65
+      },
+      "modelOpenTick": 6,
+      "game": {
+        "mounted": "seedling-ap-record-93f13131",
+        "observations": 21,
+        "cleared": true,
+        "hits": 0,
+        "end": {
+          "level": 11,
+          "x": 40,
+          "y": 49.1
+        }
+      },
+      "positions": {
+        "compared": 21,
+        "worst": 0,
+        "first": null
+      },
+      "take": {
+        "ticks": 6,
+        "cleared": true
+      },
+      "before": {
+        "ticks": 5,
+        "cleared": false
+      }
+    },
+    {
+      "plan": "l38-covered",
+      "slot": "38,1",
+      "predicted": {
+        "openTick": null
+      },
+      "modelOpenTick": null,
+      "game": {
+        "mounted": "seedling-ap-record-93f13131",
+        "observations": 31,
+        "cleared": false,
+        "hits": 0,
+        "end": {
+          "level": 38,
+          "x": 152,
+          "y": 130.5
+        }
+      },
+      "positions": {
+        "compared": 31,
+        "worst": 0,
+        "first": null
+      }
+    },
+    {
+      "plan": "l25-survey",
+      "slot": "25,0",
+      "game": {
+        "cleared": false,
+        "observations": 109
+      },
+      "positions": {
+        "compared": 109,
+        "worst": 0,
+        "first": null
+      }
+    }
+  ]
+}
