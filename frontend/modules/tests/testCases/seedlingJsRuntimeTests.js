@@ -5925,6 +5925,11 @@ const heldSetPlaysOwnRooms = (runtime) => async (tc) => {
             tc.reportCondition('[js] the JS page\'s mounted room 10 has the tree', hasHeldTree(rt?.mounted?.records?.get(10)));
         }
         tc.assertEqual(`[${runtime}] Edit ▸ is offered (a held set)`, '', panel.editRoomButton?.style.display ?? null);
+        // ⛓ document library B5 (js-23 (3)): a BUNDLE's body has no library version → the game holds it in the front only
+        const hold = await tc.pollForValue(() => (panel._levelSetHoldState && panel._levelSetHoldState.library !== 'pending'
+            ? panel._levelSetHoldState : null), `[${runtime}] the game's level-set hold settled`, 10000, 100);
+        tc.assertEqual(`[${runtime}] B5: the bundle's set is held in the FRONT only (no library version names it)`,
+            'held/front-only', `${hold?.front ?? null}/${hold?.library ?? null}`);
     } catch (e) {
         tc.reportCondition(`[${runtime}] the held-set row ran without throwing: ${e.message}`, false);
     } finally {

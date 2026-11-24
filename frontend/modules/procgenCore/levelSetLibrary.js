@@ -137,16 +137,32 @@ function entryToHold(entries) {
 export function createLevelSetHolder({ cache, front, timers = globalThis, win = globalThis.window, doc = globalThis.document,
     onChange = () => {} }) {
     return {
-        hold(ref, { what = null } = {}) {
+        /**
+         * @param {{set_id, content_hash}} ref
+         * @param {{what?: string, set?: object, onChange?: Function}} [o]  `set`: the body the caller was served under
+         *   `ref` — re-put (same key) if the front let it go before this hold, then held (js-23 (2)).
+         */
+        hold(ref, { what = null, set = null, onChange: onOwnChange = null } = {}) {
+            let frontHold = cache.hold(ref).status;
+            let refilled = false;
+            if (frontHold === 'absent' && set && set.set_id === ref.set_id) {
+                cache.put(ref.set_id, set, { contentHash: ref.content_hash });
+                frontHold = cache.hold(ref).status;
+                refilled = true;
+            }
             const st = {
                 ref: { set_id: ref.set_id, content_hash: ref.content_hash },
-                front: cache.hold(ref).status,
+                front: frontHold, refilled,
                 library: 'pending', why: null, entry_id: null, hold_id: null, beats: 0, reholds: 0, released: false,
             };
             let lib = null;
             let core = null;
             let timer = null;
-            const notify = () => { try { onChange({ ...st }); } catch { /* a readout */ } };
+            const notify = () => {
+                for (const fn of [onChange, onOwnChange]) {
+                    try { fn?.({ ...st }); } catch { /* a readout */ }
+                }
+            };
 
             const attach = async () => {
                 const got = await front.open();

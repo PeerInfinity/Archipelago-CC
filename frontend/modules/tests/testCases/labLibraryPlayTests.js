@@ -229,8 +229,10 @@ const playsSavedVersion = (runtime) => async (tc) => {
 
     // ── the game holds v1: front + library; deleting it is refused while it plays ──
     await panel._levelSetHold?.ready;
-    tc.assertEqual(`[${runtime}] the game holds its version in the front and the library`, 'held/held',
-      `${panel._levelSetHold?.state()?.front ?? null}/${panel._levelSetHold?.state()?.library ?? null}`);
+    tc.assertEqual(`[${runtime}] the game holds its version in the front and the library (the panel's readout)`, 'held/held',
+      `${panel._levelSetHoldState?.front ?? null}/${panel._levelSetHoldState?.library ?? null}`);
+    tc.reportCondition(`[${runtime}] …and the panel log says so`,
+      (document.querySelector('.flash-panel-log')?.textContent ?? '').includes('level set hold: front held, library held'));
     const refused = await withLibrary(dbName, (lib) => lib.deleteLineage(v1.answer.lineage_id));
     tc.assertEqual(`[${runtime}] deleting v1's set while the game holds it is REFUSED (held)`, 'refused/held',
       `${refused.status}/${refused.why ?? null}`);
@@ -287,6 +289,8 @@ const runningVersionHeld = (runtime) => async (tc) => {
     const key = panel._apLoadKey;
     const botActive = () => { try { return JSON.parse(panel.adapter.bot('botLevelSet'))?.active ?? null; } catch { return null; } };
     tc.assertEqual(`[${runtime}] the game plays v1`, v1.set.set_id, panel._seedlingRealSet?.set_id ?? null);
+    tc.assertEqual(`[${runtime}] J2: the panel's hold readout — a LIBRARY-saved set is held in the front AND the library`,
+      'held/held', `${panel._levelSetHoldState?.front ?? null}/${panel._levelSetHoldState?.library ?? null}`);
 
     // ── (d) a NEW version saved in the lab while the game runs changes nothing in it ──
     const v2 = await writer.save(2);

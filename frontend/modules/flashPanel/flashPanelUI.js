@@ -2124,7 +2124,7 @@ export class FlashPanelUI {
       // runtime's walks wait until the page plays its set (`SeedlingPlaybackController._deliveredSetGate`).
       this._seedlingDelivery = loaded.delivery ?? null;
       // ⛓ S4 — a HELD custom set's rooms were delivered: Edit ▸ is offered for the room the game is in.
-      this._setHeldSetEdit(loaded.assets?.recordSet?.held ?? null);
+      this._setHeldSetEdit(loaded.assets?.recordSet?.held ?? null, { body: loaded.heldSet ?? null });
 
       const glue = getSeedlingRegionGlue();
       if (!glue) {
@@ -2573,7 +2573,7 @@ export class FlashPanelUI {
    * (`loaded.assets.recordSet.held`); null hides it. ⛔ A served preset (the original game's rooms) never sets it:
    * those rooms are read-only in a world (⚖ region-editor-launch Q4), and this panel offered no Edit ▸ for them.
    */
-  _setHeldSetEdit(ref) {
+  _setHeldSetEdit(ref, { body = null } = {}) {
     // ⛓⛓ B5 — THE RUNNING GAME HOLDS THE VERSION IT PLAYS (front + library; `levelSetLibrary.createLevelSetHolder`),
     // from the moment its rooms are chosen until the next load or the panel goes. A new version saved in a lab changes
     // nothing here: nothing listens for saves, and these rooms are swapped only by a new load.
@@ -2581,7 +2581,23 @@ export class FlashPanelUI {
       && this._levelSetHold.ref.content_hash === ref.content_hash;
     if (!same) {
       void this._levelSetHold?.release();
-      this._levelSetHold = ref ? this._levelSetHolder().hold(ref, { what: `Flash panel game (${ref.set_id})` }) : null;
+      const token = {};
+      this._levelSetHoldToken = token;
+      this._levelSetHold = ref ? this._levelSetHolder().hold(ref, {
+        what: `Flash panel game (${ref.set_id})`,
+        set: body,
+        // ⛓ js-23 (3) — the readout the rows read, and one log line when the library half is settled
+        onChange: (st) => {
+          if (this._levelSetHoldToken !== token) return;
+          const was = this._levelSetHoldState?.library;
+          this._levelSetHoldState = st;
+          if (was !== st.library && st.library !== 'pending') {
+            this._panelLog(`level set hold: front ${st.front}, library ${st.library}${st.why ? ` (${st.why})` : ''}`
+              + `${st.refilled ? ' — re-put from the delivered body' : ''}`);
+          }
+        },
+      }) : null;
+      this._levelSetHoldState = this._levelSetHold?.state() ?? null;
     }
     this._heldSetEdit = ref ? { set_id: ref.set_id, content_hash: ref.content_hash } : null;
     if (!ref) { this._heldSetEditHandle?.close?.(); this._heldSetEditHandle = null; }
@@ -2606,8 +2622,13 @@ export class FlashPanelUI {
     const ref = this._heldSetEdit;
     if (!ref) return say(false, 'no held level set is loaded (only a set the host holds opens back in the lab)');
     // ⛓ B5 — a front miss is filled from the document library first (a held game's set is a front hit).
+    // ⛓ js-23 (1) — stale is judged BY VALUE (the same set re-loaded during the await is not stale) and by the mount key.
+    const loadKey = this._apLoadKey;
     await ensureHeld(levelSetCache, ref, { library: () => this._levelSetLibrary() });
-    if (this._heldSetEdit !== ref) return say(false, 'stale: another load replaced this game while its set was read');
+    const now = this._heldSetEdit;
+    if (!now || now.set_id !== ref.set_id || now.content_hash !== ref.content_hash || this._apLoadKey !== loadKey) {
+      return say(false, 'stale: another load replaced this game while its set was read');
+    }
     const got = levelSetCache.get(ref.set_id, ref.content_hash);
     if (got.status !== 'held') return say(false, got.why);
     if (got.set.provenance?.content_hash !== ref.content_hash) {

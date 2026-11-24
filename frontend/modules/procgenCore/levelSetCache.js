@@ -163,9 +163,9 @@ export function createLevelSetCache({ limit = LEVEL_SET_CACHE_LIMIT } = {}) {
             checkRef('levelSetCache.holdsOf', ref?.set_id, ref?.content_hash);
             return entries.get(keyOf(ref.set_id, ref.content_hash))?.holds ?? 0;
         },
-        /** Any version of `setId`, or exactly `(setId, contentHash)` when a hash is given. */
+        /** Any version of `setId` (no hash: `undefined` or `null`), or exactly `(setId, contentHash)` when one is given. */
         has(setId, contentHash) {
-            if (contentHash === undefined) return hashesOf(setId).length > 0;
+            if (contentHash === undefined || contentHash === null) return hashesOf(setId).length > 0;
             return entries.has(keyOf(setId, contentHash));
         },
         /** Every entry, oldest put first: `[{set_id, content_hash, holds}]`. */

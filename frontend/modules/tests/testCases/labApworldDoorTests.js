@@ -490,6 +490,11 @@ const doorASetPlays = (runtime) => async (tc) => {
       hasHeldTree(delivered?.rooms?.[10]?.source?.record));
     tc.assertEqual(`[${runtime}] STOP-check: the host serves it only under the hash the rules name`, 'held',
       levelSetCache.get(ref.set_id, ref.content_hash).status);
+    // ⛓ document library B5 (js-23 (3)): door A's carried body has no library version → held in the FRONT only
+    const hold = await tc.pollForValue(() => (panel._levelSetHoldState && panel._levelSetHoldState.library !== 'pending'
+      ? panel._levelSetHoldState : null), `[${runtime}] the game's level-set hold settled`, 10000, 100);
+    tc.assertEqual(`[${runtime}] B5: door A's set is held in the FRONT only (no library version names it)`,
+      'held/front-only', `${hold?.front ?? null}/${hold?.library ?? null}`);
     let ls = null;
     try { ls = JSON.parse(panel.adapter.bot('botLevelSet')); } catch { ls = null; }
     tc.assertEqual(`[${runtime}] the RUNTIME mounted the delivered set (botLevelSet.active, its rooms)`,

@@ -1039,7 +1039,8 @@ export async function loadSeedlingRandomizer({
             // a delivery needs if the table allocates a tag.
             tagCapable: buildCapabilities.includes(TAG_CAPABILITY),
             embed, bot, heldSet, atlases,
-        });
+        // ⛓ B5 (js-23 (2)) — the held body rides the atlas arm's answer too (see the vanilla arm's return)
+        }).then((r) => ({ ...r, heldSet: heldSet ?? null }));
     }
     if (!eligibility.eligible) return refuse(eligibility, { census, assets });
 
@@ -1137,6 +1138,10 @@ export async function loadSeedlingRandomizer({
         entrances: shuffle.plan ? { retargeted: shuffle.retargeted, moved: shuffle.plan.moved,
             unmoved: shuffle.plan.unmoved } : null,
         set,
+        // ⛓ B5 (js-23 (2)) — the held set's BODY exactly as the front served it at the read above (`set` is the
+        // placement's rewrite). Awaits sit between that read and the caller's hold, so the caller re-puts this body
+        // under the same key if the front let it go in between, then holds it.
+        heldSet: heldSet ?? null,
         invalidation,
         census,
         assets,
@@ -1273,6 +1278,8 @@ export async function loadSeedlingGenerated({
         // ⛓ ER E5 — always null here: a generated world that places entrances was refused above.
         entrances: null,
         set,
+        // ⛓ B5 — always null: a generated world never plays a held set (the shape matches the other arms').
+        heldSet: null,
         invalidation,
         levelOf,
         report,

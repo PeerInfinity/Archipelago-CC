@@ -69,6 +69,9 @@ describe('levelSetCache — put / get', () => {
         expect(c.has('x')).toBe(true);
         expect(c.has('x', '00000001')).toBe(true);
         expect(c.has('x', '00000003')).toBe(false);
+        // ⛓ js-23 (4): null is "no hash" like undefined — any version, never the literal key "x\0null"
+        expect(c.has('x', null)).toBe(true);
+        expect(c.has('y', null)).toBe(false);
     });
     it('⛔ a content_hash MISMATCH is REPORTED and NOT SERVED — the held hashes listed', () => {
         const c = createLevelSetCache();

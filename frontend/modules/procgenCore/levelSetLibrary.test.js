@@ -261,6 +261,24 @@ describe('the running game\'s holds (createLevelSetHolder) — B1 D3/D8, the HOL
         expect(await holdsOf(w.lib, w.saved.lineage_id)).toEqual([]);
         expect(w.timers.live.size).toBe(0);
     });
+    it('⛓ js-23 (2): puts landing between the read and the hold evict the entry → the served body is RE-PUT and held', async () => {
+        const w = await holderWorld();
+        const big = createLevelSetCache(); // the default bound of 4
+        big.put(w.ref.set_id, w.v1, { contentHash: w.ref.content_hash });
+        const served = big.get(w.ref.set_id, w.ref.content_hash).set;
+        for (let i = 0; i < 4; i += 1) big.put(`x${i}`, { set_id: `x${i}`, rooms: [] }, { contentHash: `0000000${i}` });
+        expect(big.get(w.ref.set_id, w.ref.content_hash).status).toBe('absent');
+        const holder = createLevelSetHolder({ cache: big, front: w.front, timers: w.timers, win: w.win, doc: w.doc });
+        const h = holder.hold(w.ref, { set: served });
+        expect(h.state()).toMatchObject({ front: 'held', refilled: true });
+        expect(big.holdsOf(w.ref)).toBe(1);
+        expect(big.get(w.ref.set_id, w.ref.content_hash).set).toBe(served);
+        // without the body there is nothing to re-put: absent, by name
+        const bare = createLevelSetCache();
+        expect(createLevelSetHolder({ cache: bare, front: w.front, timers: w.timers, win: w.win, doc: w.doc })
+            .hold(w.ref).state()).toMatchObject({ front: 'absent', refilled: false });
+        await h.release();
+    });
     it('a set with no library version (a bundle, door A\'s body) is held in the FRONT only, by name', async () => {
         const w = await holderWorld({ inLibrary: false });
         const h = w.holder.hold(w.ref);

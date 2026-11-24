@@ -185,6 +185,20 @@ describe('B5 — (a) the placement, pinned over the wiring\'s source (the window
         expect(recheck).toBeLessThan(read);
         expect(fn.slice(0, fill)).not.toMatch(/levelSets\.(get|has|refs)\(|heldLevelSetOf\(/);
     });
+    it('⛓ js-23 F1: _customSetRefusal has exactly TWO callers, and each re-checks its load right after it returns', () => {
+        const panel = readFileSync(fileURLToPath(new URL('./flashPanelUI.js', import.meta.url)), 'utf8');
+        const calls = [...panel.matchAll(/await this\._customSetRefusal\(\);\n\s*(.*)\n/g)].map((m) => m[1].trim());
+        expect(panel.match(/this\._customSetRefusal\(/g)).toHaveLength(2);
+        expect(calls).toEqual(['if (this.adapter !== adapter) return;', 'if (this._initStale(epoch)) return;']);
+    });
+    it('⛓ js-23 (2): the wiring returns the held set\'s body exactly as the front served it', async () => {
+        const { lib } = await labSaved(V1);
+        const h = host(V1);
+        const r = await load(V1, 'js', { ...h, library: lib });
+        const ref = levelSetReferenceOf(V1.levelSet);
+        expect(r.heldSet).toBe(h.levelSets.get(ref.set_id, ref.content_hash).set);
+        expect(r.heldSet).not.toBe(r.set);
+    });
     it('⛔ (d) no swap: neither the wiring nor the panel listens for library saves or live notices', () => {
         const panel = readFileSync(fileURLToPath(new URL('./flashPanelUI.js', import.meta.url)), 'utf8');
         for (const text of [src, panel]) expect(text).not.toMatch(/BroadcastChannel|versionSaved|draftUpdated/);
@@ -262,6 +276,56 @@ describe('B5 — the panel', () => {
         await expect(lib.deleteLineage(saved[0].lineage_id)).resolves.toMatchObject({ status: 'deleted' });
     });
 
+    it('⛓ js-23 (2): four puts between the load\'s read and _setHeldSetEdit evict the entry → the hold still lands', async () => {
+        const { lib } = await labSaved(V1);
+        const ref = levelSetReferenceOf(V1.levelSet);
+        levelSetCache.put(ref.set_id, V1.levelSet, { contentHash: ref.content_hash });
+        const body = levelSetCache.get(ref.set_id, ref.content_hash).set;
+        for (let i = 0; i < 4; i += 1) levelSetCache.put(`w-${i}`, { set_id: `w-${i}`, rooms: [] }, { contentHash: `0000000${i}` });
+        expect(levelSetCache.get(ref.set_id, ref.content_hash).status).toBe('absent');
+        const { panel, logs } = barePanel(lib);
+        panel._setHeldSetEdit(ref, { body });
+        expect(levelSetCache.holdsOf(ref)).toBe(1);
+        expect(panel._levelSetHoldState).toMatchObject({ front: 'held', refilled: true });
+        await panel._levelSetHold.ready;
+        expect(panel._levelSetHoldState).toMatchObject({ front: 'held', library: 'held' });
+        expect(logs.some((m) => /level set hold: front held, library held .*re-put/.test(m))).toBe(true);
+        await panel._levelSetHold.release();
+    });
+    it('⛓ js-23 (3): a set with no library version shows front-only on the readout, with why', async () => {
+        const empty = core.createDocumentLibrary({ backend: createMemoryBackend() });
+        const ref = levelSetReferenceOf(V1.levelSet);
+        levelSetCache.put(ref.set_id, V1.levelSet, { contentHash: ref.content_hash });
+        const { panel } = barePanel(empty);
+        panel._setHeldSetEdit(ref);
+        await panel._levelSetHold.ready;
+        expect(panel._levelSetHoldState).toMatchObject({ front: 'held', library: 'front-only' });
+        expect(panel._levelSetHoldState.why).toMatch(/not a library version/);
+        await panel._levelSetHold.release();
+    });
+    it('⛓ js-23 (1): Edit ▸ stale is BY VALUE — the same set re-loaded during the fill is not stale; another set is', async () => {
+        const { lib } = await labSaved(V1);
+        const ref = levelSetReferenceOf(V1.levelSet);
+        const open = async () => ({ ok: true });
+        // the same set re-loaded during the fill (a NEW ref object, same value): not stale
+        const { panel } = barePanel(lib);
+        panel._heldSetEdit = { ...ref };
+        panel._levelSetLibrary = async () => { panel._heldSetEdit = { ...ref }; return lib; };
+        await expect(panel._editHeldSetRoom({ open })).resolves.toMatchObject({ ok: true, room: 10 });
+        // another set loaded during the fill: stale, by name
+        levelSetCache.clear();
+        const { panel: p2 } = barePanel(lib);
+        p2._heldSetEdit = { ...ref };
+        p2._levelSetLibrary = async () => { p2._heldSetEdit = { set_id: 'another-set', content_hash: '00000000' }; return lib; };
+        await expect(p2._editHeldSetRoom({ open })).resolves.toMatchObject({ ok: false, why: expect.stringMatching(/^stale:/) });
+        // the mount key moved during the fill: stale
+        levelSetCache.clear();
+        const { panel: p3 } = barePanel(lib);
+        p3._heldSetEdit = { ...ref };
+        p3._apLoadKey = 'k1';
+        p3._levelSetLibrary = async () => { p3._apLoadKey = 'k2'; return lib; };
+        await expect(p3._editHeldSetRoom({ open })).resolves.toMatchObject({ ok: false, why: expect.stringMatching(/^stale:/) });
+    });
     it('⛓ J2 retired, at the panel: a playing set survives four later puts, and Edit ▸ still answers held', async () => {
         const { lib } = await labSaved(V1);
         const ref = levelSetReferenceOf(V1.levelSet);
