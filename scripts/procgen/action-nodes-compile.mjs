@@ -11,7 +11,11 @@
 //
 // Usage:
 //   node scripts/procgen/action-nodes-compile.mjs [<graph.json>] [-o out.json] [--seed N] [--exists id,id]
-//                                                 [--check] [--quiet]
+//                                                 [--fill-attempts N] [--check] [--quiet]
+//
+// `--fill-attempts` caps how many times the seeded fill is tried before the graph is refused (`fill-failed`); the
+// default is the compiler's DEFAULT_FILL_ATTEMPTS. Attempt 1 uses the seed itself, so a graph that fills first time
+// compiles to the same bytes whatever the cap (AN-OMSI-1).
 //
 // `--exists` names the content packs (`frontend/packs/`) the graph is the resolved structure of; the world then records
 // those pack ids in `provenance[p].exists` instead of the graph's own provenance block (Z.7, AN-1b).
@@ -36,7 +40,7 @@ export const DEFAULT_GRAPH = 'frontend/modules/actionNodes/graphs/example-villag
 export const DEFAULT_OUT = 'frontend/presets/action_nodes_example/AP_1/AP_1_rules.json';
 /** The pack the example graph is the resolved structure of (PL-2: `resolve(action_nodes, {exists: [it]})` equals it). */
 export const DEFAULT_EXISTS = Object.freeze(['example-village']);
-const USAGE = 'usage: node scripts/procgen/action-nodes-compile.mjs [<graph.json>] [-o out.json] [--seed N] [--exists id,id] [--check] [--quiet]';
+const USAGE = 'usage: node scripts/procgen/action-nodes-compile.mjs [<graph.json>] [-o out.json] [--seed N] [--exists id,id] [--fill-attempts N] [--check] [--quiet]';
 
 function main() {
     const argv = process.argv.slice(2);
@@ -45,7 +49,7 @@ function main() {
         const i = argv.indexOf(flag);
         return i === -1 ? undefined : argv[i + 1];
     };
-    const VALUE_FLAGS = ['-o', '--out', '--seed', '--exists'];
+    const VALUE_FLAGS = ['-o', '--out', '--seed', '--exists', '--fill-attempts'];
     const unknown = argv.filter((a, i) => a.startsWith('-') && !VALUE_FLAGS.includes(a) && !['--check', '--quiet'].includes(a)
         && !VALUE_FLAGS.includes(argv[i - 1]));
     if (unknown.length) {
@@ -58,6 +62,11 @@ function main() {
     const check = has('--check');
     const quiet = has('--quiet');
     const seedArg = valueOf('--seed');
+    const fillArg = valueOf('--fill-attempts');
+    if (fillArg !== undefined && !(Number.isInteger(Number(fillArg)) && Number(fillArg) >= 1)) {
+        console.error(`--fill-attempts takes a whole number of at least 1, got '${fillArg}'\n${USAGE}`);
+        process.exit(2);
+    }
     const existsArg = valueOf('--exists');
     const exists = existsArg !== undefined ? existsArg.split(',').map((x) => x.trim()).filter(Boolean)
         : (positional[0] ? null : [...DEFAULT_EXISTS]);
@@ -76,6 +85,7 @@ function main() {
             seed: seedArg === undefined ? 1 : Number(seedArg),
             graphPath: relative(REPO, graphPath),
             exists,
+            ...(fillArg === undefined ? {} : { fillAttempts: Number(fillArg) }),
         });
     } catch (e) {
         console.error(`REFUSED: ${e.name}: ${e.message}`);
@@ -93,6 +103,7 @@ function main() {
         }
         for (const s of report.a6.spheres) console.log(`  sphere ${s.sphere}: ${s.open_at_once} open — ${s.checks.join(', ')}`);
         console.log(`  A6: every check earnable, sphere log reaches the goal`);
+        if (report.fill) console.log(`  fill: attempt ${report.fill.attempt} filled it (seed ${report.fill.seed})`);
     }
 
     if (check) {
