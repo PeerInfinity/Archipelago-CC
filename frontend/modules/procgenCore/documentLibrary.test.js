@@ -841,6 +841,8 @@ describe('documentLibrary — source pins', () => {
             // B2: the Storage panel reads it by a document-relative dynamic import (it stays out of the bundle)
             'modules/storagePanel/storagePanelUI.js',
             'modules/tests/testCases/documentLibraryTests.js',
+            // B5: the in-app library-play rows (each on its own database)
+            'modules/tests/testCases/labLibraryPlayTests.js',
         ]);
     });
 });

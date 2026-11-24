@@ -203,6 +203,7 @@ import './modules/tests/testCases/storagePanelTests.js';
 import './modules/tests/testCases/ruleConverterTests.js';
 import './modules/tests/testCases/documentLibraryTests.js';
 import './modules/tests/testCases/labApworldDoorTests.js';
+import './modules/tests/testCases/labLibraryPlayTests.js';
 
 // Signal that test cases have been pre-imported
 window.__BUNDLED_TEST_CASES__ = true;

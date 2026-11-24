@@ -83,6 +83,8 @@ export const TEST_CASE_FILES = [
   // registered after them inherited that panel (CI 44950948937: seedling-js-runtime-generated-room). Last in the list
   // = last in every batch it shares, so it cannot change the state an existing row starts from.
   './testCases/labApworldDoorTests.js',
+  // ⛓ document library B5: after the door rows, LAST for the same reason (its rows start games, and close them, J4).
+  './testCases/labLibraryPlayTests.js',
   //'./testCases/manualTests.js',
 ];
 

@@ -872,6 +872,18 @@
             "_comment": "lab-apworld-door-play (⚖ Robert 2026-11-21, 'Play via APWorld door'). The wasm twin of seedling-js-runtime-lab-apworld-door-set-plays-held-rooms (WebGPU): door A WITH the tree set's level set, EMPTY levelSetCache → the lab panel holds it under the rules' hash → Apply → ▶ Start → the wasm game is delivered the held set (room 10 has the tree, botLevelSet.active = its id, mount key names it). Stops the game and closes the Flash panel at the end (J4)."
         },
         {
+            "id": "seedling-wasm-runtime-lab-library-plays-saved-version",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "document library B5 (⚖ Robert 2026-11-23, 'B5: app plays from library'). The wasm twin of seedling-js-runtime-lab-library-plays-saved-version (WebGPU; ▶ Start): an EMPTY front, v1 filled from the library and played, never v2; refused delete while held; deleted → G. Flash panel closed (J4)."
+        },
+        {
+            "id": "seedling-wasm-runtime-lab-library-running-version-held",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "document library B5 (⚖ Robert 2026-11-23, 'B5: app plays from library'). The wasm twin of seedling-js-runtime-lab-library-running-version-held (WebGPU): no swap on a new save, never pushed out by five puts, re-load/Edit ▸ held, heartbeat. Flash panel closed (J4)."
+        },
+        {
             "id": "seedling-wasm-runtime-solver-stop-button",
             "enabled": true,
             "category": "Seedling wasm runtime",
@@ -948,6 +960,24 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "lab-apworld-door-play (⚖ Robert 2026-11-21, 'Play via APWorld door'). The tree set handed over door A WITH its atlas and its level set, EMPTY levelSetCache: the lab panel holds the set under the rules' content hash before the rules go over, Apply, and the JS Flash panel is delivered THAT set (its id, room 10's tree, the JS page's mounted room 10, the mount key names it); Edit ▸ then opens room 10 back in the lab with the same set id. Stops the game and closes the Flash panel at the end (J4)."
+        },
+        {
+            "id": "seedling-js-runtime-lab-library-plays-saved-version",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "document library B5 (⚖ Robert 2026-11-23, 'B5: app plays from library'). Study pin 5: the lab's own writer saves v1 then v2 into the row's own database; door A hands over v1's rules with NO set (an EMPTY front); the JS Flash panel fills the front from the library by fingerprint and plays v1 (room 10's tree count is v1's, not v2's); deleting v1 is refused while it plays; stopped + deleted → G's named refusal, never vanilla, never v2. Database asserted absent at start, deleted at end; Flash panel closed (J4)."
+        },
+        {
+            "id": "seedling-js-runtime-lab-library-running-version-held",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "document library B5 (⚖ Robert 2026-11-23, 'B5: app plays from library'). J2 retired + js-23 (d): v1 plays from the library; a NEW version saved while it runs changes nothing (same adapter, AP load, mount key, rooms); five other puts leave v1 served; a re-load and Edit ▸ still answer held; the holder heartbeats its library hold. Flash panel closed (J4)."
+        },
+        {
+            "id": "seedling-lab-library-leave-warning-navigation",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "document library B5 (⚖ Robert 2026-11-23, 'B5: app plays from library'). ⚖ Q2 + js-23 M3: the hosted Seedling lab on the row's own database: a clean tab has no beforeunload handler; a pending draft arms it; the committed draft disarms it; a frame navigation with it armed completes (the harness does not hang). Logs persist()'s answer at the first save (⚖ Q3)."
         },
         {
             "id": "seedling-js-runtime-lab-apworld-door-after-bundle-measured",

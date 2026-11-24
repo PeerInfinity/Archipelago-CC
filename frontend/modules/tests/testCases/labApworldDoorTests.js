@@ -36,7 +36,7 @@ const RUNTIME_KEY = 'moduleSettings.flashPanel.runtime';
 const SOURCE = 'the Seedling watch page (SET arm)';
 const REGION_MAP = 'regionMapPanel';
 /** ⛓ The S4 row's own marker: room 10 of the vanilla 116 gains one tree, so "the delivered rooms are the held set's" is visible. */
-const HELD_TREE = Object.freeze({ type: 'tree', x: 16, y: 80 });
+export const HELD_TREE = Object.freeze({ type: 'tree', x: 16, y: 80 });
 
 const appUrl = (rel) => new URL(rel, document.baseURI).href;
 const fetchJson = async (rel) => {
@@ -44,7 +44,7 @@ const fetchJson = async (rel) => {
   if (!res.ok) throw new Error(`${rel}: HTTP ${res.status}`);
   return res.json();
 };
-const hasHeldTree = (record) => (record?.entities ?? [])
+export const hasHeldTree = (record) => (record?.entities ?? [])
   .some((e) => e.type === HELD_TREE.type && e.x === HELD_TREE.x && e.y === HELD_TREE.y);
 const rawRules = () => getLastRawJsonData()?.rawJsonData ?? null;
 const regionMap = () => getPanelInstances()[0] ?? null;
@@ -91,7 +91,7 @@ async function buildWatchSet({ withTree = false } = {}) {
  * Seedling lab panel (the same handler a frame's postMessage reaches), then the APWorld Editor's own Apply. Resolves
  * true once the app's rules ARE the handed ones (the stateManager's rulesLoaded for this load).
  */
-async function handOverAndApply(tc, rules, atlases, levelSets) {
+export async function handOverAndApply(tc, rules, atlases, levelSets) {
   const lab = labPanelInstances().find((p) => p.substrate === 'seedling') ?? null;
   tc.reportCondition('the Seedling lab panel is mounted in the app (the host half of door A)', !!lab);
   if (!lab) return false;
@@ -154,7 +154,7 @@ async function closeRegionMap(tc, opened) {
   try { await panelManager.destroyPanelByComponentType(REGION_MAP); } catch (e) { tc.log(`close Region Map: ${e.message}`); }
 }
 
-async function restoreWorld(tc, ctx, before) {
+export async function restoreWorld(tc, ctx, before) {
   if (typeof before === 'string' && before.startsWith('./presets/') && ctx.rulesSource() !== before) {
     try { await ctx.loadRulesPath(before); } catch (e) { tc.log(`could not reload ${before}: ${e.message}`); }
   }
@@ -217,7 +217,7 @@ export async function testRegionMapLabApworldDoorSeedlingSet(tc) {
  * Raise the Flash panel, OPENING it when no instance is mounted (an earlier door row closes the one it used, J4; a
  * panel built now reads the rules already loaded). Returns whether one is mounted.
  */
-async function raiseFlashPanel(tc) {
+export async function raiseFlashPanel(tc) {
   if (!getActivePanelInstance()) {
     try { await panelManager.createPanelForComponent('flashPanel', 'Flash Panel', 2); } catch (e) { tc.log(`open Flash panel: ${e.message}`, 'error'); }
   }
@@ -228,7 +228,7 @@ async function raiseFlashPanel(tc) {
 }
 
 /** Raise the Flash panel and wait for THIS load's answer: G's refusal box (a new one) or an AP load. */
-async function flashOutcome(tc, runtime, stale, ms = runtime === 'wasm' ? 120000 : 40000) {
+export async function flashOutcome(tc, runtime, stale, ms = runtime === 'wasm' ? 120000 : 40000) {
   await raiseFlashPanel(tc);
   return tc.pollForValue(() => {
     const panel = getActivePanelInstance();
@@ -241,13 +241,13 @@ async function flashOutcome(tc, runtime, stale, ms = runtime === 'wasm' ? 120000
   }, `[${runtime}] the Flash panel answered this load`, ms, 200);
 }
 
-const staleFlash = () => ({
+export const staleFlash = () => ({
   box: document.querySelector('.flash-panel-custom-set-refusal'),
   load: getActivePanelInstance()?._apLoadResult ?? null,
 });
 
 /** A world that is not the door's, so the Flash panel decides on the NEXT door-A load from scratch. */
-async function loadOtherWorld(tc, ctx, before) {
+export async function loadOtherWorld(tc, ctx, before) {
   const other = typeof before === 'string' && before.startsWith('./presets/') && !before.includes('seedling') ? before : null;
   if (other) await ctx.loadRulesPath(other);
   else await ctx.loadPreset('adventure', 1);
@@ -258,7 +258,7 @@ async function loadOtherWorld(tc, ctx, before) {
  * ⛓ (J4) STOP THE GAME AND CLOSE THE FLASH PANEL, then MEASURE that none is left running: no active instance, no
  * adapter, no runtime iframe/embed on any stage. Returns the measurement line.
  */
-async function closeFlashPanel(tc) {
+export async function closeFlashPanel(tc) {
   try { await panelManager.destroyPanelByComponentType('flashPanel'); } catch (e) { tc.log(`close Flash panel: ${e.message}`); }
   await new Promise((r) => setTimeout(r, 250));
   const panel = getActivePanelInstance();
@@ -269,7 +269,7 @@ async function closeFlashPanel(tc) {
 }
 
 /** G's refusal for THIS load, asserted whole on `runtime` (box, status, nothing started). */
-async function assertRefused(tc, runtime, leg, stale) {
+export async function assertRefused(tc, runtime, leg, stale) {
   const out = await flashOutcome(tc, runtime, stale);
   tc.assertEqual(`[${runtime}] [${leg}] the Flash panel REFUSED (G), it did not load`, 'refused', out?.kind ?? null);
   tc.assertEqual(`[${runtime}] [${leg}] the status reads G's message`, CUSTOM_SET_NOT_PLAYABLE,
