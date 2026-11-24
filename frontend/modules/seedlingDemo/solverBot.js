@@ -13298,6 +13298,8 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
     }
     if (run.progress('primary') !== slots.indexOf(blade)) ctx.equip(slots.indexOf(blade));
     const edge = resolved.edgeBait ? approachEdgePoint(run, t, stage, opts) : null; // ⛓ KT-ARRIVAL (null OFF)
+    // ⛓ hammer-phase EDGEBAIT (`edgeBait: 'also'`, `KEYLOCK_TURRET_EDGE_BAIT` only): the edge tries are a second family
+    const baitFamilies = resolved.edgeBait === 'also' && edge !== null ? [false, true] : null;
     // 2. the tries, each on a fork
     const noWalk = () => { throw new SolverRefusal('a fork does not walk'); };
     const onSnap = (f) => {
@@ -13349,7 +13351,8 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
                 };
                 const aim = via ?? { x: side.x, y: side.y };
                 // ⛓ hammer-phase KT-ARRIVAL (a caller's `edgeBait` only): the try first stops at the range's edge
-                if (edge !== null && !walkOn([edge])) { count('edge-hit', hitWhy()); return null; }
+                const bait = baitFamilies === null ? edge !== null : extra?.bait === true; // ⛓ EDGEBAIT: the try's family
+                if (bait && !walkOn([edge])) { count('edge-hit', hitWhy()); return null; }
                 const wps = planWaypointsOrNull(f.world, f.state, aim, null, solverPlanOpts(f, exempt));
                 // ⛔ every try of a route starts from the same staging state, so a route with no corridor has none at
                 // any wait: the route is done (measured: without this, L40 legs 860/861 spent their `crusher-fork`
@@ -13425,7 +13428,7 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
     if (TURRET_APPROACH_VOLLEY_ORDER.enabled) {
         // ⛓ hammer-phase BK2-APPROACH-ORDER (`TURRET_APPROACH_VOLLEY_ORDER`, OFF): the same tries, in the volley's order
         const record = approachTriesByVolley(id, sides.map((side) => ({ side, routes: routesOf(side) })), attempt,
-            TRY_ROUTE_DONE, { exempt, fork: () => {
+            TRY_ROUTE_DONE, { exempt, ...(baitFamilies ? { families: baitFamilies } : {}), fork: () => {
                 const f = fineDeadlineReached('crusher-fork') ? null : ctx.fork();
                 if (f === null) refuse(`deadline at the \`crusher-fork\` site after ${forks} approach tr(ies)`);
                 forks += 1;
@@ -13437,6 +13440,16 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
             route: for (const via of routesOf(side)) {
                 for (let w = 0; w <= TURRET_APPROACH_WAIT_MAX; w += 1) {
                     const record = attempt(side, via, w);
+                    if (record === TRY_ROUTE_DONE) continue route;
+                    if (record !== null) return record;
+                }
+            }
+        }
+        // ⛓ hammer-phase EDGEBAIT (`edgeBait: 'also'` only): the edge bait's family after OFF's whole order
+        for (const side of baitFamilies ? sides : []) {
+            route: for (const via of routesOf(side)) {
+                for (let w = 0; w <= TURRET_APPROACH_WAIT_MAX; w += 1) {
+                    const record = attempt(side, via, w, { bait: true });
                     if (record === TRY_ROUTE_DONE) continue route;
                     if (record !== null) return record;
                 }
@@ -13513,15 +13526,22 @@ export function approachWaitOrder(anchor) {
  */
 function approachTriesByVolley(id, sides, attempt, DONE, ctx) {
     let live = sides.flatMap(({ side, routes }) => routes.map((via) => ({ side, via, order: null, anchor: null })));
+    // ⛓ hammer-phase EDGEBAIT (`ctx.families`, `KEYLOCK_TURRET_EDGE_BAIT` only): each route once per family (OFF's
+    // tries, then the edge bait's), so a rank asks every route's k-th wait in both; a twin shares its route's anchor
+    const twins = ctx.families ? new Map() : null;
+    if (twins) live = ctx.families.flatMap((bait) => live.map((rt) => ({ ...rt, bait, key: `${rt.side.key}|${rt.via?.x},${rt.via?.y}` })));
     for (let rank = 0; live.length > 0; rank += 1) {
         const next = [];
         for (const rt of live) {
             if (rt.order === null) {
-                rt.anchor = approachVolleyAnchor(ctx.fork(), id, rt.via ?? { x: rt.side.x, y: rt.side.y }, ctx.exempt);
+                if (twins?.has(rt.key)) rt.anchor = twins.get(rt.key);
+                else rt.anchor = approachVolleyAnchor(ctx.fork(), id, rt.via ?? { x: rt.side.x, y: rt.side.y }, ctx.exempt);
+                twins?.set(rt.key, rt.anchor);
                 rt.order = approachWaitOrder(rt.anchor);
             }
             if (rank >= rt.order.length) continue;
-            const record = attempt(rt.side, rt.via, rt.order[rank], { order: 'volley', anchor: rt.anchor, rank });
+            const record = attempt(rt.side, rt.via, rt.order[rank], { order: 'volley', anchor: rt.anchor, rank,
+                ...(twins ? { bait: rt.bait } : {}) });
             if (record === DONE) continue;
             if (record !== null) return record;
             next.push(rt);
@@ -18369,6 +18389,40 @@ export const KEYLOCK_TURRET_ARRIVAL_COUNTS = { asked: [] };
 /** Zero `KEYLOCK_TURRET_ARRIVAL_COUNTS`. */
 export function resetKeylockTurretArrivalCounts() {
     Object.assign(KEYLOCK_TURRET_ARRIVAL_COUNTS, { asked: [] });
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE EDGEBAIT — **THE EDGE BAIT FOR `KEYLOCK_TURRET`'S OWN TURRET-FIRST PATH**
+ * (`KEYLOCK_TURRET_EDGE_BAIT`, OFF).
+ *
+ * ⚖ The user (2026-11-24): *"Edge bait follow-up"* — the edge bait KT-ARRIVAL gave its own arm (each approach try first
+ * stops `TURRET_APPROACH_EDGE_DEPTH` px inside the turret's range, so the volley clock starts at a chosen place), offered
+ * to the keylock arm's own turret-first path (`keylockTurretStance` → `turretFirst`, 0 candidates). That path solves
+ * L40's south key line only while its kill starts with the door below the turret still shut (APPROACH then stages
+ * south of the door). Measured: the same staging after a 100- or 150-tick idle (the door open, the staging point the
+ * doorway) refuses with every try hit (504 / 600 forks).
+ *
+ * ⛔ EDGE-FIRST IS NOT THE SHAPE: edge-only tries solve the door-open cases at rank 0 (16 / 10 forks), but the door-shut
+ * case that solves today at rank 0 (8 forks) then needs 462 forks, and the page worker's budget (640) cuts it. So ON,
+ * the bait is a SECOND FAMILY of tries (`approachKillForCorpse`'s `edgeBait: 'also'`): every route is asked once
+ * without the stop (OFF's try, word for word) and once with it, rank by rank in the volley's order
+ * (`approachTriesByVolley`'s `families`: each rank asks OFF's family first), or OFF's whole order then the edge's
+ * (the volley order off). A twin shares its route's anchor (probed from the staging point: probed after the edge stop,
+ * measured worse — 16 → 371 forks). Where the edge point is not plannable floor, the tries are OFF's. Measured ON
+ * (worker budget 640): the four door-open cases solve hitless at rank 0 in the edge family (29–32 forks, the dashless
+ * pass); the door-shut case keeps its 8-fork plan, key for key.
+ *
+ * The arrival arm (`KEYLOCK_TURRET_ARRIVAL`) keeps its edge-only tries (its own `edgeBait`): this switch does not move it.
+ * OFF by default. `SEEDLING_KEYLOCK_TURRET_EDGE_BAIT=1` turns it on in a node process (the page's WORKER reads it
+ * through the solver env channel: the decision is on the worker thread, inside the keylock executor), and
+ * `withKeylockTurretEdgeBait(enabled, fn)` is for a test or a witness. OFF, nothing below is asked: byte-identical.
+ */
+export const KEYLOCK_TURRET_EDGE_BAIT = { enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET_EDGE_BAIT === '1' };
+export const KEYLOCK_TURRET_EDGE_BAIT_DEFAULT = false;
+
+/** Run `fn` with `KEYLOCK_TURRET_EDGE_BAIT` set to `enabled`, restoring the previous value. */
+export function withKeylockTurretEdgeBait(enabled, fn) {
+    return withSwitch(KEYLOCK_TURRET_EDGE_BAIT, enabled, fn);
 }
 
 /**
@@ -23535,7 +23589,8 @@ function keylockTurretFirst(run, perTick, resolved, ctx) {
         let record;
         try {
             record = approachKillForCorpse(run, perTick, { corpse: { turret: id, dir }, exempt,
-                ...(resolved.turretFirst.edgeBait ? { edgeBait: true } : {}) }, { walkTo: ctx.walkTo,
+                ...(resolved.turretFirst.edgeBait ? { edgeBait: true }
+                    : (KEYLOCK_TURRET_EDGE_BAIT.enabled ? { edgeBait: 'also' } : {})) }, { walkTo: ctx.walkTo,
                 goal: ctx.goal, equip: ctx.equip, fork: ctx.fork, what: `${ctx.what} -> kill (${id})` });
         } catch (e) {
             KEYLOCK_TURRET_COUNTS.kills.push({ lock: resolved.lock, turret: id, t: from, dead: false,
