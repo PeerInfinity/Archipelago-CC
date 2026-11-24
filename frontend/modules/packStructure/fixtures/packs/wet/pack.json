@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "wet",
+  "title": "A test fixture: a needs tile kind the generator may place (content sets GEN-3)",
+  "licence": "test fixture",
+  "layers": {
+    "structure": "structure/manifest.json",
+    "concepts": "concepts/manifest.json"
+  }
+}
