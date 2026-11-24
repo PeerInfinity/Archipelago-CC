@@ -153,6 +153,19 @@ All runs are on the slice's tree, before the merge.
 
 No markdown link was added, so the doc-link census does not move.
 
+### 5.1 CI at the code tip `0e19b35234` (all success)
+
+| Run | Id | Result |
+|---|---|---|
+| `unittests` (push) | 45445189141 | success |
+| JSUT (push) | 45445188701 | success; suite 30,061 passed / 0 failed; slow battery 447 passed |
+| TT (dispatch) | 45445280898 | success; HEADROOM OK on every batch: fast 57%, fast bundled 56%, seedling-js 48%, seedling-wasm 40%, apworld 36%, seedling-js-solver 34%, playback-bot 21% |
+| feature-checks (manual batch) | 45445288026 | success |
+| `train_only` (dispatch) | 45445292160 | success, 3/3 train shards |
+
+**Still owed:** the ONE merge of main, once GEN-2 and LAB-BIOME land (the planner sends the SHA). After it: re-check
+that `tile_kinds_demo` does not move (it places no `needs` kind), plus the gates and CI at the merged tip.
+
 ## 6. What the code overturned
 
 1. **§ 2.4(5) and § 4 GEN-3's proof: "the pool beside the Swim gate (`s5`) is accepted" is wrong against the data.**
