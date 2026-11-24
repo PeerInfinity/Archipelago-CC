@@ -1,0 +1,15 @@
+{ walks: 24828, states: 9930862, derivations: 1492 }
+sameCellPrev                  24722   99.6% walks   9888790   99.6% states
+sameCellStartPrev             24496   98.7% walks   9798400   98.7% states
+sameMotionGivenStart          24496   98.7% walks   9798400   98.7% states
+sameFullGivenStart                0    0.0% walks         0    0.0% states
+sameVerdictGivenStart         24496   98.7% walks   9798400   98.7% states
+anyEarlierSameCellStart       24507   98.7% walks   9802800   98.7% states
+anyEarlierSameFull                0    0.0% walks         0    0.0% states
+sameCellAnyStartMotionEqual      21    0.1% walks      8400    0.1% states
+suffix                            0    0.0% walks         0    0.0% states
+trunc                         24826  100.0% walks   9930400  100.0% states
+unsafe                            0    0.0% walks         0    0.0% states
+strikes                           0    0.0% walks         0    0.0% states
+gap between consecutive derivations (ticks): [[1,1489],[1309,1],[486,1]]
+walks per derivation: median 19 max 51

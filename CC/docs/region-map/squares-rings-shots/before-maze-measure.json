@@ -1,0 +1,73 @@
+{
+  "measures": {
+    "seedling_playthrough_maze": {
+      "crowded": {
+        "key": "level_12__r0c19",
+        "n": 4,
+        "art": true
+      },
+      "fit": {
+        "zoom": 0.1228595890410959,
+        "squares": 89,
+        "minSide": 6,
+        "maxSide": 6,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      },
+      "untiled": {
+        "all": 306,
+        "art": 116
+      },
+      "zoomCrowded": {
+        "key": "level_12__r0c19",
+        "cellPx": 759.05,
+        "zoom": 2.37203125,
+        "squares": 4,
+        "minSide": 26.56675,
+        "maxSide": 26.56675,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      },
+      "labelCrowded": {
+        "key": "level_12__r0c19",
+        "cellPx": 64,
+        "zoom": 0.2,
+        "squares": 76,
+        "minSide": 6,
+        "maxSide": 6,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      },
+      "bare": {
+        "key": "level_12__r42c28",
+        "n": 3,
+        "art": false
+      },
+      "zoomBare": {
+        "key": "level_12__r42c28",
+        "cellPx": 759.05,
+        "zoom": 2.37203125,
+        "squares": 5,
+        "minSide": 26.56675,
+        "maxSide": 26.56675,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      },
+      "labelBare": {
+        "key": "level_12__r42c28",
+        "cellPx": 64,
+        "zoom": 0.2,
+        "squares": 75,
+        "minSide": 6,
+        "maxSide": 6,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      }
+    }
+  }
+}
