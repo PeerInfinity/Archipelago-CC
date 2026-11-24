@@ -2,7 +2,7 @@
 // flipblock probe (measure only): solve ONE captured request (the sweep's --capture-requests jsonl) in this process,
 // the worker's dispatch (as replay-seedling-solve-request.mjs), and print per pass: verdict, work, wall, and the three
 // switches' counters with the deadline-site ask count at each GSW try / PKH row. Switches by env (SEEDLING_*=1).
-// Run: node probe.mjs (--requests=<jsonl> --id=N --i=K | --fixture=<request.json.gz>) [--seam-time=T] [--budget=N] [--json=<out>]
+// Run: node probe.mjs (--requests=<jsonl> --id=N --i=K | --fixture=<request.json.gz>) [--seam-time=T] [--budget=N] [--json=<out>] [--pm-free=N]
 import { readFileSync, writeFileSync } from 'node:fs';
 import { restoreRequest } from '../../../../../scripts/procgen/seedlingSolveRequestCodec.js';
 const arg = (k, d = null) => (process.argv.find((a) => a.startsWith(`--${k}=`)) ?? `=${d ?? ''}`).split('=').slice(1).join('=') || d;
@@ -11,6 +11,7 @@ const { levelSourceFromAtlas } = await import(R + 'atlasSource.js');
 const { solveAnytime, ANYTIME_PASSES } = await import(R + 'jsRuntimeSolver.js');
 const { withSolveProgress } = await import(R + 'solveProgress.js');
 const sb = await import(R + 'solverBot.js');
+if (arg('pm-free') !== null) sb.PREVIEW_METER.freeStatesPerAsk = Number(arg('pm-free'));
 import { gunzipSync } from 'node:zlib';
 const line = arg('fixture') ? { id: arg('fixture'), key: arg('fixture') } : readFileSync(arg('requests'), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).find((r) => r.id === Number(arg('id')));
 const cap = arg('fixture') ? { i: null, request: JSON.parse(gunzipSync(readFileSync(arg('fixture')))).request } : line.requests.find((q) => q.i === Number(arg('i')));
@@ -44,6 +45,6 @@ const out = { id: line.id, key: line.key, i: cap.i, budget: req.budgetWork, seam
     env: Object.fromEntries(Object.entries(process.env).filter(([k]) => k.startsWith('SEEDLING_'))),
     ok: answer.ok, kind: answer.kind ?? null, work: answer.work ?? null, ticks: answer.ok ? answer.plan.solution.length : null,
     passes: (answer.passes ?? []).map(({ ms: m, ...r }) => ({ ...r, ms: m })), passRows, asks, bySite, wall: ms(), gsw, pkh,
-    pm: { ...sb.PREVIEW_METER_COUNTS }, msg: answer.ok ? null : String(answer.message ?? '').slice(0, 400) };
+    pm: { ...sb.PREVIEW_METER_COUNTS, free: sb.PREVIEW_METER.freeStatesPerAsk }, gswDeferred: sb.GOAL_START_WAIT_COUNTS.deferred ?? 0, msg: answer.ok ? null : String(answer.message ?? '').slice(0, 400) };
 console.log(JSON.stringify(out));
 if (arg('json')) writeFileSync(arg('json'), JSON.stringify({ ...out, solution: answer.ok ? answer.plan.solution.map((k) => [...k]) : null }));
