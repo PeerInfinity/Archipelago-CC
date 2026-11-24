@@ -3128,6 +3128,26 @@ export function withGoalStartWait(enabled, fn) {
     return withSwitch(GOAL_START_WAIT, enabled, fn);
 }
 
+/**
+ * ⛓ hammer-phase FLIPBLOCK (`GOAL_START_WAIT`, OFF ⇒ never read) — **THE WAITS ARE THE ANYTIME SOLVE'S LAST WORD, NOT A
+ * NON-LAST PASS'S.** The anytime passes share ONE work budget (`solveAnytime`), so a wait schedule run on a pass that a
+ * later pass follows spends the budget that later pass would have solved with. MEASURED (seed 1 divergence-sweep leg
+ * `level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared`, its 2560 held retry,
+ * `flipblock` report §3): OFF the dashless pass refuses EXHAUSTED at work 2239 and the full pass solves in 21 units
+ * (176 t, 0 hits); ON the dashless pass's first wait runs past 2560 and the full pass gets 1 unit — a budget cut, 3/3.
+ * ⇒ ON, `solveAnytime` marks each pass that has a later pass (`later`), and on such a pass an EXHAUSTED ladder is
+ * thrown as it came (no wait; `deferred` counts it). The last pass (the only one of a single-pass request, e.g. FACE1's
+ * 26:9 held retry) waits exactly as before. Outside `solveAnytime` (`later` false) nothing changes.
+ */
+export const GOAL_START_WAIT_PASS = { later: false };
+
+/** Run `fn` with `GOAL_START_WAIT_PASS.later` = `later` (a later anytime pass follows this one), restoring it. */
+export function withGoalStartWaitLaterPass(later, fn) {
+    const was = GOAL_START_WAIT_PASS.later;
+    GOAL_START_WAIT_PASS.later = later === true;
+    try { return fn(); } finally { GOAL_START_WAIT_PASS.later = was; }
+}
+
 /** Is `e` the combat ladder's EXHAUSTED refusal (the one `GOAL_START_WAIT` re-asks)? */
 export function isLadderExhausted(e) {
     return e instanceof SolverRefusal && typeof e.message === 'string'
@@ -29338,7 +29358,19 @@ export const WALK_CHECK_TICKS = 32;
  * two requests above), and a walk unit is `WALK_CHECK_TICKS` driven ticks at ~2–3 ms each on L40 (the constant's own
  * note), so ~1024 previewed states cost about one walk unit's wall. A row may set it.
  */
-export const PREVIEW_METER = { enabled: globalThis.process?.env?.SEEDLING_PREVIEW_METER === '1', statesPerUnit: 1024 };
+export const PREVIEW_METER = { enabled: globalThis.process?.env?.SEEDLING_PREVIEW_METER === '1', statesPerUnit: 1024,
+    /**
+     * ⛓ hammer-phase FLIPBLOCK — **THE PREVIEWS EVERY PAID UNIT CARRIES FOR FREE.** The meter exists for the stretches
+     * where previews swamp the work clock (L40: ~16,000 previewed states per work unit, one walk unit = 10–23 s). A
+     * room whose solve spends its units ELSEWHERE previews little per unit, and its previews are already paid for by
+     * those units' own wall. MEASURED (seed 1 leg `level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0:
+     * lightpole@144,64 cleared`, its 2560 held retry, `flipblock` report §3): the dashless pass solves at work 2453 of
+     * 2560 in 8.4 s (3.4 ms a unit) with 358,482 previewed states — 146 per unit asked — and the meter's 231 extra asks
+     * pushed it past the budget, 3/3. ⇒ ON, the first `freeStatesPerAsk` states per `shouldStop` ask the segment's
+     * deadline has made (the meter's own asks excluded) are not charged; only the excess is metered at
+     * `statesPerUnit`. 0 = the SPINNER880 meter exactly (every state charged). A count, never the clock.
+     */
+    freeStatesPerAsk: 1024 };
 export const PREVIEW_METER_DEFAULT = false;
 
 /** The meter's instrument: states counted, units asked, and the asks that tripped. */
@@ -29367,8 +29399,11 @@ function previewUnitDue() {
     const d = activeDeadline;
     if (d === null || d.fine !== true) return false;
     const k = PREVIEW_METER.statesPerUnit;
-    while ((d.previewStates ?? 0) - (d.previewCharged ?? 0) >= k) {
+    // ⛓ FLIPBLOCK — the states the deadline's own asks carry for free (the meter's asks earn none)
+    const free = PREVIEW_METER.freeStatesPerAsk * Math.max(0, (d.asks ?? 0) - (d.meterAsks ?? 0));
+    while ((d.previewStates ?? 0) - free - (d.previewCharged ?? 0) >= k) {
         d.previewCharged = (d.previewCharged ?? 0) + k;
+        d.meterAsks = (d.meterAsks ?? 0) + 1;
         PREVIEW_METER_COUNTS.asked += 1;
         if (fineDeadlineReached('walk')) {
             PREVIEW_METER_COUNTS.tripped += 1;
@@ -29599,6 +29634,7 @@ function askDeadline(site) {
     if (!d.tripped.has(site)) {
         // ⛓ hammer-phase D1 — a call to the caller's `shouldStop` is the JS arc's work unit
         if (activeProgress !== null) progressAsked();
+        if (PREVIEW_METER.enabled) d.asks = (d.asks ?? 0) + 1; // ⛓ FLIPBLOCK — the meter's free allowance (OFF ⇒ not read)
         if (!d.shouldStop(site)) return false;
         d.tripped.add(site);
         d.first ??= site;
@@ -36478,6 +36514,8 @@ function solveSegmentUnder({
             return;
         } catch (e) {
             if (!isLadderExhausted(e) || rewind === null || activeDeadline?.first) throw e;
+            // ⛓ FLIPBLOCK — a later anytime pass follows: it gets the budget, not this pass's waits
+            if (GOAL_START_WAIT_PASS.later) { GOAL_START_WAIT_COUNTS.deferred = (GOAL_START_WAIT_COUNTS.deferred ?? 0) + 1; throw e; }
             first = e;
         }
         for (const wait of GOAL_START_WAIT.waits) {
