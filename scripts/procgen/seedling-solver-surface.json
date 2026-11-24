@@ -325,9 +325,9 @@
       "class": "physics",
       "form": "live-state",
       "files": {
-        "solverBot.js": 1
+        "solverBot.js": 2
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "static",
       "via": [
         "direct"
@@ -1298,9 +1298,9 @@
       "class": "physics",
       "form": "live-state",
       "files": {
-        "solverBot.js": 1
+        "solverBot.js": 2
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "static",
       "via": [
         "direct"
