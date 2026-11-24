@@ -30,7 +30,11 @@ import { seedlingMountKey } from './seedlingMountKey.js';
 // ⛓ S4 — the host's held level sets and atlases: THESE instances (static, beside `presetUI.js`, their writer) are
 // the ones handed to the wiring, which is reached through a computed URL (a second instance in the bundled build).
 import { levelSetCache } from '../procgenCore/levelSetCache.js';
-import { heldLevelSetOf } from '../procgenCore/levelSetReference.js';
+import { ensureHeld, heldLevelSetOf, levelSetRefOf } from '../procgenCore/levelSetReference.js';
+// ⛓ B5 — the app's lazy door into the document library + the running game's holds (imports nothing statically: the
+// library's own modules are fetched document-relative on the first front MISS, so the bundle carries none of it).
+import { createLevelSetHolder, createLibraryFront } from '../procgenCore/levelSetLibrary.js';
+
 import { atlasCache } from '../procgenCore/atlasCache.js';
 // ⛓ S4 — Edit ▸ opens a held set's room back in the lab: the ONE opener both Edit ▸ callers use (⚖ region-editor-launch
 // Q1). ⛔ STATIC, for the same reason as the caches: its lab-panel registry is module state.
@@ -215,6 +219,13 @@ function ensureRuffleLoaded() {
   });
   return rufflePromise;
 }
+
+/** ⛓ B5 — ONE library connection and ONE holder per page, made on first use. */
+let levelSetLibraryFront = null;
+let levelSetHolder = null;
+const libraryFront = () => (levelSetLibraryFront ??= createLibraryFront());
+const openLevelSetLibrary = () => libraryFront().open();
+const holderOfLevelSets = () => (levelSetHolder ??= createLevelSetHolder({ cache: levelSetCache, front: libraryFront() }));
 
 export class FlashPanelUI {
   constructor(container, componentState) {
@@ -2071,6 +2082,8 @@ export class FlashPanelUI {
         this._panelLog('ap placement: the GENERATED arm — '
           + `${cheap.checks.find((c) => c.id === 'generated')?.why ?? ''}`);
       }
+      // ⛓ B5 — the load is current while the adapter AND the mount key it read are still the panel's.
+      const loadKey = this._apLoadKey;
       const loaded = await (generatedArm ? wiring.loadSeedlingGenerated : wiring.loadSeedlingRandomizer)({
         flashPanel,
         manifest,
@@ -2083,8 +2096,11 @@ export class FlashPanelUI {
         log: (msg, cls) => this._panelLog(msg, cls),
         levelSets: levelSetCache,
         atlases: atlasCache,
+        library: () => this._levelSetLibrary(),
+        isCurrent: () => this.adapter === adapter && this._apLoadKey === loadKey,
       });
       if (this.adapter !== adapter) { overlay.remove(); return; }
+      if (loaded.stale) { this._panelLog(`ap placement: ${loaded.why}`); overlay.remove(); return; }
       if (!loaded.eligibility?.eligible) {
         this._panelLog(`ap placement: not applicable — ${loaded.why}`);
         // ⛓ VANILLA MAP — the Playback Bot's controllers refuse by THIS reason rather than wait for a map.
@@ -2545,6 +2561,12 @@ export class FlashPanelUI {
     }
   }
 
+  /** ⛓ B5 — the document library (the page's lazy opener; a test's bare panel hands its own). */
+  _levelSetLibrary() { return openLevelSetLibrary(); }
+
+  /** ⛓ B5 — the page's holder of running games' versions (a test's bare panel hands its own). */
+  _levelSetHolder() { return holderOfLevelSets(); }
+
   /**
    * ⛓⛓ S4 — **EDIT ▸ IS OFFERED FOR A HELD SET ONLY** (⚖ Robert Q4 "Open back in the lab"). `ref` is the
    * `{set_id, content_hash}` the loaded rules name and the AP load delivered from the host's `levelSetCache`
@@ -2552,6 +2574,15 @@ export class FlashPanelUI {
    * those rooms are read-only in a world (⚖ region-editor-launch Q4), and this panel offered no Edit ▸ for them.
    */
   _setHeldSetEdit(ref) {
+    // ⛓⛓ B5 — THE RUNNING GAME HOLDS THE VERSION IT PLAYS (front + library; `levelSetLibrary.createLevelSetHolder`),
+    // from the moment its rooms are chosen until the next load or the panel goes. A new version saved in a lab changes
+    // nothing here: nothing listens for saves, and these rooms are swapped only by a new load.
+    const same = ref && this._levelSetHold && this._levelSetHold.ref.set_id === ref.set_id
+      && this._levelSetHold.ref.content_hash === ref.content_hash;
+    if (!same) {
+      void this._levelSetHold?.release();
+      this._levelSetHold = ref ? this._levelSetHolder().hold(ref, { what: `Flash panel game (${ref.set_id})` }) : null;
+    }
     this._heldSetEdit = ref ? { set_id: ref.set_id, content_hash: ref.content_hash } : null;
     if (!ref) { this._heldSetEditHandle?.close?.(); this._heldSetEditHandle = null; }
     if (this.editRoomButton) this.editRoomButton.style.display = this._heldSetEdit ? '' : 'none';
@@ -2574,6 +2605,9 @@ export class FlashPanelUI {
     };
     const ref = this._heldSetEdit;
     if (!ref) return say(false, 'no held level set is loaded (only a set the host holds opens back in the lab)');
+    // ⛓ B5 — a front miss is filled from the document library first (a held game's set is a front hit).
+    await ensureHeld(levelSetCache, ref, { library: () => this._levelSetLibrary() });
+    if (this._heldSetEdit !== ref) return say(false, 'stale: another load replaced this game while its set was read');
     const got = levelSetCache.get(ref.set_id, ref.content_hash);
     if (got.status !== 'held') return say(false, got.why);
     if (got.set.provenance?.content_hash !== ref.content_hash) {
@@ -2617,6 +2651,16 @@ export class FlashPanelUI {
     const player = stateManager.getStaticData?.()?.playerId ?? playerOfRawPayload(getLastRawJsonData?.()) ?? null;
     const rooms = atlasRoomRegions(rawRules, player).map((r) => r.region);
     if (rooms.length === 0) return null;
+    // ⛓⛓ B5 — a front miss is filled from the document library BEFORE this read (both callers re-check that their
+    // load is still current after this function returns, so nothing stale acts on the answer).
+    const named = levelSetRefOf(rawRules, player);
+    if (named) {
+      const filled = await ensureHeld(levelSetCache, named, { library: () => this._levelSetLibrary() });
+      if (filled.source === 'library') {
+        this._panelLog(`the document library ${filled.status === 'held' ? 'filled' : `answered ${filled.status} for`} `
+          + `level set ${named.set_id}${filled.why ? ` — ${filled.why}` : ''}`, filled.status === 'held' ? undefined : 'warn');
+      }
+    }
     // ⛓ S4 — a set the host HOLDS (same id, same content hash) is played, not refused: the wiring delivers its rooms.
     const held = heldLevelSetOf(rawRules, player, levelSetCache);
     const guard = await servedRegionAtlas({
@@ -3042,6 +3086,9 @@ export class FlashPanelUI {
     this._unregisterClickActions();
     this.unsubscribeHandles.forEach((u) => typeof u === 'function' && u());
     this.unsubscribeHandles = [];
+    // ⛓ B5 — the game's version is no longer held by this panel (front + library).
+    void this._levelSetHold?.release();
+    this._levelSetHold = null;
     setActivePanelInstance(null);
   }
 }

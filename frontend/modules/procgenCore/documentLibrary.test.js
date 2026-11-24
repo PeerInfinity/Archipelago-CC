@@ -810,7 +810,7 @@ describe('documentLibrary — source pins', () => {
         ]);
     });
 
-    it('nothing outside the library\'s own tests, its in-app row, the Storage panel and the Seedling lab writer imports the library', () => {
+    it('nothing outside the library\'s own tests, its in-app row, the Storage panel, the Seedling lab writer and the app\'s level-set door imports the library', () => {
         const users = [];
         const walk = (dir) => {
             for (const name of readdirSync(dir)) {
@@ -825,9 +825,14 @@ describe('documentLibrary — source pins', () => {
         };
         walk(FRONTEND);
         expect(users.sort()).toEqual([
+            // B5: the Flash panel's library-fill rows (over the memory backend)
+            'modules/flashPanel/seedlingLibraryFill.test.js',
             'modules/procgenCore/documentLibrary.test.js',
             'modules/procgenCore/documentLibraryIdb.js',
             'modules/procgenCore/documentLibraryMemory.js',
+            // B5: the app's door (the Flash panel's front fill + game holds), by a document-relative dynamic import
+            'modules/procgenCore/levelSetLibrary.js',
+            'modules/procgenCore/levelSetLibrary.test.js',
             // B3: the Seedling lab's writer (the page imports it dynamically at the first save; the engine runs in its worker)
             'modules/seedlingDemo/watchLibrary.js',
             'modules/seedlingDemo/watchLibraryCore.js',

@@ -48,7 +48,7 @@ import {
 } from '../procgenCore/labProtocol.js';
 import { putAtlases } from '../procgenCore/atlasCache.js';
 import { levelSetCache } from '../procgenCore/levelSetCache.js';
-import { levelSetContentHash, putLevelSets } from '../procgenCore/levelSetReference.js';
+import { fileLevelSets, levelSetContentHash } from '../procgenCore/levelSetReference.js';
 import { classifyDocument } from '../presets/documentBundle.js';
 import {
     registerAppEventBus, registerLabPanelInstance, unregisterLabPanelInstance,
@@ -157,7 +157,7 @@ export class ProcgenLabPanelUI {
         this.lastAtlasHandover = { put: [], refused: [] };
         /**
          * ⛓ lab-apworld-door-play — the last door-A hand-over's level sets: `{put: [{set_id, content_hash}],
-         * refused: [{set_id, why}], uncarried: [{player, set_id, content_hash}], evicted: [set_id]}`.
+         * refused: [{set_id, why}], uncarried: [{player, set_id, content_hash}], evicted: [{set_id, content_hash}]}`.
          */
         this.lastLevelSetHandover = { put: [], refused: [], uncarried: [], evicted: [] };
         /** ⚠ ONE-DEEP, LAST WINS — see the docblock. */
@@ -466,22 +466,20 @@ export class ProcgenLabPanelUI {
      * set's COMPUTED content hash and its `set_id` must be the ones some player of THESE rules names — never a hash the
      * document declares about itself. Each player is checked on its own. A refusal is NAMED in the note and the rules
      * still go over (the player then refuses the set by name, slice G).
-     * ⛓ `evicted` is what the cache's bound pushed out for this put (`ids()` before and after; the API is unchanged).
+     * ⛓ `evicted` is what the front's bound pushed out for this put, as versions `{set_id, content_hash}` (B5: the front
+     * is keyed by the pair and bounds only UNHELD entries, so a set a running game holds is never among them).
      *
      * @returns {string} the note's tail
      */
     _fileLevelSets(data) {
         const v = labLevelSetVerdicts(data.levelSets ?? [], data.rules, { contentHashOf: levelSetContentHash });
-        const heldBefore = levelSetCache.ids();
-        const put = putLevelSets(v.ok);
-        const heldAfter = new Set(levelSetCache.ids());
-        const evicted = heldBefore.filter((id) => !heldAfter.has(id));
+        const { put, evicted } = fileLevelSets(v.ok, levelSetCache);
         const uncarried = v.players.filter((p) => !p.carried)
             .map(({ player, set_id, content_hash }) => ({ player, set_id, content_hash }));
         this.lastLevelSetHandover = { put, refused: v.refused, uncarried, evicted };
         return [
             put.length ? ` · level set ${put.map((r) => r.set_id).join(', ')} held for the player` : '',
-            evicted.length ? ` · (the host's set cache let go of ${evicted.join(', ')})` : '',
+            evicted.length ? ` · (the host's set cache let go of ${evicted.map((r) => `${r.set_id} at ${r.content_hash}`).join(', ')})` : '',
             ...v.refused.map((r) => ` · ⛔ level set REFUSED (not held) — ${r.why}`),
         ].join('');
     }

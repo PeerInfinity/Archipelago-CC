@@ -62,6 +62,19 @@ import { fnv1a32, stableStringify } from './contentIdentity.js';
 
 export const DEFAULT_LIBRARY_DB_NAME = 'archipelago-cc-document-library';
 
+/**
+ * WHICH DATABASE A PAGE USES (moved here from the lab writer in B5, so the app and the labs share ONE rule).
+ * `?libraryDb=<name>` is the test seam (every row and check names its own); under automation
+ * (`navigator.webdriver`) with no seam, a per-page-load name, so an automated run NEVER opens the default
+ * library and no later page inherits its sets (js-22 L1); otherwise the app's one library.
+ */
+export function libraryDbNameOf({ search = '', webdriver = false, tabId = '' } = {}) {
+    const named = new URLSearchParams(search).get('libraryDb');
+    if (named) return named;
+    if (webdriver === true) return `${DEFAULT_LIBRARY_DB_NAME}-auto-${tabId}`;
+    return DEFAULT_LIBRARY_DB_NAME;
+}
+
 /** Versions kept per lineage (⚖ ruling Q3: "Last 10 + in use"). */
 export const KEEP_SAVED_PER_LINEAGE = 10;
 /**

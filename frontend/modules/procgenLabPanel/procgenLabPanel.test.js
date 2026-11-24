@@ -712,45 +712,58 @@ describe('procgenLabPanel — a page\'s "open in the APWorld editor"', () => {
     });
 
     /**
-     * ⛓ (J2) MEASURED, AND PINNED AS IT STANDS (⚖ js-22, J2 = (A) accepted: "the app holds 4 sets; a 5th, from either
-     * door, drops the oldest, and that set must be re-opened"). The cache holds `LEVEL_SET_CACHE_LIMIT` (4) sets, FIFO
-     * by last put. A door-A put of a 5th id evicts the one put longest ago — whatever door put it, including the set a
-     * RUNNING game was loaded from (`held-1` here: the bundle's) — and the panel says which. What that set's two
-     * readers then answer, by name: Edit ▸'s `levelSetCache.get(set_id, hash)` (`flashPanelUI._editHeldSetRoom`) and a
-     * re-load's `heldLevelSetOf(rules)` (`flashPanelUI._customSetRefusal` → G, and the wiring). Neither serves a body.
-     * ⛔ A change to the cache's bound or eviction rule (js-22's backlog: live-set pinning) reds this row ON PURPOSE.
+     * ⛓⛓ (J2) RETIRED BY B5 — A PLAYING SET IS NEVER PUSHED OUT. Was (js-22 J2 = (A)): "the app holds 4 sets; a 5th, from
+     * either door, drops the oldest", including the set a RUNNING game was loaded from. Now the front bounds only the
+     * UNHELD entries (`LEVEL_SET_CACHE_LIMIT` 4, FIFO by last put) and a running game HOLDS its version
+     * (`levelSetCache.hold`, the Flash panel's `_setHeldSetEdit` → `levelSetLibrary.createLevelSetHolder`). So four more
+     * door-A hand-overs of four other sets — and then four more — leave `held-1` served, and its two readers still answer
+     * `held`: Edit ▸'s `levelSetCache.get(set_id, hash)` and a re-load's `heldLevelSetOf(rules)`. The bound still works
+     * on the rest: each put past it evicts the oldest UNHELD version, and the panel names it (id AND hash).
+     * MUTANT (FIFO evicts a held entry): the first put evicts `held-1` and this row reds.
      */
-    it('⛓ (J2) a good put into a FULL cache evicts the oldest put, and the panel names it', () => {
+    it('⛓⛓ (J2 retired) a set a running game holds survives every later put; the bound evicts the oldest UNHELD, named', () => {
         levelSetCache.clear();
         const panel = mountPanel('seedling');
         for (const id of ['held-1', 'held-2', 'held-3', 'held-4']) {
             const d = SET(id);
             levelSetCache.put(id, d, { contentHash: REF(d).content_hash });
         }
-        const runningRef = REF(SET('held-1'));
+        const running = SET('held-1');
+        const runningRef = REF(running);
+        expect(levelSetCache.hold(runningRef)).toMatchObject({ status: 'held' });
         expect(levelSetCache.limit).toBe(4);
-        const doc = SET('door-a');
-        handOverSets(panel, RULES_WITH_SETS(REF(doc)), [doc]);
-        expect(panel.lastLevelSetHandover.evicted).toEqual(['held-1']);
+        const doors = ['door-a', 'door-b', 'door-c', 'door-d', 'door-e', 'door-f', 'door-g', 'door-h'].map((id) => SET(id));
+        const evicted = [];
+        for (const doc of doors) {
+            handOverSets(panel, RULES_WITH_SETS(REF(doc)), [doc]);
+            evicted.push(...panel.lastLevelSetHandover.evicted);
+        }
+        expect(evicted.slice(0, 3)).toEqual([REF(SET('held-2')), REF(SET('held-3')), REF(SET('held-4'))]);
+        expect(evicted.map((r) => r.set_id)).not.toContain('held-1');
         const editReads = levelSetCache.get(runningRef.set_id, runningRef.content_hash);
-        expect(editReads).toMatchObject({ status: 'absent', set: null, why: 'no level set with set_id "held-1" is held' });
+        expect(editReads).toMatchObject({ status: 'held', why: null });
+        expect(editReads.set).toEqual(running);
         const reloadReads = heldLevelSetOf(RULES_WITH_SETS(runningRef), '1', levelSetCache);
-        expect(reloadReads).toMatchObject({ status: 'absent', set: null, why: 'no level set with set_id "held-1" is held' });
-        expect(levelSetCache.ids()).toEqual(['held-2', 'held-3', 'held-4', 'door-a']);
-        expect(byRole(panel.getRootElement(), 'note').textContent).toMatch(/let go of held-1\)$/);
+        expect(reloadReads).toMatchObject({ status: 'held', why: null });
+        expect(levelSetCache.ids()).toEqual(['held-1', 'door-e', 'door-f', 'door-g', 'door-h']);
+        expect(byRole(panel.getRootElement(), 'note').textContent)
+            .toMatch(new RegExp(`let go of door-d at ${REF(SET('door-d')).content_hash}\\)$`));
         // the SAME set handed again moves it to the newest end and evicts nothing
-        handOverSets(panel, RULES_WITH_SETS(REF(doc)), [doc]);
+        handOverSets(panel, RULES_WITH_SETS(REF(doors[7])), [doors[7]]);
         expect(panel.lastLevelSetHandover.evicted).toEqual([]);
+        // the game stops: its version counts against the bound again, and is the oldest unheld → it goes
+        expect(levelSetCache.release(runningRef)).toMatchObject({ status: 'released', holds: 0, evicted: [runningRef] });
         levelSetCache.clear();
     });
 
     /**
-     * ⛓ (js-22's J6 addition, accepted as a known limit) ONE VERSION PER SET ID: put overwrites by `set_id`, so a door-A
-     * hand-over of an EDITED version `X@H2` (which its rules name) replaces a bundle-held `X@H1` a running game was
-     * opened from. Pinned as it stands: the cache then holds H2 only, and the OLD rules' `heldLevelSetOf` answers the
-     * named mismatch, never a body. ⛔ A change to "one version per id" reds this row on purpose.
+     * ⛓⛓ (J6) RETIRED BY B5 — VERSIONS SIDE BY SIDE. Was (js-22's J6 addition): "one version per set id", so a door-A
+     * hand-over of an EDITED `X@H2` replaced the bundle-held `X@H1` a running game was opened from, and the old rules got
+     * a named mismatch. Now the front is keyed by `(set_id, content_hash)`: both versions are held, each served only
+     * under its own hash, and the OLD rules' `heldLevelSetOf` answers `held` with H1's body — never H2's.
+     * MUTANT (keyed by id again): the cache holds H2 only and the old rules read `mismatch`, red.
      */
-    it('⛓ one version per set id: an edited version handed over door A replaces the held one; the old rules get the named mismatch', () => {
+    it('⛓⛓ (J6 retired) X@H2 handed over door A sits BESIDE X@H1; the old rules still read X@H1, the new ones X@H2', () => {
         levelSetCache.clear();
         const panel = mountPanel('seedling');
         const v1 = SET('set-x', 'bundle version');
@@ -759,11 +772,13 @@ describe('procgenLabPanel — a page\'s "open in the APWorld editor"', () => {
         handOverSets(panel, RULES_WITH_SETS(REF(v2)), [v2]);
         expect(panel.lastLevelSetHandover).toMatchObject({ put: [REF(v2)], refused: [], evicted: [] });
         expect(levelSetCache.ids()).toEqual(['set-x']);
+        expect(levelSetCache.size).toBe(2);
         expect(levelSetCache.get('set-x', REF(v2).content_hash).set).toBe(v2);
         const old = heldLevelSetOf(RULES_WITH_SETS(REF(v1)), '1', levelSetCache);
-        expect(old).toMatchObject({ status: 'mismatch', set: null,
-            why: `the level set held as "set-x" has content hash ${REF(v2).content_hash}, not the ${REF(v1).content_hash} `
-                + 'the rules name — it is NOT served' });
+        expect(old).toMatchObject({ status: 'held', why: null });
+        expect(old.set).toBe(v1);
+        expect(JSON.stringify(old.set)).toBe(JSON.stringify(SET('set-x', 'bundle version')));
+        expect(heldLevelSetOf(RULES_WITH_SETS(REF(v2)), '1', levelSetCache).set).toBe(v2);
         levelSetCache.clear();
     });
 

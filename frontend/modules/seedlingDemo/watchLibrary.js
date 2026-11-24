@@ -20,11 +20,16 @@
  *     by name, never a fallback. It loads through the page's own LOAD door (`takeLevelSet`). It creates
  *     no database: with none (`libraryDatabaseExists` false) it says "nothing saved yet".
  *
- * ⛔ No `navigator.storage.persist()` (js-22 L2): unruled, and Firefox prompts. B5 asks Robert.
+ *   · B5 ⚖ Q2 "Warn only if unsaved": the browser's "Leave site?" box is armed only while a draft waits
+ *     out its debounce or a save is on its way (`out.draftPending || out.inFlight > 0`), and disarmed
+ *     the moment it lands (`createLeaveGuard`). `__labLibrary.leaveArmed` says which.
+ *   · B5 ⚖ Q3 "Ask once, at first save": `navigator.storage.persist()` once per page load, at the first
+ *     save that lands (`createPersistOnce`); the answer is the line under the status
+ *     (`#editLibraryPersist`) and `__labLibrary.persist`. A refusal or a throw changes nothing else.
  */
 import {
-    classifyWhy, createDraftScheduler, libraryDbNameOf, LIBRARY_PAGE, newTabId, openPlanOf,
-    readRefusalOf, recentRowsOf, statusLineOf,
+    classifyWhy, createDraftScheduler, createLeaveGuard, createPersistOnce, libraryDbNameOf, LIBRARY_PAGE, newTabId,
+    openPlanOf, readRefusalOf, recentRowsOf, statusLineOf,
 } from './watchLibraryCore.js';
 
 /** Per page load (study §4): every save of this page carries it. */
@@ -45,10 +50,36 @@ const source = () => ({ page: LIBRARY_PAGE, tab_id: TAB_ID });
 const readout = () => {
     globalThis.__labLibrary ??= {
         dbName: libraryDbName(), tabId: TAB_ID, transport: null, status: null, saves: [], inFlight: 0,
-        draftPending: false, recent: null, opened: null,
+        draftPending: false, recent: null, opened: null, leaveArmed: false, persist: null,
     };
     return globalThis.__labLibrary;
 };
+
+/* ── B5: the leave warning (⚖ Q2) and the one persistence request (⚖ Q3), per page load ── */
+
+const leave = createLeaveGuard({ win: globalThis });
+/** Re-arm or disarm "Leave site?" from what is unsaved NOW (call after every change to it). */
+function syncLeave() {
+    const out = readout();
+    out.leaveArmed = leave.update(out.draftPending === true || out.inFlight > 0);
+}
+const persistOnce = createPersistOnce({ storage: globalThis.navigator?.storage });
+async function askPersist(statusEl) {
+    const first = !persistOnce.asked;
+    const answer = await persistOnce.ask();
+    if (!first) return;
+    readout().persist = answer;
+    const doc = globalThis.document;
+    if (!doc || !statusEl?.parentNode) return;
+    let line = doc.getElementById('editLibraryPersist');
+    if (!line) {
+        line = doc.createElement('div');
+        line.id = 'editLibraryPersist';
+        statusEl.insertAdjacentElement('afterend', line);
+    }
+    line.className = answer.status === 'granted' || answer.status === 'already' ? 'note' : 'note bad';
+    line.textContent = answer.line;
+}
 
 /* ── the transport: one worker per page ─────────────────────────────── */
 
@@ -175,6 +206,7 @@ export function createLabLibrary({ lifetime, schemas, getRecord, statusEl, sessi
         const failNext = globalThis.__labLibraryFailNext ?? null;
         globalThis.__labLibraryFailNext = null;
         out.inFlight += 1;
+        syncLeave();
         let answer;
         // ⛓ L3: what the PAGE pays is the clone into the message; the save itself is the worker's.
         const t0 = globalThis.performance.now();
@@ -184,10 +216,13 @@ export function createLabLibrary({ lifetime, schemas, getRecord, statusEl, sessi
             answer = await pending;
         } finally {
             out.inFlight -= 1;
+            syncLeave();
         }
         const quota = answer.status === 'failed' ? await reportFailure(answer) : false;
         out.saves.push({ why, kind, ...answer, quota, status_line: statusLineOf(answer, { quota }), main_ms: mainMs });
         show(answer, quota);
+        // ⚖ Q3 — the first save that LANDS asks once; its answer never changes this save's.
+        if (answer.status === 'saved') void askPersist(statusEl);
         return answer;
     };
 
@@ -197,6 +232,7 @@ export function createLabLibrary({ lifetime, schemas, getRecord, statusEl, sessi
         write: () => {
             out.draftPending = false;
             save('draft', null, 'op');
+            syncLeave();
         },
     });
     const flush = () => drafts.flush();
@@ -217,11 +253,14 @@ export function createLabLibrary({ lifetime, schemas, getRecord, statusEl, sessi
             if (c.kind === 'draft') {
                 drafts.edited();
                 out.draftPending = true;
+                syncLeave();
                 return null;
             }
             drafts.savePoint();
             out.draftPending = false;
-            return save('version', c.savedBecause, why, at);
+            const saving = save('version', c.savedBecause, why, at);
+            syncLeave();
+            return saving;
         },
         /** A new set was loaded: the old session's pending draft is written first, then the new lineage. */
         startSession({ lineageId = null, parent = null } = {}, getRec = record) {

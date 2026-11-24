@@ -21,6 +21,7 @@ import { levelSetContentHash } from '../procgenCore/levelSetReference.js';
 import {
     classifyWhy, createDraftScheduler, createSaveQueue, DRAFT_WHY, libraryDbNameOf, LIBRARY_PAGE,
     NO_SAVE_WHY, openPlanOf, readRefusalOf, recentRowsOf, SAVE_POINT_OF_WHY, statusLineOf,
+    createLeaveGuard, createPersistOnce, leaveWarningHandler, PERSIST_LINES,
 } from './watchLibraryCore.js';
 import { createLibraryEngine } from './watchLibraryEngine.js';
 import { librarySaveOf, membersContextOf } from './watchLibraryMembers.js';
@@ -342,13 +343,65 @@ describe('source pins', () => {
     const FILES = ['watchLibrary.js', 'watchLibraryCore.js', 'watchLibraryEngine.js', 'watchLibraryMembers.js', 'watchLibraryWorker.js'];
     const read = (f) => readFileSync(fileURLToPath(new URL(`./${f}`, import.meta.url)), 'latin1');
 
-    it('⛔ no navigator.storage.persist() call anywhere in the writer (js-22 L2)', () => {
-        for (const f of FILES) expect(read(f).replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '')).not.toMatch(/\.persist\s*\(/);
+    it('⛓ B5 (⚖ Q3): persist() is called in exactly ONE place — createPersistOnce — and the page asks through it', () => {
+        const code = (f) => read(f).replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');
+        const calls = FILES.flatMap((f) => (code(f).match(/\.persist\s*\(/g) ?? []).map(() => f));
+        expect(calls).toEqual(['watchLibraryCore.js']);
+        expect(code('watchLibraryCore.js')).toMatch(/export function createPersistOnce[\s\S]*storage\.persist\(\)/);
+        expect(code('watchLibrary.js')).toMatch(/createPersistOnce\(\{ storage: globalThis\.navigator\?\.storage \}\)/);
     });
 
     it('the page imports the writer only DYNAMICALLY (a standalone boot fetches nothing new)', () => {
         const page = read('watchViewer.js');
         expect(page).not.toMatch(/^import[^;]*watchLibrary/m);
         expect(page).toMatch(/import\('\.\/watchLibrary\.js'\)/);
+    });
+});
+
+describe('B5 — the leave warning (⚖ Robert Q2 "Warn only if unsaved")', () => {
+    it('armed only while unsaved: a pending draft SETS the handler (preventDefault + returnValue); a clean tab has NONE', () => {
+        const win = { onbeforeunload: null };
+        const guard = createLeaveGuard({ win });
+        expect(win.onbeforeunload).toBe(null);
+        expect(guard.update(false)).toBe(false);
+        expect(win.onbeforeunload).toBe(null);
+        expect(guard.update(true)).toBe(true);
+        expect(win.onbeforeunload).toBe(leaveWarningHandler);
+        const ev = { preventDefault: vi.fn(), returnValue: undefined };
+        expect(win.onbeforeunload(ev)).toBe('');
+        expect(ev.preventDefault).toHaveBeenCalledTimes(1);
+        expect(ev.returnValue).toBe('');
+        expect(guard.update(true)).toBe(true);
+        expect(guard.update(false)).toBe(false);
+        expect(win.onbeforeunload).toBe(null);
+        expect(guard.armed).toBe(false);
+    });
+    it('the page arms it from draftPending OR a save in flight, and from nothing else', () => {
+        const src = readFileSync(fileURLToPath(new URL('./watchLibrary.js', import.meta.url)), 'latin1');
+        expect(src).toMatch(/leave\.update\(out\.draftPending === true \|\| out\.inFlight > 0\)/);
+        expect(src.match(/onbeforeunload/g) ?? []).toEqual([]);
+    });
+});
+
+describe('B5 — the one persistence request (⚖ Robert Q3 "Ask once, at first save")', () => {
+    it('ONE persist() call across several saves; the answer is the line', async () => {
+        const storage = { persisted: vi.fn(async () => false), persist: vi.fn(async () => true) };
+        const once = createPersistOnce({ storage });
+        expect(once.asked).toBe(false);
+        const answers = await Promise.all([once.ask(), once.ask()]);
+        await once.ask();
+        expect(storage.persist).toHaveBeenCalledTimes(1);
+        expect(answers[0]).toEqual({ status: 'granted', line: PERSIST_LINES.granted });
+        expect(answers[1]).toBe(answers[0]);
+    });
+    it('already persisted → no request at all; a refusal or a throw is an answer, never an error', async () => {
+        const kept = { persisted: vi.fn(async () => true), persist: vi.fn(async () => true) };
+        await expect(createPersistOnce({ storage: kept }).ask()).resolves.toMatchObject({ status: 'already' });
+        expect(kept.persist).not.toHaveBeenCalled();
+        const no = { persisted: async () => false, persist: vi.fn(async () => false) };
+        await expect(createPersistOnce({ storage: no }).ask()).resolves.toEqual({ status: 'denied', line: PERSIST_LINES.denied });
+        const boom = { persisted: async () => false, persist: vi.fn(async () => { throw new TypeError('no'); }) };
+        await expect(createPersistOnce({ storage: boom }).ask()).resolves.toMatchObject({ status: 'denied', why: 'TypeError: no' });
+        await expect(createPersistOnce({ storage: undefined }).ask()).resolves.toMatchObject({ status: 'unsupported' });
     });
 });

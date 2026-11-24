@@ -19,10 +19,15 @@
  *   · THE STATUS LINE, one sentence per answer.
  *   · "RECENT SETS": the rows, built from `inventory` + `entriesOf`, and the fingerprinted reads.
  *
- * ⛔ No `navigator.storage.persist()` here or anywhere in this writer (js-22 L2: Firefox prompts the
- * user, and Robert has not ruled on it; B5 asks). A vitest row pins its absence from these files.
+ *   · B5, ⚖ ROBERT Q2 "Warn only if unsaved": THE LEAVE WARNING (`createLeaveGuard`). The browser's
+ *     "Leave site?" box is armed ONLY while something is unsaved — a draft waiting out its debounce, or
+ *     a save on its way to the library — and disarmed the moment it commits. A clean tab has no handler.
+ *   · B5, ⚖ ROBERT Q3 "Ask once, at first save": `navigator.storage.persist()` (`createPersistOnce`) is
+ *     asked ONCE per page load, at the first save that lands, and only if the origin is not already
+ *     persisted. Its answer is shown; a refusal or a throw is not an error (the save stands). Firefox
+ *     shows its one-time permission prompt then; Chromium grants or refuses silently (site engagement).
  */
-import { DEFAULT_LIBRARY_DB_NAME, DRAFT_REASON, WRITE_REFUSAL } from '../procgenCore/documentLibrary.js';
+import { DRAFT_REASON, libraryDbNameOf, WRITE_REFUSAL } from '../procgenCore/documentLibrary.js';
 
 /** The `substrate` string the writer files its versions under (data, never branched on). */
 export const LIBRARY_SUBSTRATE = 'seedling';
@@ -57,17 +62,10 @@ export function classifyWhy(why) {
 }
 
 /**
- * The database this page writes. `?libraryDb=<name>` is the test seam (every row and check names its
- * own); under automation (`navigator.webdriver`) with no seam, a per-page-load name, so an automated
- * run NEVER opens the default library and no later page inherits its sets (js-22 L1); otherwise the
- * app's one library.
+ * The database this page writes: the library's own rule (`documentLibrary.libraryDbNameOf`, shared with the app's
+ * Flash panel since B5) — `?libraryDb=` seam, else a per-page-load name under webdriver, else the default.
  */
-export function libraryDbNameOf({ search = '', webdriver = false, tabId = '' } = {}) {
-    const named = new URLSearchParams(search).get('libraryDb');
-    if (named) return named;
-    if (webdriver === true) return `${DEFAULT_LIBRARY_DB_NAME}-auto-${tabId}`;
-    return DEFAULT_LIBRARY_DB_NAME;
-}
+export { libraryDbNameOf };
 
 /** A random per-page-load tab id (study §4). */
 export function newTabId(random = globalThis.crypto) {
@@ -272,4 +270,68 @@ export function readRefusalOf(role, ref, answer) {
     case 'unavailable': return `NOT opened — library unavailable (${answer.why})`;
     default: return `NOT opened — the ${at} answered ${answer.status}${answer.why ? `: ${answer.why}` : ''}`;
     }
+}
+
+/* ── B5: the leave warning (⚖ Q2) and the persistence request (⚖ Q3) ─────────────────────── */
+
+/** The `beforeunload` handler the guard installs: the standard way to ask the browser for its box. */
+export function leaveWarningHandler(event) {
+    event.preventDefault();
+    // ⛓ the legacy spelling some browsers still need; the text itself is the browser's own, not ours
+    event.returnValue = '';
+    return '';
+}
+
+/**
+ * ⚖ Q2 — "Leave site?" ONLY while unsaved. `update(unsaved)` arms `win.onbeforeunload` when `unsaved` turns
+ * true and clears it (null: no handler at all) when it turns false. A property, not a listener: exactly one
+ * handler, removed whole, and nothing for the page's listener census to count.
+ * @param {{win: object, handler?: Function}} o
+ */
+export function createLeaveGuard({ win, handler = leaveWarningHandler }) {
+    let armed = false;
+    return {
+        update(unsaved) {
+            const want = unsaved === true;
+            if (want === armed) return armed;
+            armed = want;
+            if (win) win.onbeforeunload = armed ? handler : null;
+            return armed;
+        },
+        get armed() { return armed; },
+    };
+}
+
+/** What a `persist()` answer means, for the readout and the line under the status. */
+export const PERSIST_LINES = Object.freeze({
+    granted: 'Storage: this browser will keep the saved sets (persistent storage granted).',
+    already: 'Storage: this browser keeps the saved sets (persistent storage was already granted).',
+    denied: 'Storage: best effort — the browser may clear the saved sets when space runs low (persistent storage not granted). Downloads are your backup.',
+    unsupported: 'Storage: best effort — this browser cannot be asked to keep the saved sets. Downloads are your backup.',
+});
+
+/**
+ * ⚖ Q3 — ask `storage.persist()` ONCE, at the first save that lands. `ask()` returns the answer
+ * `{status: 'granted'|'already'|'denied'|'unsupported', line, why?}` (the same promise on every later call:
+ * one request per page load). Never throws.
+ * @param {{storage?: object}} o  `navigator.storage`
+ */
+export function createPersistOnce({ storage }) {
+    let asked = null;
+    const answer = (status, why = null) => ({ status, line: PERSIST_LINES[status], ...(why ? { why } : {}) });
+    const run = async () => {
+        if (!storage || typeof storage.persist !== 'function') return answer('unsupported');
+        try {
+            if (typeof storage.persisted === 'function' && await storage.persisted() === true) return answer('already');
+        } catch { /* ask anyway */ }
+        try {
+            return answer(await storage.persist() === true ? 'granted' : 'denied');
+        } catch (e) {
+            return answer('denied', `${e?.name ?? 'Error'}: ${e?.message ?? e}`);
+        }
+    };
+    return {
+        ask() { return (asked ??= run()); },
+        get asked() { return asked !== null; },
+    };
 }

@@ -96,7 +96,7 @@ import { SeedlingLevelSetDelivery } from './seedlingLevelSetDelivery.js';
 // `atlases`): this module is reached through a computed URL, so in the bundled build these imports are a SECOND,
 // empty instance. They are only the defaults for a direct (node) caller.
 import { levelSetCache as sharedLevelSetCache } from '../procgenCore/levelSetCache.js';
-import { heldLevelSetOf } from '../procgenCore/levelSetReference.js';
+import { ensureHeld, heldLevelSetOf, levelSetRefOf } from '../procgenCore/levelSetReference.js';
 import { atlasCache as sharedAtlasCache } from '../procgenCore/atlasCache.js';
 import { ATLAS_DIR, atlasIndexPath, atlasPathInIndex, mapDocumentPath, regionAtlasOf } from './mapDocumentPath.js';
 // ⛓ G7 — DEPENDENCY-FREE (it imports nothing), so a static import costs this
@@ -837,6 +837,11 @@ export function heldSetMapDocument(set) {
         tile_size: GEN_ROOM_TILE_SIZE, level_count: levels.length, levels };
 }
 
+/** ⛓ B5 — the answer of a load that stopped being the caller's during the library fill (it reads and delivers nothing). */
+export const STALE_LOAD_VERDICT = 'stale';
+export const STALE_LOAD_WHY = 'stale: the load was superseded while its level set was read from the document library '
+    + '(another load, or the game stopped) — it read and delivered nothing';
+
 const defaultFetchJson = async (url) => {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
@@ -882,6 +887,13 @@ export async function loadSeedlingRandomizer({
     /** ⛓ S4 — the host's held sets and atlases (tests hand their own). */
     levelSets = sharedLevelSetCache,
     atlases = sharedAtlasCache,
+    /**
+     * ⛓ B5 — the document library a front MISS is filled from (`ensureHeld`'s `library`: the library, or the page's
+     * lazy opener); null = no fill, the front alone (a node caller, today's behaviour).
+     */
+    library = null,
+    /** ⛓ B5 — `() => boolean`: is this load still the caller's? Asked after the fill's await; false → `stale`. */
+    isCurrent = null,
 } = {}) {
     const url = (rel) => new URL(rel, baseUrl).href;
     const refuse = (eligibility, extra = {}) => ({
@@ -916,6 +928,22 @@ export async function loadSeedlingRandomizer({
     // ⛔ Rules that name no atlas id fetch nothing more and are asked nothing: their verdict is today's.
     // ⛓⛓ S4 — …UNLESS THE HOST HOLDS THE SET THE RULES NAME (`level_set`, same id AND same content hash): then its
     // OWN rooms are what is delivered below, and the guard has nothing to stand between. Absent or mismatched: G.
+    // ⛓⛓ B5 — A FRONT MISS IS FILLED FROM THE DOCUMENT LIBRARY, HERE: before this load's first read of the front
+    // (`heldLevelSetOf` just below; the census of sync reads finds nothing earlier, on either runtime) and far outside
+    // `runSeedlingRandomizerLoadSteps`' no-await window, which this function never enters. After the await, a load that
+    // is no longer the caller's (`isCurrent`: the panel's adapter and `_apLoadKey`) drops out BY NAME and reads nothing.
+    // ⛔ A non-`held` answer fills nothing: the read below then answers absent/mismatch and G refuses, as before.
+    const namedSet = library ? levelSetRefOf(rawRules, playerId) : null;
+    if (namedSet) {
+        const filled = await ensureHeld(levelSets, namedSet, { library });
+        if (filled.source === 'library') {
+            log(`[ap placement] the document library ${filled.status === 'held' ? 'filled' : `answered ${filled.status} for`} `
+                + `level set ${namedSet.set_id}${filled.why ? ` — ${filled.why}` : ''}`, filled.status === 'held' ? undefined : 'warn');
+        }
+        if (typeof isCurrent === 'function' && !isCurrent()) {
+            return { ...refuse({ eligible: false, verdict: STALE_LOAD_VERDICT, why: STALE_LOAD_WHY }), stale: true };
+        }
+    }
     const held = heldLevelSetOf(rawRules, playerId, levelSets);
     if (held.ref && !held.set) log(`[ap placement] the rules name level set ${held.ref.set_id} — ${held.why}`, 'warn');
     const guard = await servedRegionAtlas({
