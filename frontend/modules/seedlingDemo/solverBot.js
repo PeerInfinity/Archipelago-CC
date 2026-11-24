@@ -7228,7 +7228,14 @@ export function previewWalk(run, wps, tolerance = 0,
          * policy is asked with on each tick (`oppStrikeOffer`: the press kill offers only the bodies whose strike lands
          * clear of the spinners, in its preview exactly as in its drive). `null` (every other caller) changes nothing.
          */
-        strikeOffer = null } = {}) {
+        strikeOffer = null,
+        /**
+         * ⛓ hammer-phase STRIKECACHE (`STRIKE_PREVIEW_LEAN`) — an OPT-IN for a caller that reads a TRUNCATED walk's
+         * `truncated` and nothing else (`deriveStrike`'s `walkTo`): the spinner rows are taken at the walk's end and a
+         * truncated walk's are never taken; with no strike policy the forecasts are output only, so they too are stepped
+         * at the end and never for a truncated walk (`leanDeferrable`). `false` (every other caller) changes nothing.
+         */
+        lean = false } = {}) {
     const startTick = run.ticksCompleted;
     const step = run.previewStepper();
     // ⛓ fidelity L105 D1 (`previewBeamTowerDrift`, OFF: the options as before): each step is told its previewed tick,
@@ -7306,8 +7313,12 @@ export function previewWalk(run, wps, tolerance = 0,
      */
     let spinPrev = spinCursor ? new Map((run.entities('spinnerBodies') ?? []).map((b) => [b.id,
         { hitsTimer: b.hitsTimer ?? 0, destroy: b.destroy === true }])) : null;
+    // ⛓ STRIKECACHE (`lean`): each row's inputs, in order, until the walk's end (`spinRow` is output only: nothing in
+    // the walk reads `sample.spinners`, and the cursor is the walk's own)
+    let spinDeferred = lean && spinCursor ? [] : null;
     const spinRow = (sample, state) => {
         if (!spinCursor) return;
+        if (spinDeferred !== null) { spinDeferred.push([sample, state.x, state.y, spinPress]); return; }
         spinCursor.advance({ x: state.x, y: state.y }, spinPress);
         const i = spinCursor.rows.length - 1;
         const now = spinCursor.bodies[i];
@@ -7681,6 +7692,8 @@ export function previewWalk(run, wps, tolerance = 0,
             }
         }
     };
+    // ⛓ STRIKECACHE (`lean`): the transit's forecast inputs (`[sample, pre-move state]`), when they are output only
+    const deferred = lean && leanDeferrable(run, { strike, steer, stopWhen, stall, standFor, chasers }) ? [] : null;
     for (const wp of wps) {
         wpIndex += 1;
         let spent = 0;
@@ -7708,7 +7721,8 @@ export function previewWalk(run, wps, tolerance = 0,
             // the live tick does — `stepArrowTrapsNow` runs above `stepV2`.
             tick += 1;
             spent += 1;
-            const arrows = forecast ? forecast.step(st) : null;
+            // ⛓ STRIKECACHE (`lean`, `leanDeferrable`): the forecasts are output only here, so they step at the walk's end
+            const arrows = deferred === null && forecast ? forecast.step(st) : null;
             /**
              * ⛔⛔ THE SAMPLE IS THE PRE-MOVE BOX, PAIRED WITH THE ARROWS THAT
              * HAVE ALREADY MOVED — which is the game's own pairing and not a
@@ -7729,7 +7743,7 @@ export function previewWalk(run, wps, tolerance = 0,
             // the previous tick left. Sampling the post-move player against
             // the same bodies would test a pair that never meets, which is
             // the arrows' note verbatim and true here for the same reason.
-            const chaserBodies = chasers
+            const chaserBodies = deferred === null && chasers
                 ? chasers.step(st, { slashing: slashState?.slashing === true }) : null;
             // ⛓ R9 slice 12c′ — the sample carries WHICH LEG it belongs to, so a
             // caller can measure a corridor's own length rather than the whole
@@ -7737,13 +7751,14 @@ export function previewWalk(run, wps, tolerance = 0,
             // trap 587), and a bound nobody can evaluate per leg is a bound
             // nobody can respect.
             const sample = { x: st.x, y: st.y, tick, arrows, chasers: chaserBodies, wp: wpIndex };
+            if (deferred !== null) deferred.push([sample, st]);
             // ⛓ U15-swim D2: a spit updates before the player too (run-time
             // added, prepended), so it pairs with this PRE-move box.
-            if (spitForecast) {
+            else if (spitForecast) {
                 sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
             }
-            if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
-            if (corridorForecast) {
+            if (deferred === null && grenadeForecast) sample.grenades = grenadeForecast.step(st);
+            if (deferred === null && corridorForecast) {
                 sample.corridorBodies = corridorForecast.step(st, { slashing: slashState?.slashing === true });
             }
             samples.push(sample);
@@ -7844,6 +7859,11 @@ export function previewWalk(run, wps, tolerance = 0,
      * ⚠ A TRUNCATED WALK GETS NO TAIL. The player is not where the caller
      * thinks, so standing "there" would be standing somewhere else.
      */
+    // ⛓ STRIKECACHE (`lean`): a walk that arrived steps its deferred forecasts now, tick by tick in the transit's order
+    if (deferred !== null) {
+        if (!truncated) leanForecastReplay(deferred, { forecast, chasers, spitForecast, grenadeForecast, corridorForecast });
+        else STRIKE_PREVIEW_LEAN_COUNTS.forecastTicksSkipped += deferred.length;
+    }
     const tailHeld = !truncated && standFor > 0 && standKeys ? standKeys() : null;
     if (tailHeld) strikeArmed = false;
     if (!truncated && standFor > 0) {
@@ -7902,6 +7922,13 @@ export function previewWalk(run, wps, tolerance = 0,
         }
     }
     // ⛓ hammer-phase D1 — every sample is a previewed player state: the progress tile map's unit
+    // ⛓ STRIKECACHE (`lean`): a walk that arrived takes its spinner rows now, in order; a truncated one never does
+    if (spinDeferred !== null) {
+        const rows = spinDeferred;
+        spinDeferred = null;
+        if (!truncated) for (const [sm, x, y, press] of rows) { spinPress = press; spinRow(sm, { x, y }); }
+        else STRIKE_PREVIEW_LEAN_COUNTS.spinRowsSkipped += rows.length;
+    }
     if (activeProgress !== null) progressPreview(run, samples);
     // ⛓ hammer-phase SPINNER880 — the preview meter's count (`PREVIEW_METER`, OFF ⇒ not reached)
     if (PREVIEW_METER.enabled) meterPreviewStates(samples.length);
@@ -15035,6 +15062,96 @@ function strikeScanBox(cells, floor, reach) {
     };
 }
 
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE STRIKECACHE — **WHAT A STRIKE PREVIEW'S READER NEVER READS IS NOT COMPUTED**
+ * (`STRIKE_PREVIEW_LEAN`, OFF).
+ *
+ * ⚖ The user approved "Cheaper deriveStrike" on 2026-11-23 (planner `seedling-hammer-phase-planning-14`), from
+ * SPINNER880's residue: the press kill re-derives its strike on every tick it holds none, and on L40 that is 93 % of
+ * the kill's CPU (`seedling-hammer-spinner880.md` §3.1). MEASURED (`seedling-hammer-strikecache.md` §3) on P1 19:1:
+ * 96 % of each derivation's walks repeat the tick before's (same cell, same start state — the player stands on its
+ * refuge), but only 4 % repeat it whole: the bodies move every tick, so no exact cross-tick memo hits. What repeats is
+ * the SHAPE: 58 % of the walks (82 % of the previewed states) are 400-tick `stalled` walks that move 19 ticks, then
+ * stand pinned against geometry for 381, stepping forecasts nobody reads — `walkTo` reads a truncated walk's
+ * `truncated` and nothing else.
+ *
+ * ON, `deriveStrike`'s `walkTo` asks `previewWalk` with `lean: true`, which changes two things, each exact for every
+ * reader `walkTo` has (a walk that arrived is the same walk, sample for sample; a truncated one the same `truncated`):
+ *   · the spinner rows (`spinRow`, the fight cursor — output only) are taken at the walk's end, in order, and never for
+ *     a truncated walk;
+ *   · with no strike policy (the OPP fallback's redo, and any press kill with `OPPORTUNISTIC_STRIKE` off) the
+ *     forecasts — arrows, chasers, spits, grenades, corridor bodies — are output only too (`leanDeferrable`), so the
+ *     transit steps the player alone and they are stepped at the end over the same pre-move states
+ *     (`leanForecastReplay`), and never for a truncated walk.
+ * With a strike policy the chasers' bodies are the policy's input, so those forecasts step as before.
+ * OFF: `walkTo` asks exactly as before, byte-identical.
+ *
+ * ⛓ THE SWITCH: `SEEDLING_STRIKE_PREVIEW_LEAN=1` in a node process (or the page's
+ * `?seedlingSolverEnv=SEEDLING_STRIKE_PREVIEW_LEAN=1`), `withStrikePreviewLean(enabled, fn)` for a row or a witness.
+ * It runs where `deriveStrike` runs (the solve worker, and node); no main-thread mapper reads it.
+ */
+export const STRIKE_PREVIEW_LEAN = {
+    enabled: globalThis.process?.env?.SEEDLING_STRIKE_PREVIEW_LEAN === '1',
+};
+export const STRIKE_PREVIEW_LEAN_DEFAULT = false;
+
+/** Run `fn` with `STRIKE_PREVIEW_LEAN` set to `enabled`, restoring the previous value. */
+export function withStrikePreviewLean(enabled, fn) {
+    return withSwitch(STRIKE_PREVIEW_LEAN, enabled, fn);
+}
+
+/** The switch's instrument: the forecast ticks and spinner rows a truncated walk never took, and the walks replayed. */
+export const STRIKE_PREVIEW_LEAN_COUNTS = { forecastTicksSkipped: 0, forecastReplays: 0, spinRowsSkipped: 0 };
+export function resetStrikePreviewLeanCounts() {
+    for (const k of Object.keys(STRIKE_PREVIEW_LEAN_COUNTS)) STRIKE_PREVIEW_LEAN_COUNTS[k] = 0;
+}
+
+/**
+ * ⛓ STRIKECACHE — the walks `deriveStrike` previews, as a sink (`{run, bodyId, cell, armed, strikeFor, out}` per walk
+ * it computed, the run not yet advanced past it): an INSTRUMENT for the report's census and the exactness rows, `null`
+ * (nothing asked) unless a tool sets it.
+ */
+export const STRIKE_WALK_TRACE = { sink: null };
+
+/**
+ * ⛓ STRIKECACHE — MAY THIS WALK STEP ITS FORECASTS AT ITS END? Only where nothing in the walk reads them and nothing
+ * they could do would end the walk another way:
+ *   · no strike policy: its keys read the chasers' bodies, its swing hits them and the corridor bodies; without it the
+ *     transit's keys are `chooseHeld`'s and the step the stepper's, functions of the player's state alone, and the
+ *     forecasts' outputs ride the samples and nothing else;
+ *   · no steer, no early stop (`stopWhen` reads a sample as it is taken), no stall inside the walk and no standing tail
+ *     (both step the same forecasts mid-walk);
+ *   · and no throw skipped: the forecasts throw at construction (before the walk, unchanged) or on a malformed body
+ *     (which the live run steps every tick), except the chaser forecast's `onScreenAt`, which throws only inside a
+ *     camera BAND — and a band opens only from a shake. So with chasers the camera must be exact now: `run.shake` 0 and
+ *     no `run.cameraNow.band`.
+ */
+function leanDeferrable(run, { strike, steer, stopWhen, stall, standFor, chasers }) {
+    if (strike || steer !== null || stopWhen !== null || stall !== null || standFor > 0) return false;
+    if (chasers && (run.shake !== 0 || (run.cameraNow?.band ?? null) !== null)) return false;
+    return true;
+}
+
+/**
+ * ⛓ STRIKECACHE — THE DEFERRED FORECASTS, STEPPED: one tick per `[sample, state]` in the transit's order, each
+ * forecast with the pre-move state the transit would have handed it (`slashing` false: no strike policy, no slash
+ * state), and each sample rebuilt in the transit's key order (`arrows`, `chasers`, then `spits`, `grenades`,
+ * `corridorBodies`, then `held`) so it is the transit's sample byte for byte.
+ */
+function leanForecastReplay(deferred, { forecast, chasers, spitForecast, grenadeForecast, corridorForecast }) {
+    STRIKE_PREVIEW_LEAN_COUNTS.forecastReplays += 1;
+    for (const [sample, st] of deferred) {
+        sample.arrows = forecast ? forecast.step(st) : null;
+        sample.chasers = chasers ? chasers.step(st, { slashing: false }) : null;
+        const { held } = sample;
+        delete sample.held;
+        if (spitForecast) sample.spits = spitForecast.step(st, { slashing: false });
+        if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
+        if (corridorForecast) sample.corridorBodies = corridorForecast.step(st, { slashing: false });
+        sample.held = held;
+    }
+}
+
 /** ⛓ hammer-phase P1: exported for `pressKillCost.test.js` (one derivation, ON against OFF). */
 export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = false, strikeFor = null } = {}) {
     const index = (run.entities('spinnerBodies') ?? []).findIndex((b) => b.id === bodyId);
@@ -15139,9 +15256,13 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         try {
             // ⛓ hammer-phase OPP: with `strikeFor` (the press kill under `OPPORTUNISTIC_STRIKE`) the walk strikes as the drive does
             const armed = strikeFor !== null ? strikeFor() : null;
+            // ⛓ hammer-phase STRIKECACHE (`STRIKE_PREVIEW_LEAN`, OFF ⇒ the two calls as before): a truncated walk is read
+            // as `truncated` only, so the preview defers what only an arrived walk's reader reads
+            const lean = STRIKE_PREVIEW_LEAN.enabled ? { lean: true } : null;
             walk = armed !== null
-                ? previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE, armed)
-                : previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE);
+                ? previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE, lean ? { ...armed, ...lean } : armed)
+                : (lean ? previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE, lean)
+                    : previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE));
             // ⛓ the certifying walk's own strikes (aim and press rows), carried on the strike it certifies
             if (armed?.strike) walk.previewStrikes = oppStrikeRows(armed.strike);
         } catch (e) {
@@ -15175,6 +15296,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         }
         const out = { walk, eta: walk.samples.length, unsafe };
         walks.set(cell, out);
+        STRIKE_WALK_TRACE.sink?.({ run, bodyId, cell, armed: strikeFor !== null, strikeFor, out });
         return out;
     };
     /**
