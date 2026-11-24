@@ -39,6 +39,7 @@ export const PLANNED_PANELS = Object.freeze({
 
 /** Panels a tutorial is planned for, not written yet: componentType → the planned tutorial. */
 export const NOT_COVERED_YET = Object.freeze({
+    mysteryPanel: 'A mystery case in a multiworld: open Mystery Game, connect, solve a question, receive a paper.',
 });
 
 /**

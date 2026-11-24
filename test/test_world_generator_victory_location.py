@@ -97,8 +97,8 @@ def test_the_completion_lambda_reads_both_goal_forms(cc, body):
     assert _generate_completion_lambda(cc) == body
 
 
-def test_the_eight_event_goal_recipes_set_the_field():
-    assert len(VICTORY) == 8, VICTORY
+def test_the_nine_event_goal_recipes_set_the_field():
+    assert len(VICTORY) == 9, VICTORY
 
 
 def _preset_rules(package):
