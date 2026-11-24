@@ -1362,6 +1362,8 @@ export function createLevelRun({
             if (opts.cleared?.includes(TAGS_PER_LEVEL - 1)) {
                 try { opts.nextLevelRecord = levelSource(n + 1); } catch { opts.nextLevelRecord = null; }
             }
+            // ⛓ apchest: the build reaches the world (an `<apitem kind="chest">` is a Solid chest on `apchest`).
+            if (capabilities !== null) opts.capabilities = capabilities;
             worlds.set(n, buildLevelWorld(recordFor(n), opts));
         }
         return worlds.get(n);
@@ -4225,8 +4227,13 @@ export function createLevelRun({
      */
     const chestStates = new Map();
     const chestsOf = (n) => worldFor(n).chests ?? [];
+    /** ⛓ apchest: a `Pickups/APChest` row's state carries `apChest` (read by `stepChests` and `stepChestsNow`). */
+    const markApChests = (st, n) => {
+        for (const c of chestsOf(n)) if (c.apChest) st.get(c.id).apChest = true;
+        return st;
+    };
     const chestStateFor = (n) => {
-        if (!chestStates.has(n)) return keptUnlessReading(chestStates, n, createChestState(chestsOf(n)));
+        if (!chestStates.has(n)) return keptUnlessReading(chestStates, n, markApChests(createChestState(chestsOf(n)), n));
         return chestStates.get(n);
     };
     /**
@@ -4255,7 +4262,7 @@ export function createLevelRun({
         const liveVisit = sealGone && liveSealVisit !== null && liveSealVisit.level === level
             && liveSealVisit.entries === worldEntries;
         for (const c of st.values()) {
-            if (!c.solid || (sealGone && (!liveVisit || (c.sealRemovedAt !== undefined && c.sealRemovedAt < ticksCompleted)))) {
+            if (!c.solid || (sealGone && !c.apChest && (!liveVisit || (c.sealRemovedAt !== undefined && c.sealRemovedAt < ticksCompleted)))) {
                 open.add(c.id);
             }
         }
@@ -8465,6 +8472,20 @@ export function createLevelRun({
                 continue;
             }
             if (ev.kind !== 'chestopen') continue;
+            // ⛓⛓ apchest: a `Pickups/APChest` opens as the chest does and then GRANTS NOTHING (`APChest.as:82-94`): no
+            // SealPiece, no seal slot (so not a `chestOpens` row, whose length is `sealSlotsEarned`). Its
+            // `setPersistence(tag, false)` on the open frame is the AP check report, banked as `takeApItem` banks an
+            // APItem's (`apItemFlags`, by `apitem@x,y`, + `pendingEarnedClears` for the re-entry's `check()`).
+            if (ev.apChest) {
+                const row = chestsOf(level).find((c) => c.id === ev.id);
+                const key = `${level}:${ev.persistTag}`;
+                if (ev.persistTag >= 0 && !apItemFlags.has(key)) {
+                    apItemFlags.set(key, { id: row.apItemId, level, tag: ev.persistTag, t: ticksCompleted + 1 });
+                    if (!pendingEarnedClears.has(level)) pendingEarnedClears.set(level, new Set());
+                    pendingEarnedClears.get(level).add(ev.persistTag);
+                }
+                continue;
+            }
             chestOpens.push({ t: ticksCompleted + 1, level, id: ev.id, persistTag: ev.persistTag });
             if (ev.persistTag >= 0) {
                 if (!pendingEarnedClears.has(level)) pendingEarnedClears.set(level, new Set());

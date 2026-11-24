@@ -100,6 +100,38 @@ export const CHEST = Object.freeze({
 });
 
 /**
+ * ⛓⛓ seedling-fidelity-apchest — **THE AP CHEST (`Pickups/APChest`), ON A BUILD DECLARING `apchest`.** Seedling
+ * `p4h-as3` 169247c4c4 `src/Pickups/APChest.as` builds an `<apitem kind="chest">` (`Game.as:2335`) as THIS file's
+ * chest, with three lines fewer. Shared, verbatim: `type = "Solid"` + `setHitbox(16, 16, 8, 8)` at the half-tile
+ * (`APChest.as:55-58` = `Chest.as:30-33`), `check()` (`:63-70` = `Chest.as:41-48`), the gate-and-line
+ * (`:74-78` = `Chest.as:65-69`), `open()`'s `frame == 0` latch, `frame = 1`, `openTimer = 60`, `type = ""` and
+ * `setPersistence(tag, false)` (`:82-94`), and `timerStep()` (`:96-107` = `Chest.as:96-107`). So `chestProbeLine`,
+ * `chestRect`, `chestStanceBand` and `stepChests` are its rule too; a chest row carries `apChest: true` and that
+ * flag (set on the state by `levelRun.chestStateFor`) is read by `stepChests` and `levelRun` only.
+ *
+ * DIFFERENT, and nothing else:
+ *   · NO `checkBySeal()` (neither the ctor's `Chest.as:38` nor `update`'s `:64`) — `stepChests` skips that arm;
+ *   · NO `SealPiece` and no seal-index loop in `open()` (`Chest.as:81`, `:87-91`) — `levelRun` spawns nothing;
+ *   · NO RNG draw at all: no `coins` field initialiser (`Chest.as:22`'s `Rng.cos()`), and `Music.playSound("Chest",
+ *     0)` names its index (`APChest.as:86`), so `Music.as:726-735` takes the no-draw arm (vanilla's
+ *     `playSound("Chest")` draws one `Rng.cos()` there). Counted here, never stepped (the model steps no cosmetic RNG);
+ *   · the open's `setPersistence(tag, false)` is the AP CHECK REPORT (`APChest.as:90-92`; `Game.pendingCheck`,
+ *     `Game.as:604-628`, written by `setPersistence`): the same clear `APItem.removed()` writes, on the open frame.
+ */
+export const AP_CHEST = Object.freeze({
+    as3: 'Pickups/APChest',
+    /** `openTimerMax` — the same const as `Chest.as:20` (`APChest.as:46`). */
+    openTimerMax: CHEST.openTimerMax,
+    /** No `Rng`/`Math.random` call at construction (no `coins` initialiser) or on open (`playSound("Chest", 0)`). */
+    drawsAtConstruction: false,
+    drawsOnOpen: false,
+    sealPiece: false,
+    checkBySeal: false,
+    src: 'p4h-as3 169247c4c4 Pickups/APChest.as:53-61 (ctor) + :63-70 (check) + :72-80 (update) '
+        + '+ :82-94 (open) + :96-107 (timerStep); Game.as:2333-2337 (built from <apitem kind="chest">)',
+});
+
+/**
  * ⛓ THE PROBE LINE, from the PLACEMENT coordinates the extract carries.
  *
  * `Chest.update`:
@@ -268,7 +300,8 @@ export function stepChests(state, ctx) {
     for (const c of state.values()) {
         if (c.gone) continue;
         // ── `checkBySeal()` ───────────────────────────────────────────
-        if (ctx.hasAllSealParts) {
+        // ⛓ apchest: `APChest.update` has no `checkBySeal()` (`APChest.as:72-80`).
+        if (ctx.hasAllSealParts && !c.apChest) {
             c.gone = true;
             events.push({
                 kind: 'chestgone', id: c.id, persistTag: c.persistTag, why: 'checkBySeal',
@@ -300,6 +333,7 @@ export function stepChests(state, ctx) {
                     events.push({
                         kind: 'chestopen', id: c.id, persistTag: c.persistTag,
                         x: c.x, y: c.y,
+                        ...(c.apChest ? { apChest: true } : {}),
                     });
                 }
             }

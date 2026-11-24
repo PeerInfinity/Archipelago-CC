@@ -83,6 +83,8 @@ import { outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
 import { reportSlotsReadBy } from './apReportBosses.js';
 import { lightsWorldRows } from './lightBossWorld.js';
+import { declaresApChest } from './apChestRoster.js';
+import { resolveModelCapabilities } from './modelBuild.js';
 
 /**
  * The player hitbox origin, for recovering the entity position from a box.
@@ -4223,8 +4225,20 @@ export function withRuntimeTeleporters(world, rows) {
     return o;
 }
 
+/**
+ * ⛓⛓ seedling-fidelity-apchest — the element a build declaring `apchest` builds as `Pickups/APChest`
+ * (`Game.as:2333-2337`: `String(o.@kind) == "chest"`), read as the `chest` row it shares its rule with (`chest.js`
+ * `AP_CHEST`). Any other element, or any other build, is returned as it came (the same object).
+ */
+export function apChestAsChest(e, apChests) {
+    if (!apChests || e?.type !== 'apitem' || String(e.attrs?.kind ?? '') !== 'chest') return e;
+    return { type: 'chest', x: e.x, y: e.y, attrs: { tag: e.attrs.tag }, apChest: { id: `apitem@${e.x},${e.y}` } };
+}
+
 export function buildLevelWorld(levelRecord, {
     roles = PRE_R5_ROLES, cleared = null, inventory = null, nextLevelRecord = null,
+    /** ⛓ apchest: the modelled build's manifest `capabilities` (`modelBuild.js`); null = the default build's. */
+    capabilities = null,
 } = {}) {
     if (!levelRecord || typeof levelRecord !== 'object') {
         fail('buildLevelWorld needs a level record from seedling-map.json');
@@ -4758,7 +4772,9 @@ export function buildLevelWorld(levelRecord, {
 
     // --- objects -------------------------------------------------------
     let fallthrough = null;
-    for (const e of levelRecord.entities ?? []) {
+    const apChests = declaresApChest(resolveModelCapabilities(capabilities));
+    for (const placed of levelRecord.entities ?? []) {
+        const e = apChestAsChest(placed, apChests);
         const cls = ENTITY_CLASSES[e.type];
         if (!cls) {
             fail(`${where} contains entity "${e.type}" at (${e.x},${e.y}), which is not `
@@ -5658,6 +5674,8 @@ export function buildLevelWorld(levelRecord, {
                     // out-of-band family if the attribute is absent, and
                     // L38's carries tag 1.
                     persistTag: tagOf(e.type, e.attrs),
+                    // ⛓ apchest: a `Pickups/APChest` — its open is the AP location's take (`apItemId`).
+                    ...(e.apChest ? { apChest: true, apItemId: e.apChest.id } : {}),
                 });
             }
             if (cls.as3 === 'Pulser') {
