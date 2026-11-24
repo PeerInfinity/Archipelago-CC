@@ -1160,6 +1160,29 @@ try {
             '⛔ …and an unknown region is REFUSED BY NAME on the status line, with no level drawn', unknown.fatal);
         if (shotsDir) await page.screenshot({ path: join(shotsDir, '3-link-refused-unknown-region.png'), fullPage: true });
 
+        /**
+         * ⛓⛓ LAB BIOME — a PIPELINE room's sidecar records its REGION biome (`{id: 'classic'}`), which the link used to
+         * read as the lab's PALETTE and refuse (*"biome {"id":"classic"} is not one of [maze-v1]"*). Every maze region of
+         * `meta_trial` that carries a room and a biome is opened by its link — the regions are read off the committed
+         * rules here, not named — and each must open at the default palette with its own room's size.
+         */
+        const BIOME_PRESET = 'meta_trial';
+        const biomeRules = JSON.parse(readFileSync(join(REPO, `frontend/presets/${BIOME_PRESET}/AP_1/AP_1_rules.json`), 'utf8'));
+        const biomed = Object.entries(biomeRules.preset_sidecars['1'])
+            .filter(([, sc]) => sc.substrate === 'maze' && sc.playable_payload !== undefined && sc.biome !== undefined);
+        check(biomed.length >= 2, `⛓ LAB BIOME: ${BIOME_PRESET} has ${biomed.length} maze room(s) whose sidecar records a region biome`);
+        for (const [region, sc] of biomed) {
+            await page.goto(`${PAGE}?source=edit&preset=${BIOME_PRESET}&region=${encodeURIComponent(region)}`,
+                { waitUntil: 'domcontentloaded' });
+            await settled(() => window.__mazeLab?.fatal || window.__mazeLab?.presetLink, `the link to ${BIOME_PRESET} ${region}`);
+            const got = await read();
+            check(!got.fatal && got.presetLink?.region === region && got.biome === 'maze-v1'
+                && got.level?.width === sc.playable_payload.width && got.level?.height === sc.playable_payload.height,
+                `⛓⛓ LAB BIOME: \`?preset=${BIOME_PRESET}&region=${region}\` (sidecar biome ${json(sc.biome)}) OPENS at the `
+                + 'maze-v1 palette with its own room', got.fatal ?? `${got.biome} ${got.level?.width}x${got.level?.height}`);
+            if (shotsDir) await page.screenshot({ path: join(shotsDir, `3b-link-biome-${BIOME_PRESET}-${region}.png`), fullPage: true });
+        }
+
         await load('seed=1&count=1&run=1&source=edit', () => window.__mazeLab?.step === 1, 'a generated level');
         await page.fill('#labPresetName', PRESET);
         await page.fill('#labPresetRegion', roomKey);
