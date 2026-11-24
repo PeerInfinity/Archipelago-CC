@@ -220,6 +220,10 @@
       "path": "./modules/jtaArchipelago/index.js",
       "enabled": false
     },
+    "mysteryArchipelago": {
+      "path": "./modules/mysteryArchipelago/index.js",
+      "enabled": false
+    },
     "vibeCodingSim": {
       "path": "./modules/vibeCodingSim/index.js",
       "enabled": true
@@ -285,6 +289,7 @@
     "jtaQueueEngine",
     "jtaActionQueue",
     "jtaArchipelago",
+    "mysteryArchipelago",
     "vibeCodingSim",
     "apcalc"
   ]
