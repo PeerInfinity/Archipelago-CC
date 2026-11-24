@@ -18410,7 +18410,7 @@ export function resetKeylockTurretArrivalCounts() {
  * (worker budget 640): the four door-open cases solve hitless at rank 0 in the edge family (29–32 forks, the dashless
  * pass); the door-shut case keeps its 8-fork plan, key for key.
  *
- * The arrival arm (`KEYLOCK_TURRET_ARRIVAL`) keeps its edge-only tries (`edgeBait: true`): this switch does not move it.
+ * The arrival arm (`KEYLOCK_TURRET_ARRIVAL`) keeps its edge-only tries (its own `edgeBait`): this switch does not move it.
  * OFF by default. `SEEDLING_KEYLOCK_TURRET_EDGE_BAIT=1` turns it on in a node process (the page's WORKER reads it
  * through the solver env channel: the decision is on the worker thread, inside the keylock executor), and
  * `withKeylockTurretEdgeBait(enabled, fn)` is for a test or a witness. OFF, nothing below is asked: byte-identical.
