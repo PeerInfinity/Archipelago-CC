@@ -1,0 +1,4 @@
+COUNTS 29:11 env GSW=1 PM=1 enabled GSW=true PM=true
+  result kind=refusal ok=false work=74 answer=c7b1b22b2c60 ms=2514 | live answer=c7b1b22b2c60 work=74 kind=refusal solverEnv=SEEDLING_GOAL_START_WAIT=1;SEEDLING_PREVIEW_METER=1
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":2484,"asked":0,"tripped":0}

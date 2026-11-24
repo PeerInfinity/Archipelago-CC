@@ -1,0 +1,4 @@
+COUNTS 26:8 env GSW=1 PM=1 enabled GSW=true PM=true
+  result kind=refusal ok=false work=643 answer=785fcf0cd37f ms=16987 | live answer=b7bc62b65c94 work=642 kind=refusal solverEnv=undefined
+  GOAL_START_WAIT_COUNTS.tries=[{"t":0,"wait":50,"ok":false,"why":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site after 1984 tick(s) of the segment's drive — the segment's own work is bounded there, so the sol"}]
+  PREVIEW_METER_COUNTS={"states":40075,"asked":39,"tripped":0}

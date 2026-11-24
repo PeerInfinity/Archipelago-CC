@@ -1,0 +1,4 @@
+COUNTS 19:1 env GSW=- PM=- enabled GSW=false PM=false
+  result kind=refusal ok=false work=112 answer=9d91691740df ms=161428 | live answer=9d91691740df work=112 kind=refusal solverEnv=null
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":0,"asked":0,"tripped":0}
