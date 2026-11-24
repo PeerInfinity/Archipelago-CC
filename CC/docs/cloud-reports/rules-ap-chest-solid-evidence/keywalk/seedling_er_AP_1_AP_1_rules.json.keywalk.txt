@@ -1,0 +1,1812 @@
+CHG entrance_randomization/1/placements/#12/exit : "level_30__r8c13 -> level_16__r3c7" -> "level_31__r5c24 -> level_102__r5c3"
+CHG entrance_randomization/1/placements/#12/target : "level_16__r3c7 -> level_30__r8c13" -> "level_102__r5c3 -> level_31__r5c24"
+CHG entrance_randomization/1/placements/#13/exit : "level_16__r3c7 -> level_30__r8c13" -> "level_102__r5c3 -> level_31__r5c24"
+CHG entrance_randomization/1/placements/#13/target : "level_30__r8c13 -> level_16__r3c7" -> "level_31__r5c24 -> level_102__r5c3"
+CHG entrance_randomization/1/placements/#14/exit : "level_11 -> level_99__r2c4" -> "level_30__r8c13 -> level_53__r2c2"
+CHG entrance_randomization/1/placements/#14/target : "level_99__r2c4 -> level_11" -> "level_53__r2c2 -> level_30__r8c13"
+CHG entrance_randomization/1/placements/#15/exit : "level_99__r2c4 -> level_11" -> "level_53__r2c2 -> level_30__r8c13"
+CHG entrance_randomization/1/placements/#15/target : "level_11 -> level_99__r2c4" -> "level_30__r8c13 -> level_53__r2c2"
+CHG entrance_randomization/1/placements/#16/exit : "level_10 -> level_12__r13c6" -> "level_10 -> level_11__r4c2"
+CHG entrance_randomization/1/placements/#16/target : "level_12__r13c6 -> level_10" -> "level_11__r4c2 -> level_10"
+CHG entrance_randomization/1/placements/#17/exit : "level_12__r13c6 -> level_10" -> "level_11__r4c2 -> level_10"
+CHG entrance_randomization/1/placements/#17/target : "level_10 -> level_12__r13c6" -> "level_10 -> level_11__r4c2"
+CHG entrance_randomization/1/placements/#20/exit : "level_31__r5c24 -> level_18__r1c1" -> "level_101__r4c2 -> level_7"
+CHG entrance_randomization/1/placements/#20/target : "level_18__r1c1 -> level_31__r5c24" -> "level_7 -> level_101__r4c2"
+CHG entrance_randomization/1/placements/#21/exit : "level_18__r1c1 -> level_31__r5c24" -> "level_7 -> level_101__r4c2"
+CHG entrance_randomization/1/placements/#21/target : "level_31__r5c24 -> level_18__r1c1" -> "level_101__r4c2 -> level_7"
+CHG entrance_randomization/1/placements/#22/exit : "level_19__r1c1 -> level_100__r2c3" -> "level_7 -> level_14"
+CHG entrance_randomization/1/placements/#22/target : "level_100__r2c3 -> level_19__r1c1" -> "level_14 -> level_7"
+CHG entrance_randomization/1/placements/#23/exit : "level_100__r2c3 -> level_19__r1c1" -> "level_14 -> level_7"
+CHG entrance_randomization/1/placements/#23/target : "level_19__r1c1 -> level_100__r2c3" -> "level_7 -> level_14"
+CHG entrance_randomization/1/placements/#24/exit : "level_101__r4c2 -> level_32" -> "level_14 -> level_15__r1c5"
+CHG entrance_randomization/1/placements/#24/target : "level_32 -> level_101__r4c2" -> "level_15__r1c5 -> level_14"
+CHG entrance_randomization/1/placements/#25/exit : "level_32 -> level_101__r4c2" -> "level_15__r1c5 -> level_14"
+CHG entrance_randomization/1/placements/#25/target : "level_101__r4c2 -> level_32" -> "level_14 -> level_15__r1c5"
+CHG entrance_randomization/1/placements/#26/exit : "level_53__r2c2 -> level_98" -> "level_15__r1c9 -> level_6"
+CHG entrance_randomization/1/placements/#26/target : "level_98 -> level_53__r2c2" -> "level_6 -> level_15__r1c9"
+CHG entrance_randomization/1/placements/#27/exit : "level_98 -> level_53__r2c2" -> "level_6 -> level_15__r1c9"
+CHG entrance_randomization/1/placements/#27/target : "level_53__r2c2 -> level_98" -> "level_15__r1c9 -> level_6"
+CHG entrance_randomization/1/placements/#28/exit : "level_40__r26c13 -> level_14" -> "level_5__r1c5 -> level_18__r1c1"
+CHG entrance_randomization/1/placements/#28/target : "level_14 -> level_40__r26c13" -> "level_18__r1c1 -> level_5__r1c5"
+CHG entrance_randomization/1/placements/#29/exit : "level_14 -> level_40__r26c13" -> "level_18__r1c1 -> level_5__r1c5"
+CHG entrance_randomization/1/placements/#29/target : "level_40__r26c13 -> level_14" -> "level_5__r1c5 -> level_18__r1c1"
+CHG entrance_randomization/1/placements/#30/exit : "level_51__r3c10 -> level_20__r1c4" -> "level_19__r1c1 -> level_40__r26c13"
+CHG entrance_randomization/1/placements/#30/target : "level_20__r1c4 -> level_51__r3c10" -> "level_40__r26c13 -> level_19__r1c1"
+CHG entrance_randomization/1/placements/#31/exit : "level_20__r1c4 -> level_51__r3c10" -> "level_40__r26c13 -> level_19__r1c1"
+CHG entrance_randomization/1/placements/#31/target : "level_51__r3c10 -> level_20__r1c4" -> "level_19__r1c1 -> level_40__r26c13"
+CHG entrance_randomization/1/placements/#32/exit : "level_43__r13c7 -> level_99__r7c5" -> "level_43__r13c7 -> level_32"
+CHG entrance_randomization/1/placements/#32/target : "level_99__r7c5 -> level_43__r13c7" -> "level_32 -> level_43__r13c7"
+CHG entrance_randomization/1/placements/#33/exit : "level_99__r7c5 -> level_43__r13c7" -> "level_32 -> level_43__r13c7"
+CHG entrance_randomization/1/placements/#33/target : "level_43__r13c7 -> level_99__r7c5" -> "level_43__r13c7 -> level_32"
+CHG entrance_randomization/1/placements/#34/exit : "level_96 -> level_7" -> "level_51__r3c10 -> level_99__r7c5"
+CHG entrance_randomization/1/placements/#34/target : "level_7 -> level_96" -> "level_99__r7c5 -> level_51__r3c10"
+CHG entrance_randomization/1/placements/#35/exit : "level_7 -> level_96" -> "level_99__r7c5 -> level_51__r3c10"
+CHG entrance_randomization/1/placements/#35/target : "level_96 -> level_7" -> "level_51__r3c10 -> level_99__r7c5"
+CHG entrance_randomization/1/placements/#36/exit : "level_7 -> level_5__r1c1" -> "level_101__r4c9 -> level_20__r1c4"
+CHG entrance_randomization/1/placements/#36/target : "level_5__r1c1 -> level_7" -> "level_20__r1c4 -> level_101__r4c9"
+CHG entrance_randomization/1/placements/#37/exit : "level_5__r1c1 -> level_7" -> "level_20__r1c4 -> level_101__r4c9"
+CHG entrance_randomization/1/placements/#37/target : "level_7 -> level_5__r1c1" -> "level_101__r4c9 -> level_20__r1c4"
+CHG entrance_randomization/1/placements/#38/exit : "level_6 -> level_24" -> "level_98 -> level_16__r3c7"
+CHG entrance_randomization/1/placements/#38/target : "level_24 -> level_6" -> "level_16__r3c7 -> level_98"
+CHG entrance_randomization/1/placements/#39/exit : "level_24 -> level_6" -> "level_16__r3c7 -> level_98"
+CHG entrance_randomization/1/placements/#39/target : "level_6 -> level_24" -> "level_98 -> level_16__r3c7"
+CHG entrance_randomization/1/placements/#42/exit : "level_14 -> level_15__r1c5" -> "level_5__r1c1 -> level_100__r2c3"
+CHG entrance_randomization/1/placements/#42/target : "level_15__r1c5 -> level_14" -> "level_100__r2c3 -> level_5__r1c1"
+CHG entrance_randomization/1/placements/#43/exit : "level_15__r1c5 -> level_14" -> "level_100__r2c3 -> level_5__r1c1"
+CHG entrance_randomization/1/placements/#43/target : "level_14 -> level_15__r1c5" -> "level_5__r1c1 -> level_100__r2c3"
+CHG entrance_randomization/1/placements/#44/exit : "level_15__r1c9 -> level_101__r4c9" -> "level_16__r4c21 -> level_24"
+CHG entrance_randomization/1/placements/#44/target : "level_101__r4c9 -> level_15__r1c9" -> "level_24 -> level_16__r4c21"
+CHG entrance_randomization/1/placements/#45/exit : "level_101__r4c9 -> level_15__r1c9" -> "level_24 -> level_16__r4c21"
+CHG entrance_randomization/1/placements/#45/target : "level_15__r1c9 -> level_101__r4c9" -> "level_16__r4c21 -> level_24"
+CHG entrance_randomization/1/placements/#46/exit : "level_16__r4c21 -> level_102__r5c3" -> "level_96 -> level_12__r13c6"
+CHG entrance_randomization/1/placements/#46/target : "level_102__r5c3 -> level_16__r4c21" -> "level_12__r13c6 -> level_96"
+CHG entrance_randomization/1/placements/#47/exit : "level_102__r5c3 -> level_16__r4c21" -> "level_12__r13c6 -> level_96"
+CHG entrance_randomization/1/placements/#47/target : "level_16__r4c21 -> level_102__r5c3" -> "level_96 -> level_12__r13c6"
+CHG entrance_randomization/1/placements/#48/exit : "level_5__r1c5 -> level_102__r5c9" -> "level_99__r2c4 -> level_102__r5c9"
+CHG entrance_randomization/1/placements/#48/target : "level_102__r5c9 -> level_5__r1c5" -> "level_102__r5c9 -> level_99__r2c4"
+CHG entrance_randomization/1/placements/#49/exit : "level_102__r5c9 -> level_5__r1c5" -> "level_102__r5c9 -> level_99__r2c4"
+CHG entrance_randomization/1/placements/#49/target : "level_5__r1c5 -> level_102__r5c9" -> "level_99__r2c4 -> level_102__r5c9"
+CHG entrance_randomization/1/source/atlas_id : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_0__r11c19/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_0__r14c0/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_0__r1c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_0__r2c13/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_0__r4c16/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_0__r6c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_0__r7c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_1/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_10/playable_payload/exits/#1/exitName : "level_10 -> level_12__r13c6" -> "level_10 -> level_11__r4c2"
+CHG preset_sidecars/1/level_10/playable_payload/exits/#1/targetExitId : "in_L5_16_16" -> "in_L10_48_16"
+CHG preset_sidecars/1/level_10/playable_payload/exits/#1/targetRegion : "level_12__r13c6" -> "level_11__r4c2"
+CHG preset_sidecars/1/level_10/playable_payload/exits/#1/target_level : 12 -> 11
+CHG preset_sidecars/1/level_10/playable_payload/exits/#1/target_spawn/x : 96 -> 32
+CHG preset_sidecars/1/level_10/playable_payload/exits/#1/target_spawn/y : 224 -> 64
+CHG preset_sidecars/1/level_10/playable_payload/exits/#3/targetExitId : "out_stairsdown_96_240" -> "out_stairsdown_32_80"
+CHG preset_sidecars/1/level_10/playable_payload/exits/#3/target_level : 12 -> 11
+CHG preset_sidecars/1/level_10/playable_payload/exits/#3/target_spawn/x : 96 -> 32
+CHG preset_sidecars/1/level_10/playable_payload/exits/#3/target_spawn/y : 240 -> 80
+CHG preset_sidecars/1/level_100__r2c3/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_100__r2c3/playable_payload/exits/#0/targetExitId : "out_stairsup_16_96" -> "out_stairsup_16_16"
+CHG preset_sidecars/1/level_100__r2c3/playable_payload/exits/#0/target_level : 19 -> 5
+CHG preset_sidecars/1/level_100__r2c3/playable_payload/exits/#0/target_spawn/y : 96 -> 16
+CHG preset_sidecars/1/level_100__r2c3/playable_payload/exits/#1/exitName : "level_100__r2c3 -> level_19__r1c1" -> "level_100__r2c3 -> level_5__r1c1"
+CHG preset_sidecars/1/level_100__r2c3/playable_payload/exits/#1/targetExitId : "in_L20_192_48" -> "in_L12_96_240"
+CHG preset_sidecars/1/level_100__r2c3/playable_payload/exits/#1/targetRegion : "level_19__r1c1" -> "level_5__r1c1"
+CHG preset_sidecars/1/level_100__r2c3/playable_payload/exits/#1/target_level : 19 -> 5
+CHG preset_sidecars/1/level_100__r2c3/playable_payload/exits/#1/target_spawn/y : 80 -> 32
+CHG preset_sidecars/1/level_100__r4c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_101__r0c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_101__r4c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_101__r4c2/playable_payload/exits/#1/exitName : "level_101__r4c2 -> level_32" -> "level_101__r4c2 -> level_7"
+CHG preset_sidecars/1/level_101__r4c2/playable_payload/exits/#1/targetExitId : "in_L30_224_160" -> "in_L6_224_32"
+CHG preset_sidecars/1/level_101__r4c2/playable_payload/exits/#1/targetRegion : "level_32" -> "level_7"
+CHG preset_sidecars/1/level_101__r4c2/playable_payload/exits/#1/target_level : 32 -> 7
+CHG preset_sidecars/1/level_101__r4c2/playable_payload/exits/#1/target_spawn/x : 64 -> 32
+CHG preset_sidecars/1/level_101__r4c2/playable_payload/exits/#1/target_spawn/y : 112 -> 32
+CHG preset_sidecars/1/level_101__r4c2/playable_payload/exits/#2/targetExitId : "out_stairsdown_72_136" -> "out_stairsdown_16_32"
+CHG preset_sidecars/1/level_101__r4c2/playable_payload/exits/#2/target_level : 32 -> 7
+CHG preset_sidecars/1/level_101__r4c2/playable_payload/exits/#2/target_spawn/x : 64 -> 16
+CHG preset_sidecars/1/level_101__r4c2/playable_payload/exits/#2/target_spawn/y : 128 -> 32
+CHG preset_sidecars/1/level_101__r4c9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_101__r4c9/playable_payload/exits/#0/exitName : "level_101__r4c9 -> level_15__r1c9" -> "level_101__r4c9 -> level_20__r1c4"
+CHG preset_sidecars/1/level_101__r4c9/playable_payload/exits/#0/targetExitId : "in_L16_16_64" -> "in_L19_16_96"
+CHG preset_sidecars/1/level_101__r4c9/playable_payload/exits/#0/targetRegion : "level_15__r1c9" -> "level_20__r1c4"
+CHG preset_sidecars/1/level_101__r4c9/playable_payload/exits/#0/target_level : 15 -> 20
+CHG preset_sidecars/1/level_101__r4c9/playable_payload/exits/#0/target_spawn/x : 144 -> 192
+CHG preset_sidecars/1/level_101__r4c9/playable_payload/exits/#0/target_spawn/y : 32 -> 64
+CHG preset_sidecars/1/level_101__r4c9/playable_payload/exits/#1/targetExitId : "out_stairsdown_144_16" -> "out_stairsdown_192_48"
+CHG preset_sidecars/1/level_101__r4c9/playable_payload/exits/#1/target_level : 15 -> 20
+CHG preset_sidecars/1/level_101__r4c9/playable_payload/exits/#1/target_spawn/x : 144 -> 192
+CHG preset_sidecars/1/level_101__r4c9/playable_payload/exits/#1/target_spawn/y : 16 -> 48
+CHG preset_sidecars/1/level_102__r5c3/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_102__r5c3/playable_payload/exits/#0/targetExitId : "out_stairsup_352_80" -> "out_stairsup_384_96"
+CHG preset_sidecars/1/level_102__r5c3/playable_payload/exits/#0/target_level : 16 -> 31
+CHG preset_sidecars/1/level_102__r5c3/playable_payload/exits/#0/target_spawn/x : 352 -> 384
+CHG preset_sidecars/1/level_102__r5c3/playable_payload/exits/#0/target_spawn/y : 80 -> 96
+CHG preset_sidecars/1/level_102__r5c3/playable_payload/exits/#2/exitName : "level_102__r5c3 -> level_16__r4c21" -> "level_102__r5c3 -> level_31__r5c24"
+CHG preset_sidecars/1/level_102__r5c3/playable_payload/exits/#2/targetExitId : "in_L18_16_16" -> "in_L29_112_32"
+CHG preset_sidecars/1/level_102__r5c3/playable_payload/exits/#2/targetRegion : "level_16__r4c21" -> "level_31__r5c24"
+CHG preset_sidecars/1/level_102__r5c3/playable_payload/exits/#2/target_level : 16 -> 31
+CHG preset_sidecars/1/level_102__r5c3/playable_payload/exits/#2/target_spawn/x : 352 -> 384
+CHG preset_sidecars/1/level_102__r5c3/playable_payload/exits/#2/target_spawn/y : 96 -> 112
+CHG preset_sidecars/1/level_102__r5c9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_102__r5c9/playable_payload/exits/#0/targetExitId : "out_stairsup_80_16" -> "out_stairsup_48_96"
+CHG preset_sidecars/1/level_102__r5c9/playable_payload/exits/#0/target_level : 5 -> 99
+CHG preset_sidecars/1/level_102__r5c9/playable_payload/exits/#0/target_spawn/x : 80 -> 48
+CHG preset_sidecars/1/level_102__r5c9/playable_payload/exits/#0/target_spawn/y : 16 -> 96
+CHG preset_sidecars/1/level_102__r5c9/playable_payload/exits/#1/exitName : "level_102__r5c9 -> level_5__r1c5" -> "level_102__r5c9 -> level_99__r2c4"
+CHG preset_sidecars/1/level_102__r5c9/playable_payload/exits/#1/targetExitId : "in_L4_64_16" -> "in_L100_48_96"
+CHG preset_sidecars/1/level_102__r5c9/playable_payload/exits/#1/targetRegion : "level_5__r1c5" -> "level_99__r2c4"
+CHG preset_sidecars/1/level_102__r5c9/playable_payload/exits/#1/target_level : 5 -> 99
+CHG preset_sidecars/1/level_102__r5c9/playable_payload/exits/#1/target_spawn/x : 80 -> 32
+CHG preset_sidecars/1/level_102__r5c9/playable_payload/exits/#1/target_spawn/y : 32 -> 96
+CHG preset_sidecars/1/level_103/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_104/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_105/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_106/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_107/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_108__r11c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_108__r2c0/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_108__r5c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_108__r8c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_109/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+DEL preset_sidecars/1/level_11/playable_payload/atlas_ref : "seedling-b856f0fc" -> null
+DEL preset_sidecars/1/level_11/playable_payload/atlas_region : "level_11" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/entrance_spawn/x : 32 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/entrance_spawn/y : 16 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/entrance_tile/#0 : 2 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/entrance_tile/#1 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/exitName : null -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/exit_id : "in_L3_96_128" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/exit_tiles/#0/#0 : 2 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/exit_tiles/#0/#1 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/kind : "teleporter" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/targetExitId : "out_teleporter_96_128" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/targetRegion : null -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/target_level : 3 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/target_spawn/x : 96 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/target_spawn/y : 128 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/entrance_spawn/x : 32 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/entrance_spawn/y : 64 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/entrance_tile/#0 : 2 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/entrance_tile/#1 : 4 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/exitName : null -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/exit_id : "in_L10_48_16" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/exit_tiles/#0/#0 : 2 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/exit_tiles/#0/#1 : 4 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/kind : "teleporter" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/targetExitId : "out_stairsup_48_96" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/targetRegion : null -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/target_level : 99 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/target_spawn/x : 48 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/target_spawn/y : 96 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#2/entrance_spawn/x : 32 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#2/entrance_spawn/y : 16 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#2/entrance_tile/#0 : 2 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#2/entrance_tile/#1 : 0 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#2/exitName : "level_11 -> level_3__r8c6" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#2/exit_id : "out_teleporter_32_0" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#2/exit_tiles/#0/#0 : 2 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#2/exit_tiles/#0/#1 : 0 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#2/kind : "teleporter" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#2/targetExitId : "in_L11_32_0" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#2/targetRegion : "level_3__r8c6" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#2/target_level : 3 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#2/target_spawn/x : 96 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#2/target_spawn/y : 128 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#3/entrance_spawn/x : 32 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#3/entrance_spawn/y : 64 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#3/entrance_tile/#0 : 2 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#3/entrance_tile/#1 : 5 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#3/exitName : "level_11 -> level_99__r2c4" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#3/exit_id : "out_stairsdown_32_80" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#3/exit_tiles/#0/#0 : 2 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#3/exit_tiles/#0/#1 : 5 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#3/kind : "teleporter" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#3/targetExitId : "in_L100_48_96" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#3/targetRegion : "level_99__r2c4" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#3/target_level : 99 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#3/target_spawn/x : 32 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#3/target_spawn/y : 96 -> null
+DEL preset_sidecars/1/level_11/playable_payload/gameId : "seedling" -> null
+DEL preset_sidecars/1/level_11/playable_payload/level : 11 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tile_size : 16 -> null
+DEL preset_sidecars/1/level_11/substrate : "flash_seedling" -> null
+CHG preset_sidecars/1/level_110/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_111/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_112__r0c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_112__r2c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_113/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_114/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_115__r2c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_115__r4c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_115__r5c1/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_115__r6c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_115__r8c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_115__r8c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_115__r9c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/atlas_ref : null -> "seedling-402c4685"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/atlas_region : null -> "level_11"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/atlas_sub_region : null -> "r0c2"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/entrance_spawn/x : null -> 32
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/entrance_spawn/y : null -> 16
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/entrance_tile/#0 : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/entrance_tile/#1 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/exitName : null -> null
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/exit_id : null -> "in_L3_96_128"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/exit_tiles/#0/#0 : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/exit_tiles/#0/#1 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/kind : null -> "teleporter"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/targetExitId : null -> "out_teleporter_96_128"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/targetRegion : null -> null
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/target_level : null -> 3
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/target_spawn/x : null -> 96
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/target_spawn/y : null -> 128
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/entrance_spawn/x : null -> 32
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/entrance_spawn/y : null -> 16
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/entrance_tile/#0 : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/entrance_tile/#1 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/exitName : null -> "level_11__r0c2 -> level_3__r8c6"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/exit_id : null -> "out_teleporter_32_0"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/exit_tiles/#0/#0 : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/exit_tiles/#0/#1 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/kind : null -> "teleporter"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/targetExitId : null -> "in_L11_32_0"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/targetRegion : null -> "level_3__r8c6"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/target_level : null -> 3
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/target_spawn/x : null -> 96
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/target_spawn/y : null -> 128
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/gameId : null -> "seedling"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/level : null -> 11
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tile_size : null -> 16
+ADD preset_sidecars/1/level_11__r0c2/substrate : null -> "flash_seedling"
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/atlas_ref : null -> "seedling-402c4685"
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/atlas_region : null -> "level_11"
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/atlas_sub_region : null -> "r4c2"
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#0/entrance_spawn/x : null -> 32
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#0/entrance_spawn/y : null -> 64
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#0/entrance_tile/#0 : null -> 2
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#0/entrance_tile/#1 : null -> 4
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#0/exitName : null -> null
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#0/exit_id : null -> "in_L10_48_16"
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#0/exit_tiles/#0/#0 : null -> 2
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#0/exit_tiles/#0/#1 : null -> 4
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#0/kind : null -> "teleporter"
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#0/targetExitId : null -> "out_stairsup_48_16"
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#0/targetRegion : null -> null
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#0/target_level : null -> 10
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#0/target_spawn/x : null -> 48
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#0/target_spawn/y : null -> 16
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#1/entrance_spawn/x : null -> 32
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#1/entrance_spawn/y : null -> 64
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#1/entrance_tile/#0 : null -> 2
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#1/entrance_tile/#1 : null -> 5
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#1/exitName : null -> "level_11__r4c2 -> level_10"
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#1/exit_id : null -> "out_stairsdown_32_80"
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#1/exit_tiles/#0/#0 : null -> 2
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#1/exit_tiles/#0/#1 : null -> 5
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#1/kind : null -> "teleporter"
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#1/targetExitId : null -> "in_L11_32_80"
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#1/targetRegion : null -> "level_10"
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#1/target_level : null -> 10
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#1/target_spawn/x : null -> 48
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/exits/#1/target_spawn/y : null -> 32
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/gameId : null -> "seedling"
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/level : null -> 11
+ADD preset_sidecars/1/level_11__r4c2/playable_payload/tile_size : null -> 16
+ADD preset_sidecars/1/level_11__r4c2/substrate : null -> "flash_seedling"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_12__r0c37/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_12__r13c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_12__r13c6/playable_payload/exits/#0/targetExitId : "out_stairsup_48_16" -> "out_stairsup_32_32"
+CHG preset_sidecars/1/level_12__r13c6/playable_payload/exits/#0/target_level : 10 -> 96
+CHG preset_sidecars/1/level_12__r13c6/playable_payload/exits/#0/target_spawn/x : 48 -> 32
+CHG preset_sidecars/1/level_12__r13c6/playable_payload/exits/#0/target_spawn/y : 16 -> 32
+CHG preset_sidecars/1/level_12__r13c6/playable_payload/exits/#1/exitName : "level_12__r13c6 -> level_10" -> "level_12__r13c6 -> level_96"
+CHG preset_sidecars/1/level_12__r13c6/playable_payload/exits/#1/targetExitId : "in_L11_32_80" -> "in_L97_32_48"
+CHG preset_sidecars/1/level_12__r13c6/playable_payload/exits/#1/targetRegion : "level_10" -> "level_96"
+CHG preset_sidecars/1/level_12__r13c6/playable_payload/exits/#1/target_level : 10 -> 96
+CHG preset_sidecars/1/level_12__r13c6/playable_payload/exits/#1/target_spawn/x : 48 -> 32
+CHG preset_sidecars/1/level_12__r13c6/playable_payload/exits/#1/target_spawn/y : 32 -> 48
+CHG preset_sidecars/1/level_12__r40c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_12__r42c28/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_12__r43c21/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_13/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_14/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_14/playable_payload/exits/#0/targetExitId : "out_stairsdown_320_576" -> "out_stairsdown_192_32"
+CHG preset_sidecars/1/level_14/playable_payload/exits/#0/target_level : 40 -> 7
+CHG preset_sidecars/1/level_14/playable_payload/exits/#0/target_spawn/x : 320 -> 192
+CHG preset_sidecars/1/level_14/playable_payload/exits/#0/target_spawn/y : 576 -> 32
+CHG preset_sidecars/1/level_14/playable_payload/exits/#2/exitName : "level_14 -> level_40__r26c13" -> "level_14 -> level_7"
+CHG preset_sidecars/1/level_14/playable_payload/exits/#2/targetExitId : "in_L43_176_464" -> "in_L8_144_32"
+CHG preset_sidecars/1/level_14/playable_payload/exits/#2/targetRegion : "level_40__r26c13" -> "level_7"
+CHG preset_sidecars/1/level_14/playable_payload/exits/#2/target_level : 40 -> 7
+CHG preset_sidecars/1/level_14/playable_payload/exits/#2/target_spawn/x : 320 -> 176
+CHG preset_sidecars/1/level_14/playable_payload/exits/#2/target_spawn/y : 592 -> 32
+CHG preset_sidecars/1/level_15__r1c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_15__r1c9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_15__r1c9/playable_payload/exits/#0/exitName : "level_15__r1c9 -> level_101__r4c9" -> "level_15__r1c9 -> level_6"
+CHG preset_sidecars/1/level_15__r1c9/playable_payload/exits/#0/targetExitId : "in_L102_160_96" -> "in_L7_16_32"
+CHG preset_sidecars/1/level_15__r1c9/playable_payload/exits/#0/targetRegion : "level_101__r4c9" -> "level_6"
+CHG preset_sidecars/1/level_15__r1c9/playable_payload/exits/#0/target_level : 101 -> 6
+CHG preset_sidecars/1/level_15__r1c9/playable_payload/exits/#0/target_spawn/x : 144 -> 208
+CHG preset_sidecars/1/level_15__r1c9/playable_payload/exits/#0/target_spawn/y : 80 -> 32
+CHG preset_sidecars/1/level_15__r1c9/playable_payload/exits/#1/targetExitId : "out_stairsup_144_96" -> "out_stairsup_224_32"
+CHG preset_sidecars/1/level_15__r1c9/playable_payload/exits/#1/target_level : 101 -> 6
+CHG preset_sidecars/1/level_15__r1c9/playable_payload/exits/#1/target_spawn/x : 144 -> 224
+CHG preset_sidecars/1/level_15__r1c9/playable_payload/exits/#1/target_spawn/y : 96 -> 32
+CHG preset_sidecars/1/level_15__r6c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_16__r1c1/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_16__r1c9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_16__r3c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_16__r3c7/playable_payload/exits/#0/exitName : "level_16__r3c7 -> level_30__r8c13" -> "level_16__r3c7 -> level_98"
+CHG preset_sidecars/1/level_16__r3c7/playable_payload/exits/#0/targetExitId : "in_L32_72_136" -> "in_L99_112_112"
+CHG preset_sidecars/1/level_16__r3c7/playable_payload/exits/#0/targetRegion : "level_30__r8c13" -> "level_98"
+CHG preset_sidecars/1/level_16__r3c7/playable_payload/exits/#0/target_level : 30 -> 98
+CHG preset_sidecars/1/level_16__r3c7/playable_payload/exits/#0/target_spawn/x : 224 -> 96
+CHG preset_sidecars/1/level_16__r3c7/playable_payload/exits/#0/target_spawn/y : 176 -> 112
+CHG preset_sidecars/1/level_16__r3c7/playable_payload/exits/#1/targetExitId : "out_stairsup_224_160" -> "out_stairsup_112_112"
+CHG preset_sidecars/1/level_16__r3c7/playable_payload/exits/#1/target_level : 30 -> 98
+CHG preset_sidecars/1/level_16__r3c7/playable_payload/exits/#1/target_spawn/x : 224 -> 112
+CHG preset_sidecars/1/level_16__r3c7/playable_payload/exits/#1/target_spawn/y : 160 -> 112
+CHG preset_sidecars/1/level_16__r4c21/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_16__r4c21/playable_payload/exits/#0/exitName : "level_16__r4c21 -> level_102__r5c3" -> "level_16__r4c21 -> level_24"
+CHG preset_sidecars/1/level_16__r4c21/playable_payload/exits/#0/targetExitId : "in_L101_48_96" -> "in_L23_32_32"
+CHG preset_sidecars/1/level_16__r4c21/playable_payload/exits/#0/targetRegion : "level_102__r5c3" -> "level_24"
+CHG preset_sidecars/1/level_16__r4c21/playable_payload/exits/#0/target_level : 102 -> 24
+CHG preset_sidecars/1/level_16__r4c21/playable_payload/exits/#0/target_spawn/x : 48 -> 96
+CHG preset_sidecars/1/level_16__r4c21/playable_payload/exits/#0/target_spawn/y : 96 -> 80
+CHG preset_sidecars/1/level_16__r4c21/playable_payload/exits/#1/targetExitId : "out_stairsdown_64_96" -> "out_stairsdown_96_96"
+CHG preset_sidecars/1/level_16__r4c21/playable_payload/exits/#1/target_level : 102 -> 24
+CHG preset_sidecars/1/level_16__r4c21/playable_payload/exits/#1/target_spawn/x : 64 -> 96
+CHG preset_sidecars/1/level_16__r6c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_17/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_18__r1c1/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_18__r1c1/playable_payload/exits/#0/targetExitId : "out_stairsup_384_96" -> "out_stairsup_80_16"
+CHG preset_sidecars/1/level_18__r1c1/playable_payload/exits/#0/target_level : 31 -> 5
+CHG preset_sidecars/1/level_18__r1c1/playable_payload/exits/#0/target_spawn/x : 384 -> 80
+CHG preset_sidecars/1/level_18__r1c1/playable_payload/exits/#0/target_spawn/y : 96 -> 16
+CHG preset_sidecars/1/level_18__r1c1/playable_payload/exits/#1/exitName : "level_18__r1c1 -> level_31__r5c24" -> "level_18__r1c1 -> level_5__r1c5"
+CHG preset_sidecars/1/level_18__r1c1/playable_payload/exits/#1/targetExitId : "in_L29_112_32" -> "in_L4_64_16"
+CHG preset_sidecars/1/level_18__r1c1/playable_payload/exits/#1/targetRegion : "level_31__r5c24" -> "level_5__r1c5"
+CHG preset_sidecars/1/level_18__r1c1/playable_payload/exits/#1/target_level : 31 -> 5
+CHG preset_sidecars/1/level_18__r1c1/playable_payload/exits/#1/target_spawn/x : 384 -> 80
+CHG preset_sidecars/1/level_18__r1c1/playable_payload/exits/#1/target_spawn/y : 112 -> 32
+CHG preset_sidecars/1/level_18__r7c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_19__r1c1/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_19__r1c1/playable_payload/exits/#0/exitName : "level_19__r1c1 -> level_100__r2c3" -> "level_19__r1c1 -> level_40__r26c13"
+CHG preset_sidecars/1/level_19__r1c1/playable_payload/exits/#0/targetExitId : "in_L99_48_96" -> "in_L43_176_464"
+CHG preset_sidecars/1/level_19__r1c1/playable_payload/exits/#0/targetRegion : "level_100__r2c3" -> "level_40__r26c13"
+CHG preset_sidecars/1/level_19__r1c1/playable_payload/exits/#0/target_level : 100 -> 40
+CHG preset_sidecars/1/level_19__r1c1/playable_payload/exits/#0/target_spawn/x : 32 -> 320
+CHG preset_sidecars/1/level_19__r1c1/playable_payload/exits/#0/target_spawn/y : 96 -> 592
+CHG preset_sidecars/1/level_19__r1c1/playable_payload/exits/#1/targetExitId : "out_stairsdown_48_96" -> "out_stairsdown_320_576"
+CHG preset_sidecars/1/level_19__r1c1/playable_payload/exits/#1/target_level : 100 -> 40
+CHG preset_sidecars/1/level_19__r1c1/playable_payload/exits/#1/target_spawn/x : 48 -> 320
+CHG preset_sidecars/1/level_19__r1c1/playable_payload/exits/#1/target_spawn/y : 96 -> 576
+CHG preset_sidecars/1/level_19__r1c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_19__r3c3/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_19__r5c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_20__r1c12/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_20__r1c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_20__r1c4/playable_payload/exits/#0/targetExitId : "out_stairsup_176_144" -> "out_stairsup_144_96"
+CHG preset_sidecars/1/level_20__r1c4/playable_payload/exits/#0/target_level : 51 -> 101
+CHG preset_sidecars/1/level_20__r1c4/playable_payload/exits/#0/target_spawn/x : 176 -> 144
+CHG preset_sidecars/1/level_20__r1c4/playable_payload/exits/#0/target_spawn/y : 144 -> 96
+CHG preset_sidecars/1/level_20__r1c4/playable_payload/exits/#1/exitName : "level_20__r1c4 -> level_51__r3c10" -> "level_20__r1c4 -> level_101__r4c9"
+CHG preset_sidecars/1/level_20__r1c4/playable_payload/exits/#1/targetExitId : "in_L53_32_144" -> "in_L102_160_96"
+CHG preset_sidecars/1/level_20__r1c4/playable_payload/exits/#1/targetRegion : "level_51__r3c10" -> "level_101__r4c9"
+CHG preset_sidecars/1/level_20__r1c4/playable_payload/exits/#1/target_level : 51 -> 101
+CHG preset_sidecars/1/level_20__r1c4/playable_payload/exits/#1/target_spawn/x : 160 -> 144
+CHG preset_sidecars/1/level_20__r1c4/playable_payload/exits/#1/target_spawn/y : 144 -> 80
+CHG preset_sidecars/1/level_20__r3c1/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_21/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_22__r0c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_22__r8c0/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_23/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_24/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_24/playable_payload/exits/#1/targetExitId : "out_stairsup_224_32" -> "out_stairsup_352_80"
+CHG preset_sidecars/1/level_24/playable_payload/exits/#1/target_level : 6 -> 16
+CHG preset_sidecars/1/level_24/playable_payload/exits/#1/target_spawn/x : 224 -> 352
+CHG preset_sidecars/1/level_24/playable_payload/exits/#1/target_spawn/y : 32 -> 80
+CHG preset_sidecars/1/level_24/playable_payload/exits/#4/exitName : "level_24 -> level_6" -> "level_24 -> level_16__r4c21"
+CHG preset_sidecars/1/level_24/playable_payload/exits/#4/targetExitId : "in_L7_16_32" -> "in_L18_16_16"
+CHG preset_sidecars/1/level_24/playable_payload/exits/#4/targetRegion : "level_6" -> "level_16__r4c21"
+CHG preset_sidecars/1/level_24/playable_payload/exits/#4/target_level : 6 -> 16
+CHG preset_sidecars/1/level_24/playable_payload/exits/#4/target_spawn/x : 208 -> 352
+CHG preset_sidecars/1/level_24/playable_payload/exits/#4/target_spawn/y : 32 -> 96
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/entrance_spawn/x : 96 -> 128
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/entrance_spawn/y : 112 -> 32
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/entrance_tile/#0 : 6 -> 9
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/entrance_tile/#1 : 8 -> 2
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/exitName : "level_25__r2c7 -> level_28__r0c6" -> "level_25__r2c7 -> level_22__r8c0"
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/exit_id : "out_teleporter_96_128" -> "out_teleporter_144_32"
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/exit_tiles/#0/#0 : 6 -> 9
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/exit_tiles/#0/#1 : 8 -> 2
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/targetExitId : "in_L25_96_128" -> "in_L25_144_32"
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/targetRegion : "level_28__r0c6" -> "level_22__r8c0"
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/target_level : 28 -> 22
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/target_spawn/x : 96 -> 16
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/target_spawn/y : 16 -> 128
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#2/entrance_spawn/x : 128 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#2/entrance_spawn/y : 32 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#2/entrance_tile/#0 : 9 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#2/entrance_tile/#1 : 2 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#2/exitName : "level_25__r2c7 -> level_22__r8c0" -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#2/exit_id : "out_teleporter_144_32" -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#2/exit_tiles/#0/#0 : 9 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#2/exit_tiles/#0/#1 : 2 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#2/kind : "teleporter" -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#2/targetExitId : "in_L25_144_32" -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#2/targetRegion : "level_22__r8c0" -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#2/target_level : 22 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#2/target_spawn/x : 16 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#2/target_spawn/y : 128 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#3/entrance_spawn/x : 96 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#3/entrance_spawn/y : 112 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#3/entrance_tile/#0 : 6 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#3/entrance_tile/#1 : 7 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#3/exitName : null -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#3/exit_id : "in_L28_96_0" -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#3/exit_tiles/#0/#0 : 6 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#3/exit_tiles/#0/#1 : 7 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#3/kind : "teleporter" -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#3/targetExitId : "out_teleporter_96_0" -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#3/targetRegion : null -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#3/target_level : 28 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#3/target_spawn/x : 96 -> null
+DEL preset_sidecars/1/level_25__r2c7/playable_payload/exits/#3/target_spawn/y : 0 -> null
+CHG preset_sidecars/1/level_25__r3c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/atlas_ref : null -> "seedling-402c4685"
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/atlas_region : null -> "level_25"
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/atlas_sub_region : null -> "r7c6"
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#0/entrance_spawn/x : null -> 96
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#0/entrance_spawn/y : null -> 112
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#0/entrance_tile/#0 : null -> 6
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#0/entrance_tile/#1 : null -> 8
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#0/exitName : null -> "level_25__r7c6 -> level_28__r0c6"
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#0/exit_id : null -> "out_teleporter_96_128"
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#0/exit_tiles/#0/#0 : null -> 6
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#0/exit_tiles/#0/#1 : null -> 8
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#0/kind : null -> "teleporter"
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#0/targetExitId : null -> "in_L25_96_128"
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#0/targetRegion : null -> "level_28__r0c6"
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#0/target_level : null -> 28
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#0/target_spawn/x : null -> 96
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#0/target_spawn/y : null -> 16
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#1/entrance_spawn/x : null -> 96
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#1/entrance_spawn/y : null -> 112
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#1/entrance_tile/#0 : null -> 6
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#1/entrance_tile/#1 : null -> 7
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#1/exitName : null -> null
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#1/exit_id : null -> "in_L28_96_0"
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#1/exit_tiles/#0/#0 : null -> 6
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#1/exit_tiles/#0/#1 : null -> 7
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#1/kind : null -> "teleporter"
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#1/targetExitId : null -> "out_teleporter_96_0"
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#1/targetRegion : null -> null
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#1/target_level : null -> 28
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#1/target_spawn/x : null -> 96
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/exits/#1/target_spawn/y : null -> 0
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/gameId : null -> "seedling"
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/level : null -> 25
+ADD preset_sidecars/1/level_25__r7c6/playable_payload/tile_size : null -> 16
+ADD preset_sidecars/1/level_25__r7c6/substrate : null -> "flash_seedling"
+CHG preset_sidecars/1/level_26__r13c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_26__r2c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_27/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_28__r0c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_28__r0c6/playable_payload/exits/#3/exitName : "level_28__r0c6 -> level_25__r2c7" -> "level_28__r0c6 -> level_25__r7c6"
+CHG preset_sidecars/1/level_28__r0c6/playable_payload/exits/#3/targetRegion : "level_25__r2c7" -> "level_25__r7c6"
+CHG preset_sidecars/1/level_28__r11c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_28__r1c18/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_29__r2c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_29__r5c0/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_29__r9c3/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_30__r0c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_30__r16c17/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_30__r17c11/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_30__r2c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_30__r8c13/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_30__r8c13/playable_payload/exits/#0/exitName : "level_30__r8c13 -> level_16__r3c7" -> "level_30__r8c13 -> level_53__r2c2"
+CHG preset_sidecars/1/level_30__r8c13/playable_payload/exits/#0/targetExitId : "in_L17_32_48" -> "in_L51_176_144"
+CHG preset_sidecars/1/level_30__r8c13/playable_payload/exits/#0/targetRegion : "level_16__r3c7" -> "level_53__r2c2"
+CHG preset_sidecars/1/level_30__r8c13/playable_payload/exits/#0/target_level : 16 -> 53
+CHG preset_sidecars/1/level_30__r8c13/playable_payload/exits/#0/target_spawn/x : 112 -> 48
+CHG preset_sidecars/1/level_30__r8c13/playable_payload/exits/#0/target_spawn/y : 48 -> 144
+CHG preset_sidecars/1/level_30__r8c13/playable_payload/exits/#1/targetExitId : "out_stairsdown_112_64" -> "out_stairsdown_32_144"
+CHG preset_sidecars/1/level_30__r8c13/playable_payload/exits/#1/target_level : 16 -> 53
+CHG preset_sidecars/1/level_30__r8c13/playable_payload/exits/#1/target_spawn/x : 112 -> 32
+CHG preset_sidecars/1/level_30__r8c13/playable_payload/exits/#1/target_spawn/y : 64 -> 144
+CHG preset_sidecars/1/level_31__r24c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_31__r5c24/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_31__r5c24/playable_payload/exits/#0/targetExitId : "out_stairsdown_16_16" -> "out_stairsdown_64_96"
+CHG preset_sidecars/1/level_31__r5c24/playable_payload/exits/#0/target_level : 18 -> 102
+CHG preset_sidecars/1/level_31__r5c24/playable_payload/exits/#0/target_spawn/x : 16 -> 64
+CHG preset_sidecars/1/level_31__r5c24/playable_payload/exits/#0/target_spawn/y : 16 -> 96
+CHG preset_sidecars/1/level_31__r5c24/playable_payload/exits/#2/exitName : "level_31__r5c24 -> level_18__r1c1" -> "level_31__r5c24 -> level_102__r5c3"
+CHG preset_sidecars/1/level_31__r5c24/playable_payload/exits/#2/targetExitId : "in_L16_352_80" -> "in_L101_48_96"
+CHG preset_sidecars/1/level_31__r5c24/playable_payload/exits/#2/targetRegion : "level_18__r1c1" -> "level_102__r5c3"
+CHG preset_sidecars/1/level_31__r5c24/playable_payload/exits/#2/target_level : 18 -> 102
+CHG preset_sidecars/1/level_31__r5c24/playable_payload/exits/#2/target_spawn/x : 16 -> 48
+CHG preset_sidecars/1/level_31__r5c24/playable_payload/exits/#2/target_spawn/y : 32 -> 96
+CHG preset_sidecars/1/level_32/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_32/playable_payload/exits/#0/targetExitId : "out_stairsup_48_96" -> "out_stairsup_176_464"
+CHG preset_sidecars/1/level_32/playable_payload/exits/#0/target_level : 101 -> 43
+CHG preset_sidecars/1/level_32/playable_payload/exits/#0/target_spawn/x : 48 -> 176
+CHG preset_sidecars/1/level_32/playable_payload/exits/#0/target_spawn/y : 96 -> 464
+CHG preset_sidecars/1/level_32/playable_payload/exits/#1/exitName : "level_32 -> level_101__r4c2" -> "level_32 -> level_43__r13c7"
+CHG preset_sidecars/1/level_32/playable_payload/exits/#1/targetExitId : "in_L102_64_96" -> "in_L40_320_576"
+CHG preset_sidecars/1/level_32/playable_payload/exits/#1/targetRegion : "level_101__r4c2" -> "level_43__r13c7"
+CHG preset_sidecars/1/level_32/playable_payload/exits/#1/target_level : 101 -> 43
+CHG preset_sidecars/1/level_32/playable_payload/exits/#1/target_spawn/x : 32 -> 176
+CHG preset_sidecars/1/level_32/playable_payload/exits/#1/target_spawn/y : 96 -> 448
+CHG preset_sidecars/1/level_33/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_34/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_35/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_36/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_37__r0c18/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_37__r0c18/playable_payload/exits/#0/exitName : "level_37__r0c18 -> level_38" -> "level_37__r0c18 -> level_38__r8c9"
+CHG preset_sidecars/1/level_37__r0c18/playable_payload/exits/#0/targetRegion : "level_38" -> "level_38__r8c9"
+CHG preset_sidecars/1/level_37__r12c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_37__r5c33/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_37__r9c36/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+DEL preset_sidecars/1/level_38/playable_payload/atlas_ref : "seedling-b856f0fc" -> null
+DEL preset_sidecars/1/level_38/playable_payload/atlas_region : "level_38" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/entrance_spawn/x : 144 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/entrance_spawn/y : 288 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/entrance_tile/#0 : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/entrance_tile/#1 : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/exitName : null -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/exit_id : "in_L37_288_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/exit_tiles/#0/#0 : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/exit_tiles/#0/#1 : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/kind : "teleporter" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/targetExitId : "out_teleporter_288_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/targetRegion : null -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/target_level : 37 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/target_spawn/x : 288 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/target_spawn/y : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/entrance_spawn/x : 144 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/entrance_spawn/y : 16 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/entrance_tile/#0 : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/entrance_tile/#1 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/exitName : "level_38 -> level_39__r25c9" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/exit_id : "out_teleporter_144_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/exit_tiles/#0/#0 : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/exit_tiles/#0/#1 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/kind : "teleporter" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/targetExitId : "in_L38_144_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/targetRegion : "level_39__r25c9" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/target_level : 39 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/target_spawn/x : 144 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/target_spawn/y : 608 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#2/entrance_spawn/x : 144 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#2/entrance_spawn/y : 288 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#2/entrance_tile/#0 : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#2/entrance_tile/#1 : 19 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#2/exitName : "level_38 -> level_37__r0c18" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#2/exit_id : "out_teleporter_144_304" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#2/exit_tiles/#0/#0 : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#2/exit_tiles/#0/#1 : 19 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#2/kind : "teleporter" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#2/targetExitId : "in_L38_144_304" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#2/targetRegion : "level_37__r0c18" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#2/target_level : 37 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#2/target_spawn/x : 288 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#2/target_spawn/y : 16 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#3/entrance_spawn/x : 144 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#3/entrance_spawn/y : 16 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#3/entrance_tile/#0 : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#3/entrance_tile/#1 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#3/exitName : null -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#3/exit_id : "in_L39_144_624" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#3/exit_tiles/#0/#0 : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#3/exit_tiles/#0/#1 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#3/kind : "teleporter" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#3/targetExitId : "out_teleporter_144_624" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#3/targetRegion : null -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#3/target_level : 39 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#3/target_spawn/x : 144 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#3/target_spawn/y : 624 -> null
+DEL preset_sidecars/1/level_38/playable_payload/gameId : "seedling" -> null
+DEL preset_sidecars/1/level_38/playable_payload/level : 38 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tile_size : 16 -> null
+DEL preset_sidecars/1/level_38/substrate : "flash_seedling" -> null
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/atlas_ref : null -> "seedling-402c4685"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/atlas_region : null -> "level_38"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/atlas_sub_region : null -> "r0c9"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/entrance_spawn/x : null -> 144
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/entrance_spawn/y : null -> 16
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/entrance_tile/#0 : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/entrance_tile/#1 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/exitName : null -> "level_38__r0c9 -> level_39__r25c9"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/exit_id : null -> "out_teleporter_144_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/exit_tiles/#0/#0 : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/exit_tiles/#0/#1 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/kind : null -> "teleporter"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/targetExitId : null -> "in_L38_144_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/targetRegion : null -> "level_39__r25c9"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/target_level : null -> 39
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/target_spawn/x : null -> 144
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/target_spawn/y : null -> 608
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/entrance_spawn/x : null -> 144
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/entrance_spawn/y : null -> 16
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/entrance_tile/#0 : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/entrance_tile/#1 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/exitName : null -> null
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/exit_id : null -> "in_L39_144_624"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/exit_tiles/#0/#0 : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/exit_tiles/#0/#1 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/kind : null -> "teleporter"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/targetExitId : null -> "out_teleporter_144_624"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/targetRegion : null -> null
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/target_level : null -> 39
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/target_spawn/x : null -> 144
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/target_spawn/y : null -> 624
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/gameId : null -> "seedling"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/level : null -> 38
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tile_size : null -> 16
+ADD preset_sidecars/1/level_38__r0c9/substrate : null -> "flash_seedling"
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/atlas_ref : null -> "seedling-402c4685"
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/atlas_region : null -> "level_38"
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/atlas_sub_region : null -> "r8c9"
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#0/entrance_spawn/x : null -> 144
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#0/entrance_spawn/y : null -> 288
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#0/entrance_tile/#0 : null -> 9
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#0/entrance_tile/#1 : null -> 18
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#0/exitName : null -> null
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#0/exit_id : null -> "in_L37_288_0"
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#0/exit_tiles/#0/#0 : null -> 9
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#0/exit_tiles/#0/#1 : null -> 18
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#0/kind : null -> "teleporter"
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#0/targetExitId : null -> "out_teleporter_288_0"
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#0/targetRegion : null -> null
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#0/target_level : null -> 37
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#0/target_spawn/x : null -> 288
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#0/target_spawn/y : null -> 0
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#1/entrance_spawn/x : null -> 144
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#1/entrance_spawn/y : null -> 288
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#1/entrance_tile/#0 : null -> 9
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#1/entrance_tile/#1 : null -> 19
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#1/exitName : null -> "level_38__r8c9 -> level_37__r0c18"
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#1/exit_id : null -> "out_teleporter_144_304"
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#1/exit_tiles/#0/#0 : null -> 9
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#1/exit_tiles/#0/#1 : null -> 19
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#1/kind : null -> "teleporter"
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#1/targetExitId : null -> "in_L38_144_304"
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#1/targetRegion : null -> "level_37__r0c18"
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#1/target_level : null -> 37
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#1/target_spawn/x : null -> 288
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/exits/#1/target_spawn/y : null -> 16
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/gameId : null -> "seedling"
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/level : null -> 38
+ADD preset_sidecars/1/level_38__r8c9/playable_payload/tile_size : null -> 16
+ADD preset_sidecars/1/level_38__r8c9/substrate : null -> "flash_seedling"
+CHG preset_sidecars/1/level_39__r0c9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_39__r25c9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_39__r25c9/playable_payload/exits/#1/exitName : "level_39__r25c9 -> level_38" -> "level_39__r25c9 -> level_38__r0c9"
+CHG preset_sidecars/1/level_39__r25c9/playable_payload/exits/#1/targetRegion : "level_38" -> "level_38__r0c9"
+CHG preset_sidecars/1/level_39__r2c11/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_3__r0c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_3__r8c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_3__r8c6/playable_payload/exits/#0/exitName : "level_3__r8c6 -> level_11" -> "level_3__r8c6 -> level_11__r0c2"
+CHG preset_sidecars/1/level_3__r8c6/playable_payload/exits/#0/targetRegion : "level_11" -> "level_11__r0c2"
+CHG preset_sidecars/1/level_4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_40__r0c53/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_40__r23c29/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_40__r26c13/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_40__r26c13/playable_payload/exits/#1/exitName : "level_40__r26c13 -> level_14" -> "level_40__r26c13 -> level_19__r1c1"
+CHG preset_sidecars/1/level_40__r26c13/playable_payload/exits/#1/targetExitId : "in_L13_32_32" -> "in_L20_192_48"
+CHG preset_sidecars/1/level_40__r26c13/playable_payload/exits/#1/targetRegion : "level_14" -> "level_19__r1c1"
+CHG preset_sidecars/1/level_40__r26c13/playable_payload/exits/#1/target_level : 14 -> 19
+CHG preset_sidecars/1/level_40__r26c13/playable_payload/exits/#1/target_spawn/x : 160 -> 16
+CHG preset_sidecars/1/level_40__r26c13/playable_payload/exits/#1/target_spawn/y : 64 -> 80
+CHG preset_sidecars/1/level_40__r26c13/playable_payload/exits/#15/targetExitId : "out_stairsup_176_64" -> "out_stairsup_16_96"
+CHG preset_sidecars/1/level_40__r26c13/playable_payload/exits/#15/target_level : 14 -> 19
+CHG preset_sidecars/1/level_40__r26c13/playable_payload/exits/#15/target_spawn/x : 176 -> 16
+CHG preset_sidecars/1/level_40__r26c13/playable_payload/exits/#15/target_spawn/y : 64 -> 96
+CHG preset_sidecars/1/level_40__r32c36/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_40__r36c35/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_40__r48c54/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_40__r4c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_41__r4c15/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_41__r4c3/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_41__r7c15/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_42/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_43__r13c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_43__r13c7/playable_payload/exits/#0/targetExitId : "out_stairsdown_112_112" -> "out_stairsdown_72_136"
+CHG preset_sidecars/1/level_43__r13c7/playable_payload/exits/#0/target_level : 99 -> 32
+CHG preset_sidecars/1/level_43__r13c7/playable_payload/exits/#0/target_spawn/x : 112 -> 64
+CHG preset_sidecars/1/level_43__r13c7/playable_payload/exits/#0/target_spawn/y : 112 -> 128
+CHG preset_sidecars/1/level_43__r13c7/playable_payload/exits/#13/exitName : "level_43__r13c7 -> level_99__r7c5" -> "level_43__r13c7 -> level_32"
+CHG preset_sidecars/1/level_43__r13c7/playable_payload/exits/#13/targetExitId : "in_L98_112_112" -> "in_L30_224_160"
+CHG preset_sidecars/1/level_43__r13c7/playable_payload/exits/#13/targetRegion : "level_99__r7c5" -> "level_32"
+CHG preset_sidecars/1/level_43__r13c7/playable_payload/exits/#13/target_level : 99 -> 32
+CHG preset_sidecars/1/level_43__r13c7/playable_payload/exits/#13/target_spawn/x : 96 -> 64
+CHG preset_sidecars/1/level_43__r3c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_43__r8c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_44__r0c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_44__r4c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_44__r6c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_45__r0c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_45__r14c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_45__r4c18/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_45__r6c15/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_46__r0c11/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_46__r1c26/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_46__r23c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_46__r24c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_46__r25c3/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_46__r6c24/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_47__r10c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_47__r13c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_47__r14c18/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_47__r14c22/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_47__r19c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_47__r1c21/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_47__r2c9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_47__r7c3/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_47__r8c20/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_48__r11c9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_48__r18c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_48__r2c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_48__r4c3/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_48__r7c0/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_49/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_50/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_51__r14c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_51__r2c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_51__r3c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_51__r3c10/playable_payload/exits/#2/exitName : "level_51__r3c10 -> level_20__r1c4" -> "level_51__r3c10 -> level_99__r7c5"
+CHG preset_sidecars/1/level_51__r3c10/playable_payload/exits/#2/targetExitId : "in_L19_16_96" -> "in_L98_112_112"
+CHG preset_sidecars/1/level_51__r3c10/playable_payload/exits/#2/targetRegion : "level_20__r1c4" -> "level_99__r7c5"
+CHG preset_sidecars/1/level_51__r3c10/playable_payload/exits/#2/target_level : 20 -> 99
+CHG preset_sidecars/1/level_51__r3c10/playable_payload/exits/#2/target_spawn/x : 192 -> 96
+CHG preset_sidecars/1/level_51__r3c10/playable_payload/exits/#2/target_spawn/y : 64 -> 112
+CHG preset_sidecars/1/level_51__r3c10/playable_payload/exits/#3/targetExitId : "out_stairsdown_192_48" -> "out_stairsdown_112_112"
+CHG preset_sidecars/1/level_51__r3c10/playable_payload/exits/#3/target_level : 20 -> 99
+CHG preset_sidecars/1/level_51__r3c10/playable_payload/exits/#3/target_spawn/x : 192 -> 112
+CHG preset_sidecars/1/level_51__r3c10/playable_payload/exits/#3/target_spawn/y : 48 -> 112
+CHG preset_sidecars/1/level_51__r3c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_52__r0c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_52__r2c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_52__r5c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_53__r14c9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_53__r2c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_53__r2c2/playable_payload/exits/#1/targetExitId : "out_stairsup_112_112" -> "out_stairsup_224_160"
+CHG preset_sidecars/1/level_53__r2c2/playable_payload/exits/#1/target_level : 98 -> 30
+CHG preset_sidecars/1/level_53__r2c2/playable_payload/exits/#1/target_spawn/x : 112 -> 224
+CHG preset_sidecars/1/level_53__r2c2/playable_payload/exits/#1/target_spawn/y : 112 -> 160
+CHG preset_sidecars/1/level_53__r2c2/playable_payload/exits/#2/exitName : "level_53__r2c2 -> level_98" -> "level_53__r2c2 -> level_30__r8c13"
+CHG preset_sidecars/1/level_53__r2c2/playable_payload/exits/#2/targetExitId : "in_L99_112_112" -> "in_L32_72_136"
+CHG preset_sidecars/1/level_53__r2c2/playable_payload/exits/#2/targetRegion : "level_98" -> "level_30__r8c13"
+CHG preset_sidecars/1/level_53__r2c2/playable_payload/exits/#2/target_level : 98 -> 30
+CHG preset_sidecars/1/level_53__r2c2/playable_payload/exits/#2/target_spawn/x : 96 -> 224
+CHG preset_sidecars/1/level_53__r2c2/playable_payload/exits/#2/target_spawn/y : 112 -> 176
+CHG preset_sidecars/1/level_53__r9c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_54__r10c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_54__r13c9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_54__r16c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_54__r18c15/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_54__r18c19/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_54__r19c13/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_54__r1c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_54__r27c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_54__r8c11/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_55/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_56/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_57/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_58__r1c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_58__r1c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_58__r2c1/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_58__r2c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_58__r3c3/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_58__r4c1/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_58__r6c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_59/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_5__r1c1/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_5__r1c1/playable_payload/exits/#0/exitName : "level_5__r1c1 -> level_7" -> "level_5__r1c1 -> level_100__r2c3"
+CHG preset_sidecars/1/level_5__r1c1/playable_payload/exits/#0/targetExitId : "in_L8_144_32" -> "in_L99_48_96"
+CHG preset_sidecars/1/level_5__r1c1/playable_payload/exits/#0/targetRegion : "level_7" -> "level_100__r2c3"
+CHG preset_sidecars/1/level_5__r1c1/playable_payload/exits/#0/target_level : 7 -> 100
+CHG preset_sidecars/1/level_5__r1c1/playable_payload/exits/#0/target_spawn/x : 176 -> 32
+CHG preset_sidecars/1/level_5__r1c1/playable_payload/exits/#0/target_spawn/y : 32 -> 96
+CHG preset_sidecars/1/level_5__r1c1/playable_payload/exits/#1/targetExitId : "out_stairsdown_192_32" -> "out_stairsdown_48_96"
+CHG preset_sidecars/1/level_5__r1c1/playable_payload/exits/#1/target_level : 7 -> 100
+CHG preset_sidecars/1/level_5__r1c1/playable_payload/exits/#1/target_spawn/x : 192 -> 48
+CHG preset_sidecars/1/level_5__r1c1/playable_payload/exits/#1/target_spawn/y : 32 -> 96
+CHG preset_sidecars/1/level_5__r1c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_5__r1c5/playable_payload/exits/#0/targetExitId : "out_stairsdown_160_96" -> "out_stairsdown_16_16"
+CHG preset_sidecars/1/level_5__r1c5/playable_payload/exits/#0/target_level : 102 -> 18
+CHG preset_sidecars/1/level_5__r1c5/playable_payload/exits/#0/target_spawn/x : 160 -> 16
+CHG preset_sidecars/1/level_5__r1c5/playable_payload/exits/#0/target_spawn/y : 96 -> 16
+CHG preset_sidecars/1/level_5__r1c5/playable_payload/exits/#2/exitName : "level_5__r1c5 -> level_102__r5c9" -> "level_5__r1c5 -> level_18__r1c1"
+CHG preset_sidecars/1/level_5__r1c5/playable_payload/exits/#2/targetExitId : "in_L101_144_96" -> "in_L16_352_80"
+CHG preset_sidecars/1/level_5__r1c5/playable_payload/exits/#2/targetRegion : "level_102__r5c9" -> "level_18__r1c1"
+CHG preset_sidecars/1/level_5__r1c5/playable_payload/exits/#2/target_level : 102 -> 18
+CHG preset_sidecars/1/level_5__r1c5/playable_payload/exits/#2/target_spawn/x : 176 -> 16
+CHG preset_sidecars/1/level_5__r1c5/playable_payload/exits/#2/target_spawn/y : 96 -> 32
+CHG preset_sidecars/1/level_6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_6/playable_payload/exits/#2/exitName : "level_6 -> level_24" -> "level_6 -> level_15__r1c9"
+CHG preset_sidecars/1/level_6/playable_payload/exits/#2/targetExitId : "in_L23_32_32" -> "in_L16_16_64"
+CHG preset_sidecars/1/level_6/playable_payload/exits/#2/targetRegion : "level_24" -> "level_15__r1c9"
+CHG preset_sidecars/1/level_6/playable_payload/exits/#2/target_level : 24 -> 15
+CHG preset_sidecars/1/level_6/playable_payload/exits/#2/target_spawn/x : 96 -> 144
+CHG preset_sidecars/1/level_6/playable_payload/exits/#2/target_spawn/y : 80 -> 32
+CHG preset_sidecars/1/level_6/playable_payload/exits/#3/targetExitId : "out_stairsdown_96_96" -> "out_stairsdown_144_16"
+CHG preset_sidecars/1/level_6/playable_payload/exits/#3/target_level : 24 -> 15
+CHG preset_sidecars/1/level_6/playable_payload/exits/#3/target_spawn/x : 96 -> 144
+CHG preset_sidecars/1/level_6/playable_payload/exits/#3/target_spawn/y : 96 -> 16
+CHG preset_sidecars/1/level_60__r5c0/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_60__r5c9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_61__r0c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_61__r0c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_61__r13c12/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_62/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_63__r10c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+DEL preset_sidecars/1/level_63__r5c14/playable_payload/atlas_ref : "seedling-b856f0fc" -> null
+DEL preset_sidecars/1/level_63__r5c14/playable_payload/atlas_region : "level_63" -> null
+DEL preset_sidecars/1/level_63__r5c14/playable_payload/atlas_sub_region : "r5c14" -> null
+DEL preset_sidecars/1/level_63__r5c14/playable_payload/gameId : "seedling" -> null
+DEL preset_sidecars/1/level_63__r5c14/playable_payload/level : 63 -> null
+DEL preset_sidecars/1/level_63__r5c14/playable_payload/tile_size : 16 -> null
+DEL preset_sidecars/1/level_63__r5c14/substrate : "flash_seedling" -> null
+CHG preset_sidecars/1/level_63__r6c15/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_63__r6c9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_64/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_65__r0c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_65__r0c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_65__r4c11/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_66__r5c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_66__r9c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_67__r3c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_67__r6c11/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_68__r1c1/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_68__r3c1/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_69/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_7/playable_payload/exits/#0/targetExitId : "out_stairsup_32_32" -> "out_stairsup_48_96"
+CHG preset_sidecars/1/level_7/playable_payload/exits/#0/target_level : 96 -> 101
+CHG preset_sidecars/1/level_7/playable_payload/exits/#0/target_spawn/x : 32 -> 48
+CHG preset_sidecars/1/level_7/playable_payload/exits/#0/target_spawn/y : 32 -> 96
+CHG preset_sidecars/1/level_7/playable_payload/exits/#1/exitName : "level_7 -> level_96" -> "level_7 -> level_101__r4c2"
+CHG preset_sidecars/1/level_7/playable_payload/exits/#1/targetExitId : "in_L97_32_48" -> "in_L102_64_96"
+CHG preset_sidecars/1/level_7/playable_payload/exits/#1/targetRegion : "level_96" -> "level_101__r4c2"
+CHG preset_sidecars/1/level_7/playable_payload/exits/#1/target_level : 96 -> 101
+CHG preset_sidecars/1/level_7/playable_payload/exits/#1/target_spawn/y : 48 -> 96
+CHG preset_sidecars/1/level_7/playable_payload/exits/#2/exitName : "level_7 -> level_5__r1c1" -> "level_7 -> level_14"
+CHG preset_sidecars/1/level_7/playable_payload/exits/#2/targetExitId : "in_L12_96_240" -> "in_L13_32_32"
+CHG preset_sidecars/1/level_7/playable_payload/exits/#2/targetRegion : "level_5__r1c1" -> "level_14"
+CHG preset_sidecars/1/level_7/playable_payload/exits/#2/target_level : 5 -> 14
+CHG preset_sidecars/1/level_7/playable_payload/exits/#2/target_spawn/x : 16 -> 160
+CHG preset_sidecars/1/level_7/playable_payload/exits/#2/target_spawn/y : 32 -> 64
+CHG preset_sidecars/1/level_7/playable_payload/exits/#3/targetExitId : "out_stairsup_16_16" -> "out_stairsup_176_64"
+CHG preset_sidecars/1/level_7/playable_payload/exits/#3/target_level : 5 -> 14
+CHG preset_sidecars/1/level_7/playable_payload/exits/#3/target_spawn/x : 16 -> 176
+CHG preset_sidecars/1/level_7/playable_payload/exits/#3/target_spawn/y : 16 -> 64
+CHG preset_sidecars/1/level_70/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_71__r0c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_71__r11c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_71__r13c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_71__r14c12/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_71__r16c19/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_72__r0c11/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_72__r10c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_72__r11c11/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_72__r11c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_72__r5c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_72__r6c17/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_72__r9c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_72__r9c12/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_72__r9c14/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_73__r0c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_73__r3c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_73__r4c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_73__r5c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_73__r8c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_74__r1c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_74__r2c11/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_74__r2c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_74__r8c18/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_75__r0c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_75__r10c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_75__r10c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_75__r11c3/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_75__r11c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_75__r13c3/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_75__r3c3/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_75__r8c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_75__r8c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_76/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_77__r12c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_77__r15c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_77__r2c0/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_78__r0c16/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_78__r0c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_78__r1c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_78__r3c12/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_78__r3c9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_78__r4c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_78__r5c12/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_78__r5c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_78__r6c11/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_78__r6c9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_78__r8c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_78__r8c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_79__r0c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_79__r8c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_80__r12c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_80__r13c3/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_80__r14c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_80__r16c1/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_80__r6c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+DEL preset_sidecars/1/level_80__r8c1/playable_payload/atlas_ref : "seedling-b856f0fc" -> null
+DEL preset_sidecars/1/level_80__r8c1/playable_payload/atlas_region : "level_80" -> null
+DEL preset_sidecars/1/level_80__r8c1/playable_payload/atlas_sub_region : "r8c1" -> null
+DEL preset_sidecars/1/level_80__r8c1/playable_payload/gameId : "seedling" -> null
+DEL preset_sidecars/1/level_80__r8c1/playable_payload/level : 80 -> null
+DEL preset_sidecars/1/level_80__r8c1/playable_payload/tile_size : 16 -> null
+DEL preset_sidecars/1/level_80__r8c1/substrate : "flash_seedling" -> null
+CHG preset_sidecars/1/level_80__r8c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_80__r9c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_82/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_83/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_84__r0c0/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_84__r2c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_84__r3c0/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_85/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_86/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_87__r0c23/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_87__r1c3/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_87__r7c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_87__r7c13/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_88/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_89__r11c12/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_89__r1c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_89__r1c15/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_89__r4c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_89__r6c16/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_89__r9c6/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_9/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_90/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_91/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_92__r1c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_92__r3c12/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_92__r4c2/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_92__r7c17/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_92__r7c8/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_93__r10c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_93__r14c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_93__r5c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_94__r2c16/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_94__r3c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_95/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_96/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_96/playable_payload/exits/#1/exitName : "level_96 -> level_7" -> "level_96 -> level_12__r13c6"
+CHG preset_sidecars/1/level_96/playable_payload/exits/#1/targetExitId : "in_L6_224_32" -> "in_L5_16_16"
+CHG preset_sidecars/1/level_96/playable_payload/exits/#1/targetRegion : "level_7" -> "level_12__r13c6"
+CHG preset_sidecars/1/level_96/playable_payload/exits/#1/target_level : 7 -> 12
+CHG preset_sidecars/1/level_96/playable_payload/exits/#1/target_spawn/x : 32 -> 96
+CHG preset_sidecars/1/level_96/playable_payload/exits/#1/target_spawn/y : 32 -> 224
+CHG preset_sidecars/1/level_96/playable_payload/exits/#3/targetExitId : "out_stairsdown_16_32" -> "out_stairsdown_96_240"
+CHG preset_sidecars/1/level_96/playable_payload/exits/#3/target_level : 7 -> 12
+CHG preset_sidecars/1/level_96/playable_payload/exits/#3/target_spawn/x : 16 -> 96
+CHG preset_sidecars/1/level_96/playable_payload/exits/#3/target_spawn/y : 32 -> 240
+CHG preset_sidecars/1/level_97/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_98/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_98/playable_payload/exits/#1/exitName : "level_98 -> level_53__r2c2" -> "level_98 -> level_16__r3c7"
+CHG preset_sidecars/1/level_98/playable_payload/exits/#1/targetExitId : "in_L51_176_144" -> "in_L17_32_48"
+CHG preset_sidecars/1/level_98/playable_payload/exits/#1/targetRegion : "level_53__r2c2" -> "level_16__r3c7"
+CHG preset_sidecars/1/level_98/playable_payload/exits/#1/target_level : 53 -> 16
+CHG preset_sidecars/1/level_98/playable_payload/exits/#1/target_spawn/x : 48 -> 112
+CHG preset_sidecars/1/level_98/playable_payload/exits/#1/target_spawn/y : 144 -> 48
+CHG preset_sidecars/1/level_98/playable_payload/exits/#3/targetExitId : "out_stairsdown_32_144" -> "out_stairsdown_112_64"
+CHG preset_sidecars/1/level_98/playable_payload/exits/#3/target_level : 53 -> 16
+CHG preset_sidecars/1/level_98/playable_payload/exits/#3/target_spawn/x : 32 -> 112
+CHG preset_sidecars/1/level_98/playable_payload/exits/#3/target_spawn/y : 144 -> 64
+CHG preset_sidecars/1/level_99__r2c4/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_99__r2c4/playable_payload/exits/#0/exitName : "level_99__r2c4 -> level_11" -> "level_99__r2c4 -> level_102__r5c9"
+CHG preset_sidecars/1/level_99__r2c4/playable_payload/exits/#0/targetExitId : "in_L10_48_16" -> "in_L101_144_96"
+CHG preset_sidecars/1/level_99__r2c4/playable_payload/exits/#0/targetRegion : "level_11" -> "level_102__r5c9"
+CHG preset_sidecars/1/level_99__r2c4/playable_payload/exits/#0/target_level : 11 -> 102
+CHG preset_sidecars/1/level_99__r2c4/playable_payload/exits/#0/target_spawn/x : 32 -> 176
+CHG preset_sidecars/1/level_99__r2c4/playable_payload/exits/#0/target_spawn/y : 64 -> 96
+CHG preset_sidecars/1/level_99__r2c4/playable_payload/exits/#1/targetExitId : "out_stairsdown_32_80" -> "out_stairsdown_160_96"
+CHG preset_sidecars/1/level_99__r2c4/playable_payload/exits/#1/target_level : 11 -> 102
+CHG preset_sidecars/1/level_99__r2c4/playable_payload/exits/#1/target_spawn/x : 32 -> 160
+CHG preset_sidecars/1/level_99__r2c4/playable_payload/exits/#1/target_spawn/y : 80 -> 96
+CHG preset_sidecars/1/level_99__r2c7/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_99__r6c12/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_99__r7c5/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG preset_sidecars/1/level_99__r7c5/playable_payload/exits/#0/targetExitId : "out_stairsup_176_464" -> "out_stairsup_176_144"
+CHG preset_sidecars/1/level_99__r7c5/playable_payload/exits/#0/target_level : 43 -> 51
+CHG preset_sidecars/1/level_99__r7c5/playable_payload/exits/#0/target_spawn/y : 464 -> 144
+CHG preset_sidecars/1/level_99__r7c5/playable_payload/exits/#1/exitName : "level_99__r7c5 -> level_43__r13c7" -> "level_99__r7c5 -> level_51__r3c10"
+CHG preset_sidecars/1/level_99__r7c5/playable_payload/exits/#1/targetExitId : "in_L40_320_576" -> "in_L53_32_144"
+CHG preset_sidecars/1/level_99__r7c5/playable_payload/exits/#1/targetRegion : "level_43__r13c7" -> "level_51__r3c10"
+CHG preset_sidecars/1/level_99__r7c5/playable_payload/exits/#1/target_level : 43 -> 51
+CHG preset_sidecars/1/level_99__r7c5/playable_payload/exits/#1/target_spawn/x : 176 -> 160
+CHG preset_sidecars/1/level_99__r7c5/playable_payload/exits/#1/target_spawn/y : 448 -> 144
+CHG preset_sidecars/1/level_99__r8c10/playable_payload/atlas_ref : "seedling-b856f0fc" -> "seedling-402c4685"
+CHG provenance/1/atlas_id : "seedling-cff09cce" -> "seedling-4208d945"
+CHG provenance/1/overlay_rows/#1/cite : "Chest.as:62-104" -> "Pickups/APChest.as:57-58,75,89 (Seedling p4h-as3 0451516252) = Chest.as:29-30,62-63,77"
+CHG provenance/1/overlay_rows/#1/kind : "open" -> "directional"
+CHG region_atlas/1/atlas_id : "seedling-b856f0fc" -> "seedling-402c4685"
+ADD regions/1/level_10/exits/[level_10 -> level_11__r4c2]/access_rule/rule : null -> "True_"
+ADD regions/1/level_10/exits/[level_10 -> level_11__r4c2]/connected_region : null -> "level_11__r4c2"
+ADD regions/1/level_10/exits/[level_10 -> level_11__r4c2]/er/group : null -> "stairsup"
+ADD regions/1/level_10/exits/[level_10 -> level_11__r4c2]/er/reverse : null -> "level_11__r4c2 -> level_10"
+ADD regions/1/level_10/exits/[level_10 -> level_11__r4c2]/er/shuffle : null -> true
+ADD regions/1/level_10/exits/[level_10 -> level_11__r4c2]/er/type : null -> "two_way"
+ADD regions/1/level_10/exits/[level_10 -> level_11__r4c2]/name : null -> "level_10 -> level_11__r4c2"
+DEL regions/1/level_10/exits/[level_10 -> level_12__r13c6]/access_rule/rule : "True_" -> null
+DEL regions/1/level_10/exits/[level_10 -> level_12__r13c6]/connected_region : "level_12__r13c6" -> null
+DEL regions/1/level_10/exits/[level_10 -> level_12__r13c6]/er/group : "stairsup" -> null
+DEL regions/1/level_10/exits/[level_10 -> level_12__r13c6]/er/reverse : "level_11 -> level_99__r2c4" -> null
+DEL regions/1/level_10/exits/[level_10 -> level_12__r13c6]/er/shuffle : true -> null
+DEL regions/1/level_10/exits/[level_10 -> level_12__r13c6]/er/type : "two_way" -> null
+DEL regions/1/level_10/exits/[level_10 -> level_12__r13c6]/name : "level_10 -> level_12__r13c6" -> null
+DEL regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_19__r1c1]/access_rule/rule : "True_" -> null
+DEL regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_19__r1c1]/connected_region : "level_19__r1c1" -> null
+DEL regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_19__r1c1]/er/group : "stairsdown" -> null
+DEL regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_19__r1c1]/er/reverse : "level_99__r2c4 -> level_11" -> null
+DEL regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_19__r1c1]/er/shuffle : true -> null
+DEL regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_19__r1c1]/er/type : "two_way" -> null
+DEL regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_19__r1c1]/name : "level_100__r2c3 -> level_19__r1c1" -> null
+ADD regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_5__r1c1]/access_rule/args/item_name : null -> "Progressive Swim"
+ADD regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_5__r1c1]/access_rule/rule : null -> "Has"
+ADD regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_5__r1c1]/connected_region : null -> "level_5__r1c1"
+ADD regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_5__r1c1]/er/group : null -> "stairsdown"
+ADD regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_5__r1c1]/er/reverse : null -> "level_99__r2c4 -> level_102__r5c9"
+ADD regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_5__r1c1]/er/shuffle : null -> true
+ADD regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_5__r1c1]/er/type : null -> "two_way"
+ADD regions/1/level_100__r2c3/exits/[level_100__r2c3 -> level_5__r1c1]/name : null -> "level_100__r2c3 -> level_5__r1c1"
+DEL regions/1/level_101__r4c2/exits/[level_101__r4c2 -> level_32]/access_rule/rule : "True_" -> null
+DEL regions/1/level_101__r4c2/exits/[level_101__r4c2 -> level_32]/connected_region : "level_32" -> null
+DEL regions/1/level_101__r4c2/exits/[level_101__r4c2 -> level_32]/er/group : "stairsup" -> null
+DEL regions/1/level_101__r4c2/exits/[level_101__r4c2 -> level_32]/er/reverse : "level_102__r5c3 -> level_16__r4c21" -> null
+DEL regions/1/level_101__r4c2/exits/[level_101__r4c2 -> level_32]/er/shuffle : true -> null
+DEL regions/1/level_101__r4c2/exits/[level_101__r4c2 -> level_32]/er/type : "two_way" -> null
+DEL regions/1/level_101__r4c2/exits/[level_101__r4c2 -> level_32]/name : "level_101__r4c2 -> level_32" -> null
+ADD regions/1/level_101__r4c2/exits/[level_101__r4c2 -> level_7]/access_rule/rule : null -> "True_"
+ADD regions/1/level_101__r4c2/exits/[level_101__r4c2 -> level_7]/connected_region : null -> "level_7"
+ADD regions/1/level_101__r4c2/exits/[level_101__r4c2 -> level_7]/er/group : null -> "stairsup"
+ADD regions/1/level_101__r4c2/exits/[level_101__r4c2 -> level_7]/er/reverse : null -> "level_102__r5c3 -> level_31__r5c24"
+ADD regions/1/level_101__r4c2/exits/[level_101__r4c2 -> level_7]/er/shuffle : null -> true
+ADD regions/1/level_101__r4c2/exits/[level_101__r4c2 -> level_7]/er/type : null -> "two_way"
+ADD regions/1/level_101__r4c2/exits/[level_101__r4c2 -> level_7]/name : null -> "level_101__r4c2 -> level_7"
+DEL regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_15__r1c9]/access_rule/args/item_name : "L101 flag 0: lightpole@144,64 cleared" -> null
+DEL regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_15__r1c9]/access_rule/rule : "Has" -> null
+DEL regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_15__r1c9]/connected_region : "level_15__r1c9" -> null
+DEL regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_15__r1c9]/er/group : "stairsup" -> null
+DEL regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_15__r1c9]/er/reverse : "level_102__r5c9 -> level_5__r1c5" -> null
+DEL regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_15__r1c9]/er/shuffle : true -> null
+DEL regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_15__r1c9]/er/type : "two_way" -> null
+DEL regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_15__r1c9]/name : "level_101__r4c9 -> level_15__r1c9" -> null
+ADD regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_20__r1c4]/access_rule/args/item_name : null -> "L101 flag 0: lightpole@144,64 cleared"
+ADD regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_20__r1c4]/access_rule/rule : null -> "Has"
+ADD regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_20__r1c4]/connected_region : null -> "level_20__r1c4"
+ADD regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_20__r1c4]/er/group : null -> "stairsup"
+ADD regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_20__r1c4]/er/reverse : null -> "level_102__r5c9 -> level_99__r2c4"
+ADD regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_20__r1c4]/er/shuffle : null -> true
+ADD regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_20__r1c4]/er/type : null -> "two_way"
+ADD regions/1/level_101__r4c9/exits/[level_101__r4c9 -> level_20__r1c4]/name : null -> "level_101__r4c9 -> level_20__r1c4"
+DEL regions/1/level_102__r5c3/exits/[level_102__r5c3 -> level_16__r4c21]/access_rule/rule : "True_" -> null
+DEL regions/1/level_102__r5c3/exits/[level_102__r5c3 -> level_16__r4c21]/connected_region : "level_16__r4c21" -> null
+DEL regions/1/level_102__r5c3/exits/[level_102__r5c3 -> level_16__r4c21]/er/group : "stairsdown" -> null
+DEL regions/1/level_102__r5c3/exits/[level_102__r5c3 -> level_16__r4c21]/er/reverse : "level_101__r4c2 -> level_32" -> null
+DEL regions/1/level_102__r5c3/exits/[level_102__r5c3 -> level_16__r4c21]/er/shuffle : true -> null
+DEL regions/1/level_102__r5c3/exits/[level_102__r5c3 -> level_16__r4c21]/er/type : "two_way" -> null
+DEL regions/1/level_102__r5c3/exits/[level_102__r5c3 -> level_16__r4c21]/name : "level_102__r5c3 -> level_16__r4c21" -> null
+ADD regions/1/level_102__r5c3/exits/[level_102__r5c3 -> level_31__r5c24]/access_rule/rule : null -> "True_"
+ADD regions/1/level_102__r5c3/exits/[level_102__r5c3 -> level_31__r5c24]/connected_region : null -> "level_31__r5c24"
+ADD regions/1/level_102__r5c3/exits/[level_102__r5c3 -> level_31__r5c24]/er/group : null -> "stairsdown"
+ADD regions/1/level_102__r5c3/exits/[level_102__r5c3 -> level_31__r5c24]/er/reverse : null -> "level_101__r4c2 -> level_7"
+ADD regions/1/level_102__r5c3/exits/[level_102__r5c3 -> level_31__r5c24]/er/shuffle : null -> true
+ADD regions/1/level_102__r5c3/exits/[level_102__r5c3 -> level_31__r5c24]/er/type : null -> "two_way"
+ADD regions/1/level_102__r5c3/exits/[level_102__r5c3 -> level_31__r5c24]/name : null -> "level_102__r5c3 -> level_31__r5c24"
+DEL regions/1/level_102__r5c9/exits/[level_102__r5c9 -> level_5__r1c5]/access_rule/rule : "True_" -> null
+DEL regions/1/level_102__r5c9/exits/[level_102__r5c9 -> level_5__r1c5]/connected_region : "level_5__r1c5" -> null
+DEL regions/1/level_102__r5c9/exits/[level_102__r5c9 -> level_5__r1c5]/er/group : "stairsdown" -> null
+DEL regions/1/level_102__r5c9/exits/[level_102__r5c9 -> level_5__r1c5]/er/reverse : "level_101__r4c9 -> level_15__r1c9" -> null
+DEL regions/1/level_102__r5c9/exits/[level_102__r5c9 -> level_5__r1c5]/er/shuffle : true -> null
+DEL regions/1/level_102__r5c9/exits/[level_102__r5c9 -> level_5__r1c5]/er/type : "two_way" -> null
+DEL regions/1/level_102__r5c9/exits/[level_102__r5c9 -> level_5__r1c5]/name : "level_102__r5c9 -> level_5__r1c5" -> null
+ADD regions/1/level_102__r5c9/exits/[level_102__r5c9 -> level_99__r2c4]/access_rule/rule : null -> "True_"
+ADD regions/1/level_102__r5c9/exits/[level_102__r5c9 -> level_99__r2c4]/connected_region : null -> "level_99__r2c4"
+ADD regions/1/level_102__r5c9/exits/[level_102__r5c9 -> level_99__r2c4]/er/group : null -> "stairsdown"
+ADD regions/1/level_102__r5c9/exits/[level_102__r5c9 -> level_99__r2c4]/er/reverse : null -> "level_101__r4c9 -> level_20__r1c4"
+ADD regions/1/level_102__r5c9/exits/[level_102__r5c9 -> level_99__r2c4]/er/shuffle : null -> true
+ADD regions/1/level_102__r5c9/exits/[level_102__r5c9 -> level_99__r2c4]/er/type : null -> "two_way"
+ADD regions/1/level_102__r5c9/exits/[level_102__r5c9 -> level_99__r2c4]/name : null -> "level_102__r5c9 -> level_99__r2c4"
+DEL regions/1/level_11/exits/[level_11 -> level_3__r8c6]/access_rule/rule : "True_" -> null
+DEL regions/1/level_11/exits/[level_11 -> level_3__r8c6]/connected_region : "level_3__r8c6" -> null
+DEL regions/1/level_11/exits/[level_11 -> level_3__r8c6]/name : "level_11 -> level_3__r8c6" -> null
+DEL regions/1/level_11/exits/[level_11 -> level_99__r2c4]/access_rule/rule : "True_" -> null
+DEL regions/1/level_11/exits/[level_11 -> level_99__r2c4]/connected_region : "level_99__r2c4" -> null
+DEL regions/1/level_11/exits/[level_11 -> level_99__r2c4]/er/group : "stairsdown" -> null
+DEL regions/1/level_11/exits/[level_11 -> level_99__r2c4]/er/reverse : "level_10 -> level_12__r13c6" -> null
+DEL regions/1/level_11/exits/[level_11 -> level_99__r2c4]/er/shuffle : true -> null
+DEL regions/1/level_11/exits/[level_11 -> level_99__r2c4]/er/type : "two_way" -> null
+DEL regions/1/level_11/exits/[level_11 -> level_99__r2c4]/name : "level_11 -> level_99__r2c4" -> null
+DEL regions/1/level_11/locations/[Level 011 - Chest]/access_rule/rule : "True_" -> null
+DEL regions/1/level_11/locations/[Level 011 - Chest]/id : 30000001 -> null
+DEL regions/1/level_11/locations/[Level 011 - Chest]/item/advancement : true -> null
+DEL regions/1/level_11/locations/[Level 011 - Chest]/item/name : "Seal" -> null
+DEL regions/1/level_11/locations/[Level 011 - Chest]/item/player : 1 -> null
+DEL regions/1/level_11/locations/[Level 011 - Chest]/item/type : "progression" -> null
+DEL regions/1/level_11/locations/[Level 011 - Chest]/name : "Level 011 - Chest" -> null
+DEL regions/1/level_11/name : "level_11" -> null
+ADD regions/1/level_11__r0c2/exits/[level_11__r0c2 -> level_11__r4c2]/access_rule/args/item_name : null -> "Progressive Swim"
+ADD regions/1/level_11__r0c2/exits/[level_11__r0c2 -> level_11__r4c2]/access_rule/rule : null -> "Has"
+ADD regions/1/level_11__r0c2/exits/[level_11__r0c2 -> level_11__r4c2]/connected_region : null -> "level_11__r4c2"
+ADD regions/1/level_11__r0c2/exits/[level_11__r0c2 -> level_11__r4c2]/name : null -> "level_11__r0c2 -> level_11__r4c2"
+ADD regions/1/level_11__r0c2/exits/[level_11__r0c2 -> level_3__r8c6]/access_rule/rule : null -> "True_"
+ADD regions/1/level_11__r0c2/exits/[level_11__r0c2 -> level_3__r8c6]/connected_region : null -> "level_3__r8c6"
+ADD regions/1/level_11__r0c2/exits/[level_11__r0c2 -> level_3__r8c6]/name : null -> "level_11__r0c2 -> level_3__r8c6"
+ADD regions/1/level_11__r0c2/name : null -> "level_11__r0c2"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_10]/access_rule/rule : null -> "True_"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_10]/connected_region : null -> "level_10"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_10]/er/group : null -> "stairsdown"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_10]/er/reverse : null -> "level_10 -> level_11__r4c2"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_10]/er/shuffle : null -> true
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_10]/er/type : null -> "two_way"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_10]/name : null -> "level_11__r4c2 -> level_10"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_11__r0c2]/access_rule/rule : null -> "True_"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_11__r0c2]/connected_region : null -> "level_11__r0c2"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_11__r0c2]/name : null -> "level_11__r4c2 -> level_11__r0c2"
+ADD regions/1/level_11__r4c2/locations/[Level 011 - Chest]/access_rule/rule : null -> "True_"
+ADD regions/1/level_11__r4c2/locations/[Level 011 - Chest]/id : null -> 30000001
+ADD regions/1/level_11__r4c2/locations/[Level 011 - Chest]/item/advancement : null -> true
+ADD regions/1/level_11__r4c2/locations/[Level 011 - Chest]/item/name : null -> "Seal"
+ADD regions/1/level_11__r4c2/locations/[Level 011 - Chest]/item/player : null -> 1
+ADD regions/1/level_11__r4c2/locations/[Level 011 - Chest]/item/type : null -> "progression"
+ADD regions/1/level_11__r4c2/locations/[Level 011 - Chest]/name : null -> "Level 011 - Chest"
+ADD regions/1/level_11__r4c2/name : null -> "level_11__r4c2"
+DEL regions/1/level_12__r13c6/exits/[level_12__r13c6 -> level_10]/access_rule/rule : "True_" -> null
+DEL regions/1/level_12__r13c6/exits/[level_12__r13c6 -> level_10]/connected_region : "level_10" -> null
+DEL regions/1/level_12__r13c6/exits/[level_12__r13c6 -> level_10]/er/group : "stairsdown" -> null
+DEL regions/1/level_12__r13c6/exits/[level_12__r13c6 -> level_10]/er/reverse : "level_5__r1c1 -> level_7" -> null
+DEL regions/1/level_12__r13c6/exits/[level_12__r13c6 -> level_10]/er/shuffle : true -> null
+DEL regions/1/level_12__r13c6/exits/[level_12__r13c6 -> level_10]/er/type : "two_way" -> null
+DEL regions/1/level_12__r13c6/exits/[level_12__r13c6 -> level_10]/name : "level_12__r13c6 -> level_10" -> null
+ADD regions/1/level_12__r13c6/exits/[level_12__r13c6 -> level_96]/access_rule/rule : null -> "True_"
+ADD regions/1/level_12__r13c6/exits/[level_12__r13c6 -> level_96]/connected_region : null -> "level_96"
+ADD regions/1/level_12__r13c6/exits/[level_12__r13c6 -> level_96]/er/group : null -> "stairsdown"
+ADD regions/1/level_12__r13c6/exits/[level_12__r13c6 -> level_96]/er/reverse : null -> "level_5__r1c1 -> level_100__r2c3"
+ADD regions/1/level_12__r13c6/exits/[level_12__r13c6 -> level_96]/er/shuffle : null -> true
+ADD regions/1/level_12__r13c6/exits/[level_12__r13c6 -> level_96]/er/type : null -> "two_way"
+ADD regions/1/level_12__r13c6/exits/[level_12__r13c6 -> level_96]/name : null -> "level_12__r13c6 -> level_96"
+CHG regions/1/level_13/exits/[level_13 -> level_20__r3c1]/er/reverse : "level_14 -> level_40__r26c13" -> "level_14 -> level_7"
+DEL regions/1/level_14/exits/[level_14 -> level_40__r26c13]/access_rule/rule : "True_" -> null
+DEL regions/1/level_14/exits/[level_14 -> level_40__r26c13]/connected_region : "level_40__r26c13" -> null
+DEL regions/1/level_14/exits/[level_14 -> level_40__r26c13]/er/group : "stairsup" -> null
+DEL regions/1/level_14/exits/[level_14 -> level_40__r26c13]/er/reverse : "level_13 -> level_20__r3c1" -> null
+DEL regions/1/level_14/exits/[level_14 -> level_40__r26c13]/er/shuffle : true -> null
+DEL regions/1/level_14/exits/[level_14 -> level_40__r26c13]/er/type : "two_way" -> null
+DEL regions/1/level_14/exits/[level_14 -> level_40__r26c13]/name : "level_14 -> level_40__r26c13" -> null
+ADD regions/1/level_14/exits/[level_14 -> level_7]/access_rule/rule : null -> "True_"
+ADD regions/1/level_14/exits/[level_14 -> level_7]/connected_region : null -> "level_7"
+ADD regions/1/level_14/exits/[level_14 -> level_7]/er/group : null -> "stairsup"
+ADD regions/1/level_14/exits/[level_14 -> level_7]/er/reverse : null -> "level_13 -> level_20__r3c1"
+ADD regions/1/level_14/exits/[level_14 -> level_7]/er/shuffle : null -> true
+ADD regions/1/level_14/exits/[level_14 -> level_7]/er/type : null -> "two_way"
+ADD regions/1/level_14/exits/[level_14 -> level_7]/name : null -> "level_14 -> level_7"
+DEL regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_101__r4c9]/access_rule/children/#0/args/item_name : "L101 flag 0: lightpole@144,64 cleared" -> null
+DEL regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_101__r4c9]/access_rule/children/#0/rule : "Has" -> null
+DEL regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_101__r4c9]/access_rule/children/#1/args/item_name : "Ghost Spear" -> null
+DEL regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_101__r4c9]/access_rule/children/#1/rule : "Has" -> null
+DEL regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_101__r4c9]/access_rule/rule : "Or" -> null
+DEL regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_101__r4c9]/connected_region : "level_101__r4c9" -> null
+DEL regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_101__r4c9]/er/group : "stairsdown" -> null
+DEL regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_101__r4c9]/er/reverse : "level_16__r1c1 -> level_37__r9c36" -> null
+DEL regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_101__r4c9]/er/shuffle : true -> null
+DEL regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_101__r4c9]/er/type : "two_way" -> null
+DEL regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_101__r4c9]/name : "level_15__r1c9 -> level_101__r4c9" -> null
+ADD regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_6]/access_rule/rule : null -> "True_"
+ADD regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_6]/connected_region : null -> "level_6"
+ADD regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_6]/er/group : null -> "stairsdown"
+ADD regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_6]/er/reverse : null -> "level_16__r1c1 -> level_37__r9c36"
+ADD regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_6]/er/shuffle : null -> true
+ADD regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_6]/er/type : null -> "two_way"
+ADD regions/1/level_15__r1c9/exits/[level_15__r1c9 -> level_6]/name : null -> "level_15__r1c9 -> level_6"
+CHG regions/1/level_16__r1c1/exits/[level_16__r1c1 -> level_37__r9c36]/er/reverse : "level_15__r1c9 -> level_101__r4c9" -> "level_15__r1c9 -> level_6"
+DEL regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_30__r8c13]/access_rule/args/item_name : "L16 flag 0: rope@32,16 cleared" -> null
+DEL regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_30__r8c13]/access_rule/rule : "Has" -> null
+DEL regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_30__r8c13]/connected_region : "level_30__r8c13" -> null
+DEL regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_30__r8c13]/er/group : "stairsdown" -> null
+DEL regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_30__r8c13]/er/reverse : "level_17 -> level_30__r2c10" -> null
+DEL regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_30__r8c13]/er/shuffle : true -> null
+DEL regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_30__r8c13]/er/type : "two_way" -> null
+DEL regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_30__r8c13]/name : "level_16__r3c7 -> level_30__r8c13" -> null
+ADD regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_98]/access_rule/args/item_name : null -> "L16 flag 0: rope@32,16 cleared"
+ADD regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_98]/access_rule/rule : null -> "Has"
+ADD regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_98]/connected_region : null -> "level_98"
+ADD regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_98]/er/group : null -> "stairsdown"
+ADD regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_98]/er/reverse : null -> "level_17 -> level_30__r2c10"
+ADD regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_98]/er/shuffle : null -> true
+ADD regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_98]/er/type : null -> "two_way"
+ADD regions/1/level_16__r3c7/exits/[level_16__r3c7 -> level_98]/name : null -> "level_16__r3c7 -> level_98"
+DEL regions/1/level_16__r4c21/exits/[level_16__r4c21 -> level_102__r5c3]/access_rule/rule : "True_" -> null
+DEL regions/1/level_16__r4c21/exits/[level_16__r4c21 -> level_102__r5c3]/connected_region : "level_102__r5c3" -> null
+DEL regions/1/level_16__r4c21/exits/[level_16__r4c21 -> level_102__r5c3]/er/group : "stairsup" -> null
+DEL regions/1/level_16__r4c21/exits/[level_16__r4c21 -> level_102__r5c3]/er/reverse : "level_18__r1c1 -> level_31__r5c24" -> null
+DEL regions/1/level_16__r4c21/exits/[level_16__r4c21 -> level_102__r5c3]/er/shuffle : true -> null
+DEL regions/1/level_16__r4c21/exits/[level_16__r4c21 -> level_102__r5c3]/er/type : "two_way" -> null
+DEL regions/1/level_16__r4c21/exits/[level_16__r4c21 -> level_102__r5c3]/name : "level_16__r4c21 -> level_102__r5c3" -> null
+ADD regions/1/level_16__r4c21/exits/[level_16__r4c21 -> level_24]/access_rule/rule : null -> "True_"
+ADD regions/1/level_16__r4c21/exits/[level_16__r4c21 -> level_24]/connected_region : null -> "level_24"
+ADD regions/1/level_16__r4c21/exits/[level_16__r4c21 -> level_24]/er/group : null -> "stairsup"
+ADD regions/1/level_16__r4c21/exits/[level_16__r4c21 -> level_24]/er/reverse : null -> "level_18__r1c1 -> level_5__r1c5"
+ADD regions/1/level_16__r4c21/exits/[level_16__r4c21 -> level_24]/er/shuffle : null -> true
+ADD regions/1/level_16__r4c21/exits/[level_16__r4c21 -> level_24]/er/type : null -> "two_way"
+ADD regions/1/level_16__r4c21/exits/[level_16__r4c21 -> level_24]/name : null -> "level_16__r4c21 -> level_24"
+CHG regions/1/level_17/exits/[level_17 -> level_30__r2c10]/er/reverse : "level_16__r3c7 -> level_30__r8c13" -> "level_16__r3c7 -> level_98"
+DEL regions/1/level_18__r1c1/exits/[level_18__r1c1 -> level_31__r5c24]/access_rule/rule : "True_" -> null
+DEL regions/1/level_18__r1c1/exits/[level_18__r1c1 -> level_31__r5c24]/connected_region : "level_31__r5c24" -> null
+DEL regions/1/level_18__r1c1/exits/[level_18__r1c1 -> level_31__r5c24]/er/group : "stairsdown" -> null
+DEL regions/1/level_18__r1c1/exits/[level_18__r1c1 -> level_31__r5c24]/er/reverse : "level_16__r4c21 -> level_102__r5c3" -> null
+DEL regions/1/level_18__r1c1/exits/[level_18__r1c1 -> level_31__r5c24]/er/shuffle : true -> null
+DEL regions/1/level_18__r1c1/exits/[level_18__r1c1 -> level_31__r5c24]/er/type : "two_way" -> null
+DEL regions/1/level_18__r1c1/exits/[level_18__r1c1 -> level_31__r5c24]/name : "level_18__r1c1 -> level_31__r5c24" -> null
+ADD regions/1/level_18__r1c1/exits/[level_18__r1c1 -> level_5__r1c5]/access_rule/rule : null -> "True_"
+ADD regions/1/level_18__r1c1/exits/[level_18__r1c1 -> level_5__r1c5]/connected_region : null -> "level_5__r1c5"
+ADD regions/1/level_18__r1c1/exits/[level_18__r1c1 -> level_5__r1c5]/er/group : null -> "stairsdown"
+ADD regions/1/level_18__r1c1/exits/[level_18__r1c1 -> level_5__r1c5]/er/reverse : null -> "level_16__r4c21 -> level_24"
+ADD regions/1/level_18__r1c1/exits/[level_18__r1c1 -> level_5__r1c5]/er/shuffle : null -> true
+ADD regions/1/level_18__r1c1/exits/[level_18__r1c1 -> level_5__r1c5]/er/type : null -> "two_way"
+ADD regions/1/level_18__r1c1/exits/[level_18__r1c1 -> level_5__r1c5]/name : null -> "level_18__r1c1 -> level_5__r1c5"
+DEL regions/1/level_19__r1c1/exits/[level_19__r1c1 -> level_100__r2c3]/access_rule/rule : "True_" -> null
+DEL regions/1/level_19__r1c1/exits/[level_19__r1c1 -> level_100__r2c3]/connected_region : "level_100__r2c3" -> null
+DEL regions/1/level_19__r1c1/exits/[level_19__r1c1 -> level_100__r2c3]/er/group : "stairsup" -> null
+DEL regions/1/level_19__r1c1/exits/[level_19__r1c1 -> level_100__r2c3]/er/reverse : "level_20__r1c4 -> level_51__r3c10" -> null
+DEL regions/1/level_19__r1c1/exits/[level_19__r1c1 -> level_100__r2c3]/er/shuffle : true -> null
+DEL regions/1/level_19__r1c1/exits/[level_19__r1c1 -> level_100__r2c3]/er/type : "two_way" -> null
+DEL regions/1/level_19__r1c1/exits/[level_19__r1c1 -> level_100__r2c3]/name : "level_19__r1c1 -> level_100__r2c3" -> null
+ADD regions/1/level_19__r1c1/exits/[level_19__r1c1 -> level_40__r26c13]/access_rule/rule : null -> "True_"
+ADD regions/1/level_19__r1c1/exits/[level_19__r1c1 -> level_40__r26c13]/connected_region : null -> "level_40__r26c13"
+ADD regions/1/level_19__r1c1/exits/[level_19__r1c1 -> level_40__r26c13]/er/group : null -> "stairsup"
+ADD regions/1/level_19__r1c1/exits/[level_19__r1c1 -> level_40__r26c13]/er/reverse : null -> "level_20__r1c4 -> level_101__r4c9"
+ADD regions/1/level_19__r1c1/exits/[level_19__r1c1 -> level_40__r26c13]/er/shuffle : null -> true
+ADD regions/1/level_19__r1c1/exits/[level_19__r1c1 -> level_40__r26c13]/er/type : null -> "two_way"
+ADD regions/1/level_19__r1c1/exits/[level_19__r1c1 -> level_40__r26c13]/name : null -> "level_19__r1c1 -> level_40__r26c13"
+ADD regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_101__r4c9]/access_rule/children/#0/args/item_name : null -> "L101 flag 0: lightpole@144,64 cleared"
+ADD regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_101__r4c9]/access_rule/children/#0/rule : null -> "Has"
+ADD regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_101__r4c9]/access_rule/children/#1/args/item_name : null -> "Ghost Spear"
+ADD regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_101__r4c9]/access_rule/children/#1/rule : null -> "Has"
+ADD regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_101__r4c9]/access_rule/rule : null -> "Or"
+ADD regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_101__r4c9]/connected_region : null -> "level_101__r4c9"
+ADD regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_101__r4c9]/er/group : null -> "stairsdown"
+ADD regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_101__r4c9]/er/reverse : null -> "level_19__r1c1 -> level_40__r26c13"
+ADD regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_101__r4c9]/er/shuffle : null -> true
+ADD regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_101__r4c9]/er/type : null -> "two_way"
+ADD regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_101__r4c9]/name : null -> "level_20__r1c4 -> level_101__r4c9"
+DEL regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_51__r3c10]/access_rule/rule : "True_" -> null
+DEL regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_51__r3c10]/connected_region : "level_51__r3c10" -> null
+DEL regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_51__r3c10]/er/group : "stairsdown" -> null
+DEL regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_51__r3c10]/er/reverse : "level_19__r1c1 -> level_100__r2c3" -> null
+DEL regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_51__r3c10]/er/shuffle : true -> null
+DEL regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_51__r3c10]/er/type : "two_way" -> null
+DEL regions/1/level_20__r1c4/exits/[level_20__r1c4 -> level_51__r3c10]/name : "level_20__r1c4 -> level_51__r3c10" -> null
+CHG regions/1/level_23/exits/[level_23 -> level_13]/er/reverse : "level_24 -> level_6" -> "level_24 -> level_16__r4c21"
+ADD regions/1/level_24/exits/[level_24 -> level_16__r4c21]/access_rule/rule : null -> "True_"
+ADD regions/1/level_24/exits/[level_24 -> level_16__r4c21]/connected_region : null -> "level_16__r4c21"
+ADD regions/1/level_24/exits/[level_24 -> level_16__r4c21]/er/group : null -> "stairsdown"
+ADD regions/1/level_24/exits/[level_24 -> level_16__r4c21]/er/reverse : null -> "level_23 -> level_13"
+ADD regions/1/level_24/exits/[level_24 -> level_16__r4c21]/er/shuffle : null -> true
+ADD regions/1/level_24/exits/[level_24 -> level_16__r4c21]/er/type : null -> "two_way"
+ADD regions/1/level_24/exits/[level_24 -> level_16__r4c21]/name : null -> "level_24 -> level_16__r4c21"
+DEL regions/1/level_24/exits/[level_24 -> level_6]/access_rule/rule : "True_" -> null
+DEL regions/1/level_24/exits/[level_24 -> level_6]/connected_region : "level_6" -> null
+DEL regions/1/level_24/exits/[level_24 -> level_6]/er/group : "stairsdown" -> null
+DEL regions/1/level_24/exits/[level_24 -> level_6]/er/reverse : "level_23 -> level_13" -> null
+DEL regions/1/level_24/exits/[level_24 -> level_6]/er/shuffle : true -> null
+DEL regions/1/level_24/exits/[level_24 -> level_6]/er/type : "two_way" -> null
+DEL regions/1/level_24/exits/[level_24 -> level_6]/name : "level_24 -> level_6" -> null
+DEL regions/1/level_25__r2c7/exits/[level_25__r2c7 -> level_28__r0c6]/access_rule/rule : "True_" -> null
+DEL regions/1/level_25__r2c7/exits/[level_25__r2c7 -> level_28__r0c6]/connected_region : "level_28__r0c6" -> null
+DEL regions/1/level_25__r2c7/exits/[level_25__r2c7 -> level_28__r0c6]/name : "level_25__r2c7 -> level_28__r0c6" -> null
+DEL regions/1/level_25__r2c7/locations/[Level 025 - Chest]/access_rule/rule : "True_" -> null
+DEL regions/1/level_25__r2c7/locations/[Level 025 - Chest]/id : 30000009 -> null
+DEL regions/1/level_25__r2c7/locations/[Level 025 - Chest]/item/advancement : true -> null
+DEL regions/1/level_25__r2c7/locations/[Level 025 - Chest]/item/name : "Seal" -> null
+DEL regions/1/level_25__r2c7/locations/[Level 025 - Chest]/item/player : 1 -> null
+DEL regions/1/level_25__r2c7/locations/[Level 025 - Chest]/item/type : "progression" -> null
+DEL regions/1/level_25__r2c7/locations/[Level 025 - Chest]/name : "Level 025 - Chest" -> null
+ADD regions/1/level_25__r7c6/exits/[level_25__r7c6 -> level_25__r2c7]/access_rule/rule : null -> "True_"
+ADD regions/1/level_25__r7c6/exits/[level_25__r7c6 -> level_25__r2c7]/connected_region : null -> "level_25__r2c7"
+ADD regions/1/level_25__r7c6/exits/[level_25__r7c6 -> level_25__r2c7]/name : null -> "level_25__r7c6 -> level_25__r2c7"
+ADD regions/1/level_25__r7c6/exits/[level_25__r7c6 -> level_28__r0c6]/access_rule/rule : null -> "True_"
+ADD regions/1/level_25__r7c6/exits/[level_25__r7c6 -> level_28__r0c6]/connected_region : null -> "level_28__r0c6"
+ADD regions/1/level_25__r7c6/exits/[level_25__r7c6 -> level_28__r0c6]/name : null -> "level_25__r7c6 -> level_28__r0c6"
+ADD regions/1/level_25__r7c6/locations/[Level 025 - Chest]/access_rule/rule : null -> "True_"
+ADD regions/1/level_25__r7c6/locations/[Level 025 - Chest]/id : null -> 30000009
+ADD regions/1/level_25__r7c6/locations/[Level 025 - Chest]/item/advancement : null -> true
+ADD regions/1/level_25__r7c6/locations/[Level 025 - Chest]/item/name : null -> "Seal"
+ADD regions/1/level_25__r7c6/locations/[Level 025 - Chest]/item/player : null -> 1
+ADD regions/1/level_25__r7c6/locations/[Level 025 - Chest]/item/type : null -> "progression"
+ADD regions/1/level_25__r7c6/locations/[Level 025 - Chest]/name : null -> "Level 025 - Chest"
+ADD regions/1/level_25__r7c6/name : null -> "level_25__r7c6"
+DEL regions/1/level_28__r0c6/exits/[level_28__r0c6 -> level_25__r2c7]/access_rule/rule : "True_" -> null
+DEL regions/1/level_28__r0c6/exits/[level_28__r0c6 -> level_25__r2c7]/connected_region : "level_25__r2c7" -> null
+DEL regions/1/level_28__r0c6/exits/[level_28__r0c6 -> level_25__r2c7]/name : "level_28__r0c6 -> level_25__r2c7" -> null
+ADD regions/1/level_28__r0c6/exits/[level_28__r0c6 -> level_25__r7c6]/access_rule/rule : null -> "True_"
+ADD regions/1/level_28__r0c6/exits/[level_28__r0c6 -> level_25__r7c6]/connected_region : null -> "level_25__r7c6"
+ADD regions/1/level_28__r0c6/exits/[level_28__r0c6 -> level_25__r7c6]/name : null -> "level_28__r0c6 -> level_25__r7c6"
+CHG regions/1/level_29__r2c2/exits/[level_29__r2c2 -> level_8]/er/reverse : "level_31__r5c24 -> level_18__r1c1" -> "level_31__r5c24 -> level_102__r5c3"
+DEL regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_16__r3c7]/access_rule/args/item_name : "L16 flag 0: rope@32,16 cleared" -> null
+DEL regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_16__r3c7]/access_rule/rule : "Has" -> null
+DEL regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_16__r3c7]/connected_region : "level_16__r3c7" -> null
+DEL regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_16__r3c7]/er/group : "stairsup" -> null
+DEL regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_16__r3c7]/er/reverse : "level_32 -> level_101__r4c2" -> null
+DEL regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_16__r3c7]/er/shuffle : true -> null
+DEL regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_16__r3c7]/er/type : "two_way" -> null
+DEL regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_16__r3c7]/name : "level_30__r8c13 -> level_16__r3c7" -> null
+ADD regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_53__r2c2]/access_rule/rule : null -> "True_"
+ADD regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_53__r2c2]/connected_region : null -> "level_53__r2c2"
+ADD regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_53__r2c2]/er/group : null -> "stairsup"
+ADD regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_53__r2c2]/er/reverse : null -> "level_32 -> level_43__r13c7"
+ADD regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_53__r2c2]/er/shuffle : null -> true
+ADD regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_53__r2c2]/er/type : null -> "two_way"
+ADD regions/1/level_30__r8c13/exits/[level_30__r8c13 -> level_53__r2c2]/name : null -> "level_30__r8c13 -> level_53__r2c2"
+ADD regions/1/level_31__r5c24/exits/[level_31__r5c24 -> level_102__r5c3]/access_rule/rule : null -> "True_"
+ADD regions/1/level_31__r5c24/exits/[level_31__r5c24 -> level_102__r5c3]/connected_region : null -> "level_102__r5c3"
+ADD regions/1/level_31__r5c24/exits/[level_31__r5c24 -> level_102__r5c3]/er/group : null -> "stairsup"
+ADD regions/1/level_31__r5c24/exits/[level_31__r5c24 -> level_102__r5c3]/er/reverse : null -> "level_29__r2c2 -> level_8"
+ADD regions/1/level_31__r5c24/exits/[level_31__r5c24 -> level_102__r5c3]/er/shuffle : null -> true
+ADD regions/1/level_31__r5c24/exits/[level_31__r5c24 -> level_102__r5c3]/er/type : null -> "two_way"
+ADD regions/1/level_31__r5c24/exits/[level_31__r5c24 -> level_102__r5c3]/name : null -> "level_31__r5c24 -> level_102__r5c3"
+DEL regions/1/level_31__r5c24/exits/[level_31__r5c24 -> level_18__r1c1]/access_rule/rule : "True_" -> null
+DEL regions/1/level_31__r5c24/exits/[level_31__r5c24 -> level_18__r1c1]/connected_region : "level_18__r1c1" -> null
+DEL regions/1/level_31__r5c24/exits/[level_31__r5c24 -> level_18__r1c1]/er/group : "stairsup" -> null
+DEL regions/1/level_31__r5c24/exits/[level_31__r5c24 -> level_18__r1c1]/er/reverse : "level_29__r2c2 -> level_8" -> null
+DEL regions/1/level_31__r5c24/exits/[level_31__r5c24 -> level_18__r1c1]/er/shuffle : true -> null
+DEL regions/1/level_31__r5c24/exits/[level_31__r5c24 -> level_18__r1c1]/er/type : "two_way" -> null
+DEL regions/1/level_31__r5c24/exits/[level_31__r5c24 -> level_18__r1c1]/name : "level_31__r5c24 -> level_18__r1c1" -> null
+DEL regions/1/level_32/exits/[level_32 -> level_101__r4c2]/access_rule/rule : "True_" -> null
+DEL regions/1/level_32/exits/[level_32 -> level_101__r4c2]/connected_region : "level_101__r4c2" -> null
+DEL regions/1/level_32/exits/[level_32 -> level_101__r4c2]/er/group : "stairsdown" -> null
+DEL regions/1/level_32/exits/[level_32 -> level_101__r4c2]/er/reverse : "level_30__r8c13 -> level_16__r3c7" -> null
+DEL regions/1/level_32/exits/[level_32 -> level_101__r4c2]/er/shuffle : true -> null
+DEL regions/1/level_32/exits/[level_32 -> level_101__r4c2]/er/type : "two_way" -> null
+DEL regions/1/level_32/exits/[level_32 -> level_101__r4c2]/name : "level_32 -> level_101__r4c2" -> null
+ADD regions/1/level_32/exits/[level_32 -> level_43__r13c7]/access_rule/rule : null -> "True_"
+ADD regions/1/level_32/exits/[level_32 -> level_43__r13c7]/connected_region : null -> "level_43__r13c7"
+ADD regions/1/level_32/exits/[level_32 -> level_43__r13c7]/er/group : null -> "stairsdown"
+ADD regions/1/level_32/exits/[level_32 -> level_43__r13c7]/er/reverse : null -> "level_30__r8c13 -> level_53__r2c2"
+ADD regions/1/level_32/exits/[level_32 -> level_43__r13c7]/er/shuffle : null -> true
+ADD regions/1/level_32/exits/[level_32 -> level_43__r13c7]/er/type : null -> "two_way"
+ADD regions/1/level_32/exits/[level_32 -> level_43__r13c7]/name : null -> "level_32 -> level_43__r13c7"
+DEL regions/1/level_37__r0c18/exits/[level_37__r0c18 -> level_38]/access_rule/rule : "True_" -> null
+DEL regions/1/level_37__r0c18/exits/[level_37__r0c18 -> level_38]/connected_region : "level_38" -> null
+DEL regions/1/level_37__r0c18/exits/[level_37__r0c18 -> level_38]/name : "level_37__r0c18 -> level_38" -> null
+ADD regions/1/level_37__r0c18/exits/[level_37__r0c18 -> level_38__r8c9]/access_rule/rule : null -> "True_"
+ADD regions/1/level_37__r0c18/exits/[level_37__r0c18 -> level_38__r8c9]/connected_region : null -> "level_38__r8c9"
+ADD regions/1/level_37__r0c18/exits/[level_37__r0c18 -> level_38__r8c9]/name : null -> "level_37__r0c18 -> level_38__r8c9"
+DEL regions/1/level_38/exits/[level_38 -> level_37__r0c18]/access_rule/rule : "True_" -> null
+DEL regions/1/level_38/exits/[level_38 -> level_37__r0c18]/connected_region : "level_37__r0c18" -> null
+DEL regions/1/level_38/exits/[level_38 -> level_37__r0c18]/name : "level_38 -> level_37__r0c18" -> null
+DEL regions/1/level_38/exits/[level_38 -> level_39__r25c9]/access_rule/args/item_name : "L39 flag 8: wandlock@144,592 cleared" -> null
+DEL regions/1/level_38/exits/[level_38 -> level_39__r25c9]/access_rule/rule : "Has" -> null
+DEL regions/1/level_38/exits/[level_38 -> level_39__r25c9]/connected_region : "level_39__r25c9" -> null
+DEL regions/1/level_38/exits/[level_38 -> level_39__r25c9]/name : "level_38 -> level_39__r25c9" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/access_rule/rule : "True_" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/action/item : null -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/class : "buttonroom" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/level : 38 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/x : 32 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/y : 48 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/action/verb : "press" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/event : true -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/event_id : "flag:L39:8" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/event_kind : "game_state" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/id : null -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/item/advancement : true -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/item/name : "L39 flag 8: wandlock@144,592 cleared" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/item/player : 1 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/item/type : "Event" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/locked : true -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/name : "L39 flag 8: wandlock@144,592 cleared" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/class : "wandlock" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/level : 39 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/tag : 8 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/x : 144 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/y : 592 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/side : "level_38" -> null
+DEL regions/1/level_38/locations/[Level 038 - Chest]/access_rule/rule : "True_" -> null
+DEL regions/1/level_38/locations/[Level 038 - Chest]/id : 30000015 -> null
+DEL regions/1/level_38/locations/[Level 038 - Chest]/item/advancement : true -> null
+DEL regions/1/level_38/locations/[Level 038 - Chest]/item/name : "Seal" -> null
+DEL regions/1/level_38/locations/[Level 038 - Chest]/item/player : 1 -> null
+DEL regions/1/level_38/locations/[Level 038 - Chest]/item/type : "progression" -> null
+DEL regions/1/level_38/locations/[Level 038 - Chest]/name : "Level 038 - Chest" -> null
+DEL regions/1/level_38/name : "level_38" -> null
+ADD regions/1/level_38__r0c9/exits/[level_38__r0c9 -> level_39__r25c9]/access_rule/args/item_name : null -> "L39 flag 8: wandlock@144,592 cleared"
+ADD regions/1/level_38__r0c9/exits/[level_38__r0c9 -> level_39__r25c9]/access_rule/rule : null -> "Has"
+ADD regions/1/level_38__r0c9/exits/[level_38__r0c9 -> level_39__r25c9]/connected_region : null -> "level_39__r25c9"
+ADD regions/1/level_38__r0c9/exits/[level_38__r0c9 -> level_39__r25c9]/name : null -> "level_38__r0c9 -> level_39__r25c9"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/access_rule/rule : null -> "True_"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/action/item : null -> null
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/class : null -> "buttonroom"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/level : null -> 38
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/x : null -> 32
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/y : null -> 48
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/action/verb : null -> "press"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/event : null -> true
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/event_id : null -> "flag:L39:8"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/event_kind : null -> "game_state"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/id : null -> null
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/item/advancement : null -> true
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/item/name : null -> "L39 flag 8: wandlock@144,592 cleared"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/item/player : null -> 1
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/item/type : null -> "Event"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/locked : null -> true
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/name : null -> "L39 flag 8: wandlock@144,592 cleared"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/class : null -> "wandlock"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/level : null -> 39
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/tag : null -> 8
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/x : null -> 144
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/y : null -> 592
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/side : null -> "level_38__r0c9"
+ADD regions/1/level_38__r0c9/name : null -> "level_38__r0c9"
+ADD regions/1/level_38__r8c9/exits/[level_38__r8c9 -> level_37__r0c18]/access_rule/rule : null -> "True_"
+ADD regions/1/level_38__r8c9/exits/[level_38__r8c9 -> level_37__r0c18]/connected_region : null -> "level_37__r0c18"
+ADD regions/1/level_38__r8c9/exits/[level_38__r8c9 -> level_37__r0c18]/name : null -> "level_38__r8c9 -> level_37__r0c18"
+ADD regions/1/level_38__r8c9/exits/[level_38__r8c9 -> level_38__r0c9]/access_rule/rule : null -> "True_"
+ADD regions/1/level_38__r8c9/exits/[level_38__r8c9 -> level_38__r0c9]/connected_region : null -> "level_38__r0c9"
+ADD regions/1/level_38__r8c9/exits/[level_38__r8c9 -> level_38__r0c9]/name : null -> "level_38__r8c9 -> level_38__r0c9"
+ADD regions/1/level_38__r8c9/locations/[Level 038 - Chest]/access_rule/rule : null -> "True_"
+ADD regions/1/level_38__r8c9/locations/[Level 038 - Chest]/id : null -> 30000015
+ADD regions/1/level_38__r8c9/locations/[Level 038 - Chest]/item/advancement : null -> true
+ADD regions/1/level_38__r8c9/locations/[Level 038 - Chest]/item/name : null -> "Seal"
+ADD regions/1/level_38__r8c9/locations/[Level 038 - Chest]/item/player : null -> 1
+ADD regions/1/level_38__r8c9/locations/[Level 038 - Chest]/item/type : null -> "progression"
+ADD regions/1/level_38__r8c9/locations/[Level 038 - Chest]/name : null -> "Level 038 - Chest"
+ADD regions/1/level_38__r8c9/name : null -> "level_38__r8c9"
+DEL regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38]/access_rule/args/item_name : "L39 flag 8: wandlock@144,592 cleared" -> null
+DEL regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38]/access_rule/rule : "Has" -> null
+DEL regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38]/connected_region : "level_38" -> null
+DEL regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38]/name : "level_39__r25c9 -> level_38" -> null
+ADD regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38__r0c9]/access_rule/args/item_name : null -> "L39 flag 8: wandlock@144,592 cleared"
+ADD regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38__r0c9]/access_rule/rule : null -> "Has"
+ADD regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38__r0c9]/connected_region : null -> "level_38__r0c9"
+ADD regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38__r0c9]/name : null -> "level_39__r25c9 -> level_38__r0c9"
+DEL regions/1/level_3__r8c6/exits/[level_3__r8c6 -> level_11]/access_rule/rule : "True_" -> null
+DEL regions/1/level_3__r8c6/exits/[level_3__r8c6 -> level_11]/connected_region : "level_11" -> null
+DEL regions/1/level_3__r8c6/exits/[level_3__r8c6 -> level_11]/name : "level_3__r8c6 -> level_11" -> null
+ADD regions/1/level_3__r8c6/exits/[level_3__r8c6 -> level_11__r0c2]/access_rule/rule : null -> "True_"
+ADD regions/1/level_3__r8c6/exits/[level_3__r8c6 -> level_11__r0c2]/connected_region : null -> "level_11__r0c2"
+ADD regions/1/level_3__r8c6/exits/[level_3__r8c6 -> level_11__r0c2]/name : null -> "level_3__r8c6 -> level_11__r0c2"
+CHG regions/1/level_4/exits/[level_4 -> level_31__r24c10]/er/reverse : "level_5__r1c5 -> level_102__r5c9" -> "level_5__r1c5 -> level_18__r1c1"
+DEL regions/1/level_40__r26c13/exits/[level_40__r26c13 -> level_14]/access_rule/rule : "True_" -> null
+DEL regions/1/level_40__r26c13/exits/[level_40__r26c13 -> level_14]/connected_region : "level_14" -> null
+DEL regions/1/level_40__r26c13/exits/[level_40__r26c13 -> level_14]/er/group : "stairsdown" -> null
+DEL regions/1/level_40__r26c13/exits/[level_40__r26c13 -> level_14]/er/reverse : "level_43__r13c7 -> level_99__r7c5" -> null
+DEL regions/1/level_40__r26c13/exits/[level_40__r26c13 -> level_14]/er/shuffle : true -> null
+DEL regions/1/level_40__r26c13/exits/[level_40__r26c13 -> level_14]/er/type : "two_way" -> null
+DEL regions/1/level_40__r26c13/exits/[level_40__r26c13 -> level_14]/name : "level_40__r26c13 -> level_14" -> null
+ADD regions/1/level_40__r26c13/exits/[level_40__r26c13 -> level_19__r1c1]/access_rule/rule : null -> "True_"
+ADD regions/1/level_40__r26c13/exits/[level_40__r26c13 -> level_19__r1c1]/connected_region : null -> "level_19__r1c1"
+ADD regions/1/level_40__r26c13/exits/[level_40__r26c13 -> level_19__r1c1]/er/group : null -> "stairsdown"
+ADD regions/1/level_40__r26c13/exits/[level_40__r26c13 -> level_19__r1c1]/er/reverse : null -> "level_43__r13c7 -> level_32"
+ADD regions/1/level_40__r26c13/exits/[level_40__r26c13 -> level_19__r1c1]/er/shuffle : null -> true
+ADD regions/1/level_40__r26c13/exits/[level_40__r26c13 -> level_19__r1c1]/er/type : null -> "two_way"
+ADD regions/1/level_40__r26c13/exits/[level_40__r26c13 -> level_19__r1c1]/name : null -> "level_40__r26c13 -> level_19__r1c1"
+ADD regions/1/level_43__r13c7/exits/[level_43__r13c7 -> level_32]/access_rule/rule : null -> "True_"
+ADD regions/1/level_43__r13c7/exits/[level_43__r13c7 -> level_32]/connected_region : null -> "level_32"
+ADD regions/1/level_43__r13c7/exits/[level_43__r13c7 -> level_32]/er/group : null -> "stairsup"
+ADD regions/1/level_43__r13c7/exits/[level_43__r13c7 -> level_32]/er/reverse : null -> "level_40__r26c13 -> level_19__r1c1"
+ADD regions/1/level_43__r13c7/exits/[level_43__r13c7 -> level_32]/er/shuffle : null -> true
+ADD regions/1/level_43__r13c7/exits/[level_43__r13c7 -> level_32]/er/type : null -> "two_way"
+ADD regions/1/level_43__r13c7/exits/[level_43__r13c7 -> level_32]/name : null -> "level_43__r13c7 -> level_32"
+DEL regions/1/level_43__r13c7/exits/[level_43__r13c7 -> level_99__r7c5]/access_rule/rule : "True_" -> null
+DEL regions/1/level_43__r13c7/exits/[level_43__r13c7 -> level_99__r7c5]/connected_region : "level_99__r7c5" -> null
+DEL regions/1/level_43__r13c7/exits/[level_43__r13c7 -> level_99__r7c5]/er/group : "stairsup" -> null
+DEL regions/1/level_43__r13c7/exits/[level_43__r13c7 -> level_99__r7c5]/er/reverse : "level_40__r26c13 -> level_14" -> null
+DEL regions/1/level_43__r13c7/exits/[level_43__r13c7 -> level_99__r7c5]/er/shuffle : true -> null
+DEL regions/1/level_43__r13c7/exits/[level_43__r13c7 -> level_99__r7c5]/er/type : "two_way" -> null
+DEL regions/1/level_43__r13c7/exits/[level_43__r13c7 -> level_99__r7c5]/name : "level_43__r13c7 -> level_99__r7c5" -> null
+DEL regions/1/level_51__r3c10/exits/[level_51__r3c10 -> level_20__r1c4]/access_rule/rule : "True_" -> null
+DEL regions/1/level_51__r3c10/exits/[level_51__r3c10 -> level_20__r1c4]/connected_region : "level_20__r1c4" -> null
+DEL regions/1/level_51__r3c10/exits/[level_51__r3c10 -> level_20__r1c4]/er/group : "stairsup" -> null
+DEL regions/1/level_51__r3c10/exits/[level_51__r3c10 -> level_20__r1c4]/er/reverse : "level_53__r2c2 -> level_98" -> null
+DEL regions/1/level_51__r3c10/exits/[level_51__r3c10 -> level_20__r1c4]/er/shuffle : true -> null
+DEL regions/1/level_51__r3c10/exits/[level_51__r3c10 -> level_20__r1c4]/er/type : "two_way" -> null
+DEL regions/1/level_51__r3c10/exits/[level_51__r3c10 -> level_20__r1c4]/name : "level_51__r3c10 -> level_20__r1c4" -> null
+ADD regions/1/level_51__r3c10/exits/[level_51__r3c10 -> level_99__r7c5]/access_rule/rule : null -> "True_"
+ADD regions/1/level_51__r3c10/exits/[level_51__r3c10 -> level_99__r7c5]/connected_region : null -> "level_99__r7c5"
+ADD regions/1/level_51__r3c10/exits/[level_51__r3c10 -> level_99__r7c5]/er/group : null -> "stairsup"
+ADD regions/1/level_51__r3c10/exits/[level_51__r3c10 -> level_99__r7c5]/er/reverse : null -> "level_53__r2c2 -> level_30__r8c13"
+ADD regions/1/level_51__r3c10/exits/[level_51__r3c10 -> level_99__r7c5]/er/shuffle : null -> true
+ADD regions/1/level_51__r3c10/exits/[level_51__r3c10 -> level_99__r7c5]/er/type : null -> "two_way"
+ADD regions/1/level_51__r3c10/exits/[level_51__r3c10 -> level_99__r7c5]/name : null -> "level_51__r3c10 -> level_99__r7c5"
+ADD regions/1/level_53__r2c2/exits/[level_53__r2c2 -> level_30__r8c13]/access_rule/rule : null -> "True_"
+ADD regions/1/level_53__r2c2/exits/[level_53__r2c2 -> level_30__r8c13]/connected_region : null -> "level_30__r8c13"
+ADD regions/1/level_53__r2c2/exits/[level_53__r2c2 -> level_30__r8c13]/er/group : null -> "stairsdown"
+ADD regions/1/level_53__r2c2/exits/[level_53__r2c2 -> level_30__r8c13]/er/reverse : null -> "level_51__r3c10 -> level_99__r7c5"
+ADD regions/1/level_53__r2c2/exits/[level_53__r2c2 -> level_30__r8c13]/er/shuffle : null -> true
+ADD regions/1/level_53__r2c2/exits/[level_53__r2c2 -> level_30__r8c13]/er/type : null -> "two_way"
+ADD regions/1/level_53__r2c2/exits/[level_53__r2c2 -> level_30__r8c13]/name : null -> "level_53__r2c2 -> level_30__r8c13"
+DEL regions/1/level_53__r2c2/exits/[level_53__r2c2 -> level_98]/access_rule/rule : "True_" -> null
+DEL regions/1/level_53__r2c2/exits/[level_53__r2c2 -> level_98]/connected_region : "level_98" -> null
+DEL regions/1/level_53__r2c2/exits/[level_53__r2c2 -> level_98]/er/group : "stairsdown" -> null
+DEL regions/1/level_53__r2c2/exits/[level_53__r2c2 -> level_98]/er/reverse : "level_51__r3c10 -> level_20__r1c4" -> null
+DEL regions/1/level_53__r2c2/exits/[level_53__r2c2 -> level_98]/er/shuffle : true -> null
+DEL regions/1/level_53__r2c2/exits/[level_53__r2c2 -> level_98]/er/type : "two_way" -> null
+DEL regions/1/level_53__r2c2/exits/[level_53__r2c2 -> level_98]/name : "level_53__r2c2 -> level_98" -> null
+ADD regions/1/level_5__r1c1/exits/[level_5__r1c1 -> level_100__r2c3]/access_rule/rule : null -> "True_"
+ADD regions/1/level_5__r1c1/exits/[level_5__r1c1 -> level_100__r2c3]/connected_region : null -> "level_100__r2c3"
+ADD regions/1/level_5__r1c1/exits/[level_5__r1c1 -> level_100__r2c3]/er/group : null -> "stairsup"
+ADD regions/1/level_5__r1c1/exits/[level_5__r1c1 -> level_100__r2c3]/er/reverse : null -> "level_12__r13c6 -> level_96"
+ADD regions/1/level_5__r1c1/exits/[level_5__r1c1 -> level_100__r2c3]/er/shuffle : null -> true
+ADD regions/1/level_5__r1c1/exits/[level_5__r1c1 -> level_100__r2c3]/er/type : null -> "two_way"
+ADD regions/1/level_5__r1c1/exits/[level_5__r1c1 -> level_100__r2c3]/name : null -> "level_5__r1c1 -> level_100__r2c3"
+DEL regions/1/level_5__r1c1/exits/[level_5__r1c1 -> level_7]/access_rule/rule : "True_" -> null
+DEL regions/1/level_5__r1c1/exits/[level_5__r1c1 -> level_7]/connected_region : "level_7" -> null
+DEL regions/1/level_5__r1c1/exits/[level_5__r1c1 -> level_7]/er/group : "stairsup" -> null
+DEL regions/1/level_5__r1c1/exits/[level_5__r1c1 -> level_7]/er/reverse : "level_12__r13c6 -> level_10" -> null
+DEL regions/1/level_5__r1c1/exits/[level_5__r1c1 -> level_7]/er/shuffle : true -> null
+DEL regions/1/level_5__r1c1/exits/[level_5__r1c1 -> level_7]/er/type : "two_way" -> null
+DEL regions/1/level_5__r1c1/exits/[level_5__r1c1 -> level_7]/name : "level_5__r1c1 -> level_7" -> null
+DEL regions/1/level_5__r1c5/exits/[level_5__r1c5 -> level_102__r5c9]/access_rule/rule : "True_" -> null
+DEL regions/1/level_5__r1c5/exits/[level_5__r1c5 -> level_102__r5c9]/connected_region : "level_102__r5c9" -> null
+DEL regions/1/level_5__r1c5/exits/[level_5__r1c5 -> level_102__r5c9]/er/group : "stairsup" -> null
+DEL regions/1/level_5__r1c5/exits/[level_5__r1c5 -> level_102__r5c9]/er/reverse : "level_4 -> level_31__r24c10" -> null
+DEL regions/1/level_5__r1c5/exits/[level_5__r1c5 -> level_102__r5c9]/er/shuffle : true -> null
+DEL regions/1/level_5__r1c5/exits/[level_5__r1c5 -> level_102__r5c9]/er/type : "two_way" -> null
+DEL regions/1/level_5__r1c5/exits/[level_5__r1c5 -> level_102__r5c9]/name : "level_5__r1c5 -> level_102__r5c9" -> null
+ADD regions/1/level_5__r1c5/exits/[level_5__r1c5 -> level_18__r1c1]/access_rule/rule : null -> "True_"
+ADD regions/1/level_5__r1c5/exits/[level_5__r1c5 -> level_18__r1c1]/connected_region : null -> "level_18__r1c1"
+ADD regions/1/level_5__r1c5/exits/[level_5__r1c5 -> level_18__r1c1]/er/group : null -> "stairsup"
+ADD regions/1/level_5__r1c5/exits/[level_5__r1c5 -> level_18__r1c1]/er/reverse : null -> "level_4 -> level_31__r24c10"
+ADD regions/1/level_5__r1c5/exits/[level_5__r1c5 -> level_18__r1c1]/er/shuffle : null -> true
+ADD regions/1/level_5__r1c5/exits/[level_5__r1c5 -> level_18__r1c1]/er/type : null -> "two_way"
+ADD regions/1/level_5__r1c5/exits/[level_5__r1c5 -> level_18__r1c1]/name : null -> "level_5__r1c5 -> level_18__r1c1"
+ADD regions/1/level_6/exits/[level_6 -> level_15__r1c9]/access_rule/rule : null -> "True_"
+ADD regions/1/level_6/exits/[level_6 -> level_15__r1c9]/connected_region : null -> "level_15__r1c9"
+ADD regions/1/level_6/exits/[level_6 -> level_15__r1c9]/er/group : null -> "stairsup"
+ADD regions/1/level_6/exits/[level_6 -> level_15__r1c9]/er/reverse : null -> "level_7 -> level_101__r4c2"
+ADD regions/1/level_6/exits/[level_6 -> level_15__r1c9]/er/shuffle : null -> true
+ADD regions/1/level_6/exits/[level_6 -> level_15__r1c9]/er/type : null -> "two_way"
+ADD regions/1/level_6/exits/[level_6 -> level_15__r1c9]/name : null -> "level_6 -> level_15__r1c9"
+DEL regions/1/level_6/exits/[level_6 -> level_24]/access_rule/rule : "True_" -> null
+DEL regions/1/level_6/exits/[level_6 -> level_24]/connected_region : "level_24" -> null
+DEL regions/1/level_6/exits/[level_6 -> level_24]/er/group : "stairsup" -> null
+DEL regions/1/level_6/exits/[level_6 -> level_24]/er/reverse : "level_7 -> level_96" -> null
+DEL regions/1/level_6/exits/[level_6 -> level_24]/er/shuffle : true -> null
+DEL regions/1/level_6/exits/[level_6 -> level_24]/er/type : "two_way" -> null
+DEL regions/1/level_6/exits/[level_6 -> level_24]/name : "level_6 -> level_24" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c15]/access_rule/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c15]/access_rule/rule : "Has" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c15]/connected_region : "level_63__r6c15" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c15]/name : "level_63__r5c14 -> level_63__r6c15" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c9]/access_rule/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c9]/access_rule/rule : "Has" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c9]/connected_region : "level_63__r6c9" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c9]/name : "level_63__r5c14 -> level_63__r6c9" -> null
+DEL regions/1/level_63__r5c14/locations/[Level 063 - Chest]/access_rule/rule : "True_" -> null
+DEL regions/1/level_63__r5c14/locations/[Level 063 - Chest]/id : 30000030 -> null
+DEL regions/1/level_63__r5c14/locations/[Level 063 - Chest]/item/advancement : true -> null
+DEL regions/1/level_63__r5c14/locations/[Level 063 - Chest]/item/name : "Seal" -> null
+DEL regions/1/level_63__r5c14/locations/[Level 063 - Chest]/item/player : 1 -> null
+DEL regions/1/level_63__r5c14/locations/[Level 063 - Chest]/item/type : "progression" -> null
+DEL regions/1/level_63__r5c14/locations/[Level 063 - Chest]/name : "Level 063 - Chest" -> null
+DEL regions/1/level_63__r5c14/name : "level_63__r5c14" -> null
+DEL regions/1/level_63__r6c15/exits/[level_63__r6c15 -> level_63__r5c14]/access_rule/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_63__r6c15/exits/[level_63__r6c15 -> level_63__r5c14]/access_rule/rule : "Has" -> null
+DEL regions/1/level_63__r6c15/exits/[level_63__r6c15 -> level_63__r5c14]/connected_region : "level_63__r5c14" -> null
+DEL regions/1/level_63__r6c15/exits/[level_63__r6c15 -> level_63__r5c14]/name : "level_63__r6c15 -> level_63__r5c14" -> null
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/access_rule/args/item_name : null -> "Dark Suit"
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/access_rule/rule : null -> "Has"
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/id : null -> 30000030
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/item/advancement : null -> true
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/item/name : null -> "Seal"
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/item/player : null -> 1
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/item/type : null -> "progression"
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/name : null -> "Level 063 - Chest"
+DEL regions/1/level_63__r6c9/exits/[level_63__r6c9 -> level_63__r5c14]/access_rule/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_63__r6c9/exits/[level_63__r6c9 -> level_63__r5c14]/access_rule/rule : "Has" -> null
+DEL regions/1/level_63__r6c9/exits/[level_63__r6c9 -> level_63__r5c14]/connected_region : "level_63__r5c14" -> null
+DEL regions/1/level_63__r6c9/exits/[level_63__r6c9 -> level_63__r5c14]/name : "level_63__r6c9 -> level_63__r5c14" -> null
+ADD regions/1/level_7/exits/[level_7 -> level_101__r4c2]/access_rule/rule : null -> "True_"
+ADD regions/1/level_7/exits/[level_7 -> level_101__r4c2]/connected_region : null -> "level_101__r4c2"
+ADD regions/1/level_7/exits/[level_7 -> level_101__r4c2]/er/group : null -> "stairsdown"
+ADD regions/1/level_7/exits/[level_7 -> level_101__r4c2]/er/reverse : null -> "level_6 -> level_15__r1c9"
+ADD regions/1/level_7/exits/[level_7 -> level_101__r4c2]/er/shuffle : null -> true
+ADD regions/1/level_7/exits/[level_7 -> level_101__r4c2]/er/type : null -> "two_way"
+ADD regions/1/level_7/exits/[level_7 -> level_101__r4c2]/name : null -> "level_7 -> level_101__r4c2"
+ADD regions/1/level_7/exits/[level_7 -> level_14]/access_rule/rule : null -> "True_"
+ADD regions/1/level_7/exits/[level_7 -> level_14]/connected_region : null -> "level_14"
+ADD regions/1/level_7/exits/[level_7 -> level_14]/er/group : null -> "stairsdown"
+ADD regions/1/level_7/exits/[level_7 -> level_14]/er/reverse : null -> "level_8 -> level_29__r2c2"
+ADD regions/1/level_7/exits/[level_7 -> level_14]/er/shuffle : null -> true
+ADD regions/1/level_7/exits/[level_7 -> level_14]/er/type : null -> "two_way"
+ADD regions/1/level_7/exits/[level_7 -> level_14]/name : null -> "level_7 -> level_14"
+DEL regions/1/level_7/exits/[level_7 -> level_5__r1c1]/access_rule/args/item_name : "Progressive Swim" -> null
+DEL regions/1/level_7/exits/[level_7 -> level_5__r1c1]/access_rule/rule : "Has" -> null
+DEL regions/1/level_7/exits/[level_7 -> level_5__r1c1]/connected_region : "level_5__r1c1" -> null
+DEL regions/1/level_7/exits/[level_7 -> level_5__r1c1]/er/group : "stairsdown" -> null
+DEL regions/1/level_7/exits/[level_7 -> level_5__r1c1]/er/reverse : "level_8 -> level_29__r2c2" -> null
+DEL regions/1/level_7/exits/[level_7 -> level_5__r1c1]/er/shuffle : true -> null
+DEL regions/1/level_7/exits/[level_7 -> level_5__r1c1]/er/type : "two_way" -> null
+DEL regions/1/level_7/exits/[level_7 -> level_5__r1c1]/name : "level_7 -> level_5__r1c1" -> null
+DEL regions/1/level_7/exits/[level_7 -> level_96]/access_rule/rule : "True_" -> null
+DEL regions/1/level_7/exits/[level_7 -> level_96]/connected_region : "level_96" -> null
+DEL regions/1/level_7/exits/[level_7 -> level_96]/er/group : "stairsdown" -> null
+DEL regions/1/level_7/exits/[level_7 -> level_96]/er/reverse : "level_6 -> level_24" -> null
+DEL regions/1/level_7/exits/[level_7 -> level_96]/er/shuffle : true -> null
+DEL regions/1/level_7/exits/[level_7 -> level_96]/er/type : "two_way" -> null
+DEL regions/1/level_7/exits/[level_7 -> level_96]/name : "level_7 -> level_96" -> null
+CHG regions/1/level_8/exits/[level_8 -> level_29__r2c2]/er/reverse : "level_7 -> level_5__r1c1" -> "level_7 -> level_14"
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#0/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#0/args/item_name : "Progressive Sword" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#1/args/item_name : "Ghost Spear" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#1/rule : "Has" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#2/args/item_name : "Wand" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#2/rule : "Has" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#3/args/count : 2 -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#3/args/item_name : "Progressive Shield" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#3/rule : "Has" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/rule : "Or" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/rule : "And" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/connected_region : "level_80__r8c1" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/name : "level_80__r0c2 -> level_80__r8c1" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#0/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#0/args/item_name : "Progressive Sword" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#1/args/item_name : "Ghost Spear" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#1/rule : "Has" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#2/args/item_name : "Wand" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#2/rule : "Has" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#3/args/count : 2 -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#3/args/item_name : "Progressive Shield" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#3/rule : "Has" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/rule : "Or" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/rule : "And" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/connected_region : "level_80__r8c1" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/name : "level_80__r6c5 -> level_80__r8c1" -> null
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#0/args/item_name : null -> "Dark Suit"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#0/rule : null -> "Has"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#0/args/item_name : null -> "Progressive Sword"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#0/rule : null -> "Has"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#1/args/item_name : null -> "Ghost Spear"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#1/rule : null -> "Has"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#2/args/item_name : null -> "Wand"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#2/rule : null -> "Has"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#3/args/count : null -> 2
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#3/args/item_name : null -> "Progressive Shield"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#3/rule : null -> "Has"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/rule : null -> "Or"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/rule : null -> "And"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/id : null -> 30000038
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/item/advancement : null -> true
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/item/name : null -> "Seal"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/item/player : null -> 1
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/item/type : null -> "progression"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/name : null -> "Level 080 - Chest"
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#0/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#0/args/item_name : "Progressive Sword" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#1/args/item_name : "Ghost Spear" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#1/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#2/args/item_name : "Wand" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#2/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#3/args/count : 2 -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#3/args/item_name : "Progressive Shield" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#3/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/rule : "Or" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/rule : "And" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/connected_region : "level_80__r0c2" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/name : "level_80__r8c1 -> level_80__r0c2" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#0/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#0/args/item_name : "Progressive Sword" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#1/args/item_name : "Ghost Spear" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#1/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#2/args/item_name : "Wand" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#2/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#3/args/count : 2 -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#3/args/item_name : "Progressive Shield" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#3/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/rule : "Or" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/rule : "And" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/connected_region : "level_80__r6c5" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/name : "level_80__r8c1 -> level_80__r6c5" -> null
+DEL regions/1/level_80__r8c1/locations/[Level 080 - Chest]/access_rule/rule : "True_" -> null
+DEL regions/1/level_80__r8c1/locations/[Level 080 - Chest]/id : 30000038 -> null
+DEL regions/1/level_80__r8c1/locations/[Level 080 - Chest]/item/advancement : true -> null
+DEL regions/1/level_80__r8c1/locations/[Level 080 - Chest]/item/name : "Seal" -> null
+DEL regions/1/level_80__r8c1/locations/[Level 080 - Chest]/item/player : 1 -> null
+DEL regions/1/level_80__r8c1/locations/[Level 080 - Chest]/item/type : "progression" -> null
+DEL regions/1/level_80__r8c1/locations/[Level 080 - Chest]/name : "Level 080 - Chest" -> null
+DEL regions/1/level_80__r8c1/name : "level_80__r8c1" -> null
+ADD regions/1/level_96/exits/[level_96 -> level_12__r13c6]/access_rule/rule : null -> "True_"
+ADD regions/1/level_96/exits/[level_96 -> level_12__r13c6]/connected_region : null -> "level_12__r13c6"
+ADD regions/1/level_96/exits/[level_96 -> level_12__r13c6]/er/group : null -> "stairsup"
+ADD regions/1/level_96/exits/[level_96 -> level_12__r13c6]/er/reverse : null -> "level_97 -> level_13"
+ADD regions/1/level_96/exits/[level_96 -> level_12__r13c6]/er/shuffle : null -> true
+ADD regions/1/level_96/exits/[level_96 -> level_12__r13c6]/er/type : null -> "two_way"
+ADD regions/1/level_96/exits/[level_96 -> level_12__r13c6]/name : null -> "level_96 -> level_12__r13c6"
+DEL regions/1/level_96/exits/[level_96 -> level_7]/access_rule/rule : "True_" -> null
+DEL regions/1/level_96/exits/[level_96 -> level_7]/connected_region : "level_7" -> null
+DEL regions/1/level_96/exits/[level_96 -> level_7]/er/group : "stairsup" -> null
+DEL regions/1/level_96/exits/[level_96 -> level_7]/er/reverse : "level_97 -> level_13" -> null
+DEL regions/1/level_96/exits/[level_96 -> level_7]/er/shuffle : true -> null
+DEL regions/1/level_96/exits/[level_96 -> level_7]/er/type : "two_way" -> null
+DEL regions/1/level_96/exits/[level_96 -> level_7]/name : "level_96 -> level_7" -> null
+CHG regions/1/level_97/exits/[level_97 -> level_13]/er/reverse : "level_96 -> level_7" -> "level_96 -> level_12__r13c6"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/access_rule/children/#0/children/#0/args/item_name : null -> "Ghost Spear"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/access_rule/children/#0/children/#0/rule : null -> "Has"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/access_rule/children/#0/children/#1/args/item_name : null -> "Progressive Sword"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/access_rule/children/#0/children/#1/rule : null -> "Has"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/access_rule/children/#0/children/#2/args/item_name : null -> "Wand"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/access_rule/children/#0/children/#2/rule : null -> "Has"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/access_rule/children/#0/children/#3/args/count : null -> 2
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/access_rule/children/#0/children/#3/args/item_name : null -> "Progressive Shield"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/access_rule/children/#0/children/#3/rule : null -> "Has"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/access_rule/children/#0/rule : null -> "Or"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/access_rule/children/#1/args/item_name : null -> "L16 flag 0: rope@32,16 cleared"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/access_rule/children/#1/rule : null -> "Has"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/access_rule/rule : null -> "And"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/connected_region : null -> "level_16__r3c7"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/er/group : null -> "stairsup"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/er/reverse : null -> "level_99__r7c5 -> level_51__r3c10"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/er/shuffle : null -> true
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/er/type : null -> "two_way"
+ADD regions/1/level_98/exits/[level_98 -> level_16__r3c7]/name : null -> "level_98 -> level_16__r3c7"
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/access_rule/children/#0/args/item_name : "Ghost Spear" -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/access_rule/children/#0/rule : "Has" -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/access_rule/children/#1/args/item_name : "Progressive Sword" -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/access_rule/children/#1/rule : "Has" -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/access_rule/children/#2/args/item_name : "Wand" -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/access_rule/children/#2/rule : "Has" -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/access_rule/children/#3/args/count : 2 -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/access_rule/children/#3/args/item_name : "Progressive Shield" -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/access_rule/children/#3/rule : "Has" -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/access_rule/rule : "Or" -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/connected_region : "level_53__r2c2" -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/er/group : "stairsup" -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/er/reverse : "level_99__r7c5 -> level_43__r13c7" -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/er/shuffle : true -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/er/type : "two_way" -> null
+DEL regions/1/level_98/exits/[level_98 -> level_53__r2c2]/name : "level_98 -> level_53__r2c2" -> null
+ADD regions/1/level_99__r2c4/exits/[level_99__r2c4 -> level_102__r5c9]/access_rule/rule : null -> "True_"
+ADD regions/1/level_99__r2c4/exits/[level_99__r2c4 -> level_102__r5c9]/connected_region : null -> "level_102__r5c9"
+ADD regions/1/level_99__r2c4/exits/[level_99__r2c4 -> level_102__r5c9]/er/group : null -> "stairsup"
+ADD regions/1/level_99__r2c4/exits/[level_99__r2c4 -> level_102__r5c9]/er/reverse : null -> "level_100__r2c3 -> level_5__r1c1"
+ADD regions/1/level_99__r2c4/exits/[level_99__r2c4 -> level_102__r5c9]/er/shuffle : null -> true
+ADD regions/1/level_99__r2c4/exits/[level_99__r2c4 -> level_102__r5c9]/er/type : null -> "two_way"
+ADD regions/1/level_99__r2c4/exits/[level_99__r2c4 -> level_102__r5c9]/name : null -> "level_99__r2c4 -> level_102__r5c9"
+DEL regions/1/level_99__r2c4/exits/[level_99__r2c4 -> level_11]/access_rule/rule : "True_" -> null
+DEL regions/1/level_99__r2c4/exits/[level_99__r2c4 -> level_11]/connected_region : "level_11" -> null
+DEL regions/1/level_99__r2c4/exits/[level_99__r2c4 -> level_11]/er/group : "stairsup" -> null
+DEL regions/1/level_99__r2c4/exits/[level_99__r2c4 -> level_11]/er/reverse : "level_100__r2c3 -> level_19__r1c1" -> null
+DEL regions/1/level_99__r2c4/exits/[level_99__r2c4 -> level_11]/er/shuffle : true -> null
+DEL regions/1/level_99__r2c4/exits/[level_99__r2c4 -> level_11]/er/type : "two_way" -> null
+DEL regions/1/level_99__r2c4/exits/[level_99__r2c4 -> level_11]/name : "level_99__r2c4 -> level_11" -> null
+DEL regions/1/level_99__r7c5/exits/[level_99__r7c5 -> level_43__r13c7]/access_rule/rule : "True_" -> null
+DEL regions/1/level_99__r7c5/exits/[level_99__r7c5 -> level_43__r13c7]/connected_region : "level_43__r13c7" -> null
+DEL regions/1/level_99__r7c5/exits/[level_99__r7c5 -> level_43__r13c7]/er/group : "stairsdown" -> null
+DEL regions/1/level_99__r7c5/exits/[level_99__r7c5 -> level_43__r13c7]/er/reverse : "level_98 -> level_53__r2c2" -> null
+DEL regions/1/level_99__r7c5/exits/[level_99__r7c5 -> level_43__r13c7]/er/shuffle : true -> null
+DEL regions/1/level_99__r7c5/exits/[level_99__r7c5 -> level_43__r13c7]/er/type : "two_way" -> null
+DEL regions/1/level_99__r7c5/exits/[level_99__r7c5 -> level_43__r13c7]/name : "level_99__r7c5 -> level_43__r13c7" -> null
+ADD regions/1/level_99__r7c5/exits/[level_99__r7c5 -> level_51__r3c10]/access_rule/rule : null -> "True_"
+ADD regions/1/level_99__r7c5/exits/[level_99__r7c5 -> level_51__r3c10]/connected_region : null -> "level_51__r3c10"
+ADD regions/1/level_99__r7c5/exits/[level_99__r7c5 -> level_51__r3c10]/er/group : null -> "stairsdown"
+ADD regions/1/level_99__r7c5/exits/[level_99__r7c5 -> level_51__r3c10]/er/reverse : null -> "level_98 -> level_16__r3c7"
+ADD regions/1/level_99__r7c5/exits/[level_99__r7c5 -> level_51__r3c10]/er/shuffle : null -> true
+ADD regions/1/level_99__r7c5/exits/[level_99__r7c5 -> level_51__r3c10]/er/type : null -> "two_way"
+ADD regions/1/level_99__r7c5/exits/[level_99__r7c5 -> level_51__r3c10]/name : null -> "level_99__r7c5 -> level_51__r3c10"

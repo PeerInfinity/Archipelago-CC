@@ -1,0 +1,85 @@
+CHESTS: 16 on the playthrough map
+L11 chest@32,48 tag 0 · tiles (2,3)
+    open side: (2,4) · room sub-regions today 1, the chest in r0c2 (6 tile(s)) · round it: up open, left gated [flag:canSwim], right gated [flag:canSwim], down open
+    walled: r0c2 -> r0c2 | r4c2 SEPARATES · open side in r4c2
+    FIRES · cut off from the open side: exit in_L3_96_128, exit out_teleporter_32_0
+    delivery: <apitem> (ledger row chest@L11, Level 011 - Chest): non-solid, taken from any side
+L12 chest@320,816 tag 9 · tiles (20,51)
+    open side: (20,52) · room sub-regions today 8, the chest in r42c28 (230 tile(s)) · round it: up directional [free], left open, right open, down open
+    walled: r42c28 -> r42c28 · open side in r42c28
+    no change
+    delivery: <apitem> (ledger row chest@L12, Level 012 - Chest): non-solid, taken from any side
+L15 chest@144,96 tag 1 · tiles (9,6)
+    open side: (9,7) · room sub-regions today 3, the chest in r6c8 (7 tile(s)) · round it: up gated [flag:canSwim], left open, right wall, down open
+    walled: r6c8 -> r6c8 · open side in r6c8
+    no change
+    delivery: <apitem> (ledger row chest@L15, Level 015 - Chest): non-solid, taken from any side
+L17 chest@128,16 tag 0 · tiles (8,1)
+    open side: (8,2) · room sub-regions today 1, the chest in r1c1 (50 tile(s)) · round it: up wall, left open, right open, down open
+    walled: r1c1 -> r1c1 · open side in r1c1
+    no change
+    delivery: <apitem> (ledger row chest@L17, Level 017 - Chest): non-solid, taken from any side
+L25 chest@96,96 tag 0 · tiles (6,6)
+    open side: (6,7) · room sub-regions today 2, the chest in r2c7 (14 tile(s)) · round it: up open, left wall, right open, down open
+    walled: r2c7 -> r2c7 | r7c6 SEPARATES · open side in r7c6
+    FIRES · cut off from the open side: exit in_L22_0_128, exit out_teleporter_144_32
+    delivery: <apitem> (ledger row chest@L25, Level 025 - Chest): non-solid, taken from any side
+L36 chest@64,48 tag 0 · tiles (4,3)
+    open side: (4,4) · room sub-regions today 5, the chest in r1c1 (32 tile(s)) · round it: up wall, left open, right open, down open
+    walled: r1c1 -> r1c1 · open side in r1c1
+    no change
+    delivery: <apitem> (ledger row chest@L36, Level 036 - Chest): non-solid, taken from any side
+L38 chest@144,112 tag 1 · tiles (9,7) · under a cover
+    open side: (9,8) · room sub-regions today 2, the chest in r0c9 (131 tile(s)) · round it: up open, left wall, right wall, down open
+    walled: r0c9 -> r0c9 | r8c9 SEPARATES · open side in r8c9
+    FIRES · cut off from the open side: exit out_teleporter_144_0, exit in_L39_144_624
+    delivery: <apitem> (ledger row chest@L38, Level 038 - Chest): non-solid, taken from any side
+L40 chest@880,816 tag 13 · tiles (55,51)
+    open side: (55,52) · room sub-regions today 11, the chest in r26c13 (169 tile(s)) · round it: up gated [flag:hasFire], left wall, right wall, down open
+    walled: r26c13 -> r26c13 · open side in r26c13
+    no change
+    delivery: <apitem> (ledger row chest@L40, Level 040 - Chest): non-solid, taken from any side
+L46 chest@424,40 tag 0 · tiles (26,2) (27,2) (26,3) (27,3) OFF-GRID (every touched tile walled: over-stated)
+    open side: (26,3) (27,3) · room sub-regions today 6, the chest in r1c26 (7 tile(s))
+    walled: r1c26 -> r1c26 | r3c25 | r4c27 SEPARATES · open side in (open cell 26,3) | (open cell 27,3)
+    the model's flood from the open side (the chest shut), inside r1c26: reaches every tile of it
+    no change
+    delivery: <apitem> (ledger row chest@L46, Level 046 - Chest): non-solid, taken from any side
+L48 chest@152,184 tag 0 · tiles (9,11) (10,11) (9,12) (10,12) OFF-GRID (every touched tile walled: over-stated)
+    open side: (9,12) (10,12) · room sub-regions today 9, the chest in r11c9 (4 tile(s))
+    walled: r11c9 -> (the chest was alone in it) · open side in (open cell 9,12) | (open cell 10,12)
+    the model's flood from the open side (the chest shut), inside r11c9: reaches every tile of it
+    no change
+    delivery: <apitem> (ledger row chest@L48, Level 048 - Chest): non-solid, taken from any side
+L63 chest@224,80 tag 5 · tiles (14,5)
+    open side: (14,6) · room sub-regions today 7, the chest in r5c14 (1 tile(s)) · round it: up sink, left wall, right sink, down gated [flag:hasDarkSuit]
+    walled: r5c14 -> (the chest was alone in it) · open side in (gated cell 14,6)
+    no change
+    delivery: <apitem> (ledger row chest@L63, Level 063 - Chest): non-solid, taken from any side
+L71 chest@160,256 tag 1 · tiles (10,16)
+    open side: (10,17) · room sub-regions today 6, the chest in r0c6 (106 tile(s)) · round it: up gated [flag:hasDarkSuit], left wall, right gated [flag:hasDarkSuit], down open
+    walled: r0c6 -> r0c6 · open side in r0c6
+    no change
+    delivery: <apitem> (ledger row chest@L71, Level 071 - Chest): non-solid, taken from any side
+L80 chest@16,128 tag 0 · tiles (1,8)
+    open side: (1,9) · room sub-regions today 9, the chest in r8c1 (1 tile(s)) · round it: up wall, left gated [flag:hasDarkSuit], right wall, down gated [flag:hasDarkSuit]
+    walled: r8c1 -> (the chest was alone in it) · open side in (gated cell 1,9)
+    FIRES · reached today without the open side: left (gated [flag:hasDarkSuit])
+    delivery: <apitem> (ledger row chest@L80, Level 080 - Chest): non-solid, taken from any side
+L86 chest@48,16 tag 0 · tiles (3,1)
+    open side: (3,2) · room sub-regions today 1, the chest in r1c3 (9 tile(s)) · round it: up wall, left wall, right wall, down open
+    walled: r1c3 -> r2c1 · open side in r2c1
+    no change
+    delivery: <apitem> (ledger row chest@L86, Level 086 - Chest): non-solid, taken from any side
+L90 chest@48,32 tag 0 · tiles (3,2)
+    open side: (3,3) · room sub-regions today 1, the chest in r1c2 (16 tile(s)) · round it: up open, left open, right open, down open
+    walled: r1c2 -> r1c2 · open side in r1c2
+    no change
+    delivery: <apitem> (ledger row chest@L90, Level 090 - Chest): non-solid, taken from any side
+L98 chest@160,32 tag 1 · tiles (10,2)
+    open side: (10,3) · room sub-regions today 5, the chest in r2c4 (60 tile(s)) · round it: up wall, left wall, right wall, down open
+    walled: r2c4 -> r2c4 · open side in r2c4
+    no change
+    delivery: <apitem> (ledger row chest@L98, Level 098 - Chest): non-solid, taken from any side
+FIRES (vanilla Chest Solid): 4 — L11, L25, L38, L80
+DELIVERED AS <apitem>: 16 of 16

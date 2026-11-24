@@ -1,0 +1,28 @@
+CHANNEL: headless logic-only (no wasm: a node measurement of the maze-derived rules)
+BUILT: 115 levels, 308 regions, 2662322 B in 17233 ms
+ECHOES: planted {"loc":48,"ex":640,"ix":470,"evt":33,"gate":26,"ixr":21,"ixg":4,"rope":2,"ropegate":2,"hand":19}; copied {"loc":10,"ex":9,"ix":1,"evt":0,"gate":0,"ixr":0,"ixg":0,"rope":0,"ropegate":0}; in shared worlds {"loc":7,"ex":5,"ix":0,"evt":0,"gate":0,"ixr":0,"ixg":0,"rope":0,"ropegate":0}; 21 AP elements; 7313 ms
+CERT: 1 problems / 13 accepted / 0 threw; 851 rows; wall 56860 ms, shard ms 56758/39765, heap MB 83/431
+  PROBLEM level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false
+WITNESSED BINDINGS: 3 (L63 flag 1: lightpole@64,88 cleared; L63 flag 6: lightpole@48,272 cleared; L71 flag 2: shieldlock@288,256 cleared)
+SUMMARY: {"certifier":{"problems":1,"accepted":13,"threw":0},"echoes":{"copied":{"loc":10,"ex":9,"ix":1,"evt":0,"gate":0,"ixr":0,"ixg":0,"rope":0,"ropegate":0},"elements":21},"labels":{"pair":{"path-vs-edge":179,"derived":234},"exit":{"derived":290,"echoed":13,"arrival-dependent":54,"path-vs-edge":18},"location":{"derived":65,"echoed":13,"path-vs-edge":11,"arrival-dependent":29}},"w0":{"exit":{"equal":278,"arrival-dependent":28,"stricter":6,"looser":5},"location":{"equal":66,"stricter":11,"arrival-dependent":15}},"elements":409,"echoedElements":21,"unpriced":566,"sharedBinding":168,"bindingWitnessed":14,"arrivals":{"regionsPriced":211,"arrivalNodes":247,"regionsPerArrivalCount":{"1":177,"2":32,"3":2},"regionsArrivalDependent":25},"routeA":{"classes":{"walk-in from another member":113,"overridable":54,"several arrivals":16,"internal-only":28},"overridableElements":121,"overridableEchoed":9,"overridableEchoFree":112,"regionsWithAnEchoFreeOverride":52,"overridablePartial":12,"overridableExact":98,"regionsWithAnExactOverride":46},"table":{"rows":94,"regions":45,"excluded":4}}
+WROTE: /tmp/claude-0/-home-user-Archipelago-CC/02c2f910-48d8-5d64-ba93-eca17cd8e9e7/scratchpad/dl4/derived-rules.json (906 element rows)
+TABLE: 94 rows in 45 regions; 4 exact elements excluded
+PASS: the derived-rule table matches frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json
+PASS: explained problem level_63__r6c9 → level_63__r0c1 → path-vs-edge
+  DRIFT labels.pair.path-vs-edge: expected 178, measured 179
+  DRIFT labels.pair.derived: expected 235, measured 234
+  DRIFT labels.location.derived: expected 62, measured 65
+  DRIFT w0.location.equal: expected 63, measured 66
+  DRIFT elements: expected 406, measured 409
+  DRIFT routeA.classes.walk-in from another member: expected 111, measured 113
+  DRIFT routeA.classes.overridable: expected 56, measured 54
+  DRIFT routeA.overridableElements: expected 125, measured 121
+  DRIFT routeA.overridableEchoFree: expected 116, measured 112
+  DRIFT routeA.regionsWithAnEchoFreeOverride: expected 54, measured 52
+  DRIFT routeA.overridableExact: expected 102, measured 98
+  DRIFT routeA.regionsWithAnExactOverride: expected 48, measured 46
+  DRIFT sharedBinding: expected 161, measured 168
+  DRIFT table.rows: expected 98, measured 94
+  DRIFT table.regions: expected 47, measured 45
+FAIL: 15 count(s) drifted from scripts/procgen/seedling-derived-rules-expected.json
+1 CHECK(S) FAILED

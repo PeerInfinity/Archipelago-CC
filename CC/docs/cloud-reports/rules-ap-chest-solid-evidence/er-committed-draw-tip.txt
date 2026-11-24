@@ -1,0 +1,11 @@
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async file:///home/user/Archipelago-CC/scripts/procgen/registerPipelineSubstrates.js:56:17
+    at async file:///home/user/Archipelago-CC/CC/docs/cloud-reports/rules-ap-chest-solid-evidence/tools/er-replay-committed-draw.mjs:18:1
+TREE DRAW: accepted attempt 0; attempts {"draws":1,"accepted":1,"shuffleRefused":0,"rejectedUnbeatable":0,"rejectedCheck":0,"log":[{"attempt":0,"verdict":"accepted"}]}
+  attempt 0: accepted
+COMMITTED DRAW: 50 placements mapped to the tree's doorways
+  landing-set problems: 0
+  beatability: OK, 90 spheres
+  mode checks: pass
+VERDICT: the committed draw STAYS ACCEPTABLE under the tree's rules

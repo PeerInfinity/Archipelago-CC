@@ -1,0 +1,13 @@
+ROW DEL level_10|level_10 -> level_11 {"rule":"True_"}
+ROW DEL level_11|@Level 011 - Chest {"rule":"True_"}
+ROW DEL level_11|level_11 -> level_10 {"rule":"True_"}
+ROW DEL level_11|level_11 -> level_3__r8c6 {"rule":"True_"}
+ROW DEL level_28__r0c6|level_28__r0c6 -> level_25__r2c7 {"rule":"True_"}
+ROW DEL level_38|@Level 038 - Chest {"rule":"True_"}
+ROW DEL level_38|level_38 -> level_37__r0c18 {"rule":"True_"}
+ROW ADD level_10|level_10 -> level_11__r4c2 {"rule":"True_"}
+ROW ADD level_28__r0c6|level_28__r0c6 -> level_25__r7c6 {"rule":"True_"}
+EXCL DEL level_38|@L39 flag 8: wandlock@144,592 cleared
+EXCL DEL level_38|level_38 -> level_39__r25c9
+inputs {"payloadMd5":"e705ea936f2ccf407f1046a4e5d11439","engineMd5":"74ae60f575531492ed9eaec1839e1fe3","engineFiles":42,"witnessMd5":"2e4e3caad3c894a7e8877f255ae2de56"} -> {"payloadMd5":"04d24a3500b67ee08d34c780a03855de","engineMd5":"74ae60f575531492ed9eaec1839e1fe3","engineFiles":42,"witnessMd5":"2e4e3caad3c894a7e8877f255ae2de56"}
+counts 99 6 -> 94 4

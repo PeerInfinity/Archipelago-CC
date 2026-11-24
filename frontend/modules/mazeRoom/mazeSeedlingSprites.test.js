@@ -167,7 +167,8 @@ describe('3. the maze state drives the picture', () => {
     });
 
     it('a taken item has no sprite; an event item has no sprite AND keeps its marker', () => {
-        const w = regionWorld('level_11');
+        // ⛓ rules-ap-chest-solid: L11 is two sub-regions of one shared world, carried by the upper one's payload
+        const w = regionWorld('level_11__r0c2');
         const [cell, item] = [...w.items][0];
         const s = createState(w);
         expect(spritesAt(w, s).ops.some((op) => op.key === 'seedling:pickup/chest')).toBe(true);

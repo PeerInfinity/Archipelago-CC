@@ -1,0 +1,428 @@
+== frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json: 1056 path(s) moved
+   (no level)               ADD 24 CHG 4
+   L0                       CHG 7
+   L1                       CHG 1
+   L10                      CHG 3
+   L10,L11                  ADD 6 DEL 6
+   L100                     CHG 2
+   L101                     CHG 3
+   L102                     CHG 2
+   L103                     CHG 1
+   L104                     CHG 1
+   L105                     CHG 1
+   L106                     CHG 1
+   L107                     CHG 1
+   L108                     CHG 4
+   L109                     CHG 1
+   L11                      ADD 109 DEL 70
+   L110                     CHG 1
+   L111                     CHG 1
+   L112                     CHG 2
+   L113                     CHG 1
+   L114                     CHG 1
+   L115                     CHG 7
+   L12                      CHG 6
+   L13                      CHG 1
+   L14                      CHG 1
+   L15                      CHG 3
+   L16                      CHG 5
+   L17                      CHG 1
+   L18                      CHG 2
+   L19                      CHG 4
+   L2                       CHG 1
+   L20                      CHG 3
+   L21                      CHG 1
+   L22                      CHG 2
+   L23                      CHG 1
+   L24                      CHG 1
+   L25                      ADD 70 CHG 15 DEL 35
+   L25,L28                  ADD 6 DEL 6
+   L26                      CHG 2
+   L27                      CHG 1
+   L28                      CHG 5
+   L29                      CHG 3
+   L3                       CHG 4
+   L3,L11                   ADD 6 DEL 6
+   L30                      CHG 5
+   L31                      CHG 2
+   L32                      CHG 1
+   L33                      CHG 1
+   L34                      CHG 1
+   L35                      CHG 1
+   L36                      CHG 1
+   L37                      CHG 6
+   L37,L38                  ADD 6 DEL 6
+   L38                      ADD 129 DEL 93
+   L38,L39                  ADD 8 DEL 8
+   L39                      CHG 5
+   L4                       CHG 1
+   L40                      CHG 7
+   L41                      CHG 3
+   L42                      CHG 1
+   L43                      CHG 3
+   L44                      CHG 3
+   L45                      CHG 4
+   L46                      CHG 6
+   L47                      CHG 9
+   L48                      CHG 5
+   L49                      CHG 1
+   L5                       CHG 2
+   L50                      CHG 1
+   L51                      CHG 4
+   L52                      CHG 3
+   L53                      CHG 3
+   L54                      CHG 9
+   L55                      CHG 1
+   L56                      CHG 1
+   L57                      CHG 1
+   L58                      CHG 7
+   L59                      CHG 1
+   L6                       CHG 1
+   L60                      CHG 2
+   L61                      CHG 3
+   L62                      CHG 1
+   L63                      ADD 8 CHG 4 DEL 31
+   L64                      CHG 1
+   L65                      CHG 3
+   L66                      CHG 2
+   L67                      CHG 2
+   L68                      CHG 2
+   L69                      CHG 1
+   L7                       CHG 1
+   L70                      CHG 1
+   L71                      CHG 5
+   L72                      CHG 9
+   L73                      CHG 5
+   L74                      CHG 4
+   L75                      CHG 9
+   L76                      CHG 1
+   L77                      CHG 3
+   L78                      CHG 12
+   L79                      CHG 2
+   L8                       CHG 1
+   L80                      ADD 19 CHG 8 DEL 75
+   L82                      CHG 1
+   L83                      CHG 1
+   L84                      CHG 3
+   L85                      CHG 1
+   L86                      CHG 1
+   L87                      CHG 4
+   L88                      CHG 1
+   L89                      CHG 6
+   L9                       CHG 1
+   L90                      CHG 1
+   L91                      CHG 1
+   L92                      CHG 5
+   L93                      CHG 3
+   L94                      CHG 2
+   L95                      CHG 1
+   L96                      CHG 1
+   L97                      CHG 1
+   L98                      CHG 1
+   L99                      CHG 5
+== frontend/presets/seedling_er/AP_1/AP_1_rules.json: 1907 path(s) moved
+   (no level)               ADD 24 CHG 73
+   L0                       CHG 7
+   L1                       CHG 1
+   L10                      CHG 11
+   L10,L11                  ADD 14
+   L10,L12                  DEL 14
+   L100                     CHG 10
+   L101                     CHG 23
+   L102                     CHG 22
+   L103                     CHG 1
+   L104                     CHG 1
+   L105                     CHG 1
+   L106                     CHG 1
+   L107                     CHG 1
+   L108                     CHG 4
+   L109                     CHG 1
+   L11                      ADD 109 DEL 70
+   L11,L99                  DEL 14
+   L110                     CHG 1
+   L111                     CHG 1
+   L112                     CHG 2
+   L113                     CHG 1
+   L114                     CHG 1
+   L115                     CHG 7
+   L12                      CHG 16
+   L12,L96                  ADD 14
+   L13                      CHG 1
+   L13,L20                  CHG 1
+   L13,L23                  CHG 1
+   L13,L97                  CHG 1
+   L14                      CHG 11
+   L14,L40                  DEL 14
+   L15                      CHG 13
+   L15,L101                 DEL 19
+   L16                      CHG 24
+   L16,L102                 DEL 14
+   L16,L24                  ADD 14
+   L16,L30                  DEL 16
+   L16,L37                  CHG 1
+   L16,L98                  ADD 27
+   L17                      CHG 1
+   L17,L30                  CHG 1
+   L18                      CHG 12
+   L18,L31                  DEL 14
+   L19                      CHG 14
+   L19,L100                 DEL 14
+   L19,L40                  ADD 14
+   L2                       CHG 1
+   L20                      CHG 13
+   L20,L101                 ADD 19
+   L20,L51                  DEL 14
+   L21                      CHG 1
+   L22                      CHG 2
+   L23                      CHG 1
+   L24                      CHG 11
+   L25                      ADD 70 CHG 15 DEL 35
+   L25,L28                  ADD 6 DEL 6
+   L26                      CHG 2
+   L27                      CHG 1
+   L28                      CHG 5
+   L29                      CHG 3
+   L3                       CHG 4
+   L3,L11                   ADD 6 DEL 6
+   L30                      CHG 15
+   L30,L53                  ADD 14
+   L31                      CHG 12
+   L31,L102                 ADD 14
+   L32                      CHG 11
+   L32,L101                 DEL 14
+   L32,L43                  ADD 14
+   L33                      CHG 1
+   L34                      CHG 1
+   L35                      CHG 1
+   L36                      CHG 1
+   L37                      CHG 6
+   L37,L38                  ADD 6 DEL 6
+   L38                      ADD 129 DEL 93
+   L38,L39                  ADD 8 DEL 8
+   L39                      CHG 5
+   L4                       CHG 1
+   L4,L31                   CHG 1
+   L40                      CHG 17
+   L41                      CHG 3
+   L42                      CHG 1
+   L43                      CHG 12
+   L43,L99                  DEL 14
+   L44                      CHG 3
+   L45                      CHG 4
+   L46                      CHG 6
+   L47                      CHG 9
+   L48                      CHG 5
+   L49                      CHG 1
+   L5                       CHG 22
+   L5,L100                  ADD 15
+   L5,L102                  DEL 14
+   L5,L18                   ADD 14
+   L5,L7                    DEL 15
+   L50                      CHG 1
+   L51                      CHG 14
+   L51,L99                  ADD 14
+   L52                      CHG 3
+   L53                      CHG 13
+   L53,L98                  DEL 23
+   L54                      CHG 9
+   L55                      CHG 1
+   L56                      CHG 1
+   L57                      CHG 1
+   L58                      CHG 7
+   L59                      CHG 1
+   L6                       CHG 11
+   L6,L15                   ADD 14
+   L6,L24                   DEL 14
+   L60                      CHG 2
+   L61                      CHG 3
+   L62                      CHG 1
+   L63                      ADD 8 CHG 4 DEL 31
+   L64                      CHG 1
+   L65                      CHG 3
+   L66                      CHG 2
+   L67                      CHG 2
+   L68                      CHG 2
+   L69                      CHG 1
+   L7                       CHG 20
+   L7,L101                  ADD 14
+   L7,L14                   ADD 14
+   L7,L96                   DEL 14
+   L70                      CHG 1
+   L71                      CHG 5
+   L72                      CHG 9
+   L73                      CHG 5
+   L74                      CHG 4
+   L75                      CHG 9
+   L76                      CHG 1
+   L77                      CHG 3
+   L78                      CHG 12
+   L79                      CHG 2
+   L8                       CHG 1
+   L8,L29                   CHG 2
+   L80                      ADD 19 CHG 8 DEL 75
+   L82                      CHG 1
+   L83                      CHG 1
+   L84                      CHG 3
+   L85                      CHG 1
+   L86                      CHG 1
+   L87                      CHG 4
+   L88                      CHG 1
+   L89                      CHG 6
+   L9                       CHG 1
+   L90                      CHG 1
+   L91                      CHG 1
+   L92                      CHG 5
+   L93                      CHG 3
+   L94                      CHG 2
+   L95                      CHG 1
+   L96                      CHG 11
+   L97                      CHG 1
+   L98                      CHG 11
+   L99                      CHG 24
+   L99,L102                 ADD 14
+== frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json: 4012 path(s) moved
+   (no level)               ADD 562 CHG 219 DEL 519
+   L10                      CHG 3
+   L10,L11                  ADD 6 DEL 6
+   L11                      ADD 198 DEL 75
+   L12                      ADD 89 CHG 316 DEL 68
+   L15                      ADD 17 CHG 6
+   L17                      ADD 8
+   L25                      ADD 80 CHG 16 DEL 13
+   L25,L28                  ADD 6 DEL 6
+   L28                      CHG 3
+   L3                       CHG 3
+   L3,L11                   ADD 6 DEL 6
+   L36                      ADD 8
+   L37                      CHG 3
+   L37,L38                  ADD 6 DEL 6
+   L38                      ADD 717 DEL 654
+   L38,L39                  ADD 8 DEL 8
+   L39                      CHG 3
+   L63                      ADD 8 CHG 20 DEL 33
+   L71                      ADD 33 CHG 34 DEL 16
+   L80                      ADD 32 CHG 101 DEL 77
+   L86                      CHG 2
+   L90                      ADD 12
+== frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json: 1039 path(s) moved
+   (no level)               ADD 27 CHG 1
+   L0                       CHG 7
+   L1                       CHG 1
+   L10                      CHG 3
+   L10,L11                  ADD 6 DEL 6
+   L100                     CHG 2
+   L101                     CHG 3
+   L102                     CHG 2
+   L103                     CHG 1
+   L104                     CHG 1
+   L105                     CHG 1
+   L106                     CHG 1
+   L107                     CHG 1
+   L108                     CHG 4
+   L109                     CHG 1
+   L11                      ADD 108 DEL 71
+   L110                     CHG 1
+   L111                     CHG 1
+   L112                     CHG 2
+   L113                     CHG 1
+   L114                     CHG 1
+   L115                     CHG 7
+   L12                      CHG 6
+   L13                      CHG 1
+   L14                      CHG 1
+   L15                      CHG 3
+   L16                      CHG 5
+   L17                      CHG 1
+   L18                      CHG 2
+   L19                      CHG 4
+   L2                       CHG 1
+   L20                      CHG 3
+   L21                      CHG 1
+   L22                      CHG 2
+   L23                      CHG 1
+   L24                      CHG 1
+   L25                      ADD 71 CHG 15 DEL 36
+   L25,L28                  ADD 6 DEL 6
+   L26                      CHG 2
+   L27                      CHG 1
+   L28                      CHG 5
+   L29                      CHG 3
+   L3                       CHG 4
+   L3,L11                   ADD 6 DEL 6
+   L30                      CHG 5
+   L31                      CHG 2
+   L32                      CHG 1
+   L33                      CHG 1
+   L34                      CHG 1
+   L35                      CHG 1
+   L36                      CHG 1
+   L37                      CHG 6
+   L37,L38                  ADD 6 DEL 6
+   L38                      ADD 130 DEL 94
+   L38,L39                  ADD 8 DEL 8
+   L39                      CHG 5
+   L4                       CHG 1
+   L40                      CHG 7
+   L41                      CHG 3
+   L42                      CHG 1
+   L43                      CHG 3
+   L44                      CHG 3
+   L45                      CHG 4
+   L46                      CHG 6
+   L47                      CHG 9
+   L48                      CHG 5
+   L49                      CHG 1
+   L5                       CHG 2
+   L50                      CHG 1
+   L51                      CHG 4
+   L52                      CHG 3
+   L53                      CHG 3
+   L54                      CHG 9
+   L55                      CHG 1
+   L56                      CHG 1
+   L57                      CHG 1
+   L58                      CHG 7
+   L59                      CHG 1
+   L6                       CHG 1
+   L60                      CHG 2
+   L61                      CHG 3
+   L62                      CHG 1
+   L63                      ADD 9 CHG 4 DEL 32
+   L64                      CHG 1
+   L65                      CHG 3
+   L66                      CHG 2
+   L67                      CHG 2
+   L68                      CHG 2
+   L69                      CHG 1
+   L7                       CHG 1
+   L70                      CHG 1
+   L71                      CHG 5
+   L72                      CHG 9
+   L73                      CHG 5
+   L74                      CHG 4
+   L75                      CHG 9
+   L76                      CHG 1
+   L77                      CHG 3
+   L78                      CHG 12
+   L79                      CHG 2
+   L8                       CHG 1
+   L80                      ADD 15 CHG 8 DEL 56
+   L82                      CHG 1
+   L83                      CHG 1
+   L84                      CHG 3
+   L85                      CHG 1
+   L86                      CHG 1
+   L87                      CHG 4
+   L88                      CHG 1
+   L89                      CHG 6
+   L9                       CHG 1
+   L90                      CHG 1
+   L91                      CHG 1
+   L92                      CHG 5
+   L93                      CHG 3
+   L94                      CHG 2
+   L95                      CHG 1
+   L96                      CHG 1
+   L97                      CHG 1
+   L98                      CHG 1
+   L99                      CHG 5

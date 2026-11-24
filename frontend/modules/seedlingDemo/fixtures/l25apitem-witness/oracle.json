@@ -2,12 +2,12 @@
   "source": "probe-seedling-l25-apitem.mjs --record (seedling fidelity L25APITEM)",
   "build": "seedling_bot_ap_p4g",
   "tape": "frontend/modules/seedlingDemo/fixtures/l25apitem-witness/step34-on.tape.json",
-  "delivered_set": "seedling-ap-record-6d7e278d",
+  "delivered_set": "seedling-ap-record-93f13131",
   "vanilla_set": "seedling-vanilla-record-23510f80",
   "slot": "25,0",
   "takenAt": 48,
   "delivered": {
-    "mounted": "seedling-ap-record-6d7e278d",
+    "mounted": "seedling-ap-record-93f13131",
     "observations": 109,
     "cleared": true,
     "end": {

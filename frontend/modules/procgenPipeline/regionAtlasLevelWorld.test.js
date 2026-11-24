@@ -116,12 +116,24 @@ describe('projectLevelWorld — L15', () => {
 
     it('ownership = the partition on every floor cell, "no news" elsewhere', () => {
         const part = PARTITION.regions.level_15;
+        // ⛓ rules-ap-chest-solid: a LOCATION on a cell the partition leaves unowned (the AP chest's one-sided crossing at
+        // (9,6)) is owned by the sub-region its location is bound to (`projectLevelWorld`'s `boundAt`), as a rope's cells are.
+        const boundLetter = (x, y) => {
+            const item = payload.items.find((i) => i.x === x && i.y === y);
+            const loc = item && L15.locations.find((l) => l.name === item.locationName);
+            const i = loc ? payload.shared_world.regions.indexOf(`level_15__${loc.sub_region}`) : -1;
+            return i === -1 ? '.' : SHARED_WORLD_ALPHABET[i];
+        };
+        const bound = [];
         for (let y = 0; y < payload.height; y += 1) {
             for (let x = 0; x < payload.width; x += 1) {
-                const want = at(x, y) === MAZE_TILE_FLOOR ? part.rows[y][x] : '.';
+                const floor = at(x, y) === MAZE_TILE_FLOOR;
+                const want = !floor ? '.' : part.rows[y][x] !== '.' ? part.rows[y][x] : boundLetter(x, y);
+                if (floor && part.rows[y][x] === '.' && want !== '.') bound.push(`${x},${y}`);
                 expect(payload.shared_world.rows[y][x], `(${x},${y})`).toBe(want);
             }
         }
+        expect(bound).toEqual(['9,6']);
         expect(payload.shared_world.entrances).toEqual({
             level_15__r1c5: { x: 3, y: 4 }, level_15__r1c9: { x: 9, y: 1 }, level_15__r6c8: { x: 8, y: 6 },
         });

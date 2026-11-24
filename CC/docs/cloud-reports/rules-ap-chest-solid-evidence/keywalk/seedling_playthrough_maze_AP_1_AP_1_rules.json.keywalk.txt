@@ -1,0 +1,2228 @@
+CHG preset_sidecars/1/level_10/playable_payload/exits/#0/exitName : "level_10 -> level_11" -> "level_10 -> level_11__r4c2"
+CHG preset_sidecars/1/level_10/playable_payload/exits/#0/exit_id : "level_10 -> level_11" -> "level_10 -> level_11__r4c2"
+CHG preset_sidecars/1/level_10/playable_payload/exits/#0/targetRegion : "level_11" -> "level_11__r4c2"
+DEL preset_sidecars/1/level_11/playable_payload/atlas_region : "level_11" -> null
+DEL preset_sidecars/1/level_11/playable_payload/entrance/x : 2 -> null
+DEL preset_sidecars/1/level_11/playable_payload/entrance/y : 0 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/atlas_exit_id : "out_teleporter_32_0" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/exitName : "level_11 -> level_3__r8c6" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/exit_id : "level_11 -> level_3__r8c6" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/isTeleporter : true -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/side : null -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/targetExitId : null -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/targetRegion : "level_3__r8c6" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/x : 2 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#0/y : 0 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/atlas_exit_id : "out_stairsdown_32_80" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/exitName : "level_11 -> level_10" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/exit_id : "level_11 -> level_10" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/isTeleporter : true -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/side : null -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/targetExitId : null -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/targetRegion : "level_10" -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/x : 2 -> null
+DEL preset_sidecars/1/level_11/playable_payload/exits/#1/y : 5 -> null
+DEL preset_sidecars/1/level_11/playable_payload/height : 7 -> null
+DEL preset_sidecars/1/level_11/playable_payload/items/#0/id : "Seal" -> null
+DEL preset_sidecars/1/level_11/playable_payload/items/#0/locationName : "Level 011 - Chest" -> null
+DEL preset_sidecars/1/level_11/playable_payload/items/#0/x : 2 -> null
+DEL preset_sidecars/1/level_11/playable_payload/items/#0/y : 3 -> null
+DEL preset_sidecars/1/level_11/playable_payload/level : 11 -> null
+DEL preset_sidecars/1/level_11/playable_payload/origin/x : 0 -> null
+DEL preset_sidecars/1/level_11/playable_payload/origin/y : 0 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tile_size : 16 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#0 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#1 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#10 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#11 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#12 : 0 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#13 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#14 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#15 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#16 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#17 : 0 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#18 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#19 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#2 : 0 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#20 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#21 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#22 : 0 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#23 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#24 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#25 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#26 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#27 : 0 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#28 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#29 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#3 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#30 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#31 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#32 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#33 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#34 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#4 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#5 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#6 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#7 : 0 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#8 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/tiles/#9 : 1 -> null
+DEL preset_sidecars/1/level_11/playable_payload/width : 5 -> null
+DEL preset_sidecars/1/level_11/substrate : "maze" -> null
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/atlas_region : null -> "level_11"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/entrance/x : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/entrance/y : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/entry_gates/#0/dir : null -> "E"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/entry_gates/#0/gate : null -> null
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/entry_gates/#0/x : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/entry_gates/#0/y : null -> 3
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/entry_gates/#1/dir : null -> "S"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/entry_gates/#1/gate : null -> null
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/entry_gates/#1/x : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/entry_gates/#1/y : null -> 3
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/entry_gates/#2/dir : null -> "W"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/entry_gates/#2/gate : null -> null
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/entry_gates/#2/x : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/entry_gates/#2/y : null -> 3
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/atlas_exit_id : null -> "out_teleporter_32_0"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/exitName : null -> "level_11__r0c2 -> level_3__r8c6"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/exit_id : null -> "level_11__r0c2 -> level_3__r8c6"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/isTeleporter : null -> true
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/side : null -> null
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/targetExitId : null -> null
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/targetRegion : null -> "level_3__r8c6"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/x : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#0/y : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/atlas_exit_id : null -> "out_stairsdown_32_80"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/exitName : null -> "level_11__r4c2 -> level_10"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/exit_id : null -> "level_11__r4c2 -> level_10"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/isTeleporter : null -> true
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/side : null -> null
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/targetExitId : null -> null
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/targetRegion : null -> "level_10"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/x : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/exits/#1/y : null -> 5
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/height : null -> 7
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/items/#0/id : null -> "Seal"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/items/#0/locationName : null -> "Level 011 - Chest"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/items/#0/x : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/items/#0/y : null -> 3
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/level : null -> 11
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacleLib/atlas_gate_0/clear_rule/args/item_name : null -> "Progressive Swim"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacleLib/atlas_gate_0/clear_rule/rule : null -> "Has"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacleLib/atlas_gate_0/clear_set_type : null -> "rule"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacleLib/atlas_gate_0/color : null -> "#b06eb8"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacleLib/atlas_gate_0/display/mode : null -> "tree"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacleLib/atlas_gate_0/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacleLib/atlas_gate_0/name : null -> "Progressive Swim"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#0/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#0/x : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#0/y : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#1/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#1/x : null -> 3
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#1/y : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#2/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#2/x : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#2/y : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#3/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#3/x : null -> 3
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#3/y : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#4/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#4/x : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#4/y : null -> 3
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#5/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#5/x : null -> 3
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#5/y : null -> 3
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#6/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#6/x : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#6/y : null -> 4
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#7/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#7/x : null -> 3
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#7/y : null -> 4
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#8/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#8/x : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#8/y : null -> 5
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#9/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#9/x : null -> 3
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/obstacles/#9/y : null -> 5
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/origin/x : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/origin/y : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/entrances/level_11__r0c2/x : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/entrances/level_11__r0c2/y : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/entrances/level_11__r4c2/x : null -> 2
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/entrances/level_11__r4c2/y : null -> 4
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/key : null -> "level_11"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/links/level_11__r0c2>level_11__r4c2 : null -> "level_11__r0c2 -> level_11__r4c2"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/links/level_11__r4c2>level_11__r0c2 : null -> "level_11__r4c2 -> level_11__r0c2"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/regions/#0 : null -> "level_11__r0c2"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/regions/#1 : null -> "level_11__r4c2"
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/rows/#0 : null -> "..A.."
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/rows/#1 : null -> "..A.."
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/rows/#2 : null -> "..A.."
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/rows/#3 : null -> "..B.."
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/rows/#4 : null -> "..B.."
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/rows/#5 : null -> "..B.."
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/shared_world/rows/#6 : null -> "....."
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tile_size : null -> 16
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#0 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#1 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#10 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#11 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#12 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#13 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#14 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#15 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#16 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#17 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#18 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#19 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#2 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#20 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#21 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#22 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#23 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#24 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#25 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#26 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#27 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#28 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#29 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#3 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#30 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#31 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#32 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#33 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#34 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#4 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#5 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#6 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#7 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#8 : null -> 0
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/tiles/#9 : null -> 1
+ADD preset_sidecars/1/level_11__r0c2/playable_payload/width : null -> 5
+ADD preset_sidecars/1/level_11__r0c2/shared_world : null -> "level_11"
+ADD preset_sidecars/1/level_11__r0c2/substrate : null -> "maze"
+ADD preset_sidecars/1/level_11__r4c2/shared_world : null -> "level_11"
+ADD preset_sidecars/1/level_11__r4c2/substrate : null -> "maze"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#100/dir : "S" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#100/x : 31 -> 29
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#101/x : 32 -> 29
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#102/x : 33 -> 30
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#103/dir : "W" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#103/x : 33 -> 31
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#104/dir : "E" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#104/x : 34 -> 32
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#105/dir : "W" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#105/x : 35 -> 33
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#106/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#106/x : 36 -> 33
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#107/dir : "S" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#107/x : 36 -> 34
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#108/dir : "S" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#108/x : 37 -> 35
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#109/dir : "N" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#109/x : 2 -> 36
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#109/y : 52 -> 51
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#110/dir : "W" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#110/x : 4 -> 36
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#110/y : 52 -> 51
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#111/dir : "E" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#111/x : 5 -> 37
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#111/y : 52 -> 51
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#112/dir : "W" -> "N"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#112/x : 5 -> 2
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#113/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#113/x : 6 -> 4
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#114/dir : "S" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#114/x : 6 -> 5
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#115/x : 6 -> 5
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#116/x : 7 -> 6
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#117/dir : "W" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#117/x : 8 -> 6
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#118/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#118/x : 9 -> 6
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#119/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#119/x : 14 -> 7
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#120/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#120/x : 15 -> 8
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#121/dir : "S" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#121/x : 15 -> 9
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#122/dir : "S" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#122/x : 16 -> 14
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#123/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#123/x : 17 -> 15
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#124/dir : "E" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#124/x : 18 -> 15
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#125/dir : "W" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#125/x : 22 -> 16
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#126/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#126/x : 23 -> 17
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#127/dir : "S" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#127/x : 23 -> 18
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#128/dir : "S" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#128/x : 24 -> 22
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#129/dir : "S" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#129/x : 25 -> 23
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#130/dir : "W" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#130/x : 33 -> 23
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#131/dir : "E" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#131/x : 34 -> 24
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#132/dir : "W" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#132/x : 35 -> 25
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#133/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#133/x : 36 -> 33
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#134/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#134/x : 1 -> 34
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#134/y : 53 -> 52
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#135/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#135/x : 2 -> 35
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#135/y : 53 -> 52
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#136/dir : "S" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#136/x : 2 -> 36
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#136/y : 53 -> 52
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#137/x : 2 -> 1
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#138/x : 3 -> 2
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#139/dir : "W" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#139/x : 4 -> 2
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#140/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#140/x : 5 -> 2
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#141/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#141/x : 5 -> 3
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#142/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#142/x : 6 -> 4
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#143/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#143/x : 6 -> 5
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#144/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#144/x : 7 -> 5
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#145/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#145/x : 8 -> 6
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#146/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#146/x : 9 -> 6
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#147/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#147/x : 14 -> 7
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#148/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#148/x : 15 -> 8
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#149/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#149/x : 17 -> 9
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#150/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#150/x : 18 -> 14
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#151/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#151/x : 22 -> 15
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#152/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#152/x : 23 -> 17
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#153/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#153/x : 33 -> 18
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#154/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#154/x : 34 -> 22
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#155/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#155/x : 35 -> 23
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#156/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#156/x : 36 -> 33
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#157/dir : "S" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#157/gate : "atlas_gate_14" -> null
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#157/x : 2 -> 34
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#157/y : 54 -> 53
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#158/x : 5 -> 35
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#158/y : 54 -> 53
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#159/x : 6 -> 36
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#159/y : 54 -> 53
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#160/dir : "W" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#160/gate : null -> "atlas_gate_14"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#160/x : 6 -> 2
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#161/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#161/x : 7 -> 5
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#162/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#162/x : 33 -> 6
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#163/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#163/x : 34 -> 6
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#164/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#164/x : 35 -> 7
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#165/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#165/x : 36 -> 33
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#166/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#166/x : 6 -> 34
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#166/y : 55 -> 54
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#167/dir : "N" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#167/x : 7 -> 35
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#167/y : 55 -> 54
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#168/x : 7 -> 36
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#168/y : 55 -> 54
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#169/dir : "N" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#169/x : 8 -> 6
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#170/x : 9 -> 7
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#171/dir : "N" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#171/x : 10 -> 7
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#172/x : 11 -> 8
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#173/dir : "W" -> "N"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#173/x : 11 -> 9
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#174/dir : "E" -> "N"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#174/x : 12 -> 10
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#175/dir : "W" -> "N"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#175/x : 22 -> 11
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#176/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#176/x : 23 -> 11
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#177/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#177/x : 24 -> 12
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#178/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#178/x : 25 -> 22
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#179/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#179/x : 26 -> 23
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#180/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#180/x : 27 -> 24
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#181/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#181/x : 33 -> 25
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#182/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#182/x : 34 -> 26
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#183/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#183/x : 35 -> 27
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#184/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#184/x : 36 -> 33
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#185/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#185/x : 6 -> 34
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#185/y : 56 -> 55
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#186/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#186/x : 7 -> 35
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#186/y : 56 -> 55
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#187/dir : "S" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#187/x : 7 -> 36
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#187/y : 56 -> 55
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#188/dir : "S" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#188/x : 8 -> 6
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#189/dir : "S" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#189/x : 9 -> 7
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#190/x : 10 -> 7
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#191/x : 11 -> 8
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#192/dir : "W" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#192/x : 24 -> 9
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#193/dir : "E" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#193/x : 25 -> 10
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#194/dir : "W" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#194/x : 35 -> 11
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#195/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#195/x : 36 -> 24
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#196/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#196/x : 13 -> 25
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#196/y : 57 -> 56
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#197/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#197/x : 14 -> 35
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#197/y : 57 -> 56
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#198/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#198/x : 24 -> 36
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#198/y : 57 -> 56
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#199/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#199/x : 25 -> 13
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#200/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#200/x : 35 -> 14
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#201/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#201/x : 36 -> 24
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#202/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#202/x : 13 -> 25
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#202/y : 58 -> 57
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#203/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#203/x : 14 -> 35
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#203/y : 58 -> 57
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#204/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#204/x : 24 -> 36
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#204/y : 58 -> 57
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#205/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#205/x : 25 -> 13
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#206/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#206/x : 35 -> 14
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#207/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#207/x : 36 -> 24
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#208/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#208/x : 13 -> 25
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#208/y : 59 -> 58
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#209/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#209/x : 14 -> 35
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#209/y : 59 -> 58
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#210/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#210/x : 24 -> 36
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#210/y : 59 -> 58
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#211/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#211/x : 25 -> 13
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#212/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#212/x : 35 -> 14
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#213/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#213/x : 36 -> 24
+ADD preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#214/dir : null -> "E"
+ADD preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#214/gate : null -> null
+ADD preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#214/x : null -> 25
+ADD preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#214/y : null -> 59
+ADD preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#215/dir : null -> "W"
+ADD preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#215/gate : null -> null
+ADD preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#215/x : null -> 35
+ADD preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#215/y : null -> 59
+ADD preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#216/dir : null -> "E"
+ADD preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#216/gate : null -> null
+ADD preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#216/x : null -> 36
+ADD preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#216/y : null -> 59
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#89/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#89/x : 22 -> 20
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#90/dir : "N" -> "S"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#90/x : 23 -> 20
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#91/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#91/x : 23 -> 20
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#92/dir : "N" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#92/x : 24 -> 22
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#93/x : 25 -> 23
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#94/dir : "W" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#94/x : 25 -> 23
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#95/dir : "E" -> "N"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#95/x : 26 -> 24
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#96/dir : "W" -> "N"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#96/x : 28 -> 25
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#97/dir : "E" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#97/x : 29 -> 25
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#98/dir : "S" -> "E"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#98/x : 29 -> 26
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#99/dir : "S" -> "W"
+CHG preset_sidecars/1/level_12__r0c19/playable_payload/entry_gates/#99/x : 30 -> 28
+ADD preset_sidecars/1/level_15__r1c5/playable_payload/entry_gates/#0/dir : null -> "E"
+ADD preset_sidecars/1/level_15__r1c5/playable_payload/entry_gates/#0/gate : null -> null
+ADD preset_sidecars/1/level_15__r1c5/playable_payload/entry_gates/#0/x : null -> 9
+ADD preset_sidecars/1/level_15__r1c5/playable_payload/entry_gates/#0/y : null -> 6
+ADD preset_sidecars/1/level_15__r1c5/playable_payload/entry_gates/#1/dir : null -> "S"
+ADD preset_sidecars/1/level_15__r1c5/playable_payload/entry_gates/#1/gate : null -> null
+ADD preset_sidecars/1/level_15__r1c5/playable_payload/entry_gates/#1/x : null -> 9
+ADD preset_sidecars/1/level_15__r1c5/playable_payload/entry_gates/#1/y : null -> 6
+ADD preset_sidecars/1/level_17/playable_payload/entry_gates/#0/dir : null -> "E"
+ADD preset_sidecars/1/level_17/playable_payload/entry_gates/#0/gate : null -> null
+ADD preset_sidecars/1/level_17/playable_payload/entry_gates/#0/x : null -> 8
+ADD preset_sidecars/1/level_17/playable_payload/entry_gates/#0/y : null -> 1
+ADD preset_sidecars/1/level_17/playable_payload/entry_gates/#1/dir : null -> "W"
+ADD preset_sidecars/1/level_17/playable_payload/entry_gates/#1/gate : null -> null
+ADD preset_sidecars/1/level_17/playable_payload/entry_gates/#1/x : null -> 8
+ADD preset_sidecars/1/level_17/playable_payload/entry_gates/#1/y : null -> 1
+ADD preset_sidecars/1/level_25__r2c7/playable_payload/entry_gates/#10/dir : null -> "W"
+ADD preset_sidecars/1/level_25__r2c7/playable_payload/entry_gates/#10/gate : null -> null
+ADD preset_sidecars/1/level_25__r2c7/playable_payload/entry_gates/#10/x : null -> 6
+ADD preset_sidecars/1/level_25__r2c7/playable_payload/entry_gates/#10/y : null -> 6
+ADD preset_sidecars/1/level_25__r2c7/playable_payload/entry_gates/#9/dir : null -> "S"
+ADD preset_sidecars/1/level_25__r2c7/playable_payload/entry_gates/#9/gate : null -> null
+ADD preset_sidecars/1/level_25__r2c7/playable_payload/entry_gates/#9/x : null -> 6
+ADD preset_sidecars/1/level_25__r2c7/playable_payload/entry_gates/#9/y : null -> 6
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/exitName : "level_25__r2c7 -> level_28__r0c6" -> "level_25__r7c6 -> level_28__r0c6"
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/exits/#1/exit_id : "level_25__r2c7 -> level_28__r0c6" -> "level_25__r7c6 -> level_28__r0c6"
+ADD preset_sidecars/1/level_25__r2c7/playable_payload/shared_world/entrances/level_25__r7c6/x : null -> 6
+ADD preset_sidecars/1/level_25__r2c7/playable_payload/shared_world/entrances/level_25__r7c6/y : null -> 8
+ADD preset_sidecars/1/level_25__r2c7/playable_payload/shared_world/links/level_25__r7c6>level_25__r2c7 : null -> "level_25__r7c6 -> level_25__r2c7"
+ADD preset_sidecars/1/level_25__r2c7/playable_payload/shared_world/regions/#2 : null -> "level_25__r7c6"
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/shared_world/rows/#6 : "BBB...AA.." -> "BBB...CA.."
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/shared_world/rows/#7 : "......A..." -> "......C..."
+CHG preset_sidecars/1/level_25__r2c7/playable_payload/shared_world/rows/#8 : "......A..." -> "......C..."
+ADD preset_sidecars/1/level_25__r7c6/shared_world : null -> "level_25"
+ADD preset_sidecars/1/level_25__r7c6/substrate : null -> "maze"
+CHG preset_sidecars/1/level_28__r0c6/playable_payload/exits/#1/exitName : "level_28__r0c6 -> level_25__r2c7" -> "level_28__r0c6 -> level_25__r7c6"
+CHG preset_sidecars/1/level_28__r0c6/playable_payload/exits/#1/exit_id : "level_28__r0c6 -> level_25__r2c7" -> "level_28__r0c6 -> level_25__r7c6"
+CHG preset_sidecars/1/level_28__r0c6/playable_payload/exits/#1/targetRegion : "level_25__r2c7" -> "level_25__r7c6"
+ADD preset_sidecars/1/level_36/playable_payload/entry_gates/#0/dir : null -> "E"
+ADD preset_sidecars/1/level_36/playable_payload/entry_gates/#0/gate : null -> null
+ADD preset_sidecars/1/level_36/playable_payload/entry_gates/#0/x : null -> 4
+ADD preset_sidecars/1/level_36/playable_payload/entry_gates/#0/y : null -> 3
+ADD preset_sidecars/1/level_36/playable_payload/entry_gates/#1/dir : null -> "W"
+ADD preset_sidecars/1/level_36/playable_payload/entry_gates/#1/gate : null -> null
+ADD preset_sidecars/1/level_36/playable_payload/entry_gates/#1/x : null -> 4
+ADD preset_sidecars/1/level_36/playable_payload/entry_gates/#1/y : null -> 3
+CHG preset_sidecars/1/level_37__r0c18/playable_payload/exits/#2/exitName : "level_37__r0c18 -> level_38" -> "level_37__r0c18 -> level_38__r8c9"
+CHG preset_sidecars/1/level_37__r0c18/playable_payload/exits/#2/exit_id : "level_37__r0c18 -> level_38" -> "level_37__r0c18 -> level_38__r8c9"
+CHG preset_sidecars/1/level_37__r0c18/playable_payload/exits/#2/targetRegion : "level_38" -> "level_38__r8c9"
+DEL preset_sidecars/1/level_38/playable_payload/atlas_region : "level_38" -> null
+DEL preset_sidecars/1/level_38/playable_payload/buttonLib/button_0/holds : "sw_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/buttonLib/button_0/kind : "button" -> null
+DEL preset_sidecars/1/level_38/playable_payload/buttons/#0/id : "button_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/buttons/#0/x : 5 -> null
+DEL preset_sidecars/1/level_38/playable_payload/buttons/#0/y : 12 -> null
+DEL preset_sidecars/1/level_38/playable_payload/entrance/x : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/entrance/y : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/atlas_exit_id : "out_teleporter_144_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/exitName : "level_38 -> level_39__r25c9" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/exit_id : "level_38 -> level_39__r25c9" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/isTeleporter : true -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/side : null -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/targetExitId : null -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/targetRegion : "level_39__r25c9" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/x : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#0/y : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/atlas_exit_id : "out_teleporter_144_304" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/exitName : "level_38 -> level_37__r0c18" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/exit_id : "level_38 -> level_37__r0c18" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/isTeleporter : true -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/side : null -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/targetExitId : null -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/targetRegion : "level_37__r0c18" -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/x : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/exits/#1/y : 19 -> null
+DEL preset_sidecars/1/level_38/playable_payload/height : 20 -> null
+DEL preset_sidecars/1/level_38/playable_payload/items/#0/id : "L39 flag 8: wandlock@144,592 cleared" -> null
+DEL preset_sidecars/1/level_38/playable_payload/items/#0/locationName : "L39 flag 8: wandlock@144,592 cleared" -> null
+DEL preset_sidecars/1/level_38/playable_payload/items/#0/x : 2 -> null
+DEL preset_sidecars/1/level_38/playable_payload/items/#0/y : 3 -> null
+DEL preset_sidecars/1/level_38/playable_payload/items/#1/id : "Seal" -> null
+DEL preset_sidecars/1/level_38/playable_payload/items/#1/locationName : "Level 038 - Chest" -> null
+DEL preset_sidecars/1/level_38/playable_payload/items/#1/x : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/items/#1/y : 7 -> null
+DEL preset_sidecars/1/level_38/playable_payload/level : 38 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_0/clear_rule/args/item_name : "Progressive Swim" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_0/clear_rule/rule : "Has" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_0/clear_set_type : "rule" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_0/color : "#b06eb8" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_0/display/mode : "tree" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_0/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_0/name : "Progressive Swim" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_1/clear_rule/args/item_name : "Fire" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_1/clear_rule/rule : "Has" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_1/clear_set_type : "rule" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_1/color : "#b06eb8" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_1/display/mode : "tree" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_1/id : "atlas_gate_1" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_1/name : "Fire" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_2/clear_rule/args/item_name : "L39 flag 8: wandlock@144,592 cleared" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_2/clear_rule/rule : "Has" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_2/clear_set_type : "rule" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_2/color : "#b06eb8" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_2/display/mode : "tree" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_2/id : "atlas_gate_2" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacleLib/atlas_gate_2/name : "L39 flag 8: wandlock@144,592 cleared" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#0/id : "atlas_gate_2" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#0/x : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#0/y : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#1/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#1/x : 2 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#1/y : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#10/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#10/x : 16 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#10/y : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#11/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#11/x : 3 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#11/y : 10 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#12/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#12/x : 4 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#12/y : 10 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#13/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#13/x : 5 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#13/y : 10 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#14/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#14/x : 6 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#14/y : 10 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#15/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#15/x : 7 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#15/y : 10 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#16/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#16/x : 11 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#16/y : 10 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#17/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#17/x : 12 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#17/y : 10 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#18/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#18/x : 13 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#18/y : 10 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#19/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#19/x : 14 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#19/y : 10 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#2/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#2/x : 3 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#2/y : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#20/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#20/x : 15 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#20/y : 10 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#21/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#21/x : 3 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#21/y : 11 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#22/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#22/x : 5 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#22/y : 11 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#23/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#23/x : 7 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#23/y : 11 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#24/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#24/x : 11 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#24/y : 11 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#25/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#25/x : 12 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#25/y : 11 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#26/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#26/x : 13 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#26/y : 11 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#27/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#27/x : 14 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#27/y : 11 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#28/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#28/x : 15 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#28/y : 11 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#29/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#29/x : 3 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#29/y : 12 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#3/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#3/x : 4 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#3/y : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#30/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#30/x : 15 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#30/y : 12 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#31/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#31/x : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#31/y : 13 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#32/id : "atlas_gate_1" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#32/x : 5 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#32/y : 13 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#33/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#33/x : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#33/y : 13 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#34/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#34/x : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#34/y : 14 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#35/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#35/x : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#35/y : 14 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#36/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#36/x : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#36/y : 15 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#37/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#37/x : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#37/y : 15 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#38/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#38/x : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#38/y : 16 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#39/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#39/x : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#39/y : 16 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#4/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#4/x : 5 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#4/y : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#40/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#40/x : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#40/y : 17 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#41/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#41/x : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#41/y : 17 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#42/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#42/x : 17 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#42/y : 17 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#43/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#43/x : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#43/y : 17 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#44/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#44/x : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#44/y : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#45/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#45/x : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#45/y : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#46/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#46/x : 17 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#46/y : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#47/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#47/x : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#47/y : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#48/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#48/x : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#48/y : 19 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#49/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#49/x : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#49/y : 19 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#5/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#5/x : 6 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#5/y : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#50/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#50/x : 17 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#50/y : 19 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#51/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#51/x : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#51/y : 19 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#6/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#6/x : 12 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#6/y : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#7/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#7/x : 13 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#7/y : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#8/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#8/x : 14 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#8/y : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#9/id : "atlas_gate_0" -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#9/x : 15 -> null
+DEL preset_sidecars/1/level_38/playable_payload/obstacles/#9/y : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/origin/x : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/origin/y : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/entrances/level_38/x : 9 -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/entrances/level_38/y : 18 -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/key : "level_38" -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/regions/#0 : "level_38" -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#0 : ".........A........." -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#1 : "...AAAAAAAAAAAAA..." -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#10 : "...AAAAA.A.AAAAA..." -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#11 : "...A.A.A.A.AAAAA..." -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#12 : "...A.A...A.....A..." -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#13 : "A....A...A........A" -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#14 : "A......AAAAAAAA...A" -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#15 : "A..AAAAAAAAAAAAA..A" -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#16 : "A..AAAAAAAAAAAAA..A" -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#17 : "AA.AAAAAAAAAAAAA.AA" -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#18 : "AA..AAAAAAAAAAA..AA" -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#19 : "AA.......A.......AA" -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#2 : ".AAAA..AAAAA..AAAA." -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#3 : ".AAAA..AAAAA..AAAA." -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#4 : ".AAAAAAAAAAAAAAAAA." -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#5 : ".......AAAAA......." -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#6 : "........AAA........" -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#7 : ".........A........." -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#8 : ".........A........." -> null
+DEL preset_sidecars/1/level_38/playable_payload/shared_world/rows/#9 : "..AAAAA..A..AAAAA.." -> null
+DEL preset_sidecars/1/level_38/playable_payload/tile_size : 16 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#0 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#1 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#10 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#100 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#101 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#102 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#103 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#104 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#105 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#106 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#107 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#108 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#109 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#11 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#110 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#111 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#112 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#113 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#114 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#115 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#116 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#117 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#118 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#119 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#12 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#120 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#121 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#122 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#123 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#124 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#125 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#126 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#127 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#128 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#129 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#13 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#130 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#131 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#132 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#133 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#134 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#135 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#136 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#137 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#138 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#139 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#14 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#140 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#141 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#142 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#143 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#144 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#145 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#146 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#147 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#148 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#149 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#15 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#150 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#151 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#152 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#153 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#154 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#155 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#156 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#157 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#158 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#159 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#16 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#160 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#161 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#162 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#163 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#164 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#165 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#166 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#167 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#168 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#169 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#17 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#170 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#171 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#172 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#173 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#174 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#175 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#176 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#177 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#178 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#179 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#18 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#180 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#181 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#182 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#183 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#184 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#185 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#186 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#187 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#188 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#189 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#19 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#190 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#191 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#192 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#193 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#194 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#195 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#196 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#197 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#198 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#199 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#2 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#20 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#200 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#201 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#202 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#203 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#204 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#205 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#206 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#207 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#208 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#209 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#21 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#210 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#211 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#212 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#213 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#214 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#215 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#216 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#217 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#218 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#219 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#22 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#220 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#221 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#222 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#223 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#224 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#225 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#226 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#227 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#228 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#229 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#23 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#230 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#231 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#232 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#233 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#234 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#235 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#236 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#237 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#238 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#239 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#24 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#240 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#241 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#242 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#243 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#244 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#245 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#246 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#247 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#248 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#249 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#25 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#250 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#251 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#252 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#253 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#254 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#255 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#256 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#257 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#258 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#259 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#26 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#260 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#261 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#262 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#263 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#264 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#265 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#266 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#267 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#268 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#269 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#27 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#270 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#271 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#272 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#273 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#274 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#275 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#276 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#277 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#278 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#279 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#28 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#280 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#281 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#282 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#283 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#284 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#285 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#286 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#287 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#288 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#289 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#29 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#290 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#291 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#292 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#293 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#294 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#295 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#296 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#297 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#298 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#299 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#3 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#30 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#300 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#301 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#302 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#303 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#304 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#305 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#306 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#307 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#308 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#309 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#31 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#310 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#311 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#312 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#313 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#314 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#315 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#316 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#317 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#318 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#319 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#32 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#320 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#321 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#322 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#323 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#324 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#325 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#326 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#327 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#328 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#329 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#33 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#330 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#331 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#332 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#333 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#334 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#335 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#336 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#337 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#338 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#339 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#34 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#340 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#341 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#342 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#343 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#344 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#345 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#346 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#347 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#348 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#349 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#35 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#350 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#351 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#352 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#353 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#354 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#355 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#356 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#357 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#358 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#359 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#36 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#360 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#361 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#362 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#363 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#364 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#365 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#366 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#367 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#368 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#369 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#37 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#370 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#371 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#372 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#373 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#374 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#375 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#376 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#377 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#378 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#379 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#38 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#39 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#4 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#40 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#41 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#42 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#43 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#44 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#45 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#46 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#47 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#48 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#49 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#5 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#50 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#51 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#52 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#53 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#54 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#55 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#56 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#57 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#58 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#59 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#6 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#60 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#61 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#62 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#63 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#64 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#65 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#66 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#67 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#68 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#69 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#7 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#70 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#71 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#72 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#73 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#74 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#75 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#76 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#77 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#78 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#79 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#8 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#80 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#81 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#82 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#83 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#84 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#85 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#86 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#87 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#88 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#89 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#9 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#90 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#91 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#92 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#93 : 0 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#94 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#95 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#96 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#97 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#98 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/tiles/#99 : 1 -> null
+DEL preset_sidecars/1/level_38/playable_payload/width : 19 -> null
+DEL preset_sidecars/1/level_38/shared_world : "level_38" -> null
+DEL preset_sidecars/1/level_38/substrate : "maze" -> null
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/atlas_region : null -> "level_38"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/buttonLib/button_0/holds : null -> "sw_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/buttonLib/button_0/kind : null -> "button"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/buttons/#0/id : null -> "button_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/buttons/#0/x : null -> 5
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/buttons/#0/y : null -> 12
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/entrance/x : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/entrance/y : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/entry_gates/#0/dir : null -> "S"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/entry_gates/#0/gate : null -> null
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/entry_gates/#0/x : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/entry_gates/#0/y : null -> 7
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/atlas_exit_id : null -> "out_teleporter_144_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/exitName : null -> "level_38__r0c9 -> level_39__r25c9"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/exit_id : null -> "level_38__r0c9 -> level_39__r25c9"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/isTeleporter : null -> true
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/side : null -> null
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/targetExitId : null -> null
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/targetRegion : null -> "level_39__r25c9"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/x : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#0/y : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/atlas_exit_id : null -> "out_teleporter_144_304"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/exitName : null -> "level_38__r8c9 -> level_37__r0c18"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/exit_id : null -> "level_38__r8c9 -> level_37__r0c18"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/isTeleporter : null -> true
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/side : null -> null
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/targetExitId : null -> null
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/targetRegion : null -> "level_37__r0c18"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/x : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/exits/#1/y : null -> 19
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/height : null -> 20
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/items/#0/id : null -> "L39 flag 8: wandlock@144,592 cleared"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/items/#0/locationName : null -> "L39 flag 8: wandlock@144,592 cleared"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/items/#0/x : null -> 2
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/items/#0/y : null -> 3
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/items/#1/id : null -> "Seal"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/items/#1/locationName : null -> "Level 038 - Chest"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/items/#1/x : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/items/#1/y : null -> 7
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/level : null -> 38
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_0/clear_rule/args/item_name : null -> "Progressive Swim"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_0/clear_rule/rule : null -> "Has"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_0/clear_set_type : null -> "rule"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_0/color : null -> "#b06eb8"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_0/display/mode : null -> "tree"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_0/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_0/name : null -> "Progressive Swim"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_1/clear_rule/args/item_name : null -> "Fire"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_1/clear_rule/rule : null -> "Has"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_1/clear_set_type : null -> "rule"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_1/color : null -> "#b06eb8"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_1/display/mode : null -> "tree"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_1/id : null -> "atlas_gate_1"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_1/name : null -> "Fire"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_2/clear_rule/args/item_name : null -> "L39 flag 8: wandlock@144,592 cleared"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_2/clear_rule/rule : null -> "Has"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_2/clear_set_type : null -> "rule"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_2/color : null -> "#b06eb8"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_2/display/mode : null -> "tree"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_2/id : null -> "atlas_gate_2"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacleLib/atlas_gate_2/name : null -> "L39 flag 8: wandlock@144,592 cleared"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#0/id : null -> "atlas_gate_2"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#0/x : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#0/y : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#1/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#1/x : null -> 2
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#1/y : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#10/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#10/x : null -> 16
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#10/y : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#11/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#11/x : null -> 3
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#11/y : null -> 10
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#12/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#12/x : null -> 4
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#12/y : null -> 10
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#13/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#13/x : null -> 5
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#13/y : null -> 10
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#14/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#14/x : null -> 6
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#14/y : null -> 10
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#15/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#15/x : null -> 7
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#15/y : null -> 10
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#16/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#16/x : null -> 11
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#16/y : null -> 10
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#17/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#17/x : null -> 12
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#17/y : null -> 10
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#18/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#18/x : null -> 13
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#18/y : null -> 10
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#19/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#19/x : null -> 14
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#19/y : null -> 10
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#2/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#2/x : null -> 3
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#2/y : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#20/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#20/x : null -> 15
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#20/y : null -> 10
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#21/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#21/x : null -> 3
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#21/y : null -> 11
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#22/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#22/x : null -> 5
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#22/y : null -> 11
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#23/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#23/x : null -> 7
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#23/y : null -> 11
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#24/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#24/x : null -> 11
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#24/y : null -> 11
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#25/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#25/x : null -> 12
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#25/y : null -> 11
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#26/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#26/x : null -> 13
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#26/y : null -> 11
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#27/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#27/x : null -> 14
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#27/y : null -> 11
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#28/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#28/x : null -> 15
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#28/y : null -> 11
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#29/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#29/x : null -> 3
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#29/y : null -> 12
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#3/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#3/x : null -> 4
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#3/y : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#30/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#30/x : null -> 15
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#30/y : null -> 12
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#31/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#31/x : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#31/y : null -> 13
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#32/id : null -> "atlas_gate_1"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#32/x : null -> 5
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#32/y : null -> 13
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#33/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#33/x : null -> 18
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#33/y : null -> 13
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#34/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#34/x : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#34/y : null -> 14
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#35/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#35/x : null -> 18
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#35/y : null -> 14
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#36/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#36/x : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#36/y : null -> 15
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#37/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#37/x : null -> 18
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#37/y : null -> 15
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#38/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#38/x : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#38/y : null -> 16
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#39/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#39/x : null -> 18
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#39/y : null -> 16
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#4/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#4/x : null -> 5
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#4/y : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#40/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#40/x : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#40/y : null -> 17
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#41/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#41/x : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#41/y : null -> 17
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#42/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#42/x : null -> 17
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#42/y : null -> 17
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#43/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#43/x : null -> 18
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#43/y : null -> 17
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#44/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#44/x : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#44/y : null -> 18
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#45/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#45/x : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#45/y : null -> 18
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#46/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#46/x : null -> 17
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#46/y : null -> 18
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#47/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#47/x : null -> 18
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#47/y : null -> 18
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#48/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#48/x : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#48/y : null -> 19
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#49/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#49/x : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#49/y : null -> 19
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#5/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#5/x : null -> 6
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#5/y : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#50/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#50/x : null -> 17
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#50/y : null -> 19
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#51/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#51/x : null -> 18
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#51/y : null -> 19
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#6/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#6/x : null -> 12
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#6/y : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#7/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#7/x : null -> 13
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#7/y : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#8/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#8/x : null -> 14
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#8/y : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#9/id : null -> "atlas_gate_0"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#9/x : null -> 15
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/obstacles/#9/y : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/origin/x : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/origin/y : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/entrances/level_38__r0c9/x : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/entrances/level_38__r0c9/y : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/entrances/level_38__r8c9/x : null -> 9
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/entrances/level_38__r8c9/y : null -> 18
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/key : null -> "level_38"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/links/level_38__r8c9>level_38__r0c9 : null -> "level_38__r8c9 -> level_38__r0c9"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/regions/#0 : null -> "level_38__r0c9"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/regions/#1 : null -> "level_38__r8c9"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#0 : null -> ".........A........."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#1 : null -> "...AAAAAAAAAAAAA..."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#10 : null -> ".........B........."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#11 : null -> ".........B........."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#12 : null -> ".........B........."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#13 : null -> ".........B........."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#14 : null -> ".......BBBBBBBB...."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#15 : null -> "...BBBBBBBBBBBBB..."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#16 : null -> "...BBBBBBBBBBBBB..."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#17 : null -> "...BBBBBBBBBBBBB..."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#18 : null -> "....BBBBBBBBBBB...."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#19 : null -> ".........B........."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#2 : null -> ".AAAA..AAAAA..AAAA."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#3 : null -> ".AAAA..AAAAA..AAAA."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#4 : null -> ".AAAAAAAAAAAAAAAAA."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#5 : null -> ".......AAAAA......."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#6 : null -> "........AAA........"
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#7 : null -> ".........B........."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#8 : null -> ".........B........."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/shared_world/rows/#9 : null -> ".........B........."
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tile_size : null -> 16
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#0 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#1 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#10 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#100 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#101 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#102 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#103 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#104 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#105 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#106 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#107 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#108 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#109 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#11 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#110 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#111 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#112 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#113 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#114 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#115 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#116 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#117 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#118 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#119 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#12 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#120 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#121 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#122 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#123 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#124 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#125 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#126 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#127 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#128 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#129 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#13 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#130 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#131 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#132 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#133 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#134 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#135 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#136 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#137 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#138 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#139 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#14 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#140 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#141 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#142 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#143 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#144 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#145 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#146 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#147 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#148 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#149 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#15 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#150 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#151 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#152 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#153 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#154 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#155 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#156 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#157 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#158 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#159 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#16 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#160 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#161 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#162 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#163 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#164 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#165 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#166 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#167 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#168 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#169 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#17 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#170 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#171 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#172 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#173 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#174 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#175 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#176 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#177 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#178 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#179 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#18 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#180 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#181 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#182 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#183 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#184 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#185 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#186 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#187 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#188 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#189 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#19 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#190 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#191 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#192 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#193 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#194 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#195 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#196 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#197 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#198 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#199 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#2 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#20 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#200 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#201 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#202 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#203 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#204 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#205 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#206 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#207 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#208 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#209 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#21 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#210 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#211 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#212 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#213 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#214 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#215 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#216 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#217 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#218 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#219 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#22 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#220 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#221 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#222 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#223 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#224 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#225 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#226 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#227 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#228 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#229 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#23 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#230 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#231 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#232 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#233 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#234 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#235 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#236 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#237 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#238 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#239 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#24 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#240 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#241 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#242 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#243 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#244 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#245 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#246 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#247 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#248 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#249 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#25 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#250 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#251 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#252 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#253 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#254 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#255 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#256 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#257 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#258 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#259 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#26 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#260 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#261 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#262 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#263 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#264 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#265 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#266 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#267 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#268 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#269 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#27 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#270 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#271 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#272 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#273 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#274 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#275 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#276 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#277 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#278 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#279 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#28 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#280 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#281 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#282 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#283 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#284 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#285 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#286 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#287 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#288 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#289 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#29 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#290 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#291 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#292 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#293 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#294 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#295 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#296 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#297 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#298 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#299 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#3 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#30 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#300 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#301 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#302 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#303 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#304 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#305 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#306 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#307 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#308 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#309 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#31 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#310 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#311 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#312 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#313 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#314 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#315 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#316 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#317 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#318 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#319 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#32 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#320 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#321 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#322 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#323 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#324 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#325 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#326 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#327 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#328 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#329 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#33 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#330 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#331 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#332 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#333 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#334 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#335 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#336 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#337 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#338 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#339 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#34 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#340 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#341 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#342 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#343 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#344 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#345 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#346 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#347 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#348 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#349 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#35 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#350 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#351 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#352 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#353 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#354 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#355 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#356 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#357 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#358 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#359 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#36 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#360 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#361 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#362 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#363 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#364 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#365 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#366 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#367 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#368 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#369 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#37 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#370 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#371 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#372 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#373 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#374 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#375 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#376 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#377 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#378 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#379 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#38 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#39 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#4 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#40 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#41 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#42 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#43 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#44 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#45 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#46 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#47 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#48 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#49 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#5 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#50 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#51 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#52 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#53 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#54 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#55 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#56 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#57 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#58 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#59 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#6 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#60 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#61 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#62 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#63 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#64 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#65 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#66 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#67 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#68 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#69 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#7 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#70 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#71 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#72 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#73 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#74 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#75 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#76 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#77 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#78 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#79 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#8 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#80 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#81 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#82 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#83 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#84 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#85 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#86 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#87 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#88 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#89 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#9 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#90 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#91 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#92 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#93 : null -> 0
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#94 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#95 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#96 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#97 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#98 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/tiles/#99 : null -> 1
+ADD preset_sidecars/1/level_38__r0c9/playable_payload/width : null -> 19
+ADD preset_sidecars/1/level_38__r0c9/shared_world : null -> "level_38"
+ADD preset_sidecars/1/level_38__r0c9/substrate : null -> "maze"
+ADD preset_sidecars/1/level_38__r8c9/shared_world : null -> "level_38"
+ADD preset_sidecars/1/level_38__r8c9/substrate : null -> "maze"
+CHG preset_sidecars/1/level_39__r0c9/playable_payload/exits/#1/exitName : "level_39__r25c9 -> level_38" -> "level_39__r25c9 -> level_38__r0c9"
+CHG preset_sidecars/1/level_39__r0c9/playable_payload/exits/#1/exit_id : "level_39__r25c9 -> level_38" -> "level_39__r25c9 -> level_38__r0c9"
+CHG preset_sidecars/1/level_39__r0c9/playable_payload/exits/#1/targetRegion : "level_38" -> "level_38__r0c9"
+CHG preset_sidecars/1/level_3__r0c4/playable_payload/exits/#2/exitName : "level_3__r8c6 -> level_11" -> "level_3__r8c6 -> level_11__r0c2"
+CHG preset_sidecars/1/level_3__r0c4/playable_payload/exits/#2/exit_id : "level_3__r8c6 -> level_11" -> "level_3__r8c6 -> level_11__r0c2"
+CHG preset_sidecars/1/level_3__r0c4/playable_payload/exits/#2/targetRegion : "level_11" -> "level_11__r0c2"
+DEL preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/entrances/level_63__r5c14/x : 14 -> null
+DEL preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/entrances/level_63__r5c14/y : 5 -> null
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/entrances/level_63__r6c15/x : 15 -> 14
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/entrances/level_63__r6c15/y : 6 -> 5
+DEL preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/links/level_63__r5c14>level_63__r6c15 : "level_63__r5c14 -> level_63__r6c15" -> null
+DEL preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/links/level_63__r5c14>level_63__r6c9 : "level_63__r5c14 -> level_63__r6c9" -> null
+DEL preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/links/level_63__r6c15>level_63__r5c14 : "level_63__r6c15 -> level_63__r5c14" -> null
+DEL preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/links/level_63__r6c9>level_63__r5c14 : "level_63__r6c9 -> level_63__r5c14" -> null
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/regions/#1 : "level_63__r5c14" -> "level_63__r6c9"
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/regions/#2 : "level_63__r6c9" -> "level_63__r6c15"
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/regions/#3 : "level_63__r6c15" -> "level_63__r10c2"
+DEL preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/regions/#4 : "level_63__r10c2" -> null
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#10 : "..E........C........" -> "..D........B........"
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#11 : "..E........C........" -> "..D........B........"
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#12 : "..E........C........" -> "..D........B........"
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#13 : "EEE........C........" -> "DDD........B........"
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#14 : "..E........C........" -> "..D........B........"
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#15 : "..EE...CCCCC........" -> "..DD...BBBBB........"
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#16 : "..EE...CC..........." -> "..DD...BB..........."
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#17 : "..E.....C..........." -> "..D.....B..........."
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#18 : "..E.....C..........." -> "..D.....B..........."
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#19 : "..E.....C..........." -> "..D.....B..........."
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#5 : "..A..A........B....." -> "..A..A........C....."
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#6 : "AAA.AAA..CCCC..D...." -> "AAA.AAA..BBBB..C...."
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#7 : "..AAA..C.C.CC..D...." -> "..AAA..B.B.BB..C...."
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#8 : "..A....CCC.CC..D...." -> "..A....BBB.BB..C...."
+CHG preset_sidecars/1/level_63__r0c1/playable_payload/shared_world/rows/#9 : "...........CC......." -> "...........BB......."
+DEL preset_sidecars/1/level_63__r5c14/shared_world : "level_63" -> null
+DEL preset_sidecars/1/level_63__r5c14/substrate : "maze" -> null
+CHG preset_sidecars/1/level_71__r0c6/playable_payload/entry_gates/#2/dir : "W" -> "S"
+CHG preset_sidecars/1/level_71__r0c6/playable_payload/entry_gates/#2/gate : "atlas_gate_4" -> null
+CHG preset_sidecars/1/level_71__r0c6/playable_payload/entry_gates/#2/x : 18 -> 10
+ADD preset_sidecars/1/level_71__r0c6/playable_payload/entry_gates/#3/dir : null -> "W"
+ADD preset_sidecars/1/level_71__r0c6/playable_payload/entry_gates/#3/gate : null -> null
+ADD preset_sidecars/1/level_71__r0c6/playable_payload/entry_gates/#3/x : null -> 10
+ADD preset_sidecars/1/level_71__r0c6/playable_payload/entry_gates/#3/y : null -> 16
+ADD preset_sidecars/1/level_71__r0c6/playable_payload/entry_gates/#4/dir : null -> "W"
+ADD preset_sidecars/1/level_71__r0c6/playable_payload/entry_gates/#4/gate : null -> "atlas_gate_4"
+ADD preset_sidecars/1/level_71__r0c6/playable_payload/entry_gates/#4/x : null -> 18
+ADD preset_sidecars/1/level_71__r0c6/playable_payload/entry_gates/#4/y : null -> 16
+ADD preset_sidecars/1/level_80__r0c2/playable_payload/entry_gates/#0/dir : null -> "E"
+ADD preset_sidecars/1/level_80__r0c2/playable_payload/entry_gates/#0/gate : null -> null
+ADD preset_sidecars/1/level_80__r0c2/playable_payload/entry_gates/#0/x : null -> 1
+ADD preset_sidecars/1/level_80__r0c2/playable_payload/entry_gates/#0/y : null -> 8
+DEL preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/entrances/level_80__r8c1/x : 1 -> null
+DEL preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/entrances/level_80__r8c1/y : 8 -> null
+DEL preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/links/level_80__r0c2>level_80__r8c1 : "level_80__r0c2 -> level_80__r8c1" -> null
+DEL preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/links/level_80__r6c5>level_80__r8c1 : "level_80__r6c5 -> level_80__r8c1" -> null
+DEL preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/links/level_80__r8c1>level_80__r0c2 : "level_80__r8c1 -> level_80__r0c2" -> null
+DEL preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/links/level_80__r8c1>level_80__r6c5 : "level_80__r8c1 -> level_80__r6c5" -> null
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/regions/#2 : "level_80__r8c1" -> "level_80__r8c4"
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/regions/#3 : "level_80__r8c4" -> "level_80__r9c5"
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/regions/#4 : "level_80__r9c5" -> "level_80__r12c4"
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/regions/#5 : "level_80__r12c4" -> "level_80__r13c3"
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/regions/#6 : "level_80__r13c3" -> "level_80__r14c2"
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/regions/#7 : "level_80__r14c2" -> "level_80__r16c1"
+DEL preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/regions/#8 : "level_80__r16c1" -> null
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/#10 : ".....E...." -> ".....D...."
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/#12 : "....FF...." -> "....EE...."
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/#13 : "...G......" -> "...F......"
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/#14 : "..H......." -> "..G......."
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/#16 : ".II......." -> ".HH......."
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/#17 : "..II......" -> "..HH......"
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/#18 : "..II......" -> "..HH......"
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/#19 : "..II......" -> "..HH......"
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/#8 : ".C..D....." -> ".B..C....."
+CHG preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/#9 : ".....E...." -> ".....D...."
+DEL preset_sidecars/1/level_80__r8c1/shared_world : "level_80" -> null
+DEL preset_sidecars/1/level_80__r8c1/substrate : "maze" -> null
+CHG preset_sidecars/1/level_86/playable_payload/entrance/x : 3 -> 1
+CHG preset_sidecars/1/level_86/playable_payload/entrance/y : 1 -> 2
+ADD preset_sidecars/1/level_90/playable_payload/entry_gates/#0/dir : null -> "E"
+ADD preset_sidecars/1/level_90/playable_payload/entry_gates/#0/gate : null -> null
+ADD preset_sidecars/1/level_90/playable_payload/entry_gates/#0/x : null -> 3
+ADD preset_sidecars/1/level_90/playable_payload/entry_gates/#0/y : null -> 2
+ADD preset_sidecars/1/level_90/playable_payload/entry_gates/#1/dir : null -> "S"
+ADD preset_sidecars/1/level_90/playable_payload/entry_gates/#1/gate : null -> null
+ADD preset_sidecars/1/level_90/playable_payload/entry_gates/#1/x : null -> 3
+ADD preset_sidecars/1/level_90/playable_payload/entry_gates/#1/y : null -> 2
+ADD preset_sidecars/1/level_90/playable_payload/entry_gates/#2/dir : null -> "W"
+ADD preset_sidecars/1/level_90/playable_payload/entry_gates/#2/gate : null -> null
+ADD preset_sidecars/1/level_90/playable_payload/entry_gates/#2/x : null -> 3
+ADD preset_sidecars/1/level_90/playable_payload/entry_gates/#2/y : null -> 2
+CHG region_atlas/1/atlas_id : "seedling-94cd96dd" -> "seedling-2b43d322"
+DEL regions/1/level_10/exits/[level_10 -> level_11]/access_rule/rule : "True_" -> null
+DEL regions/1/level_10/exits/[level_10 -> level_11]/connected_region : "level_11" -> null
+DEL regions/1/level_10/exits/[level_10 -> level_11]/name : "level_10 -> level_11" -> null
+ADD regions/1/level_10/exits/[level_10 -> level_11__r4c2]/access_rule/rule : null -> "True_"
+ADD regions/1/level_10/exits/[level_10 -> level_11__r4c2]/connected_region : null -> "level_11__r4c2"
+ADD regions/1/level_10/exits/[level_10 -> level_11__r4c2]/name : null -> "level_10 -> level_11__r4c2"
+DEL regions/1/level_11/exits/[level_11 -> level_10]/access_rule/rule : "True_" -> null
+DEL regions/1/level_11/exits/[level_11 -> level_10]/connected_region : "level_10" -> null
+DEL regions/1/level_11/exits/[level_11 -> level_10]/name : "level_11 -> level_10" -> null
+DEL regions/1/level_11/exits/[level_11 -> level_3__r8c6]/access_rule/rule : "True_" -> null
+DEL regions/1/level_11/exits/[level_11 -> level_3__r8c6]/connected_region : "level_3__r8c6" -> null
+DEL regions/1/level_11/exits/[level_11 -> level_3__r8c6]/name : "level_11 -> level_3__r8c6" -> null
+DEL regions/1/level_11/locations/[Level 011 - Chest]/access_rule/rule : "True_" -> null
+DEL regions/1/level_11/locations/[Level 011 - Chest]/id : 30000001 -> null
+DEL regions/1/level_11/locations/[Level 011 - Chest]/item/advancement : true -> null
+DEL regions/1/level_11/locations/[Level 011 - Chest]/item/name : "Seal" -> null
+DEL regions/1/level_11/locations/[Level 011 - Chest]/item/player : 1 -> null
+DEL regions/1/level_11/locations/[Level 011 - Chest]/item/type : "progression" -> null
+DEL regions/1/level_11/locations/[Level 011 - Chest]/name : "Level 011 - Chest" -> null
+DEL regions/1/level_11/name : "level_11" -> null
+ADD regions/1/level_11__r0c2/exits/[level_11__r0c2 -> level_11__r4c2]/access_rule/args/item_name : null -> "Progressive Swim"
+ADD regions/1/level_11__r0c2/exits/[level_11__r0c2 -> level_11__r4c2]/access_rule/rule : null -> "Has"
+ADD regions/1/level_11__r0c2/exits/[level_11__r0c2 -> level_11__r4c2]/connected_region : null -> "level_11__r4c2"
+ADD regions/1/level_11__r0c2/exits/[level_11__r0c2 -> level_11__r4c2]/name : null -> "level_11__r0c2 -> level_11__r4c2"
+ADD regions/1/level_11__r0c2/exits/[level_11__r0c2 -> level_3__r8c6]/access_rule/rule : null -> "True_"
+ADD regions/1/level_11__r0c2/exits/[level_11__r0c2 -> level_3__r8c6]/connected_region : null -> "level_3__r8c6"
+ADD regions/1/level_11__r0c2/exits/[level_11__r0c2 -> level_3__r8c6]/name : null -> "level_11__r0c2 -> level_3__r8c6"
+ADD regions/1/level_11__r0c2/name : null -> "level_11__r0c2"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_10]/access_rule/rule : null -> "True_"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_10]/connected_region : null -> "level_10"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_10]/name : null -> "level_11__r4c2 -> level_10"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_11__r0c2]/access_rule/rule : null -> "True_"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_11__r0c2]/connected_region : null -> "level_11__r0c2"
+ADD regions/1/level_11__r4c2/exits/[level_11__r4c2 -> level_11__r0c2]/name : null -> "level_11__r4c2 -> level_11__r0c2"
+ADD regions/1/level_11__r4c2/locations/[Level 011 - Chest]/access_rule/rule : null -> "True_"
+ADD regions/1/level_11__r4c2/locations/[Level 011 - Chest]/id : null -> 30000001
+ADD regions/1/level_11__r4c2/locations/[Level 011 - Chest]/item/advancement : null -> true
+ADD regions/1/level_11__r4c2/locations/[Level 011 - Chest]/item/name : null -> "Seal"
+ADD regions/1/level_11__r4c2/locations/[Level 011 - Chest]/item/player : null -> 1
+ADD regions/1/level_11__r4c2/locations/[Level 011 - Chest]/item/type : null -> "progression"
+ADD regions/1/level_11__r4c2/locations/[Level 011 - Chest]/name : null -> "Level 011 - Chest"
+ADD regions/1/level_11__r4c2/name : null -> "level_11__r4c2"
+DEL regions/1/level_25__r2c7/exits/[level_25__r2c7 -> level_28__r0c6]/access_rule/rule : "True_" -> null
+DEL regions/1/level_25__r2c7/exits/[level_25__r2c7 -> level_28__r0c6]/connected_region : "level_28__r0c6" -> null
+DEL regions/1/level_25__r2c7/exits/[level_25__r2c7 -> level_28__r0c6]/name : "level_25__r2c7 -> level_28__r0c6" -> null
+DEL regions/1/level_25__r2c7/locations/[Level 025 - Chest]/access_rule/rule : "True_" -> null
+DEL regions/1/level_25__r2c7/locations/[Level 025 - Chest]/id : 30000009 -> null
+DEL regions/1/level_25__r2c7/locations/[Level 025 - Chest]/item/advancement : true -> null
+DEL regions/1/level_25__r2c7/locations/[Level 025 - Chest]/item/name : "Seal" -> null
+DEL regions/1/level_25__r2c7/locations/[Level 025 - Chest]/item/player : 1 -> null
+DEL regions/1/level_25__r2c7/locations/[Level 025 - Chest]/item/type : "progression" -> null
+DEL regions/1/level_25__r2c7/locations/[Level 025 - Chest]/name : "Level 025 - Chest" -> null
+ADD regions/1/level_25__r7c6/exits/[level_25__r7c6 -> level_25__r2c7]/access_rule/rule : null -> "True_"
+ADD regions/1/level_25__r7c6/exits/[level_25__r7c6 -> level_25__r2c7]/connected_region : null -> "level_25__r2c7"
+ADD regions/1/level_25__r7c6/exits/[level_25__r7c6 -> level_25__r2c7]/name : null -> "level_25__r7c6 -> level_25__r2c7"
+ADD regions/1/level_25__r7c6/exits/[level_25__r7c6 -> level_28__r0c6]/access_rule/rule : null -> "True_"
+ADD regions/1/level_25__r7c6/exits/[level_25__r7c6 -> level_28__r0c6]/connected_region : null -> "level_28__r0c6"
+ADD regions/1/level_25__r7c6/exits/[level_25__r7c6 -> level_28__r0c6]/name : null -> "level_25__r7c6 -> level_28__r0c6"
+ADD regions/1/level_25__r7c6/locations/[Level 025 - Chest]/access_rule/rule : null -> "True_"
+ADD regions/1/level_25__r7c6/locations/[Level 025 - Chest]/id : null -> 30000009
+ADD regions/1/level_25__r7c6/locations/[Level 025 - Chest]/item/advancement : null -> true
+ADD regions/1/level_25__r7c6/locations/[Level 025 - Chest]/item/name : null -> "Seal"
+ADD regions/1/level_25__r7c6/locations/[Level 025 - Chest]/item/player : null -> 1
+ADD regions/1/level_25__r7c6/locations/[Level 025 - Chest]/item/type : null -> "progression"
+ADD regions/1/level_25__r7c6/locations/[Level 025 - Chest]/name : null -> "Level 025 - Chest"
+ADD regions/1/level_25__r7c6/name : null -> "level_25__r7c6"
+DEL regions/1/level_28__r0c6/exits/[level_28__r0c6 -> level_25__r2c7]/access_rule/rule : "True_" -> null
+DEL regions/1/level_28__r0c6/exits/[level_28__r0c6 -> level_25__r2c7]/connected_region : "level_25__r2c7" -> null
+DEL regions/1/level_28__r0c6/exits/[level_28__r0c6 -> level_25__r2c7]/name : "level_28__r0c6 -> level_25__r2c7" -> null
+ADD regions/1/level_28__r0c6/exits/[level_28__r0c6 -> level_25__r7c6]/access_rule/rule : null -> "True_"
+ADD regions/1/level_28__r0c6/exits/[level_28__r0c6 -> level_25__r7c6]/connected_region : null -> "level_25__r7c6"
+ADD regions/1/level_28__r0c6/exits/[level_28__r0c6 -> level_25__r7c6]/name : null -> "level_28__r0c6 -> level_25__r7c6"
+DEL regions/1/level_37__r0c18/exits/[level_37__r0c18 -> level_38]/access_rule/rule : "True_" -> null
+DEL regions/1/level_37__r0c18/exits/[level_37__r0c18 -> level_38]/connected_region : "level_38" -> null
+DEL regions/1/level_37__r0c18/exits/[level_37__r0c18 -> level_38]/name : "level_37__r0c18 -> level_38" -> null
+ADD regions/1/level_37__r0c18/exits/[level_37__r0c18 -> level_38__r8c9]/access_rule/rule : null -> "True_"
+ADD regions/1/level_37__r0c18/exits/[level_37__r0c18 -> level_38__r8c9]/connected_region : null -> "level_38__r8c9"
+ADD regions/1/level_37__r0c18/exits/[level_37__r0c18 -> level_38__r8c9]/name : null -> "level_37__r0c18 -> level_38__r8c9"
+DEL regions/1/level_38/exits/[level_38 -> level_37__r0c18]/access_rule/rule : "True_" -> null
+DEL regions/1/level_38/exits/[level_38 -> level_37__r0c18]/connected_region : "level_37__r0c18" -> null
+DEL regions/1/level_38/exits/[level_38 -> level_37__r0c18]/name : "level_38 -> level_37__r0c18" -> null
+DEL regions/1/level_38/exits/[level_38 -> level_39__r25c9]/access_rule/args/item_name : "L39 flag 8: wandlock@144,592 cleared" -> null
+DEL regions/1/level_38/exits/[level_38 -> level_39__r25c9]/access_rule/rule : "Has" -> null
+DEL regions/1/level_38/exits/[level_38 -> level_39__r25c9]/connected_region : "level_39__r25c9" -> null
+DEL regions/1/level_38/exits/[level_38 -> level_39__r25c9]/name : "level_38 -> level_39__r25c9" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/access_rule/rule : "True_" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/action/item : null -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/class : "buttonroom" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/level : 38 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/x : 32 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/y : 48 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/action/verb : "press" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/event : true -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/event_id : "flag:L39:8" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/event_kind : "game_state" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/id : null -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/item/advancement : true -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/item/name : "L39 flag 8: wandlock@144,592 cleared" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/item/player : 1 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/item/type : "Event" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/locked : true -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/name : "L39 flag 8: wandlock@144,592 cleared" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/class : "wandlock" -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/level : 39 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/tag : 8 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/x : 144 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/y : 592 -> null
+DEL regions/1/level_38/locations/[L39 flag 8: wandlock@144,592 cleared]/side : "level_38" -> null
+DEL regions/1/level_38/locations/[Level 038 - Chest]/access_rule/rule : "True_" -> null
+DEL regions/1/level_38/locations/[Level 038 - Chest]/id : 30000015 -> null
+DEL regions/1/level_38/locations/[Level 038 - Chest]/item/advancement : true -> null
+DEL regions/1/level_38/locations/[Level 038 - Chest]/item/name : "Seal" -> null
+DEL regions/1/level_38/locations/[Level 038 - Chest]/item/player : 1 -> null
+DEL regions/1/level_38/locations/[Level 038 - Chest]/item/type : "progression" -> null
+DEL regions/1/level_38/locations/[Level 038 - Chest]/name : "Level 038 - Chest" -> null
+DEL regions/1/level_38/name : "level_38" -> null
+ADD regions/1/level_38__r0c9/exits/[level_38__r0c9 -> level_39__r25c9]/access_rule/args/item_name : null -> "L39 flag 8: wandlock@144,592 cleared"
+ADD regions/1/level_38__r0c9/exits/[level_38__r0c9 -> level_39__r25c9]/access_rule/rule : null -> "Has"
+ADD regions/1/level_38__r0c9/exits/[level_38__r0c9 -> level_39__r25c9]/connected_region : null -> "level_39__r25c9"
+ADD regions/1/level_38__r0c9/exits/[level_38__r0c9 -> level_39__r25c9]/name : null -> "level_38__r0c9 -> level_39__r25c9"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/access_rule/rule : null -> "True_"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/action/item : null -> null
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/class : null -> "buttonroom"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/level : null -> 38
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/x : null -> 32
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/action/presser/y : null -> 48
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/action/verb : null -> "press"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/event : null -> true
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/event_id : null -> "flag:L39:8"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/event_kind : null -> "game_state"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/id : null -> null
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/item/advancement : null -> true
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/item/name : null -> "L39 flag 8: wandlock@144,592 cleared"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/item/player : null -> 1
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/item/type : null -> "Event"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/locked : null -> true
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/name : null -> "L39 flag 8: wandlock@144,592 cleared"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/class : null -> "wandlock"
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/level : null -> 39
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/tag : null -> 8
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/x : null -> 144
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/obstacle/y : null -> 592
+ADD regions/1/level_38__r0c9/locations/[L39 flag 8: wandlock@144,592 cleared]/side : null -> "level_38__r0c9"
+ADD regions/1/level_38__r0c9/name : null -> "level_38__r0c9"
+ADD regions/1/level_38__r8c9/exits/[level_38__r8c9 -> level_37__r0c18]/access_rule/rule : null -> "True_"
+ADD regions/1/level_38__r8c9/exits/[level_38__r8c9 -> level_37__r0c18]/connected_region : null -> "level_37__r0c18"
+ADD regions/1/level_38__r8c9/exits/[level_38__r8c9 -> level_37__r0c18]/name : null -> "level_38__r8c9 -> level_37__r0c18"
+ADD regions/1/level_38__r8c9/exits/[level_38__r8c9 -> level_38__r0c9]/access_rule/rule : null -> "True_"
+ADD regions/1/level_38__r8c9/exits/[level_38__r8c9 -> level_38__r0c9]/connected_region : null -> "level_38__r0c9"
+ADD regions/1/level_38__r8c9/exits/[level_38__r8c9 -> level_38__r0c9]/name : null -> "level_38__r8c9 -> level_38__r0c9"
+ADD regions/1/level_38__r8c9/locations/[Level 038 - Chest]/access_rule/rule : null -> "True_"
+ADD regions/1/level_38__r8c9/locations/[Level 038 - Chest]/id : null -> 30000015
+ADD regions/1/level_38__r8c9/locations/[Level 038 - Chest]/item/advancement : null -> true
+ADD regions/1/level_38__r8c9/locations/[Level 038 - Chest]/item/name : null -> "Seal"
+ADD regions/1/level_38__r8c9/locations/[Level 038 - Chest]/item/player : null -> 1
+ADD regions/1/level_38__r8c9/locations/[Level 038 - Chest]/item/type : null -> "progression"
+ADD regions/1/level_38__r8c9/locations/[Level 038 - Chest]/name : null -> "Level 038 - Chest"
+ADD regions/1/level_38__r8c9/name : null -> "level_38__r8c9"
+DEL regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38]/access_rule/args/item_name : "L39 flag 8: wandlock@144,592 cleared" -> null
+DEL regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38]/access_rule/rule : "Has" -> null
+DEL regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38]/connected_region : "level_38" -> null
+DEL regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38]/name : "level_39__r25c9 -> level_38" -> null
+ADD regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38__r0c9]/access_rule/args/item_name : null -> "L39 flag 8: wandlock@144,592 cleared"
+ADD regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38__r0c9]/access_rule/rule : null -> "Has"
+ADD regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38__r0c9]/connected_region : null -> "level_38__r0c9"
+ADD regions/1/level_39__r25c9/exits/[level_39__r25c9 -> level_38__r0c9]/name : null -> "level_39__r25c9 -> level_38__r0c9"
+DEL regions/1/level_3__r8c6/exits/[level_3__r8c6 -> level_11]/access_rule/rule : "True_" -> null
+DEL regions/1/level_3__r8c6/exits/[level_3__r8c6 -> level_11]/connected_region : "level_11" -> null
+DEL regions/1/level_3__r8c6/exits/[level_3__r8c6 -> level_11]/name : "level_3__r8c6 -> level_11" -> null
+ADD regions/1/level_3__r8c6/exits/[level_3__r8c6 -> level_11__r0c2]/access_rule/rule : null -> "True_"
+ADD regions/1/level_3__r8c6/exits/[level_3__r8c6 -> level_11__r0c2]/connected_region : null -> "level_11__r0c2"
+ADD regions/1/level_3__r8c6/exits/[level_3__r8c6 -> level_11__r0c2]/name : null -> "level_3__r8c6 -> level_11__r0c2"
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c15]/access_rule/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c15]/access_rule/rule : "Has" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c15]/connected_region : "level_63__r6c15" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c15]/name : "level_63__r5c14 -> level_63__r6c15" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c9]/access_rule/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c9]/access_rule/rule : "Has" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c9]/connected_region : "level_63__r6c9" -> null
+DEL regions/1/level_63__r5c14/exits/[level_63__r5c14 -> level_63__r6c9]/name : "level_63__r5c14 -> level_63__r6c9" -> null
+DEL regions/1/level_63__r5c14/locations/[Level 063 - Chest]/access_rule/rule : "True_" -> null
+DEL regions/1/level_63__r5c14/locations/[Level 063 - Chest]/id : 30000030 -> null
+DEL regions/1/level_63__r5c14/locations/[Level 063 - Chest]/item/advancement : true -> null
+DEL regions/1/level_63__r5c14/locations/[Level 063 - Chest]/item/name : "Seal" -> null
+DEL regions/1/level_63__r5c14/locations/[Level 063 - Chest]/item/player : 1 -> null
+DEL regions/1/level_63__r5c14/locations/[Level 063 - Chest]/item/type : "progression" -> null
+DEL regions/1/level_63__r5c14/locations/[Level 063 - Chest]/name : "Level 063 - Chest" -> null
+DEL regions/1/level_63__r5c14/name : "level_63__r5c14" -> null
+DEL regions/1/level_63__r6c15/exits/[level_63__r6c15 -> level_63__r5c14]/access_rule/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_63__r6c15/exits/[level_63__r6c15 -> level_63__r5c14]/access_rule/rule : "Has" -> null
+DEL regions/1/level_63__r6c15/exits/[level_63__r6c15 -> level_63__r5c14]/connected_region : "level_63__r5c14" -> null
+DEL regions/1/level_63__r6c15/exits/[level_63__r6c15 -> level_63__r5c14]/name : "level_63__r6c15 -> level_63__r5c14" -> null
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/access_rule/args/item_name : null -> "Dark Suit"
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/access_rule/rule : null -> "Has"
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/id : null -> 30000030
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/item/advancement : null -> true
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/item/name : null -> "Seal"
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/item/player : null -> 1
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/item/type : null -> "progression"
+ADD regions/1/level_63__r6c15/locations/[Level 063 - Chest]/name : null -> "Level 063 - Chest"
+DEL regions/1/level_63__r6c9/exits/[level_63__r6c9 -> level_63__r5c14]/access_rule/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_63__r6c9/exits/[level_63__r6c9 -> level_63__r5c14]/access_rule/rule : "Has" -> null
+DEL regions/1/level_63__r6c9/exits/[level_63__r6c9 -> level_63__r5c14]/connected_region : "level_63__r5c14" -> null
+DEL regions/1/level_63__r6c9/exits/[level_63__r6c9 -> level_63__r5c14]/name : "level_63__r6c9 -> level_63__r5c14" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#0/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#0/args/item_name : "Progressive Sword" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#1/args/item_name : "Ghost Spear" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#1/rule : "Has" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#2/args/item_name : "Wand" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#2/rule : "Has" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#3/args/count : 2 -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#3/args/item_name : "Progressive Shield" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/children/#3/rule : "Has" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/children/#1/rule : "Or" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/access_rule/rule : "And" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/connected_region : "level_80__r8c1" -> null
+DEL regions/1/level_80__r0c2/exits/[level_80__r0c2 -> level_80__r8c1]/name : "level_80__r0c2 -> level_80__r8c1" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#0/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#0/args/item_name : "Progressive Sword" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#1/args/item_name : "Ghost Spear" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#1/rule : "Has" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#2/args/item_name : "Wand" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#2/rule : "Has" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#3/args/count : 2 -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#3/args/item_name : "Progressive Shield" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/children/#3/rule : "Has" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/children/#1/rule : "Or" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/access_rule/rule : "And" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/connected_region : "level_80__r8c1" -> null
+DEL regions/1/level_80__r6c5/exits/[level_80__r6c5 -> level_80__r8c1]/name : "level_80__r6c5 -> level_80__r8c1" -> null
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#0/args/item_name : null -> "Dark Suit"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#0/rule : null -> "Has"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#0/args/item_name : null -> "Progressive Sword"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#0/rule : null -> "Has"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#1/args/item_name : null -> "Ghost Spear"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#1/rule : null -> "Has"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#2/args/item_name : null -> "Wand"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#2/rule : null -> "Has"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#3/args/count : null -> 2
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#3/args/item_name : null -> "Progressive Shield"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/children/#3/rule : null -> "Has"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/children/#1/rule : null -> "Or"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/access_rule/rule : null -> "And"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/id : null -> 30000038
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/item/advancement : null -> true
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/item/name : null -> "Seal"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/item/player : null -> 1
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/item/type : null -> "progression"
+ADD regions/1/level_80__r6c5/locations/[Level 080 - Chest]/name : null -> "Level 080 - Chest"
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#0/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#0/args/item_name : "Progressive Sword" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#1/args/item_name : "Ghost Spear" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#1/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#2/args/item_name : "Wand" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#2/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#3/args/count : 2 -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#3/args/item_name : "Progressive Shield" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/children/#3/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/children/#1/rule : "Or" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/access_rule/rule : "And" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/connected_region : "level_80__r0c2" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r0c2]/name : "level_80__r8c1 -> level_80__r0c2" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#0/args/item_name : "Dark Suit" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#0/args/item_name : "Progressive Sword" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#0/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#1/args/item_name : "Ghost Spear" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#1/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#2/args/item_name : "Wand" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#2/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#3/args/count : 2 -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#3/args/item_name : "Progressive Shield" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/children/#3/rule : "Has" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/children/#1/rule : "Or" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/access_rule/rule : "And" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/connected_region : "level_80__r6c5" -> null
+DEL regions/1/level_80__r8c1/exits/[level_80__r8c1 -> level_80__r6c5]/name : "level_80__r8c1 -> level_80__r6c5" -> null
+DEL regions/1/level_80__r8c1/locations/[Level 080 - Chest]/access_rule/rule : "True_" -> null
+DEL regions/1/level_80__r8c1/locations/[Level 080 - Chest]/id : 30000038 -> null
+DEL regions/1/level_80__r8c1/locations/[Level 080 - Chest]/item/advancement : true -> null
+DEL regions/1/level_80__r8c1/locations/[Level 080 - Chest]/item/name : "Seal" -> null
+DEL regions/1/level_80__r8c1/locations/[Level 080 - Chest]/item/player : 1 -> null
+DEL regions/1/level_80__r8c1/locations/[Level 080 - Chest]/item/type : "progression" -> null
+DEL regions/1/level_80__r8c1/locations/[Level 080 - Chest]/name : "Level 080 - Chest" -> null
+DEL regions/1/level_80__r8c1/name : "level_80__r8c1" -> null
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#10 : "level_4" -> "level_3__r8c6"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#11 : "level_5__r1c5" -> "level_4"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#12 : "level_6" -> "level_5__r1c5"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#13 : "level_7" -> "level_6"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#14 : "level_8" -> "level_7"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#15 : "level_86" -> "level_8"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#16 : "level_9" -> "level_86"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#17 : "level_94__r2c16" -> "level_9"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#18 : "level_94__r3c4" -> "level_94__r2c16"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#19 : "Menu" -> "level_94__r3c4"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#2 : "level_11" -> "level_11__r0c2"
+ADD sphere_log/#1/player_data/1/new_accessible_regions/#20 : null -> "Menu"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#3 : "level_13" -> "level_11__r4c2"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#4 : "level_14" -> "level_13"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#5 : "level_15__r1c5" -> "level_14"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#6 : "level_2" -> "level_15__r1c5"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#7 : "level_20__r3c1" -> "level_2"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#8 : "level_3__r0c4" -> "level_20__r3c1"
+CHG sphere_log/#1/player_data/1/new_accessible_regions/#9 : "level_3__r8c6" -> "level_3__r0c4"
+CHG sphere_log/#11/player_data/1/new_accessible_regions/#10 : "level_26__r13c8" -> "level_25__r7c6"
+CHG sphere_log/#11/player_data/1/new_accessible_regions/#11 : "level_26__r2c4" -> "level_26__r13c8"
+CHG sphere_log/#11/player_data/1/new_accessible_regions/#12 : "level_27" -> "level_26__r2c4"
+CHG sphere_log/#11/player_data/1/new_accessible_regions/#13 : "level_28__r0c6" -> "level_27"
+CHG sphere_log/#11/player_data/1/new_accessible_regions/#14 : "level_28__r11c4" -> "level_28__r0c6"
+CHG sphere_log/#11/player_data/1/new_accessible_regions/#15 : "level_29__r2c2" -> "level_28__r11c4"
+CHG sphere_log/#11/player_data/1/new_accessible_regions/#16 : "level_29__r5c0" -> "level_29__r2c2"
+CHG sphere_log/#11/player_data/1/new_accessible_regions/#17 : "level_30__r0c4" -> "level_29__r5c0"
+CHG sphere_log/#11/player_data/1/new_accessible_regions/#18 : "level_31__r5c24" -> "level_30__r0c4"
+CHG sphere_log/#11/player_data/1/new_accessible_regions/#19 : "level_37__r12c6" -> "level_31__r5c24"
+CHG sphere_log/#11/player_data/1/new_accessible_regions/#20 : "level_44__r6c4" -> "level_37__r12c6"
+ADD sphere_log/#11/player_data/1/new_accessible_regions/#21 : null -> "level_44__r6c4"
+CHG sphere_log/#28/player_data/1/new_accessible_regions/#10 : "level_49" -> "level_48__r2c10"
+ADD sphere_log/#28/player_data/1/new_accessible_regions/#11 : null -> "level_49"
+CHG sphere_log/#28/player_data/1/new_accessible_regions/#3 : "level_38" -> "level_38__r0c9"
+CHG sphere_log/#28/player_data/1/new_accessible_regions/#4 : "level_44__r0c4" -> "level_38__r8c9"
+CHG sphere_log/#28/player_data/1/new_accessible_regions/#5 : "level_45__r0c7" -> "level_44__r0c4"
+CHG sphere_log/#28/player_data/1/new_accessible_regions/#6 : "level_46__r0c11" -> "level_45__r0c7"
+CHG sphere_log/#28/player_data/1/new_accessible_regions/#7 : "level_47__r2c9" -> "level_46__r0c11"
+CHG sphere_log/#28/player_data/1/new_accessible_regions/#8 : "level_48__r18c7" -> "level_47__r2c9"
+CHG sphere_log/#28/player_data/1/new_accessible_regions/#9 : "level_48__r2c10" -> "level_48__r18c7"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#10 : "level_63__r6c15" -> "level_71__r14c12"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#11 : "level_71__r14c12" -> "level_79__r0c4"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#12 : "level_79__r0c4" -> "level_80__r12c4"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#13 : "level_80__r12c4" -> "level_80__r13c3"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#14 : "level_80__r13c3" -> "level_80__r14c2"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#15 : "level_80__r14c2" -> "level_80__r16c1"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#16 : "level_80__r16c1" -> "level_80__r6c5"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#17 : "level_80__r6c5" -> "level_80__r8c4"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#18 : "level_80__r8c1" -> "level_80__r9c5"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#19 : "level_80__r8c4" -> "level_82"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#20 : "level_80__r9c5" -> "level_93__r10c7"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#21 : "level_82" -> "level_93__r5c7"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#22 : "level_93__r10c7" -> "level_96"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#23 : "level_93__r5c7" -> "level_97"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#24 : "level_96" -> "level_98"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#25 : "level_97" -> "level_99__r2c4"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#26 : "level_98" -> "level_99__r2c7"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#27 : "level_99__r2c4" -> "level_99__r6c12"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#28 : "level_99__r2c7" -> "level_99__r7c5"
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#29 : "level_99__r6c12" -> "level_99__r8c10"
+DEL sphere_log/#77/player_data/1/new_accessible_regions/#30 : "level_99__r7c5" -> null
+DEL sphere_log/#77/player_data/1/new_accessible_regions/#31 : "level_99__r8c10" -> null
+CHG sphere_log/#77/player_data/1/new_accessible_regions/#9 : "level_63__r5c14" -> "level_63__r6c15"

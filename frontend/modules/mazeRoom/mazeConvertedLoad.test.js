@@ -67,7 +67,8 @@ describe('maze converted load: which object is the level', () => {
         //   +8 sidecars, all room-less regions of their level's shared world.
         // ⛓ rules-k-pursuit-resume: 274/116/158 -> 306/116/190 — rule K + (b) (a lavarunner that outruns the player gates its leash cut at its kill-lock arm) splits L72 (+9 sub-regions), L74 (+4), L75 (+9) and re-cuts L73 (+3), L78 (+4), L80 (+3), L99 (+3): +32 sidecars, all room-less regions of their
         //   level's shared world.
-        expect([SIDECARS.length, ROOMS.length, SHARED.length]).toEqual([306, 116, 190]);
+        // ⛓ rules-ap-chest-solid: the AP chest is a one-sided Solid — L11 and L38 split in two, L25 gains its chest sub-region, L63 loses its chest one-tile sub-region ([306, 116, 190] -> [307, 116, 191])
+        expect([SIDECARS.length, ROOMS.length, SHARED.length]).toEqual([307, 116, 191]);
     });
     it('a sidecar envelope and its bare playable_payload load the same level', () => {
         const s = room('level_16');
@@ -189,6 +190,7 @@ describe('maze converted load: a payload without engine fields takes no new path
         const count = (f) => ROOMS.filter(([, s]) => s.playable_payload[f] !== undefined).length;
         // entry_gates 39 at fe98f37f22 → 41: train 102's no-hit (rules-7) gave L22/L25 their new entry gates.
         expect(Object.fromEntries(ENGINE_ENTITY_FIELDS.map((f) => [f, count(f)])))
-            .toEqual({ block_lib: 3, traps: 5, entry_gates: 41, block_sinks: 8, pulls: 4, pulsers: 0 });
+            // ⛓ rules-ap-chest-solid: + 7 rooms whose AP chest is a one-sided entry gate (41 -> 48)
+            .toEqual({ block_lib: 3, traps: 5, entry_gates: 48, block_sinks: 8, pulls: 4, pulsers: 0 });
     });
 });

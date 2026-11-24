@@ -17,7 +17,7 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import {
     buildPlaythroughAtlas, modelVerdicts, refuseUnboundMembers, modelFloodTiles, playthroughGridFor,
     playthroughAnalyzerOptions,
-    playthroughNoHitGates,
+    playthroughNoHitGates, playthroughEntitySemantics,
 } from './make-seedling-playthrough-rules.mjs';
 import { analyzeRegion } from '../../frontend/modules/procgenPipeline/regionAtlasAnalyzer.js';
 import { buildGroupOpeners } from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
@@ -95,7 +95,17 @@ describe('a link the physics model cannot walk is NOT emitted as True_', () => {
         expect(noHitGates.length).toBeGreaterThan(0);
         expect(ruleless.filter((x) => !modelFree(x) && !fall(x) && noHitFree(x)).map((x) => x.region).sort())
             .toEqual(noHitGates.map((g) => `level_${g.gate.level}`).sort());
-        const rest = ruleless.filter((x) => !modelFree(x) && !fall(x) && !noHitFree(x));
+        // ⛓ rules-ap-chest-solid: and the free way THROUGH a one-sided Solid (the AP chest, `probe` with no condition) —
+        // one-way (the far side enters it only by another way round, if any). Read off the overlay's ruling per placed entity,
+        // never typed; a level that also holds a re-closing lock keeps that exception's own reading below.
+        const oneSidedLevels = new Set(MAP.levels.filter((l) => l.entities.some((e) => {
+            const sem = playthroughEntitySemantics(e, l);
+            return sem?.kind === 'directional' && sem.probe && !sem.condition && !sem.opensFrom;
+        })).map((l) => `level_${l.level}`));
+        const throughOneSided = (x) => x.oneWay && oneSidedLevels.has(x.region) && !reclosingLevels.has(x.region);
+        expect(ruleless.filter((x) => !modelFree(x) && !fall(x) && !noHitFree(x) && throughOneSided(x)).map((x) => `${x.region} ${x.row}`))
+            .toEqual(['level_11 r4c2->r0c2', 'level_25 r7c6->r2c7', 'level_38 r8c9->r0c9']);
+        const rest = ruleless.filter((x) => !modelFree(x) && !fall(x) && !noHitFree(x) && !throughOneSided(x));
         expect(rest.filter((x) => !reclosingLevels.has(x.region))).toEqual([]);
         expect(rest.every((x) => x.oneWay)).toBe(true);
     });

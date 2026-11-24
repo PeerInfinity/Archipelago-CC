@@ -1,0 +1,4 @@
+ FAIL  frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.slow.test.js > seedling_playthrough_maze — every region certified against the atlas at every subset > native engine, every region
+ Test Files  1 failed | 20 passed (21)
+      Tests  1 failed | 260 passed (261)
+   Duration  1017.89s (transform 6.39s, setup 1.28s, import 36.99s, tests 977.27s, environment 3ms)

@@ -224,9 +224,12 @@ describe('the committed playthrough\'s leg list', () => {
         // ⛓ rules-l16-l17-trap-transition: 42 -> 44 — L16's stairs down stand beside the landing in the armed lane, so
         //   their departure costs the cut (⚖ user 2026-11-10: closed in either direction) and L17's arrival through
         //   in_L16_112_64 is gated by flag:L16:0: its two legs (the stairs back up, the chest) stage it.
-        expect(gated.length).toBe(44);
+        // ⛓ rules-ap-chest-solid: 44 -> 42 — L38 splits at its one-sided chest, so of the L39 arrival's four legs (gated by
+        //   flag:L39:8) only r0c9's two stay door legs (its L39 door, staged; the press, skipped): the chest and L37's door
+        //   are behind the chest now (a crossing).
+        expect(gated.length).toBe(42);
         expect(gated.every((l) => (l.stagedEvents?.length > 0) !== Boolean(l.skip))).toBe(true);
-        expect(gated.filter((l) => l.stagedEvents).length).toBe(37); // l63-pole-crossings: 40 -> 37 (+ 2 skips gone); l112-owl-rocklock: 37 -> 35; l16-l17-trap-transition: 35 -> 37
+        expect(gated.filter((l) => l.stagedEvents).length).toBe(35); // l63-pole-crossings: 40 -> 37 (+ 2 skips gone); l112-owl-rocklock: 37 -> 35; l16-l17-trap-transition: 35 -> 37; ap-chest-solid: 37 -> 35
         expect(gated.filter((l) => l.skip).every((l) => /^goal-is-a-staged-event: /.test(l.skip))).toBe(true);
         const plain = legs.filter((l) => !l.arrive.events && !l.goalEvents);
         expect(plain.every((l) => !('stagedEvents' in l) && !('skip' in l))).toBe(true);
@@ -290,23 +293,30 @@ describe('the committed playthrough\'s leg list', () => {
         //   shifted by -2 and from 621 by -7 — rule K (a lavarunner that outruns the player gates its leash cut) splits L72, L74
         //   and L75 into walk-in members and re-keys L73 r3c7 -> r8c2 and L99 r2c7 -> r7c5: 17 one-region door legs go, 10 re-keyed
         //   ones come (fixtures/divergence-door-leg-keys.json, re-recorded by its `rerecord` recipe).
+        // ⛓ rules-ap-chest-solid: 66 -> 65 goal-event legs, every id from 47 on shifted — L11, L38 and L25 split at their
+        //   one-sided AP chests: 19 one-region door legs go, 9 within-sub-region ones come (fixtures/divergence-door-leg-keys.json,
+        //   re-recorded by its `rerecord` recipe). The one goal-event leg that goes is flag:L39:8's (L38's L37 arrival to the L39
+        //   door, a crossing of the chest now); L39's own arrival into r0c9 STAGES that flag on its arrival instead.
+        // ⛓ rules-ap-chest-solid, the LATCH: the SAME 65 goal-event legs by key, every id from 46 on shifted (+1 at 46, +3 by
+        //   the end) — the three chest latch events are locations on their probe sides, so L11 r4c2's L10 arrival, L25 r7c6's L28
+        //   arrival and L38 r8c9's L37 arrival each gain a door leg to their event. No leg gained or lost a goal event.
         expect(by).toEqual({
-            'flag:L0:4': [45], 'flag:L0:1': [97, 108, 119, 130, 141, 152, 163], 'flag:L24:0': [180],
-            'flag:L16:0': [206, 208, 210, 212, 214, 216, 218], 'flag:L39:8': [348],
-            'flag:L62:0': [515, 520, 525, 530, 535, 566], 'flag:L63:1': [517, 522, 527, 532, 537, 541, 546, 551, 556],
-            'flag:L63:6': [569, 571], 'flag:L63:7': [572],
-            'flag:L71:2': [614, 616], 'flag:L12:7+flag:L12:12': [632], 'flag:L101:0': [740],
-            'flag:L112:1': [784, 785, 791, 792, 798, 799, 805, 806, 812, 813],
-            'flag:L114:0': [786, 787, 788, 793, 794, 795, 800, 801, 802, 807, 808, 814, 815],
-            'flag:L113:0': [823, 824, 825, 826],
+            'flag:L0:4': [45], 'flag:L0:1': [95, 106, 117, 128, 139, 150, 161], 'flag:L24:0': [178],
+            'flag:L16:0': [204, 206, 208, 210, 212, 214, 216],
+            'flag:L62:0': [508, 513, 518, 523, 528, 559], 'flag:L63:1': [510, 515, 520, 525, 530, 534, 539, 544, 549],
+            'flag:L63:6': [562, 564], 'flag:L63:7': [565],
+            'flag:L71:2': [607, 609], 'flag:L12:7+flag:L12:12': [625], 'flag:L101:0': [733],
+            'flag:L112:1': [777, 778, 784, 785, 791, 792, 798, 799, 805, 806],
+            'flag:L114:0': [779, 780, 781, 786, 787, 788, 793, 794, 795, 800, 801, 807, 808],
+            'flag:L113:0': [816, 817, 818, 819],
         });
         // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
         for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);
         // the Watcher's talk (`flag:L114:0`) is in another level than the FinalDoor's L113: otherLevel
-        expect(legs[802].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
+        expect(legs[795].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
         // the Or: no Ghost Spear at sphere 5.x, so the lit pole stages; L63's pole for an L62 exit is otherLevel
-        expect(legs[515].sphere.inventory).not.toContain('Ghost Spear');
-        expect(legs[517].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
+        expect(legs[508].sphere.inventory).not.toContain('Ghost Spear');
+        expect(legs[510].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
         // a goal that needs no event keeps no goalEvents key at all (its row is byte-identical)
         expect(legs.filter((l) => !l.goalEvents).every((l) => !('goalEvents' in l))).toBe(true);
     });

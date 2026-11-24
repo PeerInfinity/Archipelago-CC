@@ -317,6 +317,45 @@ describe('grid construction over real levels', () => {
         expect(on.latch).toBe(true);
     });
 
+    // ⛓ rules-ap-chest-solid — the AP chest (the playthrough overlay's `chest` row: `probe: 'S'`, `pocketReentry`, no condition,
+    // not `persists`) walls every entry but the step north from the cell below; a walled entry whose side holds no landing is
+    // re-opened (whoever stands there came through the opened chest), and a side WITH a landing stays walled.
+    // ⛓ rules-ap-chest-solid, the LATCH (⚖ Robert "Make it exact"): the transcription's `persistAttr: 'tag'` (an opened chest stays
+    // open, `APChest.as:66-68,92`) LATCHES a walled side that holds a landing, and only such a side.
+    it('an AP chest is one-sided from the SOUTH; a walled side with no landing is let back in, one with a landing is latched', () => {
+        expect(ENTITY_SEMANTICS.chest).toMatchObject({ kind: 'manual', persistAttr: 'tag' });
+        const chestRow = { kind: 'directional', probe: 'S', pocketReentry: true };
+        const entityOverride = (e, base) => (e.type === 'chest' ? { ...base, ...chestRow } : base);
+        const gridOf = (n, options) => {
+            const level = levelById(n);
+            return buildSeedlingRegionGrid({ x: 0, y: 0, w: level.width, h: level.height }, level, { entityOverride, ...options });
+        };
+        const cellAt = (g, x, y) => g.cells[y * g.width + x];
+        // L11: chest@32,48 = tile (2,3); L3's landing (2,1) is above it, L10's (2,4) below. The far side has a landing: walled.
+        expect(cellAt(gridOf(11, {}), 2, 3).enter).toBeUndefined();
+        const l11 = cellAt(gridOf(11, { directionalLocks: true, arrivalTiles: [[2, 1], [2, 4]] }), 2, 3);
+        expect(l11.kind).toBe('directional');
+        expect(l11.enter).toEqual({ E: null, S: null, W: null });
+        expect(l11.latch).toBe(true);
+        // a chest whose tag is < 0 does not persist, so it is walled but never latched
+        const noTag = (n) => ({ ...levelById(n), entities: levelById(n).entities.map((e) => (e.type === 'chest' ? { ...e, attrs: { ...e.attrs, tag: '-1' } } : e)) });
+        const g11 = buildSeedlingRegionGrid({ x: 0, y: 0, w: noTag(11).width, h: noTag(11).height }, noTag(11), { entityOverride, directionalLocks: true, arrivalTiles: [[2, 1], [2, 4]] });
+        expect(cellAt(g11, 2, 3).latch).toBeUndefined();
+        expect(cellAt(g11, 2, 3).enter).toEqual({ E: null, S: null, W: null });
+        // L40: chest@880,816 = tile (55,51), under the fire-gated alcove (54..56, 48..50) that no landing enters: the step back
+        // down into the chest (moving S) is free; with a landing placed IN the alcove, or no `arrivalTiles` at all, it is walled.
+        const below = [[0, 53]];
+        expect(cellAt(gridOf(40, { directionalLocks: true, arrivalTiles: below }), 55, 51).enter).toEqual({ E: null, W: null });
+        expect(cellAt(gridOf(40, { directionalLocks: true, arrivalTiles: below }), 55, 51).latch).toBeUndefined();   // no landing side: nothing to latch
+        expect(cellAt(gridOf(40, { directionalLocks: true, arrivalTiles: [...below, [55, 48]] }), 55, 51).latch).toBe(true);
+        expect(cellAt(gridOf(40, { directionalLocks: true, arrivalTiles: [...below, [55, 48]] }), 55, 51).enter).toEqual({ E: null, S: null, W: null });
+        expect(cellAt(gridOf(40, { directionalLocks: true }), 55, 51).enter).toEqual({ E: null, S: null, W: null });
+        // a BossLock's probe never takes this path (it latches instead): the rule reads `pocketReentry` only
+        const boss = levelById(30);
+        const g = buildSeedlingRegionGrid({ x: 0, y: 0, w: boss.width, h: boss.height }, boss, { directionalLocks: true, arrivalTiles: [] });
+        expect(g.cells[2 * g.width + 4].enter).toEqual({ E: null, S: null, W: null });
+    });
+
     // ⛓ RULES (A) — a bosslock whose `tag` is >= 0 stays open once opened
     // (BossLock.as:43,81), so its cell is `latch`ed — and only under `directionalLocks`.
     it('a persistent bosslock latches its `enter` gates under `directionalLocks`, and a tag < 0 one does not', () => {

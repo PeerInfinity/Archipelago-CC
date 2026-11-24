@@ -13,7 +13,10 @@ export const RULES = JSON.parse(readFileSync(
 export const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling-playthrough.json', import.meta.url), 'utf8'));
 export const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8', 'level_16__r1c1', 'level_16__r4c21',
     'level_18__r1c1', 'level_18__r7c10', 'level_0__r7c6', 'level_19__r5c5', 'level_20__r1c4',
-    'level_3__r0c4', 'level_8', 'level_94__r3c4', 'level_12__r42c28', 'level_67__r3c2', 'level_28__r0c6', 'level_30__r0c4', 'level_32', 'level_38',
+    'level_3__r0c4', 'level_8', 'level_94__r3c4', 'level_12__r42c28', 'level_67__r3c2', 'level_28__r0c6', 'level_30__r0c4', 'level_32',
+    // ⛓ rules-ap-chest-solid: L38 is two sub-regions (its one-sided AP chest, latched): both halves, so the sample keeps L38's press
+    //   (r0c9) and now also certifies the chest's latch event (r8c9, its probe side)
+    'level_38__r0c9', 'level_38__r8c9',
     'level_39__r25c9', 'level_40__r23c29', 'level_61__r0c10', 'level_63__r0c1', 'level_62', 'level_63__r10c2', 'level_58__r3c3', 'level_65__r0c8',
     'level_80__r0c2', 'level_71__r0c6', 'level_78__r0c2', 'level_101__r4c2'];
 /**

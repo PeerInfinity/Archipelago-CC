@@ -148,7 +148,9 @@ describe('flash_seedling — the atlas install knob (S2 D1)', () => {
         //   (the L78 door) each hold one; L78's new sub-regions hold none (its doors stay in r0c2 / r0c16).
         // ⛓ rules-k-pursuit-resume: 188 -> 191 — rule K + (b) splits L72, L74 and L75 at their lavarunners' leash cuts, so
         //   each one's two doors fall in two zones (L72 r0c11 / r11c6, L74 r2c2 / r8c18, L75 r0c4 / r13c3).
-        expect(entry.zoneCount).toBe(191);
+        // ⛓ rules-ap-chest-solid: 191 -> 194 — a one-sided AP chest splits L11 (r0c2 the L3 door, r4c2 the L10 stairs) and L38
+        //   (r0c9 the L39 door, r8c9 the L37 door), and L25's chest pocket r7c6 takes the L28 door from r2c7.
+        expect(entry.zoneCount).toBe(194);
         entry.prepareSphereGrowth({ params: {} });
         expect(entry.rulesJsonBlocks().region_atlas.atlas_id).toBe(SEEDLING_STARTER_ATLAS.atlas_id);
     });

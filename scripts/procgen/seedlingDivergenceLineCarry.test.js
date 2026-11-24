@@ -110,7 +110,8 @@ describe('⛓ the committed playthrough\'s list: OFF byte-identical, ON = the ca
         // the measured witnesses (the page needed exactly these carries): an Or(<flag>, <items not held>) arrival door
         expect(carried.map((l) => [l.key, l.carriedFlags.map((f) => f.eventId)])).toEqual([
             ['level_62 <- in_L64_32_96 -> exit:out_teleporter_240_304', ['flag:L62:0']],
-            ['level_63__r5c14 <- in_L65_128_0 ~> level_63__r6c9 -> location:Level 063 - Chest', ['flag:L63:7']],
+            // ⛓ rules-ap-chest-solid: the chest is bound in r6c15 (beside its open side), no longer its own r5c14
+            ['level_63__r6c15 <- in_L65_128_0 ~> level_63__r6c9 -> location:Level 063 - Chest', ['flag:L63:7']],
         ]);
     });
 

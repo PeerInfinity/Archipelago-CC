@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-b856f0fc",
+  "atlas_id": "seedling-b156d8a1",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "b856f0fc" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "b156d8a1" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -732,31 +732,54 @@
           "exit_id": "in_L3_96_128",
           "kind": "teleporter",
           "exit_tiles": [[2,1]],
-          "entrance_tile": [2,1]
+          "entrance_tile": [2,1],
+          "sub_region": "r0c2"
         },
         {
           "exit_id": "in_L10_48_16",
           "kind": "teleporter",
           "exit_tiles": [[2,4]],
-          "entrance_tile": [2,4]
+          "entrance_tile": [2,4],
+          "sub_region": "r4c2"
         },
         {
           "exit_id": "out_teleporter_32_0",
           "kind": "teleporter",
           "exit_tiles": [[2,0]],
-          "entrance_tile": [2,0]
+          "entrance_tile": [2,0],
+          "sub_region": "r0c2"
         },
         {
           "exit_id": "out_stairsdown_32_80",
           "kind": "teleporter",
           "exit_tiles": [[2,5]],
-          "entrance_tile": [2,5]
+          "entrance_tile": [2,5],
+          "sub_region": "r4c2"
         }
       ],
       "locations": [
-        { "name": "Level 011 - Chest", "tile": [2,3], "vanilla_item": "Seal" }
+        { "name": "Level 011 - Chest", "tile": [2,3], "vanilla_item": "Seal", "sub_region": "r4c2" }
       ],
-      "annotations": { "rules_source": "manual" }
+      "annotations": { "rules_source": "analyzer" },
+      "subgraph": {
+        "sub_regions": ["r0c2","r4c2"],
+        "internal_exits": [
+          {
+            "from": "r0c2",
+            "to": "r4c2",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Swim" } },
+                { "rule": "CanReachRegion", "args": { "region_name": "level_11__r4c2" } }
+              ]
+            }
+          },
+          { "from": "r4c2", "to": "r0c2", "bidirectional": false, "source": "analyzer" }
+        ]
+      }
     },
     {
       "region_id": "level_12",
@@ -2050,7 +2073,7 @@
           "kind": "teleporter",
           "exit_tiles": [[6,8]],
           "entrance_tile": [6,8],
-          "sub_region": "r2c7"
+          "sub_region": "r7c6"
         },
         {
           "exit_id": "out_teleporter_144_32",
@@ -2071,17 +2094,24 @@
           "kind": "teleporter",
           "exit_tiles": [[6,7]],
           "entrance_tile": [6,7],
-          "sub_region": "r2c7"
+          "sub_region": "r7c6"
         }
       ],
       "locations": [
-        { "name": "Level 025 - Chest", "tile": [6,6], "vanilla_item": "Seal", "sub_region": "r2c7" }
+        { "name": "Level 025 - Chest", "tile": [6,6], "vanilla_item": "Seal", "sub_region": "r7c6" }
       ],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r2c7","r3c2"],
+        "sub_regions": ["r2c7","r3c2","r7c6"],
         "internal_exits": [
           { "from": "r2c7", "to": "r3c2", "bidirectional": false, "source": "analyzer" },
+          {
+            "from": "r2c7",
+            "to": "r7c6",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "CanReachRegion", "args": { "region_name": "level_25__r7c6" } }
+          },
           {
             "from": "r3c2",
             "to": "r2c7",
@@ -2095,7 +2125,8 @@
                 { "rule": "Has", "args": { "item_name": "Progressive Shield" } }
               ]
             }
-          }
+          },
+          { "from": "r7c6", "to": "r2c7", "bidirectional": false, "source": "analyzer" }
         ]
       }
     },
@@ -2919,31 +2950,48 @@
           "exit_id": "in_L37_288_0",
           "kind": "teleporter",
           "exit_tiles": [[9,18]],
-          "entrance_tile": [9,18]
+          "entrance_tile": [9,18],
+          "sub_region": "r8c9"
         },
         {
           "exit_id": "out_teleporter_144_0",
           "kind": "teleporter",
           "exit_tiles": [[9,0]],
-          "entrance_tile": [9,0]
+          "entrance_tile": [9,0],
+          "sub_region": "r0c9"
         },
         {
           "exit_id": "out_teleporter_144_304",
           "kind": "teleporter",
           "exit_tiles": [[9,19]],
-          "entrance_tile": [9,19]
+          "entrance_tile": [9,19],
+          "sub_region": "r8c9"
         },
         {
           "exit_id": "in_L39_144_624",
           "kind": "teleporter",
           "exit_tiles": [[9,1]],
-          "entrance_tile": [9,1]
+          "entrance_tile": [9,1],
+          "sub_region": "r0c9"
         }
       ],
       "locations": [
-        { "name": "Level 038 - Chest", "tile": [9,7], "vanilla_item": "Seal" }
+        { "name": "Level 038 - Chest", "tile": [9,7], "vanilla_item": "Seal", "sub_region": "r8c9" }
       ],
-      "annotations": { "rules_source": "manual" }
+      "annotations": { "rules_source": "analyzer" },
+      "subgraph": {
+        "sub_regions": ["r0c9","r8c9"],
+        "internal_exits": [
+          {
+            "from": "r0c9",
+            "to": "r8c9",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "CanReachRegion", "args": { "region_name": "level_38__r8c9" } }
+          },
+          { "from": "r8c9", "to": "r0c9", "bidirectional": false, "source": "analyzer" }
+        ]
+      }
     },
     {
       "region_id": "level_39",
@@ -5718,12 +5766,13 @@
           "name": "Level 063 - Chest",
           "tile": [14,5],
           "vanilla_item": "Seal",
-          "sub_region": "r5c14"
+          "sub_region": "r6c15",
+          "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
         }
       ],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r0c1","r5c14","r6c9","r6c15","r10c2"],
+        "sub_regions": ["r0c1","r6c9","r6c15","r10c2"],
         "internal_exits": [
           {
             "from": "r0c1",
@@ -5738,20 +5787,6 @@
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
-          },
-          {
-            "from": "r5c14",
-            "to": "r6c15",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r5c14",
-            "to": "r6c9",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
           },
           {
             "from": "r6c15",
@@ -10274,11 +10309,31 @@
         }
       ],
       "locations": [
-        { "name": "Level 080 - Chest", "tile": [1,8], "vanilla_item": "Seal", "sub_region": "r8c1" }
+        {
+          "name": "Level 080 - Chest",
+          "tile": [1,8],
+          "vanilla_item": "Seal",
+          "sub_region": "r6c5",
+          "access_rule": {
+            "rule": "And",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+              {
+                "rule": "Or",
+                "children": [
+                  { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                  { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+                  { "rule": "Has", "args": { "item_name": "Wand" } },
+                  { "rule": "Has", "args": { "item_name": "Progressive Shield", "count": 2 } }
+                ]
+              }
+            ]
+          }
+        }
       ],
       "annotations": { "rules_source": "mixed" },
       "subgraph": {
-        "sub_regions": ["r0c2","r6c5","r8c1","r8c4","r9c5","r12c4","r13c3","r14c2","r16c1"],
+        "sub_regions": ["r0c2","r6c5","r8c4","r9c5","r12c4","r13c3","r14c2","r16c1"],
         "internal_exits": [
           {
             "from": "r0c2",
@@ -10286,27 +10341,6 @@
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r0c2",
-            "to": "r8c1",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
-                {
-                  "rule": "Or",
-                  "children": [
-                    { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
-                    { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
-                    { "rule": "Has", "args": { "item_name": "Wand" } },
-                    { "rule": "Has", "args": { "item_name": "Progressive Shield", "count": 2 } }
-                  ]
-                }
-              ]
-            }
           },
           {
             "from": "r12c4",
@@ -10408,27 +10442,6 @@
             "bidirectional": false,
             "source": "manual",
             "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
-          },
-          {
-            "from": "r6c5",
-            "to": "r8c1",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
-                {
-                  "rule": "Or",
-                  "children": [
-                    { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
-                    { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
-                    { "rule": "Has", "args": { "item_name": "Wand" } },
-                    { "rule": "Has", "args": { "item_name": "Progressive Shield", "count": 2 } }
-                  ]
-                }
-              ]
-            }
           },
           {
             "from": "r8c4",

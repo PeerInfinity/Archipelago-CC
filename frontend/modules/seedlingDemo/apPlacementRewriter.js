@@ -123,6 +123,33 @@ export const AP_LOOK = 'ap';
  *  distinguishable only by a hash suffix. */
 export const AP_RECORD_SET_ID_BASE = 'seedling-ap-record';
 
+/**
+ * ⛓ rules-ap-chest-solid — **AN AP LOCATION THAT STOOD IN A VANILLA CHEST SAYS SO.** The p4h build constructs
+ * `Pickups/APChest` from an `<apitem>` whose `@kind` is the literal `chest` (`Game.as`, the `apitem` loop; Seedling
+ * `p4h-as3` commit `0451516252`): a `Solid` 16x16 (`APChest.as:57-58`) that opens only for a player on the one-pixel
+ * line under its bottom edge, and only while no other Solid overlaps it (`APChest.as:75`, `Chest.as:62-63`). Any
+ * other value, or none, is the 8x8 overlap `APItem`, so p4g and older builds ignore the attribute and keep the
+ * overlap pickup.
+ */
+export const AP_CHEST_KIND = 'chest';
+
+/** The vanilla entity type whose AP location is delivered as an `APChest`. */
+export const AP_CHEST_VANILLA_TYPE = 'chest';
+
+/**
+ * The attributes of a delivered `<apitem>`, in the PINNED order `tag`, `look`, `kind` (the OEL bytes are compared).
+ * `kind` is written only when the vanilla entity the location stood in is a `chest`.
+ * @param {number|string} tag
+ * @param {string} look
+ * @param {string} vanillaType the replaced entity's type
+ * @returns {{tag: string, look: string, kind?: string}}
+ */
+export function apItemAttrs(tag, look, vanillaType) {
+    return vanillaType === AP_CHEST_VANILLA_TYPE
+        ? { tag: String(tag), look, kind: AP_CHEST_KIND }
+        : { tag: String(tag), look };
+}
+
 /** The address M1's `pendingCheck` carries, and this table's key. */
 export const placementKey = (level, tag) => `${level}|${tag}`;
 
@@ -496,13 +523,13 @@ export function rewriteRecordSet(vanillaSet, table) {
                     + 'node(s), which an `apitem` has no way to express — refusing rather than '
                     + 'dropping geometry the room depends on');
             }
-            // ⛔ THE ATTRIBUTE ORDER IS PINNED: `tag` then `look`, because the
-            // emitted OEL text is what crosses and its bytes are compared.
+            // ⛔ THE ATTRIBUTE ORDER IS PINNED: `tag`, `look`, then `kind`, because
+            // the emitted OEL text is what crosses and its bytes are compared.
             record.entities[at] = {
                 type: AP_ITEM_TYPE,
                 x: old.x,
                 y: old.y,
-                attrs: { tag: String(entry.tag), look: entry.look },
+                attrs: apItemAttrs(entry.tag, entry.look, old.type),
             };
             replaced += 1;
         }

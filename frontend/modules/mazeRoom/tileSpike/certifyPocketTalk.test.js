@@ -95,9 +95,11 @@ describe('the L63/L65 pocket landings (L61 + L63 + L65)', () => {
         ]);
         const fresh = 'no AP crossing into level_63__r6c9 from outside its world admits this arrival';
         const excused = out.accepted.filter((a) => a.by === fresh).map((a) => a.label).sort();
+        // ⛓ rules-ap-chest-solid: the chest's own one-tile sub-region r5c14 is gone (its cell is a one-sided crossing); the chest
+        //   is bound in r6c15, beside its open side, and its row is excused the same way.
         expect(excused).toEqual([
-            'level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)', 'level_63__r6c9 → level_63__r10c2',
-            'level_63__r6c9 → level_63__r5c14', 'level_63__r6c9 → level_63__r6c15',
+            'level_63__r6c15 @ Level 063 - Chest (from level_63__r6c9)', 'level_63__r6c9 → level_63__r10c2',
+            'level_63__r6c9 → level_63__r6c15',
         ]);
         const named = (label, why) => out.skipped.some((k) => k.label === label && (k.why ?? null) === why);
         expect(named(`level_63__r6c9 @ ${F7} (landing 8,18)`, 'own event')).toBe(true);

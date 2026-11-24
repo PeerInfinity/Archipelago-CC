@@ -173,12 +173,14 @@ describe('the playthrough\'s obstacle events', () => {
         const e = buttons.events.find((x) => x.fields.event_id === 'flag:L39:8');
         // ⛓ rules-l39: L38 is ONE region now (its static pulser's empty pocket r12c5 is gone), and the plug's L39
         // side is the corridor r25c9 (the rope's run, solid until cut, splits it from the room r2c11)
-        expect(e.fields.side).toBe('level_38');
+        // ⛓ rules-ap-chest-solid: and L38 is two sub-regions again — its chest (9,7) opens only from below, so the upper half
+        // r0c9 (L39's door, this button) is entered from r8c9 through the opened chest and never the other way
+        expect(e.fields.side).toBe('level_38__r0c9');
         expect(e.fields.obstacle).toEqual({ level: 39, tag: 8, class: 'wandlock', x: 144, y: 592 });
         expect(e.fields.action.presser).toEqual({ level: 38, class: 'buttonroom', x: 32, y: 48 });
         expect(e.fields.across).toEqual([]);
         const gates = gatesOf(RULES, new Set([e.name]));
-        expect(gates.map((g) => `${g.from}->${g.to}`).sort()).toEqual(['level_38->level_39__r25c9', 'level_39__r25c9->level_38']);
+        expect(gates.map((g) => `${g.from}->${g.to}`).sort()).toEqual(['level_38__r0c9->level_39__r25c9', 'level_39__r25c9->level_38__r0c9']);
         // the fresh derivation gates exactly the departures the committed rules ask it on
         expect(buttons.exitGates.filter((g) => JSON.stringify(g.rule).includes(e.name)).map((g) => `${g.region_id}/${g.exit_id}`))
             .toEqual(['level_38/out_teleporter_144_0', 'level_39/out_teleporter_144_624']);

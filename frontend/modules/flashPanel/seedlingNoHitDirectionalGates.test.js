@@ -8,6 +8,7 @@ import { describe, expect, it } from 'vitest';
 import { noHitDirectionalGatesFor, stampNoHitDirectionalGates, gateCondition, WITNESS_ARM_OF_FLAG } from './seedlingNoHitDirectionalGates.js';
 import { wallFlyerBands } from './seedlingWallFlyerBands.js';
 import { buildLevelWorld } from '../seedlingDemo/levelWorld.js';
+import { PLAYTHROUGH_ENTITY_OVERLAY } from './seedlingPlaythroughOverlay.js';
 
 const read = (rel) => JSON.parse(readFileSync(new URL(rel, import.meta.url), 'utf8'));
 const MAP = read('./atlases/seedling-map.json');
@@ -181,14 +182,24 @@ describe('the committed rules carry the gates and nothing else in those rooms', 
     const isTrue = (rule) => rule === undefined || rule === null || rule.rule === 'True_';
 
     it('each gated room is two sub-regions; one crossing costs the arm set, and every other exit and location is free', () => {
+        // ⛓ rules-ap-chest-solid: + one sub-region per one-sided Solid of the room (the AP chest, the overlay's `probe` row),
+        // which it splits off with a one-way free row out (L25's chest (6,6), with L28's door below it).
+        const oneSided = (level) => MAP.levels.find((l) => l.level === level).entities
+            .filter((e) => PLAYTHROUGH_ENTITY_OVERLAY[e.type]?.probe && !PLAYTHROUGH_ENTITY_OVERLAY[e.type]?.condition).length;
+        expect(TABLE.gates.map((g) => [g.level, oneSided(g.level)]).filter(([, n]) => n > 0)).toEqual([[25, 1]]);
         for (const gate of TABLE.gates) {
             const regions = roomRegions(gate.level);
-            expect(regions, `L${gate.level}`).toHaveLength(2);
+            expect(regions, `L${gate.level}`).toHaveLength(2 + oneSided(gate.level));
             const priced = [];
             for (const r of regions) {
                 for (const e of REGIONS[r].exits ?? []) if (!isTrue(e.access_rule)) priced.push({ from: r, to: e.connected_region, rule: e.access_rule });
                 for (const l of REGIONS[r].locations ?? []) expect(isTrue(l.access_rule), `${r} @ ${l.name}`).toBe(true);
             }
+            // ⛓ rules-ap-chest-solid, the LATCH: a re-entry into a one-sided Solid's pocket costs the chest's lock event (read off the
+            //   rule: an item named for a chest), never the gate's arms; it is not this table's crossing.
+            const latchRow = (p) => JSON.stringify(p.rule).includes(': chest@');
+            expect(priced.filter(latchRow).length, `L${gate.level}`).toBe(oneSided(gate.level));
+            priced.splice(0, priced.length, ...priced.filter((p) => !latchRow(p)));
             expect(priced, `L${gate.level}`).toHaveLength(1);
             expect(regions).toContain(priced[0].to);
             expect(priced[0].from).not.toBe(priced[0].to);

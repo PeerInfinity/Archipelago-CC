@@ -1,0 +1,886 @@
+[
+ {
+  "level": 11,
+  "chest": "chest@32,48",
+  "tag": "0",
+  "tiles": [
+   [
+    2,
+    3
+   ]
+  ],
+  "offGrid": false,
+  "cover": false,
+  "openSideTiles": [
+   [
+    2,
+    4
+   ]
+  ],
+  "subRegions": [
+   "r0c2"
+  ],
+  "home": "r0c2",
+  "homeSize": 6,
+  "neighbours": [
+   "up open",
+   "left gated [flag:canSwim]",
+   "right gated [flag:canSwim]",
+   "down open"
+  ],
+  "openSideParts": [
+   "r4c2"
+  ],
+  "separates": true,
+  "parts": [
+   "r0c2",
+   "r4c2"
+  ],
+  "members": [
+   "exit in_L3_96_128",
+   "exit in_L10_48_16",
+   "exit out_teleporter_32_0",
+   "exit out_stairsdown_32_80"
+  ],
+  "cutOff": [
+   "exit in_L3_96_128",
+   "exit out_teleporter_32_0"
+  ],
+  "fires": true,
+  "otherWays": [],
+  "modelUnreached": null,
+  "location": "Level 011 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L11"
+ },
+ {
+  "level": 12,
+  "chest": "chest@320,816",
+  "tag": "9",
+  "tiles": [
+   [
+    20,
+    51
+   ]
+  ],
+  "offGrid": false,
+  "cover": false,
+  "openSideTiles": [
+   [
+    20,
+    52
+   ]
+  ],
+  "subRegions": [
+   "r0c19",
+   "r0c37",
+   "r13c6",
+   "r40c4",
+   "r42c28",
+   "r43c21",
+   "r51c1",
+   "r51c38"
+  ],
+  "home": "r42c28",
+  "homeSize": 230,
+  "neighbours": [
+   "up directional [free]",
+   "left open",
+   "right open",
+   "down open"
+  ],
+  "openSideParts": [
+   "r42c28"
+  ],
+  "separates": false,
+  "parts": [
+   "r42c28"
+  ],
+  "members": [
+   "exit out_teleporter_32_848",
+   "exit in_L83_32_64"
+  ],
+  "cutOff": [],
+  "fires": false,
+  "otherWays": [],
+  "modelUnreached": null,
+  "location": "Level 012 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L12"
+ },
+ {
+  "level": 15,
+  "chest": "chest@144,96",
+  "tag": "1",
+  "tiles": [
+   [
+    9,
+    6
+   ]
+  ],
+  "offGrid": false,
+  "cover": false,
+  "openSideTiles": [
+   [
+    9,
+    7
+   ]
+  ],
+  "subRegions": [
+   "r1c5",
+   "r1c9",
+   "r6c8"
+  ],
+  "home": "r6c8",
+  "homeSize": 7,
+  "neighbours": [
+   "up gated [flag:canSwim]",
+   "left open",
+   "right wall",
+   "down open"
+  ],
+  "openSideParts": [
+   "r6c8"
+  ],
+  "separates": false,
+  "parts": [
+   "r6c8"
+  ],
+  "members": [],
+  "cutOff": [],
+  "fires": false,
+  "otherWays": [],
+  "modelUnreached": null,
+  "location": "Level 015 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L15"
+ },
+ {
+  "level": 17,
+  "chest": "chest@128,16",
+  "tag": "0",
+  "tiles": [
+   [
+    8,
+    1
+   ]
+  ],
+  "offGrid": false,
+  "cover": false,
+  "openSideTiles": [
+   [
+    8,
+    2
+   ]
+  ],
+  "subRegions": [
+   "r1c1"
+  ],
+  "home": "r1c1",
+  "homeSize": 50,
+  "neighbours": [
+   "up wall",
+   "left open",
+   "right open",
+   "down open"
+  ],
+  "openSideParts": [
+   "r1c1"
+  ],
+  "separates": false,
+  "parts": [
+   "r1c1"
+  ],
+  "members": [
+   "exit in_L16_112_64",
+   "exit in_pit_L16_7_2",
+   "exit in_pit_L16_8_2",
+   "exit in_pit_L16_9_2",
+   "exit in_pit_L16_7_3",
+   "exit in_pit_L16_8_3",
+   "exit in_pit_L16_9_3",
+   "exit in_pit_L16_8_4",
+   "exit out_stairsup_32_48"
+  ],
+  "cutOff": [],
+  "fires": false,
+  "otherWays": [],
+  "modelUnreached": null,
+  "location": "Level 017 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L17"
+ },
+ {
+  "level": 25,
+  "chest": "chest@96,96",
+  "tag": "0",
+  "tiles": [
+   [
+    6,
+    6
+   ]
+  ],
+  "offGrid": false,
+  "cover": false,
+  "openSideTiles": [
+   [
+    6,
+    7
+   ]
+  ],
+  "subRegions": [
+   "r2c7",
+   "r3c2"
+  ],
+  "home": "r2c7",
+  "homeSize": 14,
+  "neighbours": [
+   "up open",
+   "left wall",
+   "right open",
+   "down open"
+  ],
+  "openSideParts": [
+   "r7c6"
+  ],
+  "separates": true,
+  "parts": [
+   "r2c7",
+   "r7c6"
+  ],
+  "members": [
+   "exit in_L22_0_128",
+   "exit out_teleporter_96_128",
+   "exit out_teleporter_144_32",
+   "exit in_L28_96_0"
+  ],
+  "cutOff": [
+   "exit in_L22_0_128",
+   "exit out_teleporter_144_32"
+  ],
+  "fires": true,
+  "otherWays": [],
+  "modelUnreached": null,
+  "location": "Level 025 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L25"
+ },
+ {
+  "level": 36,
+  "chest": "chest@64,48",
+  "tag": "0",
+  "tiles": [
+   [
+    4,
+    3
+   ]
+  ],
+  "offGrid": false,
+  "cover": false,
+  "openSideTiles": [
+   [
+    4,
+    4
+   ]
+  ],
+  "subRegions": [
+   "r0c4",
+   "r1c1",
+   "r3c8",
+   "r4c0",
+   "r8c7"
+  ],
+  "home": "r1c1",
+  "homeSize": 32,
+  "neighbours": [
+   "up wall",
+   "left open",
+   "right open",
+   "down open"
+  ],
+  "openSideParts": [
+   "r1c1"
+  ],
+  "separates": false,
+  "parts": [
+   "r1c1"
+  ],
+  "members": [
+   "exit in_L12_168_368",
+   "exit out_teleporter_32_128",
+   "exit in_light_boss_exit_L69_112_96"
+  ],
+  "cutOff": [],
+  "fires": false,
+  "otherWays": [],
+  "modelUnreached": null,
+  "location": "Level 036 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L36"
+ },
+ {
+  "level": 38,
+  "chest": "chest@144,112",
+  "tag": "1",
+  "tiles": [
+   [
+    9,
+    7
+   ]
+  ],
+  "offGrid": false,
+  "cover": true,
+  "openSideTiles": [
+   [
+    9,
+    8
+   ]
+  ],
+  "subRegions": [
+   "r0c9",
+   "r12c5"
+  ],
+  "home": "r0c9",
+  "homeSize": 131,
+  "neighbours": [
+   "up open",
+   "left wall",
+   "right wall",
+   "down open"
+  ],
+  "openSideParts": [
+   "r8c9"
+  ],
+  "separates": true,
+  "parts": [
+   "r0c9",
+   "r8c9"
+  ],
+  "members": [
+   "exit in_L37_288_0",
+   "exit out_teleporter_144_0",
+   "exit out_teleporter_144_304",
+   "exit in_L39_144_624"
+  ],
+  "cutOff": [
+   "exit out_teleporter_144_0",
+   "exit in_L39_144_624"
+  ],
+  "fires": true,
+  "otherWays": [],
+  "modelUnreached": null,
+  "location": "Level 038 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L38"
+ },
+ {
+  "level": 40,
+  "chest": "chest@880,816",
+  "tag": "13",
+  "tiles": [
+   [
+    55,
+    51
+   ]
+  ],
+  "offGrid": false,
+  "cover": false,
+  "openSideTiles": [
+   [
+    55,
+    52
+   ]
+  ],
+  "subRegions": [
+   "r0c36",
+   "r0c53",
+   "r4c4",
+   "r13c59",
+   "r22c0",
+   "r23c29",
+   "r26c13",
+   "r32c36",
+   "r36c35",
+   "r48c54",
+   "r49c36"
+  ],
+  "home": "r26c13",
+  "homeSize": 169,
+  "neighbours": [
+   "up gated [flag:hasFire]",
+   "left wall",
+   "right wall",
+   "down open"
+  ],
+  "openSideParts": [
+   "r26c13"
+  ],
+  "separates": false,
+  "parts": [
+   "r26c13"
+  ],
+  "members": [
+   "exit in_L39_144_0",
+   "exit out_stairsdown_320_576",
+   "exit out_teleporter_480_912",
+   "exit out_pit_4_20",
+   "exit out_pit_5_20",
+   "exit out_pit_13_20",
+   "exit out_pit_14_20",
+   "exit out_pit_4_21",
+   "exit out_pit_5_21",
+   "exit out_pit_13_21",
+   "exit out_pit_14_21",
+   "exit out_pit_4_22",
+   "exit out_pit_5_22",
+   "exit out_pit_4_23",
+   "exit out_pit_5_23",
+   "exit in_L43_176_464",
+   "location Level 040 - Totem Part 160,640"
+  ],
+  "cutOff": [],
+  "fires": false,
+  "otherWays": [],
+  "modelUnreached": null,
+  "location": "Level 040 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L40"
+ },
+ {
+  "level": 46,
+  "chest": "chest@424,40",
+  "tag": "0",
+  "tiles": [
+   [
+    26,
+    2
+   ],
+   [
+    27,
+    2
+   ],
+   [
+    26,
+    3
+   ],
+   [
+    27,
+    3
+   ]
+  ],
+  "offGrid": true,
+  "cover": false,
+  "openSideTiles": [
+   [
+    26,
+    3
+   ],
+   [
+    27,
+    3
+   ]
+  ],
+  "subRegions": [
+   "r0c11",
+   "r1c26",
+   "r6c24",
+   "r23c5",
+   "r24c8",
+   "r25c3"
+  ],
+  "home": "r1c26",
+  "homeSize": 7,
+  "neighbours": [],
+  "openSideParts": [
+   "(open cell 26,3)",
+   "(open cell 27,3)"
+  ],
+  "separates": true,
+  "parts": [
+   "r1c26",
+   "r3c25",
+   "r4c27"
+  ],
+  "members": [],
+  "cutOff": [],
+  "fires": false,
+  "otherWays": [],
+  "modelUnreached": [],
+  "location": "Level 046 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L46"
+ },
+ {
+  "level": 48,
+  "chest": "chest@152,184",
+  "tag": "0",
+  "tiles": [
+   [
+    9,
+    11
+   ],
+   [
+    10,
+    11
+   ],
+   [
+    9,
+    12
+   ],
+   [
+    10,
+    12
+   ]
+  ],
+  "offGrid": true,
+  "cover": false,
+  "openSideTiles": [
+   [
+    9,
+    12
+   ],
+   [
+    10,
+    12
+   ]
+  ],
+  "subRegions": [
+   "r0c0",
+   "r0c18",
+   "r2c10",
+   "r4c3",
+   "r7c0",
+   "r7c19",
+   "r10c0",
+   "r11c9",
+   "r18c7"
+  ],
+  "home": "r11c9",
+  "homeSize": 4,
+  "neighbours": [],
+  "openSideParts": [
+   "(open cell 9,12)",
+   "(open cell 10,12)"
+  ],
+  "separates": false,
+  "parts": [],
+  "members": [],
+  "cutOff": [],
+  "fires": false,
+  "otherWays": [],
+  "modelUnreached": [],
+  "location": "Level 048 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L48"
+ },
+ {
+  "level": 63,
+  "chest": "chest@224,80",
+  "tag": "5",
+  "tiles": [
+   [
+    14,
+    5
+   ]
+  ],
+  "offGrid": false,
+  "cover": false,
+  "openSideTiles": [
+   [
+    14,
+    6
+   ]
+  ],
+  "subRegions": [
+   "r0c1",
+   "r5c8",
+   "r5c14",
+   "r6c9",
+   "r6c15",
+   "r10c2",
+   "r12c4"
+  ],
+  "home": "r5c14",
+  "homeSize": 1,
+  "neighbours": [
+   "up sink",
+   "left wall",
+   "right sink",
+   "down gated [flag:hasDarkSuit]"
+  ],
+  "openSideParts": [
+   "(gated cell 14,6)"
+  ],
+  "separates": false,
+  "parts": [],
+  "members": [],
+  "cutOff": [],
+  "fires": false,
+  "otherWays": [],
+  "modelUnreached": null,
+  "location": "Level 063 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L63"
+ },
+ {
+  "level": 71,
+  "chest": "chest@160,256",
+  "tag": "1",
+  "tiles": [
+   [
+    10,
+    16
+   ]
+  ],
+  "offGrid": false,
+  "cover": false,
+  "openSideTiles": [
+   [
+    10,
+    17
+   ]
+  ],
+  "subRegions": [
+   "r0c6",
+   "r11c7",
+   "r12c3",
+   "r13c7",
+   "r14c12",
+   "r16c19"
+  ],
+  "home": "r0c6",
+  "homeSize": 106,
+  "neighbours": [
+   "up gated [flag:hasDarkSuit]",
+   "left wall",
+   "right gated [flag:hasDarkSuit]",
+   "down open"
+  ],
+  "openSideParts": [
+   "r0c6"
+  ],
+  "separates": false,
+  "parts": [
+   "r0c6"
+  ],
+  "members": [
+   "exit out_teleporter_96_0",
+   "exit out_teleporter_224_304",
+   "exit out_teleporter_304_96",
+   "exit in_L72_0_256",
+   "exit in_L75_64_224",
+   "exit in_L76_0_80",
+   "exit in_L80_32_0"
+  ],
+  "cutOff": [],
+  "fires": false,
+  "otherWays": [],
+  "modelUnreached": null,
+  "location": "Level 071 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L71"
+ },
+ {
+  "level": 80,
+  "chest": "chest@16,128",
+  "tag": "0",
+  "tiles": [
+   [
+    1,
+    8
+   ]
+  ],
+  "offGrid": false,
+  "cover": false,
+  "openSideTiles": [
+   [
+    1,
+    9
+   ]
+  ],
+  "subRegions": [
+   "r0c2",
+   "r6c5",
+   "r8c1",
+   "r8c4",
+   "r9c5",
+   "r12c4",
+   "r13c3",
+   "r14c2",
+   "r16c1"
+  ],
+  "home": "r8c1",
+  "homeSize": 1,
+  "neighbours": [
+   "up wall",
+   "left gated [flag:hasDarkSuit]",
+   "right wall",
+   "down gated [flag:hasDarkSuit]"
+  ],
+  "openSideParts": [
+   "(gated cell 1,9)"
+  ],
+  "separates": false,
+  "parts": [],
+  "members": [],
+  "cutOff": [],
+  "fires": true,
+  "otherWays": [
+   "left (gated [flag:hasDarkSuit])"
+  ],
+  "modelUnreached": null,
+  "location": "Level 080 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L80"
+ },
+ {
+  "level": 86,
+  "chest": "chest@48,16",
+  "tag": "0",
+  "tiles": [
+   [
+    3,
+    1
+   ]
+  ],
+  "offGrid": false,
+  "cover": false,
+  "openSideTiles": [
+   [
+    3,
+    2
+   ]
+  ],
+  "subRegions": [
+   "r1c3"
+  ],
+  "home": "r1c3",
+  "homeSize": 9,
+  "neighbours": [
+   "up wall",
+   "left wall",
+   "right wall",
+   "down open"
+  ],
+  "openSideParts": [
+   "r2c1"
+  ],
+  "separates": false,
+  "parts": [
+   "r2c1"
+  ],
+  "members": [
+   "exit in_L0_160_272",
+   "exit out_teleporter_48_64"
+  ],
+  "cutOff": [],
+  "fires": false,
+  "otherWays": [],
+  "modelUnreached": null,
+  "location": "Level 086 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L86"
+ },
+ {
+  "level": 90,
+  "chest": "chest@48,32",
+  "tag": "0",
+  "tiles": [
+   [
+    3,
+    2
+   ]
+  ],
+  "offGrid": false,
+  "cover": false,
+  "openSideTiles": [
+   [
+    3,
+    3
+   ]
+  ],
+  "subRegions": [
+   "r1c2"
+  ],
+  "home": "r1c2",
+  "homeSize": 16,
+  "neighbours": [
+   "up open",
+   "left open",
+   "right open",
+   "down open"
+  ],
+  "openSideParts": [
+   "r1c2"
+  ],
+  "separates": false,
+  "parts": [
+   "r1c2"
+  ],
+  "members": [
+   "exit in_L89_256_0",
+   "exit out_teleporter_48_96"
+  ],
+  "cutOff": [],
+  "fires": false,
+  "otherWays": [],
+  "modelUnreached": null,
+  "location": "Level 090 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L90"
+ },
+ {
+  "level": 98,
+  "chest": "chest@160,32",
+  "tag": "1",
+  "tiles": [
+   [
+    10,
+    2
+   ]
+  ],
+  "offGrid": false,
+  "cover": false,
+  "openSideTiles": [
+   [
+    10,
+    3
+   ]
+  ],
+  "subRegions": [
+   "r0c0",
+   "r0c13",
+   "r2c4",
+   "r11c0",
+   "r11c13"
+  ],
+  "home": "r2c4",
+  "homeSize": 60,
+  "neighbours": [
+   "up wall",
+   "left wall",
+   "right wall",
+   "down open"
+  ],
+  "openSideParts": [
+   "r2c4"
+  ],
+  "separates": false,
+  "parts": [
+   "r2c4"
+  ],
+  "members": [
+   "exit in_L93_112_80",
+   "exit out_stairsup_112_112",
+   "exit out_teleporter_112_192",
+   "exit in_L99_112_112"
+  ],
+  "cutOff": [],
+  "fires": false,
+  "otherWays": [],
+  "modelUnreached": null,
+  "location": "Level 098 - Chest",
+  "delivery": "apitem",
+  "ledgerRow": "chest@L98"
+ }
+]

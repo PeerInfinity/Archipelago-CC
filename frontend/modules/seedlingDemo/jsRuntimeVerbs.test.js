@@ -228,7 +228,8 @@ describe('S4 — chests and pickups through collect-placement (beyond S1\'s L86)
     it('L17 chest (bare)', () => expectCollected({ region: 'level_17', level: 17, tag: 0, entityType: 'chest', verbs: ['chest'] }));
     it('L109 Firewand (bare) — a pickup, the `collect` verb', () => expectCollected({
         region: 'level_109', level: 109, tag: 0, entityType: 'firewand', verbs: ['collect'] }));
-    it('L11 chest (kit)', () => expectCollected({ region: 'level_11', level: 11, tag: 0, entityType: 'chest', kit: true, verbs: ['chest'] }));
+    // ⛓ rules-ap-chest-solid: L11 is two sub-regions (the chest opens only from below); the chest's is the lower one, L10's landing
+    it('L11 chest (kit)', () => expectCollected({ region: 'level_11__r4c2', level: 11, tag: 0, entityType: 'chest', kit: true, verbs: ['chest'] }));
 
     it('L12 chest behind the SHIELD LOCK (bare): the solver declines naming the `touch` and the shield; the walker walks', () => {
         const { rt } = arrive({ region: 'level_12__r0c19', at: { x: 16, y: 80 } });

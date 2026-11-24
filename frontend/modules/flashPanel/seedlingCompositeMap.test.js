@@ -132,7 +132,9 @@ describe('2. the hooks for steps 2–3', () => {
             residue = residue.concat(unplacedSeedlingLocations(region, ctx));
         }
         // ⛓ rules-l99-sided-killlock: event 37 -> 38, L99's kill-lock event (its lock@80,96 stands in its own level)
-        expect(kinds).toEqual({ item: 48, event: 38 });
+        // ⛓ rules-ap-chest-solid: event 38 -> 41, the three chest latch events (L11 flag 0: chest@32,48, L25 flag 0: chest@96,96,
+        //   L38 flag 1: chest@144,112 cleared; each chest stands in its own level, so none is residue)
+        expect(kinds).toEqual({ item: 48, event: 41 });
         // ⛓ the three events whose obstacle is in ANOTHER level than the region listing them (a remote effect)
         expect(residue.sort()).toEqual(['L39 flag 8: wandlock@144,592 cleared', 'L62 flag 0: lightpole@120,200 cleared',
             'L63 flag 1: lightpole@64,88 cleared'].sort());

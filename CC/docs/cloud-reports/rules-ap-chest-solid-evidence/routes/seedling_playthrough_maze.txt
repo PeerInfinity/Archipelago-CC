@@ -1,0 +1,25 @@
+level_3:level_3 -> level_11 => exit:level_11 -> level_10
+    base ['FREE']
+    tip  ['Progressive Swim']
+level_3:level_3 -> level_11 => loc:Level 011 - Chest
+    base ['FREE']
+    tip  ['Progressive Swim']
+level_22:level_22 -> level_25 => exit:level_25 -> level_28
+    base ['FREE']
+    tip  None
+level_22:level_22 -> level_25 => loc:Level 025 - Chest
+    base ['FREE']
+    tip  None
+level_26:level_26 -> level_25 => exit:level_25 -> level_28
+    base ['Ghost Spear', 'Progressive Shield', 'Progressive Sword']
+    tip  None
+level_26:level_26 -> level_25 => loc:Level 025 - Chest
+    base ['Ghost Spear', 'Progressive Shield', 'Progressive Sword']
+    tip  None
+level_39:level_39 -> level_38 => exit:level_38 -> level_37
+    base ['FREE']
+    tip  None
+level_39:level_39 -> level_38 => loc:Level 038 - Chest
+    base ['FREE']
+    tip  None
+MOVED ROUTES: 8

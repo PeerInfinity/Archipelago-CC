@@ -246,9 +246,10 @@ describe('⛓ the committed playthrough\'s list: OFF byte-identical, ON adds exa
     // ⛓ rules-l40-bk2-fixup: the subject moves from Boss Key 2 (which no longer carries: its goal rule stages flag 12) to the
     //   Chest, the L40 leg that still carries the same door for the same reason.
     it('⛓ MUTANT (route order = accessibility): reading the leg\'s AP sphere instead of its collection row loses the Chest\'s door', () => {
-        // the leg's own `sphere` is where its goal becomes ACCESSIBLE (5.3); flag 12 is collected at a later row
+        // the leg's own `sphere` is where its goal becomes ACCESSIBLE (5.4); flag 12 is collected at a later row
+        // ⛓ rules-ap-chest-solid: 5.3 -> 5.4, L38's chest latch event is collected at 5.3 (a sub-step shift, not a sphere move)
         const chest = on.find((l) => l.key.endsWith('location:Level 040 - Chest'));
-        expect(chest.sphere.label).toBe('5.3');
+        expect(chest.sphere.label).toBe('5.4');
         expect(chest.sphere.inventory).not.toContain('L40 flag 12: wandlock@480,560 cleared');
         expect(ids(chest.carriedFlags)).toEqual(['flag:L40:12']);
     });
