@@ -36,7 +36,7 @@
 import {
     NEAREST_TILE_INDEX, PLAYER_SOLID_TYPES, SOLID_GRID, TILE_SIZE,
     ADDED_TIME_PROPERTIES, addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap, tagOf, withRuntimeTeleporters, withTileWrites,
-    maskHitsBox,
+    maskHitsBox, apChestRecord,
 } from './levelWorld.js';
 import {
     INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, PICKUP_CEREMONY_BY_KEYTYPE,
@@ -1362,9 +1362,8 @@ export function createLevelRun({
             if (opts.cleared?.includes(TAGS_PER_LEVEL - 1)) {
                 try { opts.nextLevelRecord = levelSource(n + 1); } catch { opts.nextLevelRecord = null; }
             }
-            // ⛓ apchest: the build reaches the world (an `<apitem kind="chest">` is a Solid chest on `apchest`).
-            if (capabilities !== null) opts.capabilities = capabilities;
-            worlds.set(n, buildLevelWorld(recordFor(n), opts));
+            // ⛓ apchest: the build's record (an `<apitem kind="chest">` is a Solid chest on `apchest`; p4g: the same object).
+            worlds.set(n, buildLevelWorld(apChestRecord(recordFor(n), capabilities), opts));
         }
         return worlds.get(n);
     };

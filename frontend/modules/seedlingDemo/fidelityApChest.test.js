@@ -16,7 +16,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { AP_CHEST, CHEST, chestProbeLine, chestStanceBand, createChestState, stepChests } from './chest.js';
-import { apChestAsChest, buildLevelWorld } from './levelWorld.js';
+import { apChestAsChest, apChestRecord, buildLevelWorld } from './levelWorld.js';
 import { declaresApChest } from './apChestRoster.js';
 import { P4G_CAPABILITIES, setModelBuildDefault } from './modelBuild.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -75,14 +75,15 @@ describe('the gate is the build\'s capability and the element\'s kind', () => {
 
 describe('p4g: the delivered chest is still the overlap APItem, the world unchanged', () => {
     for (const n of [11, 25, 38]) {
-        it(`L${n}: an apitem, no chest, no chest solid; the same world whether the build is named or not`, () => {
+        it(`L${n}: an apitem, no chest, no chest solid; the same record whether the build is named or not`, () => {
             const rec = DELIVERED(n);
             const w = buildLevelWorld(rec);
             const c = CHESTS[n];
             expect(w.apItems.map((a) => [a.id, a.tag])).toEqual([[`apitem@${c.x},${c.y}`, c.tag]]);
             expect(w.chests).toEqual([]);
             expect(w.solids.filter((s) => s.chestId)).toEqual([]);
-            expect(JSON.stringify(buildLevelWorld(rec, { capabilities: P4G_CAPABILITIES }))).toBe(JSON.stringify(w));
+            expect(apChestRecord(rec, P4G_CAPABILITIES)).toBe(rec);
+            expect(apChestRecord(rec, null)).toBe(rec);
         });
     }
     it('every plan replays the same with p4g named as with no build named; the side walk passes through the cell', () => {
@@ -100,7 +101,7 @@ describe('p4g: the delivered chest is still the overlap APItem, the world unchan
 describe('p4h: the AP chest is the vanilla chest\'s Solid, opened only from its bottom line', () => {
     for (const n of [11, 25, 38]) {
         it(`L${n}: a chest row (apChest, its AP id), a chest solid, no apitem; the vanilla chest's rect and band`, () => {
-            const w = buildLevelWorld(DELIVERED(n), { capabilities: P4H_CAPS });
+            const w = buildLevelWorld(apChestRecord(DELIVERED(n), P4H_CAPS));
             const c = CHESTS[n];
             expect(w.apItems).toEqual([]);
             expect(w.chests).toEqual([{ id: `chest@${c.x},${c.y}`, tag: 'chest', x: c.x, y: c.y, persistTag: c.tag,
@@ -196,7 +197,7 @@ describe('p4h: the fade, persistence and check()', () => {
     it('the take is banked: a re-entry of L25 builds no chest and no solid (`check()` on the cleared tag)', () => {
         const out = play('l25-below');
         expect(out.run.bankedClears).toContainEqual({ level: 25, tag: 0 });
-        const again = buildLevelWorld(DELIVERED(25), { capabilities: P4H_CAPS, cleared: [0] });
+        const again = buildLevelWorld(apChestRecord(DELIVERED(25), P4H_CAPS), { cleared: [0] });
         expect([again.chests, again.solids.filter((s) => s.chestId), again.apItems]).toEqual([[], [], []]);
     });
     it('a measurement default (`setModelBuildDefault`) reaches a run that names no build', () => {

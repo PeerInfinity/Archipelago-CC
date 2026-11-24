@@ -143,8 +143,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 158,
-            "count": 210,
+            "browser": 159,
+            "count": 211,
             "id": "probe"
         },
         {
@@ -259,13 +259,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 538,
-        "browser": 228,
+        "blockStyle": 539,
+        "browser": 229,
         "cited": 296,
-        "files": 560,
+        "files": 561,
         "lineStyle": 22,
-        "withDocblock": 560,
-        "withFlags": 477
+        "withDocblock": 561,
+        "withFlags": 478
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11650,6 +11650,45 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-cloudberry-touch-up — **THE ON-SCREEN ↑ AT A CLOUDBERRY DOOR, TAPPED MANY TIMES, MISSES COUNTED** (cloudberry P3a; P1b's one unexplained live miss: a touch ↑ at the end door that did not open the exit menu).",
             "path": "scripts/procgen/probe-cloudberry-touch-up.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "out"
+            ],
+            "file": "probe-seedling-apchest.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's AP CHEST (`Pickups/APChest`), ON THE GAME (slice seedling-fidelity-apchest).",
+            "path": "scripts/procgen/probe-seedling-apchest.mjs"
         },
         {
             "argvHelpers": [

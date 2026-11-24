@@ -30,7 +30,7 @@
    "predicted": {
     "openTick": null
    },
-   "tape": "tapes/apchest-l25-side.tape.json",
+   "tape": "walks/apchest-l25-side.tape.json",
    "model": {
     "openTick": null,
     "takes": [],
@@ -156,7 +156,7 @@
    "predicted": {
     "openTick": null
    },
-   "tape": "tapes/apchest-l25-above.tape.json",
+   "tape": "walks/apchest-l25-above.tape.json",
    "model": {
     "openTick": null,
     "takes": [],
@@ -284,7 +284,7 @@
     "passageTick": 6,
     "fadeEndTick": 65
    },
-   "tape": "tapes/apchest-l25-below.tape.json",
+   "tape": "walks/apchest-l25-below.tape.json",
    "model": {
     "openTick": 6,
     "takes": [
@@ -519,7 +519,7 @@
     "passageTick": 6,
     "fadeEndTick": 65
    },
-   "tape": "tapes/apchest-l11-below.tape.json",
+   "tape": "walks/apchest-l11-below.tape.json",
    "model": {
     "openTick": 6,
     "takes": [
@@ -652,7 +652,7 @@
    "predicted": {
     "openTick": null
    },
-   "tape": "tapes/apchest-l38-covered.tape.json",
+   "tape": "walks/apchest-l38-covered.tape.json",
    "model": {
     "openTick": null,
     "takes": [],
@@ -830,7 +830,7 @@
     "openTick": 12,
     "coverOpenTick": 11
    },
-   "tape": "tapes/apchest-l38-cover-button.tape.json",
+   "tape": "walks/apchest-l38-cover-button.tape.json",
    "model": {
     "openTick": 12,
     "takes": [

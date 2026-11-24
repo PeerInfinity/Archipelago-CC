@@ -4235,10 +4235,20 @@ export function apChestAsChest(e, apChests) {
     return { type: 'chest', x: e.x, y: e.y, attrs: { tag: e.attrs.tag }, apChest: { id: `apitem@${e.x},${e.y}` } };
 }
 
+/**
+ * ⛓⛓ seedling-fidelity-apchest — the level record a build with these `capabilities` (`modelBuild.js`; null = the
+ * default build's) constructs: on `apchest`, each `<apitem kind="chest">` read as `apChestAsChest`. The SAME object
+ * when nothing converts (every p4g record), so `buildLevelWorld` stays a function of its record alone.
+ */
+export function apChestRecord(levelRecord, capabilities = null) {
+    if (!declaresApChest(resolveModelCapabilities(capabilities))) return levelRecord;
+    const entities = levelRecord?.entities ?? [];
+    if (!entities.some((e) => apChestAsChest(e, true) !== e)) return levelRecord;
+    return { ...levelRecord, entities: entities.map((e) => apChestAsChest(e, true)) };
+}
+
 export function buildLevelWorld(levelRecord, {
     roles = PRE_R5_ROLES, cleared = null, inventory = null, nextLevelRecord = null,
-    /** ⛓ apchest: the modelled build's manifest `capabilities` (`modelBuild.js`); null = the default build's. */
-    capabilities = null,
 } = {}) {
     if (!levelRecord || typeof levelRecord !== 'object') {
         fail('buildLevelWorld needs a level record from seedling-map.json');
@@ -4772,9 +4782,7 @@ export function buildLevelWorld(levelRecord, {
 
     // --- objects -------------------------------------------------------
     let fallthrough = null;
-    const apChests = declaresApChest(resolveModelCapabilities(capabilities));
-    for (const placed of levelRecord.entities ?? []) {
-        const e = apChestAsChest(placed, apChests);
+    for (const e of levelRecord.entities ?? []) {
         const cls = ENTITY_CLASSES[e.type];
         if (!cls) {
             fail(`${where} contains entity "${e.type}" at (${e.x},${e.y}), which is not `
