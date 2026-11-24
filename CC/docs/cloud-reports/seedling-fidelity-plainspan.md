@@ -246,8 +246,10 @@ does.
       generated worlds, with no apitem in the room.
 - **Vitest ON** (the 52 gate files, `--maxWorkers=3`, `SEEDLING_PLAIN_PICKUP_IN_FREEZE=1`; `d3/vitest-on.txt`): **52/52
   files, 1448 passed, 1 skipped** (an env-guarded "ships OFF" row). **0 ON movers.**
-- **Train ON** (`vitest.train.config.js`, one file at a time; `d3/train-on.txt`): wave 57's 13 `.train.` files. My grep
-  for apitems, the key, L28/L43 and the two tapes added none.
+- **Train ON** (`vitest.train.config.js`, one file at a time, `SEEDLING_PLAIN_PICKUP_IN_FREEZE=1`; `d3/train-on.txt`):
+  wave 57's 13 `.train.` files. My grep for apitems, the key, L28/L43 and the two tapes added none. **13/13 files, 51
+  tests passed ON, 0 movers.** The first loop hit its background limit after 12 files, so `hammerWallFlyerDrillKill`
+  was re-run alone: 5/5.
 - **GAME WITNESS: not recorded.**
   - No shipped room has the shape, so a witness needs a custom level set: L29 with its rock and button restored and two
     apitems at `@112,127` and `@110,127`.
@@ -286,9 +288,11 @@ does.
 - Solver surface: `--check` RED on line numbers only; after `--write`, GREEN (374 rows).
 - `check-procgen-docs.mjs`: ALL CHECKS PASSED. `generate-procgen-reference.mjs --check`: all 7 modules and 5 regions
   match.
-- The producer checks and the six `solve-seedling-*.mjs --check` runs: see the addendum below.
-- **CI:** `JavaScript Unit Tests` run 45327676431 at the code head `ec037862` (queued when this was written; see the
-  addendum).
+- `ci-producer-checks.mjs --jobs=3`: **99 run, 0 red, 1 skipped, 0 known-red** (`d3/producer-checks.txt`).
+- The six `solve-seedling-{r8-battery,r8-d2-chain,r8-l18,r8-tail,r9-l3,r9-campaign}.mjs --check`: `d3/solve-checks.txt`
+  : **all six green**.
+- **CI:** `JavaScript Unit Tests` run 45327676431 at the code head `ec037862`: **success**. The suite was 30052 passed,
+  0 skipped and 0 failed (3 shards), and the slow battery 446/446. Later commits are evidence and docs only.
 - **Owed by the planner (I cannot dispatch):**
   `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref claude/plain-pickups-rock-freeze-xe5hny -f train_only=true`
 
