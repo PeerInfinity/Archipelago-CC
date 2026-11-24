@@ -285,7 +285,7 @@ describe('⛓ the setting', () => {
         expect(schema).toBeTruthy();
         expect(schema.default).toBe('separate');
         expect(schema.default).toBe(groupsMod.SUB_REGION_VIEW_SCHEMA.default);
-        expect(schema.enum).toEqual(['separate', 'nested']);
+        expect(schema.enum).toEqual(['separate', 'nested', 'merged']);
 
         const { RegionGraphUI } = await import('./regionGraphUI.js');
         const seen = [];
