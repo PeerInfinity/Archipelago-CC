@@ -55,7 +55,7 @@ import { PERSISTENCE_RESPONSE } from '../../frontend/modules/seedlingDemo/levelW
 import {
     PLAYTHROUGH_MAP, playthroughHandRuledGridFor, playthroughGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
     setPlaythroughLandingAtlas, playthroughLandingGates, buildPlaythroughAtlas, playthroughEventLayer, permissiveBindings,
-    playthroughHandInputs, playthroughEncounterLockOpeners,
+    playthroughHandInputs, playthroughEncounterLockOpeners, playthroughRockFireSides, playthroughLavaTrapPullMap,
 } from './make-seedling-playthrough-rules.mjs';
 import { levelWorldFits } from '../../frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.js';
 import { deserializeMazeWorld } from '../../frontend/modules/mazeRoom/mazeRoomEngine.js';
@@ -792,6 +792,10 @@ export function buildPlaythroughMaze({
         events: layer.world,
         gameConfig,
         levelWorlds: { partition },
+        // ⛓ tile-fire-breaks-rocks: the rocks' flame stances, the rules producer's own map (one input for rules and maze).
+        rockFire: playthroughRockFireSides(),
+        // ⛓⛓ rules-lavatrap-pull-line: the LavaTraps' line-cut discs, the rules producer's own (the disc rule T reads).
+        lavaPulls: playthroughLavaTrapPullMap(),
         analysis: {
             gridForLevel: (level) => playthroughPuzzleLockGridFor(level, { atlas, partition }),
             conditionKey: playthroughAnalyzerOptions.conditionKey,

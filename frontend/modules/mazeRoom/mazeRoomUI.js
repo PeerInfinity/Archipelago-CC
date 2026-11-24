@@ -92,8 +92,13 @@ import {
 } from '../flashPanel/mapDocumentPath.js';
 import { resolveMazeArrival } from './mazeArrival.js';
 import { loadMazeTileArt } from './mazeTileArt.js';
+import { drawMazeTileKinds } from './mazeTileKindOverlay.js';
+import { placedTileKindDrift, placedTileKindRefusals } from './mazeTileKinds.js';
+import { drawMazeThings, mazeThingLines, thingAt } from './mazeThingOverlay.js';
 import { browserDecoder, browserRasteriser } from '../artLibrary/artLibrary.js';
-import { browserPackIo, documentContentOf, effectiveContentStack } from '../procgenPipeline/worldContent.js';
+import {
+    RECORDED_EXISTS_KEY, browserPackIo, documentContentOf, documentWorldSettingsOf, effectiveContentStack,
+} from '../procgenPipeline/worldContent.js';
 /**
  * ⛓ DEDUP M6 — the ONE pixel→tile conversion, DOM-free and unit-tested. The
  * lab page's canvas has used it since editor v3; the panel divided by the
@@ -639,6 +644,36 @@ export class MazeRoomUI {
     }
 
     /**
+     * ⛓ CONTENT SETS GEN-2 — **A NEW DOCUMENT WITHOUT THE PANEL'S ROOM UNBINDS THAT ROOM.** In playback the panel (and
+     * its playthrough visualizer) stay bound to the region `_adoptLoadedRegion` gave them until another region is
+     * adopted. A document that has no sidecar for that region (a plain preset: Adventure) adopts none, so the old
+     * room stayed bound, and the Playback Bot — whose controller for a non-procgen preset is the maze's whenever the
+     * panel is mounted — walked the NEW world's targets on the OLD room: tiles resolved by name in it, its `reset`
+     * (the visualizer's `freshStart()`) re-armed its playthrough and `instant` played it, publishing
+     * `system:locationCheck` for the old room's locations into the new world. Measured: `playback-bot-tile-kinds-demo`
+     * (top-down over Adventure: its rooms carry Adventure's region and location names) then `playback-bot-walk-order`
+     * (plain Adventure) — Chalice Home checked behind the bot's back, its own last check never sent, and every walk
+     * order STUCK. Unbinding returns the panel to its state before any region was adopted (no world, no region: what
+     * walk-order meets on main), where a walk the maze cannot take falls to the bot's direct play. A document that
+     * still has the region (a reload of the same world, the APWorld editor's regenerate) keeps it, and a standalone
+     * world (no region) is never touched.
+     */
+    _unbindStaleRegion(rulesJson, player) {
+        const region = this.currentRegionId ?? this._visualizer?.regionId ?? null;
+        if (!region) return;
+        if (rulesJson?.preset_sidecars?.[String(player ?? '1')]?.[region]) return;
+        this._visualizer?.stop();
+        this._visualizer?.setWorld(null, null);
+        this.world = null;
+        this.state = null;
+        this.currentRegionId = null;
+        this.arrivalDoorId = null;
+        this.externalInventory = null;
+        this.externalCheckedLocations = null;
+        this.message = '';
+    }
+
+    /**
      * Cache the raw rules.json content so the savedQueueStore can key
      * its buckets by a stable content-hash. Subscribes to
      * stateManager:rawJsonDataLoaded so the cache stays in sync when
@@ -654,6 +689,7 @@ export class MazeRoomUI {
             // the boot rules), so the panel keeps its own copy.
             this._cachedRulesPlayer = playerOfRawPayload(payload);
             if (this._seedlingArt?.status !== 'loading') this._seedlingArt = null;
+            this._unbindStaleRegion(payload?.rawJsonData ?? null, this._cachedRulesPlayer);
         };
         eventBus.subscribe('stateManager:rawJsonDataLoaded', handler, 'mazeRoom');
         this._unsubRulesLoaded =
@@ -1685,6 +1721,7 @@ export class MazeRoomUI {
         this._invalidateRulesReadout();
         this.world = payload.world;
         this.state = createState(this.world);
+        this._thingReading = null;
         // ⛓ T2b F1 — `exit_id`, else the exit leading back to
         // `arrivedFrom.source_region` (a world with no reverse links, e.g. a
         // return from a placed Seedling room), else the entrance.
@@ -1867,6 +1904,8 @@ export class MazeRoomUI {
             ));
         }
         this.rootElement.appendChild(this._renderMaze());
+        const thingEl = this._renderThingReading();
+        if (thingEl) this.rootElement.appendChild(thingEl);
         if (this.genControlsVisible) {
             this.rootElement.appendChild(this._renderPlaybackLogSection());
             this.rootElement.appendChild(this._renderCollapsibleSection(
@@ -3536,7 +3575,9 @@ export class MazeRoomUI {
 
         const swatches = document.createElement('div');
         swatches.className = 'maze-room-editor-swatches';
-        for (const entry of PALETTE_ENTRIES) {
+        // ⛓ CONTENT SETS TILE-3 — the TILE KIND entry is the maze LAB's (it needs a kind picker over the loaded packs'
+        //   declared kinds); the panel's editor does not offer it.
+        for (const entry of PALETTE_ENTRIES.filter((e) => e.type !== PALETTE_TYPES.TILE_KIND)) {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'maze-room-editor-swatch';
@@ -3974,19 +4015,25 @@ export class MazeRoomUI {
      * it declares one) then the loaded slot's recorded `procgen_metadata[p].content` (⚠ a per-player map), through
      * `worldContent.effectiveContentStack` — the one stack rule, so a later pack wins per key by `mergeKeyed`. The
      * substrate set is the maze alone, as the region job's `attachJobContent` reads it (`[args.substrate]`).
+     * ⛓ GEN-2 — and the slot's recorded "what exists" packs (`procgen_metadata[p].exists`), under the content, as the
+     * one stack rule orders them: a tile kind the generator placed from such a pack draws from its art.
      */
     _tileArtStack() {
         let content = [];
+        let exists = [];
         if (Array.isArray(this._tileArtContentOverride)) {
             return effectiveContentStack({ substrateIds: [substrateRegistryEntry.id], content: this._tileArtContentOverride });
         }
         try {
             const { rules, player } = this._loadedRules();
-            if (rules && player !== null && player !== undefined) content = documentContentOf(rules, player);
+            if (rules && player !== null && player !== undefined) {
+                content = documentContentOf(rules, player);
+                exists = documentWorldSettingsOf(rules, player)[RECORDED_EXISTS_KEY];
+            }
         } catch (err) {
             console.warn(`[mazeRoom] tile art: the world's content list is unreadable (${err.message}); drawing without it`);
         }
-        return effectiveContentStack({ substrateIds: [substrateRegistryEntry.id], content });
+        return effectiveContentStack({ substrateIds: [substrateRegistryEntry.id], exists, content });
     }
 
     /**
@@ -4017,7 +4064,8 @@ export class MazeRoomUI {
             if (this._tileArt?.key !== key) return;
             if (loaded.failed.length) console.warn(`[mazeRoom] tile art: ${loaded.failed.length} sheet(s) failed (drawn in the maze's own colours): ${loaded.failed.join('; ')}`);
             this._tileArt = { status: 'ready', key, ...loaded };
-            if (loaded.tileArt) this.render();
+            // ⛓ TILE-3: a world with placed tile kinds redraws once the stack's declared kinds are known, art or not.
+            if (loaded.tileArt || this._tileKindsShown()) this.render();
         }, (err) => {
             if (this._tileArt?.key !== key) return;
             console.error(`[mazeRoom] tile art did not load (drawn in the maze's own colours): ${err.message}`);
@@ -4080,6 +4128,123 @@ export class MazeRoomUI {
         };
         view.seedlingSkin = seedlingSkin ? this._withSeedlingSprites(seedlingSkin, view, canvas) : null;
         drawWorld(ctx, this.world, view);
+        // ⛓ CONTENT SETS TILE-3 — the region's placed tile kinds, beside drawWorld (`mazeTileKindOverlay.js`), once the
+        //   world's stack has resolved (its declared kinds say each one's base): before that, nothing, rather than a
+        //   placeholder that the load would replace. Never on a Seedling-atlas world.
+        this._tileKindDraws = this._tileKindsShown() && this._tileKindsReady()
+            ? drawMazeTileKinds(ctx, this.world, {
+                tilePx: view.tilePx, playerPos: view.playerPos, fogEnabled: view.fogEnabled,
+                isTileVisible: view.isTileVisible, tileArt: view.tileArt, tileKinds: this._tileArt?.tileKinds ?? null,
+            })
+            : [];
+        // ⛓ CONTENT SETS PASS-1 — a placed kind's baked pass that the loaded packs now declare differently is DRIFT:
+        //   warned once per world and stack, by name, and listed by `getTileKindStatus`. Never re-lowered.
+        if (this._tileKindDraws.length) this._warnTileKindDrift();
+        // ⛓ CONTENT SETS S2 — the region's thing, beside drawWorld (`mazeThingOverlay.js`). Never on a Seedling-atlas
+        //   world (the Seedling skin draws there), as the tile art is not.
+        this._thingDraws = this._thingsShown()
+            ? drawMazeThings(ctx, this.world, {
+                tilePx: view.tilePx, playerPos: view.playerPos, fogEnabled: view.fogEnabled,
+                isTileVisible: view.isTileVisible, tileArt: view.tileArt,
+            })
+            : [];
+    }
+
+    /** ⛓ TILE-3 — whether this world's placed tile kinds are drawn: it has some, and it is not a Seedling-atlas world. */
+    _tileKindsShown() {
+        return this.world?.tileKinds instanceof Map && this.world.tileKinds.size > 0 && !this._seedlingSkin();
+    }
+
+    /** ⛓ TILE-3 — the world's stack has resolved (loaded, failed, or empty), so its declared kinds are known. */
+    _tileKindsReady() {
+        if (this._tileArt?.key !== this._tileArtStack().join(',')) return false;
+        return this._tileArt.status === 'ready' || this._tileArt.status === 'failed';
+    }
+
+    /**
+     * ⛓ TILE-3 — what the in-app row reads: the placed kinds, how each was last drawn (the chain's step), and the
+     * placed kinds the world's loaded packs refuse (`mazeTileKinds.placedTileKindRefusals`: undeclared, or a lying look;
+     * each still DRAWS — the placeholder or its base — and never throws).
+     */
+    getTileKindStatus() {
+        const ready = this._tileKindsShown() && this._tileKindsReady();
+        return {
+            shown: this._tileKindsShown(),
+            ready,
+            draws: JSON.parse(JSON.stringify(this._tileKindDraws ?? [])),
+            refusals: ready ? placedTileKindRefusals(this.world, this._tileArt?.tileKinds ?? {}) : [],
+            // ⛓ PASS-1 — the placed kinds whose baked pass the loaded packs now declare differently (by name; kept).
+            drift: ready ? placedTileKindDrift(this.world, this._tileArt?.tileKinds ?? {}) : [],
+        };
+    }
+
+    /** ⛓ PASS-1 — the drift `getTileKindStatus` lists, warned on the console once per (world, stack). */
+    _warnTileKindDrift() {
+        const drift = placedTileKindDrift(this.world, this._tileArt?.tileKinds ?? {});
+        const key = drift.length ? `${this._tileArt?.key}|${JSON.stringify(drift)}` : null;
+        if (key && key !== this._tileKindDriftWarned) {
+            for (const d of drift) console.warn(`[mazeRoomUI] ${d.description}`);
+        }
+        this._tileKindDriftWarned = key;
+    }
+
+    /** ⛓ S2 — whether this world's things are drawn and read: it has some, and it is not a Seedling-atlas world. */
+    _thingsShown() {
+        return Array.isArray(this.world?.things) && this.world.things.length > 0 && !this._seedlingSkin();
+    }
+
+    /**
+     * ⛓⛓ CONTENT SETS S2 — **READ A THING BY STANDING ON ITS CELL.** Called after every move the panel executes: on a
+     * thing's cell its name and lines are shown in the panel and `content:thingExamined` is published (the text
+     * adventure's shape, S1); off one, the reading is cleared. It does not block, nothing is picked up, no location is
+     * checked, and walking back onto the cell reads it again. The autopather and the bots know nothing of it.
+     */
+    _readThingAt(pos) {
+        const thing = pos && this._thingsShown() ? thingAt(this.world, pos.x, pos.y) : null;
+        if (!thing) { this._thingReading = null; return; }
+        this._thingReading = { region: this.currentRegionId, thing, lines: mazeThingLines(thing) };
+        eventBus.publish('content:thingExamined', {
+            region: this.currentRegionId,
+            thing: thing.id,
+            kind: thing.kind,
+            concept: thing.concept,
+            info: thing.info?.concept ?? null,
+            originator: 'mazeRoom',
+        }, 'mazeRoom');
+    }
+
+    /** The reading under the canvas: the thing's name, then its lines. */
+    _renderThingReading() {
+        const r = this._thingReading;
+        if (!r) return null;
+        const section = document.createElement('div');
+        section.className = 'maze-room-thing';
+        section.dataset.thing = r.thing.id;
+        section.dataset.concept = r.thing.concept;
+        const title = document.createElement('div');
+        title.className = 'maze-room-thing-name';
+        title.textContent = r.thing.name;
+        section.appendChild(title);
+        for (const line of r.lines) {
+            const p = document.createElement('p');
+            p.className = 'maze-room-thing-line';
+            p.textContent = line;
+            section.appendChild(p);
+        }
+        return section;
+    }
+
+    /** What the in-app row reads: the world's things, how each was last drawn, and the reading shown. */
+    getThingStatus() {
+        return {
+            region: this.currentRegionId ?? null,
+            shown: this._thingsShown(),
+            things: JSON.parse(JSON.stringify(this.world?.things ?? [])),
+            drawn: [...(this._thingDraws ?? [])],
+            reading: this._thingReading
+                ? { region: this._thingReading.region, thing: this._thingReading.thing.id, lines: [...this._thingReading.lines] }
+                : null,
+        };
     }
 
     /**
@@ -4664,6 +4829,8 @@ export class MazeRoomUI {
                 if (isExit(this.world, this.state.player_pos.x, this.state.player_pos.y)) {
                     this.message = `Reached exit in ${this.state.turn} steps.`;
                 }
+                // ⛓ S2 — standing on a region's thing reads it (after the fog grew, so it is seen).
+                this._readThingAt(this.state.player_pos);
             }
         }
         // Whether the move executed or not, the turn passed — tick

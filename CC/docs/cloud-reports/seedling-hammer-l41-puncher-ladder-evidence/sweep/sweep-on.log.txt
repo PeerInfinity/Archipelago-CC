@@ -1,0 +1,22 @@
+# box lock: TAKEN by probe-seedling-divergence-sweep.mjs (browser, pid 7451) — head 4c3afd9b3, 2 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+LEG-BUDGET: 480000 ms per leg (--leg-budget-ms; default 90000); the leg hang bound 1590 s; the solver's own backstop 300 s per solve (a named failure)
+INFO: mode inv: 2 legs in 2 page(s) (of 923 legs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 1: setting default (model default on)
+UPGRADE-WINDOW: page 1: setting 85
+DASH_ONLY_WINDOW: page 1: setting default
+DASH_SHAPE: page 1: setting default
+SOLVER_ENV: page 1: SEEDLING_KILL_HIT_BODY=1 (--solver-env)
+LEG 855 start (page 1, pageLeg 0)
+INFO: page 1: 2 page error(s), ~2 swaps
+RECYCLE: page 1: launch 86 ms, newPage 50 ms, pageClose 38 ms, browserClose 183 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 2: setting default (model default on)
+UPGRADE-WINDOW: page 2: setting 85
+DASH_ONLY_WINDOW: page 2: setting default
+DASH_SHAPE: page 2: setting default
+SOLVER_ENV: page 2: SEEDLING_KILL_HIT_BODY=1 (--solver-env)
+LEG 857 start (page 2, pageLeg 0)
+INFO: page 2: 2 page error(s), ~2 swaps
+RECYCLE: page 2: launch 58 ms, newPage 54 ms, pageClose 31 ms, browserClose 189 ms
+INFO: sweep done

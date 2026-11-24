@@ -33,6 +33,7 @@
 import {
     createSetMapProvider, edgeOf, layoutGraph, OPPOSITE, roomFingerprintOf,
 } from '../procgenCore/setMapLayout.js';
+import { unreachableRoomsOf } from '../procgenCore/setMapUnreachable.js';
 import { LINK_ONE_WAY_DEFAULT } from './mazeAtlasDerivation.js';
 
 export class MazeSetMapError extends Error {
@@ -141,11 +142,16 @@ export function mazeDoorPointsOf(record, room) {
  * positions die with the document they were laid out for.
  */
 export function createMazeSetMap() {
-    return createSetMapProvider({
+    const provider = createSetMapProvider({
         linksOf: mazeMapLinksOf,
         graphOf: mazeLayoutGraphOf,
         fingerprintOf: mazeRoomFingerprint,
         doorsOf: mazeDoorPointsOf,
         fail,
     });
+    /** ⛓ (maze-map-unreachable, additive) the rooms the last REPORT finds unreachable — `setEditorView` marks them,
+     *  only while the set is the one REPORT ran over. The same function Seedling's provider hands it: the join is the
+     *  REPORT's own atlas `map_ref`, which a maze derivation sets to the entry INDEX. Before any REPORT it draws nothing. */
+    provider.unreachableOf = (report) => unreachableRoomsOf(report);
+    return provider;
 }

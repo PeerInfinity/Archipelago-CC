@@ -64,7 +64,7 @@ A recording is bound to a block by its **recording tag `(arrivalKey, ordinal)`**
 
 Substrate actions come in two grades:
 
-- **Queue-grade**: player-meaningful and individually costed — `regionMove`, `locationCheck`, `explore`, and any future verb of the same weight. `explore` is a `customAction` entry; the generic executor dispatches an event per action for interested modules.
+- **Queue-grade**: player-meaningful and individually costed — `regionMove`, `locationCheck`, `explore`, `act`, and any future verb of the same weight. `explore` and `act` are named `customAction` entries; each name's row in `shared/procgen/loopCustomActions.js` gives its cost, its completion event and its label (`explore`: the move cost × the explore multiplier, `loop:exploreCompleted` through the dispatcher; `act`: the region's `actions.act`, `loop:actionCompleted` on the event bus). The generic executor dispatches an event per action for interested modules.
 - **Sub-queue-grade**: finer than a queue entry, such as the maze's per-tile moves. Many make up one meaningful step and none belongs in the block interior.
 
 From that, each substrate has one of three capture shapes. `captureShapeOf(entry)` (used through `loopState._captureShapeFor()`) answers `'fine'` if the entry supplies `takeLastRecording`, else `'summary'` if it declares `loopSupport.summaryRecording`, else `'coarse'`:
@@ -224,6 +224,10 @@ This is stored as the entry's `annotations`.
 - **The minimum is conservative.** The two sources share no clock, so the tracker assumes every spend came before any gain: `min = min(0, total consumed)`, shown as "needs ≥X at start". It can overstate but never understate.
 
 `formatAnnotations` (kept apart from the DOM for testing) shows net deltas when nonzero and a minimum only when it went below zero; the tooltip carries XP and the full numbers. A discarded recording takes its annotations with it.
+
+## The start gate
+
+A substrate may refuse a queue entry before it starts: `loopSupport.actionGate(action) → {ok, reason, code}`, asked by the generic executor when an entry's progress is 0. A refusal stops the queue at that entry (`stopProcessing`), records `loopState.lastActionRefusal` (`{index, actionName, region, label, reason, code, substrate}`; the loops public function `getLastActionRefusal`) and publishes `loops:actionRefused`, which the Loops panel shows in its state banner. The entry is never skipped: a skipped requirement would silently change the plan. A loop reset or a rules load clears the record. Mana is never part of a gate. ActionNodes is the one substrate that declares a gate ([action-nodes.md](./action-nodes.md#the-runtime)).
 
 ## The loop-mode interaction rules
 

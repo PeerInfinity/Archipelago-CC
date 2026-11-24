@@ -285,7 +285,7 @@ accept; a **warning** is suspicious-but-maybe-intentional state. Two layers:
 | layer | the kinds | what it asks |
 |---|---|---|
 | **shape** — D0's declaration (`sidecarFieldsOf`, `sidecarPayloadErrors`) | `NOT_AN_ENTRY` · `NOT_PLAYABLE` · `BAD_DECLARATION` · `NO_DECLARATION` · `MISSING_REQUIRED` · `UNDECLARED_FIELD` · `INVALID_VALUE` · `SUBSTRATE_MISMATCH` | the `substrate` is registered and has `deserializeWorld`; every payload key is declared, every `required` one present, every value inside its descriptor. ⚠ `required` means *every producer of this substrate writes it* — not *a reader needs it* — so a missing one is a WARNING and its sentence says exactly that. **The mismatch:** when the payload fits ANOTHER declaring substrate strictly better than its own (`sidecarFit` — the Jaccard index of the payload's substrate-owned keys and a declaration's, the envelope left out on both sides because the engine writes it under every substrate; ties broken by the fewest fields the shape check names), the block says *"this payload has the keys of `Y`, not `X`"* and folds the per-field sentences into that one |
-| **document** — the rest of the document | `DESERIALIZE_THROWS` · `NO_REGION` · `EXIT_UNKNOWN` · `EXIT_NOT_CARRIED` · `EXITS_UNCHECKED` · `LOCATION_UNKNOWN` · `LOCATION_NOT_CARRIED` · `LOCATIONS_UNCHECKED` · `GRID_CELL_DUPLICATE` · `GRID_CELL_OUTSIDE` · `REF_UNRESOLVED` | the payload deserializes through the entry's own `deserializeWorld`; every non-null `exits[].exitName` names an exit of the region (the prefixed `<region>__<exit>` spelling read through, `apExitNameCandidates`); `grid_cell` is unique in the slot and inside `procgen_metadata.grid_dims`; a field whose descriptor `references` a sibling resolves to one (jta's dataset ref). And, **DECLARED per substrate** on its registry entry (`apLocationNamesOf`, `apExitNamesOf` — see *substrate-registry.md*), the payload's AP location names and its complete exit list against the region's, both ways: a name the payload carries that the document lacks is an ERROR; a document endpoint the payload does not carry is a WARNING (a producer may drop one by name — the maze atlas projection's `exit_tile_collision`, which is in the committed corpus). A substrate that declares no carrier, or a payload whose reader finds none, is ONE warning per substrate per slot saying it was NOT CHECKED (`UNCHECKED_SIDECAR_KINDS`) — never a silent pass |
+| **document** — the rest of the document | `DESERIALIZE_THROWS` · `NO_REGION` · `EXIT_UNKNOWN` · `EXIT_NOT_CARRIED` · `EXITS_UNCHECKED` · `LOCATION_UNKNOWN` · `LOCATION_NOT_CARRIED` · `LOCATIONS_UNCHECKED` · `GRID_CELL_DUPLICATE` · `GRID_CELL_OUTSIDE` · `REF_UNRESOLVED` | the payload deserializes through the entry's own `deserializeWorld`; every non-null `exits[].exitName` names an exit of the region (the prefixed `<region>__<exit>` spelling read through, `apExitNameCandidates`); `grid_cell` is unique in the slot and inside `procgen_metadata.grid_dims` (cells are SIGNED: a negative cell is checked only against a declared `grid_origin`, else only the far edge is);  a field whose descriptor `references` a sibling resolves to one (jta's dataset ref). And, **DECLARED per substrate** on its registry entry (`apLocationNamesOf`, `apExitNamesOf` — see *substrate-registry.md*), the payload's AP location names and its complete exit list against the region's, both ways: a name the payload carries that the document lacks is an ERROR; a document endpoint the payload does not carry is a WARNING (a producer may drop one by name — the maze atlas projection's `exit_tile_collision`, which is in the committed corpus). A substrate that declares no carrier, or a payload whose reader finds none, is ONE warning per substrate per slot saying it was NOT CHECKED (`UNCHECKED_SIDECAR_KINDS`) — never a silent pass |
 
 ⛔ **Errors block nothing.** The raw save is not vetoed by any of this — the
 reader owns the repair — and the schema veto is exactly as strict as it was.
@@ -2031,6 +2031,20 @@ a move's bounds refusal reads the same function (see *Moving and swapping
 regions* below). Re-measured at M2 over the same 42 slots: **38 grid / 4 null,
 0 sized by `grid_dims`, every grid and every cell unmoved.**
 
+⛓ **Signed cells (unbounded grid S1).** A `grid_cell` may be negative (⚖ user,
+2026-11-16: signed storage, the start room at (0,0)). `mapBoundsFor` also returns
+the box's top-left cell, `minX`/`minY`: the cells' extent widened to the origin —
+`procgen_metadata[p].grid_origin` when declared, else (0,0) — and to `grid_dims`
+anchored there (`procgenCore/cellExtent.js`, `drawnBox`). Every committed
+document has `minX = minY = 0`, so nothing it draws moved. The reconstruction
+places cells signed on `gridForBox`'s grid (`grid.minX`/`grid.minY`, also
+`result.gridOrigin`), the renderer draws cell (gx, gy) at
+`(gx − minX)·cellW`, `cellAtPoint` returns signed cells, `regionLayout.isGridCell`
+accepts negatives, and the Map canvas carries `data-grid-min-x`/`-y`.
+Since S2 that grid is the engine's own `Grid` with an origin
+(`new Grid({width, height, minX, minY})`); S1's module-private bridge subclass
+is gone, and nothing that reads `grid.minX`/`grid.minY` changed.
+
 The stats line beside the map says which rule sized the cell, off
 `regionSizeSource` rather than a second derivation (`data-cell-source` on
 `.apworld-map-slot` carries the same value for a row to read): *"cell 8×6 tiles"*
@@ -2539,7 +2553,10 @@ reads it without the procgen engine.
 **What the op writes** — `preset_sidecars[p]` (every placed region's entry),
 `procgen_metadata[p]` (`driver: 'apworld-initialise'`, `source_game` (the
 document's `game_name`), `source_counts` (`computeSourceCounts`, as the pipeline
-records it), `stop_reason`, `region_count`, `grid_dims` = the cells' extent,
+records it), `stop_reason`, `region_count`, `grid_dims` = the cells' box widened
+to (0,0) (`max + 1` when every cell is ≥ 0) plus `grid_origin` only when that box
+starts below 0 (`procgenCore/cellExtent.js` `recordedGridBox`, the writer
+`buildRulesJson` shares),
 `substrate_configs` per R6b when a declaring substrate realised a region), the
 substrate's own blocks (`rulesJsonBlocks`), each landed under the slot
 (`region_atlas[p]`, `flash_panel[p]`, rules F2 — so a second Seedling slot of one

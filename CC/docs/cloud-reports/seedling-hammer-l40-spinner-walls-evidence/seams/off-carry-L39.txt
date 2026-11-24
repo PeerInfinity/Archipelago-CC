@@ -1,0 +1,37 @@
+== seam-off-carry-L39.jsonl
+5215 OK  1167 hits 0 dashless:1259@721 full:1167@779 95e4b43df7b0 
+5216 OK  1165 hits 0 dashless:1360@727 full:1165@783 f8584f0ed43b 
+5217 OK  1165 hits 0 dashless:1360@727 full:1165@783 f8584f0ed43b 
+5218 OK  1222 hits 0 dashless:1270@726 full:1222@733 a904378d42d4 
+5219 OK  1222 hits 0 dashless:1270@726 full:1222@733 a904378d42d4 
+5220 OK  1222 hits 0 dashless:1270@726 full:1222@733 a904378d42d4 
+5221 OK  1222 hits 0 dashless:1270@726 full:1222@733 a904378d42d4 
+5222 OK  1222 hits 0 dashless:1270@726 full:1222@733 a904378d42d4 
+5223 OK  1222 hits 0 dashless:1270@726 full:1222@733 a904378d42d4 
+5224 OK  1285 hits 0 dashless:1366@800 full:1285@766 6287c7692431 
+5225 REF None hits 0 dashless:refusal@56 full:refusal@56   at (741.44,685.29) NOPHASE
+5226 OK  1302 hits 0 dashless:1359@752 full:1302@838 2662b97d4803 
+5227 REF None hits 0 dashless:refusal@56 full:refusal@56   at (741.44,685.29) NOPHASE
+5228 REF None hits 0 dashless:refusal@56 full:refusal@56   at (739.28,683.81) NOPHASE
+5229 OK  1253 hits 0 dashless:1330@797 full:1253@892 1ad0afea7028 
+5230 OK  1231 hits 0 dashless:1322@794 full:1231@893 0b5afac4954a 
+5231 OK  1192 hits 0 dashless:1373@728 full:1192@731 7dd3d0caaeb8 
+5232 OK  1190 hits 0 dashless:1284@639 full:1190@785 744ad79f62a4 
+5233 OK  1317 hits 0 dashless:1368@909 full:1317@990 ff95a231a1b7 
+5234 OK  1228 hits 0 dashless:1330@720 full:1228@830 d648d51dad0c 
+5235 OK  1228 hits 0 dashless:1330@720 full:1228@830 d648d51dad0c 
+5236 OK  1305 hits 0 dashless:1384@790 full:1305@830 6083dd9d60d7 
+5237 OK  1305 hits 0 dashless:1384@790 full:1305@830 6083dd9d60d7 
+5238 OK  1153 hits 0 dashless:1247@750 full:1153@834 1a97d4e2991a 
+5239 OK  1243 hits 0 dashless:1366@696 full:1243@788 ae52f0523c80 
+5240 OK  1260 hits 0 dashless:1314@703 full:1260@817 8a787b695d74 
+5241 REF None hits 0 dashless:refusal@170 full:refusal@170   at (868.73,855.83) LANDED
+5242 REF None hits 0 dashless:refusal@170 full:refusal@170   at (868.73,855.83) LANDED
+5243 OK  1106 hits 0 dashless:1126@705 full:1106@788 5378f4e4df44 
+5244 OK  1234 hits 0 dashless:1326@810 full:1234@876 3e62a305b410 
+5245 OK  1234 hits 0 dashless:1326@812 full:1234@878 fdc9ef66ade5 
+5246 OK  1039 hits 0 dashless:1118@703 full:1039@764 e696164cfe50 
+5247 OK  1066 hits 0 dashless:1149@702 full:1066@768 4de514330810 
+5248 OK  1018 hits 0 dashless:1095@723 full:1018@694 2f3c5a0259b6 
+5249 OK  1127 hits 0 dashless:1212@702 full:1127@798 037c8a6d6ba4 
+5250 OK  1022 hits 0 dashless:1094@687 full:1022@674 f49dcbbcd357 

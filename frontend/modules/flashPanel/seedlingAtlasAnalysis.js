@@ -21,11 +21,12 @@ import {
 } from './seedlingObstacleEvents.js';
 import { talkRangeOf } from '../seedlingDemo/endingChain.js';
 import { buildLevelWorld, combatCensusOf, rectsOverlap } from '../seedlingDemo/levelWorld.js';
+import { FIRE_ROCK_TAG } from './seedlingRockBreakers.js';
 import { contactRect } from '../seedlingDemo/combat.js';
 import { spearHitRect, pressRectTouches } from '../seedlingDemo/presses.js';
 import { swingHits } from '../seedlingDemo/combatVerbs.js';
 import { DARKTRAP_LIGHT_DEATH } from '../seedlingDemo/enemyDamage.js';
-import { lavaTrapPulls, LAVATRAP_PULL } from './seedlingPlaythroughOverlay.js';
+import { LAVATRAP_PULL } from './seedlingPlaythroughOverlay.js';
 
 import {
     buildSeedlingRegionGrid,
@@ -181,7 +182,7 @@ export function analyzeSeedlingAtlas(atlas, deps) {
  * @param {{ mapDoc:object, gameConfig:object, levelWorlds?:object, analysis?:object }} deps
  * @returns {{ gridFor:Function, conditionKey:Function, resolveCondition:Function, unresolved:string[] }}
  */
-export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = null, analysis = null, events = null }) {
+export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = null, analysis = null, events = null, rockFire = null, lavaPulls = null }) {
     const levels = indexSeedlingLevels(mapDoc);
     const options = seedlingAnalyzerOptions(gameConfig);
     // ⛓ IN-ROOM LATCHES (session tile-lay-l40-latches): a level world lays each in-room press the rules minted as a
@@ -193,6 +194,27 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = n
         if (!levelWorlds || !level) return { laid: [], kept: [] };
         if (!latchCache.has(level.level)) latchCache.set(level.level, layableLatches(level, events, grid));
         return latchCache.get(level.level);
+    };
+    // ⛓⛓ FIRE BREAKS ROCKS (session tile-fire-breaks-rocks): each ordinary rock's flame stances, HANDED IN by the rules
+    // producer (`rockFire`: its `playthroughRockFireSides()`, `L<level>:<rock id>` -> {stances, …}, the census the overlay's
+    // `rockFireRuling` reads, narrowed where a parked holder needs a kill), so maze and rules read ONE map. A level-world
+    // compile without it is refused by name: a maze that silently lost Fire would be stricter than the rules.
+    if (levelWorlds && !rockFire) {
+        throw new Error('seedlingMazeProjectionDeps: a level-world compile needs `rockFire` (the rules producer\'s playthroughRockFireSides())');
+    }
+    // ⛓⛓ rules-lavatrap-pull-line: each LavaTrap's disc, HANDED IN by the rules producer (`lavaPulls`: its
+    // `playthroughLavaTrapPullMap()`, level number -> the line-cut pulls rule T reads), so maze and rules read ONE disc.
+    // A level-world compile without it is refused by name: a maze that re-derived the disc could reel where the game does not.
+    if (levelWorlds && !lavaPulls) {
+        throw new Error('seedlingMazeProjectionDeps: a level-world compile needs `lavaPulls` (the rules producer\'s playthroughLavaTrapPullMap())');
+    }
+    const rockFireCache = new Map();
+    const rockFireOf = (level) => {
+        if (!rockFireCache.has(level.level)) {
+            const prefix = `L${level.level}:`;
+            rockFireCache.set(level.level, new Map([...rockFire].filter(([k]) => k.startsWith(prefix)).map(([k, v]) => [k.slice(prefix.length), v])));
+        }
+        return rockFireCache.get(level.level);
     };
     const gridFor = (region) => {
         const level = levels.get(levelKeyOf(region.map_ref));
@@ -231,7 +253,9 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = n
         ...(levelWorlds ? {
             levelEntitiesFor: (region, grid) => {
                 const level = levels.get(levelKeyOf(region.map_ref));
-                return level ? seedlingLevelEntities(level, options.resolveCondition, { grid, latches: latchesOf(level, grid).laid }) : null;
+                return level ? seedlingLevelEntities(level, options.resolveCondition, {
+                    grid, latches: latchesOf(level, grid).laid, rockFire: rockFireOf(level), lavaPulls: lavaPulls.get(level.level) ?? [],
+                }) : null;
             },
             partitionFor: (region) => levelWorlds.partition?.regions?.[region.region_id] ?? null,
             // ⛓ BLOCK SINKS: a grid cell of the terrain a pushed block sinks into (water, lava, pit).
@@ -404,7 +428,8 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  *           A pole is not tile-aligned, so no footprint class can stand for it (session tile-primitives-lightpoles,
  *           ⚖ 2026-10-28 "Rope-shaped, stances").
  *   pull    a LavaTrap: `tiles` = its own cell, `from` = the cells its tongue grabs from and `rule` = what survives the
- *           ride — the rules producer's own `lavaTrapPulls` disc (32 px centre to centre, no line test) and
+ *           ride — the rules producer's own disc (`lavaPulls`: `lavaTrapPulls`, 32 px centre to centre, cut by the launch
+ *           line, ⛓⛓ rules-lavatrap-pull-line) and
  *           `LAVATRAP_PULL.condition` (the Dark Suit), so maze and rules read one disc (session
  *           tile-primitives-sphere-order-9, ⚖ 2026-10-29 "Forced pull, rules' disc"); `yields` (when any) = the
  *           steps into two discs it loses to the disc the walk enters first (session tile-primitives-sphere-order-10,
@@ -419,10 +444,11 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  *
  * @param {object} level a map-document level
  * @param {(condition:object)=>object|null} resolveCondition
- * @param {{grid?: object}} [opts] the level's analysis grid (whole level, origin 0) — a trap's lane needs it
+ * @param {{grid?: object, lavaPulls?: object[]}} [opts] the level's analysis grid (whole level, origin 0) — a trap's lane needs it;
+ *   `lavaPulls` = the rules producer's line-cut pulls of this level (`playthroughLavaTrapPulls`), needed for a LavaTrap row
  * @returns {Array<{kind:string, tiles:number[][], group?:string, strike?:object[], label:string}>}
  */
-export function seedlingLevelEntities(level, resolveCondition, { grid = null, latches = [] } = {}) {
+export function seedlingLevelEntities(level, resolveCondition, { grid = null, latches = [], rockFire = null, lavaPulls = null } = {}) {
     const rows = [];
     const ropes = ropesOf({ levels: [level] }).map((r) => ({ ...r, verdict: ropeVerdict(r, level) }));
     const minted = ropes.filter((r) => !r.verdict.refuse);
@@ -459,7 +485,8 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null, la
         }
         if (kind === 'pull') {
             const [x, y] = [Math.floor(entity.x / TILE), Math.floor(entity.y / TILE)];
-            const pull = lavaTrapPulls(level, TILE).find((p) => p.tile[0] === x && p.tile[1] === y);
+            if (!lavaPulls) throw new Error(`${label}: a LavaTrap row needs \`lavaPulls\` (the rules producer's line-cut discs)`);
+            const pull = lavaPulls.find((p) => p.tile[0] === x && p.tile[1] === y);
             const rule = resolveCondition(LAVATRAP_PULL.condition);
             if (!pull || !rule) throw new Error(`${label}: no pull of the rules producer's at (${x},${y}), or its condition has no AP rule`);
             rows.push({ kind, tiles: [pull.tile], from: pull.from, ...(pull.yields.length > 0 ? { yields: pull.yields } : {}), rule, label });
@@ -502,11 +529,29 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null, la
                 throw new Error(`${label}: flag "${c.flag}" resolves to ${JSON.stringify(rule)}, not one Has or an And `
                     + 'of Has — a strike needs a set of items');
             });
+            // ⛓⛓ FIRE BREAKS ROCKS (session tile-fire-breaks-rocks): an ordinary rock with a clean flame stance is also
+            // struck by Fire (`Player.as:1032` → `genericHit` → `BreakableRock.hit`, rockType 0), from those stances
+            // only (`rockFire`, the rules' own `rockFireSides`): the flame hits all eight neighbours whatever the
+            // facing, so each stance tile stands for every facing. A rock with none (L40, L41) keeps the swing's.
+            const fire = kind === 'rock' && entity.type === FIRE_ROCK_TAG ? rockFire?.get(label) : null;
+            if (fire && fire.stances.length > 0) {
+                const rule = resolveCondition(ROCK_FIRE_ARM);
+                if (rule?.rule !== 'Has' || (rule.args?.count ?? 1) !== 1) {
+                    throw new Error(`${label}: the arm ${ROCK_FIRE_ARM.flag} resolves to ${JSON.stringify(rule)}, not one Has`);
+                }
+                const action = actionIdOfFlag(ROCK_FIRE_ARM.flag);
+                if (row.strike.some((st) => st.action === action)) throw new Error(`${label}: its condition already names ${action}`);
+                const stances = fire.stances.flatMap(({ tx, ty }) => ['N', 'E', 'S', 'W'].map((f) => [tx, ty, f]));
+                row.strike.push({ action, item: rule.args.item_name, footprint: weaponFootprint(action), stances });
+            }
         }
         rows.push(row);
     }
     return rows;
 }
+
+/** The flame's arm (`Player.fire`, under `hasFire || hasFireWand`: the rules' `ROCK_FIRE_CONDITION` names `hasFire`). */
+const ROCK_FIRE_ARM = Object.freeze({ flag: 'hasFire' });
 
 /** The model the rules' pole functions read (`poleKillsOf`), injected as the rules producer does. */
 const POLE_MODEL = Object.freeze({ buildLevelWorld, combatCensusOf, contactRect, DARKTRAP_LIGHT_DEATH });

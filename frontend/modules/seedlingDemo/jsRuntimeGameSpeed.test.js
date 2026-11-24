@@ -7,8 +7,8 @@
  * `seedling_playthrough` on the JS transport, the solver driving its real rooms): L0 → the starting house (L86), its
  * chest's apitem, and back out to L0. The HOST is modelled as the live one answers: on its own turn, in a
  * MICROTASK chain off the page's report (`onStateChanged` → the event bus → `queueItems` / a walk verb). It hands the
- * chest goal when the page reports level 86, and on the chest's `pendingCheck` it delivers an item (an in-place
- * reboot, `jsRuntimeCore.rebootInPlace`) and hands the walk back to L0. A SYNCHRONOUS host (answers inside the
+ * chest goal when the page reports level 86, and on the chest's `pendingCheck` it delivers an item (written into the
+ * live run since seedling-js-item-live-delivery; an in-place reboot before it) and hands the walk back to L0. A SYNCHRONOUS host (answers inside the
  * report) is run too.
  *
  * The page's clock is the real one (`jsRuntimeClock`: the accumulator and the one-slot-per-turn pump), the slot is
@@ -16,7 +16,8 @@
  * display with stalls, on a simulated event loop: a frame callback, then its microtasks, then each posted task with
  * its microtasks.
  *
- * Mutants (each must turn the pin red):
+ * Mutants (each must turn the pin red — ⛓ since seedling-js-item-live-delivery the late answer is a live write on a
+ * later tick rather than a reboot, and each mutant's `deliveredAt` is pinned to differ from the reference's):
  *  m1 the PRE-SPEED loop (every due slot inside the frame callback) at 4× — the host's answer is drained a tick late;
  *  m2 a host delivery applied one slot late at 4× (the brief's mutant);
  *  m3 ⛓ CUSTOM SPEED — a host delivery applied one slot late at a FRACTIONAL speed (1.5×). ⚠ m2's mechanism (a
@@ -185,7 +186,10 @@ async function play({ speed, graphics = true, host = 'microtask', pump: pumpKind
         if (SETTLED.includes(rt.playback.state) && rt.playback.state === WALK_STATES.FAILED) throw new Error(`walk failed at ${rt.ticks}`);
     }
     return { digests: untilTicks !== null ? digests.slice(0, untilTicks) : digests, checks, held, doneAt, frames, wallMs,
-        solves: rt.playback.solverStats.solves, reboots: rt.events.filter((e) => e.type === 'boot' && e.why === IN_PLACE_REBOOT_WHY).length };
+        solves: rt.playback.solverStats.solves, reboots: rt.events.filter((e) => e.type === 'boot' && e.why === IN_PLACE_REBOOT_WHY).length,
+        // ⛓ seedling-js-item-live-delivery — the deliveries written into the live run (they no longer reboot it)
+        delivered: rt.events.filter((e) => e.type === 'delivery' && e.changed).length,
+        deliveredAt: rt.events.filter((e) => e.type === 'delivery' && e.changed).map((e) => e.tick) };
 }
 
 describe('GAME SPEED — the clock', () => {
@@ -308,7 +312,8 @@ describe('GAME SPEED — a Playback-Bot walk is the same tick sequence at 1× / 
         expect(r.doneAt).not.toBeNull();
         expect(r.checks).toEqual([{ tick: expect.any(Number), value: `1|86|${CHEST.tag}|0` }]);
         expect(r.solves).toBe(3);
-        expect(r.reboots).toBe(2);   // both deliveries landed (in-place reboots)
+        expect(r.delivered).toBe(2); // both deliveries landed (live, seedling-js-item-live-delivery) …
+        expect(r.reboots).toBe(0);   // … and none rebooted the room
         if (graphics) expect(r.held).toBeGreaterThan(40); // the fades were held: L0's boot and both crossings
         else expect(r.held).toBe(0);
     }, 240000);
@@ -321,7 +326,8 @@ describe('GAME SPEED — a Playback-Bot walk is the same tick sequence at 1× / 
         expect(r.checks).toEqual(base.checks);
         expect(r.held).toBe(base.held);
         expect(r.solves).toBe(3);
-        expect(r.reboots).toBe(2);
+        expect(r.delivered).toBe(2);
+        expect(r.reboots).toBe(0);
         // and it really was shown faster
         expect(r.wallMs).toBeLessThan((base.wallMs / speed) * 1.15);
     }, 240000);
@@ -329,7 +335,8 @@ describe('GAME SPEED — a Playback-Bot walk is the same tick sequence at 1× / 
     it('4× with a SYNCHRONOUS host (answers inside the report): the same tick sequence as 1×', async () => {
         const a = await play({ speed: 1, graphics: false, host: 'sync' });
         const b = await play({ speed: 4, graphics: false, host: 'sync', untilTicks: a.digests.length });
-        expect(a.reboots).toBe(2);
+        expect(a.delivered).toBe(2);
+        expect(a.reboots).toBe(0);
         expect(firstDiff(b, a)).toBe(-1);
         expect(b.checks).toEqual(a.checks);
     }, 240000);
@@ -337,11 +344,14 @@ describe('GAME SPEED — a Playback-Bot walk is the same tick sequence at 1× / 
     it('MUTANT m1 — the pre-speed loop (every due slot inside the frame callback) at 4×: a host answer lands a tick late, the pin goes red', async () => {
         const r = await play({ speed: 4, graphics: false, pump: 'legacy', untilTicks: ref.off.digests.length });
         expect(firstDiff(r, ref.off)).toBeGreaterThan(-1);
+        // ⛓ seedling-js-item-live-delivery — the late answer is now a LIVE write on a later tick (no reboot): measured
+        expect(r.deliveredAt).not.toEqual(ref.off.deliveredAt);
     }, 240000);
 
     it('MUTANT m2 — a host delivery applied one slot late at 4×: the pin goes red, from the delivery on', async () => {
         const r = await play({ speed: 4, graphics: false, lateAt: 4, untilTicks: ref.off.digests.length });
         expect(firstDiff(r, ref.off)).toBeGreaterThan(ref.off.checks[0].tick);
+        expect(r.deliveredAt).not.toEqual(ref.off.deliveredAt);
     }, 240000);
 
     // ⛓ CUSTOM SPEED — fractional and slow speeds: the same tick sequence as 1× (the 1× refs above)
@@ -354,7 +364,8 @@ describe('GAME SPEED — a Playback-Bot walk is the same tick sequence at 1× / 
             expect(r.checks).toEqual(base.checks);
             expect(r.held).toBe(base.held);
             expect(r.solves).toBe(3);
-            expect(r.reboots).toBe(2);
+            expect(r.delivered).toBe(2);
+            expect(r.reboots).toBe(0);
             // shown at that speed: the wall time scales by 1 / speed (within the frame quantum and the walk's tail)
             expect(r.wallMs).toBeLessThan((base.wallMs / speed) * 1.15);
             expect(r.wallMs).toBeGreaterThan((base.wallMs / speed) * 0.85);

@@ -88,6 +88,7 @@ import * as regionsModule from './modules/regions/index.js';
 import * as helpersModule from './modules/helpers/index.js';
 import * as dungeonsModule from './modules/dungeons/index.js';
 import * as regionGraphModule from './modules/regionGraph/index.js';
+import * as regionMapModule from './modules/regionMap/index.js';
 import * as discoveryModule from './modules/discovery/index.js';
 import * as discoveryPanelModule from './modules/discoveryPanel/index.js';
 import * as gameStateModule from './modules/gameState/index.js';
@@ -134,6 +135,7 @@ import * as procgenPlayerModule from './modules/procgenPlayer/index.js';
 import * as menuPanelModule from './modules/menuPanel/index.js';
 import * as resourceChannelsModule from './modules/resourceChannels/index.js';
 import * as textAdventureSubstrateWrapperModule from './modules/textAdventureSubstrateWrapper/index.js';
+import * as actionNodesModule from './modules/actionNodes/index.js';
 import * as jtaSubstrateWrapperModule from './modules/jtaSubstrateWrapper/index.js';
 import * as omsiSubstrateWrapperModule from './modules/omsiSubstrateWrapper/index.js';
 import * as jtaBalanceModule from './modules/jtaBalance/index.js';
@@ -154,6 +156,7 @@ import './modules/tests/testCases/locationPanelTests.js';
 import './modules/tests/testCases/exitPanelTests.js';
 import './modules/tests/testCases/regionPanelTests.js';
 import './modules/tests/testCases/regionGraphPanelTests.js';
+import './modules/tests/testCases/regionMapTests.js';
 import './modules/tests/testCases/loopsPanelTests.js';
 import './modules/tests/testCases/eventsPanelTests.js';
 import './modules/tests/testCases/pathAnalyzerTests.js';
@@ -183,11 +186,13 @@ import './modules/tests/testCases/omsiUnlockTests.js';
 import './modules/tests/testCases/omsiRegionSplitTests.js';
 import './modules/tests/testCases/mazeConsumableTileTests.js';
 import './modules/tests/testCases/mazeTileArtTests.js';
+import './modules/tests/testCases/mazeThingTests.js';
 import './modules/tests/testCases/mazeBlockModeTests.js';
 import './modules/tests/testCases/manaDepletionFlagTests.js';
 import './modules/tests/testCases/seedlingAtlasMazeTests.js';
 import './modules/tests/testCases/seedlingJsRuntimeTests.js';
 import './modules/tests/testCases/taswBlockModeTests.js';
+import './modules/tests/testCases/actionNodesTests.js';
 import './modules/tests/testCases/apworldEditorTests.js';
 import './modules/tests/testCases/substrateRegistryPanelTests.js';
 import './modules/tests/testCases/procgenPipelineTests.js';
@@ -196,6 +201,8 @@ import './modules/tests/testCases/miniPanelsTests.js';
 import './modules/tests/testCases/tutorialTests.js';
 import './modules/tests/testCases/storagePanelTests.js';
 import './modules/tests/testCases/ruleConverterTests.js';
+import './modules/tests/testCases/documentLibraryTests.js';
+import './modules/tests/testCases/labApworldDoorTests.js';
 
 // Signal that test cases have been pre-imported
 window.__BUNDLED_TEST_CASES__ = true;
@@ -228,6 +235,7 @@ const BUNDLED_MODULES = {
   helpers: helpersModule,
   dungeons: dungeonsModule,
   regionGraph: regionGraphModule,
+  regionMap: regionMapModule,
   discovery: discoveryModule,
   discoveryPanel: discoveryPanelModule,
   gameState: gameStateModule,
@@ -274,6 +282,7 @@ const BUNDLED_MODULES = {
   menuPanel: menuPanelModule,
   resourceChannels: resourceChannelsModule,
   textAdventureSubstrateWrapper: textAdventureSubstrateWrapperModule,
+  actionNodes: actionNodesModule,
   jtaSubstrateWrapper: jtaSubstrateWrapperModule,
   omsiSubstrateWrapper: omsiSubstrateWrapperModule,
   jtaBalance: jtaBalanceModule,

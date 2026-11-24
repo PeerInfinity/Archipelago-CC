@@ -102,6 +102,7 @@ export const QUEUE_ACTION_WORDING = Object.freeze({
     regionMove: 'moves between regions',
     locationCheck: 'location checks',
     explore: 'exploring',
+    act: "performing each node's action",
 });
 
 /** ⛓ The capture shapes in words (L4) — how a replay of a recorded visit works. */
@@ -138,6 +139,7 @@ export const CELL_WORDING = Object.freeze({
     itemTypesPreview: (types) => `${CELL_WORDING.itemTypes(types.length)}${types.length
         ? `: ${types.slice(0, LIST_PREVIEW).join(', ')}${types.length > LIST_PREVIEW ? ', …' : ''}` : ''}`,
     itemTypesLive: 'its list comes from the running game — see the Substrate Registry panel',
+    sharedTypesFromWorld: "its list comes from the loaded world's own data",
     concepts: (n) => `${n} concept${n === 1 ? '' : 's'}`,
     conceptTier: (concept, tier) => `${concept} (${tier})`,
     conceptsPreview: (names) => `${CELL_WORDING.concepts(names.length)}: ${names.slice(0, LIST_PREVIEW).join(', ')}${
@@ -215,6 +217,13 @@ const conceptsCell = (e) => {
  * every field in `fields`, shaped by `registryShape.cellOf`) and applies
  * `requires`. ⚖ The sentences are the user's (approved 2026-09-27).
  */
+/** ⛓ L12/L13: a type-list sharing category (`stats`, `resources`): its static list, or "from the loaded world". */
+function sharedTypesCell(decl) {
+    if (!decl || typeof decl !== 'object') return cell(CELL_KINDS.NO);
+    if (Array.isArray(decl.types)) return cell(CELL_KINDS.YES, decl.types.join(', '));
+    return cell(CELL_KINDS.YES, CELL_WORDING.sharedTypesFromWorld);
+}
+
 export const CAPABILITY_STATEMENTS = Object.freeze([
     {
         id: 'P1', group: 'play', universal: true,
@@ -324,11 +333,13 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         },
     },
     {
-        id: 'L6', group: 'loop', universal: true,
+        id: 'L6', group: 'loop',
         statement: 'A Bot block can play it for you',
         fields: ['loopSupport.executeVia', 'sharing.mana.loopActionDelegation'],
-        /* ⛓ UNIVERSAL since 2026-10-18: ta-loop-bot gave the text adventure a Bot
-         * block and the generic `flash` entry (the last ✗) was removed. */
+        /* ⛓ Universal from 2026-10-18 (ta-loop-bot gave the text adventure a Bot
+         * block and the generic `flash` entry, the last ✗, was removed) until
+         * 2026-11-15: ActionNodes registers its data half in slice AN-1 and gets
+         * its Bot block in slice AN-3, so it is the one ✗ in between. */
         answer: (e) => {
             const kind = solverKindOf(e);
             return kind ? cell(CELL_KINDS.YES, SOLVER_WORDING[kind] ?? kind) : cell(CELL_KINDS.NO);
@@ -374,6 +385,20 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         statement: "Recorded actions are named in the game's own words",
         fields: ['describeAction'],
         answer: (e) => yesNo(isFn(e.describeAction)),
+    },
+    /* ⛓ ActionNodes design §5 (slice AN-2): the host ledger keeps per-loop
+     * stats and resources for a substrate that declares the two categories. */
+    {
+        id: 'L12', group: 'loop',
+        statement: 'The host keeps its per-loop stats',
+        fields: ['sharing.stats'],
+        answer: (e) => sharedTypesCell(e.sharing?.stats),
+    },
+    {
+        id: 'L13', group: 'loop',
+        statement: 'The host keeps its per-loop resources',
+        fields: ['sharing.resources'],
+        answer: (e) => sharedTypesCell(e.sharing?.resources),
     },
     {
         id: 'G1', group: 'generate',

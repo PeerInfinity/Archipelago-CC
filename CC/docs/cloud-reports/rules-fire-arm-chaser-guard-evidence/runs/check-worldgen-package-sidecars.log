@@ -1,0 +1,37 @@
+── _worldgen_sidecars.json ≡ the committed documents' `preset_sidecars` slot blocks
+PASS: procgen_maze_worldgen ≡ frontend/presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_P1_rules.json slot 1
+PASS: procgen_maze_worldgen ≡ frontend/presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_rules.json slot 1
+PASS: procgen_maze_worldgen ≡ frontend/presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_P2_rules.json slot 2
+PASS: procgen_maze_worldgen ≡ frontend/presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_rules.json slot 2
+PASS: bounce_worldgen ≡ frontend/presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_P3_rules.json slot 3
+PASS: bounce_worldgen ≡ frontend/presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_rules.json slot 3
+PASS: bounce_worldgen ≡ frontend/presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_P4_rules.json slot 4
+PASS: bounce_worldgen ≡ frontend/presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_rules.json slot 4
+PASS: bounce_worldgen ≡ frontend/presets/bounce_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json slot 1
+PASS: seedling_playthrough ≡ frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json slot 1
+PASS: cloudberry_sphere_worldgen ≡ frontend/presets/cloudberry_sphere_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json slot 1
+PASS: cloudberry_maze_mix_worldgen ≡ frontend/presets/cloudberry_maze_mix_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json slot 1
+PASS: cloudberry_double_jump_worldgen ≡ frontend/presets/cloudberry_double_jump_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json slot 1
+PASS: cloudberry_hero_physics_worldgen ≡ frontend/presets/cloudberry_hero_physics_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json slot 1
+── _worldgen_flash_panel.json ≡ the committed documents' `flash_panel` slot blocks
+PASS: seedling_playthrough ≡ frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json slot 1
+── _worldgen_region_atlas.json ≡ the committed documents' `region_atlas` slot blocks
+PASS: seedling_playthrough ≡ frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json slot 1
+── every committed flash_panel copy of a wired game ≡ frontend/modules/procgenPipeline/flashPanelWiring.json
+PASS: frontend/presets/seedling/AP_14089154938208861744/AP_14089154938208861744_rules.json slot 1 ≡ wiring.seedling
+PASS: frontend/presets/seedling_atlas/AP_1/AP_1_rules.json slot 1 ≡ wiring.seedling
+PASS: frontend/presets/seedling_atlas_host/AP_1/AP_1_rules.json slot 1 ≡ wiring.seedling
+PASS: frontend/presets/seedling_atlas_location/AP_1/AP_1_rules.json slot 1 ≡ wiring.seedling
+PASS: frontend/presets/seedling_er/AP_1/AP_1_rules.json slot 1 ≡ wiring.seedling
+PASS: frontend/presets/seedling_generated_chestdoor/AP_1/AP_1_rules.json slot 1 ≡ wiring.seedling
+PASS: frontend/presets/seedling_generated_host/AP_1/AP_1_rules.json slot 1 ≡ wiring.seedling
+PASS: frontend/presets/seedling_generated_leaf/AP_1/AP_1_rules.json slot 1 ≡ wiring.seedling
+PASS: frontend/presets/seedling_generated_room/AP_1/AP_1_rules.json slot 1 ≡ wiring.seedling
+PASS: frontend/presets/seedling_generated_swim/AP_1/AP_1_rules.json slot 1 ≡ wiring.seedling
+PASS: frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json slot 1 ≡ wiring.seedling
+PASS: frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json slot 1 ≡ wiring.seedling
+PASS: frontend/presets/seedling_sphere_room/AP_1/AP_1_rules.json slot 1 ≡ wiring.seedling
+PASS: frontend/presets/seedling_spiral_room/AP_1/AP_1_rules.json slot 1 ≡ wiring.seedling
+PASS: worlds/seedling_playthrough/_worldgen_flash_panel.json ≡ wiring.seedling
+  (hand-kept, no producer: frontend/presets/robotkitty_tilemap/AP_14089154938208861744/AP_14089154938208861744_rules.json slot 1 config robotkitty.json)
+ALL CHECKS PASSED

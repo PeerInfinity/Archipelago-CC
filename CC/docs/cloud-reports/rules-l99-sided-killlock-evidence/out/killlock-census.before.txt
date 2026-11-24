@@ -1,0 +1,29 @@
+L5 lock@48,112 tag 0 fires false latch false through null why every side clears the room
+  clears size 23 near undefined steps [{"tile":[3,7],"dir":"S"}] beyond [] across []
+L18 lock@144,112 tag 0 fires true latch true through null why null
+  clears size 60 near undefined steps [{"tile":[9,7],"dir":"E"}] beyond [] across []
+  cannot size 2 near undefined steps [{"tile":[9,7],"dir":"W"}] beyond [spinner@48,96,spinner@112,48] across []
+L26 rocklock@112,208 tag 0 fires true latch true through null why null
+  clears size 89 near undefined steps [{"tile":[7,13],"dir":"N"},{"tile":[7,13],"dir":"E"},{"tile":[7,13],"dir":"S"}] beyond [] across []
+  cannot size 2 near undefined steps [{"tile":[7,13],"dir":"W"}] beyond [puncher@32,208] across [puncher@80,168]
+L39 wandlock@144,592 tag 8 fires false latch false through null why a cross-level ButtonRoom also clears its tag
+  cannot size 2 near undefined steps [{"tile":[9,37],"dir":"N"}] beyond [spinner@112,88,spinner@224,112,spinner@224,208] across []
+  clears size 193 near undefined steps [{"tile":[9,37],"dir":"S"}] beyond [] across []
+L53 lock@144,208 tag 2 fires true latch true through null why null
+  cannot size 2 near undefined steps [{"tile":[9,13],"dir":"N"}] beyond [puncher@136,96] across [jellyfish@144,192,jellyfish@184,160,jellyfish@152,168]
+  clears size 74 near undefined steps [{"tile":[9,13],"dir":"S"}] beyond [] across []
+L60 lock@128,80 tag 0 fires false latch true through {"flags":[["hasGhostSword","hasSpear"]],"event":true} why null
+  clears size 32 near undefined steps [{"tile":[8,5],"dir":"E"}] beyond [] across []
+  across size 2 near undefined steps [{"tile":[8,5],"dir":"W"}] beyond [] across [jellyfish@120,112,jellyfish@56,64]
+L71 lock@112,192 tag 0 fires false latch false through {"flags":[["hasGhostSword","hasSpear"]],"event":false} why null
+  across size 21 near undefined steps [{"tile":[7,12],"dir":"N"}] beyond [] across [lavarunner@64,224,lavarunner@64,192,lavarunner@72,208,lavarunner@48,200,lavarunner@80,224]
+  across size 255 near undefined steps [{"tile":[7,12],"dir":"S"}] beyond [] across [lavarunner@64,224,lavarunner@64,192,lavarunner@72,208,lavarunner@48,200,lavarunner@80,224]
+L78 lock@32,32 tag 0 fires false latch false through null why every side clears the room
+  clears size 194 near undefined steps [{"tile":[2,2],"dir":"N"},{"tile":[2,2],"dir":"E"},{"tile":[2,2],"dir":"S"},{"tile":[2,2],"dir":"W"}] beyond [] across []
+L98 lock@112,112 tag 0 fires false latch false through null why every side clears the room
+  clears size 86 near undefined steps [{"tile":[7,7],"dir":"N"},{"tile":[7,7],"dir":"E"},{"tile":[7,7],"dir":"S"},{"tile":[7,7],"dir":"W"}] beyond [] across []
+L99 lock@80,96 tag 0 fires false latch false through null why every side clears the room
+  clears size 76 near undefined steps [{"tile":[5,6],"dir":"N"},{"tile":[5,6],"dir":"E"},{"tile":[5,6],"dir":"S"}] beyond [] across []
+99 []
+71 []
+60 [["lock@128,80",{"W":true,"E":{"rule":"Has","args":{"item_name":"Ghost Spear"}}}]]

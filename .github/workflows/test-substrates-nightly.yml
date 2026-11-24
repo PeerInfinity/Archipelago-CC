@@ -1,4 +1,4 @@
-name: Substrate tests — nightly manual batches
+name: Substrate tests — nightly manual batches (+ Seedling train checks)
 
 # ⛓ ONE NIGHTLY RUN OF EVERY MANUAL test-substrates BATCH, AT main.
 #
@@ -16,7 +16,14 @@ name: Substrate tests — nightly manual batches
 # job is only the summary. (Dispatching the manual workflow instead would make
 # a second run whose results this one would have to poll for.)
 #
-# Not here, on purpose (the brief's limits): no sweep, survey or train tier.
+# ⛓ PLUS two train-tier CHECKS (⚖ Robert 2026-11-17, "Train tier + nightly"):
+# the `seedling-checks` job runs the wallflyer no-hit cross-check and the
+# Seedling map extractor's --check — the SAME *.train.test.js files the
+# train-tier shards run (unittests_frontend.yml), so one definition serves both
+# homes. A sibling of the batch call, not a step of it: its red never blocks or
+# changes the batches, and the summary folds its job conclusion in.
+#
+# Not here, on purpose: no sweep, no survey, and no OTHER train-tier file.
 
 on:
   schedule:
@@ -28,6 +35,15 @@ on:
   # The same run on demand. A dispatch runs at the ref it is dispatched on
   # (`gh workflow run` defaults to main); only a run at main is the nightly.
   workflow_dispatch:
+    inputs:
+      # `seedling-checks` skips the batch call and runs only the train checks
+      # (minutes, not hours): `gh workflow run test-substrates-nightly.yml
+      # -R PeerInfinity/Archipelago-CC --ref <branch> -f only=seedling-checks`.
+      only:
+        description: 'all = the nightly (batches + checks); seedling-checks = the two train checks alone'
+        type: choice
+        options: [all, seedling-checks]
+        default: all
 
 # Its own group: a second nightly waits behind the first, never stacks on it.
 # (Not the manual workflow's runs — a dispatch there is a different group.)
@@ -42,14 +58,45 @@ permissions:
 jobs:
   manual:
     name: manual
+    # A schedule has no inputs (empty ≠ 'seedling-checks'), so the nightly always runs it.
+    if: ${{ inputs.only != 'seedling-checks' }}
     uses: ./.github/workflows/test-substrates-manual.yml
     with:
       batch: all
       bundled: false
 
+  # ⛓ The train checks. Same setup as the train-tier shards (recursive
+  # checkout: vendor/seedling for the extractor; no unshallow — neither check
+  # reads history). ⛔ This job's name is what nightly-manual-summary.js
+  # matches (CHECKS_JOB_NAME); rename both together.
+  seedling-checks:
+    name: Seedling train checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: No-hit cross-check + map extractor --check (the train-tier files)
+        run: >-
+          npx vitest run --config vitest.train.config.js
+          scripts/procgen/derive-seedling-wallflyer-nohit.train.test.js
+          scripts/procgen/extract-seedling-map.train.test.js
+
   summary:
     name: Nightly summary
-    needs: manual
+    needs: [manual, seedling-checks]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -78,8 +125,11 @@ jobs:
           RUN_ID: ${{ github.run_id }}
           SHA: ${{ github.sha }}
           REF: ${{ github.ref_name }}
+          ONLY: ${{ inputs.only }}
         run: |
           batches=$(node scripts/test/list-test-batches.js --manual)
+          # Checks alone: the batch call was skipped, so there are no batches to grade.
+          if [ "$ONLY" = "seedling-checks" ]; then batches='[]'; fi
           set +e
           node scripts/test/nightly-manual-summary.js --artifacts=nightly-artifacts --batches="$batches" \
             --jobs=jobs.json --run-id="$RUN_ID" --sha="$SHA" --ref="$REF" \
@@ -95,8 +145,8 @@ jobs:
           retention-days: 30
 
       # Last, so the artifact is up before the run reads red.
-      - name: Red if any batch is red
+      - name: Red if any batch or the train checks are red
         if: ${{ steps.summary.outputs.rc != '0' }}
         run: |
-          echo "::error::nightly manual batches RED — see the job summary / nightly-manual-summary.json"
+          echo "::error::nightly RED (a manual batch or the Seedling train checks) — see the job summary / nightly-manual-summary.json"
           exit 1

@@ -19,7 +19,7 @@
  * which forecasts the spinners WITHOUT the walk's presses, and puts the struck spinner 28.6 px from where it is. That
  * is the hit-aware spinner forecast (the hammer arc's); this file pins the model against the game and the measurement.
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll, afterAll } from 'vitest';
 import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set (fidelity-18's request)
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -31,6 +31,15 @@ import { SolverRefusal, stanceHypothesisProbe, withLatchWeighFirst } from './sol
 import { heldKeysAt, parseTape } from './tapeFormat.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
+import { PRESS_KILL_CHASERS as __PRESS_KILL_CHASERS_HOLD } from './pressKillCost.js';
+
+// ⛓ `PRESS_KILL_CHASERS` held OFF for this whole file: it ships ON since the PKC + FH flip (⚖ the user, 2026-11-20). ON (the default since the PKC + FH flip), the chain
+// ends at kill(spinner@880,848) by press 'no step out' at (743.68,762.93) (HAMMER_PHASE_RUNG); still refused.
+// These rows predate the flip and pin other switches; held OFF they are byte-for-byte their pre-flip selves. The
+// flip's own effect is measured by its sweeps and survey.
+let __heldWas;
+beforeAll(() => { __heldWas = __PRESS_KILL_CHASERS_HOLD.enabled; __PRESS_KILL_CHASERS_HOLD.enabled = false; });
+afterAll(() => { __PRESS_KILL_CHASERS_HOLD.enabled = __heldWas; });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const fixture = (n) => JSON.parse(readFileSync(join(HERE, 'fixtures', 'l40res-witness', `${n}.json`), 'utf8'));

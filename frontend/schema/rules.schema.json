@@ -389,12 +389,22 @@
             },
             "grid_dims": {
               "type": "object",
-              "description": "Bounding size of the generated grid in cells. Auto-derived by procgenPipelineEngine.js:6353-6356 from the maximum `grid_cell`.",
+              "description": "Bounding size of the generated grid in cells: the box of the slot's `grid_cell`s widened to include (0,0), i.e. max + 1 when every cell is >= 0; anchored at `grid_origin` when present, else at (0,0). Auto-derived by procgenCore/cellExtent.js `recordedGridBox` (buildRulesJson, slotInitialise).",
               "properties": {
                 "width": { "type": "integer" },
                 "height": { "type": "integer" }
               },
               "required": ["width", "height"]
+            },
+            "grid_origin": {
+              "type": "object",
+              "description": "Top-left cell of the `grid_dims` box, present ONLY when it is negative on either axis (region cells are signed; the start room sits at (0,0)). Absent, `grid_dims` is anchored at (0,0). Written by procgenCore/cellExtent.js `recordedGridBox` (buildRulesJson, slotInitialise); read by compositeMapDocument.mapBoundsFor, sidecarIssues GRID_CELL_OUTSIDE and the engine's sphere-tree rebuild.",
+              "properties": {
+                "gx": { "type": "integer" },
+                "gy": { "type": "integer" }
+              },
+              "required": ["gx", "gy"],
+              "additionalProperties": false
             },
             "source_game": {
               "type": ["string", "null"],
@@ -516,6 +526,16 @@
                       "both",
                       "none"
                     ]
+                  },
+                  "xpGainScale": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Region XP gained in this region per mana spent there (default 1 when absent; 0 = no XP). Producer: frontend/modules/actionNodes/actionGraphCompiler.js `compileActionGraph` (the graph's `settings.xpGainScale` on every node). Read by the ActionNodes runtime (slice 2); nothing else reads it yet."
+                  },
+                  "actions": {
+                    "type": "object",
+                    "description": "AUTHORED per-verb costs of this region, verb name -> mana, for a substrate whose costs are its own. Producer: frontend/modules/actionNodes/actionGraphCompiler.js `compileActionGraph` (`act` = the node's time). Read by the ActionNodes runtime and the Loops `act` verb (slice 2); nothing else reads it yet.",
+                    "additionalProperties": { "type": "number", "minimum": 0 }
                   }
                 }
               }
@@ -554,7 +574,7 @@
     },
     "discovery_mode": {
       "type": "object",
-      "description": "Each slot's Discovery-mode choice, keyed by player slot ID (string) — the shape `loop_costs` uses (a block at the document level is not read). A slot WITHOUT an entry is the default: Discovery follows loop mode (on exactly while loop mode is, as Loop mode's session overrides). Producer: frontend/modules/procgenPipeline/procgenPipelineEngine.js `buildRulesJson` (its `discoveryMode` option — the Procgen Pipeline's \"Discovery mode\" select, the drivers' `--discovery-mode`), and exporter/games/base/handler.py (the worldgen `_worldgen_discovery_mode.json` round-trip, under the exporting player). Consumed by frontend/modules/discovery (worldDiscoveryMode.js `readWorldDiscoveryMode` reads the loaded slot's entry).",
+      "description": "Each slot's Discovery-mode choice, keyed by player slot ID (string) — the shape `loop_costs` uses (a block at the document level is not read). A slot WITHOUT an entry is the default: Discovery follows loop mode (on exactly while loop mode is, as Loop mode's session overrides). Producer: frontend/modules/procgenPipeline/procgenPipelineEngine.js `buildRulesJson` (its `discoveryMode` option — the Procgen Pipeline's \"Discovery mode\" select, the drivers' `--discovery-mode`), and exporter/games/base/handler.py (the worldgen `_worldgen_discovery_mode.json` round-trip, under the exporting player). Producer of the `bundle` field: frontend/modules/actionNodes/actionGraphCompiler.js `compileActionGraph` (ActionNodes AN-1b). Consumed by frontend/modules/discovery (worldDiscoveryMode.js `readWorldDiscoveryMode` reads the loaded slot's entry).",
       "patternProperties": {
         "^[0-9]+$": {
           "type": "object",
@@ -562,6 +582,11 @@
           "properties": {
             "enabled": {
               "type": "boolean"
+            },
+            "bundle": {
+              "type": "string",
+              "enum": ["actionNodes"],
+              "description": "Optional, with enabled:true: a named override bundle forced in AND out of loop mode. \"actionNodes\" — Loop mode's discovery overrides with autoDiscoverLocations on; the start node is fully discovered and its neighbours show their contents, a node's exits stay unnamed until it is first completed, nothing is cleared on a loop reset, no explore (ActionNodes AN-1b, Robert 2026-11-16). Producer: frontend/modules/actionNodes/actionGraphCompiler.js `compileActionGraph`. Consumer: frontend/modules/discovery/worldDiscoveryMode.js `readWorldDiscoveryMode` / `ACTION_NODES_OVERRIDES`."
             }
           },
           "required": [
@@ -628,6 +653,61 @@
       },
       "additionalProperties": false
     },
+    "action_nodes": {
+      "type": "object",
+      "description": "Each slot's ActionNodes world: what the runtime reads that the per-node `preset_sidecars` payloads do not say, keyed by player slot ID (string) — the shape `loop_costs` and `region_atlas` use. Producer: frontend/modules/actionNodes/actionGraphCompiler.js `compileActionGraph` (`actionNodesBlockOf`), via scripts/procgen/action-nodes-compile.mjs. Consumer: the ActionNodes runtime (slice 2); nothing reads it yet.",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "One slot's ActionNodes world.",
+          "properties": {
+            "schema_version": { "type": "integer", "description": "The block's version (`ACTION_NODES_BLOCK_VERSION`)." },
+            "graph_id": { "type": "string", "description": "The graph document's `graph_id`." },
+            "name": { "type": "string", "description": "The graph's display name." },
+            "loop": {
+              "type": "object",
+              "description": "A loop's starting pool before boosts.",
+              "properties": { "mana": { "type": "integer", "minimum": 1 } },
+              "required": ["mana"],
+              "additionalProperties": false
+            },
+            "stats": { "type": "object", "description": "Stat id -> {name}. Stats only go up, and reset with the loop." },
+            "resources": { "type": "object", "description": "Resource id -> {name}. Resources go up or down, and reset with the loop." },
+            "boosts": {
+              "type": "object",
+              "description": "Archipelago item name -> what holding one gives, at once and at the start of every loop: {boon_id, stats, resources, mana}. `mana` is the PER-ITEM starting-mana boost (⚖ user 2026-11-15: configurable per item, default 10); while an ActionNodes world is loaded the runtime takes each item's mana from here instead of the global flat per-item term.",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "boon_id": { "type": "string" },
+                  "stats": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+                  "resources": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+                  "mana": { "type": "integer", "minimum": 0 }
+                },
+                "required": ["boon_id", "stats", "resources", "mana"],
+                "additionalProperties": false
+              }
+            },
+            "mana_per_item_default": { "type": "integer", "minimum": 0, "description": "The per-item mana boost an item with no `boosts` row gets (DEFAULT_MANA_PER_ITEM)." },
+            "start": { "type": "string", "description": "The start node's id (its region)." },
+            "goal": { "type": "string", "description": "The goal node's id (its region)." },
+            "action": { "type": "string", "description": "The Loops queue verb that performs a node: `act`." },
+            "settings": {
+              "type": "object",
+              "description": "The graph's settings with defaults applied.",
+              "properties": {
+                "xpGainScale": { "type": "number", "minimum": 0 },
+                "xpEffect": { "type": "string", "description": "As a `loop_costs` region's `xpEffect`." }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": ["schema_version", "graph_id", "loop", "stats", "resources", "boosts", "mana_per_item_default", "start", "goal", "action"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
     "region_atlas": {
       "type": "object",
       "description": "Which region atlas each slot's graph was compiled from, keyed by player slot ID (string) — the shape `procgen_metadata`, `loop_costs` and `preset_sidecars` use (rules F2, 2026-10-05; a block at the document level is refused by name: stateManager/core/initialization.js `RETIRED_TOP_LEVEL_KEYS`, and `scripts/procgen/migrate-per-player-blocks.mjs` moves an old document). Producers: frontend/modules/procgenPipeline/regionAtlasCompiler.js `compileRegionAtlas` (via `regionAtlasReference`), the procgen pipeline's `buildRulesJson` and the APWorld Editor's initialise op (a substrate's `rulesJsonBlocks`, landed under the slot by rulesDocOps.js), and the hub's player-scope `set-key region_atlas` (the marking tool's Save, documentKeys.js `regionAtlasSetKeyOp`).",
@@ -647,6 +727,24 @@
             "map_document": {
               "type": "string",
               "description": "Path of the tile-space map document the atlas was marked on. Omitted when the atlas declares no tile space."
+            },
+            "level_set": {
+              "type": "object",
+              "description": "The level set this slot's rooms were built from, when it is not the game's own (a set edited in a lab). The rules carry the reference, not the body; a host that received the set (a bundle's `level-set` member) holds it under `set_id` (frontend/modules/procgenCore/levelSetCache.js). Producer: the watch-page set editor's compile (seedlingDemo/watchSetIdentity.js). Absent on every committed preset.",
+              "properties": {
+                "set_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The level-set document's own stamped `set_id`."
+                },
+                "content_hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}$",
+                  "description": "The set's content hash: the whole document minus `set_id` and `provenance` (procgenCore/levelSetReference.js `levelSetContentHash`; equal to a stamped set's `provenance.content_hash`)."
+                }
+              },
+              "required": ["set_id", "content_hash"],
+              "additionalProperties": false
             }
           },
           "required": ["atlas_id", "game"]
@@ -1020,8 +1118,8 @@
         },
         "event_kind": {
           "type": "string",
-          "enum": ["game_state"],
-          "description": "RULES obstacle-events: what an EVENT location (id null, event true) stands for. Absent = a logic event, which the frontend state manager auto-collects on reach (Archipelago's own sweep does the same). 'game_state' = state the GAME saves (a saved obstacle's persistence flag): the state manager NEVER auto-collects it (stateManager/core/eventKinds.js, fail-closed: an unknown kind is not auto-collected either); the runtime collects it on the game's own flag. Producer: scripts/procgen/make-seedling-playthrough-rules.mjs (flashPanel/seedlingObstacleEvents.js)."
+          "enum": ["game_state", "goal"],
+          "description": "RULES obstacle-events: what an EVENT location (id null, event true) stands for. Absent = a logic event, which the frontend state manager auto-collects on reach (Archipelago's own sweep does the same). 'game_state' = state the GAME saves (a saved obstacle's persistence flag): the state manager NEVER auto-collects it (stateManager/core/eventKinds.js, fail-closed: an unknown kind is not auto-collected either); the runtime collects it on the game's own flag. Producer: scripts/procgen/make-seedling-playthrough-rules.mjs (flashPanel/seedlingObstacleEvents.js). 'goal' = the slot's goal event, set by the CLIENT (never in a file) on rules the host's Upstream Rules Add-on sent (client/core/upstreamGoal.js): never auto-collected; it is checked like any location (a click, the Timer, a bot, the Loop queue), and that check reports the goal."
         },
         "event_id": {
           "type": "string",
@@ -1165,16 +1263,8 @@
       "properties": {
         "name": { "type": "string" },
         "id": {
-          "oneOf": [
-            { "type": "integer" },
-            { "type": "null" },
-            {
-              "type": "array",
-              "items": { "type": "integer" },
-              "description": "Array of Archipelago Item IDs for composite items."
-            }
-          ],
-          "description": "Archipelago Item ID. Can be a single integer, null, or an array of integers for composite items like pendants and crystals."
+          "type": ["integer", "null"],
+          "description": "Archipelago Item ID, or null for an item with none (an event). A world whose item code is not an integer (A Link to the Past's crystals and pendants carry ROM bytes) exports null: the exporter's int_id_or_none."
         },
         "groups": { "type": "array", "items": { "type": "string" } },
         "classification": {

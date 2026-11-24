@@ -106,6 +106,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { PALETTE_ENTRIES } from '../../frontend/modules/mazeRoom/mazeRoomEditor.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-maze-lab.mjs', kind: 'browser' });
@@ -135,6 +136,9 @@ const { clearItem } = await MAZE('mazeRoomEngine.js');
  * would be asserting against the day it was written.
  */
 const { OVERVIEW } = await import(join(REPO, 'frontend/modules/procgenCore/setEditorCore.js'));
+/** ⛓ (lab-stale-handover) the sentences the mount says once the set changed after REPORT — read, not copied. */
+const { STALE_REPORT_NOTE, STALE_DOOR_TITLE } = await import(
+    join(REPO, 'frontend/modules/procgenCore/setEditorView.js'));
 const { BUNDLE_KINDS } = await import(
     join(REPO, 'frontend/modules/presets/documentBundle.js'));
 /** ⛓ EDITOR v3 E6b — the constant the SET arm's blank-room inputs are SEEDED
@@ -1259,6 +1263,174 @@ try {
             '⛓ …and a PLAIN generated maze has no wires and no error: keys open doors by colour and any block presses '
             + 'any button (rules, not wires), and the note says so', plainNote);
         if (shotsDir) await page.screenshot({ path: join(shotsDir, '5-wires-plain-maze.png'), fullPage: true });
+
+        /* ── CLAIM 26: a converted room links BACK to its Seedling level (maze seedling link) ── */
+        /**
+         * ⛓⛓ The expected level of each subject is read off the committed preset here (its room's
+         * `playable_payload.level`), never asked of the page; the href is compared with the Seedling editor's own URL
+         * grammar (`?source=edit&level=N`) and FOLLOWED in a second tab, whose editor must open that level as an
+         * `atlas` base. ⛔ The link costs no request: the link boot fetches the index and the rules once each (the room
+         * needs both), and a plain maze boot fetches no preset document at all.
+         */
+        const RULES_REL = 'presets/seedling_playthrough_maze/AP_1/AP_1_rules.json';
+        const seedlingHref = (level) => `${base}/frontend/modules/seedlingDemo/watch.html?source=edit&level=${level}`;
+        const lineOf = () => page.evaluate(() => ({
+            hidden: document.getElementById('labSeedlingLine').hidden,
+            open: { hidden: document.getElementById('labSeedlingOpen').hidden,
+                href: document.getElementById('labSeedlingOpen').getAttribute('href'),
+                target: document.getElementById('labSeedlingOpen').target,
+                text: document.getElementById('labSeedlingOpen').textContent },
+            note: document.getElementById('labSeedlingNote').textContent,
+        }));
+        const presetReqs = [];
+        const onReq = (r) => { if (r.url().includes('/frontend/presets/')) presetReqs.push(r.url()); };
+        page.on('request', onReq);
+        const level5 = sidecars[roomKey].playable_payload.level;
+        presetReqs.length = 0;
+        const conv5 = await loadLink(roomKey, `the seedling link of ${roomKey}`);
+        const line5 = await lineOf();
+        const bootReqs = presetReqs.map((u) => u.slice(u.indexOf('/frontend/presets/') + '/frontend/'.length));
+        check(conv5.seedlingLink?.shown === true && conv5.seedlingLink.ok === true && conv5.seedlingLink.level === level5
+            && !line5.hidden && !line5.open.hidden && line5.open.href === seedlingHref(level5)
+            && line5.open.target === '_blank' && line5.open.text.includes(`level ${level5}`),
+            `⛓⛓ CLAIM 26: the converted room ${roomKey} shows "open level ${level5} in the Seedling editor", a NEW-TAB link `
+            + `to watch.html?source=edit&level=${level5} (its own \`playable_payload.level\`)`, json(line5));
+        check(json([...bootReqs].sort()) === json(['presets/preset_files.json', RULES_REL].sort()),
+            '⛓ …and it costs NO extra request: the link boot fetched the preset index and the rules file once each, the '
+            + 'same two documents the room itself needs', json(bootReqs));
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `1-maze-link-to-seedling-${roomKey}.png`), fullPage: true });
+
+        const tab = await browser.newPage();
+        const tabErrors = [];
+        tab.on('pageerror', (e) => tabErrors.push(e.message));
+        /** ⛔ No href = nothing to follow: the row reports it as a FAIL rather than crashing the rest of the run. */
+        let seedEditor = { base: null, baseLine: 'no link to follow' };
+        if (typeof line5.open.href === 'string') {
+            await tab.goto(line5.open.href, { waitUntil: 'domcontentloaded' });
+            await tab.waitForFunction(() => window.__editorEdit?.base, null, { timeout: 120000 })
+                .catch((e) => { throw new Error(`STUCK waiting for the Seedling editor the link opened: ${e.message}`); });
+            seedEditor = await tab.evaluate(() => ({ base: window.__editorEdit.base,
+                baseLine: document.getElementById('editBase')?.textContent ?? '' }));
+        }
+        check(seedEditor.base?.kind === 'atlas' && seedEditor.base.level === level5 && tabErrors.length === 0
+            && new RegExp(`level ${level5}\\b`).test(seedEditor.baseLine),
+            `⛓⛓ …FOLLOWED, the link opens the Seedling editor on vanilla level ${level5} (an \`atlas\` base), and the `
+            + 'editor\'s own base line names that level',
+            `${json(seedEditor.base)} · "${seedEditor.baseLine}" · ${tabErrors.join(' | ')}`);
+        if (shotsDir) await tab.screenshot({ path: join(shotsDir, `2-seedling-editor-level-${level5}.png`), fullPage: true });
+        await tab.close();
+
+        const roomlessLink = await loadLink(roomless, `the seedling link of the room-less ${roomless}`);
+        const roomlessLine = await lineOf();
+        const holderOf = sidecars[holder].playable_payload.level;
+        check(roomlessLink.seedlingLink?.ok === true && roomlessLink.seedlingLink.level === holderOf
+            && roomlessLine.open.href === seedlingHref(holderOf) && roomlessLine.note.includes('has no room of its own')
+            && roomlessLine.note.includes(holder),
+            `⛓ …a ROOM-LESS region (${roomless}) links to its shared world's room ${holder}'s level, ${holderOf}, and `
+            + 'the note says it opens the whole level', roomlessLine.note);
+
+        const byLevel = new Map();
+        for (const [k, s] of Object.entries(sidecars)) {
+            const lv = s.playable_payload?.level;
+            if (Number.isInteger(lv)) byLevel.set(lv, [...(byLevel.get(lv) ?? []), k]);
+        }
+        const [splitLevel, splitRooms] = [...byLevel].find(([, ks]) => ks.length > 1);
+        const splitLines = [];
+        for (const k of splitRooms) {
+            await loadLink(k, `the seedling link of ${k}, one of level ${splitLevel}'s rooms`);
+            splitLines.push(await lineOf());
+        }
+        check(splitLines.every((l) => l.open.href === seedlingHref(splitLevel)
+            && l.note.includes(`split across ${splitRooms.length} maze rooms`)),
+            `⛓ …a level split across several maze rooms (${splitLevel}: ${splitRooms.join(', ')}) — EVERY one links to `
+            + `level ${splitLevel}, and says how many share it`, splitLines.map((l) => l.note).join(' | '));
+
+        await loadLink(roomKey, `the seedling link of ${roomKey}, to edit`);
+        const savedBefore = await page.inputValue('#labText');
+        const floor = conv5.level.tiles.map((t, i) => (t === 0 ? i : -1)).filter((i) => i >= 0);
+        await page.click('#labPalette button[data-type="wall"]');
+        for (const i of floor) {
+            const b = await page.$eval('#canvas', (c) => {
+                const r = c.getBoundingClientRect();
+                return { x: r.x, y: r.y, w: r.width, h: r.height };
+            });
+            const tx = i % conv5.level.width;
+            const ty = Math.floor(i / conv5.level.width);
+            await page.mouse.click(b.x + Math.floor(((tx + 0.5) * b.w) / conv5.level.width),
+                b.y + Math.floor(((ty + 0.5) * b.h) / conv5.level.height));
+            if ((await read()).edits >= 1) break;
+        }
+        await settled(() => window.__mazeLab?.edits === 1, 'one maze edit on the converted room');
+        const edited5 = await read();
+        const editedLine = await lineOf();
+        /** ⛓ MAZE PASTED ROOM LINK — the save box as a person would COPY it, edited (one edit) and not (savedBefore). */
+        const copiedEdited = await page.inputValue('#labText');
+        check(edited5.seedlingLink?.ok === true && editedLine.open.href === seedlingHref(level5)
+            && editedLine.note.includes(`opens the ORIGINAL level ${level5}`) && editedLine.note.includes('1 maze edit(s)')
+            && (await page.inputValue('#labText')) !== savedBefore,
+            `⛓⛓ …an EDITED converted room still links to level ${level5}, and the note says the editor opens the `
+            + 'ORIGINAL and the maze edit is not carried over', editedLine.note);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `3-edited-room-note-${roomKey}.png`), fullPage: true });
+
+        await page.fill('#labText', JSON.stringify(sidecars[roomKey]));
+        await page.evaluate(() => { document.getElementById('status').textContent = ''; });
+        await page.click('#labLoad');
+        await settled(() => /^loaded a /.test(document.getElementById('status')?.textContent ?? ''), 'the pasted sidecar');
+        const pasted = await read();
+        const pastedLine = await lineOf();
+        check(pasted.seedlingLink?.shown === true && pasted.seedlingLink.ok === false && !pastedLine.hidden
+            && pastedLine.open.hidden && pastedLine.open.href === null && pastedLine.note.includes(`level number ${level5}`)
+            && pastedLine.note.includes('open it by preset link'),
+            '⛔ …a BARE pasted converted sidecar shows NO link (it brings no rules and no `converted_from`, so the number '
+            + 'names no map) and the line says why', pastedLine.note);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `4b-pasted-bare-sidecar-reason-${roomKey}.png`), fullPage: true });
+
+        /**
+         * ⛓⛓ MAZE PASTED ROOM LINK (⚖ Robert 2026-11-16) — the maze lab's OWN save box, copied from the link boot above
+         * and pasted into LOAD, names its map (`converted_from`, the map the rules declared), so it links to the same
+         * level. The map is read off the committed rules here, never asked of the page.
+         */
+        const pasteBox = async (text, what) => {
+            await page.fill('#labText', text);
+            await page.evaluate(() => { document.getElementById('status').textContent = ''; });
+            await page.click('#labLoad');
+            await settled(() => /^loaded a /.test(document.getElementById('status')?.textContent ?? ''), what);
+            return { state: await read(), line: await lineOf(), bar: new URL(page.url()).searchParams };
+        };
+        const declaredMap = rules.region_atlas['1'].map_document;
+        const copied = JSON.parse(savedBefore).converted_from ?? null;
+        const copy = await pasteBox(savedBefore, 'the pasted save box of the converted room');
+        check(json(copied) === json({ map_document: declaredMap, level: level5, edits: 0 })
+            && copy.state.seedlingLink?.ok === true && copy.state.seedlingLink.level === level5 && !copy.line.hidden
+            && copy.line.open.href === seedlingHref(level5) && copy.line.open.target === '_blank'
+            && !copy.line.note.includes('ORIGINAL') && !copy.bar.has('preset') && !copy.bar.has('region'),
+            `⛓⛓ CLAIM 26 (paste): the maze lab's own SAVE BOX of ${roomKey}, copied and pasted into LOAD, names its map `
+            + `(\`converted_from\` = ${declaredMap}, level ${level5}) and links to the SAME level as its preset-link boot`,
+            `${json(copied)} · ${json(copy.line)}`);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `5-pasted-save-box-links-${roomKey}.png`), fullPage: true });
+        const copyEd = await pasteBox(copiedEdited, 'the pasted save box of the EDITED converted room');
+        check(JSON.parse(copiedEdited).converted_from?.edits === 1 && copyEd.line.open.href === seedlingHref(level5)
+            && copyEd.line.note.includes(`opens the ORIGINAL level ${level5}`) && copyEd.line.note.includes('1 maze edit(s)'),
+            `⛓ …the save box of the EDITED room pasted: still level ${level5}, and the note says the editor opens the `
+            + 'ORIGINAL (the edit was counted into the copy)', copyEd.line.note);
+
+        presetReqs.length = 0;
+        const errorsBefore = errors.length;
+        const plainBoot = await load('seed=1&count=1&run=1&source=edit', () => window.__mazeLab?.step === 1,
+            'a plain generated maze, for the seedling link');
+        const plainLine = await lineOf();
+        page.off('request', onReq);
+        check(!plainBoot.fatal && json(plainBoot.seedlingLink) === json({ shown: false }) && plainLine.hidden
+            && presetReqs.length === 0 && errors.length === errorsBefore,
+            '⛔ …and a PLAIN generated maze (seed 1) has no link line, no error, and its boot fetched no preset document',
+            `${json(plainBoot.seedlingLink)} · ${presetReqs.length} preset request(s)`);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, '4-plain-maze-no-link.png'), fullPage: true });
+        const plainCopy = await page.inputValue('#labText');
+        const plainPaste = await pasteBox(plainCopy, 'the pasted save box of the plain generated maze');
+        check(!('converted_from' in JSON.parse(plainCopy)) && json(plainPaste.state.seedlingLink) === json({ shown: false })
+            && plainPaste.line.hidden,
+            '⛔ …and the PLAIN maze\'s save box writes no `converted_from`, so its paste shows no link line', json(plainPaste.state.seedlingLink));
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, '6-pasted-generated-no-link.png'), fullPage: true });
     }
 
     /* ── CLAIM 8: the URL round-trips, and its VALUES are asserted ── */
@@ -2030,9 +2202,10 @@ try {
      * as a member and reds three claims at once.
      */
     const paletteCount = await page.$$eval('#labPalette button', (bs) => bs.length);
-    check(paletteCount === 9,
-        '⛔ …and `#labPalette` still enumerates exactly the nine palette entries',
-        String(paletteCount));
+    // ⛓ CONTENT SETS TILE-3 — the count is READ off `PALETTE_ENTRIES` (it was a literal 9 until the TILE KIND entry).
+    check(paletteCount === PALETTE_ENTRIES.length,
+        '⛔ …and `#labPalette` still enumerates exactly the `PALETTE_ENTRIES` rows',
+        `${paletteCount} of ${PALETTE_ENTRIES.length}`);
 
     /* ⛓ THE SUBJECT CELLS, computed from the level's own tiles. */
     const tBusy = new Set([
@@ -3215,6 +3388,88 @@ try {
         `room 1 → ${roomUndo.set.openRoomOps}, library ${stripUndo.set.ops} → `
         + `${roomUndo.set.ops}`);
 
+    /* ── CLAIM 19f: the map marks the rooms the REPORT finds UNREACHABLE ─ */
+    /**
+     * ⛓⛓⛓ **CLAIM 19f — MAZE MAP UNREACHABLE** (slice `maze-map-unreachable`). The maze provider now hands
+     * `setEditorView` the same `unreachableOf` hook Seedling's does (`procgenCore/setMapUnreachable`). The page SETS
+     * ITS OWN STATE: the 3-link CHAIN 0 ↔ 1 ↔ 2 ↔ 3, cut between rooms 1 and 2 with the MAP's own DISCONNECT tool,
+     * so the REPORT names rooms 2 and 3 unreachable. REPORT → those two cells hatched + the legend; an edit (undo,
+     * which reconnects) → `stale`, nothing marked; REPORT again → `current`, nothing marked.
+     * ⛔ MUTANT: the hook removed from `mazeSetMap.createMazeSetMap` → no `unreachable` readout key, no legend → red.
+     */
+    await load(`${setUrl}&setView=map`, () => window.__mazeLab?.set?.mounted === true
+        && window.__mazeLab.set.map?.cells?.length > 0, 'the SET arm on the MAP for unreachable marks');
+    await pasteSet(overlayOf(3), () => window.__mazeLab?.set?.links === 3
+        && window.__mazeLab.set.map?.cells?.length > 0, 'the 3-link CHAIN, on the map');
+    const unreachInk = (cell) => page.evaluate((c) => {
+        const cv = document.getElementById('editSetOverview');
+        const d = cv.getContext('2d').getImageData(c[0], c[1], c[2], c[3]).data;
+        let n = 0;
+        // ⛓ setEditorView's UNREACHABLE_INK is #ff5a5a
+        for (let i = 0; i < d.length; i += 4) if (d[i] > 200 && d[i + 1] < 140 && d[i + 2] < 140) n += 1;
+        return n;
+    }, cell);
+    const m0 = (await read()).set.map;
+    check(m0.unreachableReport === 'none' && json(m0.unreachable) === json([])
+        && (await page.textContent('#editSetMapUnreachable')) === '',
+    '⛓ **CLAIM 19f** — before any REPORT the maze map marks NOTHING and the legend is empty',
+    `${m0.unreachableReport} ${json(m0.unreachable)}`);
+    const inkNone = await unreachInk(m0.cells[3]);
+    // the map's own DISCONNECT tool: two clicks on the link between rooms 1 and 2
+    const clickMapAt = async (x, y) => {
+        const r = await page.evaluate(([px, py]) => {
+            const c = document.getElementById('editSetOverview');
+            const wrap = c.parentNode;
+            wrap.scrollIntoView({ block: 'center' });
+            wrap.scrollLeft = Math.max(0, px - wrap.clientWidth / 2);
+            wrap.scrollTop = Math.max(0, py - wrap.clientHeight / 2);
+            const b = c.getBoundingClientRect();
+            return { left: b.left, top: b.top, sx: b.width / c.width, sy: b.height / c.height };
+        }, [x, y]);
+        await page.mouse.click(r.left + x * r.sx, r.top + y * r.sy);
+    };
+    const midOf = (cells, a, b) => [
+        cells[a][0] + cells[a][2] / 2 + ((cells[b][0] + cells[b][2] / 2) - (cells[a][0] + cells[a][2] / 2)) * 0.5,
+        cells[a][1] + cells[a][3] / 2 + ((cells[b][1] + cells[b][3] / 2) - (cells[a][1] + cells[a][3] / 2)) * 0.5,
+    ];
+    await page.focus('#editSetOverview');
+    await page.keyboard.press('d');
+    await clickMapAt(...midOf(m0.cells, 1, 2));
+    await settled(() => window.__mazeLab?.set?.map?.picked !== null, 'the DISCONNECT pick on the map');
+    await clickMapAt(...midOf(m0.cells, 1, 2));
+    await settled(() => window.__mazeLab?.set?.links === 2, 'the map\'s DISCONNECT (second click)');
+    await page.keyboard.press('Escape');
+    await page.click('#editSetReport');
+    await settled(() => window.__mazeLab?.set?.map?.unreachableReport === 'current', 'REPORT over the cut chain');
+    const m1 = (await read()).set.map;
+    const legend1 = await page.textContent('#editSetMapUnreachable');
+    const inkMarked = await unreachInk(m1.cells[3]);
+    const inkReached = await unreachInk(m1.cells[0]);
+    check(json(m1.unreachable) === json([2, 3]) && m1.unreachableMarks.every((m) => m.partial === false)
+        && /UNREACHABLE.*room\(s\) 2, 3/.test(legend1),
+    '⛓⛓⛓ **CLAIM 19f — REPORT MARKS THE ROOMS IT FINDS UNREACHABLE** — the map\'s own DISCONNECT cut the chain '
+        + 'between rooms 1 and 2, and REPORT\'s rooms 2 and 3 are the marked ones, with the legend naming them',
+    `${json(m1.unreachable)} · ${legend1.slice(0, 120)}`);
+    check(inkMarked > inkNone + 50 && inkReached === 0,
+        '⛓⛓ …and the marks are INK on the canvas: red in room 3\'s cell (none before), none in reachable room 0',
+        `room 3 red px ${inkNone} → ${inkMarked}; room 0 ${inkReached}`);
+    await page.focus('#editSetOverview');
+    await page.keyboard.press('Control+z');
+    await settled(() => window.__mazeLab?.set?.links === 3
+        && window.__mazeLab.set.map?.unreachableReport === 'stale', 'the UNDO to make the REPORT stale');
+    const m2 = (await read()).set.map;
+    check(json(m2.unreachable) === json([]) && (await unreachInk(m2.cells[3])) === 0
+        && /changed since the last REPORT/.test(await page.textContent('#editSetMapUnreachable')),
+    '⛓⛓ **CLAIM 19f — AN EDIT MAKES THE MARKS STALE** — after the undo (which reconnects) nothing is marked and '
+        + 'the legend says to run REPORT again', m2.unreachableReport);
+    await page.click('#editSetReport');
+    await settled(() => window.__mazeLab?.set?.map?.unreachableReport === 'current', 'REPORT over the whole chain');
+    const m3 = (await read()).set.map;
+    check(json(m3.unreachable) === json([]) && (await unreachInk(m3.cells[3])) === 0
+        && /no unreachable room/.test(await page.textContent('#editSetMapUnreachable')),
+    '⛓⛓ **CLAIM 19f — RECONNECTED, REPORT MARKS NOTHING** — the chain closes and the legend says so',
+    `${m3.unreachableReport} ${json(m3.unreachable)}`);
+
     /* ── CLAIM 19e: ADD ROOM, and the one authority on a size ────────── */
     /**
      * ⛓⛓⛓ **CLAIM 19e — THE MAZE ARM MINTS A BLANK ROOM** (EDITOR v3 E6b).
@@ -3484,6 +3739,57 @@ try {
         + `⛔ Before E2c's first commit this press refused the maze's own PRIMARY document by `
         + `name, quoting a roster of ${BUNDLE_KINDS.length - 1}`,
         `${json(bundle.kinds)} · ${bundle.bytes} B`);
+
+    /**
+     * ⛓⛓⛓ lab-stale-handover (⚖ Robert 2026-11-20, *"Fix stale hand-over"*) — **REPORT, EDIT, TAKE THE DOOR: THE
+     * rules.json CARRIES THE EDIT.** The ring was just REPORTed and downloaded. One exit of room 0 gains a rule
+     * through the page's own rule form (a set op), and `rules.json` is pressed WITHOUT pressing REPORT. Before this
+     * slice the door read the never-invalidated last REPORT and wrote the pre-edit bytes again.
+     * ⛔ MUTANT: the doors read `lastReport ?? runReport()` again — `staleDoor` equals `staleBeforeBytes` and the
+     * second claim below reds.
+     */
+    const staleBeforeBytes = await page.evaluate(() => window.__editorSetRulesBytes ?? null);
+    const staleOpsBefore = (await read()).set.ops;
+    const STALE_RULE = { rule: 'Has', args: { item_name: 'lab-stale-handover-key' } };
+    await page.selectOption('#editSetRoom', '0');
+    /** ⛓ an exit the RING links (`RING_LINKS`), so the compiler builds an AP exit for it and the rule gates it. */
+    const staleTarget = await page.evaluate((want) => [...(document.getElementById('editSetRuleTarget')?.options ?? [])]
+        .map((o) => o.value).find((v) => v === want) ?? null, `exit:${RING_LINKS.find((l) => l.from[0] === 0).from[1]}`);
+    await page.selectOption('#editSetRuleTarget', staleTarget);
+    await page.fill('#editSetRuleJson', json(STALE_RULE));
+    await page.dispatchEvent('#editSetRuleJson', 'input');
+    await page.click('#editSetRuleCommit');
+    await settled((n) => window.__mazeLab?.set?.ops === n + 1, 'the rule commit to land as ONE set op',
+        staleOpsBefore).catch(async (e) => {
+        throw new Error(`${e.message} · target ${staleTarget} · rule note ${await page.textContent('#editSetRuleErrors')}`
+            + ` · set note ${await page.textContent('#editSetNote')} · options ${json(await page.evaluate(() => [
+                ...(document.getElementById('editSetRuleTarget')?.options ?? [])].map((o) => o.value)))}`);
+    });
+    const staleNow = await page.evaluate(() => ({
+        note: document.getElementById('editSetReportNote')?.textContent ?? null,
+        rulesDisabled: document.getElementById('editDownloadRules')?.disabled ?? null,
+        rulesTitle: document.getElementById('editDownloadRules')?.title ?? null,
+    }));
+    check(staleTarget !== null && staleNow.note === STALE_REPORT_NOTE
+        && staleNow.rulesDisabled === false && staleNow.rulesTitle === STALE_DOOR_TITLE,
+        '⛓⛓ **lab-stale-handover — AFTER AN EDIT THE REPORT SAYS IT IS OUT OF DATE** — a rule on room 0\'s '
+        + `\`${staleTarget}\`, and the REPORT note says its rows describe the EARLIER set; the rules button is open `
+        + 'with the sentence that a press runs REPORT again on the current set first',
+        json(staleNow.note));
+    await pressDownload('#editDownloadRules', '__editorSetRulesPresses', { settleOn: '__editorSetRulesBytes' });
+    const staleDoor = await page.evaluate(() => window.__editorSetRulesBytes ?? null);
+    await page.click('#editSetReport');
+    await settled((stale) => document.getElementById('editSetReportNote')?.textContent !== stale,
+        'the fresh REPORT to replace the out-of-date note', STALE_REPORT_NOTE);
+    await pressDownload('#editDownloadRules', '__editorSetRulesPresses', { settleOn: '__editorSetRulesBytes' });
+    const staleFresh = await page.evaluate(() => window.__editorSetRulesBytes ?? null);
+    check(typeof staleDoor === 'string' && staleDoor !== staleBeforeBytes
+        && staleDoor.includes('lab-stale-handover-key') && !(staleBeforeBytes ?? '').includes('lab-stale-handover-key')
+        && staleDoor === staleFresh,
+        '⛓⛓⛓ **lab-stale-handover — THE rules.json TAKEN AFTER THE EDIT CARRIES THE EDIT** — its bytes name the '
+        + 'new rule\'s item, differ from the pre-edit download, and equal what a fresh REPORT then writes. ⛔ Before '
+        + 'this slice the door wrote the last REPORT\'s bytes again',
+        `${(staleBeforeBytes ?? '').length} B → door ${(staleDoor ?? '').length} B · fresh ${(staleFresh ?? '').length} B`);
 
 
     /* ══════════════════════════════════════════════════════════════════

@@ -349,6 +349,35 @@ export class CostDataManager {
   }
 
   /**
+   * The region's STATED price for a named custom action
+   * (`regions[<region>].actions[<actionName>]`), or null when it states none.
+   * ActionNodes' compiler writes `actions.act` on every node; the named-action
+   * table (`shared/procgen/loopCustomActions.js`) reads it.
+   *
+   * @param {string} regionName
+   * @param {string} actionName
+   * @returns {number|null}
+   */
+  getRegionActionCost(regionName, actionName) {
+    const v = this.costData?.regions?.[regionName]?.actions?.[actionName];
+    return typeof v === 'number' && Number.isFinite(v) ? v : null;
+  }
+
+  /**
+   * The region's XP GAIN scale (`regions[<region>].xpGainScale`, design §8):
+   * region XP earned there is multiplied by it. Default 1 — the long-standing
+   * 1 XP : 1 mana — when no cost data is loaded or the region states none or a
+   * non-finite / negative value.
+   *
+   * @param {string} regionName
+   * @returns {number}
+   */
+  getRegionXpGainScale(regionName) {
+    const v = this.costData?.regions?.[regionName]?.xpGainScale;
+    return typeof v === 'number' && Number.isFinite(v) && v >= 0 ? v : 1;
+  }
+
+  /**
    * Get cost for a location
    * @param {string} locationName - Name of the location
    * @returns {number} Cost for checking the location

@@ -22,6 +22,8 @@
  *        -> 'a re-boot while the worker thinks …' reds
  *   m4 no retry after a decline
  *        -> 'decline → retry → SOLVED on the L6 W=71 leg' reds
+ *   f3 (FALLBACK HONESTY) the decline cut to its first line again (`jsRuntimeSolver.take`)
+ *        -> 'a refusal the worker answered is the decline said, WHOLE' reds
  */
 import { afterEach, describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -240,11 +242,22 @@ describe('jsRuntimeSolveService — the budget, the retry, and no stale plan', (
     }, 60000);
 
     it('decline → retry → SOLVED on the L6 W=71 leg (each retry named)', async () => {
-        const { service } = workerService();
+        const { service: real } = workerService();
         // ⛓ W=71, not §1.6's W=60: swim R4 (the i-frame preview carries facing +
         // recovery) made the solver SOLVE from W=60. Swept at R4 (W 0–240): W=71
         // is the danger-map decline this row needs. (W=70 declines on a solver
         // stack overflow — reported to the swim arc; not a witness.)
+        // ⛓ FALLBACK HONESTY (R1) — that real decline names a PRICED DANGER, which now FAILS the goal at once
+        // (`jsRuntimeSolver.test.js`'s L6 W=71 row). The retry policy is for every OTHER decline, so the FIRST answer
+        // here is the same refusal with no obstacle (a deadline's shape); every later solve is the real worker's.
+        let asks = 0;
+        const service = { kind: real.kind, warm: (...a) => real.warm?.(...a), dispose: () => real.dispose(),
+            start(request, opts) {
+                asks += 1;
+                if (asks > 1) return real.start(request, opts);
+                return { settled: true, started: true, provisional: null, answered: 0, passes: [], cancel() {},
+                    result: { ok: false, kind: 'refusal', message: 'solverBot(js-runtime-L6-exit) reach-exit (224,32)->L7: the danger map forbids it (no obstacle named)' } };
+            } };
         const rt = midRoom({ ...WITNESSES[0], walkTicks: 71, solveService: service });
         rt.playback.setSolverWalk(true);
         const out = await settleAsync(rt);
@@ -269,8 +282,10 @@ describe('jsRuntimeSolveService — the budget, the retry, and no stale plan', (
         const firstRun = rt.run;
         rt.tick();
         expect(rt.playback.solving).toBe(true);
-        // A host item flag lands mid-solve: the core re-boots the room on the next tick (the hold drains the queue).
-        rt.queueItems([{ class: 'Main', property: 'hasFeather', value: true }]);
+        // A re-boot lands mid-solve: the core re-boots the room on the next tick (the hold drains the queue).
+        // ⛓ seedling-js-item-live-delivery — restated from "a host item flag lands mid-solve": an item is written into
+        // the live run now and re-boots nothing; the RE2 restore is the one reboot in place left.
+        expect(rt.restoreSave(rt.exportSave())).toEqual({ ok: true });
         const out = await settleAsync(rt);
         const s = rt.playback.solverStats;
         expect(rt.run).not.toBe(firstRun);
@@ -473,12 +488,13 @@ describe('⛓ ANYTIME — the worker posts each pass; the page plays the provisi
         expect(made[0].cancelled).toBe(true);
     }, 120000);
 
-    it('a refusal the worker answered is the decline said, by its first line', async () => {
+    it('a refusal the worker answered is the decline said, WHOLE (every line reaches the status)', async () => {
         const declined = { ok: false, kind: 'refusal', pass: 'dashless', message: 'the danger map forbids it\nsecond line' };
         const rt = midRoom({ ...WITNESSES[0], walkTicks: 150, solveService: settledWith(() => declined) });
         rt.playback.setSolverWalk(true);
         for (let i = 0; i < 50 && rt.playback.solverStats.declines === 0; i += 1) { rt.tick(); await sleep(2); }
-        expect(rt.playback.solverStats.lastDecline).toBe('the danger map forbids it');
+        expect(rt.playback.solverStats.lastDecline).toBe('the danger map forbids it\nsecond line');
+        expect(rt.playback.reason).toBe('the solver declined — the danger map forbids it\nsecond line; walking instead');
     }, 120000);
 
     it('⛓ DETERMINISTIC BUDGET — the page sends its WORK budget and upgrade window with every solve (`?solverUpgradeWindowWork=` / the setting); 0 / null = the budget', async () => {

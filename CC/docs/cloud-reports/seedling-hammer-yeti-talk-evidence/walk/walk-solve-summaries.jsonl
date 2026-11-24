@@ -1,0 +1,134 @@
+{"id":1,"name":"wasm-continue-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":326,"ok":true,"kind":null,"work":12,"message":null}
+{"id":2,"name":"wasm-exit-2","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":420,"ok":true,"kind":null,"work":4,"message":null}
+{"id":3,"name":"wasm-exit-3","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":497,"ok":true,"kind":null,"work":16,"message":null}
+{"id":4,"name":"wasm-exit-4","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":256,"ok":true,"kind":null,"work":23,"message":null}
+{"id":5,"name":"wasm-exit-5","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":520,"ok":true,"kind":null,"work":22,"message":null}
+{"id":6,"name":"wasm-exit-6","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":415,"ok":true,"kind":null,"work":15,"message":null}
+{"id":7,"name":"wasm-exit-7","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":334,"ok":true,"kind":null,"work":10,"message":null}
+{"id":8,"name":"wasm-exit-8","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":217,"ok":true,"kind":null,"work":64,"message":null}
+{"id":9,"name":"wasm-exit-9","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":400,"ok":true,"kind":null,"work":8,"message":null}
+{"id":10,"name":"wasm-location-10","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":249,"ok":true,"kind":null,"work":4,"message":null}
+{"id":11,"name":"wasm-continue-exit-10","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":566,"ok":true,"kind":null,"work":9,"message":null}
+{"id":12,"name":"wasm-location-11","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":257,"ok":true,"kind":null,"work":9,"message":null}
+{"id":13,"name":"wasm-continue-exit-11","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":458,"ok":true,"kind":null,"work":16,"message":null}
+{"id":14,"name":"wasm-exit-3","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":224,"ok":true,"kind":null,"work":58,"message":null}
+{"id":15,"name":"wasm-exit-2","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":332,"ok":true,"kind":null,"work":24,"message":null}
+{"id":16,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":175,"ok":true,"kind":null,"work":84,"message":null}
+{"id":17,"name":"wasm-location-86","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":81,"ok":true,"kind":null,"work":24,"message":null}
+{"id":18,"name":"wasm-continue-exit-86","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":400,"ok":true,"kind":null,"work":12,"message":null}
+{"id":19,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":222,"ok":true,"kind":null,"work":122,"message":null}
+{"id":20,"name":"wasm-exit-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1083,"ok":true,"kind":null,"work":152,"message":null}
+{"id":21,"name":"wasm-location-36","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":489,"ok":true,"kind":null,"work":42,"message":null}
+{"id":22,"name":"wasm-continue-exit-36","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":449,"ok":true,"kind":null,"work":66,"message":null}
+{"id":23,"name":"wasm-exit-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1527,"ok":true,"kind":null,"work":149,"message":null}
+{"id":24,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":760,"ok":true,"kind":null,"work":126,"message":null}
+{"id":25,"name":"wasm-exit-13","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":209,"ok":true,"kind":null,"work":20,"message":null}
+{"id":26,"name":"wasm-exit-14","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":927,"ok":true,"kind":null,"work":99,"message":null}
+{"id":27,"name":"wasm-exit-15","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":313,"ok":true,"kind":null,"work":321,"message":null}
+{"id":28,"name":"wasm-location-16","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":914,"ok":true,"kind":null,"work":63,"message":null}
+{"id":29,"name":"wasm-continue-exit-16","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":783,"ok":true,"kind":null,"work":84,"message":null}
+{"id":30,"name":"wasm-location-17","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":71,"ok":true,"kind":null,"work":9,"message":null}
+{"id":31,"name":"wasm-continue-exit-17","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":213,"ok":true,"kind":null,"work":44,"message":null}
+{"id":32,"name":"wasm-exit-16","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1235,"ok":true,"kind":null,"work":318,"message":null}
+{"id":33,"name":"wasm-exit-18","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":2380,"ok":true,"kind":null,"work":76,"message":null}
+{"id":34,"name":"wasm-location-19","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":296,"ok":true,"kind":null,"work":133,"message":null}
+{"id":35,"name":"wasm-continue-location-19","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":272,"ok":true,"kind":null,"work":38,"message":null}
+{"id":36,"name":"wasm-continue-exit-19","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":338,"ok":true,"kind":null,"work":113,"message":null}
+{"id":37,"name":"wasm-location-20","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":488,"ok":true,"kind":null,"work":43,"message":null}
+{"id":38,"name":"wasm-continue-location-20","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":433,"ok":true,"kind":null,"work":53,"message":null}
+{"id":39,"name":"wasm-continue-exit-20","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":347,"ok":false,"kind":"refusal","work":2,"message":"solverBot(wasm-continue-exit-20): no corridor for goal reach-exit toward (24,56) in level 20. Obstacle: proximity-hazard:shieldlocknorm (shieldlocknorm@176,16). No strategy row exists for this obstacle. Planner said: no walkable tile path in level 20 from tile (12,1) to (1,3). The two are in differe"}
+{"id":40,"name":"wasm-exit-20","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":522,"ok":true,"kind":null,"work":132,"message":null}
+{"id":41,"name":"wasm-exit-13","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":518,"ok":true,"kind":null,"work":52,"message":null}
+{"id":42,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":730,"ok":true,"kind":null,"work":124,"message":null}
+{"id":43,"name":"wasm-exit-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":4057,"ok":true,"kind":null,"work":641,"message":null}
+{"id":44,"name":"wasm-exit-21","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":262,"ok":true,"kind":null,"work":16,"message":null}
+{"id":45,"name":"wasm-exit-22","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":596,"ok":true,"kind":null,"work":63,"message":null}
+{"id":46,"name":"wasm-location-25","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":443,"ok":true,"kind":null,"work":24,"message":null}
+{"id":47,"name":"wasm-continue-exit-25","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":466,"ok":true,"kind":null,"work":24,"message":null}
+{"id":48,"name":"wasm-exit-22","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":663,"ok":true,"kind":null,"work":101,"message":null}
+{"id":49,"name":"wasm-location-29","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":280,"ok":true,"kind":null,"work":100,"message":null}
+{"id":50,"name":"wasm-continue-exit-29","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":130,"ok":true,"kind":null,"work":37,"message":null}
+{"id":51,"name":"wasm-exit-31","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":740,"ok":true,"kind":null,"work":154,"message":null}
+{"id":52,"name":"wasm-location-30","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":552,"ok":true,"kind":null,"work":184,"message":null}
+{"id":53,"name":"wasm-continue-exit-30","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":556,"ok":true,"kind":null,"work":82,"message":null}
+{"id":54,"name":"wasm-location-32","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":11482,"ok":true,"kind":null,"work":50,"message":null}
+{"id":55,"name":"wasm-continue-exit-32","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":447,"ok":true,"kind":null,"work":73,"message":null}
+{"id":56,"name":"wasm-exit-30","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1419,"ok":true,"kind":null,"work":365,"message":null}
+{"id":57,"name":"wasm-exit-22","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":340,"ok":true,"kind":null,"work":91,"message":null}
+{"id":58,"name":"wasm-exit-21","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":196,"ok":true,"kind":null,"work":16,"message":null}
+{"id":59,"name":"wasm-exit-23","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":135,"ok":true,"kind":null,"work":9,"message":null}
+{"id":60,"name":"wasm-exit-24","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":355,"ok":true,"kind":null,"work":72,"message":null}
+{"id":61,"name":"wasm-location-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":6637,"ok":true,"kind":null,"work":642,"message":null}
+{"id":62,"name":"wasm-continue-exit-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":2293,"ok":true,"kind":null,"work":273,"message":null}
+{"id":63,"name":"wasm-exit-37","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":424,"ok":true,"kind":null,"work":148,"message":null}
+{"id":64,"name":"wasm-location-38","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":576,"ok":true,"kind":null,"work":152,"message":null}
+{"id":65,"name":"wasm-continue-exit-38","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":327,"ok":false,"kind":"refusal","work":11,"message":"solverBot(wasm-continue-exit-38) reach-exit (144,304)->L37 -> hold: every responder in group t=2 [cover@208,224] is ALREADY OPEN before the hold begins, so holding the button proves nothing about it. A hold that changes nothing is a check that cannot fail."}
+{"id":66,"name":"wasm-exit-38","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1022,"ok":true,"kind":null,"work":9,"message":null}
+{"id":67,"name":"wasm-exit-37","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":494,"ok":true,"kind":null,"work":140,"message":null}
+{"id":68,"name":"wasm-exit-44","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":467,"ok":true,"kind":null,"work":100,"message":null}
+{"id":69,"name":"wasm-exit-45","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":960,"ok":true,"kind":null,"work":125,"message":null}
+{"id":70,"name":"wasm-exit-46","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":343,"ok":true,"kind":null,"work":132,"message":null}
+{"id":71,"name":"wasm-exit-47","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":508,"ok":true,"kind":null,"work":128,"message":null}
+{"id":72,"name":"wasm-exit-48","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1097,"ok":false,"kind":"refusal","work":642,"message":"solverBot(wasm-exit-48): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-48) reach-pit (11,3)->L49's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `should"}
+{"id":73,"name":"wasm-exit-48","budget":2560,"attempt":{"retry":1,"budgets":[640,2560]},"ms":2036,"ok":true,"kind":null,"work":1384,"message":null}
+{"id":74,"name":"wasm-location-49","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":387,"ok":true,"kind":null,"work":98,"message":null}
+{"id":75,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":124,"ok":true,"kind":null,"work":24,"message":null}
+{"id":76,"name":"wasm-exit-13","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":195,"ok":true,"kind":null,"work":20,"message":null}
+{"id":77,"name":"wasm-exit-14","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":857,"ok":true,"kind":null,"work":56,"message":null}
+{"id":78,"name":"wasm-location-15","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":684,"ok":true,"kind":null,"work":110,"message":null}
+{"id":79,"name":"wasm-continue-exit-15","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":572,"ok":true,"kind":null,"work":109,"message":null}
+{"id":80,"name":"wasm-exit-14","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":473,"ok":true,"kind":null,"work":39,"message":null}
+{"id":81,"name":"wasm-exit-13","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":308,"ok":true,"kind":null,"work":52,"message":null}
+{"id":82,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":581,"ok":true,"kind":null,"work":121,"message":null}
+{"id":83,"name":"wasm-exit-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1315,"ok":true,"kind":null,"work":191,"message":null}
+{"id":84,"name":"wasm-exit-37","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":674,"ok":true,"kind":null,"work":134,"message":null}
+{"id":85,"name":"wasm-location-38","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":599,"ok":true,"kind":null,"work":88,"message":null}
+{"id":86,"name":"wasm-continue-exit-38","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":135,"ok":true,"kind":null,"work":43,"message":null}
+{"id":87,"name":"wasm-location-39","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":2336,"ok":true,"kind":null,"work":641,"message":null}
+{"id":88,"name":"wasm-continue-exit-39","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1108,"ok":true,"kind":null,"work":40,"message":null}
+{"id":89,"name":"wasm-location-40","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":4975,"ok":false,"kind":"refusal","work":644,"message":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the calle"}
+{"id":90,"name":"wasm-location-40","budget":2560,"attempt":{"retry":1,"budgets":[640,2560]},"ms":16014,"ok":false,"kind":"refusal","work":2562,"message":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the calle"}
+{"id":91,"name":"wasm-location-40","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":7893,"ok":false,"kind":"refusal","work":644,"message":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the calle"}
+{"id":92,"name":"wasm-location-40","budget":2560,"attempt":{"retry":1,"budgets":[640,2560]},"ms":17631,"ok":true,"kind":null,"work":1459,"message":null}
+{"id":93,"name":"wasm-continue-location-40","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":4018,"ok":false,"kind":"refusal","work":136,"message":"solverBot(wasm-continue-location-40) apitem (160,640) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (576.1,679.2) — spinner:spinner@816,848 (a live Spinner BODY at (571.6,682.8) at horizon 463 — `Enemy.hitPlayer`'s 7x7 `collide(\"Player\", x, y)` at force 3) — and ever"}
+{"id":94,"name":"wasm-location-40","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":499,"ok":true,"kind":null,"work":65,"message":null}
+{"id":95,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":783,"ok":true,"kind":null,"work":118,"message":null}
+{"id":96,"name":"wasm-exit-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":835,"ok":true,"kind":null,"work":191,"message":null}
+{"id":97,"name":"wasm-exit-37","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":368,"ok":true,"kind":null,"work":17,"message":null}
+{"id":98,"name":"wasm-exit-44","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":458,"ok":true,"kind":null,"work":105,"message":null}
+{"id":99,"name":"wasm-exit-45","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":864,"ok":true,"kind":null,"work":134,"message":null}
+{"id":100,"name":"wasm-location-46","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":503,"ok":true,"kind":null,"work":142,"message":null}
+{"id":101,"name":"wasm-continue-exit-46","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":391,"ok":true,"kind":null,"work":140,"message":null}
+{"id":102,"name":"wasm-exit-47","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":498,"ok":true,"kind":null,"work":126,"message":null}
+{"id":103,"name":"wasm-location-48","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":353,"ok":true,"kind":null,"work":115,"message":null}
+{"id":104,"name":"wasm-continue-exit-48","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":235,"ok":true,"kind":null,"work":112,"message":null}
+{"id":105,"name":"wasm-exit-49","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":571,"ok":true,"kind":null,"work":98,"message":null}
+{"id":106,"name":"wasm-exit-50","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":870,"ok":true,"kind":null,"work":174,"message":null}
+{"id":107,"name":"wasm-exit-50","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":552,"ok":true,"kind":null,"work":174,"message":null}
+{"id":108,"name":"wasm-exit-51","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":229,"ok":true,"kind":null,"work":106,"message":null}
+{"id":109,"name":"wasm-exit-51","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":423,"ok":true,"kind":null,"work":106,"message":null}
+{"id":110,"name":"wasm-exit-53","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1692,"ok":false,"kind":"refusal","work":643,"message":"solverBot(wasm-exit-53): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-53) reach-exit (144,240)->L54's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `sh"}
+{"id":111,"name":"wasm-exit-53","budget":2560,"attempt":{"retry":1,"budgets":[640,2560]},"ms":1766,"ok":true,"kind":null,"work":841,"message":null}
+{"id":112,"name":"wasm-exit-54","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1494,"ok":true,"kind":null,"work":142,"message":null}
+{"id":113,"name":"wasm-exit-52","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":462,"ok":true,"kind":null,"work":118,"message":null}
+{"id":114,"name":"wasm-exit-52","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":192,"ok":true,"kind":null,"work":118,"message":null}
+{"id":115,"name":"wasm-location-55","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":278,"ok":true,"kind":null,"work":94,"message":null}
+{"id":117,"name":"wasm-continue-exit-55","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":246,"ok":true,"kind":null,"work":40,"message":null}
+{"id":116,"name":"wasm-continue-exit-55","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":358,"ok":true,"kind":null,"work":40,"message":null}
+{"id":118,"name":"wasm-exit-52","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":532,"ok":true,"kind":null,"work":146,"message":null}
+{"id":119,"name":"wasm-exit-56","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":688,"ok":true,"kind":null,"work":126,"message":null}
+{"id":120,"name":"wasm-exit-57","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":2169,"ok":true,"kind":null,"work":162,"message":null}
+{"id":121,"name":"wasm-continue-exit-57","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":661,"ok":true,"kind":null,"work":106,"message":null}
+{"id":122,"name":"wasm-location-58","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":132,"ok":true,"kind":null,"work":100,"message":null}
+{"id":123,"name":"wasm-continue-exit-58","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":100,"ok":false,"kind":"refusal","work":110,"message":"solverBot(wasm-continue-exit-58) reach-exit (80,16)->L46: the re-planned corridor failed too — solverBot(wasm-continue-exit-58) reach-exit (80,16)->L46 waypoint 1 (72,56): not reached within 400 ticks; stalled at (56.85,55.9499999999999) v=(1.0500000000000023,0) in level 58, aiming at (72,56), after"}
+{"id":124,"name":"wasm-exit-58","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":462,"ok":true,"kind":null,"work":102,"message":null}
+{"id":125,"name":"wasm-exit-46","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":364,"ok":true,"kind":null,"work":130,"message":null}
+{"id":126,"name":"wasm-exit-45","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":495,"ok":true,"kind":null,"work":134,"message":null}
+{"id":127,"name":"wasm-exit-44","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":388,"ok":true,"kind":null,"work":40,"message":null}
+{"id":128,"name":"wasm-exit-87","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1000,"ok":true,"kind":null,"work":170,"message":null}
+{"id":129,"name":"wasm-exit-92","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":956,"ok":true,"kind":null,"work":145,"message":null}
+{"id":130,"name":"wasm-exit-91","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":396,"ok":false,"kind":"refusal","work":20,"message":"solverBot(wasm-exit-91) reach-exit (16,144)->L89: the combat ladder is EXHAUSTED. The corridor passes through danger at (78.6,87.2) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when the player is in its run range with a cle"}
+{"id":131,"name":"wasm-exit-91","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":384,"ok":false,"kind":"refusal","work":20,"message":"solverBot(wasm-exit-91) reach-exit (16,144)->L89: the combat ladder is EXHAUSTED. The corridor passes through danger at (78.6,87.2) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when the player is in its run range with a cle"}
+{"id":132,"name":"wasm-exit-91","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":364,"ok":false,"kind":"refusal","work":20,"message":"solverBot(wasm-exit-91) reach-exit (16,144)->L89: the combat ladder is EXHAUSTED. The corridor passes through danger at (78.6,87.2) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when the player is in its run range with a cle"}
+{"id":133,"name":"wasm-exit-91","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":437,"ok":false,"kind":"refusal","work":20,"message":"solverBot(wasm-exit-91) reach-exit (16,144)->L89: the combat ladder is EXHAUSTED. The corridor passes through danger at (78.6,87.2) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when the player is in its run range with a cle"}
+{"id":134,"name":"wasm-exit-91","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":353,"ok":false,"kind":"refusal","work":20,"message":"solverBot(wasm-exit-91) reach-exit (16,144)->L89: the combat ladder is EXHAUSTED. The corridor passes through danger at (78.6,87.2) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when the player is in its run range with a cle"}

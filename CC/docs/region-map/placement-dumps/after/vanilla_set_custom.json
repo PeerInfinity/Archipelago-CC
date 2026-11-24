@@ -1,0 +1,3180 @@
+{
+  "crossLength": 1045.51,
+  "crossLinks": 144,
+  "groupCount": 43,
+  "groups": [
+    {
+      "bbox": {
+        "maxX": 3,
+        "maxY": 1,
+        "minX": -3,
+        "minY": -5
+      },
+      "members": [
+        "level_0",
+        "level_12",
+        "level_37",
+        "level_38",
+        "level_39",
+        "level_40",
+        "level_41",
+        "level_42",
+        "level_44",
+        "level_45",
+        "level_46",
+        "level_47",
+        "level_59",
+        "level_60",
+        "level_61",
+        "level_62",
+        "level_63",
+        "level_65",
+        "level_66",
+        "level_67",
+        "level_87",
+        "level_88",
+        "level_89",
+        "level_90",
+        "level_91",
+        "level_93",
+        "level_94",
+        "level_95"
+      ],
+      "placedBy": "start",
+      "root": "level_0"
+    },
+    {
+      "bbox": {
+        "maxX": 5,
+        "maxY": 0,
+        "minX": 5,
+        "minY": 0
+      },
+      "members": [
+        "level_1"
+      ],
+      "placedBy": "warp",
+      "root": "level_1"
+    },
+    {
+      "bbox": {
+        "maxX": 1,
+        "maxY": 5,
+        "minX": -1,
+        "minY": 3
+      },
+      "members": [
+        "level_2",
+        "level_3",
+        "level_4",
+        "level_11",
+        "level_111"
+      ],
+      "placedBy": "below",
+      "root": "level_2"
+    },
+    {
+      "bbox": {
+        "maxX": 1,
+        "maxY": 8,
+        "minX": 1,
+        "minY": 7
+      },
+      "members": [
+        "level_5",
+        "level_6"
+      ],
+      "placedBy": "below",
+      "root": "level_5"
+    },
+    {
+      "bbox": {
+        "maxX": -3,
+        "maxY": 5,
+        "minX": -3,
+        "minY": 5
+      },
+      "members": [
+        "level_7"
+      ],
+      "placedBy": "source",
+      "root": "level_7"
+    },
+    {
+      "bbox": {
+        "maxX": 4,
+        "maxY": 8,
+        "minX": 3,
+        "minY": 7
+      },
+      "members": [
+        "level_8",
+        "level_9",
+        "level_10"
+      ],
+      "placedBy": "below",
+      "root": "level_8"
+    },
+    {
+      "bbox": {
+        "maxX": 3,
+        "maxY": 3,
+        "minX": 3,
+        "minY": 3
+      },
+      "members": [
+        "level_13"
+      ],
+      "placedBy": "below",
+      "root": "level_13"
+    },
+    {
+      "bbox": {
+        "maxX": 3,
+        "maxY": 5,
+        "minX": 3,
+        "minY": 5
+      },
+      "members": [
+        "level_14"
+      ],
+      "placedBy": "below",
+      "root": "level_14"
+    },
+    {
+      "bbox": {
+        "maxX": 6,
+        "maxY": 7,
+        "minX": 6,
+        "minY": 7
+      },
+      "members": [
+        "level_15"
+      ],
+      "placedBy": "below",
+      "root": "level_15"
+    },
+    {
+      "bbox": {
+        "maxX": 6,
+        "maxY": 9,
+        "minX": 6,
+        "minY": 9
+      },
+      "members": [
+        "level_16"
+      ],
+      "placedBy": "below",
+      "root": "level_16"
+    },
+    {
+      "bbox": {
+        "maxX": 6,
+        "maxY": 11,
+        "minX": 6,
+        "minY": 11
+      },
+      "members": [
+        "level_17"
+      ],
+      "placedBy": "below",
+      "root": "level_17"
+    },
+    {
+      "bbox": {
+        "maxX": 10,
+        "maxY": 7,
+        "minX": 9,
+        "minY": 7
+      },
+      "members": [
+        "level_18",
+        "level_19"
+      ],
+      "placedBy": "below",
+      "root": "level_19"
+    },
+    {
+      "bbox": {
+        "maxX": 10,
+        "maxY": 5,
+        "minX": 10,
+        "minY": 5
+      },
+      "members": [
+        "level_20"
+      ],
+      "placedBy": "below",
+      "root": "level_20"
+    },
+    {
+      "bbox": {
+        "maxX": 8,
+        "maxY": 5,
+        "minX": 5,
+        "minY": 3
+      },
+      "members": [
+        "level_21",
+        "level_22",
+        "level_23",
+        "level_25",
+        "level_26",
+        "level_27",
+        "level_28",
+        "level_29",
+        "level_30"
+      ],
+      "placedBy": "below",
+      "root": "level_21"
+    },
+    {
+      "bbox": {
+        "maxX": 11,
+        "maxY": 1,
+        "minX": 11,
+        "minY": 1
+      },
+      "members": [
+        "level_24"
+      ],
+      "placedBy": "source",
+      "root": "level_24"
+    },
+    {
+      "bbox": {
+        "maxX": 12,
+        "maxY": 7,
+        "minX": 12,
+        "minY": 7
+      },
+      "members": [
+        "level_31"
+      ],
+      "placedBy": "below",
+      "root": "level_31"
+    },
+    {
+      "bbox": {
+        "maxX": 7,
+        "maxY": -4,
+        "minX": 7,
+        "minY": -4
+      },
+      "members": [
+        "level_32"
+      ],
+      "placedBy": "source",
+      "root": "level_32"
+    },
+    {
+      "bbox": {
+        "maxX": 7,
+        "maxY": 0,
+        "minX": 7,
+        "minY": 0
+      },
+      "members": [
+        "level_33"
+      ],
+      "placedBy": "warp",
+      "root": "level_33"
+    },
+    {
+      "bbox": {
+        "maxX": -5,
+        "maxY": 0,
+        "minX": -5,
+        "minY": 0
+      },
+      "members": [
+        "level_34"
+      ],
+      "placedBy": "warp",
+      "root": "level_34"
+    },
+    {
+      "bbox": {
+        "maxX": 9,
+        "maxY": 0,
+        "minX": 9,
+        "minY": 0
+      },
+      "members": [
+        "level_35"
+      ],
+      "placedBy": "warp",
+      "root": "level_35"
+    },
+    {
+      "bbox": {
+        "maxX": -7,
+        "maxY": 0,
+        "minX": -7,
+        "minY": 0
+      },
+      "members": [
+        "level_36"
+      ],
+      "placedBy": "warp",
+      "root": "level_36"
+    },
+    {
+      "bbox": {
+        "maxX": 12,
+        "maxY": 3,
+        "minX": 12,
+        "minY": 3
+      },
+      "members": [
+        "level_43"
+      ],
+      "placedBy": "below",
+      "root": "level_43"
+    },
+    {
+      "bbox": {
+        "maxX": 14,
+        "maxY": -9,
+        "minX": 12,
+        "minY": -12
+      },
+      "members": [
+        "level_48",
+        "level_49",
+        "level_50",
+        "level_51",
+        "level_52",
+        "level_53",
+        "level_54",
+        "level_55",
+        "level_56"
+      ],
+      "placedBy": "source",
+      "root": "level_48"
+    },
+    {
+      "bbox": {
+        "maxX": 14,
+        "maxY": -7,
+        "minX": 14,
+        "minY": -7
+      },
+      "members": [
+        "level_57"
+      ],
+      "placedBy": "right",
+      "root": "level_57"
+    },
+    {
+      "bbox": {
+        "maxX": 12,
+        "maxY": -7,
+        "minX": 12,
+        "minY": -7
+      },
+      "members": [
+        "level_58"
+      ],
+      "placedBy": "warp",
+      "root": "level_58"
+    },
+    {
+      "bbox": {
+        "maxX": 5,
+        "maxY": -5,
+        "minX": 5,
+        "minY": -5
+      },
+      "members": [
+        "level_64"
+      ],
+      "placedBy": "warp",
+      "root": "level_64"
+    },
+    {
+      "bbox": {
+        "maxX": 5,
+        "maxY": -2,
+        "minX": 5,
+        "minY": -2
+      },
+      "members": [
+        "level_68"
+      ],
+      "placedBy": "warp",
+      "root": "level_68"
+    },
+    {
+      "bbox": {
+        "maxX": 16,
+        "maxY": -7,
+        "minX": 16,
+        "minY": -7
+      },
+      "members": [
+        "level_69"
+      ],
+      "placedBy": "right",
+      "root": "level_69"
+    },
+    {
+      "bbox": {
+        "maxX": 16,
+        "maxY": -9,
+        "minX": 16,
+        "minY": -9
+      },
+      "members": [
+        "level_70"
+      ],
+      "placedBy": "source",
+      "root": "level_70"
+    },
+    {
+      "bbox": {
+        "maxX": 21,
+        "maxY": -1,
+        "minX": 18,
+        "minY": -5
+      },
+      "members": [
+        "level_71",
+        "level_72",
+        "level_73",
+        "level_74",
+        "level_75",
+        "level_76",
+        "level_77",
+        "level_78",
+        "level_79",
+        "level_80",
+        "level_85"
+      ],
+      "placedBy": "below",
+      "root": "level_85"
+    },
+    {
+      "bbox": {
+        "maxX": 18,
+        "maxY": 6,
+        "minX": 18,
+        "minY": 5
+      },
+      "members": [
+        "level_82",
+        "level_96"
+      ],
+      "placedBy": "below",
+      "root": "level_82"
+    },
+    {
+      "bbox": {
+        "maxX": 18,
+        "maxY": -9,
+        "minX": 18,
+        "minY": -9
+      },
+      "members": [
+        "level_83"
+      ],
+      "placedBy": "source",
+      "root": "level_83"
+    },
+    {
+      "bbox": {
+        "maxX": 18,
+        "maxY": -7,
+        "minX": 18,
+        "minY": -7
+      },
+      "members": [
+        "level_84"
+      ],
+      "placedBy": "right",
+      "root": "level_84"
+    },
+    {
+      "bbox": {
+        "maxX": -9,
+        "maxY": 0,
+        "minX": -9,
+        "minY": 0
+      },
+      "members": [
+        "level_86"
+      ],
+      "placedBy": "warp",
+      "root": "level_86"
+    },
+    {
+      "bbox": {
+        "maxX": 7,
+        "maxY": -2,
+        "minX": 7,
+        "minY": -2
+      },
+      "members": [
+        "level_92"
+      ],
+      "placedBy": "warp",
+      "root": "level_92"
+    },
+    {
+      "bbox": {
+        "maxX": 10,
+        "maxY": 3,
+        "minX": 10,
+        "minY": 3
+      },
+      "members": [
+        "level_97"
+      ],
+      "placedBy": "below",
+      "root": "level_97"
+    },
+    {
+      "bbox": {
+        "maxX": 23,
+        "maxY": -5,
+        "minX": 23,
+        "minY": -5
+      },
+      "members": [
+        "level_98"
+      ],
+      "placedBy": "below",
+      "root": "level_98"
+    },
+    {
+      "bbox": {
+        "maxX": 23,
+        "maxY": -7,
+        "minX": 23,
+        "minY": -7
+      },
+      "members": [
+        "level_99"
+      ],
+      "placedBy": "right",
+      "root": "level_99"
+    },
+    {
+      "bbox": {
+        "maxX": 23,
+        "maxY": -9,
+        "minX": 23,
+        "minY": -9
+      },
+      "members": [
+        "level_100"
+      ],
+      "placedBy": "source",
+      "root": "level_100"
+    },
+    {
+      "bbox": {
+        "maxX": 25,
+        "maxY": -7,
+        "minX": 25,
+        "minY": -7
+      },
+      "members": [
+        "level_101"
+      ],
+      "placedBy": "right",
+      "root": "level_101"
+    },
+    {
+      "bbox": {
+        "maxX": 28,
+        "maxY": -11,
+        "minX": 22,
+        "minY": -12
+      },
+      "members": [
+        "level_102",
+        "level_103",
+        "level_104",
+        "level_105",
+        "level_106",
+        "level_107",
+        "level_108",
+        "level_109"
+      ],
+      "placedBy": "source",
+      "root": "level_102"
+    },
+    {
+      "bbox": {
+        "maxX": 0,
+        "maxY": -7,
+        "minX": 0,
+        "minY": -7
+      },
+      "members": [
+        "level_110"
+      ],
+      "placedBy": "above",
+      "root": "level_110"
+    },
+    {
+      "bbox": {
+        "maxX": -5,
+        "maxY": 4,
+        "minX": -6,
+        "minY": 2
+      },
+      "members": [
+        "level_112",
+        "level_113",
+        "level_114",
+        "level_115"
+      ],
+      "placedBy": "warp",
+      "root": "level_112"
+    }
+  ],
+  "largestGroup": 28,
+  "links": [
+    [
+      "level_0",
+      "level_1",
+      "warp",
+      null
+    ],
+    [
+      "level_0",
+      "level_2",
+      "down",
+      null
+    ],
+    [
+      "level_0",
+      "level_2",
+      "warp",
+      null
+    ],
+    [
+      "level_0",
+      "level_12",
+      "join",
+      "E"
+    ],
+    [
+      "level_0",
+      "level_13",
+      "down",
+      null
+    ],
+    [
+      "level_0",
+      "level_86",
+      "warp",
+      null
+    ],
+    [
+      "level_0",
+      "level_89",
+      "join",
+      "N"
+    ],
+    [
+      "level_0",
+      "level_94",
+      "join",
+      "W"
+    ],
+    [
+      "level_0",
+      "level_94",
+      "join",
+      "W"
+    ],
+    [
+      "level_1",
+      "level_0",
+      "warp",
+      null
+    ],
+    [
+      "level_1",
+      "level_114",
+      "warp",
+      null
+    ],
+    [
+      "level_2",
+      "level_0",
+      "up",
+      null
+    ],
+    [
+      "level_2",
+      "level_3",
+      "join",
+      "S"
+    ],
+    [
+      "level_3",
+      "level_2",
+      "join",
+      "N"
+    ],
+    [
+      "level_3",
+      "level_4",
+      "join",
+      "E"
+    ],
+    [
+      "level_3",
+      "level_11",
+      "join",
+      "S"
+    ],
+    [
+      "level_3",
+      "level_111",
+      "join",
+      "W"
+    ],
+    [
+      "level_4",
+      "level_3",
+      "join",
+      "W"
+    ],
+    [
+      "level_4",
+      "level_5",
+      "down",
+      null
+    ],
+    [
+      "level_5",
+      "level_4",
+      "up",
+      null
+    ],
+    [
+      "level_5",
+      "level_6",
+      "join",
+      "S"
+    ],
+    [
+      "level_5",
+      "level_12",
+      "up",
+      null
+    ],
+    [
+      "level_6",
+      "level_5",
+      "join",
+      "N"
+    ],
+    [
+      "level_6",
+      "level_7",
+      "up",
+      null
+    ],
+    [
+      "level_7",
+      "level_6",
+      "down",
+      null
+    ],
+    [
+      "level_7",
+      "level_8",
+      "down",
+      null
+    ],
+    [
+      "level_8",
+      "level_7",
+      "up",
+      null
+    ],
+    [
+      "level_8",
+      "level_9",
+      "join",
+      "S"
+    ],
+    [
+      "level_9",
+      "level_8",
+      "join",
+      "E"
+    ],
+    [
+      "level_9",
+      "level_10",
+      "join",
+      "W"
+    ],
+    [
+      "level_10",
+      "level_9",
+      "join",
+      "S"
+    ],
+    [
+      "level_10",
+      "level_11",
+      "up",
+      null
+    ],
+    [
+      "level_11",
+      "level_3",
+      "join",
+      "N"
+    ],
+    [
+      "level_11",
+      "level_10",
+      "down",
+      null
+    ],
+    [
+      "level_12",
+      "level_0",
+      "join",
+      "W"
+    ],
+    [
+      "level_12",
+      "level_1",
+      "warp",
+      null
+    ],
+    [
+      "level_12",
+      "level_5",
+      "down",
+      null
+    ],
+    [
+      "level_12",
+      "level_21",
+      "down",
+      null
+    ],
+    [
+      "level_12",
+      "level_24",
+      "warp",
+      null
+    ],
+    [
+      "level_12",
+      "level_33",
+      "warp",
+      null
+    ],
+    [
+      "level_12",
+      "level_34",
+      "warp",
+      null
+    ],
+    [
+      "level_12",
+      "level_35",
+      "warp",
+      null
+    ],
+    [
+      "level_12",
+      "level_36",
+      "warp",
+      null
+    ],
+    [
+      "level_12",
+      "level_37",
+      "join",
+      "N"
+    ],
+    [
+      "level_12",
+      "level_83",
+      "warp",
+      null
+    ],
+    [
+      "level_12",
+      "level_88",
+      "join",
+      "N"
+    ],
+    [
+      "level_12",
+      "level_95",
+      "join",
+      "W"
+    ],
+    [
+      "level_12",
+      "level_95",
+      "join",
+      "W"
+    ],
+    [
+      "level_13",
+      "level_0",
+      "up",
+      null
+    ],
+    [
+      "level_13",
+      "level_14",
+      "down",
+      null
+    ],
+    [
+      "level_13",
+      "level_20",
+      "down",
+      null
+    ],
+    [
+      "level_14",
+      "level_13",
+      "up",
+      null
+    ],
+    [
+      "level_14",
+      "level_15",
+      "down",
+      null
+    ],
+    [
+      "level_15",
+      "level_14",
+      "up",
+      null
+    ],
+    [
+      "level_15",
+      "level_16",
+      "down",
+      null
+    ],
+    [
+      "level_16",
+      "level_15",
+      "up",
+      null
+    ],
+    [
+      "level_16",
+      "level_17",
+      "down",
+      null
+    ],
+    [
+      "level_16",
+      "level_17",
+      "down",
+      null
+    ],
+    [
+      "level_16",
+      "level_17",
+      "down",
+      null
+    ],
+    [
+      "level_16",
+      "level_17",
+      "down",
+      null
+    ],
+    [
+      "level_16",
+      "level_17",
+      "down",
+      null
+    ],
+    [
+      "level_16",
+      "level_17",
+      "down",
+      null
+    ],
+    [
+      "level_16",
+      "level_17",
+      "down",
+      null
+    ],
+    [
+      "level_16",
+      "level_17",
+      "down",
+      null
+    ],
+    [
+      "level_16",
+      "level_18",
+      "up",
+      null
+    ],
+    [
+      "level_17",
+      "level_16",
+      "up",
+      null
+    ],
+    [
+      "level_18",
+      "level_16",
+      "down",
+      null
+    ],
+    [
+      "level_18",
+      "level_19",
+      "join",
+      "E"
+    ],
+    [
+      "level_19",
+      "level_18",
+      "join",
+      "W"
+    ],
+    [
+      "level_19",
+      "level_20",
+      "up",
+      null
+    ],
+    [
+      "level_20",
+      "level_13",
+      "up",
+      null
+    ],
+    [
+      "level_20",
+      "level_19",
+      "down",
+      null
+    ],
+    [
+      "level_21",
+      "level_22",
+      "join",
+      "S"
+    ],
+    [
+      "level_21",
+      "level_23",
+      "join",
+      "W"
+    ],
+    [
+      "level_21",
+      "level_29",
+      "join",
+      "E"
+    ],
+    [
+      "level_22",
+      "level_21",
+      "join",
+      "N"
+    ],
+    [
+      "level_22",
+      "level_25",
+      "join",
+      "W"
+    ],
+    [
+      "level_22",
+      "level_29",
+      "join",
+      "E"
+    ],
+    [
+      "level_22",
+      "level_30",
+      "join",
+      "S"
+    ],
+    [
+      "level_23",
+      "level_21",
+      "join",
+      "E"
+    ],
+    [
+      "level_23",
+      "level_24",
+      "up",
+      null
+    ],
+    [
+      "level_24",
+      "level_12",
+      "warp",
+      null
+    ],
+    [
+      "level_24",
+      "level_12",
+      "warp",
+      null
+    ],
+    [
+      "level_24",
+      "level_23",
+      "down",
+      null
+    ],
+    [
+      "level_25",
+      "level_22",
+      "join",
+      "E"
+    ],
+    [
+      "level_25",
+      "level_26",
+      "join",
+      "W"
+    ],
+    [
+      "level_25",
+      "level_28",
+      "join",
+      "S"
+    ],
+    [
+      "level_26",
+      "level_25",
+      "join",
+      "E"
+    ],
+    [
+      "level_26",
+      "level_27",
+      "join",
+      "S"
+    ],
+    [
+      "level_26",
+      "level_28",
+      "join",
+      "E"
+    ],
+    [
+      "level_27",
+      "level_26",
+      "join",
+      "N"
+    ],
+    [
+      "level_27",
+      "level_28",
+      "warp",
+      null
+    ],
+    [
+      "level_28",
+      "level_25",
+      "join",
+      "N"
+    ],
+    [
+      "level_28",
+      "level_26",
+      "join",
+      "W"
+    ],
+    [
+      "level_28",
+      "level_27",
+      "warp",
+      null
+    ],
+    [
+      "level_28",
+      "level_30",
+      "join",
+      "E"
+    ],
+    [
+      "level_29",
+      "level_21",
+      "join",
+      "W"
+    ],
+    [
+      "level_29",
+      "level_22",
+      "join",
+      "W"
+    ],
+    [
+      "level_29",
+      "level_31",
+      "down",
+      null
+    ],
+    [
+      "level_30",
+      "level_22",
+      "join",
+      "N"
+    ],
+    [
+      "level_30",
+      "level_28",
+      "join",
+      "W"
+    ],
+    [
+      "level_30",
+      "level_31",
+      "down",
+      null
+    ],
+    [
+      "level_30",
+      "level_31",
+      "down",
+      null
+    ],
+    [
+      "level_30",
+      "level_32",
+      "up",
+      null
+    ],
+    [
+      "level_31",
+      "level_29",
+      "up",
+      null
+    ],
+    [
+      "level_31",
+      "level_30",
+      "up",
+      null
+    ],
+    [
+      "level_32",
+      "level_1",
+      "warp",
+      null
+    ],
+    [
+      "level_32",
+      "level_30",
+      "down",
+      null
+    ],
+    [
+      "level_32",
+      "level_30",
+      "down",
+      null
+    ],
+    [
+      "level_32",
+      "level_30",
+      "down",
+      null
+    ],
+    [
+      "level_33",
+      "level_12",
+      "warp",
+      null
+    ],
+    [
+      "level_34",
+      "level_12",
+      "warp",
+      null
+    ],
+    [
+      "level_34",
+      "level_12",
+      "warp",
+      null
+    ],
+    [
+      "level_35",
+      "level_12",
+      "warp",
+      null
+    ],
+    [
+      "level_36",
+      "level_12",
+      "warp",
+      null
+    ],
+    [
+      "level_37",
+      "level_1",
+      "warp",
+      null
+    ],
+    [
+      "level_37",
+      "level_12",
+      "join",
+      "S"
+    ],
+    [
+      "level_37",
+      "level_38",
+      "join",
+      "N"
+    ],
+    [
+      "level_37",
+      "level_44",
+      "join",
+      "W"
+    ],
+    [
+      "level_37",
+      "level_97",
+      "down",
+      null
+    ],
+    [
+      "level_38",
+      "level_37",
+      "join",
+      "S"
+    ],
+    [
+      "level_38",
+      "level_39",
+      "join",
+      "N"
+    ],
+    [
+      "level_39",
+      "level_38",
+      "join",
+      "S"
+    ],
+    [
+      "level_39",
+      "level_40",
+      "join",
+      "N"
+    ],
+    [
+      "level_40",
+      "level_39",
+      "join",
+      "S"
+    ],
+    [
+      "level_40",
+      "level_41",
+      "join",
+      "E"
+    ],
+    [
+      "level_40",
+      "level_42",
+      "join",
+      "N"
+    ],
+    [
+      "level_40",
+      "level_43",
+      "down",
+      null
+    ],
+    [
+      "level_40",
+      "level_43",
+      "down",
+      null
+    ],
+    [
+      "level_40",
+      "level_43",
+      "down",
+      null
+    ],
+    [
+      "level_40",
+      "level_43",
+      "down",
+      null
+    ],
+    [
+      "level_40",
+      "level_43",
+      "down",
+      null
+    ],
+    [
+      "level_40",
+      "level_43",
+      "down",
+      null
+    ],
+    [
+      "level_40",
+      "level_43",
+      "down",
+      null
+    ],
+    [
+      "level_40",
+      "level_43",
+      "down",
+      null
+    ],
+    [
+      "level_40",
+      "level_43",
+      "down",
+      null
+    ],
+    [
+      "level_40",
+      "level_43",
+      "down",
+      null
+    ],
+    [
+      "level_40",
+      "level_43",
+      "down",
+      null
+    ],
+    [
+      "level_40",
+      "level_43",
+      "down",
+      null
+    ],
+    [
+      "level_40",
+      "level_43",
+      "down",
+      null
+    ],
+    [
+      "level_41",
+      "level_40",
+      "join",
+      "W"
+    ],
+    [
+      "level_42",
+      "level_40",
+      "join",
+      "S"
+    ],
+    [
+      "level_43",
+      "level_1",
+      "warp",
+      null
+    ],
+    [
+      "level_43",
+      "level_37",
+      "warp",
+      null
+    ],
+    [
+      "level_43",
+      "level_40",
+      "up",
+      null
+    ],
+    [
+      "level_44",
+      "level_37",
+      "join",
+      "E"
+    ],
+    [
+      "level_44",
+      "level_45",
+      "join",
+      "N"
+    ],
+    [
+      "level_44",
+      "level_87",
+      "join",
+      "W"
+    ],
+    [
+      "level_45",
+      "level_44",
+      "join",
+      "S"
+    ],
+    [
+      "level_45",
+      "level_46",
+      "join",
+      "N"
+    ],
+    [
+      "level_46",
+      "level_45",
+      "join",
+      "S"
+    ],
+    [
+      "level_46",
+      "level_47",
+      "join",
+      "N"
+    ],
+    [
+      "level_47",
+      "level_46",
+      "join",
+      "S"
+    ],
+    [
+      "level_47",
+      "level_48",
+      "warp",
+      null
+    ],
+    [
+      "level_48",
+      "level_47",
+      "warp",
+      null
+    ],
+    [
+      "level_48",
+      "level_49",
+      "down",
+      null
+    ],
+    [
+      "level_48",
+      "level_53",
+      "join",
+      "W"
+    ],
+    [
+      "level_49",
+      "level_50",
+      "join",
+      "S"
+    ],
+    [
+      "level_50",
+      "level_49",
+      "join",
+      "N"
+    ],
+    [
+      "level_50",
+      "level_51",
+      "join",
+      "S"
+    ],
+    [
+      "level_51",
+      "level_50",
+      "join",
+      "N"
+    ],
+    [
+      "level_51",
+      "level_52",
+      "join",
+      "E"
+    ],
+    [
+      "level_51",
+      "level_53",
+      "up",
+      null
+    ],
+    [
+      "level_52",
+      "level_51",
+      "join",
+      "W"
+    ],
+    [
+      "level_52",
+      "level_54",
+      "join",
+      "N"
+    ],
+    [
+      "level_52",
+      "level_55",
+      "join",
+      "W"
+    ],
+    [
+      "level_52",
+      "level_56",
+      "join",
+      "E"
+    ],
+    [
+      "level_53",
+      "level_48",
+      "join",
+      "E"
+    ],
+    [
+      "level_53",
+      "level_51",
+      "down",
+      null
+    ],
+    [
+      "level_53",
+      "level_54",
+      "join",
+      "S"
+    ],
+    [
+      "level_54",
+      "level_52",
+      "join",
+      "S"
+    ],
+    [
+      "level_54",
+      "level_53",
+      "join",
+      "N"
+    ],
+    [
+      "level_55",
+      "level_52",
+      "join",
+      "E"
+    ],
+    [
+      "level_56",
+      "level_52",
+      "join",
+      "W"
+    ],
+    [
+      "level_56",
+      "level_57",
+      "down",
+      null
+    ],
+    [
+      "level_57",
+      "level_1",
+      "warp",
+      null
+    ],
+    [
+      "level_57",
+      "level_58",
+      "warp",
+      null
+    ],
+    [
+      "level_58",
+      "level_46",
+      "warp",
+      null
+    ],
+    [
+      "level_58",
+      "level_57",
+      "warp",
+      null
+    ],
+    [
+      "level_58",
+      "level_57",
+      "warp",
+      null
+    ],
+    [
+      "level_59",
+      "level_60",
+      "join",
+      "E"
+    ],
+    [
+      "level_59",
+      "level_67",
+      "join",
+      "W"
+    ],
+    [
+      "level_59",
+      "level_95",
+      "join",
+      "S"
+    ],
+    [
+      "level_59",
+      "level_95",
+      "join",
+      "S"
+    ],
+    [
+      "level_60",
+      "level_59",
+      "join",
+      "W"
+    ],
+    [
+      "level_60",
+      "level_61",
+      "join",
+      "E"
+    ],
+    [
+      "level_61",
+      "level_60",
+      "join",
+      "W"
+    ],
+    [
+      "level_61",
+      "level_62",
+      "join",
+      "N"
+    ],
+    [
+      "level_61",
+      "level_62",
+      "join",
+      "N"
+    ],
+    [
+      "level_61",
+      "level_63",
+      "join",
+      "E"
+    ],
+    [
+      "level_61",
+      "level_63",
+      "join",
+      "E"
+    ],
+    [
+      "level_61",
+      "level_63",
+      "join",
+      "E"
+    ],
+    [
+      "level_62",
+      "level_61",
+      "join",
+      "S"
+    ],
+    [
+      "level_62",
+      "level_61",
+      "join",
+      "S"
+    ],
+    [
+      "level_62",
+      "level_63",
+      "join",
+      "S"
+    ],
+    [
+      "level_62",
+      "level_63",
+      "join",
+      "S"
+    ],
+    [
+      "level_62",
+      "level_64",
+      "warp",
+      null
+    ],
+    [
+      "level_63",
+      "level_61",
+      "join",
+      "W"
+    ],
+    [
+      "level_63",
+      "level_61",
+      "join",
+      "W"
+    ],
+    [
+      "level_63",
+      "level_61",
+      "join",
+      "W"
+    ],
+    [
+      "level_63",
+      "level_62",
+      "join",
+      "N"
+    ],
+    [
+      "level_63",
+      "level_62",
+      "join",
+      "N"
+    ],
+    [
+      "level_63",
+      "level_65",
+      "join",
+      "S"
+    ],
+    [
+      "level_63",
+      "level_65",
+      "join",
+      "S"
+    ],
+    [
+      "level_64",
+      "level_62",
+      "warp",
+      null
+    ],
+    [
+      "level_65",
+      "level_63",
+      "join",
+      "N"
+    ],
+    [
+      "level_65",
+      "level_63",
+      "join",
+      "N"
+    ],
+    [
+      "level_65",
+      "level_66",
+      "join",
+      "W"
+    ],
+    [
+      "level_65",
+      "level_68",
+      "warp",
+      null
+    ],
+    [
+      "level_66",
+      "level_65",
+      "join",
+      "E"
+    ],
+    [
+      "level_66",
+      "level_70",
+      "warp",
+      null
+    ],
+    [
+      "level_67",
+      "level_59",
+      "join",
+      "E"
+    ],
+    [
+      "level_68",
+      "level_65",
+      "warp",
+      null
+    ],
+    [
+      "level_69",
+      "level_1",
+      "warp",
+      null
+    ],
+    [
+      "level_69",
+      "level_36",
+      "warp",
+      null
+    ],
+    [
+      "level_70",
+      "level_66",
+      "warp",
+      null
+    ],
+    [
+      "level_70",
+      "level_69",
+      "down",
+      null
+    ],
+    [
+      "level_71",
+      "level_72",
+      "join",
+      "E"
+    ],
+    [
+      "level_71",
+      "level_75",
+      "join",
+      "N"
+    ],
+    [
+      "level_71",
+      "level_76",
+      "join",
+      "E"
+    ],
+    [
+      "level_71",
+      "level_80",
+      "join",
+      "S"
+    ],
+    [
+      "level_71",
+      "level_82",
+      "down",
+      null
+    ],
+    [
+      "level_71",
+      "level_85",
+      "join",
+      "S"
+    ],
+    [
+      "level_72",
+      "level_71",
+      "join",
+      "W"
+    ],
+    [
+      "level_72",
+      "level_73",
+      "join",
+      "N"
+    ],
+    [
+      "level_73",
+      "level_72",
+      "join",
+      "S"
+    ],
+    [
+      "level_73",
+      "level_74",
+      "join",
+      "N"
+    ],
+    [
+      "level_74",
+      "level_73",
+      "join",
+      "S"
+    ],
+    [
+      "level_74",
+      "level_75",
+      "join",
+      "S"
+    ],
+    [
+      "level_75",
+      "level_71",
+      "join",
+      "S"
+    ],
+    [
+      "level_75",
+      "level_74",
+      "join",
+      "N"
+    ],
+    [
+      "level_76",
+      "level_71",
+      "join",
+      "W"
+    ],
+    [
+      "level_76",
+      "level_77",
+      "join",
+      "E"
+    ],
+    [
+      "level_77",
+      "level_76",
+      "join",
+      "W"
+    ],
+    [
+      "level_77",
+      "level_78",
+      "join",
+      "S"
+    ],
+    [
+      "level_78",
+      "level_77",
+      "join",
+      "N"
+    ],
+    [
+      "level_78",
+      "level_79",
+      "join",
+      "N"
+    ],
+    [
+      "level_79",
+      "level_78",
+      "join",
+      "S"
+    ],
+    [
+      "level_79",
+      "level_80",
+      "join",
+      "N"
+    ],
+    [
+      "level_80",
+      "level_71",
+      "join",
+      "N"
+    ],
+    [
+      "level_80",
+      "level_79",
+      "join",
+      "S"
+    ],
+    [
+      "level_80",
+      "level_79",
+      "join",
+      "S"
+    ],
+    [
+      "level_82",
+      "level_1",
+      "warp",
+      null
+    ],
+    [
+      "level_82",
+      "level_96",
+      "join",
+      "N"
+    ],
+    [
+      "level_83",
+      "level_12",
+      "warp",
+      null
+    ],
+    [
+      "level_83",
+      "level_84",
+      "down",
+      null
+    ],
+    [
+      "level_84",
+      "level_85",
+      "down",
+      null
+    ],
+    [
+      "level_84",
+      "level_85",
+      "down",
+      null
+    ],
+    [
+      "level_84",
+      "level_85",
+      "down",
+      null
+    ],
+    [
+      "level_84",
+      "level_85",
+      "down",
+      null
+    ],
+    [
+      "level_84",
+      "level_85",
+      "down",
+      null
+    ],
+    [
+      "level_84",
+      "level_85",
+      "down",
+      null
+    ],
+    [
+      "level_84",
+      "level_85",
+      "down",
+      null
+    ],
+    [
+      "level_84",
+      "level_85",
+      "down",
+      null
+    ],
+    [
+      "level_84",
+      "level_85",
+      "down",
+      null
+    ],
+    [
+      "level_85",
+      "level_71",
+      "join",
+      "N"
+    ],
+    [
+      "level_86",
+      "level_0",
+      "warp",
+      null
+    ],
+    [
+      "level_87",
+      "level_44",
+      "join",
+      "E"
+    ],
+    [
+      "level_87",
+      "level_88",
+      "join",
+      "S"
+    ],
+    [
+      "level_87",
+      "level_88",
+      "join",
+      "S"
+    ],
+    [
+      "level_87",
+      "level_89",
+      "join",
+      "W"
+    ],
+    [
+      "level_87",
+      "level_92",
+      "warp",
+      null
+    ],
+    [
+      "level_87",
+      "level_93",
+      "join",
+      "N"
+    ],
+    [
+      "level_88",
+      "level_12",
+      "join",
+      "S"
+    ],
+    [
+      "level_88",
+      "level_87",
+      "join",
+      "N"
+    ],
+    [
+      "level_88",
+      "level_87",
+      "join",
+      "N"
+    ],
+    [
+      "level_89",
+      "level_0",
+      "join",
+      "S"
+    ],
+    [
+      "level_89",
+      "level_1",
+      "warp",
+      null
+    ],
+    [
+      "level_89",
+      "level_87",
+      "join",
+      "E"
+    ],
+    [
+      "level_89",
+      "level_90",
+      "join",
+      "N"
+    ],
+    [
+      "level_89",
+      "level_91",
+      "join",
+      "N"
+    ],
+    [
+      "level_90",
+      "level_89",
+      "join",
+      "S"
+    ],
+    [
+      "level_91",
+      "level_89",
+      "join",
+      "S"
+    ],
+    [
+      "level_91",
+      "level_92",
+      "warp",
+      null
+    ],
+    [
+      "level_92",
+      "level_87",
+      "warp",
+      null
+    ],
+    [
+      "level_92",
+      "level_91",
+      "warp",
+      null
+    ],
+    [
+      "level_93",
+      "level_87",
+      "join",
+      "S"
+    ],
+    [
+      "level_93",
+      "level_98",
+      "warp",
+      null
+    ],
+    [
+      "level_94",
+      "level_0",
+      "join",
+      "E"
+    ],
+    [
+      "level_94",
+      "level_0",
+      "join",
+      "E"
+    ],
+    [
+      "level_94",
+      "level_1",
+      "warp",
+      null
+    ],
+    [
+      "level_95",
+      "level_12",
+      "join",
+      "E"
+    ],
+    [
+      "level_95",
+      "level_12",
+      "join",
+      "E"
+    ],
+    [
+      "level_95",
+      "level_59",
+      "join",
+      "N"
+    ],
+    [
+      "level_95",
+      "level_59",
+      "join",
+      "N"
+    ],
+    [
+      "level_96",
+      "level_82",
+      "join",
+      "S"
+    ],
+    [
+      "level_96",
+      "level_97",
+      "up",
+      null
+    ],
+    [
+      "level_97",
+      "level_37",
+      "up",
+      null
+    ],
+    [
+      "level_97",
+      "level_96",
+      "down",
+      null
+    ],
+    [
+      "level_98",
+      "level_93",
+      "warp",
+      null
+    ],
+    [
+      "level_98",
+      "level_99",
+      "up",
+      null
+    ],
+    [
+      "level_99",
+      "level_98",
+      "down",
+      null
+    ],
+    [
+      "level_99",
+      "level_100",
+      "up",
+      null
+    ],
+    [
+      "level_100",
+      "level_99",
+      "down",
+      null
+    ],
+    [
+      "level_100",
+      "level_101",
+      "warp",
+      null
+    ],
+    [
+      "level_101",
+      "level_102",
+      "up",
+      null
+    ],
+    [
+      "level_101",
+      "level_102",
+      "up",
+      null
+    ],
+    [
+      "level_101",
+      "level_110",
+      "warp",
+      null
+    ],
+    [
+      "level_102",
+      "level_101",
+      "down",
+      null
+    ],
+    [
+      "level_102",
+      "level_101",
+      "down",
+      null
+    ],
+    [
+      "level_102",
+      "level_103",
+      "join",
+      "W"
+    ],
+    [
+      "level_102",
+      "level_107",
+      "join",
+      "E"
+    ],
+    [
+      "level_103",
+      "level_1",
+      "warp",
+      null
+    ],
+    [
+      "level_103",
+      "level_102",
+      "join",
+      "E"
+    ],
+    [
+      "level_103",
+      "level_104",
+      "join",
+      "W"
+    ],
+    [
+      "level_104",
+      "level_103",
+      "join",
+      "E"
+    ],
+    [
+      "level_104",
+      "level_105",
+      "join",
+      "W"
+    ],
+    [
+      "level_105",
+      "level_104",
+      "join",
+      "E"
+    ],
+    [
+      "level_105",
+      "level_106",
+      "join",
+      "S"
+    ],
+    [
+      "level_106",
+      "level_101",
+      "warp",
+      null
+    ],
+    [
+      "level_106",
+      "level_105",
+      "join",
+      "N"
+    ],
+    [
+      "level_107",
+      "level_102",
+      "join",
+      "W"
+    ],
+    [
+      "level_107",
+      "level_108",
+      "join",
+      "E"
+    ],
+    [
+      "level_108",
+      "level_107",
+      "join",
+      "W"
+    ],
+    [
+      "level_108",
+      "level_109",
+      "join",
+      "E"
+    ],
+    [
+      "level_109",
+      "level_101",
+      "warp",
+      null
+    ],
+    [
+      "level_109",
+      "level_108",
+      "join",
+      "W"
+    ],
+    [
+      "level_110",
+      "level_0",
+      "down",
+      null
+    ],
+    [
+      "level_111",
+      "level_3",
+      "join",
+      "E"
+    ],
+    [
+      "level_111",
+      "level_112",
+      "warp",
+      null
+    ],
+    [
+      "level_112",
+      "level_111",
+      "warp",
+      null
+    ],
+    [
+      "level_112",
+      "level_113",
+      "join",
+      "N"
+    ],
+    [
+      "level_113",
+      "level_112",
+      "join",
+      "S"
+    ],
+    [
+      "level_113",
+      "level_112",
+      "join",
+      "S"
+    ],
+    [
+      "level_113",
+      "level_114",
+      "join",
+      "N"
+    ],
+    [
+      "level_113",
+      "level_114",
+      "join",
+      "N"
+    ],
+    [
+      "level_113",
+      "level_115",
+      "join",
+      "N"
+    ],
+    [
+      "level_113",
+      "level_115",
+      "join",
+      "N"
+    ],
+    [
+      "level_114",
+      "level_1",
+      "warp",
+      null
+    ],
+    [
+      "level_114",
+      "level_113",
+      "join",
+      "S"
+    ],
+    [
+      "level_114",
+      "level_113",
+      "join",
+      "S"
+    ],
+    [
+      "level_115",
+      "level_113",
+      "join",
+      "S"
+    ],
+    [
+      "level_115",
+      "level_113",
+      "join",
+      "S"
+    ]
+  ],
+  "positions": {
+    "level_0": [
+      0,
+      0
+    ],
+    "level_1": [
+      5,
+      0
+    ],
+    "level_10": [
+      3,
+      8
+    ],
+    "level_100": [
+      23,
+      -9
+    ],
+    "level_101": [
+      25,
+      -7
+    ],
+    "level_102": [
+      25,
+      -12
+    ],
+    "level_103": [
+      24,
+      -12
+    ],
+    "level_104": [
+      23,
+      -12
+    ],
+    "level_105": [
+      22,
+      -12
+    ],
+    "level_106": [
+      22,
+      -11
+    ],
+    "level_107": [
+      26,
+      -12
+    ],
+    "level_108": [
+      27,
+      -12
+    ],
+    "level_109": [
+      28,
+      -12
+    ],
+    "level_11": [
+      0,
+      5
+    ],
+    "level_110": [
+      0,
+      -7
+    ],
+    "level_111": [
+      -1,
+      4
+    ],
+    "level_112": [
+      -6,
+      4
+    ],
+    "level_113": [
+      -6,
+      3
+    ],
+    "level_114": [
+      -6,
+      2
+    ],
+    "level_115": [
+      -5,
+      2
+    ],
+    "level_12": [
+      1,
+      0
+    ],
+    "level_13": [
+      3,
+      3
+    ],
+    "level_14": [
+      3,
+      5
+    ],
+    "level_15": [
+      6,
+      7
+    ],
+    "level_16": [
+      6,
+      9
+    ],
+    "level_17": [
+      6,
+      11
+    ],
+    "level_18": [
+      9,
+      7
+    ],
+    "level_19": [
+      10,
+      7
+    ],
+    "level_2": [
+      0,
+      3
+    ],
+    "level_20": [
+      10,
+      5
+    ],
+    "level_21": [
+      7,
+      3
+    ],
+    "level_22": [
+      7,
+      4
+    ],
+    "level_23": [
+      6,
+      3
+    ],
+    "level_24": [
+      11,
+      1
+    ],
+    "level_25": [
+      6,
+      4
+    ],
+    "level_26": [
+      5,
+      4
+    ],
+    "level_27": [
+      5,
+      5
+    ],
+    "level_28": [
+      6,
+      5
+    ],
+    "level_29": [
+      8,
+      3
+    ],
+    "level_3": [
+      0,
+      4
+    ],
+    "level_30": [
+      7,
+      5
+    ],
+    "level_31": [
+      12,
+      7
+    ],
+    "level_32": [
+      7,
+      -4
+    ],
+    "level_33": [
+      7,
+      0
+    ],
+    "level_34": [
+      -5,
+      0
+    ],
+    "level_35": [
+      9,
+      0
+    ],
+    "level_36": [
+      -7,
+      0
+    ],
+    "level_37": [
+      1,
+      -1
+    ],
+    "level_38": [
+      2,
+      -2
+    ],
+    "level_39": [
+      2,
+      -3
+    ],
+    "level_4": [
+      1,
+      4
+    ],
+    "level_40": [
+      2,
+      -4
+    ],
+    "level_41": [
+      3,
+      -4
+    ],
+    "level_42": [
+      2,
+      -5
+    ],
+    "level_43": [
+      12,
+      3
+    ],
+    "level_44": [
+      -1,
+      -1
+    ],
+    "level_45": [
+      -2,
+      -2
+    ],
+    "level_46": [
+      -2,
+      -3
+    ],
+    "level_47": [
+      -2,
+      -4
+    ],
+    "level_48": [
+      14,
+      -12
+    ],
+    "level_49": [
+      12,
+      -12
+    ],
+    "level_5": [
+      1,
+      7
+    ],
+    "level_50": [
+      12,
+      -11
+    ],
+    "level_51": [
+      12,
+      -10
+    ],
+    "level_52": [
+      13,
+      -10
+    ],
+    "level_53": [
+      13,
+      -12
+    ],
+    "level_54": [
+      13,
+      -11
+    ],
+    "level_55": [
+      12,
+      -9
+    ],
+    "level_56": [
+      14,
+      -10
+    ],
+    "level_57": [
+      14,
+      -7
+    ],
+    "level_58": [
+      12,
+      -7
+    ],
+    "level_59": [
+      -2,
+      -1
+    ],
+    "level_6": [
+      1,
+      8
+    ],
+    "level_60": [
+      0,
+      -3
+    ],
+    "level_61": [
+      1,
+      -4
+    ],
+    "level_62": [
+      1,
+      -5
+    ],
+    "level_63": [
+      3,
+      -3
+    ],
+    "level_64": [
+      5,
+      -5
+    ],
+    "level_65": [
+      3,
+      -2
+    ],
+    "level_66": [
+      0,
+      -4
+    ],
+    "level_67": [
+      -3,
+      -1
+    ],
+    "level_68": [
+      5,
+      -2
+    ],
+    "level_69": [
+      16,
+      -7
+    ],
+    "level_7": [
+      -3,
+      5
+    ],
+    "level_70": [
+      16,
+      -9
+    ],
+    "level_71": [
+      18,
+      -3
+    ],
+    "level_72": [
+      19,
+      -3
+    ],
+    "level_73": [
+      19,
+      -4
+    ],
+    "level_74": [
+      18,
+      -5
+    ],
+    "level_75": [
+      18,
+      -4
+    ],
+    "level_76": [
+      20,
+      -3
+    ],
+    "level_77": [
+      21,
+      -3
+    ],
+    "level_78": [
+      21,
+      -2
+    ],
+    "level_79": [
+      19,
+      -1
+    ],
+    "level_8": [
+      4,
+      7
+    ],
+    "level_80": [
+      19,
+      -2
+    ],
+    "level_82": [
+      18,
+      6
+    ],
+    "level_83": [
+      18,
+      -9
+    ],
+    "level_84": [
+      18,
+      -7
+    ],
+    "level_85": [
+      18,
+      -2
+    ],
+    "level_86": [
+      -9,
+      0
+    ],
+    "level_87": [
+      1,
+      -2
+    ],
+    "level_88": [
+      2,
+      -1
+    ],
+    "level_89": [
+      0,
+      -1
+    ],
+    "level_9": [
+      4,
+      8
+    ],
+    "level_90": [
+      0,
+      -2
+    ],
+    "level_91": [
+      -1,
+      -2
+    ],
+    "level_92": [
+      7,
+      -2
+    ],
+    "level_93": [
+      1,
+      -3
+    ],
+    "level_94": [
+      -1,
+      0
+    ],
+    "level_95": [
+      0,
+      1
+    ],
+    "level_96": [
+      18,
+      5
+    ],
+    "level_97": [
+      10,
+      3
+    ],
+    "level_98": [
+      23,
+      -5
+    ],
+    "level_99": [
+      23,
+      -7
+    ]
+  },
+  "sizes": [
+    28,
+    1,
+    5,
+    2,
+    1,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    9,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    9,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    11,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    8,
+    1,
+    4
+  ],
+  "source": "hook",
+  "start": "level_0",
+  "stats": {
+    "adjacent": 126,
+    "bbox": {
+      "maxX": 28,
+      "maxY": 11,
+      "minX": -9,
+      "minY": -12
+    },
+    "consistent": 178,
+    "directed": 184,
+    "down": {
+      "across": 62,
+      "below": 62
+    },
+    "droppedLinks": 0,
+    "groups": 43,
+    "honoured": 122,
+    "links": 333,
+    "mixedGridCell": null,
+    "nodes": 115,
+    "player": "1",
+    "source": "hook",
+    "substrate": "flash_seedling",
+    "up": {
+      "above": 25,
+      "across": 25
+    },
+    "vertical": {
+      "cycleDropped": 0,
+      "links": 87
+    }
+  }
+}

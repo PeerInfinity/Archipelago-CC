@@ -873,6 +873,21 @@ jobs:
         if: ${{ !cancelled() }}
         run: node scripts/procgen/ci-expected-red.mjs /tmp/gates.log
 
+      # ⛓ export-flake-evidence: check-seedling-editor-export.mjs keeps both
+      # pictures of a failed byte-identity row (and a diff mask) here.
+      # ⛓ lab-load-flake-evidence: check-seedling-lab-load-in-js.mjs keeps the
+      # evidence.json and the page/frame DOM of a failed touch T1/T2 load.
+      - name: 'Keep the gate-flake pictures (shard ${{ matrix.shard.id }})'
+        if: failure()
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: seedling-gate-flake-${{ matrix.shard.id }}
+          path: |
+            test-results/seedling-editor-export-flake/
+            test-results/seedling-lab-load-flake/
+          if-no-files-found: ignore
+          retention-days: 30
+
       - name: 'Shard ${{ matrix.shard.id }} — summary'
         if: always()
         run: |

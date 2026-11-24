@@ -72,8 +72,10 @@ describe('mazeRoomLibrary substrateRegistryEntry', () => {
         expect(typeof substrateRegistryEntry.renderLibraryProcgenParams).toBe('function');
         expect(typeof substrateRegistryEntry.renderProcgenParams).toBe('function');
         // The flags are read only by a LIBRARY entry's instantiate, so the maze
-        // contributes nothing to a quota-driven world's regionParams.
-        expect(substrateRegistryEntry.buildRegionParams).toBeUndefined();
+        // contributes nothing to a quota-driven world's regionParams — ⛓ CONTENT SETS GEN-1: unless the world
+        // sets a maze biome (or its tile numbers); with neither, still nothing, so every world is byte-equal.
+        expect(substrateRegistryEntry.buildRegionParams({ params: { ...substrateRegistryEntry.defaultProcgenParams, seed: 3 }, mode: 'sphere' })).toEqual({});
+        expect(substrateRegistryEntry.buildRegionParams({ params: { mazeBiome: 'scattered' }, mode: 'topDown' })).toEqual({ mazeBiome: 'scattered' });
     });
 
     it('declares the maze identity, panel type, and load event', () => {
@@ -95,8 +97,10 @@ describe('mazeRoomLibrary substrateRegistryEntry', () => {
         expect(substrateRegistryEntry.supportedFeatures).toContain('arbitrary_exit_rules');
     });
 
-    it('exposes deserializeWorld bound to the engine implementation', () => {
-        expect(substrateRegistryEntry.deserializeWorld).toBe(deserializeMazeWorld);
+    it('exposes deserializeWorld: the engine implementation, wrapped to carry `things` (content sets S2)', () => {
+        // ⛓ S2 — `mazeThings.thingsDeserializer`: the engine's world, plus the payload's things (pinned in mazeThings.test.js).
+        expect(typeof substrateRegistryEntry.deserializeWorld).toBe('function');
+        expect(substrateRegistryEntry.deserializeWorld).not.toBe(deserializeMazeWorld);
     });
 
     it('exposes the build-time adapter slots, bound to maze implementations', () => {
@@ -108,7 +112,9 @@ describe('mazeRoomLibrary substrateRegistryEntry', () => {
         expect(typeof substrateRegistryEntry.placeFromRules).toBe('function');
         expect(substrateRegistryEntry.placeFromRules).not.toBe(placeFromRules);
         expect(substrateRegistryEntry.extractPathsAndObstacles).toBe(extractPathsAndObstacles);
-        expect(substrateRegistryEntry.serializeWorld).toBe(serializeMazeWorld);
+        // ⛓ CONTENT SETS S2 — the serializer is the engine's, wrapped to write `things` (`mazeThings.js`).
+        expect(typeof substrateRegistryEntry.serializeWorld).toBe('function');
+        expect(substrateRegistryEntry.serializeWorld).not.toBe(serializeMazeWorld);
     });
 
     it('exposes getPlaybackController for the bot to dispatch into', () => {

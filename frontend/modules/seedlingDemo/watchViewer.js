@@ -139,6 +139,7 @@ import { routeDiffersLine } from './frontierReadout.js';
  * why a browser page may import them at all.
  */
 import { mapDocumentPath } from '../flashPanel/mapDocumentPath.js';
+import { findMazeCounterparts, mazeLinkFor } from './seedlingMazeLink.js';
 import { buildStagedTape } from './botDriverV1.js';
 import { buildLevelSet } from './levelSetExporter.js';
 import {
@@ -313,7 +314,9 @@ import {
 } from '../presets/documentBundle.js';
 import { loadJSZipBrowser } from '../presets/loadJSZipBrowser.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
-import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
+import { stampAtlasIdentity, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
+import { WATCH_SET_ATLAS, handoverRefusalOf, isSetSaveDownload, labSetIdentity } from './watchSetIdentity.js';
+import { levelSetContentHash } from '../procgenCore/levelSetReference.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { REDO_COMMAND_ID, TOOLS, UNDO_COMMAND_ID } from '../procgenCore/editorView.js';
 import { createEditSession, foldEdits, resolveBase } from '../procgenCore/editCore.js';
@@ -4068,6 +4071,14 @@ const holdHostSetDocument = (doc) => { hostSetDocument = doc; };
  */
 let setArmSnapshot = () => null;
 const installSetArmSnapshot = (fn) => { setArmSnapshot = fn; };
+
+/**
+ * ⛓⛓ S4 (seedling-custom-set-arm) — **A HOST'S SET NEVER SILENTLY REPLACES THE READER'S UNSAVED ONE.** Installed by
+ * the EDIT arm (`(set) => null | why`), asked by `hostLoad` BEFORE a handed-over level set is held; the rule is
+ * `watchSetIdentity.handoverRefusalOf` (pinned in node). A retired arm answers null (nothing to lose).
+ */
+let handoverRefusal = () => null;
+const installHandoverRefusal = (fn) => { handoverRefusal = fn; };
 
 /**
  * A source that answers for the held generated level and defers to the atlas
@@ -9073,8 +9084,52 @@ async function runEditor(params, lifetime) {
     let setSession = null;
     let setRoomSource = null;
     let setUi = null;
+    /**
+     * ⛓ S4 — the held set's CONTENT HASH at its last SAVE (`levelSetContentHash`): the load, a set/bundle download, a
+     * host room's close. The hand-over guard compares it with the hash now (`watchSetIdentity.handoverRefusalOf`).
+     */
+    let setSessionSavedHash = null;
+    const setHashNow = () => (setSession ? levelSetContentHash(setSession.record().set) : null);
+    const markSetSaved = () => { setSessionSavedHash = setHashNow(); };
     /** ⛓ Which room of the SET the room session below was opened on, or null. */
     let openRoom = null;
+    /**
+     * ⛓⛓⛓ **A HOST'S ROOM IS OPEN** — true from the moment `?room=` opens a room
+     * of the HELD HOST DOCUMENT (an Edit ▸ handover) until that room session ends.
+     *
+     * ⚖ THE RULE (slice seedling-load-vanilla-fix, ⚖ Robert 2026-11-15):
+     *   · WHILE IT IS OPEN the reader's LOAD doors REFUSE, by name. The owning
+     *     panel is waiting for this room's close, and the close it would see after
+     *     a new set (`openRoom = null`) would hand it THAT set as the room's save.
+     *   · ONCE IT CLOSES (or is discarded) the held host document is RELEASED.
+     *     The host has its record (the close's announce carries it); each Edit ▸
+     *     sends its document again. ⛔ Kept, it was re-taken on the next remount —
+     *     a SOURCE switch — and `validateLevelSet` refused it: its stamp predates
+     *     the folded close (an EDITED SET REUSING ITS ID), so the page lost the
+     *     set and said so in the LOAD box's words.
+     */
+    let hostRoomOpen = false;
+    /** ⛓ Is the host's room still open? Releases the held document once it is not. */
+    const hostRoomStillOpen = () => {
+        if (hostRoomOpen && openRoom === null) {
+            hostRoomOpen = false;
+            holdHostSetDocument(null);
+            // ⛓ S4 — the close's announce handed this record back to the host: that is its save.
+            markSetSaved();
+        }
+        return hostRoomOpen;
+    };
+    /** ⛔ The reader's LOAD doors, while a host's room is open: refused, with the sentence. */
+    const refuseWhileHostRoomOpen = () => {
+        if (!hostRoomStillOpen()) return false;
+        const why = `room ${openRoom} was HANDED OVER by another panel (its Edit ▸) and is still `
+            + 'OPEN — CLOSE the handed-over room first. Its edits go back to the panel that '
+            + 'opened it, and a document loaded now would replace them.';
+        $('editLoadNote').textContent = `⛔ REFUSED — ${why}`;
+        $('status').className = 'bad';
+        $('status').textContent = `the LOAD box was REFUSED — ${why}`;
+        return true;
+    };
     /**
      * ⛓ EDITOR INTEGRATION W3 — a RETIRED arm reports nothing to the host.
      * ⛔ Registered here, beside the locals it is about, rather than beside the
@@ -9082,6 +9137,8 @@ async function runEditor(params, lifetime) {
      * the subscription is, and this is the module-level handle's own undo.
      */
     lifetime.onRetire(() => installSetArmSnapshot(() => null));
+    // ⛓ A remount after the host's room closed must not re-take its document.
+    lifetime.onRetire(() => { hostRoomStillOpen(); });
     const adapter = createSeedlingEditAdapter({
         schema: null,
         levelSource: levelSourceFromAtlas(atlas),
@@ -9102,14 +9159,33 @@ async function runEditor(params, lifetime) {
         tileTypeForPlacement,
         rulesSchema,
         levelSetSchema,
-        atlas: { game: 'seedling-watch-edit', mapDocument: 'watch.html set editor' },
+        // ⛓ lab-set-seedling-identity: the GAME is Seedling, the map document a LABEL (`watchSetIdentity.js`).
+        atlas: WATCH_SET_ATLAS,
     };
     const setAdapter = createSeedlingSetAdapter(setDeps);
+    /**
+     * ⛓⛓ THE SET'S IDENTITY AT THE DOORS (lab-set-seedling-identity). The compile the
+     * mount runs for the REPORT is the lab's: a stamped COPY of the atlas
+     * (`seedling-lab-<8 hex>`); ⛓ S4: with the compiler's own `flash_panel` block. Every door (rules.json,
+     * the APWorld Editor, the bundle) reads the report, so all three carry that id.
+     * `atlasAtDoor` gives the bundle's atlas member the same stamp.
+     */
+    const labIdentity = labSetIdentity({ compileRegionAtlas, stampAtlasIdentity });
 
     const atlasLevels = (atlas.levels ?? []).map((l) => l.level);
     const wantLevel = Number.isInteger(params.level) ? params.level : atlasLevels[0];
 
     let session = null;
+    // ⛓ S4 — the hand-over guard (module docblock at `installHandoverRefusal`), over this arm's live locals.
+    installHandoverRefusal((set) => handoverRefusalOf({
+        heldSetId: setSession ? setSession.record().set.set_id : null,
+        unsaved: !!setSession && setHashNow() !== setSessionSavedHash,
+        roomEdits: openRoom !== null && session ? session.ops().length : 0,
+        openRoom,
+        hostRoomOpen: hostRoomStillOpen(),
+        handedSetId: set?.set_id ?? null,
+    }));
+    lifetime.onRetire(() => installHandoverRefusal(() => null));
     let baseTag = null;
     /**
      * ⛓ THE BASE'S RECORD, KEPT BESIDE THE TAG. The session owns it internally
@@ -9215,9 +9291,77 @@ async function runEditor(params, lifetime) {
         };
     };
 
+    /**
+     * ⛓⛓ SEEDLING → MAZE LINK (⚖ Robert 2026-11-14) — the open room's converted maze room(s), opened in the maze
+     * lab in a new tab. `seedlingMazeLink` does the finding; this is the control. ⛔ ON DEMAND: nothing is fetched
+     * until `#editMazeFind` is pressed (the index and the Seedling presets' rules, ~2 MB), so a row that never asks
+     * for the link sees no request and no time spent. After the first press the answer re-renders with the room
+     * (an edit, an undo, another room opened). A room with no counterpart shows the REASON and no link.
+     */
+    let mazeCounterparts = null;   // null = not asked; a Promise while looking; then the answer or {error}
+    let mazeLink = null;
+    const renderMazeLink = () => {
+        const open = $('editMazeOpen');
+        const pick = $('editMazeRoom');
+        const note = $('editMazeNote');
+        if (mazeCounterparts === null || mazeCounterparts instanceof Promise) {
+            mazeLink = null;
+            return;
+        }
+        $('editMazeFind').hidden = true;
+        mazeLink = mazeCounterparts.error
+            ? { ok: false, reason: `the maze presets could not be read — ${mazeCounterparts.error}` }
+            : mazeLinkFor({
+                baseRecord, baseKind: baseTag?.kind ?? null, edits: session ? session.ops().length : 0,
+                mapDoc: atlas, counterparts: mazeCounterparts,
+            });
+        if (!mazeLink.ok) {
+            pick.hidden = true;
+            open.hidden = true;
+            open.removeAttribute('href');
+            note.className = 'note bad';
+            note.textContent = `no maze lab link: ${mazeLink.reason}`;
+            return;
+        }
+        const keep = pick.value;
+        pick.replaceChildren(...mazeLink.options.map((o) => {
+            const opt = document.createElement('option');
+            opt.value = o.url;
+            opt.textContent = o.label;
+            return opt;
+        }));
+        if (mazeLink.options.some((o) => o.url === keep)) pick.value = keep;
+        pick.hidden = mazeLink.options.length < 2;
+        open.hidden = false;
+        open.href = repoUrl(`frontend/${pick.value}`);
+        note.className = 'note';
+        note.textContent = `level ${mazeLink.level}: ${mazeLink.options.length} maze room(s)`
+            + `${mazeLink.notes.length ? ` — ⚠ ${mazeLink.notes.join('; ')}` : ''}`;
+    };
+    lifetime.on($('editMazeRoom'), 'change', () => {
+        $('editMazeOpen').href = repoUrl(`frontend/${$('editMazeRoom').value}`);
+    });
+    lifetime.on($('editMazeFind'), 'click', () => {
+        if (mazeCounterparts !== null) return;
+        $('editMazeFind').disabled = true;
+        $('editMazeNote').className = 'note';
+        $('editMazeNote').textContent = 'looking for this room in the maze presets…';
+        mazeCounterparts = findMazeCounterparts({
+            mapDoc: atlas,
+            mapName: mapDocumentPath(null).name,
+            fetchJson: (path) => fetchJson(repoUrl(`frontend/${path}`), path),
+        }).catch((e) => ({ error: e.message }));
+        mazeCounterparts.then((answer) => {
+            if (!lifetime.alive()) return;
+            mazeCounterparts = answer;
+            render();
+        });
+    });
+
     let editorUi = null;
     const render = () => {
         const n = session.ops().length;
+        renderMazeLink();
         $('editBase').textContent = `${describeBase(baseTag)}${n ? `, then ${n} edit(s)` : ''}`
             + ' — ⛔ the URL carries NO edits (⚖ ruling 9); the PAYLOAD is the reproduction.';
         /**
@@ -9315,6 +9459,8 @@ async function runEditor(params, lifetime) {
             transcribe: untranscribedTypes(session.record(), ENTITY_CLASSES),
             /** ⛓ E2 — what the room is wired to, and the issues the panel lists. */
             get links() { return editorUi?.links() ?? null; },
+            /** ⛓ The Seedling → maze link: null until `#editMazeFind` is pressed and answered. */
+            get mazeLink() { return mazeLink; },
             /**
              * ⛓ EDITOR v3 C2 — WHICH SET IS HELD and how many of its rooms this
              * page could open. ⛔ The set itself is NOT echoed here: it is up to
@@ -9753,7 +9899,47 @@ async function runEditor(params, lifetime) {
      * makes an overlay a document that can arrive at all.
      */
     let heldOverlay = null;
-    const takeLevelSet = (set, overlay = null) => {
+    /**
+     * ⛓⛓⛓ DOCUMENT LIBRARY B3 — **THE LAB SAVES BY ITSELF.** `onSetChange`'s `why` reaches the writer
+     * (`watchLibrary.js`): a room CLOSE, a REPORT, a download and the hand-over are numbered versions, an
+     * edit is the tab's rolling draft, a selection writes nothing (⚖ Robert Q1). ⛔ The writer is imported
+     * DYNAMICALLY at the first save, so a page that never saves fetches nothing new, and nothing restores
+     * on reload. A set loaded from the box, a file, a preset or a host starts a NEW lineage; one opened
+     * from "Recent sets" continues ITS lineage (`libraryOrigin`, set only for that one call).
+     */
+    let libraryWriter = null;
+    let libraryLoad = null;
+    let librarySession = { lineageId: null, parent: null };
+    let libraryOrigin = null;
+    const libraryRecord = () => setSession?.record() ?? null;
+    const withLibrary = () => (libraryLoad ??= import('./watchLibrary.js').then((m) => {
+        if (!lifetime.alive()) return null;
+        libraryWriter = m.createLabLibrary({
+            lifetime,
+            schemas: { rulesSchema, levelSetSchema, atlasSchema },
+            getRecord: libraryRecord,
+            statusEl: $('editLibraryStatus'),
+            session: librarySession,
+        });
+        return libraryWriter;
+    }));
+    const libraryChanged = (why) => {
+        if (why === 'select' || why === 'room' || !setSession) return;
+        if (libraryWriter) {
+            libraryWriter.changed(why);
+            return;
+        }
+        // ⛓ The first save: the record at THIS moment is what a save point saves, so it is held until the
+        // writer has loaded (an edit's draft reads the record when it fires, as always).
+        const at = setSession.record();
+        withLibrary().then((w) => {
+            if (!w) return;
+            if (why === 'op') w.changed(why);
+            else w.changed(why, at);
+        });
+    };
+    const takeLevelSet = (set, overlay = null, { fromHost = false } = {}) => {
+        if (!fromHost && refuseWhileHostRoomOpen()) return false;
         const v = validateLevelSet(set);
         if (!v.ok) {
             const why = `this JSON has \`rooms\`, so it is a LEVEL SET — and `
@@ -9776,9 +9962,16 @@ async function runEditor(params, lifetime) {
             $('status').textContent = `the LOAD box was REFUSED — ${why}`;
             return false;
         }
+        // ⛓ B3: the OLD session's pending draft is written before the session changes under it.
+        libraryWriter?.flush();
         setSession = createSetSession(setAdapter, record, { base });
+        librarySession = libraryOrigin ?? { lineageId: null, parent: null };
+        libraryWriter?.startSession(librarySession, libraryRecord);
         setRoomSource = setSessionRoomSource(setSession);
         openRoom = null;
+        markSetSaved();
+        // ⛓ A set the READER loaded is theirs: the host's document is not held for it.
+        if (!fromHost) holdHostSetDocument(null);
         /**
          * ⛓⛓ EDITOR INTEGRATION W3 — the host bridge's window onto this arm.
          * ⛔ A FUNCTION over the live locals, and it is re-installed on every
@@ -9794,7 +9987,8 @@ async function runEditor(params, lifetime) {
             session: setSession,
             adapter: setAdapter,
             deps: setDeps,
-            compileRegionAtlas,
+            compileRegionAtlas: labIdentity.compileRegionAtlas,
+            atlasAtDoor: labIdentity.atlasAtDoor,
             validateRegionAtlas,
             atlasSchema: atlasSchema ?? undefined,
             /**
@@ -9809,8 +10003,8 @@ async function runEditor(params, lifetime) {
              */
             apworldEditor: {
                 available: () => hostBridge?.connected === true,
-                open: (rules) => hostBridge?.openInApworldEditor(
-                    rules, 'the Seedling watch page (SET arm)') === true,
+                open: (rules, atlases = [], levelSets = []) => hostBridge?.openInApworldEditor(
+                    rules, 'the Seedling watch page (SET arm)', atlases, levelSets) === true,
             },
             recordToOel,
             drawRoomStill,
@@ -9830,9 +10024,14 @@ async function runEditor(params, lifetime) {
                 : { room: openRoom, ops: session.ops().length, session }),
             openRoomAt,
             discardRoom,
-            download,
+            // ⛓ S4 — the set editor's downloads: a SET or BUNDLE one is the set's save (the hand-over guard's); a room's,
+            // the overlay's, the companion's or rules.json's is not (`isSetSaveDownload`).
+            download: (name, text, type) => {
+                if (isSetSaveDownload({ text, type })) markSetSaved();
+                download(name, text, type);
+            },
             loadZip,
-            onSetChange: () => {
+            onSetChange: (change) => {
                 renderSetRooms();
                 render();
                 /**
@@ -9849,8 +10048,11 @@ async function runEditor(params, lifetime) {
                  * restores what is on screen rather than what arrived. ⚠ Only
                  * while a host handed one over — a set the READER pasted is
                  * theirs and this page has never restored one across a switch.
+                 * ⛓ And only while the host's ROOM is open: its close RELEASES
+                 * the document (`hostRoomStillOpen`), so a later remount cannot
+                 * re-take a copy whose stamp predates the fold.
                  */
-                if (peekHostSetDocument()) {
+                if (hostRoomStillOpen() && peekHostSetDocument()) {
                     holdHostSetDocument({
                         set: setSession.record().set,
                         overlay: setSession.record().overlay,
@@ -9865,6 +10067,8 @@ async function runEditor(params, lifetime) {
                  * its own `render`.
                  */
                 if (lifetime.alive()) publishWatch(params.source);
+                // ⛓ B3 — LAST, after everything above: the library save is beside the page's own work.
+                if (lifetime.alive()) libraryChanged(change?.why);
             },
         });
         renderSetRooms();
@@ -9923,7 +10127,8 @@ async function runEditor(params, lifetime) {
      * happens once, at download (§20.6). Re-validating here read a correct
      * session as a broken document and silently kept the old overlay.
      */
-    const takeOverlay = (overlay) => {
+    const takeOverlay = (overlay, { fromHost = false } = {}) => {
+        if (!fromHost && refuseWhileHostRoomOpen()) return false;
         if (!setSession) {
             heldOverlay = overlay;
             setNote(`HELD an OVERLAY (${overlay.overlay_id ?? 'unstamped'}) with no set to `
@@ -9937,8 +10142,31 @@ async function runEditor(params, lifetime) {
                 + 'set (that writes the overlay too) or undo back to zero first.', true);
             return false;
         }
-        return takeLevelSet(setSession.record().set, overlay);
+        return takeLevelSet(setSession.record().set, overlay, { fromHost });
     };
+
+    /**
+     * ⛓⛓ DOCUMENT LIBRARY B3 — **RECENT SETS.** Lists the library's sets (the writer's module, loaded on
+     * this press) and opens one BY FINGERPRINT through `takeLevelSet`, the LOAD box's own door. The
+     * session it opens continues that set's lineage (`libraryOrigin`, for exactly that call).
+     */
+    lifetime.on($('editLoadRecent'), 'click', async () => {
+        const m = await import('./watchLibrary.js');
+        if (!lifetime.alive()) return;
+        await m.showRecentSets({
+            lifetime,
+            listEl: $('editRecentList'),
+            noteEl: $('editRecentNote'),
+            onOpen: ({ set, overlay, lineageId, parent }) => {
+                libraryOrigin = { lineageId, parent };
+                try {
+                    return takeLevelSet(set, overlay);
+                } finally {
+                    libraryOrigin = null;
+                }
+            },
+        });
+    });
 
     lifetime.on($('editSetOpen'), 'click', () => {
         if (!setSession) return;
@@ -10088,6 +10316,7 @@ async function runEditor(params, lifetime) {
      * @returns {boolean} whether anything was taken
      */
     const intakeLoadText = (text) => {
+        if (refuseWhileHostRoomOpen()) return false;
         const got = sniffLoadBox(text);
         if (got.kind === null) {
             $('editLoadNote').textContent = `⛔ REFUSED — ${got.why}`;
@@ -10265,8 +10494,8 @@ async function runEditor(params, lifetime) {
      * silent.
      */
     const hostDoc = peekHostSetDocument();
-    if (hostDoc?.set) takeLevelSet(hostDoc.set, hostDoc.overlay ?? null);
-    else if (hostDoc?.overlay) takeOverlay(hostDoc.overlay);
+    if (hostDoc?.set) takeLevelSet(hostDoc.set, hostDoc.overlay ?? null, { fromHost: true });
+    else if (hostDoc?.overlay) takeOverlay(hostDoc.overlay, { fromHost: true });
 
     /**
      * ⛓⛓ **`?room=` OPENS ONE ROOM OF WHAT IS HELD**, through `openRoomAt` —
@@ -10291,7 +10520,7 @@ async function runEditor(params, lifetime) {
                 + `${setSession.record().set.rooms.length} room(s), numbered from 0. No room `
                 + 'was opened.', true);
         } else {
-            openRoomAt(params.room);
+            hostRoomOpen = openRoomAt(params.room) && Boolean(hostDoc?.set);
         }
         setUi?.render();
         render();
@@ -11636,16 +11865,35 @@ function showPanelsFor(source) {
  * cannot be honoured is worse than none.
  */
 function wireSourceSelector(params, onSwitch) {
+    showSourceFor(params);
     const sel = $('source');
-    sel.value = params.source;
-    showPanelsFor(params.source);
     sel.onchange = () => onSwitch(sel.value);
 
     // ⛓ The engine picker rides the same switch — REPLAY-only, because the
     // other three arms build JS worlds and the wasm side builds none.
     const sideSel = $('side');
-    sideSel.value = params.side;
     sideSel.onchange = () => onSwitch('replay', sideSel.value);
+}
+
+/**
+ * ⛓⛓ THE SOURCE AND SIDE DROP-DOWNS SHOW THE ARM `params` NAMES — at boot AND
+ * after every `navigateTo` (slice seedling-source-sync). ONE helper for both
+ * paths, so they cannot drift.
+ *
+ * ⛔ A host navigate (another panel's Edit ▸ → `?source=edit&room=`) mounts an
+ * arm the drop-down did not pick. Before this, only the boot set the
+ * drop-downs, so after it `#source` still showed the boot arm; picking the arm
+ * that WAS mounted then fired `change` → a second, async remount, and a LOAD
+ * pressed during it landed in the retiring arm.
+ *
+ * ⚠ Setting `.value` fires no `change` (measured: 0 events, no remount), so
+ * this cannot start a second switch. And a person re-picking the option the
+ * drop-down already shows fires none either, so it does not remount.
+ */
+function showSourceFor(params) {
+    $('source').value = params.source;
+    $('side').value = params.side;
+    showPanelsFor(params.source);
 }
 
 /**
@@ -11954,7 +12202,7 @@ async function navigateTo(search, why) {
     }
     window.history.replaceState(null, '', `${window.location.pathname}?${asked.toString()}`);
     const params = readParams();
-    showPanelsFor(params.source);
+    showSourceFor(params);
     resetPageChrome();
     await mountArm(params, armLifetimes.start(armNameFor(params), why));
 }
@@ -12208,6 +12456,18 @@ async function hostLoad(payload) {
      */
     const got = sniffLoadBox(JSON.stringify(payload));
     if (got.kind === 'levelset' || got.kind === 'overlay') {
+        // ⛓ S4 — nothing of the reader's is clobbered: refused by name, the document NOT held, no navigate.
+        const refused = got.kind === 'levelset' ? handoverRefusal(got.set) : null;
+        if (refused) {
+            const status = document.getElementById('status');
+            if (status) {
+                status.className = 'bad';
+                status.textContent = `the HAND-OVER was REFUSED — ${refused}`;
+            }
+            // eslint-disable-next-line no-console
+            console.warn(`watchViewer: the hand-over was REFUSED — ${refused}`);
+            return;
+        }
         const held = peekHostSetDocument();
         holdHostSetDocument(got.kind === 'levelset'
             ? { set: got.set, overlay: held?.overlay ?? null }

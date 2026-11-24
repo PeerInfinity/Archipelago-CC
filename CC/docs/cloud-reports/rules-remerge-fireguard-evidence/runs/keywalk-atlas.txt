@@ -1,0 +1,16 @@
+## frontend/modules/flashPanel/atlases/seedling-playthrough.json vs origin/main: 5 change(s)
+CHG /atlas_id
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /provenance/content_hash
+    - "2ac275e8"
+    + "630fbc4c"
+DEL /regions/name=Level 073/subgraph/internal_exits/[0]/access_rule/children/[3]
+    - {"args": {"item_name": "Fire"}, "rule": "Has"}
+    + null
+CHG /regions/name=Level 100/subgraph/internal_exits/[0]/bidirectional
+    - false
+    + true
+DEL /regions/name=Level 100/subgraph/internal_exits/[1]
+    - {"access_rule": {"children": [{"args": {"item_name": "Progressive Sword"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}, {"args": {"item_name": "Fire"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": false, "from": "r4c10", "source": "analyzer", "to": "r2c3"}
+    + null

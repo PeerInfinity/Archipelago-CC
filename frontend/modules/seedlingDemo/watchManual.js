@@ -276,6 +276,17 @@ export function createManualSession({
     return {
         run,
         staging: honest,
+        /**
+         * ⛓ seedling-js-item-live-delivery — a host delivery written into the LIVE run at this tick boundary
+         * (`levelRun.deliver`), and RECORDED on the staging (`deliveries: [{t, change}]`) when it changed the run, so a
+         * run rebuilt from `staging` and replayed through `perTick` (the JS solver's shadow) applies it at the same tick.
+         */
+        deliver(change) {
+            const t = run.ticksCompleted;
+            const r = run.deliver(change);
+            if (r.changed) (honest.deliveries ??= []).push({ t, change: { ...change } });
+            return r;
+        },
         get name() { return name; },
         /** Completed movement ticks — `observations.length - 1`, always. */
         get tick() { return perTick.length; },

@@ -10,51 +10,53 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 <!-- GENERATED:substrate-capability-chart BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**30 statements · 9 substrates · 40 registry fields read (43 of the developer matrix's 105, counting the parents of the fields read) · 62 not yet read.**
+**32 statements · 10 substrates · 42 registry fields read (45 of the developer matrix's 117, counting the parents of the fields read) · 72 not yet read.**
 
 ## Play
 
-| | What you can do | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Text Adventure |
-|---|---|---|---|---|---|---|---|---|---|---|
-| P1 | You can play its regions by hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| P2 | The Playback Bot can walk it (replaying a world's solution) | ✓ | ✓ | ◐ with the Flash Panel's JS runtime, or its wasm runtime | ◐ with the Flash Panel's JS runtime, or its wasm runtime | ✓ | ✓ | ✓ | ✓ | ✓ |
-| P3 | It draws its own picture on the composite map (else a labelled box) | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ | ✓ |
-| P4 | It brings progression items of its own | ✓ Right arrow, Left arrow, Springs, Jetpacks, Blue platforms, Brown platforms, Victory | ✓ 13 items | ✗ | ✓ Progressive Sword, Progressive Shield, Progressive Swim | ✓ 48 items | ✓ Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key | ✓ Victory, Noiz2sa Star | ✓ Victory | ✗ |
-| P5 | What the generator may do with it | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit |
-| P6 | It can show the library's concepts in its own way | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ 4 concepts: sword (mechanic), swim (mechanic), guardian (skin), … | ✗ | ✗ | ✓ 4 concepts: sword (mechanic), swim (mechanic), guardian (mechanic), … |
-| P7 | Themeable | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ gate, item | ✗ | ✗ | ✓ gate, item, place |
+| | What you can do | Action Nodes | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Text Adventure |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| P1 | You can play its regions by hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| P2 | The Playback Bot can walk it (replaying a world's solution) | ✗ | ✓ | ✓ | ◐ with the Flash Panel's JS runtime, or its wasm runtime | ◐ with the Flash Panel's JS runtime, or its wasm runtime | ✓ | ✓ | ✓ | ✓ | ✓ |
+| P3 | It draws its own picture on the composite map (else a labelled box) | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ | ✓ |
+| P4 | It brings progression items of its own | ✗ | ✓ Right arrow, Left arrow, Springs, Jetpacks, Blue platforms, Brown platforms, Victory | ✓ 13 items | ✗ | ✓ Progressive Sword, Progressive Shield, Progressive Swim | ✓ 48 items | ✓ Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key | ✓ Victory, Noiz2sa Star | ✓ Victory | ✗ |
+| P5 | What the generator may do with it | ✗ | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit |
+| P6 | It can show the library's concepts in its own way | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ 4 concepts: sword (mechanic), swim (mechanic), guardian (skin), … | ✗ | ✗ | ✓ 4 concepts: sword (mechanic), swim (mechanic), guardian (mechanic), … |
+| P7 | Themeable | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ gate, item, character, object, info | ✗ | ✗ | ✓ gate, item, place, character, object, info |
 
 ## Loop mode
 
-| | What you can do | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Text Adventure |
-|---|---|---|---|---|---|---|---|---|---|---|
-| L1 | You can play it in loop mode | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| L2 | What you can queue for it | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks, exploring | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks, exploring |
-| L3 | You can record a visit and replay it | ✓ | ✓ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| L4 | How a replay works | ✓ applies the result instantly | ✓ applies the result instantly | n/a | n/a | ✓ replays your exact moves | ✓ replays your exact moves | ✓ applies the result instantly | ✓ replays your exact moves | ✓ re-runs the queued actions |
-| L5 | Instant fast-forward | ✓ always — a replay is already instant | ✓ always — a replay is already instant | ✗ | ✗ | ✓ a per-block toggle | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle | ✓ a per-block toggle |
-| L6 | A Bot block can play it for you | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the substrate walks it itself | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it |
-| L7 | The Bot honours Instant | n/a | n/a | ✗ | ✗ | ✓ | ✗ | n/a | ✓ | n/a |
-| L8 | You can play it outside loop mode | ✓ | ✓ | ✓ | ✓ | ✗ (note 1) | ✓ | ✓ | ✗ (note 2) | ✓ |
-| L9 | It shares the loop-mode mana pool | ✗ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ | ✓ |
-| L10 | It shares consumable items with other substrates | ✗ | ✗ | ✗ | ✗ | ✓ its list comes from the running game — see the Substrate Registry panel | ✗ | ✗ | ✓ 18 item types: gold, reputation, herbs, … | ✗ |
-| L11 | Recorded actions are named in the game's own words | ✗ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ |
+| | What you can do | Action Nodes | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Text Adventure |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| L1 | You can play it in loop mode | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| L2 | What you can queue for it | ✓ moves between regions, performing each node's action | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks, exploring | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks, exploring |
+| L3 | You can record a visit and replay it | ✗ | ✓ | ✓ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| L4 | How a replay works | n/a | ✓ applies the result instantly | ✓ applies the result instantly | n/a | n/a | ✓ replays your exact moves | ✓ replays your exact moves | ✓ applies the result instantly | ✓ replays your exact moves | ✓ re-runs the queued actions |
+| L5 | Instant fast-forward | ✗ | ✓ always — a replay is already instant | ✓ always — a replay is already instant | ✗ | ✗ | ✓ a per-block toggle | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle | ✓ a per-block toggle |
+| L6 | A Bot block can play it for you | ✗ | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the substrate walks it itself | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it |
+| L7 | The Bot honours Instant | n/a | n/a | n/a | ✗ | ✗ | ✓ | ✗ | n/a | ✓ | n/a |
+| L8 | You can play it outside loop mode | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ (note 1) | ✓ | ✓ | ✗ (note 2) | ✓ |
+| L9 | It shares the loop-mode mana pool | ✓ | ✗ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ | ✓ |
+| L10 | It shares consumable items with other substrates | ✓ its list comes from the running game — see the Substrate Registry panel | ✗ | ✗ | ✗ | ✗ | ✓ its list comes from the running game — see the Substrate Registry panel | ✗ | ✗ | ✓ 18 item types: gold, reputation, herbs, … | ✗ |
+| L11 | Recorded actions are named in the game's own words | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ |
+| L12 | The host keeps its per-loop stats | ✓ its list comes from the loaded world's own data | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| L13 | The host keeps its per-loop resources | ✓ its list comes from the loaded world's own data | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 
 1. JtA: loop mode stays on — it declares `loopSupport.requiresLoopMode`
 2. Idle Loops: loop mode stays on — it declares `loopSupport.requiresLoopMode`
 
 ## Generate
 
-| | What you can do | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Text Adventure |
-|---|---|---|---|---|---|---|---|---|---|---|
-| G1 | The pipeline can build regions of it | ✓ picked from its own levels to fit the plan | ✓ picked from its own levels to fit the plan | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✗ only as content from its own game | ✓ grown to order |
-| G2 | How many ready-made rooms / levels it brings | ✓ 5 | ✗ | ✓ 4 Atlas rooms | n/a | ✓ 30 | n/a | ✓ 3 Noiz2sa segments | ✓ 1 | n/a |
-| G3 | Generates quickly | ✓ | ✗ its generation cost is declared `heavy` | ✓ | ✓ | ✓ | ✓ | ✓ | n/a | ✓ |
-| G4 | Its rooms can be captured into a library and reused | ✓ | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ |
-| G5 | Exits can be locked behind items | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ | ✓ |
-| G6 | It has its own settings in the generation form | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✗ |
-| G7 | A world of it can start with an empty inventory | ✗ (note 1) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| G8 | Any number of locations fits in one room | n/a | n/a | n/a | ✗ (note 2) | n/a | ✗ (note 3) | n/a | n/a | ✓ |
+| | What you can do | Action Nodes | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Text Adventure |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| G1 | The pipeline can build regions of it | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ picked from its own levels to fit the plan | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✗ only as content from its own game | ✓ grown to order |
+| G2 | How many ready-made rooms / levels it brings | ✗ | ✓ 5 | ✗ | ✓ 4 Atlas rooms | n/a | ✓ 30 | n/a | ✓ 3 Noiz2sa segments | ✓ 1 | n/a |
+| G3 | Generates quickly | n/a | ✓ | ✗ its generation cost is declared `heavy` | ✓ | ✓ | ✓ | ✓ | ✓ | n/a | ✓ |
+| G4 | Its rooms can be captured into a library and reused | ✗ | ✓ | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ |
+| G5 | Exits can be locked behind items | ✗ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ | ✓ |
+| G6 | It has its own settings in the generation form | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✗ |
+| G7 | A world of it can start with an empty inventory | ✓ | ✗ (note 1) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| G8 | Any number of locations fits in one room | n/a | n/a | n/a | n/a | ✗ (note 2) | n/a | ✗ (note 3) | n/a | n/a | ✓ |
 
 1. Bounce Demo: a world starts with one of Left arrow / Right arrow — a bounce level cannot gate both arrows in one region, and hosts at most one arrowless-gated exit — the sphere route grants one arrow at the start for this reason
 2. Seedling (generated room): a room holds `capacityAt(size)` of them — the room grows to hold more, up to 30 (the game's 30 persistence tags), which no size lifts
@@ -62,12 +64,12 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 ## Edit
 
-| | What you can do | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Text Adventure |
-|---|---|---|---|---|---|---|---|---|---|---|
-| E1 | Its rooms can be edited | ✓ in a panel | ✗ | ✓ on a lab page | ✓ on a lab page | ✗ | ✓ on a lab page | ✗ | ✗ | ✗ |
-| E2 | A region of a saved world can be opened in an editor and saved back | ✓ | ✗ | ✗ (note 1) | ✓ | ✗ | ✓ | ✗ | ✗ | ✓ |
-| E3 | An exit can be moved to another side (and a side can hold more than one) | ◐ one exit per side | ◐ one exit per side | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✗ | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✓ and a side can hold more than one |
-| E4 | The editor's validity report checks its location and exit names | ✓ | ✓ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| | What you can do | Action Nodes | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Text Adventure |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| E1 | Its rooms can be edited | ✗ | ✓ in a panel | ✗ | ✓ on a lab page | ✓ on a lab page | ✗ | ✓ on a lab page | ✗ | ✗ | ✗ |
+| E2 | A region of a saved world can be opened in an editor and saved back | ✗ | ✓ | ✗ | ✗ (note 1) | ✓ | ✗ | ✓ | ✗ | ✗ | ✓ |
+| E3 | An exit can be moved to another side (and a side can hold more than one) | ✓ and a side can hold more than one | ◐ one exit per side | ◐ one exit per side | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✗ | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✓ and a side can hold more than one |
+| E4 | The editor's validity report checks its location and exit names | ✓ | ✓ | ✓ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
 1. Seedling (region atlas): this is a room from the original Seedling game, and those are read-only in a world: its access rules come from the game's committed playthrough atlas, not from the room's layout, so an edit here would leave them wrong. (Its sidecar is an ATLAS REFERENCE — `atlas_ref` / `level` — with no room data in it.) A change to a real-game room goes in as a reviewed level-set patch (`SEEDLING_SET_PATCHES`).
 
@@ -93,6 +95,8 @@ Each row is answered from these fields of the substrate's registry entry — the
 - **L9** — `sharing.mana`
 - **L10** — `sharing.items`
 - **L11** — `describeAction`
+- **L12** — `sharing.stats`
+- **L13** — `sharing.resources`
 - **G1** — `generateRegionCore`, `generateZoneForSpecs`, `generateZoneForSpecsGen`
 - **G2** — `zoneCount`, `zoneSourceLabel`, `generateRegionCore`
 - **G3** — `generationCost`
@@ -109,6 +113,19 @@ Each row is answered from these fields of the substrate's registry entry — the
 ## Each substrate on its own
 
 What each one lets you do — its ✓ and degree cells from the tables above, in the same order.
+
+### Action Nodes
+
+- *Play* — You can play its regions by hand
+- *Loop mode* — What you can queue for it: moves between regions, performing each node's action
+- *Loop mode* — You can play it outside loop mode
+- *Loop mode* — It shares the loop-mode mana pool
+- *Loop mode* — It shares consumable items with other substrates: its list comes from the running game — see the Substrate Registry panel
+- *Loop mode* — The host keeps its per-loop stats: its list comes from the loaded world's own data
+- *Loop mode* — The host keeps its per-loop resources: its list comes from the loaded world's own data
+- *Generate* — A world of it can start with an empty inventory
+- *Edit* — An exit can be moved to another side (and a side can hold more than one): and a side can hold more than one
+- *Edit* — The editor's validity report checks its location and exit names
 
 ### Bounce Demo
 
@@ -227,7 +244,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Play* — It brings progression items of its own: Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key
 - *Play* — What the generator may do with it: item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit
 - *Play* — It can show the library's concepts in its own way: 4 concepts: sword (mechanic), swim (mechanic), guardian (skin), …
-- *Play* — Themeable: gate, item
+- *Play* — Themeable: gate, item, character, object, info
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions, location checks, exploring
 - *Loop mode* — You can record a visit and replay it
@@ -296,7 +313,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Play* — It draws its own picture on the composite map (else a labelled box)
 - *Play* — What the generator may do with it: item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit
 - *Play* — It can show the library's concepts in its own way: 4 concepts: sword (mechanic), swim (mechanic), guardian (mechanic), …
-- *Play* — Themeable: gate, item, place
+- *Play* — Themeable: gate, item, place, character, object, info
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions, location checks, exploring
 - *Loop mode* — You can record a visit and replay it
@@ -316,8 +333,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 ## Fields no statement reads yet
 
-62 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
+72 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
 
-`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `compositeMap.artwork`, `compositeMap.displayRegionOf`, `compositeMap.locationTiles`, `defaultContentPack`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `entranceShuffle`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `fillerItem`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `goalContainer`, `goalContainer.noteOf`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `itemIntroduction`, `itemIntroduction.exhaustedRefusal`, `itemIntroduction.introducibleItems`, `itemIntroduction.replayableItems`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `loopSupport.playClock`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `priceRegions`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionEditStatus`, `regionGeometry`, `regionSourceDefault`, `renderLibraryProcgenParams`, `restartWarp`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `spiralItemCapacity`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
+`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `compositeMap.artwork`, `compositeMap.displayRegionOf`, `compositeMap.layoutGraph`, `compositeMap.locationTiles`, `compositeMap.regionExtent`, `compositeMap.remoteLocationTiles`, `defaultContentPack`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `entranceShuffle`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `fillRules`, `fillerItem`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `goalContainer`, `goalContainer.noteOf`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `itemIntroduction`, `itemIntroduction.exhaustedRefusal`, `itemIntroduction.introducibleItems`, `itemIntroduction.replayableItems`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopBot`, `loopSupport.actionGate`, `loopSupport.authoredCosts`, `loopSupport.customQueues`, `loopSupport.playClock`, `loopSupport.strictQueueActions`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `priceRegions`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `recordedRegionParams`, `regionBiomeOf`, `regionEditStatus`, `regionGeometry`, `regionSourceDefault`, `renderLibraryProcgenParams`, `restartWarp`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `spiralItemCapacity`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
 
 <!-- GENERATED:substrate-capability-chart END -->

@@ -1,0 +1,35 @@
+# box lock: TAKEN by play-l28-solved.mjs (browser, pid 2955) — head c3c27f3ac, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+{
+ "sight": true,
+ "solve": {
+  "ok": true,
+  "ticks": 448,
+  "hits": []
+ },
+ "cut": 448,
+ "idle": 0,
+ "perTickTotal": 448,
+ "page": "seedling_bot_ap_p4g",
+ "idleLead": 101,
+ "game": {
+  "sampled": 448,
+  "lockAt": 102,
+  "minY": 22.15032800466015,
+  "maxHits": 0,
+  "firstHitT": null,
+  "end": {
+   "x": 24,
+   "y": 136,
+   "level": 30
+  }
+ },
+ "model": {
+  "lockWriteT": 101,
+  "minY": 22.15032800466015,
+  "firstHitT": -1
+ },
+ "diverging": 0,
+ "firstDiverging": []
+}
+ALL CHECKS PASSED

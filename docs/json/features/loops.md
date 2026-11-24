@@ -141,7 +141,7 @@ default) that first hop is taken automatically at load, exactly as
 | **Resume** | Continue from where you paused |
 | **Restart** | Reset the loop (refill mana) and start the queue from the beginning |
 | **Speed slider** | Adjust game speed (0.5x to 1000x, default 100x; the number box beside it takes 0.1x to 1000x) |
-| **Instant mode** | Global: timer actions complete in one frame (disables speed slider). Distinct from the per-block **Instant** checkbox described under [Block Modes](#playing-a-substrate-region-block-modes) |
+| **Instant mode** | Global: timer actions complete in one frame (disables speed slider). Same outcome as normal speed, only faster: an action the pool cannot pay for drains what is left into region XP, does not complete, and the loop resets. Distinct from the per-block **Instant** checkbox described under [Block Modes](#playing-a-substrate-region-block-modes) |
 | **Auto-restart** | Keep the queue running instead of stopping when a loop reset interrupts it. Applies to resets **loops itself causes** — running the pool dry. A reset the underlying game causes (Journey to Ascension, Idle Loops) always continues, because the game has already restarted and stopping would only strand the queue behind it |
 | **Auto-resume** | Automatically resume processing when new actions are added after queue completion |
 | **Auto-remove** | Remove completed location checks and fully-explored explore actions from the queue |
@@ -202,6 +202,8 @@ The unit of that choice is a **block**: one visit to one region, i.e. the run of
 ### What each mode costs
 
 All four cost the same. A region visit is priced by what happens in it, not by who performed it — playing a block by hand, recording it, replaying the recording, and letting the Bot do it all charge the same mana and earn the same XP. There is no cheaper way to do the same content, and no penalty for automating it.
+
+An action's price is fixed when it starts, at the region's level at that moment, at every speed. The XP the action earns as it runs can level the region up, but that makes the *next* action cheaper, not the rest of this one.
 
 ### Instant
 

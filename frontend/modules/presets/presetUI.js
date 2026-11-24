@@ -6,6 +6,8 @@ import { centralRegistry } from '../../app/core/centralRegistry.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { JSZIP_SCRIPT, loadJSZipBrowser } from './loadJSZipBrowser.js';
 import { describeBundle, gunzipIfNeeded, readBundle } from './documentBundle.js';
+import { putAtlases } from '../procgenCore/atlasCache.js';
+import { putLevelSets } from '../procgenCore/levelSetReference.js';
 import { INITIALISE_DRIVER } from '../apworldEditor/initialiseDriver.js';
 
 const DEV_INDEX_PATH = './presets/preset_files.json';
@@ -1714,17 +1716,40 @@ export class PresetUI {
       const JSZip = await this.loadJSZip();
       const { members, notes } = await readBundle(bytes, { jszip: JSZip });
       const rules = members.find((m) => m.kind === 'rules');
-      const others = members.filter((m) => m.kind !== 'rules');
       const summary = describeBundle({ members, notes });
       if (!rules) {
         throw new Error(`${file.name} carries no rules.json — ${summary}`);
       }
       log('info', `Bundle ${file.name}: ${summary}`);
-      if (others.length || notes.length) {
+      /**
+       * ⛓ region-map atlas-cache — **THE BUNDLE'S REGION ATLAS GOES TO THE HOST CACHE**, keyed by its own
+       * `atlas_id`, BEFORE the rules are published: the rules name that id in `region_atlas[p]` and carry no
+       * body, so this is the one moment the host holds both (`procgenCore/atlasCache.js`; the Region Map reads it).
+       */
+      const atlases = members.filter((m) => m.kind === 'region-atlas');
+      putAtlases(atlases.map((m) => m.doc));
+      /**
+       * ⛓ S3 — **AND THE BUNDLE'S LEVEL SET GOES TO ITS HOST CACHE**, the same moment and for the same reason:
+       * the rules name it (`region_atlas[p].level_set = {set_id, content_hash}`) and carry no body. Held under its
+       * own `set_id` WITH its computed content hash (`procgenCore/levelSetReference.js`), so a reader that asks by
+       * the rules' hash is told of a mismatch rather than served the wrong set. ⛓ S4: the Flash panel's AP load delivers it.
+       */
+      const levelSets = members.filter((m) => m.kind === 'level-set');
+      const heldSets = putLevelSets(levelSets.map((m) => m.doc));
+      const isCached = (m) => m.kind === 'region-atlas' || m.kind === 'level-set';
+      const others = members.filter((m) => m.kind !== 'rules' && !isCached(m));
+      if (others.length || notes.length || atlases.length || levelSets.length) {
+        const cached = [
+          ...atlases.map((m) => `${m.kind} (\`${m.name}\`) as ${m.doc.atlas_id}`),
+          ...levelSets.map((m) => `${m.kind} (\`${m.name}\`) as ${
+            heldSets.some((r) => r.set_id === m.doc.set_id) ? m.doc.set_id : '(NOT held: no set_id)'}`),
+        ];
+        const skipped = [...others.map((m) => `${m.kind} (\`${m.name}\`)`), ...notes];
         this.eventBus.publish('ui:notification', {
           type: 'info',
-          message: `${file.name}: loaded the rules member; NOT loaded — `
-            + `${[...others.map((m) => `${m.kind} (\`${m.name}\`)`), ...notes].join(', ')}`,
+          message: `${file.name}: loaded the rules member`
+            + `${cached.length ? `; CACHED — ${cached.join(', ')}` : ''}`
+            + `${skipped.length ? `; NOT loaded — ${skipped.join(', ')}` : ''}`,
         });
       }
       this.displayLoadedJsonFileDetails(rules.doc, `${file.name} → ${rules.name}`,

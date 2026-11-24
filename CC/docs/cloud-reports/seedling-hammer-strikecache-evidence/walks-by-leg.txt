@@ -1,0 +1,25 @@
+leg | key | requests | reaching deriveStrike walkTo | walks | forecast ticks skipped | spinner rows skipped
+19 | Level 040 - Chest | 2 | 1 | 2144 | 123200 | 368000
+26 | Level 040 - Boss Key 2 | 12 | 3 | 1050 | 39200 | 291200
+6 | Level 019 - Boss Key 0 | 5 | 1 | 518 | 9600 | 0
+18 | Level 039 - Totem Part 72,40 | 9 | 1 | 197 | 22000 | 0
+1 | Level 010 - Sword | 10 | 0 | 0 | 0 | 0
+2 | Level 011 - Chest | 2 | 0 | 0 | 0 | 0
+3 | Level 086 - Chest | 5 | 0 | 0 | 0 | 0
+4 | Level 036 - Chest | 4 | 0 | 0 | 0 | 0
+5 | Level 017 - Chest | 9 | 0 | 0 | 0 | 0
+8 | Level 020 - Shield | 2 | 0 | 0 | 0 | 0
+9 | Level 025 - Chest | 10 | 0 | 0 | 0 | 0
+10 | Level 029 - Boss Key 1 | 3 | 0 | 0 | 0 | 0
+11 | Level 030 - Torchpickup | 3 | 0 | 0 | 0 | 0
+12 | Level 032 - Bob Boss | 2 | 0 | 0 | 0 | 0
+14 | Level 012 - Chest | 7 | 0 | 0 | 0 | 0
+15 | Level 038 - Chest | 3 | 0 | 0 | 0 | 0
+16 | Level 049 - Conch | 10 | 0 | 0 | 0 | 0
+17 | Level 015 - Chest | 4 | 0 | 0 | 0 | 0
+20 | Level 040 - Totem Part 160,640 | 1 | 0 | 0 | 0 | 0
+21 | Level 046 - Chest | 6 | 0 | 0 | 0 | 0
+22 | Level 048 - Chest | 3 | 0 | 0 | 0 | 0
+23 | Level 055 - Boss Key 3 | 12 | 0 | 0 | 0 | 0
+24 | Level 089 - Feather | 18 | 0 | 0 | 0 | 0
+25 | Level 090 - Chest | 5 | 0 | 0 | 0 | 0

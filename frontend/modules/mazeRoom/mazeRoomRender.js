@@ -122,7 +122,7 @@ import {
 import { drawHazards } from '../shared/procgen/contentModules/hazardRender.js';
 import { TILE_WALL, effectiveInventory, getTile, latchesDown } from './mazeRoomEngine.js';
 import { isConceptGate, paintConceptGate } from './mazeConcepts.js';
-import { conceptArtFrame, drawConceptArt, drawTileArt, tileArtFrame, tileArtRefusal } from './mazeTileArt.js';
+import { conceptArtFrame, drawConceptArt, drawMazeTile, tileArtRefusal } from './mazeTileArt.js';
 
 export class MazeRenderError extends Error {
     constructor(message) {
@@ -173,6 +173,9 @@ export const COLORS = {
     blockStruck: '#d05a3a',
     blockDormant: '#7ab8d8',
     pulser: '#e0e070',
+    // ⛓ CONTENT SETS S2: a region's sign (a piece of information no character or object holds), drawn beside
+    // `drawWorld` by `mazeThingOverlay.js` when the stack has no art for it.
+    sign: '#b89868',
 };
 
 /**
@@ -403,9 +406,15 @@ const BLOCK_ART = Object.freeze({ walk: 'block', struck: 'blockStruck', dormant:
 
 export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
     const px = view.tilePx;
+    // ⛓ TILE-1: the cell origin (the composite map's cell, `mazeCompositeMap.js`; 0 in the one-region view).
+    const ox = view.offX ?? 0;
+    const oy = view.offY ?? 0;
+    const X = (x) => ox + x * px;
+    const Y = (y) => oy + y * px;
     // ⛓ R2b: the seam (`mazeTileArt.drawTileArt`); null under the Seedling skin, and for a view built before R2b.
+    // ⛓ TILE-1: every kind through the one chain (`mazeTileArt.drawMazeTile`): the art, else the shape below.
     const tileArt = view.seedlingSkin ? null : (view.tileArt ?? null);
-    const art = (thing, x, y) => tileArt !== null && drawTileArt(ctx, tileArt, thing, x * px, y * px, px, px);
+    const tile = (thing, x, y, own) => drawMazeTile(ctx, tileArt, thing, X(x), Y(y), px, { own });
     const owned = (x, y) => spriteCells?.has(`${x},${y}`) ?? false;
     if (Array.isArray(w.pulsers) && w.pulsers.length > 0) {
         ctx.save();
@@ -414,20 +423,20 @@ export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
             ctx.fillStyle = view.livePulsers?.[i] ? COLORS.laneArmed : COLORS.laneSilent;
             for (const key of p.reach) {
                 const [rx, ry] = key.split(',').map(Number);
-                ctx.fillRect(rx * px, ry * px, px, px);
+                ctx.fillRect(X(rx), Y(ry), px, px);
             }
             ctx.globalAlpha = 1;
             if (owned(p.x, p.y)) return;
             ctx.fillStyle = COLORS.pulser;
             ctx.strokeStyle = view.livePulsers?.[i] ? COLORS.laneArmed : COLORS.laneSilent;
             ctx.lineWidth = 2;
-            if (!art('pulser', p.x, p.y)) {
+            tile('pulser', p.x, p.y, () => {
                 ctx.beginPath();
-                ctx.arc(p.x * px + px / 2, p.y * px + px / 2, px * 0.25, 0, Math.PI * 2);
+                ctx.arc(X(p.x) + px / 2, Y(p.y) + px / 2, px * 0.25, 0, Math.PI * 2);
                 ctx.fill();
-            }
+            });
             ctx.beginPath();
-            ctx.arc(p.x * px + px / 2, p.y * px + px / 2, px * 0.42, 0, Math.PI * 2);
+            ctx.arc(X(p.x) + px / 2, Y(p.y) + px / 2, px * 0.42, 0, Math.PI * 2);
             ctx.stroke();
         });
         ctx.restore();
@@ -444,17 +453,18 @@ export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
             for (const key of p.disc) {
                 if (key === trap) continue;
                 const [dx, dy] = key.split(',').map(Number);
-                ctx.fillRect(dx * px, dy * px, px, px);
+                ctx.fillRect(X(dx), Y(dy), px, px);
             }
             ctx.globalAlpha = 1;
             if (owned(p.x, p.y)) continue;
-            if (art('pull', p.x, p.y)) continue;
-            ctx.fillStyle = COLORS.pullTrap;
-            ctx.beginPath();
-            ctx.arc(p.x * px + px / 2, p.y * px + px / 2, px * 0.32, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = COLORS.pullMouth;
-            ctx.fillRect(p.x * px + px * 0.3, p.y * px + px * 0.45, px * 0.4, px * 0.1);
+            tile('pull', p.x, p.y, () => {
+                ctx.fillStyle = COLORS.pullTrap;
+                ctx.beginPath();
+                ctx.arc(X(p.x) + px / 2, Y(p.y) + px / 2, px * 0.32, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = COLORS.pullMouth;
+                ctx.fillRect(X(p.x) + px * 0.3, Y(p.y) + px * 0.45, px * 0.4, px * 0.1);
+            });
         }
         ctx.restore();
     }
@@ -471,11 +481,12 @@ export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
     for (const key of w.buttons?.keys() ?? []) {
         const [x, y] = key.split(',').map(Number);
         if (owned(x, y)) continue;
-        if (art(onCell.has(key) ? 'buttonDown' : 'button', x, y)) continue;
-        ctx.beginPath();
-        ctx.arc(x * px + px / 2, y * px + px / 2, px * 0.28, 0, Math.PI * 2);
-        if (onCell.has(key)) ctx.fill();
-        ctx.stroke();
+        tile(onCell.has(key) ? 'buttonDown' : 'button', x, y, () => {
+            ctx.beginPath();
+            ctx.arc(X(x) + px / 2, Y(y) + px / 2, px * 0.28, 0, Math.PI * 2);
+            if (onCell.has(key)) ctx.fill();
+            ctx.stroke();
+        });
     }
     const artBlocks = placed.length > 0 && placed.every((key) => spriteCells?.has(key));
     if (!artBlocks && live.length > 0) {
@@ -484,23 +495,132 @@ export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
         for (const key of live) {
             const [x, y] = key.split(',').map(Number);
             const look = w.blockLib ? blockLook(w, view.blockKinds?.[key] ?? w.blocks.get(key)) : 'walk';
-            if (art(BLOCK_ART[look], x, y)) continue;
-            if (look === 'dormant') {
-                ctx.fillStyle = COLORS.blockDormant;
-                ctx.beginPath();
-                ctx.arc(x * px + px / 2, y * px + px / 2, px * 0.36, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.stroke();
-                ctx.fillStyle = COLORS.block;
-                continue;
-            }
-            if (look === 'struck') ctx.fillStyle = COLORS.blockStruck;
-            ctx.fillRect(x * px + px * 0.15, y * px + px * 0.15, px * 0.7, px * 0.7);
-            ctx.strokeRect(x * px + px * 0.15, y * px + px * 0.15, px * 0.7, px * 0.7);
-            if (look === 'struck') ctx.fillStyle = COLORS.block;
+            tile(BLOCK_ART[look], x, y, () => {
+                if (look === 'dormant') {
+                    ctx.fillStyle = COLORS.blockDormant;
+                    ctx.beginPath();
+                    ctx.arc(X(x) + px / 2, Y(y) + px / 2, px * 0.36, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.fillStyle = COLORS.block;
+                    return;
+                }
+                if (look === 'struck') ctx.fillStyle = COLORS.blockStruck;
+                ctx.fillRect(X(x) + px * 0.15, Y(y) + px * 0.15, px * 0.7, px * 0.7);
+                ctx.strokeRect(X(x) + px * 0.15, Y(y) + px * 0.15, px * 0.7, px * 0.7);
+                if (look === 'struck') ctx.fillStyle = COLORS.block;
+            });
         }
     }
     ctx.restore();
+}
+
+/**
+ * ⛓ TILE-1 — **THE ARROW TRAPS**, moved out of `drawWorld` whole so the composite map draws them too: each trap's lane
+ * tinted while armed (`view.armedTraps`) and grey while silenced, its own cell marked along its top edge (the `trap`
+ * kind, through the chain). `view` needs `tilePx`, `armedTraps`, `seedlingSkin`, `tileArt` and the optional cell
+ * origin `offX`/`offY`. A world with no traps draws nothing.
+ */
+export function drawArrowTraps(ctx, w, view, spriteCells = null) {
+    if (!Array.isArray(w.traps) || w.traps.length === 0) return;
+    const px = view.tilePx;
+    const ox = view.offX ?? 0;
+    const oy = view.offY ?? 0;
+    const tileArt = view.seedlingSkin ? null : (view.tileArt ?? null);
+    w.traps.forEach((trap, i) => {
+        ctx.globalAlpha = 0.3;
+        ctx.fillStyle = view.armedTraps?.[i] ? COLORS.laneArmed : COLORS.laneSilent;
+        for (const key of trap.lane) {
+            const [lx, ly] = key.split(',').map(Number);
+            ctx.fillRect(ox + lx * px, oy + ly * px, px, px);
+        }
+        ctx.globalAlpha = 1;
+        if (spriteCells?.has(`${trap.x},${trap.y}`)) return;
+        drawMazeTile(ctx, tileArt, 'trap', ox + trap.x * px, oy + trap.y * px, px, {
+            own: () => {
+                ctx.fillStyle = COLORS.trap;
+                ctx.fillRect(ox + trap.x * px + 2, oy + trap.y * px, px - 4, Math.max(2, Math.floor(px / 5)));
+            },
+        });
+    });
+}
+
+/**
+ * ⛓ TILE-1 — **A MANA OR CONSUMABLE TILE**, moved out of `drawWorld`'s cell loop whole so the composite map draws it
+ * too. Drawn as a DIAMOND rather than a circle so it reads as categorically different from an AP item pickup — which
+ * it is: not a location, not tracked, no bearing on winnability. A mana tile is the `manaTile` kind (through the
+ * chain: its art, else the diamond labelled M); a cross-game consumable is its substrate's hue with its type's
+ * letter. `collected` fades it to 0.25 either way: under loop mode it comes back on the next reset (X1-R1), so showing
+ * where it is stays useful.
+ */
+export function drawConsumableTile(ctx, tileArt, x0, y0, px, { mana = null, consumable = null, collected = undefined } = {}) {
+    if (!mana && !consumable) return;
+    const diamond = () => {
+        const cx = x0 + px / 2;
+        const cy = y0 + px / 2;
+        const r = px * 0.32;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - r);
+        ctx.lineTo(cx + r, cy);
+        ctx.lineTo(cx, cy + r);
+        ctx.lineTo(cx - r, cy);
+        ctx.closePath();
+        if (mana) {
+            ctx.fillStyle = COLORS.manaTile;
+        } else {
+            // Hash the owning substrate id to a stable hue so each foreign game's tiles read as a family,
+            // mirroring getItemRenderHints' fallback.
+            ctx.fillStyle = consumableTileColor(consumable.substrate);
+        }
+        ctx.fill();
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        const label = mana
+            ? 'M'
+            : (consumable.type?.[0] ?? '?').toUpperCase();
+        ctx.fillStyle = '#000';
+        ctx.font = `bold ${Math.floor(px * 0.4)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, cx, cy);
+    };
+    ctx.save();
+    if (collected) ctx.globalAlpha = 0.25;
+    if (mana) drawMazeTile(ctx, tileArt, 'manaTile', x0, y0, px, { own: diamond });
+    else diamond();
+    ctx.restore();
+}
+
+/**
+ * ⛓ TILE-1 — **THE PLAYER**, moved out of `drawWorld` whole: the `player` kind through the chain (its art, else the
+ * disc) at `view.playerPos`, and the facing tick over it either way (`view.facing`). Nothing when there is no
+ * position. `view` needs `tilePx`, `playerPos`, `facing`, `seedlingSkin`, `tileArt` and the optional `offX`/`offY`.
+ * The Seedling skin's live sprites, when they carry the player, draw it instead (`drawWorld`).
+ */
+export function drawMazePlayer(ctx, view) {
+    if (!view.playerPos) return;
+    const px = view.tilePx;
+    const ox = view.offX ?? 0;
+    const oy = view.offY ?? 0;
+    const tileArt = view.seedlingSkin ? null : (view.tileArt ?? null);
+    const { x, y } = view.playerPos;
+    drawMazeTile(ctx, tileArt, 'player', ox + x * px, oy + y * px, px, {
+        own: () => {
+            ctx.fillStyle = COLORS.player;
+            ctx.beginPath();
+            ctx.arc(ox + x * px + px / 2, oy + y * px + px / 2, px * 0.35, 0, Math.PI * 2);
+            ctx.fill();
+        },
+    });
+    // ITEM ACTIONS: a tick on the side the player faces (the use target).
+    const tick = { N: [0, -1], S: [0, 1], E: [1, 0], W: [-1, 0] }[view.facing];
+    if (tick) {
+        const cx = ox + x * px + px / 2 + tick[0] * px * 0.38;
+        const cy = oy + y * px + px / 2 + tick[1] * px * 0.38;
+        ctx.fillStyle = COLORS.wall;
+        ctx.fillRect(cx - px * 0.08, cy - px * 0.08, px * 0.16, px * 0.16);
+    }
 }
 
 /**
@@ -537,7 +657,8 @@ export function drawWorld(ctx, world, view) {
     // ⛓ CONTENT SETS R2b: the pack's tiles, beside the Seedling skin and never under it. Every use below is
     // `tileArt !== null && drawTileArt(…)`, so a null (no art in the stack) runs exactly the ops it always ran.
     const tileArt = skin ? null : view.tileArt;
-    const art = (thing, x, y) => tileArt !== null && drawTileArt(ctx, tileArt, thing, x * px, y * px, px, px);
+    // ⛓ TILE-1: every kind through the one chain (`mazeTileArt.drawMazeTile`): the art, else the `own` shape.
+    const tile = (thing, x, y, own) => drawMazeTile(ctx, tileArt, thing, x * px, y * px, px, { own });
     if (skin) {
         ctx.drawImage(skin.layer, 0, 0);
         if (sprites?.ops.length) sprites.paint(ctx, sprites.ops);
@@ -546,10 +667,11 @@ export function drawWorld(ctx, world, view) {
         // Tile base layer: floor / wall.
         for (let y = 0; y < w.height; y++) {
             for (let x = 0; x < w.width; x++) {
-                const tile = getTile(w, x, y);
-                if (art(tile === TILE_WALL ? 'wall' : 'floor', x, y)) continue;
-                ctx.fillStyle = tile === TILE_WALL ? COLORS.wall : COLORS.floor;
-                ctx.fillRect(x * px, y * px, px, px);
+                const kind = getTile(w, x, y) === TILE_WALL ? 'wall' : 'floor';
+                tile(kind, x, y, () => {
+                    ctx.fillStyle = COLORS[kind];
+                    ctx.fillRect(x * px, y * px, px, px);
+                });
             }
         }
     }
@@ -619,9 +741,14 @@ export function drawWorld(ctx, world, view) {
             // covers it because we don't paint the entrance
             // border when isExit is true.)
             // R2b: an OPEN exit is a thing (`maze:tile/exit`); a closed one is a state signal and stays red.
-            if (isExit && exitVisible && ((isLogicGate && gateClosed) || !art('exit', x, y))) {
-                ctx.fillStyle = (isLogicGate && gateClosed) ? COLORS.exitBlocked : COLORS.exit;
+            if (isExit && exitVisible && isLogicGate && gateClosed) {
+                ctx.fillStyle = COLORS.exitBlocked;
                 ctx.fillRect(x * px, y * px, px, px);
+            } else if (isExit && exitVisible) {
+                tile('exit', x, y, () => {
+                    ctx.fillStyle = COLORS.exit;
+                    ctx.fillRect(x * px, y * px, px, px);
+                });
             }
 
             // Combo-list obstacles (colored doors) keep their
@@ -702,59 +829,14 @@ export function drawWorld(ctx, world, view) {
                 }
             }
 
-            // X1 consumable tiles. Drawn as a DIAMOND rather than a
-            // circle so they read as categorically different from
-            // AP item pickups at a glance — which they are: not
-            // locations, not tracked, no bearing on winnability.
-            // Not gated on locationVisible: discovery mode filters
-            // AP locations, and these aren't any.
+            // X1 consumable tiles (⛓ TILE-1: `drawConsumableTile`, shared with the composite map). Not gated on
+            // locationVisible: discovery mode filters AP locations, and these aren't any.
             const consumableHere = w.consumableTiles?.get(key);
             const manaHere = w.manaTiles?.get(key);
-            const collectedHere = (consumableHere || manaHere) ? view.isConsumableCollected?.(x, y) : undefined;
-            if (manaHere && tileArtFrame(tileArt, 'manaTile')) {
-                // R2b: the mana tile's art, faded once collected exactly as the diamond is.
-                ctx.save();
-                if (collectedHere) ctx.globalAlpha = 0.25;
-                art('manaTile', x, y);
-                ctx.restore();
-            } else if (consumableHere || manaHere) {
-                const collected = collectedHere;
-                const cx = x * px + px / 2;
-                const cy = y * px + px / 2;
-                const r = px * 0.32;
-                ctx.save();
-                // Collected tiles stay faintly visible rather than
-                // vanishing: under loop mode they come back on the
-                // next reset (X1-R1), so showing where they are is
-                // useful information, not clutter.
-                if (collected) ctx.globalAlpha = 0.25;
-                ctx.beginPath();
-                ctx.moveTo(cx, cy - r);
-                ctx.lineTo(cx + r, cy);
-                ctx.lineTo(cx, cy + r);
-                ctx.lineTo(cx - r, cy);
-                ctx.closePath();
-                if (manaHere) {
-                    ctx.fillStyle = COLORS.manaTile;
-                } else {
-                    // Hash the owning substrate id to a stable hue so
-                    // each foreign game's tiles read as a family,
-                    // mirroring getItemRenderHints' fallback.
-                    ctx.fillStyle = consumableTileColor(consumableHere.substrate);
-                }
-                ctx.fill();
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-                const label = manaHere
-                    ? 'M'
-                    : (consumableHere.type?.[0] ?? '?').toUpperCase();
-                ctx.fillStyle = '#000';
-                ctx.font = `bold ${Math.floor(px * 0.4)}px sans-serif`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(label, cx, cy);
-                ctx.restore();
+            if (consumableHere || manaHere) {
+                drawConsumableTile(ctx, tileArt, x * px, y * px, px, {
+                    mana: manaHere, consumable: consumableHere, collected: view.isConsumableCollected?.(x, y),
+                });
             }
 
             // Closed logic gate marker: 2px red border. Drawn
@@ -780,10 +862,12 @@ export function drawWorld(ctx, world, view) {
             // Entrance border: 2px solid green, only when the
             // tile isn't also an exit (per the §5 "both = exit
             // row" rule).
-            if (isEntrance && !isExit && !art('entrance', x, y)) {
-                ctx.strokeStyle = COLORS.entrance;
-                ctx.lineWidth = 2;
-                ctx.strokeRect(x * px + 1, y * px + 1, px - 2, px - 2);
+            if (isEntrance && !isExit) {
+                tile('entrance', x, y, () => {
+                    ctx.strokeStyle = COLORS.entrance;
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(x * px + 1, y * px + 1, px - 2, px - 2);
+                });
             }
         }
     }
@@ -817,21 +901,7 @@ export function drawWorld(ctx, world, view) {
     // ⛓ ARROW TRAPS (session tile-primitives-arrow-rope, ⚖ "Lane tint + named refusal"): each trap's lane
     // tinted red while armed and grey while silenced, the trap's own cell marked along its top edge. Under
     // the fog like the hazards; drawn only on a world that has traps, so every other draw log is unchanged.
-    if (Array.isArray(w.traps) && w.traps.length > 0) {
-        w.traps.forEach((trap, i) => {
-            ctx.globalAlpha = 0.3;
-            ctx.fillStyle = view.armedTraps?.[i] ? COLORS.laneArmed : COLORS.laneSilent;
-            for (const key of trap.lane) {
-                const [lx, ly] = key.split(',').map(Number);
-                ctx.fillRect(lx * px, ly * px, px, px);
-            }
-            ctx.globalAlpha = 1;
-            if (spriteCells?.has(`${trap.x},${trap.y}`)) return;
-            if (art('trap', trap.x, trap.y)) return;
-            ctx.fillStyle = COLORS.trap;
-            ctx.fillRect(trap.x * px + 2, trap.y * px, px - 4, Math.max(2, Math.floor(px / 5)));
-        });
-    }
+    drawArrowTraps(ctx, w, view, spriteCells);
 
     drawLiveMarkers(ctx, w, view, spriteCells);
 
@@ -857,21 +927,7 @@ export function drawWorld(ctx, world, view) {
 
     if (view.playerPos && sprites?.player) {
         sprites.paint(ctx, sprites.player);
-    } else if (view.playerPos) {
-        const { x, y } = view.playerPos;
-        if (!art('player', x, y)) {
-            ctx.fillStyle = COLORS.player;
-            ctx.beginPath();
-            ctx.arc(x * px + px / 2, y * px + px / 2, px * 0.35, 0, Math.PI * 2);
-            ctx.fill();
-        }
-        // ITEM ACTIONS: a tick on the side the player faces (the use target).
-        const tick = { N: [0, -1], S: [0, 1], E: [1, 0], W: [-1, 0] }[view.facing];
-        if (tick) {
-            const cx = x * px + px / 2 + tick[0] * px * 0.38;
-            const cy = y * px + px / 2 + tick[1] * px * 0.38;
-            ctx.fillStyle = COLORS.wall;
-            ctx.fillRect(cx - px * 0.08, cy - px * 0.08, px * 0.16, px * 0.16);
-        }
+    } else {
+        drawMazePlayer(ctx, view);
     }
 }

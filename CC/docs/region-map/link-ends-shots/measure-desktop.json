@@ -1,0 +1,67 @@
+{
+  "seedling_fit": {
+    "model": {
+      "cross": 55,
+      "neighbour": 83
+    },
+    "drawn": {
+      "cross": 55,
+      "neighbour": 83,
+      "gapMarks": 58,
+      "edgeLines": 80,
+      "arrowheads": 58
+    },
+    "zoom": 0.09965277777777778
+  },
+  "seedling_group": {
+    "model": {
+      "cross": 55,
+      "neighbour": 83
+    },
+    "drawn": {
+      "cross": 23,
+      "neighbour": 26,
+      "gapMarks": 13,
+      "edgeLines": 36,
+      "arrowheads": 23
+    },
+    "zoom": 0.2790625
+  },
+  "apart": {
+    "from": "level_12",
+    "to": "level_95",
+    "apartJoins": 23,
+    "seg": {
+      "x0": 688,
+      "y0": 469,
+      "x1": 641.6344086021505,
+      "y1": 1008
+    },
+    "fromCell": {
+      "x": 688,
+      "y": 16,
+      "w": 640,
+      "h": 960
+    },
+    "toCell": {
+      "x": 16,
+      "y": 1008,
+      "w": 640,
+      "h": 240
+    }
+  },
+  "alttp_fit": {
+    "model": {
+      "cross": 0,
+      "neighbour": 297
+    },
+    "drawn": {
+      "cross": 0,
+      "neighbour": 297,
+      "gapMarks": 46,
+      "edgeLines": 251,
+      "arrowheads": 0
+    },
+    "zoom": 0.1116441908713693
+  }
+}

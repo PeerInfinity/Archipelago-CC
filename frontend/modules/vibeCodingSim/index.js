@@ -10,6 +10,7 @@ import { VibeCodingSimUI } from './vibeCodingSimUI.js';
 import { GameState, SimulationConfig } from './simEngine.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
+import { REGION_CLICKED, isClickFromPanel } from '../regionView/clickActions.js';
 
 export const moduleInfo = {
     name: 'vibeCodingSim',
@@ -51,7 +52,7 @@ export function register(registrationApi) {
     // Events we subscribe to
     registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
     registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
-    registrationApi.registerEventBusSubscriberIntent('regionGraph:nodeSelected');
+    registrationApi.registerEventBusSubscriberIntent(REGION_CLICKED);
 
     // Public functions
     registrationApi.registerPublicFunction(
@@ -81,9 +82,12 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         }
     });
 
-    // Listen for region graph clicks
-    eventBus.subscribe('regionGraph:nodeSelected', (data) => {
-        const nodeId = data?.nodeId;
+    // Listen for region graph clicks. ⛓ CA-S4: the generic click event, FILTERED to the Region Graph (it heard only
+    // the Graph's `regionGraph:nodeSelected` before, retired in CA-S5). A Region Map click is not heard: ⚖ user
+    // 2026-11-20 (session 84c8ab35), "Region Graph only".
+    eventBus.subscribe(REGION_CLICKED, (data) => {
+        if (!isClickFromPanel(data, 'regionGraph')) return;
+        const nodeId = data?.regionName;
         if (nodeId && panelInstance) {
             // Region names are like "Complete Node 3" — look up which feature this maps to
             // The graph_structure maps indices to feature IDs

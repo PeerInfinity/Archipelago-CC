@@ -9,7 +9,7 @@
  *     `[INACCESSIBLE LOCATION DETECTED]` alarm; a genuine server/client mismatch still raises it.
  *
  * The payloads below are the exact ones the surfaces publish (locations/locationUI.js handleLocationClick,
- * regionGraph/graphInteractionManager.js dispatchLocationCheckEvent, flashPanel/seedlingRegionGlue.js _locationCheck).
+ * regionView/clickActions.js `path.check` (the Region Graph's location click), flashPanel/seedlingRegionGlue.js _locationCheck).
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -97,6 +97,99 @@ beforeEach(() => {
   messageHandler._slotReleased = false;
   messageHandler._goalReported = false;
   messageHandler._syncedLocationIds = new Set();
+  messageHandler._serverBuild = null;
+  messageHandler._rulesWait = null;
+  messageHandler._heldGameChecks = [];
+  messageHandler.roomInfo = { seed_name: '95732197124131042068' };
+});
+
+/**
+ * sdc-no-preset-refusal: while this slot's rules are pending (a build, an overlay, or the wait for the room's
+ * preset), the loaded rules are another game's or another player's. A CLICK on their location is refused: no
+ * frame, nothing applied locally. A check the GAME made (reportedByGame, or system:) is held, because it can't be
+ * made again, and sent through the normal path once a Connected is applied (planner condition (a), 2026-11-15).
+ */
+describe('rules pending — clicks refused, game checks held', () => {
+  const pending = (wait) => {
+    messageHandler._serverBuild = { game: 'Baking Adventure', mode: 'overlay', local: null, connected: {}, held: [] };
+    messageHandler._rulesWait = wait ? { game: 'Baking Adventure', unsubscribe: () => {} } : null;
+  };
+
+  it.each([
+    ['a reachable Locations-card click', CARD('Preheat Oven'), 'user:locationCheck'],
+    ['a region-graph node click', NODE('Add Vanilla'), 'user:locationCheck'],
+    ['an ID-less location', CARD('Some Event'), 'user:locationCheck'],
+  ])('the wait for rules: %s is refused, nothing sent or passed on', async (_label, data, eventName) => {
+    pending(true);
+    await handleUserLocationCheckForClient(data, eventName);
+    expect(sentFrames()).toEqual([]);
+    expect(dispatcher.publishToNextModule).not.toHaveBeenCalled();
+    expect(published('client:locationCheckRefused')).toEqual([
+      { locationName: data.locationName, reason: 'rules_pending', originator: data.originator ?? null },
+    ]);
+    const lines = published('ui:printToConsole');
+    expect(lines).toHaveLength(1);
+    expect(lines[0].type).toBe('warning');
+    expect(lines[0].message).toBe(
+      `Not checked: "${data.locationName}". This room's Baking Adventure rules are not loaded, so the loaded rules' ` +
+        "locations are not this slot's; nothing was sent."
+    );
+    expect(smState.pings).toBe(0); // the logic gate is not consulted: the loaded logic is not this slot's
+  });
+
+  it.each([
+    ['a game-reported pickup (Seedling glue)', SEEDLING_PICKUP('Seedling Chest'), 'user:locationCheck'],
+    ['an APCalc calculator check', { locationName: 'Preheat Oven', originator: 'APCalcCheck', reportedByGame: true }, 'user:locationCheck'],
+    ['a system:locationCheck', { locationName: 'Preheat Oven', regionName: 'Kitchen' }, 'system:locationCheck'],
+  ])('%s while rules are pending is HELD (not refused), then sent once a Connected is applied', async (_l, data, eventName) => {
+    pending(true);
+    await handleUserLocationCheckForClient(data, eventName);
+    expect(sentFrames()).toEqual([]);
+    expect(published('client:locationCheckRefused')).toEqual([]);
+    expect(dispatcher.publishToNextModule).not.toHaveBeenCalled();
+    expect(messageHandler._heldGameChecks.map((h) => h.eventData.locationName)).toEqual([data.locationName]);
+    expect(published('ui:printToConsole').at(-1).message).toMatch(new RegExp(`^Holding "${data.locationName}" \\(made by the game\\)`));
+
+    // Still pending: a replay does nothing.
+    await messageHandler._replayHeldGameChecks();
+    expect(sentFrames()).toEqual([]);
+
+    // The rules loaded (no build): the held check goes through the normal path, once.
+    messageHandler._serverBuild = null;
+    await messageHandler._replayHeldGameChecks();
+    expect(sentFrames()).toEqual([{ cmd: 'LocationChecks', locations: [NAME_TO_ID[data.locationName]] }]);
+    expect(messageHandler._heldGameChecks).toEqual([]);
+    await messageHandler._replayHeldGameChecks();
+    expect(sentFrames()).toHaveLength(1);
+  });
+
+  it('held game checks are dropped, with a warning, when the player disconnects', async () => {
+    pending(true);
+    await handleUserLocationCheckForClient(SEEDLING_PICKUP('Seedling Chest'), 'user:locationCheck');
+    messageHandler._dropHeldGameChecks('the player disconnected first');
+    expect(messageHandler._heldGameChecks).toEqual([]);
+    expect(published('ui:printToConsole').at(-1)).toEqual({
+      message: 'Not sent: 1 check(s) the game made while this room\'s rules were pending ("Seedling Chest"); the player disconnected first.',
+      type: 'warning',
+    });
+    messageHandler._serverBuild = null;
+    await messageHandler._replayHeldGameChecks();
+    expect(sentFrames()).toEqual([]);
+  });
+
+  it('a build still loading: refused with the loading line', async () => {
+    pending(false);
+    await handleUserLocationCheckForClient(CARD('Preheat Oven'), 'user:locationCheck');
+    expect(sentFrames()).toEqual([]);
+    expect(published('ui:printToConsole')[0].message).toBe(
+      'Not checked: "Preheat Oven". The Baking Adventure rules for this room are still loading; nothing was sent.'
+    );
+  });
+
+  it('once the rules are loaded (no build), the same click is sent', async () => {
+    await handleUserLocationCheckForClient(CARD('Preheat Oven'), 'user:locationCheck');
+    expect(sentFrames()).toEqual([{ cmd: 'LocationChecks', locations: [300000001] }]);
+  });
 });
 
 describe('B — the connected logic gate', () => {

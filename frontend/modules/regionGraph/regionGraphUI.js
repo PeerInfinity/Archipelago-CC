@@ -14,6 +14,11 @@ import { NavigationManager } from './navigationManager.js';
 import { LayoutControlsManager } from './layoutControlsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
+import { defaultClickActions } from '../regionView/clickActions.js';
+import { mountClickActionsStrip } from '../regionView/clickActionsUI.js';
+import { CLICK_ACTIONS_KEY, loadRegionGraphClickActions, saveRegionGraphClickActions } from './clickActionsSettings.js';
+import { applyPendingCentre } from './regionGraphCentreAction.js';
+import { SUB_REGION_VIEW_KEY, normaliseSubRegionView, GROUP_STYLES } from './subRegionGroups.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -87,6 +92,10 @@ export class RegionGraphUI {
       showUndiscoveredRegionNames: false,
       colorUndiscoveredByReachability: false
     };
+
+    // ⛓ What a click runs (CA-S2): `moduleSettings.regionGraph.clickActions`, kept in memory for the click handlers
+    // and the "On click" strip. The default until `loadClickActions` reads (or migrates) the stored value.
+    this.clickActions = defaultClickActions();
     
     this.rootElement = document.createElement('div');
     this.rootElement.classList.add('region-graph-panel-container', 'panel-container');
@@ -140,10 +149,28 @@ export class RegionGraphUI {
     this.controlPanel.style.maxWidth = '400px';
     this.controlPanel.innerHTML = '';
     
+    // ⛓ The "On click" strip (⚖ R6): its own collapsible section at the top of the panel, outside Controls (which
+    // sits top-left), keeping the ⏸ master switch when collapsed. Shared with the Region Map (CA-S3).
+    this.clickStripHost = document.createElement('div');
+    this.clickStripHost.classList.add('region-graph-click-strip-host');
+    Object.assign(this.clickStripHost.style, { position: 'absolute', top: '5px', right: '5px', zIndex: '1000', maxWidth: '45%' });
+    this.clickStrip = mountClickActionsStrip({
+      panelId: 'regionGraph',
+      container: this.clickStripHost,
+      getSettings: () => this.clickActions,
+      saveSettings: (next, opts) => {
+        this.clickActions = next;
+        saveRegionGraphClickActions(settingsManager, next, opts)
+          .catch((error) => logger.warn('Could not save the click actions:', error));
+      },
+    });
+
     this.rootElement.appendChild(this.statusBar);
     this.rootElement.appendChild(this.controlPanel);
+    this.rootElement.appendChild(this.clickStripHost);
     this.rootElement.appendChild(this.graphContainer);
     this.container.element.appendChild(this.rootElement);
+    this.loadClickActions();
 
     registerPanelInstance(this);
 
@@ -170,6 +197,25 @@ export class RegionGraphUI {
     return this.rootElement;
   }
 
+  /**
+   * Read `moduleSettings.regionGraph.clickActions` into `this.clickActions` and the strip. The first load with no
+   * stored value migrates the seven old "On Region Node Click" keys ONCE and saves the result
+   * (`clickActionsSettings.js`); the old keys stay where they are.
+   */
+  async loadClickActions() {
+    try {
+      const { clickActions, migrated, from } = await loadRegionGraphClickActions(settingsManager);
+      this.clickActions = clickActions;
+      if (migrated) logger.info('Migrated the "On Region Node Click" keys to clickActions', { from, clickActions });
+    } catch (error) {
+      logger.warn('Could not load the click actions; using the defaults:', error);
+    }
+    // ⛓ CA-S4: once loaded, write the panel-owned actions' first values this config does not name yet (the strip's
+    // `seed`: Flash's teleport = the box's setting at that moment, Discovery's discover = on, the Map's centre = off).
+    this.clickStrip?.seed();
+    this.clickStrip?.render();
+  }
+
   async loadDisplaySettings() {
     try {
       this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
@@ -178,6 +224,15 @@ export class RegionGraphUI {
       logger.error('Failed to load display settings:', error);
       this.useSubstitutedNames = true;
     }
+    // ⛓ region-graph-groups-a: how sub-regions draw. No call-site default: the schema's is the only one.
+    try {
+      this.subRegionView = normaliseSubRegionView(await settingsManager.getSetting(SUB_REGION_VIEW_KEY));
+    } catch (error) {
+      logger.warn('Could not load subRegionView; using the schema default:', error);
+      this.subRegionView = normaliseSubRegionView(undefined);
+    }
+    const select = this.controlPanel?.querySelector?.('#subRegionView');
+    if (select) select.value = this.subRegionView;
   }
 
   getRegionDisplayText(regionData, regionName) {
@@ -727,7 +782,9 @@ export class RegionGraphUI {
             'visibility': 'hidden',
             'events': 'no'
           }
-        }
+        },
+        // ⛓ subRegionView = nested: the group boxes (compound parents; subRegionGroups.js)
+        ...GROUP_STYLES
       ],
       
       layout: {
@@ -900,9 +957,13 @@ export class RegionGraphUI {
     // Subscribe to settings changes for display name toggle
     this.unsubscribeSettingsChanged = this.eventBus.subscribe('settings:changed',
       async ({ key }) => {
+        if (key === '*' || key === CLICK_ACTIONS_KEY) await this.loadClickActions();
+        // The click configuration does not change what the graph draws: no rebuild for it.
+        if (key === CLICK_ACTIONS_KEY) return;
         if (key === '*' || key.startsWith('generalSettings.useSubstitutedNames') ||
             key.startsWith('moduleSettings.regionGraph')) {
           await this.loadDisplaySettings();
+          if (this.controlPanel) await this.layoutControlsManager.loadLocationVisibilityMode();
           if (this.cy && this.graphInitialized) {
             this.loadGraphData();
           }
@@ -1039,26 +1100,6 @@ export class RegionGraphUI {
     return this.navigationManager.getCurrentPlayerLocation();
   }
 
-  attemptMovePlayerOneStepToRegion(targetRegion) {
-    return this.navigationManager.attemptMovePlayerOneStepToRegion(targetRegion);
-  }
-
-  attemptMovePlayerDirectlyToRegion(targetRegion) {
-    return this.navigationManager.attemptMovePlayerDirectlyToRegion(targetRegion);
-  }
-
-  addToPath(targetRegion, moveOnlyOneStep = false) {
-    return this.navigationManager.addToPath(targetRegion, moveOnlyOneStep);
-  }
-  
-  overwritePath(targetRegion, moveOnlyOneStep = false) {
-    return this.navigationManager.overwritePath(targetRegion, moveOnlyOneStep);
-  }
-  
-  setShowAllRegions(enabled) {
-    return this.navigationManager.setShowAllRegions(enabled);
-  }
-
   toggleControlPanel() {
     return this.layoutControlsManager.toggleControlPanel();
   }
@@ -1073,7 +1114,8 @@ export class RegionGraphUI {
     logger.debug('Panel shown', { hasCytoscape: !!this.cy });
     if (this.cy) {
       this.cy.resize();
-      this.cy.fit(30);
+      // ⛓ G4: a "Centre the Region Graph on it" that landed while the tab was hidden is applied now, in place of the fit.
+      if (!applyPendingCentre(this)) this.cy.fit(30);
     } else {
       logger.debug('Panel shown but no Cytoscape instance, checking if libraries are loaded...');
       logger.verbose('Library check', { cytoscape: !!window.cytoscape, coseBase: !!window.coseBase, cytoscapeFcose: !!window.cytoscapeFcose });
@@ -1237,6 +1279,7 @@ export class RegionGraphUI {
   destroy() {
     unregisterPanelInstance(this);
     this.overlayManager.destroy();
+    this.clickStrip?.destroy();
     if (this.unsubscribeStateUpdate) {
       this.unsubscribeStateUpdate();
     }

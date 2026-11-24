@@ -38,7 +38,9 @@ import { describe, expect, it } from 'vitest';
 
 import { loadAtlasSchema, loadRulesSchema } from './jsonSchemaFiles.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
-import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
+import { stampAtlasIdentity, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
+import { labSetIdentity } from '../seedlingDemo/watchSetIdentity.js';
+import { levelSetContentHash } from './levelSetReference.js';
 import { createLifetime } from './pageLifetime.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { buildLevelSet } from '../seedlingDemo/levelSetExporter.js';
@@ -50,9 +52,12 @@ import {
     createSeedlingSetAdapter, createSetSession, setRecord,
 } from '../seedlingDemo/seedlingSetAdapter.js';
 import { mountWatchSetEditor } from '../seedlingDemo/watchSetEditor.js';
-import { SET_CHANGE_WHY, mountSetEditor } from './setEditorView.js';
+import {
+    SET_CHANGE_WHY, STALE_DOOR_TITLE, STALE_REPORT_NOTE, mountSetEditor,
+} from './setEditorView.js';
 import { exitArrowShapes } from './setEditorCore.js';
-import { BUNDLE_KINDS } from '../presets/documentBundle.js';
+import { exitRuleKey } from './setOverlay.js';
+import { BUNDLE_KINDS, readBundle } from '../presets/documentBundle.js';
 import { loadJSZipNode } from '../../../scripts/procgen/loadJSZipNode.mjs';
 import {
     createMazeSetAdapter, createSetSession as createMazeSetSession,
@@ -271,7 +276,14 @@ const generatedSet = (n = ROOMS, setId = 'set-editor-view-test') => buildLevelSe
 
 const seedlingHarness = ({
     rooms = ROOMS, onSetChange = null, embeds = [], apworldEditor = null, overviewMapOn = false,
+    loadZip = null, labIdentity = false,
 } = {}) => {
+    /**
+     * ⛓ lab-apworld-door-play — `labIdentity: true` mounts with the WATCH PAGE's own compile hooks
+     * (`labSetIdentity`: the stamped atlas + `region_atlas[p].level_set`), so the rules name a level set the way the
+     * real page's do. ⛔ `false` by default: every older row drives the plain compile it always did.
+     */
+    const lab = labIdentity ? labSetIdentity({ compileRegionAtlas, stampAtlasIdentity }) : null;
     const adapter = createSeedlingSetAdapter(DEPS);
     /**
      * ⛓ A ROOM SESSION STUB — the mount reads `{room, ops}` and
@@ -322,7 +334,8 @@ const seedlingHarness = ({
         session,
         adapter,
         deps: DEPS,
-        compileRegionAtlas,
+        compileRegionAtlas: lab ? lab.compileRegionAtlas : compileRegionAtlas,
+        ...(lab ? { atlasAtDoor: lab.atlasAtDoor } : {}),
         validateRegionAtlas,
         atlasSchema: ATLAS_SCHEMA,
         drawRoomStill: (canvas, roomRecord) => {
@@ -352,6 +365,8 @@ const seedlingHarness = ({
          * that predates this slice drives the same mount it always did.
          */
         apworldEditor,
+        // ⛓ lab-stale-handover — `null` by default, the mount's own default, so older rows drive the same mount.
+        loadZip,
         doc,
     });
     return {
@@ -367,10 +382,13 @@ const seedlingHarness = ({
  * bridge asynchronously), and a fixed `true`/`false` could not show that.
  */
 const hostLink = ({ here = true, accepts = true } = {}) => {
-    const state = { here, seen: [], asked: 0 };
+    const state = { here, seen: [], atlases: [], levelSets: [], asked: 0 };
     state.link = {
         available: () => { state.asked += 1; return state.here; },
-        open: (rules) => { state.seen.push(rules); return accepts; },
+        open: (rules, atlases, levelSets) => {
+            state.seen.push(rules); state.atlases.push(atlases); state.levelSets.push(levelSets);
+            return accepts;
+        },
     };
     return state;
 };
@@ -749,9 +767,16 @@ const PIN = Object.freeze({
                 "[reach] region \"level_3\" is UNREACHABLE from the start — no chain of exits gets there at all, under any rule set",
                 "[locations] 1 location(s) in the OVERLAY, 1 compiled"
             ],
-            "reportNote": "⛔ REFUSED BEFORE EXPORT — 2 region(s) (level_1, level_3) cannot be reached from the start; a rules.json whose graph does not close is a world nobody can finish, and the seed that found out would be the report",
+            /**
+             * ⛔⛔ (lab-stale-handover, ON PURPOSE) the script's last REPORT is followed by a MOVE UP — a set change —
+             * so the note it ends on is the STALE sentence, and the rules button is open (a press re-runs REPORT on
+             * the current set). Captured before: the old verdict, `⛔ REFUSED BEFORE EXPORT — 2 region(s) (level_1,
+             * level_3) cannot be reached from the start; …`, and `rulesDisabled: true` — the pin had recorded the
+             * defect's visible face. Every other field is the pre-lift capture, unmoved.
+             */
+            "reportNote": STALE_REPORT_NOTE,
             "closeDisabled": true,
-            "rulesDisabled": true
+            "rulesDisabled": false
         },
         "ruleErrors": "⛓ the rule validates against `rules.schema.json`",
         "stills": [
@@ -1570,7 +1595,7 @@ const mazeBindings = (rulesSchema, blankSize = null) => mazeSetBindings({ rulesS
 
 const mazeHarness = ({
     overlay = emptyMazeOverlay(), loadZip = null, extraMember = null, blankSize = null,
-    apworldEditor = null,
+    apworldEditor = null, atlasAtDoor = undefined,
 } = {}) => {
     for (const k of [...READOUT_NAMES, ...PRESS_COUNTERS]) delete globalThis[k];
     const adapter = createMazeSetAdapter({ rulesSchema: DEPS.rulesSchema });
@@ -1590,6 +1615,7 @@ const mazeHarness = ({
         validateRegionAtlas,
         atlasSchema: ATLAS_SCHEMA,
         apworldEditor,
+        ...(atlasAtDoor ? { atlasAtDoor } : {}),
         ...(() => {
             const b = mazeBindings(DEPS.rulesSchema, blankSize);
             if (!extraMember) return b;
@@ -2072,6 +2098,47 @@ describe('⛓⛓⛓ EDITOR v3 E2b — the SAME mount, bound to `mazeSetAdapter`,
             op: 'mark-location', room: 0, item: 1, name: 'the hub chest', vanilla_item: 'Coin',
         }]);
     });
+
+    /**
+     * ⛓⛓ lab-set-seedling-identity — **`atlasAtDoor`: THE BUNDLE'S ATLAS MEMBER IS THE
+     * HOOK'S ANSWER, ASKED WITH THE REPORT'S ATLAS AND RULES.** The Seedling watch page
+     * passes its stamped copy here (`seedlingDemo/watchSetIdentity.js`); a mount that
+     * passes nothing keeps the identity (the row above, unchanged, is that half).
+     */
+    it('`atlasAtDoor` is asked with the REPORT\'s atlas and rules, and its answer is the member', async () => {
+        const calls = [];
+        const h = mazeHarness({
+            loadZip: async () => loadJSZipNode(),
+            atlasAtDoor: (atlas, rules) => {
+                calls.push({ atlas, rules });
+                return { ...structuredClone(atlas), description: 'the door\'s copy' };
+            },
+        });
+        connectAll(h, RING);
+        const rep = h.ui.runReport();
+        await pressDownload(h, 'editDownloadBundle',
+            '__editorSetBundlePresses', '__editorSetBundleKinds');
+        expect(calls).toHaveLength(1);
+        expect(calls[0].atlas).toBe(rep.atlas);
+        expect(calls[0].rules).toBe(rep.rules);
+        expect(globalThis.__editorSetBundleKinds)
+            .toEqual(['region-library', 'overlay', 'rules', 'region-atlas']);
+        const back = await readBundle(globalThis.__editorSetBundleOut, { jszip: loadJSZipNode() });
+        expect(back.members.find((m) => m.kind === 'region-atlas').doc.description).toBe('the door\'s copy');
+        expect(rep.atlas.description).not.toBe('the door\'s copy');
+    });
+    it('…and a hook that THROWS refuses the bundle by name, writing nothing', async () => {
+        const h = mazeHarness({
+            loadZip: async () => loadJSZipNode(),
+            atlasAtDoor: () => { throw new Error('no compile on this page made that atlas'); },
+        });
+        connectAll(h, RING);
+        h.ui.runReport();
+        const before = h.downloads.length;
+        await pressDownload(h, 'editDownloadBundle', '__editorSetBundlePresses', null);
+        expect(textOf(h, 'editSetNote')).toBe('⛔ NOT BUNDLED — no compile on this page made that atlas');
+        expect(h.downloads.length).toBe(before);
+    });
 });
 
 describe('⛓⛓ Seedling editor E3 — the MAP on the same overview canvas (the shared mount\'s additive `overviewMap`)', () => {
@@ -2123,5 +2190,365 @@ describe('⛓⛓ Seedling editor E3 — the MAP on the same overview canvas (the
         c.dispatch('click', gap);
         expect(h.ui.selected).toBe(4);
         expect(h.session.ops().length).toBe(0);
+    });
+
+    /**
+     * ⛓⛓ lab-map-camera — the opening view is HOME: the canvas is the provider's frame, the cells are its cells, and
+     * the paint does not transform at all. MUTANT: transform even at home (a `setTransform` lands in the paint).
+     */
+    it('the opening MAP is HOME — the frame\'s own canvas and cells, and no transform', () => {
+        const h = seedlingHarness({ overviewMapOn: true });
+        const m = h.ui.map();
+        const c = $(h, 'editSetOverview');
+        expect(m.camera).toMatchObject({ zoom: 1, engaged: false });
+        expect(m.viewport).toEqual({ w: m.frame.width, h: m.frame.height });
+        expect([c.width, c.height]).toEqual([m.frame.width, m.frame.height]);
+        expect(m.start).toBe(0);
+        expect(c.calls.some((k) => k.startsWith('setTransform('))).toBe(false);
+    });
+
+    /**
+     * ⛓⛓ lab-map-camera — after `+` the map is drawn through the camera, and a click on a room AS DRAWN selects that
+     * room. MUTANT: the picker reads the canvas point as a frame point — it lands on another room or none.
+     */
+    it('after a zoom, a click on a room as DRAWN selects THAT room (the picker reads through the camera)', () => {
+        const h = seedlingHarness({ overviewMapOn: true });
+        const home = h.ui.map().cells;
+        const c = $(h, 'editSetOverview');
+        const key = (k) => c.dispatch('keydown', { key: k, stopPropagation() {}, preventDefault() {} });
+        key('+');
+        key('+');
+        const m = h.ui.map();
+        expect(m.camera).toMatchObject({ zoom: 1.5625, engaged: true });
+        expect(c.calls.some((k) => k.startsWith('setTransform('))).toBe(true);
+        const under = (cells, p) => cells.findIndex(([x, y, w, hh]) => p.clientX >= x && p.clientX < x + w
+            && p.clientY >= y && p.clientY < y + hh);
+        const target = m.cells.findIndex((cell, i) => i !== 0 && cell[0] > 0 && cell[0] + cell[2] < m.viewport.w
+            && under(home, centre(cell)) !== i);
+        expect(target).toBeGreaterThan(0);
+        c.dispatch('mousedown', { ...centre(m.cells[target]), button: 0 });
+        c.dispatch('click', centre(m.cells[target]));
+        expect(h.ui.selected).toBe(target);
+        expect(h.session.ops().length).toBe(0);
+    });
+
+    /** ⛓ lab-map-camera — a press that moves past the threshold pans the camera by exactly the drag. */
+    it('a DRAG pans the camera by the drag; a move under the threshold does not', () => {
+        const h = seedlingHarness({ overviewMapOn: true });
+        const c = $(h, 'editSetOverview');
+        const panel = c.parentNode;
+        const m0 = h.ui.map();
+        const ev = (x, y) => ({ clientX: x, clientY: y, button: 0, stopPropagation() {}, preventDefault() {} });
+        c.dispatch('mousedown', ev(50, 40));
+        panel.dispatch('mousemove', ev(52, 41));
+        expect(h.ui.map().camera).toEqual(m0.camera);
+        panel.dispatch('mousemove', ev(80, 30));
+        const m1 = h.ui.map();
+        expect(m1.camera.engaged).toBe(true);
+        // ⛓ (lab-map-small-set-view) the drag engages keeping every pixel: the canvas's top-left stays frame (0, 0)
+        expect(m1.camera.x).toBe(m1.viewport.w / 2 - 30);
+        expect(m1.camera.y).toBe(m1.viewport.h / 2 + 10);
+        expect(m1.cells[1]).toEqual([m0.cells[1][0] + 30, m0.cells[1][1] - 10, m0.cells[1][2], m0.cells[1][3]]);
+    });
+
+    /**
+     * ⛓⛓ lab-map-small-set-view — on a frame SMALLER than its panel, the first gesture gives the map the panel's
+     * room: the panel's width, and its CSS `max-height` (read through `getComputedStyle`). `+` engages CENTRED (the
+     * window's centre at the view's centre, then the zoom about it); FIT then zooms IN to fill the tight axis.
+     * MUTANT: the old `min(panel, frame)` window → the viewport stays the frame's and FIT stays ≤ the home zoom.
+     */
+    it('a SMALL set\'s map takes the panel\'s room once engaged (width + CSS max-height); `+` is centred; FIT zooms in',
+        () => {
+            const h = seedlingHarness({ overviewMapOn: true });
+            const c = $(h, 'editSetOverview');
+            const panel = c.parentNode;
+            panel.nodeType = 1;
+            h.doc.defaultView = { getComputedStyle: (el) => ({ maxHeight: el === panel ? '640px' : 'none' }) };
+            const m0 = h.ui.map();
+            expect(m0.frame.width).toBeLessThan(panel.clientWidth);
+            expect(m0.frame.height).toBeLessThan(640);
+            const key = (k) => c.dispatch('keydown', { key: k, stopPropagation() {}, preventDefault() {} });
+            key('+');
+            const m1 = h.ui.map();
+            expect(m1.viewport).toEqual({ w: panel.clientWidth, h: 640 });
+            expect([c.width, c.height]).toEqual([panel.clientWidth, 640]);
+            // the frame point at the home window's centre is the new view's centre (zoomAtCentre keeps it there)
+            expect(m1.camera).toMatchObject({ x: m0.frame.width / 2, y: m0.frame.height / 2, zoom: 1.25 });
+            key('0');
+            const m2 = h.ui.map();
+            expect(m2.camera.zoom).toBeGreaterThan(1);
+            const xs = m2.cells.flatMap(([x, , w]) => [x, x + w]);
+            const ys = m2.cells.flatMap(([, y, , hh]) => [y, y + hh]);
+            const slack = Math.min(m2.viewport.w - (Math.max(...xs) - Math.min(...xs)),
+                m2.viewport.h - (Math.max(...ys) - Math.min(...ys)));
+            expect(slack).toBeLessThan(17);
+            expect(Math.min(...xs)).toBeGreaterThanOrEqual(-1e-6);
+            expect(Math.min(...ys)).toBeGreaterThanOrEqual(-1e-6);
+        });
+
+    /**
+     * ⛓ seedling-map-unreachable — the map marks the rooms the LAST REPORT finds unreachable, and only while the set
+     * is the one that REPORT ran over. MUTANTS: the provider's `unreachableOf` removed (nothing marked); the stale
+     * rule dropped (the marks survive the undo); the marks painted before REPORT runs (the `none` assertion).
+     */
+    it('REPORT → the unreachable rooms are marked; any change clears them until REPORT runs again', () => {
+        const h = seedlingHarness({ overviewMapOn: true });
+        const c = $(h, 'editSetOverview');
+        const red = (from) => c.calls.slice(from).filter((k) => k === 'strokeStyle=#ff5a5a').length;
+        expect(h.ui.map()).toMatchObject({ unreachable: [], unreachableReport: 'none' });
+        // ⛓ room 4's exit #1 is its only door to 5 (the linked chain), so 5 is cut off
+        h.ui.applySet({ op: 'disconnect', room: 4, exitIndex: 1 });
+        expect(h.ui.map()).toMatchObject({ unreachable: [], unreachableReport: 'none' });
+        let at = c.calls.length;
+        click(h, 'editSetReport');
+        const m = h.ui.map();
+        expect(m.unreachableReport).toBe('current');
+        expect(m.unreachable).toEqual([5]);
+        expect(m.unreachableMarks).toEqual([{ room: 5, partial: false, regions: ['level_5'], cell: m.cells[5] }]);
+        expect(red(at)).toBeGreaterThan(0);
+        at = c.calls.length;
+        click(h, 'editSetUndo');
+        expect(h.session.ops().length).toBe(0);
+        expect(h.ui.map()).toMatchObject({ unreachable: [], unreachableReport: 'stale' });
+        expect(red(at)).toBe(0);
+        click(h, 'editSetReport');
+        expect(h.ui.map()).toMatchObject({ unreachable: [], unreachableReport: 'current' });
+    });
+});
+
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ lab-stale-handover — A DOOR HANDS OVER THE SET AS IT IS NOW
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **REPORT → ONE EDIT → EVERY DOOR CARRIES THE CURRENT SET** (⚖ Robert 2026-11-20, "Fix stale hand-over").
+ * Before this slice the three doors read `lastReport ?? runReport()` and nothing invalidated `lastReport`, so after
+ * an edit each door handed over the rules (and the atlas) of the set as it was at the last REPORT.
+ * ⛔ MUTANT: the doors read the never-invalidated `lastReport` again — every row in the first half reds, because the
+ * door's document equals the PRE-edit report's and not a fresh one's.
+ */
+const LAB_EDITS = Object.freeze({
+    maze: {
+        harness: (o) => mazeHarness(o),
+        before: (h) => connectAll(h, RING),
+        /** ⛓ one exit of the closed ring gains a rule — the graph still closes, so every door stays open. */
+        edit: (h) => h.ui.applySet({
+            op: 'set-access-rule', room: 0, target: exitRuleKey('exit_1'),
+            rule: { rule: 'Has', args: { item_name: 'key_red' } },
+        }),
+        primaryKind: 'region-library',
+    },
+    seedling: {
+        harness: (o) => seedlingHarness(o),
+        before: () => {},
+        /** ⛓ room 0's exit gains a rule (the fixed script's own rule) — the graph still closes, every door stays open. */
+        edit: (h) => h.ui.applySet({
+            op: 'set-access-rule', room: 0, target: exitRuleKey('out_teleporter_128_128'),
+            rule: { rule: 'Reachable', region: 'level_0' },
+        }),
+        primaryKind: 'level-set',
+    },
+});
+const json = (d) => JSON.stringify(d);
+
+describe('⛓⛓⛓ lab-stale-handover — after an edit, every door carries the CURRENT set (both labs)', () => {
+    for (const lab of ['maze', 'seedling']) {
+        const L = LAB_EDITS[lab];
+        const setup = (extra = {}) => {
+            const host = hostLink();
+            const h = L.harness({ loadZip: async () => loadJSZipNode(), apworldEditor: host.link, ...extra });
+            L.before(h);
+            click(h, 'editSetReport');
+            const old = h.ui.report();
+            expect(old.download.rules.allowed).toBe(true);
+            return { h, host, old };
+        };
+        /** ⛔ NOT VACUOUS: the edit really changes the compiled rules, so "equals a fresh REPORT" can tell. */
+        it(`${lab}: the edit changes what a fresh REPORT compiles`, () => {
+            const { h, old } = setup();
+            expect(L.edit(h).ok).toBe(true);
+            expect(json(h.ui.runReport().rules)).not.toBe(json(old.rules));
+        });
+        it(`${lab}: the rules.json download writes the edited set's rules, not the last REPORT's`, () => {
+            const { h, old } = setup();
+            const res = L.edit(h);
+            expect(res.ok).toBe(true);
+            click(h, 'editDownloadRules');
+            const out = globalThis.__editorSetRulesOut;
+            expect(json(out)).not.toBe(json(old.rules));
+            expect(json(out)).toBe(json(h.ui.runReport().rules));
+        });
+        it(`${lab}: Open in APWorld Editor hands over the edited set's rules`, () => {
+            const { h, host, old } = setup();
+            expect(L.edit(h).ok).toBe(true);
+            click(h, 'editOpenApworldEditor');
+            expect(host.seen).toHaveLength(1);
+            expect(json(host.seen[0])).not.toBe(json(old.rules));
+            expect(json(host.seen[0])).toBe(json(h.ui.runReport().rules));
+        });
+        /**
+         * ⛔⛔ THE HOLD — with NO change after REPORT every door hands over the REPORT's own documents, by identity,
+         * and REPORT is not run again (the report object is the same one). MUTANT: invalidate on every render (or
+         * on a non-set event) — `report()` becomes a new object and the identity reds.
+         */
+        it(`${lab}: with NO edit after REPORT, every door hands over the REPORT's own documents`, async () => {
+            const { h, host, old } = setup();
+            click(h, 'editDownloadRules');
+            expect(globalThis.__editorSetRulesOut).toBe(old.rules);
+            click(h, 'editOpenApworldEditor');
+            expect(host.seen[0]).toBe(old.rules);
+            await pressDownload(h, 'editDownloadBundle', '__editorSetBundlePresses', '__editorSetBundleKinds');
+            const back = await readBundle(globalThis.__editorSetBundleOut, { jszip: loadJSZipNode() });
+            expect(json(back.members.find((m) => m.kind === 'rules').doc)).toBe(json(old.rules));
+            expect(h.ui.report()).toBe(old);
+        });
+        /**
+         * ⛓⛓ THE REPORT PANEL SAYS IT IS OUT OF DATE. After an edit the rows stay (they are what the reader saw), the
+         * note says they describe the EARLIER set, and the rules button is open with the sentence that a press runs
+         * REPORT again; a door press re-runs it, and the panel is the fresh verdict again. MUTANT: drop the
+         * `paintReportState()` call from `render()` — the note keeps the old verdict and the first expectation reds.
+         */
+        it(`${lab}: the REPORT panel says it is out of date after an edit, and is current again after a door`, () => {
+            const { h, old } = setup();
+            const verdict = textOf(h, 'editSetReportNote');
+            const rows = rowsOf(h, 'editSetReportOut');
+            expect(verdict).not.toBe(STALE_REPORT_NOTE);
+            expect(L.edit(h).ok).toBe(true);
+            expect(textOf(h, 'editSetReportNote')).toBe(STALE_REPORT_NOTE);
+            expect(rowsOf(h, 'editSetReportOut')).toEqual(rows);
+            expect($(h, 'editDownloadRules').disabled).toBe(false);
+            expect($(h, 'editDownloadRules').title).toBe(STALE_DOOR_TITLE);
+            expect($(h, 'editOpenApworldEditor').title).toBe(STALE_DOOR_TITLE);
+            click(h, 'editDownloadRules');
+            expect(h.ui.report()).not.toBe(old);
+            expect(textOf(h, 'editSetReportNote')).toBe(verdict);
+            expect($(h, 'editDownloadRules').title).not.toBe(STALE_DOOR_TITLE);
+        });
+        it(`${lab}: the bundle's rules and region-atlas members are the edited set's`, async () => {
+            const { h, old } = setup();
+            expect(L.edit(h).ok).toBe(true);
+            await pressDownload(h, 'editDownloadBundle', '__editorSetBundlePresses', '__editorSetBundleKinds');
+            const back = await readBundle(globalThis.__editorSetBundleOut, { jszip: loadJSZipNode() });
+            const member = (k) => back.members.find((m) => m.kind === k)?.doc;
+            const fresh = h.ui.runReport();
+            expect(json(member('rules'))).not.toBe(json(old.rules));
+            expect(json(member('rules'))).toBe(json(fresh.rules));
+            expect(json(member('region-atlas'))).toBe(json(fresh.atlas));
+        });
+        /**
+         * ⛓⛓ lab-apworld-door-map — **DOOR A CARRIES THE ATLAS THE RULES IT HANDS OVER NAME**, before and after an
+         * edit post-REPORT: one atlas, its id = `rules.region_atlas['1'].atlas_id`, and it is the bundle door's member
+         * for the same press state. MUTANT: `apworldEditor.open(rep.rules)` (no atlases) — `atlases` is undefined and
+         * every expectation below reds.
+         */
+        it(`${lab}: Open in APWorld Editor carries the atlas the handed-over rules name, after an edit too`, () => {
+            const { h, host, old } = setup();
+            click(h, 'editOpenApworldEditor');
+            expect(host.atlases[0]).toHaveLength(1);
+            expect(host.atlases[0][0]).toBe(old.atlas);
+            expect(host.atlases[0][0].atlas_id).toBe(host.seen[0].region_atlas['1'].atlas_id);
+            expect(globalThis.__editorSetApworldAtlasIds).toEqual([old.atlas.atlas_id]);
+            expect(L.edit(h).ok).toBe(true);
+            click(h, 'editOpenApworldEditor');
+            const fresh = h.ui.report();
+            expect(fresh).not.toBe(old);
+            expect(host.atlases[1]).toHaveLength(1);
+            expect(host.atlases[1][0]).toBe(fresh.atlas);
+            expect(host.atlases[1][0].atlas_id).toBe(host.seen[1].region_atlas['1'].atlas_id);
+            expect(json(host.atlases[1][0])).toBe(json(h.ui.runReport().atlas));
+        });
+    }
+});
+
+describe('⛓⛓ lab-apworld-door-map — door A hands over `atlasAtDoor`\'s atlas, and a refusal there sends the rules anyway', () => {
+    /** ⛓ A STAMPING page (the Seedling watch page's shape): the door's copy, under the id the rules name. */
+    it('the atlas handed over is `atlasAtDoor`\'s answer for the report\'s atlas and rules', () => {
+        const host = hostLink();
+        const calls = [];
+        const h = mazeHarness({
+            apworldEditor: host.link,
+            atlasAtDoor: (atlas, rules) => {
+                calls.push({ atlas, rules });
+                return { ...structuredClone(atlas), description: 'the door\'s copy' };
+            },
+        });
+        connectAll(h, RING);
+        const rep = h.ui.runReport();
+        click(h, 'editOpenApworldEditor');
+        expect(calls).toHaveLength(1);
+        expect(calls[0].atlas).toBe(rep.atlas);
+        expect(calls[0].rules).toBe(host.seen[0]);
+        expect(host.atlases[0].map((a) => a.description)).toEqual(['the door\'s copy']);
+        expect(textOf(h, 'editSetNote')).toMatch(new RegExp(`with its region atlas ${rep.atlas.atlas_id}$`));
+    });
+    it('…and when `atlasAtDoor` throws, the RULES still go over, with no atlas, and the note names why', () => {
+        const host = hostLink();
+        const h = mazeHarness({
+            apworldEditor: host.link,
+            atlasAtDoor: () => { throw new Error('no compile on this page made that atlas'); },
+        });
+        connectAll(h, RING);
+        const rep = h.ui.runReport();
+        click(h, 'editOpenApworldEditor');
+        expect(host.seen).toEqual([rep.rules]);
+        expect(host.atlases).toEqual([[]]);
+        expect(globalThis.__editorSetApworldAtlasIds).toEqual([]);
+        expect(textOf(h, 'editSetNote')).toMatch(/no region atlas \(no compile on this page made that atlas\)$/);
+    });
+});
+
+
+describe('⛓⛓ lab-apworld-door-play — door A carries the level set the handed rules name, after an edit too', () => {
+    const refOf = (rules) => rules.region_atlas['1'].level_set;
+    /**
+     * ⛓⛓ THE SET'S COMPUTED HASH IS THE HANDED RULES' `content_hash`, before and after an edit post-REPORT, and it is
+     * the bundle's `level-set` member for the same press state. MUTANT: `apworldEditor.open(rep.rules, atlases)` (no
+     * sets) — `levelSets` is undefined and every expectation below reds.
+     */
+    it('seedling (watch-page compile): one set, its hash = the rules\' content_hash, its id = the rules\' set_id', async () => {
+        const host = hostLink();
+        const h = seedlingHarness({ apworldEditor: host.link, labIdentity: true, loadZip: async () => loadJSZipNode() });
+        click(h, 'editSetReport');
+        const old = h.ui.report();
+        click(h, 'editOpenApworldEditor');
+        expect(host.levelSets[0]).toHaveLength(1);
+        const [set0] = host.levelSets[0];
+        expect(set0.set_id).toBe(refOf(host.seen[0]).set_id);
+        expect(levelSetContentHash(set0)).toBe(refOf(host.seen[0]).content_hash);
+        expect(globalThis.__editorSetApworldLevelSetIds).toEqual([set0.set_id]);
+        expect(textOf(h, 'editSetNote')).toMatch(new RegExp(`with its level set ${set0.set_id}$`));
+        expect(host.seen[0]).toBe(old.rules);
+        await pressDownload(h, 'editDownloadBundle', '__editorSetBundlePresses', '__editorSetBundleKinds');
+        const back = await readBundle(globalThis.__editorSetBundleOut, { jszip: loadJSZipNode() });
+        expect(json(back.members.find((m) => m.kind === 'level-set').doc)).toBe(json(set0));
+
+        // ⛓ an edit to the SET'S BODY after REPORT (a room opened, edited and CLOSED into the set — one `replace-room`)
+        h.openRoom(1);
+        h.ui.render();
+        click(h, 'editRoomClose');
+        click(h, 'editOpenApworldEditor');
+        expect(h.ui.report()).not.toBe(old);
+        const [set1] = host.levelSets[1];
+        const ref1 = refOf(host.seen[1]);
+        expect(ref1.content_hash).not.toBe(refOf(host.seen[0]).content_hash);
+        expect(set1.set_id).toBe(ref1.set_id);
+        expect(levelSetContentHash(set1)).toBe(ref1.content_hash);
+        expect(json(host.seen[1])).toBe(json(h.ui.runReport().rules));
+    });
+    /** ⛔ Rules that name no set (the plain compile; the maze lab) send `[]`, and the note says nothing new. */
+    it('rules that name no level set: `[]`, exactly as before (seedling plain compile, maze)', () => {
+        for (const make of [(o) => seedlingHarness(o), (o) => mazeHarness(o)]) {
+            const host = hostLink();
+            const h = make({ apworldEditor: host.link });
+            if (make.toString().includes('maze')) connectAll(h, RING);
+            const rep = h.ui.runReport();
+            click(h, 'editOpenApworldEditor');
+            expect(Object.values(host.seen[0].region_atlas ?? {}).some((r) => r.level_set)).toBe(false);
+            expect(host.levelSets).toEqual([[]]);
+            expect(globalThis.__editorSetApworldLevelSetIds).toEqual([]);
+            expect(textOf(h, 'editSetNote')).not.toMatch(/level set/);
+            expect(rep.download.rules.allowed).toBe(true);
+        }
     });
 });

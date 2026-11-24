@@ -45,7 +45,7 @@ import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 import { FIRE_BREAK_WAIT_TICKS, solveSegment, SolverRefusal, stanceHypothesisProbe } from './solverBot.js';
 import { WAIT_AFTER_PRESS_TICKS } from './breakableRocks.js';
 import { FIRE_WINDOW } from './fireVerb.js';
-import { FIREBREAK_WITNESS_DIR, FIREBREAK_WITNESSES, compareFireBreak, fireBreakModelSamples, fireBreakPlan }
+import { FIREBREAK_RULES_WITNESSES, FIREBREAK_WITNESS_DIR, FIREBREAK_WITNESSES, compareFireBreak, fireBreakModelSamples, fireBreakPlan }
     from './fidelityFireBreak.js';
 
 const SRC = atlasLevelSource();
@@ -78,7 +78,7 @@ describe('fidelity FIREBREAK — the key', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.fireBreakArm).toBe(true);
             expect(CONTACT_FIDELITY.fireBreakArm).toBe(true);
             // ⛓ wave 40: FENCEPOST `spinnerRemoveRead` landed after it.
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf('fireBreakArm') + 1)).toEqual(['spinnerRemoveRead', 'fallRockHoldsButton', 'corridorForecastMemo']); // ⛓ wave 41: ROCKBUTTON
+            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf('fireBreakArm') + 1)).toEqual(['spinnerRemoveRead', 'fallRockHoldsButton', 'corridorForecastMemo', 'wallFlyerCorpseGone', 'darkSuitStaticRetaliation', 'pulserForecastPulse', 'darkSuitBossRetaliation', 'owlContactInStep', 'turretSuitRetaliation', 'pickupTickFreeze', 'dialogueFrameFreeze', 'frozenTickUngated', 'freezeEdgeFrames', 'freezeReleaseTick', 'freezeSpanUpdates']); // ⛓ wave 41: ROCKBUTTON
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FIRE_BREAK_ARM');
         });
     it('the clock: the sword\'s wait moved by the flame\'s later first test (press + 4 against press + 1)', () => {
@@ -227,7 +227,9 @@ describe('fidelity FIREBREAK — D1: the `break` verb with Fire and no Sword (th
 });
 
 describe('fidelity FIREBREAK — D2: the solver\'s plans, played on the game (p4g), are the model at 0 px', () => {
-    const recorded = FIREBREAK_WITNESSES.map((w) => [w.name, w, join(FIREBREAK_WITNESS_DIR, `${w.name}.json`)]);
+    // ⛓ RULES rules-fire-breaks-rocks: the rule's own witnesses (`--set=rules`) are recorded and replayed the same way.
+    const recorded = [...FIREBREAK_WITNESSES, ...FIREBREAK_RULES_WITNESSES]
+        .map((w) => [w.name, w, join(FIREBREAK_WITNESS_DIR, `${w.name}.json`)]);
     it('every witness has its recording', () => {
         expect(recorded.filter(([, , path]) => !existsSync(path)).map(([name]) => name)).toEqual([]);
     });

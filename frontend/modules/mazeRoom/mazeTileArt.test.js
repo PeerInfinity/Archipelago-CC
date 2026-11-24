@@ -28,6 +28,7 @@ import {
     MAZE_ART_KEYS, MAZE_ART_NAMESPACE, MAZE_ART_THINGS, MazeTileArtError, drawTileArt, keyedThings, loadMazeTileArt,
     tileArtRefusal,
 } from './mazeTileArt.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
@@ -82,11 +83,11 @@ const FIXTURE = {
 };
 const fixtureIo = (decoded = []) => ({
     base: FIX_BASE,
-    readJson: async (url) => {
+    readJson: withFixtureProvenance(async (url) => {
         const hit = FIXTURE[url.slice(FIX_BASE.length)];
         if (!hit) throw new Error(`no fixture at ${url}`);
         return JSON.parse(JSON.stringify(hit));
-    },
+    }),
     decode: async (url) => {
         decoded.push(url);
         if (url.includes('broken')) throw new Error('not an image');
@@ -170,7 +171,7 @@ describe('no art available → exactly today\'s draw', () => {
 
     it('an empty stack reads nothing', async () => {
         const io = { base: FIX_BASE, readJson: async () => { throw new Error('read'); }, decode: async () => { throw new Error('decode'); } };
-        expect(await loadMazeTileArt([], io)).toEqual({ ids: [], tileArt: null, failed: [], keyed: {}, conceptArt: {} });
+        expect(await loadMazeTileArt([], io)).toEqual({ ids: [], tileArt: null, failed: [], keyed: {}, conceptArt: {}, thingArt: {}, tileKinds: {} });
     });
 });
 
@@ -244,7 +245,7 @@ describe('⛓ a SHAPE entry through the seam (content sets R2b part 2)', () => {
         const rasterised = [];
         const io = {
             base: FIX_BASE,
-            readJson: async (url) => JSON.parse(JSON.stringify(files[url.slice(FIX_BASE.length)])),
+            readJson: withFixtureProvenance(async (url) => JSON.parse(JSON.stringify(files[url.slice(FIX_BASE.length)]))),
             decode: async (url) => ({ src: url.slice(FIX_BASE.length) }),
             rasterise: async (shape) => { rasterised.push(shape); return { shape: 'block' }; },
         };

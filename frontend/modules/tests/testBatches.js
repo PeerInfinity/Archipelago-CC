@@ -44,13 +44,29 @@ export const TEST_BATCHES = Object.freeze({
     }),
     'seedling-js': Object.freeze({
         description:
-            'The Seedling JS runtime rows: real game boots and bot/solver '
-            + 'walks on the JS runtime, the costliest on-push category, so they '
-            + 'get a budget of their own instead of starving the tail of fast. '
-            + 'On push.',
+            'The Seedling JS runtime rows: real game boots, graphics, sound, '
+            + 'panel layout and bot walks on the JS runtime, the costliest on-push '
+            + 'category, so they get a budget of their own instead of starving the '
+            + 'tail of fast. Its solver rows moved to seedling-js-solver on '
+            + '2026-11-15. On push.',
         categories: Object.freeze(['Seedling JS runtime']),
         // No WebGPU: the JS page draws no WebGPU. Its wasm rows (which did need
         // it, ⛓ SEEDLING LOOP MODE 2026-10-11) moved to seedling-wasm.
+    }),
+    'seedling-js-solver': Object.freeze({
+        description:
+            'The Seedling JS solver rows: the JS runtime with the solver mode on '
+            + '(its walks through enemy, kill-lock, door, pit, chest, rope and boss '
+            + 'rooms, its budget fallback, Stop button, limits and frame clock, and '
+            + 'the solve-progress view). Split from seedling-js on 2026-11-15, when '
+            + 'that batch read 69 % of its budget (412 s of 600 s; '
+            + 'HEADROOM_WARN_FRACTION is 0.7). On push.',
+        // The category is set on BOTH sides of each row: its registerTest() in
+        // testCases/seedlingJsRuntimeTests.js (what the in-app runner filters on)
+        // and its row in the substrates config (what scripts/test/testWebgpu.js
+        // and these tests read). testBatches.test.js holds the two equal.
+        categories: Object.freeze(['Seedling JS solver']),
+        // No WebGPU, like seedling-js: the JS page draws none.
     }),
     'seedling-wasm': Object.freeze({
         description:
@@ -70,7 +86,11 @@ export const TEST_BATCHES = Object.freeze({
             + 'Loop mode included (the JtA loop-mode rows are minutes of game '
             + 'between them). Split from fast on 2026-10-12, when the JtA rows '
             + 'took fast to 80 % of its budget. On push.',
-        categories: Object.freeze(['Playback Bot']),
+        // ⛓ REGION MAP step 3b (2026-11-15): the Region Map's seedling_playthrough rows (≈ 1 min) ride here, on
+        // push, rather than in fast (js-19 e2: fast at 62 % of its budget at the base) or seedling-js (66 %, which
+        // they would take past HEADROOM_WARN_FRACTION); this batch was at 8 %. The category 'Region Map' (its
+        // classic-world smoke row, and step 4's generated-world clicks row) stays in fast.
+        categories: Object.freeze(['Playback Bot', 'Region Map: Seedling']),
     }),
     apworld: Object.freeze({
         description:

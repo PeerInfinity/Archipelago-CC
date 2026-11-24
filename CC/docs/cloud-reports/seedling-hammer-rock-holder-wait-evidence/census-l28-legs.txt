@@ -1,0 +1,9 @@
+legs total 934 ; L28 legs 8
+  level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_0_96 | arrive (96, 16) | staged None | skip None
+  level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_96_0 | arrive (96, 16) | staged None | skip None
+  level_28__r0c6 <- in_L25_96_128 -> location:L28 flag 0: rope@160,64 cleared | arrive (96, 16) | staged None | skip None
+  level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_0_96 | arrive (16, 96) | staged None | skip None
+  level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_96_0 | arrive (16, 96) | staged None | skip None
+  level_28__r0c6 <- in_L26_144_208 -> location:L28 flag 0: rope@160,64 cleared | arrive (16, 96) | staged None | skip None
+  level_28__r1c18 <- in_L30_0_128 -> exit:out_teleporter_304_16 | arrive (288, 16) | staged None | skip None
+  level_28__r11c4 <- in_L27_168_16 -> exit:out_teleporter_128_304 | arrive (128, 288) | staged None | skip None

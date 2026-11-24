@@ -205,6 +205,7 @@ The in-app runner races the whole roster against one wall-clock budget
 ```
 npm test -- --mode=test-substrates --batch=fast          # everything no other batch claims (+ the smoke rows)
 npm test -- --mode=test-substrates --batch=seedling-js   # the Seedling JS runtime rows
+npm test -- --mode=test-substrates --batch=seedling-js-solver  # the Seedling JS solver rows (split from seedling-js)
 npm test -- --mode=test-substrates --batch=seedling-wasm # the Seedling wasm (and Flash) runtime rows (WebGPU)
 npm test -- --mode=test-substrates --batch=playback-bot  # the Playback Bot rows (generated worlds played to the end, Loop mode too)
 npm test -- --mode=test-substrates --batch=apworld       # the apworld editor rows only (on push only when its pushPaths hit)
@@ -244,11 +245,13 @@ batch on the bundled boot and then takes ANY batch by name — the manual bundle
 
 **Nightly + after hours (⚖ Robert 2026-11-11).** `test-substrates-nightly.yml` runs
 every manual batch at `main` once a night (cron `37 10 * * *` = 02:37 PST / 03:37 PDT)
-by calling `test-substrates-manual.yml` with `batch=all`. It is a drift SIGNAL, never
+by calling `test-substrates-manual.yml` with `batch=all`, plus the two Seedling
+train checks (`-f only=seedling-checks` runs those alone). It is a drift SIGNAL, never
 landing evidence for any SHA. A red is a note to the owner, read off the run's summary
 and its `nightly-manual-summary` artifact (morning pickup one-liner:
 `.github/workflows/README.md` § *Substrate tests — nightly manual batches*). **B1:** by
-convention, bulk harvests and exploratory sweeps are dispatched 22:00–07:00 Pacific.
+convention, bulk harvests and exploratory sweeps are dispatched 20:00–21:30 Pacific (⚖ Robert
+2026-11-21: the laptop is in standby from ~21:30, so a later dispatch never goes out; the runs go on overnight in CI).
 Exempt: anything a landing train dispatches; gate runs at a slice tip (`train_only`,
 `full_matrix`, TT); a re-measure that a queued packet is waiting on.
 
@@ -330,7 +333,9 @@ npm run test:unit:calib    # demoted calibration sweeps, manual only, never in C
 **The train tier** (`*.train.test.js`, `vitest.train.config.js`; ⚖ Robert 2026-11-02,
 CI manual-only P1–P5) holds the solverBot hammer/fidelity pins, the generator
 capacity pin and the scripted `deriveLevelWorldLogic` sample — heavy rows moved off
-the slice push. CI runs it as three serial jobs, `Train-tier Vitest (shard k/3)` in
+the slice push — plus two CLI checks in `scripts/procgen/*.train.test.js` (⚖ Robert
+2026-11-17): the wallflyer no-hit cross-check and `extract-seedling-map.mjs --check`,
+which the nightly's `Seedling train checks` job also runs. CI runs it as three serial jobs, `Train-tier Vitest (shard k/3)` in
 `unittests_frontend.yml` (⚖ Robert 2026-11-08; the name deliberately does NOT match
 `/JavaScript Unit Tests/`, so `ci-vitest-summary.mjs`'s suite row is the same with them
 present or skipped). The files are split longest-first off

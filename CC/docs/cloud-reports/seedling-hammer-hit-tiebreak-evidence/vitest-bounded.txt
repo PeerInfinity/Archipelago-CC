@@ -1,0 +1,115 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/jsRuntimeWalker.test.js (25 tests) 851ms
+stderr | frontend/modules/seedlingDemo/dashShape.test.js
+[centralRegistry] CentralRegistry initialized
+
+stderr | frontend/modules/seedlingDemo/dashShape.test.js
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:251:25)
+    at new StateManagerProxy (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:119:10)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+    at VitestModuleRunner.cachedRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1053:73)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/index.js:85:1
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+
+stdout | frontend/modules/seedlingDemo/dashShape.test.js > the hook, the settings and the page query > the switches default to the dash flip's shape (legPrecheck ON, noSwingPrefix OFF, keepPartial ON; no env here), read once at import; three settings, each default | on | off, schema default `default`
+[flashPanelModule] [FlashPanel Module] Registering...
+[flashPanelModule] [FlashPanel Module] Registration complete.
+
+stdout | frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js > ⛓ PANEL-ROUTE — the plan in hand's tile path on the stream > L6 bare (bait — ENEMIES), 150 walker ticks in: the final post's best.route is the posted plan's tile path; the plan (every field, its Maps and Sets) is the same bytes with no subscriber
+[panel-route] L6 bare (bait — ENEMIES), 150 walker ticks in solve 1: pass dashless · 288 ticks · 15 cells · 0 dashes · 127 B · passRoutes - · posts 3 · with route 1 · dashesPressed 0 · map 6:17x5 · {"level":6,"cells":[[2,1],[3,1],[3,2],[4,2],[5,2],[5,3],[6,3],[7,3],[8,3],[9,3],[9,2],[10,2],[11,2],[12,2],[13,2]],"dashes":[]}
+
+stdout | frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js > ⛓ PANEL-ROUTE — the plan in hand's tile path on the stream > L4 kit (hold + shove), 40 walker ticks in: the final post's best.route is the posted plan's tile path; the plan (every field, its Maps and Sets) is the same bytes with no subscriber
+[panel-route] L4 kit (hold + shove), 40 walker ticks in solve 1: pass full · 227 ticks · 9 cells · 6 dashes · 122 B · passRoutes dashless · posts 5 · with route 4 · dashesPressed 6 · map 4:7x6 · {"level":4,"cells":[[1,1],[1,2],[1,3],[1,4],[2,4],[3,4],[3,3],[4,3],[4,2]],"dashes":[[1,1],[1,2],[1,3],[3,4],[3,3],[4,2]]}
+
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js (16 tests) 6037ms
+     ✓ L6 bare (bait — ENEMIES), 150 walker ticks in: the REQUEST is byte-identical with and without a subscriber, and so is the plan; with NO subscriber the worker posts no solve-progress  837ms
+     ✓ L4 kit (hold + shove), 40 walker ticks in: the REQUEST is byte-identical with and without a subscriber, and so is the plan; with NO subscriber the worker posts no solve-progress  1262ms
+     ✓ L4 kit (hold + shove), 40 walker ticks in: at 100 ms and at 1000 ms: the REQUEST, the plan, the digest and the shouldStop total are identical; only the envelope's rate differs  1151ms
+     ✓ at most one post per the envelope's interval (default 100 ms) plus the FINAL, which comes just before the result and meters the attempt's whole work  667ms
+     ✓ L6 bare (bait — ENEMIES), 150 walker ticks in: the final post's best.route is the posted plan's tile path; the plan (every field, its Maps and Sets) is the same bytes with no subscriber  844ms
+     ✓ L4 kit (hold + shove), 40 walker ticks in: the final post's best.route is the posted plan's tile path; the plan (every field, its Maps and Sets) is the same bytes with no subscriber  1255ms
+ ✓ frontend/modules/seedlingDemo/wasmDelivery.test.js (27 tests) 170ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverShouldStop.test.js (18 tests) 1360ms
+     ✓ the clock decides nothing: the default budgets on a clock that jumps a DAY per read answer exactly as on a counter  324ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.test.js (20 tests) 3741ms
+     ✓ ON, the floor-195 corridor still scans, exactly as OFF; the floor-196 one refuses by name with nothing scanned  488ms
+     ✓ the D2 counter-example whole: ON, `plan-seedling-axe-witness` plans axe-l48-reach-l49 at 368 ticks (K = 40: 585)  2445ms
+ ✓ frontend/modules/seedlingDemo/wasmWalkTape.test.js (44 tests) 962ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeGeneratedSolver.test.js (33 tests) 489ms
+ ✓ frontend/modules/seedlingDemo/wasmEquips.test.js (21 tests) 162ms
+ ✓ frontend/modules/seedlingDemo/hammerDashWindow.test.js (12 tests) 11144ms
+     ✓ L4: the thresholds — ON 39 (38 keeps the partial 235 t), OFF 84 (83 ships the dashless 255 t)  882ms
+     ✓ leg 108 (L12) on the shipped arm: 328 t at 85 (the full pass, a kept partial), 343 t at 84 — the threshold IS the window  1375ms
+     ✓ THE MARGIN PIN: leg 108 ships 328 t at the window minus its floor (ON 0); OFF, its dashless 561 t  1053ms
+     ✓ ON: the same keys; each stand-tail dash is certified whole with its stand — the hold's all 131 ticks, the collect's to its ceremony  371ms
+     ✓ ON under the window: L4's hold stance (button@16,64, a 126-tick stand) — the same keys AND the same units (the window does not move)  304ms
+     ✓ ON dashes where it should: generated bushy post-feather seed 9 — the collect approach in a spinner room, 96 → 80 t, certified with its 7-tick stand; the level 102 → 86 t  1914ms
+     ✓ ON is not monotone: generated winding post-feather seed 9 — the whole-certified press-blind chain is 204 t where OFF's is 199 t (the skeleton walk 205 → 210 t)  3160ms
+     ✓ ON with no stand tail = OFF: leg 108 (no corridor of it ends standing), key for key and unit for unit  1577ms
+stderr | frontend/modules/seedlingDemo/dashOnlyWindow.test.js
+[centralRegistry] CentralRegistry initialized
+
+stderr | frontend/modules/seedlingDemo/dashOnlyWindow.test.js
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:251:25)
+    at new StateManagerProxy (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:119:10)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+    at VitestModuleRunner.cachedRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1053:73)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/index.js:85:1
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+
+stdout | frontend/modules/seedlingDemo/dashOnlyWindow.test.js > the switch, the setting and the page query > the default is ON (no env opt-out here), read once at import; the setting is default | on | off, schema default `default`
+[flashPanelModule] [FlashPanel Module] Registering...
+[flashPanelModule] [FlashPanel Module] Registration complete.
+
+ ✓ frontend/modules/seedlingDemo/dashOnlyWindow.test.js (14 tests) 1452ms
+     ✓ window 75: OFF cuts the WHOLE full pass and ships the dashless 255 t — stamped; ON (the default) lets its non-dash work run on the budget and upgrades to 219 t  498ms
+     ✓ ON: the smallest window that holds the full pass's dash asks is 39 (219 t); at 38 the full pass trips at `sword-dash` (never `walk`), keeping the partial schedule that dash scan returns  362ms
+     ✓ L4 at window 75 through a real worker: the posting instance OFF → the worker ships the dashless 255 t and stamps `dashOnlyWindow: false`; at the default (ON) it upgrades to 219 t, unstamped  578ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeForcedHit.test.js (6 tests) 1153ms
+     ✓ the page (in place) — leg 622: `lastSolve` carries the billed crossing and the damage, and the solved note names the hit  364ms
+     ✓ the WORKER boundary — the real worker entry, structured-cloned: the same `forcedHits` / `damage` as in place  760ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverLimitOff.test.js (6 tests) 812ms
+     ✓ both defaults and no limit: the SAME plan where the defaults trip nothing (no pass row carries a deadline)  485ms
+     ✓ L4, a window-cut request (window 1): the defaults' budget ships the window's dashless plan; NO LIMIT ships the full pass's (deadline null) — no limit turns the upgrade window off too  318ms
+ ✓ frontend/modules/seedlingDemo/hammerHitTiebreak.test.js (10 tests) 6155ms
+     ✓ 308 OFF: the full pass ships 191 t (the model: 3 hits and a death); no plan carries a stamp  412ms
+     ✓ 160 defaults: both passes punched — ON = OFF byte for byte (same verdict, the length rule)  2343ms
+     ✓ 160 under FADE_MOVE: OFF ships the punched full 632 t; ON ships the hitless dashless 680 t  3185ms
+ ✓ frontend/modules/seedlingDemo/solverEnvChannel.test.js (11 tests) 1227ms
+     ✓ the result records the switches set (and carries no stamp at the defaults)  309ms
+     ✓ an unknown switch refuses BY NAME in the worker too: every solve, nothing installed  423ms
+ ✓ frontend/modules/seedlingDemo/wasmHoldSeam.test.js (14 tests) 163ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverRockLockMapper.test.js (23 tests) 2219ms
+     ✓ ON: the mapped goal SOLVES in the worker (with KILLLOCK_CLEAR_WRITE), 0 hits, {26,0} written (0)  1612ms
+     ✓ ON: the mapped goal SOLVES in the worker (with KILLLOCK_CLEAR_WRITE), 0 hits, {26,0} written (1)  583ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverAnytime.test.js (8 tests) 572ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverTalkClearGoal.test.js (18 tests) 250ms
+ ✓ frontend/modules/seedlingDemo/hammerClearTagStand.test.js (4 tests) 11120ms
+     ✓ L35 leg 127: OFF the hold is punched twice; ON the kill runs first and it takes 0 hits  4710ms
+     ✓ L0 leg 105: ON answers OFF's plan byte for byte (its transit is punched, so the kill already ran first)  6388ms
+ ✓ frontend/modules/seedlingDemo/hammerFadeMove.test.js (7 tests) 9681ms
+     ✓ ON answers OFF byte for byte (a hitless still wait whose aim needs no opening is never moved)  6185ms
+     ✓ ATTACK alone answers OFF byte for byte (phase 2 is asked only inside a phase-1 move)  1613ms
+     ✓ both ON: leg 127 is hitless at OFF's length; the attack is ranked first and refused by the fork on a hit  1879ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverForkRun.test.js (5 tests) 115ms
+ ✓ frontend/modules/seedlingDemo/dashShape.test.js (14 tests) 78835ms
+     ✓ in process: each key has its own witness — noSwingPrefix L4 full pass 57 → 48 units; keepPartial (dash-only window 20) 255 → 235 t; legPrecheck 392:0 the same ticks for less work  43343ms
+     ✓ through a real worker: the posting instance's shape rides on the request; the worker's plan moves as in process and is stamped with what it READ; at the defaults unstamped  35463ms
+
+ Test Files  22 passed (22)
+      Tests  356 passed (356)
+   Start at  21:58:30
+   Duration  84.54s (transform 5.03s, setup 1.09s, import 21.24s, tests 138.67s, environment 2ms)
+

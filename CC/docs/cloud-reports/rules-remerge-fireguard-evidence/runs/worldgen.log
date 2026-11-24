@@ -1,0 +1,31 @@
+INFO: Loading JSON from frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json
+INFO: Renamed game from 'Seedling Playthrough' to 'Seedling Playthrough'
+INFO: Sorted placements by classification (progression first)
+INFO: Extracted: 61 items, 89 locations, 267 regions
+INFO: Generating world in worlds/seedling_playthrough
+INFO: Wrote manifest to worlds/seedling_playthrough/archipelago.json
+INFO: Wrote worldgen options to worlds/seedling_playthrough/_worldgen_options.json
+INFO: Wrote worldgen sidecars to worlds/seedling_playthrough/_worldgen_sidecars.json
+INFO: Wrote flash_panel to worlds/seedling_playthrough/_worldgen_flash_panel.json
+INFO: Wrote region_atlas to worlds/seedling_playthrough/_worldgen_region_atlas.json
+INFO: Wrote embedded rules to worlds/seedling_playthrough/_worldgen_rules.json
+INFO: Writing: worlds/seedling_playthrough/Items.py
+INFO: Writing: worlds/seedling_playthrough/Locations.py
+INFO: Writing: worlds/seedling_playthrough/Regions.py
+INFO: Writing: worlds/seedling_playthrough/Rules.py
+INFO: Writing: worlds/seedling_playthrough/Options.py
+INFO: Writing: worlds/seedling_playthrough/__init__.py
+INFO: Writing: worlds/seedling_playthrough/_ext/__init__.py
+INFO: Writing: worlds/seedling_playthrough/_ext/extra_rules.py
+INFO: Writing: worlds/seedling_playthrough/_ext/world_mixin.py
+INFO: Writing: worlds/seedling_playthrough/_spoiler_hook_client.py
+INFO: Writing: worlds/seedling_playthrough/_ext/_game.py
+INFO: Successfully generated world in worlds/seedling_playthrough
+
+Generated world files in: worlds/seedling_playthrough
+
+Next steps:
+1. Review generated files and make any necessary adjustments
+2. Test with: python -c "from worlds.seedling_playthrough import *"
+3. Generate template: python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+4. Generate test seed: python Generate.py --seed 1

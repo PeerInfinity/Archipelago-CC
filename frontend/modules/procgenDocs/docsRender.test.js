@@ -316,7 +316,26 @@ describe('⛓ the links the render emits', () => {
         //   412 → 414: content sets R4 — concepts.md § The theme trial world → maze.md § Tile art (1 doc), and that §
         //   → frontend/packs/meta/art/manifest.json, the worked example (1 repo).
         //   412 → 413: hammer PANEL-ROUTE — seedling-bot.md's solve-progress line → seedling-solve-progress.md § 7 (1 doc).
-        expect(checked).toBe(415);
+        //   415 → 416: content sets S1 — text-adventure.md's `things` field → its own § Things that are not AP checks (1 same-doc).
+        //   416 → 418: content sets S2 — maze.md § Things ⇄ concepts.md § Content roles (2 doc).
+        //   416 → 419: region-map step 3a — region-layout.md (its index row, its registry link, the registry's row to it)
+        //   421 → 428: ActionNodes AN-1 — action-nodes.md (its index row, 5 links out, the registry's annotation row to it)
+        //   428 → 429: content packs PL-1 — concepts.md § Content roles → its own § What exists, the numbers and the bindings (1 same-doc).
+        //   429 → 430: content packs PL-2 — concepts.md § The resolver, the fill rules and the gap report → action-nodes.md (1 doc).
+        //   430 → 435: ActionNodes AN-2 — action-nodes.md § The runtime (2 same-doc links to it), its link to
+        //   loop-recording.md § The start gate and back, and the registry's `loopSupport.actionGate` row → it (3 doc).
+        //   435 → 437: ActionNodes AN-1b — the registry's `fillRules` row → concepts.md and its `strictQueueActions` row →
+        //   action-nodes.md § No explore (2 doc).
+        //   437 → 440: ActionNodes AN-3a — the registry's `loopBot` row → action-nodes.md § The bot planner, that § ⇄
+        //   playback-and-debugging.md § The playback bot (3 doc).
+        //   440 → 446: rule-table-doc-command — seedling-derived-rules.md: its index row, 2 links out, its
+        //   § Staleness self-link, and maze.md's and pipeline-presets.md's links to it (5 doc, 1 same-doc).
+        //   446 → 448: ActionNodes AN-3b — action-nodes.md's opening paragraph → its own § The node states and the node
+        //   card and § The bot planner (2 same-doc).
+        //   448 → 450: content sets GEN-1 — maze.md → its own § Region biomes, and substrate-registry.md's
+        //   `regionBiomeOf` row → it (1 same-doc, 1 doc).
+        //   450 → 452: document library B3 — editing-core.md ↔ seedling-editor.md § Saving to the library (2 doc).
+        expect(checked).toBe(452);
     });
 
     it('tags each link with the kind that produced it', () => {

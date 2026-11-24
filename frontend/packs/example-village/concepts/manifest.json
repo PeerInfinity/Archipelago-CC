@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "provenance": {
+    "sources": {
+      "actionnodes-design": {
+        "type": "model",
+        "model": "claude-fable-5-2",
+        "date": "2026-11-15",
+        "session": "actionnodes-design",
+        "approved": { "by": "Robert", "date": "2026-11-15", "ruling": "A14: accepted for initial testing, details adjustable" }
+      },
+      "pl2-pack": {
+        "type": "model",
+        "model": "claude-opus-5-5",
+        "date": "2026-11-16",
+        "session": "content-packs-pl2",
+        "note": "The clock resource's name, which the graph document never showed (its mana is the loop pool). No approval is recorded"
+      }
+    },
+    "default": "actionnodes-design",
+    "groups": { "example-village:resource/mana": "pl2-pack" }
+  },
+  "concepts": {
+    "example-village:place/village": { "kind": "place", "name": "The Village", "presents": "example-village:place/village" },
+    "example-village:resource/mana": { "kind": "resource", "name": "Mana", "presents": "example-village:resource/mana" },
+    "example-village:stat/strength": { "kind": "stat", "name": "Strength", "presents": "example-village:stat/strength" },
+    "example-village:stat/knowledge": { "kind": "stat", "name": "Knowledge", "presents": "example-village:stat/knowledge" },
+    "example-village:resource/gold": { "kind": "resource", "name": "Gold", "presents": "example-village:resource/gold" },
+    "example-village:resource/bread": { "kind": "resource", "name": "Bread", "presents": "example-village:resource/bread" },
+    "example-village:boon/strength-boost": { "kind": "boon", "name": "Strength Boost", "presents": "example-village:boon/strength-boost" },
+    "example-village:boon/pocket-money": { "kind": "boon", "name": "Pocket Money", "presents": "example-village:boon/pocket-money" },
+    "example-village:task/start": { "kind": "task", "name": "Start", "presents": "example-village:task/start" },
+    "example-village:task/do-chores": { "kind": "task", "name": "Do Chores", "presents": "example-village:task/do-chores" },
+    "example-village:task/train": { "kind": "task", "name": "Train", "presents": "example-village:task/train" },
+    "example-village:task/read-the-notice": { "kind": "task", "name": "Read the Notice", "presents": "example-village:task/read-the-notice" },
+    "example-village:task/eat-bread": { "kind": "task", "name": "Eat Bread", "presents": "example-village:task/eat-bread" },
+    "example-village:task/buy-bread": { "kind": "task", "name": "Buy Bread", "presents": "example-village:task/buy-bread" },
+    "example-village:task/bribe-the-guard": { "kind": "task", "name": "Bribe the Guard", "presents": "example-village:task/bribe-the-guard" },
+    "example-village:task/guards-locker": { "kind": "task", "name": "Guard's Locker", "presents": "example-village:task/guards-locker" },
+    "example-village:task/move-the-boulder": { "kind": "task", "name": "Move the Boulder", "presents": "example-village:task/move-the-boulder" },
+    "example-village:task/leave-the-village": { "kind": "task", "name": "Leave the Village", "presents": "example-village:task/leave-the-village" }
+  }
+}

@@ -1,0 +1,141 @@
+# ActionNodes Substrate
+
+The ActionNodes substrate (id `action_nodes`) is a puzzle played in loops: one region is one node, and a node is one action with a mana cost, stat and resource minimums, results and a limit per loop. Stats and resources reset with every loop; Archipelago items are boosts that apply at once and again at the start of every loop. A world is compiled from a graph document by `compileActionGraph`, with its Archipelago logic derived by an exact one-loop search and the guarantee that every loop not waiting on an item can earn a check proven at compile time. Slice 1 built the headless core: the format, the compiler, the logic, the bot planner and a committed example. Slice 2 made it playable in the browser, in and out of Loop mode: the runtime, the `act` verb with its start gate, the host ledger and the Resources panel ([The runtime](#the-runtime)). Slice 3 added click-to-play on the Region Graph and the Region Map, and the live bot ([The node states and the node card](#the-node-states-and-the-node-card), [The bot planner](#the-bot-planner)).
+
+The module is `frontend/modules/actionNodes/`. Nothing in it touches a generator or the maze engine.
+
+## The graph document
+
+One JSON document, kind `action-graph`, schema version 1, validated by `actionGraph.js` (`validateActionGraph`, `assertActionGraph`). Every refusal has a name in `ACTION_GRAPH_REFUSALS`; tests assert the name, never the wording. The field names (`requires`, `results`, `limit`, `after`) are the shared task shape's, so a later pack resolver can produce exactly this document and the compiler does not change.
+
+| Field | Meaning |
+|---|---|
+| `loop.mana` | A loop's starting pool, before boosts. |
+| `stats`, `resources` | `{<id>: {name}}`. Stats only go up; resources go up or down. Both reset with the loop. |
+| `boons` | The Archipelago items: `{<id>: {name, count, gives: {stats, resources, mana}}}`. `gives` applies at once when received and at the start of every loop, so a boost resource spent during a loop is back at the next one. |
+| `filler` | Optional: the boon id that fills the check locations the boons do not. |
+| `start` | The start node's id. |
+| `settings` | `xpGainScale` (default 1) and `xpEffect` (default `cost`), written onto every node's `loop_costs` entry. |
+| `nodes.<id>` | `name`, `kind` (`start`, `action`, `check`, `use`, `goal`), `time` (mana per performance, 0 allowed), `requires` (`{stats, resources}` minimums), `results` (`{stats, resources, mana}`), `limit` (performances per loop, required on every node), `after` (a list of sets: the node is reached this loop when every node of one set is cleared), optional `position`, optional `src`. |
+| `provenance` | The content-sets provenance block: `sources` (each `{type, …}`: `game`, `person`, `model`, `authored` or `derived` with that type's fields), `default`, and a per-entry `src` on a node or boon that differs from the default. |
+
+**The per-item starting-mana boost.** A boon's `gives.mana` is the mana that item adds to every loop's starting pool. When a boon does not state it, it is `DEFAULT_MANA_PER_ITEM` (10), the constant the global "every received item adds mana" setting (`gameState.manaPerItem`, toggled by `includePerItemMaxMana`) uses, so a boon that says nothing behaves as every item does today. `resolvedBoostOf` is the only place the default is applied. The compiled `action_nodes[p].boosts` table states every item's value, and while an ActionNodes world is loaded the runtime takes each received item's mana from that table instead of the global flat term (`gameState.setPerItemManaTable`; [The runtime](#the-runtime)). Other substrates are unchanged.
+
+**What the validator enforces, and why.** No boon amount and no stat result is negative, and every requirement is a minimum. With those, holding more items can never make a plan impossible, which is what lets the logic keep only minimal item combinations ([Gotchas](./gotchas.md#a-minimal-set-search-over-an-item-lattice-assumes-monotonicity-and-the-learning-walk-cannot-check-it)). It also requires exactly one start and one goal, an `after` on every other node, every node reachable through `after` chains, and an item pool that fits the check count. Forms the first version leaves out are refused by name: alternative requirement sets, result timing (`when`), growing limits, `modifies`, maximum requirements.
+
+## The model and the search
+
+`actionModel.js` is one loop. Movement is free, so a loop's whole state is how many times each node has been performed; mana, stats and resources follow from the counts. A node can be performed when, in this order: mana is above 0; the node is reached (the start always is, and is cleared from the beginning); its limit is not used up; every minimum is met; no resource would go below 0; the mana left covers its price. A node may be started with too little mana, but it does not complete, so the logic and the bot count it only when it completes. An item received during a loop applies at once (`applyBoost`).
+
+`actionSearch.js` enumerates every reachable state of one loop breadth-first, so each state's recorded plan has the fewest performances. `deriveActionLogic` runs it once per item combination (each boon from 0 to its `count`) and keeps, per node, the minimal combinations under which some state performs it and some state reaches it. Both searches have budgets (`DEFAULT_STATE_BUDGET`, `DEFAULT_COMBINATION_BUDGET`); past one the search is refused by name (`search-budget-exceeded`, `combination-budget-exceeded`), never cut short. A hand-set intended path is the fallback for graphs too large to search; it is not built.
+
+## The compiler
+
+`compileActionGraph(graph, {playerId, seed, budget, graphPath, exists})` in `actionGraphCompiler.js` returns `{rules, report}`:
+
+- **Regions:** `Menu` → the start node; one region per node, named by its id. **Two-way edges** (AN-1b): each `after` edge A→B is a forward exit `A -> B` and an ungated reverse exit `B -> A`, both named `<from> -> <to>`. There is no exit back to `Menu` and no return-to-start exit: the start is reached by the `Menu -> start` hop, as in every substrate. Moving between nodes reached this loop is free (the user, 2026-11-16: *"once a node becomes reachable in a loop, it stays reachable for the rest of the loop, and moving between nodes is free. Reachability resets when the loop resets."*). The Region Graph merges an exit pair into one edge, so it draws one edge per `after` edge.
+- **Locations:** a check node's location is named by the node; the goal node's location holds `Victory` (`procgenCore/goalItem.js`), locked, and the completion condition is `item_check Victory`.
+- **Rules:** a location's rule is "some one-loop plan performs the node with the items held"; a forward exit's is "some one-loop plan reaches the node it leads to"; a reverse exit's is `True`. The reverse exits change no meaning: every location and forward-exit rule is already the exact one-loop answer, and the search already assumes free movement. Each is the Or over the minimal combinations of And(Has(item, n)); an empty combination is True. An item is progression when any rule names it.
+- **Items and fill:** each boon `count` times, then the filler; a seeded assumed fill over the derived rules.
+- **Ids:** the `action-nodes` row of `procgenCore/apIdNamespaces.js` (base 40000000), allocated by sorted name.
+- **Blocks:** `preset_sidecars[p]` (one per node, below), `action_nodes[p]` (`actionNodesBlockOf`: loop, stats, resources, `boosts` by item name, `mana_per_item_default`, start, goal, `action: 'act'`, settings), `procgen_metadata[p]` (`driver: 'action-graph-compiler'`, the graph id and path, `action_logic`), `provenance[p]` (the pack ids given as `exists`, else the graph's own provenance block: a world looks its sources up through its packs), `exporter[p].assume_bidirectional_exits: false` (the world LISTS its back-exits; `true` would let a reader construct one for every exit, `start -> Menu` included), `discovery_mode[p]: {enabled: true, bundle: 'actionNodes'}` (below) and `loop_costs[p]`: every node `{moveCost: 0, xpEffect, xpGainScale, actions: {act: <time>}}`. These costs are authored, not generated; `rules.schema.json` declares `actions` and `xpGainScale` on a region entry for them.
+- **Sphere log:** `generateSphereLog` over the compiled rules, embedded as `sphere_log`.
+
+**The proof.** In each loop at least one location check can be earned (when the player is not waiting on another world). The compiler refuses by name when a check or the goal has no item combination that earns it (`check-never-earnable`), when a node is never reached (`node-never-reached`), when the sphere log over the derived rules does not reach the goal (`goal-not-in-logic`), or when the fill finds no place for a progression item (`fill-failed`). A check is in logic exactly when a one-loop plan earns it, and the fill guarantees an unchecked in-logic check whenever the game is not waiting, so some loop earns one. `action_logic.a6.spheres` reports how many checks are open at once in each sphere; that is reported, not enforced. Every target also records a witness plan per minimal combination.
+
+**The payload.** `playable_payload` is the node with names resolved: `node_id`, `name`, `kind`, `time`, `limit`, `requires` and `results` as `{<id>: {name, amount}}` (results also `mana`), `after`, `location` (only on a node that carries one), optional `position`, and the envelope's `exits` (each `{exit_id, exitName, targetRegion}`, a reverse exit also `reverse: true`, with no `side`: a node has none). The entry's `sidecarFields` declare every key.
+
+## The runtime
+
+`actionNodesRuntime.js` holds the loaded world; `index.js` wires it to the app and `actionNodesPanel.js` shows the node the player is at. The runtime's model has `buildActionModel`'s shape, built from `action_nodes[p]` and the node payloads (`runtimeModelOf`), so "can this node be performed" is `actionModel.whyNot`, the same rule the search and the bot use.
+
+- **What it keeps.** Per loop: each node's performances. Through the host ledger (`resourceChannels/resourceLedger.js`): the stats and resources. Across loops, until the next world load: the checks it has sent and the nodes whose exits it has revealed.
+- **The `act` verb.** A Loops queue entry `{type: 'customAction', actionName: 'act', params: {nodeId, label}, sourceRegion}`. The named-action table (`shared/procgen/loopCustomActions.js`) prices it at the node's `loop_costs[p].regions[<node>].actions.act` (then the region-XP discount, as every cost), labels it by the node's name, and on completion publishes `loop:actionCompleted` on the event bus; the runtime then performs the node. There is no explore in ActionNodes (below).
+- **The start gate** (`loopSupport.actionGate`). Before the generic executor starts an entry of an ActionNodes region it asks the runtime. An `act` is refused when its node is not reached this loop, its limit is used up, a requirement is not met, or a result would take a resource below 0; a move is governed by the MULTI-ENTRY RULE (AN-3a): every exit, forward or reverse, is open iff its TARGET is reached this loop — the start, or a node one of whose `after` sets is fully cleared. On a one-member set that is "the source is cleared" (code `not-cleared`, with the count); on `after: [[A, B]]` both A→N and B→N stay shut until A and B are cleared (refused with A cleared: `target-not-reached`, naming B); on `after: [[A], [B]]` either cleared opens both. A move that names no exit of the node keeps "the source is cleared". The compiler's forward-exit rule is already the target's reach rule, so the example preset is unchanged. So a multi-hop move between reached nodes is never refused and costs 0; reachability resets with the loop. Any custom action but `act` is refused (`action-not-offered`). The refusal stops the queue at that entry and the Loops panel names the entry and the reason ([Loop Recording](./loop-recording.md#the-start-gate)). Mana is not part of the gate: a node started short of mana drains what is left into region XP and the loop ends, as every Loops action does.
+- **One performance.** The results go to the ledger (all or nothing), `results.mana` to the pool. The first time a node is cleared, its forward exits are revealed (below); discovery is never reset by a loop. A check or goal node sends its location once (`user:locationCheck`); in later loops the action repeats without it.
+- **Outside Loop mode** the panel's **Act** performs at once: the runtime charges the shared pool the XP-adjusted price (`chargeMana`), and at zero fires the loop-reset teleport. Short of mana, what is left is spent and the action does not complete. In Loop mode the button is **Queue act**: it appends an `act` entry when the queue ends at the node.
+- **Boosts (A4).** An item named in `boosts` adds its stats and resources to the ledger at once when received and again at every loop's start. Its `mana` is that item's starting mana, through the per-item table in `gameState` (an item with no row adds `mana_per_item_default`); a received boost's mana is also gained at once. The first state snapshot after a load is the baseline, so items already held are not gained twice. A baseline that arrives after the loop's first performance (nothing guarantees a snapshot between a load and a check) does not restart the loop: what it holds was received during the loop and applies at once (AN-3a; before, it wiped the loop's counts mid-loop).
+- **Both resets.** `gameState:loopReset` and `loopState:loopReset` each start a new loop: counts to zero, the ledger to its base plus every held boost.
+- **Cross-substrate items.** The resources are also declared under `sharing.items`, so a grant to `action_nodes/<resource>` lands in the ledger.
+- **Costs are authored.** The entry declares `loopSupport.authoredCosts`, the cost class `authored`: the Loops panel's Generate Costs and the pipeline's cost pass copy each node's entry as compiled. `xpGainScale` on a region entry scales the region XP earned there (default 1, so every other world is unchanged).
+
+### No explore
+
+The user, 2026-11-16: *"I don't want explore actions to be available in ActionNodes."* The entry's `loopSupport.queueActions` (`regionMove`, `act`) is ENFORCED: it declares `strictQueueActions` (`loops/strictQueueActions.js`). An explore — from any control, an undiscovered exit or location click included — is refused at queue time (gameState's custom-action guard, installed by the loops module: nothing is appended, `gameState.lastQueueRefusal` names it) and, if it got into the queue some other way, by the start gate. The Loops block builder draws no explore button for a region whose entry lists no explore. No other substrate opts in.
+
+### Discovery
+
+The user, 2026-11-16: the start node starts fully discovered; the nodes connected to it start showing all their contents; a node that is visible but not completed on any loop shows how many exits it has and which way they lead, not their names nor their targets' names; discovery stays on loop reset; no random explore effect. The compiled world names the discovery module's `actionNodes` bundle (`discovery/worldDiscoveryMode.js`: Loop mode's overrides with `autoDiscoverLocations` on, forced with Loop mode on AND off).
+
+- **At load** the discovery module reveals the start's neighbourhood (`discovery/revealCore.js` `revealStartNeighbourhood`): the start node's exits, the nodes they lead to with their locations, and each of those nodes' exit back.
+- **A node's first clear** calls the discovery module's public `revealExits(node, its forward exits)`: each exit, its target and the target's locations, and the target's exit back. It makes no random pick (until AN-1b the runtime published `loop:exploreCompleted`, whose receiver also ran explore's random pick).
+- **A reverse exit is revealed with its node**, so it never shows as `???` and never adds to the visible exit count. A visible node's forward exits stay `???` edges to `???` nodes at their layout position (what the Region Graph already draws; the Regions panel lists them as `??? → ???`).
+- **The order trap.** The override applier writes `regionDiscoveryTrigger` before `autoDiscoverLocations`, so the start cascade runs with locations off; `settingsChangeSteps` re-runs its location step when they turn on.
+- **Loop reset.** Nothing clears discovery: no module publishes `loop:reset` (`revealCore.test.js` holds that).
+
+### The node states and the node card
+
+`nodeStates.js` gives every node exactly one state, by one pure function over the node data and a loop state, in this precedence:
+
+| State | Meaning |
+|---|---|
+| `undiscovered` | the discovery module has not discovered its region: the card shows the discovery placeholder |
+| `not-reached` | no `after` set is cleared this loop |
+| `done` | its limit is used up this loop (the start, cleared from the beginning, is always `done`) |
+| `blocked` | reached, performances left, a requirement unmet (named). Short ONLY of mana: `blocked`, "not enough mana" (it can still be queued) |
+| `ready` | reached, performances left, every requirement met, the mana covers its live price |
+
+While the Loops queue is being planned the states are for its END (`queueEndState` applies every uncompleted `act` entry and stops where the queue would); while it runs they follow the live state (`viewStateOf`; `runtime.nodeStates({running, queue, isDiscovered})`).
+
+**The card** (`nodeCard.js`) is a Region Graph node overlay. `nodeCardOverlay.js` registers it (`regionGraph` public `registerNodeOverlayProvider`) while an ActionNodes world is loaded and removes it on unload (`unregisterNodeOverlayProvider`, added for this in AN-3a), so no other world sees it; it refreshes on the queue, the ledger, mana, discovery and checks. It shows the name, a check mark once its location is checked (a goal mark on the goal), `used/limit`, the live mana price, needs and gives with the unmet line marked, and takes its state's border. An undiscovered node shows `???` only; one with no way in from a discovered node is not drawn (the view model's rule). A Region Graph panel created while the card is registered (a closed panel reopened, or a second one) gets it too: `regionGraph/index.js` publishes `regionGraph:panelMounted` when a panel registers, and `nodeCardOverlay.js` registers the card again on it (AN-3b; before, the overlay API's one pending slot served only the first panel, so a reopened panel had no card until the next world load).
+
+**The click** (AN-3b; the user, 2026-11-17: *"The default click action should be to perform once. I don't want to add a right click action."*). `actionNodes.act` is a registered click action (`regionView/clickActions.js`; owner `actionNodes`, region target, a toggle, panel order 300, after the built-in route and checks), registered only while an ActionNodes world is loaded (`nodeClickAction.js` `syncClickAction`); both the Region Graph and the Region Map run it from their **On click** strip. A click on a node card's body is the node's click: the overlay manager forwards it to the Region Graph's `handleRegionNodeClick` (planner ruling 2026-11-20). What a click does is `nodePerformPlan.js` `planPerform`, computed for the END of the Loops queue (the state the cards show):
+
+| The node at the queue's end | Loop mode on | Loop mode off |
+|---|---|---|
+| `ready`, the queue ends on it | queues one `act` | performs once at once (`runtime.actNow`, the pool pays) |
+| `ready`, the queue ends elsewhere (unreached by the queue) | queues the free hops to it (`actionLoopBot.hopsBetween`; from `Menu`, `Menu → start` first), then one `act` | the same moves, then performs once |
+| `blocked` (a requirement, or short only of mana) | refused by name, with the unmet requirement (`Eat Bread: needs Bread 1 (has 0)`, `… : not enough mana`); nothing queued | the same |
+| `done` (its limit used up at the queue's end) | refused by name, with the count | the same |
+| `not-reached` | refused, naming what is still to clear | the same |
+| `undiscovered` | refused, naming nothing about the node | the same |
+
+A queue that already stops early (an entry the gate would refuse) is refused too: nothing after its stop would run. The hops are queued as `user:regionMove` under the planning source `actionNodes-plan-<panel>` (`loops/loopModeExemptions.js`). A click never starts a performance it cannot finish (⚖ Q1 still lets the node panel's **Queue act** do that on purpose). There is no right click.
+
+**The "perform all remaining" button** (AN-3b; the user: *"a separate button on the repeatable nodes to perform all remaining"*). A node whose limit is greater than 1 gets one **Perform all remaining** button in the card's `.an-card__actions[data-slot="perform-all-remaining"]`. It does what the click does with every performance left at the queue's end (`limit − count`), CAPPED by what the end state allows: each performance must pass the gate with the mana left after the ones before it (the live, XP-discounted price) and every requirement. When the mana runs short it queues (or performs) as many as the pool finishes and says so on the card (`.an-card__message`, e.g. `1 hop(s), then Do Chores ×1 of the 2 left (stopped: short by 4 mana)`); a node with none left, or not ready, is refused by name there. The button is not a node click (it publishes no `regionView:regionClicked`).
+
+The Resources panel (`resourceChannels/resourcesPanel.js`) shows the mana line, the ledger's stats and resources, and the boosts in effect, for every substrate of the loaded world that declares a sharing category.
+
+## The bot planner
+
+`actionPlanner.js` `planLoop(model, {items, checked, xp, start})` plans one loop (or the rest of one) with the live items and region-XP prices (`livePrices`, the shared `xpFormulas.js`). Its aim: the goal as soon as it is reachable, with the fewest performances; otherwise the most new checks (ties: most mana left); otherwise the target short of mana by the least, run as far as it goes and ended by attempting the node it cannot afford, which drains the rest into region XP; otherwise, when every target needs an item, the most mana it can spend, and it says it is waiting for an item. Every decision is a line naming the choice and why each unchosen check was not taken, for example *Move the Boulder: short by 5 mana after Guard's Locker*.
+
+`playToGoal(model, {placements, xpGainScale})` plays a compiled world with it: an item arrives the moment its check is performed and the bot plans the rest of the loop again from there.
+
+**The live bot** (AN-3a). The registry entry declares `loopBot.planLoop(context)` (`actionLoopBot.js` `planLiveLoop`): `planLoop` over the runtime's model with the live inventory, checks, region XP and pool, written as a Loops path — `Menu → start`, then for each performance the free hops from where the player is (a shortest path over exits whose target is reached at that point of the plan, so the start gate never refuses one), then the `act` entry; an attempt is the last act. The Playback Bot's loop runner asks it for the whole loop when every region of the world is an ActionNodes node ([Playback and Debugging](./playback-and-debugging.md#the-playback-bot-frontendmodulesplaybackbot)); its reasoning lines go to the bot's log and the console behind the bot's **Log the loop plan's reasoning** setting. `actionLiveSim.js` `playLiveToGoal(rules)` plays those paths headless through the real runtime gate, pool and checks. **The mid-loop replan** (AN-3b). When a loop's queue has run to its end with mana left and the state DIVERGED from the plan — an item arrived during the loop (applied at once, A4), the one thing the plan could not foresee — the runner asks `planLoop` again with `context.continueFrom = {region, mana}`: the rest of the loop from the runtime's live counts, routed from the player's node (no `Menu → start` hop). Its path is APPENDED to the queue, which resumes where it stopped (no reset, no refill); its lines are logged as `loop N (replan): …`. Without a divergence the loop ends as before: the plan already was the planner's answer for that state. `playLiveToGoal` plays the same continuation, so the live path reaches the example's goal in the pure planner's 2 loops (AN-3a: 3) with its reasoning lines.
+
+## The scripts
+
+- `scripts/procgen/action-nodes-compile.mjs [<graph>] [-o out] [--seed N] [--exists id,id] [--check]` compiles a graph; `--exists` names the packs the graph is the resolved structure of (recorded in `provenance[p]`). With no graph it compiles the example to the committed preset, naming its pack `example-village`, and the check mode is a byte-identity gate.
+- `scripts/procgen/action-nodes-play.mjs [<rules.json>] [--live-only]` plays a compiled world to its goal with the planner and prints every loop with its reasoning, at the graph's XP scale and at 0; then the live bot's path (`playLiveToGoal`), where a refused hop or act fails the run.
+
+## The example
+
+`graphs/example-village.json` is the ten-node village: Start; Do Chores (5 mana, Gold +3, twice); Train; Read the Notice; Eat Bread (a use node, off the start); Buy Bread and Bribe the Guard (after Do Chores); Guard's Locker and Move the Boulder (the two checks); Leave the Village (the goal, Strength 2 and Knowledge 1). Its two boons, Strength Boost and Pocket Money, state `gives.mana: 0`: under the default of 10 the goal would no longer need the bread. Its numbers are hand-made content in the content-sets sense of *use the table as written*: nothing reassigns them, and the compiler reads them exactly as written (the other value of that per-world switch, *assign by playthrough*, belongs to generated worlds and is not built here). It compiles to the committed preset `frontend/presets/action_nodes_example/AP_1/` (4 item combinations, at most 64 states each): both checks `True`, the goal `Has(Strength Boost)`.
+
+## The registry entry
+
+`actionNodesLibrary.js` registers identity, `deserializeWorld` / `serializeWorld` (exits as a `Map`), `sidecarFields`, `apLocationNamesOf`, `apExitNamesOf`, `regionGeometry: sides` and `SIDE_AGNOSTIC_EXIT_SIDES`. It declares no realiser hook, because the compiler writes its regions.
+
+- `fillRules`: the content-pack fill rules it applies (`procgenCore/fillRules.js` `fillRulesOf`).
+- `loopSupport`: `queueActions: ['regionMove', 'act']`, `strictQueueActions: true`, `actionGate`, `authoredCosts: true`, `manual: false`. Not `manual`: a Manual block parks the queue for live play, and in Loop mode every performance is a queue entry, so a park would wait for nothing. Not `record` / `playback` (the strict action gate's pair: the start gate does that job), and no `executeVia` until the playback controller exists.
+- `sharing`: `mana`, `items` (its resources), `stats` and `resources`, each list read from the loaded world.
+- `loopBot.planLoop`: the live bot's loop plan (above).
+
+It declares no playback controller (the live bot plays through the Loops queue), so the capability chart shows ✗ for a Bot block.
+
+Unit tests: `frontend/modules/actionNodes/*.test.js`; in the browser, the category "ActionNodes" of the substrates test mode (batch `fast`), and `an-bot-plays-to-goal` in the category "Playback Bot" (batch `playback-bot`).
+
+## Related documentation
+
+- [Architecture](./architecture.md) · [Substrate Registry Reference](./substrate-registry.md) · [Loop Recording and Block Modes](./loop-recording.md) · [Gotchas](./gotchas.md)

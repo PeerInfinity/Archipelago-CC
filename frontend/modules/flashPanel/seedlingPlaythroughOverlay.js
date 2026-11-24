@@ -909,9 +909,52 @@ export const PIXEL_MASK_TAGS = Object.freeze([
  * transcription's. Signature matches `buildSeedlingRegionGrid`'s
  * `entityOverride` hook.
  */
+/**
+ * ⛓⛓ RULES rules-fire-breaks-rocks — AN ORDINARY ROCK'S BREAKERS, WITH THE FLAME'S SIDE. The transcription's
+ * `breakablerock` row is the swing's (`anyOf(hasSword, hasSpear)`); the game also breaks the rock under `Player.fire()`
+ * (`Player.as:1032` -> `genericHit` -> `BreakableRock.hit(hasGhostSword ? 1 : 0)`, `rockType` 0), but only from a stance
+ * whose flame reaches that rock and nothing else (`seedlingRockBreakers.rockFireSides`, the caller's `ctx.rockFire`:
+ * `L<level>:<rock id>` -> `{stances, fireDirs, swingDirs}`). A rock with a stance is occupied on
+ * `anyOf(hasSword, hasSpear, hasFire)` and every entry direction with no stance behind it is gated back to the swing
+ * (`enter`); a rock with none (L40, L41) keeps the transcription's row. No `ctx.rockFire`: the transcription's row.
+ */
+export const ROCK_FIRE_CONDITION = anyOf(flag('hasSword'), flag('hasSpear'), flag('hasFire'));
+/**
+ * ⛓⛓ tile-fire-breaks-rocks §4 — A ROCK'S OWN CLEARED EVENT, WHERE IT IS MINTED. ⚖ Robert 2026-11-12, via the liaison:
+ * "Credit where created (Recommended)"; shape ruled by rules-6. A tagged rock is gone once its flag is cleared
+ * (`BreakableRock.check`, `BreakableRock.as:47-54`), so holding its event the rock is no obstacle from any side. Where
+ * the producer MINTS that event (`ctx.mintedEvents`, the names its own event layer makes: `obstacleEventNames`), every
+ * swing-only `enter` gate also opens on it. A rock whose event is not minted (L16, L53, L100's)
+ * is unchanged: crediting an event nothing grants would be a `Has` of no item.
+ */
+export function rockOwnEvent(entity, ctx) {
+    const tag = Number(entity.attrs?.tag);
+    if (!Number.isInteger(tag) || tag < 0 || !ctx?.mintedEvents) return null;
+    const name = obstacleEventName({ level: ctx.level, tag, cls: entity.type, x: entity.x, y: entity.y });
+    return ctx.mintedEvents.has(name) ? { event: name } : null;
+}
+function rockFireRuling(entity, base, ctx) {
+    const row = ctx?.rockFire?.get(`L${ctx.level}:${entity.type}@${entity.x},${entity.y}`);
+    if (!row || row.stances.length === 0) return null;
+    const own = rockOwnEvent(entity, ctx);
+    const swing = own ? anyOf(base.condition, own) : base.condition;
+    return {
+        ...base,
+        // ⚠ The occupancy is NOT credited with the event: it is also the event's own location rule (the producer prices
+        // the event at the obstacle's crossing cost), which would then name itself. Holding the event already implies
+        // Sword | Spear | Fire (its rule), so only the swing-only sides need it.
+        condition: ROCK_FIRE_CONDITION,
+        ...(row.swingDirs.length ? { enter: Object.fromEntries(row.swingDirs.map((d) => [d, swing])) } : {}),
+        ...(own ? { ownEvent: own.event } : {}),
+        fireStances: row.stances.map(({ x, y }) => [x, y]),
+        cite: 'Player.as:924,989,1032 -> genericHit -> BreakableRock.hit (BreakableRock.as:57-67)',
+    };
+}
+
 export function overlayEntitySemantics(entity, base, ctx = null) {
     const tag = entity?.type;
     if (tag === undefined) return null;
+    if (tag === 'breakablerock') return rockFireRuling(entity, base, ctx);
     if (LOCK_FAMILY.has(tag)) {
         const ruled = lockRuling(entity, ctx);
         return ruled ? { ...base, ...ruled } : null;
@@ -1490,9 +1533,17 @@ export const LAVATRAP_PULL = Object.freeze({
  * measure (`LavaTrap.as:29` centres the entity in its tile, `:81` uses
  * `FP.distance` on the two centres, and `:83` compares with `<=`).
  *
- * The line-of-sight test (`collideLine("Solid", ...)`) is NOT applied: it needs
- * the per-pixel solid set, and leaving it out can only ADD pulls, which is the
- * permissive direction. Named here rather than folded into the result.
+ * ⛓⛓ rules-lavatrap-pull-line — THE LINE TEST (⚖ Robert 2026-11-20 "Fix pull disc, then K"). The tongue launches
+ * only on a clear line (`:86-88` `!FP.world.collideLine("Solid", x, y, player.x, player.y)`), so a tile is in the disc
+ * only where the centre-to-centre segment to the trap crosses no tile `solid(x, y)` names (`pullLineClear`, sampled per
+ * px; the two end tiles never count). `solid` is REQUIRED, the caller's stand-in for `"Solid"`: the rules producer passes
+ * its analyzer grid's `wall` cells (`playthroughLavaTrapPulls`), and rule T and the maze read THAT disc, never re-cut
+ * it. A pit, lava or water tile is `"Tile"`, not `"Solid"` (`Scenery/Tile.as:24-27`), so it never cuts: the tongue
+ * crosses it, which is L108's whole ferry. `solid: null` is the UNCUT disc, by name (a measurement of the cut itself);
+ * an omitted `solid` is refused, so no caller silently reads a disc the game does not pull from.
+ * An ARMED trap whose line is blocked still launches later, from the first tile with a clear line (`:81-90`: `d <=
+ * chompRange && !wait` re-tests the line every frame): a cut tile is "not pulled THERE", not "not pulled at all", which
+ * the tile walk models as it is (a step onto a kept tile is reeled).
  *
  * ⛓ `yields` (session tile-primitives-sphere-order-10, ⚖ 2026-10-30 "First
  * range entered"): the one-tile steps into this trap's disc from outside it
@@ -1505,7 +1556,12 @@ export const LAVATRAP_PULL = Object.freeze({
  * discs are entered at the same point is yielded by none of them: the maze
  * refuses it by name.
  */
-export function lavaTrapPulls(level, tileSize = 16) {
+export function lavaTrapPulls(level, tileSize = 16, options = {}) {
+    if (!('solid' in options) || (options.solid !== null && typeof options.solid !== 'function')) {
+        throw new Error('lavaTrapPulls: pass `solid` ((x, y) => the tile stands for "Solid"), or `solid: null` for the uncut disc '
+            + '(LavaTrap.as:86-88 launches only on a clear collideLine("Solid"))');
+    }
+    const { solid } = options;
     const out = [];
     for (const e of level?.entities ?? []) {
         if (e.type !== LAVATRAP_PULL.tag) continue;
@@ -1524,6 +1580,7 @@ export function lavaTrapPulls(level, tileSize = 16) {
                 // `FP.distance` is Euclidean and `d` is coerced to int before
                 // the comparison, so the boundary is a floor, not a round.
                 if (Math.floor(Math.sqrt(dx * dx + dy * dy)) > LAVATRAP_PULL.chompRange) continue;
+                if (solid && !pullLineClear([x, y], [tx, ty], tileSize, solid)) continue;
                 from.push([x, y]);
             }
         }
@@ -1532,6 +1589,24 @@ export function lavaTrapPulls(level, tileSize = 16) {
     out.sort((a, b) => (a.tile[1] - b.tile[1]) || (a.tile[0] - b.tile[0]));
     lavaTrapStepYields(out, level, tileSize);
     return out;
+}
+
+/**
+ * Is the centre-to-centre segment from tile `a` to tile `b` clear of every tile `solid(x, y)` names? Sampled once per px
+ * along the segment; the two end tiles never count (the player's own tile and the trap's). The one line test the pull
+ * disc and rule T share (`LavaTrap.as:86-88`).
+ */
+export function pullLineClear(a, b, tileSize, solid) {
+    const [ax, ay] = tileCentre(a, tileSize);
+    const [bx, by] = tileCentre(b, tileSize);
+    const steps = Math.ceil(Math.hypot(bx - ax, by - ay));
+    for (let s = 1; s < steps; s += 1) {
+        const x = Math.floor((ax + ((bx - ax) * s) / steps) / tileSize);
+        const y = Math.floor((ay + ((by - ay) * s) / steps) / tileSize);
+        if ((x === a[0] && y === a[1]) || (x === b[0] && y === b[1])) continue;
+        if (solid(x, y)) return false;
+    }
+    return true;
 }
 
 /** The pixel centre of tile `[x, y]`. */

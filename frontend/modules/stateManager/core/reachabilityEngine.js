@@ -613,17 +613,10 @@ export function isLocationAccessible(sm, location) {
       return false;
     }
     if (!location.access_rule) {
-      // Event locations with no access rule are only accessible if you don't already have the event item
-      // This matches Python's behavior where event items can only be collected once
-      if (location.item && location.item.event && location.item.name) {
-        // Check if we already have this event item
-        const itemCount = sm.inventory && sm.inventory[location.item.name];
-        if (itemCount && itemCount > 0) {
-          // Already have this event, location is not accessible (can't collect again)
-          return false;
-        }
-      }
-      // No access rule means accessible (for non-event locations or events we don't have yet)
+      // No access rule means accessible. (A branch here used to refuse an
+      // event location whose `location.item.event` was set and already held;
+      // no preset writes `event` on a location's item — the flag lives on
+      // `items[p][name].event` — so it never ran, and was removed.)
       return true;
     }
 

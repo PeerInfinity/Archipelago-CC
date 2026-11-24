@@ -12,8 +12,15 @@ content-pack stack (`../contentPacks/`), merged so that a later pack wins per ke
     null.
   - `keys()`: every key, in stack order and then declaration order. An overridden key keeps the position where it
     first appeared.
-- `PACK_CONCEPT_KINDS` is `character`, `place`, `object` and `info` (a piece of information, such as a clue). This
-  module owns the list; the roles contract imports it.
+- `PACK_CONCEPT_KINDS` is `character`, `place`, `object` and `info` (a piece of information, such as a clue), and
+  since content packs PL-1 `task`, `stat`, `resource` and `boon` (the structure layer's kinds), and since content
+  sets PASS-1 `terrain` (a tile kind whose passability a structure terrain entry declares). This module owns the
+  list; the roles contract imports it. `STRUCTURE_KINDS` (the four, `place` and `terrain`), `STRUCTURE_ID_PATTERN`
+  (built from them) and `TERRAIN_PASSES` (`walkable`, `blocked`, `needs`, `one-way`; one value per slice; `TERRAIN_DIRS` for `one-way`'s `dirs`) are the structure layer's
+  (`../packStructure/`).
+- `presents` takes two forms: a bare mechanic id (`guardian`), or a namespaced STRUCTURE id
+  (`<pack>:<kind>/<slug>`) whose kind is the concept's own. `presenting(id)` answers either. An entry may carry
+  `src`, its provenance source (`../contentPacks/provenance.js`).
 - ⛔ **A pack concept never affects reachability.** Mechanic concepts (`sword`, `guardian`, …) live in
   `procgenCore/concepts.js` and carry logic (`docs/json/developer/procgen/concepts.md`). A pack concept carries
   presentation only. `presents` names a mechanic concept that the entry re-presents. Here it is an opaque id: this
@@ -35,6 +42,7 @@ The manifest is `concepts/manifest.json` inside a pack:
       "description": "…",                                   // optional
       "look": { "color": "#c0a040", "symbol": "N" },        // optional
       "art": "meta:character/narrator",                    // optional; an art-library key
+      "base": "character",                                 // optional; one of PACK_TILE_BASES (TILE-2)
       "text": { "greeting": "meta:narrator/greeting" },    // optional; slot → a text-library key
       "presents": "guardian"                               // optional; a mechanic concept id
     } } }
@@ -44,6 +52,11 @@ The manifest is `concepts/manifest.json` inside a pack:
   concept.
 - `art` names a key in the art library (`../artLibrary/`). `text` maps a slot name to a key in the text library
   (`../textLibrary/`). Neither key is resolved here.
+- `base` (content sets TILE-2) says what the concept IS as a maze tile when nothing draws it as itself: one of the
+  closed `PACK_TILE_BASES` (`floor`, `wall`, `marker`, `character`). This module owns the names;
+  `mazeRoom/mazeTileArt.js` holds one draw per name (`MAZE_TILE_BASES`) and refuses at import to drift from the list.
+  The maze reads it through `mazeTileArt.mazeTileKind` (kind → `{ artKey, base }`). A row with no `base` is valid; a
+  kind with neither art nor a base is drawn as the placeholder, never a throw.
 
 ## ⛔ Refusal by name
 
@@ -57,5 +70,7 @@ Each of these throws a `ContentPackError` that names the pack, the concept key a
 - a missing or empty `name`, or an empty `description`;
 - a malformed `look`: the colour must be `#rrggbb`, and the symbol a non-empty string;
 - an `art` value, or a `text` slot's value, that is not a namespaced key;
-- an empty `presents`;
+- an empty `presents`; a namespaced `presents` that is not a structure id, or names another kind than the entry's;
+- a `src` that is not a string;
+- a `base` that is not one of `PACK_TILE_BASES` (the refusal lists the set);
 - two entries of one pack that present the same mechanic id (that pack's answer would be ambiguous).

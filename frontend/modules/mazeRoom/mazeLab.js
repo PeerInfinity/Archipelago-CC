@@ -320,6 +320,18 @@ export function readPresetLinkParams(q) {
     return { preset, region };
 }
 
+/** ⛓ TILE-3 — `?packs=a,b` → `['a', 'b']`; absent or empty → null. A pack id that is not one is refused by name. */
+export function readPacksParam(raw) {
+    if (raw === null || raw === undefined || raw.trim() === '') return null;
+    const ids = raw.split(',').map((s) => s.trim());
+    for (const id of ids) {
+        if (!/^[a-z][a-z0-9-]*$/.test(id)) {
+            fail(`mazeLab: ?packs= names ${JSON.stringify(id)}, which is not a content pack id (lowercase, digits, -)`);
+        }
+    }
+    return ids;
+}
+
 export function readLabParams(search) {
     const q = new URLSearchParams(search);
     const source = (q.get('source') || SOURCES.GENERATE).toLowerCase();
@@ -386,6 +398,13 @@ export function readLabParams(search) {
          * quietly promising a document nobody is editing.
          */
         library: q.get('library'),
+        /**
+         * ⛓ CONTENT SETS TILE-3 — **THE CONTENT PACKS THE EDITOR READS**, a comma list in stack order (a later pack
+         * wins). Their declared tile kinds are what the TILE KIND palette entry places, and their art draws them.
+         * Absent: no pack is loaded, no kind is declared, and the entry refuses by name. Copied forward, never
+         * written.
+         */
+        packs: readPacksParam(q.get('packs')),
         /**
          * ⛓⛓⛓ EDITOR INTEGRATION W4 — **A WORLD BUNDLE TO FETCH AND HOLD**,
          * `?library=`'s own sibling one document up. ⛔ It names a `.zip`, not a
@@ -1235,8 +1254,9 @@ export function undoEdit(state) {
  * them. ⚠ A state's existing edits are replayed in, so entering EDIT twice in
  * one page life does not lose the first visit's work.
  */
-export function openEditSession(state) {
-    const session = createEditSession(mazeEditAdapter, state.baseRecord ?? state.record, {
+export function openEditSession(state, { adapter = mazeEditAdapter } = {}) {
+    // ⛓ CONTENT SETS TILE-3 — the page passes its own adapter, which knows the loaded packs' declared tile kinds.
+    const session = createEditSession(adapter, state.baseRecord ?? state.record, {
         base: editBaseTag(state),
         certified: state.certified ?? null,
     });
@@ -1545,7 +1565,60 @@ export function labPayload(state) {
         summary: state.summary,
         level: serializeMazeLevel(state.record),
         trace: state.trace ?? [],
+        /**
+         * ⛓⛓ MAZE PASTED ROOM LINK — **WHICH MAP THIS ROOM'S LEVEL NUMBER INDEXES, written only when this page was
+         * TOLD**: a room opened by preset link whose rules declare its map (the view sets `state.convertedFrom`), or a
+         * paste of such a payload (`loadPayload` keeps it). `edits` counts the maze edits folded into `level` since the
+         * conversion, so a paste of an edited room still says the Seedling level is the ORIGINAL. ⛔ Absent for every
+         * other room (generated, directed, a bare sidecar paste), so their payloads are byte-identical to before.
+         */
+        ...(convertedFromOfState(state) ? {
+            converted_from: {
+                map_document: state.convertedFrom.map_document,
+                level: state.convertedFrom.level,
+                edits: (state.convertedFrom.edits ?? 0) + (state.edits ?? []).length,
+            },
+        } : {}),
     };
+}
+
+/**
+ * ⛓ MAZE PASTED ROOM LINK — the state's `convertedFrom`, while it is still about the room on screen: it is tied to the
+ * BASE it was recorded on (`base`), the same rule as the view's origin WeakMap. Edits fold from that base and keep it;
+ * a directive or a ladder step moves the base, and the claim lapses (null).
+ */
+export function convertedFromOfState(state) {
+    const c = state?.convertedFrom;
+    return c && c.base === state.baseRecord ? c : null;
+}
+
+/**
+ * ⛓⛓ MAZE PASTED ROOM LINK — a payload's `converted_from` block, or null when it is absent or malformed (a malformed
+ * one is IGNORED, not trusted: the link line then shows its reason, and a wrong link is worse than none).
+ */
+export function convertedFromOf(payload) {
+    const c = payload?.converted_from;
+    if (!c || typeof c !== 'object') return null;
+    if (typeof c.map_document !== 'string' || c.map_document === '' || !Number.isInteger(c.level)) return null;
+    const edits = Number.isInteger(c.edits) && c.edits >= 0 ? c.edits : 0;
+    return Object.freeze({ map_document: c.map_document, level: c.level, edits });
+}
+
+/** ⛓ `convertedFrom` for a state: the block plus the BASE record it is about (see `convertedFromOfState`). */
+export const convertedFromFor = (block, baseRecord) => (block ? Object.freeze({ ...block, base: baseRecord }) : null);
+
+/**
+ * ⛓ A room opened by preset link, given what its rules proved (`mazeSeedlingLink.seedlingOriginOf`'s answer): a
+ * LINKABLE origin is recorded as the state's `convertedFrom`, so the save box names the map; anything else (no origin,
+ * an unlinkable one) leaves the state exactly as it was.
+ */
+export function withConvertedFrom(state, origin) {
+    if (!origin?.linkable) return state;
+    return Object.freeze({
+        ...state,
+        convertedFrom: convertedFromFor({ map_document: origin.mapDocument, level: origin.level, edits: 0 },
+            state.baseRecord),
+    });
 }
 
 /**
@@ -1819,6 +1892,9 @@ export function loadPayload(payload, { biome = DEFAULT_MAZE_BIOME } = {}) {
          *  page's answer is its own oracle's or none. */
         certified: null,
         loaded: true,
+        /** ⛓ MAZE PASTED ROOM LINK — the map/level a lab payload says it was converted from; the key is ABSENT (not
+         *  null) for every payload without one, so those states are unchanged. */
+        ...(convertedFromOf(payload) ? { convertedFrom: convertedFromFor(convertedFromOf(payload), world) } : {}),
     });
 }
 

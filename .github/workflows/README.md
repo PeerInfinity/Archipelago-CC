@@ -13,6 +13,21 @@ This document describes the GitHub Actions workflows used for testing and CI/CD 
 | [Test Multiworld UT Fuzz](#test-multiworld-ut-fuzz) | Manual | Multiworld assembly UT testing | `test-results-multiworld-ut-fuzz` |
 | [Test World Generator](#test-world-generator) | Manual | World generator consistency testing | `test-results-world-generator` / `test-results-world-generator-canonical` / `test-results-world-generator-random` |
 | [Cloudberry end-to-end](#cloudberry-end-to-end) | Push (Cloudberry paths only)/Manual | The Cloudberry substrate's generation and play gates against the live Cloudberry site | N/A |
+| [Upstream Rules Add-on](#upstream-rules-add-on) | Push (add-on/exporter paths only)/Manual | The packed add-on generates rooms on PRISTINE upstream Archipelago (0.6.8 tag, 0.6.9 main) and each slot's slot_data is checked | N/A |
+| [Upstream Rules Add-on spoiler row](#upstream-rules-add-on) | Manual | Spoiler tests of nine presets after the add-on's strips, with controls | N/A |
+
+## Upstream Rules Add-on
+
+`upstream-rules-addon.yml` checks out upstream Archipelago at each pinned ref (the `0.6.8` tag, and upstream main
+`3745641196`, whose `Utils.__version__` is 0.6.9; add the `0.6.9` tag when upstream cuts it), installs its
+requirements, holds `apworlds/upstream_rules_addon.apworld` equal to a fresh pack (`pack_upstream_rules_addon.py
+--check`), then runs `scripts/test/upstream_rules_addon_pristine.py`: eleven generated rooms (present, ER, race, over
+cap, disabled, excluded, editor strip level, absent, and three modified copies of the apworld: broken, no handlers,
+degraded). Every generation must exit 0. `upstream-rules-addon-spoiler-row.yml` (MANUAL only, Robert 2026-11-16:
+`gh workflow run upstream-rules-addon-spoiler-row.yml -R PeerInfinity/Archipelago-CC --ref <branch>`) runs
+`scripts/test/upstream_rules_addon_spoiler_row.py`: the stripped documents' spoiler tests, about 6 minutes. Run it
+after a change to the strip list, the presets or the client's logic. Neither deploys or writes anything. Host guide:
+[docs/json/features/upstream-rules-addon.md](../../docs/json/features/upstream-rules-addon.md).
 
 ## Push-run policy (the two heavy push workflows)
 
@@ -46,7 +61,7 @@ still runs at the train, so `main` never takes a head it has not passed.
 
 | Check | Was | Now | Run it on a slice |
 |---|---|---|---|
-| P1/P2/P3/P5: the train Vitest tier (`*.train.test.js`, `vitest.train.config.js`): the Seedling hammer/fidelity behaviour pins, `seedlingGenCapacity`, the maze certifier's scripted sample, `hammerGhostKillRung`, `hammerChooserPair` | slow tier or default tier, every push | the `Train-tier Vitest (shard k/3)` jobs (serial inside; split longest-first by `scripts/test/trainShardPlan.js` off `scripts/test/train-shard-costs.json`): js-land/** pushes, a main push whose SHA has no earlier run that passed every shard, and a `train` or `train_only` dispatch. `hammerEscapeGenerated.slow` stays on push as the solver smoke row; `hammerEscapeExact`, `hammerBk2Combat` and `fidelityCorpseBump2` moved here from the slow tier on 2026-11-08 | Train shards only: `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f train_only=true`. With the default tier, slow tier and gates too: `... -f train=true` |
+| P1/P2/P3/P5: the train Vitest tier (`*.train.test.js`, `vitest.train.config.js`): the Seedling hammer/fidelity behaviour pins, `seedlingGenCapacity`, the maze certifier's scripted sample, `hammerGhostKillRung`, `hammerChooserPair`; since 2026-11-17 (⚖ Robert, "Train tier + nightly") also two CLI checks wrapped beside their scripts in `scripts/procgen/`: the wallflyer no-hit cross-check (`derive-seedling-wallflyer-nohit.train.test.js`, `--check --quick`) and the Seedling map extractor's `--check` (`extract-seedling-map.train.test.js`), which the nightly runs too | slow tier or default tier, every push | the `Train-tier Vitest (shard k/3)` jobs (serial inside; split longest-first by `scripts/test/trainShardPlan.js` off `scripts/test/train-shard-costs.json`): js-land/** pushes, a main push whose SHA has no earlier run that passed every shard, and a `train` or `train_only` dispatch. `hammerEscapeGenerated.slow` stays on push as the solver smoke row; `hammerEscapeExact`, `hammerBk2Combat` and `fidelityCorpseBump2` moved here from the slow tier on 2026-11-08 | Train shards only: `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f train_only=true`. With the default tier, slow tier and gates too: `... -f train=true` |
 | P4: `gate: seedling-wasm-ship` | any push that hit its `@ci-paths` or derived import closure | on a slice push, only its declared globs (`flashPanel/**`, the recompiler page, `vendor/seedling`) and its own file (`@ci-paths-slice declared`); always on main, js-land/**, PRs and every dispatch | `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref <branch>` |
 | P6: Python ubuntu 3.12 / 3.13 legs (`unittests.yml`) | every matrix run | main, js-land/**, PRs and every dispatch; a slice push runs 3.11.2 + hosting | `gh workflow run unittests.yml -R PeerInfinity/Archipelago-CC --ref <branch>` |
 
@@ -95,19 +110,23 @@ All test workflows can be triggered manually from the GitHub Actions tab:
 
 **Triggers:** `schedule` `37 10 * * *` (10:37 UTC = 02:37 PST; 03:37 Pacific during PDT, still inside the after-hours window, so the cron is not shifted for DST), and `workflow_dispatch` (at the ref dispatched on; only a run at `main` is the nightly).
 
-**Purpose:** ⚖ Robert 2026-11-11 (option C). One run a night of every manual batch at `main`, as a drift signal. It calls `test-substrates-manual.yml` with `batch=all` (`workflow_call`), so the batch list, setup and per-batch headroom check are that file's. Its own `Nightly summary` job writes the job summary (per batch: PASSED/total, failing rows, NEVER STARTED / CUT OFF, the headroom verdict, the job's conclusion) and uploads `nightly-manual-summary.json` (artifact `nightly-manual-summary`, 30 days: `{runId, sha, ref, red, redBatches, batches: {<batch>: {result, passed, total, failing, neverStarted, cutOff, headroom, job}}}`, written by `scripts/test/nightly-manual-summary.js`). The run is red when any batch is red. Its own concurrency group means a second nightly waits behind the first.
+**Purpose:** ⚖ Robert 2026-11-11 (option C). One run a night of every manual batch at `main`, as a drift signal. It calls `test-substrates-manual.yml` with `batch=all` (`workflow_call`), so the batch list, setup and per-batch headroom check are that file's. Its own `Nightly summary` job writes the job summary (per batch: PASSED/total, failing rows, NEVER STARTED / CUT OFF, the headroom verdict, the job's conclusion) and uploads `nightly-manual-summary.json` (artifact `nightly-manual-summary`, 30 days: `{runId, sha, ref, red, redBatches, batches: {<batch>: {result, passed, total, failing, neverStarted, cutOff, headroom, job}}}`, written by `scripts/test/nightly-manual-summary.js`). The run is red when any batch is red.
+
+**The Seedling train checks** (⚖ Robert 2026-11-17, "Train tier + nightly"): a sibling job, `Seedling train checks`, runs the two train-tier files `scripts/procgen/derive-seedling-wallflyer-nohit.train.test.js` (the wallflyer no-hit derivation against `seedlingNoHitDirectionalGates.json`, `--quick`) and `scripts/procgen/extract-seedling-map.train.test.js` (`seedling-map.json` against `vendor/seedling` at its pin): the same files the train shards run, so one definition serves both homes. It does not block or change the batch call. Its conclusion is `checks` in the JSON and one line under the table, and a red there makes the run red. To run the checks alone (minutes): `gh workflow run test-substrates-nightly.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f only=seedling-checks`; that skips the batch call. A red no-hit check is a question for the rules owner, never a reason to edit the table to match. A red extractor check means the root artifact drifted from the pinned source; re-recording it is Robert's call.
+
+Its own concurrency group means a second nightly waits behind the first.
 
 **⛔ A SIGNAL, NEVER EVIDENCE.** A nightly result at `main` is never landing evidence for any SHA, `main`'s next head included. A red is a note to the owner of the batch (via js-17 or the planner that reads it in the morning). Nothing is posted outside CI.
 
 **Morning pickup** (the newest scheduled run, its verdict, then its JSON):
 
 ```bash
-id=$(gh run list -R PeerInfinity/Archipelago-CC -w test-substrates-nightly.yml -b main -e schedule -L 1 --json databaseId -q '.[0].databaseId'); d=$(mktemp -d); gh run download "$id" -R PeerInfinity/Archipelago-CC -n nightly-manual-summary -D "$d" && jq '{runId, sha, red, redBatches, batches: (.batches | map_values({result, passed, total, failing}))}' "$d/nightly-manual-summary.json"
+id=$(gh run list -R PeerInfinity/Archipelago-CC -w test-substrates-nightly.yml -b main -e schedule -L 1 --json databaseId -q '.[0].databaseId'); d=$(mktemp -d); gh run download "$id" -R PeerInfinity/Archipelago-CC -n nightly-manual-summary -D "$d" && jq '{runId, sha, red, redBatches, checks: .checks.conclusion, batches: (.batches | map_values({result, passed, total, failing}))}' "$d/nightly-manual-summary.json"
 ```
 
 ### After-hours bulk runs (B1, convention; ⚖ Robert 2026-11-11)
 
-Bulk harvests and exploratory sweeps (divergence-sweep harvests, multi-arm A/B sweeps, survey batches, wasm-probe fan-outs) are dispatched **22:00–07:00 Pacific**, so they do not hold the runners that push gates wait on during the day. **Exempt, run now:** (1) anything a landing train dispatches; (2) gate runs at a slice tip (`train_only`, `full_matrix`, TT); (3) a re-measure that a queued packet is waiting on. It is a convention, with no enforcement. The nightly above is in the window too, and is a signal, never evidence.
+Bulk harvests and exploratory sweeps (divergence-sweep harvests, multi-arm A/B sweeps, survey batches, wasm-probe fan-outs) are dispatched **20:00–21:30 Pacific** (⚖ Robert 2026-11-21, moved from 22:00–07:00: the laptop is in standby from about 21:30, so no session dispatched anything in the old window; the runs go on overnight in CI), so they do not hold the runners that push gates wait on during the day. **Exempt, run now:** (1) anything a landing train dispatches; (2) gate runs at a slice tip (`train_only`, `full_matrix`, TT); (3) a re-measure that a queued packet is waiting on. It is a convention, with no enforcement. The nightly above is in the window too, and is a signal, never evidence.
 
 ---
 

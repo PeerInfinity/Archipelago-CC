@@ -1,19 +1,19 @@
 {
   "source": "probe-seedling-moonrock.mjs --record (seedling fidelity MOONROCK)",
   "build": "seedling_bot_ap_p4g",
-  "delivered_set_id": "seedling-vanilla-record-5aeefc3c",
+  "delivered_set_id": "seedling-vanilla-record-23510f80",
   "variant_set_ids": {
-    "delivered": "seedling-vanilla-record-5aeefc3c",
+    "delivered": "seedling-vanilla-record-23510f80",
     "delivered:unpatched": "seedling-vanilla-record-1040ace1",
-    "delivered:approved": "seedling-vanilla-record-f27ab2e3",
-    "delivered:off-stairs": "seedling-vanilla-record-5bd42ad5"
+    "delivered:approved": "seedling-vanilla-record-5e57cde7",
+    "delivered:off-stairs": "seedling-vanilla-record-21eb9981"
   },
   "arms": [
     {
       "tape": "fall",
       "world": "delivered",
       "mounted": {
-        "active": "seedling-vanilla-record-5aeefc3c",
+        "active": "seedling-vanilla-record-23510f80",
         "table_levels": 116
       },
       "observations": 151,
@@ -145,7 +145,7 @@
       "tape": "fall",
       "world": "delivered:approved",
       "mounted": {
-        "active": "seedling-vanilla-record-f27ab2e3",
+        "active": "seedling-vanilla-record-5e57cde7",
         "table_levels": 116
       },
       "observations": 151,
@@ -211,7 +211,7 @@
       "tape": "fall",
       "world": "delivered:off-stairs",
       "mounted": {
-        "active": "seedling-vanilla-record-5bd42ad5",
+        "active": "seedling-vanilla-record-21eb9981",
         "table_levels": 116
       },
       "observations": 151,
@@ -322,7 +322,7 @@
       "tape": "fallRockSet",
       "world": "delivered",
       "mounted": {
-        "active": "seedling-vanilla-record-5aeefc3c",
+        "active": "seedling-vanilla-record-23510f80",
         "table_levels": 116
       },
       "observations": 151,
@@ -454,7 +454,7 @@
       "tape": "fallRockSet",
       "world": "delivered:approved",
       "mounted": {
-        "active": "seedling-vanilla-record-f27ab2e3",
+        "active": "seedling-vanilla-record-5e57cde7",
         "table_levels": 116
       },
       "observations": 151,
@@ -520,7 +520,7 @@
       "tape": "fallRockSet",
       "world": "delivered:off-stairs",
       "mounted": {
-        "active": "seedling-vanilla-record-5bd42ad5",
+        "active": "seedling-vanilla-record-21eb9981",
         "table_levels": 116
       },
       "observations": 151,
@@ -631,7 +631,7 @@
       "tape": "shield",
       "world": "delivered",
       "mounted": {
-        "active": "seedling-vanilla-record-5aeefc3c",
+        "active": "seedling-vanilla-record-23510f80",
         "table_levels": 116
       },
       "observations": 161,
@@ -725,7 +725,7 @@
       "tape": "shield",
       "world": "delivered:approved",
       "mounted": {
-        "active": "seedling-vanilla-record-f27ab2e3",
+        "active": "seedling-vanilla-record-5e57cde7",
         "table_levels": 116
       },
       "observations": 161,
@@ -791,7 +791,7 @@
       "tape": "shield",
       "world": "delivered:off-stairs",
       "mounted": {
-        "active": "seedling-vanilla-record-5bd42ad5",
+        "active": "seedling-vanilla-record-21eb9981",
         "table_levels": 116
       },
       "observations": 161,

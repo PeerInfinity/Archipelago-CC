@@ -1,0 +1,1729 @@
+{
+ "rules": "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json",
+ "set_id": "seedling-vanilla-record-23510f80",
+ "ticks": 180,
+ "near": 16,
+ "rows": [
+  {
+   "level": 5,
+   "x": 48,
+   "y": 96,
+   "body": "bob@48,80",
+   "gap": 10,
+   "screen": "near",
+   "arrivedFrom": [
+    "level_6"
+   ],
+   "game": [
+    "idle:hit@47",
+    "up:hit@9",
+    "down:hit@70",
+    "left:hit@56",
+    "right:hit@161"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@47(bob@48,80)",
+    "up:hit@9(bob@48,80)",
+    "down:hit@70(bob@48,80)",
+    "left:hit@56(bob@16,80)",
+    "right:hit@161(bob@48,80)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 56,
+     "y": 104
+    },
+    {
+     "t": 180,
+     "x": 56,
+     "y": 99
+    },
+    {
+     "t": 180,
+     "x": 56,
+     "y": 109
+    },
+    {
+     "t": 180,
+     "x": 18.05,
+     "y": 108.95
+    },
+    {
+     "t": 180,
+     "x": 93.96,
+     "y": 104
+    }
+   ]
+  },
+  {
+   "level": 16,
+   "x": 192,
+   "y": 32,
+   "body": "bob@176,16",
+   "gap": 10,
+   "screen": "near",
+   "arrivedFrom": [],
+   "game": [
+    "idle:hit@47",
+    "up:hit@54",
+    "down:left->L17@27",
+    "left:hit@57,left->L17@65",
+    "right:hit@9"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@47(bob@208,32)",
+    "up:hit@54(bob@176,16)",
+    "down:left->L17",
+    "left:hit@57(arrowtrap@128,32#5.1)",
+    "right:hit@9(bob@208,32)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 200,
+     "y": 40
+    },
+    {
+     "t": 180,
+     "x": 200,
+     "y": 18.05
+    },
+    {
+     "t": 26,
+     "x": 200,
+     "y": 55.66
+    },
+    {
+     "t": 180,
+     "x": 64.01,
+     "y": 34.1
+    },
+    {
+     "t": 180,
+     "x": 205,
+     "y": 40
+    }
+   ]
+  },
+  {
+   "level": 16,
+   "x": 192,
+   "y": 32,
+   "body": "bob@208,32",
+   "gap": 10,
+   "screen": "near",
+   "arrivedFrom": [],
+   "game": [
+    "idle:hit@47",
+    "up:hit@54",
+    "down:left->L17@27",
+    "left:hit@57,left->L17@65",
+    "right:hit@9"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@47(bob@208,32)",
+    "up:hit@54(bob@176,16)",
+    "down:left->L17",
+    "left:hit@57(arrowtrap@128,32#5.1)",
+    "right:hit@9(bob@208,32)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 200,
+     "y": 40
+    },
+    {
+     "t": 180,
+     "x": 200,
+     "y": 18.05
+    },
+    {
+     "t": 26,
+     "x": 200,
+     "y": 55.66
+    },
+    {
+     "t": 180,
+     "x": 64.01,
+     "y": 34.1
+    },
+    {
+     "t": 180,
+     "x": 205,
+     "y": 40
+    }
+   ]
+  },
+  {
+   "level": 16,
+   "x": 208,
+   "y": 32,
+   "body": "bob@208,32",
+   "gap": -6,
+   "screen": "overlap",
+   "arrivedFrom": [],
+   "game": [
+    "idle:hit@1,left->L17@43",
+    "up:hit@1,left->L17@43",
+    "down:hit@1,left->L17@43",
+    "left:hit@1,left->L17@43",
+    "right:hit@1,left->L17@43"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@1(bob@208,32)",
+    "up:hit@1(bob@208,32)",
+    "down:hit@1(bob@208,32)",
+    "left:hit@1(bob@208,32)",
+    "right:hit@1(bob@208,32)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 42,
+     "x": 216,
+     "y": 56.39
+    },
+    {
+     "t": 42,
+     "x": 216,
+     "y": 56.39
+    },
+    {
+     "t": 42,
+     "x": 216,
+     "y": 56.39
+    },
+    {
+     "t": 42,
+     "x": 216,
+     "y": 56.39
+    },
+    {
+     "t": 42,
+     "x": 216,
+     "y": 56.39
+    }
+   ]
+  },
+  {
+   "level": 16,
+   "x": 224,
+   "y": 32,
+   "body": "bob@208,32",
+   "gap": 10,
+   "screen": "near",
+   "arrivedFrom": [],
+   "game": [
+    "idle:hit@42",
+    "up:hit@86",
+    "down:left->L17@27",
+    "left:hit@9",
+    "right:hit@129"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@42(bob@208,32)",
+    "up:hit@86(bob@208,32)",
+    "down:left->L17",
+    "left:hit@9(bob@208,32)",
+    "right:hit@129(bob@208,32)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 248.25,
+     "y": 40
+    },
+    {
+     "t": 180,
+     "x": 232,
+     "y": 18.05
+    },
+    {
+     "t": 26,
+     "x": 232,
+     "y": 55.66
+    },
+    {
+     "t": 180,
+     "x": 225.35,
+     "y": 40
+    },
+    {
+     "t": 180,
+     "x": 245.9,
+     "y": 40
+    }
+   ]
+  },
+  {
+   "level": 16,
+   "x": 176,
+   "y": 64,
+   "body": "bob@192,80",
+   "gap": 10,
+   "screen": "near",
+   "arrivedFrom": [],
+   "game": [
+    "idle:hit@58",
+    "up:hit@32",
+    "down:hit@66",
+    "left:hit@159",
+    "right:left->L17@28"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@58(bob@192,80)",
+    "up:hit@32(bob@176,16)",
+    "down:hit@66(bob@160,112)",
+    "left:hit@159(bob@192,80)",
+    "right:left->L17"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 184,
+     "y": 72
+    },
+    {
+     "t": 180,
+     "x": 184,
+     "y": 49.95
+    },
+    {
+     "t": 180,
+     "x": 184,
+     "y": 119.8
+    },
+    {
+     "t": 180,
+     "x": 162.05,
+     "y": 72
+    },
+    {
+     "t": 27,
+     "x": 199.6,
+     "y": 72
+    }
+   ]
+  },
+  {
+   "level": 16,
+   "x": 192,
+   "y": 80,
+   "body": "bob@192,80",
+   "gap": -6,
+   "screen": "overlap",
+   "arrivedFrom": [],
+   "game": [
+    "idle:hit@1",
+    "up:hit@1",
+    "down:hit@1",
+    "left:hit@1",
+    "right:hit@1"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@1(bob@192,80)",
+    "up:hit@1(bob@192,80)",
+    "down:hit@1(bob@192,80)",
+    "left:hit@1(bob@192,80)",
+    "right:hit@1(bob@192,80)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 200,
+     "y": 104.22
+    },
+    {
+     "t": 180,
+     "x": 200,
+     "y": 100.97
+    },
+    {
+     "t": 180,
+     "x": 200,
+     "y": 108.92
+    },
+    {
+     "t": 180,
+     "x": 200,
+     "y": 88
+    },
+    {
+     "t": 180,
+     "x": 200,
+     "y": 88
+    }
+   ]
+  },
+  {
+   "level": 17,
+   "x": 112,
+   "y": 32,
+   "body": "bob@96,32",
+   "gap": 10,
+   "screen": "near",
+   "arrivedFrom": [
+    "level_16__r1c9"
+   ],
+   "game": [
+    "idle:hit@42",
+    "up:hit@86",
+    "down:hit@31",
+    "left:hit@9",
+    "right:clear"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:hit@42(bob@96,32)",
+    "up:hit@86(bob@96,32)",
+    "down:hit@31(bob@112,80)",
+    "left:hit@9(bob@96,32)",
+    "right:clear"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 120,
+     "y": 40
+    },
+    {
+     "t": 180,
+     "x": 120,
+     "y": 18.05
+    },
+    {
+     "t": 180,
+     "x": 120,
+     "y": 71.75
+    },
+    {
+     "t": 180,
+     "x": 113.35,
+     "y": 40
+    },
+    {
+     "t": 180,
+     "x": 173.5,
+     "y": 40
+    }
+   ]
+  },
+  {
+   "level": 17,
+   "x": 112,
+   "y": 48,
+   "body": "bob@96,32",
+   "gap": 10,
+   "screen": "near",
+   "arrivedFrom": [
+    "level_16__r1c9"
+   ],
+   "game": [
+    "idle:hit@58",
+    "up:hit@101",
+    "down:hit@20",
+    "left:left->L16@61",
+    "right:clear"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:hit@58(bob@96,32)",
+    "up:hit@101(bob@96,32)",
+    "down:hit@20(bob@112,80)",
+    "left:left->L16",
+    "right:clear"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 120,
+     "y": 56
+    },
+    {
+     "t": 180,
+     "x": 120,
+     "y": 18.4
+    },
+    {
+     "t": 180,
+     "x": 120,
+     "y": 63.96
+    },
+    {
+     "t": 60,
+     "x": 49.7,
+     "y": 56
+    },
+    {
+     "t": 180,
+     "x": 173.5,
+     "y": 56
+    }
+   ]
+  },
+  {
+   "level": 17,
+   "x": 128,
+   "y": 64,
+   "body": "bob@112,80",
+   "gap": 10,
+   "screen": "near",
+   "arrivedFrom": [
+    "level_16__r1c9"
+   ],
+   "game": [
+    "idle:hit@58",
+    "up:hit@145",
+    "down:hit@53",
+    "left:hit@31",
+    "right:clear"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:hit@58(bob@112,80)",
+    "up:hit@145(bob@96,32)",
+    "down:hit@53(bob@112,80)",
+    "left:hit@31(bob@80,64)",
+    "right:clear"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 159.33,
+     "y": 48.67
+    },
+    {
+     "t": 180,
+     "x": 152.45,
+     "y": 18.12
+    },
+    {
+     "t": 180,
+     "x": 167.38,
+     "y": 92.95
+    },
+    {
+     "t": 180,
+     "x": 104.25,
+     "y": 72
+    },
+    {
+     "t": 180,
+     "x": 173.6,
+     "y": 72
+    }
+   ]
+  },
+  {
+   "level": 26,
+   "x": 128,
+   "y": 208,
+   "body": "puncher@80,168",
+   "gap": 40,
+   "screen": "chase",
+   "arrivedFrom": [
+    "level_28__r0c6"
+   ],
+   "game": [
+    "idle:clear",
+    "up:clear",
+    "down:clear",
+    "left:clear",
+    "right:left->L28@7"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:clear",
+    "up:clear",
+    "down:clear",
+    "left:clear",
+    "right:left->L28"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 136,
+     "y": 216
+    },
+    {
+     "t": 180,
+     "x": 136,
+     "y": 210.5
+    },
+    {
+     "t": 180,
+     "x": 136,
+     "y": 221
+    },
+    {
+     "t": 180,
+     "x": 130.5,
+     "y": 216
+    },
+    {
+     "t": 6,
+     "x": 142.65,
+     "y": 216
+    }
+   ]
+  },
+  {
+   "level": 27,
+   "x": 168,
+   "y": 32,
+   "body": "wallflyer@192,48",
+   "gap": 15,
+   "screen": "near",
+   "arrivedFrom": [],
+   "game": [
+    "idle:clear",
+    "up:left->L28@7",
+    "down:hit@18",
+    "left:dies",
+    "right:clear"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:clear",
+    "up:left->L28",
+    "down:hit@18(wallflyer@192,48)",
+    "left:clear",
+    "right:clear"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 176,
+     "y": 40
+    },
+    {
+     "t": 6,
+     "x": 176,
+     "y": 33.35
+    },
+    {
+     "t": 180,
+     "x": 166.38,
+     "y": 69.69
+    },
+    {
+     "t": 180,
+     "x": 176,
+     "y": 40
+    },
+    {
+     "t": 180,
+     "x": 221.95,
+     "y": 40
+    }
+   ]
+  },
+  {
+   "level": 40,
+   "x": 368,
+   "y": 416,
+   "body": "bob@352,416",
+   "gap": 10,
+   "screen": "near",
+   "arrivedFrom": [],
+   "game": [
+    "idle:hit@42",
+    "up:hit@49",
+    "down:left->L43@27",
+    "left:hit@9",
+    "right:clear"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:hit@42(bob@352,416)",
+    "up:hit@49(bob@352,416)",
+    "down:left->L43",
+    "left:hit@9(bob@352,416)",
+    "right:clear"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 376,
+     "y": 424
+    },
+    {
+     "t": 180,
+     "x": 406.97,
+     "y": 418.06
+    },
+    {
+     "t": 26,
+     "x": 376,
+     "y": 439.66
+    },
+    {
+     "t": 180,
+     "x": 369.35,
+     "y": 424
+    },
+    {
+     "t": 180,
+     "x": 413.6,
+     "y": 424
+    }
+   ]
+  },
+  {
+   "level": 40,
+   "x": 208,
+   "y": 448,
+   "body": "bob@208,448",
+   "gap": -6,
+   "screen": "overlap",
+   "arrivedFrom": [],
+   "game": [
+    "idle:hit@1",
+    "up:hit@1",
+    "down:hit@1",
+    "left:hit@1",
+    "right:hit@1,left->L43@68"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@1(bob@208,448)",
+    "up:hit@1(bob@208,448)",
+    "down:hit@1(bob@208,448)",
+    "left:hit@1(bob@208,448)",
+    "right:hit@1(bob@208,448)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 216,
+     "y": 472.22
+    },
+    {
+     "t": 180,
+     "x": 216,
+     "y": 468.97
+    },
+    {
+     "t": 180,
+     "x": 216,
+     "y": 508.77
+    },
+    {
+     "t": 180,
+     "x": 216,
+     "y": 472.22
+    },
+    {
+     "t": 67,
+     "x": 231.6,
+     "y": 472.03
+    }
+   ]
+  },
+  {
+   "level": 40,
+   "x": 352,
+   "y": 448,
+   "body": "bob@352,448",
+   "gap": -6,
+   "screen": "overlap",
+   "arrivedFrom": [],
+   "game": [
+    "idle:hit@1",
+    "up:hit@1",
+    "down:hit@1",
+    "left:hit@1",
+    "right:hit@1"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@1(bob@352,448)",
+    "up:hit@1(bob@352,448)",
+    "down:hit@1(bob@352,448)",
+    "left:hit@1(bob@352,448)",
+    "right:hit@1(bob@352,448)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 360,
+     "y": 472.22
+    },
+    {
+     "t": 180,
+     "x": 360,
+     "y": 468.97
+    },
+    {
+     "t": 180,
+     "x": 360,
+     "y": 456
+    },
+    {
+     "t": 180,
+     "x": 360,
+     "y": 472.22
+    },
+    {
+     "t": 180,
+     "x": 413.5,
+     "y": 472.22
+    }
+   ]
+  },
+  {
+   "level": 40,
+   "x": 208,
+   "y": 464,
+   "body": "bob@192,480",
+   "gap": 10,
+   "screen": "near",
+   "arrivedFrom": [],
+   "game": [
+    "idle:hit@47,left->L43@90",
+    "up:hit@9",
+    "down:hit@56",
+    "left:hit@50",
+    "right:left->L43@28"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@47(bob@208,448)",
+    "up:hit@9(bob@208,448)",
+    "down:hit@56(bob@224,496)",
+    "left:hit@50(bob@208,448)",
+    "right:left->L43"
+   ],
+   "lastInBoot": [
+    {
+     "t": 89,
+     "x": 231.77,
+     "y": 488.07
+    },
+    {
+     "t": 180,
+     "x": 216,
+     "y": 467
+    },
+    {
+     "t": 180,
+     "x": 210.02,
+     "y": 508.96
+    },
+    {
+     "t": 180,
+     "x": 217.32,
+     "y": 501.51
+    },
+    {
+     "t": 27,
+     "x": 231.6,
+     "y": 472
+    }
+   ]
+  },
+  {
+   "level": 40,
+   "x": 208,
+   "y": 464,
+   "body": "bob@208,448",
+   "gap": 10,
+   "screen": "near",
+   "arrivedFrom": [],
+   "game": [
+    "idle:hit@47,left->L43@90",
+    "up:hit@9",
+    "down:hit@56",
+    "left:hit@50",
+    "right:left->L43@28"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@47(bob@208,448)",
+    "up:hit@9(bob@208,448)",
+    "down:hit@56(bob@224,496)",
+    "left:hit@50(bob@208,448)",
+    "right:left->L43"
+   ],
+   "lastInBoot": [
+    {
+     "t": 89,
+     "x": 231.77,
+     "y": 488.07
+    },
+    {
+     "t": 180,
+     "x": 216,
+     "y": 467
+    },
+    {
+     "t": 180,
+     "x": 210.02,
+     "y": 508.96
+    },
+    {
+     "t": 180,
+     "x": 217.32,
+     "y": 501.51
+    },
+    {
+     "t": 27,
+     "x": 231.6,
+     "y": 472
+    }
+   ]
+  },
+  {
+   "level": 40,
+   "x": 208,
+   "y": 480,
+   "body": "bob@192,480",
+   "gap": 10,
+   "screen": "near",
+   "arrivedFrom": [],
+   "game": [
+    "idle:hit@42,left->L43@65",
+    "up:hit@20",
+    "down:hit@53",
+    "left:hit@9,left->L43@55",
+    "right:left->L43@28"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@42(bob@192,480)",
+    "up:hit@20(bob@208,448)",
+    "down:hit@53(bob@224,496)",
+    "left:hit@9(bob@192,480)",
+    "right:left->L43"
+   ],
+   "lastInBoot": [
+    {
+     "t": 64,
+     "x": 232.31,
+     "y": 488
+    },
+    {
+     "t": 180,
+     "x": 216,
+     "y": 474.73
+    },
+    {
+     "t": 180,
+     "x": 210.09,
+     "y": 508.95
+    },
+    {
+     "t": 54,
+     "x": 231.43,
+     "y": 488
+    },
+    {
+     "t": 27,
+     "x": 231.6,
+     "y": 488
+    }
+   ]
+  },
+  {
+   "level": 40,
+   "x": 208,
+   "y": 480,
+   "body": "bob@224,496",
+   "gap": 10,
+   "screen": "near",
+   "arrivedFrom": [],
+   "game": [
+    "idle:hit@42,left->L43@65",
+    "up:hit@20",
+    "down:hit@53",
+    "left:hit@9,left->L43@55",
+    "right:left->L43@28"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@42(bob@192,480)",
+    "up:hit@20(bob@208,448)",
+    "down:hit@53(bob@224,496)",
+    "left:hit@9(bob@192,480)",
+    "right:left->L43"
+   ],
+   "lastInBoot": [
+    {
+     "t": 64,
+     "x": 232.31,
+     "y": 488
+    },
+    {
+     "t": 180,
+     "x": 216,
+     "y": 474.73
+    },
+    {
+     "t": 180,
+     "x": 210.09,
+     "y": 508.95
+    },
+    {
+     "t": 54,
+     "x": 231.43,
+     "y": 488
+    },
+    {
+     "t": 27,
+     "x": 231.6,
+     "y": 488
+    }
+   ]
+  },
+  {
+   "level": 53,
+   "x": 192,
+   "y": 64,
+   "body": "puncher@136,96",
+   "gap": 48,
+   "screen": "chase",
+   "arrivedFrom": [
+    "level_48__r7c0"
+   ],
+   "game": [
+    "idle:clear",
+    "up:clear",
+    "down:clear",
+    "left:clear",
+    "right:left->L48@7"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:clear",
+    "up:clear",
+    "down:clear",
+    "left:clear",
+    "right:left->L48"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 200,
+     "y": 72
+    },
+    {
+     "t": 180,
+     "x": 200,
+     "y": 66.5
+    },
+    {
+     "t": 180,
+     "x": 200,
+     "y": 77
+    },
+    {
+     "t": 180,
+     "x": 178.05,
+     "y": 72
+    },
+    {
+     "t": 6,
+     "x": 206.65,
+     "y": 72
+    }
+   ]
+  },
+  {
+   "level": 71,
+   "x": 16,
+   "y": 288,
+   "body": "lavarunner@64,224",
+   "gap": 56,
+   "screen": "chase",
+   "arrivedFrom": [
+    "level_85"
+   ],
+   "game": [
+    "idle:clear",
+    "up:clear",
+    "down:left->L85@6",
+    "left:clear",
+    "right:clear"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:clear",
+    "up:clear",
+    "down:left->L85",
+    "left:clear",
+    "right:clear"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 24,
+     "y": 296
+    },
+    {
+     "t": 180,
+     "x": 24,
+     "y": 242.5
+    },
+    {
+     "t": 5,
+     "x": 24,
+     "y": 301.5
+    },
+    {
+     "t": 180,
+     "x": 18.5,
+     "y": 296
+    },
+    {
+     "t": 180,
+     "x": 29.5,
+     "y": 296
+    }
+   ]
+  },
+  {
+   "level": 72,
+   "x": 16,
+   "y": 256,
+   "body": "lavarunner@80,216",
+   "gap": 56,
+   "screen": "chase",
+   "arrivedFrom": [
+    "level_71__r0c6"
+   ],
+   "game": [
+    "idle:hit@65,left->L71@69",
+    "up:dies",
+    "down:dies",
+    "left:left->L71@7",
+    "right:hit@47"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:hit@65(lavarunner@80,216)",
+    "up:hit@23(lava@L72)",
+    "down:hit@8(lava@L72)",
+    "left:left->L71",
+    "right:hit@22(lava@L72)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 68,
+     "x": 17.1,
+     "y": 270.53
+    },
+    {
+     "t": 180,
+     "x": 24,
+     "y": 238.55
+    },
+    {
+     "t": 180,
+     "x": 24,
+     "y": 271.95
+    },
+    {
+     "t": 6,
+     "x": 17.35,
+     "y": 264
+    },
+    {
+     "t": 180,
+     "x": 49.6,
+     "y": 264
+    }
+   ]
+  },
+  {
+   "level": 73,
+   "x": 64,
+   "y": 16,
+   "body": "lavarunner@32,24",
+   "gap": 24,
+   "screen": "chase",
+   "arrivedFrom": [
+    "level_74"
+   ],
+   "game": [
+    "idle:clear",
+    "up:left->L74@7",
+    "down:clear",
+    "left:clear",
+    "right:dies"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:clear",
+    "up:left->L74",
+    "down:clear",
+    "left:clear",
+    "right:hit@36(lava@L73)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 72,
+     "y": 24
+    },
+    {
+     "t": 6,
+     "x": 72,
+     "y": 17.35
+    },
+    {
+     "t": 180,
+     "x": 72,
+     "y": 44.95
+    },
+    {
+     "t": 180,
+     "x": 66.5,
+     "y": 24
+    },
+    {
+     "t": 180,
+     "x": 113.55,
+     "y": 24
+    }
+   ]
+  },
+  {
+   "level": 74,
+   "x": 16,
+   "y": 128,
+   "body": "lavarunner@24,56",
+   "gap": 64,
+   "screen": "chase",
+   "arrivedFrom": [
+    "level_75"
+   ],
+   "game": [
+    "idle:clear",
+    "up:dies",
+    "down:left->L75@6",
+    "left:dies",
+    "right:dies"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:clear",
+    "up:hit@23(lava@L74)",
+    "down:left->L75",
+    "left:hit@9(lava@L74)",
+    "right:hit@9(lava@L74)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 24,
+     "y": 136
+    },
+    {
+     "t": 180,
+     "x": 24,
+     "y": 110.55
+    },
+    {
+     "t": 5,
+     "x": 24,
+     "y": 141.5
+    },
+    {
+     "t": 180,
+     "x": 13.6,
+     "y": 136
+    },
+    {
+     "t": 180,
+     "x": 34.4,
+     "y": 136
+    }
+   ]
+  },
+  {
+   "level": 75,
+   "x": 64,
+   "y": 16,
+   "body": "lavarunner@104,64",
+   "gap": 39,
+   "screen": "chase",
+   "arrivedFrom": [
+    "level_74"
+   ],
+   "game": [
+    "idle:hit@156",
+    "up:left->L74@7",
+    "down:hit@55",
+    "left:dies",
+    "right:clear"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:hit@159(lavarunner@104,64)",
+    "up:left->L74",
+    "down:hit@35(lava@L75)",
+    "left:hit@9(lava@L75)",
+    "right:clear"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 77.34,
+     "y": 29.36
+    },
+    {
+     "t": 6,
+     "x": 72,
+     "y": 17.35
+    },
+    {
+     "t": 180,
+     "x": 72,
+     "y": 64.95
+    },
+    {
+     "t": 180,
+     "x": 61.6,
+     "y": 24
+    },
+    {
+     "t": 180,
+     "x": 77.5,
+     "y": 24
+    }
+   ]
+  },
+  {
+   "level": 77,
+   "x": 96,
+   "y": 288,
+   "body": "lavarunner@80,272",
+   "gap": 8,
+   "screen": "chase",
+   "arrivedFrom": [
+    "level_78__r0c16"
+   ],
+   "game": [
+    "idle:hit@37,left->L78@40",
+    "up:hit@15",
+    "down:left->L78@6",
+    "left:hit@34,left->L78@37",
+    "right:hit@35"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@37(lavarunner@112,256)",
+    "up:hit@15(lavarunner@80,272)",
+    "down:left->L78",
+    "left:hit@34(lavarunner@112,256)",
+    "right:hit@9(lava@L77)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 39,
+     "x": 98.45,
+     "y": 301.04
+    },
+    {
+     "t": 180,
+     "x": 117.09,
+     "y": 272.57
+    },
+    {
+     "t": 5,
+     "x": 104,
+     "y": 301.5
+    },
+    {
+     "t": 36,
+     "x": 98.5,
+     "y": 301.28
+    },
+    {
+     "t": 180,
+     "x": 114.4,
+     "y": 296
+    }
+   ]
+  },
+  {
+   "level": 77,
+   "x": 96,
+   "y": 288,
+   "body": "lavarunner@112,256",
+   "gap": 24,
+   "screen": "chase",
+   "arrivedFrom": [
+    "level_78__r0c16"
+   ],
+   "game": [
+    "idle:hit@37,left->L78@40",
+    "up:hit@15",
+    "down:left->L78@6",
+    "left:hit@34,left->L78@37",
+    "right:hit@35"
+   ],
+   "arrivalHit": true,
+   "model": [
+    "idle:hit@37(lavarunner@112,256)",
+    "up:hit@15(lavarunner@80,272)",
+    "down:left->L78",
+    "left:hit@34(lavarunner@112,256)",
+    "right:hit@9(lava@L77)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 39,
+     "x": 98.45,
+     "y": 301.04
+    },
+    {
+     "t": 180,
+     "x": 117.09,
+     "y": 272.57
+    },
+    {
+     "t": 5,
+     "x": 104,
+     "y": 301.5
+    },
+    {
+     "t": 36,
+     "x": 98.5,
+     "y": 301.28
+    },
+    {
+     "t": 180,
+     "x": 114.4,
+     "y": 296
+    }
+   ]
+  },
+  {
+   "level": 78,
+   "x": 32,
+   "y": 16,
+   "body": "lavarunner@96,32",
+   "gap": 56,
+   "screen": "chase",
+   "arrivedFrom": [
+    "level_79__r8c4"
+   ],
+   "game": [
+    "idle:clear",
+    "up:left->L79@7",
+    "down:clear",
+    "left:dies",
+    "right:dies"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:clear",
+    "up:left->L79",
+    "down:clear",
+    "left:hit@9(lava@L78)",
+    "right:hit@9(lava@L78)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 40,
+     "y": 24
+    },
+    {
+     "t": 6,
+     "x": 40,
+     "y": 17.35
+    },
+    {
+     "t": 180,
+     "x": 40,
+     "y": 29
+    },
+    {
+     "t": 180,
+     "x": 29.6,
+     "y": 24
+    },
+    {
+     "t": 180,
+     "x": 50.4,
+     "y": 24
+    }
+   ]
+  },
+  {
+   "level": 80,
+   "x": 32,
+   "y": 16,
+   "body": "lavarunner@80,32",
+   "gap": 40,
+   "screen": "chase",
+   "arrivedFrom": [
+    "level_71__r0c6"
+   ],
+   "game": [
+    "idle:hit@51",
+    "up:left->L71@7",
+    "down:hit@50",
+    "left:dies",
+    "right:hit@42"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:hit@51(lavarunner@80,32)",
+    "up:left->L71",
+    "down:hit@22(lava@L80)",
+    "left:hit@9(lava@L80)",
+    "right:hit@22(lava@L80)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 40,
+     "y": 24
+    },
+    {
+     "t": 6,
+     "x": 40,
+     "y": 17.35
+    },
+    {
+     "t": 180,
+     "x": 40,
+     "y": 49.6
+    },
+    {
+     "t": 180,
+     "x": 29.6,
+     "y": 24
+    },
+    {
+     "t": 180,
+     "x": 65.6,
+     "y": 24
+    }
+   ]
+  },
+  {
+   "level": 100,
+   "x": 288,
+   "y": 80,
+   "body": "flyer@224,96",
+   "gap": 57,
+   "screen": "chase",
+   "arrivedFrom": [],
+   "game": [
+    "idle:hit@107",
+    "up:dies",
+    "down:left->L101@6",
+    "left:dies",
+    "right:dies"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:hit@107(flyer@224,96)",
+    "up:clear",
+    "down:left->L101",
+    "left:clear",
+    "right:clear"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 296,
+     "y": 88
+    },
+    {
+     "t": 180,
+     "x": 296,
+     "y": 73.75
+    },
+    {
+     "t": 5,
+     "x": 296,
+     "y": 93.5
+    },
+    {
+     "t": 180,
+     "x": 276.4,
+     "y": 88
+    },
+    {
+     "t": 180,
+     "x": 315.6,
+     "y": 88
+    }
+   ]
+  },
+  {
+   "level": 101,
+   "x": 288,
+   "y": 240,
+   "body": "flyer@224,192",
+   "gap": 57,
+   "screen": "chase",
+   "arrivedFrom": [
+    "level_100__r4c10",
+    "level_106",
+    "level_109"
+   ],
+   "game": [
+    "idle:hit@113",
+    "up:dies",
+    "down:dies",
+    "left:clear",
+    "right:dies"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:hit@113(flyer@224,192)",
+    "up:clear",
+    "down:clear",
+    "left:clear",
+    "right:clear"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 296,
+     "y": 248
+    },
+    {
+     "t": 180,
+     "x": 296,
+     "y": 213.55
+    },
+    {
+     "t": 180,
+     "x": 296,
+     "y": 263.29
+    },
+    {
+     "t": 180,
+     "x": 84.5,
+     "y": 248
+    },
+    {
+     "t": 180,
+     "x": 310.25,
+     "y": 248
+    }
+   ]
+  },
+  {
+   "level": 105,
+   "x": 208,
+   "y": 64,
+   "body": "flyer@192,16",
+   "gap": 50,
+   "screen": "chase",
+   "arrivedFrom": [
+    "level_104"
+   ],
+   "game": [
+    "idle:hit@66",
+    "up:dies",
+    "down:dies",
+    "left:hit@49",
+    "right:left->L104@7"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:hit@66(flyer@192,16)",
+    "up:clear",
+    "down:clear",
+    "left:hit@49(jellyfish@120,72)",
+    "right:left->L104"
+   ],
+   "lastInBoot": [
+    {
+     "t": 180,
+     "x": 216,
+     "y": 72
+    },
+    {
+     "t": 180,
+     "x": 216,
+     "y": 57.75
+    },
+    {
+     "t": 180,
+     "x": 216,
+     "y": 87.29
+    },
+    {
+     "t": 180,
+     "x": 176.35,
+     "y": 54.41
+    },
+    {
+     "t": 6,
+     "x": 222.65,
+     "y": 72
+    }
+   ]
+  },
+  {
+   "level": 73,
+   "x": 32,
+   "y": 128,
+   "body": "(--also)",
+   "gap": null,
+   "screen": "also",
+   "arrivedFrom": [
+    "level_72"
+   ],
+   "game": [
+    "idle:hit@143,left->L72@146",
+    "up:clear",
+    "down:left->L72@6",
+    "left:dies",
+    "right:dies"
+   ],
+   "arrivalHit": false,
+   "model": [
+    "idle:hit@143(bulb@80,80)",
+    "up:clear",
+    "down:left->L72",
+    "left:hit@9(lava@L73)",
+    "right:hit@9(lava@L73)"
+   ],
+   "lastInBoot": [
+    {
+     "t": 145,
+     "x": 34.7,
+     "y": 141.3
+    },
+    {
+     "t": 180,
+     "x": 40,
+     "y": 114.05
+    },
+    {
+     "t": 5,
+     "x": 40,
+     "y": 141.5
+    },
+    {
+     "t": 180,
+     "x": 29.6,
+     "y": 136
+    },
+    {
+     "t": 180,
+     "x": 50.4,
+     "y": 136
+    }
+   ]
+  }
+ ]
+}

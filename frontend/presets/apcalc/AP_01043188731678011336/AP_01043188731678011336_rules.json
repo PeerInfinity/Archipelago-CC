@@ -57,7 +57,7 @@
         "locations": [
           {
             "name": "Victory",
-            "id": null,
+            "id": 234810601,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -144,8 +144,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "event": true
+            "locked": true
           }
         ]
       },
@@ -4818,6 +4817,16 @@
         "type": null,
         "max_count": 52
       },
+      "Victory": {
+        "name": "Victory",
+        "id": 234810015,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
       "Checked 1": {
         "name": "Checked 1",
         "id": null,
@@ -5612,17 +5621,6 @@
       },
       "Checked 73": {
         "name": "Checked 73",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Victory": {
-        "name": "Victory",
         "id": null,
         "groups": [
           "Event"
@@ -13311,7 +13309,8 @@
         "trash_per_sphere": 1,
         "max_branches": 5,
         "randomize_items": true,
-        "goal": "all_locations"
+        "goal": "all_locations",
+        "reports_goal_by_server_item": true
       },
       "web": {
         "theme": "grass",

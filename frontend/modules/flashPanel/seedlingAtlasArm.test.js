@@ -25,6 +25,7 @@ import {
     AP_ATLAS_MODULE_PATHS, loadSeedlingAtlas, loadSeedlingRandomizer, runSeedlingRandomizerLoad,
 } from './seedlingRandomizerWiring.js';
 import { SeedlingCheckBinding } from './seedlingCheckBinding.js';
+import { unservedAtlasWhy } from './seedlingRandomizerEligibility.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..', '..');
@@ -132,7 +133,10 @@ describe('the sixth fact — `atlas`, decided by (iii)\'s own count', () => {
         // ⛓ tile-rules-automation-r-a5: 262 -> 264 — L40 splits at its wand locks (r4c4 out of r0c53; the body r26c13).
         // ⛓ rules-no-hit-directional: 264 -> 266 — L22 and L25 each split at their directional no-hit gate (the wallflyer
         //   band: r0c6 / r8c0, r2c7 / r3c2; ⚖ the user 2026-11-11, a per-room table for now).
-        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(266);
+        // ⛓ rules-lavatrap-neck: 266 -> 274 — rule T splits L77 (level_77 -> r2c0 + r12c6 + r15c6) and L78 (+ r1c10, r3c1, r3c9, r4c4, r5c6, r6c9), at its lava-trap
+        //   discs that seal a route.
+        // ⛓ rules-k-pursuit-resume: 274 -> 306 — rule K + (b) (a lavarunner that outruns the player gates its leash cut at its kill-lock arm) splits L72 (+9 sub-regions), L74 (+4), L75 (+9) and re-cuts L73 (+3), L78 (+4), L80 (+3), L99 (+3); -3 for the three whole-level regions L72/L74/L75 that split.
+        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(306);
         expect(atlasRoomRegions(rulesOf('seedling'))).toHaveLength(0);
         expect(atlasRoomRegions(rulesOf('seedling_generated_room'))).toHaveLength(0);
     });
@@ -227,8 +231,11 @@ describe('loadSeedlingRandomizer hands the four pipeline real-room worlds to the
         const rules = rulesOf('seedling_atlas');
         rules.region_atlas['1'].atlas_id = 'seedling-nowhere';
         const { r } = await load(rules);
-        expect(r).toMatchObject({ verdict: 'ineligible', arm: RANDOMIZER_ARMS.ATLAS, checkBinding: null });
-        expect(r.why).toMatch(/^atlas: the atlas index lists no atlas "seedling-nowhere"/);
+        // ⛓ slice G — refused by the eligibility guard (check `atlas`), BEFORE the atlas arm is chosen: a custom
+        // set, not a world of the original rooms. (`loadSeedlingAtlas`'s own index refusal stays, for a direct call.)
+        expect(r).toMatchObject({ verdict: 'ineligible', checkBinding: null, delivery: null });
+        expect(r.eligibility).toMatchObject({ arm: null, failed: 'atlas' });
+        expect(r.why).toBe(`atlas: ${unservedAtlasWhy('seedling-nowhere')}`);
     });
 
     it('loadSeedlingAtlas refuses a verdict that does not name its arm, and a blank slot', async () => {

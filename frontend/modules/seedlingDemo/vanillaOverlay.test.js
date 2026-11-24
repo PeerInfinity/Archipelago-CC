@@ -21,13 +21,14 @@ import { describe, expect, it } from 'vitest';
 
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
-import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
+import { stampAtlasIdentity, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { freeEdgesOf } from '../procgenCore/setEditorCore.js';
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { TILE_SIZE } from './levelWorld.js';
 import { parseOelLevel } from './procgenLevelOel.js';
 import { tileOf } from './seedlingAtlasDerivation.js';
 import { emptyOverlay } from './seedlingSetOverlay.js';
+import { WATCH_SET_ATLAS, labSetIdentity } from './watchSetIdentity.js';
 import {
     createSeedlingSetAdapter, createSetSession, deriveAtlasOf, setRecord,
 } from './seedlingSetAdapter.js';
@@ -45,7 +46,8 @@ const DEPS = Object.freeze({
     tileSize: TILE_SIZE,
     tileTypeForPlacement,
     rulesSchema: loadRulesSchema(),
-    atlas: { game: 'seedling-watch-edit', mapDocument: 'watch.html set editor' },
+    // ⛓ the page's own `deps.atlas` (lab-set-seedling-identity), read, not copied
+    atlas: WATCH_SET_ATLAS,
 });
 
 /** ⛓ ONE lift for the whole file — it parses the 116-room map extract. */
@@ -449,8 +451,28 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ rules-no-hit-directional (ada6b422… -> cfd26871): L22 and L25 split at their directional no-hit gates (two
         //   sub-regions each, one priced internal row each; atlas id e3ae176e -> 3a6a7579). The chest's sub_region is
         //   r2c7. No name, exit or location moves.
+        // ⛓ tile-fire-breaks-rocks (ada6b422… -> a6f17c8f): an ordinary rock also breaks to Fire from a flame-stance side
+        //   (atlas id e3ae176e -> 32298df9). The overlay fixture `--check`s byte-identical.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('cfd26871831f9881c850c65f356ed09d');
+            // merged rules-no-hit-directional + tile-fire-breaks-rocks: atlas id 88e3788c.
+            // ⛓ rules-l99-sided-killlock (e53ce517… -> 28dc5dc7): L99's lock@80,96 is cleared only from the lower floor (the
+            //   west pocket's two far lavarunners never wake), so its two-way internal row splits into the room's weapon row
+            //   and the pocket's latch return (internal exits only; atlas id 88e3788c -> 2ac275e8). No name, exit or location moves.
+            // ⛓ rules-fire-arm-chaser-guard (28dc5dc7… -> 26bec328…): atlas id 2ac275e8 -> 630fbc4c (L73's and L100's rocks lose
+            //   their Fire arm; L100's one-way pair re-merges into one two-way row; no name moves).
+            // ⛓ rules-nohit-wand-crosscheck (e53ce517 -> 7443e728): the Wand joins L22 south-to-north's no-hit arms (one
+            //   internal row's Or gains Wand); atlas id 88e3788c -> df2a42ee.
+            // ⛓ rules-remerge-wand-nohit: both slices merged (L99 sided kill-lock + L22 Wand); re-recorded from the producers
+            //   (28dc5dc7 -> 5f47a836; atlas id 2ac275e8 -> 77a4c0ea).
+            // ⛓ land/rules-move-fireguard: the Fire guard re-merged onto train 140 (L22 Wand); re-recorded from the producers (5f47a836 -> 9925cc35; atlas id 77a4c0ea -> 5ca88dfe).
+            // ⛓ rules-lavatrap-neck: rule T (L77's and L78's lavatrap discs are gated cells costing Or(Dark Suit, Ghost Spear);
+            //   L77 splits into r2c0 / r12c6 / r15c6, L78 gains six sub-regions; no door, location or other level moves).
+            // ⛓ rules-remerge-lavatrap: rule T re-merged onto main (train 146, land/rules-move-fireguard); re-recorded from the
+            //   producers (9925cc35 -> 391ef89a; atlas id 5ca88dfe -> ea1ef5ba).
+            // ⛓ rules-k-pursuit-resume: rule K + (b) on the line-cut pull disc (a lavarunner that outruns the player gates its
+            //   leash cut at its kill-lock arm: L72/L74/L75 split, L71/L73/L78/L80 re-cut, the L98/L99 rename); re-recorded from
+            //   the producers (391ef89a -> 5c3dd651; atlas id ea1ef5ba -> b856f0fc). The overlay fixture `--check`s byte-identical.
+            .toBe('5c3dd651d2aa811d4536995f5ebcfae1');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
@@ -487,7 +509,11 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
         const session = createSetSession(
             createSeedlingSetAdapter(DEPS), setRecord(LIFT.set, overlay),
             { base: { kind: 'set', set_id: LIFT.set.set_id } });
-        return reportOf(session, DEPS, { compileRegionAtlas, validateRegionAtlas });
+        // ⛓ …and the page's own compile: a `seedling-lab-` stamped copy (⛓ S4: with the compiler's own `flash_panel`).
+        return reportOf(session, DEPS, {
+            compileRegionAtlas: labSetIdentity({ compileRegionAtlas, stampAtlasIdentity }).compileRegionAtlas,
+            validateRegionAtlas,
+        });
     };
 
     // ⛓ RULES (B): 332 -> 330 — the LavaBoss arena's two doors (L82 out, L96 in) lift as rules too.

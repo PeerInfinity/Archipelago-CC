@@ -1,0 +1,9 @@
+MUTANT no-drill
+predicted: the drill row and the composition row (2)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed | 4 passed (5)
+      Tests  2 failed | 52 passed (54)
+restored: 0
+rows (re-run):
+RELEASETICK — the four families through a texted ceremony (staged) > drill (L59, wave 51's T freeze ON so it is idle at the close): ON it hops on R, OFF a tick later
+RELEASETICK — composition (waves 50 to 54 ON underneath) > every family leads by one tick with all five ON, and nothing refuses

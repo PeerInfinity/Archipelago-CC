@@ -35,6 +35,7 @@ import { prepareRunFromState, runPresetHeadless } from '../procgenPipeline/prese
 import {
     RECORDED_CONTENT_KEY, defaultContentSetOf, effectiveContentStack, loadContentSet,
 } from '../procgenPipeline/worldContent.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const DEFAULT = substrateRegistryEntry.defaultContentPack;
@@ -68,12 +69,12 @@ function themeIo() {
     const disk = nodePackIo();
     return {
         base: MEM,
-        readJson: async (url) => {
+        readJson: withFixtureProvenance(async (url) => {
             const rel = url.slice(MEM.length);
             if (rel in FILES) return structuredClone(FILES[rel]);
             if (rel.startsWith(`${THEME}/`)) throw new Error(`no file ${url}`);
             return disk.readJson(new URL(rel, disk.base).href);
-        },
+        }),
     };
 }
 const themeSet = (stack = [DEFAULT, THEME]) => loadContentSet(stack, themeIo());
@@ -90,7 +91,7 @@ describe('the declaration', () => {
     it('every concept the entry realises is accepted by exactly one role, and the default pack fills it', () => {
         const roles = Object.entries(MAZE_CONTENT_ROLES);
         for (const cid of Object.keys(substrateRegistryEntry.conceptRealisations)) {
-            const accepting = roles.filter(([, r]) => r.accepts.presents.includes(cid));
+            const accepting = roles.filter(([, r]) => (r.accepts.presents ?? []).includes(cid));
             expect(accepting.length, cid).toBe(1);
             const look = presentedLook(DEFAULT_SET, accepting[0][0], cid);
             expect(look, cid).not.toBeNull();

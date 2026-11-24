@@ -66,8 +66,10 @@ import { DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { stampLibraryIdentity } from '../procgenPipeline/regionLibraryValidator.js';
 import { captureTileGridLibraryEntry } from './mazeLibraryEntry.js';
-import { deserializeMazeWorld, extractPathsAndObstacles } from './mazeRoomEngine.js';
+import { extractPathsAndObstacles } from './mazeRoomEngine.js';
 import { serializeMazeWorld } from './mazeSerializer.js';
+import { reseatThings } from './mazeThings.js';
+import { ONE_WAY_PASS, TILE_KINDS_FIELD, deserializeMazeWorldWithKinds } from './mazeTileKinds.js';
 
 /** ⛓ The three deps the capture path takes — the maze's own, in one place. */
 const CAPTURE_DEPS = Object.freeze({
@@ -124,7 +126,8 @@ const obstacleLibOf = (payload) => (payload?.obstacleLib
  * from a world, and a second assembly would drift the day capture's does.
  */
 function open({ regionId, payload }) {
-    const world = deserializeMazeWorld(payload);
+    // ⛓ CONTENT SETS TILE-3 — with its placed tile kinds, so the room the lab opens shows (and can edit) them.
+    const world = deserializeMazeWorldWithKinds(payload);
     const entry = captureTileGridLibraryEntry(
         { region_id: regionId, playable_payload: world },
         { entry_id: regionId, name: regionId },
@@ -171,8 +174,15 @@ function save(saved, { regionId, payload }) {
             + `(\`library.entries[0].payload\`) for "${regionId}" — got `
             + `${JSON.stringify(saved && Object.keys(saved))}.`);
     }
-    const next = restamp(edited, payload);
-    const world = deserializeMazeWorld(next);
+    // ⛓ CONTENT SETS S2 — the region's `things` (not a tile, so the lab never sees them): `restamp` carries the
+    //   document's back, and `reseatThings` keeps each on its cell while that is still free floor, moving one the
+    //   edit covered by the hash rule (none where no cell is free). A re-derive (an unedited save) moves nothing.
+    refuseTileKindOnThing(edited, payload, regionId);
+    const next = reseatThings(restamp(edited, payload), regionId);
+    // ⛓ CONTENT SETS PASS-2 — the save carries the placed kinds' baked copies, and a needs kind's derived gate is
+    //   checked by name here (`mazeTileKinds.withTileKinds`: on its cell, a rule obstacle, the concept's rule) before
+    //   anything is derived from the payload. The kinds themselves change nothing the extractor reads.
+    const world = deserializeMazeWorldWithKinds(next);
     const extracted = extractPathsAndObstacles(world, { regionId });
     const compiled = compileRegion(extracted, { obstacleLib: obstacleLibOf(next) });
     /**
@@ -233,8 +243,50 @@ function restamp(edited, original) {
     //   committed maze payloads: `fogEnabled` is the only one — but the rule is
     //   written as "whatever the original had and the round trip does not", so
     //   a serializer that stops emitting a second field cannot lose it silently.
-    for (const [k, v] of Object.entries(original ?? {})) if (!(k in next)) next[k] = v;
+    // ⛓ CONTENT SETS TILE-3 — EXCEPT the placed tile kinds: the LAB owns them (it shows and edits them), so an edit
+    //   that removed the last one saves a payload with no `tileKinds`, and copying the document's back would undo it.
+    const gatesMerged = ownsGates(original, edited);
+    for (const [k, v] of Object.entries(original ?? {})) {
+        if (!(k in next) && k !== TILE_KINDS_FIELD && !(k === ENTRY_GATES && gatesMerged)) next[k] = v;
+    }
+    // ⛓⛓ CONTENT SETS PASS-3 — ENTRY GATES, MERGED. The lab's library capture (`serializeMazeWorld`) keeps a world's
+    //   `entry_gates` only when a placed one-way kind owns some, so the edit carries exactly ITS kinds' gates and none
+    //   of the document's own (the world's direction physics, e.g. a Seedling level's). The save is the document's
+    //   gates minus those its one-way kinds owned (the edit decides those), then the edit's. A world where no one-way
+    //   kind is involved on either side takes the old rule above, byte for byte.
+    if (gatesMerged) {
+        const theirs = (original?.[ENTRY_GATES] ?? []).filter((g) => !oneWayCells(original).has(tileKey(g)));
+        const mine = edited[ENTRY_GATES] ?? [];
+        const slot = (g) => `${g.x},${g.y},${g.dir}`;
+        const mineSlots = new Set(mine.map(slot));
+        const merged = [...theirs.filter((g) => !mineSlots.has(slot(g))), ...mine];
+        delete next[ENTRY_GATES];
+        if (merged.length) next[ENTRY_GATES] = merged;
+    }
     return next;
+}
+
+const ENTRY_GATES = 'entry_gates';
+/** ⛓ PASS-3 — the cells of a payload's placed one-way kinds. */
+const oneWayCells = (payload) => new Set((payload?.[TILE_KINDS_FIELD] ?? []).filter((k) => k.pass === ONE_WAY_PASS).map(tileKey));
+/** ⛓ PASS-3 — is a placed one-way kind involved on either side of the save? */
+const ownsGates = (original, edited) => oneWayCells(original).size > 0 || oneWayCells(edited).size > 0;
+
+/**
+ * ⛓ CONTENT SETS TILE-3 — **A PLACED KIND MAY NOT COVER A THING.** The lab never sees the region's `things` (they come
+ * back from the document), so it cannot refuse a press onto a thing's cell; the save does, by name, rather than
+ * `reseatThings` silently moving the thing off the kind.
+ */
+function refuseTileKindOnThing(edited, original, regionId) {
+    const things = new Map((original?.things ?? []).map((t) => [tileKey(t), t]));
+    for (const k of edited?.[TILE_KINDS_FIELD] ?? []) {
+        const t = things.get(tileKey(k));
+        if (t) {
+            throw new Error(`mazeRegionRoundTrip: "${regionId}" places the tile kind "${k.kind}" on (${k.x},${k.y}), `
+                + `where the region's thing "${t.name ?? t.id}" stands: a tile kind goes on an empty floor cell. `
+                + 'Place it elsewhere.');
+        }
+    }
 }
 
 /**

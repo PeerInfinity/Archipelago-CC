@@ -65,10 +65,16 @@ import {
 import { ruleSchemaErrors } from './jsonSchemaCheck.js';
 import { UNDO_COMMAND_ID, mountEditorView } from './editorView.js';
 import { createLifetime } from './pageLifetime.js';
+import {
+    DRAG_THRESHOLD_PX, centreOnRect, engagedView, fitFrame, homeView, panScreen, rectToScreen, resizeView, toScreen,
+    toWorld, transformOf, zoomAt, zoomAtCentre,
+} from './setMapCamera.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 import {
     BUNDLE_KINDS, DEFAULT_RULES_JSON_INDENT, writeBundle,
 } from '../presets/documentBundle.js';
+import { labLevelSetVerdicts, levelSetRefsNamedBy } from './labProtocol.js';
+import { levelSetContentHash } from './levelSetReference.js';
 
 export class SetEditorViewError extends Error {
     constructor(message) {
@@ -81,6 +87,15 @@ const fail = (message) => { throw new SetEditorViewError(message); };
 
 /** E3: one zoom step of the map (keys `+`/`-`, the buttons, Ctrl+wheel). */
 const MAP_ZOOM_STEP = 1.25;
+/**
+ * ⛓ (lab-stale-handover) what the REPORT note and a door's title say once the set changed after REPORT — exported so a
+ * check can read the sentence instead of copying it.
+ */
+export const STALE_REPORT_NOTE = '⚠ the set changed since this REPORT — the rows above describe the EARLIER set. '
+    + 'A door (rules.json, the bundle, Open in APWorld Editor) runs REPORT again on the current set first; '
+    + 'or press REPORT.';
+export const STALE_DOOR_TITLE = 'the set changed since the last REPORT — pressing this runs REPORT again on the '
+    + 'current set first';
 
 /**
  * ⛓ `reportOver`'s own discipline (`setEditorCore.js:54`): a reader that was
@@ -197,8 +212,21 @@ const el = (doc, tag, className, text) => {
  *   every path, so a page may publish what it derives from the MOUNT and not
  *   only what it derives from the SESSION. `why` is one of `SET_CHANGE_WHY`
  * @param {Function} [o.loadZip]   `() => Promise<JSZip>`
+ * @param {Function} [o.atlasAtDoor] `(atlas, rules) => atlas` — the `region-atlas` member
+ *   a BUNDLE carries, given the report's atlas and the report's rules. A substrate whose
+ *   compile stamps a COPY of the atlas (the Seedling watch page:
+ *   `seedlingDemo/watchSetIdentity.js`) returns that stamped copy here, so the member's
+ *   `atlas_id` is the one `rules.region_atlas[p]` names and the host atlas cache files it
+ *   under that id. The report's own atlas stays unstamped. A throw is printed as the
+ *   bundle's refusal. The default is the identity, so a mount that never heard of it
+ *   bundles exactly what it bundled before
  * @param {object} [o.apworldEditor] the REVERSE LINK (APWorld editor hub, H4c)
- *   — `{available: () => boolean, open: (rules) => boolean}`. ⛔ `null` (the
+ *   — `{available: () => boolean, open: (rules, atlases, levelSets) => boolean}`. ⛓ lab-apworld-door-map: `atlases`
+ *   is `[atlasAtDoor(rep.atlas, rep.rules)]` (the SAME member the bundle door writes, so its id is the one
+ *   the rules name) or `[]` when the report has no atlas or `atlasAtDoor` refuses; the rules go either way.
+ *   ⛓ lab-apworld-door-play: `levelSets` is the `level-set` member(s) of the SAME `adapterFns.download(session)` the
+ *   bundle writes, kept only when its computed content hash and `set_id` are the ones the handed rules name
+ *   (`labLevelSetVerdicts`, the host's own rule); `[]` when the rules name none, and asked for only then. ⛔ `null` (the
  *   default) is the STANDALONE answer and the button stays HIDDEN, not
  *   disabled: a page with no host has no app to open the hub in, and a disabled
  *   control would advertise a door that does not exist here. ⚠ `available()` is
@@ -212,7 +240,9 @@ const el = (doc, tag, className, text) => {
  *   state(record)}`, all in CANVAS PIXELS (see `seedlingDemo/seedlingSetMap.createSetMap`). ⛔ A VIEW: the
  *   adapter's one-row grid, the room ids and every op are unchanged, and a click still answers `{tx: room, ty: 0}`.
  *   `null` (the default) is today's strip, untouched. The substrate builds the provider, because which way a door
- *   leads is a fact about the substrate's documents.
+ *   leads is a fact about the substrate's documents. OPTIONAL `unreachableOf(report)` → `[{room, partial, regions}]`
+ *   (seedling-map-unreachable, additive): the rooms the last REPORT found unreachable, hatched on the map while the
+ *   set is still the one REPORT ran over, with a legend in `#editSetMapUnreachable`. A provider without it draws as before.
  * @param {boolean} [o.overviewMapOn] whether the map (rather than the strip) is shown at mount — `false` unless
  *   asked, so a caller that never heard of the map keeps the strip; `#editSetMapView` toggles it
  */
@@ -226,7 +256,7 @@ export function mountSetEditor({
     cellSubstrate = () => null, identityOf = null, reportRows = null,
     say = () => {}, roomSession = () => null, openRoomAt = () => false,
     discardRoom = () => {}, download = () => {}, onSetChange = null,
-    loadZip = null, apworldEditor = null,
+    loadZip = null, apworldEditor = null, atlasAtDoor = (atlas) => atlas,
     overviewMap = null, overviewMapOn = false,
     doc = globalThis.document,
 } = {}) {
@@ -304,12 +334,18 @@ export function mountSetEditor({
         const here = Boolean(apworldEditor) && apworldEditor.available() === true;
         btn.hidden = !here;
         if (!here) return;
-        const allowed = lastReport ? lastReport.download.rules.allowed : false;
+        /**
+         * ⛓ (lab-stale-handover) a STALE report (the set changed since it ran) leaves the door OPEN: the press runs
+         * REPORT again on the current set first, and refuses by name if that one does not compile.
+         */
+        const stale = reportState() === 'stale';
+        const allowed = stale || (lastReport ? lastReport.download.rules.allowed : false);
         btn.disabled = !allowed;
-        btn.title = allowed
-            ? 'compile this document and open it in the APWorld Editor panel'
-            : (lastReport?.download.rules.why
-                ?? 'press REPORT first — the APWorld Editor opens the COMPILED document');
+        btn.title = stale ? STALE_DOOR_TITLE
+            : allowed
+                ? 'compile this document and open it in the APWorld Editor panel'
+                : (lastReport?.download.rules.why
+                    ?? 'press REPORT first — the APWorld Editor opens the COMPILED document');
     };
 
     /**
@@ -437,21 +473,94 @@ export function mountSetEditor({
     let mapOn = overviewMap !== null && overviewMapOn === true;
     /** The map's last frame — what `cellAt` and the shapes are measured against. */
     let mapFrame = null;
+    /**
+     * ⛓⛓⛓ THE MAP'S CAMERA (slice `lab-map-camera`, `setMapCamera.js`). `mapCam` maps the frame (the WORLD) onto the
+     * canvas (the SCREEN), `mapVp` is the canvas size. ⛔ Until a gesture ENGAGES it the view is AT HOME: the canvas
+     * is the frame's size, the camera is the identity over it, and nothing below transforms — the pre-camera code
+     * path, so the opening picture is byte-identical to before (⚖ "the default picture stays unchanged").
+     */
+    let mapCam = null;
+    let mapVp = null;
+    let mapEngaged = false;
+    /** Whether the paint transforms: never at home (see above). */
+    const camMoved = () => mapEngaged && mapCam !== null;
+    const mapToScreen = (p) => (camMoved() ? toScreen(mapCam, mapVp, p) : p);
+    const mapToWorld = (p) => (camMoved() ? toWorld(mapCam, mapVp, p) : p);
+    const mapRect = (r) => (camMoved() ? rectToScreen(mapCam, mapVp, r) : [r.x, r.y, r.w, r.h]);
     /** A DISCONNECT picked on the map and waiting for its confirming click: `{room, value, link}`. */
     let disconnectPick = null;
+    /**
+     * ⛓ (seedling-map-unreachable, ADDITIVE) the last REPORT's unreachable rooms, `{record, marks}`, taken from the
+     * provider's optional `unreachableOf(report)` when REPORT runs. ⛔ THE STALE RULE: the marks are drawn only while
+     * `record()` IS the record that REPORT ran over (every op is copy-on-write, so any edit, undo or load makes a new
+     * one); after a change they are not drawn and the legend says to run REPORT again. A provider without the hook
+     * (the maze's) leaves this `null`, and the map paints exactly what it painted before.
+     */
+    let reportMarks = null;
+    /** The marks the last map paint drew: `[{room, partial, regions}]`. */
+    let mapMarks = [];
+    const UNREACHABLE_INK = '#ff5a5a';
+    const marksNow = () => (reportMarks && reportMarks.record === record() ? reportMarks.marks : []);
+    const renderUnreachableLegend = () => {
+        const note = $('editSetMapUnreachable');
+        if (!note || typeof overviewMap?.unreachableOf !== 'function') return;
+        const stale = reportMarks !== null && reportMarks.record !== record();
+        const rooms = mapMarks.map((m) => m.room);
+        const partial = mapMarks.filter((m) => m.partial).map((m) => m.room);
+        note.textContent = !mapOn || reportMarks === null ? ''
+            : stale ? '⚠ the set changed since the last REPORT — unreachable rooms are not marked until REPORT runs again'
+                : rooms.length === 0 ? '⛓ the last REPORT found no unreachable room'
+                    : `▨ red-hatched = UNREACHABLE from the start, as of the last REPORT: room(s) ${rooms.join(', ')}`
+                      + (partial.length ? ` (dashed = only some of its regions: ${partial.join(', ')})` : '');
+        note.className = !stale && rooms.length > 0 ? 'note bad' : 'note';
+    };
+    /** Hatch and outline one unreachable cell (partial: a dashed outline only). */
+    const paintUnreachable = (ctx, r, partial) => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(r.x, r.y, r.w, r.h);
+        ctx.clip();
+        ctx.strokeStyle = UNREACHABLE_INK;
+        if (!partial) {
+            ctx.globalAlpha = 0.35;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let d = -r.h; d < r.w; d += 10) {
+                ctx.moveTo(r.x + d, r.y + r.h);
+                ctx.lineTo(r.x + d + r.h, r.y);
+            }
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+        ctx.lineWidth = 3;
+        if (partial) ctx.setLineDash([6, 4]);
+        ctx.strokeRect(r.x + 1.5, r.y + 1.5, r.w - 3, r.h - 3);
+        ctx.setLineDash([]);
+        ctx.fillStyle = UNREACHABLE_INK;
+        ctx.font = '10px monospace';
+        ctx.fillText(partial ? '✖ part unreachable' : '✖ unreachable', r.x + 3, r.y + r.h - 4);
+        ctx.restore();
+    };
 
     const paintMap = () => {
         const layout = overviewMap.frame(record());
         mapFrame = layout;
-        overview.width = layout.width;
-        overview.height = layout.height;
-        overview.style.width = `${layout.width}px`;
-        overview.style.height = `${layout.height}px`;
+        if (!mapEngaged) ({ cam: mapCam, vp: mapVp } = homeView(layout));
+        overview.width = mapVp.w;
+        overview.height = mapVp.h;
+        overview.style.width = `${mapVp.w}px`;
+        overview.style.height = `${mapVp.h}px`;
         const ctx = overview.getContext ? overview.getContext('2d') : null;
         if (!ctx) return;
-        ctx.clearRect(0, 0, layout.width, layout.height);
+        ctx.clearRect(0, 0, mapVp.w, mapVp.h);
         ctx.fillStyle = '#0c0c0c';
-        ctx.fillRect(0, 0, layout.width, layout.height);
+        ctx.fillRect(0, 0, mapVp.w, mapVp.h);
+        // ⛓ engaged: everything below is drawn in FRAME px through the camera; at home, no transform at all.
+        const moved = camMoved();
+        if (moved && typeof ctx.setTransform === 'function') {
+            const t = transformOf(mapCam, mapVp);
+            ctx.setTransform(t.a, 0, 0, t.d, t.e, t.f);
+        }
         for (let i = 0; i < roomCount(); i += 1) {
             const cell = adapterFns.readSetCell(record(), i, 0);
             const r = layout.cells[i];
@@ -478,6 +587,10 @@ export function mountSetEditor({
             }
             ctx.restore();
         }
+        mapMarks = marksNow().filter((m) => layout.cells[m.room]);
+        for (const m of mapMarks) paintUnreachable(ctx, layout.cells[m.room], m.partial);
+        if (moved && typeof ctx.setTransform === 'function') ctx.setTransform(1, 0, 0, 1, 0, 0);
+        renderUnreachableLegend();
     };
 
     /** A pointer event as a point on the map canvas, in canvas pixels. */
@@ -490,16 +603,23 @@ export function mountSetEditor({
         };
     };
 
+    /** A pointer event as a point in the map's FRAME (world) pixels — through the camera once it is engaged. */
+    const mapWorldPoint = (ev) => {
+        const p = mapPoint(ev);
+        return p ? mapToWorld(p) : null;
+    };
+
     /**
      * ⛓ The map's shapes, in the overlay's CELL space. `editorView` scales a shape by the adapter's bounds
      * (`{w: rooms, h: 1}`), so a canvas pixel `(x, y)` is cell `(x·n/width, y/height)`. The provider's `link` and
-     * `marker` fields are its own and are stripped here.
+     * `marker` fields are its own and are stripped here. ⛓ (lab-map-camera) a point is taken through the camera to
+     * the canvas first; at home that is no conversion at all and the canvas IS the frame.
      */
     const mapShapes = () => {
-        if (!mapFrame || !(mapFrame.width > 0)) return [];
+        if (!mapFrame || !(mapFrame.width > 0) || !mapVp || !(mapVp.w > 0)) return [];
         const n = Math.max(1, roomCount());
-        const sx = n / mapFrame.width;
-        const sy = 1 / mapFrame.height;
+        const sx = n / mapVp.w;
+        const sy = 1 / mapVp.h;
         return overviewMap.shapes(record(), mapFrame, { selected }).map((sh) => {
             const { link, marker, ...rest } = sh;
             const pick = disconnectPick && link && link.kind === disconnectPick.link.kind
@@ -507,7 +627,7 @@ export function mountSetEditor({
             return {
                 ...rest,
                 ...(pick ? { highlight: true, label: `✂ ${rest.label ?? 'DISCONNECT?'}` } : {}),
-                points: rest.points.map((pt) => ({ x: pt.x * sx, y: pt.y * sy })),
+                points: rest.points.map((pt) => mapToScreen(pt)).map((pt) => ({ x: pt.x * sx, y: pt.y * sy })),
             };
         });
     };
@@ -524,6 +644,10 @@ export function mountSetEditor({
         if (!overview) return;
         if (mapOn) { paintMap(); return; }
         mapFrame = null;
+        mapMarks = [];
+        // ⛓ (lab-map-camera) the strip has no camera; the map's comes back home when it is shown again.
+        mapEngaged = false;
+        renderUnreachableLegend();
         const layout = layoutNow();
         overview.width = layout.width;
         overview.height = layout.height;
@@ -624,7 +748,8 @@ export function mountSetEditor({
     const cellAt = (ev) => {
         if (mapOn) {
             // ⛓ E3: a map click is still answered in the adapter's own coordinates — `{tx: room, ty: 0}`.
-            const p = mapPoint(ev);
+            // ⛓ (lab-map-camera) `point` is in FRAME px: every picker below reads the provider's frame.
+            const p = mapWorldPoint(ev);
             const room = p && mapFrame ? overviewMap.roomAt(record(), mapFrame, p) : null;
             /**
              * ⛔ A LINK LIES BETWEEN ROOMS, so with DISCONNECT armed a click in the gap is still a press: it is
@@ -945,20 +1070,73 @@ export function mountSetEditor({
 
     /* ── E3: THE MAP'S OWN CONTROLS — zoom, the view toggle, re-layout, select and open ── */
 
+    /**
+     * ⛓⛓ ENGAGE THE CAMERA (lab-map-camera): the canvas becomes the part of the home canvas its scrolling panel
+     * shows, the camera centred where that window's centre was, and the panel's scroll goes back to 0 — so nothing
+     * moves on screen at the switch. A no-op once engaged. ⛓ (lab-map-small-set-view) on an axis where the frame
+     * fits, the canvas takes the room the panel can give (`panelRoom`); `anchor` says where the camera starts —
+     * `'pixels'` (a drag, a wheel: every on-screen pixel stays put) or `'centre'` (`+`/`−`: the window's centre at
+     * the new view's centre). See `engagedView`.
+     */
+    function engageCamera(anchor = 'pixels') {
+        if (mapEngaged || !mapOn || !mapFrame) return;
+        const panel = overview?.parentNode ?? {};
+        ({ cam: mapCam, vp: mapVp } = engagedView(mapFrame, panelRoom(panel), { anchor }));
+        mapEngaged = true;
+        if (Number.isFinite(panel.scrollLeft)) panel.scrollLeft = 0;
+        if (Number.isFinite(panel.scrollTop)) panel.scrollTop = 0;
+    }
+    /**
+     * ⛓⛓ THE ROOM THE PANEL CAN GIVE (slice `lab-map-small-set-view`) — what `engagedView` reads. The width is the
+     * panel's client width (the page lays the panel out as a block, so it is as wide as its container whatever the
+     * canvas is); the HEIGHT is the panel's own CSS `max-height` in px, because at home a short frame's panel is only
+     * as tall as the canvas, and `max-height` is the height the page already gives a tall set's map. No px
+     * `max-height` (none, a percentage) → no room is claimed and the axis stays the frame's. Per page, from the page's
+     * own CSS; nothing here knows a game.
+     */
+    function panelRoom(panel) {
+        const view = doc?.defaultView;
+        let roomHeight;
+        if (panel && view && typeof view.getComputedStyle === 'function' && panel.nodeType === 1) {
+            const m = /^([0-9.]+)px$/.exec(String(view.getComputedStyle(panel).maxHeight ?? '').trim());
+            if (m) roomHeight = Number(m[1]);
+        }
+        return {
+            clientWidth: panel.clientWidth, clientHeight: panel.clientHeight,
+            scrollLeft: panel.scrollLeft, scrollTop: panel.scrollTop, roomHeight,
+        };
+    }
+    /** Repaint the map and its overlay only — a camera move changes no row, list or form. */
+    function repaintMap() {
+        paintStrip();
+        view.repaint();
+    }
+    /** `+`/`-`/the buttons: zoom about the VIEW's centre. */
     function zoomBy(k) {
-        if (!overviewMap) return;
-        const before = overviewMap.zoom;
-        const z = overviewMap.setZoom(before * k);
-        say(`MAP zoom ${z.toFixed(2)}×${z === before ? ' (at the limit)' : ''}`);
+        if (!overviewMap || !mapOn || !mapFrame) return;
+        engageCamera('centre');
+        const before = mapCam.zoom;
+        mapCam = zoomAtCentre(mapCam, mapVp, k);
+        say(`MAP zoom ${mapCam.zoom.toFixed(2)}×${mapCam.zoom === before ? ' (at the limit)' : ''}`);
         render();
     }
+    /** `0`/FIT: every room inside the view — BOTH axes. */
     function zoomFit() {
-        if (!overviewMap || !mapOn) return;
-        overviewMap.setZoom(1);
-        const f = overviewMap.frame(record());
-        const avail = overview?.parentNode?.clientWidth ?? f.width;
-        const z = overviewMap.setZoom(Math.max(0.01, avail / f.width));
-        say(`MAP fitted to the panel: zoom ${z.toFixed(2)}×`);
+        if (!overviewMap || !mapOn || !mapFrame) return;
+        engageCamera();
+        mapCam = fitFrame(mapFrame, mapVp);
+        say(`MAP fitted to the panel (both axes): zoom ${mapCam.zoom.toFixed(2)}×`);
+        render();
+    }
+    /** CENTRE ON START: the start room at the view's centre, the zoom kept. */
+    function centreOnStart() {
+        if (!overviewMap || !mapOn || !mapFrame) return;
+        const start = typeof overviewMap.startOf === 'function' ? overviewMap.startOf(record()) : 0;
+        const cell = mapFrame.cells[start];
+        if (!cell) { say('the map has no start room to centre on', true); return; }
+        engageCamera();
+        mapCam = centreOnRect(mapCam, cell);
+        say(`MAP centred on the start room (room ${start})`);
         render();
     }
     const openRoomFromMap = (i) => {
@@ -1002,11 +1180,93 @@ export function mountSetEditor({
             const c = cellAt(ev);
             if (c) openRoomFromMap(c.tx);
         });
+        /**
+         * ⛓⛓ CTRL+WHEEL ZOOMS AROUND THE CURSOR (lab-map-camera). ⚖ Ctrl, not the plain wheel: the map sits in a
+         * long scrolling page, and a plain wheel taken by the map would trap the page's scroll whenever the pointer
+         * crossed it. Ctrl+wheel is also what a trackpad pinch sends. The plain wheel scrolls the page, as before.
+         */
         mine.on(overview, 'wheel', (ev) => {
-            if (!mapOn || !(ev.ctrlKey || ev.metaKey)) return;
+            if (!mapOn || !(ev.ctrlKey || ev.metaKey) || !mapFrame) return;
             ev.preventDefault();
-            zoomBy(ev.deltaY < 0 ? MAP_ZOOM_STEP : 1 / MAP_ZOOM_STEP);
+            engageCamera();
+            repaintMap();
+            const p = mapPoint(ev);
+            if (!p) return;
+            const before = mapCam.zoom;
+            mapCam = zoomAt(mapCam, mapVp, p.x, p.y, ev.deltaY < 0 ? MAP_ZOOM_STEP : 1 / MAP_ZOOM_STEP);
+            say(`MAP zoom ${mapCam.zoom.toFixed(2)}× at the cursor${mapCam.zoom === before ? ' (at the limit)' : ''}`);
+            repaintMap();
         });
+        /**
+         * ⛓⛓ DRAG TO PAN (lab-map-camera). A press that moves DRAG_THRESHOLD_PX or more is a drag: it moves the
+         * camera, and its click is swallowed (in the capture phase on the panel, before `editorView` or the select
+         * handler see it). A press that moves less is still a click. While the button is down on the map, the
+         * pointer's moves never reach `editorView` — a set has no brush, so a stroke there could only be refused.
+         */
+        const panel = overview.parentNode;
+        let press = null;
+        let swallowDragClick = false;
+        mine.on(overview, 'mousedown', (ev) => {
+            swallowDragClick = false;
+            press = mapOn && ev.button === 0 ? { x: ev.clientX, y: ev.clientY, cam: null, dragging: false } : null;
+        });
+        const dragMove = (ev) => {
+            if (!press || !mapOn) return;
+            const dx = ev.clientX - press.x;
+            const dy = ev.clientY - press.y;
+            if (!press.dragging) {
+                if (Math.hypot(dx, dy) < DRAG_THRESHOLD_PX) return;
+                engageCamera();
+                repaintMap();
+                press.dragging = true;
+                press.cam = mapCam;
+            }
+            const rect = overview.getBoundingClientRect();
+            const kx = rect.width > 0 ? overview.width / rect.width : 1;
+            const ky = rect.height > 0 ? overview.height / rect.height : 1;
+            mapCam = panScreen(press.cam, dx * kx, dy * ky);
+            repaintMap();
+        };
+        if (panel && typeof panel.addEventListener === 'function') {
+            mine.on(panel, 'mousemove', (ev) => {
+                if (press && mapOn) ev.stopPropagation();
+                dragMove(ev);
+            }, { capture: true });
+            mine.on(panel, 'click', (ev) => {
+                if (!swallowDragClick) return;
+                swallowDragClick = false;
+                ev.stopPropagation();
+                ev.preventDefault();
+            }, { capture: true });
+        }
+        /**
+         * ⛓ A RESIZED PAGE while engaged (slice `lab-map-small-set-view`): the viewport takes the panel's new width
+         * (the panel is a block, so its client width is its container's, whatever the canvas is), the height is
+         * kept, and the frame point at the canvas's top-left stays there. At home there is nothing to do — the
+         * canvas is the frame's size and the panel scrolls, as before.
+         */
+        const win = doc?.defaultView;
+        if (panel && win && typeof win.addEventListener === 'function') {
+            mine.on(win, 'resize', () => {
+                if (!mapEngaged || !mapOn || !mapVp) return;
+                const cw = Math.floor(panel.clientWidth);
+                if (!(cw > 0) || cw === mapVp.w) return;
+                ({ cam: mapCam, vp: mapVp } = resizeView(mapCam, mapVp, { w: cw, h: mapVp.h }));
+                repaintMap();
+            });
+        }
+        if (doc && typeof doc.addEventListener === 'function') {
+            // ⛓ a drag that leaves the panel keeps following the pointer (inside it, the capture above has it).
+            mine.on(doc, 'mousemove', dragMove);
+            mine.on(doc, 'mouseup', () => {
+                if (press?.dragging) {
+                    swallowDragClick = true;
+                    say(`MAP panned — drag to move it, Ctrl+wheel zooms at the cursor, 0 fits, `
+                        + 'CENTRE ON START finds the start');
+                }
+                press = null;
+            });
+        }
         const toggle = $('editSetMapView');
         if (toggle) {
             toggle.checked = mapOn;
@@ -1020,6 +1280,7 @@ export function mountSetEditor({
         }
         for (const [id, run] of [['editSetZoomIn', () => zoomBy(MAP_ZOOM_STEP)],
             ['editSetZoomOut', () => zoomBy(1 / MAP_ZOOM_STEP)], ['editSetZoomFit', zoomFit],
+            ['editSetCentreStart', centreOnStart],
             ['editSetMapRelayout', () => {
                 overviewMap.reset();
                 say('MAP re-laid out — the canonical layout of this set (positions are derived; none are stored)');
@@ -1415,9 +1676,30 @@ export function mountSetEditor({
     /* ── THE REPORT ────────────────────────────────────────────────── */
 
     let lastReport = null;
+    /**
+     * ⛓⛓⛓ (lab-stale-handover; ⚖ Robert 2026-11-20, *"Fix stale hand-over"*) **THE RECORD THE LAST REPORT RAN OVER**,
+     * and the rule every door reads it by. Every op is copy-on-write, so ANY change to the set — an edit, a CLOSE, an
+     * undo, a paste, another set loaded into this session — makes `record()` a different object: the SAME signal the
+     * unreachable marks' stale rule (`reportMarks.record`) already reads, not a parallel one.
+     *
+     * ⛔ THE DEFECT IT CURES: the three doors (rules.json, Open in APWorld Editor, the bundle) read
+     * `lastReport ?? runReport()` and nothing invalidated `lastReport`, so REPORT → edit → a door handed over the OLD
+     * rules and atlas (old rooms; for the Seedling lab the old `seedling-lab-<hash>` fingerprint). MEASURED in node on
+     * both labs: all three doors' documents were the pre-edit report's byte for byte.
+     *
+     * ⛓ THE CURE IS "ALWAYS THE CURRENT SET" (option (a)), not "refuse until REPORT is re-run": a door already runs
+     * REPORT at the click when there is none, so a stale report is treated exactly as no report. ⛔ With NO change
+     * since REPORT `currentReport()` IS `lastReport` and every door's output is what it was.
+     */
+    let reportRecord = null;
+    /** `'none'` (REPORT has not run) · `'current'` (it ran over the set as it is now) · `'stale'` (the set changed since). */
+    const reportState = () => (lastReport === null ? 'none' : reportRecord === record() ? 'current' : 'stale');
+    /** The last REPORT while it is still about the current set, else `null` — what a door reads before running one. */
+    const currentReport = () => (reportState() === 'current' ? lastReport : null);
 
     const runReport = () => {
         const box = $('editSetReportOut');
+        reportRecord = record();
         lastReport = reportOver({
             session,
             deps,
@@ -1444,6 +1726,9 @@ export function mountSetEditor({
          * refusal is `reportOver`'s alone (its own docblock: *"a page that
          * disabled the button on its own condition would be a second answer"*).
          */
+        if (typeof overviewMap?.unreachableOf === 'function') {
+            reportMarks = { record: record(), marks: overviewMap.unreachableOf(lastReport) ?? [] };
+        }
         if (typeof reportRows === 'function') {
             const extra = reportRows(session.record(), lastReport) ?? [];
             if (extra.length > 0) {
@@ -1462,20 +1747,35 @@ export function mountSetEditor({
             }
             box.appendChild(list);
         }
+        paintReportState();
+        return lastReport;
+    };
+
+    /**
+     * ⛓⛓ (lab-stale-handover) **THE REPORT NOTE AND THE rules.json BUTTON SAY WHICH SET THEY ARE ABOUT.** Current: the
+     * report's own verdict, exactly as `runReport` always wrote it. Stale: the rows stay (they are what the reader
+     * saw) and the note says they describe the EARLIER set and that a door runs REPORT again first; the rules button
+     * is enabled with that sentence as its title, because pressing it no longer hands over the old document. Painted
+     * by `runReport` and by every `render()`, so an undo back to the reported record reads "current" again.
+     * ⛔ Before the first REPORT nothing here is touched — the opening view is what it was.
+     */
+    function paintReportState() {
+        if (lastReport === null) return;
+        const stale = reportState() === 'stale';
         const btn = $('editDownloadRules');
         if (btn) {
-            btn.disabled = !lastReport.download.rules.allowed;
-            btn.title = lastReport.download.rules.why ?? 'write rules.json';
+            btn.disabled = !stale && !lastReport.download.rules.allowed;
+            btn.title = stale ? STALE_DOOR_TITLE : (lastReport.download.rules.why ?? 'write rules.json');
         }
         paintApworldButton();
         const why = $('editSetReportNote');
         if (why) {
-            why.textContent = lastReport.download.rules.why
-                ?? '⛓ the graph closes and the set validates — rules.json may be exported.';
-            why.className = lastReport.download.rules.allowed ? 'note' : 'note bad';
+            why.textContent = stale ? STALE_REPORT_NOTE
+                : (lastReport.download.rules.why
+                    ?? '⛓ the graph closes and the set validates — rules.json may be exported.');
+            why.className = stale || !lastReport.download.rules.allowed ? 'note bad' : 'note';
         }
-        return lastReport;
-    };
+    }
 
     /* ── THE IDENTITY LINE ─────────────────────────────────────────── */
 
@@ -1562,6 +1862,7 @@ export function mountSetEditor({
         renderIdentity();
         renderMapNote();
         paintApworldButton();
+        paintReportState();
         const close = $('editRoomClose');
         if (close) close.disabled = roomSession() === null;
     }
@@ -1827,7 +2128,7 @@ export function mountSetEditor({
     on('editDownloadRules', () => {
         pressScope('__editorSetRulesPresses',
             ['__editorSetRulesOut', '__editorSetRulesBytes']);
-        const rep = lastReport ?? runReport();
+        const rep = currentReport() ?? runReport();
         if (!rep.download.rules.allowed) {
             setNote(rep.download.rules.why, true);
             return;
@@ -1878,23 +2179,80 @@ export function mountSetEditor({
     const apworldBtn = $('editOpenApworldEditor');
     if (apworldBtn) { apworldBtn.hidden = true; apworldBtn.disabled = true; }
     on('editOpenApworldEditor', () => {
-        pressScope('__editorSetApworldPresses', ['__editorSetApworldOut']);
+        pressScope('__editorSetApworldPresses',
+            ['__editorSetApworldOut', '__editorSetApworldAtlasIds', '__editorSetApworldLevelSetIds']);
         if (!apworldEditor || apworldEditor.available() !== true) {
             setNote('⛔ NOT OPENED — this page has no host to open the APWorld Editor in. '
                 + 'A lab page is a standalone document; the editor lives in the app.', true);
             return;
         }
-        const rep = lastReport ?? runReport();
+        const rep = currentReport() ?? runReport();
         if (!rep.download.rules.allowed) {
             setNote(rep.download.rules.why, true);
             return;
         }
-        const sent = apworldEditor.open(rep.rules) === true;
+        /**
+         * ⛓ lab-apworld-door-map — **THE ATLAS TRAVELS WITH THE RULES, THROUGH THE BUNDLE'S OWN SEAM.** The rules
+         * name their atlas by `region_atlas[p].atlas_id` and carry no body, so the host's Region Map can draw the real
+         * map only if the atlas crosses too. `atlasAtDoor` is the call the bundle door makes for its `region-atlas`
+         * member (a stamping page returns the stamped copy the rules were compiled from), and `rep` is the same
+         * `currentReport() ?? runReport()` both doors read — so the atlas id handed over is ALWAYS the id in the
+         * rules handed over, after an edit too (lab-stale-handover). ⛔ A refusal there does NOT stop the hand-off:
+         * the rules go over as they always did, with no atlas, and the note says why.
+         */
+        let atlases = [];
+        let atlasWhy = null;
+        if (rep.atlas) {
+            try {
+                atlases = [atlasAtDoor(rep.atlas, rep.rules)];
+            } catch (e) {
+                if (!(e instanceof Error)) throw e;
+                atlasWhy = e.message;
+            }
+        }
+        /**
+         * ⛓ lab-apworld-door-play — **AND THE LEVEL SET THE RULES NAME, SO THE SET PLAYS.** The rules name the set
+         * their rooms came from (`region_atlas[p].level_set = {set_id, content_hash}`) and carry no body; the player
+         * delivers those rooms only when the host HOLDS that exact set. The document is the `level-set` member of the
+         * SAME `adapterFns.download(session)` the bundle writes (validated, stamped once), and it travels only when
+         * its COMPUTED hash and id are the ones the handed rules name — `labLevelSetVerdicts`, the rule the host
+         * applies again before it holds anything — so the page never offers a different version of the set. Asked
+         * only when the rules name a set: a door whose rules name none sends `[]`, exactly as before.
+         * ⛔ A refusal does NOT stop the hand-off: the rules go over, the player refuses the set by name (slice G).
+         */
+        let levelSets = [];
+        let setWhy = null;
+        const setRefs = levelSetRefsNamedBy(rep.rules);
+        if (setRefs.length > 0) {
+            try {
+                const docs = adapterFns.download(session).members
+                    .filter((m) => m.kind === 'level-set').map((m) => m.doc);
+                const v = labLevelSetVerdicts(docs, rep.rules, { contentHashOf: levelSetContentHash });
+                levelSets = v.ok;
+                const missing = v.players.filter((p) => !p.carried);
+                if (missing.length) {
+                    setWhy = [...v.refused.map((r) => r.why),
+                        ...missing.map((p) => `no set this page writes is ${JSON.stringify(p.set_id)} @ ${p.content_hash} `
+                            + `(player ${p.player})`)].join('; ');
+                }
+            } catch (e) {
+                if (!(e instanceof Error)) throw e;
+                levelSets = [];
+                setWhy = e.message;
+            }
+        }
+        const sent = apworldEditor.open(rep.rules, atlases, levelSets) === true;
         globalThis.__editorSetApworldOut = rep.rules;
+        globalThis.__editorSetApworldAtlasIds = atlases.map((a) => a?.atlas_id ?? null);
+        globalThis.__editorSetApworldLevelSetIds = levelSets.map((s) => s.set_id);
         setNote(sent
             ? `OPENED in the APWorld Editor — ${rep.report.ap_regions} AP region(s), `
               + `${rep.report.exits} exit(s), ${rep.report.locations} location(s)`
-            : '⛔ NOT OPENED — the host link refused the hand-off.', !sent);
+              + (atlases.length ? ` · with its region atlas ${atlases.map((a) => a.atlas_id).join(', ')}`
+                  : ` · no region atlas${atlasWhy ? ` (${atlasWhy})` : ''}`)
+              + (levelSets.length ? ` · with its level set ${levelSets.map((s) => s.set_id).join(', ')}` : '')
+              + (setWhy ? ` · ⛔ level set NOT carried (${setWhy})` : '')
+            : '⛔ NOT OPENED — the host link refused the hand-off.', !sent || setWhy !== null);
         render();
         onSetChange?.({ why: 'handoff' });
     });
@@ -1949,7 +2307,7 @@ export function mountSetEditor({
             return;
         }
         const out = adapterFns.download(session);
-        const rep = lastReport ?? runReport();
+        const rep = currentReport() ?? runReport();
         const members = [];
         const notes = [];
         /**
@@ -1972,7 +2330,17 @@ export function mountSetEditor({
         }
         if (rep.download.rules.allowed && rep.rules) {
             members.push({ kind: 'rules', doc: rep.rules });
-            if (rep.atlas) members.push({ kind: 'region-atlas', doc: rep.atlas });
+            if (rep.atlas) {
+                let atlasMember;
+                try {
+                    atlasMember = atlasAtDoor(rep.atlas, rep.rules);
+                } catch (e) {
+                    if (!(e instanceof Error)) throw e;
+                    setNote(`⛔ NOT BUNDLED — ${e.message}`, true);
+                    return;
+                }
+                members.push({ kind: 'region-atlas', doc: atlasMember });
+            }
         } else {
             notes.push(`no \`rules.json\` member — ${rep.download.rules.why}`);
         }
@@ -2040,9 +2408,34 @@ export function mountSetEditor({
          */
         map: () => (overviewMap && mapOn ? {
             ...overviewMap.state(record()),
-            frame: mapFrame ? { width: mapFrame.width, height: mapFrame.height } : null,
-            cells: mapFrame ? mapFrame.cells.map((c) => [c.x, c.y, c.w, c.h]) : [],
+            /**
+             * ⛓⛓ (lab-map-camera) `zoom`, `frame` and `cells` are AS DRAWN on the canvas: the camera's zoom, the frame
+             * at that zoom, each cell's canvas rect. At home they are the provider's own numbers, unconverted.
+             * `camera` is the camera itself (`x`, `y`: the FRAME point at the canvas centre), `viewport` the canvas.
+             */
+            zoom: mapCam && mapEngaged ? mapCam.zoom : overviewMap.state(record()).zoom,
+            frame: mapFrame ? (camMoved()
+                ? { width: mapFrame.width * mapCam.zoom, height: mapFrame.height * mapCam.zoom }
+                : { width: mapFrame.width, height: mapFrame.height }) : null,
+            cells: mapFrame ? mapFrame.cells.map((c) => mapRect(c)) : [],
+            camera: mapCam ? { x: mapCam.x, y: mapCam.y, zoom: mapCam.zoom, engaged: mapEngaged } : null,
+            start: typeof overviewMap.startOf === 'function' ? overviewMap.startOf(record()) : null,
+            viewport: mapVp ? { w: mapVp.w, h: mapVp.h } : null,
             picked: disconnectPick ? { room: disconnectPick.room, value: disconnectPick.value } : null,
+            /**
+             * ⛓ (seedling-map-unreachable) present only with a provider that has `unreachableOf`: the room indices
+             * the map marks from the last REPORT, each mark with its cell, and whether that REPORT is `current`,
+             * `stale` (the set changed since; nothing is marked) or `none` (REPORT has not run).
+             */
+            ...(typeof overviewMap.unreachableOf === 'function' ? {
+                unreachable: mapMarks.map((m) => m.room),
+                unreachableMarks: mapMarks.map((m) => ({
+                    room: m.room, partial: m.partial, regions: [...m.regions],
+                    cell: mapFrame?.cells[m.room] ? mapRect(mapFrame.cells[m.room]) : null,
+                })),
+                unreachableReport: reportMarks === null ? 'none'
+                    : reportMarks.record === record() ? 'current' : 'stale',
+            } : {}),
         } : null),
         report: () => lastReport,
         destroy() {

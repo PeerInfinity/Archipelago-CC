@@ -1,0 +1,90 @@
+# The Upstream Rules Add-on (worlds/upstream_rules_addon → apworlds/upstream_rules_addon.apworld) on a PRISTINE
+# upstream Archipelago: the packed apworld goes into custom_worlds/ of an upstream checkout at a pinned ref, and
+# scripts/test/upstream_rules_addon_pristine.py generates rooms and checks each slot's slot_data (inject, strips,
+# gate; absent / over-cap / broken / no-handlers / degraded / race / ER / excluded / disabled).
+#
+# Refs: upstream's 0.6.8 release tag, and upstream main 3745641196 (Utils.__version__ 0.6.9; upstream had
+# no 0.6.9 tag when this was written, 2026-11-16). Add the 0.6.9 tag here when upstream cuts it.
+# Reads nothing secret, writes nothing, deploys nothing.
+name: upstream-rules-addon
+
+on:
+  push:
+    # A landing train (js-land/*) carries slices already gated on their own branch; main and slice-branch
+    # pushes that touch the paths below still run it (⚖ Robert 2026-11-17, "Yes, skip trains").
+    branches-ignore: ['js-land/**']
+    paths:
+      - 'worlds/upstream_rules_addon/**'
+      - 'apworlds/upstream_rules_addon.apworld'
+      - 'exporter/**'
+      - 'rule_builder/_ast_utils.py'
+      - 'world_generator/_embedded_rules.py'
+      - 'world_generator/_sanitization.py'
+      - 'world_generator/apworld.py'
+      - 'worlds/json_tools_installer/json_tools_settings.py'
+      - 'scripts/setup/update_host_settings.py'
+      - 'scripts/build/pack_upstream_rules_addon.py'
+      - 'scripts/test/upstream_rules_addon_pristine.py'
+      - '.github/workflows/upstream-rules-addon.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ (github.event_name == 'push' && github.ref != 'refs/heads/main') && github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  pristine:
+    name: Add-on on upstream ${{ matrix.label }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: '0.6.8'
+            ref: '0.6.8'
+          - label: '0.6.9 (main 3745641196)'
+            ref: '374564119673430fdbe25e0de92c698e64c9ee77'
+    steps:
+      - name: Check out this repository
+        uses: actions/checkout@v6.0.2
+        with:
+          path: fork
+          persist-credentials: false
+      - name: Check out upstream Archipelago at ${{ matrix.ref }}
+        uses: actions/checkout@v6.0.2
+        with:
+          repository: ArchipelagoMW/Archipelago
+          ref: ${{ matrix.ref }}
+          path: upstream
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.12'
+      - name: Install upstream's requirements
+        working-directory: upstream
+        run: |
+          python -m pip install --upgrade pip
+          python ModuleUpdate.py --yes --force
+      - name: The committed apworld is a fresh pack
+        run: python fork/scripts/build/pack_upstream_rules_addon.py --check
+      - name: Generate rooms with the add-on and check them
+        env:
+          SKIP_REQUIREMENTS_UPDATE: '1'
+        run: |
+          python fork/scripts/test/upstream_rules_addon_pristine.py --upstream upstream \
+            --apworld fork/apworlds/upstream_rules_addon.apworld --out "$RUNNER_TEMP/addon-out"
+      - name: Upload the rooms' logs and report
+        if: always()
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: upstream-rules-addon-${{ strategy.job-index }}
+          path: |
+            ${{ runner.temp }}/addon-out/**/gen.log
+            ${{ runner.temp }}/addon-out/report.json
+          if-no-files-found: ignore
+          retention-days: 14

@@ -13,7 +13,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
     buildPlaythroughAtlas, playthroughEncounterLocks, playthroughButtonEvents, playthroughInRoomPoleEvents, playthroughLockEvents, playthroughObstacleEvents, playthroughRopeEvents, playthroughTalkEvents, pocketDoorsCharged, doorwaysBesideLanding,
-    withEventGates,
+    withEventGates, creditedRockEvents,
 } from './make-seedling-playthrough-rules.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -128,7 +128,11 @@ describe('the playthrough\'s obstacle events', () => {
         // ⛓ RULES sided-openers: a LOCK RETURN that reuses an obstacle event (L71's shield lock, a landing inside
         // it AND a one-sided latch) asks that event too; those rows are the next test's, not a landing edge.
         const lockReturns = new Set(locks.internalExitRules.map((r) => `${r.region_id}__${r.from}->${r.region_id}__${r.to}`));
-        const gates = gatesOf(RULES, names).filter((g) => !lockReturns.has(`${g.from}->${g.to}`));
+        // ⛓ tile-fire-breaks-rocks §4: a rock's swing-only side inside its own level also opens on the rock's own minted
+        // event (`creditedRockEvents`: L0's in-rock landings' rocks); those internal rows are §4's, not a landing edge.
+        const credited = new Set(creditedRockEvents());
+        const rockCredit = (g) => levelOf(g.from) === levelOf(g.to) && g.items.every((i) => credited.has(i));
+        const gates = gatesOf(RULES, names).filter((g) => !lockReturns.has(`${g.from}->${g.to}`) && !rockCredit(g));
         const want = FIXTURE.edges.reduce((m, e) => {
             const k = `L${e.edge.from}->L${e.edge.to}|${e.edge.door}`;
             const name = derived.events.find((ev) => ev.fields.event_id === `flag:L${e.flag.level}:${e.flag.tag}`).name;
@@ -321,7 +325,10 @@ describe('the playthrough\'s obstacle events', () => {
         const R = RULES.regions['1'];
         const WEAPON = { rule: 'Or', children: [
             { rule: 'Has', args: { item_name: 'Progressive Sword' } }, { rule: 'Has', args: { item_name: 'Ghost Spear' } }] };
-        expect(R.level_0__r7c6.exits.find((e) => e.connected_region === 'level_0__r6c5').access_rule).toEqual(WEAPON);
+        // ⛓ tile-fire-breaks-rocks: from r7c6 the rock also breaks to Fire (that side holds a clean flame stance; game-witnessed,
+        // fidelity FIREBREAK `L0 flag 4` and rules-6's `rules-l0-west-cross`).
+        expect(R.level_0__r7c6.exits.find((e) => e.connected_region === 'level_0__r6c5').access_rule)
+            .toEqual({ ...WEAPON, children: [...WEAPON.children, { rule: 'Has', args: { item_name: 'Fire' } }] });
         expect(R.level_0__r6c5.exits.find((e) => e.connected_region === 'level_1').access_rule).toEqual({ rule: 'True_' });
         expect(R.level_0__r7c6.exits.find((e) => e.connected_region === 'level_1')).toBeUndefined();
     });
@@ -344,13 +351,44 @@ describe('encounter locks a side cannot clear — RULES rocklock-pocket', () => 
     it('the census fires on the kill-locks whose door pocket no inventory clears the room from, and names why the rest do not', () => {
         const rows = playthroughEncounterLocks();
         expect(named(rows.filter((r) => r.fires))).toEqual([
-            'L18 flag 0: lock@144,112 cleared', 'L26 flag 0: rocklock@112,208 cleared', 'L53 flag 2: lock@144,208 cleared']);
+            'L18 flag 0: lock@144,112 cleared', 'L26 flag 0: rocklock@112,208 cleared', 'L53 flag 2: lock@144,208 cleared',
+            // ⛓ rules-l99-sided-killlock: the west pocket (the L100 landing) wakes one lavarunner of three
+            'L99 flag 0: lock@80,96 cleared']);
         expect(rows.filter((r) => r.fires).every((r) => r.latch)).toBe(true);
         const why = Object.fromEntries(rows.filter((r) => !r.fires).map((r) => [r.name, r.why]));
         expect(why['L39 flag 8: wandlock@144,592 cleared']).toBe('a cross-level ButtonRoom also clears its tag');
         // L26: the census's pocket (the L28 door's) cannot reach puncher@32,208 by any arm
         const l26 = rows.find((r) => r.level === 26).sides.find((s) => s.verdict === 'cannot');
         expect(l26).toMatchObject({ beyond: ['puncher@32,208'], steps: [{ tile: [7, 13], dir: 'W' }] });
+    });
+
+    // ⛓⛓ RULES l99-sided-killlock — the game witness `rules-l99-l6-witness`: from the west pocket (the L100 landing) the
+    // lock never opens with any arm, from the lower floor it opens hitless with the Sword or the Ghost Spear. The pocket is
+    // a SIDE because the player's own 1 px flood says so (a cliffside's pixel mask cuts the tile flood's one component),
+    // and two of its three lavarunners never wake: no reachable centre comes within their class's runRange.
+    it('L99: the west pocket wakes one lavarunner of three (the 1 px flood\'s centres), so only the lower floor clears', async () => {
+        const { ENEMY_CLASSES } = await import('../../frontend/modules/seedlingDemo/combat.js');
+        const runRange = ENEMY_CLASSES.lavarunner.aggro.range;
+        const row = playthroughEncounterLocks().find((r) => r.name === 'L99 flag 0: lock@80,96 cleared');
+        expect(row).toMatchObject({ fires: true, latch: true, through: null });
+        const west = row.sides.find((s) => s.verdict === 'cannot');
+        const east = row.sides.find((s) => s.verdict === 'clears');
+        expect(row.sides).toHaveLength(2);
+        // the steps INTO the lock: the plateau's (from its north and west), the lower floor's (from its south)
+        expect(west.steps.map((s) => s.dir).sort()).toEqual(['E', 'S']);
+        expect(east.steps.map((s) => s.dir)).toEqual(['N']);
+        expect(west.beyond.sort()).toEqual(['lavarunner@176,64', 'lavarunner@192,64']);
+        expect(west.across).toEqual(['lavarunner@160,32']);
+        for (const at of west.beyond) expect(west.nearest[at], at).toBeGreaterThan(runRange);
+        expect(west.nearest['lavarunner@160,32']).toBeLessThanOrEqual(runRange);
+        // the rules: the pocket's crossing asks for the event, earned on the lower floor; the floor's own does not
+        const R = RULES.regions['1'];
+        const asks = (e) => JSON.stringify(e.access_rule).includes(JSON.stringify(row.name));
+        // ⛓ rules-k-pursuit-resume: rule K cuts the lower floor at its lavarunners' leashes; the pocket's neighbour is its member r7c5 (was r2c7)
+        expect(asks(R.level_99__r2c4.exits.find((e) => e.connected_region === 'level_99__r7c5'))).toBe(true);
+        expect(asks(R.level_99__r7c5.exits.find((e) => e.connected_region === 'level_99__r2c4'))).toBe(false);
+        //   (the lock's lower-floor side is K's member r7c5, the stairs' landing member, which the cut separates from r2c7)
+        expect(eventsOf(RULES).find((e) => e.name === row.name)).toMatchObject({ region: 'level_99__r7c5', side: 'level_99__r7c5' });
     });
 
     it('each fired lock is a lock event on the side that clears it, and only the pocket\'s crossing asks for it', () => {
@@ -399,8 +437,10 @@ describe('encounter locks a side cannot clear — RULES rocklock-pocket', () => 
     it('L71: no side clears the room by walking, so each crossing pays the Spear and no event is minted', () => {
         for (const [from, to] of [['level_71__r13c7', 'level_71__r11c7'], ['level_71__r11c7', 'level_71__r13c7']]) {
             const rule = exitRule(from, to);
-            expect(rule.rule, `${from} -> ${to}`).toBe('And');
-            expect(rule.children).toContainEqual(has('Ghost Spear'));
+            // ⛓ rules-fire-breaks-rocks: the analyzer's absorption (`A ∧ (A ∨ B) = A`) spells And(Ghost Spear, Or(Sword,
+            // Ghost Spear)) as Ghost Spear alone: the same logic, and the crossing still pays the Spear.
+            const terms = rule.rule === 'And' ? rule.children : [rule];
+            expect(terms, `${from} -> ${to}`).toContainEqual(has('Ghost Spear'));
             expect(JSON.stringify(rule)).not.toContain('cleared');
         }
         expect(eventsOf(RULES).find((e) => e.name === 'L71 flag 0: lock@112,192 cleared')).toBeUndefined();

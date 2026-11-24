@@ -3,6 +3,7 @@ import { pickerHTML, setupNodePicker } from './nodePicker.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { isRegionGroupNode, SUB_REGION_VIEW_KEY, SUB_REGION_VIEW_SCHEMA, SUB_REGION_VIEW_LABELS } from './subRegionGroups.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -44,35 +45,13 @@ export class LayoutControlsManager {
             <input type="number" id="wheelSensitivity" min="0.1" max="5" step="0.1" value="1" style="width: 60px; padding: 2px;">
           </label>
         </details>
-        <details open style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
-          <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">On Region Node Click:</summary>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="movePlayerOneStep" style="margin-right: 5px;">
-            Move player one step towards region
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="movePlayerDirectly" style="margin-right: 5px;" checked>
-            Move player directly to region
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="showRegionInPanel" style="margin-right: 5px;" checked>
-            Show region in Regions panel
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="addToPath" style="margin-right: 5px;" checked>
-            Add to path
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="overwritePath" style="margin-right: 5px;">
-            Overwrite path
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="addLocationsToPath" style="margin-right: 5px;">
-            Add locations to path
-          </label>
-          <label style="display: block; margin: 3px 0; cursor: pointer;">
-            <input type="checkbox" id="checkAllLocationsInRegion" style="margin-right: 5px;">
-            Check all locations in region
+        <details open class="rg-sub-regions" style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
+          <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">Sub-regions:</summary>
+          <label style="display: block; margin: 3px 0;">
+            <span style="margin-right: 5px;">Draw as:</span>
+            <select id="subRegionView" style="padding: 2px;">
+              ${SUB_REGION_VIEW_SCHEMA.enum.map((v) => `<option value="${v}">${SUB_REGION_VIEW_LABELS[v] ?? v}</option>`).join('')}
+            </select>
           </label>
         </details>
         <details open style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
@@ -132,18 +111,12 @@ export class LayoutControlsManager {
   }
 
   async loadCheckboxSettings() {
-    // Load checkbox states from settings
+    // Load checkbox states from settings. (The seven "On Region Node Click" boxes left in CA-S2: a click runs the
+    // panel's click actions, set in the "On click" strip — `moduleSettings.regionGraph.clickActions`.)
     const checkboxes = [
       { id: '#forceHideEdgeLabels', setting: 'moduleSettings.regionGraph.forceHideEdgeLabels', default: true },
       { id: '#keepRegionSetsComplete', setting: 'moduleSettings.regionGraph.keepRegionSetsComplete', default: true },
       { id: '#onlyShowLocationsInView', setting: 'moduleSettings.regionGraph.onlyShowLocationsInView', default: false },
-      { id: '#movePlayerOneStep', setting: 'moduleSettings.regionGraph.movePlayerOneStep', default: false },
-      { id: '#movePlayerDirectly', setting: 'moduleSettings.regionGraph.movePlayerDirectly', default: true },
-      { id: '#showRegionInPanel', setting: 'moduleSettings.regionGraph.showRegionInPanel', default: true },
-      { id: '#addToPath', setting: 'moduleSettings.regionGraph.addToPath', default: true },
-      { id: '#overwritePath', setting: 'moduleSettings.regionGraph.overwritePath', default: false },
-      { id: '#addLocationsToPath', setting: 'moduleSettings.regionGraph.addLocationsToPath', default: false },
-      { id: '#checkAllLocationsInRegion', setting: 'moduleSettings.regionGraph.checkAllLocationsInRegion', default: false },
       { id: '#graph-show-undiscovered', setting: 'moduleSettings.regionGraph.showUndiscovered', default: true }
     ];
 
@@ -221,16 +194,25 @@ export class LayoutControlsManager {
     // | force-hide). Default is 'hover'. (Previously migrated from retired
     // forceShowLocations / forceHideLocations checkbox keys; that migration
     // has been removed.)
-    const mode = await settingsManager.getSetting(
-      'moduleSettings.regionGraph.locationVisibility', 'hover');
-    this.ui.locationVisibilityMode = mode;
-    const radio = this.ui.controlPanel.querySelector(
-      `input[name="locationVisibility"][value="${mode}"]`);
-    if (radio) radio.checked = true;
+    await this.loadLocationVisibilityMode();
 
     // Sync edge label visibility flag
     const forceHideEdgeLabelsEl = this.ui.controlPanel.querySelector('#forceHideEdgeLabels');
     this.ui.edgeLabelsHidden = !!forceHideEdgeLabelsEl?.checked;
+
+    // ⛓ Sub-regions (region-graph-groups-a): the select writes the setting; the panel's settings:changed handler
+    // reloads it and REBUILDS the graph (`RegionGraphUI` rebuilds on any moduleSettings.regionGraph.* write).
+    const subRegionSelect = this.ui.controlPanel.querySelector('#subRegionView');
+    if (subRegionSelect) {
+      if (this.ui.subRegionView) subRegionSelect.value = this.ui.subRegionView;
+      subRegionSelect.addEventListener('change', async (e) => {
+        try {
+          await settingsManager.updateSetting(SUB_REGION_VIEW_KEY, e.target.value);
+        } catch (error) {
+          logger.warn(`Failed to save setting ${SUB_REGION_VIEW_KEY}:`, error);
+        }
+      });
+    }
 
     // Setup change handler for discovery checkbox to trigger graph rebuild
     const showUndiscoveredCheckbox = this.ui.controlPanel.querySelector('#graph-show-undiscovered');
@@ -293,6 +275,25 @@ export class LayoutControlsManager {
 
     // Update discovery controls visibility based on current mode
     this.updateDiscoveryControlsVisibility();
+  }
+
+  /**
+   * Read `moduleSettings.regionGraph.locationVisibility` into the UI and the
+   * radio. Called on the first settings load and on every settings:changed
+   * that may carry it, so a write through the settings API (not only a radio
+   * click) takes effect. A built graph re-draws its location nodes at once.
+   */
+  async loadLocationVisibilityMode() {
+    const mode = await settingsManager.getSetting(
+      'moduleSettings.regionGraph.locationVisibility', 'hover');
+    const changed = this.ui.locationVisibilityMode !== mode;
+    this.ui.locationVisibilityMode = mode;
+    const radio = this.ui.controlPanel?.querySelector(
+      `input[name="locationVisibility"][value="${mode}"]`);
+    if (radio) radio.checked = true;
+    if (changed && this.ui.cy && this.ui.graphInitialized) {
+      this.ui.dataManager.redrawLocationNodesForMode();
+    }
   }
 
   /**
@@ -499,7 +500,8 @@ export class LayoutControlsManager {
     const layout = this.ui.gridLayout;
     if (!layout || layout.size === 0) return null;
 
-    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player'));
+    // A group box is sized by its members and placed by them: it takes no grid cell.
+    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player') && !isRegionGroupNode(n));
     const avgNodeWidth = nodes.reduce((sum, n) => {
       const bb = n.boundingBox({ includeLabels: true });
       return sum + bb.w;
@@ -546,7 +548,8 @@ export class LayoutControlsManager {
    * with computed positions that guarantee no edge connects same-row nodes.
    */
   buildHierarchyLayout() {
-    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player'));
+    // A group box has no depth of its own (its members do): it takes no row slot.
+    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player') && !isRegionGroupNode(n));
 
     // Group nodes by depth
     const depthGroups = new Map();
@@ -633,7 +636,7 @@ export class LayoutControlsManager {
     const adjList = new Map();
 
     // Initialize all nodes
-    this.ui.cy.nodes().filter(n => !n.hasClass('hidden') && !n.hasClass('player')).forEach(node => {
+    this.ui.cy.nodes().filter(n => !n.hasClass('hidden') && !n.hasClass('player') && !isRegionGroupNode(n)).forEach(node => {
       const id = node.id();
       inDegree.set(id, 0);
       adjList.set(id, []);
@@ -685,7 +688,11 @@ export class LayoutControlsManager {
 
   saveNodePositions() {
     this.ui.nodePositions.clear();
-    this.ui.cy.nodes().forEach(node => {
+    // Location nodes are drawn around their region, never laid out; saving
+    // them would make the next rebuild's size check re-run the layout. A
+    // group box (subRegionView = nested) is placed by its members: saving it
+    // would leak a position no `separate` graph has.
+    this.ui.cy.nodes().not('.location-node').filter(n => !isRegionGroupNode(n)).forEach(node => {
       this.ui.nodePositions.set(node.id(), {
         x: node.position('x'),
         y: node.position('y')
@@ -695,7 +702,7 @@ export class LayoutControlsManager {
 
   exportNodePositions() {
     const positions = {};
-    this.ui.cy.nodes().forEach(node => {
+    this.ui.cy.nodes().filter(n => !isRegionGroupNode(n)).forEach(node => {
       positions[node.id()] = {
         x: Math.round(node.position('x')),
         y: Math.round(node.position('y'))

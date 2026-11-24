@@ -92,6 +92,14 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_BEAMTOWER_DRIFT || !!process.env.SEEDLING_BEAMTOWER_BEAM_HIT
         || !!process.env.SEEDLING_SPINNING_AXE_PLAYER_HIT || !!process.env.SEEDLING_PARTIAL_DODGE_REPROBE
         || !!process.env.SEEDLING_CORRIDOR_BODY_PRICING || !!process.env.SEEDLING_CORRIDOR_FORECAST_MEMO
+        || !!process.env.SEEDLING_WALLFLYER_CORPSE_GONE
+        || !!process.env.SEEDLING_DARK_SUIT_STATIC_RETALIATION || !!process.env.SEEDLING_DARK_SUIT_BOSS_RETALIATION
+        || !!process.env.SEEDLING_OWL_CONTACT_IN_STEP || !!process.env.SEEDLING_TURRET_SUIT_RETALIATION
+        || !!process.env.SEEDLING_PICKUP_TICK_FREEZE || !!process.env.SEEDLING_DIALOGUE_FRAME_FREEZE
+        || !!process.env.SEEDLING_FROZEN_TICK_UNGATED
+        || !!process.env.SEEDLING_FREEZE_EDGE_FRAMES
+        || !!process.env.SEEDLING_FREEZE_RELEASE_TICK
+        || !!process.env.SEEDLING_FREEZE_SPAN_UPDATES
         || !!process.env.SEEDLING_ARROW_LANE_CROSSING
         || !!process.env.SEEDLING_AXE_TIMING_RUNG || !!process.env.SEEDLING_AXE_GATE_TRANSIT
         || !!process.env.SEEDLING_STATUE_TALK_RANGE
@@ -105,7 +113,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT
         || !!process.env.SEEDLING_BAIT_COMPONENT_MEMO || !!process.env.SEEDLING_BAIT_ALIGN_SAFE_MEMO
         || !!process.env.SEEDLING_BAIT_PARKED_TAIL
-        || !!process.env.SEEDLING_CORPSE_BUMP_REST_READ || !!process.env.SEEDLING_SPINNER_ROSTER_GONE)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_CORPSE_BUMP_REST_READ || !!process.env.SEEDLING_SPINNER_ROSTER_GONE
+        || !!process.env.SEEDLING_PULSER_FORECAST_PULSE)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -404,7 +413,31 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity ROCKBUTTON D1 (wave 41): a landed FallRock is a Solid that holds a Button down — ON since the ROCKBUTTON flip (⚖ user 2026-11-12).
             fallRockHoldsButton: true,
             // ⛓ fidelity CORRIDORFLIP D2 (wave 42): the corridor forecast memoises its frozen geometry reads — ON since the CORRIDORFLIP flip (⚖ user 2026-11-12).
-            corridorForecastMemo: true });
+            corridorForecastMemo: true,
+            // ⛓ fidelity WALLFLYERCORPSE D2 (wave 45): a wallflyer the run no longer holds live is not priced at its placement — ON since the WALLFLYERCORPSE flip.
+            wallFlyerCorpseGone: true,
+            // ⛓ fidelity DARKSUITSTATIC D2 (wave 46): the dark suit retaliates into a static body — OFF.
+            darkSuitStaticRetaliation: false,
+            // ⛓ fidelity L39HIT D2 (wave 47): a spinner forecast steps the room's pulsers and their pulse on the bodies — OFF.
+            pulserForecastPulse: false,
+            // ⛓ fidelity DARKSUITBOSSES D2 (wave 48): the dark suit retaliates into a boss — OFF.
+            darkSuitBossRetaliation: false,
+            // ⛓ fidelity OWLSUIT D2 (wave 49): the Owl's body contact is billed at its AS3 slot, with its "Suit" retaliation — OFF.
+            owlContactInStep: false,
+            // ⛓ fidelity TURRETSUIT D2 (wave 50): a Turret's body contact is billed at its AS3 slot, with its "Suit" retaliation — OFF.
+            turretSuitRetaliation: false,
+            // ⛓ fidelity PICKUPFREEZE D2 (wave 51): a pickup's first frame freezes the families that update after it — OFF.
+            pickupTickFreeze: false,
+            // ⛓ fidelity DIALOGUEFREEZE D2 (wave 52): a dialogue's later frames freeze the families that update after the NPC — OFF.
+            dialogueFrameFreeze: false,
+            // ⛓ fidelity FROZENTICK D2 (wave 53): the chasers' and the blocks' ungated update runs on the frozen frames too — OFF.
+            frozenTickUngated: false,
+            // ⛓ fidelity CEREMONYTOWER D2 (wave 54): a texted ceremony's later frames step the beam tower once, and a rock's release frame steps the families after it — OFF.
+            freezeEdgeFrames: false,
+            // ⛓ fidelity RELEASETICK D2 (wave 55): a texted ceremony's finishing tick steps the four families once more, unfrozen (the release frame) — OFF.
+            freezeReleaseTick: false,
+            // ⛓ fidelity RELEASEPICKUP D2 (wave 56): the beam tower's graphic through a texted pickup's phase A, and a pickup inside a rock's span refused — OFF.
+            freezeSpanUpdates: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

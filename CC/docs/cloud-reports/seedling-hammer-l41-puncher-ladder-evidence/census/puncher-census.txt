@@ -1,0 +1,145 @@
+PUNCHER puncher@416,256 level_12__r0c19
+PUNCHER puncher@32,208 level_26__r2c4
+PUNCHER puncher@80,168 level_26__r2c4
+PUNCHER puncher@128,624 level_40__r26c13
+PUNCHER puncher@816,128 level_40__r0c53
+PUNCHER puncher@136,96 level_53__r2c2
+LEG 97 level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_80 | level_12__r0c19:puncher@416,256
+LEG 98 level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_352 | level_12__r0c19:puncher@416,256
+LEG 99 level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_368 | level_12__r0c19:puncher@416,256
+LEG 100 level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_112_96 | level_12__r0c19:puncher@416,256
+LEG 101 level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_168_368 | level_12__r0c19:puncher@416,256
+LEG 102 level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_304_0 | level_12__r0c19:puncher@416,256
+LEG 103 level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_432_352 | level_12__r0c19:puncher@416,256
+LEG 104 level_12__r0c19 <- in_L0_304_176 -> location:Level 012 - Witch | level_12__r0c19:puncher@416,256
+LEG 105 level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared | level_12__r0c19:puncher@416,256
+LEG 106 level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared | level_12__r0c19:puncher@416,256
+LEG 107 level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 10: shieldlocknorm@288,704 cleared | level_12__r0c19:puncher@416,256
+LEG 108 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_80 | level_12__r0c19:puncher@416,256
+LEG 109 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_352 | level_12__r0c19:puncher@416,256
+LEG 110 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_368 | level_12__r0c19:puncher@416,256
+LEG 111 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_112_96 | level_12__r0c19:puncher@416,256
+LEG 112 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_168_368 | level_12__r0c19:puncher@416,256
+LEG 113 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_304_0 | level_12__r0c19:puncher@416,256
+LEG 114 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_432_352 | level_12__r0c19:puncher@416,256
+LEG 115 level_12__r0c19 <- in_L33_32_64 -> location:Level 012 - Witch | level_12__r0c19:puncher@416,256
+LEG 116 level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: bosslock@416,240 cleared | level_12__r0c19:puncher@416,256
+LEG 117 level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared | level_12__r0c19:puncher@416,256
+LEG 118 level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared | level_12__r0c19:puncher@416,256
+LEG 119 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_80 | level_12__r0c19:puncher@416,256
+LEG 120 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_352 | level_12__r0c19:puncher@416,256
+LEG 121 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_368 | level_12__r0c19:puncher@416,256
+LEG 122 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_112_96 | level_12__r0c19:puncher@416,256
+LEG 123 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_168_368 | level_12__r0c19:puncher@416,256
+LEG 124 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_304_0 | level_12__r0c19:puncher@416,256
+LEG 125 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_432_352 | level_12__r0c19:puncher@416,256
+LEG 126 level_12__r0c19 <- in_L35_32_64 -> location:Level 012 - Witch | level_12__r0c19:puncher@416,256
+LEG 127 level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared | level_12__r0c19:puncher@416,256
+LEG 128 level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared | level_12__r0c19:puncher@416,256
+LEG 129 level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared | level_12__r0c19:puncher@416,256
+LEG 130 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_80 | level_12__r0c19:puncher@416,256
+LEG 131 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_352 | level_12__r0c19:puncher@416,256
+LEG 132 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_368 | level_12__r0c19:puncher@416,256
+LEG 133 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_112_96 | level_12__r0c19:puncher@416,256
+LEG 134 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_168_368 | level_12__r0c19:puncher@416,256
+LEG 135 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_304_0 | level_12__r0c19:puncher@416,256
+LEG 136 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_432_352 | level_12__r0c19:puncher@416,256
+LEG 137 level_12__r0c19 <- in_L36_32_128 -> location:Level 012 - Witch | level_12__r0c19:puncher@416,256
+LEG 138 level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bosslock@416,240 cleared | level_12__r0c19:puncher@416,256
+LEG 139 level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,240 cleared | level_12__r0c19:puncher@416,256
+LEG 140 level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 10: shieldlocknorm@288,704 cleared | level_12__r0c19:puncher@416,256
+LEG 141 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_80 | level_12__r0c19:puncher@416,256
+LEG 142 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_352 | level_12__r0c19:puncher@416,256
+LEG 143 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_368 | level_12__r0c19:puncher@416,256
+LEG 144 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_112_96 | level_12__r0c19:puncher@416,256
+LEG 145 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_168_368 | level_12__r0c19:puncher@416,256
+LEG 146 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_304_0 | level_12__r0c19:puncher@416,256
+LEG 147 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_432_352 | level_12__r0c19:puncher@416,256
+LEG 148 level_12__r0c19 <- in_L88_96_304 -> location:Level 012 - Witch | level_12__r0c19:puncher@416,256
+LEG 149 level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared | level_12__r0c19:puncher@416,256
+LEG 150 level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,240 cleared | level_12__r0c19:puncher@416,256
+LEG 151 level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 10: shieldlocknorm@288,704 cleared | level_12__r0c19:puncher@416,256
+LEG 152 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_80 | level_12__r0c19:puncher@416,256
+LEG 153 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_352 | level_12__r0c19:puncher@416,256
+LEG 154 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_368 | level_12__r0c19:puncher@416,256
+LEG 155 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_112_96 | level_12__r0c19:puncher@416,256
+LEG 156 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_168_368 | level_12__r0c19:puncher@416,256
+LEG 157 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_304_0 | level_12__r0c19:puncher@416,256
+LEG 158 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_432_352 | level_12__r0c19:puncher@416,256
+LEG 159 level_12__r0c19 <- in_L95_624_64 -> location:Level 012 - Witch | level_12__r0c19:puncher@416,256
+LEG 160 level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared | level_12__r0c19:puncher@416,256
+LEG 161 level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared | level_12__r0c19:puncher@416,256
+LEG 162 level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared | level_12__r0c19:puncher@416,256
+LEG 163 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_80 | level_12__r0c19:puncher@416,256
+LEG 164 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_352 | level_12__r0c19:puncher@416,256
+LEG 165 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_368 | level_12__r0c19:puncher@416,256
+LEG 166 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_112_96 | level_12__r0c19:puncher@416,256
+LEG 167 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_168_368 | level_12__r0c19:puncher@416,256
+LEG 168 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_304_0 | level_12__r0c19:puncher@416,256
+LEG 169 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_432_352 | level_12__r0c19:puncher@416,256
+LEG 170 level_12__r0c19 <- in_L95_624_80 -> location:Level 012 - Witch | level_12__r0c19:puncher@416,256
+LEG 171 level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,240 cleared | level_12__r0c19:puncher@416,256
+LEG 172 level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared | level_12__r0c19:puncher@416,256
+LEG 173 level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 10: shieldlocknorm@288,704 cleared | level_12__r0c19:puncher@416,256
+LEG 271 level_26__r2c4 <- in_L25_0_96 -> exit:out_teleporter_64_304 | level_26__r2c4:puncher@32,208,puncher@80,168
+LEG 272 level_26__r2c4 <- in_L25_0_96 -> exit:out_teleporter_144_32 | level_26__r2c4:puncher@32,208,puncher@80,168
+LEG 273 level_26__r2c4 <- in_L25_0_96 -> location:L26 flag 0: rocklock@112,208 cleared | level_26__r2c4:puncher@32,208,puncher@80,168
+LEG 274 level_26__r2c4 <- in_L27_32_0 -> exit:out_teleporter_64_304 | level_26__r2c4:puncher@32,208,puncher@80,168
+LEG 275 level_26__r2c4 <- in_L27_32_0 -> exit:out_teleporter_144_32 | level_26__r2c4:puncher@32,208,puncher@80,168
+LEG 276 level_26__r2c4 <- in_L27_32_0 -> location:L26 flag 0: rocklock@112,208 cleared | level_26__r2c4:puncher@32,208,puncher@80,168
+LEG 359 level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0 | level_40__r0c53:puncher@816,128
+LEG 360 level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96 | level_40__r0c53:puncher@816,128
+LEG 361 level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 7: wandlock@208,128 cleared | level_40__r0c53:puncher@816,128
+LEG 362 level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0 | level_40__r0c53:puncher@816,128
+LEG 363 level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96 | level_40__r0c53:puncher@816,128
+LEG 364 level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 7: wandlock@208,128 cleared | level_40__r0c53:puncher@816,128
+LEG 365 level_40__r26c13 <- in_L39_144_0 -> exit:out_stairsdown_320_576 | level_40__r26c13:puncher@128,624
+LEG 366 level_40__r26c13 <- in_L39_144_0 -> exit:out_teleporter_480_912 | level_40__r26c13:puncher@128,624
+LEG 367 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_20 | level_40__r26c13:puncher@128,624
+LEG 368 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_20 | level_40__r26c13:puncher@128,624
+LEG 369 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_13_20 | level_40__r26c13:puncher@128,624
+LEG 370 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_14_20 | level_40__r26c13:puncher@128,624
+LEG 371 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_21 | level_40__r26c13:puncher@128,624
+LEG 372 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_21 | level_40__r26c13:puncher@128,624
+LEG 373 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_13_21 | level_40__r26c13:puncher@128,624
+LEG 374 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_14_21 | level_40__r26c13:puncher@128,624
+LEG 375 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_22 | level_40__r26c13:puncher@128,624
+LEG 376 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_22 | level_40__r26c13:puncher@128,624
+LEG 377 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_23 | level_40__r26c13:puncher@128,624
+LEG 378 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_23 | level_40__r26c13:puncher@128,624
+LEG 379 level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640 | level_40__r26c13:puncher@128,624
+LEG 380 level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest | level_40__r26c13:puncher@128,624
+LEG 381 level_40__r26c13 <- in_L43_176_464 -> exit:out_stairsdown_320_576 | level_40__r26c13:puncher@128,624
+LEG 382 level_40__r26c13 <- in_L43_176_464 -> exit:out_teleporter_480_912 | level_40__r26c13:puncher@128,624
+LEG 383 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_20 | level_40__r26c13:puncher@128,624
+LEG 384 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_20 | level_40__r26c13:puncher@128,624
+LEG 385 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_13_20 | level_40__r26c13:puncher@128,624
+LEG 386 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_14_20 | level_40__r26c13:puncher@128,624
+LEG 387 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_21 | level_40__r26c13:puncher@128,624
+LEG 388 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_21 | level_40__r26c13:puncher@128,624
+LEG 389 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_13_21 | level_40__r26c13:puncher@128,624
+LEG 390 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_14_21 | level_40__r26c13:puncher@128,624
+LEG 391 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_22 | level_40__r26c13:puncher@128,624
+LEG 392 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_22 | level_40__r26c13:puncher@128,624
+LEG 393 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_23 | level_40__r26c13:puncher@128,624
+LEG 394 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_23 | level_40__r26c13:puncher@128,624
+LEG 395 level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640 | level_40__r26c13:puncher@128,624
+LEG 396 level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Chest | level_40__r26c13:puncher@128,624
+LEG 462 level_53__r2c2 <- in_L48_0_112 -> exit:out_stairsdown_32_144 | level_53__r2c2:puncher@136,96
+LEG 463 level_53__r2c2 <- in_L48_0_112 -> exit:out_teleporter_208_64 | level_53__r2c2:puncher@136,96
+LEG 464 level_53__r2c2 <- in_L51_176_144 -> exit:out_stairsdown_32_144 | level_53__r2c2:puncher@136,96
+LEG 465 level_53__r2c2 <- in_L51_176_144 -> exit:out_teleporter_208_64 | level_53__r2c2:puncher@136,96
+LEG 855 level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144 | level_40__r0c53:puncher@816,128
+LEG 856 level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:L40 flag 1: wandlock@176,80 cleared | level_40__r0c53:puncher@816,128
+LEG 857 level_40__r4c4 <- in_L42_240_336 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144 | level_40__r0c53:puncher@816,128
+LEG 858 level_40__r4c4 <- in_L42_240_336 ~> level_40__r0c53 -> location:L40 flag 1: wandlock@176,80 cleared | level_40__r0c53:puncher@816,128
+LEG 859 level_40__r23c29 <- in_L41_0_160 ~> level_40__r0c53 -> location:L40 flag 8: bosslock@480,352 cleared | level_40__r0c53:puncher@816,128
+LEG 860 level_40__r23c29 <- in_L42_240_336 ~> level_40__r0c53 -> location:L40 flag 8: bosslock@480,352 cleared | level_40__r0c53:puncher@816,128
+LEG 861 level_40__r23c29 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 8: bosslock@480,352 cleared | level_40__r26c13:puncher@128,624
+LEG 862 level_40__r23c29 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 8: bosslock@480,352 cleared | level_40__r26c13:puncher@128,624
+LEG 863 level_40__r32c36 <- in_L39_144_0 ~> level_40__r26c13 -> location:Level 040 - Boss Key 2 | level_40__r26c13:puncher@128,624
+LEG 864 level_40__r32c36 <- in_L43_176_464 ~> level_40__r26c13 -> location:Level 040 - Boss Key 2 | level_40__r26c13:puncher@128,624
+LEG 865 level_40__r48c54 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared | level_40__r26c13:puncher@128,624
+LEG 866 level_40__r48c54 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared | level_40__r26c13:puncher@128,624
+LEG 900 level_53__r9c10 <- in_L48_0_112 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared | level_53__r2c2:puncher@136,96
+LEG 901 level_53__r9c10 <- in_L51_176_144 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared | level_53__r2c2:puncher@136,96

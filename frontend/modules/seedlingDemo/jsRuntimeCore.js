@@ -95,9 +95,12 @@
  *
  * ── ⛔ WHAT IS NOT MODELLED, BY NAME ──────────────────────────────────────
  *
- *  · An item flag that changes MID-ROOM re-boots the run where the player
- *    stands (the run's inventory is fixed at boot). The room's earned clears
- *    are carried; its per-visit state (enemy positions, velocity) is not.
+ *  · ⛓ seedling-js-item-live-delivery — an item flag, a key, a totem part
+ *    or a seal part that arrives MID-ROOM is written into the LIVE run
+ *    (`applyDeliveries` → `levelRun.deliver`), as the game's setters write
+ *    the save and rebuild nothing: the room keeps every killed enemy, pushed
+ *    block and held button, and the respawn point stays the room's entry.
+ *    (Until then it re-booted the run where the player stood.)
  *  · ⛓ J3 — the VANILLA 116 are playable too: the page hands over the map
  *    document (`setVanilla`) and a `new Game` teleport with no level set
  *    mounted boots that level, exactly as the wasm game runs its own tables
@@ -231,11 +234,12 @@ const overlaps = (a, b) => a.x < b.right && b.x < a.right && a.y < b.bottom && b
 export const EXIT_TYPES = Object.freeze(['teleporter', ...STAIRS_TAGS]);
 
 /**
- * The `why` of a boot note for a REBOOT IN PLACE (`rebootInPlace`: an item flag, a key, a seal part). The game
- * builds no new world for one (a `Main.*` write), so no load fade either: the page's painter reads it off
+ * The `why` of a boot note for a REBOOT IN PLACE (`rebootInPlace`). ⛓ seedling-js-item-live-delivery: only the RE2
+ * restore reboots in place now; an item flag, a key, a totem part or a seal part is written into the LIVE run
+ * (`applyDeliveries`, a `delivery` note) and boots nothing. No load fade for it: the page's painter reads it off
  * `events` to tell such a run from a `new Game` (graphics G7).
  */
-export const IN_PLACE_REBOOT_WHY = 'an item flag changed';
+export const IN_PLACE_REBOOT_WHY = 'the save was restored';
 
 /**
  * ⛓ J3 — the `exitType` a fired door reports: the type of the room's own
@@ -351,9 +355,20 @@ export function apItemsOf(record) {
  *   at        {level, x, y} | null   where the player stands, as constructor args — RECORDED, NOT USED YET (the AP
  *                                    start is the host's; resuming there is the follow-up slice)
  *   set       the mounted set's id, or null (a restore onto another set is refused by name)
+ *   time      number | null      ⛓ (version 2, sdc-js-save-day-clock; ⚖ Robert 2026-11-22: "Keep it, and make JS match")
+ *                                the day clock, `Main.time` (`Main.as:178`, `SAVE_FILE.data.time`; `Game.time` reads
+ *                                it): the run's `gameTime` when it counts, else null. A restore stages it as the next
+ *                                boot's `save.time`, the value a fresh page declares `PAGE_BOOT_TIME` for — so the
+ *                                reloaded run reads `time + BOOT_PRESWAP_FRAMES + LOAD_FADE_FRAMES` where a fresh one
+ *                                reads `PAGE_BOOT_TIME + …`, the wasm game's own arithmetic (its explicit-start reset
+ *                                is a `new Game` that keeps `Main.time`). Null / absent = a fresh start's clock.
  * ⛔ NO PLAYER DAMAGE: a reload is a fresh life.
+ * ⛓ VERSIONS READ: `JS_SAVE_VERSIONS_READ`. A version-1 save (no `time`) restores everything it has, with the clock a
+ * fresh start's; it is never refused for lacking `time`.
  */
-export const JS_SAVE_VERSION = 1;
+export const JS_SAVE_VERSION = 2;
+/** Every save version `restoreSave` reads (the current one last). */
+export const JS_SAVE_VERSIONS_READ = Object.freeze([1, JS_SAVE_VERSION]);
 
 /**
  * @param {object} [opts]
@@ -391,6 +406,24 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
      */
     const sealSlots = Array.from({ length: SAVE_SLOTS.seal_parts }, () => -1);
     const heldTotems = new Set();
+    /**
+     * ⛓⛓ seedling-early-delivery — WHAT THE HOST ITSELF WROTE (⚖ Robert 2026-11-18T15:36:30Z: *"I don't want either to
+     * drop items that arrive from the server early"*): the keys, totem parts and seal identities its method calls
+     * set, and the last value it wrote to each item flag. The ledgers above MERGE these with what a run earned; this
+     * keeps the host's half apart, so the two resets that wipe the ledgers do not wipe the AP inventory with them:
+     *   · `mount` — "a new set is a new save" drops what the OLD set's runs earned (and a restored save), and kept
+     *     dropping what the host had already delivered: an item the server sent before the AP load mounted its set
+     *     (the panel attaches, then loads; the load's first await is a frame) was gone from the new save;
+     *   · `restoreSave` — the RE2 save is put back over the ledgers at the end of the AP load (`_bindJsSave`), and a
+     *     save written BEFORE an item arrived (a reload: the server re-sends on connect) took it away again.
+     * The panel's adapter re-sent most of them on its next push (`_setIfMissing` / its per-tick property writes), so
+     * the PAGE mostly recovered; the CORE did not, and Health never did (`stageSession`'s `hits_max`). Re-seated by
+     * `reseatHostDeliveries` into the ledgers, they reach the run the way every ledger does: the next boot stages them
+     * (a mount drops the session; a restore re-boots in place), once — the readouts then hold them, so the adapter
+     * writes nothing more. Never cleared: an AP item is not taken back by a level set (a `false` the host writes —
+     * the inventory panel's removal — is recorded as its last value, and re-seated as that).
+     */
+    const hostDelivered = { keys: new Set(), totems: new Set(), seals: [], flags: {} };
     /** The run whose opened chests were last folded into `sealSlots`, and how many. */
     let sealsFolded = { run: null, earned: 0 };
     let menu = true;
@@ -424,9 +457,18 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     const carried = new Map();
     /** "level:tag" apitems collected (their slot is cleared). */
     const collected = new Set();
+    /** ⛓ RE2 — the restore's reboot in place is pending (the ONLY reboot in place since seedling-js-item-live-delivery). */
     let deferredReboot = false;
+    /**
+     * ⛓ seedling-js-item-live-delivery — host deliveries the session's ledgers hold and the LIVE run has not been handed
+     * yet (`applyDeliveries`): `{kind: 'flag'|'key'|'totem'|'seal', …}`, `levelRun.deliver`'s vocabulary. A boot drops
+     * them, because it stages the ledgers they are already in.
+     */
+    let pendingDeliveries = [];
     /** ⛓ RE2 — a restored save's slot order, staged by the next non-tape boot (then null). */
     let restoredSlots = null;
+    /** ⛓ sdc-js-save-day-clock — a restored save's day clock (`Main.time`), staged by the next non-tape boot (then null). */
+    let restoredTime = null;
     /** ⛓ RE2 — the restore's own reboot in place: a fresh life, so it carries no damage. */
     let restoreBoot = false;
     /** ⛓ RE2 — a restored save no boot has staged yet. */
@@ -642,13 +684,15 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ RE2 — the first non-tape boot after a restore stages the SAVED slot order (filtered against the flags,
         // which the restore set in the same step), not the run it replaces.
         const slots = restoredSlots && !declared ? slotsHeld(restoredSlots, flags) : carriedSlots();
-        if (!declared) { restoredSlots = null; restorePending = false; }
+        // ⛓ sdc-js-save-day-clock — and the SAVED day clock (`Main.time`); null = `bootStaging`'s own (a fresh page's).
+        const time = restoredTime !== null && !declared ? restoredTime : undefined;
+        if (!declared) { restoredSlots = null; restoredTime = null; restorePending = false; }
         // The constructor writes the statics before it builds anything (a room the model refuses included).
         lastCtor = { x, y };
         // ⛓ PHASE B — a TAPE's boot (`botStart`) stages the tape's own declaration and nothing of the session's: the
         // game's `botStart` resets the persistence table and the save arrays to a fresh start and applies only what the
         // tape declares (`Bot.as:1708-1772`, ⚖ ruling 25). Absent (every other caller), the staging below is unchanged.
-        const staging = declared ? { ...declared } : bootStaging({ boot: { level, x, y }, items: { ...flags }, pins: [...JS_RUNTIME_PINS] });
+        const staging = declared ? { ...declared } : bootStaging({ boot: { level, x, y }, items: { ...flags }, pins: [...JS_RUNTIME_PINS], time });
         if (!declared) stageSession(staging, slots, playerDamage);
         // ⛓ seedling-js-replay-continuation — a NON-tape boot (the first frame, a teleport, an in-place reboot) ends
         // the tape chain: the next `botStart` rebuilds (see `botStart`'s bounded liberty).
@@ -675,6 +719,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         if (declared) bootItems = { ...flags, ...pickItems(session.run.inventory ?? {}) };
         halted = null;
         deferredReboot = false;
+        pendingDeliveries = [];
         note({ type: 'boot', level, x, y, why, message: `[js runtime] boot level ${level} at (${x}, ${y}) — ${why}` });
         saveChanged('boot');
         return session;
@@ -688,6 +733,14 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ SEAL DELIVERY — and its seal log and totem parts (only when it holds any: a run without stays byte-identical).
         if (heldTotems.size) staging.save.totem_parts = [...heldTotems].sort((a, b) => a - b);
         if (sealLog().length) staging.save.seal_parts = sealLog();
+        // ⛓ seedling-early-delivery — `Main.hitsMax` (AP's Health) survives every boot, as the game's static does. ⛔ NOT
+        // through `items`: `bootStaging` puts the flags under `seam.items`, and no seam key reads `items.hitsMax`
+        // (`SEAM_BOOT_SPEC`'s row is `hits_max` → `save.hitsMax`), so until this line a Health the host delivered
+        // before ANY boot (the page's first frame, the AP load's mount, a teleport, the RE2 restore) was dropped from
+        // the run while `flags` (and so the readout) said 4 — and the adapter, seeing 4, never wrote it again
+        // (measured, `CC/docs/cloud-reports/seedling-early-delivery.md`). Only above the base, so a run without stays
+        // byte-identical.
+        if (flags.hitsMax !== ITEM_FLAGS.hitsMax) staging.seam = { ...(staging.seam ?? {}), hits_max: flags.hitsMax };
         if (slots) {
             staging.inventory_slots = slots.slots;
             staging.seam = { ...(staging.seam ?? {}), primary: slots.primary };
@@ -865,9 +918,13 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ seedling-js-replay-continuation — a HELD room steps nothing (`Main.as:80-89`: `Bot.holding` skips
         // `super.update()`), and the host's queue was drained above, as the game's `drainItems` runs on such a frame.
         if (tape.holding) { flush(); return { stepped: false, held: true }; }
-        // ⛓ PHASE B — an item delivery's in-place reboot WAITS while a tape is armed (it would replace the tape's run
-        // mid-stream; the game's flag write rebuilds nothing), and lands on the first tick after the tape finishes.
+        // ⛓ RE2 — a restore's reboot in place WAITS while a tape is armed (it would replace the tape's run mid-stream),
+        // and lands on the first tick after the tape finishes.
         if (deferredReboot && !tape.armed && !session.run.inCeremony && !encounterHoldsDelivery()) rebootInPlace(IN_PLACE_REBOOT_WHY);
+        // ⛓ seedling-js-item-live-delivery — and so does a delivery's live write (a write into a tape's run would desync
+        // it): it lands at the boundary of the first tick after the tape finishes.
+        applyDeliveries();
+        if (!session || halted) { flush(); return { stepped: false }; }
         const run = session.run;
         // ⛓ PHASE B — the tape's keys for this tick, or null: no tape armed (every tick before Phase B), or the tape
         // finished on THIS frame (the game's frame still updates — `Bot.as:3330-3333` returns to `super.update()`).
@@ -1146,6 +1203,12 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         return { hits: d.hits, hits_timer: d.hitsTimer, direction_face: d.directionFace };
     }
 
+    /**
+     * ⛓ RE2 — THE RESTORE'S REBOOT IN PLACE, and since seedling-js-item-live-delivery its ONLY caller: a host delivery
+     * is written into the live run (`applyDeliveries` → `levelRun.deliver`), as the game's setters write the save and
+     * build nothing. The constructor args are INTEGERS (`new Game(_level:int, _playerx:int, _playery:int)`; AS3's
+     * `int()` truncates), never the float a live position minus the half tile is.
+     */
     function rebootInPlace(why) {
         const run = session.run;
         // The player's tick-0 state is the ctor args plus the half tile.
@@ -1154,9 +1217,44 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ RE2 — the restore's reboot is a fresh life (⚖ Robert: "No, a fresh life"): no damage carried.
         const fresh = restoreBoot;
         restoreBoot = false;
-        boot({ level: run.level, x: run.state.x - half, y: run.state.y - half }, why,
-            { playerDamage: fresh ? null : carriedDamage(run) });
+        const ctor = { x: Math.trunc(run.state.x - half), y: Math.trunc(run.state.y - half) };
+        if (!Number.isInteger(ctor.x) || !Number.isInteger(ctor.y)) {
+            throw new Error(`jsRuntimeCore.rebootInPlace: a non-integer constructor (${ctor.x}, ${ctor.y})`);
+        }
+        boot({ level: run.level, ...ctor }, why, { playerDamage: fresh ? null : carriedDamage(run) });
         arrival = keep;
+    }
+
+    /**
+     * ⛓⛓ seedling-js-item-live-delivery — HAND THE LIVE RUN WHAT THE HOST DELIVERED (⚖ Robert 2026-11-18, "Live
+     * apply, no rebuild"). Called at a TICK BOUNDARY only — the end of the queue drain and the top of `tickOnce`, both
+     * before the tick's `session.step` — the boundary the wasm game's BridgeGeneric write lands on (its own
+     * `ENTER_FRAME`, between two `Game.update()`s; `levelRun.deliver` has the citation). It waits, as the reboot it
+     * replaces waited, while a tape is armed, while a ceremony runs, and while an encounter leg's own report is
+     * being served (`encounterHoldsDelivery`): a live write can still refute a leg's plan.
+     */
+    function applyDeliveries() {
+        if (pendingDeliveries.length === 0 || !session || halted) return;
+        if (tape.armed || session.run.inCeremony || encounterHoldsDelivery()) return;
+        const batch = pendingDeliveries;
+        pendingDeliveries = [];
+        let changed = false;
+        for (const d of batch) {
+            let r;
+            try {
+                r = session.deliver(d);
+            } catch (err) {
+                halted = { tick: ticks, message: err.message };
+                note({ type: 'halt', message: `[js runtime] HALTED — the model refused a delivery: ${err.message.split('\n')[0]}` });
+                return;
+            }
+            // A delivered flag is not one the run GAINED in play (`foldGainedItems` measures against this).
+            if (d.kind === 'flag' && bootItems) bootItems[d.property] = session.run.inventory[d.property];
+            changed = changed || r.changed;
+            note({ type: 'delivery', ...d, changed: r.changed, level: session.run.level, tick: ticks,
+                message: `[js runtime] delivery ${JSON.stringify(d)} — ${r.changed ? 'written into the live run' : 'already held (no-op)'}` });
+        }
+        if (changed) saveChanged('delivery');
     }
 
     // ── ⛓⛓ RE2 — the save (`JS_SAVE_VERSION`'s head) ───────────────────────
@@ -1185,13 +1283,23 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             slots: slots ? { slots: [...slots.slots], primary: slots.primary, secondary: slots.secondary, firstUse: slots.firstUse } : null,
             flags: effective,
             at: run ? { level: run.level, x: run.state.x - 8, y: run.state.y - 8 } : null,
+            // ⛓ sdc-js-save-day-clock — a restore no boot has staged yet keeps ITS clock (as `slots` keeps its order).
+            time: restorePending ? restoredTime : savedClock(run),
         };
+    }
+
+    /** `Main.time` as the save holds it: the run's `Game.time` when its clock counts, else null (a fresh start's). */
+    function savedClock(run) {
+        const t = run?.gameTime ?? null;
+        return Number.isFinite(t) && t > 0 ? t : null;
     }
 
     /** Why `save` cannot be restored here, or null. */
     function saveRefusal(save) {
         if (!save || typeof save !== 'object') return 'the save is not an object';
-        if (save.version !== JS_SAVE_VERSION) return `the save is version ${save.version}, this runtime reads ${JS_SAVE_VERSION}`;
+        if (!JS_SAVE_VERSIONS_READ.includes(save.version)) {
+            return `the save is version ${save.version}, this runtime reads ${JS_SAVE_VERSIONS_READ.join(' or ')}`;
+        }
         const here = mounted?.set.set_id ?? null;
         if ((save.set ?? null) !== here) return `the save is for level set ${save.set ?? '(none)'}, and ${here ?? 'no set'} is mounted`;
         const pairs = (v) => Array.isArray(v) && v.every((p) => Array.isArray(p) && p.length === 2 && p.every(Number.isInteger));
@@ -1201,6 +1309,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         if (!ints(save.seals) || save.seals.length !== SAVE_SLOTS.seal_parts) return `seals must be ${SAVE_SLOTS.seal_parts} integers`;
         if (!save.flags || typeof save.flags !== 'object') return 'flags must be an object';
         if (save.slots !== null && save.slots !== undefined && !ints(save.slots.slots)) return 'slots.slots must be an integer list';
+        // ⛓ sdc-js-save-day-clock — `time` is NEVER a refusal: absent (version 1), null or malformed is a fresh start's
+        // clock, and the rest of the save is restored (js-22: "restore everything it has"; `restoreSave` names it).
         return null;
     }
 
@@ -1234,14 +1344,25 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             if (!(prop in save.flags)) continue;
             flags[prop] = typeof ITEM_FLAGS[prop] === 'number' ? Number(save.flags[prop]) : Boolean(save.flags[prop]);
         }
+        // ⛓ seedling-early-delivery — what the host delivered stays (a save written before it arrived lacks it).
+        reseatHostDeliveries();
         restoredSlots = save.slots ? { ...save.slots, slots: [...save.slots.slots] } : null;
+        // ⛓ sdc-js-save-day-clock — the day clock; a version-1 save (no `time`), a null one or a malformed one (not a
+        // positive number) boots a fresh start's, the malformed one said by name in the note. The next write is valid.
+        const timeOk = Number.isFinite(save.time) && save.time > 0;
+        const badTime = !timeOk && save.time !== null && save.time !== undefined;
+        restoredTime = timeOk ? save.time : null;
         restorePending = true;
         if (session) {
             restoreBoot = true;
             deferredReboot = true;
         }
+        // ⛓ seedling-js-item-live-delivery — the restored ledgers supersede any delivery not yet handed to the run.
+        pendingDeliveries = [];
         note({ type: 'save', restored: true, message: `[js runtime] save restored — ${carried.size} clear(s), `
-            + `${collected.size} apitem(s), ${heldKeys.size} key(s), ${sealLog().length} seal(s), ${heldTotems.size} totem part(s)` });
+            + `${collected.size} apitem(s), ${heldKeys.size} key(s), ${sealLog().length} seal(s), ${heldTotems.size} totem part(s), `
+            + (badTime ? `the saved clock ${JSON.stringify(save.time)} was not a positive number; the clock is a fresh start's`
+                : `the clock ${restoredTime === null ? "a fresh start's" : `at ${restoredTime}`}`) });
         return { ok: true };
     }
 
@@ -1249,29 +1370,53 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
 
     function aliasClass(alias) { return aliases.get(alias) ?? alias; }
 
+    /**
+     * ⛓ seedling-early-delivery — put what the host delivered (`hostDelivered`) back into the ledgers after a reset:
+     * its keys and totem parts (a union), its seal identities appended to the log where it lacks them (the log's
+     * filled prefix: `sealLog`), and its last write to each item flag. Idempotent. Nothing is handed to a run here:
+     * both callers stage the ledgers into the next boot.
+     * ⚠ (fidelity-22) the flags `Object.assign` after `restoreSave` LOWERS a restored save's higher flag (e.g. `hitsMax`)
+     * to the host's last write. Unreachable today (Health locations are `apitem`; the host is the only writer); it bites
+     * only if in-game Health (`Bot.as:2768`) coexisted with host writes.
+     */
+    function reseatHostDeliveries() {
+        for (const k of hostDelivered.keys) heldKeys.add(k);
+        for (const i of hostDelivered.totems) heldTotems.add(i);
+        for (const id of hostDelivered.seals) {
+            const log = sealLog();
+            if (log.includes(id)) continue;
+            if (log.length >= SAVE_SLOTS.seal_parts) break;
+            sealSlots[log.length] = id;
+        }
+        Object.assign(flags, hostDelivered.flags);
+    }
+
     function applyItem(item) {
         // ⛓ KEY DELIVERY — `Main.hasKeySet(i, true)` (games/seedling.json's method-call keys): the session gains
-        // the key and the room is rebooted in place, as for an item flag (a key is read at BUILD: a held key's
-        // `BossKey` removes itself). A `false` is never sent (the adapter never clears) and is not modelled.
+        // the key, and (seedling-js-item-live-delivery) the LIVE run gains it at the next tick boundary
+        // (`applyDeliveries`; `BossLock.update` reads it every frame). The host's echo of a key the run picked up itself
+        // is a no-op there. A `false` is never sent (the adapter never clears) and is not modelled.
         if (item?.invocation === 'method_call' && aliasClass(item.path?.[0]?.class) === MAIN
             && item.method === 'hasKeySet' && Number.isInteger(item.args?.[0]) && item.args?.[1] === true) {
             const k = item.args[0];
+            hostDelivered.keys.add(k);
             if (!heldKeys.has(k) && !(session?.run?.keys?.has?.(k))) {
                 heldKeys.add(k);
-                if (session) deferredReboot = true;
+                if (session) pendingDeliveries.push({ kind: 'key', key: k });
             } else heldKeys.add(k);
             return;
         }
         // ⛓ SEAL DELIVERY — `Main.hasSealPartSet(slot, identity)` / `Main.hasTotemPartSet(i, true)` (games/seedling.json's
-        // FILL items): the setter's own write (a slot / an index), then a reboot in place, as for a key (a chest reads
-        // `hasAllSealParts` at BUILD — `Chest.checkBySeal`; a `BossTotemPart` its index). A clear is never sent.
+        // FILL items): the setter's own write (a slot / an index), then the same write into the LIVE run at the next
+        // tick boundary (`applyDeliveries`; a chest asks `checkBySeal()` every frame, `Chest.as:59-61`). A clear is never sent.
         if (item?.invocation === 'method_call' && aliasClass(item.path?.[0]?.class) === MAIN
             && item.method === 'hasSealPartSet' && Number.isInteger(item.args?.[0]) && Number.isInteger(item.args?.[1])
             && item.args[0] >= 0 && item.args[0] < SAVE_SLOTS.seal_parts && item.args[1] >= 0) {
             foldGainedSaves();
+            if (!hostDelivered.seals.includes(item.args[1])) hostDelivered.seals.push(item.args[1]);
             if (sealSlots[item.args[0]] !== item.args[1]) {
                 sealSlots[item.args[0]] = item.args[1];
-                if (session) deferredReboot = true;
+                if (session) pendingDeliveries.push({ kind: 'seal', slot: item.args[0], identity: item.args[1] });
             }
             return;
         }
@@ -1279,9 +1424,10 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             && item.method === 'hasTotemPartSet' && Number.isInteger(item.args?.[0]) && item.args?.[1] === true
             && item.args[0] >= 0 && item.args[0] < SAVE_SLOTS.totem_parts) {
             foldGainedSaves();
+            hostDelivered.totems.add(item.args[0]);
             if (!heldTotems.has(item.args[0])) {
                 heldTotems.add(item.args[0]);
-                if (session) deferredReboot = true;
+                if (session) pendingDeliveries.push({ kind: 'totem', index: item.args[0] });
             }
             return;
         }
@@ -1295,9 +1441,10 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             if (cls === GAME && item.property === 'menu') { menu = Boolean(item.value); return; }
             if (cls === MAIN && item.property in flags) {
                 const value = typeof ITEM_FLAGS[item.property] === 'number' ? Number(item.value) : Boolean(item.value);
+                hostDelivered.flags[item.property] = value;
                 if (flags[item.property] !== value) {
                     flags[item.property] = value;
-                    if (session) deferredReboot = true;
+                    if (session) pendingDeliveries.push({ kind: 'flag', property: item.property, value });
                 }
                 return;
             }
@@ -1312,6 +1459,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         if (deferredReboot && session && !session.run.inCeremony && !halted && !encounterHoldsDelivery()) {
             rebootInPlace(IN_PLACE_REBOOT_WHY);
         }
+        applyDeliveries();
     }
 
     /**
@@ -1477,9 +1625,13 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         heldKeys.clear();
         sealSlots.fill(-1);
         heldTotems.clear();
+        // ⛓ seedling-early-delivery — … but not the AP inventory: what the host delivered before the mount is the new
+        // save's too (the next boot, the set's start, stages it).
+        reseatHostDeliveries();
         collected.clear();
         reportedClears.clear();
         restoredSlots = null;
+        restoredTime = null;
         restoreBoot = false;
         restorePending = false;
         session = null;

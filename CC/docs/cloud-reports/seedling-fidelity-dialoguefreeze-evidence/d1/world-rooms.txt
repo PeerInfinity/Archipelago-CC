@@ -1,0 +1,17 @@
+0 introchar@152,296 statue2@208,160 {}
+1 oracle@72,40 {}
+12 witch@424,392 introchar@568,616 {}
+19 sign@72,136 {"shieldBosses":1}
+34 introchar@32,80 forestchar@104,80 adnanchar@64,56 {}
+35 forestchar@64,24 {}
+36 adnanchar@120,24 {}
+37 totem@296,128 hermit@272,160 {}
+48 karlore@120,280 {}
+58 yeti@64,64 {}
+64 sensei@40,56 {}
+87 statue1@248,192 adnanchar@216,232 {}
+88 introchar@64,112 {}
+89 forestchar@88,104 {}
+94 adnanchar@248,168 rekcahdam@176,200 {}
+111 sign@216,176 {}
+114 watcher@80,80 {}

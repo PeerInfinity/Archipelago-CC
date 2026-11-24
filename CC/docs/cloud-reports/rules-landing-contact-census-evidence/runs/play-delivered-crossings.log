@@ -1,0 +1,11 @@
+SET delivered: seedling-vanilla-record-23510f80
+# box lock: TAKEN by rules-landing-contact-census play.mjs (browser, pid 10710) — head c1927ba30, 10 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only (asserted)
+ROW {"tape":"l73-north-sword-delivered","set":"seedling-vanilla-record-23510f80","ticks":174,"finished":true,"verdict":"left->L74@166","firstHit":null,"hitsInBoot":0,"restarts":0,"levels":[73,74],"end":{"level":74,"x":296,"y":136,"t":174},"lastInBoot":{"t":165,"x":72.35,"y":16.51,"mob":[]},"firstMob":["Bulb(88.0,88.0)","LavaRunner(40.0,32.0)"],"polled":973}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"l73s-sword-east@delivered","set":"seedling-vanilla-record-23510f80","ticks":395,"finished":true,"verdict":"left->L72@353","firstHit":null,"hitsInBoot":0,"restarts":0,"levels":[73,72],"end":{"level":72,"x":184,"y":64.95,"t":395},"lastInBoot":{"t":352,"x":38.81,"y":141.82,"mob":[]},"firstMob":["Bulb(88.0,88.0)","LavaRunner(40.0,32.0)"],"polled":1994}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"l73s-fire@delivered","set":"seedling-vanilla-record-23510f80","ticks":279,"finished":true,"verdict":"hit@58,left->L72@237","firstHit":58,"hitsInBoot":2,"restarts":1,"levels":[73,72],"end":{"level":72,"x":184,"y":64.95,"t":279},"lastInBoot":{"t":236,"x":43.32,"y":141.91,"mob":["Bulb(59.6,99.0)","LavaRunner(50.0,41.8)"]},"firstMob":["Bulb(88.0,88.0)","LavaRunner(40.0,32.0)"],"polled":1422}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"l73n-fire-bulb@delivered","set":"seedling-vanilla-record-23510f80","ticks":426,"finished":true,"verdict":"hit@286","firstHit":286,"hitsInBoot":2,"restarts":1,"levels":[73],"end":{"level":73,"x":43.7,"y":82.05,"t":426},"lastInBoot":{"t":426,"x":43.7,"y":82.05,"mob":["Bulb(58.4,86.9)","LavaRunner(40.6,41.5)"]},"firstMob":["Bulb(88.0,88.0)","LavaRunner(40.0,32.0)"],"polled":2118}

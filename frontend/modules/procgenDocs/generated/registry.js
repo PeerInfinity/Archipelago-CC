@@ -24,6 +24,12 @@ export const REGISTRY = frz({
     "columnOrder": "`getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them",
     "columns": [
         {
+            "fields": 16,
+            "id": "action_nodes",
+            "label": "Action Nodes",
+            "registeredBy": "frontend/modules/actionNodes/actionNodesLibrary.js"
+        },
+        {
             "fields": 44,
             "id": "bounce",
             "label": "Bounce Demo",
@@ -54,7 +60,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 37,
+            "fields": 40,
             "id": "maze",
             "label": "Maze",
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
@@ -121,13 +127,19 @@ export const REGISTRY = frz({
                 "compositeMap.artwork",
                 "compositeMap.displayRegionOf",
                 "compositeMap.drawRegion",
-                "compositeMap.locationTiles"
+                "compositeMap.layoutGraph",
+                "compositeMap.locationTiles",
+                "compositeMap.regionExtent",
+                "compositeMap.remoteLocationTiles"
             ],
             "title": "Composite map"
         },
         {
             "rows": [
+                "loopBot",
                 "loopSupport",
+                "loopSupport.actionGate",
+                "loopSupport.authoredCosts",
                 "loopSupport.botActsAtOnce",
                 "loopSupport.customQueues",
                 "loopSupport.executeVia",
@@ -138,6 +150,7 @@ export const REGISTRY = frz({
                 "loopSupport.queueActions",
                 "loopSupport.record",
                 "loopSupport.requiresLoopMode",
+                "loopSupport.strictQueueActions",
                 "loopSupport.summaryRecording",
                 "priceRegions",
                 "takeLastRecording"
@@ -148,7 +161,9 @@ export const REGISTRY = frz({
             "rows": [
                 "sharing.items",
                 "sharing.mana",
-                "sharing.mana.loopActionDelegation"
+                "sharing.mana.loopActionDelegation",
+                "sharing.resources",
+                "sharing.stats"
             ],
             "title": "Cross-substrate sharing"
         },
@@ -168,9 +183,12 @@ export const REGISTRY = frz({
                 "contentRoles",
                 "defaultContentPack",
                 "extractPathsAndObstacles",
+                "fillRules",
                 "generateRegionCore",
                 "placeFromItems",
-                "placeFromRules"
+                "placeFromRules",
+                "recordedRegionParams",
+                "regionBiomeOf"
             ],
             "title": "Build-time — procedural substrates"
         },
@@ -343,11 +361,20 @@ export const REGISTRY = frz({
             "registered": [
                 "noiz2sa"
             ]
+        },
+        {
+            "error": null,
+            "file": "frontend/modules/actionNodes/actionNodesLibrary.js",
+            "loadable": true,
+            "registered": [
+                "action_nodes"
+            ]
         }
     ],
     "rows": [
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling_gen",
@@ -358,6 +385,13 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -428,6 +462,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling_gen",
@@ -438,6 +473,13 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -511,6 +553,13 @@ export const REGISTRY = frz({
                 "maze"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -586,6 +635,13 @@ export const REGISTRY = frz({
                 "omsi"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -663,6 +719,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -735,6 +798,13 @@ export const REGISTRY = frz({
                 "maze"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -809,6 +879,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -881,9 +958,17 @@ export const REGISTRY = frz({
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
-                "flash_seedling_gen"
+                "flash_seedling_gen",
+                "maze"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -921,9 +1006,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -959,6 +1044,13 @@ export const REGISTRY = frz({
                 "flash_seedling"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -1036,6 +1128,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -1108,6 +1207,13 @@ export const REGISTRY = frz({
                 "bounce"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -1183,6 +1289,13 @@ export const REGISTRY = frz({
                 "maze"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -1260,6 +1373,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -1276,25 +1396,31 @@ export const REGISTRY = frz({
                 {
                     "id": "flash_seedling",
                     "present": true,
-                    "short": "4 keys",
+                    "short": "7 keys",
                     "type": "object",
                     "value": [
                         "artwork",
                         "displayRegionOf",
                         "drawRegion",
-                        "locationTiles"
+                        "layoutGraph",
+                        "locationTiles",
+                        "regionExtent",
+                        "remoteLocationTiles"
                     ]
                 },
                 {
                     "id": "flash_seedling_gen",
                     "present": true,
-                    "short": "4 keys",
+                    "short": "7 keys",
                     "type": "object",
                     "value": [
                         "artwork",
                         "displayRegionOf",
                         "drawRegion",
-                        "locationTiles"
+                        "layoutGraph",
+                        "locationTiles",
+                        "regionExtent",
+                        "remoteLocationTiles"
                     ]
                 },
                 {
@@ -1347,6 +1473,13 @@ export const REGISTRY = frz({
                 "flash_seedling_gen"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -1421,6 +1554,13 @@ export const REGISTRY = frz({
                 "flash_seedling_gen"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -1498,6 +1638,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -1572,6 +1719,94 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Composite map",
+            "name": "compositeMap.layoutGraph"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling",
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -1641,10 +1876,179 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "flash_seedling",
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Composite map",
+            "name": "compositeMap.regionExtent"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling",
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Composite map",
+            "name": "compositeMap.remoteLocationTiles"
+        },
+        {
+            "carriedBy": [
                 "maze",
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -1730,6 +2134,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -1767,11 +2178,14 @@ export const REGISTRY = frz({
                 {
                     "id": "maze",
                     "present": true,
-                    "short": "{gate, item}",
+                    "short": "{character, gate, info, item, object}",
                     "type": "object",
                     "value": [
+                        "character",
                         "gate",
-                        "item"
+                        "info",
+                        "item",
+                        "object"
                     ]
                 },
                 {
@@ -1791,11 +2205,14 @@ export const REGISTRY = frz({
                 {
                     "id": "text_adventure",
                     "present": true,
-                    "short": "{gate, item, place}",
+                    "short": "{character, gate, info, item, object, place}",
                     "type": "object",
                     "value": [
+                        "character",
                         "gate",
+                        "info",
                         "item",
+                        "object",
                         "place"
                     ]
                 }
@@ -1810,6 +2227,13 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -1888,6 +2312,13 @@ export const REGISTRY = frz({
                 "noiz2sa"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -2026,6 +2457,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -2095,6 +2533,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -2106,6 +2545,13 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -2179,6 +2625,13 @@ export const REGISTRY = frz({
                 "bounce"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -2256,6 +2709,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -2328,6 +2788,13 @@ export const REGISTRY = frz({
                 "flash_seedling"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -2408,6 +2875,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -2477,6 +2951,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -2487,6 +2962,16 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "{keys, relabel}",
+                    "type": "object",
+                    "value": [
+                        "keys",
+                        "relabel"
+                    ]
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -2587,6 +3072,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -2664,6 +3156,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -2733,9 +3232,107 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "10 items",
+                    "type": "array",
+                    "value": [
+                        "P1",
+                        "T1",
+                        "L1",
+                        "L2",
+                        "W1",
+                        "B1",
+                        "R4",
+                        "AN1",
+                        "AN2",
+                        "AN-flat"
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — procedural substrates",
+            "name": "fillRules"
+        },
+        {
+            "carriedBy": [
                 "noiz2sa"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -2811,6 +3408,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -2884,6 +3488,13 @@ export const REGISTRY = frz({
                 "cloudberry"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -2972,6 +3583,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -3049,6 +3667,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -3123,6 +3748,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -3196,6 +3828,13 @@ export const REGISTRY = frz({
                 "flash_seedling_gen"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -3278,6 +3917,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -3351,6 +3997,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -3423,6 +4076,13 @@ export const REGISTRY = frz({
                 "flash_seedling_gen"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -3499,6 +4159,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -3573,6 +4240,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -3642,6 +4316,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -3653,6 +4328,13 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "action_nodes",
+                    "type": "string",
+                    "value": "action_nodes"
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -3732,6 +4414,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "bounceDemo",
@@ -3804,6 +4493,13 @@ export const REGISTRY = frz({
                 "maze"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -3880,6 +4576,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -3955,6 +4658,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -4027,6 +4737,13 @@ export const REGISTRY = frz({
                 "flash_seedling_gen"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -4105,6 +4822,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -4177,6 +4901,13 @@ export const REGISTRY = frz({
                 "flash_seedling_gen"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -4251,6 +4982,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -4320,6 +5058,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -4331,6 +5070,13 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "Action Nodes",
+                    "type": "string",
+                    "value": "Action Nodes"
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -4406,6 +5152,13 @@ export const REGISTRY = frz({
                 "maze"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -4484,6 +5237,13 @@ export const REGISTRY = frz({
                 "omsi"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -4634,6 +5394,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -4645,6 +5406,13 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "actionNodes:loadRegion",
+                    "type": "string",
+                    "value": "actionNodes:loadRegion"
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -4720,6 +5488,13 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -4798,6 +5573,89 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "{planLoop}",
+                    "type": "object",
+                    "value": [
+                        "planLoop"
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Loop mode",
+            "name": "loopBot"
+        },
+        {
+            "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -4809,6 +5667,19 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "5 keys",
+                    "type": "object",
+                    "value": [
+                        "actionGate",
+                        "authoredCosts",
+                        "manual",
+                        "queueActions",
+                        "strictQueueActions"
+                    ]
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -4954,9 +5825,176 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Loop mode",
+            "name": "loopSupport.actionGate"
+        },
+        {
+            "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Loop mode",
+            "name": "loopSupport.authoredCosts"
+        },
+        {
+            "carriedBy": [
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -5039,6 +6077,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "no",
@@ -5119,6 +6164,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "solver",
@@ -5198,6 +6250,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "yes",
@@ -5267,6 +6326,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -5278,6 +6338,13 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "no",
+                    "type": "boolean",
+                    "value": false
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -5354,6 +6421,13 @@ export const REGISTRY = frz({
                 "noiz2sa"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -5434,6 +6508,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "yes",
@@ -5503,6 +6584,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -5514,6 +6596,16 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "regionMove, act",
+                    "type": "array",
+                    "value": [
+                        "regionMove",
+                        "act"
+                    ]
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -5621,6 +6713,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "yes",
@@ -5695,6 +6794,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -5764,11 +6870,98 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Loop mode",
+            "name": "loopSupport.strictQueueActions"
+        },
+        {
+            "carriedBy": [
                 "bounce",
                 "cloudberry",
                 "noiz2sa"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -5843,6 +7036,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -5912,6 +7112,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -5923,6 +7124,13 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "actionNodesPanel",
+                    "type": "string",
+                    "value": "actionNodesPanel"
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -5998,6 +7206,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -6072,6 +7287,13 @@ export const REGISTRY = frz({
                 "omsi"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -6165,6 +7387,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -6240,6 +7469,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -6313,6 +7549,13 @@ export const REGISTRY = frz({
                 "flash_seedling_gen"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -6388,6 +7631,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -6460,6 +7710,13 @@ export const REGISTRY = frz({
                 "noiz2sa"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -6536,6 +7793,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -6610,6 +7874,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -6679,9 +7950,180 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "maze"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": true,
+                    "short": "mazeBiome, mazeBiomeSeed, tileKinds",
+                    "type": "array",
+                    "value": [
+                        "mazeBiome",
+                        "mazeBiomeSeed",
+                        "tileKinds"
+                    ]
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — procedural substrates",
+            "name": "recordedRegionParams"
+        },
+        {
+            "carriedBy": [
+                "maze"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — procedural substrates",
+            "name": "regionBiomeOf"
+        },
+        {
+            "carriedBy": [
                 "flash_seedling_gen"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -6752,6 +8194,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -6762,6 +8205,13 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "sides",
+                    "type": "string",
+                    "value": "sides"
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -6839,6 +8289,13 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -6928,6 +8385,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -7000,6 +8464,13 @@ export const REGISTRY = frz({
                 "maze"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -7080,6 +8551,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "fn",
@@ -7153,6 +8631,13 @@ export const REGISTRY = frz({
                 "flash_seedling_gen"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -7237,6 +8722,13 @@ export const REGISTRY = frz({
                 "maze"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -7328,6 +8820,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -7397,6 +8896,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -7408,6 +8908,13 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -7478,12 +8985,25 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "jta",
                 "maze",
                 "omsi",
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "{items, mana, resources, stats}",
+                    "type": "object",
+                    "value": [
+                        "items",
+                        "mana",
+                        "resources",
+                        "stats"
+                    ]
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -7564,10 +9084,20 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "jta",
                 "omsi"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "{getTypes}",
+                    "type": "object",
+                    "value": [
+                        "getTypes"
+                    ]
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -7642,12 +9172,20 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "jta",
                 "maze",
                 "omsi",
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "{}",
+                    "type": "object",
+                    "value": []
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -7724,6 +9262,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -7793,6 +9338,171 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "{getTypes}",
+                    "type": "object",
+                    "value": [
+                        "getTypes"
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Cross-substrate sharing",
+            "name": "sharing.resources"
+        },
+        {
+            "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "{getTypes}",
+                    "type": "object",
+                    "value": [
+                        "getTypes"
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Cross-substrate sharing",
+            "name": "sharing.stats"
+        },
+        {
+            "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -7804,6 +9514,25 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "11 keys",
+                    "type": "object",
+                    "value": [
+                        "after",
+                        "exits",
+                        "kind",
+                        "limit",
+                        "location",
+                        "name",
+                        "node_id",
+                        "position",
+                        "requires",
+                        "results",
+                        "time"
+                    ]
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -7887,7 +9616,7 @@ export const REGISTRY = frz({
                 {
                     "id": "maze",
                     "present": true,
-                    "short": "31 keys",
+                    "short": "33 keys",
                     "type": "object",
                     "value": [
                         "action_lib",
@@ -7916,6 +9645,8 @@ export const REGISTRY = frz({
                         "pulls",
                         "pulsers",
                         "shared_world",
+                        "things",
+                        "tileKinds",
                         "tile_size",
                         "tiles",
                         "trapLib",
@@ -7962,14 +9693,15 @@ export const REGISTRY = frz({
                 {
                     "id": "text_adventure",
                     "present": true,
-                    "short": "5 keys",
+                    "short": "6 keys",
                     "type": "object",
                     "value": [
                         "exitGates",
                         "exits",
                         "fogEnabled",
                         "locations",
-                        "prose"
+                        "prose",
+                        "things"
                     ]
                 }
             ],
@@ -7982,6 +9714,13 @@ export const REGISTRY = frz({
                 "jta"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -8057,6 +9796,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -8130,6 +9876,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "{needs}",
@@ -8201,6 +9954,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -8212,6 +9966,13 @@ export const REGISTRY = frz({
                 "text_adventure"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "[]",
+                    "type": "array",
+                    "value": []
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -8322,6 +10083,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -8396,6 +10164,13 @@ export const REGISTRY = frz({
                 "maze"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": true,
@@ -8474,6 +10249,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "Victory",
@@ -8547,6 +10329,13 @@ export const REGISTRY = frz({
                 "jta"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,
@@ -8625,6 +10414,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": true,
                     "short": "5",
@@ -8699,6 +10495,13 @@ export const REGISTRY = frz({
             ],
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "bounce",
                     "present": false,
                     "short": "—",
@@ -8772,6 +10575,13 @@ export const REGISTRY = frz({
                 "noiz2sa"
             ],
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
                 {
                     "id": "bounce",
                     "present": false,

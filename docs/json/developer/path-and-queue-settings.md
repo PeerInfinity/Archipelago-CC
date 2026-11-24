@@ -51,12 +51,13 @@ These control what happens when the user clicks on graph nodes. They are graph-s
 
 | Setting | Type | Default | Purpose |
 |---------|------|---------|---------|
-| `addToPath` | boolean | `true` | Clicking appends to the existing path |
-| `overwritePath` | boolean | `false` | Clicking replaces the path from start region |
-| `movePlayerOneStep` | boolean | `false` | Move one step toward target on click |
-| `movePlayerDirectly` | boolean | `true` | Jump directly to target on click |
-| `addLocationsToPath` | boolean | `false` | Also add location checks when navigating |
-| `checkAllLocationsInRegion` | boolean | `false` | Auto-check all accessible locations on arrival |
+| `clickActions` | object | `{ enabled: true, region: { 'path.route': { from: 'pathEnd' }, 'path.checkAll': false, 'regions.open': true }, location: { 'path.check': 'now' } }` | What a click runs, edited by the panel's "On click" strip (`regionView/clickActionsUI.js`). `enabled` is the master switch. `path.route` is `{ from: 'pathEnd' \| 'start' \| 'player' }` (extend the path, restart it from the start, move the player directly; always all the way) or `false`. `path.check` is `'now'` \| `'addToPath'` \| `false`. Other panels' ids (`regions.open`, …) are kept even when their panel is not loaded. Model: `frontend/modules/regionView/README.md` § Click actions |
+
+`clickActions` replaced six of the old click keys (CA-S2): `addToPath` → `path.route.from = 'pathEnd'`; else `overwritePath` → `'start'`; else `movePlayerDirectly` → `'player'`; `showRegionInPanel` → `regions.open`; `checkAllLocationsInRegion` → `path.checkAll`; `addLocationsToPath` → `path.check: 'addToPath'`. The old "move one step" option (`movePlayerOneStep`) is removed and ignored. On first load with no stored `clickActions`, the panel migrates the old keys once and saves the result. Old keys already in a user's storage are left there, unread.
+
+- **CA-S3** removed six of the old keys from the settings presets and has no reader for them: the Region Map now has its own `moduleSettings.regionMap.clickActions` (same shape, its own "On click" strip), whose first run copies the Region Graph's `clickActions` (§ the Region Map, `docs/json/developer/modules/regionMap.md`).
+- **CA-S4** retired the last old key, `addLocationsToPath`: the schema entry, the five presets that named it, and CA-S2's mirror (a Region Graph strip save no longer writes it). The Regions panel's location clicks (`regions/regionBlockBuilder.js`) now read the Region Graph's resolved `clickActions.location['path.check'] === 'addToPath'` (`regionGraph/clickActionsSettings.js` `regionGraphLocationAddsToPath`, read-only, migration included), so a user whose only stored state is the old key reads the same answer. A stored `addLocationsToPath` is left in place, orphaned (read only by the one-time migration, as the other six are). No old key is written.
+- CA-S4 also added the panel-owned actions (`flash.teleport`, `flash.teleportLocation`, `discovery.discover`, `regions.scrollTo`, `regionGraph.centre`, `regionMap.centre`). Each panel's strip writes their first values into its `clickActions` once (`frontend/modules/regionView/README.md` § The panel-owned actions).
 
 ### 5. Path Display Preferences (owned by `regions`)
 

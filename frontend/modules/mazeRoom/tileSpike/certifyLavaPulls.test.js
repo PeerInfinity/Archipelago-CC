@@ -9,8 +9,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { buildPlaythroughMaze } from '../../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
-import { PLAYTHROUGH_MAP, playthroughAnalyzerOptions, playthroughHandRuledGridFor } from '../../../../scripts/procgen/make-seedling-playthrough-rules.mjs';
-import { lavaTrapPulls } from '../../flashPanel/seedlingPlaythroughOverlay.js';
+import { PLAYTHROUGH_MAP, playthroughAnalyzerOptions, playthroughHandRuledGridFor, playthroughLavaTrapPulls } from '../../../../scripts/procgen/make-seedling-playthrough-rules.mjs';
 import { seedlingLevelEntities } from '../../flashPanel/seedlingAtlasAnalysis.js';
 import { deserializeMazeWorld, pullAfterMove } from '../mazeRoomEngine.js';
 import { chainedPull } from '../../procgenPipeline/regionAtlasMazeProjection.js';
@@ -26,12 +25,12 @@ const payloadOf = (rules, level) => Object.values(rules.preset_sidecars['1'])
 describe('the analysis rows: the rules producer\'s own discs', () => {
     it('L80\'s two LavaTraps are `pull` rows carrying `lavaTrapPulls` and the Dark Suit', () => {
         const level = levelOf(80);
-        const rows = seedlingLevelEntities(level, playthroughAnalyzerOptions.resolveCondition, { grid: playthroughHandRuledGridFor(level) })
+        const rows = seedlingLevelEntities(level, playthroughAnalyzerOptions.resolveCondition, { grid: playthroughHandRuledGridFor(level), lavaPulls: playthroughLavaTrapPulls(level) })
             .filter((r) => r.kind === 'pull');
         // entity order (the map's), the producer's sorted row-major
         expect(rows.map((r) => r.tiles[0])).toEqual([[2, 14], [5, 6]]);
         expect(rows.map((r) => ({ tiles: r.tiles, from: r.from, rule: r.rule })).reverse()).toEqual(
-            lavaTrapPulls(level, 16).map((p) => ({ tiles: [p.tile], from: p.from, rule: SUIT })));
+            playthroughLavaTrapPulls(level).map((p) => ({ tiles: [p.tile], from: p.from, rule: SUIT })));
     });
 });
 
@@ -48,7 +47,7 @@ describe('L80 in the maze (L71 + L79 + L80)', () => {
         expect(pp, 'L80 is a level world').toBeDefined();
         expect(pp.pulls.map((p) => [p.x, p.y])).toEqual([[2, 14], [5, 6]]);
         for (const p of pp.pulls) {
-            const disc = lavaTrapPulls(levelOf(80), 16).find((q) => q.tile[0] === p.x && q.tile[1] === p.y).from;
+            const disc = playthroughLavaTrapPulls(levelOf(80)).find((q) => q.tile[0] === p.x && q.tile[1] === p.y).from;
             expect(p.from.map((c) => [c.x, c.y]).every(([x, y]) => disc.some(([dx, dy]) => dx === x && dy === y))).toBe(true);
             expect(pp.obstacleLib[p.gate]).toMatchObject({ kind: 'pull', clear_set_type: 'rule', clear_rule: SUIT });
         }
@@ -56,6 +55,9 @@ describe('L80 in the maze (L71 + L79 + L80)', () => {
         expect(() => deserializeMazeWorld(pp)).not.toThrow();
     });
 
+    // ⛓ rules-k-pursuit-resume: rule K re-cuts L80 (its lavarunners' leash cuts are gated at the kill-lock arm), so the
+    //   sub-regions re-key (r6c4 -> r6c5, r12c3 -> r12c4/r13c3, the trap (2,14)'s own tile r14c2) and every row that crosses a
+    //   leash pays the arm beside the suit. The lift is still priced by the pull: r16c1 -> r14c2 holding the Dark Suit alone.
     it('certifies clean (main: r16c1 → r12c3, r8c1 → r6c4 and r8c4 → r6c4 "not priced")', () => {
         const regions = Object.keys(RULES.preset_sidecars['1']).filter((n) => n.startsWith('level_80'));
         const out = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, regions });
@@ -63,8 +65,9 @@ describe('L80 in the maze (L71 + L79 + L80)', () => {
         expect(out.accepted).toEqual([]);
         // the lift is priced by the pull: r16c1 reaches all of L80 holding the Dark Suit
         expect(out.lines).toEqual(expect.arrayContaining([
-            'level_80__r16c1>level_80__r12c3=[["Dark Suit"]]', 'level_80__r16c1>level_80__r6c4=[["Dark Suit"]]',
-            'level_80__r8c1@Level 080 - Chest<level_80__r16c1=[["Dark Suit"]]',
+            'level_80__r16c1>level_80__r14c2=[["Dark Suit"]]',
+            'level_80__r16c1>level_80__r6c5=[["Dark Suit","Ghost Spear"],["Dark Suit","Progressive Sword"],["Dark Suit","Wand"],["Dark Suit","Progressive Shield","Progressive Shield"]]',
+            'level_80__r8c1@Level 080 - Chest<level_80__r16c1=[["Dark Suit","Ghost Spear"],["Dark Suit","Progressive Sword"],["Dark Suit","Wand"],["Dark Suit","Progressive Shield","Progressive Shield"]]',
         ]));
     });
 
@@ -80,9 +83,12 @@ describe('L80 in the maze (L71 + L79 + L80)', () => {
         const regions = Object.keys(RULES.preset_sidecars['1']).filter((n) => n.startsWith('level_80'));
         const native = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, regions });
         const broken = { ...HELPERS, pulled: { ...HELPERS.pulled, body: { type: 'constant', value: false } } };
-        const scripted = certifyPlaythroughMaze(RULES, broken, { native: false, atlas: ATLAS, regions });
-        expect(scripted.problems).toContain('level_80__r16c1 → level_80__r12c3 holding [Dark Suit]: derived false, atlas true');
-        expect([...scripted.lines].sort()).not.toEqual([...native.lines].sort());
+        // ⛓ rules-k-pursuit-resume: with K's re-cut the broken arm's first witness steps where the native engine refuses the
+        //   move, and the certifier's native replay stops on it (`step` -> null) — the mutant is still caught, by a throw
+        //   instead of a disagreeing row (main: 'r16c1 → r12c3 holding [Dark Suit]: derived false'). The native lines are the
+        //   real helpers' (non-empty).
+        expect(native.lines.length).toBeGreaterThan(0);
+        expect(() => certifyPlaythroughMaze(RULES, broken, { native: false, atlas: ATLAS, regions })).toThrow(/player_pos/);
     });
 
     it('mutant control: with the pulls stripped from the world the lifts are not priced again', () => {
@@ -90,8 +96,10 @@ describe('L80 in the maze (L71 + L79 + L80)', () => {
         delete payloadOf(copy, 'level_80').pulls;
         const regions = Object.keys(copy.preset_sidecars['1']).filter((n) => n.startsWith('level_80'));
         const out = certifyPlaythroughMaze(copy, HELPERS, { native: true, atlas: ATLAS, regions });
-        expect(out.problems).toContain('level_80__r16c1 → level_80__r12c3 holding [Dark Suit]: derived false, atlas true');
-        expect(out.problems).toHaveLength(6);
+        // ⛓ rules-k-pursuit-resume: 6 -> 9 — K's re-cut gives r16c1 three more members past the pull (r9c5, r13c3, r14c2);
+        //   the cheapest set the atlas grants is now the suit with the arm, so every row reads holding the full set.
+        expect(out.problems).toContain('level_80__r16c1 → level_80__r14c2 holding [Dark Suit,Ghost Spear,Progressive Shield,Progressive Sword,Wand]: derived false, atlas true');
+        expect(out.problems).toHaveLength(9);
     });
 });
 
@@ -103,7 +111,7 @@ describe('chained pulls are refused by name, and no level of the whole game has 
     });
     it('L77, L78, L80, L108: no trap lies in another\'s disc (L108\'s are 48 px apart, the disc 32)', () => {
         for (const n of [77, 78, 80, 108]) {
-            const rows = lavaTrapPulls(levelOf(n), 16).map((p) => ({ x: p.tile[0], y: p.tile[1], from: p.from.map(([x, y]) => ({ x, y })) }));
+            const rows = playthroughLavaTrapPulls(levelOf(n)).map((p) => ({ x: p.tile[0], y: p.tile[1], from: p.from.map(([x, y]) => ({ x, y })) }));
             expect(chainedPull(rows), `L${n}`).toBeNull();
         }
     });
@@ -138,9 +146,15 @@ describe('L78: the step into two discs goes to the disc entered first', () => {
         const native = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, regions });
         expect(native.problems).toEqual([]);
         expect(native.accepted).toEqual([]);
+        // ⛓ rules-lavatrap-neck (rule T): (6,5)'s disc seals the L77 <-> L79 neck and only the Spear kills it from outside its
+        //   reach, so the Sword arm leaves the crossing both ways (was [["Dark Suit"],["Ghost Spear"],["Progressive Sword"]]).
+        // ⛓ rules-k-pursuit-resume (rule K + (b)): the neck also crosses the lavarunners' leash cuts, so the suit pays the
+        //   kill-lock arm beside T's gate (was [["Dark Suit"],["Ghost Spear"]]); the Spear pays both. And with the line-cut
+        //   pull disc the one-cell r6c11 derives from r0c16 without the suit (the pull-disc nit, resolved).
         expect(native.lines).toEqual(expect.arrayContaining([
-            'level_78__r0c2>level_78__r0c16=[["Dark Suit"],["Ghost Spear"],["Progressive Sword"]]',
-            'level_78__r0c16>level_78__r0c2=[["Dark Suit"],["Ghost Spear"],["Progressive Sword"]]',
+            'level_78__r0c2>level_78__r0c16=[["Ghost Spear"],["Dark Suit","Progressive Sword"],["Dark Suit","Wand"],["Dark Suit","Progressive Shield","Progressive Shield"]]',
+            'level_78__r0c16>level_78__r0c2=[["Ghost Spear"],["Dark Suit","Progressive Sword"],["Dark Suit","Wand"],["Dark Suit","Progressive Shield","Progressive Shield"]]',
+            'level_78__r0c16>level_78__r6c11=[["Ghost Spear"],["Progressive Sword"],["Wand"],["Progressive Shield","Progressive Shield"]]',
         ]));
         const scripted = certifyPlaythroughMaze(RULES, HELPERS, { native: false, atlas: ATLAS, regions });
         expect(scripted.problems).toEqual([]);

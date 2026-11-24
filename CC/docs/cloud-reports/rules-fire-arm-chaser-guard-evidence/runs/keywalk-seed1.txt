@@ -1,0 +1,23 @@
+276 difference(s)
+[folded] 266 x .../atlas_ref: "seedling-88e3788c" -> "seedling-626182a8"
+[folded] 1 x .../atlas_id: "seedling-88e3788c" -> "seedling-626182a8"
+/regions/1/level_100__r4c10/exits/0/access_rule/args/item_names
+  - "len 3"
+  + "len 2"
+/regions/1/level_100__r4c10/exits/0/access_rule/args/item_names/0
+  - "Fire"
+  + "Ghost Spear"
+/regions/1/level_100__r4c10/exits/0/access_rule/args/item_names/1
+  - "Ghost Spear"
+  + "Progressive Sword"
+/regions/1/level_73__r0c4/exits/0/access_rule/args/item_names
+  - "len 4"
+  + "len 3"
+/regions/1/level_73__r0c4/exits/0/access_rule/args/item_names/1
+  - "Fire"
+  + "Ghost Spear"
+/regions/1/level_73__r0c4/exits/0/access_rule/args/item_names/2
+  - "Ghost Spear"
+  + "Progressive Sword"
+/regions/1/level_73__r3c7/exits/0/access_rule/args/item_names
+  - "len 4"

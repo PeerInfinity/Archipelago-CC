@@ -46,6 +46,7 @@ from .constants import (
     SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
 )
 from .profiling import profiler, auto_enable_from_env
+from .games.base.utilities import int_id_or_none
 from BaseClasses import ItemClassification
 
 # Auto-enable profiling from environment variable
@@ -2046,7 +2047,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                 # Get location address, handling cases where it might be a list
                                 # (e.g., ALTTP prize locations have multiple ROM addresses)
                                 raw_address = getattr(location, 'address', None)
-                                location_id = raw_address if isinstance(raw_address, int) else None
+                                location_id = int_id_or_none(raw_address)
 
                                 # Determine if this is an event location
                                 # Event locations have event=True or address=None
@@ -2243,7 +2244,7 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
             #logger.warning(f"Item '{item_name}' found in item_id_to_name but not in handler data for {game_name}. Creating basic entry.")
             items_data[item_name] = {
                 'name': item_name,
-                'id': item_id,
+                'id': int_id_or_none(item_id),
                 'groups': [],
                 'classification': 'filler',
                 'type': None, 'max_count': 1
@@ -2252,7 +2253,7 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
             # Ensure the ID from the world map is added if missing
             # BUT don't overwrite if the item is marked as an event (game handler intentionally set id=None)
             if items_data[item_name].get('id') is None and not items_data[item_name].get('event'):
-                items_data[item_name]['id'] = item_id
+                items_data[item_name]['id'] = int_id_or_none(item_id)
         
         # Add groups from world.item_name_groups if they aren't already present
         base_groups = [
@@ -2280,8 +2281,15 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
             item_name = location.item.name
             item_classification = getattr(location.item, 'classification', ItemClassification.filler)
 
-            # Add event items that aren't in items_data yet (items with code=None)
+            # Add event items that aren't in items_data yet (items with code=None).
+            # Only THIS player's items: another player's item placed in this world is
+            # not this world's item (its ID is another game's), so `items[p]` never
+            # lists it (design-upstream-addon.md, defect 2). The location still names
+            # it (`item: {name, player}`), which is what every reader of a foreign
+            # placement uses.
             if item_name not in items_data:
+                if getattr(location.item, 'player', player) != player:
+                    continue
                 # Extract type value
                 type_obj = getattr(location.item, 'type', None)
                 if type_obj is not None:
@@ -2300,10 +2308,10 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 item_entry = {'name': item_name}
                 if item_hint and item_hint != item_name:
                     item_entry['hint_text'] = item_hint
-                item_entry['id'] = getattr(location.item, 'code', None)
+                item_entry['id'] = int_id_or_none(getattr(location.item, 'code', None))
                 item_entry['groups'] = []
                 item_entry['classification'] = classification_to_string(item_classification)
-                if getattr(location.item, 'code', None) is None:
+                if item_entry['id'] is None:  # no AP id (code None, or not an int: int_id_or_none) = an event
                     item_entry['event'] = True
                 item_entry['type'] = item_type
                 item_entry['max_count'] = 1
@@ -2348,10 +2356,10 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 item_entry = {'name': item_name}
                 if item_hint and item_hint != item_name:
                     item_entry['hint_text'] = item_hint
-                item_entry['id'] = getattr(item, 'code', None)
+                item_entry['id'] = int_id_or_none(getattr(item, 'code', None))
                 item_entry['groups'] = []
                 item_entry['classification'] = classification_to_string(item_classification)
-                if getattr(item, 'code', None) is None:
+                if item_entry['id'] is None:  # no AP id (code None, or not an int: int_id_or_none) = an event
                     item_entry['event'] = True
                 item_entry['type'] = item_type
                 item_entry['max_count'] = 1
@@ -2789,7 +2797,22 @@ PLAYER_SPECIFIC_KEYS = [
 ]
 
 
-def create_ordered_export_data(data, game_name=None, player_id=None):
+def world_directory_of(world, game_name: Optional[str] = None) -> Optional[str]:
+    """The directory (package) name of a world: ``worlds.<name>`` of its class's module.
+
+    Read off the world class itself, so it is right for a world in a zipped ``.apworld``
+    and needs no fork-only data file. Falls back to ``get_world_directory_name`` (the
+    world-mapping files, then the worlds folder, then a guess from the name) when the
+    world is unavailable or its class lives outside ``worlds``.
+    """
+    module_path = getattr(type(world), '__module__', '') if world is not None else ''
+    parts = module_path.split('.')
+    if len(parts) >= 2 and parts[0] == 'worlds' and parts[1]:
+        return parts[1]
+    return get_world_directory_name(game_name) if game_name else None
+
+
+def create_ordered_export_data(data, game_name=None, player_id=None, game_directory=None):
     """
     Create an ordered dictionary with fields in the desired order.
     
@@ -2797,6 +2820,9 @@ def create_ordered_export_data(data, game_name=None, player_id=None):
         data: The data to order
         game_name: Game name to include (if provided)
         player_id: If provided, extract only this player's data from player-specific fields
+            (and from `helpers`: a slot's file carries its own helpers only, `{}` if none)
+        game_directory: The world's directory name (`world_directory_of`); when None it
+            is looked up from `game_name` (`get_world_directory_name`)
         
     Returns:
         Dict with fields in desired order (Python 3.7+ maintains insertion order)
@@ -2814,9 +2840,21 @@ def create_ordered_export_data(data, game_name=None, player_id=None):
         # Special handling for game_directory
         if key == 'game_directory':
             if game_name:
-                # Use the get_world_directory_name function to get the directory name
-                game_directory = get_world_directory_name(game_name)
-                ordered_data[key] = game_directory
+                ordered_data[key] = (game_directory if game_directory
+                                     else get_world_directory_name(game_name))
+            continue
+
+        # `helpers` is keyed by player but was never sliced, so every slot's file
+        # carried every slot's helpers (design-upstream-addon.md, defect 2). A slot's
+        # file carries its own entry, or `{}` as a one-player document with none does.
+        # The combined export keeps every slot's.
+        if key == 'helpers':
+            if key in data:
+                if player_id is not None and isinstance(data[key], dict):
+                    ordered_data[key] = ({player_id: data[key][player_id]}
+                                         if player_id in data[key] else {})
+                else:
+                    ordered_data[key] = data[key]
             continue
 
         # Special handling for playerId - only include in player-specific exports
@@ -3076,8 +3114,16 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     if fallback_record is not None:
         format_fallback.stamp(primary_data, fallback_record, multiworld.player_ids)
 
+    # `game_directory` from the world class's module: one world class for the combined
+    # document when the room plays one game, else the name lookup ("Multiworld").
+    combined_worlds = [multiworld.worlds[p] for p in multiworld.player_ids
+                       if multiworld.game.get(p) == combined_game_name]
+    combined_game_directory = (world_directory_of(combined_worlds[0], combined_game_name)
+                               if combined_worlds else None)
+
     combined_rules_path = os.path.join(output_dir, f"{filename_base}_rules.json")
-    ordered_data = create_ordered_export_data(primary_data, game_name=combined_game_name)
+    ordered_data = create_ordered_export_data(primary_data, game_name=combined_game_name,
+                                              game_directory=combined_game_directory)
 
     if write_export_data(ordered_data, combined_rules_path):
         results['rules_combined'] = combined_rules_path
@@ -3088,7 +3134,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     # Write AST format file if "both" is selected
     if rules_json_format == "both":
         ast_rules_path = os.path.join(output_dir, f"{filename_base}_rules-ast.json")
-        ordered_ast_data = create_ordered_export_data(ast_data, game_name=combined_game_name)
+        ordered_ast_data = create_ordered_export_data(ast_data, game_name=combined_game_name,
+                                                      game_directory=combined_game_directory)
         if write_export_data(ordered_ast_data, ast_rules_path):
             results['rules_combined_ast'] = ast_rules_path
         else:
@@ -3103,7 +3150,9 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             player_rules_path = os.path.join(output_dir, f"{filename_base}_P{player_str}_rules.json")
 
             # Create ordered player-specific data (use primary format)
-            player_data = create_ordered_export_data(primary_data, game_name=player_game_name, player_id=player_str)
+            player_game_directory = world_directory_of(multiworld.worlds.get(player), player_game_name)
+            player_data = create_ordered_export_data(primary_data, game_name=player_game_name, player_id=player_str,
+                                                     game_directory=player_game_directory)
 
             # Write player-specific file
             if write_export_data(player_data, player_rules_path):
@@ -3114,7 +3163,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             # Write AST format player file if "both" is selected
             if rules_json_format == "both":
                 player_ast_path = os.path.join(output_dir, f"{filename_base}_P{player_str}_rules-ast.json")
-                player_ast_data = create_ordered_export_data(ast_data, game_name=player_game_name, player_id=player_str)
+                player_ast_data = create_ordered_export_data(ast_data, game_name=player_game_name, player_id=player_str,
+                                                             game_directory=player_game_directory)
                 if write_export_data(player_ast_data, player_ast_path):
                     results[f"rules_p{player_str}_ast"] = player_ast_path
 

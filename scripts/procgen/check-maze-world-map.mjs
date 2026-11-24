@@ -20,6 +20,12 @@
  *      editing nothing.
  *   6. **ZOOM / TOGGLE / RE-LAYOUT / the default** — `+`/`-` move the canvas; the strip is one toggle away; RE-LAYOUT
  *      is canonical; no `?setView=` opens on the STRIP (this page's default).
+ *   8. **THE CAMERA** (slice `lab-map-camera`, `setMapCameraClaims.js`) — the record as section 6 left it opens
+ *      HOME (node's frame at zoom 1); a drag pans and is not a click; Ctrl+wheel zooms around the cursor; a click
+ *      after a pan selects THAT room; `0` fits both axes; CENTRE ON START centres the start room. Then the SMALL-SET
+ *      claims (slice `lab-map-small-set-view`, `setMapSmallSetClaims`): the demo pack's frame is smaller than its
+ *      panel, so the engaged view is the panel's room, the switch keeps every pixel, FIT zooms in, a click after FIT
+ *      selects the room drawn there, a resize keeps the top-left.
  *   7. **THE WORLD SESSION** — a world bundle opens on the strip, the map toggle disabled and the reason on the line.
  *
  * `--shots=<dir>` writes the slice's screenshots. Brings its own server (`serveRepoRoot`) unless `--host=`.
@@ -36,6 +42,7 @@ import { fileURLToPath } from 'node:url';
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
+import { setMapCameraClaims, setMapSmallSetClaims } from './setMapCameraClaims.js';
 
 argvHelp(import.meta.url);
 
@@ -369,7 +376,7 @@ async function main() {
         const w0 = (await set()).map.frame.width;
         await mapKey('+');
         const z1 = (await set()).map;
-        check(z1.zoom > 1 && z1.frame.width > w0, '6 `+` ZOOMS IN: the canvas grows', `${w0} → ${z1.frame.width}`);
+        check(z1.zoom > 1 && z1.frame.width > w0, '6 `+` ZOOMS IN: the drawn map grows', `${w0} → ${z1.frame.width}`);
         await mapKey('-');
         check((await set()).map.frame.width === w0, '6 `-` zooms back out');
         await page.uncheck('#editSetMapView');
@@ -380,6 +387,24 @@ async function main() {
         const rl = (await set()).map;
         check(rl.rule === 'canonical' && rl.relayouts === 1 && json(rl.positions) === json(layoutOf(nowRec)),
             '6 RE-LAYOUT asks for the canonical layout of the record as it stands', json(rl.positions));
+
+        /* ── 8. THE CAMERA (lab-map-camera), on the record as it stands ──── */
+        {
+            const f = frameOf(rl.positions.map(([gx, gy]) => ({ gx, gy })), mazeMapLinksOf(nowRec).sizes, 1);
+            await setMapCameraClaims({
+                page, check, tag: '8',
+                mapOf: async () => (await set()).map,
+                homeCells: f.cells.map((c) => [c.x, c.y, c.w, c.h]),
+                shot: (name) => shot(`8-${name}`, '#editSetOverviewWrap'),
+            });
+            // ⛓ (lab-map-small-set-view) the demo pack's frame is smaller than its panel: the engaged view grows
+            await setMapSmallSetClaims({
+                page, check, tag: '8',
+                mapOf: async () => (await set()).map,
+                homeCells: f.cells.map((c) => [c.x, c.y, c.w, c.h]),
+                shot: (name) => shot(`8-${name}`, '#editSetOverviewWrap'),
+            });
+        }
 
         /* ── 7. THE WORLD SESSION stays on the strip, and says why ────────── */
         await page.goto(`${origin}/frontend/modules/mazeRoom/lab.html?source=set&world=${WORLD_ROUTE}&setView=map`,

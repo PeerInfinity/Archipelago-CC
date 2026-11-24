@@ -1020,6 +1020,15 @@
     <div class="line">
       <span id="editBase" class="note"></span>
     </div>
+    <!-- ⛓ SEEDLING → MAZE LINK (⚖ Robert 2026-11-14): the open room's converted maze room, in the maze lab, in a
+         new tab. Fetches NOTHING until pressed (seedlingMazeLink.js finds the room by content; the reason shows
+         when there is none). -->
+    <div class="line">
+      <button id="editMazeFind" title="looks this room up in the converted maze presets (fetches them on first press)">find this room in the MAZE LAB</button>
+      <select id="editMazeRoom" hidden title="this level has several converted maze rooms"></select>
+      <a id="editMazeOpen" target="_blank" rel="noopener" hidden>open in the maze lab ↗</a>
+      <span id="editMazeNote" class="note"></span>
+    </div>
     <div class="line">
       <label for="editLoad">LOAD</label>
       <textarea id="editLoad" rows="3" style="width:44em"
@@ -1075,6 +1084,18 @@
       <span id="editLoadFileNote" class="note"></span>
     </div>
     <!--
+      ⛓⛓ DOCUMENT LIBRARY B3 — **RECENT SETS.** The sets this page saved into the browser's document
+      library by itself (a numbered version at each save point: room CLOSE, REPORT, a download, the
+      hand-over to the app; a rolling DRAFT while editing). Nothing is read until this is pressed, and a
+      fresh page restores nothing. Open reads a version BY ITS FINGERPRINT and loads it through the same
+      door as the box above (`takeLevelSet`).
+    -->
+    <div class="line">
+      <button id="editLoadRecent" type="button">Recent sets…</button>
+      <span id="editRecentNote" class="note"></span>
+    </div>
+    <div id="editRecentList"></div>
+    <!--
       ⛓⛓⛓ EDITOR v3 C2 — **`set-room`: THE FOURTH BASE BECOMES LAUNCHABLE**
       (plan §3.2). A level-set document loaded into the box above is HELD on the
       page and its rooms are offered here; picking one resolves that room's
@@ -1124,6 +1145,10 @@
     <div class="line">
       <span id="editSetNote" class="note"></span>
     </div>
+    <div class="line">
+      <!-- ⛓ DOCUMENT LIBRARY B3: what the last library save said ("Saved: version N of …", "Draft saved", "NOT saved — …"). -->
+      <span id="editLibraryStatus" class="note"></span>
+    </div>
     <!-- ⛓⛓ Seedling editor E1 — SOLVE IN EDIT: what the SOLVE button below asks the oracle.
          The GOAL is one of this room's own (a pickup, AP item or chest; an exit back into the
          room); the INVENTORY is typed (seam item flags as JSON, {} = none). -->
@@ -1163,7 +1188,8 @@
       ⛓ SEEDLING EDITOR E3 — THE MAP. The same canvas shows either the MAP (a 2D layout DERIVED from the exits;
       nothing about it is stored) or the STRIP (one cell per room, in index order — still the adapter's own grid,
       kept because RECT/PASTE between sets addresses an index RANGE). `?setView=strip` opens on the strip.
-      Pan: scroll the panel. Zoom: + / − / 0 on the focused map, the buttons, or Ctrl+wheel.
+      Pan: drag the map. Zoom: + / − (about the view's centre) on the focused map or the buttons, Ctrl+wheel at the
+      cursor; 0 / fit shows every room; "centre on start" puts the start room in the middle (lab-map-camera).
     -->
     <div class="line">
       <label for="editSetMapView">map view</label>
@@ -1171,6 +1197,7 @@
       <button id="editSetZoomOut">−</button>
       <button id="editSetZoomIn">+</button>
       <button id="editSetZoomFit">fit</button>
+      <button id="editSetCentreStart" title="put the start room at the centre of the map">centre on start</button>
       <button id="editSetMapRelayout">RE-LAYOUT</button>
       <button id="editSetDisconnectTool">DISCONNECT on the map (d)</button>
       <span class="note">click a room to select it, double-click to open it</span>
@@ -1180,6 +1207,7 @@
       <canvas id="editSetOverview" tabindex="0" width="1" height="1"></canvas>
     </div>
     <div class="line"><span id="editSetMapNote" class="note" style="display:block;min-height:1.4em"></span></div>
+    <div class="line"><span id="editSetMapUnreachable" class="note" style="display:block"></span></div>
     <div class="line">
       <button id="editSetGesture" disabled>CONNECT — click the SOURCE room, then the TARGET</button>
       <label for="editSetExitList">the selected room's exits</label>

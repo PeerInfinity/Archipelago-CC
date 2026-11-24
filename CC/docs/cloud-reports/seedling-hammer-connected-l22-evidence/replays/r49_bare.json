@@ -1,0 +1,25 @@
+{
+ "variant": "bare",
+ "records": "captured",
+ "ok": false,
+ "kind": "refusal",
+ "ms": 13,
+ "work": 0,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "work": 0
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "work": 0
+  }
+ ],
+ "message": "levelRun: the staged inventory_slots [1,3] holds item 1 and the staged items do not hold hasFire: the game keeps such a slot (`addItemsFromSave` never removes on a false flag), and a press through it is gated on the missing flag, which this model does not carry."
+}

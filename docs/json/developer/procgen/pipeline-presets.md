@@ -74,16 +74,49 @@ A large source costs what it costs; the 30 s preset budget applies to the shippe
 |---|---|---|
 | `topdown-maze-ta-demo` | maze + text_adventure | An existing game's region graph realised as procgen regions, keeping its access rules. |
 | `topdown-zones-demo` | maze + bounce | Physics zones realising source regions, with bounce abilities granted as starting items. |
+| `tile-kinds-demo` | maze | The "Randomly placed tiles" maze biome: every source region a 16×12 maze room, the pack `furniture` named under what exists, and the per-room mix `scattered` 2 : `classic` 1, so furnished and bare rooms side by side with the all-classic world's logic. |
 
 ### Committed Seedling presets
 
 Each Seedling preset's state is a named constant in `presetDefs.js` (for example `SEEDLING_SPHERE_ROOM_STATE`). The same state is also committed as a preset under `frontend/presets/` and played in the Seedling wasm by a matching `scripts/procgen/check-seedling-*-play.mjs` gate. Seedling room hosting itself is documented in [Flash substrate](./flash.md).
+
+### Regenerating the Seedling playthrough chain
+
+The playthrough's committed artifacts are made by ten steps that each read what the step before wrote. `scripts/procgen/regen-seedling.mjs` runs them in order, with each producer's own command:
+
+| # | Step | Command | Writes |
+|---|---|---|---|
+| 1 | `rules` | `make-seedling-playthrough-rules.mjs` | `atlases/seedling-playthrough.json`, `seedling_playthrough/AP_1/AP_1_rules.json` |
+| 2 | `partition` | `make-seedling-subregion-partition.mjs` | `atlases/seedling-subregion-partition.json` |
+| 3 | `world` | the `seedling_playthrough` row of `scripts/data/worldgen-package-recipes.json`, through `scripts/lib/worldgen_recipe.py` | `worlds/seedling_playthrough/` |
+| 4 | `template` | `generate_yaml_templates('Players/Templates')` | `Players/Templates/Seedling Playthrough.yaml` (gitignored) |
+| 5 | `host-settings` | `update_host_settings.py minimal-spoilers` | `host.yaml` (gitignored) |
+| 6 | `seed1` | `Generate.py --weights_file_path "Templates/Seedling Playthrough.yaml" --multi 1 --seed 1` | `seedling_playthrough/AP_14089154938208861744/` and its `preset_files.json` row |
+| 7 | `maze` | `make-seedling-playthrough-maze.mjs` | `seedling_playthrough_maze/AP_1/AP_1_rules.json` |
+| 8 | `er` | `make-seedling-er-preset.mjs` | `seedling_er/AP_1/AP_1_rules.json` |
+| 9 | `sphere-order` | `make-seedling-sphere-order.mjs` | `atlases/seedling-sphere-order.json` |
+| 10 | `census` | `census-seedling-campaign.mjs --check-frontier` | nothing: a check |
+
+```sh
+node scripts/procgen/regen-seedling.mjs            # --check (the default): each step's own check; exit 0 only if every step is OK
+node scripts/procgen/regen-seedling.mjs --write    # run the producers into the tree, then print git status and the md5s
+node scripts/procgen/regen-seedling.mjs --list     # the steps with their commands, inputs and outputs
+node scripts/procgen/regen-seedling.mjs --from=maze          # or --only=rules,partition: part of the chain
+```
+
+`--check` prints one line per step: `OK`, `STALE: <what>`, `REFUSED: <quoted reason>` or `SKIPPED: <why>`. The `template` and `seed1` steps have no check of their own. `template` is regenerated into a temp dir and compared. `seed1` sets the committed files aside, runs `Generate.py` in place, compares the output and then restores the committed bytes. `host-settings` reads `host.yaml` against the script's own `minimal-spoilers` table. `--write` restores the final newline that `Generate.py` drops from `preset_files.json` and removes the `output/` files that this run created. The step fails if the exporter changed another game's row or wrote a `seed` other than 1.
+
+The derived-rule table (`atlases/seedling-playthrough-derived-rules.json`) is **not** a step. CI makes it (`seedling-probe.yml`, recipe in `seedlingDerivedRuleTable.js` `REGEN_RECIPE`), and `node scripts/procgen/refresh-seedling-derived-rules.mjs --dispatch --ref=<branch>` refreshes it and then runs this chain ([The Seedling Derived-Rule Table](./seedling-derived-rules.md)). The chain only reads it: when it is stale, `rules` prints `REFUSED: STALE derived-rule table: …`. A new atlas id also has to be named in the hand-kept `atlases/atlas_files.json`.
 
 ### The committed concept preset
 
 `CONCEPT_TRIAL_STATE` is committed the same way, as `frontend/presets/concept_trial/`, through the same producer (`make-seedling-spiral-room-preset.mjs --state=concept-trial`: the recipe writes no Seedling block of its own, so any state goes through it). It is played by `scripts/procgen/check-concept-trial-play.mjs` and the in-app row `concept-trial-plays`. See [Concepts](./concepts.md#the-trial-world).
 
 `META_TRIAL_STATE` is committed as `frontend/presets/meta_trial/` by the same producer (`--state=meta-trial`) and played by the in-app row `meta-trial-plays`. A preset that names a theme (`params.content`) cannot be built synchronously: build it with `prepareRunFromState`, which loads its content set first, as the panel's Generate does. See [Concepts § Selecting a content set](./concepts.md#selecting-a-content-set).
+
+### The committed tile-kinds preset
+
+`TILE_KINDS_DEMO_STATE` (content sets GEN-2) is committed as `frontend/presets/tile_kinds_demo/` by the same producer (`--state=tile-kinds-demo`). It is the one top-down state the producer builds: its row names its source, the committed Adventure seed-1 preset with the sphere log beside it (what a plain page load has loaded), so the committed world is the one the panel builds over Adventure. On it, seed 3: 9 maze rooms, 6 `scattered` (4 rugs and 4 pillars each) and 3 `classic`. `procgenPipeline/tileKindsDemoWorld.test.js` holds its bytes and its law (the logic equals the same state built all-`classic`, and each furnished room keeps its reach less the pillars, its walk length and its compiled rules), and the in-app row `playback-bot-tile-kinds-demo` (batch `playback-bot`) plays it to the end. An edit to the `furniture` pack's `structure` or `concepts` layer moves it.
 
 **Note on timings:** to time a preset, run it through `buildRunFromState` then `runPresetHeadless`, the headless test's own path. Most presets generate in well under a second.
 

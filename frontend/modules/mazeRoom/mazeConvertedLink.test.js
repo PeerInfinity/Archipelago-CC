@@ -72,8 +72,13 @@ describe('maze converted link — the resolver over the real preset', () => {
             }
         }
         // Measured on the committed preset after no-hit (266 = 116 + 150; 55 shared worlds reached via a holder).
-        expect(counts).toEqual({ self: 116, viaHolder: 150 });
-        expect(holders.size).toBe(55);
+        // ⛓ rules-lavatrap-neck: 274 = 116 + 158 — rule T splits L77 (level_77 -> r2c0 + r12c6 + r15c6) and L78 (+ r1c10, r3c1, r3c9, r4c4, r5c6, r6c9): +8 room-less
+        //   regions; holders 55 -> 56, L77's world gains its first room-less regions (r12c6, r15c6 open via r2c0),
+        //   L78's already had a holder.
+        // ⛓ rules-k-pursuit-resume: 306 = 116 + 190 — rule K + (b) (a lavarunner that outruns the player gates its leash cut at its kill-lock arm) splits L72 (+9 sub-regions), L74 (+4), L75 (+9) and re-cuts L73 (+3), L78 (+4), L80 (+3), L99 (+3): +32 room-less regions.
+        expect(counts).toEqual({ self: 116, viaHolder: 190 });
+        // ⛓ rules-k-pursuit-resume: 56 -> 59, L72, L74 and L75 are shared level worlds now (rule K splits each).
+        expect(holders.size).toBe(59);
     });
 
     it('a trap room opens BY LINK with its traps, the same level LOAD gives the sidecar', async () => {

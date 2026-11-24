@@ -2,9 +2,49 @@ import { registerTest } from '../testRegistry.js';
 import { stateManagerProxySingleton } from '../../stateManager/index.js';
 import { buildContext } from '../../tutorials/tutorialContext.js';
 import { PICKER } from '../../regionGraph/nodePicker.js';
+import { locationState, isRegionReachable } from '../../regionView/regionViewModel.js';
+import settingsManager from '../../../app/core/settingsManager.js';
+import { getLastRawJsonData } from '../../stateManager/index.js';
+import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
+import { SUB_REGION_VIEW_KEY, multiMemberGroups, isRegionGroupNode, groupNodeId } from '../../regionGraph/subRegionGroups.js';
 
 const PANEL_ID = 'regionGraphPanel';
 const MAX_WAIT_TIME = 10000;
+
+/** The Region Graph's Cytoscape instance (cytoscape keeps it on its container). */
+const graphCy = () => document.querySelector('.region-graph-panel-container div[id^="cy-"]')?._cyreg?.cy ?? null;
+/** The region nodes (not the player marker, not location nodes). */
+const regionNodes = (cy) => cy.nodes('.region').filter((n) => !n.hasClass('player') && !n.hasClass('location-node'));
+/**
+ * Does the graph show the loaded world? Its region nodes are exactly
+ * staticData's regions. Durable state, unlike the status bar, whose
+ * "Loaded N regions, M connections" the layout overwrites a moment later.
+ */
+function graphShowsWorld() {
+  const cy = graphCy();
+  const regions = stateManagerProxySingleton.getStaticData?.()?.regions;
+  if (!cy || !regions?.size) return false;
+  const ids = regionNodes(cy).map((n) => n.id());
+  return ids.length === regions.size && ids.every((id) => regions.has(id)) && cy.edges().length > 0;
+}
+/** Poll until no region node moved for one interval: no layout is running. */
+function layoutSettled(testController, cy) {
+  let last = null;
+  return testController.pollForCondition(() => {
+    const now = JSON.stringify(regionNodes(cy).map((n) => n.position()));
+    const still = now === last; last = now; return still;
+  }, 'the layout settled', MAX_WAIT_TIME, 300);
+}
+/**
+ * Reload the world loaded before a row that changed it (a `./presets/` path
+ * only). `always`: also when it is still the loaded one, for a row that
+ * changed its state (moved the player, checked a location).
+ */
+async function restoreWorld(testController, ctx, before, { always = false } = {}) {
+  if (typeof before === 'string' && before.startsWith('./presets/') && (always || ctx.rulesSource() !== before)) {
+    try { await ctx.loadRulesPath(before); } catch (e) { testController.log(`could not reload ${before}: ${e.message}`); }
+  }
+}
 
 /**
  * Basic test to verify the Region Graph panel can be activated and displays correctly
@@ -141,147 +181,71 @@ export async function testCytoscapeLibraryLoading(testController) {
  * Test that the graph loads automatically on initial page load
  */
 export async function testGraphInitialLoad(testController) {
-  let overallResult = true;
-  const testRunId = `graph-initial-load-${Date.now()}`;
-  
+  // Shows the world that is ALREADY loaded, without a rules load of its own:
+  // the panel builds from current data on first show (checkAndLoadInitialData /
+  // the snapshot catch-up), or has built already if an earlier row showed it.
   try {
-    testController.log(`[${testRunId}] Starting graph initial load test...`);
-    testController.reportCondition('Test started', true);
-    
-    // Just activate the panel without loading rules - data should already be available
+    if (!stateManagerProxySingleton.getStaticData?.()?.regions?.size) {
+      testController.reportCondition('a world is loaded before the panel is shown', false);
+      return testController.getOverallResult();
+    }
     testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
-    
     const panelElement = await testController.pollForValue(
-      () => document.querySelector('.region-graph-panel-container'),
-      'Region Graph panel',
-      5000,
-      50
-    );
-    
-    if (!panelElement) {
-      throw new Error('Region Graph panel not found');
-    }
-    
-    const statusBar = panelElement.querySelector('div[style*="position: absolute"]');
-    
-    // Wait for graph to load automatically
-    const dataLoaded = await testController.pollForCondition(
-      () => {
-        const text = statusBar?.textContent || '';
-        return text.includes('regions') && text.includes('connections');
-      },
-      'Graph automatically loaded on page load',
-      5000,
-      100
-    );
-    
-    testController.reportCondition('Graph loaded without manual rule loading', dataLoaded);
-    
-    if (dataLoaded) {
-      const statusText = statusBar?.textContent || '';
-      testController.log(`[${testRunId}] Graph loaded automatically: ${statusText}`);
-      
-      const hasRegionCount = /\d+\s+regions/.test(statusText);
-      const hasConnectionCount = /\d+\s+connections/.test(statusText);
-      
-      testController.reportCondition('Shows region count', hasRegionCount);
-      testController.reportCondition('Shows connection count', hasConnectionCount);
-      
-      // Check for canvas rendering
-      const graphContainer = panelElement.querySelector('div[id^="cy-"]');
-      const hasCanvas = graphContainer?.querySelector('canvas');
-      testController.reportCondition('Canvas rendered', !!hasCanvas);
-    }
-    
-    testController.log(`[${testRunId}] Initial load test completed`);
-    testController.completeTest();
-    
+      () => document.querySelector('.region-graph-panel-container'), 'Region Graph panel', 5000, 50);
+    if (!panelElement) throw new Error('Region Graph panel not found');
+    const shown = await testController.pollForCondition(graphShowsWorld,
+      'the graph shows every region of the loaded world', MAX_WAIT_TIME, 100);
+    testController.reportCondition('graph shows the loaded world without a rules load', shown);
+    const cy = graphCy();
+    testController.log(`${cy ? regionNodes(cy).length : 0} region node(s), ${cy?.edges().length ?? 0} edge(s); `
+      + `status "${panelElement.querySelector('div[style*="position: absolute"]')?.textContent ?? ''}"`);
+    const canvas = await testController.pollForCondition(
+      () => { const c = panelElement.querySelector('div[id^="cy-"] canvas'); return !!c && c.width > 0 && c.height > 0; },
+      'Cytoscape canvas rendered', 5000, 100);
+    testController.reportCondition('Canvas rendered', canvas);
   } catch (error) {
-    testController.log(`[${testRunId}] ERROR: ${error.message}`);
-    testController.reportCondition('Initial load test error-free', false);
-    overallResult = false;
+    testController.reportCondition(`Initial load test error-free: ${error.message}`, false);
   }
-  
-  return overallResult;
+  return testController.getOverallResult();
 }
 
 /**
  * Test that the graph initializes with data from StateManager after loading rules
  */
 export async function testGraphDataLoading(testController) {
-  let overallResult = true;
-  const testRunId = `graph-data-loading-${Date.now()}`;
-  
+  // A rules load while the panel is up rebuilds the graph for the new world
+  // (stateManager:rulesLoaded → loadGraphData). Reloads the world loaded before.
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
   try {
-    testController.log(`[${testRunId}] Starting graph data loading test...`);
-    testController.reportCondition('Test started', true);
-    
-    await testController.loadALTTPRules();
-    testController.log(`[${testRunId}] Default rules loaded`);
-    
-    const stateManager = testController.stateManager;
-
     testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
-    
     const panelElement = await testController.pollForValue(
-      () => document.querySelector('.region-graph-panel-container'),
-      'Region Graph panel',
-      5000,
-      50
-    );
-    
-    if (!panelElement) {
-      throw new Error('Region Graph panel not found');
-    }
-    
-    const statusBar = panelElement.querySelector('div[style*="position: absolute"]');
-    
-    await testController.pollForCondition(
-      () => {
-        const text = statusBar?.textContent || '';
-        return text.includes('regions') && text.includes('connections');
-      },
-      'Graph data loaded (status shows region/connection count)',
-      MAX_WAIT_TIME,
-      100
-    );
-    
-    const statusText = statusBar?.textContent || '';
-    testController.log(`[${testRunId}] Status bar shows: ${statusText}`);
-    
-    const hasRegionCount = /\d+\s+regions/.test(statusText);
-    const hasConnectionCount = /\d+\s+connections/.test(statusText);
-    
-    testController.reportCondition('Status shows region count', hasRegionCount);
-    testController.reportCondition('Status shows connection count', hasConnectionCount);
-    
-    const graphContainer = panelElement.querySelector('div[id^="cy-"]');
-    const hasCanvasElement = await testController.pollForCondition(
-      () => {
-        const canvas = graphContainer?.querySelector('canvas');
-        return canvas && canvas.width > 0 && canvas.height > 0;
-      },
-      'Cytoscape canvas rendered',
-      5000,
-      100
-    );
-    
-    testController.reportCondition('Cytoscape canvas rendered', hasCanvasElement);
-    
-    if (hasRegionCount && hasConnectionCount && hasCanvasElement) {
-      testController.log(`[${testRunId}] Graph successfully loaded and rendered`);
-      testController.completeTest();
-    } else {
-      overallResult = false;
-    }
-    
+      () => document.querySelector('.region-graph-panel-container'), 'Region Graph panel', 5000, 50);
+    if (!panelElement) throw new Error('Region Graph panel not found');
+    const built = await testController.pollForCondition(graphShowsWorld, 'the graph shows the current world', MAX_WAIT_TIME, 100);
+    testController.reportCondition('the graph is built before the rules load', built);
+    // A node of the graph as it is now: a rebuild removes every element.
+    const oldNode = graphCy() ? regionNodes(graphCy())[0] : null;
+
+    await testController.loadALTTPRules();
+    const rebuilt = await testController.pollForCondition(
+      () => !!oldNode?.removed() && graphShowsWorld(),
+      'the graph rebuilt for the ALTTP rules', MAX_WAIT_TIME, 100);
+    testController.reportCondition('a rules load rebuilds the graph for the new world', rebuilt);
+    const cy = graphCy();
+    testController.log(`${cy ? regionNodes(cy).length : 0} region node(s), ${cy?.edges().length ?? 0} edge(s) for `
+      + `${stateManagerProxySingleton.getStaticData?.()?.regions?.size ?? 0} region(s)`);
+    const canvas = await testController.pollForCondition(
+      () => { const c = panelElement.querySelector('div[id^="cy-"] canvas'); return !!c && c.width > 0 && c.height > 0; },
+      'Cytoscape canvas rendered', 5000, 100);
+    testController.reportCondition('Cytoscape canvas rendered', canvas);
   } catch (error) {
-    testController.log(`[${testRunId}] ERROR: ${error.message}`);
-    testController.reportCondition('Graph data loading test error-free', false);
-    overallResult = false;
+    testController.reportCondition(`Graph data loading test error-free: ${error.message}`, false);
+  } finally {
+    await restoreWorld(testController, ctx, before);
+    ctx.dispose();
   }
-  
-  return overallResult;
+  return testController.getOverallResult();
 }
 
 /**
@@ -308,16 +272,13 @@ export async function testControlButtons(testController) {
       throw new Error('Region Graph panel not found');
     }
     
+    // Built, and no layout running (a running one makes Re-layout a no-op).
+    const built = await testController.pollForCondition(graphShowsWorld, 'the graph shows the current world', MAX_WAIT_TIME, 100);
+    if (!built) throw new Error('the graph did not build');
+    await layoutSettled(testController, graphCy());
     await testController.pollForCondition(
-      () => {
-        const statusBar = panelElement.querySelector('div[style*="position: absolute"]');
-        const text = statusBar?.textContent || '';
-        return text.includes('regions') && text.includes('connections');
-      },
-      'Graph loaded',
-      MAX_WAIT_TIME,
-      100
-    );
+      () => !/Running layout/.test(panelElement.querySelector('div[style*="position: absolute"]')?.textContent || ''),
+      'no layout running', MAX_WAIT_TIME, 100);
     
     const controlPanel = Array.from(panelElement.querySelectorAll('div[style*="position: absolute"]'))
       .find(p => p.querySelector('button#resetView'));
@@ -352,7 +313,7 @@ export async function testControlButtons(testController) {
     const layoutCompleted = await testController.pollForCondition(
       () => {
         const text = statusBar?.textContent || '';
-        return text.includes('Layout complete') || text.includes('regions');
+        return text.includes('Layout complete');
       },
       'Layout completed',
       MAX_WAIT_TIME,
@@ -376,78 +337,62 @@ export async function testControlButtons(testController) {
  * Test node selection and event publishing
  */
 export async function testNodeSelection(testController) {
-  let overallResult = true;
-  const testRunId = `node-selection-${Date.now()}`;
-  
+  // A real pointer tap on a region node — mousedown + mouseup at its rendered
+  // position, which Cytoscape turns into 'tap' — publishes
+  // regionView:regionClicked { panelId: 'regionGraph', regionName } and marks
+  // the node selected (CA-S5: regionGraph:nodeSelected, which this row heard
+  // before, is retired; the row checks it stays silent).
+  // The only row through the canvas → tap → handler wiring (the picker calls
+  // the handler directly). The tap also runs the panel's "On click"
+  // actions (it may move the player), so the world loaded before is reloaded.
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  let clickedEvent = null;
+  const unsubscribe = testController.eventBus.subscribe('regionView:regionClicked', (data) => {
+    if (data?.panelId === 'regionGraph') clickedEvent = data;
+  }, 'tests');
+  const retired = [];
+  const unsubscribeRetired = testController.eventBus.subscribe('regionGraph:nodeSelected', (data) => retired.push(data), 'tests');
   try {
-    testController.log(`[${testRunId}] Starting node selection test...`);
-    testController.reportCondition('Test started', true);
-    
-    let nodeSelectedEvent = null;
-    const unsubscribe = testController.eventBus.subscribe('regionGraph:nodeSelected', (data) => {
-      nodeSelectedEvent = data;
-      testController.log(`[${testRunId}] Node selected event received:`, data);
-    });
-
     testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
-    
-    const panelElement = await testController.pollForValue(
-      () => document.querySelector('.region-graph-panel-container'),
-      'Region Graph panel',
-      5000,
-      50
-    );
-    
-    if (!panelElement) {
-      throw new Error('Region Graph panel not found');
-    }
-    
-    await testController.pollForCondition(
-      () => {
-        const canvas = panelElement.querySelector('canvas');
-        return canvas && canvas.width > 0;
-      },
-      'Graph rendered',
-      MAX_WAIT_TIME,
-      100
-    );
-    
-    const canvas = panelElement.querySelector('canvas');
-    if (canvas) {
-      const rect = canvas.getBoundingClientRect();
-      const clickEvent = new MouseEvent('click', {
-        clientX: rect.left + rect.width / 2,
-        clientY: rect.top + rect.height / 2,
-        bubbles: true
-      });
-      canvas.dispatchEvent(clickEvent);
-      
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      testController.reportCondition('Node selection event published', !!nodeSelectedEvent);
-      if (nodeSelectedEvent) {
-        testController.reportCondition('Event contains nodeId', !!nodeSelectedEvent.nodeId);
-        testController.reportCondition('Event contains data', !!nodeSelectedEvent.data);
-      }
-    }
-    
-    unsubscribe();
-    
-    testController.log(`[${testRunId}] Node selection test completed`);
-    testController.completeTest();
-    
+    const built = await testController.pollForCondition(graphShowsWorld, 'the graph shows the current world', MAX_WAIT_TIME, 100);
+    if (!built) throw new Error('the graph did not build');
+    const cy = graphCy();
+    // Wait out a running layout: a node that is still moving is a moving target.
+    await layoutSettled(testController, cy);
+    // A region that is not under the player marker, sorted for a stable pick.
+    const target = regionNodes(cy).filter((n) => !n.hasClass('current') && !n.hasClass('discovery-hidden'))
+      .sort((a, b) => (a.id() < b.id() ? -1 : 1))[0] ?? regionNodes(cy)[0];
+    if (!target) throw new Error('no region node to tap');
+    cy.center(target);
+    await new Promise((r) => setTimeout(r, 100));
+    const container = cy.container();
+    const rect = container.getBoundingClientRect();
+    const rp = target.renderedPosition();
+    const at = { clientX: rect.left + rp.x, clientY: rect.top + rp.y, bubbles: true, cancelable: true, button: 0 };
+    const top = document.elementFromPoint(at.clientX, at.clientY);
+    testController.reportCondition('the node is on screen inside the graph', !!top && container.contains(top));
+    top.dispatchEvent(new MouseEvent('mousedown', { ...at, buttons: 1 }));
+    top.dispatchEvent(new MouseEvent('mouseup', { ...at, buttons: 0 }));
+    const published = await testController.pollForCondition(() => clickedEvent?.regionName === target.id(),
+      `regionView:regionClicked for ${target.id()}`, 3000, 50);
+    testController.reportCondition(`tapping "${target.id()}" publishes regionView:regionClicked { panelId: 'regionGraph', regionName } for it`, published);
+    testController.reportCondition('the tapped node is marked selected', cy.getElementById(target.id()).hasClass('selected'));
+    testController.reportCondition('no regionGraph:nodeSelected (retired in CA-S5)', retired.length === 0);
   } catch (error) {
-    testController.log(`[${testRunId}] ERROR: ${error.message}`);
-    testController.reportCondition('Node selection test error-free', false);
-    overallResult = false;
+    testController.reportCondition(`Node selection test error-free: ${error.message}`, false);
+  } finally {
+    unsubscribe?.();
+    unsubscribeRetired?.();
+    await restoreWorld(testController, ctx, before, { always: true });
+    ctx.dispose();
   }
-  
-  return overallResult;
+  return testController.getOverallResult();
 }
 
 /**
  * The "Go to" picker (nodePicker.js): choosing a region does what tapping its
- * node does (regionGraph:nodeSelected for that node), and choosing a location
+ * node does (regionView:regionClicked from the Region Graph for that node), and choosing a location
  * checks it as a location-node tap does. The section starts folded. Reloads
  * the world loaded before, since the picks move the player and check a location.
  */
@@ -455,7 +400,9 @@ export async function testRegionGraphNodePicker(testController) {
   const ctx = buildContext({ eventBus: testController.eventBus });
   const before = ctx.rulesSource();
   let selected = null;
-  const unsubscribe = testController.eventBus.subscribe('regionGraph:nodeSelected', (data) => { selected = data; }, 'tests');
+  const unsubscribe = testController.eventBus.subscribe('regionView:regionClicked', (data) => {
+    if (data?.panelId === 'regionGraph') selected = data;
+  }, 'tests');
   try {
     testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
     // The controls (and the picker in them) are built once the panel's four
@@ -492,14 +439,24 @@ export async function testRegionGraphNodePicker(testController) {
 
     const region = listOf(PICKER.region).options[0].value;
     pick(PICKER.region, region);
-    const sawRegion = await testController.pollForCondition(() => selected?.nodeId === region,
-      `regionGraph:nodeSelected for ${region}`, 3000, 50);
+    const sawRegion = await testController.pollForCondition(() => selected?.regionName === region,
+      `regionView:regionClicked for ${region}`, 3000, 50);
     testController.reportCondition(`picking region "${region}" selects its node, as a tap does`, sawRegion);
     testController.reportCondition('the status names the region', status().includes(region));
 
+    // An ACCESSIBLE unchecked location, as the graph colours it: an
+    // inaccessible one (Agahnim 1 in ALTTP at the start) is refused by the
+    // check gate, which is not what this row tests.
+    const staticData = stateManagerProxySingleton.getStaticData();
+    const accessible = new Set();
+    for (const [regionName, regionData] of staticData?.regions ?? []) {
+      for (const location of regionData?.locations ?? []) {
+        if (locationState(ctx.snapshot(), staticData, location, { regionName }) === 'accessible') accessible.add(location.name);
+      }
+    }
     const unchecked = [...listOf(PICKER.location).options].map((o) => o.value)
-      .find((name) => !(ctx.snapshot()?.checkedLocations ?? []).includes(name));
-    if (!unchecked) throw new Error('every location is checked already');
+      .find((name) => accessible.has(name));
+    if (!unchecked) throw new Error('no accessible unchecked location to pick');
     pick(PICKER.location, unchecked);
     const checked = await testController.pollForCondition(
       () => (ctx.snapshot()?.checkedLocations ?? []).includes(unchecked),
@@ -513,9 +470,498 @@ export async function testRegionGraphNodePicker(testController) {
     testController.reportCondition(`node picker test error-free: ${error.message}`, false);
   } finally {
     unsubscribe?.();
-    if (typeof before === 'string' && before.startsWith('./presets/')) {
-      try { await ctx.loadRulesPath(before); } catch (e) { testController.log(`could not reload ${before}: ${e.message}`); }
+    await restoreWorld(testController, ctx, before, { always: true });
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
+/**
+ * The location-node rebuild bug: "force-show" location nodes survive a
+ * rebuild. Picks force-show through the settings (not the radio), so the
+ * mode must be read back from settings:changed; then writes another
+ * moduleSettings.regionGraph.* key, which rebuilds the graph; the location
+ * nodes must be drawn again after each. Restores both settings (hover mode
+ * then draws none in bulk).
+ */
+export async function testRegionGraphLocationNodesSurviveRebuild(testController) {
+  const MODE = 'moduleSettings.regionGraph.locationVisibility';
+  const OTHER = 'moduleSettings.regionGraph.wheelSensitivity';
+  let mode0 = null;
+  let other0 = null;
+  try {
+    testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    const built = await testController.pollForCondition(graphShowsWorld, 'the graph shows the current world', MAX_WAIT_TIME, 100);
+    if (!built) throw new Error('the graph did not build');
+    const cy = graphCy();
+    const regions = stateManagerProxySingleton.getStaticData().regions;
+    const withLocations = [...regions.values()].filter((r) => (r?.locations ?? []).length > 0).length;
+    if (!withLocations) throw new Error('the loaded world has no locations');
+    mode0 = await settingsManager.getSetting(MODE, 'hover');
+    other0 = await settingsManager.getSetting(OTHER, 1);
+    if (mode0 === 'force-show') { await settingsManager.updateSetting(MODE, 'hover'); }
+    const drawn = () => graphCy()?.nodes('.location-node').length ?? 0;
+    const rebuiltSince = (node) => () => !!node?.removed() && graphShowsWorld();
+
+    // 1. force-show through the settings: a regionGraph.* write, so it also rebuilds.
+    let probe = regionNodes(cy)[0];
+    await settingsManager.updateSetting(MODE, 'force-show');
+    const rebuilt1 = await testController.pollForCondition(rebuiltSince(probe), 'the graph rebuilt on the mode write', MAX_WAIT_TIME, 100);
+    testController.reportCondition('a locationVisibility write rebuilds the graph', rebuilt1);
+    const radio = document.querySelector('.region-graph-panel-container input[name="locationVisibility"]:checked');
+    testController.reportCondition('the radio follows the setting', radio?.value === 'force-show');
+    const shown1 = await testController.pollForCondition(() => drawn() > 0, 'location nodes drawn after the mode write', MAX_WAIT_TIME, 100);
+    testController.reportCondition('force-show draws location nodes after its own rebuild', shown1);
+
+    // 2. another regionGraph.* write: the rebuild must not drop them.
+    probe = regionNodes(graphCy())[0];
+    await settingsManager.updateSetting(OTHER, other0 === 2 ? 3 : 2);
+    const rebuilt2 = await testController.pollForCondition(rebuiltSince(probe), 'the graph rebuilt on the second write', MAX_WAIT_TIME, 100);
+    testController.reportCondition('a moduleSettings.regionGraph.* write rebuilds the graph', rebuilt2);
+    const shown2 = await testController.pollForCondition(() => drawn() > 0, 'location nodes drawn after the rebuild', MAX_WAIT_TIME, 100);
+    testController.reportCondition('force-show location nodes are still drawn after the rebuild', shown2);
+    testController.log(`${drawn()} location node(s) drawn; ${withLocations} region(s) with locations`);
+  } catch (error) {
+    testController.reportCondition(`location nodes survive rebuild test error-free: ${error.message}`, false);
+  } finally {
+    if (other0 !== null) await settingsManager.updateSetting(OTHER, other0);
+    if (mode0 !== null) {
+      await settingsManager.updateSetting(MODE, mode0);
+      if (mode0 === 'hover') {
+        const cleared = await testController.pollForCondition(
+          () => (graphCy()?.nodes('.location-node').length ?? 0) === 0, 'hover mode drew none in bulk', MAX_WAIT_TIME, 100);
+        testController.reportCondition('back in hover mode, no location nodes stay drawn', cleared);
+      }
     }
+  }
+  return testController.getOverallResult();
+}
+
+/* ── region-graph-groups-a: subRegionView = nested (option A) ───────────── */
+
+/**
+ * ⛓ subRegionView = nested on seedling_atlas (the smallest preset with sub-regions; seedling_playthrough's counts are
+ * pinned by subRegionView.nested.test.js — loading its 307 regions cost the fast batch ~20 s). The row SETS the setting itself (session-only, `ctx.setSetting`) and
+ * RESTORES it at the end (`ctx.restoreSettings`: the override is cleared, the stored value / schema default applies), and
+ * checks the graph is back to no boxes: a leaked `nested` would change every later Region Graph row.
+ * The box count is DERIVED at run time (the same fold, `multiMemberGroups`, over the loaded rules and the live substrate
+ * registry), never a preset pin. Then a tap on a box runs nothing, and a tap on a member runs its click action (the
+ * default actions: the path extends to it), once.
+ */
+/** The row's world: seedling_atlas (11 regions, 2 levels split into sub-regions) — the smallest preset with boxes. */
+const NESTED_RULES = './presets/seedling_atlas/AP_1/AP_1_rules.json';
+export async function testRegionGraphSubRegionNested(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  let rec = null;
+  let moved = false;
+  const boxes = () => graphCy()?.nodes().filter((n) => isRegionGroupNode(n)) ?? null;
+  try {
+    if (ctx.rulesSource() !== NESTED_RULES) { await ctx.loadRulesPath(NESTED_RULES); moved = true; }
+    testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    const built = await testController.pollForCondition(graphShowsWorld, 'the graph shows seedling_atlas', MAX_WAIT_TIME, 100);
+    if (!built) throw new Error('the graph did not build');
+    const startView = await settingsManager.getSetting(SUB_REGION_VIEW_KEY);
+    testController.reportCondition(`subRegionView starts at the schema default "separate" (it is "${startView}")`, startView === 'separate');
+    testController.reportCondition(`separate draws no box (${boxes()?.length})`, boxes()?.length === 0);
+
+    const regions = stateManagerProxySingleton.getStaticData().regions;
+    const last = getLastRawJsonData();
+    const expected = multiMemberGroups(regions.keys(), { rules: last?.rawJsonData,
+      playerId: String(last?.selectedPlayerInfo?.playerId ?? '1'), registry: substrateRegistry });
+    if (expected.size === 0) throw new Error('the fold found no group of 2+ (is the Seedling substrate registered?)');
+
+    // Switch: a moduleSettings.regionGraph.* write rebuilds the graph.
+    const probe = regionNodes(graphCy())[0];
+    const t0 = performance.now();
+    await ctx.setSetting(SUB_REGION_VIEW_KEY, 'nested');
+    const nested = await testController.pollForCondition(() => !!probe?.removed() && graphShowsWorld() && boxes()?.length === expected.size,
+      `the graph rebuilt with ${expected.size} boxes`, MAX_WAIT_TIME, 50);
+    const switchMs = Math.round(performance.now() - t0);
+    testController.reportCondition(`nested draws one box per display group of 2+: ${boxes()?.length} = ${expected.size} (switch ${switchMs} ms)`, nested);
+    const cy = graphCy();
+    const inside = regionNodes(cy).filter((n) => n.isChild()).length;
+    const membersExpected = [...expected.values()].reduce((a, m) => a + m.length, 0);
+    testController.reportCondition(`every member is inside its box: ${inside} = ${membersExpected}`, inside === membersExpected
+      && [...expected].every(([key, members]) => members.every((m) => cy.getElementById(m).parent().id() === groupNodeId(key))));
+    testController.log(`[subRegionView] seedling_atlas nested: boxes=${boxes().length} inside=${inside} groupsOfOne=${regionNodes(cy).length - inside} switchMs=${switchMs}`);
+
+    // Clicks: the default actions (session-only).
+    const { defaultClickActions } = await import('../../regionView/clickActions.js');
+    await ctx.setSetting(CLICK_ACTIONS, defaultClickActions());
+    await testController.pollForCondition(() => stripSummary().startsWith('On click:'), 'the strip shows the click actions', 5000, 50);
+    rec = recordEvents(testController, ['regionView:regionClicked']);
+    const box = boxes()[0];
+    box.emit('tap');
+    await new Promise((r) => setTimeout(r, 300));
+    testController.reportCondition(`a tap on box "${box.data('groupKey')}" runs no click (${rec.seen.length} regionClicked)`, rec.seen.length === 0);
+
+    const member = await nearestReachableMember(testController, cy);
+    if (!member) throw new Error(`no reachable member region within reach of the path end (${await pathEnd()})`);
+    const region = member.id();
+    member.emit('tap');
+    const extended = await testController.pollForCondition(async () => (await pathEnd()) === region,
+      `the path ends at ${region}`, 5000, 50);
+    testController.reportCondition(`a tap on member "${region}" (in box "${member.parent().data('groupKey')}") runs its click action: the path extends to it`, extended);
+    testController.reportCondition(`… and the click is published once, for the member (${rec.seen.map(([, d]) => d?.regionName).join(', ')})`,
+      rec.seen.length === 1 && rec.seen[0][1]?.regionName === region);
+    moved = true;
+  } catch (error) {
+    testController.reportCondition(`subRegionView nested test error-free: ${error.message}`, false);
+  } finally {
+    rec?.stop();
+    await ctx.restoreSettings();
+    const restored = await settingsManager.getSetting(SUB_REGION_VIEW_KEY);
+    const back = await testController.pollForCondition(() => graphShowsWorld() && boxes()?.length === 0,
+      'the graph rebuilt with no box', MAX_WAIT_TIME, 50);
+    testController.reportCondition(`restored: subRegionView reads "${restored}" again and the graph draws no box`, restored === 'separate' && back);
+    await restoreWorld(testController, ctx, before, { always: moved });
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
+/**
+ * The nearest REACHABLE region inside a box (a compound child), not the path end, walking out from the path end along
+ * the graph's ACCESSIBLE edges (a two-way edge both ways, a one-way edge forward), sorted per ring for a stable pick.
+ * Reachability is read from the snapshot. Polled: the first snapshot can arrive after the build.
+ */
+async function nearestReachableMember(testController, cy) {
+  let found = null;
+  await testController.pollForCondition(async () => {
+    const end = await pathEnd();
+    const snapshot = stateManagerProxySingleton.getLatestStateSnapshot?.();
+    if (!cy.getElementById(end)?.length || !snapshot) return false;
+    const seen = new Set([end]);
+    let ring = [end];
+    while (ring.length && !found) {
+      const next = new Set();
+      for (const id of ring) {
+        cy.getElementById(id).connectedEdges('.accessible').forEach((e) => {
+          const s = e.source().id(); const t = e.target().id();
+          const to = s === id ? t : (e.data('isBidirectional') ? s : null);
+          if (to && !seen.has(to) && isRegionReachable(snapshot, to)) { seen.add(to); next.add(to); }
+        });
+      }
+      ring = [...next].sort();
+      found = ring.map((id) => cy.getElementById(id)).find((n) => n.isChild() && !n.hasClass('discovery-hidden')) ?? null;
+    }
+    return !!found;
+  }, 'a reachable member region near the path end', MAX_WAIT_TIME, 100);
+  return found;
+}
+
+/* ── CA-S2: the "On click" strip and the click actions ─────────────────── */
+
+const CLICK_ACTIONS = 'moduleSettings.regionGraph.clickActions';
+const STRIP_SUMMARY = '.region-graph-panel-container .click-actions-strip-summary';
+const stripSummary = () => document.querySelector(STRIP_SUMMARY)?.textContent ?? '';
+
+/**
+ * The Graph's collapsed summary of the default actions. ⛓ CA-S4: Discovery's `discovery.discover` starts ON for the
+ * Region Graph (it reproduces the old `regionGraph:nodeSelected` listener; still gated by the discovery bundle), and it
+ * runs first (`ORDER.select`), so the summary leads with "discover" whenever the Discovery module is loaded.
+ */
+async function defaultGraphSummary(rest = 'extend path · Regions — location: check') {
+  const { getClickAction } = await import('../../regionView/clickActions.js');
+  return `On click: ${getClickAction('discovery.discover') ? 'discover · ' : ''}${rest}`;
+}
+
+/**
+ * Open the graph, set this row's click actions (session-only, `ctx.setSetting`; `ctx.restoreSettings` puts them back)
+ * and wait until the strip shows them (the panel holds what a click reads). → the Cytoscape instance.
+ * `alttp`: load ALTTP first (a known world with somewhere to walk from the start; the caller reloads the world
+ * loaded before) — the world a solo run boots into may have no reachable exit from its start.
+ */
+async function clickActionsSetUp(testController, ctx, clickActions, expectSummary, { alttp = false } = {}) {
+  testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+  let built = await testController.pollForCondition(graphShowsWorld, 'the graph shows the current world', MAX_WAIT_TIME, 100);
+  if (!built) throw new Error('the graph did not build');
+  if (alttp) {
+    const oldNode = regionNodes(graphCy())[0];
+    await testController.loadALTTPRules();
+    built = await testController.pollForCondition(() => !!oldNode?.removed() && graphShowsWorld(),
+      'the graph rebuilt for ALTTP', MAX_WAIT_TIME, 100);
+    if (!built) throw new Error('the graph did not rebuild for ALTTP');
+  }
+  await ctx.setSetting(CLICK_ACTIONS, clickActions);
+  const shown = await testController.pollForCondition(() => stripSummary() === expectSummary,
+    `the strip shows "${expectSummary}"`, 5000, 50);
+  testController.reportCondition(`the "On click" strip reads "${expectSummary}" (now "${stripSummary()}")`, shown);
+  return graphCy();
+}
+
+/** The region the path (or, with no path, the player) ends at. */
+async function pathEnd() {
+  const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+  const gs = getGameStateSingleton();
+  return gs.getLastRegionInPath?.() || gs.getCurrentRegion?.();
+}
+
+/**
+ * A REACHABLE region one exit away from where the path ends, sorted for a stable pick. (An accessible region is not
+ * necessarily walkable from there — ALTTP's Menu is reachable, but has no walk back from Overworld — so the pick
+ * follows an exit out of the path end.) Reachability is read from the snapshot, not from the graph's colour
+ * classes, which a cold build applies a moment later. Polled: the first snapshot can arrive after the build.
+ */
+async function accessibleTarget(testController, cy) {
+  let found = null;
+  await testController.pollForCondition(async () => {
+    const end = await pathEnd();
+    const from = cy.getElementById(end);
+    const snapshot = stateManagerProxySingleton.getLatestStateSnapshot?.();
+    if (!from?.length || !snapshot) return false;
+    found = from.connectedEdges().filter((e) => e.source().id() === end).targets()
+      .filter((n) => n.id() !== end && !n.hasClass('player') && !n.hasClass('location-node')
+        && !n.hasClass('discovery-hidden') && isRegionReachable(snapshot, n.id()))
+      .sort((a, b) => (a.id() < b.id() ? -1 : 1))[0] ?? null;
+    return !!found;
+  }, 'a reachable region one exit from the path end', MAX_WAIT_TIME, 100);
+  return found;
+}
+
+/** Record the given events (and their payloads) until `stop()`. */
+function recordEvents(testController, names) {
+  const seen = [];
+  const offs = names.map((name) => testController.eventBus.subscribe(name, (data) => seen.push([name, data]), 'tests'));
+  return { seen, stop: () => offs.forEach((off) => off?.()) };
+}
+
+/**
+ * The DEFAULT click (CA-S2): a tap on an accessible region extends the path to it (route from the path end, all the
+ * way) and opens the Regions panel at it (`regions.open`, registered by the Regions module). Sets its own state.
+ */
+export async function testRegionGraphClickDefault(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  let rec = null;
+  try {
+    const { defaultClickActions } = await import('../../regionView/clickActions.js');
+    const cy = await clickActionsSetUp(testController, ctx, defaultClickActions(), await defaultGraphSummary(), { alttp: true });
+    const target = await accessibleTarget(testController, cy);
+    if (!target) throw new Error(`no reachable region one exit from the path end (${await pathEnd()})`);
+    const region = target.id();
+    // Recorded from here: the row's own panel activation (the setup) is not the click's.
+    rec = recordEvents(testController, ['regionGraph:nodeSelected', 'regionView:regionClicked', 'ui:activatePanel', 'ui:navigateToRegion']);
+    target.emit('tap');
+    const extended = await testController.pollForCondition(async () => (await pathEnd()) === region,
+      `the path ends at ${region}`, 5000, 50);
+    testController.reportCondition(`a click on "${region}" extends the path to it (it ends at ${await pathEnd()})`, extended);
+    const opened = await testController.pollForCondition(
+      () => rec.seen.some(([n, d]) => n === 'ui:navigateToRegion' && d?.regionName === region), 'ui:navigateToRegion', 3000, 50);
+    testController.reportCondition('… and opens the Regions panel at it (ui:activatePanel regionsPanel, then ui:navigateToRegion)',
+      opened && rec.seen.some(([n, d]) => n === 'ui:activatePanel' && d?.panelId === 'regionsPanel'));
+    const order = rec.seen.map(([n]) => n);
+    testController.reportCondition(`regionView:regionClicked { panelId: 'regionGraph', regionName } is published first (${order.join(', ')})`,
+      order[0] === 'regionView:regionClicked' && rec.seen[0][1]?.panelId === 'regionGraph' && rec.seen[0][1]?.regionName === region);
+    testController.reportCondition('no regionGraph:nodeSelected (retired in CA-S5)', !order.includes('regionGraph:nodeSelected'));
+  } catch (error) {
+    testController.reportCondition(`default click test error-free: ${error.message}`, false);
+  } finally {
+    rec?.stop();
+    await ctx.restoreSettings();
+    await restoreWorld(testController, ctx, before, { always: true });
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
+/**
+ * The ⏸ MASTER SWITCH off (CA-S2): a tap moves nobody, edits no path, opens no Regions panel — but
+ * `regionView:regionClicked` is still published (it reports the click, not what the click ran). Until CA-S5 retired it,
+ * this row waited on `regionGraph:nodeSelected`; it now checks that stays silent. Sets its own state.
+ */
+export async function testRegionGraphClickMasterOff(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  let rec = null;
+  let changed = true; // until the row has seen the path unchanged
+  try {
+    const { defaultClickActions } = await import('../../regionView/clickActions.js');
+    const cy = await clickActionsSetUp(testController, ctx, { ...defaultClickActions(), enabled: false }, 'On click: ⏸ paused');
+    const master = document.querySelector('.region-graph-panel-container .click-actions-strip-master');
+    testController.reportCondition('the collapsed strip shows the master switch, paused (▶)', master?.textContent === '▶');
+    // Any reachable region but the path end: with the master switch on, `regions.open` would publish for it whether
+    // or not a walk exists, so its silence is the switch's. (No world load: this row changes nothing when it passes.)
+    const endBefore = await pathEnd();
+    const snapshot = stateManagerProxySingleton.getLatestStateSnapshot?.();
+    const target = regionNodes(cy).filter((n) => n.id() !== endBefore && !n.hasClass('discovery-hidden')
+      && isRegionReachable(snapshot, n.id())).sort((a, b) => (a.id() < b.id() ? -1 : 1))[0] ?? null;
+    if (!target) throw new Error(`no reachable region but the path end (${endBefore})`);
+    const region = target.id();
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+    const pathBefore = JSON.stringify(getGameStateSingleton().getPath?.() ?? []);
+    // Recorded from here: the row's own panel activation (the setup) is not the click's.
+    rec = recordEvents(testController, ['regionGraph:nodeSelected', 'regionView:regionClicked', 'ui:activatePanel', 'ui:navigateToRegion']);
+    target.emit('tap');
+    const selected = await testController.pollForCondition(
+      () => rec.seen.some(([n, d]) => n === 'regionView:regionClicked' && d?.panelId === 'regionGraph' && d?.regionName === region),
+      'regionView:regionClicked', 3000, 50);
+    testController.reportCondition(`master off: regionView:regionClicked is still published for "${region}"`, selected);
+    testController.reportCondition('master off: no regionGraph:nodeSelected (retired in CA-S5)',
+      !rec.seen.some(([n]) => n === 'regionGraph:nodeSelected'));
+    await new Promise((r) => setTimeout(r, 750)); // what a click would do, it would have done by now
+    changed = !((await pathEnd()) === endBefore && JSON.stringify(getGameStateSingleton().getPath?.() ?? []) === pathBefore);
+    testController.reportCondition(`master off: no move, no path edit (the path still ends at ${await pathEnd()})`, !changed);
+    testController.reportCondition('master off: no Regions-panel change (no ui:activatePanel / ui:navigateToRegion)',
+      !rec.seen.some(([n]) => n === 'ui:activatePanel' || n === 'ui:navigateToRegion'));
+  } catch (error) {
+    testController.reportCondition(`master-off click test error-free: ${error.message}`, false);
+  } finally {
+    rec?.stop();
+    await ctx.restoreSettings();
+    await restoreWorld(testController, ctx, before, { always: changed });
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
+/**
+ * A LOCATION click with the location action "Check it now" (CA-S2): the location is checked. Through the "Go to"
+ * picker's location box, which calls the location handler as a location-node tap does. Sets its own state.
+ */
+export async function testRegionGraphClickLocationCheck(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  try {
+    const { defaultClickActions } = await import('../../regionView/clickActions.js');
+    const settings = defaultClickActions();
+    settings.location['path.check'] = 'now';
+    await clickActionsSetUp(testController, ctx, settings, await defaultGraphSummary());
+    const section = document.querySelector(`.region-graph-panel-container ${PICKER.section}`);
+    if (!section) throw new Error('no picker section in the Region Graph controls');
+    const staticData = stateManagerProxySingleton.getStaticData();
+    let target = null;
+    for (const [regionName, regionData] of staticData?.regions ?? []) {
+      for (const location of regionData?.locations ?? []) {
+        if (!target && locationState(ctx.snapshot(), staticData, location, { regionName }) === 'accessible') target = location.name;
+      }
+    }
+    if (!target) throw new Error('no accessible unchecked location');
+    const input = section.querySelector(PICKER.location);
+    input.value = target;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    const checked = await testController.pollForCondition(
+      () => (ctx.snapshot()?.checkedLocations ?? []).includes(target), `${target} checked`, 5000, 100);
+    testController.reportCondition(`a click on location "${target}" (check it now) checks it`, checked);
+  } catch (error) {
+    testController.reportCondition(`location check click test error-free: ${error.message}`, false);
+  } finally {
+    await ctx.restoreSettings();
+    await restoreWorld(testController, ctx, before, { always: true });
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
+/* ── CA-S4: the panel-owned actions ────────────────────────────────────── */
+
+/**
+ * `discovery.discover` on the Region Graph (CA-S4): with discovery mode on and a click allowed to discover
+ * (`clickDiscoversRegion`), a tap on an undiscovered region discovers it; with loop mode's bundle
+ * (`clickDiscoversRegion: false`) a tap discovers nothing. The Graph runs ONLY that action here (route, Regions and the
+ * location check off). Sets its own state (session-only settings); reloads the world loaded before.
+ */
+export async function testRegionGraphClickDiscover(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  try {
+    const discoveryState = (await import('../../discovery/singleton.js')).default;
+    const { LOOP_MODE_OVERRIDES } = await import('../../discovery/worldDiscoveryMode.js');
+    const only = { enabled: true, region: { 'path.route': false, 'path.checkAll': false, 'regions.open': false,
+      'discovery.discover': true }, location: { 'path.check': false } };
+    const cy = await clickActionsSetUp(testController, ctx, only, 'On click: discover');
+    const setBundle = async (bundle) => {
+      for (const [k, v] of Object.entries(bundle)) await ctx.setSetting(`moduleSettings.discovery.${k}`, v);
+      await new Promise((r) => setTimeout(r, 300)); // Discovery reloads its bundle on settings:changed
+    };
+    await setBundle({ enableDiscoveryMode: true, regionDiscoveryTrigger: 'onEnter', clickDiscoversRegion: true,
+      disableLocationCheckUI: false });
+    const undiscovered = () => regionNodes(cy).filter((n) => !discoveryState.isRegionDiscovered(n.id()))
+      .sort((a, b) => (a.id() < b.id() ? -1 : 1));
+    const first = undiscovered()[0];
+    if (!first) throw new Error('no undiscovered region in discovery mode');
+    first.emit('tap');
+    const discovered = await testController.pollForCondition(() => discoveryState.isRegionDiscovered(first.id()),
+      `${first.id()} discovered`, 3000, 50);
+    testController.reportCondition(`discovery.discover: a tap on undiscovered "${first.id()}" discovers it`, discovered);
+    await setBundle(LOOP_MODE_OVERRIDES);
+    const second = undiscovered()[0];
+    if (!second) throw new Error('no second undiscovered region');
+    second.emit('tap');
+    await new Promise((r) => setTimeout(r, 750));
+    testController.reportCondition(`loop mode's bundle (clickDiscoversRegion: false): a tap on "${second.id()}" discovers nothing`,
+      !discoveryState.isRegionDiscovered(second.id()));
+  } catch (error) {
+    testController.reportCondition(`discover click test error-free: ${error.message}`, false);
+  } finally {
+    await ctx.restoreSettings();
+    await restoreWorld(testController, ctx, before, { always: true });
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
+/**
+ * THE REGIONS PANEL'S LOCATION CLICK FOLLOWS THE GRAPH'S STRIP (CA-S4): it reads the Region Graph's resolved
+ * `clickActions.location['path.check']` (it read the old `addLocationsToPath` key, kept in step by CA-S2's mirror,
+ * now retired). With "add the check to the path", a click on an accessible location in the Regions panel queues it
+ * in the path and checks nothing; with "check it now", the same click checks it. Sets its own state; reloads the world.
+ */
+export async function testRegionsLocationClickFollowsGraphStrip(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  let showAllBox = null;
+  let showAllWas = null;
+  try {
+    const { defaultClickActions } = await import('../../regionView/clickActions.js');
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+    const withCheck = (choice) => { const s = defaultClickActions(); s.location['path.check'] = choice; return s; };
+    await ctx.setSetting(CLICK_ACTIONS, withCheck('addToPath'));
+    const staticData = stateManagerProxySingleton.getStaticData();
+    let target = null;
+    for (const [regionName, regionData] of staticData?.regions ?? []) {
+      for (const location of regionData?.locations ?? []) {
+        if (!target && locationState(ctx.snapshot(), staticData, location, { regionName }) === 'accessible') {
+          target = { name: location.name, region: regionName };
+        }
+      }
+    }
+    if (!target) throw new Error('no accessible unchecked location');
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'tests');
+    // Show every region (the target need not be on the visited path); put the box back after
+    showAllBox = document.querySelector('#show-all-regions');
+    showAllWas = showAllBox?.checked ?? null;
+    if (showAllBox && !showAllBox.checked) showAllBox.click();
+    const wrapper = () => document.querySelector(`li.location-item[data-location-name="${CSS.escape(target.name)}"] .location-wrapper`);
+    const block = () => document.querySelector(`.region-block[data-region="${CSS.escape(target.region)}"]`);
+    await testController.pollForCondition(() => !!block(), `the Regions panel shows the region ${target.region}`, 5000, 100);
+    // A collapsed block renders no locations: expand it with its own header (as a user would)
+    if (!wrapper()) block()?.querySelector('.region-header')?.click();
+    const shown = await testController.pollForCondition(() => !!wrapper(), `the Regions panel shows ${target.name}`, 5000, 100);
+    if (!shown) {
+      const items = [...document.querySelectorAll('li.location-item')];
+      testController.log(`Regions panel: ${items.length} location items; ${target.name}'s: ${items.filter((li) => li.dataset.locationName === target.name).map((li) => li.outerHTML.slice(0, 300)).join(' | ') || 'none'}; region blocks ${[...document.querySelectorAll('.region-block')].map((b) => `${b.dataset.region}:${b.className}`).join(',')} (target ${target.region}); world ${ctx.rulesSource()}; the panel ${document.querySelector('.regions-panel-container, #regions-panel') ? 'mounted' : 'NOT found'}`);
+      throw new Error(`the Regions panel shows no clickable ${target.name}`);
+    }
+    const queued = () => (getGameStateSingleton().getPath?.() ?? []).some((e) => e.type === 'locationCheck' && e.locationName === target.name);
+    wrapper().click();
+    const inPath = await testController.pollForCondition(queued, `${target.name} queued in the path`, 5000, 50);
+    testController.reportCondition(`the Graph's strip says "add the check to the path": a Regions-panel click queues "${target.name}"`,
+      inPath && !(ctx.snapshot()?.checkedLocations ?? []).includes(target.name));
+    await ctx.setSetting(CLICK_ACTIONS, withCheck('now'));
+    const again = await testController.pollForCondition(() => !!wrapper(), `${target.name} still clickable`, 5000, 100);
+    if (!again) throw new Error(`${target.name} is no longer clickable`);
+    wrapper().click();
+    const checked = await testController.pollForCondition(
+      () => (ctx.snapshot()?.checkedLocations ?? []).includes(target.name), `${target.name} checked`, 5000, 100);
+    testController.reportCondition(`the Graph's strip says "check it now": the same click checks "${target.name}"`, checked);
+  } catch (error) {
+    testController.reportCondition(`Regions-panel location click test error-free: ${error.message}`, false);
+  } finally {
+    if (showAllBox && showAllWas !== null && showAllBox.checked !== showAllWas) showAllBox.click();
+    await ctx.restoreSettings();
+    await restoreWorld(testController, ctx, before, { always: true });
     ctx.dispose();
   }
   return testController.getOverallResult();
@@ -545,8 +991,8 @@ registerTest({
   name: 'Graph Initial Load',
   category: 'Region Graph',
   testFunction: testGraphInitialLoad,
-  //enabled: true, // Disabled - the functionality works but test timing is complex due to panel reuse
-  description: 'Tests that the graph loads automatically on initial page load without manual rule loading'
+  //enabled: true,
+  description: 'The graph shows every region of the already-loaded world on show, without a rules load of its own'
 });
 
 registerTest({
@@ -555,7 +1001,7 @@ registerTest({
   category: 'Region Graph',
   testFunction: testGraphDataLoading,
   //enabled: true,
-  description: 'Tests that the graph loads region and connection data from StateManager'
+  description: 'A rules load while the panel is up rebuilds the graph for the new world; reloads the world loaded before'
 });
 
 registerTest({
@@ -573,7 +1019,7 @@ registerTest({
   category: 'Region Graph',
   testFunction: testNodeSelection,
   //enabled: true,
-  description: 'Tests node selection and event publishing functionality'
+  description: 'A pointer tap (mousedown + mouseup) on a region node publishes regionView:regionClicked { panelId: \'regionGraph\', regionName } and marks it selected; no regionGraph:nodeSelected (retired)'
 });
 
 registerTest({
@@ -583,4 +1029,67 @@ registerTest({
   testFunction: testRegionGraphNodePicker,
   enabled: false, // runs where a roster enrols it (the substrates config)
   description: 'The folded "Go to" section: picking a region selects its node as a tap does; picking a location checks it; an unknown name says so'
+});
+
+registerTest({
+  id: 'test_region_graph_location_nodes_survive_rebuild',
+  name: 'Region Graph: force-show location nodes survive a rebuild',
+  category: 'Region Graph',
+  testFunction: testRegionGraphLocationNodesSurviveRebuild,
+  enabled: false, // runs where a roster enrols it (the substrates config)
+  description: 'force-show written through the settings draws the location nodes, and a later moduleSettings.regionGraph.* write (which rebuilds the graph) leaves them drawn'
+});
+
+registerTest({
+  id: 'test_region_graph_sub_region_nested',
+  name: 'Region Graph: sub-regions nested in region boxes (subRegionView = nested)',
+  category: 'Region Graph',
+  testFunction: testRegionGraphSubRegionNested,
+  enabled: false, // runs where a roster enrols it (the substrates config)
+  description: 'region-graph-groups-a: on seedling_atlas (2 boxes), subRegionView = nested (session-only) draws one box per display group of 2+ with its members inside; a box tap runs nothing, a member tap runs its click action; the setting is restored and the boxes go'
+});
+
+registerTest({
+  id: 'test_region_graph_click_default',
+  name: 'Region Graph: the default click extends the path and opens the Regions panel',
+  category: 'Region Graph',
+  testFunction: testRegionGraphClickDefault,
+  enabled: false, // runs where a roster enrols it (the substrates config)
+  description: 'CA-S2: with the default click actions, a tap on an accessible region extends the path to it and opens the Regions panel at it; regionView:regionClicked comes first'
+});
+
+registerTest({
+  id: 'test_region_graph_click_master_off',
+  name: 'Region Graph: the ⏸ master switch off — no action, the click event still published',
+  category: 'Region Graph',
+  testFunction: testRegionGraphClickMasterOff,
+  enabled: false, // runs where a roster enrols it (the substrates config)
+  description: 'CA-S2: with clickActions.enabled false, a tap moves nobody, edits no path and opens no Regions panel, but still publishes regionView:regionClicked'
+});
+
+registerTest({
+  id: 'test_region_graph_click_location_check',
+  name: 'Region Graph: a location click checks it now',
+  category: 'Region Graph',
+  testFunction: testRegionGraphClickLocationCheck,
+  enabled: false, // runs where a roster enrols it (the substrates config)
+  description: 'CA-S2: with the location action "check it now", a location click (through the Go to picker) checks it'
+});
+
+registerTest({
+  id: 'test_region_graph_click_discover',
+  name: 'Region Graph: a click discovers (discovery.discover), not under loop mode',
+  category: 'Region Graph',
+  testFunction: testRegionGraphClickDiscover,
+  enabled: false,
+  description: 'CA-S4: with discovery on and clickDiscoversRegion, a tap discovers an undiscovered region (the registered discovery.discover); with loop mode\'s bundle it discovers nothing',
+});
+
+registerTest({
+  id: 'test_regions_location_click_follows_graph_strip',
+  name: 'Regions panel: a location click follows the Region Graph\'s strip',
+  category: 'Region Graph',
+  testFunction: testRegionsLocationClickFollowsGraphStrip,
+  enabled: false,
+  description: 'CA-S4: the Regions panel reads the Graph\'s clickActions location choice: "add to path" queues the check, "check it now" checks it',
 });

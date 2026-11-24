@@ -1,0 +1,13 @@
+legs 924
+L12 chaser+texted dialogue (puncher, Witch/introchar): 90 legs [97, 98, 99, 100, 101]...
+L15 pushable+chest seal: 4 legs [200, 201, 836, 837]
+L25 pushable+chest seal: 7 legs [264, 265, 266, 267, 268, 269, 270]
+L28 chaser+rope rock (bobsoldier): 8 legs [282, 283, 284, 285, 286, 287, 288, 289]
+L38 pushable+chest seal: 8 legs [348, 349, 350, 351, 352, 353, 354, 355]
+L39 pushable+rope rock+text-less totempart: 3 legs [356, 357, 358]
+L40 pushable+text-less pickups: 50 legs [359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 856, 857, 858, 859, 860, 861, 862, 863, 864, 865, 866, 867]
+L41 pushable+text-less totempart: 2 legs [397, 868]
+L63 pushable+chest seal: 29 legs [538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 907]
+L67 pushable+bosskey: 2 legs [577, 908]
+L74 chaser+button rock (bulb, lavarunners): 6 legs [611, 612, 613, 614, 615, 616]
+total legs in reached rooms 209

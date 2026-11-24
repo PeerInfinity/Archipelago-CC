@@ -171,32 +171,40 @@ describe('jsRuntimeSolver — a LIVE mid-room state is solved, played on the pag
 });
 
 describe('jsRuntimeSolver — refusal, refutation, instant, and OFF', () => {
-    it('a refusal falls back to the J2 walker WITH the solver\'s reason in the status (never silently)', () => {
-        // From this state the solver declines (the danger map forbids its corridor).
+    it('⛓ FALLBACK HONESTY (R1) — a refusal that names a PRICED DANGER FAILS the goal by the solver\'s whole reason, and never walks (L6 W=71)', () => {
+        // From this state the solver declines (the danger map forbids its corridor), with `obstacle.kind: 'danger'`.
         // ⛓ W=71, not §1.6's W=60: swim R4's i-frame preview fix made W=60 SOLVE;
         // the R4 sweep (W 0–240) leaves W=71 as the danger-map decline.
+        // Before R1 this decline was "walking instead" — into the bob the solver priced. Every other decline still
+        // walks with its reason in the status (jsRuntimeGeneratedSolver's named decline, jsRuntimeSolveService's rows).
         const { rt } = midRoom({ region: 'level_6', fromId: 'in_L5_48_112', toId: 'out_stairsup_224_32', walkTicks: 71 });
         rt.playback.setSolverWalk(true);
-        // ⛓ S2 — read the status AT the decline: the retry policy asks again after
-        // a death (the decline-retry rows), and from W=71 the walker meets a bob
-        // within a few ticks, so a later read would see the retry's solve.
+        // The W=71 lead-in was the J2 walker's own (solver off): the counts after it are the baseline.
+        const before = { ...rt.playback.stats };
         for (let t = 0; t < 20 && rt.playback.solverStats.declines === 0; t += 1) rt.tick();
-        expect(rt.playback.state).toBe(WALK_STATES.WALKING);
-        expect(rt.playback.reason).toMatch(/^the solver declined — solverBot\(.*\) reach-exit \(224,32\)->L7: .*; walking instead$/);
+        const s = rt.playback.solverStats;
+        expect(rt.playback.state).toBe(WALK_STATES.FAILED);
+        expect(s).toMatchObject({ solves: 0, declines: 1, played: 0 });
+        expect(s.lastDeclineObstacle?.kind).toBe('danger');
+        expect(rt.playback.reason).toBe(`the solver declined — ${s.lastDecline}`);
+        expect(rt.playback.reason).toMatch(/^the solver declined — solverBot\(.*\) reach-exit \(224,32\)->L7: /);
         expect(rt.playback.describe()).toContain('the solver declined');
-        expect(rt.playback.solverStats).toMatchObject({ solves: 0, declines: 1, played: 0 });
-        expect(rt.playback.stats.declined).toBe(rt.playback.solverStats.lastDecline);
-        // The walker is walking: its own planner ran after the decline.
-        expect(rt.playback.stats.plans).toBeGreaterThan(0);
+        // The walker never walked: no plan of its own, and no walk-instead decline held for a retry.
+        expect(rt.playback.stats).toMatchObject({ plans: before.plans, walked: before.walked, declined: null, retries: 0 });
+        for (let t = 0; t < 10; t += 1) rt.tick();
+        expect(rt.playback.state).toBe(WALK_STATES.FAILED);
+        expect(rt.playback.stats).toMatchObject({ plans: before.plans, walked: before.walked });
         expect(rt.events.filter((e) => e.type === 'solver').map((e) => e.solver)).toEqual(['declined']);
     });
 
-    it('a forced mismatch (an item re-boot mid-plan) refutes the plan and RE-SOLVES from the live state to the crossing', () => {
+    it('a forced mismatch (a re-boot in place mid-plan) refutes the plan and RE-SOLVES from the live state to the crossing', () => {
+        // ⛓ seedling-js-item-live-delivery — restated from "an item re-boot mid-plan": an item is written into the live
+        // run now and re-boots nothing, so the re-boot is the one in place left, the RE2 restore.
         const { rt } = midRoom({ region: 'level_6', fromId: 'in_L5_48_112', toId: 'out_stairsup_224_32', walkTicks: 150 });
         rt.playback.setSolverWalk(true);
         const firstRun = rt.run;
         const { crossings } = settle(rt, {
-            each: (t) => { if (t === 40) rt.queueItems([{ class: 'Main', property: 'hasFeather', value: true }]); },
+            each: (t) => { if (t === 40) expect(rt.restoreSave(rt.exportSave())).toEqual({ ok: true }); },
         });
         expect(rt.run).not.toBe(firstRun);
         const s = rt.playback.solverStats;
@@ -250,8 +258,9 @@ describe('jsRuntimeSolver — refusal, refutation, instant, and OFF', () => {
         const { rt } = midRoom({ region: 'level_4', fromId: 'in_L3_128_48', toId: 'out_stairsdown_64_16', walkTicks: 40, kit: true });
         rt.playback.setSolverWalk(true);
         let flip = false;
-        // Re-boot the room every 5 ticks: every plan is refuted.
-        settle(rt, { each: (t) => { if (t % 5 === 4) { flip = !flip; rt.queueItems([{ class: 'Main', property: 'hasTorch', value: flip }]); } } });
+        // Re-boot the room every 5 ticks: every plan is refuted. ⛓ seedling-js-item-live-delivery — restated from an
+        // item flag toggled every 5 ticks (an item re-boots nothing now): the RE2 restore, the one reboot in place left.
+        settle(rt, { each: (t) => { if (t % 5 === 4) { flip = !flip; expect(rt.restoreSave(rt.exportSave())).toEqual({ ok: true }); } } });
         expect(rt.playback.state).toBe(WALK_STATES.FAILED);
         expect(rt.playback.reason).toMatch(new RegExp(`refuted ${MAX_REFUTATIONS} time\\(s\\) — last: the run was re-booted`));
         expect(rt.playback.solverStats.refutations).toBe(MAX_REFUTATIONS);

@@ -24,19 +24,72 @@ import {
   createSphereLogDownloadUrl,
   generateSphereLogFilename,
 } from '../utils/debugSphereLogger.js';
+import { APCALC_GAME } from '../../apcalc/apcalcRulesBuilder.js';
 import { sharedClientState } from './sharedState.js';
 import { getLastRawJsonData, stateManagerProxySingleton } from '../../stateManager/index.js';
 import {
   checkLocalWorld,
   isGeneratedWorldDoc,
+  omittedRulesMessage,
   overlayServerData,
   readWorldgenRules,
+  UPSTREAM_RULES_ADDON_NAME,
+  UPSTREAM_RULES_ADDON_SOURCE,
   WORLDGEN_RULES_KEY,
   WORLDGEN_RULES_OMITTED_KEY,
 } from './localRulesOverlay.js';
 import { applyReceivedItems, goalMet } from './goalCheck.js';
 import { readRoomSpoilerData } from './spoilerData.js';
-import { needsLogicGate, logicRefusal, refusalMessage } from './checkGate.js';
+import { applyServerItemGroups, itemNameGroupsKey, readServerItemGroups } from './serverItemGroups.js';
+import { needsLogicGate, logicRefusal, refusalMessage, GAME_REPORTED_FIELD } from './checkGate.js';
+import { deriveUpstreamGoal, markGoalEvent, completesWithGoal, reportsOwnGoal } from './upstreamGoal.js';
+import {
+  OFFLINE_CHOICE,
+  OFFLINE_ORIGINATOR,
+  captureRecord,
+  classifyRecord,
+  goalInPending,
+  matchesRoom,
+  mergeRecord,
+  offerMessage,
+  pickPass,
+  recordKey,
+} from './offlineProgress.js';
+
+/** "gameKey/folder, …" for a few preset candidates (the console names them). */
+function describePresetFolders(presets, max = 3) {
+  const names = [...new Set(presets.map((p) => `${p.gameKey}/${p.folderName}`))];
+  return names.length > max ? `${names.slice(0, max).join(', ')}, …` : names.join(', ');
+}
+
+/**
+ * The console line when a logged-in slot has no rules (_awaitLocalRules). A
+ * game with presets only at other seeds needs this room's own preset file;
+ * the APCalc Generator is named only for APCalc, the one game it makes.
+ * `addonCould`: the slot's world sent no rules document and no note (it is
+ * not a world_generator package), so the host's Upstream Rules Addon could
+ * have sent one; the line says so (never for APCalc, which the add-on skips).
+ */
+export function rulesNeededMessage(game, seedName, presetsAtOtherSeeds = null, { addonCould = false } = {}) {
+  const tail = "; the client is logged in, sends no checks until then, and applies the server's data when they load.";
+  const addon =
+    addonCould && game !== APCALC_GAME ? ` (a host can send them by installing the ${UPSTREAM_RULES_ADDON_NAME})` : '';
+  if (presetsAtOtherSeeds?.length > 0) {
+    return (
+      `This ${game} room needs its own preset file (seed ${seedName ?? 'unknown'}), and the server did not send ` +
+      `its rules${addon}. The ${game} presets here are for other seeds. Load this room's rules.json (the Files panel)` +
+      tail
+    );
+  }
+  const where = game === APCALC_GAME ? 'APCalc Generator → Load in Frontend, or the Files panel' : 'the Files panel';
+  return `No rules for ${game} are loaded, and the server did not send them${addon}. Load its rules.json (${where})${tail}`;
+}
+
+/** How long one check of an offline-progress pass may take before the pass goes on without it. */
+export const OFFLINE_STEP_TIMEOUT_MS = 10_000;
+
+/** client:locationCheckRefused reason while a slot's rules are pending (not a checkGate REFUSAL). */
+export const RULES_PENDING = 'rules_pending';
 
 // Module name constant - avoids circular import with ../index.js
 const MODULE_NAME = 'client';
@@ -45,6 +98,9 @@ const MODULE_NAME = 'client';
 const PRESET_LOAD_TIMEOUT_MS = 60_000;
 // How long a build from server data waits for the scouts' LocationInfo.
 const SCOUT_TIMEOUT_MS = 30_000;
+// How long a build waits for the server's item groups (a `Get` answer) before
+// it goes on with the rules' own (see _requestServerItemGroups).
+export const GROUPS_TIMEOUT_MS = 10_000;
 // Packets that change runtime state. While rules are being built from server
 // data they are held, then applied against the built rules.
 const HELD_DURING_BUILD = new Set(['ReceivedItems', 'RoomUpdate']);
@@ -119,6 +175,11 @@ export class MessageHandler {
     // A build of rules from server data in progress (see _beginServerBuild):
     // { game, connected, held, timer }. Null when none.
     this._serverBuild = null;
+    // Checks a GAME made (reportedByGame, or system:) while this slot's rules
+    // were pending: { eventData, eventName, seedName }. Replayed through the
+    // normal path once a Connected is applied (_replayHeldGameChecks); a game
+    // pickup can't be made again, so they are never silently dropped.
+    this._heldGameChecks = [];
 
     // Use the imported stateManagerProxySingleton directly
     this.stateManager = stateManagerProxySingleton;
@@ -135,6 +196,34 @@ export class MessageHandler {
     this._slotReleased = false;
     // What the server has delivered on this connection: item name -> count.
     this._serverItems = new Map();
+    // Counts connections (each _handleConnected), so a goal check is tied to the one it happened on.
+    this._connectionSeq = 0;
+    // The add-on goal (upstreamGoal.js): { goal, doc, slot, seedName } when the add-on's
+    // rules loaded with a derivable goal. It is honoured only while THAT document is the
+    // loaded one, for that room seed and slot (_upstreamGoalFor): a same-seed reconnect
+    // keeps the loaded rules, and so keeps it; any other load replaces the document.
+    this._upstreamGoal = null;
+    // Offline progress (offlineProgress.js; sdc-offline-progress-op1). Records captured at RoomInfo, by
+    // document identity (recordKey), for this page session only; names the GAME reported while offline
+    // (kept exempt from the gate when pushed); the open offer; names pushed on this connection; the
+    // ids the server has checked on it; the passes, one at a time; and the sources of the client's
+    // own rules loads (any other load is the player's, and discards the records).
+    this._offlineRecords = new Map();
+    this._offlineGameReported = new Set();
+    this._offlineOffer = null;
+    this._offlineInFlight = new Set();
+    this._roomCheckedIds = new Set();
+    this._offlinePassChain = Promise.resolve();
+    this._offlinePassWaiting = false;
+    // A step of a pass that has not finished after this long is left behind (tried again next pass): measured
+    // live (MW-P3, ~1 play in 3), a gate's worker ping occasionally never settled, and one such call held the
+    // whole push. Above the ping's own 5 s timeout. The cause (two id counters sharing the proxy's pendingQueries)
+    // is fixed in stateManagerProxy.js; the bound stays as a guard: a step also awaits more than the ping.
+    this._offlineStepTimeoutMs = OFFLINE_STEP_TIMEOUT_MS;
+    this._clientRulesSources = new Set();
+    // `${seed}|${slot}` of every slot whose goal this page session reported: an ID-less goal the server never
+    // echoes stays checked locally, and must not be offered again at the next connect.
+    this._goalReportedRooms = new Set();
   }
 
   // Add method to inject eventBus
@@ -183,6 +272,8 @@ export class MessageHandler {
     });
     this.eventBus.subscribe('connection:close', (data) => {
       if (data?.requested) this._invalidGameRetried = false;
+      // The player ended the session: the held game checks have no room to go to.
+      if (data?.requested) this._dropHeldGameChecks('the player disconnected first');
       // The session is over: stop reporting a slot, or isHandshakeComplete()
       // keeps claiming the client is logged in after a disconnect.
       this.clientSlot = null;
@@ -195,6 +286,7 @@ export class MessageHandler {
     this.eventBus.subscribe('connection:message', (commands) => {
       commands.forEach((command) => this.processMessage(command));
     });
+    this.eventBus.subscribe('stateManager:rulesLoaded', (event) => this._onRulesLoadedForOfflineProgress(event));
   }
 
   processMessage(command) {
@@ -245,6 +337,11 @@ export class MessageHandler {
 
       case 'LocationInfo':
         this._handleLocationInfo(command);
+        break;
+
+      case 'Retrieved':
+        this._handleRetrieved(command);
+        this.eventBus?.publish(`game:raw:${command.cmd}`, command);
         break;
 
       default:
@@ -341,7 +438,10 @@ export class MessageHandler {
       this.clientSlotName = this.getDefaultSlotName();
     }
 
+    // Before the connect flow touches the rules: its reload and the Connected reset both lose offline checks.
+    this._captureOfflineProgress();
     this.roomInfo = data;
+    this._dropHeldGameChecks('the server is another room now', (held) => !isSameSeed(held.seedName, data.seed_name));
     this._cancelServerBuild();
     this._cancelRulesWait();
     const roomInfoSeq = ++this._roomInfoSeq;
@@ -392,8 +492,7 @@ export class MessageHandler {
       if (!otherPlayersName) {
         log('info', `[MessageHandler] Using game name from stateManager: ${loadedGame}`);
         this._warnOnSeedMismatch(data.seed_name);
-        this._sendConnect(loadedGame, { fromLoadedRules: true });
-        return;
+        return this._connectWithLoadedRules(loadedGame, data.seed_name, roomInfoSeq);
       }
       this._printToConsole(
         `The loaded rules are for ${otherPlayersName}, not ${this.clientSlotName}; looking for this slot's rules…`,
@@ -406,6 +505,40 @@ export class MessageHandler {
       );
     }
     return this._connectWithoutRules(data, roomGames, roomInfoSeq);
+  }
+
+  /**
+   * Connect with the rules already loaded. When they are this room's exact seed and their
+   * goal is one this client reports (_preparePresetGoal; ⚖ Robert 2026-11-19: any document
+   * with the exact seed), a marked copy is loaded first: the loaded document is unmarked,
+   * and its goal may already be auto-collected. Nothing is lost by the reload: Connected
+   * replaces the checked locations and the inventory anyway. A document that already is the
+   * goal record's (a same-seed reconnect) is kept as it is.
+   */
+  async _connectWithLoadedRules(game, roomSeedName, roomInfoSeq) {
+    const raw = getLastRawJsonData?.();
+    const doc = raw?.rawJsonData;
+    const player = raw?.selectedPlayerInfo?.playerId;
+    if (doc && player !== undefined && player !== null && this._upstreamGoal?.doc !== doc
+      && isSameSeed(doc.seed_name, roomSeedName) && doc.world?.[String(player)]?.game === game) {
+      this._upstreamGoal = null;
+      const copy = structuredClone(doc);
+      const goal = this._preparePresetGoal(copy, player, game, roomSeedName);
+      if (goal) {
+        const source = raw.source ?? `rules:${roomSeedName}:P${player}`;
+        const loaded = await this._loadRulesDocument(copy, player, source, raw.selectedPlayerInfo ?? undefined);
+        if (roomInfoSeq !== this._roomInfoSeq) return;
+        if (loaded) {
+          this._upstreamGoal = { goal, doc: copy, slot: String(player), seedName: String(roomSeedName) };
+        } else {
+          this._printToConsole(
+            `Could not reload the ${game} rules with their goal marked; this client won't tell the server when ${game} is finished.`,
+            'warning'
+          );
+        }
+      }
+    }
+    this._sendConnect(game, { fromLoadedRules: true });
   }
 
   /**
@@ -447,7 +580,7 @@ export class MessageHandler {
         `Found preset ${preset.gameKey}/${preset.folderName} for this room; loading it before connecting…`,
         'info'
       );
-      const loaded = await this._loadPresetRules(preset);
+      const loaded = await this._loadPresetRules(preset, { roomSeedName: roomInfo.seed_name });
       if (isStale()) return;
       if (loaded) {
         this._printToConsole(`Loaded ${preset.path} (player ${preset.playerId}).`, 'success');
@@ -481,16 +614,22 @@ export class MessageHandler {
           this._connectWithOverlay(game, local);
           return;
         }
-      } else if (candidates) {
-        // No rules for this game anywhere. A world_generator world sends its
-        // own (slot_data.worldgen_rules), and only Connected shows whether it
-        // did, so connect now; if the server sends none, the packets wait
-        // there until the player loads the rules (⚖ b1, Robert 2026-11-06).
-        this._connectWithOverlay(game, null);
-        return;
       }
-      log('info', `[MessageHandler] No usable rules; connecting as ${game}.`);
-      this._sendConnect(game);
+      // No rules for this game that fit the room: none anywhere, or only
+      // presets made at other seeds (a hand-written world's preset is only its
+      // own seed's room). The rules already loaded are never kept for the
+      // slot: they are another game's, or another player's. A world that
+      // sends its own rules (slot_data.worldgen_rules) is played with them;
+      // otherwise the packets wait, logged in, until the player loads this
+      // room's rules (⚖ b1, Robert 2026-11-06; sdc-no-preset-refusal, Robert
+      // 2026-11-15: "Yes, fix it").
+      // "Other seeds" only when none is this room's (several matching this
+      // seed were named by _findPresetForRoom: the player picks one).
+      const thisSeedFolder = roomInfo.seed_name ? `AP_${roomInfo.seed_name}` : null;
+      const otherSeeds =
+        candidates?.length > 0 && candidates.every((c) => c.folderName !== thisSeedFolder) ? candidates : null;
+      this._warnLoadedRulesNotUsed(game, roomInfo.seed_name);
+      this._connectWithOverlay(game, null, { presetsAtOtherSeeds: otherSeeds });
       return;
     }
 
@@ -620,16 +759,46 @@ export class MessageHandler {
    * are scouted, and the server's placements and slot_data are laid over the
    * local document before the ONE load (_completeServerBuild).
    */
-  _connectWithOverlay(game, local, { fromLoadedRules = false } = {}) {
-    this._serverBuild = { game, mode: 'overlay', local, connected: null, held: [], timer: null };
-    this._printToConsole(
-      local
-        ? `Using the local ${game} rules (${local.source}) unless the server sends its own; ` +
-            "the server's placements and slot data are applied after login…"
-        : `No ${game} rules are loaded; connecting to see whether the server sends them…`,
-      'info'
-    );
+  _connectWithOverlay(game, local, { fromLoadedRules = false, presetsAtOtherSeeds = null } = {}) {
+    this._serverBuild = {
+      game, mode: 'overlay', local, presetsAtOtherSeeds, connected: null, held: [], timer: null,
+    };
+    if (local) {
+      this._printToConsole(
+        `Using the local ${game} rules (${local.source}) unless the server sends its own; ` +
+          "the server's placements and slot data are applied after login…",
+        'info'
+      );
+    } else if (presetsAtOtherSeeds) {
+      const seed = this.roomInfo?.seed_name ?? 'unknown';
+      this._printToConsole(
+        `This ${game} room (seed ${seed}) has no preset here: the ${game} presets on hand are for other seeds ` +
+          `(${describePresetFolders(presetsAtOtherSeeds)}), and their placements are not this room's. ` +
+          'Connecting to see whether the server sends its rules…',
+        'warning'
+      );
+    } else {
+      this._printToConsole(`No ${game} rules are loaded; connecting to see whether the server sends them…`, 'info');
+    }
     this._sendConnect(game, { fromLoadedRules });
+  }
+
+  /**
+   * The loaded rules are `game`'s but did not fit this slot (another
+   * player's), and no preset fits either: say that they are not used, and
+   * name their seed when it is another (⚖ "seed_name mismatch → warning").
+   */
+  _warnLoadedRulesNotUsed(game, roomSeedName) {
+    if (this.getClientGameName() !== game) return;
+    const loadedSeed = stateManagerProxySingleton?.getStaticData?.()?.seed_name;
+    const seedPart =
+      loadedSeed && roomSeedName && String(loadedSeed) !== String(roomSeedName)
+        ? ` are for seed ${loadedSeed}, not this room's seed ${roomSeedName}, and`
+        : '';
+    const message =
+      `Warning: the loaded ${game} rules${seedPart} are not this slot's, so they are not used for it.`;
+    log('warn', `[MessageHandler] ${message}`);
+    this._printToConsole(message, 'warning');
   }
 
   /**
@@ -643,10 +812,10 @@ export class MessageHandler {
   _awaitLocalRules(build) {
     this._cancelRulesWait();
     const { game } = build;
+    const slotData = build.connected?.slot_data || {};
+    const addonCould = slotData[WORLDGEN_RULES_KEY] === undefined && !slotData[WORLDGEN_RULES_OMITTED_KEY];
     this._printToConsole(
-      `No rules for ${game} are loaded, and the server did not send them. Load its rules.json ` +
-        '(for example APCalc Generator → Load into frontend, or the Files panel); the client is logged in ' +
-        'and applies the server\'s data when they load.',
+      rulesNeededMessage(game, this.roomInfo?.seed_name, build.presetsAtOtherSeeds, { addonCould }),
       'warning'
     );
     this.eventBus?.publish('client:rulesNeeded', { game });
@@ -663,7 +832,9 @@ export class MessageHandler {
         build.local = local;
         this._completeServerBuild();
       } else {
-        // A document of the game that is not a generated world's: used as loaded.
+        // A document of the game that is not a generated world's: used as
+        // loaded, the player's choice (⚖ "seed_name mismatch → warning, but allow it").
+        this._warnOnSeedMismatch(this.roomInfo?.seed_name);
         this._completeServerBuild(null, { useLoaded: true });
       }
     });
@@ -686,7 +857,7 @@ export class MessageHandler {
    *
    * @returns {Promise<boolean>} true when stateManager:rulesLoaded arrived
    */
-  async _loadPresetRules(preset) {
+  async _loadPresetRules(preset, { roomSeedName = null } = {}) {
     let jsonData;
     try {
       const response = await fetch(preset.path);
@@ -696,7 +867,25 @@ export class MessageHandler {
       log('warn', `[MessageHandler] Could not fetch ${preset.path}: ${e.message}`);
       return false;
     }
-    return this._loadRulesDocument(jsonData, preset.playerId, preset.path);
+    this._upstreamGoal = null;
+    const goal = roomSeedName ? this._preparePresetGoal(jsonData, preset.playerId, preset.game, roomSeedName) : null;
+    const loaded = await this._loadRulesDocument(jsonData, preset.playerId, preset.path);
+    if (loaded && goal) {
+      this._upstreamGoal = { goal, doc: jsonData, slot: String(preset.playerId), seedName: String(roomSeedName) };
+    }
+    return loaded;
+  }
+
+  /**
+   * A committed preset matched to the room by its exact seed (sdc-preset-goal-report): the
+   * same goal as an add-on slot's (_prepareUpstreamGoal), derived and marked in `doc` (this
+   * fetch's own object) before it loads. Not for a world that reports its own goal
+   * (reportsOwnGoal), nor for a document of another seed. Returns the goal or null.
+   */
+  _preparePresetGoal(doc, player, game, roomSeedName) {
+    if (!isSameSeed(doc?.seed_name, roomSeedName)) return null;
+    if (reportsOwnGoal(doc, player)) return null;
+    return this._deriveAndMarkGoal(doc, player, game ?? doc?.world?.[String(player)]?.game ?? 'this game');
   }
 
   /**
@@ -707,10 +896,13 @@ export class MessageHandler {
   _loadRulesDocument(jsonData, playerId, sourceName, playerInfo = undefined) {
     if (!this.eventBus) return Promise.resolve(false);
     const preset = { playerId, path: sourceName };
+    // The client's own load: not the player loading other rules (_onRulesLoadedForOfflineProgress).
+    this._clientRulesSources.add(sourceName);
     return new Promise((resolve) => {
       let unsubscribe = null;
       const timer = setTimeout(() => {
         unsubscribe?.();
+        this._clientRulesSources.delete(sourceName);
         resolve(false);
       }, PRESET_LOAD_TIMEOUT_MS);
       unsubscribe = this.eventBus.subscribe('stateManager:rulesLoaded', (event) => {
@@ -776,6 +968,9 @@ export class MessageHandler {
     this._slotReleased = false;
     this._invalidGameRetried = false;
     this._serverItems.clear();
+    this._connectionSeq += 1;
+    this._offlineInFlight = new Set();
+    this._roomCheckedIds = new Set(data.checked_locations || []);
 
     // Get stateManager
     const stateManager = await this._getStateManager();
@@ -895,6 +1090,273 @@ export class MessageHandler {
     } else if (this.scoutedLocations.size > 0) {
       this.eventBus?.publish('game:locationsScouted', { locations: this.getScoutedLocations() });
     }
+    await this._replayHeldGameChecks();
+    await this._offerOfflineProgress();
+  }
+
+  /**
+   * The game checks held while this slot's rules were pending, sent now
+   * through the normal path (handleUserLocationCheckForClient: the server's
+   * id, or the local ID-less check). Runs after every applied Connected; a
+   * check is held again if rules are somehow pending once more.
+   */
+  async _replayHeldGameChecks() {
+    if (this._heldGameChecks.length === 0 || this._serverBuild) return;
+    const held = this._heldGameChecks;
+    this._heldGameChecks = [];
+    this._printToConsole(
+      `Sending ${held.length} check(s) the game made while this room's rules were loading: ` +
+        `${held.map((h) => `"${h.eventData.locationName}"`).join(', ')}.`,
+      'info'
+    );
+    for (const { eventData, eventName } of held) {
+      await handleUserLocationCheckForClient(eventData, eventName);
+    }
+  }
+
+  /** Drop held game checks (those `which` selects), saying so: they were made but are never sent. */
+  _dropHeldGameChecks(why, which = () => true) {
+    const dropped = this._heldGameChecks.filter(which);
+    if (dropped.length === 0) return;
+    this._heldGameChecks = this._heldGameChecks.filter((h) => !which(h));
+    const message =
+      `Not sent: ${dropped.length} check(s) the game made while this room's rules were pending ` +
+      `(${dropped.map((h) => `"${h.eventData.locationName}"`).join(', ')}); ${why}.`;
+    log('warn', `[MessageHandler] ${message}`);
+    this._printToConsole(message, 'warning');
+  }
+
+  // ---- Offline progress (offlineProgress.js; sdc-offline-progress-op1, ⚖ Robert 2026-11-21) ----
+
+  /**
+   * At RoomInfo, before the connect flow reloads anything: the loaded document's checked
+   * ID-bearing locations (and its goal) become a record, merged into a kept one of the same
+   * identity. The state manager still holds the offline state here; after Connected it holds
+   * only the server's, so a record is never taken anywhere else.
+   */
+  _captureOfflineProgress() {
+    const raw = getLastRawJsonData?.();
+    const checked = stateManagerProxySingleton?.getLatestStateSnapshot?.()?.checkedLocations;
+    const fresh = captureRecord(raw?.rawJsonData, raw?.selectedPlayerInfo?.playerId, checked, this._offlineGameReported);
+    this._offlineGameReported = new Set();
+    if (!fresh) return;
+    const key = recordKey(fresh);
+    this._offlineRecords.set(key, mergeRecord(this._offlineRecords.get(key), fresh));
+  }
+
+  /** The record of this connection's room and slot, if any (exact identity: matchesRoom). */
+  _offlineRecordForConnection() {
+    if (this.clientSlot === null || this.clientSlot === undefined) return null;
+    const room = { seedName: this.roomInfo?.seed_name ?? null, slot: this.clientSlot, slotInfo: this.slotInfo };
+    for (const record of this._offlineRecords.values()) if (matchesRoom(record, room)) return record;
+    return null;
+  }
+
+  /** This connection's record when the player chose Send (its passes run on item deliveries). */
+  _activeOfflineRecord() {
+    const record = this._offlineRecordForConnection();
+    return record?.decision === OFFLINE_CHOICE.SEND ? record : null;
+  }
+
+  /** Sorts a record against this connection, and drops what will never be sent (already on the server, unknown here). */
+  _classifyOfflineRecord(record) {
+    const goalReportable =
+      record.goalLocation !== null &&
+      this._upstreamGoalFor(record.goalLocation) !== null &&
+      !this._goalReportedRooms.has(`${record.seedName}|${record.slot}`);
+    const out = classifyRecord(record, {
+      roomIds: this.serverLocationNameToId ?? new Map(),
+      checkedIds: this._roomCheckedIds,
+      goalReportable,
+    });
+    if (out.unknown.length > 0) {
+      const message =
+        `Not sent: ${out.unknown.length} offline check(s) this room has no location for ` +
+        `(${out.unknown.map((n) => `"${n}"`).join(', ')}).`;
+      log('warn', `[MessageHandler] ${message}`);
+      this._printToConsole(message, 'warning');
+    }
+    const keep = new Set(out.pending.map((e) => e.name));
+    record.names = record.names.filter((n) => keep.has(n));
+    if (record.names.length === 0) this._offlineRecords.delete(recordKey(record));
+    return out;
+  }
+
+  /**
+   * After every applied Connected (a build's too): the record of this exact room and slot is
+   * offered (Send / Not now / Discard), or, when the player already chose Send earlier in this
+   * session (a reconnect mid-push), its passes go on without asking again.
+   */
+  async _offerOfflineProgress() {
+    this._closeOfflineOffer(null);
+    if (this._serverBuild) return;
+    const record = this._offlineRecordForConnection();
+    if (!record) return;
+    const { pending } = this._classifyOfflineRecord(record);
+    if (pending.length === 0) return;
+    if (record.decision === OFFLINE_CHOICE.SEND) {
+      this._printToConsole(`Sending the rest of your offline checks (${pending.length}).`, 'info');
+      await this._queueOfflinePass();
+      return;
+    }
+    const doc = getLastRawJsonData?.()?.rawJsonData;
+    const goal = goalInPending(doc, this.clientSlot, pending, this._serverItems);
+    const slotName = this.slotInfo?.[String(this.clientSlot)]?.name ?? this.clientSlotName;
+    const message = offerMessage(record, pending.length, goal, slotName);
+    const key = recordKey(record);
+    this._offlineOffer = { key, count: pending.length, goal, message };
+    this._printToConsole(`${message} Choose Send, Not now or Discard above the console.`, 'info');
+    this.eventBus?.publish('client:offlineProgressOffer', { key, count: pending.length, goal, message });
+  }
+
+  /** @returns {object|null} The open offer: { key, count, goal, message }. */
+  getOfflineProgressOffer() {
+    return this._offlineOffer;
+  }
+
+  _closeOfflineOffer(choice) {
+    if (!this._offlineOffer) return;
+    this._offlineOffer = null;
+    this.eventBus?.publish('client:offlineProgressOfferClosed', { choice });
+  }
+
+  /**
+   * The player's answer to the offer. Send: push now, and keep pushing on item deliveries
+   * (and on later connects in this session). Not now: keep it, offer it at the next connect.
+   * Discard: delete it.
+   *
+   * @param {'send'|'later'|'discard'} choice
+   * @returns {Promise<boolean>} whether there was an offer to answer
+   */
+  async respondToOfflineProgress(choice) {
+    const offer = this._offlineOffer;
+    if (!offer || !Object.values(OFFLINE_CHOICE).includes(choice)) return false;
+    this._closeOfflineOffer(choice);
+    const record = this._offlineRecords.get(offer.key);
+    if (!record) return false;
+    if (choice === OFFLINE_CHOICE.DISCARD) {
+      this._offlineRecords.delete(offer.key);
+      this._printToConsole('Discarded your offline checks; nothing was sent.', 'info');
+    } else if (choice === OFFLINE_CHOICE.LATER) {
+      record.decision = OFFLINE_CHOICE.LATER;
+      this._printToConsole(
+        'Kept your offline checks; they are offered again the next time you connect to this room (until the page is reloaded).',
+        'info'
+      );
+    } else {
+      record.decision = OFFLINE_CHOICE.SEND;
+      await this._queueOfflinePass();
+    }
+    return true;
+  }
+
+  /**
+   * One pass at a time, and at most one waiting: every ReceivedItems and RoomUpdate asks for a pass,
+   * and a push of 100 checks brings ~200 of them. Measured live (MW-P3): queued one each, the no-op
+   * passes and their worker round trips held the real sends back for minutes. A pass that starts
+   * later sees every item that arrived before it, so one waiting pass serves them all.
+   */
+  _queueOfflinePass() {
+    if (this._offlinePassWaiting) return this._offlinePassChain;
+    this._offlinePassWaiting = true;
+    this._offlinePassChain = this._offlinePassChain
+      .then(() => {
+        this._offlinePassWaiting = false;
+        return this._offlineProgressPass();
+      })
+      .catch((e) => {
+        this._offlinePassWaiting = false;
+        log('error', '[MessageHandler] Offline progress pass failed:', e);
+      });
+    return this._offlinePassChain;
+  }
+
+  /**
+   * One pass: every pending check that is in logic now (or that the game reported) goes
+   * through the ordinary check path, called directly as _replayHeldGameChecks does (the
+   * dispatcher would hand it to Loop mode's queue). The gate there still decides; a check
+   * that is out of logic is never sent, and stays for the next pass.
+   */
+  async _offlineProgressPass() {
+    if (!connection.isConnected() || this._serverBuild) return;
+    const record = this._activeOfflineRecord();
+    if (!record) return;
+    const { pending } = this._classifyOfflineRecord(record);
+    if (pending.length === 0) {
+      this._printToConsole('All your offline checks are on the server.', 'success');
+      return;
+    }
+    let pingTimer = null;
+    try {
+      // Bounded like a step (see _offlineStepTimeoutMs): a ping that never settles must not hold the passes.
+      await Promise.race([
+        stateManagerProxySingleton.pingWorker?.('client:offlineProgress'),
+        new Promise((resolve) => {
+          pingTimer = setTimeout(resolve, this._offlineStepTimeoutMs);
+        }),
+      ]);
+    } catch {
+      // keep the last snapshot; the gate asks again per check
+    }
+    clearTimeout(pingTimer);
+    const reachability = stateManagerProxySingleton.getLatestStateSnapshot?.()?.locationReachability ?? {};
+    const batch = pickPass(pending, { reachability, inFlight: this._offlineInFlight });
+    let sent = 0;
+    const push = async (entry) => {
+      this._offlineInFlight.add(entry.name);
+      const eventData = { locationName: entry.name, originator: OFFLINE_ORIGINATOR };
+      if (entry.reportedByGame) eventData[GAME_REPORTED_FIELD] = true;
+      let timer = null;
+      const outcome = await Promise.race([
+        handleUserLocationCheckForClient(eventData, 'user:locationCheck').then(() => 'done'),
+        new Promise((resolve) => {
+          timer = setTimeout(() => resolve('stuck'), this._offlineStepTimeoutMs);
+        }),
+      ]);
+      clearTimeout(timer);
+      if (outcome === 'stuck') {
+        log('warn', `[MessageHandler] Offline progress: the check of "${entry.name}" did not finish within ` +
+          `${this._offlineStepTimeoutMs} ms; going on, and trying it again on the next pass.`);
+      }
+      const went = entry.goal ? this._goalStatus(entry.name) === 'checked' : this._sentLocationIds.has(entry.id);
+      if (went) sent += 1;
+      else this._offlineInFlight.delete(entry.name); // refused after all: tried again next pass
+    };
+    // One at a time, the goal last (pickPass). Measured live (MW-P3, 83 in logic): sent all at once, 27 of
+    // the gate's calls never settled; one at a time with the passes coalesced, all went.
+    for (const entry of batch) {
+      if (!connection.isConnected() || this._activeOfflineRecord() !== record) break;
+      await push(entry);
+    }
+    // The goal is ID-less: the server never confirms it, so it leaves the record once it is reported.
+    if (this._goalReported && record.goalLocation !== null) {
+      record.names = record.names.filter((n) => n !== record.goalLocation);
+      if (record.names.length === 0) this._offlineRecords.delete(recordKey(record));
+    }
+    const waiting = pending.filter((e) => !this._offlineInFlight.has(e.name)).length;
+    if (sent > 0) {
+      this._printToConsole(
+        `Sent ${sent} offline check(s).` +
+          (waiting > 0
+            ? ` Still out of logic: ${waiting}; kept, and sent once the items you receive put them in logic (until the page is reloaded).`
+            : ''),
+        'info'
+      );
+    }
+  }
+
+  /** A rules load the client did not start is the player's: the records describe state they no longer see. */
+  _onRulesLoadedForOfflineProgress(event) {
+    const source = event?.source;
+    if (source !== undefined && this._clientRulesSources.has(source)) {
+      this._clientRulesSources.delete(source);
+      return;
+    }
+    this._offlineGameReported = new Set();
+    if (this._offlineRecords.size === 0) return;
+    this._offlineRecords.clear();
+    this._closeOfflineOffer(OFFLINE_CHOICE.DISCARD);
+    this._printToConsole('Discarded your offline checks: other rules were loaded.', 'info');
   }
 
   /**
@@ -939,12 +1401,16 @@ export class MessageHandler {
     this.slotInfo = data.slot_info || {};
     this.missingLocationIds = data.missing_locations || [];
     this.checkedLocationIds = data.checked_locations || [];
-    this._printToConsole(
-      build.mode === 'overlay'
-        ? `Logged in; applying the server's placements to the ${build.game} rules…`
-        : `Logged in; building ${build.game} rules from the server's data…`,
-      'info'
-    );
+    let message;
+    if (build.mode !== 'overlay') {
+      message = `Logged in; building ${build.game} rules from the server's data…`;
+    } else if (build.local || data.slot_data?.[WORLDGEN_RULES_KEY] !== undefined) {
+      message = `Logged in; applying the server's placements to the ${build.game} rules…`;
+    } else {
+      message = `Logged in; the server sent no ${build.game} rules, and none for this room are loaded.`;
+    }
+    this._printToConsole(message, 'info');
+    this._requestServerItemGroups(build, data);
     if (this.missingLocationIds.length + this.checkedLocationIds.length === 0) {
       // Nothing to scout: no LocationInfo will come.
       this.scoutedLocations = new Map();
@@ -967,9 +1433,15 @@ export class MessageHandler {
   async _completeServerBuild(failure = null, { useLoaded = false } = {}) {
     const build = this._serverBuild;
     if (!build?.connected || build.completing) return;
+    if (!failure && !useLoaded && build.groups?.pending) {
+      // The scouts are in; the build goes on when the groups answer (or time out).
+      build.groups.readyBesidesGroups = true;
+      return;
+    }
     build.completing = true;
     clearTimeout(build.timer);
     build.timer = null;
+    clearTimeout(build.groups?.timer);
     const data = build.connected;
     let error = failure;
     if (!error && !useLoaded) {
@@ -981,14 +1453,25 @@ export class MessageHandler {
           this._awaitLocalRules(build);
           return;
         }
+        this._applyServerItemGroups(build, data, rules);
+        this._upstreamGoal = null;
+        const addonGoal = this._prepareUpstreamGoal(build, data, rules);
         const playerName = this.slotInfo?.[String(data.slot)]?.name ?? this.clientSlotName;
         const sourceName = `server:${this.roomInfo?.seed_name ?? 'seedless'}:P${data.slot}`;
         const loaded = await this._loadRulesDocument(rules, data.slot, sourceName, { playerName });
         if (this._serverBuild !== build) return; // a reconnect superseded this build
         if (!loaded) throw new Error(`the rules did not load within ${PRESET_LOAD_TIMEOUT_MS / 1000} s`);
+        if (addonGoal) {
+          this._upstreamGoal = {
+            goal: addonGoal, doc: rules, slot: String(data.slot), seedName: this.roomInfo?.seed_name ?? null,
+          };
+        }
         if (build.mode === 'overlay') {
           this._printToConsole(
             `Loaded ${build.overlaySource === 'server' ? 'the server-sent' : 'the local'} ${build.game} rules ` +
+              (build.overlaySource === 'server' && build.overlayFrom === UPSTREAM_RULES_ADDON_SOURCE
+                ? `(from the host's ${UPSTREAM_RULES_ADDON_NAME}) `
+                : '') +
               "with the server's placements " +
               `(${this.getScoutedLocations().length} locations, room seed ${this.roomInfo?.seed_name ?? 'unknown'}).`,
             'success'
@@ -1079,7 +1562,7 @@ export class MessageHandler {
       } else {
         const check = checkLocalWorld(server.doc, server.player, room);
         if (check.ok) {
-          chosen = { doc: server.doc, player: server.player, source: 'server' };
+          chosen = { doc: server.doc, player: server.player, source: 'server', from: server.source };
         } else {
           // The ID check is a safety net: a package's own document matches by construction.
           this._printToConsole(
@@ -1089,12 +1572,7 @@ export class MessageHandler {
         }
       }
     } else if (slotData[WORLDGEN_RULES_OMITTED_KEY]) {
-      const { size_kb: size, cap_kb: cap } = slotData[WORLDGEN_RULES_OMITTED_KEY];
-      this._printToConsole(
-        `The server did not send this world's rules (${size} KB, over the slot's rules_in_slot_data_max_kb of ` +
-          `${cap} KB).`,
-        'info'
-      );
+      this._printToConsole(omittedRulesMessage(slotData[WORLDGEN_RULES_OMITTED_KEY]), 'info');
     }
     if (!chosen && build.local) {
       const { doc, player } = build.local;
@@ -1104,6 +1582,7 @@ export class MessageHandler {
     }
     if (!chosen) return null;
     build.overlaySource = chosen.source;
+    build.overlayFrom = chosen.from ?? null;
     if (chosen.source === 'server' && build.local) {
       log('info', `[MessageHandler] Using the server-sent ${build.game} rules over ${build.local.source}`);
     }
@@ -1120,9 +1599,82 @@ export class MessageHandler {
     });
   }
 
+  /**
+   * Ask the server for the slot's game's item groups (data storage
+   * `_read_item_name_groups_<game>`), to arrive with the scouts before the one
+   * loadRules. The build does not wait past GROUPS_TIMEOUT_MS: an old server, or
+   * one that never answers, leaves the rules' own groups (one console line).
+   */
+  _requestServerItemGroups(build, connected) {
+    const game = connected.slot_info?.[String(connected.slot)]?.game ?? build.game;
+    const key = itemNameGroupsKey(game);
+    build.groups = { key, game, pending: true, value: null, readyBesidesGroups: false, timer: null };
+    try {
+      connection.send([{ cmd: 'Get', keys: [key] }]);
+    } catch (e) {
+      log('warn', `[MessageHandler] Could not ask for ${key}: ${e.message}`);
+      this._settleServerItemGroups(build, null, `asking for them failed (${e.message})`);
+      return;
+    }
+    build.groups.timer = setTimeout(() => {
+      if (this._serverBuild !== build) return;
+      this._settleServerItemGroups(build, null, `no answer within ${GROUPS_TIMEOUT_MS / 1000} s`);
+    }, GROUPS_TIMEOUT_MS);
+  }
+
+  /** A Retrieved packet: the answer to _requestServerItemGroups, when it names our key. */
+  _handleRetrieved(data) {
+    const groups = this._serverBuild?.groups;
+    if (!groups?.pending || !Object.prototype.hasOwnProperty.call(data?.keys || {}, groups.key)) return;
+    const raw = data.keys[groups.key];
+    const value = readServerItemGroups(raw);
+    let why = null;
+    if (!value) why = raw === null || raw === undefined ? 'the server has no such key' : 'the answer was not a group table';
+    this._settleServerItemGroups(this._serverBuild, value, why);
+  }
+
+  _settleServerItemGroups(build, value, why = null) {
+    const groups = build?.groups;
+    if (!groups?.pending) return;
+    groups.pending = false;
+    clearTimeout(groups.timer);
+    groups.timer = null;
+    groups.value = value;
+    if (!value) {
+      const message = `The server did not send ${groups.game}'s item groups (${why}); using the rules' own.`;
+      log('warn', `[MessageHandler] ${message}`);
+      this._printToConsole(message, 'info');
+    }
+    if (groups.readyBesidesGroups && this._serverBuild === build) this._completeServerBuild();
+  }
+
+  /**
+   * The server's item groups into the rules about to load (in place): the
+   * server is the record when it answered. A disagreement with the file's (or
+   * the builder's) groups is one console line.
+   */
+  _applyServerItemGroups(build, connected, rules) {
+    const groups = build.groups;
+    if (!groups?.value) return;
+    const ownItemNames = Object.keys(this.dataPackage?.games?.[groups.game]?.item_name_to_id || {});
+    const { differences } = applyServerItemGroups(rules, connected.slot, groups.value, {
+      ownItemNames: ownItemNames.length > 0 ? ownItemNames : undefined,
+    });
+    if (differences.length === 0) {
+      log('info', `[MessageHandler] The server's ${groups.game} item groups match the rules' (${groups.value.size}).`);
+      return;
+    }
+    const message =
+      `The server's ${groups.game} item groups differ from the rules' (${differences.join('; ')}); ` +
+      "using the server's.";
+    log('warn', `[MessageHandler] ${message}`);
+    this._printToConsole(message, 'warning');
+  }
+
   _cancelServerBuild() {
     if (!this._serverBuild) return;
     clearTimeout(this._serverBuild.timer);
+    clearTimeout(this._serverBuild.groups?.timer);
     this._serverBuild = null;
   }
 
@@ -1340,6 +1892,8 @@ export class MessageHandler {
 
     applyReceivedItems(this._serverItems, data.index, processedItemDetails.map((d) => d.itemName));
     this._reportGoalIfMet();
+    // Items can put kept offline checks in logic (our own come back from the push): another pass.
+    if (this._activeOfflineRecord()) this._queueOfflinePass();
 
     // Publish notification
     this.eventBus?.publish('game:itemsReceived', {
@@ -1356,10 +1910,111 @@ export class MessageHandler {
     });
   }
 
+  /**
+   * An add-on slot's goal (upstreamGoal.js), before its rules load: derive the one goal
+   * location and mark it `event_kind: 'goal'` (never auto-collected) in `rules`, the
+   * client's own overlay copy. Only for rules the server sent from the host's Upstream
+   * Rules Add-on; anything else returns null and is left as it is.
+   */
+  _prepareUpstreamGoal(build, connected, rules) {
+    if (build.mode !== 'overlay' || build.overlaySource !== 'server') return null;
+    if (build.overlayFrom !== UPSTREAM_RULES_ADDON_SOURCE) return null;
+    return this._deriveAndMarkGoal(rules, connected.slot, build.game);
+  }
+
+  /** Derive `slot`'s goal in `doc` and mark it `event_kind: 'goal'`; else one console line saying why not. */
+  _deriveAndMarkGoal(doc, slot, game) {
+    const p = String(slot);
+    const derived = deriveUpstreamGoal(doc, p);
+    if (derived.goal && markGoalEvent(doc, p, derived.goal)) {
+      log('info', `[MessageHandler] Goal reported by this client for slot ${p}: "${derived.goal.location}" (${derived.goal.item}).`);
+      return derived.goal;
+    }
+    const why = derived.reason ?? 'its goal location was not found';
+    this._printToConsole(
+      `This client won't tell the server when ${game} is finished (${why}). Its own game client reports the goal.`,
+      'info'
+    );
+    return null;
+  }
+
+  /**
+   * The add-on goal record when `locationName` is its goal location AND its document is
+   * still the loaded one, for this room's seed and this slot; else null.
+   */
+  _upstreamGoalFor(locationName) {
+    const record = this._upstreamGoal;
+    if (!record || record.goal.location !== locationName) return null;
+    if (getLastRawJsonData?.()?.rawJsonData !== record.doc) return null;
+    if (String(this.clientSlot) !== record.slot) return null;
+    if (!record.seedName || !isSameSeed(record.seedName, this.roomInfo?.seed_name)) return null;
+    return record;
+  }
+
+  _goalStatus(name) {
+    return stateManagerProxySingleton.getLatestStateSnapshot?.()?.locationReachability?.[name] ?? null;
+  }
+
+  /**
+   * After a local check of an ID-less location went up to the state manager: when it is
+   * the add-on goal, it was NOT checked before (`before`), and the state manager now
+   * records it checked, note that THIS connection checked it, and report if complete.
+   * Whoever sent the check (design-upstream-goal-report; ⚖ Robert 2026-11-17).
+   */
+  async _noteUpstreamGoalCheck(locationName, before) {
+    const record = this._upstreamGoalFor(locationName);
+    if (!record || before === 'checked') return;
+    if (!(await this._waitForLocalCheck(locationName))) return;
+    if (this._upstreamGoalFor(locationName) !== record || !connection.isConnected()) return;
+    record.checkedOnConnection = this._connectionSeq;
+    if (!this._reportUpstreamGoalIfMet()) {
+      this._printToConsole(
+        `"${locationName}" is checked. The goal is sent once the items the server has sent you complete it.`,
+        'info'
+      );
+    }
+  }
+
+  /**
+   * Reports the add-on goal when this connection checked the goal location and the
+   * server-delivered items complete the goal with it (and not without it). Also run on
+   * every ReceivedItems, so items that arrive after the check still finish the game.
+   * @returns {boolean} whether the goal was sent now
+   */
+  _reportUpstreamGoalIfMet() {
+    const record = this._upstreamGoal;
+    if (!record || record.checkedOnConnection !== this._connectionSeq) return false;
+    if (this._upstreamGoalFor(record.goal.location) !== record) return false;
+    if (this._goalStatus(record.goal.location) !== 'checked') return false;
+    if (!completesWithGoal(record.goal, this._serverItems, record.slot)) return false;
+    if (!this.reportGoal()) return false;
+    const slotName = this.slotInfo?.[record.slot]?.name ?? this.clientSlotName ?? `slot ${record.slot}`;
+    this._printToConsole(
+      `Goal sent: you finished at "${record.goal.location}". The server now marks ${slotName} as done.`,
+      'success'
+    );
+    return true;
+  }
+
+  /** Whether the state manager records `name` as checked, within a short wait (its own guard ran). */
+  async _waitForLocalCheck(name, { tries = 20, intervalMs = 100 } = {}) {
+    for (let i = 0; i < tries; i += 1) {
+      try {
+        await stateManagerProxySingleton.pingWorker?.('client:upstreamGoal');
+      } catch {
+        // keep the last snapshot
+      }
+      if (this._goalStatus(name) === 'checked') return true;
+      await new Promise((resolve) => setTimeout(resolve, intervalMs));
+    }
+    return false;
+  }
+
   /** Reports the goal once the server's items satisfy the slot's completion condition (see goalCheck.js). */
   _reportGoalIfMet() {
     const game = this.slotInfo?.[String(this.clientSlot)]?.game ?? this.clientGameName;
     if (goalMet(getLastRawJsonData?.()?.rawJsonData, this.clientSlot, game, this._serverItems)) this.reportGoal();
+    else this._reportUpstreamGoalIfMet();
   }
 
   _logDebug(message, ...args) {
@@ -1380,7 +2035,9 @@ export class MessageHandler {
 
     // Process location updates directly to stateManager
     if (stateManager && data.checked_locations) {
+      for (const id of data.checked_locations) this._roomCheckedIds.add(id);
       await this._syncLocationsFromServer(data.checked_locations);
+      if (this._activeOfflineRecord()) this._queueOfflinePass();
     }
 
     // Process player updates if present - detect new players joining
@@ -1839,6 +2496,7 @@ Location was force-checked to maintain server sync.`;
     if (!connection.isConnected()) return false;
 
     this._goalReported = true;
+    this._goalReportedRooms.add(`${this.roomInfo?.seed_name ?? ''}|${this.clientSlot}`);
     // The server may release/collect the slot's remaining locations now; their echo is not a logic bug.
     this._slotReleased = true;
     log('info', '[MessageHandler] Reporting goal completion to server (CLIENT_GOAL).');
@@ -2024,6 +2682,38 @@ Location was force-checked to maintain server sync.`;
     this._printToConsole(refusalMessage(locationName, reason), 'warning');
   }
 
+  /** A game's check while this slot's rules are pending: held for _replayHeldGameChecks. */
+  _holdGameCheck(eventData, eventName) {
+    this._heldGameChecks.push({ eventData, eventName, seedName: this.roomInfo?.seed_name ?? null });
+    log('info', `[MessageHandler] Holding the game's check "${eventData.locationName}" until the rules load.`);
+    this._printToConsole(
+      `Holding "${eventData.locationName}" (made by the game) until this room's ${this._serverBuild?.game ?? ''} ` +
+        'rules load; it is sent then.',
+      'info'
+    );
+  }
+
+  /** A check while this slot's rules are pending: refused, with a console line naming what is awaited. */
+  _refuseCheckWhileRulesPending(eventData) {
+    const locationName = eventData.locationName;
+    const game = this._serverBuild?.game ?? 'this slot';
+    const reason = RULES_PENDING;
+    log('info', `[MessageHandler] Refused location check "${locationName}" (${reason}); nothing sent.`,
+      { originator: eventData?.originator });
+    this.eventBus?.publish('client:locationCheckRefused', {
+      locationName,
+      reason,
+      originator: eventData?.originator ?? null,
+    });
+    this._printToConsole(
+      this.getAwaitedRulesGame()
+        ? `Not checked: "${locationName}". This room's ${game} rules are not loaded, so the loaded rules' ` +
+            'locations are not this slot\'s; nothing was sent.'
+        : `Not checked: "${locationName}". The ${game} rules for this room are still loading; nothing was sent.`,
+      'warning'
+    );
+  }
+
   // Actual method to send location checks, used by the exported handler
   _internalSendLocationChecks(locationIds) {
     log('info', '[MessageHandler] _internalSendLocationChecks called with IDs:', locationIds);
@@ -2121,6 +2811,20 @@ export async function handleUserLocationCheckForClient(
       '[ClientModule/MessageHandler] Handling user:locationCheck while connected.',
       eventData
     );
+    if (eventData.locationName && messageHandlerSingleton._serverBuild) {
+      // This slot's rules are not loaded yet (a build, an overlay, or the wait
+      // for the room's preset). A check the GAME made is held and sent once
+      // they load (it can't be made again). A click on the loaded rules'
+      // locations is refused: those rules are another game's or another
+      // player's. Nothing is sent now, and nothing is applied locally
+      // (sdc-no-preset-refusal).
+      if (eventName === 'system:locationCheck' || eventData[GAME_REPORTED_FIELD] === true) {
+        messageHandlerSingleton._holdGameCheck(eventData, eventName);
+      } else {
+        messageHandlerSingleton._refuseCheckWhileRulesPending(eventData);
+      }
+      return;
+    }
     if (eventData.locationName) {
       // The logic gate (checkGate.js): a check the game did not report is refused when the state manager says the
       // location is unreachable, the same as offline. Nothing is sent and the event is not passed on.
@@ -2141,7 +2845,11 @@ export async function handleUserLocationCheckForClient(
         // judges it (sdc-connected-events). The server never echoes it, so nothing collects it twice.
         log('info', `[MessageHandler] "${eventData.locationName}" has no server ID; checking it locally.`);
         if (dispatcher) {
+          // The add-on goal (upstreamGoal.js) is one of these: note whether it was checked before.
+          const isGoal = messageHandlerSingleton._upstreamGoalFor(eventData.locationName) !== null;
+          const before = isGoal ? messageHandlerSingleton._goalStatus(eventData.locationName) : null;
           dispatcher.publishToNextModule(MODULE_NAME, eventName, eventData, { direction: 'up' });
+          if (isGoal) await messageHandlerSingleton._noteUpstreamGoalCheck(eventData.locationName, before);
         } else {
           log('error', '[ClientModule/MessageHandler] Dispatcher not available for a local (ID-less) check.');
         }
@@ -2170,6 +2878,10 @@ export async function handleUserLocationCheckForClient(
     log('info', 
       '[ClientModule/MessageHandler] Not connected. Propagating user:locationCheck up.'
     );
+    // A pickup the game reported offline stays exempt from the gate when it is pushed at connect.
+    if (eventData?.locationName && (eventName === 'system:locationCheck' || eventData[GAME_REPORTED_FIELD] === true)) {
+      messageHandlerSingleton._offlineGameReported.add(eventData.locationName);
+    }
     if (dispatcher) {
       dispatcher.publishToNextModule(
         MODULE_NAME,

@@ -1,11 +1,13 @@
 // regionBlockBuilder.js
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { isRegionReachable } from '../regionView/regionViewModel.js';
 import { renderLogicTree } from '../commonUI/index.js';
 import commonUI from '../commonUI/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { regionGraphLocationAddsToPath } from '../regionGraph/clickActionsSettings.js';
 import { getModuleEventBus } from './index.js';
 
 // Helper function for logging with fallback
@@ -559,10 +561,7 @@ export class RegionBlockBuilder {
         }
         
         // Check if source region is reachable
-        const sourceRegionReachable =
-          snapshot.regionReachability?.[entrance.sourceRegion] === true ||
-          snapshot.regionReachability?.[entrance.sourceRegion] === 'reachable' ||
-          snapshot.regionReachability?.[entrance.sourceRegion] === 'checked';
+        const sourceRegionReachable = isRegionReachable(snapshot, entrance.sourceRegion);
           
         const isTraversable = sourceRegionReachable && entranceAccessible;
         
@@ -743,10 +742,7 @@ export class RegionBlockBuilder {
         }
         
         const connectedRegionName = exitDef.connected_region;
-        const connectedRegionReachable =
-          snapshot.regionReachability?.[connectedRegionName] === true ||
-          snapshot.regionReachability?.[connectedRegionName] === 'reachable' ||
-          snapshot.regionReachability?.[connectedRegionName] === 'checked';
+        const connectedRegionReachable = isRegionReachable(snapshot, connectedRegionName);
         const isTraversable =
           regionIsReachable && exitAccessible && connectedRegionReachable;
 
@@ -1081,8 +1077,9 @@ export class RegionBlockBuilder {
           }
         });
 
-        // Check if location is queued in the path (only if the setting is enabled)
-        settingsManager.getSetting('moduleSettings.regionGraph.addLocationsToPath', false).then(addToPathEnabled => {
+        // Check if location is queued in the path (only if the Region Graph's location action adds checks to the path;
+        // CA-S4: read through its resolver, `clickActions.location['path.check'] === 'addToPath'`)
+        regionGraphLocationAddsToPath(settingsManager).then(addToPathEnabled => {
           if (addToPathEnabled) {
             import('../gameState/singleton.js').then(({ getGameStateSingleton }) => {
               try {
@@ -1179,8 +1176,9 @@ export class RegionBlockBuilder {
                 `[LocationWrapper] Clicked on location: ${locationDef.name}, Region: ${regionName}`
               );
 
-              // Check if we should add to path (use same setting as regionGraph)
-              const shouldAddToPath = await settingsManager.getSetting('moduleSettings.regionGraph.addLocationsToPath', false);
+              // Check if we should add to path: the Region Graph's location action (CA-S4: its resolved
+              // `clickActions.location['path.check'] === 'addToPath'`, which replaced the old `addLocationsToPath` key)
+              const shouldAddToPath = await regionGraphLocationAddsToPath(settingsManager);
               
               if (shouldAddToPath) {
                 // Add location check to path
@@ -1392,8 +1390,14 @@ export class RegionBlockBuilder {
       return null;
     }
 
-    for (const dungeonData of Object.values(staticData.dungeons)) {
-      if (dungeonData.regions && dungeonData.regions.includes(regionName)) {
+    // `staticData.dungeons` is a Map (name → dungeon); Object.values() of a
+    // Map is [], so the lookup used to fail for every region.
+    const dungeons = staticData.dungeons;
+    const dungeonList = dungeons instanceof Map
+      ? Array.from(dungeons.values())
+      : Object.values(dungeons);
+    for (const dungeonData of dungeonList) {
+      if (dungeonData?.regions && dungeonData.regions.includes(regionName)) {
         return dungeonData;
       }
     }

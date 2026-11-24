@@ -20,6 +20,9 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
+  customActionRowOf, customActionBaseCost, customActionLabel,
+} from '../shared/procgen/loopCustomActions.js';
+import {
   botHonorsInstant, captureShapeOf, offersPlayback, solverKindOf, SOLVER_KINDS,
 } from '../procgenCore/substratePredicates.js';
 import { blockKeyOf, resolveQueueBlocks, assignRecordingTags } from './blockIdentity.js';
@@ -46,6 +49,7 @@ import {
 // AND exactly one exit). A pure module (it imports only `rulesGraph`), so this
 // is not a dependency on the menu panel's wiring.
 import { SKIP_MENU_DEFAULT, skipsStart } from '../menuPanel/menuPanelEngine.js';
+import { strictQueueRefusal } from './strictQueueActions.js';
 import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
 
 /**
@@ -54,6 +58,8 @@ import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
  * Record park IS the visit's recorded duration.
  */
 const TIME_DRAIN_INTERVAL_MS = 1000;
+// Percent-of-progress slack for "the pool pays exactly this action" (LOOPS-I1).
+const PROGRESS_EPSILON = 1e-9;
 
 /** A play-clock `stats` object reduced to its finite-number fields (N4): it is stored in a recording. */
 function plainNumbers(stats) {
@@ -139,6 +145,10 @@ export class LoopState {
 
     // Action queue manager (will be initialized after gameState is set)
     this.actionQueueManager = null;
+    // ⚖ LOOPS-I2: the price each in-flight action was given when it started
+    // (pathIndex → mana), read while its progress is above 0. See
+    // _startedActionPrice.
+    this._startedActionPrices = new Map();
 
     // Resources (mana, manaPerItem) and region XP live in gameState now —
     // accessed below via delegating getters/setters for backward compat.
@@ -317,6 +327,9 @@ export class LoopState {
     // the queue. Cleared by _resetLoop. Set when manual mode detects
     // the player exited to an unexpected region.
     this._queuePausedUntilReset = false;
+    // The last start-gate refusal (ActionNodes design §3): which entry, which
+    // region, and why. Cleared by a loop reset and a rules load.
+    this.lastActionRefusal = null;
     // Cached raw rules data — populated by the
     // stateManager:rawJsonDataLoaded subscriber in _setupEventListeners.
     // Used by the customQueue action's saved-queue lookup (needs the
@@ -757,7 +770,13 @@ export class LoopState {
    */
   addRegionXP(regionName, amount) {
     const gs = this._gs();
-    if (gs) gs.addRegionXP(regionName, amount);
+    if (!gs) return;
+    // ⛓ design §8: `xpGainScale` (per region in loop_costs, default 1) scales
+    // the XP a region earns. Every loops award — the generic timer's tick and
+    // `_spendMana` — comes through here. At the default the amount is passed
+    // unchanged (× 1), so no world without the field earns differently.
+    const scale = this.costDataManager?.getRegionXpGainScale?.(regionName) ?? 1;
+    gs.addRegionXP(regionName, scale === 1 ? amount : amount * scale);
   }
 
 
@@ -789,10 +808,10 @@ export class LoopState {
     if (action.type === 'customAction') {
       if (targetRegion && targetInstance) {
         // Insert at specific location
-        this.gameState.insertCustomActionAt(action.actionName, targetRegion, targetInstance, {});
+        this.gameState.insertCustomActionAt(action.actionName, targetRegion, targetInstance, action.params ?? {});
       } else {
         // Add to current location
-        this.gameState.addCustomAction(action.actionName, {});
+        this.gameState.addCustomAction(action.actionName, action.params ?? {});
       }
     } else if (action.type === 'locationCheck') {
       if (targetRegion && targetInstance) {
@@ -1533,6 +1552,19 @@ export class LoopState {
       // is reachable only through the Bot branch above. What remains here
       // is the generic timer, which runs coarse Playback interiors and
       // AP-native blocks.)
+      // The START GATE (ActionNodes design §3): before an entry starts, its
+      // region's substrate may refuse it (`loopSupport.actionGate`). A
+      // refusal STOPS the queue and names the action and the reason; it never
+      // skips the entry, because a skipped requirement would silently change
+      // the plan. Mana is not part of any gate: an entry started short of
+      // mana drains what is left, as every Loops action does.
+      if ((this.actionQueueManager.getProgress(this.currentAction.pathIndex) || 0) === 0) {
+        const refusal = this._startGateRefusal(this.currentAction);
+        if (refusal) {
+          this._refuseCurrentAction(refusal);
+          return;
+        }
+      }
       this._advanceActionProgress(deltaTime);
       this._maybeCompleteCurrentAction();
       // Queue ran to the end — no current action to reset, terminal events
@@ -3427,12 +3459,16 @@ export class LoopState {
    *   - gs.addRegionXP + gameState:xpChanged event for fine-grained UI updates
    *
    * Zero-cost actions, the global instantMode debug flag, and a per-block
-   * Instant toggle (M3) all complete the action in a single frame.
+   * Instant toggle (M3) all complete an AFFORDABLE action in a single frame.
+   * No path spends more than the pool holds (LOOPS-I1): an unaffordable
+   * action drains it and stays incomplete, so Instant ends where normal
+   * speed does, only sooner. Every speed charges the price the action had
+   * when it started (_startedActionPrice, LOOPS-I2).
    */
   _advanceActionProgress(deltaTime) {
-    const actionCost = this._calculateActionCost(this.currentAction);
     const currentProgress =
       this.actionQueueManager.getProgress(this.currentAction.pathIndex) || 0;
+    const actionCost = this._startedActionPrice(this.currentAction, currentProgress);
 
     let progressIncrement;
     if (actionCost === 0 || this.instantMode || this._currentBlockIsInstant()) {
@@ -3442,6 +3478,26 @@ export class LoopState {
       progressIncrement = (deltaTime / 1000) * (20 / actionCost);
     }
 
+    // ⚖ LOOPS-I1 (2026-11-21): a frame spends AT MOST what the pool holds.
+    // An action whose remaining cost exceeds the pool drains it, banks the
+    // drained mana as XP, does NOT complete, and the OOM reset follows. One
+    // rule for every path: Instant and a per-block Instant used to complete
+    // any action in one frame whatever the mana (deductMana clamps to 0 and
+    // completion runs before the OOM check), and a normal-speed frame could
+    // do the same on its last frame. With the debt flag on the pool runs
+    // negative instead, so nothing is capped.
+    const gs = this._gs();
+    let drainsPool = false;
+    if (gs && actionCost > 0 && !gs.noManaDepletionReset) {
+      const affordable = (Math.max(0, gs.currentMana) / actionCost) * 100;
+      // The tolerance keeps an action that costs EXACTLY the pool (up to
+      // float noise) affordable: it completes, then the OOM reset fires.
+      if (progressIncrement - affordable > PROGRESS_EPSILON) {
+        progressIncrement = affordable;
+        drainsPool = true;
+      }
+    }
+
     const newProgress = currentProgress + progressIncrement;
     this.actionQueueManager.setProgress(
       this.currentAction.pathIndex,
@@ -3449,15 +3505,20 @@ export class LoopState {
     );
     this.currentAction.progress = newProgress;
 
-    const manaCost = (progressIncrement / 100) * actionCost;
-    const gs = this._gs();
+    // A capped frame spends the pool EXACTLY: recomputing it as
+    // (mana / cost × 100) / 100 × cost leaves a ~1e-14 residue about one
+    // time in ten, and a pool above 0 never fires the OOM reset — the queue
+    // would drain slivers forever.
+    const manaCost = drainsPool
+      ? Math.max(0, gs.currentMana)
+      : (progressIncrement / 100) * actionCost;
     if (gs) {
       gs.deductMana(manaCost);
       if (manaCost > 0) this._passManaSpent += manaCost;
     }
 
     if (this.currentAction.sourceRegion) {
-      const xpGain = (progressIncrement / 100) * actionCost;
+      const xpGain = manaCost; // XP = mana spent, 1:1
       this.addRegionXP(this.currentAction.sourceRegion, xpGain);
       const xpData = this.getRegionXP(this.currentAction.sourceRegion);
       this.eventBus.publish('gameState:xpChanged', {
@@ -3465,6 +3526,31 @@ export class LoopState {
         xpData,
       });
     }
+  }
+
+  /**
+   * The price of `action` for this frame: the price it had when it STARTED.
+   *
+   * ⚖ Ruling A (Robert, 2026-11-21, LOOPS-I2): an action is priced ONCE, at
+   * the region level it has when it starts, at every speed. Normal speed
+   * used to re-price every frame, so the XP an action banked could level the
+   * region up and make the rest of it cheaper. Live play, Record, Instant and
+   * the Loop Stats predictions all charge an action once at its start price
+   * (blockModes.test.js "ONE ECONOMY"), so normal speed was the odd one out.
+   *
+   * The price is taken whenever the action's progress is 0 (a new action, or
+   * one a reset or a cancel sent back to 0), so a fresh start re-prices and
+   * nothing has to remember to clear it. An action found mid-way with no
+   * price stored (progress restored from a save) is priced now.
+   */
+  _startedActionPrice(action, progress) {
+    const key = action.pathIndex;
+    if (progress > 0 && this._startedActionPrices.has(key)) {
+      return this._startedActionPrices.get(key);
+    }
+    const price = this._calculateActionCost(action);
+    this._startedActionPrices.set(key, price);
+    return price;
   }
 
   /**
@@ -3570,6 +3656,7 @@ export class LoopState {
         (action, index) =>
           index > this.currentActionIndex &&
           action.type === 'customAction' &&
+          action.actionName === 'explore' &&
           action.sourceRegion === regionName
       );
 
@@ -3773,6 +3860,80 @@ export class LoopState {
   }
 
   /**
+   * Ask the action's region's substrate whether this entry may START
+   * (`loopSupport.actionGate(action) → {ok, reason, code?}`). Null when it may
+   * (no substrate, no gate, or `ok` not false); else the refusal. A gate that
+   * throws refuses, naming the throw: a broken gate must not wave an entry
+   * through.
+   * @returns {null | {reason: string, code: string|null, substrate: string}}
+   */
+  /**
+   * The QUEUE-TIME half of a substrate's strict verb list (AN-1b): gameState's
+   * custom-action guard, installed by the loops module. Null unless the
+   * region's substrate declares `loopSupport.strictQueueActions` and its
+   * `queueActions` does not hold `actionName` (strictQueueActions.js).
+   */
+  customActionRefusal(actionName, regionName) {
+    const substrate = this._lookupSubstrateId(regionName);
+    if (!substrate) return null;
+    let entry = null;
+    try { entry = substrateRegistry.get(substrate) ?? null; } catch { entry = null; }
+    return strictQueueRefusal(entry?.loopSupport ?? null, actionName, { substrateLabel: entry?.label ?? substrate, region: regionName });
+  }
+
+  _startGateRefusal(action) {
+    if (!action?.sourceRegion) return null;
+    const substrate = this._lookupSubstrateId(action.sourceRegion);
+    if (!substrate) return null;
+    let gate = null;
+    try {
+      gate = substrateRegistry.get(substrate)?.loopSupport?.actionGate ?? null;
+    } catch { gate = null; }
+    if (typeof gate !== 'function') return null;
+    let verdict;
+    try {
+      verdict = gate(action);
+    } catch (e) {
+      verdict = { ok: false, reason: `the gate threw: ${e?.message ?? e}`, code: 'gate-threw' };
+    }
+    if (!verdict || verdict.ok !== false) return null;
+    return { reason: String(verdict.reason ?? 'refused'), code: verdict.code ?? null, substrate };
+  }
+
+  /** How a refusal names an entry: the queue row's own words. */
+  _describeQueueEntry(action) {
+    switch (action?.type) {
+      case 'customAction': return customActionLabel(action);
+      case 'regionMove': return `Move to ${action.destinationRegion}`;
+      case 'locationCheck': return `Check ${action.locationName}`;
+      default: return String(action?.type ?? 'action');
+    }
+  }
+
+  /**
+   * Stop the queue on a start-gate refusal: record it (`lastActionRefusal`),
+   * stop processing, and publish `loops:actionRefused` so the panel says
+   * which action and why. The entry stays where it is.
+   */
+  _refuseCurrentAction(refusal) {
+    const action = this.currentAction;
+    this.lastActionRefusal = {
+      index: this.currentActionIndex,
+      pathIndex: action?.pathIndex ?? null,
+      actionType: action?.type ?? null,
+      actionName: action?.actionName ?? null,
+      region: action?.sourceRegion ?? null,
+      label: this._describeQueueEntry(action),
+      reason: refusal.reason,
+      code: refusal.code,
+      substrate: refusal.substrate,
+    };
+    log('warn', `[LoopState] ${this.lastActionRefusal.label} in ${this.lastActionRefusal.region} refused: ${refusal.reason} — the queue stops here.`);
+    this.stopProcessing();
+    this.eventBus?.publish?.('loops:actionRefused', { ...this.lastActionRefusal });
+  }
+
+  /**
    * Apply the effects of completing an action
    * @param {Object} action - The completed action
    */
@@ -3786,17 +3947,33 @@ export class LoopState {
     }
 
     switch (action.type) {
-      case 'customAction':
-        // Publish event for discovery module via dispatcher. fromLoop
+      case 'customAction': {
+        // The named-action table says where a completion goes. `explore`
+        // (and any unknown name, the old behaviour) publishes
+        // loop:exploreCompleted through the dispatcher for discovery; fromLoop
         // marks it as queue execution: loops itself receives this event
         // first (M3b explore gate/observation receiver, initialTarget
         // 'bottom' → highest load priority first) and must pass its own
         // dispatches through without gating or re-charging them.
+        // `act` (ActionNodes) publishes loop:actionCompleted on the event bus
+        // SYNCHRONOUSLY, so the substrate's runtime has applied the results
+        // before the next entry's start gate asks about them.
+        const row = customActionRowOf(action);
+        if (row?.completionChannel === 'eventBus') {
+          this.eventBus?.publish?.(row.completionEvent, {
+            actionName: action.actionName,
+            regionName: action.sourceRegion,
+            params: action.params ?? {},
+            fromLoop: true,
+          });
+          break;
+        }
         this.dispatcher.publish('loop:exploreCompleted', {
           regionName: action.sourceRegion,
           fromLoop: true,
         });
         break;
+      }
       case 'locationCheck':
         // Propagate user:locationCheck through the normal dispatcher chain
         // (discovery → gameState → stateManager), the same way it flows
@@ -3925,9 +4102,9 @@ export class LoopState {
           baseCost = this.costDataManager.getLocationCost(action.locationName);
           break;
         case 'customAction':
-          // Explore cost = DEFAULT_EXPLORE_MULTIPLIER x region's moveCost
-          baseCost = this.costDataManager.getRegionCost(action.sourceRegion)
-            * DEFAULT_EXPLORE_MULTIPLIER;
+          // The named-action table: explore = DEFAULT_EXPLORE_MULTIPLIER x
+          // region's moveCost; act = the region's authored `actions.act`.
+          baseCost = customActionBaseCost(action, this.costDataManager);
           break;
         case 'manual':
         case 'customQueue':
@@ -3992,6 +4169,7 @@ export class LoopState {
     if (!this.actionQueueManager) return;
     // Clear all progress tracking
     this.actionQueueManager.resetProgress();
+    this._startedActionPrices.clear();
     // Reset current action index so startProcessing() starts from the beginning
     this.currentActionIndex = 0;
     this.currentAction = null;
@@ -4135,6 +4313,7 @@ export class LoopState {
     this._queuePausedUntilReset = false;
     // Any in-progress Record capture belongs to the old world.
     this._discardActiveRecording();
+    this.lastActionRefusal = null;
 
     // Reset action progress
     this._resetActionsProgress();
@@ -4189,6 +4368,7 @@ export class LoopState {
     // A Record in progress at reset (mana-out mid-record) is discarded.
     this._discardActiveRecording();
     this._boundReplayCheckedIndex = -1;
+    this.lastActionRefusal = null;
 
     // Notify loop reset
     this.eventBus.publish('loopState:loopReset', {

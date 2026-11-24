@@ -20,7 +20,8 @@
  *     draws that key — or nothing, and the painter draws the row's baked colour and symbol, as before. Nothing is
  *     baked (⚖ Q8: art resolves by key at play), so no world document moves.
  *   · `loadMazeTileArt` — THE PLAY-TIME LOAD: the ART layer of a world's content stack (`loadPackStack(ids,
- *     { only: ['art'] })`, as `mazeSeedlingSkin.loadSeedlingArt` loads `graphics.seedling`), the library, the
+ *     { only: ['art'] })` — with roles, also `concepts` and (⛓ PASS-1) `structure`, the tile kinds' declared
+ *     passability — as `mazeSeedlingSkin.loadSeedlingArt` loads `graphics.seedling`), the library, the
  *     decoded sheets. A later pack in the stack overriding `maze:tile/wall` wins: that is `mergeKeyed`, the pack
  *     stack's own rule — ⛔ no second merge lives here (⚖ "If there is an existing system for this, I want to use
  *     that instead of making a new one").
@@ -37,7 +38,8 @@
  */
 import { loadPackStack } from '../contentPacks/contentPacks.js';
 import { createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
-import { createPackConcepts } from '../packConcepts/packConcepts.js';
+import { PACK_TILE_BASES, createPackConcepts } from '../packConcepts/packConcepts.js';
+import { createStructure, terrainOf } from '../packStructure/packStructure.js';
 
 /** The art keys' namespace: the maze's own, like `seedling:*` is the Seedling pack's. */
 export const MAZE_ART_NAMESPACE = 'maze';
@@ -53,20 +55,23 @@ export const MAZE_ART_NAMESPACE = 'maze';
  * painter's colour table rather than trusted.
  */
 export const MAZE_ART_KEYS = Object.freeze({
-    floor: Object.freeze({ key: 'maze:tile/floor', colors: ['floor'], what: 'an open floor cell (the base layer)' }),
-    wall: Object.freeze({ key: 'maze:tile/wall', colors: ['wall'], what: 'a wall cell (the base layer)' }),
-    exit: Object.freeze({ key: 'maze:tile/exit', colors: ['exit'], what: 'an exit cell whose gate is open (a closed one stays the `exitBlocked` fill)' }),
-    entrance: Object.freeze({ key: 'maze:tile/entrance', colors: ['entrance'], what: 'the entrance cell (today a green border)' }),
-    manaTile: Object.freeze({ key: 'maze:tile/mana', colors: ['manaTile'], what: 'a mana-refill tile (today a diamond labelled M; faded once collected)' }),
-    player: Object.freeze({ key: 'maze:character/player', colors: ['player'], what: 'the player (today a disc; the facing tick is drawn over it either way)' }),
-    trap: Object.freeze({ key: 'maze:object/trap', colors: ['trap'], what: 'an arrow trap\'s own cell (its lane stays the armed/silent tint)' }),
-    block: Object.freeze({ key: 'maze:object/block', colors: ['block', 'blockEdge'], what: 'a pushable block (the walked kind)' }),
-    blockStruck: Object.freeze({ key: 'maze:object/block-struck', colors: ['blockStruck', 'blockEdge'], what: 'a struck block kind (fire, spear, a woken corpse)' }),
-    blockDormant: Object.freeze({ key: 'maze:object/block-dormant', colors: ['blockDormant', 'blockEdge'], what: 'a dormant block kind (a turret)' }),
-    button: Object.freeze({ key: 'maze:object/button', colors: ['button'], what: 'a button, UP' }),
-    buttonDown: Object.freeze({ key: 'maze:object/button-down', colors: ['button'], what: 'a button, DOWN (held by the player, a block or a latch)' }),
-    pulser: Object.freeze({ key: 'maze:object/pulser', colors: ['pulser'], what: 'a pulser\'s body on its wall cell (its ring stays the armed/silent signal)' }),
-    pull: Object.freeze({ key: 'maze:object/pull', colors: ['pullTrap', 'pullMouth'], what: 'a pull\'s trap cell (its disc stays the live/inert tint)' }),
+    floor: Object.freeze({ key: 'maze:tile/floor', colors: ['floor'], base: 'floor', what: 'an open floor cell (the base layer)' }),
+    wall: Object.freeze({ key: 'maze:tile/wall', colors: ['wall'], base: 'wall', what: 'a wall cell (the base layer)' }),
+    exit: Object.freeze({ key: 'maze:tile/exit', colors: ['exit'], base: 'floor', what: 'an exit cell whose gate is open (a closed one stays the `exitBlocked` fill)' }),
+    entrance: Object.freeze({ key: 'maze:tile/entrance', colors: ['entrance'], base: 'floor', what: 'the entrance cell (today a green border)' }),
+    manaTile: Object.freeze({ key: 'maze:tile/mana', colors: ['manaTile'], base: 'marker', what: 'a mana-refill tile (today a diamond labelled M; faded once collected)' }),
+    player: Object.freeze({ key: 'maze:character/player', colors: ['player'], base: 'character', what: 'the player (today a disc; the facing tick is drawn over it either way)' }),
+    trap: Object.freeze({ key: 'maze:object/trap', colors: ['trap'], base: 'marker', what: 'an arrow trap\'s own cell (its lane stays the armed/silent tint)' }),
+    block: Object.freeze({ key: 'maze:object/block', colors: ['block', 'blockEdge'], base: 'marker', what: 'a pushable block (the walked kind)' }),
+    blockStruck: Object.freeze({ key: 'maze:object/block-struck', colors: ['blockStruck', 'blockEdge'], base: 'marker', what: 'a struck block kind (fire, spear, a woken corpse)' }),
+    blockDormant: Object.freeze({ key: 'maze:object/block-dormant', colors: ['blockDormant', 'blockEdge'], base: 'marker', what: 'a dormant block kind (a turret)' }),
+    button: Object.freeze({ key: 'maze:object/button', colors: ['button'], base: 'marker', what: 'a button, UP' }),
+    buttonDown: Object.freeze({ key: 'maze:object/button-down', colors: ['button'], base: 'marker', what: 'a button, DOWN (held by the player, a block or a latch)' }),
+    pulser: Object.freeze({ key: 'maze:object/pulser', colors: ['pulser'], base: 'marker', what: 'a pulser\'s body on its wall cell (its ring stays the armed/silent signal)' }),
+    pull: Object.freeze({ key: 'maze:object/pull', colors: ['pullTrap', 'pullMouth'], base: 'marker', what: 'a pull\'s trap cell (its disc stays the live/inert tint)' }),
+    // ⛓ CONTENT SETS S2 — a region's thing (`mazeThings.js`) that is a piece of information no character or object
+    // holds; drawn by `mazeThingOverlay.js`, beside `drawWorld`.
+    sign: Object.freeze({ key: 'maze:object/sign', colors: ['sign'], base: 'marker', what: 'a piece of information on a floor cell that no character or object holds (a sign)' }),
 });
 
 /** The thing names (`MAZE_ART_KEYS`' own keys) — what `drawTileArt` accepts. */
@@ -93,6 +98,12 @@ export function tileArtRefusal(tileArt) {
     if (!(tileArt.images instanceof Map)) return 'tileArt.images must be a Map of sheetRef → decoded image (artLibrary.loadSheetImages)';
     if (tileArt.conceptArt !== undefined && (!tileArt.conceptArt || typeof tileArt.conceptArt !== 'object' || Array.isArray(tileArt.conceptArt))) {
         return 'tileArt.conceptArt must be { role: { mechanic: { key } } } (mazeTileArt.conceptArtKeys)';
+    }
+    if (tileArt.thingArt !== undefined && (!tileArt.thingArt || typeof tileArt.thingArt !== 'object' || Array.isArray(tileArt.thingArt))) {
+        return 'tileArt.thingArt must be { conceptKey: { key } } (mazeTileArt.thingArtKeys)';
+    }
+    if (tileArt.tileKinds !== undefined && (!tileArt.tileKinds || typeof tileArt.tileKinds !== 'object' || Array.isArray(tileArt.tileKinds))) {
+        return 'tileArt.tileKinds must be { conceptKey: { artKey, base, pass } } (mazeTileArt.tileKindKeys)';
     }
     return null;
 }
@@ -121,6 +132,202 @@ export function drawTileArt(ctx, tileArt, thing, dx, dy, dw, dh) {
     if (!f) return false;
     ctx.drawImage(f.image, f.sx, f.sy, f.sw, f.sh, dx, dy, dw, dh);
     return true;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓ CONTENT SETS TILE-1 — THE ONE FALLBACK CHAIN (⚖ the user 2026-11-15: "I don't want adding a new custom tile type
+ * in the library to require updating the default graphics.")
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ THE BASES — a small CLOSED set of what a tile kind IS, each with ONE default draw. Every `MAZE_ART_KEYS` row
+ * declares its `base`; a kind the table does not know (one a pack names) needs only a base to be drawn, never a
+ * default graphic of its own. A base's draw is plain and deliberately generic: it says "an object is here", not which.
+ *
+ * `floor`/`wall` paint with the painter's own `COLORS.floor`/`COLORS.wall` values (`mazeTileArt.test.js` holds them
+ * equal; they are spelled here because `mazeRoomRender.js` imports this file). `marker`/`character` have colours of
+ * their own that no kind uses, so a base draw is never mistaken for a kind's own.
+ */
+export const MAZE_TILE_BASES = Object.freeze({
+    floor: Object.freeze({ color: '#2a2a2a', what: 'a cell the player can stand on: the whole cell filled' }),
+    wall: Object.freeze({ color: '#000000', what: 'a cell nothing stands on: the whole cell filled' }),
+    marker: Object.freeze({ color: '#9aa0b4', what: 'an object on a cell: an inset square, ink-edged' }),
+    character: Object.freeze({ color: '#e6e6f0', what: 'someone on a cell: a disc, ink-edged' }),
+});
+
+// ⛓ TILE-2: the NAMES are the concept parser's (`packConcepts.PACK_TILE_BASES`, which refuses any other `base` at
+// load); this table holds one draw per name. A drift between the two is refused here, at import, by name.
+if (Object.keys(MAZE_TILE_BASES).join() !== PACK_TILE_BASES.join()) {
+    throw new MazeTileArtError(`mazeTileArt: MAZE_TILE_BASES [${Object.keys(MAZE_TILE_BASES).join(', ')}] differs from `
+        + `packConcepts.PACK_TILE_BASES [${PACK_TILE_BASES.join(', ')}]`);
+}
+
+/** ⛓ THE PLACEHOLDER — a kind with no art, no own draw and no base: a labelled box in a colour no kind or base uses. */
+export const MAZE_TILE_PLACEHOLDER = Object.freeze({ color: '#ff00ff', ink: '#000000' });
+
+/** The kinds the placeholder has been drawn for, so each is logged once. */
+const placeholderLogged = new Set();
+
+/** TEST SEAM: forget which kinds the placeholder has logged. */
+export function resetMazeTilePlaceholderLogForTests() {
+    placeholderLogged.clear();
+}
+
+/** The base a kind resolves to: its row's, else the caller's declared one; null when neither names a known base. */
+export function mazeTileBaseOf(kind, declaredBase = null) {
+    const base = MAZE_ART_KEYS[kind]?.base ?? declaredBase ?? null;
+    return base !== null && Object.prototype.hasOwnProperty.call(MAZE_TILE_BASES, base) ? base : null;
+}
+
+function artFrameFor(tileArt, kind, artKey) {
+    if (!tileArt) return null;
+    if (Object.prototype.hasOwnProperty.call(MAZE_ART_KEYS, kind)) return tileArtFrame(tileArt, kind);
+    if (typeof artKey !== 'string' || !tileArt.art.has(artKey)) return null;
+    const r = tileArt.art.frameRect(artKey, 0);
+    const image = r ? tileArt.images.get(r.sheetRef) : null;
+    return image ? { key: artKey, image, sx: r.sx, sy: r.sy, sw: r.sw, sh: r.sh } : null;
+}
+
+/**
+ * Which step of the chain would draw `kind`, without drawing it: `'art'`, `'default'`, `'base'` or `'placeholder'`
+ * (`drawMazeTile`'s answers). `hasOwn` says whether the caller has an own draw for it.
+ */
+export function mazeTileStep(tileArt, kind, { hasOwn = false, base = null, artKey = null } = {}) {
+    if (artFrameFor(tileArt, kind, artKey)) return 'art';
+    if (hasOwn) return 'default';
+    return mazeTileBaseOf(kind, base) ? 'base' : 'placeholder';
+}
+
+/** A base's one default draw into the cell `(x0, y0, px)`. */
+export function paintMazeTileBase(ctx, base, x0, y0, px) {
+    const { color } = MAZE_TILE_BASES[base];
+    if (base === 'floor' || base === 'wall') {
+        ctx.fillStyle = color;
+        ctx.fillRect(x0, y0, px, px);
+        return;
+    }
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.strokeStyle = MAZE_TILE_PLACEHOLDER.ink;
+    ctx.lineWidth = 1.5;
+    if (base === 'character') {
+        ctx.beginPath();
+        ctx.arc(x0 + px / 2, y0 + px / 2, px * 0.35, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+    } else {
+        ctx.fillRect(x0 + px * 0.2, y0 + px * 0.2, px * 0.6, px * 0.6);
+        ctx.strokeRect(x0 + px * 0.2, y0 + px * 0.2, px * 0.6, px * 0.6);
+    }
+    ctx.restore();
+}
+
+/** The placeholder: the cell in `MAZE_TILE_PLACEHOLDER.color`, ink-edged, the kind's first two letters on it. */
+export function paintMazeTilePlaceholder(ctx, kind, x0, y0, px) {
+    ctx.save();
+    ctx.fillStyle = MAZE_TILE_PLACEHOLDER.color;
+    ctx.fillRect(x0 + 1, y0 + 1, px - 2, px - 2);
+    ctx.strokeStyle = MAZE_TILE_PLACEHOLDER.ink;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0 + 1.5, y0 + 1.5, px - 3, px - 3);
+    ctx.fillStyle = MAZE_TILE_PLACEHOLDER.ink;
+    ctx.font = `bold ${Math.floor(px * 0.4)}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(String(kind ?? '?').slice(0, 2), x0 + px / 2, y0 + px / 2);
+    ctx.restore();
+}
+
+/**
+ * ⛓⛓ THE CHAIN — "how do I draw kind K" into the cell `(x0, y0, px)`, first that applies:
+ *   1. the theme's ART for K (`tileArtFrame` for a `MAZE_ART_KEYS` row; the declared `artKey` for a kind the table
+ *      does not know);
+ *   2. K's OWN default draw, `own()` — for a row, the painter's existing `COLORS` shape (both views pass it);
+ *   3. K's BASE (`MAZE_ART_KEYS[K].base`, else the declared `base`): that base's one draw (`paintMazeTileBase`);
+ *   4. the PLACEHOLDER (`paintMazeTilePlaceholder`), logged once per kind. ⛔ It never throws.
+ * Answers the step that drew. A row's painter always passes `own`, so for every existing kind steps 1–2 are exactly
+ * the draw it made before the chain existed (⛔ the one-region view is op-identical: `mazeTileFallback.test.js`).
+ * A kind the table does not know resolves through 1, 3 and 4: it needs a base, not a default graphic.
+ */
+export function drawMazeTile(ctx, tileArt, kind, x0, y0, px, { own = null, base = null, artKey = null } = {}) {
+    const f = artFrameFor(tileArt, kind, artKey);
+    if (f) {
+        ctx.drawImage(f.image, f.sx, f.sy, f.sw, f.sh, x0, y0, px, px);
+        return 'art';
+    }
+    if (typeof own === 'function') {
+        own();
+        return 'default';
+    }
+    const b = mazeTileBaseOf(kind, base);
+    if (b) {
+        paintMazeTileBase(ctx, b, x0, y0, px);
+        return 'base';
+    }
+    if (!placeholderLogged.has(kind)) {
+        placeholderLogged.add(kind);
+        console.warn(`[mazeTileArt] tile kind "${kind}" has no art, no default draw and no base: drawn as the placeholder`);
+    }
+    paintMazeTilePlaceholder(ctx, kind, x0, y0, px);
+    return 'placeholder';
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓ CONTENT SETS TILE-2 — A PACK DECLARES A TILE KIND: its concept row carries `base` beside its `art` key.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ THE PACK-DECLARED KINDS of a world's stack: every pack concept that carries a `base`
+ * (`packConcepts.PACK_TILE_BASES`; the parser refused any other at load), by its concept key →
+ * `{ artKey, base, pack, pass }` (frozen). `artKey` is the concept's `art` key, or null. As `thingArtKeys`, the key is
+ * not checked against the art library here: one the stack's art does not resolve falls through to the base.
+ * A concept with no `base` is not a declared kind; asked for by its key, it resolves with no base
+ * (`mazeTileKind`), and the chain draws the placeholder.
+ *
+ * ⛓ CONTENT SETS PASS-1 — `pass` is the kind's DECLARED PASSABILITY, read through the structure layer
+ * (`packStructure.terrainOf`: the pass of the terrain entry the concept presents, `walkable` when it presents
+ * none; ⛓ PASS-2: and `needs`, the mechanic concept id, when the pass is `needs`). `structure` is the stack's `createStructure` reader, or null when the stack carries no structure layer. A
+ * kind whose pass cannot be read (it presents a terrain entry no loaded structure holds) gets `pass: null` and
+ * `passError`, the refusal's sentence: the editor refuses to place it by name (`mazeTileKinds.tileKindRefusal`), and a
+ * draw is unaffected (the look never depends on the logic).
+ */
+export function tileKindKeys(packConcepts, structure = null) {
+    const out = {};
+    for (const key of packConcepts?.keys() ?? []) {
+        const c = packConcepts.get(key);
+        if (typeof c.base === 'string') {
+            let terrain = { pass: null };
+            let passError = null;
+            try { terrain = terrainOf(c, structure); } catch (e) { passError = e.message; }
+            out[key] = Object.freeze({
+                artKey: typeof c.art === 'string' ? c.art : null, base: c.base, pack: c.pack, ...terrain,
+                ...(passError ? { passError } : {}),
+            });
+        }
+    }
+    return Object.freeze(out);
+}
+
+/**
+ * ⛓⛓ THE LOOKUP — tile kind → `{ artKey, base }`, what `drawMazeTile` takes beside the kind.
+ *   · a `MAZE_ART_KEYS` kind: its row's key and base, exactly as the chain resolves it today (pinned:
+ *     `mazeTileKind.test.js`; a pack cannot re-declare a row, because a concept key is namespaced and a row's
+ *     name is not);
+ *   · a pack concept key: from `packConcepts` (the world's stack, `createPackConcepts`): its `art` and `base`,
+ *     each null when the row has none;
+ *   · `tileKinds` (a `tileKindKeys` result, e.g. `tileArt.tileKinds`) may stand in for `packConcepts`;
+ *   · anything else: `{ artKey: null, base: null }` — the placeholder, never a throw.
+ */
+export function mazeTileKind(kind, { packConcepts = null, tileKinds = null } = {}) {
+    const row = Object.prototype.hasOwnProperty.call(MAZE_ART_KEYS, kind) ? MAZE_ART_KEYS[kind] : null;
+    if (row) return Object.freeze({ artKey: row.key, base: row.base });
+    const declared = tileKinds && Object.prototype.hasOwnProperty.call(tileKinds, kind) ? tileKinds[kind] : null;
+    if (declared) return Object.freeze({ artKey: declared.artKey, base: declared.base });
+    const c = packConcepts?.get(kind) ?? null;
+    return Object.freeze({
+        artKey: typeof c?.art === 'string' ? c.art : null,
+        base: typeof c?.base === 'string' ? c.base : null,
+    });
 }
 
 /** Which of the key table's keys a library carries: `{ thing: pack }` for each, the rest absent. */
@@ -187,6 +394,44 @@ export function drawConceptArt(ctx, tileArt, roleId, conceptId, dx, dy, dw, dh) 
 }
 
 /**
+ * ⛓ CONTENT SETS S2 — **WHICH ART KEY A REGION'S THING DRAWS, BY ITS PACK CONCEPT.** A thing names its pack concept
+ * (`concept`); for each role of `contentRoles` that accepts KINDS (the maze's `character`, `object`, `info`), every
+ * pack concept of an accepted kind that presents no mechanic (the contract's rule: a presenter fills no kind role) and
+ * carries an `art` key. Returns `{ conceptKey: { key, pack } }` (frozen). As `conceptArtKeys`, the role's `needs` are
+ * not asked and the key is not checked against the art library here (one that does not resolve draws the baked way).
+ * ⚠ Written here, not with `contentRoles`, for the same reason as `conceptArtKeys`.
+ */
+export function thingArtKeys(contentRoles, packConcepts) {
+    const kinds = new Set(Object.values(contentRoles ?? {}).flatMap((role) => role?.accepts?.kinds ?? []));
+    const out = {};
+    for (const key of packConcepts.keys()) {
+        const c = packConcepts.get(key);
+        if (kinds.has(c.kind) && (c.presents === undefined || c.presents === null) && typeof c.art === 'string') {
+            out[key] = Object.freeze({ key: c.art, pack: c.pack });
+        }
+    }
+    return Object.freeze(out);
+}
+
+/** The frame a thing of pack concept `conceptKey` draws, or null (draw it the baked way). As `conceptArtFrame`. */
+export function thingArtFrame(tileArt, conceptKey) {
+    const entry = tileArt?.thingArt?.[conceptKey];
+    if (!entry || !tileArt.art.has(entry.key)) return null;
+    const r = tileArt.art.frameRect(entry.key, 0);
+    const image = r ? tileArt.images.get(r.sheetRef) : null;
+    if (!image) return null;
+    return { key: entry.key, image, sx: r.sx, sy: r.sy, sw: r.sw, sh: r.sh, pack: tileArt.art.packOf(entry.key) };
+}
+
+/** ⛓ THE SEAM for a thing: as `drawTileArt`, by the thing's pack concept. */
+export function drawThingArt(ctx, tileArt, conceptKey, dx, dy, dw, dh) {
+    const f = thingArtFrame(tileArt, conceptKey);
+    if (!f) return false;
+    ctx.drawImage(f.image, f.sx, f.sy, f.sw, f.sh, dx, dy, dw, dh);
+    return true;
+}
+
+/**
  * ⛓ THE PLAY-TIME LOAD. `ids` is the world's effective content stack (`worldContent.effectiveContentStack`), in
  * override order; `io` is `{ base, readJson }` (`worldContent.browserPackIo()` in a browser); `decode(url)` turns a
  * sheet into an image (`artLibrary.browserDecoder()`) and `rasterise(shape)` a SHAPE entry
@@ -196,25 +441,38 @@ export function drawConceptArt(ctx, tileArt, roleId, conceptId, dx, dy, dw, dh) 
  * `contentRoles` (optional; the maze entry's `contentRoles`) also loads the stack's `concepts` layer and resolves each
  * concept gate's and item's art key (`conceptArtKeys`, R5). Without it only the `art` layer is read, as before.
  *
- * Resolves `{ ids, tileArt, failed, keyed, conceptArt }` (`conceptArt` as `conceptArtKeys`, `{}` without roles): `tileArt` is the seam's `{ art, images }`, or null when no pack in
+ * Resolves `{ ids, tileArt, failed, keyed, conceptArt, thingArt, tileKinds }` (`conceptArt` as `conceptArtKeys`,
+ * `thingArt` as `thingArtKeys` (S2), `tileKinds` as `tileKindKeys` (TILE-2), each `{}` without roles): `tileArt` is the seam's `{ art, images }`, or null when no pack in
  * the stack carries a key of the table (nothing is decoded then, and the maze draws as it always has); `failed`
  * lists the sheets that did not decode, by name (their keys fall back); `keyed` is `keyedThings`. An empty stack
  * reads nothing. A pack that cannot be read is refused by name (`ContentPackError`): the caller catches it and draws
  * without art.
  */
 export async function loadMazeTileArt(ids, { base, readJson, decode, rasterise = null, contentRoles = null }) {
-    if (!Array.isArray(ids) || ids.length === 0) return { ids: [], tileArt: null, failed: [], keyed: {}, conceptArt: {} };
-    const stack = await loadPackStack(ids, { base, readJson, only: contentRoles ? ['art', 'concepts'] : ['art'] });
+    if (!Array.isArray(ids) || ids.length === 0) return { ids: [], tileArt: null, failed: [], keyed: {}, conceptArt: {}, thingArt: {}, tileKinds: {} };
+    // ⛓ PASS-1: with roles, the `structure` layer too — the tile kinds' declared passability (`tileKindKeys`). It
+    //   feeds the editor's bake and the views' drift report only: nothing re-derives a world's logic from it.
+    const stack = await loadPackStack(ids, { base, readJson, only: contentRoles ? ['art', 'concepts', 'structure'] : ['art'] });
     const art = createArtLibrary(stack);
     const keyed = keyedThings(art);
-    const conceptArt = contentRoles ? conceptArtKeys(contentRoles, createPackConcepts(stack), ids) : Object.freeze({});
-    const conceptKeys = Object.values(conceptArt).flatMap((m) => Object.values(m).map((e) => e.key)).filter((k) => art.has(k));
-    if (Object.keys(keyed).length === 0 && conceptKeys.length === 0) return { ids: [...ids], tileArt: null, failed: [], keyed, conceptArt };
+    const packConcepts = contentRoles ? createPackConcepts(stack) : null;
+    const conceptArt = contentRoles ? conceptArtKeys(contentRoles, packConcepts, ids) : Object.freeze({});
+    // ⛓ S2: and each region thing's art key, by its pack concept.
+    const thingArt = contentRoles ? thingArtKeys(contentRoles, packConcepts) : Object.freeze({});
+    // ⛓ TILE-2: and each pack-declared tile kind's art key and base (`tileKindKeys`; `mazeTileKind` reads it).
+    const structure = contentRoles && stack.some((l) => l.layers?.structure) ? createStructure(stack) : null;
+    const tileKinds = contentRoles ? tileKindKeys(packConcepts, structure) : Object.freeze({});
+    const conceptKeys = [
+        ...Object.values(conceptArt).flatMap((m) => Object.values(m).map((e) => e.key)),
+        ...Object.values(thingArt).map((e) => e.key),
+        ...Object.values(tileKinds).map((e) => e.artKey).filter((k) => k !== null),
+    ].filter((k) => art.has(k));
+    if (Object.keys(keyed).length === 0 && conceptKeys.length === 0) return { ids: [...ids], tileArt: null, failed: [], keyed, conceptArt, thingArt, tileKinds };
     // Decode only the sheets the maze's keys draw from: a stack may also carry another substrate's art (the whole
     // Seedling pack), which the maze would never draw.
     const wanted = new Set([...Object.values(MAZE_ART_KEYS).map((row) => row.key), ...conceptKeys]
         .filter((key) => art.has(key)).map((key) => art.resolve(key).sheetRef));
     const sheets = art.sheetsInUse().filter((s) => wanted.has(s.sheetRef));
     const { images, failed } = await loadSheetImages({ sheetsInUse: () => sheets }, decode, rasterise);
-    return { ids: [...ids], tileArt: Object.freeze({ art, images, conceptArt }), failed, keyed, conceptArt };
+    return { ids: [...ids], tileArt: Object.freeze({ art, images, conceptArt, thingArt, tileKinds }), failed, keyed, conceptArt, thingArt, tileKinds };
 }

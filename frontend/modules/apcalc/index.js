@@ -9,6 +9,7 @@
 import { APCalcUI } from './apcalcUI.js';
 import { APCalcState } from './apcalcState.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { REGION_CLICKED, isClickFromPanel } from '../regionView/clickActions.js';
 
 export const moduleInfo = {
     name: 'apcalc',
@@ -40,7 +41,7 @@ export function register(registrationApi) {
     registrationApi.registerEventBusPublisher('apcalc:stateChanged');
     registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
     registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
-    registrationApi.registerEventBusSubscriberIntent('regionGraph:nodeSelected');
+    registrationApi.registerEventBusSubscriberIntent(REGION_CLICKED);
 
     // Dispatcher: send region moves, location checks, and path clearing
     registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
@@ -65,9 +66,12 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         if (staticData) initializeGame(staticData);
     });
 
-    // Listen for region graph node clicks → filter paths, or clear on C click
-    eventBus.subscribe('regionGraph:nodeSelected', (data) => {
-        const nodeId = data?.nodeId;
+    // Listen for region graph node clicks → filter paths, or clear on C click. ⛓ CA-S4: the generic click event,
+    // FILTERED to the Region Graph (it heard only the Graph's `regionGraph:nodeSelected` before, retired in CA-S5). A
+    // Region Map click is not heard: ⚖ user 2026-11-20 (session 84c8ab35), "Region Graph only".
+    eventBus.subscribe(REGION_CLICKED, (data) => {
+        if (!isClickFromPanel(data, 'regionGraph')) return;
+        const nodeId = data?.regionName;
         if (!nodeId) return;
         if (nodeId === 'C' && gameState) {
             gameState.reset();
@@ -174,6 +178,20 @@ function initializeGame(staticData) {
             originator: 'APCalcCheck',
             originalDOMEvent: true,
             reportedByGame: true, // the game's own check: never logic-gated (client/core/checkGate.js)
+        }, { initialTarget: 'bottom' });
+    };
+
+    // The game's finish: every node visited (APCalcState.onFinished, once per game).
+    // Victory is an ID-bearing location (worlds/apcalc), so the server records the
+    // check and delivers the Victory item, and goalCheck.js then reports the goal.
+    gameState.onFinished = (locationName) => {
+        if (!dispatcher) return;
+        dispatcher.publish('user:locationCheck', {
+            locationName,
+            regionName: 'C',
+            originator: 'APCalcCheck',
+            originalDOMEvent: true,
+            reportedByGame: true,
         }, { initialTarget: 'bottom' });
     };
 

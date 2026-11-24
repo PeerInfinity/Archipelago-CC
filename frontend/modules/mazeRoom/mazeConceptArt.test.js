@@ -32,6 +32,7 @@ import { createState, deserializeMazeWorld } from './mazeRoomEngine.js';
 import { CONCEPT_ART_CLEARED_ALPHA, COLORS, TILE_PX, drawWorld, plainView } from './mazeRoomRender.js';
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
 import { conceptArtFrame, conceptArtKeys, loadMazeTileArt, tileArtRefusal } from './mazeTileArt.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
@@ -71,7 +72,7 @@ const FILES = Object.freeze({
 });
 const fixtureIo = {
     base: FIX_BASE,
-    readJson: async (url) => JSON.parse(JSON.stringify(FILES[url.slice(FIX_BASE.length)])),
+    readJson: withFixtureProvenance(async (url) => JSON.parse(JSON.stringify(FILES[url.slice(FIX_BASE.length)]))),
     decode: noSheet,
     rasterise: rasteriser(),
     contentRoles: ROLES,

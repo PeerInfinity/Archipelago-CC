@@ -1,0 +1,8 @@
+[31m     [31m×[31m OFF `hitsTimer` stands still on the frozen ticks; ON it drains one per frozen tick, and the bob hits again[39m[32m 214[2mms[22m[39m
+[31m     [31m×[31m OFF its `v` stands still on the frozen ticks; ON it is re-aimed every frame, the position held, and the path after moves[39m[32m 51[2mms[22m[39m
+[31m     [31m×[31m OFF the Puncher's `v` stands still through the frozen ticks; ON its chase block runs on every one[39m[32m 70[2mms[22m[39m
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 3 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[31m[1mAssertionError[22m: expected [ 28, 28, 28, 28, 28, 28, 28, …(24) ] to deeply equal [ 27, 26, 25, 24, 23, 22, 21, …(24) ][39m
+[31m[1mAssertionError[22m: expected 1 to be greater than 1[39m
+[31m[1mAssertionError[22m: expected 1 to be greater than 1[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m18 passed[39m[22m[90m (21)[39m

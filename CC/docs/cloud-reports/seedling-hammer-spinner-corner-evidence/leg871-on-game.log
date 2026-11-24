@@ -1,0 +1,9 @@
+PAGE: seedling_bot_ap_p4g · delivered seedling-ap-record-01b432a9 · 1 witness tape(s)
+# box lock: TAKEN by probe-seedling-bobiframe.mjs (browser, pid 4072) — head fc2f3dd1a, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"name":"zz-spinnercorner-leg871-on","ticks":1114,"gameHits":[],"off":{"sampled":1114,"bobComparisons":12663,"spinnerComparisons":5175,"firstPlayer":null,"firstBob":{"t":543,"id":"bob@736,752","d":0.17677669529666673,"game":[744,760,0,0],"model":[743.8232233047033,759.8232233047033,0,0]},"firstSpinner":null,"hits":[]},"on":{"sampled":1114,"bobComparisons":12662,"spinnerComparisons":5175,"firstPlayer":null,"firstBob":null,"firstSpinner":null,"hits":[]}}
+PASS: zz-spinnercorner-leg871-on: every tick of the tape was sampled on the game — 1114/1114
+PASS: zz-spinnercorner-leg871-on: chaserSpinnerWalls ON — the model is the game at 0 px (player, bobs with hits/hits_timer, spinners) — 12662 bob + 5175 spinner comparison(s); first partings [null,null,null]
+PASS: zz-spinnercorner-leg871-on: chaserSpinnerWalls ON — the model bills the game's player hits, on the game's ticks — game [] model []
+INFO: zz-spinnercorner-leg871-on: chaserSpinnerWalls OFF — first bob parting {"t":543,"id":"bob@736,752","d":0.17677669529666673,"game":[744,760,0,0],"model":[743.8232233047033,759.8232233047033,0,0]}, first player parting null, model hits []
+ALL PASS

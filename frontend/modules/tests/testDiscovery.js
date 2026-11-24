@@ -32,6 +32,7 @@ export const TEST_CASE_FILES = [
   './testCases/exitPanelTests.js',
   './testCases/regionPanelTests.js',
   './testCases/regionGraphPanelTests.js',
+  './testCases/regionMapTests.js',
   './testCases/loopsPanelTests.js',
   './testCases/eventsPanelTests.js',
   './testCases/pathAnalyzerTests.js',
@@ -62,11 +63,13 @@ export const TEST_CASE_FILES = [
   './testCases/omsiRegionSplitTests.js',
   './testCases/mazeConsumableTileTests.js',
   './testCases/mazeTileArtTests.js',
+  './testCases/mazeThingTests.js',
   './testCases/mazeBlockModeTests.js',
   './testCases/manaDepletionFlagTests.js',
   './testCases/seedlingAtlasMazeTests.js',
   './testCases/seedlingJsRuntimeTests.js',
   './testCases/taswBlockModeTests.js',
+  './testCases/actionNodesTests.js',
   './testCases/apworldEditorTests.js',
   './testCases/substrateRegistryPanelTests.js',
   './testCases/procgenPipelineTests.js',
@@ -75,6 +78,11 @@ export const TEST_CASE_FILES = [
   './testCases/tutorialTests.js',
   './testCases/storagePanelTests.js',
   './testCases/ruleConverterTests.js',
+  './testCases/documentLibraryTests.js',
+  // ⛓ lab-apworld-door-map: LAST on purpose. Its play rows leave a Flash game running (the held set), and a row
+  // registered after them inherited that panel (CI 44950948937: seedling-js-runtime-generated-room). Last in the list
+  // = last in every batch it shares, so it cannot change the state an existing row starts from.
+  './testCases/labApworldDoorTests.js',
   //'./testCases/manualTests.js',
 ];
 

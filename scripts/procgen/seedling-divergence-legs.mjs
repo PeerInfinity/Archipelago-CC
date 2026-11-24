@@ -66,6 +66,11 @@
  *              read as a natural one. OFF (the default) the list is byte-identical. ⚖ TEST-HARNESS STAGING ONLY, as the
  *              events: the runtime's "flags flow game → AP only" is unchanged. L40: Boss Key 2 (collected 6.6) and flag
  *              8 (7.3) carry flag 12 (the south door, collected 6.1); the AP sphere they become accessible at is 5.3/6.6.
+ *   rope rock  ⛓ (`SEEDLING_CARRY_ROPE_ROCK=1`, OFF by default; hammer CARRY-ROPE-ROCK) a CARRIED rope flag also stages
+ *              the tag of every rock its pull drops (`ropeRockPairs`: a `RopeStart` and the `FallRock`s of its level
+ *              sharing its `tset`, off the atlas), stamped in `carriedFlags` with `ropeRock`. The game writes both on
+ *              the pull frame, and `levelRun` refuses a build that holds the rope's alone ("Declare both tags or
+ *              neither"). OFF the carry arm is byte-identical.
  *
  *   edge events ⛓ (`--stage-edge-events`, OPT-IN, hammer LEG-LIST STAGING) the `events` above read each arrival edge's rule
  *              WITHOUT an inventory (`requiredEvents`: an `Or` with any event-free arm needs nothing), so an arrival whose door
@@ -80,7 +85,13 @@
  *              (`withEdgeEvents`; skipped by name as the events are). Applied before the route carry, so a staged flag is not
  *              carried. OFF (the default) the list is byte-identical. ⚖ TEST-HARNESS STAGING ONLY, as the events.
  *
- * Run: node scripts/procgen/seedling-divergence-legs.mjs --out=<legs.jsonl> [--presets=a,b] [--blocks] [--carry-route-flags] [--stage-edge-events]
+ *   line carry ⛓ (`--carry-line-only`, OPT-IN, needs `--carry-route-flags`; hammer CARRY-DROP) the route carry is further
+ *              restricted to the flags a rule on the leg's OWN LINE names (`lineReads`): each edge on the arrival's paths (every
+ *              door; every link walked, and its source arrival's paths) and the goal's rule. A flag the route cleared before
+ *              the leg that only another sub-region's edge names (an obstacle off the leg's line) is not carried. OFF (the
+ *              default) the list is byte-identical. ⚖ TEST-HARNESS STAGING ONLY, as the carry.
+ *
+ * Run: node scripts/procgen/seedling-divergence-legs.mjs --out=<legs.jsonl> [--presets=a,b] [--blocks] [--carry-route-flags] [--stage-edge-events] [--carry-line-only]
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -399,6 +410,106 @@ export function withRouteCarry(leg, carry) {
 }
 
 /**
+ * ⛓ CARRY-ROPE-ROCK (`SEEDLING_CARRY_ROPE_ROCK=1`, OFF by default; hammer CARRY-ROPE-ROCK) — the switch. ON, a carried
+ * rope flag stages the tags of the rocks its pull drops (`ropeRockPairs`, `withRopeRockCarry`). OFF the carry arm is
+ * byte-identical to before. `withCarryRopeRock(enabled, fn)` scopes it (a test row); the env var sets it for a run.
+ */
+let carryRopeRockOverride = null;
+export function carryRopeRockOn() {
+    return carryRopeRockOverride ?? (globalThis.process?.env?.SEEDLING_CARRY_ROPE_ROCK === '1');
+}
+export function withCarryRopeRock(enabled, fn) {
+    const prev = carryRopeRockOverride;
+    carryRopeRockOverride = Boolean(enabled);
+    try { return fn(); } finally { carryRopeRockOverride = prev; }
+}
+
+/**
+ * Every rope's flag → the flags of the rocks its PULL drops, read off the level data: a `RopeStart` (`classOf(type)`)
+ * publishes its `tset` group (`activators.ropePublish`), and every `FallRock`/`FallRockLarge` of the same level sharing
+ * that group falls on that frame, writing its own tag (`fallRock.dropRock`) — the pair `levelRun`'s build refuses to
+ * see half of ("Declare both tags or neither"). `levels` = the atlas's `levels` (`{level, entities}`); `ropeFlagOf` /
+ * `rockFlagOf` = (level, tag) → the `{level, tag}` the game writes (null = no write: a rock with tag < 0). Returns
+ * Map(`${level}:${tag}` of the rope's flag → [{eventId, level, tag, rock, rope}]), only ropes that drop a rock.
+ */
+export function ropeRockPairs(levels, { classOf, tSetOf, tagOf, ropeFlagOf, rockFlagOf }) {
+    const out = new Map();
+    for (const lv of levels) {
+        const ents = lv.entities ?? [];
+        const rocks = ents.filter((e) => /^FallRock/.test(classOf(e.type) ?? ''));
+        for (const rope of ents.filter((e) => classOf(e.type) === 'RopeStart')) {
+            const group = tSetOf(rope.type, rope.attrs);
+            if (!(group >= 0)) continue;
+            const rf = ropeFlagOf(lv.level, tagOf(rope.type, rope.attrs));
+            const drops = rocks.filter((r) => tSetOf(r.type, r.attrs) === group)
+                .map((r) => ({ r, f: rockFlagOf(lv.level, tagOf(r.type, r.attrs)) })).filter(({ f }) => f)
+                .map(({ r, f }) => ({ eventId: `flag:L${f.level}:${f.tag}`, level: f.level, tag: f.tag,
+                    rock: `${r.type}@${r.x},${r.y}`, rope: `${rope.type}@${rope.x},${rope.y}` }));
+            if (!rf || !drops.length) continue;
+            const k = `${rf.level}:${rf.tag}`;
+            out.set(k, [...(out.get(k) ?? []), ...drops]);
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓ LINE CARRY (`--carry-line-only`, OPT-IN; hammer CARRY-DROP) — the `game_state` event ids a rule on the leg's OWN
+ * LINE names (`namedGameStateEvents`, any arm): the goal's rule, and every edge on the arrival's paths off `trace`
+ * (`arrivalEdgeEvents`' map: one path per door, its edge's rule; one per link walked, its rule, then its source
+ * arrival's paths, recursively). No sphere is read: a named flag is on the line whichever arm the route took.
+ */
+export function lineReads(trace, arrival, goalRule, byItem) {
+    const out = new Set(namedGameStateEvents(goalRule, byItem));
+    const seen = new Set();
+    const walk = (a) => {
+        if (seen.has(a)) return;
+        seen.add(a);
+        for (const p of trace?.get(a) ?? []) {
+            for (const id of namedGameStateEvents(p.rule, byItem)) out.add(id);
+            if (p.src) walk(p.src);
+        }
+    };
+    walk(arrival);
+    return out;
+}
+
+/**
+ * A carried leg (`withRouteCarry`'s output) with its carried ROPE flags completed: each rock a carried rope's pull drops
+ * (`pairs` = `ropeRockPairs`) that its staging does not already hold is ADDED to `stagedEvents` and stamped in
+ * `carriedFlags` (`ropeRock` = the rope it pairs with). A leg with no carried rope flag is returned UNCHANGED.
+ */
+export function withRopeRockCarry(leg, pairs) {
+    if (!leg.carriedFlags?.length) return leg;
+    const have = leg.stagedEvents ?? [];
+    const add = [];
+    const same = (a) => (b) => a.level === b.level && a.tag === b.tag;
+    for (const f of leg.carriedFlags) {
+        for (const r of pairs.get(`${f.level}:${f.tag}`) ?? []) {
+            if (!have.some(same(r)) && !add.some(same(r))) add.push({ eventId: r.eventId, level: r.level, tag: r.tag, ropeRock: r.rope });
+        }
+    }
+    if (!add.length) return leg;
+    return { ...leg, stagedEvents: [...have, ...add.map((f) => ({ ...f, otherLevel: f.level !== leg.level }))],
+        carriedFlags: [...leg.carriedFlags, ...add.map((f) => ({ ...f }))] };
+}
+
+/**
+ * `ropeRockPairs` over the atlas at `mapPath`, with the run's own readers: `levelWorld`'s class table / `tSetOf` /
+ * `tagOf`, and the flag the game writes — `outOfBandFlagFor` (a rope with tag < 0: `outOfBandFlagForWriter`, as
+ * `levelRun.pullRope`; a rock with tag < 0 writes nothing, as `fallRock.dropRock`). `M` = (module path) → import.
+ */
+export async function atlasRopeRockPairs(M, mapPath) {
+    const { ENTITY_CLASSES, tSetOf, tagOf } = await M('seedlingDemo/levelWorld.js');
+    const { outOfBandFlagFor } = await M('seedlingDemo/breakableRocks.js');
+    const { outOfBandFlagForWriter } = await M('seedlingDemo/outOfBandLedger.js');
+    const MAP = JSON.parse(readFileSync(mapPath, 'utf8'));
+    return ropeRockPairs(MAP.levels, { classOf: (t) => ENTITY_CLASSES[t]?.as3 ?? null, tSetOf, tagOf,
+        ropeFlagOf: (level, tag) => (tag < 0 ? outOfBandFlagForWriter({ as3: 'RopeStart', level, tag }) : outOfBandFlagFor(level, tag)),
+        rockFlagOf: (level, tag) => (tag < 0 ? null : outOfBandFlagFor(level, tag)) });
+}
+
+/**
  * ⛓ EDGE EVENTS (`--stage-edge-events`, OPT-IN) — the `game_state` events an arrival-path edge's rule (a door, or a
  * logical link walked) cannot be satisfied WITHOUT at the leg's sphere (`holds` = that sphere's AP inventory, as
  * `goalEventsHeld`): the ones it needs whatever is held (`requiredEvents`), plus the cheapest held branch's. So an `Or`
@@ -555,9 +666,15 @@ async function main() {
     const BLOCKS = process.argv.includes('--blocks');
     // ⛓ ROUTE CARRY — OPT-IN (off = today's list, byte-identical): see the head's `carry`
     const CARRY = process.argv.includes('--carry-route-flags');
+    // ⛓ CARRY-ROPE-ROCK (switch, OFF by default): a carried rope flag stages the rocks its pull drops
+    const ROPE_ROCK = CARRY && carryRopeRockOn() ? await atlasRopeRockPairs(M, join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json')) : null;
     const carryOf = new Map();
     // ⛓ EDGE EVENTS — OPT-IN (off = today's list, byte-identical): see the head's `edge events`
     const EDGE = process.argv.includes('--stage-edge-events');
+    // ⛓ LINE CARRY — OPT-IN, a narrowing of the route carry (off = today's list, byte-identical): see the head's `line carry`
+    const LINE = process.argv.includes('--carry-line-only');
+    if (LINE && !CARRY) { console.log('FAIL: --carry-line-only narrows the route carry: pass --carry-route-flags with it'); process.exit(2); }
+    const TRACE = EDGE || LINE;
     const { resolveArrivalSpawn, seedlingStartSpawn } = await M('flashPanel/seedlingRegionBinding.js');
     const { returnSpawnTable } = await M('flashPanel/seedlingReturnSpawns.js');
     const { atlasRoomRegions } = await M('seedlingDemo/seedlingAtlasCheckTable.js');
@@ -623,9 +740,9 @@ async function main() {
         };
         const starts = new Set(startTargets(rules));
         // ⛓ EDGE EVENTS (opt-in): arrival → its paths (`arrivalEdgeEvents`); region → door id → the doors' edge rules
-        const trace = EDGE ? new Map() : null;
+        const trace = TRACE ? new Map() : null;
         const intoRules = new Map();
-        if (EDGE) {
+        if (TRACE) {
             for (const [from, pl] of regions) {
                 for (const e of pl.exits ?? []) {
                     if (!e.targetRegion || !e.targetExitId) continue;
@@ -659,7 +776,7 @@ async function main() {
             };
             for (const [id, needs] of into.get(region) ?? []) add(resolveArrivalSpawn(pl, { exit_id: id }, RETURNS), id, needs);
             if (starts.has(region)) add(seedlingStartSpawn({ world: pl, returnSpawns: RETURNS, partition: PARTITION }), 'start', [[]]);
-            if (EDGE) {
+            if (TRACE) {
                 const pathTo = (sp) => (sp ? trace.get(arrivals.find((b) => b.x === sp.x && b.y === sp.y)) : null);
                 for (const a of arrivals) trace.set(a, []);
                 for (const [id, doors] of intoRules.get(region) ?? []) pathTo(resolveArrivalSpawn(pl, { exit_id: id }, RETURNS))?.push(...doors);
@@ -744,8 +861,10 @@ async function main() {
             const staged = EDGE && Number.isInteger(i) ? withEdgeEvents(leg, arrivalEdgeEvents(trace, a, crossable), g.sphere.label,
                 (rule) => namedGameStateEvents(rule, byItem)) : leg;
             // ⛓ ROUTE CARRY (opt-in; ⚖ test-harness staging only, as the events): the flags the route cleared before it
-            const out = CARRY ? withRouteCarry(staged, routeCarry({ goal: g.goal, sphere: g.sphere, flags: carryFlags,
-                collected, reads: readsOf(pl.level) })) : staged;
+            const lineOnly = (reads) => { const on = lineReads(trace, a, g.rule, byItem); return new Set([...reads].filter((id) => on.has(id))); };
+            const carriedLeg = CARRY ? withRouteCarry(staged, routeCarry({ goal: g.goal, sphere: g.sphere, flags: carryFlags,
+                collected, reads: LINE ? lineOnly(readsOf(pl.level)) : readsOf(pl.level) })) : staged;
+            const out = ROPE_ROCK ? withRopeRockCarry(carriedLeg, ROPE_ROCK) : carriedLeg;
             seen.set(k, out);
             legs.push(out);
         }
@@ -778,6 +897,11 @@ async function main() {
         const carried = legs.filter((l) => l.carriedFlags);
         console.log(`INFO: ROUTE CARRY (--carry-route-flags, test-harness staging): ${carried.length} leg(s) carry the flag(s) the route `
             + `cleared before them (stamped carriedFlags): ${JSON.stringify(by((l) => (l.carriedFlags ? `L${l.level} +${l.carriedFlags.length}` : 'none')))}`);
+        if (ROPE_ROCK) {
+            const rr = legs.filter((l) => l.carriedFlags?.some((f) => f.ropeRock));
+            console.log(`INFO: CARRY-ROPE-ROCK (SEEDLING_CARRY_ROPE_ROCK=1): ${ROPE_ROCK.size} rope(s) drop a rock; ${rr.length} carried leg(s) `
+                + `stage the rock(s) with the rope: ${JSON.stringify(rr.map((l) => `${l.key} +${l.carriedFlags.filter((f) => f.ropeRock).map((f) => f.eventId).join('+')}`))}`);
+        }
     }
     const skipped = legs.filter((l) => l.skip);
     console.log(`INFO: ${skipped.length} leg(s) SKIPPED by name (an event gate that maps to no flag, or the goal IS the gating event)`

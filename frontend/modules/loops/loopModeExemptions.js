@@ -14,6 +14,20 @@
  * Sources:
  *   - 'regionGraph-*'        — region-graph authoring clicks
  *     (addToPath / overwritePath / oneStep / direct move).
+ *   - 'regionMap-*'          — the Region Map panel's clicks as step 4
+ *     sent them. Since CA-S3 its clicks run the shared click actions and
+ *     carry 'regionView-path-regionMap' (below); the prefix is kept for
+ *     older callers, as 'regionGraph*' is (mode-toggle design R7).
+ *   - 'regionView-path-*'    — the shared click actions' path moves
+ *     (regionView/clickActions.js PATH_SOURCE_PREFIX; mode-toggle design
+ *     R7): every map panel's built-in path action dispatches under
+ *     'regionView-path-<panelId>', so the ACTION, not the panel, decides
+ *     that a click plans. Panel-owned play actions (a Flash teleport) keep
+ *     their own source and stay gated.
+ *   - 'actionNodes-plan-*'   — the ActionNodes click (`actionNodes.act`)
+ *     and its card's "perform all remaining" button
+ *     (actionNodes/nodeClickAction.js PLAN_SOURCE_PREFIX, slice AN-3b):
+ *     in Loop mode they QUEUE the free hops to the node, then its acts.
  *   - 'procgenPlayer-*'      — procgenPlayer's synthesized transitions
  *     (the initial Menu → first-region placement).
  *   - 'menuPanel-*'          — the menu panel's exit buttons, its
@@ -26,6 +40,9 @@
 export function isLoopModePlanningSource(source) {
     if (typeof source !== 'string') return false;
     return source.startsWith('regionGraph')
+        || source.startsWith('regionMap')
+        || source.startsWith('regionView-path')
+        || source.startsWith('actionNodes-plan')
         || source.startsWith('procgenPlayer')
         || source.startsWith('menuPanel');
 }

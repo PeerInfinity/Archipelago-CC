@@ -1,0 +1,13 @@
+legs 52
+  both passes planned: 34
+  no solver goal: 3
+  refused: 13
+  shipped OFF plan takes a model hit: 2
+  solved: 36
+mixed (both passes planned, verdicts differ): 3
+  MOVES  level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared
+      OFF full 632 t, 2 hit(s)  ->  ON dashless 680 t, 0 hit(s)   passes: dashless 680 t 0h0d; full 632 t 2h0d
+  stays  level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared
+      OFF full 156 t, 0 hit(s)  ->  ON full 156 t, 0 hit(s)   passes: dashless 187 t 2h0d; full 156 t 0h0d
+  MOVES  level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 0: bosslock@64,32 cleared
+      OFF full 191 t, 3 hit(s), death  ->  ON dashless 255 t, 0 hit(s)   passes: dashless 255 t 0h0d; full 191 t 3h1d

@@ -351,20 +351,67 @@ describe('the corpus census — printed, then pinned', () => {
          *              manifest, its worked example (`repo` 43 → 44).
          *   412 → 413  hammer PANEL-ROUTE (2026-11-12): seedling-bot.md's solve-progress line →
          *              seedling-solve-progress.md § 7 (the route stamp) (`doc` 309 → 310).
+         *   415 → 416  content sets S1 (2026-11-14): text-adventure.md's payload `things` field → its own
+         *              § Things that are not AP checks (`same-doc` 38 → 39).
+         *   416 → 418  content sets S2 (2026-11-14): maze.md § Things → concepts.md § Content roles, and
+         *              concepts.md § Content roles → maze.md § Things (`doc` 311 → 313).
+         *   416 → 419  region-map step 3a (2026-11-14): the new region-layout.md — its README index row, its link to
+         *              substrate-registry.md § Entry contract, and that table's `compositeMap.layoutGraph` row → it
+         *              (`doc` 311 → 314).
+         *   421 → 428  ActionNodes AN-1 (2026-11-15): the new action-nodes.md — its README index row, its
+         *              link to gotchas.md § the monotonicity gotcha, its four Related links (architecture.md,
+         *              substrate-registry.md, loop-recording.md, gotchas.md), and the registry's hand-kept
+         *              annotation row → it (`doc` 316 → 323).
+         *   428 → 429  content packs PL-1 (2026-11-15): concepts.md § Content roles' `assertPresents` bullet → its
+         *              own § What exists, the numbers and the bindings (`same-doc` 39 → 40).
+         *   429 → 430  content packs PL-2 (2026-11-16): concepts.md § The resolver, the fill rules and the gap
+         *              report → action-nodes.md (`doc` 323 → 324).
+         *   430 → 435  ActionNodes AN-2 (2026-11-16): action-nodes.md's two same-doc links to its new § The
+         *              runtime, that § → loop-recording.md § The start gate, that § → action-nodes.md § The
+         *              runtime, and substrate-registry.md's `loopSupport.actionGate` row → it (`doc` 324 → 327,
+         *              `same-doc` 40 → 42).
+         *   435 → 437  ActionNodes AN-1b (2026-11-16): substrate-registry.md's new `fillRules` row → concepts.md and its
+         *              `loopSupport.strictQueueActions` row → action-nodes.md § No explore (`doc` 327 → 329).
+         *   437 → 440  ActionNodes AN-3a (2026-11-17): substrate-registry.md's new `loopBot` row → action-nodes.md § The
+         *              bot planner, that § → playback-and-debugging.md § The playback bot, and that doc's runner
+         *              bullet back → action-nodes.md § The bot planner (`doc` 329 → 332).
+         *   440 → 446  rule-table-doc-command (2026-11-18): the new seedling-derived-rules.md — its README index row, its
+         *              links to maze.md and pipeline-presets.md § Regenerating the Seedling playthrough chain, and
+         *              maze.md's derived-rule-table bullet and pipeline-presets.md's table paragraph → it (`doc` 332 →
+         *              337); its own § Staleness link (`same-doc` 42 → 43).
+         *   446 → 448  ActionNodes AN-3b (2026-11-20): action-nodes.md's opening paragraph now names what slice 3
+         *              added → its own § The node states and the node card and § The bot planner (`same-doc` 43 → 45).
+         *   448 → 450  content sets GEN-1 (2026-11-22): maze.md's tile-kind paragraph → its own new § Region biomes
+         *              (`same-doc` 45 → 46), and substrate-registry.md's new `regionBiomeOf` row → it (`doc` 337 → 338).
+         *   450 → 452  document library B3 (2026-11-23): editing-core.md § The document library → seedling-editor.md
+         *              § Saving to the library, and that section → editing-core.md § The document library (`doc` 338 → 340).
          */
         expect(by).toEqual({
-            'same-doc': 38,
-            doc: 311,
+            'same-doc': 46,
+            doc: 340,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(415);
+        expect(CORPUS.length).toBe(452);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(311);
+        //   421 → 428: ActionNodes AN-1 — action-nodes.md (its index row, 5 links out) and the registry's
+        //   annotation row to it (7 doc).
+        //   429 → 430: content packs PL-2 — concepts.md § The resolver… → action-nodes.md (1 doc).
+        //   324 → 327: ActionNodes AN-2 — action-nodes.md § The runtime ⇄ loop-recording.md § The start gate, and the
+        //   registry's `loopSupport.actionGate` row → action-nodes.md § The runtime (3 doc).
+        //   327 → 329: ActionNodes AN-1b — the registry's `fillRules` row → concepts.md and its
+        //   `loopSupport.strictQueueActions` row → action-nodes.md § No explore (2 doc).
+        //   329 → 332: ActionNodes AN-3a — the registry's `loopBot` row → action-nodes.md § The bot planner, that § ⇄
+        //   playback-and-debugging.md § The playback bot (3 doc).
+        //   332 → 337: rule-table-doc-command — seedling-derived-rules.md (its index row, 2 links out) and the two
+        //   links in to it from maze.md and pipeline-presets.md (5 doc).
+        //   337 → 338: content sets GEN-1 — the registry's `regionBiomeOf` row → maze.md § Region biomes (1 doc).
+        //   338 → 340: document library B3 — editing-core.md ↔ seedling-editor.md § Saving to the library (2 doc).
+        expect(docs).toHaveLength(340);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

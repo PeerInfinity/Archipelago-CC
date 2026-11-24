@@ -33,6 +33,7 @@ import {
     preloadedDefaultContentPacks, resetDefaultContentCache, DEFER_CONTENT_SET, withoutContentSet,
     pickedContentList, selectableContentPacks,
 } from './worldContent.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 
@@ -80,7 +81,7 @@ function memIo(files = FIXTURE) {
         read,
         defaultRead,
         base: MEM,
-        readJson: async (url) => {
+        readJson: withFixtureProvenance(async (url) => {
             const hit = Object.keys(table).find((suffix) => url.endsWith(`/${suffix}`));
             if (!hit) {
                 const id = url.slice(MEM.length).split('/')[0];
@@ -93,7 +94,7 @@ function memIo(files = FIXTURE) {
             }
             read.push(url);
             return structuredClone(table[hit]);
-        },
+        }),
     };
 }
 /**
@@ -230,7 +231,11 @@ describe('loadContentSet — the load', () => {
         const set = await loadContentSet(['trial', 'later'], io);
         expect(Object.isFrozen(set)).toBe(true);
         expect(isContentSet(set)).toBe(true);
-        expect(Object.keys(set)).toEqual(['ids', 'concepts', 'text']);
+        // ⛓ CONTENT SETS GEN-1 — and the logic layer of the world's "what exists" packs: none named, none read.
+        expect(Object.keys(set)).toEqual(['ids', 'concepts', 'text', 'structure', 'structureIds']);
+        expect(set.structure).toBeNull();
+        expect(set.structureIds).toEqual([]);
+        expect(io.read.some((u) => u.includes('/structure/'))).toBe(false);
         expect(set.ids).toEqual(['trial', 'later']);
         expect(set.concepts.presenting('guardian').key).toBe('trial:character/the-gate');
         expect(set.text.string('trial:gate/blocked')).toBe(FIXTURE.later.text.strings['trial:gate/blocked']);

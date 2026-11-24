@@ -3,6 +3,8 @@
 import { evaluateRule } from '../shared/ruleEngine.js';
 // Import the function directly from its source file
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { isRegionReachable } from '../regionView/regionViewModel.js';
+import { helperDefinitionFor } from './helperDefinition.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 // eventBus will be injected during module initialization
@@ -700,20 +702,8 @@ class CommonUI {
         }
 
         // Try to look up helper definition from static data (rules.json) first
-        let helperDef = null;
-        if (stateSnapshotInterface && typeof stateSnapshotInterface.getStaticData === 'function') {
-          const staticData = stateSnapshotInterface.getStaticData();
-          if (staticData?.helpers) {
-            // helpers is keyed by player ID, try common player IDs
-            const playerIds = ['1', '0', 1, 0];
-            for (const pid of playerIds) {
-              if (staticData.helpers[pid]?.[rule.name]) {
-                helperDef = staticData.helpers[pid][rule.name];
-                break;
-              }
-            }
-          }
-        }
+        // keyed by player: the loaded player's helpers (helperDefinition.js)
+        const helperDef = helperDefinitionFor(stateSnapshotInterface, rule.name);
 
         // Only add expand/collapse button if we have a helper definition
         if (helperDef) {
@@ -2757,20 +2747,8 @@ class CommonUI {
           }
 
           // Try to look up helper definition from static data for expand/collapse
-          let helperDef = null;
-          if (stateSnapshotInterface && typeof stateSnapshotInterface.getStaticData === 'function') {
-            const staticData = stateSnapshotInterface.getStaticData();
-            if (staticData?.helpers) {
-              // helpers is keyed by player ID, try common player IDs
-              const playerIds = ['1', '0', 1, 0];
-              for (const pid of playerIds) {
-                if (staticData.helpers[pid]?.[ruleName]) {
-                  helperDef = staticData.helpers[pid][ruleName];
-                  break;
-                }
-              }
-            }
-          }
+          // keyed by player: the loaded player's helpers (helperDefinition.js)
+          const helperDef = helperDefinitionFor(stateSnapshotInterface, ruleName);
 
           // If we found a helper definition, add expand/collapse button
           if (helperDef) {
@@ -2879,11 +2857,7 @@ class CommonUI {
     const rawStatus = snapshot?.regionReachability?.[regionName];
     let displayStatus; // Will be true (accessible), false (inaccessible), or undefined (unknown)
 
-    if (
-      rawStatus === 'reachable' ||
-      rawStatus === 'checked' ||
-      rawStatus === true
-    ) {
+    if (isRegionReachable(snapshot, regionName)) {
       displayStatus = true;
     } else if (rawStatus === undefined) {
       displayStatus = undefined; // Explicitly undefined if not in snapshot or snapshot missing
@@ -2984,12 +2958,7 @@ class CommonUI {
     const isChecked = checkedLocations.has(locationName);
 
     // Check if the region is accessible
-    const regionStatus = snapshot?.regionReachability?.[regionName];
-    const isRegionAccessible = (
-      regionStatus === 'reachable' ||
-      regionStatus === 'checked' ||
-      regionStatus === true
-    );
+    const isRegionAccessible = isRegionReachable(snapshot, regionName);
 
     // Location is only truly accessible if both location AND region are accessible
     const isFullyAccessible = isLocationAccessible && isRegionAccessible;

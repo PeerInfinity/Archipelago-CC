@@ -1,0 +1,4 @@
+[31m     [31m×[31m OFF the glide resumes after the lump; ON it ran through the 150 frames and the block is already at rest[39m[32m 85[2mms[22m[39m
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[31m[1mAssertionError[22m: expected [ 81.5, 81.5 ] to deeply equal [ 81.5, 88.5 ][39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m20 passed[39m[22m[90m (21)[39m

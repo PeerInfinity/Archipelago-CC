@@ -1,10 +1,11 @@
-import { getModuleEventBus, getNodeLabelProvider } from './index.js';
+import { getModuleEventBus, getNodeLabelProvider, moduleDispatcher } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import { evaluateRule } from '../shared/ruleEngine.js';
-import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
+import { runClickActions, clickStatusOf, REGION_CLICKED, LOCATION_CLICKED } from '../regionView/clickActions.js';
+import { REGION_GRAPH_ORIGINATORS } from './regionGraphOriginators.js';
+import { isRegionGroupNode, GROUP_CLASS } from './subRegionGroups.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -18,23 +19,7 @@ export class GraphInteractionManager {
   }
 
   setupEventHandlers() {
-    this.ui.cy.on('tap', 'node', (evt) => {
-      const node = evt.target;
-
-      // Skip if this is the player node
-      if (node.hasClass('player')) {
-        return;
-      }
-
-      // Handle location node clicks
-      if (node.hasClass('location-node')) {
-        this.handleLocationNodeClick(node);
-        return; // Don't process as region node
-      }
-
-      // Handle region node clicks
-      this.handleRegionNodeClick(node);
-    });
+    this.ui.cy.on('tap', 'node', (evt) => this.onNodeTap(evt.target));
 
     this.ui.cy.on('layoutstop', () => {
       // Keep isLayoutRunning true during animation to prevent premature player positioning
@@ -54,6 +39,7 @@ export class GraphInteractionManager {
 
         this.ui.isLayoutRunning = false;
         this.ui.saveNodePositions();
+        this.ui.dataManager.reseatLocationNodes();
         this.ui.updateStatus('Layout complete');
 
         // Position the player after layout animation is complete (for initial load)
@@ -97,6 +83,11 @@ export class GraphInteractionManager {
         }
       });
     }
+
+    // A dragged group box (subRegionView = nested) moves its members: their location nodes follow.
+    this.ui.cy.on('drag dragfree', `node.${GROUP_CLASS}`, (evt) => {
+      for (const member of evt.target.data('members') ?? []) this.ui.updateLocationNodePositions(member);
+    });
 
     // Update location nodes when region nodes are dragged
     this.ui.cy.on('drag', 'node.region', (evt) => {
@@ -167,156 +158,27 @@ export class GraphInteractionManager {
         this.updateZoomBasedVisibility();
       });
     });
-
-    // Make "Add to path" and "Overwrite path" mutually exclusive
-    const addToPathCheckbox = this.ui.controlPanel.querySelector('#addToPath');
-    const overwritePathCheckbox = this.ui.controlPanel.querySelector('#overwritePath');
-
-    if (addToPathCheckbox && overwritePathCheckbox) {
-      addToPathCheckbox.addEventListener('change', (e) => {
-        if (e.target.checked) {
-          overwritePathCheckbox.checked = false;
-          this.ui.saveCheckboxSetting('#overwritePath', 'moduleSettings.regionGraph.overwritePath', false);
-        }
-        this.ui.saveCheckboxSetting('#addToPath', 'moduleSettings.regionGraph.addToPath', e.target.checked);
-      });
-
-      overwritePathCheckbox.addEventListener('change', (e) => {
-        if (e.target.checked) {
-          addToPathCheckbox.checked = false;
-          this.ui.saveCheckboxSetting('#addToPath', 'moduleSettings.regionGraph.addToPath', false);
-        }
-        this.ui.saveCheckboxSetting('#overwritePath', 'moduleSettings.regionGraph.overwritePath', e.target.checked);
-      });
-    }
-
-    // Make "Move player one step" and "Move player directly" mutually exclusive
-    const moveOneStepCheckbox = this.ui.controlPanel.querySelector('#movePlayerOneStep');
-    const moveDirectlyCheckbox = this.ui.controlPanel.querySelector('#movePlayerDirectly');
-
-    if (moveOneStepCheckbox && moveDirectlyCheckbox) {
-      moveOneStepCheckbox.addEventListener('change', (e) => {
-        if (e.target.checked) {
-          moveDirectlyCheckbox.checked = false;
-          this.ui.saveCheckboxSetting('#movePlayerDirectly', 'moduleSettings.regionGraph.movePlayerDirectly', false);
-        }
-        this.ui.saveCheckboxSetting('#movePlayerOneStep', 'moduleSettings.regionGraph.movePlayerOneStep', e.target.checked);
-      });
-
-      moveDirectlyCheckbox.addEventListener('change', (e) => {
-        if (e.target.checked) {
-          moveOneStepCheckbox.checked = false;
-          this.ui.saveCheckboxSetting('#movePlayerOneStep', 'moduleSettings.regionGraph.movePlayerOneStep', false);
-        }
-        this.ui.saveCheckboxSetting('#movePlayerDirectly', 'moduleSettings.regionGraph.movePlayerDirectly', e.target.checked);
-      });
-    }
-
-    // Handle the "Show region in panel" checkbox
-    const showRegionInPanelCheckbox = this.ui.controlPanel.querySelector('#showRegionInPanel');
-    if (showRegionInPanelCheckbox) {
-      showRegionInPanelCheckbox.addEventListener('change', (e) => {
-        this.ui.saveCheckboxSetting('#showRegionInPanel', 'moduleSettings.regionGraph.showRegionInPanel', e.target.checked);
-      });
-    }
-
-    // Handle the "Add locations to path" checkbox
-    const addLocationsToPathCheckbox = this.ui.controlPanel.querySelector('#addLocationsToPath');
-    if (addLocationsToPathCheckbox) {
-      addLocationsToPathCheckbox.addEventListener('change', (e) => {
-        this.ui.saveCheckboxSetting('#addLocationsToPath', 'moduleSettings.regionGraph.addLocationsToPath', e.target.checked);
-      });
-    }
-
-    const checkAllLocationsInRegionCheckbox = this.ui.controlPanel.querySelector('#checkAllLocationsInRegion');
-    if (checkAllLocationsInRegionCheckbox) {
-      checkAllLocationsInRegionCheckbox.addEventListener('change', (e) => {
-        this.ui.saveCheckboxSetting('#checkAllLocationsInRegion', 'moduleSettings.regionGraph.checkAllLocationsInRegion', e.target.checked);
-      });
-    }
   }
 
+  /**
+   * ⛓ A click on a location node (a tap, or the "Go to" picker): the panel's LOCATION click actions
+   * (`moduleSettings.regionGraph.clickActions.location`, the "On click" strip; slice CA-S2).
+   */
   handleLocationNodeClick(node) {
     const locationName = node.data('locationName') || node.data('label');
     const parentRegion = node.data('parentRegion');
 
     logger.debug(`Location node clicked: ${locationName} in ${parentRegion}`);
-
-    // Discovery mode: if location checks are disabled, skip the check
-    if (this.ui.isDiscoveryModeActive && this.ui.discoverySettings.disableLocationCheckUI) {
-      logger.debug(`Location check disabled by discovery settings, skipping: ${locationName}`);
-      return;
-    }
-
-    // Check which actions are enabled via checkboxes (same logic as region nodes)
-    const movePlayerOneStepCheckbox = this.ui.controlPanel.querySelector('#movePlayerOneStep');
-    const movePlayerDirectlyCheckbox = this.ui.controlPanel.querySelector('#movePlayerDirectly');
-    const showRegionCheckbox = this.ui.controlPanel.querySelector('#showRegionInPanel');
-    const addToPathCheckbox = this.ui.controlPanel.querySelector('#addToPath');
-    const overwritePathCheckbox = this.ui.controlPanel.querySelector('#overwritePath');
-
-    // Check if we should add to path (use settings)
-    settingsManager.getSetting('moduleSettings.regionGraph.addLocationsToPath', false).then(shouldAddToPath => {
-      if (shouldAddToPath) {
-        logger.debug(`Adding location ${locationName} to path in region ${parentRegion}`);
-
-        // First, navigate to the region using the same logic as region node clicks
-        if (addToPathCheckbox && addToPathCheckbox.checked) {
-          this.ui.addToPath(parentRegion, movePlayerOneStepCheckbox && movePlayerOneStepCheckbox.checked);
-        } else if (overwritePathCheckbox && overwritePathCheckbox.checked) {
-          this.ui.overwritePath(parentRegion, movePlayerOneStepCheckbox && movePlayerOneStepCheckbox.checked);
-        } else {
-          // Neither path option is checked - handle move player options
-          if (movePlayerOneStepCheckbox && movePlayerOneStepCheckbox.checked) {
-            this.ui.attemptMovePlayerOneStepToRegion(parentRegion);
-          }
-          if (movePlayerDirectlyCheckbox && movePlayerDirectlyCheckbox.checked) {
-            this.ui.attemptMovePlayerDirectlyToRegion(parentRegion);
-          }
-        }
-
-        // Then add the location check to the path
-        import('../gameState/singleton.js').then(({ getGameStateSingleton }) => {
-          const gameState = getGameStateSingleton();
-          gameState.addLocationCheck(locationName, parentRegion);
-          logger.debug(`Added location ${locationName} to player path`);
-          // The path update will automatically trigger highlightPathEdges via the event system
-        }).catch(error => {
-          logger.error('Error adding location to path:', error);
-        });
-      } else {
-        // Original behavior - dispatch location check event
-        this.dispatchLocationCheckEvent(locationName, parentRegion);
-      }
-    }).catch(error => {
-      logger.error('Error getting setting:', error);
-      // Fallback to original behavior
-      this.dispatchLocationCheckEvent(locationName, parentRegion);
-    });
+    // ⛓ CA-S4: the generic click event (design §4.3), before the actions, as the Region Map publishes it.
+    this.eventBus.publish(LOCATION_CLICKED, { panelId: 'regionGraph', regionName: parentRegion, locationName });
+    return this.runClick('location', { regionName: parentRegion, locationName });
   }
 
-  dispatchLocationCheckEvent(locationName, parentRegion) {
-    import('./index.js').then(({ moduleDispatcher }) => {
-      const payload = {
-        locationName: locationName,
-        regionName: parentRegion,
-        originator: 'RegionGraphCheck',
-        originalDOMEvent: true,
-      };
-
-      if (moduleDispatcher) {
-        moduleDispatcher.publish('user:locationCheck', payload, {
-          initialTarget: 'bottom',
-        });
-        logger.debug('Dispatched user:locationCheck', payload);
-      } else {
-        logger.error('moduleDispatcher not available to handle location check.');
-      }
-    }).catch(error => {
-      logger.error('Error importing moduleDispatcher:', error);
-    });
-  }
-
+  /**
+   * ⛓ A click on a region node (a tap, the "Go to" picker, or an overlay card's body): select it (the visual select
+   * state), publish the generic `regionView:regionClicked` (CA-S4), then run the panel's REGION click actions.
+   * CA-S5 retired `regionGraph:nodeSelected`, which was published here first: nothing in the app heard it.
+   */
   handleRegionNodeClick(node) {
     const regionName = node.id(); // Node ID is the region name
 
@@ -328,116 +190,60 @@ export class GraphInteractionManager {
     this.ui.cy.$('node').removeClass('selected');
     node.addClass('selected');
 
-    // Publish the custom regionGraph event for any other listeners
-    this.eventBus.publish('regionGraph:nodeSelected', {
-      nodeId: regionName,
-      data: node.data()
-    });
+    // ⛓ CA-S4: the generic click event (design §4.3), the Region Map's shape; apcalc and vibeCodingSim hear it.
+    this.eventBus.publish(REGION_CLICKED, { panelId: 'regionGraph', regionName });
 
-    // Check which actions are enabled via checkboxes
-    const movePlayerOneStepCheckbox = this.ui.controlPanel.querySelector('#movePlayerOneStep');
-    const movePlayerDirectlyCheckbox = this.ui.controlPanel.querySelector('#movePlayerDirectly');
-    const showRegionCheckbox = this.ui.controlPanel.querySelector('#showRegionInPanel');
-    const addToPathCheckbox = this.ui.controlPanel.querySelector('#addToPath');
-    const overwritePathCheckbox = this.ui.controlPanel.querySelector('#overwritePath');
-
-    // Handle path modifications (Add to path or Overwrite path)
-    if (addToPathCheckbox && addToPathCheckbox.checked) {
-      this.ui.addToPath(regionName, movePlayerOneStepCheckbox && movePlayerOneStepCheckbox.checked);
-    } else if (overwritePathCheckbox && overwritePathCheckbox.checked) {
-      this.ui.overwritePath(regionName, movePlayerOneStepCheckbox && movePlayerOneStepCheckbox.checked);
-    } else {
-      // Neither path option is checked - handle move player options
-      // Move player one step towards region (if enabled)
-      if (movePlayerOneStepCheckbox && movePlayerOneStepCheckbox.checked) {
-        this.ui.attemptMovePlayerOneStepToRegion(regionName);
-      }
-
-      // Move player directly to region (if enabled)
-      if (movePlayerDirectlyCheckbox && movePlayerDirectlyCheckbox.checked) {
-        this.ui.attemptMovePlayerDirectlyToRegion(regionName);
-      }
-    }
-
-    // Show region in Regions panel (if enabled)
-    if (showRegionCheckbox && showRegionCheckbox.checked) {
-      // Control "Show All Regions" based on path modification checkboxes
-      const shouldShowAll = !(addToPathCheckbox?.checked || overwritePathCheckbox?.checked);
-      this.ui.setShowAllRegions(shouldShowAll);
-
-      // Activate the regions panel
-      this.eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' });
-      logger.debug('Published ui:activatePanel for regionsPanel');
-
-      // Navigate to the region
-      this.eventBus.publish('ui:navigateToRegion', { regionName: regionName });
-      logger.debug(`Published ui:navigateToRegion for ${regionName}`);
-    }
-
-    // Check all locations in region (if enabled)
-    const checkAllLocationsCheckbox = this.ui.controlPanel.querySelector('#checkAllLocationsInRegion');
-    if (checkAllLocationsCheckbox && checkAllLocationsCheckbox.checked) {
-      this.checkAllLocationsInRegion(regionName);
-    }
+    return this.runClick('region', { regionName });
   }
 
-  checkAllLocationsInRegion(regionName) {
-    // Discovery mode: if location checks are disabled, skip
-    if (this.ui.isDiscoveryModeActive && this.ui.discoverySettings.disableLocationCheckUI) {
-      logger.debug(`Location checks disabled by discovery settings, skipping bulk check for: ${regionName}`);
-      return;
+  /**
+   * The handles the click actions run with (CA-S1 §6.3): the navigation manager's (`stateManager`, `pathFinder`,
+   * `gameState`, `getRules`, `restart`) with THIS module's dispatcher, its event bus, its originators, the planners'
+   * error log, and "Show All Regions" off before a path edit runs (§6.2: the path edits always did that).
+   */
+  clickHandles() {
+    const nav = this.ui.navigationManager;
+    const h = nav._handles(moduleDispatcher);
+    return Object.assign(h, {
+      eventBus: this.eventBus,
+      originators: REGION_GRAPH_ORIGINATORS,
+      onError: (error) => logger.warn('Error getting player location:', error),
+      beforePathExecute: () => nav.setShowAllRegions(false),
+    });
+  }
+
+  /**
+   * Run the enabled click actions for one click (`runClickActions`, in the R8 order: path, checks, panel actions),
+   * then show the route's result in the status bar as the moves always did. → the `runClickActions` answer, or null
+   * when the module dispatcher is not up yet (before `initialize`).
+   */
+  runClick(target, ctx) {
+    if (!moduleDispatcher) {
+      logger.warn('moduleDispatcher not available: the click actions did not run');
+      return null;
     }
-
-    // Get locations in this region
-    const staticData = stateManager.getStaticData();
-    const regionData = staticData?.regions?.get(regionName);
-
-    if (regionData && regionData.locations && regionData.locations.length > 0) {
-      // Get current state to check which locations are accessible
-      const snapshot = stateManager.getLatestStateSnapshot();
-      const snapshotInterface = createSnapshotInterface(snapshot, staticData);
-      const checkedLocations = new Set(snapshot.checkedLocations || []);
-
-      // Check each location that is accessible and not already checked
-      import('./index.js').then(({ moduleDispatcher }) => {
-        let locationsChecked = 0;
-
-        regionData.locations.forEach(location => {
-          // Skip if already checked
-          if (checkedLocations.has(location.name)) {
-            return;
-          }
-
-          // Check if location is accessible
-          const isAccessible = location.access_rule ?
-            evaluateRule(location.access_rule, snapshotInterface) : true;
-
-          if (isAccessible) {
-            // Dispatch location check event
-            const payload = {
-              locationName: location.name,
-              regionName: regionName,
-              originator: 'RegionGraphBulkCheck',
-              originalDOMEvent: true,
-            };
-
-            if (moduleDispatcher) {
-              moduleDispatcher.publish('user:locationCheck', payload, {
-                initialTarget: 'bottom',
-              });
-              locationsChecked++;
-              logger.debug('Dispatched user:locationCheck for bulk check', payload);
-            }
-          }
-        });
-
-        if (locationsChecked > 0) {
-          logger.debug(`Checked ${locationsChecked} accessible locations in ${regionName}`);
-        }
-      }).catch(error => {
-        logger.error('Error importing moduleDispatcher for bulk location check:', error);
-      });
+    const settings = this.ui.clickActions;
+    const discovery = { active: this.ui.isDiscoveryModeActive, settings: this.ui.discoverySettings };
+    const result = runClickActions('regionGraph', target, { ...ctx, discovery }, settings, this.clickHandles());
+    if (result.skipped?.length) logger.debug('Click actions not loaded:', result.skipped.map((s) => s.id));
+    const status = clickStatusOf(result, ctx, settings);
+    if (status) {
+      if (status.from === 'player' && status.text.startsWith('No path to')) this.ui.navigationManager._flashNoPath(status.text);
+      else this.ui.updateStatus(status.text);
     }
+    return result;
+  }
+
+
+  /**
+   * A tap on a node: a location node runs the LOCATION click actions, a region node the REGION ones. The player
+   * marker and a group box (subRegionView = nested: a compound parent, not a region) run none.
+   * → the click's result, or null when nothing ran.
+   */
+  onNodeTap(node) {
+    if (node.hasClass('player') || isRegionGroupNode(node)) return null;
+    if (node.hasClass('location-node')) return this.handleLocationNodeClick(node);
+    return this.handleRegionNodeClick(node);
   }
 
   highlightCurrentRegion(regionName) {
@@ -634,7 +440,7 @@ export class GraphInteractionManager {
       const isDiscoveryModeActive = this.ui.isDiscoveryModeActive || false;
       const showUndiscoveredNames = this.ui.discoverySettings?.showUndiscoveredRegionNames || false;
       this.ui.cy.nodes().forEach(node => {
-        if (!node.hasClass('location-node') && !node.hasClass('player')) {
+        if (!node.hasClass('location-node') && !node.hasClass('player') && !isRegionGroupNode(node)) {
           const regionName = node.data('regionName') || node.id();
           if (isDiscoveryModeActive && !discoveryStateSingleton.isRegionDiscovered(regionName)) {
             if (showUndiscoveredNames && !node.hasClass('discovery-hidden')) {
@@ -654,6 +460,7 @@ export class GraphInteractionManager {
       // Show location labels if forced (at same zoom as region labels)
       this.ui.cy.style()
         .selector('node.region').style('label', 'data(label)')
+        .selector(`node.${GROUP_CLASS}`).style('label', 'data(label)')
         .selector('.location-node').style('label', forceShowLocationLabels ? 'data(label)' : '')
         .selector('edge').style('label', '')
         .update();
@@ -663,6 +470,7 @@ export class GraphInteractionManager {
       // Show location labels if forced (at same zoom as region labels)
       this.ui.cy.style()
         .selector('node.region').style('label', 'data(label)')
+        .selector(`node.${GROUP_CLASS}`).style('label', 'data(label)')
         .selector('.location-node').style('label', forceShowLocationLabels ? 'data(label)' : '')
         .selector('edge').style('label', '')
         .update();
@@ -672,6 +480,7 @@ export class GraphInteractionManager {
       // Apply all labels except location nodes (unless forced)
       this.ui.cy.style()
         .selector('node.region').style('label', 'data(label)')
+        .selector(`node.${GROUP_CLASS}`).style('label', 'data(label)')
         .selector('node.player').style('label', 'data(label)')
         .selector('.location-node').style('label', forceShowLocationLabels ? 'data(label)' : '')
         .selector('edge[label]').style('label', edgeLabelStyle)
@@ -682,6 +491,7 @@ export class GraphInteractionManager {
       this.updateRegionLabelsWithCounts();
       this.ui.cy.style()
         .selector('node.region').style('label', 'data(label)')
+        .selector(`node.${GROUP_CLASS}`).style('label', 'data(label)')
         .selector('node.player').style('label', 'data(label)')
         .selector('.location-node').style('label', forceShowLocationLabels ? 'data(label)' : '')
         .selector('edge[label]').style('label', edgeLabelStyle)
@@ -692,6 +502,7 @@ export class GraphInteractionManager {
       this.updateRegionLabelsWithCounts();
       this.ui.cy.style()
         .selector('node.region').style('label', 'data(label)')
+        .selector(`node.${GROUP_CLASS}`).style('label', 'data(label)')
         .selector('node.player').style('label', 'data(label)')
         .selector('.location-node').style('label', 'data(label)')
         .selector('edge[label]').style('label', edgeLabelStyle)
@@ -709,7 +520,7 @@ export class GraphInteractionManager {
     const showUndiscoveredNames = this.ui.discoverySettings?.showUndiscoveredRegionNames || false;
     const hasLabelProvider = !!getNodeLabelProvider();
     this.ui.cy.nodes().forEach(node => {
-      if (!node.hasClass('location-node') && !node.hasClass('player')) {
+      if (!node.hasClass('location-node') && !node.hasClass('player') && !isRegionGroupNode(node)) {
         const regionName = node.data('regionName') || node.id();
         // In discovery mode, undiscovered regions show ??? or name depending on setting
         if (isDiscoveryModeActive && !discoveryStateSingleton.isRegionDiscovered(regionName)) {

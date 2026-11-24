@@ -12,6 +12,7 @@ import {
 import { centralRegistry } from '../../../app/core/centralRegistry.js'; // RE-ADD import
 import { docsBase } from '../../../app/config/docsBase.js';
 import { mountChecksLine } from '../../commonUI/checksLine.js';
+import { createOfferTabMarker } from './offerTabMarker.js';
 
 
 // Helper function for logging with fallback
@@ -114,6 +115,16 @@ class MainContentUI {
     this.eventBus.subscribe('game:roomInfo', (data) => {
       this._roomGames = [...(data?.games || [])].filter((g) => g !== 'Archipelago');
       this._renderGamePicker();
+    });
+    this.eventBus.subscribe('client:offlineProgressOffer', (offer) => this._renderOfflineProgress(offer));
+    this.eventBus.subscribe('client:offlineProgressOfferClosed', () => this._renderOfflineProgress(null));
+    // While an offer waits and this panel is another tab, its tab shows " •" (DOM only; never
+    // setTitle, which would write the marker into the saved layout). Its own subscriptions,
+    // dropped in dispose(), so a remounted panel's dead instance marks nothing.
+    this.offerTabMarker = createOfferTabMarker({
+      container: this.container,
+      bus: this.eventBus,
+      getOffer: () => this.messageHandler?.getOfflineProgressOffer?.() ?? null,
     });
     this.eventBus.subscribe('client:gameChoiceNeeded', (data) => {
       if (Array.isArray(data?.games)) this._roomGames = data.games;
@@ -223,6 +234,14 @@ class MainContentUI {
               <datalist id="client-game-options"></datalist>
             </div>
           </div>
+
+          <div id="client-offline-progress" role="group" aria-label="Offline progress" style="display: none; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; padding: 6px 8px; background-color: #3a3522; border: 1px solid #8a7a3a; border-radius: 3px;">
+            <span class="offline-progress-message" style="flex: 1 1 280px;"></span>
+            <span class="offline-progress-goal" style="display: none; flex: 1 1 100%; color: #ffb366;"></span>
+            <button class="offline-progress-send" style="padding: 4px 10px;">Send</button>
+            <button class="offline-progress-later" style="padding: 4px 10px;">Not now</button>
+            <button class="offline-progress-discard" style="padding: 4px 10px;">Discard</button>
+          </div>
           
           <div id="console-checks-line" style="font-size: 0.9em;"></div>
         </div>
@@ -268,6 +287,7 @@ class MainContentUI {
     this.gamePicker = root.querySelector('#client-game-picker');
     this.gameInput = root.querySelector('#client-game');
     this.gameOptions = root.querySelector('#client-game-options');
+    this.offlineProgressBar = root.querySelector('#client-offline-progress');
 
     this.attachEventListeners();
     this.initializeConsole();
@@ -277,6 +297,8 @@ class MainContentUI {
     // state but has nothing to draw on until now).
     this.updateConnectionStatus(this._connectionState, this._connectionDetail);
     this._renderGamePicker();
+    // An offer made before this panel existed (or while it was another tab) is still open on the handler.
+    this._renderOfflineProgress(this.messageHandler?.getOfflineProgressOffer?.() ?? null);
 
     this.checksLine?.dispose();
     this.checksLine = mountChecksLine(root.querySelector('#console-checks-line'), {
@@ -341,6 +363,26 @@ class MainContentUI {
     }
   }
 
+  /**
+   * The offline-progress offer (messageHandler._offerOfflineProgress): its text, the goal
+   * warning when the goal is in it, and Send / Not now / Discard. Hidden when there is none.
+   */
+  _renderOfflineProgress(offer) {
+    const bar = this.offlineProgressBar;
+    if (!bar) return;
+    if (!offer) {
+      bar.style.display = 'none';
+      return;
+    }
+    // The bar shows the summary; the goal sentence gets its own line, so it can't be missed.
+    const [summary, goalPart] = offer.message.split(/ (?=This includes your goal)/);
+    bar.querySelector('.offline-progress-message').textContent = summary;
+    const goal = bar.querySelector('.offline-progress-goal');
+    goal.textContent = goalPart ? `⚠ ${goalPart}` : '';
+    goal.style.display = goalPart ? 'block' : 'none';
+    bar.style.display = 'flex';
+  }
+
   /** Hands the Game field's value to the handler (connects if it is waiting). */
   _submitGameChoice() {
     const game = this.gameInput?.value?.trim();
@@ -349,6 +391,14 @@ class MainContentUI {
   }
 
   attachEventListeners() {
+    if (this.offlineProgressBar) {
+      for (const [cls, choice] of [['send', 'send'], ['later', 'later'], ['discard', 'discard']]) {
+        this.offlineProgressBar.querySelector(`.offline-progress-${cls}`)?.addEventListener('click', () => {
+          this.messageHandler?.respondToOfflineProgress?.(choice);
+        });
+      }
+    }
+
     if (this.gameInput) {
       this.gameInput.addEventListener('change', () => this._submitGameChoice());
       this.gameInput.addEventListener('keydown', (event) => {
@@ -1227,6 +1277,8 @@ class MainContentUI {
 
     this.checksLine?.dispose();
     this.checksLine = null;
+    this.offerTabMarker?.dispose();
+    this.offerTabMarker = null;
 
     // Detach any DOM elements this UI created if necessary
     if (this.rootElement && this.rootElement.parentNode) {

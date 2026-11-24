@@ -37,6 +37,18 @@ A flood fill (`componentsOf` in `scripts/procgen/seedlingRouteGraph.mjs`) treats
 - Check with a directed flood (the same BFS with the edge predicate) against the undirected one.
 - Two one-way branches can be mutually exclusive; sweep each opener alone and all together before reporting a route.
 
+### Entry gates: every reader honours them (fixed by content sets PASS-3)
+
+The maze engine's one-way primitive, `entry_gates` (`{x, y, dir, gate}`; `gate: null` means no entry that way), used to be honoured by `step`, `whyBlocked` and `bfsSolver` only. The generic extractor (`ghostStep`, `minimalObstacleSets`) and the autopather's `_bfsToGoal` ignored it, so a `null`-gated exit was extracted as reachable with no rule while the engine refused the walk (measured by content sets PASS-D). **Fixed in PASS-3 part 0**:
+- `ghostStep` and `floorReachableSet` refuse a `null` gate as they refuse a wall;
+- `obstaclesAlongPath` and `minimalObstacleSets` charge a gated entry (a gate id) like an obstacle on that directed step;
+- the autopather's walkability check reads the move's gate.
+
+Pinned by `mazeRoom/mazeEntryGatesExtract.test.js`: PASS-D's corridor, and every single and pair of `null` gates on an open room (the extractor, `step`'s BFS and the autopather agree per target).
+
+- The fix moved `engineMd5`. The derived-rule table was regenerated with no verdict moved, and no preset byte moved. The generic extractor's own re-derivation of four `seedling_playthrough_maze` regions (`level_12__r0c19`, `level_19__r1c1`, `level_68__r1c1`, `level_99__r2c4`) became stricter, because it now charges their gated entries (⚖ the user, 2026-11-19: "Yes, please continue"). Their shipped rules come from the table, and the hub keeps them frozen.
+- Still not reading entry gates, on purpose: `mazeGeometry`'s `longestShortestPath`, a geometric metric baked into payloads (reading gates there would move preset bytes), and the visualizer's blocked-step log text.
+
 ### A minimal-set search over an item lattice assumes monotonicity, and the learning walk cannot check it
 
 The maze certifier's lattice walks (`deriveLevelWorldLogic.js`) take for granted that holding more items never loses a target: the rank walk's superset skip, the top-point skip, the latch sandwich, and above 4,096 points the learning walk (`learnLattice.js`), which decides a whole down-set from one negative point. The learner gives NO signal when the premise breaks: over all 236 non-monotone predicates on 3 items it refused none and answered all (session tile-l12-level-world). So the guard is static: `assertMonotoneWorld` refuses any rule node other than Has / And / Or and any trap armed by an axis item before the first search. A new rule kind or an item that ARMS something is refused there by name; do not route around the refusal, price the mechanic first. An event target's own event is the one admitted exception, learned on the axis without it.

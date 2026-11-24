@@ -35,7 +35,7 @@
 
 import {
     NEAREST_TILE_INDEX, PLAYER_SOLID_TYPES, SOLID_GRID, TILE_SIZE,
-    addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap, tagOf, withRuntimeTeleporters, withTileWrites,
+    ADDED_TIME_PROPERTIES, addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap, tagOf, withRuntimeTeleporters, withTileWrites,
     maskHitsBox,
 } from './levelWorld.js';
 import {
@@ -218,6 +218,8 @@ import {
     // ⛓ R9 SLICE 12c‴, ⚖ ruling 45: the same table MINUS `playerHit` — the
     // writers a room can open WITHOUT the player doing anything.
     BOSS_CLASS_SHAKE_WRITERS,
+    // ⛓ unbilledhits D3: the band's opener, named in the on-screen refusals (`bandOpenerText`).
+    SHAKE_BAND_KEPT,
     // ⛓ U14-swim D1: `Moonrock.update`'s camera target is `FP.screen`-relative.
     SCREEN_H, SCREEN_W,
 } from './camera.js';
@@ -420,6 +422,30 @@ function darkSuitHitChaser(c, p, frozen) {
 }
 
 /**
+ * ⛓ fidelity OWLSUIT D2 (`CONTACT_FIDELITY.owlContactInStep`) — THE DARK SUIT'S RETALIATION INTO THE OWL.
+ *
+ * `Player.hit`'s `e.hit(darkSuitForce, new Point(x, y), darkSuitDamage, "Suit")` (`Player.as:1384-1387`) with `e` the
+ * Owl. `FinalBoss` has no `hit` override, so it is `Enemy.hit` (`Enemies/Enemy.as:141-181`): the `maxForce` clamp
+ * (-1, or 2 after the first lava hit: force 1 either way); the gate `(hitsTimer <= 0 || hitByDarkStuff) &&
+ * !freezeObjects && canHit` — `hitByDarkStuff` is never true for him (the lava hit writes it false, and this arm does
+ * not write it), and `canHit` is LAST tick's `rockfallTime < 0` (`FinalBoss.as:131`, assigned after
+ * `super.update()`), so a barrage swallows it; then `onlyHitBy = "Lava"` (`FinalBoss.as:61`) is not "Suit", so the
+ * damage arm is skipped and `justKnock` (`:62`) takes `knockback(f, p)` (`Enemy.as:247-255`): `v += f·(cos a, sin a)`,
+ * `a = atan2(y - p.y, x - p.x)`. No hits, no i-frame, no latch: `darkSuitDamage` is unread. That is `finalBossHit`'s
+ * `justKnock` arm, called here.
+ *
+ * @returns the `playerHits` row's `retaliation` field: the Owl's `v` AFTER the shove — the value the cap and the
+ *   walk/coast split then read on this same tick.
+ */
+function owlSuitRetaliation(b, p) {
+    const r = finalBossHit(b, { force: DARK_SUIT_FORCE, fromX: p.x, fromY: p.y, type: 'Suit' });
+    return {
+        id: b.id, as3: 'FinalBoss', landed: r.landed, damaged: r.damaged === true, force: r.force,
+        why: r.why ?? 'justKnock: onlyHitBy "Lava" != "Suit"', vx: b.vx, vy: b.vy,
+    };
+}
+
+/**
  * The one `Enemy.hit` a dark arm makes on a stepped chaser — the shield's
  * (`"Shield"`) and the suit's (`"Suit"`) differ in the force and the damage.
  * A landed non-killing hit calls `knockback(f, p)` (`f` capped by `maxForce`),
@@ -479,6 +505,8 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'tentacleBeastFight',
     // ⛓ fidelity DRILL D2: the drills this visit steps, live (the danger map's static row reads them).
     'drillBodies',
+    // ⛓ seedling-fidelity-wallflyerbodies: the wallflyers still in the world (dying ones too, by their fields).
+    'wallFlyerBodies',
 ]);
 
 /**
@@ -841,6 +869,15 @@ export function createLevelRun({
      * (an in-place reboot, a cold adoption) — never over a replayed prefix, which re-bills its own hits.
      */
     playerDamage = null,
+    /**
+     * ⛓⛓⛓ seedling-js-item-live-delivery — THE HOST DELIVERIES A LIVE SESSION WROTE INTO ITS RUN (`deliver`), as
+     * `[{t, change}]`: applied at the same tick BOUNDARY (`t` = `ticksCompleted` when it was written), so a run
+     * rebuilt from the session's staging and replayed through its keys — the JS solver's shadow and every fork
+     * (`jsRuntimeSolver.replayTape` / `forkRunFor`, which hand the staging through `createRunForStaging`) — is the
+     * run the page plays. An OPTIONAL field no tape carries (`stagingFromTape` does not copy it), like
+     * `inventorySlots` / `playerDamage`: empty = every run before this slice.
+     */
+    stagedDeliveries = [],
 }) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
@@ -1023,6 +1060,20 @@ export function createLevelRun({
     const sealParts = Array.from({ length: SAVE_SLOTS.seal_parts }, () => -1);
     (bootSave.seal_parts ?? []).forEach((identity, slot) => { sealParts[slot] = identity; });
     const hasAllTotemParts = () => totemParts.size >= SAVE_SLOTS.totem_parts;
+    /**
+     * ⛓ seedling-js-item-live-delivery — the two per-visit facts a LIVE delivery (`deliver`, below) leaves behind.
+     * Declared here, above every reader, because a reader may run during construction; both stay null on every run
+     * no host delivers into (every tape, every solve), so such a run is byte-identical to before.
+     *
+     *  · `liveSealVisit` `{level, entries}`: the visit during which the SIXTEENTH seal arrived. That visit's chests
+     *    were built without it, so they leave the way `Chest.update`'s `checkBySeal()` removes them (a wall until
+     *    the end of the frame that ran it), not the way a build removes them (absent from the start).
+     *  · `addedTimeHold` `{entries, values}`: the `ADDED_TIME_PROPERTIES` the current visit's world was built with,
+     *    held when a delivery changes one of them, so a mid-visit memo drop does not rebuild the room without an
+     *    entity whose `added()` already ran (Karlore, `Karlore.as:27-33`).
+     */
+    let liveSealVisit = null;
+    let addedTimeHold = null;
     /**
      * R2: the tape's persistence clears, indexed BY LEVEL.
      *
@@ -1286,7 +1337,10 @@ export function createLevelRun({
     };
     const worldFor = (n) => {
         if (!worlds.has(n)) {
-            const opts = { ...(roles ? { roles } : {}), inventory };
+            // ⛓ seedling-js-item-live-delivery: a delivered ADDED_TIME flag does not reach the CURRENT visit's build
+            // (its `added()` already ran); the next `new Game` — `enterWorld`'s `dropWorldIfBuiltStale` — does.
+            const held = addedTimeHold !== null && addedTimeHold.entries === worldEntries && n === level;
+            const opts = { ...(roles ? { roles } : {}), inventory: held ? { ...inventory, ...addedTimeHold.values } : inventory };
             if (clearedByLevel.has(n)) opts.cleared = clearedForBuild(n, clearedByLevel.get(n));
             // ⛓ Seedling fidelity F6 (I01): the next level's record, the only
             // one whose `tag = -1` writers land here — the provenance the build
@@ -3436,6 +3490,26 @@ export function createLevelRun({
      */
     let pendingDeath = null;
     /**
+     * ⛓ fidelity TURRETSUIT D2 (`CONTACT_FIDELITY.turretSuitRetaliation`, ON only): the tick a turret's contact was
+     * answered in its own slot (`turretHitPlayerNow`), until the static scan of that tick is reached. A frozen return
+     * between the two (`runFrozenTick`) finds it set and refuses by name. OFF it is never written.
+     */
+    let turretSlotContact = null;
+    /**
+     * ⛓ fidelity PICKUPFREEZE D2 (`CONTACT_FIDELITY.pickupTickFreeze`, ON only): this tick's prediction that a pickup
+     * ceremony starts (`pickupFreezeAheadNow`), `{t, level, start: null | {tag, textless}, slots}`, asked by the
+     * families that update after a pickup and re-checked at the detection. OFF it is never written.
+     */
+    let pickupFreezeAhead = null;
+    /**
+     * ⛓ fidelity DIALOGUEFREEZE D2 (`CONTACT_FIDELITY.dialogueFrameFreeze`, ON only): this tick's prediction that a
+     * texted NPC's `talk()` raises `Game.freezeObjects` and keeps it up (`dialogueFreezeAheadNow`), `{t, level, frozen,
+     * slots}`, asked by the families that update after the NPC and re-checked at the talker and watcher arms; and the
+     * tick's held keys, for the talk key's release. OFF neither is ever written.
+     */
+    let dialogueFreezeAhead = null;
+    let dialogueHeldNow = null;
+    /**
      * The `Game` constructor args of the CURRENT world — what
      * `restartLevel()` reboots into.
      *
@@ -3875,8 +3949,15 @@ export function createLevelRun({
      *     anim reached "sit" during the span HOPS (`Drill.update` runs its hop below `super.update()`).
      * Measured on p4g (`timedpass-l28-fire-l26` / `-l25`): the drill parked under the stance hops onto it in the pull's
      * own tick, and its contact lands only when the returning camera brings it on screen (t134, seven ticks on).
-     * ⚠ Not modelled, named: the player's own release-frame step (a player at rest takes none) and the span's other
-     * entities (this is reached only with the switch ON; L28's only other bodies are its drills and the bobsoldier).
+     * ⚠ Not modelled, named: the span's other entities (this is reached only with the switch ON; L28's only other
+     * bodies are its drills and the bobsoldier).
+     * ⛓ fidelity RELEASETICK D1: the player's release-frame step IS modelled, as the pull tick's own step. The pull
+     * runs inside `Player.update` above `super.update()` (`slash()` / `spear()` / `fire()`, `Player.as:562-575`), so
+     * `fall()` raises the flag before `Mobile.mobileUpdate`'s gated `friction(); input(); moveX; moveY`
+     * (`Mobile.as:35-41`): the game's player takes NO step on the pull frame and ONE on the release frame, the
+     * model's one step of the pull tick, below this span. Game-witnessed: `rockbutton-l28-livefall` matches the model
+     * to Δ 0 after the cut, mid-motion. (A button's rock is raised by the `Button`'s own update, ahead of the player,
+     * and resolved through `runFrozenTick`, which takes no player step: so `dropRocksTogether` banks one.)
      */
     const fallRockFrozenFrame = (r, frame) => {
         // ⚠ `view()` reads the target the PREVIOUS frame's rock wrote (measured: the release frame's camera still
@@ -3937,11 +4018,20 @@ export function createLevelRun({
         // reads them — see `fallRockFrozenFrame`.
         const spanOn = CONTACT_FIDELITY.drillTimedPass && CONTACT_FIDELITY.drillLive;
         for (let i = 1; i <= 1000; i += 1) {
+            // ⛓ fidelity FROZENTICK D2 (ON only): the blocks update before the rock (`Game.as:2382` vs `:2353`).
+            stepPushablesDeadFrameNow();
             const r = stepFallRock(s, playerBoxAt(state.x, state.y),
                 { cleared: true, ...(spanOn ? { screen: { width: SCREEN_W, height: SCREEN_H } } : {}) });
             s = r.state;
             frames = i;
+            // ⛓ fidelity CEREMONYTOWER D2 (ON only): the turrets after the rock (`:2295`), frozen; unfrozen on the release.
+            stepRockSpanShootersNow(r.unfroze);
             if (spanOn) fallRockFrozenFrame(r, i);
+            // ⛓ fidelity FROZENTICK D2 (ON only): the chasers after it (`:2276-2301`), frozen on every frame but the
+            // release frame (the rock lowers the flag before they update: unfrozen there, not stepped — named).
+            if (!r.unfroze && CONTACT_FIDELITY.frozenTickUngated && !noclip) stepChasersFrozenNow();
+            // ⛓ fidelity CEREMONYTOWER D2 (ON only): …and that release frame's one unfrozen update.
+            if (r.unfroze) stepRockReleaseBodiesNow('a rope-dropped fallrock', { drills: false });
             // ⛓ fidelity ROCKBUTTON D1: the span's activator frames — all but the RELEASE frame, whose activator update
             // is the pull tick's own end-of-tick `stepActivators` (it runs after this collapsed span, with the rock
             // landed). Measured: stepping the release frame here too opens L28's lock one tick early (game t166).
@@ -4004,6 +4094,8 @@ export function createLevelRun({
         let snapY = null;
         let unfroze = false;
         for (let i = 1; i <= 2000 && !unfroze; i += 1) {
+            // ⛓ fidelity FROZENTICK D2 (ON only): the blocks update before the rocks (`Game.as:2382` vs `:2353`).
+            stepPushablesDeadFrameNow();
             for (const e of started) {
                 const r = stepFallRock(e.state, playerBoxAt(state.x, state.y),
                     { cleared: true });
@@ -4014,7 +4106,15 @@ export function createLevelRun({
                 // per-rock loop that runs to its own end.
                 if (r.unfroze) unfroze = true;
             }
-            stepDrillGraphicsFrozen();
+            // ⛓ fidelity CEREMONYTOWER D2 (ON only): the turrets after the rocks, frozen; unfrozen on the release frame.
+            stepRockSpanShootersNow(unfroze);
+            const releaseOn = unfroze && CONTACT_FIDELITY.freezeEdgeFrames && !noclip;
+            // ⛓ fidelity CEREMONYTOWER D2 (ON only): on the release frame the drills take their whole update (below).
+            if (!(releaseOn && CONTACT_FIDELITY.drillTimedPass && CONTACT_FIDELITY.drillLive)) stepDrillGraphicsFrozen();
+            // ⛓ fidelity FROZENTICK D2 (ON only): the chasers, frozen on every frame but the release frame (named).
+            if (!unfroze && CONTACT_FIDELITY.frozenTickUngated && !noclip) stepChasersFrozenNow();
+            // ⛓ fidelity CEREMONYTOWER D2 (ON only): …and the release frame's one unfrozen update, drills then chasers.
+            if (releaseOn) stepRockReleaseBodiesNow('a fallrock dropped together', { drills: true });
             for (const b of bosses) {
                 // ⛓ R6 SLICE 4: and `render()` runs on every frozen frame
                 // too — it is outside `Game.update` entirely. Without this
@@ -4032,7 +4132,8 @@ export function createLevelRun({
                     // there — which cannot matter, because the rest arm is
                     // behind `fullyActivated` and that lands 30 ticks after
                     // this span ends. Named rather than relied on.
-                    freezeObjects: true,
+                    // ⛓ fidelity CEREMONYTOWER D2 (ON only): the release frame reads it down, as the game does.
+                    freezeObjects: !releaseOn,
                     playerY: null,
                 });
             }
@@ -4083,6 +4184,14 @@ export function createLevelRun({
      * all sixteen seal parts: `Chest`'s constructor runs `checkBySeal()` (the flag write), `Chest.check()` removes the
      * tagged chest on the first `Game.update` and `update`'s own `checkBySeal()` an untagged one, both before any frame
      * the player moves in. A derivation of the save, so it holds from the build — no state, no tick needed. OFF: false.
+     *
+     * ⛓ THE LIVE HALF (seedling-js-item-live-delivery, ⚖ Robert 2026-11-18 "Live apply, no rebuild"): the sixteenth
+     * seal can also ARRIVE mid-visit (`deliver`, a host's `Main.hasSealPartSet`). The game's `Chest.update` then runs
+     * `checkBySeal()` on the next frame, in the chest's update slot (before the Player's: `World.addUpdate` prepends):
+     * the flag is written at once (banked here through `pendingEarnedClears`, `open()`'s path) and `FP.world.remove`
+     * lands at that frame's `updateLists()` (`Engine.as:69-76`), so the Player still collides with it that frame and
+     * walks through from the next. `liveSealVisit` + `sealRemovedAt` carry that one frame; the next build of any room
+     * is the constructor half above. No committed tape takes the sixteenth seal mid-visit.
      */
     const chestsSealRemoved = () => CONTACT_FIDELITY.chestSealRemoval
         && sealParts[SAVE_SLOTS.seal_parts - 1] !== -1;
@@ -4091,7 +4200,15 @@ export function createLevelRun({
         if (st.size === 0) return null;
         const open = new Set();
         const sealGone = chestsSealRemoved();
-        for (const c of st.values()) if (!c.solid || sealGone) open.add(c.id);
+        // ⛓ seedling-js-item-live-delivery (CHESTSEAL's live half): in the visit the sixteenth seal arrived in, a chest
+        // stays a wall until the frame its own `checkBySeal()` ran has ended (`sealRemovedAt`, `stepChestsNow`).
+        const liveVisit = sealGone && liveSealVisit !== null && liveSealVisit.level === level
+            && liveSealVisit.entries === worldEntries;
+        for (const c of st.values()) {
+            if (!c.solid || (sealGone && (!liveVisit || (c.sealRemovedAt !== undefined && c.sealRemovedAt < ticksCompleted)))) {
+                open.add(c.id);
+            }
+        }
         return open.size === 0 ? null : open;
     };
     /**
@@ -5271,6 +5388,65 @@ export function createLevelRun({
      * deterministic, so its rows ARE those rows; past them the memo extends from its own `st` under this tick's ctx,
      * which is what extending a memo always did. Otherwise the forecast is cut fresh, exactly as before.
      */
+    /**
+     * ⛓⛓ fidelity L39HIT D2 (`CONTACT_FIDELITY.pulserForecastPulse`, OFF ⇒ `null`, so every forecast is byte-identical)
+     * — **THE ROOM'S PULSERS STEP ALONGSIDE A SPINNER FORECAST, AND THEIR PULSE HITS THE FORECAST'S BODIES.**
+     *
+     * `advance` steps the spinners (`stepSpinners`, the `:2416` adds) and, later in the same tick, the pulsers
+     * (`stepPulsersNow`, the `:2357` adds; `World.addUpdate` prepends, so the spinner moves first), and a pulse's enemy
+     * arm is `Enemy.hit(force 6, pulser point, damage 1, "Pulse")` (`Pulser.as:87-116`, `Enemy.as:141-181`): `hits += 1`,
+     * a 30-tick `hitsTimer` and an atan2 knockback that is twenty ticks of another trajectory. Every forecast stepped
+     * only the bodies, so a spinner a periodic Pulser was about to shove stayed on its old line in the forecast.
+     * MEASURED (L39, the seed-1 walk's 2864 t plan, seam 30036): `pulser@64,96` hits `spinner@112,88` at t1317; the
+     * forecast cut at t1310 has the body 5.75 px off from t1318 and ~88 px off at t1522, where the game and the model
+     * both take its hammer (the walk's preview priced the forecast's body, `dangerMap.spinnerDanger`).
+     *
+     * The stepper copies each pulser's state and steps it after the bodies on every forecast row, `armed` as
+     * `stepPulsersNow` reads it ONCE, at the forecast's own tick (the arrow forecast's bound, `arrowForecastNow`): the
+     * latched group, or the momentary group as the player's box presses it now (`pulserPublishLag`'s `pressedLast`
+     * first). Only the ENEMY arm acts here (`hitSpinner`, as `stepPulsersNow` calls it); a block's shove and the
+     * player's hit are not a spinner forecast's (it holds the blocks where they are and knows no player). A frozen ctx
+     * (a ceremony: the pulser slot is below its early return) steps no pulser. `null` with the switch OFF, under
+     * `noclip`, or in a room with no pulser.
+     *
+     * @returns {?{step(st: object, frozen: boolean): void, copy(): object}} `step` mutates the forecast's own `st` (its
+     *   `byId` is the forecast's copy, `stepSpinners`' contract); `copy` is an independent stepper at the same row
+     */
+    const pulserForecastStepper = () => {
+        if (!CONTACT_FIDELITY.pulserForecastPulse || noclip) return null;
+        const live = pulserStateFor(level);
+        if (live.size === 0) return null;
+        const activators = activatorStateFor(level);
+        const pressed = pressedGroups(world, playerBoxAt(state.x, state.y), movingSolidsNow());
+        const lag = CONTACT_FIDELITY.pulserPublishLag;
+        const make = (rows) => ({
+            step(st, frozen) {
+                if (frozen) return;
+                rows = rows.map((q) => {
+                    const armed = (lag ? q.p.pressedLast === true : q.pressedNow) || q.latched;
+                    const r = stepPulser(q.p, armed);
+                    const next = { ...q, p: lag ? { ...r.state, pressedLast: q.pressedNow } : r.state };
+                    if (!r.hit) return next;
+                    const targets = spinnerRects(st).map((sp) => ({
+                        id: sp.id, type: 'Enemy', as3: 'Spinner', x: sp.spinner.x, y: sp.spinner.y,
+                        originX: SPINNER.originX, originY: SPINNER.originY, w: SPINNER.w, h: SPINNER.h,
+                    }));
+                    for (const reached of pulseReaches(r.state, targets)) {
+                        if (reached.arm !== 'enemy') continue;
+                        const sp = st.byId.get(reached.id);
+                        if (sp) {
+                            st.byId.set(reached.id, hitSpinner(sp, { force: PULSER.force, from: { x: r.state.x, y: r.state.y },
+                                damage: PULSER.damage, t: 'Pulse', frozen: false }));
+                        }
+                    }
+                    return next;
+                });
+            },
+            copy: () => make(rows),
+        });
+        return make([...live].map(([id, p]) => ({ id, p, pressedNow: pressed.has(p.t),
+            latched: activators.latched.get(p.t) === true })));
+    };
     const shiftedSpinnerForecast = (live) => {
         const prev = spinnerForecastPrev;
         spinnerForecastPrev = null;
@@ -5351,7 +5527,7 @@ export function createLevelRun({
     let shake = 0;
     let camBand = null;
     /**
-     * ⛓⛓ fidelity SHAKEEXACT D1 (`CONTACT_FIDELITY.shakeExactSplit`, OFF) — ⚖ the user (2026-10-25, "Exact for split").
+     * ⛓⛓ fidelity SHAKEEXACT D1 (`CONTACT_FIDELITY.shakeExactSplit`, ON since ⚖ the user, 2026-10-25, "Exact for split").
      * Under `Rng.split` `view()` jiggles by `shake * Game.shakeJiggle(Game.time, axis) - shake/2` and takes no draw
      * (`Game.as:2004-2011`), so a split run's shaking camera is a POINT wherever the run knows the `Game.time` that
      * `view()` reads. `exactJiggleTime(viewTime)` is that time, or `null` where the band stays — the cases are
@@ -5360,6 +5536,25 @@ export function createLevelRun({
     const rngSplit = rng?.split === true;
     const exactJiggleTime = (viewTime) => (CONTACT_FIDELITY.shakeExactSplit === true && rngSplit
         && Number.isFinite(viewTime) ? viewTime : null);
+    /**
+     * ⛓ unbilledhits D3 — WHICH CASE OPENED A BAND, for the on-screen refusals to name (text only: nothing decides on
+     * it). `exactJiggleTime`'s three terms in its own order: the switch, then `SHAKE_BAND_KEPT.unsplit`, then
+     * `SHAKE_BAND_KEPT.noClock`. `rebootSettle` is named at its own open site; `acrossLoad` refuses at the load and
+     * never opens a band; `bandAlready` is the band staying open, so the case is the one that OPENED it.
+     */
+    const bandKeptCaseAt = (viewTime) => {
+        if (CONTACT_FIDELITY.shakeExactSplit !== true) return 'shakeExactSplitOff';
+        if (!rngSplit) return 'unsplit';
+        if (!Number.isFinite(viewTime)) return 'noClock';
+        return null;
+    };
+    const bandOpenerText = (c) => (c && SHAKE_BAND_KEPT[c]
+        ? `the band was opened by \`camera.SHAKE_BAND_KEPT.${c}\` — ${SHAKE_BAND_KEPT[c]}`
+        : c === 'shakeExactSplitOff'
+            ? 'the band was opened because `CONTACT_FIDELITY.shakeExactSplit` is OFF (not a `SHAKE_BAND_KEPT` case)'
+            : 'the band\'s opener is not recorded');
+    /** The `SHAKE_BAND_KEPT` case that opened the live `camBand` (null while the camera is a point). */
+    let camBandCase = null;
     /**
      * The `Game.time` a `view()` reads (`Game.as:889-890`: `view(); time += timeRate;`), from the clock's side of it:
      * after a tick's `clock.tick()` it is `now() − 1`; inside a dead span not yet paid (`spendFrozen` after the loop),
@@ -5395,7 +5590,7 @@ export function createLevelRun({
             for (let i = 0; i < CAMERA_LOAD_SETTLE_TICKS; i += 1) {
                 if (camBand === null && shake === 0) { cam = stepCamera(cam, state, w); continue; }
                 // ⛓ SHAKEEXACT: the band stays here (`SHAKE_BAND_KEPT.rebootSettle`).
-                if (camBand === null) { camBand = cameraBand(cam); shakeBandOpens += 1; }
+                if (camBand === null) { camBand = cameraBand(cam); camBandCase = 'rebootSettle'; shakeBandOpens += 1; }
                 const r = stepCameraBand(camBand, state, w, { shake });
                 camBand = r.band;
                 shake = r.shake;
@@ -5452,7 +5647,7 @@ export function createLevelRun({
             shakeExactViews += 1;
             return;
         }
-        if (camBand === null) { camBand = cameraBand(cam); shakeBandOpens += 1; }
+        if (camBand === null) { camBand = cameraBand(cam); camBandCase = bandKeptCaseAt(viewTime); shakeBandOpens += 1; }
         const r = stepCameraBand(camBand, player, worldRec, { shake, cameraTarget });
         camBand = r.band;
         shake = r.shake;
@@ -5523,7 +5718,7 @@ export function createLevelRun({
         if (verdict === 'uncertain') {
             throw new Error(`levelRun: whether ${who} is on screen at tick `
                 + `${ticksCompleted} depends on where inside \`Game.shake\`'s jiggle the `
-                + 'camera landed, and the two draws that decide it are not indexable '
+                + `camera landed, and ${bandOpenerText(camBandCase)} `
                 + '(camera.js, "THE SHAKE, AND WHY IT IS A BAND"). `Enemy.update` '
                 + 'early-returns at ZERO margin, so this is the difference between a body '
                 + 'that damages and one that does not. Move the stance away from the '
@@ -5614,6 +5809,127 @@ export function createLevelRun({
         return record;
     };
     applyGrantsFor(level);
+
+    /**
+     * ⛓⛓⛓ seedling-js-item-live-delivery — **A HOST DELIVERY, APPLIED TO THE LIVE RUN** (⚖ Robert 2026-11-18T01:41Z,
+     * "Live apply, no rebuild"; the cure A of `CC/docs/cloud-reports/seedling-js-item-reboot-diagnosis.md` §5).
+     *
+     * The game's item setters write the SAVE and nothing else (`Main.as:187-212`); every reader is live. So the JS page
+     * no longer rebuilds the room for a delivery (`jsRuntimeCore.rebootInPlace`, which brought back every killed enemy
+     * and every pushed block and moved the respawn point to the pickup): it writes the same state here, and the room
+     * goes on. One entry point, four kinds — `change` is one of
+     *
+     *   {kind: 'flag', property, value}  `Main.<property> = value` — `applyGrantsFor`'s own `applyItem` for a `true`
+     *                                    (the grant path without its level gate), the setter's value for `hitsMax`
+     *                                    and for a `false`. Readers are use-time (`Player.as`, `ShieldLock.as:33`,
+     *                                    `LavaTrap.as:64`, …); the SLOT is appended by this frame's tail
+     *                                    (`syncSlotsAtTail`, `Inventory.update` → `addItemsFromSave`,
+     *                                    `Inventory.as:161,188,291-330`), never here.
+     *   {kind: 'key', key}               `Main.hasKeySet(key, true)` → `keys` (`BossLock.update` reads it every frame,
+     *                                    `BossLock.as:58-66`; `activators.js` reads this Set every tick).
+     *   {kind: 'totem', index}           `Main.hasTotemPartSet(index, true)` → `totemParts` (`hasAllTotemParts` live).
+     *   {kind: 'seal', slot, identity}   `Main.hasSealPartSet(slot, identity)` → `sealParts[slot]`; the sixteenth
+     *                                    removes the room's chests through `Chest.update`'s `checkBySeal()`
+     *                                    (`hasAllSealPartsNow`, `liveSealVisit`; fidelity CHESTSEAL's live half).
+     *
+     * ⛔ WHEN: AT A TICK BOUNDARY, NEVER INSIDE A STEP (it throws if `advance` is on the stack). The wasm game's write
+     * is BridgeGeneric's `getItemQueue` poll on its own `ENTER_FRAME` (`flash-ap-api` `BridgeGeneric.as:117,224`),
+     * outside `Game.update` and its `blackCover` gate — between two `Game.update()`s. So a write landing between
+     * frame t and t+1 is what t+1's Player step reads, and t+1's tail appends its slot; the JS core calls this from
+     * its queue drain at the top of a tick (`jsRuntimeCore.applyDeliveries`), which is that boundary.
+     *
+     * ⚖ INTERIM — THE CEREMONY GATE (per Robert's 2026-10-12 ruling: model the interaction, do not avoid it). The core
+     * does not call this while a ceremony runs (`applyDeliveries`' `session.run.inCeremony` gate), so the model holds a
+     * delivery to the first tick after the ceremony. The game does not: BridgeGeneric writes on its own `ENTER_FRAME`,
+     * during the ceremony's dead frames and under `blackCover`, so the save already holds the item while the ceremony
+     * plays. The gate is a named interim avoidance, not the game's timing.
+     *
+     * ⚠ WHAT IS NOT LIVE, ON PURPOSE: an `ADDED_TIME_PROPERTIES` flag (Fire → Karlore, `Karlore.as:27-33`) changes
+     * no entity of the CURRENT visit — `added()` already ran — so the visit's world is held at the values it was built
+     * with (`addedTimeHold`); the next `new Game` of any room builds with the delivery (`enterWorld` →
+     * `dropWorldIfBuiltStale`). A held key's `BossKey` / totem's `BossTotemPart` stays on the floor this visit too
+     * (their `check()` runs on a new world's first frame only, `Game.as:869-878`).
+     *
+     * IDEMPOTENT: a delivery the run already holds (the host's echo of the run's OWN pickup — a key, a totem part —
+     * or the same seal identity in the same slot, or a flag at its value) changes nothing and records nothing.
+     * @returns {{changed: boolean}}
+     */
+    const deliveries = [];
+    let advancing = false;
+    const deliver = (change) => {
+        if (advancing) {
+            throw new Error('levelRun.deliver: called INSIDE a step. A host write lands between two `Game.update()`s '
+                + '(BridgeGeneric polls on its own ENTER_FRAME), never mid-frame.');
+        }
+        return deliverNow(change);
+    };
+    /** The staged deliveries (`stagedDeliveries`) not applied yet, in tick order. */
+    const pendingStagedDeliveries = (Array.isArray(stagedDeliveries) ? stagedDeliveries : [])
+        .map((d, i) => {
+            if (!Number.isInteger(d?.t) || d.t < 0 || typeof d.change !== 'object' || d.change === null) {
+                throw new Error(`levelRun: staged delivery ${i} is not {t: integer >= 0, change: {kind, …}} — ${JSON.stringify(d)}`);
+            }
+            return { t: d.t, change: { ...d.change } };
+        })
+        .sort((a, b) => a.t - b.t);
+    /** Apply every staged delivery due at this boundary (`t === ticksCompleted`); a past one would be a lost write. */
+    const applyStagedDeliveries = () => {
+        while (pendingStagedDeliveries.length > 0 && pendingStagedDeliveries[0].t <= ticksCompleted) {
+            const d = pendingStagedDeliveries.shift();
+            if (d.t < ticksCompleted) {
+                throw new Error(`levelRun: staged delivery at t ${d.t} was not applied by t ${ticksCompleted} — `
+                    + `${JSON.stringify(d.change)}`);
+            }
+            deliverNow(d.change);
+        }
+    };
+    const deliverNow = (change) => {
+        const kind = change?.kind;
+        const unchanged = { changed: false };
+        const intIn = (v, n) => Number.isInteger(v) && v >= 0 && v < n;
+        let row;
+        if (kind === 'flag') {
+            const name = ITEM_NAMES.find((nm) => ITEM_PROPERTIES[nm].property === change.property);
+            if (name === undefined) throw new Error(`levelRun.deliver: ${JSON.stringify(change.property)} is not an item property`);
+            const spec = ITEM_PROPERTIES[name];
+            const value = spec.kind === 'add' ? Number(change.value) : change.value === true;
+            if (spec.kind === 'add' && !Number.isFinite(value)) throw new Error(`levelRun.deliver: ${spec.property} needs a number`);
+            if (inventory[spec.property] === value) return unchanged;
+            if (ADDED_TIME_PROPERTIES.includes(spec.property)
+                && (addedTimeHold === null || addedTimeHold.entries !== worldEntries)) {
+                addedTimeHold = {
+                    entries: worldEntries,
+                    values: Object.fromEntries(ADDED_TIME_PROPERTIES.map((p) => [p, inventory[p]])),
+                };
+            }
+            if (value === true) applyItem(inventory, name);
+            else inventory[spec.property] = value;
+            row = { property: spec.property, value };
+        } else if (kind === 'key') {
+            if (!intIn(change.key, SAVE_SLOTS.keys)) throw new Error(`levelRun.deliver: key ${change.key} is out of range`);
+            if (keys.has(change.key)) return unchanged;
+            keys.add(change.key);
+            row = { key: change.key };
+        } else if (kind === 'totem') {
+            if (!intIn(change.index, SAVE_SLOTS.totem_parts)) throw new Error(`levelRun.deliver: totem part ${change.index} is out of range`);
+            if (totemParts.has(change.index)) return unchanged;
+            totemParts.add(change.index);
+            row = { index: change.index };
+        } else if (kind === 'seal') {
+            if (!intIn(change.slot, SAVE_SLOTS.seal_parts) || !Number.isInteger(change.identity) || change.identity < 0) {
+                throw new Error(`levelRun.deliver: seal ${JSON.stringify(change)} is out of range`);
+            }
+            if (sealParts[change.slot] === change.identity) return unchanged;
+            const hadAll = hasAllSealPartsNow();
+            sealParts[change.slot] = change.identity;
+            if (!hadAll && hasAllSealPartsNow()) liveSealVisit = { level, entries: worldEntries };
+            row = { slot: change.slot, identity: change.identity };
+        } else {
+            throw new Error(`levelRun.deliver: unknown kind ${JSON.stringify(kind)} (flag | key | totem | seal)`);
+        }
+        deliveries.push({ t: ticksCompleted, level, kind, ...row });
+        return { changed: true };
+    };
 
     /**
      * ⛓⛓⛓ R6 SLICE 3: THE END-OF-TICK WORLD SWAP, ONCE.
@@ -8065,7 +8381,7 @@ export function createLevelRun({
         if (st.size === 0) return;
         const events = stepChests(st, {
             playerBox: playerBoxAt(state.x, state.y),
-            hasAllSealParts: HAS_ALL_SEAL_PARTS,
+            hasAllSealParts: hasAllSealPartsNow(),
             solidOver: (c) => {
                 // The chest's own box, and its own solid excluded — the
                 // `e !== this` of `Entity.collide`.
@@ -8085,6 +8401,12 @@ export function createLevelRun({
             // constructor; the model banks it on the visit's first chest step, as `open()`'s is (a `tag = -1` chest
             // writes nothing, `Chest.as:51`). OFF: dropped, as before.
             if (ev.kind === 'chestgone' && ev.why === 'checkBySeal' && chestsSealRemoved()) {
+                // ⛓ seedling-js-item-live-delivery: a chest of the visit the sixteenth seal arrived in, removed by
+                // its own update — `FP.world.remove` lands at the frame's `updateLists()` (`Engine.as:69-76`), so the
+                // Player, updated after it this frame, still collides with it; `openChestIdsNow` opens it next tick.
+                if (liveSealVisit !== null && liveSealVisit.level === level && liveSealVisit.entries === worldEntries) {
+                    st.get(ev.id).sealRemovedAt = ticksCompleted;
+                }
                 if (ev.persistTag >= 0) {
                     if (!pendingEarnedClears.has(level)) pendingEarnedClears.set(level, new Set());
                     pendingEarnedClears.get(level).add(ev.persistTag);
@@ -8963,6 +9285,8 @@ export function createLevelRun({
         // mirrored here as such.
         let fcam = cam ? { ...cam } : null;
         let fband = camBand ? { x: { ...camBand.x }, y: { ...camBand.y } } : null;
+        // ⛓ unbilledhits D3: the case that opened `fband` — the live band's, or the forecast's own open below.
+        let fbandCase = camBand ? camBandCase : null;
         let fshake = shake;
         // ⛓ fidelity SHAKEEXACT D1: the `Game.time` the forecast's next `view()` reads — the live tick's own, whose
         // `view()` the first advance below reproduces (`gameTimeAt`'s no-dead-frame assumption, named there).
@@ -8990,7 +9314,7 @@ export function createLevelRun({
                 fshake = r.shake;
                 return;
             }
-            if (fband === null) fband = cameraBand(fcam);
+            if (fband === null) { fband = cameraBand(fcam); fbandCase = bandKeptCaseAt(viewTime); }
             const r = stepCameraBand(fband, player, worldRec,
                 { shake: fshake, cameraTarget: target });
             fband = r.band;
@@ -9007,8 +9331,8 @@ export function createLevelRun({
             const verdict = onScreenUnderShake(rect, fband);
             if (verdict === 'uncertain') {
                 throw new Error(`chaserForecast: whether ${who} is on screen depends on `
-                    + 'where inside `Game.shake`\'s jiggle the camera landed, and the two '
-                    + 'draws that decide it are not indexable (camera.js, "THE SHAKE, AND '
+                    + `where inside \`Game.shake\`'s jiggle the camera landed, and ${bandOpenerText(fbandCase)} `
+                    + '(camera.js, "THE SHAKE, AND '
                     + 'WHY IT IS A BAND"). `Enemy.update` early-returns at ZERO margin, so '
                     + 'this is the difference between a body that damages and one that '
                     + 'does not — and a FORECAST must not guess it any more than the live '
@@ -10771,6 +11095,9 @@ export function createLevelRun({
                     force: SHIELD_BOSS.swingForce,
                     damage: SHIELD_BOSS.damage,
                     from: { x: b.x, y: b.y },
+                    // ⛓ fidelity DARKSUITBOSSES D2 (`CONTACT_FIDELITY.darkSuitBossRetaliation`, ON only):
+                    // `p.hit(this, swingForce, …)` (`ShieldBoss.as:112`), so the boss is `e`.
+                    ...(CONTACT_FIDELITY.darkSuitBossRetaliation ? { retaliate: () => shieldBossSuitRetaliation(b) } : {}),
                 });
             }
             // ⛔ THE REMOVAL IS WHAT OPENS THE ROOM, and it is eleven ticks
@@ -10797,6 +11124,25 @@ export function createLevelRun({
                 });
             }
         }
+    }
+
+    /**
+     * ⛓ fidelity DARKSUITBOSSES D2 — `ShieldBoss.hit(darkSuitForce, …, darkSuitDamage, "Suit")` (`Enemies/ShieldBoss.as:
+     * 130-151`), on the model's own row. The stab's damaging frames are 5-8, all in "stab" (`:37`, `:108`), so an armed
+     * boss takes the `playedSound`/`startStab(true)` arm and `startStab` refuses (it needs "sit", `:172`); an unarmed one
+     * is armed (`activated = true`). Called between `stepShieldBoss` and the graphic step, where `hitPlayer` is.
+     */
+    function shieldBossSuitRetaliation(b) {
+        const v = shieldBossTakesHit(b, { d: DARK_SUIT_DAMAGE, f: DARK_SUIT_FORCE, t: 'Suit', frozen: ceremony !== null });
+        if (v.landed || v.killed || v.aborted || v.retaliated) {
+            throw new Error(`levelRun: the dark suit's retaliation into ${b.id} at tick ${ticksCompleted + 1} in level `
+                + `${level} ${v.killed ? 'kills' : v.landed ? 'damages' : 'moves'} it (anim "${b.anim}"). D1 found the `
+                + 'stab frames in "stab", where `ShieldBoss.hit` damages nothing. Refused by name (fidelity DARKSUITBOSSES).');
+        }
+        return {
+            id: b.id, as3: 'ShieldBoss', landed: false, swallowed: v.swallowed, activated: b.activated,
+            why: v.refusedAt,
+        };
     }
 
     /**
@@ -11001,11 +11347,41 @@ export function createLevelRun({
          * says so — this is the reasoning, not the evidence.
          */
         const owlOpts = normalizeLiveOpts(liveSolidOpts());
+        /**
+         * ⛓ fidelity OWLSUIT D2 (`CONTACT_FIDELITY.owlContactInStep`, OFF) — `Enemy.update`'s `hitPlayer()` AT ITS
+         * AS3 SLOT. ON, `stepFinalBoss` calls `owlHitPlayer` inside `super.update()` (`Enemies/FinalBoss.as:110`),
+         * after the move and `hitUpdate`, so the contact sees the Owl's post-move, PRE-snap point and its `hitsTimer`
+         * before a lava hit sets it; its writes land before the lava test, the cap and the phase arms read them: the
+         * player's knockback `p.v` (the barrage aim, `:144`, reads `player` LIVE below) and, under the suit, the
+         * Owl's own `v` (`owlSuitRetaliation`, declared). The bill below the step then does not run.
+         */
+        const owlInStep = CONTACT_FIDELITY.owlContactInStep;
+        const owlHitPlayer = ({ frozen: owlFrozen }) => {
+            // `Bot.noDamage` returns first in `Player.hit`, and `!Game.freezeObjects` is its gate (a ceremony or the
+            // intro): no effect at all, so no row, as the bill below skips a ceremony.
+            if (noclip || noDamage || owlFrozen) return;
+            if (!rectsOverlap(finalBossBox(b.x, b.y), playerBox)) return;
+            // `p.hit(this, 3, new Point(x, y), damage)` (`Enemies/Enemy.as:218`); `damage` is `Enemy`'s default, which
+            // `FinalBoss` never assigns, and `applyPlayerHit`'s own default.
+            applyPlayerHit({
+                source: 'owlBody',
+                id: b.id,
+                force: PLAYER_DAMAGE.contactForce,
+                from: { x: b.x, y: b.y },
+                retaliate: (p) => owlSuitRetaliation(b, p),
+            });
+        };
         const step = stepFinalBoss(b, {
             frozen: frozenByCeremony,
             // The player as the boss sees them: the END of the previous tick,
             // because he updates first.
-            player: { x: state.x, y: state.y, vx: state.vx, vy: state.vy },
+            player: owlInStep
+                ? {
+                    get x() { return state.x; }, get y() { return state.y; },
+                    get vx() { return state.vx; }, get vy() { return state.vy; },
+                }
+                : { x: state.x, y: state.y, vx: state.vx, vy: state.vy },
+            onHitPlayer: owlInStep ? owlHitPlayer : undefined,
             solidAt: (x, y) => !!world.collidesSolid(finalBossBox(x, y), owlOpts),
             firstTileAt: (x, y) => firstTileUnder(world.tiles, finalBossBox(x, y)),
             stream,
@@ -11152,7 +11528,11 @@ export function createLevelRun({
         // case is unreachable while the pods are avoided (a contact during a
         // barrage means standing on a boss who is sitting in a pod cell). It
         // is REFUSED rather than approximated.
-        if (!noclip && !noDamage && !b.destroy && b.hitsTimer <= 0 && !frozenByCeremony) {
+        // ⛓ fidelity OWLSUIT D2: ON, the contact was billed INSIDE the step (`owlHitPlayer`), so this bill is skipped
+        // and the rock-spawn refusal with it: the barrage aim read the knocked-back `p.v`, as in the game.
+        if (owlInStep) {
+            if (pendingDeath) return { frozen: false };
+        } else if (!noclip && !noDamage && !b.destroy && b.hitsTimer <= 0 && !frozenByCeremony) {
             if (rectsOverlap(finalBossBox(b.x, b.y), playerBox)) {
                 if (rockSpawnedThisTick) {
                     throw new Error(`levelRun: the Owl's body touched the player at tick `
@@ -11162,13 +11542,24 @@ export function createLevelRun({
                         + 'barrage aim reads on this very tick — and this model runs the '
                         + 'contact after the arms. Refused rather than approximated.');
                 }
-                applyPlayerHit({
-                    source: 'owlBody',
-                    id: b.id,
-                    force: PLAYER_DAMAGE.contactForce,
-                    damage: 1,
-                    from: { x: b.x, y: b.y },
-                });
+                // ⛓ fidelity DARKSUITBOSSES D1 (ON only): the Owl is `e` and is NOT declared — the refusal names why.
+                try {
+                    applyPlayerHit({
+                        source: 'owlBody',
+                        id: b.id,
+                        force: PLAYER_DAMAGE.contactForce,
+                        damage: 1,
+                        from: { x: b.x, y: b.y },
+                    });
+                } catch (e) {
+                    if (!CONTACT_FIDELITY.darkSuitBossRetaliation
+                        || !/`hasDarkSuit` retaliates INTO the attacker/.test(e.message)) throw e;
+                    throw new Error(`${e.message} — fidelity DARKSUITBOSSES D1: \`FinalBoss.hit\` is \`Enemy.hit\` `
+                        + 'with `onlyHitBy = "Lava"` and `justKnock` (Enemies/FinalBoss.as:61-62), so a "Suit" hit is '
+                        + '`knockback(1, p)` into `v` inside `super.update()`, and the phase arms then read `v.length` '
+                        + '(Enemies/FinalBoss.as:126-155). This model bills the contact after `stepFinalBoss`\'s arms. '
+                        + 'Not declared.');
+                }
                 if (pendingDeath) return { frozen: false };
             }
         }
@@ -12240,6 +12631,8 @@ export function createLevelRun({
      * instead of a walk that silently took no damage.
      */
     function stepContactsNow() {
+        // ⛓ fidelity TURRETSUIT D2 (ON only): the scan is reached, so no freeze followed a slot contact.
+        if (turretSlotContact !== null) turretSlotContact = null;
         if (noclip || noDamage) return;
         const census = world.combat?.enemies;
         if (!census) return;
@@ -12248,6 +12641,8 @@ export function createLevelRun({
             const rect = contactRect(inst);
             if (!rect || !rectsOverlap(rect, box)) continue;
             const id = `${inst.tag}@${inst.x},${inst.y}`;
+            // ⛓ fidelity TURRETSUIT D2 (ON only): a turret's contact was answered in its own slot this tick.
+            if (turretContactInSlot(inst, id)) continue;
             const pricing = contactPricing(inst.tag);
             // ⛓⛓ R6 SLICE 4: a `boss` is priced IN ITS OWN STEP, above.
             // The census rect here is its `.oel` placement and the descent
@@ -12359,7 +12754,9 @@ export function createLevelRun({
                 });
                 continue;
             }
-            applyPlayerHit({
+            // ⛓ fidelity DARKSUITSTATIC D2 (`CONTACT_FIDELITY.darkSuitStaticRetaliation`, ON only): the body is `e`.
+            const suit = CONTACT_FIDELITY.darkSuitStaticRetaliation ? staticSuitRetaliation(inst, id) : null;
+            const bill = () => applyPlayerHit({
                 source: 'enemy',
                 id,
                 // `p.hit(this, 3, new Point(x, y), damage)` — the base
@@ -12368,9 +12765,195 @@ export function createLevelRun({
                 force: PLAYER_DAMAGE.contactForce,
                 damage: inst.row.damage,
                 from: { x: inst.cx, y: inst.cy },
+                ...(suit?.retaliate ? { retaliate: suit.retaliate } : {}),
             });
+            if (suit?.undeclaredWhy) {
+                // an undeclared class's refusal (`playerHit`'s `byEnemy`) names WHY it is undeclared
+                try {
+                    bill();
+                } catch (e) {
+                    if (!/`hasDarkSuit` retaliates INTO the attacker/.test(e.message)) throw e;
+                    throw new Error(`${e.message} ${suit.undeclaredWhy}`);
+                }
+            } else {
+                bill();
+            }
             if (pendingDeath) return;
         }
+    }
+
+    /**
+     * ⛓⛓ SEEDLING FIDELITY DARKSUITSTATIC D2 — **THE DARK SUIT'S RETALIATION INTO A STATIC BODY**
+     * (`CONTACT_FIDELITY.darkSuitStaticRetaliation`, OFF).
+     *
+     *     Player.as:1384-1387   if (e && hasDarkSuit) e.hit(darkSuitForce, new Point(x, y), darkSuitDamage, "Suit");
+     *
+     * `Enemy.hitPlayer` (`Enemies/Enemy.as:211-221`) calls `p.hit(this, 3, …)`, so the static scan's body is `e`. Per
+     * class (D1 census, `CC/docs/cloud-reports/seedling-fidelity-darksuitstatic.md`):
+     *   · `DarkTrap` — `hit()` is an EMPTY override (`Enemies/DarkTrap.as:56-59`): no effect.
+     *   · `IceTrap` — `canHit = false` (`Enemies/IceTrap.as:32`) closes `Enemy.hit`'s only gate (`Enemy.as:147`): no effect.
+     *   · `SandTrap` — `Enemy.hit` unchanged (`SandTrap.knockback` is empty, `:77-80`): `enemyHit` on F4's damage row
+     *     (`staticBodyStateFor`), i.e. `hits += 1`, `hitsTimer = 30`, the `hitByDarkStuff` latch; a third hit plays
+     *     "die" (`startDeath`, `:88-92`), staged as the sword arm stages it, and — because the blow lands INSIDE the
+     *     trap's own `update()` — `World.update` advances its graphic on this same tick (`World.as` update loop:
+     *     `e.update()` then `e._graphic.update()`), one step the sword's blow (the Player updates last) does not get.
+     *   · `Turret` (relabelled here by `STATIC_SWORD_ARM`) — NOT declared: `Turret.update` reads `hitsTimer` in its fire
+     *     gate and plays "die" over "startshot" AFTER `super.update()` (`Enemies/Turret.as:45-79`), and the model steps
+     *     that half in `stepShootersNow`, above this scan. So a Suit hit would land after the turret's fire gate had
+     *     already read the pre-hit timer. It stays ABSENT (refused by name), with this reason.
+     *
+     * @returns {{retaliate: Function} | {undeclaredWhy: string}}
+     */
+    function staticSuitRetaliation(inst, id) {
+        const as3 = inst.as3;
+        if (as3 === 'DarkTrap') {
+            return { retaliate: () => ({ id, as3, landed: false, effect: 'none',
+                why: '`DarkTrap.hit` is an empty override (Enemies/DarkTrap.as:56-59)' }) };
+        }
+        if (as3 === 'IceTrap') {
+            return { retaliate: () => ({ id, as3, landed: false, effect: 'none',
+                why: '`canHit = false` (Enemies/IceTrap.as:32) closes `Enemy.hit` (Enemies/Enemy.as:147)' }) };
+        }
+        if (as3 === 'SandTrap') return { retaliate: () => staticSuitHit(id) };
+        if (as3 === 'Turret') {
+            return { undeclaredWhy: 'fidelity DARKSUITSTATIC D1: `Turret.update` reads `hitsTimer` in its fire gate '
+                + 'and plays "die" over "startshot" AFTER `super.update()` (Enemies/Turret.as:45-79), and this model '
+                + 'steps that half in `stepShootersNow`, above the contact scan — a Suit hit here would land after the '
+                + 'fire gate had read the pre-hit timer. Not declared.' };
+        }
+        return { undeclaredWhy: `fidelity DARKSUITSTATIC D1: no retaliation row for \`${as3}\`.` };
+    }
+
+    /** `Enemy.hit(darkSuitForce, …, darkSuitDamage, "Suit")` on a SandTrap's F4 damage row; a kill is staged. */
+    function staticSuitHit(id) {
+        const sb = staticBodyStateFor(level).get(id) ?? null;
+        if (!sb) {
+            throw new Error(`levelRun: the dark suit retaliates into ${id} at tick ${ticksCompleted + 1} in level `
+                + `${level}, which is not in the run's static body state.`);
+        }
+        const verdict = enemyHit(sb, { d: DARK_SUIT_DAMAGE, f: DARK_SUIT_FORCE, t: 'Suit', frozen: ceremony !== null });
+        if (verdict.killed) {
+            const spec = STATIC_SWORD_DEATH[sb.as3] ?? STATIC_ARROW_DEATH[sb.as3];
+            // `SandTrap.startDeath` is `play("die")`: no `destroy` at the blow.
+            sb.destroy = false;
+            if (!(sb.persistTag >= 0)) {
+                throw new Error(`levelRun: ${sb.id} dies to the dark suit's retaliation at tick ${ticksCompleted + 1} `
+                    + 'and carries no persistence tag, so its `removed()` would write OUT OF BAND. Refused by name '
+                    + '(fidelity DARKSUITSTATIC, F4\'s rule).');
+            }
+            const census = world.combat?.enemies ?? [];
+            const before = census.filter((e) => !e.removed).map((e) => ({ as3: e.as3 }));
+            const after = census.filter((e) => !e.removed && `${e.tag}@${e.x},${e.y}` !== sb.id
+                && !(staticBodyStateFor(level).get(`${e.tag}@${e.x},${e.y}`)?.dying))
+                .map((e) => ({ as3: e.as3 }));
+            const led = killLockLedger(levelSource(level), { bodiesBefore: before, bodiesAfter: after });
+            if (!led.nil) {
+                throw new Error(`levelRun: the dark suit's retaliation at tick ${ticksCompleted + 1} KILLS ${sb.id}, `
+                    + `whose removal OPENS ${led.opens.length} kill lock(s) in level ${level} (${led.why}) — not `
+                    + 'staged. Refused by name (fidelity DARKSUITSTATIC).');
+            }
+            sb.killedAt = ticksCompleted + 1;
+            sb.dieAnim = createSpriteAnim(spec.dieAnim.frames, spec.dieAnim.rate);
+            // The blow is inside the trap's own `update()`, so its graphic advances on this tick too.
+            if (stepSpriteAnim(sb.dieAnim)) {
+                throw new Error(`levelRun: ${sb.id}'s "die" ended on its first step — not a SandTrap anim.`);
+            }
+        }
+        return {
+            id, as3: sb.as3, landed: verdict.landed, hits: sb.hits, hitsTimer: sb.hitsTimer,
+            hitByDarkStuff: sb.hitByDarkStuff,
+            ...(verdict.killed ? { killed: true } : {}),
+            ...(verdict.landed ? {} : { why: verdict.refusedAt }),
+        };
+    }
+
+    /**
+     * ⛓⛓ SEEDLING FIDELITY TURRETSUIT D2 — **A TURRET'S `hitPlayer`, IN ITS OWN TURN**
+     * (`CONTACT_FIDELITY.turretSuitRetaliation`, OFF; with `STATIC_SWORD_ARM` ON, whose relabel prices it).
+     *
+     *     Turret.as:47       super.update();          → Enemy.update: hitUpdate(); hitPlayer();   (Enemy.as:106-111)
+     *     Turret.as:48-51    if (freezeObjects || destroy || currentAnim == "die") return;
+     *     Turret.as:64       else if (hitsTimer <= 0) { shootTimer = 40; play("startshot"); }
+     *
+     * The static scan's gates and bill, asked here instead (`stepShootersNow`'s `onHitPlayer`): the box against the
+     * player as the previous tick left it, `enemyHitPlayerFires` on F4's row (whose `hitUpdate` ran above, in
+     * `stepStaticBodiesNow`), then `applyPlayerHit` with `retaliate` declared. A ceremony tick never reaches the scan
+     * (and `Player.hit` is freeze-gated), so it is skipped here too.
+     */
+    function turretHitPlayerNow(id) {
+        if (noDamage || ceremony !== null) return;
+        const inst = (world.combat?.enemies ?? []).find((e) => e.as3 === 'Turret' && `${e.tag}@${e.x},${e.y}` === id);
+        if (!inst) return;
+        const rect = contactRect(inst);
+        if (!rect || !rectsOverlap(rect, playerBoxAt(state.x, state.y))) return;
+        turretSlotContact = { t: ticksCompleted + 1, id };
+        const live = staticBodyStates.get(level)?.get(id) ?? null;
+        const verdict = enemyHitPlayerFires(
+            live
+                ? { hitsTimer: live.hitsTimer, destroy: live.destroy === true, dieAnim: live.dying === true }
+                : { hitsTimer: 0, destroy: false, dieAnim: false },
+            onScreenNow(rect, id) ? 'on' : 'off',
+        );
+        if (!verdict.fires) {
+            contactsSuppressed.push({ t: ticksCompleted + 1, level, source: 'enemy', id, why: verdict.refusedAt });
+            return;
+        }
+        applyPlayerHit({
+            source: 'enemy',
+            id,
+            force: PLAYER_DAMAGE.contactForce,
+            damage: inst.row.damage,
+            from: { x: inst.cx, y: inst.cy },
+            retaliate: () => turretSuitHit(id),
+        });
+    }
+
+    /** ⛓ fidelity TURRETSUIT D2: the static scan's skip — this turret's contact was answered in `stepShootersNow`. */
+    function turretContactInSlot(inst, id) {
+        return CONTACT_FIDELITY.turretSuitRetaliation && STATIC_SWORD_ARM.enabled && inst.as3 === 'Turret'
+            && shooterStateFor(level).has(id);
+    }
+
+    /**
+     * `Enemy.hit(darkSuitForce, …, darkSuitDamage, "Suit")` on a Turret's F4 damage row (`Turret` has no `hit`
+     * override; its `knockback` is empty). A kill is `startDeath` = `play("die")` (`Turret.as:91-95`), staged as the
+     * sword arm stages it (no `destroy` at the blow, no tag, the kill-lock ledger) — and, because the blow lands INSIDE
+     * the turret's own `update()`, its graphic takes the blow tick's step too (`World.update`: `e.update()` then
+     * `e._graphic.update()`), which `stepStaticBodiesNow` has already passed this tick.
+     */
+    function turretSuitHit(id) {
+        const sb = staticBodyStateFor(level).get(id) ?? null;
+        if (!sb) {
+            throw new Error(`levelRun: the dark suit retaliates into ${id} at tick ${ticksCompleted + 1} in level `
+                + `${level}, which is not in the run's static body state.`);
+        }
+        const verdict = enemyHit(sb, { d: DARK_SUIT_DAMAGE, f: DARK_SUIT_FORCE, t: 'Suit', frozen: ceremony !== null });
+        if (verdict.killed) {
+            const spec = STATIC_SWORD_DEATH[sb.as3];
+            sb.destroy = false;
+            const census = world.combat?.enemies ?? [];
+            const before = census.filter((e) => !e.removed).map((e) => ({ as3: e.as3 }));
+            const after = census.filter((e) => !e.removed && `${e.tag}@${e.x},${e.y}` !== sb.id
+                && !(staticBodyStateFor(level).get(`${e.tag}@${e.x},${e.y}`)?.dying))
+                .map((e) => ({ as3: e.as3 }));
+            const led = killLockLedger(levelSource(level), { bodiesBefore: before, bodiesAfter: after });
+            if (!led.nil) {
+                throw new Error(`levelRun: the dark suit's retaliation at tick ${ticksCompleted + 1} KILLS ${sb.id}, `
+                    + `whose removal OPENS ${led.opens.length} kill lock(s) in level ${level} (${led.why}) — not `
+                    + 'staged. Refused by name (fidelity TURRETSUIT).');
+            }
+            sb.killedAt = ticksCompleted + 1;
+            sb.dieAnim = createSpriteAnim(spec.dieAnim.frames, spec.dieAnim.rate);
+            if (stepSpriteAnim(sb.dieAnim)) {
+                throw new Error(`levelRun: ${sb.id}'s "die" ended on its first step — not a Turret anim.`);
+            }
+        }
+        return {
+            id, as3: sb.as3, landed: verdict.landed, hits: sb.hits, hitsTimer: sb.hitsTimer,
+            hitByDarkStuff: sb.hitByDarkStuff,
+            ...(verdict.killed ? { killed: true } : {}),
+            ...(verdict.landed ? {} : { why: verdict.refusedAt }),
+        };
     }
 
     /**
@@ -12918,20 +13501,25 @@ export function createLevelRun({
             b.removedTick = ticksCompleted + 1;
         }
     }
-    function stepDrillsNow() {
+    function stepDrillsNow({ mainTick = false } = {}) {
         if (noclip || noDamage) return;
         const st = drillStateFor(level);
         if (st.size === 0) return;
         const base = spinnerCtx();
         const t = ticksCompleted + 1;
         const mixed = CONTACT_FIDELITY.drillMixedRooms;
+        // ⛓ fidelity PICKUPFREEZE D2 (ON only): a texted pickup touched this tick froze it first (`Game.as:2290`). Asked
+        // from the main tick's slot only (a fall-rock span's release frame is not a pickup's first frame).
+        const frozenAhead = mainTick && pickupFreezesFamilyNow('drill', { lump: false });
+        // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): a texted NPC's later frame froze it first (`Game.as:2290` vs `:2389+`).
+        const dialogueAhead = mainTick && dialogueFreezeAheadNow('drill');
         // ⛓ fidelity DRILL D2: the game's update order is the LAST placement first (one drill: no order).
         for (const id of (mixed ? [...st.keys()].reverse() : [...st.keys()])) {
             const before = st.get(id);
             if (before.removed) continue;
             const enemyAt = mixed ? drillEnemyBodiesTest(id, st) : null;
             const out = stepDrill(before, {
-                frozen: ceremony !== null,
+                frozen: ceremony !== null || frozenAhead || dialogueAhead,
                 onScreen: (rect) => onScreenNow(rect, `drill ${id}`),
                 playerBox: playerBoxAt(state.x, state.y),
                 player: { x: state.x, y: state.y },
@@ -14130,8 +14718,95 @@ export function createLevelRun({
         pendingCeremonyLump = { level, what, due: ticksCompleted + 1, frames: CEREMONY_LUMP_SHOVE_FRAMES };
         ceremony.shoveLump = what;
     }
+    /**
+     * ⛓⛓ fidelity FROZENTICK D2 (`CONTACT_FIDELITY.frozenTickUngated`, ON only) — THE CHASERS' FROZEN UPDATE ON A FRAME
+     * WHOSE FREEZE IS NOT A CEREMONY. `stepChasersNow` reads `ceremony !== null` as `Game.freezeObjects` (the move,
+     * the chase blocks that test it, the sword, `applyPlayerHit`'s refusal); a dialogue frame, a button-dropped rock's
+     * frame and a rock's span hold no ceremony, so the freeze is held here for the one call, as the inventory hold
+     * and the seal lump hold theirs. What runs is what the game runs under the flag: `hitUpdate`, `Mobile.death`'s
+     * fade, the terrain switch and the pit descent, and `Jellyfish`'s and `Puncher`'s chase blocks (no freeze test).
+     */
+    const FROZEN_TICK_FREEZE = Object.freeze({ frozenTick: true });
+    function stepChasersFrozenNow() {
+        const held = ceremony;
+        if (held === null) ceremony = FROZEN_TICK_FREEZE;
+        try {
+            stepChasersNow();
+        } finally {
+            ceremony = held;
+        }
+    }
+    /**
+     * ⛓⛓ fidelity FROZENTICK D2 (ON only) — ONE DEAD FRAME OF THE PUSHABLE BLOCKS. `PushableBlock.update` and
+     * `PushableBlockFire.update` override `Mobile.update` without `mobileUpdate` (`PushableBlock.as:96-111`,
+     * `PushableBlockFire.as:125-142`): no freeze gate, so a gliding block keeps gliding through every dead frame. The
+     * main-tick slot steps them on a frozen TICK already; this is for the frames the model collapses.
+     */
+    function stepPushablesDeadFrameNow() {
+        if (!CONTACT_FIDELITY.frozenTickUngated || noclip) return;
+        const pushState = pushableStateFor(level);
+        if (pushState.byId.size > 0) stepPushables(pushState, pushableCtx());
+    }
+    /**
+     * ⛓⛓ fidelity CEREMONYTOWER D2 (`CONTACT_FIDELITY.freezeEdgeFrames`, ON only) — THE TURRETS THROUGH A ROCK'S SPAN,
+     * AND ON ITS RELEASE FRAME. The spits are runtime adds (they update ahead of every placed entity, the rock
+     * included); the turrets (`Game.as:2295`) update after the `FallRock` (`:2353`). So on every frozen frame of the span
+     * (and on a button-dropped rock's frame A) both are frozen — `Turret.update` returns on the flag, its anim runs
+     * (`Turret.as:48-51`) — and on the RELEASE frame, which the rock unfreezes first (`Scenery/FallRock.as:92-96`), the
+     * spits are still frozen and the turrets are NOT: their aim, `shootTimer`, fire gate and, with wave 50's slot,
+     * `hitPlayer` (`stepShooterReleaseFrameNow`, the text-less pickup's F+150 shape). The freeze is held for the call
+     * (`FROZEN_TICK_FREEZE`) and every outer reader's state is restored, `turretSlotContact` included (the frame is
+     * dead: no later slot of a tick answers its contact).
+     *
+     * @param {boolean} release the rock's release frame (else one frozen frame)
+     */
+    function stepRockSpanShootersNow(release) {
+        if (!CONTACT_FIDELITY.freezeEdgeFrames || noclip) return;
+        if (shooterStateFor(level).size === 0 && spitsFor(level).length === 0) return;
+        const held = ceremony;
+        const slot = turretSlotContact;
+        if (held === null) ceremony = FROZEN_TICK_FREEZE;
+        try {
+            if (release) stepShooterReleaseFrameNow();
+            else stepShootersThroughFreeze(1);
+        } finally {
+            ceremony = held;
+            turretSlotContact = slot;
+        }
+    }
+    /**
+     * ⛓⛓ fidelity CEREMONYTOWER D2 (ON only) — A ROCK'S RELEASE FRAME, BELOW THE TURRETS: the drills (`Game.as:2290`,
+     * when `drills`: `dropRock`'s release already steps them under `drillTimedPass`) and the chasers (`:2276-2301`), all
+     * after the rock, all UNFROZEN — the flag is held DOWN for the call (a wand's rocks fall inside its ceremony's
+     * finishing tick, `ceremony` still set) and restored. Their move, chase blocks and `hitPlayer` (`Player.hit` is no
+     * longer refused) run against the player as the span left it: the player updates after them
+     * (`pendingFreeSteps`). An ice turret (`:2296`) or a beam tower (`:2297`) would update there too: not transcribed,
+     * so a rock room holding one is REFUSED by name (no shipped rock room does).
+     *
+     * @param {string} what the rock's source, for the refusal
+     * @param {{drills: boolean}} opts
+     */
+    function stepRockReleaseBodiesNow(what, { drills }) {
+        if (!CONTACT_FIDELITY.freezeEdgeFrames || noclip) return;
+        if (turretStateFor(level).size > 0 || beamTowerStateFor(level).size > 0) {
+            throw new Error(`levelRun: ${what}'s release frame at tick ${ticksCompleted} in level ${level} meets `
+                + `${turretStateFor(level).size > 0 ? 'an IceTurret' : 'a BeamTower'}, which updates after the rock `
+                + '(`Game.as:2296-2297` vs `:2353`) and so takes one UNFROZEN update on that dead frame. Not '
+                + 'transcribed; refused by name (fidelity CEREMONYTOWER).');
+        }
+        const held = ceremony;
+        ceremony = null;
+        try {
+            if (drills && CONTACT_FIDELITY.drillTimedPass && CONTACT_FIDELITY.drillLive) stepDrillsNow();
+            stepChasersNow();
+        } finally {
+            ceremony = held;
+        }
+    }
     /** ONE dead frame: the chasers' frozen update, then the player's ungated lines (`Player.update`'s order). */
     function stepCeremonyDeadFrameNow() {
+        // ⛓ fidelity FROZENTICK D2 (ON only): the blocks first (`Game.as:2382-2384`, added after every chaser).
+        stepPushablesDeadFrameNow();
         stepChasersNow();
         shieldBumpNow();
         const d = stepPlayerDamage(damage);
@@ -14184,6 +14859,126 @@ export function createLevelRun({
         ceremonyLumps.push({ t: ticksCompleted, level, what: ceremony.shoveLump, frames: 1, release: true });
     }
     const ceremonyLumps = [];
+    /**
+     * ⛓⛓ fidelity RELEASETICK D2 (`CONTACT_FIDELITY.freezeReleaseTick`, ON only) — A TEXTED CEREMONY'S RELEASE FRAME R,
+     * FOR THE FOUR FAMILIES THAT UPDATE AFTER THE PICKUP. The finishing tick stands for two game frames: the close C
+     * (`NPC.talk()`'s last page lowers the flag through the `talking` setter, `NPCs/NPC.as:207-214,250-263`, and removes
+     * itself deferred; `Pickup.update` re-raises it, `Pickups/Pickup.as:57-60,95`, because `myText` is still set) and
+     * the release R (`NPC.removed()` has nulled `myText`, `:71-85`, so `pick_up`'s `!myText` arm lowers the flag and
+     * calls `removeSelf()`, `Pickup.as:106-112`). The pickups (`Game.as:2330-2351`) update before the beam tower
+     * (`:2297`), the ice turret (`:2296`), the turret (`:2295`) and the drill (`:2290`), so those four are FROZEN on C and
+     * UNFROZEN on R. The main slots step each once there, frozen (`ceremony` is still set): that is C's update. This is
+     * R's, at the ceremony branch's finishing arm (below the main slots and the chasers' C, above the chasers' and the
+     * player's R, which are the tick's own fall-through): the runtime adds first, frozen (the spits and the ice turret's
+     * blasts update ahead of the pickup), then — the flag held DOWN for the call and restored — the tower, the ice
+     * turret, the turrets (with wave 50's slot, `turretHitPlayerNow`: its `turretSlotContact` is the tick's own, and the
+     * static scan below reads it) and the drills, in the game's order. The pickup and dialogue predicates are not asked
+     * (R is not a pickup's T). R is a DEAD frame and C the observed one: `setTemp` raises `Game.talking` when the NPC
+     * is added (`NPC.as:95-100`), so `Game.update`'s `inventory.open = false` (`Game.as:1044-1051`) lowers the flag at
+     * the end of phase A's last frame and of every dialogue frame, but not at C's (the NPC has cleared `Game.talking`):
+     * phase A is 149 dead frames, R the 150th (the measured 150, `fixtures/dead-frame-observations.json`). The clock's
+     * phase-A spend of 150 counts R's frame, so `clock.now()` on the finishing tick is R's `Game.time`. ⚠ With a
+     * `Game.time` the tower's anim is unknown here anyway (phase A's frames are not stepped for it, so its `lastClock`
+     * test fails from T on: pre-existing), and R's step keeps it so. A text-less pickup has no C (no NPC): its R is
+     * F+150, which `pickupTickFreeze` models (the turrets) and T's step stands for (the lump-less three); a Seed's
+     * `removeSelf` keeps the flag up.
+     */
+    function stepCeremonyReleaseFamiliesNow() {
+        if (!CONTACT_FIDELITY.freezeReleaseTick || noclip || ceremony === null || !ceremony.dialogue) return;
+        stepBlastsNow();
+        stepSpitsNow();
+        const held = ceremony;
+        ceremony = null;
+        try {
+            // ⛓ fidelity RELEASEPICKUP D2 (`freezeSpanUpdates` ON only): C's step was the frame before R's.
+            relabelBeamTowerCloseFrameNow();
+            if (beamTowersStepped()) stepBeamTowersNow({ frozen: false });
+            stepIceTurretsNow({ mainSlot: false });
+            stepShootersNow(CONTACT_FIDELITY.turretSuitRetaliation && STATIC_SWORD_ARM.enabled
+                ? turretHitPlayerNow : undefined, { frozen: false });
+            if (CONTACT_FIDELITY.drillLive) stepDrillsNow();
+        } finally {
+            ceremony = held;
+        }
+    }
+    /**
+     * ⛓⛓ fidelity RELEASEPICKUP D2 (`CONTACT_FIDELITY.freezeSpanUpdates`, ON only) — EVERY BEAM TOWER THROUGH A TEXTED
+     * PICKUP'S PHASE A. `BeamTower.update` returns on the flag (`Puzzlements/BeamTower.as:54-57`) and `World.update`
+     * runs its graphic anyway (`net/flashpunk/World.as:58`), so each of the 149 dead frames is one frozen
+     * `stepBeamTowerFrame`: the Spritemap and `animEnd`'s turn, no drift, no beam test. Called at the contact, after the
+     * clock's phase-A spend, beside `stepShootersThroughFreeze`. The frames carry no trace row (they are dead).
+     * The anim is claimed KNOWN (`lastClock` set to the frame before the next stepped one) only where the rest of the
+     * ceremony steps the tower exactly once per frame — `pickupTickFreeze` (T's one frozen step, `runFrozenTick`'s),
+     * `freezeEdgeFrames` (one per dialogue frame) and `freezeReleaseTick` (R's) — and only from a continuous history
+     * (`lastClock` is T's frame or the one before it: under `pickupTickFreeze` T's step comes after the lump, and frozen
+     * anim steps commute; or none yet, the tower's first step being T's). Without the three the anim is marked UNKNOWN:
+     * the jump test alone cannot see phase A when the tower has no step before T (a ceremony on the room's first tick —
+     * OFF then claims an anim 150 frames stale), so the lump does not leave it to that test. A text-less pickup is not
+     * lumped (the key's doc). The game's T is `clock.now() - 150`; the lump is its frames T+1..T+149.
+     */
+    function stepBeamTowersThroughPhaseANow() {
+        if (!CONTACT_FIDELITY.freezeSpanUpdates || noclip || !beamTowersStepped()) return;
+        if (ceremony === null || !ceremony.dialogue) return;
+        const st = beamTowerStateFor(level);
+        if (st.size === 0) return;
+        const exact = CONTACT_FIDELITY.pickupTickFreeze && CONTACT_FIDELITY.freezeEdgeFrames
+            && CONTACT_FIDELITY.freezeReleaseTick;
+        const clockNow = clock.now();
+        const contact = clockNow === null ? null : clockNow - CEREMONY_DEAD_FRAMES.pickup;
+        for (const t of st.values()) {
+            for (let k = 1; k < CEREMONY_DEAD_FRAMES.pickup; k += 1) stepBeamTowerFrame(t, { time: null, frozen: true });
+            if (!exact) t.animKnown = false;
+            else if (contact !== null && (t.lastClock === null || t.lastClock === contact || t.lastClock === contact - 1)) {
+                t.lastClock = clockNow - 1;
+            }
+        }
+    }
+    /**
+     * ⛓ fidelity RELEASEPICKUP D2 (ON only): R's step follows C's in the same tick, at the same `clock.now()` (R's
+     * `Game.time`, the phase-A spend having counted R); C's frozen step was the frame before. Relabelled so the jump
+     * test sees the two frames it is. Only under `stepBeamTowersThroughPhaseANow`'s `exact` set, and only a tower whose
+     * C step read this very clock (a continuous history).
+     */
+    function relabelBeamTowerCloseFrameNow() {
+        if (!CONTACT_FIDELITY.freezeSpanUpdates || noclip || !beamTowersStepped()) return;
+        if (!(CONTACT_FIDELITY.pickupTickFreeze && CONTACT_FIDELITY.freezeEdgeFrames)) return;
+        const clockNow = clock.now();
+        if (clockNow === null) return;
+        for (const t of beamTowerStateFor(level).values()) if (t.lastClock === clockNow) t.lastClock = clockNow - 1;
+    }
+    /**
+     * ⛓⛓ fidelity RELEASEPICKUP D2 (`CONTACT_FIDELITY.freezeSpanUpdates`, ON only) — A PICKUP THE GAME COLLECTS INSIDE
+     * A ROCK'S SPAN: REFUSED BY NAME (the interim; the model does not hold a ceremony nested in a rock's freeze).
+     * `Pickup.update`'s `collide("Player")` is outside `Mobile`'s freeze gate (`Pickups/Pickup.as:63-84`,
+     * `Mobile.as:31-41`), so a pickup under the player on any span frame is collected on the first such frame, and
+     * `pick_up` then re-raises the flag after the rock every frame (`:95`) — the rock's release does not release. The
+     * player is still through the span, so the positions are the frame-A position (a button: the post-move box, which
+     * `Button.update` presses from, ahead of the pickups at `Game.as:2330-2340`) and a landing's snap
+     * (`Scenery/FallRock.as:54-60`, ahead of every pickup). `at` is the snapped position, or null for the run's own;
+     * `skip` is the ceremony's own pickup (the wand, whose finishing tick drops L43's rocks).
+     *
+     * @param {string} what the rock's source, for the refusal
+     * @param {{x: number, y: number}|null} at
+     */
+    function assertNoPickupInRockSpanNow(what, at = null) {
+        if (!CONTACT_FIDELITY.freezeSpanUpdates || noclip) return;
+        const skip = ceremony !== null && ceremony.pickup && !ceremony.pickup.runtime
+            ? pickupKey(level, ceremony.pickup) : null;
+        const hits = [];
+        pickupUnderfoot((p, box) => {
+            if (pickupKey(level, p) !== skip && rectsOverlap(box, p.rect)) hits.push(`${p.tag ?? 'pickup'}@${p.x},${p.y}`);
+        }, at);
+        if (at === null && ceremony === null) {
+            const start = predictPickupCeremonyStart();
+            if (start !== null && hits.length === 0) hits.push(`a runtime ${start.tag}`);
+        }
+        if (hits.length === 0) return;
+        throw new Error(`levelRun: ${what} at tick ${ticksCompleted} in level ${level} freezes the world with the player `
+            + `on ${hits.join(', ')}${at === null ? '' : ` (the landing's snap, y = ${at.y})`}. \`Pickup.update\`'s `
+            + 'collide has no freeze gate (`Pickups/Pickup.as:63-84`), so the game collects it INSIDE the rock\'s span '
+            + 'and its ceremony re-raises the flag past the rock\'s release: a ceremony nested in a rock\'s freeze is not '
+            + 'modelled. Refused by name (fidelity RELEASEPICKUP).');
+    }
     /**
      * ⛓⛓⛓ seedling-js-inventory-menu — THE V MENU'S HOLD: the frozen frames a menu session spends, which the TAPE
      * never sees and the WORLD does (fidelity-15's W0 ACK, C1-C3).
@@ -14362,8 +15157,12 @@ export function createLevelRun({
      * the ice turrets and above the player, the LAST placed first. It reads
      * the player as the previous tick left it. A spit its `endAnim` adds is
      * deferred to the frame's end: it first updates on the next tick.
+     *
+     * ⛓ fidelity TURRETSUIT D2: `onHitPlayer(id)`, when the caller passes one, is `Enemy.update`'s `hitPlayer()` —
+     * called at the top of each turret's turn, BELOW `hitUpdate` (`stepStaticBodiesNow`) and ABOVE the "die" return
+     * and the fire gate (`Turret.as:47-64`), so both read what the contact wrote. Absent, no statement runs.
      */
-    function stepShootersNow() {
+    function stepShootersNow(onHitPlayer, { frozen = ceremony !== null } = {}) {
         const st = shooterStateFor(level);
         if (st.size === 0) return;
         if (turretStateFor(level).size > 0) {
@@ -14372,6 +15171,7 @@ export function createLevelRun({
         }
         for (const id of [...st.keys()].reverse()) {
             const t = st.get(id);
+            if (onHitPlayer) onHitPlayer(id);
             /**
              * ⛓ hammer-phase C1 (`STATIC_SWORD_ARM` ON): the body's own damage state is F4's row, stepped above
              * (`stepStaticBodiesNow`: `hitUpdate` first, as `Enemy.update` runs it before the aim). A turret playing
@@ -14389,7 +15189,7 @@ export function createLevelRun({
                 }
                 if (row) t.hitsTimer = row.hitsTimer;
             }
-            stepTurret(t, { frozen: ceremony !== null, player: { x: state.x, y: state.y } });
+            stepTurret(t, { frozen, player: { x: state.x, y: state.y } });
             if (t.spawned) {
                 t.spawned.spawnedAt = ticksCompleted + 1;
                 spitsFor(level).unshift(t.spawned);
@@ -14411,6 +15211,28 @@ export function createLevelRun({
         for (let k = 0; k < frames; k += 1) {
             stepSpitsNow();
             stepShootersNow();
+        }
+    }
+
+    /**
+     * ⛓ fidelity PICKUPFREEZE D2 (`CONTACT_FIDELITY.pickupTickFreeze`, ON only): a TEXT-LESS pickup's last frame,
+     * F+150. The spits update before the pickup and still read the freeze; then `pick_up`'s `!myText` arm lowers it
+     * (`Pickups/Pickup.as:106-112`), so the turrets update UNFROZEN — their aim, `shootTimer` and fire gate, and, with
+     * wave 50's slot (`turretSuitRetaliation` + `STATIC_SWORD_ARM` ON), their `hitPlayer`, which `Player.hit` no longer
+     * refuses. The player has not moved since T's top, so every read is the box the touch was found at. `ceremony`
+     * stands for the flag in every reader (the fire gate, `turretHitPlayerNow`'s exit, `applyPlayerHit`'s `frozen`),
+     * so it is lowered for exactly the turrets' turn and restored.
+     */
+    function stepShooterReleaseFrameNow() {
+        if (shooterStateFor(level).size === 0 && spitsFor(level).length === 0) return;
+        stepSpitsNow();
+        const up = ceremony;
+        ceremony = null;
+        try {
+            stepShootersNow(CONTACT_FIDELITY.turretSuitRetaliation && STATIC_SWORD_ARM.enabled
+                ? turretHitPlayerNow : undefined, { frozen: false });
+        } finally {
+            ceremony = up;
         }
     }
 
@@ -14659,10 +15481,15 @@ export function createLevelRun({
 
     /** ⛓ fidelity CORPSEBUMP D1: a puncher's reach in one update, px — `moveSpeed` 1 plus knockback headroom (a bound). */
     const CORPSE_PUNCHER_PAD = 4;
-    function stepIceTurretsNow() {
+    function stepIceTurretsNow({ mainSlot = true } = {}) {
         const st = turretStateFor(level);
         if (st.size === 0) return;
         const ids = [...st.keys()].reverse();
+        // ⛓ fidelity PICKUPFREEZE D2 (ON only): a texted pickup touched this tick froze it first (`Game.as:2296`).
+        // ⛓ fidelity RELEASETICK D2: asked from the main slot only (a ceremony's release frame is not a pickup's T).
+        const frozenAhead = mainSlot && pickupFreezesFamilyNow('iceturret', { lump: false });
+        // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): a texted NPC's later frame froze it first (`Game.as:2296`).
+        const dialogueAhead = mainSlot && dialogueFreezeAheadNow('iceturret');
         for (const id of ids) {
             const t = st.get(id);
             if (t.removed) continue;
@@ -14670,7 +15497,7 @@ export function createLevelRun({
             const withoutSelf = opts.turrets === null ? null
                 : new Map([...opts.turrets].filter(([k]) => k !== id));
             stepIceTurret(t, {
-                frozen: ceremony !== null,
+                frozen: ceremony !== null || frozenAhead || dialogueAhead,
                 // ⛔⛔⛔ R5 SLICE 22: COMPUTED, NOT DECLARED — AND SLICE
                 // 20's DECLARATION IS WHAT THE RECORDING REFUTED.
                 //
@@ -14863,8 +15690,13 @@ export function createLevelRun({
      * carries it, and the predicate is the game's own — **the LAST SLOT,
      * not the count** — because the array is a collection log and the game
      * tests `Main.hasSealPart(SEALS - 1) != -1`.
+     *
+     * ⛓ seedling-js-item-live-delivery: AND NO LONGER A BUILD CONSTANT. `Chest.update` asks `checkBySeal()` every
+     * frame (`Chest.as:59-61`), so a sixteenth seal the host delivers mid-visit (`deliver`) removes the room's
+     * chests on the next frame. Nothing in the model writes `sealParts` but the boot and `deliver`, so a run no host
+     * delivers into reads exactly the constant this was.
      */
-    const HAS_ALL_SEAL_PARTS = sealParts[SAVE_SLOTS.seal_parts - 1] !== -1;
+    const hasAllSealPartsNow = () => sealParts[SAVE_SLOTS.seal_parts - 1] !== -1;
     /** One record per chest this run opened. */
     const chestOpens = [];
     /** One per tick a pulse's `hit()` ran, per pulser. */
@@ -15569,6 +16401,168 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓ fidelity PICKUPFREEZE D2 (`CONTACT_FIDELITY.pickupTickFreeze`) — WILL A PICKUP CEREMONY START THIS TICK?
+     *
+     * The detection below the families, asked above them as a pure read and in its own order: the runtime seed, the
+     * Witch's DarkSword, the BobBoss's Fire, then a placed pickup (`pickupUnderfoot`). `textless` is the ceremony's
+     * `text === ''` (`Pickup.pick_up`'s `!myText` arm lowers the freeze on frame F+150, before the families update).
+     * Every slot that asks is recorded; `assertPickupFreezeAheadHeld` re-checks the answer at the detection, and
+     * `runFrozenTick` refuses a predicted start that another freeze pre-empts. OFF: null, nothing recorded.
+     *
+     * @param {string} slot the family asking (for the refusal's text)
+     * @returns {null|{tag: string, textless: boolean}}
+     */
+    function pickupFreezeAheadNow(slot) {
+        if (!CONTACT_FIDELITY.pickupTickFreeze || noclip) return null;
+        const start = predictPickupCeremonyStart();
+        const prev = pickupFreezeAhead !== null && pickupFreezeAhead.t === ticksCompleted
+            && pickupFreezeAhead.level === level ? pickupFreezeAhead : null;
+        if (prev !== null && JSON.stringify(prev.start) !== JSON.stringify(start)) {
+            throw new Error(`levelRun: the pickup-freeze prediction moved inside tick ${ticksCompleted} in level `
+                + `${level}: ${prev.slots.join(', ')} read ${JSON.stringify(prev.start)}, ${slot} reads `
+                + `${JSON.stringify(start)} (the player's box moved between the two slots). Refused by name `
+                + '(fidelity PICKUPFREEZE).');
+        }
+        pickupFreezeAhead = prev ?? { t: ticksCompleted, level, start, slots: [] };
+        pickupFreezeAhead.slots.push(slot);
+        return start;
+    }
+    /** ⛓ fidelity CEREMONYTOWER D2: the tower slot's prediction for this tick (`{t, level, holds}`); null OFF. */
+    let ceremonyHoldAhead = null;
+    function predictPickupCeremonyStart() {
+        if (ceremony !== null) return null;
+        if (runtimeSeedUnderfoot()) return { tag: 'seed', textless: false };
+        if (witchSword && witchSword.level === level && witchSword.added && !witchSword.collected && !state.fall) {
+            const pb = playerBoxAt(state.x, state.y);
+            const sb = darkSwordBox(witchSword);
+            if (pb.right > sb.x && pb.x < sb.right && pb.bottom > sb.y && pb.y < sb.bottom) {
+                return { tag: 'darksword', textless: false };
+            }
+        }
+        if (bobFireUnderfoot()) return { tag: 'fire', textless: false };
+        const hit = pickupUnderfoot();
+        if (hit) return { tag: hit.tag ?? 'pickup', textless: ceremonyFor(hit).text === '' };
+        return null;
+    }
+    /** ⛓ fidelity PICKUPFREEZE D2: the slot answer — a turret freezes on T always, a lump-less family only if texted. */
+    function pickupFreezesFamilyNow(slot, { lump }) {
+        const start = pickupFreezeAheadNow(slot);
+        return start !== null && (lump || !start.textless);
+    }
+    /**
+     * ⛓⛓ fidelity CEREMONYTOWER D2 (`CONTACT_FIDELITY.freezeEdgeFrames`, ON only) — DOES A TEXTED CEREMONY HOLD THROUGH
+     * THIS TICK? On such a tick the ceremony branch returns through `runFrozenTick(…, 'a pickup ceremony')`, whose frozen
+     * tower step is the frame's one update (`Pickup.update` re-raises the flag before the tower every frame,
+     * `Pickups/Pickup.as:57-60,95`). Read off a CLONE of the ceremony's dialogue with the tick's own talk-key release
+     * (`stepDialogue`, the branch's step; `prevHeld` is not written between the slot and the branch on any path that
+     * reaches it). `assertCeremonyHoldAheadHeld` re-checks the answer at the branch. OFF: false, nothing recorded.
+     *
+     * @param {Set<string>} keysHeld the tick's held keys
+     * @returns {boolean}
+     */
+    function ceremonyHoldsThroughNow(keysHeld) {
+        if (!CONTACT_FIDELITY.freezeEdgeFrames || noclip || ceremony === null || !ceremony.dialogue) return false;
+        const c = structuredClone(ceremony.dialogue);
+        stepDialogue(c, releasedThisTick(keysHeld, TALK_KEY));
+        ceremonyHoldAhead = { t: ticksCompleted, level, holds: !c.done };
+        return !c.done;
+    }
+    /** ⛓ fidelity CEREMONYTOWER D2: the branch's answer against the slot's prediction; the record is spent. */
+    function assertCeremonyHoldAheadHeld(finishing) {
+        const rec = ceremonyHoldAhead;
+        if (rec === null || rec.t !== ticksCompleted || rec.level !== level) return;
+        ceremonyHoldAhead = null;
+        if (rec.holds === !finishing) return;
+        throw new Error(`levelRun: the beam tower's slot read tick ${ticksCompleted} in level ${level} as a ceremony `
+            + `frame that ${rec.holds ? 'holds through' : 'finishes'}, and the ceremony then `
+            + `${finishing ? 'finished' : 'held'}. Refused by name rather than stepped on a guess (fidelity CEREMONYTOWER).`);
+    }
+    /**
+     * ⛓ fidelity PICKUPFREEZE D2: the detection's answer against the slots' prediction. A slot that stepped its family
+     * frozen for a start that did not happen (or unfrozen for one that did) is refused by name; the record is spent.
+     */
+    function assertPickupFreezeAheadHeld() {
+        const rec = pickupFreezeAhead;
+        if (rec === null || rec.t !== ticksCompleted || rec.level !== level) return;
+        pickupFreezeAhead = null;
+        const last = ceremonyStarts.length > 0 ? ceremonyStarts[ceremonyStarts.length - 1] : null;
+        const started = last !== null && last.t === ticksCompleted && last.level === level && ceremony !== null;
+        const textless = started ? ceremony.dialogue === null : null;
+        const agree = rec.start === null ? !started
+            : started && rec.start.tag === (last.tag ?? 'pickup') && rec.start.textless === textless;
+        if (agree) return;
+        throw new Error(`levelRun: ${rec.slots.join(', ')} stepped tick ${ticksCompleted} in level ${level} for `
+            + `${rec.start === null ? 'no pickup ceremony' : `a ${rec.start.tag} ceremony`}, and the detection then `
+            + `${started ? `started a ${last.tag} ceremony (${textless ? 'text-less' : 'texted'})` : 'started none'}. `
+            + 'The families that update after a pickup read the freeze its first frame raises; refused by name rather '
+            + 'than stepped on a guess (fidelity PICKUPFREEZE).');
+    }
+
+    /**
+     * ⛓⛓ fidelity DIALOGUEFREEZE D2 (`CONTACT_FIDELITY.dialogueFrameFreeze`) — IS THIS TICK A DIALOGUE FRAME THAT
+     * FREEZES THE FAMILIES AFTER THE NPC?
+     *
+     * `NPC.talk()` (`NPCs/NPC.as:185-239`) raises `Game.freezeObjects` inside `if (talking)` and, on the frame the pages
+     * run out or the player is out of the circle, lowers it again through the `talking` setter (`:207-214`, `:230-236`,
+     * `:253-255`) before any family added ahead of the NPC updates. So the families are frozen on a frame iff an NPC was
+     * ALREADY talking at its `talk()` and does not close on it; the start frame (`startTalking()`, `:240-248`) is not
+     * one. Asked as a pure read of the two arms (`stepTalkersNow`, then `stepWatchersNow`, the same gates), the close
+     * read off a CLONE of the dialogue (`stepNpcDialogue`, the arms' own step). Every slot that asks is recorded;
+     * `assertDialogueFreezeAheadHeld` re-checks the answer at the arms, and `runFrozenTick` refuses a predicted dialogue
+     * frame that another freeze pre-empts. OFF: false, nothing recorded.
+     *
+     * @param {string} slot the family asking (for the refusal's text)
+     * @returns {boolean}
+     */
+    function dialogueFreezeAheadNow(slot) {
+        if (!CONTACT_FIDELITY.dialogueFrameFreeze || noclip) return false;
+        const frozen = predictDialogueFrameFrozen();
+        const prev = dialogueFreezeAhead !== null && dialogueFreezeAhead.t === ticksCompleted
+            && dialogueFreezeAhead.level === level ? dialogueFreezeAhead : null;
+        if (prev !== null && prev.frozen !== frozen) {
+            throw new Error(`levelRun: the dialogue-freeze prediction moved inside tick ${ticksCompleted} in level `
+                + `${level}: ${prev.slots.join(', ')} read ${prev.frozen}, ${slot} reads ${frozen} (the player moved `
+                + 'between the two slots, across a talk circle). Refused by name (fidelity DIALOGUEFREEZE).');
+        }
+        dialogueFreezeAhead = prev ?? { t: ticksCompleted, level, frozen, slots: [] };
+        dialogueFreezeAhead.slots.push(slot);
+        return frozen;
+    }
+    function predictDialogueFrameFrozen() {
+        const released = dialogueHeldNow !== null && releasedThisTick(dialogueHeldNow, TALK_KEY);
+        const player = { x: state.x, y: state.y };
+        const staysOpen = (d, inRange) => {
+            const c = structuredClone(d);
+            stepNpcDialogue(c, released, inRange);
+            return !c.done;
+        };
+        for (const w of talkerStateFor(level).values()) {
+            if (w.cleared || !w.text || !w.talking) continue;
+            return staysOpen(w.dialogue, inTalkRange({ x: w.ex, y: w.ey }, player, talkRangeOf(w.tag)));
+        }
+        for (const w of watcherStateFor(level).values()) {
+            if (w.cleared || w.persistTag < 0 || !w.text || !w.talking) continue;
+            if (staysOpen(w.dialogue, inTalkRange({ x: w.ex, y: w.ey }, player))) return true;
+        }
+        return false;
+    }
+    /**
+     * ⛓ fidelity DIALOGUEFREEZE D2: the arms' answer against the slots' prediction (`frozen`: the talker or watcher arm
+     * froze this tick). A slot that stepped its family frozen for a frame that then did not freeze (or unfrozen for one
+     * that did) is refused by name; the record is spent.
+     */
+    function assertDialogueFreezeAheadHeld(frozen) {
+        const rec = dialogueFreezeAhead;
+        if (rec === null || rec.t !== ticksCompleted || rec.level !== level) return;
+        dialogueFreezeAhead = null;
+        if (rec.frozen === frozen) return;
+        throw new Error(`levelRun: ${rec.slots.join(', ')} stepped tick ${ticksCompleted} in level ${level} `
+            + `${rec.frozen ? 'frozen for' : 'unfrozen, predicting no'} dialogue frame, and the talker/watcher arms then `
+            + `${frozen ? 'froze' : 'did not freeze'} it. The families that update after a texted NPC read the freeze its `
+            + '`talk()` raises; refused by name rather than stepped on a guess (fidelity DIALOGUEFREEZE).');
+    }
+
+    /**
      * ⛓⛓⛓ R6 SLICE 6c: ONE FROZEN TICK, EXTRACTED — one implementation, two
      * callers.
      *
@@ -15588,8 +16582,31 @@ export function createLevelRun({
      *
      * @param {object} activators the level's activator state, as of tick top
      * @param {string} what       what raised the freeze, for the messages
+     * @param {{chasers?: boolean}} [opts] ⛓ fidelity FROZENTICK D2: `chasers` — the caller's freeze is up when the
+     *   chasers update (its raiser updates before them), so `frozenTickUngated` ON runs their frozen update here.
      */
-    const runFrozenTick = (activators, what) => {
+    const runFrozenTick = (activators, what, { chasers = false } = {}) => {
+        // ⛓ fidelity TURRETSUIT D2 (ON only): a freeze that starts AFTER a turret's contact was answered in its slot.
+        if (turretSlotContact !== null && turretSlotContact.t === ticksCompleted + 1) {
+            throw new Error(`levelRun: ${turretSlotContact.id}'s contact was answered in its own slot at tick `
+                + `${turretSlotContact.t} in level ${level}, and the same tick then froze (${what}). A pickup's or a `
+                + 'dialogue\'s update runs BEFORE the turret\'s in the game (`Game.loadlevel` adds them after it, and '
+                + '`addUpdate` prepends), so `Player.hit`\'s `!Game.freezeObjects` would have refused it; that order is '
+                + 'not transcribed. Refused by name (fidelity TURRETSUIT).');
+        }
+        // ⛓ fidelity PICKUPFREEZE D2 (ON only): a predicted pickup start that another freeze pre-empted.
+        if (pickupFreezeAhead !== null && pickupFreezeAhead.t === ticksCompleted && pickupFreezeAhead.start !== null) {
+            throw new Error(`levelRun: ${pickupFreezeAhead.slots.join(', ')} stepped tick ${ticksCompleted} in level `
+                + `${level} frozen for a ${pickupFreezeAhead.start.tag} ceremony, and the tick froze first for ${what}. `
+                + 'Refused by name (fidelity PICKUPFREEZE).');
+        }
+        // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): a predicted dialogue frame that another freeze pre-empted.
+        if (dialogueFreezeAhead !== null && dialogueFreezeAhead.t === ticksCompleted && dialogueFreezeAhead.level === level
+            && dialogueFreezeAhead.frozen) {
+            throw new Error(`levelRun: ${dialogueFreezeAhead.slots.join(', ')} stepped tick ${ticksCompleted} in level `
+                + `${level} frozen for a dialogue frame, and the tick froze first for ${what}. `
+                + 'Refused by name (fidelity DIALOGUEFREEZE).');
+        }
         // ⚠ A FROZEN TICK IS NOT A RENDERED FRAME AS FAR AS THIS MODEL IS
         // CONCERNED, and a bridge does not know that. `Tile.render` keeps
         // running, so the game would open one EARLIER than the tick count
@@ -15620,6 +16637,9 @@ export function createLevelRun({
         }
         // ⛓ fidelity BEAMTOWER D1: a tower's own update returns on the freeze, its graphic still updates.
         if (!noclip && beamTowersStepped()) stepBeamTowersNow({ frozen: true });
+        // ⛓ fidelity FROZENTICK D2 (ON only): and the chasers' frozen update — `hitUpdate`, the fade, the terrain
+        // switch, the pit descent, the Jellyfish's and the Puncher's chase — before the player's lines below.
+        if (chasers && CONTACT_FIDELITY.frozenTickUngated && !noclip) stepChasersFrozenNow();
         // ⛓ SLOTS: `Game.update`'s tail runs on a frozen frame too.
         flushPendingRemoved();
         syncSlotsAtTail();
@@ -16715,7 +17735,24 @@ export function createLevelRun({
         if (a.boss) {
             const b = a.boss;
             const solidOpts = normalizeLiveOpts(liveSolidOpts());
+            const billBob = (h) => {
+                const hit = applyPlayerHit({ source: 'bobBoss', id: `${b.id}:${h.arm}`,
+                    force: h.force, damage: h.damage, from: h.from,
+                    // ⛓ fidelity DARKSUITBOSSES D2: `p.hit(this, …)` (`Enemy.as:217`, `BobSoldier.as:169`).
+                    ...(suitInStep ? { retaliate: () => bobBossSuitRetaliation(b) } : {}) });
+                bobLedger({ what: 'player-hit', form: b.form, arm: h.arm, applied: hit.applied });
+                // ⛓⛓⛓ R3-swim D3: a death here is the ordinary hit death
+                // (`pendingDeath`, rebooted at end of tick). The new `Game`
+                // builds the rock fallen and re-adds the boss on its first
+                // live frame (`bobArenaNow`); the respawn is the rock's own
+                // `playerPosition` write, `ARENA.respawn`.
+            };
+            // ⛓ fidelity DARKSUITBOSSES D2 (`CONTACT_FIDELITY.darkSuitBossRetaliation`, ON, with the suit): the bill
+            // lands INSIDE the step, where `BobBoss.update` makes it, so a retaliation's writes (form 2's re-seed,
+            // `BobBoss.as:165-173`) precede `spin` and the later sword lines (`BobSoldier.as:72-84`).
+            const suitInStep = CONTACT_FIDELITY.darkSuitBossRetaliation && !!inventory.hasDarkSuit;
             const r = stepBobBossBody(b, {
+                ...(suitInStep ? { onPlayerHit: billBob } : {}),
                 player: { x: state.x, y: state.y },
                 playerBox: playerBoxAt(state.x, state.y),
                 frozen: false,
@@ -16732,16 +17769,7 @@ export function createLevelRun({
                         && box.bottom > ARENA_NPC_POINT.y)
                     || !!world.collidesSolid(box, solidOpts),
             });
-            for (const h of r.playerHits) {
-                const hit = applyPlayerHit({ source: 'bobBoss', id: `${b.id}:${h.arm}`,
-                    force: h.force, damage: h.damage, from: h.from });
-                bobLedger({ what: 'player-hit', form: b.form, arm: h.arm, applied: hit.applied });
-                // ⛓⛓⛓ R3-swim D3: a death here is the ordinary hit death
-                // (`pendingDeath`, rebooted at end of tick). The new `Game`
-                // builds the rock fallen and re-adds the boss on its first
-                // live frame (`bobArenaNow`); the respawn is the rock's own
-                // `playerPosition` write, `ARENA.respawn`.
-            }
+            if (!suitInStep) for (const h of r.playerHits) billBob(h);
             if (r.transition && !r.transition.done) {
                 bobNoInput = true;
                 a.faceUp = true;
@@ -17546,6 +18574,24 @@ export function createLevelRun({
         }
     }
 
+    /**
+     * ⛓ fidelity DARKSUITBOSSES D2 — `BobBoss.hit(darkSuitForce, …, darkSuitDamage, "Suit")` (`Enemies/BobBoss.as:
+     * 163-175`): form 2's own-gate re-seed, then `Enemy.hit(0, null, d, "Suit")` — hits, i-frames, the latch, a kill's
+     * `destroy` (`bobBossHit`, the sword arm's function). A kill starts `death()`'s transition on the next step, as a
+     * sword kill does. The `boss-hit` ledger row carries `by: 'suit'`.
+     */
+    function bobBossSuitRetaliation(b) {
+        const v = bobBossHit(b, { d: DARK_SUIT_DAMAGE, t: 'Suit', frozen: ceremony !== null });
+        bobLedger({ what: 'boss-hit', by: 'suit', form: b.form, landed: v.landed, killed: v.killed, hits: b.hits,
+            hitsMax: b.hitsMax, hitsTimer: b.hitsTimer, why: v.refusedAt ?? null });
+        return {
+            id: b.id, as3: 'BobBoss', form: b.form, landed: v.landed, hits: b.hits, hitsTimer: b.hitsTimer,
+            hitByDarkStuff: b.hitByDarkStuff === true, swords: b.swords,
+            ...(v.killed ? { killed: true } : {}),
+            ...(v.landed ? {} : { why: v.refusedAt }),
+        };
+    }
+
     function bobBossSlashNow({ rect: r, reachLimit, weapon, pressTick, hits, lineWaived = false }) {
         const a = bobArena;
         if (!a || a.none || a.level !== level || !a.boss) return;
@@ -18190,6 +19236,21 @@ export function createLevelRun({
             hitsTimer: d.hitsTimer, destroy: d.destroy,
             // ⛓ fidelity DRILLWATER D1: the pit latch and its end (ON only; OFF the row is unchanged)
             ...(CONTACT_FIDELITY.drillTerrainSwitch ? { fallInPit: d.fallInPit === true, fell: d.fell === true, terrainDeath: d.terrainDeath ?? null } : {}) })));
+    /**
+     * ⛓ seedling-fidelity-wallflyerbodies: this level's wallflyers STILL IN THE WORLD, `{id, x, y, vx, vy, hits,
+     * hitsTimer, dieAnim, destroy, removed}` (`[]` under noclip) — the census-visible face of `run.wallFlyers.bodies`,
+     * which stays as it is (the debug getter: whole bodies, removed ones, and the events).
+     *
+     * A body leaves the list on the tick `removed` is set — `Mobile.death`'s fade ending (`wallFlyer.js:291-293`), the
+     * game's `FP.world.remove`. A DYING body stays and says so: the "die" anim on (`dieAnim !== null`, set by
+     * `hitWallFlyer`'s kill, `wallFlyer.js:358-361`), then `destroy` (the anim's `endAnim`, `wallFlyer.js:330-335`, or
+     * water/lava/pit, `:260-273`) while it fades. LIVE is `!destroy && dieAnim === null` — `stepWallFlyer`'s own tail
+     * gate (`wallFlyer.js:308`) and `hitWallFlyer`'s (`:347`). So `removed` reads false on every row; it is kept so a
+     * reader written against the getter's bodies reads the same field.
+     */
+    const wallFlyerBodiesNow = () => (noclip ? [] : [...wallFlyerStateFor(level).values()].filter((w) => !w.removed)
+        .map((w) => ({ id: w.id, x: w.x, y: w.y, vx: w.vx, vy: w.vy, hits: w.hits, hitsTimer: w.hitsTimer,
+            dieAnim: w.dieAnim && { ...w.dieAnim }, destroy: w.destroy, removed: w.removed })));
     const ENTITY_FAMILIES = Object.freeze({
         openActivators: openActivatorsNow,
         pushables: pushablesNow,
@@ -18226,6 +19287,7 @@ export function createLevelRun({
         lavaBossFight: lavaBossFightNow,
         tentacleBeastFight: tentacleBeastFightNow,
         drillBodies: drillBodiesNow,
+        wallFlyerBodies: wallFlyerBodiesNow,
     });
 
     /**
@@ -19045,6 +20107,8 @@ export function createLevelRun({
     // ⛓ fidelity BOSSFORK D2: and the boot's build, here because every binding the fight's build reads is now made.
     tentacleMouthAtBuild();
 
+    // ⛓ seedling-js-item-live-delivery: a staged delivery written before the first step (`t` 0).
+    applyStagedDeliveries();
     return {
         get level() { return level; },
         get world() { return world; },
@@ -19188,6 +20252,8 @@ export function createLevelRun({
          */
         /** ⛓ fidelity DRILL D2: the entities fold's `drillBodies` (`run.entities('drillBodies')`). */
         get drillBodies() { return drillBodiesNow(); },
+        /** ⛓ seedling-fidelity-wallflyerbodies: the entities fold's `wallFlyerBodies` (`run.entities('wallFlyerBodies')`). */
+        get wallFlyerBodies() { return wallFlyerBodiesNow(); },
         /** ⛓ seedling-fidelity-terrain W3: the live drill(s) and their events (`hop`, `contact`, `struck`). */
         get drills() {
             return {
@@ -19360,7 +20426,10 @@ export function createLevelRun({
                 && memo.firstTick === firstTickInWorld
                 && memo.ticks === ticksCompleted;
             if (usable && memo.rows.length >= need) return memo.rows.slice(0, need);
-            const shifted = usable || !PRESS_KILL_COST.enabled ? null : shiftedSpinnerForecast(live);
+            // ⛓ fidelity L39HIT D2 (`pulserForecastPulse`, OFF ⇒ null): the room's pulsers, stepped with the rows; a
+            // forecast that carries them is cut fresh (the shift's clauses compare the bodies, not the pulsers' rings)
+            const pulses = usable ? null : pulserForecastStepper();
+            const shifted = usable || !PRESS_KILL_COST.enabled || pulses !== null ? null : shiftedSpinnerForecast(live);
             if (!usable && PRESS_KILL_COST.enabled) {
                 if (shifted === null) PRESS_KILL_COST_COUNTS.forecastCut += 1;
                 else PRESS_KILL_COST_COUNTS.forecastShifted += 1;
@@ -19414,8 +20483,14 @@ export function createLevelRun({
                 // ⛓ hammer-phase P1: what rows 1… are stepped under, copied now (the shift's clause 4)
                 cur.key = PRESS_KILL_COST.enabled ? snapshotValue(cur.ctxAfter.inputs) : UNCACHEABLE;
             }
+            if (!usable && pulses !== null) {
+                cur.pulses = pulses;
+                cur.key = UNCACHEABLE; // ⛓ L39HIT D2: never the shift's `prev` (its rows carry the pulsers' rings)
+            }
             for (let i = cur.rows.length; i < need; i += 1) {
                 stepSpinners(cur.st, i === 0 ? cur.ctxNow : cur.ctxAfter);
+                // ⛓ fidelity L39HIT D2: the pulse lands after the bodies' step, as `advance` orders them
+                cur.pulses?.step(cur.st, (i === 0 ? cur.ctxNow : cur.ctxAfter).inputs?.frozen === true);
                 cur.rows.push(spinnerRects(cur.st).map((s) => s.rect));
                 // ⛓ hammer-phase P1: the bodies each row was cut from (`stepSpinner` never mutates one), for the shift
                 cur.states.push([...cur.st.byId.values()]);
@@ -19553,9 +20628,12 @@ export function createLevelRun({
                 const blocked = forecastSwordTest(st, th, t, from, { own, damage, frozen, weapon }, tests);
                 lineBlocked = lineBlocked ?? blocked;
             };
+            // ⛓ fidelity L39HIT D2 (`pulserForecastPulse`, OFF ⇒ null): the room's pulsers, as `spinnerForecast` steps them
+            const pulses = live.byId.size > 0 ? pulserForecastStepper() : null;
             for (let i = 0; i < need; i += 1) {
                 const t = ticksCompleted + i;
                 if (live.byId.size > 0) stepSpinners(st, i === 0 ? ctxNow : ctxAfter);
+                pulses?.step(st, frozen);
                 // ⛓ SHIELDBUMP D1: `shieldBumpNow` runs after the bodies' update and above `slash()`'s tests
                 if (stepsBump) bumpRow(t);
                 if (!lineBlocked) {
@@ -19667,8 +20745,10 @@ export function createLevelRun({
              * ones its parent's.
              */
             const cursor = ({ parent, from, st, win, slash, rows, bodies, tests, lineBlocked, bumped = null,
-                shieldBumps = null }) => {
+                shieldBumps = null, pulses = null }) => {
                 const snaps = [];
+                // ⛓ fidelity L39HIT D2: the pulsers' state after each own row (`pulserForecastPulse` ON; else all null)
+                const pulseSnaps = [];
                 const wins = [];
                 const slashes = [];
                 // ⛓ SHIELDBUMP D1: per row, was the bump stepped (a state given)? Whole arrays from row 0, as `rows`.
@@ -19685,6 +20765,8 @@ export function createLevelRun({
                         const i = rows.length;
                         const t = n0 + i;
                         if (hasBodies) stepSpinners(st, i === 0 ? ctxNow : ctxAfter);
+                        // ⛓ fidelity L39HIT D2: the pulse lands after the bodies' step and above the player's tests
+                        pulses?.step(st, frozen);
                         if (stepsBump) {
                             // ⛓ SHIELDBUMP D1: `shieldBumpNow`, the top-of-tick `slashing` (a swing ending ON t-1 is out)
                             const q = forecastPlayerState(point);
@@ -19743,6 +20825,7 @@ export function createLevelRun({
                         bodies.push(now.map((s) => ({ id: s.id, hits: s.spinner.hits, hitsTimer: s.spinner.hitsTimer,
                             destroy: s.spinner.destroy })));
                         snaps.push(new Map(st.byId));
+                        pulseSnaps.push(pulses?.copy() ?? null);
                         wins.push(win);
                         slashes.push(slash);
                         return out;
@@ -19754,7 +20837,10 @@ export function createLevelRun({
                     },
                     /** The state after row `j` (its own, or its parent's). */
                     snap(j) {
-                        if (j >= from) return { st: snaps[j - from], win: wins[j - from], slash: slashes[j - from] };
+                        if (j >= from) {
+                            return { st: snaps[j - from], win: wins[j - from], slash: slashes[j - from],
+                                pulses: pulseSnaps[j - from] };
+                        }
                         if (parent === null) throw new Error(`levelRun.spinnerFightForecast: no row ${j} to fork at`);
                         return parent.snap(j);
                     },
@@ -19763,7 +20849,8 @@ export function createLevelRun({
                         if (j >= rows.length) throw new Error(`levelRun.spinnerFightForecast: row ${j} not reached`);
                         const s = c.snap(j);
                         return cursor({ parent: c, from: j + 1, st: { byId: new Map(s.st), level },
-                            win: s.win, slash: s.slash, rows: rows.slice(0, j + 1), bodies: bodies.slice(0, j + 1),
+                            win: s.win, slash: s.slash, pulses: s.pulses?.copy() ?? null,
+                            rows: rows.slice(0, j + 1), bodies: bodies.slice(0, j + 1),
                             tests: tests.filter((x) => x.t <= n0 + j),
                             lineBlocked: lineBlocked !== null && lineBlocked.t <= n0 + j ? lineBlocked : null,
                             ...(stepsBump ? { bumped: covered.slice(0, j + 1),
@@ -19781,7 +20868,8 @@ export function createLevelRun({
             return cursor({ parent: null, from: 0,
                 st: { byId: new Map([...live.byId].map(([k, v]) => [k, { ...v }])), level },
                 win: swordWindow, slash: { state: info.state, endsAt: info.endsAt, gate, tick: n0 },
-                rows: [], bodies: [], tests: [], lineBlocked: null });
+                rows: [], bodies: [], tests: [], lineBlocked: null,
+                pulses: hasBodies ? pulserForecastStepper() : null });
         },
         /**
          * ⛔⛔ R5 slice 13: `{t, level, id, flag, cause}` per `Spinner.removed()`.
@@ -21677,7 +22765,14 @@ export function createLevelRun({
          * rather than swallowed, because a caller that wants to ignore them
          * can, and one that wants them cannot get them back.
          */
+        /** ⛓ seedling-js-item-live-delivery — a host delivery, applied live at a tick boundary (`deliver`). */
+        deliver(change) { return deliver(change); },
+        /** ⛓ seedling-js-item-live-delivery — one row per delivery that CHANGED the run: `{t, level, kind, …}`. */
+        get deliveries() { return deliveries.map((d) => ({ ...d })); },
         advance(held) {
+            // ⛓ seedling-js-item-live-delivery: `deliver` refuses while this is on the stack (a write is never mid-frame).
+            advancing = true;
+            try {
             // ⛓ fidelity FENCEPOST D1: the tick's body, unchanged, as one arrow — `settleSpinnerRemovalsNow` is its `updateLists()` tail.
             spinnersSteppedThisTick = null; // a tick that threw below its spinner step leaves no survivor
             const advanced = (() => {
@@ -21689,6 +22784,8 @@ export function createLevelRun({
             // caller that catches. See `spinnerForecast`.
             spinnerForecastPrev = PRESS_KILL_COST.enabled ? spinnerForecastMemo : null;
             spinnerForecastMemo = null;
+            // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): the tick's keys, for the slots' talk-key release.
+            if (CONTACT_FIDELITY.dialogueFrameFreeze) dialogueHeldNow = held;
             // ⛓ U9-swim: the shield box's player, as the last frame rendered it.
             // ⛔ Its `direction` is the GAME's, which `sprites()` pins to
             // `directionFace` while a hit has parked it (`Player.hit` arms
@@ -21906,7 +23003,7 @@ export function createLevelRun({
             // ── ⛓⛓⛓ R2-swim D1: THE WALLFLYERS, directly below the spinners
             // (`Game.as:2392` adds them one line above `:2393`'s spinners).
             if (!noclip) stepWallFlyersNow();
-            if (!noclip && CONTACT_FIDELITY.drillLive) stepDrillsNow();
+            if (!noclip && CONTACT_FIDELITY.drillLive) stepDrillsNow({ mainTick: true });
             if (!noclip) stepShieldBossesNow();
             const pushState = pushableStateFor(level);
             if (!noclip && pushState.byId.size > 0) stepPushables(pushState, pushableCtx());
@@ -21962,10 +23059,14 @@ export function createLevelRun({
                         + 'this path returns above `stepPullsNow`. Refused by name (U12-swim D1).');
                 }
                 const ids = pendingButtonFalls;
+                // ⛓ fidelity RELEASEPICKUP D2 (ON only): frame A's position, which the pickups ask inside the span.
+                assertNoPickupInRockSpanNow('a button-dropped fallrock');
                 pendingButtonFalls = null;
                 prevHeld = new Set(held);
                 buttonFallsInFlight = new Set(ids);
-                const tick = runFrozenTick(activators, 'a button-dropped fallrock');
+                // ⛓ fidelity CEREMONYTOWER D2 (ON only): frame A is frozen to the turrets too (`:2295` vs the Button's `:2341`).
+                stepRockSpanShootersNow(false);
+                const tick = runFrozenTick(activators, 'a button-dropped fallrock', { chasers: true });
                 buttonFallsInFlight = new Set();
                 resolveButtonFalls(ids);
                 // ── ⛓ fidelity SMALLGAPS D1 (`CONTACT_FIDELITY.buttonFallReleaseStep`): THE RELEASE STEP, IN THIS TICK ──
@@ -22089,12 +23190,37 @@ export function createLevelRun({
             // ⛓ fidelity BEAMTOWER D1: the towers (`Game.as:2297`, added after the ice turrets and before the
             // lobbers), so they update before every chaser and the player — both sweep against where THIS call
             // left the tower. A ceremony's `Game.freezeObjects` skips the drift (the anim still runs).
-            if (!noclip && beamTowersStepped()) stepBeamTowersNow({ frozen: ceremony !== null });
+            // ⛓ fidelity PICKUPFREEZE D2 (ON only): a texted pickup touched this tick has already frozen them (`Game.as:2297`).
+            // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): on a texted NPC's later frame the main slot does NOT step them:
+            // `runFrozenTick`'s frozen step is the frame's one update, after the NPC as `Game.as:2297` orders it.
+            // ⛓ fidelity FROZENTICK D2 (`pickupTickFreeze` ON only): and on a TEXTED pickup's T likewise — that tick
+            // returns through `runFrozenTick`, whose frozen step is the frame's one update (wave 51 stepped it twice).
+            if (!noclip && beamTowersStepped() && !(CONTACT_FIDELITY.dialogueFrameFreeze
+                && beamTowerStateFor(level).size > 0 && dialogueFreezeAheadNow('beamtower'))) {
+                if (!(CONTACT_FIDELITY.pickupTickFreeze && beamTowerStateFor(level).size > 0
+                    && pickupFreezesFamilyNow('beamtower', { lump: false }))
+                    // ⛓ fidelity CEREMONYTOWER D2 (`freezeEdgeFrames` ON only): and on a texted ceremony's later tick that
+                    // holds through — it returns through `runFrozenTick`, whose frozen step is the frame's one update.
+                    && !(CONTACT_FIDELITY.freezeEdgeFrames && beamTowerStateFor(level).size > 0
+                        && ceremonyHoldsThroughNow(held))) {
+                    stepBeamTowersNow({ frozen: ceremony !== null });
+                }
+            }
             if (!noclip) stepIceTurretsNow();
             // ── ⛓⛓⛓ U15-swim D1: THE TURRETS, BELOW THE ICE TURRETS ──────
             // `Game.as:2272` adds them just before the `iceturret`
             // (`:2273`), and `addUpdate` prepends.
-            if (!noclip) stepShootersNow();
+            // ⛓ fidelity TURRETSUIT D2 (ON only): each turret's `hitPlayer`, in its own turn (`turretHitPlayerNow`).
+            // ⛓ fidelity PICKUPFREEZE D2 (ON only): a pickup touched this tick updated first and froze them — no aim, no
+            // `shootTimer`, no shot, and no `hitPlayer` bill (`Player.hit`'s `!Game.freezeObjects`).
+            // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): and so did a texted NPC's later frame (`Game.as:2295` vs `:2389+`).
+            if (!noclip && shooterStateFor(level).size > 0 && [pickupFreezesFamilyNow('turret', { lump: true }),
+                dialogueFreezeAheadNow('turret')].some(Boolean)) {
+                stepShootersNow(undefined, { frozen: true });
+            } else if (!noclip) {
+                stepShootersNow(CONTACT_FIDELITY.turretSuitRetaliation && STATIC_SWORD_ARM.enabled
+                    ? turretHitPlayerNow : undefined);
+            }
 
             // ── ⛓⛓⛓ R5 SLICE 22: `Player.update`'s `freezeStep()` ────
             //
@@ -22335,13 +23461,16 @@ export function createLevelRun({
                             + 'frame is a TICK, a ceremony\'s phase A is a DEAD frame. '
                             + 'Refused rather than approximated.');
                     }
+                    assertDialogueFreezeAheadHeld(true);
                     prevHeld = new Set(held);
-                    return runFrozenTick(activators, 'a placed NPC\'s dialogue');
+                    return runFrozenTick(activators, 'a placed NPC\'s dialogue', { chasers: true });
                 }
             }
             if (!noclip) {
                 const watcherRelease = releasedThisTick(held, TALK_KEY);
                 const wr = stepWatchersNow(watcherRelease);
+                // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): the slots' prediction, against the two arms' answer.
+                assertDialogueFreezeAheadHeld(wr.frozen);
                 if (wr.frozen) {
                     if (ceremony !== null) {
                         throw new Error('levelRun: a Watcher\'s dialogue and a pickup '
@@ -22352,7 +23481,7 @@ export function createLevelRun({
                             + 'Refused rather than approximated.');
                     }
                     prevHeld = new Set(held);
-                    return runFrozenTick(activators, 'a Watcher\'s dialogue');
+                    return runFrozenTick(activators, 'a Watcher\'s dialogue', { chasers: true });
                 }
             }
 
@@ -22531,6 +23660,8 @@ export function createLevelRun({
                     const fade = wandFadeFreezeTicks();
                     spendFrozen(fade, 'wand-approach-fade');
                     wandFades.push({ t: ticksCompleted, level, deadFrames: fade });
+                    // ⛓ fidelity FROZENTICK D2 (ON only): the blocks glide through the fade's dead frames.
+                    for (let k = 0; CONTACT_FIDELITY.frozenTickUngated && k < fade; k += 1) stepPushablesDeadFrameNow();
                 }
             }
             // ── ⛓⛓⛓ R6 SLICE 6d: THE RUNTIME SEED, BEFORE THE PLACED ──
@@ -22564,6 +23695,8 @@ export function createLevelRun({
                         seed: { id: seed.id, arm: seed.arm },
                         dialogue: beginDialogue(seed.text, { framesThisCharacter }),
                     };
+                    // ⛓ fidelity RELEASEPICKUP D2 (ON only): the beam towers' graphic through phase A.
+                    stepBeamTowersThroughPhaseANow();
                 }
             }
             // ⛓⛓ ENCOUNTERS D3: the runtime `DarkSword` `Witch.doneTalking()`
@@ -22597,6 +23730,8 @@ export function createLevelRun({
                             dialogue: beginDialogue(DARK_SWORD.text, { framesThisCharacter }),
                         };
                         armCeremonyLumpNow('darksword');
+                        // ⛓ fidelity RELEASEPICKUP D2 (ON only): the beam towers' graphic through phase A.
+                        stepBeamTowersThroughPhaseANow();
                     }
                 }
             }
@@ -22619,6 +23754,8 @@ export function createLevelRun({
                         totemPart: null,
                         dialogue: beginDialogue(BOB_BOSS_FIRE.text, { framesThisCharacter }),
                     };
+                    // ⛓ fidelity RELEASEPICKUP D2 (ON only): the beam towers' graphic through phase A.
+                    stepBeamTowersThroughPhaseANow();
                 }
             }
             if (ceremony === null) {
@@ -22669,16 +23806,31 @@ export function createLevelRun({
                     // ⛓ CEREMONYSHOVE D2: and, ON, the chasers' and the player's — one tick later (see the arm).
                     if (ceremony.dialogue !== null) armCeremonyLumpNow(hit.tag ?? 'pickup');
                     // ⛓ U15-swim D1: phase A's dead frames, frozen, for the turrets.
-                    if (!noclip) stepShootersThroughFreeze(CEREMONY_DEAD_FRAMES.pickup);
+                    // ⛓ fidelity PICKUPFREEZE D2 (ON): a text-less pickup's F+150 is the turrets' release frame.
+                    if (!noclip && CONTACT_FIDELITY.pickupTickFreeze && ceremony.dialogue === null) {
+                        stepShootersThroughFreeze(CEREMONY_DEAD_FRAMES.pickup - 1);
+                        stepShooterReleaseFrameNow();
+                    } else if (!noclip) stepShootersThroughFreeze(CEREMONY_DEAD_FRAMES.pickup);
+                    // ⛓ fidelity RELEASEPICKUP D2 (ON only): and the beam towers' graphic, for a texted pickup.
+                    stepBeamTowersThroughPhaseANow();
                     // ⛓ seedling-fidelity-bombpusher: and for the lobber and its bombs.
                     if (!noclip) stepBombsThroughFreeze(CEREMONY_DEAD_FRAMES.pickup);
+                    // ⛓ fidelity FROZENTICK D2 (ON only): and the blocks, which no freeze gates, through phase A's dead
+                    // frames when no stepped lump carries them (a text-less pickup: 149 frames and F+150).
+                    if (CONTACT_FIDELITY.frozenTickUngated && !(CONTACT_FIDELITY.ceremonyShove && ceremony.dialogue !== null)) {
+                        for (let k = 0; k < CEREMONY_DEAD_FRAMES.pickup; k += 1) stepPushablesDeadFrameNow();
+                    }
                 }
             }
+            // ⛓ fidelity PICKUPFREEZE D2 (ON only): the slots' prediction against what the detection found.
+            if (pickupFreezeAhead !== null) assertPickupFreezeAheadHeld();
             if (ceremony !== null) {
                 const released = releasedThisTick(held, TALK_KEY);
                 prevHeld = new Set(held);
                 if (ceremony.dialogue) stepDialogue(ceremony.dialogue, released);
                 const finishing = ceremony.dialogue === null || ceremony.dialogue.done;
+                // ⛓ fidelity CEREMONYTOWER D2 (ON only): the tower slot's prediction against the branch.
+                if (ceremonyHoldAhead !== null) assertCeremonyHoldAheadHeld(finishing);
                 // ⛓ CEREMONYSHOVE D2: ON, the last dead frame, before the release (`stepCeremonyReleaseFrameNow`).
                 if (finishing && ceremony.shoveLump) stepCeremonyReleaseFrameNow();
                 if (finishing && ceremony.seed) {
@@ -22806,6 +23958,8 @@ export function createLevelRun({
                     // taken rather than skipped so that the two completions
                     // do not become two models of one frame.
                 } else if (finishing) {
+                    // ⛓ fidelity RELEASETICK D2 (ON only): the release frame's one UNFROZEN update of the four families.
+                    stepCeremonyReleaseFamiliesNow();
                     // `removeSelf()` -> `removed()`: the property write and
                     // `Game.setPersistence`. The item lands HERE and not on
                     // contact, which is the whole difference between a real
@@ -22976,6 +24130,10 @@ export function createLevelRun({
                         // is frozen, so the LAST snap is where the next live
                         // tick starts from.
                         if (dropped.snapY !== null) state.y = dropped.snapY;
+                        // ⛓ fidelity RELEASEPICKUP D2 (ON only): the snapped position, which the pickups ask too.
+                        if (dropped.snapY !== null) {
+                            assertNoPickupInRockSpanNow('the wand\'s fallrocks', { x: state.x, y: state.y });
+                        }
                     }
                     collected.push({
                         t: ticksCompleted + 1,
@@ -23150,6 +24308,13 @@ export function createLevelRun({
                             force: BOSS_TOTEM_BODY.force,
                             damage: BOSS_TOTEM_BODY.damage,
                             from: { x: b.x, y: b.y },
+                            // ⛓ fidelity DARKSUITBOSSES D2 (ON only): `Enemy.hitPlayer` passes the totem as `e`
+                            // (`BossTotem.as:301`), and its "Suit" hit writes nothing.
+                            ...(CONTACT_FIDELITY.darkSuitBossRetaliation ? { retaliate: () => ({
+                                id: b.id ?? 'bosstotem', as3: 'BossTotem', landed: false, effect: 'none',
+                                why: '`BossTotem.hit` → `Enemy.hit` (Enemies/BossTotem.as:719-725): `onlyHitBy = "Wand"` '
+                                    + '(:262) and `justKnock` false (Enemies/Enemy.as:42, :149-180); `knockback` is empty (:727)',
+                            }) } : {}),
                         });
                     }
                     // 4. THE CAMERA OVERRIDE, which runs on every frame he
@@ -24049,7 +25214,13 @@ export function createLevelRun({
             return { transition: record, grant, ...hits };
             })();
             settleSpinnerRemovalsNow();
+            advancing = false;
+            // ⛓ seedling-js-item-live-delivery: the next boundary's staged deliveries (`t` = this tick's end).
+            applyStagedDeliveries();
             return advanced;
+            } finally {
+                advancing = false;
+            }
         },
     };
 }

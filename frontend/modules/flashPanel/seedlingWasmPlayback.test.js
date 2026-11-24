@@ -484,6 +484,41 @@ describe('named refusals and failures', () => {
         expect(e.notes.some((n) => /\(brave,chest,pulse,walk; dashless pass\)/.test(n ?? ''))).toBe(true);
     });
 
+    // ⛓ EARLY DISARM — the game stops the plan tape itself after ONE row (seed 2's L12: an equip check at tick 0).
+    // Before: `watch()` read `botStatus` only once every planned tick had drained, so this polled forever (300 s of
+    // "playing tick 1/N" until the outer stall timer). Now a stalled drain with ticks owed reads it: a named failure.
+    const disarmAfterOneRow = (e, error) => {
+        const drain = e.game.botDrain;
+        const status = e.game.botStatus;
+        e.game.botDrain = () => {
+            const g = e.game;
+            if (!(g.armed && g.tape?.tick_count > 0 && g.drainRows)) return drain();
+            g.calls.push('botDrain');
+            const ticks = g.drainRows.slice(0, 1);
+            g.drainRows = null;
+            g.armed = false; g.finished = true; g.tapeError = error; g.pos = ticks[0];
+            return JSON.stringify({ ticks, transitions: [] });
+        };
+        e.game.botStatus = () => JSON.stringify({ ...JSON.parse(status()), error: e.game.tapeError ?? '' });
+    };
+    for (const [error, why] of [
+        ['equip at tick 0 selected slot 1 but the inventory holds 1 item(s)', /the game's tape errored: equip at tick 0 selected slot 1 but the inventory holds 1 item\(s\)/],
+        ['', /the game's tape ended at tick 1 of \d+/],
+    ]) {
+        it(`⛓ EARLY DISARM — a tape the game stops after 1 row ${error ? 'with an error' : 'without one'} fails BY NAME, fast`, () => {
+            const e = engineOver(A);
+            disarmAfterOneRow(e, error);
+            e.engine.walkTo(DOOR);
+            runUntil(e, () => e.failures.length > 0, 4000);
+            expect(e.failures).toHaveLength(1);
+            expect(e.failures[0]).toMatch(why);
+            expect(e.dones).toEqual([]);
+            // asked on the stalled drain only: one plan-phase status read per STATUS_MS, never one per drain
+            const tail = e.game.calls.slice(e.game.calls.lastIndexOf('botStart'));
+            expect(tail.filter((c) => c === 'botDrain').length).toBeGreaterThan(tail.filter((c) => c === 'botStatus').length);
+        });
+    }
+
     it('stop() mid-play releases our tape (botReset) and records the leg as stopped with what drained', () => {
         const e = engineOver(A);
         e.engine.walkTo(DOOR);

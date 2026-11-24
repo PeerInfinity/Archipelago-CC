@@ -28,11 +28,15 @@ import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
 
 import '../mazeRoom/mazeRoomLibrary.js';
+import { MAZE_TEXT_VARIANT, freeFloorCells } from '../mazeRoom/mazeThings.js';
+import { textVariantKey } from '../procgenCore/contentRoles.js';
 import '../textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
 import { CONCEPT_TRIAL_STATE, META_TRIAL_STATE } from './presetDefs.js';
 import { prepareRunFromState, runPresetHeadless } from './presetRun.js';
 import { nodePackIo } from '../contentPacks/nodePackIo.js';
 import { CONCEPTS } from '../procgenCore/concepts.js';
+import { gateItemText } from '../textAdventureSubstrateWrapper/textAdventureRoom.js';
+import { TEXT_ADVENTURE_CONCEPT_REALISATIONS } from '../textAdventureSubstrateWrapper/textAdventureConceptRealisations.js';
 import { RECORDED_CONTENT_KEY, documentContentOf } from './worldContent.js';
 import { findRulesFileFromGameSeed } from '../../app/mode/modeDataLoader.js';
 
@@ -47,10 +51,12 @@ const PLACES = Object.values(PACK_CONCEPTS).filter((c) => c.kind === 'place');
 
 const build = async (state) => runPresetHeadless(await prepareRunFromState(structuredClone(state), { io: nodePackIo() }));
 const sidecarsOf = (rj, substrate) => Object.entries(rj.preset_sidecars['1']).filter(([, s]) => s.substrate === substrate);
-/** The document minus what the theme may write in this world: text-adventure prose, and the record. */
+/** The document minus what the theme may write in this world: text-adventure prose, every region's things, and the record. */
 const withoutPresentation = (rj) => {
     const out = structuredClone(rj);
-    for (const [, s] of sidecarsOf(out, 'text_adventure')) delete s.playable_payload.prose;
+    for (const [, s] of sidecarsOf(out, 'text_adventure')) { delete s.playable_payload.prose; delete s.playable_payload.things; }
+    // ⛓ S2 — a maze region's thing is presentation too (a record beside the grid, not a tile).
+    for (const [, s] of sidecarsOf(out, 'maze')) delete s.playable_payload.things;
     for (const block of Object.values(out.procgen_metadata ?? {})) delete block[RECORDED_CONTENT_KEY];
     return out;
 };
@@ -74,14 +80,19 @@ describe('R3 — the meta trial world beside its control (the concept trial)', a
         expect(Object.keys(world.rulesJson.procgen_metadata)).toEqual(Object.keys(ctrl.rulesJson.procgen_metadata));
     });
 
-    it('the guardian gate speaks the Gate\'s two lines', () => {
+    it('the guardian gate speaks the Gate\'s two lines, {item} filled at generation with the item its rule asks for', () => {
         const gate = presenterOf('guardian');
         const exits = sidecarsOf(world.rulesJson, 'text_adventure')
             .flatMap(([, s]) => Object.values(s.playable_payload.prose?.exits ?? {}));
+        // the item the text adventure's guardian realisation needs (its `needs` → AP item ids), not a literal
+        const item = gateItemText(TEXT_ADVENTURE_CONCEPT_REALISATIONS.guardian.placements.gate);
+        const baked = (key) => PACK_STRINGS[key].split('{item}').join(item);
+        for (const key of [gate.text.passedWith, gate.text.blocked]) expect(PACK_STRINGS[key]).toContain('{item}');
         expect(exits).toEqual([{
-            moveMessage: PACK_STRINGS[gate.text.passedWith],
-            inaccessibleMessage: PACK_STRINGS[gate.text.blocked],
+            moveMessage: baked(gate.text.passedWith),
+            inaccessibleMessage: baked(gate.text.blocked),
         }]);
+        expect(JSON.stringify(exits)).not.toContain('{item}');
     });
 
     it('the sword\'s check speaks the theme\'s line', () => {
@@ -102,8 +113,63 @@ describe('R3 — the meta trial world beside its control (the concept trial)', a
         }
     });
 
-    it('the fall-through: every maze payload is the control\'s byte for byte, the water gate among them', () => {
-        const maze = (rj) => JSON.stringify(sidecarsOf(rj, 'maze'));
+    it('⛓ S1: every text-adventure room holds one thing — a theme character carrying a piece of the theme\'s '
+        + 'information, its words baked from the pack (the control\'s rooms none)', () => {
+        const fill = (t, vars) => t.replace(/\{(\w+)\}/g, (w, k) => (k in vars ? vars[k] : w));
+        const rooms = sidecarsOf(world.rulesJson, 'text_adventure');
+        for (const [rid, s] of rooms) {
+            const { things } = s.playable_payload;
+            expect(things?.length, rid).toBe(1);
+            const [t] = things;
+            const c = PACK_CONCEPTS[t.concept];
+            expect(c, `${rid}: ${t.concept} is a pack concept`).toBeTruthy();
+            expect(c.presents, `${rid}: a presenter is never a thing`).toBeUndefined();
+            expect(['character', 'object']).toContain(c.kind);
+            const vars = { regionId: rid, roomName: s.playable_payload.prose?.name ?? rid };
+            expect(t).toMatchObject({ kind: c.kind, name: c.name, description: c.description });
+            if (c.kind === 'character') expect(t.says).toBe(fill(PACK_STRINGS[c.text.says], vars));
+            const i = PACK_CONCEPTS[t.info.concept];
+            expect(i.kind).toBe('info');
+            expect(t.info).toEqual({ concept: t.info.concept, name: i.name, body: fill(PACK_STRINGS[i.text.body], vars) });
+            expect(JSON.stringify(t)).not.toMatch(/\{(regionId|roomName)\}/);
+        }
+        for (const [rid, s] of sidecarsOf(ctrl.rulesJson, 'text_adventure')) expect(s.playable_payload.things, rid).toBeUndefined();
+    });
+
+    it('⛓ S2: every maze region holds one thing on a free floor cell — a theme holder with its baked look, its words '
+        + 'the pack\'s MAZE lines where it has them (`<key>/maze`), carrying a piece of the theme\'s information', () => {
+        const fill = (t, vars) => t.replace(/\{(\w+)\}/g, (w, k) => (k in vars ? vars[k] : w));
+        const line = (key) => PACK_STRINGS[textVariantKey(key, MAZE_TEXT_VARIANT)] ?? PACK_STRINGS[key];
+        const ctrlRooms = Object.fromEntries(sidecarsOf(ctrl.rulesJson, 'maze'));
+        const rooms = sidecarsOf(world.rulesJson, 'maze');
+        expect(rooms.length).toBeGreaterThan(0);
+        for (const [rid, s] of rooms) {
+            const { things } = s.playable_payload;
+            expect(things?.length, rid).toBe(1);
+            const [t] = things;
+            const c = PACK_CONCEPTS[t.concept];
+            expect(c?.presents, `${rid}: a presenter is never a thing`).toBeUndefined();
+            expect(['character', 'object']).toContain(c.kind);
+            expect(t).toMatchObject({ kind: c.kind, name: c.name, color: c.look.color, symbol: c.look.symbol, description: c.description });
+            const vars = { regionId: rid };
+            if (c.kind === 'character') {
+                expect(t.says).toBe(fill(line(c.text.says), vars));
+                expect(PACK_STRINGS[textVariantKey(c.text.says, MAZE_TEXT_VARIANT)], `${c.name} has a maze line`).toBeTruthy();
+            }
+            const i = PACK_CONCEPTS[t.info.concept];
+            expect(t.info).toEqual({ concept: t.info.concept, name: i.name, body: fill(line(i.text.body), vars) });
+            expect(JSON.stringify(t)).not.toMatch(/\{(regionId|roomName)\}/);
+            // on a cell that is free floor in the control's payload (nothing else stands there)
+            expect(freeFloorCells(ctrlRooms[rid].playable_payload), rid).toContainEqual({ x: t.x, y: t.y });
+        }
+        for (const [rid, s] of sidecarsOf(ctrl.rulesJson, 'maze')) expect(s.playable_payload.things, rid).toBeUndefined();
+    });
+
+    it('the fall-through: every maze payload is the control\'s byte for byte, the water gate among them (S2: but its `things`)', () => {
+        const maze = (rj) => JSON.stringify(sidecarsOf(rj, 'maze').map(([rid, s]) => {
+            const { things: _t, ...payload } = s.playable_payload;
+            return [rid, { ...s, playable_payload: payload }];
+        }));
         expect(maze(world.rulesJson)).toBe(maze(ctrl.rulesJson));
         const water = sidecarsOf(world.rulesJson, 'maze')
             .flatMap(([, s]) => Object.values(s.playable_payload.obstacleLib ?? {})).filter((d) => d.concept === 'water');
@@ -189,6 +255,8 @@ describe('R3 — the Gate\'s maze look (a maze world where the guardian is a maz
                     if (isConceptGate(d) && d.concept === 'guardian') for (const f of ['name', 'color', 'symbol']) delete d[f];
                 }
             }
+            // ⛓ S2 — and the maze regions' things (presentation, beside the grid)
+            for (const [, s] of sidecarsOf(out, 'maze')) delete s.playable_payload.things;
             for (const block of Object.values(out.procgen_metadata ?? {})) delete block[RECORDED_CONTENT_KEY];
             return out;
         };

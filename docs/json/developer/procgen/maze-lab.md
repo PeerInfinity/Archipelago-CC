@@ -57,6 +57,18 @@ A converted room keeps the entity fields only the engine reads (arrow traps, ent
 
 The lab names no preset: everything is read off the two documents (`mazeConvertedLink.test.js`; `check-maze-lab` CLAIM 24).
 
+The Seedling editor builds these links for the room it holds (*The maze lab link* in the Seedling editor page); nothing in the lab changes for them.
+
+**Back to the Seedling editor.** A room opened this way that was converted from a Seedling level shows, under the identity line, **open level N in the Seedling editor ↗**: a new-tab link to `seedlingDemo/watch.html?source=edit&level=N`, the Seedling editor's own launch URL. `mazeRoom/mazeSeedlingLink.js` decides it from the room's own documents and names no preset: the room's `playable_payload.level` is an integer, and its preset's `region_atlas[player].map_document` is the map the Seedling editor reads. The rules are the ones the link already fetched, so the link costs no request.
+
+- A room-less region opens its shared world's room, so the link names that room's level (the whole level), and the note says so.
+- A level split across several maze rooms (level 94 has 2 in `seedling_playthrough_maze`; level 0 has 6 in `seedling_atlas_maze`): every one links to the same level, and the note says how many share it.
+- An edited room still links, to the ORIGINAL level; the note says the maze edits are not carried over.
+- The page's own save box, copied from a room that links and pasted into LOAD, links to the same level. For such a room the save box carries `converted_from: {map_document, level, edits}`: the map its preset's rules declared, the level, and the maze edits made before the copy. LOAD keeps the block, and the same map test decides. Edits keep the block; a directive or a ladder step makes a new base, and the block is dropped with it.
+- A pasted bare sidecar (copied out of a `rules.json`) carries its level number but nothing that names its map, so it shows the reason instead of a link. So does a hand-edited `converted_from` that names another map. A malformed block is ignored. There is no fallback to the default map: a paste that does not name its map never links. A generated maze, a SET-arm room and every preset room without an integer `level` show nothing, and their save boxes have no `converted_from`.
+
+All 126 converted rooms link (116 in `seedling_playthrough_maze`, 10 in `seedling_atlas_maze`), and every level they name is a level of the Seedling map (`mazeSeedlingLink.test.js`; `check-maze-lab` CLAIM 26).
+
 ### The link wires
 
 In the `edit` mode (and on a room opened in the set mode) the editor overlay draws the room's token wires: an arrow from each presser to each responder of the same token. `mazeRoom/mazeLinks.js` reads them from the room, using the token fields and nothing else:
@@ -238,6 +250,7 @@ A library is pasted into the mode's own box, uploaded (`.json`, or a `.zip` bund
 - **A fetch failure is fatal; a content failure is not.** A failed `?library=` fetch refuses by name; a validation failure (`validateRegionLibrary`) is shown in the load box and the page keeps working.
 - **A room opens inside this mode**, not by switching to `edit` (see [Gotchas](./gotchas.md)). Closing it folds its edits into one `replace-room` op (`closeRoomSession`).
 - **ADD ROOM** mints `blankMazeRoomPayload({width, height})` (`mazeSetAdapter.js`): a doorless all-floor room, so the REPORT refuses the `rules.json` export until a connect gives it a door. `createWorld` refuses a dimension below 2 by name, and that message reaches the mode's note.
+- **After an edit, the doors carry the edited library.** If the library changes after REPORT, `rules.json` and the bundle run REPORT again on the current library before handing anything over (Procgen Editing Core, § The set editor). Until then, the note under the REPORT rows says they describe the earlier library.
 
 **The map.** The overview can show the library as a 2D map instead of the strip: tick **map view** (`#editSetMapView`), or open with `?setView=map`. The strip is the default here, because RECT/PASTE addresses a range of room indices and a world session has no map. The provider is `mazeRoom/mazeSetMap.js`, over the layout shared with the Seedling editor (`procgenCore/setMapLayout.js`), so the gestures and rules are the Seedling map's (The Seedling Editor, § The map).
 
@@ -245,6 +258,8 @@ A library is pasted into the mode's own box, uploaded (`.json`, or a `.zip` bund
 - **The layout** walks the links breadth-first from `overlay.start` (entry 0 if absent), placing each room one cell from the room that reached it on the door's side. Rooms no link reaches form groups to the right, so a library with no overlay lays out as a row.
 - **Stability.** Nothing about the map is stored. A `connect`, a `disconnect` or their undo moves no room while the rooms stay the same (count, ids, names and sizes); a renumbering re-derives the layout, as does RE-LAYOUT.
 - **On the map**, CONNECT (`c`) can pick the source exit by clicking its door tick, and DISCONNECT (`d`) previews first: a maze `disconnect` removes the whole link, both directions, and renumbers nothing. Every refusal is the adapter's own sentence.
+- **Unreachable rooms.** After REPORT, each room holding a region REPORT names unreachable is hatched and outlined in red, with a legend line under the map (`#editSetMapUnreachable`), as in the Seedling editor. Both providers use the same function (`procgenCore/setMapUnreachable.js`), which joins a region to its room through the report's own derived atlas (`map_ref`, the entry index). The marks are drawn only while the library is the one REPORT ran over: any edit or undo clears them until REPORT runs again.
+- **Pan and zoom.** Drag to pan; `+` / `-` zoom about the middle, Ctrl+wheel zooms at the pointer (the plain wheel scrolls the page), `0` or **fit** shows every room both ways, and **centre on start** (`#editSetCentreStart`) puts the start room in the middle. The map opens exactly as before; the camera takes over at the first gesture. The demo pack's map is smaller than its panel, so from then on the view is the panel's room (its width, and its CSS `max-height`), and FIT zooms in to fill it. It is the Seedling map's camera (The Seedling Editor, § The map, "The camera"), and `window.__mazeLab.set.map` carries the same `camera`, `viewport` and `start`. Browser row: section 8 of `scripts/procgen/check-maze-world-map.mjs` (the small-set claims run on the demo pack).
 
 ### Editing a world (`?world=<bundle>.zip`)
 
@@ -279,7 +294,7 @@ and talks to it over the `iframeAdapter` bridge. The vocabulary is defined once 
 | `procgenLab:selectTile` | page → host | `tx`, `ty` |
 | `procgenLab:openInApworldEditor` | page → host | `rules`, `source` |
 
-`selectTile` fires on a canvas click in every mode. `openInApworldEditor` sends the set mode's compiled `rules.json`; the panel forwards it as `apworldEditor:loadRules` plus `ui:activatePanel`. Its button is hidden when the page is standalone. See [the APWorld editor](../../modules/apworldEditor.md#the-links-tab).
+`selectTile` fires on a canvas click in every mode. `openInApworldEditor` sends the set mode's compiled `rules.json` and the region atlas it was compiled from (`atlases`; the editing core describes the field); the panel puts the atlas in the host atlas cache and forwards the rules as `apworldEditor:loadRules` plus `ui:activatePanel`. The Region Map gains from it only where it has an atlas reader: in a WORLD, the Seedling rooms get their real extents. Maze rooms are drawn as generic boxes with or without it, so a SET-arm hand-over shows the same map as before. Its button is hidden when the page is standalone. See [the APWorld editor](../../modules/apworldEditor.md#the-links-tab).
 
 The in-page half, `mazeLabBridge.js`, is imported dynamically only when `?iframeId=` is present (`check-procgen-lab-hosting.mjs` checks a standalone load never fetches it). `window.__mazeLab.loaded` is true when the state came from a payload.
 

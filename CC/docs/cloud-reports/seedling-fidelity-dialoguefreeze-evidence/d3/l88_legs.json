@@ -1,0 +1,65 @@
+[
+ {
+  "id": 685,
+  "key": "level_88 <- in_L12_304_0 -> exit:out_teleporter_32_0",
+  "level": 88,
+  "goal": "exit",
+  "name": "level_88 -> level_87__r1c3"
+ },
+ {
+  "id": 686,
+  "key": "level_88 <- in_L12_304_0 -> exit:out_teleporter_96_304",
+  "level": 88,
+  "goal": "exit",
+  "name": "level_88 -> level_12__r0c19"
+ },
+ {
+  "id": 687,
+  "key": "level_88 <- in_L12_304_0 -> exit:out_teleporter_192_0",
+  "level": 88,
+  "goal": "exit",
+  "name": "level_88 -> level_87__r1c3 #2"
+ },
+ {
+  "id": 688,
+  "key": "level_88 <- in_L87_272_304 -> exit:out_teleporter_32_0",
+  "level": 88,
+  "goal": "exit",
+  "name": "level_88 -> level_87__r1c3"
+ },
+ {
+  "id": 689,
+  "key": "level_88 <- in_L87_272_304 -> exit:out_teleporter_96_304",
+  "level": 88,
+  "goal": "exit",
+  "name": "level_88 -> level_12__r0c19"
+ },
+ {
+  "id": 690,
+  "key": "level_88 <- in_L87_272_304 -> exit:out_teleporter_192_0",
+  "level": 88,
+  "goal": "exit",
+  "name": "level_88 -> level_87__r1c3 #2"
+ },
+ {
+  "id": 691,
+  "key": "level_88 <- in_L87_432_304 -> exit:out_teleporter_32_0",
+  "level": 88,
+  "goal": "exit",
+  "name": "level_88 -> level_87__r1c3"
+ },
+ {
+  "id": 692,
+  "key": "level_88 <- in_L87_432_304 -> exit:out_teleporter_96_304",
+  "level": 88,
+  "goal": "exit",
+  "name": "level_88 -> level_12__r0c19"
+ },
+ {
+  "id": 693,
+  "key": "level_88 <- in_L87_432_304 -> exit:out_teleporter_192_0",
+  "level": 88,
+  "goal": "exit",
+  "name": "level_88 -> level_87__r1c3 #2"
+ }
+]

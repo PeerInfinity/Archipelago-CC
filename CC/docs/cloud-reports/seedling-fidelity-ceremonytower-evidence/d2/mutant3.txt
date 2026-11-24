@@ -1,0 +1,3 @@
+     × OFF the turrets leave the span mid-shot with `shootTimer` 40; ON the anim ran out and the release frame counted one 31ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 31 passed (32)

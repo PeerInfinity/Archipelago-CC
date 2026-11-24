@@ -91,10 +91,12 @@ import {
     SOURCES, agreementWithPayload, applyDirective, applyEdits, certifyInto, describeState,
     framesForActions, generateStep, generateWithDirectives, labCatalogue,
     labPayload, labReadoutIdentity, labUrlFields,
-    loadPayload, openEditSession, planFrames, projectSession, readLabParams,
-    serializeMazeLevel, skeletonCatalogue, stepFromParams, writeLabParams,
+    convertedFromOfState, levelOfPayload, loadPayload, openEditSession, planFrames, projectSession,
+    readLabParams,
+    serializeMazeLevel, skeletonCatalogue, stepFromParams, withConvertedFrom, writeLabParams,
 } from './mazeLab.js';
 import { describePresetLink, openPresetRegion } from './mazeLabPreset.js';
+import { seedlingLinkFor, seedlingOriginOf } from './mazeSeedlingLink.js';
 /**
  * ⛓⛓⛓ EDITOR v3 SLICE A2 — **THE SHARED TOOL, MOUNTED.** ⛔ The canvas tool,
  * the stroke-is-one-group law, the command table and the key map are
@@ -104,7 +106,14 @@ import { describePresetLink, openPresetRegion } from './mazeLabPreset.js';
  */
 import { REDO_COMMAND_ID, UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
 import { describeOps } from '../procgenCore/editCore.js';
-import { mazeEditAdapter } from './mazeEditAdapter.js';
+import { createMazeEditAdapter } from './mazeEditAdapter.js';
+import { placeableTileKinds } from './mazeRoomEditor.js';
+import { loadMazeTileArt } from './mazeTileArt.js';
+import { placedTileKindDrift } from './mazeTileKinds.js';
+import { drawMazeTileKinds } from './mazeTileKindOverlay.js';
+import { MAZE_CONTENT_ROLES } from './mazeContent.js';
+import { browserPackIo } from '../procgenPipeline/worldContent.js';
+import { browserDecoder, browserRasteriser } from '../artLibrary/artLibrary.js';
 // ⛓ Maze editor tools (step B2): the shared FILL / CLEAR / MOVE this page turns on.
 import { MAZE_EDIT_TOOLS, MAZE_FILL_REFUSAL } from './mazeEditTools.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
@@ -164,7 +173,7 @@ import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { TILE_SIZE } from '../seedlingDemo/levelWorld.js';
 import { validateLevelSet } from '../seedlingDemo/levelSetValidator.js';
 import { parseOelLevel } from '../seedlingDemo/procgenLevelOel.js';
-import { deserializeMazeWorld } from './mazeRoomEngine.js';
+import { deserializeMazeWorldWithKinds } from './mazeTileKinds.js';
 /**
  * ⛓⛓⛓ **THE SHARED SET EDITOR, MOUNTED — THE SAME FUNCTION `watch.html` BINDS
  * TO SEEDLING** (EDITOR v3 E2b lifted it; §7/§16.2's one-toolkit law). ⛔ The
@@ -329,6 +338,16 @@ export function main() {
     let payloadCheck = null;
     let hover = null;
     let editor = null;
+    /**
+     * ⛓⛓ CONTENT SETS TILE-3 — **THE LOADED PACKS' DECLARED TILE KINDS** (`?packs=`; `mazeTileArt.tileKindKeys`) and
+     * their art. `null` until a stack loads (no `?packs=`: never), and then every TILE KIND press refuses by name.
+     * ONE adapter for the page, asking for the current declared kinds at each apply, so a session opened before the
+     * packs landed checks against them all the same.
+     */
+    let labTileKinds = null;
+    let labTileArt = null;
+    let labPackNote = '';
+    const labEditAdapter = createMazeEditAdapter({ tileKinds: () => labTileKinds });
     /**
      * ⛓⛓⛓ EDITOR v3 SLICE A2 — **THE EDIT SESSION IS THE HOME FOR `record`,
      * `edits` AND `certified`**, for the whole page life and not only in the
@@ -532,7 +551,7 @@ export function main() {
      */
     const adopt = (next) => {
         state = next;
-        session = openEditSession(state);
+        session = openEditSession(state, { adapter: labEditAdapter });
         state = projectSession(state, session);
         return state;
     };
@@ -551,6 +570,7 @@ export function main() {
                 itemLib: state.record.itemLib ?? DEFAULT_ITEMS,
                 obstacleLib: state.record.obstacleLib ?? DEFAULT_OBSTACLES,
             });
+            editor.setTileKinds(labTileKinds);
         }
         return editor;
     };
@@ -838,6 +858,19 @@ export function main() {
             blocks: overlayBlocks(),
             latched: shownFrame()?.latched ?? null,
         }));
+        // ⛓ CONTENT SETS TILE-3 — the placed tile kinds, beside drawWorld (the panel's own pass), by the declared kinds
+        //   of `?packs=` (none loaded: every placed kind is undeclared and draws the placeholder). Nothing without one.
+        drawMazeTileKinds(ctx, w, {
+            tilePx: TILE_PX, playerPos: shownFrame()?.player ?? null, fogEnabled: false, isTileVisible: () => true,
+            tileArt: labTileArt, tileKinds: labTileKinds ?? {},
+        });
+        // ⛓ CONTENT SETS PASS-1 — a placed kind whose baked pass differs from what `?packs=` declares now is DRIFT,
+        //   said by name beside the picker (`mazeTileKinds.placedTileKindDrift`). Never re-lowered: the world is kept.
+        const driftNote = $('labTileKindNote');
+        if (driftNote && labTileKinds) {
+            const drift = placedTileKindDrift(w, labTileKinds);
+            driftNote.textContent = [labPackNote, ...drift.map((d) => `⚠ ${d.description}`)].join(' ');
+        }
         /**
          * ⛔⛔ EDITOR v3 E2c — **THE THREE SIBLING OVERLAYS ARE THE LAB LEVEL'S,
          * AND THEY DO NOT DRAW OVER A LIBRARY ROOM.** The area graph, the
@@ -1120,6 +1153,42 @@ export function main() {
      * REPAINTED here: a room that arrives without a gesture (a link, a LOAD, a step) would otherwise keep the last
      * room's wires until the next click, the same trap `editorView.repaint` exists for.
      */
+    /**
+     * ⛓⛓ MAZE SEEDLING LINK — **WHERE THE ROOM ON SCREEN CAME FROM**, keyed by its BASE record. Edits fold from the
+     * base (the base object stays), so an edited room keeps its origin; a GENERATE, a LOAD or another link brings a
+     * new base and so no origin (or its own). ⛔ Nothing here writes the state, the payload or the bar.
+     */
+    const seedlingOrigins = new WeakMap();
+    const noteSeedlingOrigin = (origin) => {
+        if (origin && state?.baseRecord) seedlingOrigins.set(state.baseRecord, origin);
+    };
+    const seedlingLinkView = () => seedlingLinkFor({
+        origin: (state?.baseRecord && seedlingOrigins.get(state.baseRecord)) ?? null,
+        /** ⛓ MAZE PASTED ROOM LINK — edits folded in before the save box was copied count too: a paste of an edited
+         *  room is still not the ORIGINAL level. */
+        edits: (convertedFromOfState(state)?.edits ?? 0) + (state?.edits ?? []).length,
+        presetLink: state?.presetLink ?? null,
+    });
+    /** The line under the identity: the link (new tab) and its notes, or the reason a converted room cannot link. */
+    const renderSeedlingLink = () => {
+        const line = $('labSeedlingLine');
+        if (!line) return null;
+        const v = seedlingLinkView();
+        line.hidden = !v.shown;
+        const a = $('labSeedlingOpen');
+        a.hidden = !v.ok;
+        if (v.ok) {
+            a.href = frontendUrl(v.url);
+            a.textContent = v.label;
+        } else {
+            a.removeAttribute('href');
+            a.textContent = '';
+        }
+        $('labSeedlingNote').textContent = !v.shown ? '' : (v.ok ? v.notes.join(' · ') : v.reason);
+        $('labSeedlingNote').className = v.shown && !v.ok ? 'note bad' : 'note';
+        return v;
+    };
+
     const renderLinkLine = () => {
         const line = $('labLinkLine');
         if (!line) return;
@@ -1130,7 +1199,31 @@ export function main() {
         setRoomTool?.repaint();
     };
 
+    /**
+     * ⛓ TILE-3 — the TILE KIND picker: the declared kinds a press may place (`placeableTileKinds`), the selected one,
+     * and how the `?packs=` load went. Outside both enumerated palette boxes (`lab.html`).
+     */
+    const renderTileKindPick = () => {
+        const line = $('labTileKindLine');
+        if (!line) return;
+        line.hidden = !params?.packs;
+        const sel = $('labTileKind');
+        const kinds = placeableTileKinds(labTileKinds);
+        sel.textContent = '';
+        for (const k of kinds) {
+            const o = document.createElement('option');
+            o.value = k;
+            o.textContent = k;
+            sel.appendChild(o);
+        }
+        sel.disabled = kinds.length === 0;
+        const current = (setRoomEditor ?? editor)?.selectedTileKind ?? null;
+        if (current) sel.value = current;
+        $('labTileKindNote').textContent = labPackNote;
+    };
+
     const renderEditPanel = () => {
+        renderTileKindPick();
         const box = $('labPalette');
         box.textContent = '';
         for (const e of PALETTE_ENTRIES) {
@@ -1882,20 +1975,30 @@ export function main() {
      * a GENERATE press or a LOAD — a state without it — drops it. ⛔ No preset name here: the documents say it all.
      */
     const bootPresetRoom = async ({ preset, region }) => {
+        /** ⛓ MAZE SEEDLING LINK — the documents this route fetched, kept so the rules need no second request. */
+        const fetched = new Map();
         const link = await openPresetRegion({
             preset,
             region,
             fetchJson: async (path) => {
                 const res = await fetch(frontendUrl(path));
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                return res.json();
+                const doc = await res.json();
+                fetched.set(path, doc);
+                return doc;
             },
         });
         const { sidecar: _sidecar, ...where } = link;
+        const origin = seedlingOriginOf({
+            payload: link.sidecar.playable_payload, rules: fetched.get(link.path) ?? null, player: link.player,
+        });
         adopt(Object.freeze({
-            ...loadPayload(link.sidecar),
+            /** ⛓ MAZE PASTED ROOM LINK — when the rules PROVED this room's map, the save box says so (`converted_from`)
+             *  and a paste of it links too. ⛔ Only a linkable origin: anything unproven writes nothing. */
+            ...withConvertedFrom(loadPayload(link.sidecar), origin),
             presetLink: Object.freeze({ ...where, asked: Object.freeze({ preset, region }) }),
         }));
+        noteSeedlingOrigin(origin);
         say(describePresetLink(link));
     };
 
@@ -1925,7 +2028,13 @@ export function main() {
     const loadFromBox = () => {
         try {
             const payload = JSON.parse($('labText').value);
-            adopt(loadPayload(payload));
+            const loaded = adopt(loadPayload(payload));
+            /** ⛓ MAZE SEEDLING LINK — a pasted room brings no rules, so a level number in it cannot link (it says so)…
+             *  ⛓ MAZE PASTED ROOM LINK — …unless it is this page's own save box from a room whose rules named its map:
+             *  its `converted_from` (kept by `loadPayload`) names the map, and the same map test decides. */
+            noteSeedlingOrigin(seedlingOriginOf({
+                payload: levelOfPayload(payload), convertedFrom: convertedFromOfState(loaded),
+            }));
             /** ⛓ MAZE CONVERTED LINK — the box replaced the link's room, so the bar stops naming it. */
             const bar = new URLSearchParams(window.location.search);
             if (bar.has('preset') || bar.has('region')) {
@@ -2392,14 +2501,14 @@ export function main() {
         const { library, entry, local } = mazeEntryAt(record, index);
         let world;
         try {
-            world = deserializeMazeWorld(cell.payload);
+            world = deserializeMazeWorldWithKinds(cell.payload);
         } catch (e) {
             say(`⛔ room ${index} ("${entry?.entry_id}") would not open — ${e.message}`, true);
             return false;
         }
         discardSetRoom();
         setRoomIndex = index;
-        setRoomSess = createEditSession(mazeEditAdapter, world, {
+        setRoomSess = createEditSession(labEditAdapter, world, {
             base: roomBaseTag(library, local, entry),
         });
         /**
@@ -2412,10 +2521,12 @@ export function main() {
             itemLib: world.itemLib ?? DEFAULT_ITEMS,
             obstacleLib: world.obstacleLib ?? DEFAULT_OBSTACLES,
         });
+        setRoomEditor.setTileKinds(labTileKinds);
+        if (editor?.selectedTileKind) setRoomEditor.selectTileKind(editor.selectedTileKind);
         setRoomTool = mountEditorView({
             canvas: $('canvas'),
             session: setRoomSess,
-            adapter: mazeEditAdapter,
+            adapter: labEditAdapter,
             // ⛔ THE GEOMETRY STAYS THIS PAGE'S, and it is the SAME `cellAt` the
             //   EDIT arm uses — it reads `canvasWorld()`, which is this room.
             cellAt,
@@ -2553,8 +2664,8 @@ export function main() {
              */
             apworldEditor: {
                 available: () => bridge?.connected === true,
-                open: (rules) => bridge?.openInApworldEditor(rules,
-                    heldWorld ? 'the maze lab (WORLD arm)' : 'the maze lab (SET arm)') === true,
+                open: (rules, atlases = []) => bridge?.openInApworldEditor(rules,
+                    heldWorld ? 'the maze lab (WORLD arm)' : 'the maze lab (SET arm)', atlases) === true,
             },
             compileRegionAtlas,
             validateRegionAtlas,
@@ -3239,6 +3350,7 @@ export function main() {
             return;
         }
         if (setRoomSess === null) return;
+        renderTileKindPick();
         const pal = $('labSetPalette');
         pal.textContent = '';
         for (const e of PALETTE_ENTRIES) {
@@ -3327,6 +3439,7 @@ export function main() {
          */
         const witness = witnessOf(state, walkReport);
         $('identity').textContent = describeState(state, lastSolve, witness);
+        const seedlingLink = renderSeedlingLink();
         if (witness.seam) say(witness.seam, true);
         $('status').textContent = message || '—';
         $('status').className = messageBad ? 'bad' : 'ok';
@@ -3368,6 +3481,8 @@ export function main() {
             /** ⛓ MAZE CONVERTED LINK — where a link-opened room came from (`null` for any other level). */
             presetLink: state.presetLink
                 ? (({ asked: _a, ...where }) => where)(state.presetLink) : null,
+            /** ⛓ MAZE SEEDLING LINK — what the line under the identity shows (`{shown: false}` for a plain room). */
+            seedlingLink,
             identity: $('identity').textContent,
             /**
              * ⛓⛓⛓ SLICE 12 — THE TRI-STATE, PUBLISHED AS IT STANDS. ⚠ It was
@@ -4327,7 +4442,7 @@ export function main() {
             tool = mountEditorView({
                 canvas,
                 session,
-                adapter: mazeEditAdapter,
+                adapter: labEditAdapter,
                 // ⛔ THE GEOMETRY STAYS THIS PAGE'S — `check-maze-lab` claim 5
                 //   computes the target cell independently and asserts the tile
                 //   it named is the tile that changed.
@@ -4515,6 +4630,33 @@ export function main() {
         $('status').className = 'bad';
         window.__mazeLab = { fatal: e.message };
         return;
+    }
+
+    /**
+     * ⛓⛓ CONTENT SETS TILE-3 — **THE `?packs=` STACK, LOADED ONCE**: its art and its declared tile kinds
+     * (`loadMazeTileArt` with the maze's roles, the panel's own load). A load that fails is said in the picker's note
+     * and leaves no kind declared; it never stops the page.
+     */
+    $('labTileKind')?.addEventListener('change', (e) => {
+        editor?.selectTileKind(e.target.value);
+        setRoomEditor?.selectTileKind(e.target.value);
+    });
+    if (params.packs) {
+        labPackNote = `loading packs ${params.packs.join(', ')}…`;
+        loadMazeTileArt(params.packs, {
+            ...browserPackIo(), decode: browserDecoder(), rasterise: browserRasteriser(), contentRoles: MAZE_CONTENT_ROLES,
+        }).then((loaded) => {
+            labTileKinds = loaded.tileKinds;
+            labTileArt = loaded.tileArt;
+            const n = placeableTileKinds(labTileKinds).length;
+            labPackNote = `packs ${params.packs.join(', ')}: ${n} placeable tile kind${n === 1 ? '' : 's'}`;
+            editor?.setTileKinds(labTileKinds);
+            setRoomEditor?.setTileKinds(labTileKinds);
+            render();
+        }, (err) => {
+            labPackNote = `⛔ packs ${params.packs.join(', ')} did not load — ${err.message}`;
+            render();
+        });
     }
 
     /**

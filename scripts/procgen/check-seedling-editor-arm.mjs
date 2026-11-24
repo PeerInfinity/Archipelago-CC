@@ -183,10 +183,23 @@ const { loadRulesSchema } = await import(
     join(REPO, 'frontend/modules/procgenCore/jsonSchemaFiles.js'));
 const { stringifyRulesJson } = await import(
     join(REPO, 'frontend/modules/shared/rulesJsonBuilder.js'));
-const { compileRegionAtlas } = await import(
+const { compileRegionAtlas, FLASH_PANEL_WIRING } = await import(
     join(REPO, 'frontend/modules/procgenPipeline/regionAtlasCompiler.js'));
-const { validateRegionAtlas } = await import(
+const { stampAtlasIdentity, validateRegionAtlas } = await import(
     join(REPO, 'frontend/modules/procgenPipeline/regionAtlasValidator.js'));
+/**
+ * ⛓⛓ lab-set-seedling-identity — **THE PAGE'S OWN IDENTITY MODULE, NOT A COPY OF IT.**
+ * The set adapter's `deps.atlas` (game `seedling`, the map-document LABEL) and the
+ * compile the mount runs (a `seedling-lab-<8 hex>` stamped copy; ⛓ S4: WITH the
+ * compiler's own `flash_panel` block again) are read from `watchSetIdentity.js`, the file `watchViewer.js` reads, so
+ * node's answer cannot drift from the page's choice.
+ */
+const { LAB_SET_ATLAS_BASE, WATCH_SET_ATLAS, labSetIdentity } = await M('watchSetIdentity.js');
+const LAB = labSetIdentity({ compileRegionAtlas, stampAtlasIdentity });
+const LAB_COMPILE = LAB.compileRegionAtlas;
+const SERVED_ATLAS_IDS = new Set(JSON.parse(readFileSync(
+    join(REPO, 'frontend/modules/flashPanel/atlases/atlas_files.json'), 'utf8'))
+    .atlases.map((a) => a.atlas_id));
 const { TILE_COLUMN_TO_TYPE, TILE_TYPE_NAMES } = await import(
     join(REPO, 'frontend/modules/flashPanel/seedlingSemantics.js'));
 const { foldEdits, resolveBase } = await import(
@@ -199,6 +212,12 @@ const { foldEdits, resolveBase } = await import(
 const { readBundle } = await import(
     join(REPO, 'frontend/modules/presets/documentBundle.js'));
 const { loadJSZipNode } = await import(join(REPO, 'scripts/procgen/loadJSZipNode.mjs'));
+/** ⛓ S3 — the one spelling of a level set's content hash (the rules' `level_set.content_hash`). */
+const { levelSetContentHash } = await import(
+    join(REPO, 'frontend/modules/procgenCore/levelSetReference.js'));
+/** ⛓ (lab-stale-handover) the sentences the mount says once the set changed after REPORT — read, not copied. */
+const { STALE_REPORT_NOTE, STALE_DOOR_TITLE } = await import(
+    join(REPO, 'frontend/modules/procgenCore/setEditorView.js'));
 
 const PAGE_PATH = '/frontend/modules/seedlingDemo/watch.html';
 const ATLAS = JSON.parse(readFileSync(
@@ -567,7 +586,7 @@ const SET_DEPS = {
     tileSize: TILE_SIZE,
     tileTypeForPlacement,
     rulesSchema: loadRulesSchema(),
-    atlas: { game: 'seedling-watch-edit', mapDocument: 'watch.html set editor' },
+    atlas: WATCH_SET_ATLAS,
 };
 const setAdapter = createSeedlingSetAdapter(SET_DEPS);
 const nodeSetSession = () => createSetSession(setAdapter,
@@ -638,7 +657,7 @@ check(VANILLA_XML_SCAN.ok === true && VANILLA_XML_SCAN.why === null
 const VANILLA_XML_SESSION = createSetSession(setAdapter, VANILLA_XML_RECORD,
     { base: { kind: 'set', set_id: VANILLA_XML.set_id } });
 const VANILLA_XML_REPORT = reportOf(VANILLA_XML_SESSION, SET_DEPS,
-    { compileRegionAtlas, validateRegionAtlas });
+    { compileRegionAtlas: LAB_COMPILE, validateRegionAtlas });
 const VANILLA_XML_FREE = freeEdgesOf(VANILLA_XML_REPORT.rules);
 /**
  * ⛓⛓⛓ **EDITOR v3 E5 — THE VERDICT ON THIS ROW FLIPPED, AND THAT IS THE SLICE.**
@@ -693,7 +712,7 @@ const VANILLA_OVERLAY_RECORD = setRecord(VANILLA_XML, VANILLA_OVERLAY);
 const VANILLA_OVERLAY_REPORT = reportOf(
     createSetSession(setAdapter, VANILLA_OVERLAY_RECORD,
         { base: { kind: 'set', set_id: VANILLA_XML.set_id } }),
-    SET_DEPS, { compileRegionAtlas, validateRegionAtlas });
+    SET_DEPS, { compileRegionAtlas: LAB_COMPILE, validateRegionAtlas });
 const VANILLA_OVERLAY_FREE = freeEdgesOf(VANILLA_OVERLAY_REPORT.rules);
 const VANILLA_OVERLAY_LOCS = VANILLA_OVERLAY_REPORT.atlas.regions
     .reduce((n, r) => n + (r.locations ?? []).length, 0);
@@ -720,7 +739,7 @@ check(VANILLA_OVERLAY_LOCS > 0
  * levels", the permuted map) and is not repeated in a browser.
  */
 const D2_FREE = freeEdgesOf(reportOf(nodeSetSession(), SET_DEPS,
-    { compileRegionAtlas, validateRegionAtlas }).rules);
+    { compileRegionAtlas: LAB_COMPILE, validateRegionAtlas }).rules);
 check(D2_FREE.length !== VANILLA_XML_FREE.length && D2_FREE.length > 0,
     '⛓ …and that count really is a function of the SET — the D2 subject\'s differs, so a '
     + 'hardcoded expectation would be red on whichever document it was not written for',
@@ -2360,8 +2379,8 @@ try {
     const nodeReport = reportOf(nodeSetSession(), {
         parseOel: parseOelLevel, tileSize: TILE_SIZE, tileTypeForPlacement,
         rulesSchema: loadRulesSchema(),
-        atlas: { game: 'seedling-watch-edit', mapDocument: 'watch.html set editor' },
-    }, { compileRegionAtlas, validateRegionAtlas });
+        atlas: WATCH_SET_ATLAS,
+    }, { compileRegionAtlas: LAB_COMPILE, validateRegionAtlas });
     check(report.report.length > 0
         && report.report.some((r) => /^\[free\]/.test(r))
         && report.report.some((r) => /^\[reach\]/.test(r))
@@ -2690,6 +2709,49 @@ try {
         '⛓⛓ **AND THE `rules.json` MEMBER IS THE SAME DOCUMENT `#editDownloadRules` WROTE**, '
         + 'byte for byte at the same indent',
         `${pageBytes.length} B`);
+    /**
+     * ⛓⛓⛓ lab-set-seedling-identity — **THE SET LEAVES AS SEEDLING, WITH ITS OWN
+     * FINGERPRINT.** Asked of the bytes the page wrote, read back in node: every room is
+     * `flash_seedling`; ⛓ RE-RECORDED by S4 (seedling-custom-set-arm, lab-7 reviewed): the
+     * `flash_panel` block is the compiler's own Seedling wiring (until S4: none — "offers
+     * nothing to play"; S4's player delivers a HELD set's own rooms, and the bundle carries
+     * the set);
+     * the rules name a `seedling-lab-<8 hex>` atlas that is NOT served; the bundle's
+     * `region-atlas` member IS that atlas (same id, a valid content hash), so the host
+     * atlas cache files it under the id the rules name.
+     */
+    const atlasMember = readBack.members.find((m) => m.kind === 'region-atlas');
+    const labRef = rulesMember?.doc?.region_atlas?.['1'] ?? null;
+    const labRows = Object.values(rulesMember?.doc?.preset_sidecars?.['1'] ?? {});
+    check(labRows.length > 0 && labRows.every((r) => r.substrate === 'flash_seedling')
+        && labRef?.game === WATCH_SET_ATLAS.game
+        && json(rulesMember?.doc?.flash_panel ?? null) === json({ 1: FLASH_PANEL_WIRING.seedling }),
+        '⛓⛓⛓ **THE BUNDLED RULES ARE SEEDLING\'S AND WIRED TO PLAY (S4)** — every room `flash_seedling`, '
+        + '`region_atlas[1].game` the shared `SEEDLING_ATLAS_GAME`, and the compiler\'s own Seedling '
+        + '`flash_panel` block (re-recorded by S4: was "no `flash_panel` block")',
+        `${labRows.length} room(s) · ${json(labRef)} · flash_panel ${json(rulesMember?.doc?.flash_panel ?? null)}`);
+    check(new RegExp(`^${LAB_SET_ATLAS_BASE}-[0-9a-f]{8}$`).test(labRef?.atlas_id ?? '')
+        && !SERVED_ATLAS_IDS.has(labRef.atlas_id)
+        && atlasMember?.doc?.atlas_id === labRef.atlas_id
+        && labRows.every((r) => r.playable_payload?.atlas_ref === labRef.atlas_id)
+        && validateRegionAtlas(atlasMember.doc).errors.length === 0,
+        '⛓⛓⛓ **…UNDER ITS OWN FINGERPRINT** — a `seedling-lab-<8 hex>` id that the served index '
+        + '(`atlas_files.json`) does not hold, named by `region_atlas`, by every sidecar\'s '
+        + '`atlas_ref` and by the bundle\'s own atlas member, whose content hash validates',
+        `${labRef?.atlas_id} · member ${atlasMember?.doc?.atlas_id} · served ${[...SERVED_ATLAS_IDS].join(',')}`);
+    /**
+     * ⛓⛓⛓ S3 (seedling-level-set-held) — **THE RULES NAME THE SET THE BUNDLE CARRIES.**
+     * `region_atlas[1].level_set` is `{set_id, content_hash}` of the bundle's own `level-set`
+     * member: its id, and the content hash recomputed in node from the member's bytes.
+     * ⛔ MUTANT: `seedlingSetAdapter.rulesJsonOf` stops handing `levelSet` → `level_set` is absent and this reds.
+     */
+    check(labRef?.level_set?.set_id === setMember?.doc?.set_id
+        && labRef?.level_set?.content_hash === levelSetContentHash(setMember.doc)
+        && json(Object.keys(labRef ?? {}).sort()) === json(['atlas_id', 'game', 'level_set', 'map_document']),
+        '⛓⛓⛓ **S3 — THE RULES NAME THE SET THE BUNDLE CARRIES** — `region_atlas[1].level_set` is the '
+        + '`level-set` member\'s own `set_id` and its content hash (recomputed in node), and it is the only '
+        + 'key S3 added beside the stamp',
+        `${json(labRef?.level_set)} · member ${setMember?.doc?.set_id}`);
     check(!/apmapping/i.test(json(kindsOf)) && /NOT a member/.test(bundled.note),
         '⛔ …and the `apMapping` companion is NOT a member — the note SAYS SO rather than '
         + 'leaving a person to notice it is missing',
@@ -3250,6 +3312,91 @@ try {
         + 'absence to explain. ⛓ The refused-bundle claim did not go with it — it is driven on '
         + 'the CUT set above, whose graph still does not close by construction',
         `${json(vanKinds)} · ${vanBundle.bytes.length} B · ${vanBundle.note.slice(0, 140)}`);
+
+    /**
+     * ⛓⛓⛓ lab-stale-handover (⚖ Robert 2026-11-20, *"Fix stale hand-over"*) — **REPORT, EDIT ONE ROOM, TAKE THE
+     * DOOR: THE BUNDLE CARRIES THE SET AS IT IS NOW.** The vanilla 116 was just REPORTed and bundled. One more tile
+     * is painted in room `VANILLA_OPEN_ROOM` and CLOSEd (a set change; the lab fingerprint covers the rooms'
+     * tiles), and the bundle is pressed WITHOUT pressing REPORT. Before this slice the door read the never-
+     * invalidated last REPORT, so the bundle's rules and atlas kept the PRE-edit `seedling-lab-<hash>`.
+     * ⛔ MUTANT: the doors read `lastReport ?? runReport()` again — `staleIds.after` equals `staleIds.before` and
+     * the first claim below reds.
+     */
+    const atlasIdsOf = (read) => ({
+        rules: read.members.find((m) => m.kind === 'rules')?.doc?.region_atlas?.['1']?.atlas_id ?? null,
+        member: read.members.find((m) => m.kind === 'region-atlas')?.doc?.atlas_id ?? null,
+        rulesBytes: stringifyRulesJson(read.members.find((m) => m.kind === 'rules')?.doc ?? null),
+        levelSet: json(read.members.find((m) => m.kind === 'rules')?.doc?.region_atlas?.['1']?.level_set ?? null),
+        setMember: read.members.find((m) => m.kind === 'level-set')?.doc?.set_id ?? null,
+    });
+    const STALE_PAINT = (() => {
+        const room = { ...vanOut.set.rooms[VANILLA_OPEN_ROOM].source.record, level: VANILLA_OPEN_ROOM };
+        const b = adapter.bounds(room);
+        for (let y = 1; y < b.h - 1; y += 1) {
+            for (let x = 1; x < b.w - 1; x += 1) {
+                const c = adapter.readCell(room, x, y);
+                if (c.tile && c.tile.column !== PAINT_COLUMN && c.entities.length === 0
+                    && !(x === VANILLA_PAINT.tx && y === VANILLA_PAINT.ty)) return { tx: x, ty: y };
+            }
+        }
+        return null;
+    })();
+    const staleBefore = atlasIdsOf(vanRead);
+    const setEditsBefore = (await setRead()).edit.set?.edits ?? null;
+    await page.selectOption('#editSetRoom', String(VANILLA_OPEN_ROOM));
+    await page.click('#editSetOpen');
+    await page.waitForFunction(() => window.__editorEdit?.baseKind === 'set-room', null, { timeout: 60000 });
+    await page.selectOption('#genEditTool', 'paint');
+    await page.selectOption('#genEditLayer', 'tiles');
+    await page.selectOption('#genEditTerrain', PAINT_TERRAIN);
+    await clickCell(STALE_PAINT);
+    await page.waitForFunction(() => (window.__editorEdit?.edits ?? 0) >= 1, null, { timeout: 60000 });
+    await page.click('#editRoomClose');
+    await page.waitForFunction((n) => window.__editorEdit?.set?.edits === n + 1, setEditsBefore,
+        { timeout: 60000 }).catch(() => {});
+    const staleState = await page.evaluate(() => ({
+        edits: window.__editorEdit?.set?.edits ?? null,
+        note: document.getElementById('editSetReportNote')?.textContent ?? null,
+        rulesDisabled: document.getElementById('editDownloadRules')?.disabled ?? null,
+        rulesTitle: document.getElementById('editDownloadRules')?.title ?? null,
+    }));
+    check(STALE_PAINT !== null && staleState.edits === setEditsBefore + 1
+        && staleState.note === STALE_REPORT_NOTE
+        && staleState.rulesDisabled === false && staleState.rulesTitle === STALE_DOOR_TITLE,
+        '⛓⛓ **lab-stale-handover — AFTER AN EDIT THE REPORT SAYS IT IS OUT OF DATE** — one painted tile, CLOSEd '
+        + 'into ONE more set op, and the REPORT note says its rows describe the EARLIER set; the rules button is '
+        + 'open with the sentence that a press runs REPORT again on the current set first',
+        `${json(STALE_PAINT)} · set edits ${setEditsBefore} → ${staleState.edits} · ${json(staleState.note)}`);
+    await pressDownload('#editDownloadBundle', '__editorSetBundlePresses', { settleOn: '__editorSetBundleKinds' });
+    const staleAfter = atlasIdsOf(await readBundle(Uint8Array.from(
+        await page.evaluate(() => Array.from(window.__editorSetBundleOut))), { jszip: loadJSZipNode() }));
+    await page.click('#editSetReport');
+    await page.waitForTimeout(2500);
+    await pressDownload('#editDownloadBundle', '__editorSetBundlePresses', { settleOn: '__editorSetBundleKinds' });
+    const staleFresh = atlasIdsOf(await readBundle(Uint8Array.from(
+        await page.evaluate(() => Array.from(window.__editorSetBundleOut))), { jszip: loadJSZipNode() }));
+    const labIdRe = new RegExp(`^${LAB_SET_ATLAS_BASE}-[0-9a-f]{8}$`);
+    check(labIdRe.test(staleBefore.rules ?? '') && labIdRe.test(staleAfter.rules ?? '')
+        && staleAfter.rules !== staleBefore.rules && staleAfter.member === staleAfter.rules
+        && staleAfter.rules === staleFresh.rules && staleAfter.member === staleFresh.member
+        && staleAfter.rulesBytes === staleFresh.rulesBytes,
+        '⛓⛓⛓ **lab-stale-handover — THE BUNDLE TAKEN AFTER THE EDIT CARRIES THE EDITED SET** — its rules and its '
+        + '`region-atlas` member name a NEW `seedling-lab-<8 hex>` (not the pre-edit one), and both, with the rules '
+        + 'bytes, equal what a fresh REPORT then bundles. ⛔ Before this slice the door handed over the last '
+        + 'REPORT\'s documents, so the id did not move',
+        `before ${staleBefore.rules} → door ${staleAfter.rules} (member ${staleAfter.member}) · fresh REPORT `
+        + `${staleFresh.rules}`);
+    /**
+     * ⛓⛓ S3 — **…AND SO DOES ITS `level_set`**: REPORT → edit → door names the EDITED set (a new
+     * `set_id`, the bundle's own `level-set` member), equal to what a fresh REPORT then bundles.
+     */
+    check(staleBefore.levelSet !== 'null' && staleAfter.levelSet !== staleBefore.levelSet
+        && staleAfter.levelSet === staleFresh.levelSet
+        && JSON.parse(staleAfter.levelSet)?.set_id === staleAfter.setMember,
+        '⛓⛓ **S3 — THE DOOR TAKEN AFTER THE EDIT NAMES THE EDITED SET** — `region_atlas[1].level_set` moved '
+        + 'with the edit, names the bundle\'s own `level-set` member, and equals a fresh REPORT\'s',
+        `before ${staleBefore.levelSet} → door ${staleAfter.levelSet} (member ${staleAfter.setMember}) · fresh `
+        + `${staleFresh.levelSet}`);
 
     /**
      * ⛓⛓⛓ **THE OVERVIEW ARROWS ARE PAINTED AT LOAD — D2's DEFECT, FOUND BY

@@ -1,0 +1,3 @@
+locations reachable with every item: base 89 / 89  tip 89 / 89
+lost at tip: []
+gained at tip: []

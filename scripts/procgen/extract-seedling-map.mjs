@@ -10,13 +10,18 @@
 // fail to be tracked.
 //
 // Usage:
-//   node scripts/procgen/extract-seedling-map.mjs --source <seedling-checkout>
-//   node scripts/procgen/extract-seedling-map.mjs --source <path> --check
-//   node scripts/procgen/extract-seedling-map.mjs --source <path> --out other.json
+//   node scripts/procgen/extract-seedling-map.mjs                       # --source defaults to the vendor/seedling submodule
+//   node scripts/procgen/extract-seedling-map.mjs --check
+//   node scripts/procgen/extract-seedling-map.mjs --source <seedling-checkout> [--out other.json] [--check]
 //
-// --check re-extracts and compares against the committed file WITHOUT writing;
-// it exits 1 on any difference. The document carries no timestamp precisely so
-// that check can be exact: same checkout in, same bytes out.
+// --source defaults to the `vendor/seedling` submodule, resolved against the
+// repo root (not the cwd), pinned at the default build's source commit.
+//
+// --check re-extracts and compares against the committed file (or `--out`'s)
+// WITHOUT writing; it exits 1 on any difference, naming the first differing
+// level and field. The document carries no timestamp precisely so that check
+// can be exact: same checkout in, same bytes out. Its train-tier wrapper is
+// extract-seedling-map.train.test.js (train jobs + the nightly).
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { readdirSync, statSync } from 'node:fs';
 import { join, relative, resolve, sep } from 'node:path';
@@ -32,7 +37,8 @@ argvHelp(import.meta.url);
 export const SEEDLING_MAP_SCHEMA_VERSION = 1;
 
 const REPO_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
-const DEFAULT_OUT = join(REPO_ROOT, 'frontend/modules/flashPanel/atlases/seedling-map.json');
+export const DEFAULT_OUT = join(REPO_ROOT, 'frontend/modules/flashPanel/atlases/seedling-map.json');
+export const DEFAULT_SOURCE = join(REPO_ROOT, 'vendor/seedling');
 const LEVEL_ROOT = 'assets/levels';
 const LEVEL_TABLE = 'src/Game.as';
 
@@ -114,41 +120,89 @@ export function extractSeedlingMap(sourceRoot) {
     };
 }
 
+const describe = (v) => {
+    const t = JSON.stringify(v);
+    return t === undefined ? 'absent' : t.length > 80 ? `${t.slice(0, 77)}...` : t;
+};
+
+/**
+ * The first place two documents differ, as `levels[N] (Class path).field[i]...: committed X, extracted Y`;
+ * null when they are deep-equal. Walks keys in the extracted document's order, then any extra committed key.
+ */
+export function firstDifference(committed, extracted, at = '') {
+    if (Object.is(committed, extracted)) return null;
+    const bothObjects = committed && extracted && typeof committed === 'object' && typeof extracted === 'object'
+        && Array.isArray(committed) === Array.isArray(extracted);
+    if (!bothObjects) return `${at || '(root)'}: committed ${describe(committed)}, extracted ${describe(extracted)}`;
+    if (Array.isArray(extracted)) {
+        for (let i = 0; i < Math.max(committed.length, extracted.length); i += 1) {
+            let label = `${at}[${i}]`;
+            const lvl = extracted[i] ?? committed[i];
+            if (at === 'levels' && lvl && typeof lvl === 'object') label += ` (${lvl.class} ${lvl.path})`;
+            const d = firstDifference(committed[i], extracted[i], label);
+            if (d) return d;
+        }
+        return null;
+    }
+    for (const k of [...new Set([...Object.keys(extracted), ...Object.keys(committed)])]) {
+        const d = firstDifference(committed[k], extracted[k], at ? `${at}.${k}` : k);
+        if (d) return d;
+    }
+    return null;
+}
+
+/**
+ * `--check` as a function (the train-tier wrapper imports it): extract `source` in memory and byte-compare with `out`.
+ * @returns {{ok: boolean, message: string, levelCount: number, bytes: number, difference: string|null}}
+ */
+export function checkSeedlingMap({ source = DEFAULT_SOURCE, out = DEFAULT_OUT } = {}) {
+    const doc = extractSeedlingMap(resolve(source));
+    const text = compactJsonFile(doc, { maxInline: 220 });
+    const base = { levelCount: doc.level_count, bytes: text.length };
+    if (!existsSync(out)) {
+        return { ...base, ok: false, difference: null, message: `${out} does not exist — run without --check to create it` };
+    }
+    const committed = readFileSync(out, 'utf8');
+    if (committed === text) {
+        return { ...base, ok: true, difference: null, message: `${out} matches a fresh extract (${doc.level_count} levels, ${text.length} bytes)` };
+    }
+    let difference;
+    try {
+        difference = firstDifference(JSON.parse(committed), doc)
+            ?? 'the same data, formatted differently (re-run without --check to re-format)';
+    } catch (e) {
+        difference = `the committed file is not JSON (${e.message})`;
+    }
+    return {
+        ...base, ok: false, difference,
+        message: `${out} differs from a fresh extract of ${source}\n`
+            + `  committed ${committed.length} bytes, extracted ${text.length} bytes\n`
+            + `  first difference: ${difference}`,
+    };
+}
+
 function main() {
     const argv = process.argv.slice(2);
     const flag = (name) => {
         const i = argv.indexOf(name);
         return i >= 0 && i + 1 < argv.length ? argv[i + 1] : null;
     };
-    const sourceRoot = flag('--source');
+    const sourceRoot = resolve(flag('--source') ?? DEFAULT_SOURCE);
     const check = argv.includes('--check');
     const outPath = flag('--out') ?? DEFAULT_OUT;
 
-    if (!sourceRoot) {
-        console.error('usage: node scripts/procgen/extract-seedling-map.mjs --source <seedling-checkout> [--out <file>] [--check]');
-        process.exit(2);
+    if (check) {
+        const r = checkSeedlingMap({ source: sourceRoot, out: outPath });
+        if (r.ok) console.log(`OK: ${r.message}`);
+        else console.error(`ERROR: ${r.message}`);
+        process.exit(r.ok ? 0 : 1);
     }
 
-    const doc = extractSeedlingMap(resolve(sourceRoot));
+    const doc = extractSeedlingMap(sourceRoot);
     // maxInline 220: keeps a whole entity (type, position and its attributes)
     // on one line while still breaking the per-level tile lists one placement
     // per line.
     const text = compactJsonFile(doc, { maxInline: 220 });
-
-    if (check) {
-        if (!existsSync(outPath)) {
-            console.error(`ERROR: ${outPath} does not exist — run without --check to create it`);
-            process.exit(1);
-        }
-        const committed = readFileSync(outPath, 'utf8');
-        if (committed !== text) {
-            console.error(`ERROR: ${outPath} differs from a fresh extract of ${sourceRoot}`);
-            console.error(`  committed ${committed.length} bytes, extracted ${text.length} bytes`);
-            process.exit(1);
-        }
-        console.log(`OK: ${outPath} matches a fresh extract (${doc.level_count} levels, ${text.length} bytes)`);
-        return;
-    }
 
     writeFileSync(outPath, text);
     const tiles = doc.levels.reduce((n, l) => n + l.layers.reduce((m, y) => m + y.tiles.length, 0), 0);

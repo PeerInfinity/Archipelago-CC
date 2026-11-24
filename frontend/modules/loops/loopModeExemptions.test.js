@@ -23,6 +23,9 @@ import {
     MOVE_SOURCE_START,
     MOVE_SOURCE_RESTART,
 } from '../menuPanel/menuPanelEngine.js';
+import { PATH_SOURCE_PREFIX, pathSourceFor } from '../regionView/clickActions.js';
+import { PANEL_ID as REGION_MAP_PANEL_ID } from '../regionMap/regionMapClickActions.js';
+import { PLAN_SOURCE_PREFIX, planSourceFor } from '../actionNodes/nodeClickAction.js';
 
 describe('⛓ isLoopModePlanningSource — authoring sources', () => {
     it('classifies the region graph\'s four click shapes', () => {
@@ -34,6 +37,37 @@ describe('⛓ isLoopModePlanningSource — authoring sources', () => {
         ]) {
             expect(isLoopModePlanningSource(source)).toBe(true);
         }
+    });
+
+    // CA-S3: the Region Map's clicks run the shared click actions, so its path moves carry
+    // `pathSourceFor(<the Map's panel id>)`, by the Map module's own constant. Step 4's four `regionMap-*` sources
+    // (`regionMap/regionMapClicks.js` REGION_MAP_SOURCES, retired) are no longer sent; the `regionMap` prefix stays
+    // classified for older callers (as `regionGraph*` does, R7), pinned here by their literal strings.
+    it('classifies the Region Map\'s click moves, by the module\'s own constants (CA-S3), and keeps step 4\'s prefix', () => {
+        expect(REGION_MAP_PANEL_ID).toBe('regionMap');
+        expect(pathSourceFor(REGION_MAP_PANEL_ID)).toBe('regionView-path-regionMap');
+        expect(isLoopModePlanningSource(pathSourceFor(REGION_MAP_PANEL_ID))).toBe(true);
+        for (const source of ['regionMap-addToPath', 'regionMap-overwritePath', 'regionMap-oneStep', 'regionMap-direct']) {
+            expect(isLoopModePlanningSource(source)).toBe(true);
+        }
+    });
+
+    it('classifies the shared click actions\' path moves, by the module\'s own constants (mode-toggle R7)', () => {
+        expect(PATH_SOURCE_PREFIX).toBe('regionView-path');
+        for (const panelId of ['regionGraph', 'regionMap', 'someFuturePanel']) {
+            expect(isLoopModePlanningSource(pathSourceFor(panelId))).toBe(true);
+        }
+    });
+
+    // AN-3b: the ActionNodes click (`actionNodes.act`) and its card's "perform all remaining" button queue the free hops
+    // to the node under `actionNodes-plan-<panel>`, by the module's own constant.
+    it('classifies the ActionNodes click\'s and button\'s queued hops, by the module\'s own constants (AN-3b)', () => {
+        expect(PLAN_SOURCE_PREFIX).toBe('actionNodes-plan');
+        for (const panelId of ['regionGraph', 'regionMap', 'nodeCard']) {
+            expect(isLoopModePlanningSource(planSourceFor(panelId))).toBe(true);
+        }
+        expect(isLoopModePlanningSource('replay-actionNodes-plan-regionGraph')).toBe(false);
+        expect(isLoopModePlanningSource('actionNodes')).toBe(false);
     });
 
     it('classifies procgenPlayer\'s synthesized start hop', () => {
@@ -71,5 +105,12 @@ describe('⛓ isLoopModePlanningSource — everything else is performed play', (
     it('matches on a PREFIX, so a lookalike that merely CONTAINS a tag is play', () => {
         expect(isLoopModePlanningSource('substrate-menuPanel')).toBe(false);
         expect(isLoopModePlanningSource('replay-regionGraph')).toBe(false);
+        expect(isLoopModePlanningSource('replay-regionMap')).toBe(false);
+        expect(isLoopModePlanningSource('replay-regionView-path-regionGraph')).toBe(false);
+    });
+
+    it('only the PATH actions of regionView plan: another regionView-* source is play', () => {
+        expect(isLoopModePlanningSource('regionView-teleport')).toBe(false);
+        expect(isLoopModePlanningSource('regionView')).toBe(false);
     });
 });

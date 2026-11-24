@@ -91,6 +91,53 @@ describe('GameState — loop-mode resource API', () => {
     it('returns the new currentMana', () => {
       expect(gs.deductMana(30)).toBe(70);
     });
+
+    // ⚖ LOOPS-I2: a pool spent down in n equal fractional spends keeps ~1e-14
+    // for about 2 n in 5 (raw float), and a `<= 0` depletion test then fires
+    // one spend late. deductMana snaps float noise to exactly 0.
+    describe('the sliver snap (LOOPS-I2)', () => {
+      const NS = Array.from({ length: 59 }, (_, i) => i + 2); // 2…60
+      const rawPoolAfter = (n) => {
+        let p = 100;
+        for (let k = 0; k < n; k++) p = p - 100 / n;
+        return p;
+      };
+      const slivered = NS.filter((n) => rawPoolAfter(n) > 0);
+
+      it('the fixture slivers in raw float (the pin below has teeth)', () => {
+        expect(slivered.length).toBeGreaterThan(0);
+      });
+
+      it.each(NS)('pool 100 spent in n = %i equal spends ends at EXACTLY 0, on spend n', (n) => {
+        gs.currentMana = 100;
+        for (let k = 1; k < n; k++) {
+          gs.deductMana(100 / n);
+          expect(gs.getCurrentMana()).toBeGreaterThan(0);
+        }
+        gs.deductMana(100 / n);
+        expect(gs.getCurrentMana()).toBe(0);
+      });
+
+      it('a deliberate small remainder is kept (0.01, the in-app tests\' "one step from empty")', () => {
+        gs.deductMana(gs.getCurrentMana() - 0.01);
+        expect(gs.getCurrentMana()).toBeCloseTo(0.01, 12);
+      });
+
+      it('debt mode is unchanged: the raw float result, slivers and debt alike', () => {
+        for (const n of slivered) {
+          const g = new GameState(makeBus());
+          g.setNoManaDepletionReset(true);
+          for (let k = 0; k < n; k++) g.deductMana(100 / n);
+          expect(g.getCurrentMana()).toBe(rawPoolAfter(n));
+          expect(g.getManaDebt()).toBe(0);
+        }
+        const g = new GameState(makeBus());
+        g.setNoManaDepletionReset(true);
+        g.deductMana(100 + 1e-12);
+        expect(g.getCurrentMana()).toBe(100 - (100 + 1e-12));
+        expect(g.getManaDebt()).toBe(Math.abs(100 - (100 + 1e-12)));
+      });
+    });
   });
 
   describe('refillMana', () => {
@@ -158,6 +205,46 @@ describe('GameState — loop-mode resource API', () => {
     it('emits gameState:manaChanged', () => {
       gs.recalculateMaxMana({ inventory: { a: 1 } });
       expect(bus.events.find((e) => e.name === 'gameState:manaChanged')).toBeDefined();
+    });
+  });
+
+  describe('per-item starting mana (ActionNodes: each item\'s boost, default the flat term)', () => {
+    const INV = { 'Strength Boost': 1, 'Pocket Money': 2, Other: 1 };
+    const flatOf = (inv) => gs.defaultMaxMana
+      + Object.values(inv).reduce((a, n) => a + n, 0) * gs.getManaPerItem();
+
+    it('⛔ PIN: with no table (every non-ActionNodes world) maxMana is the flat count × manaPerItem, unchanged', () => {
+      expect(gs.getPerItemManaTable()).toBeNull();
+      gs.recalculateMaxMana({ inventory: INV });
+      expect(gs.getMaxMana()).toBe(flatOf(INV));
+    });
+
+    it('a table gives each item its own mana; an item with no row takes the default', () => {
+      gs.setPerItemManaTable({ 'Strength Boost': 0, 'Pocket Money': 3 }, 7);
+      gs.recalculateMaxMana({ inventory: INV });
+      expect(gs.getMaxMana()).toBe(gs.defaultMaxMana + 0 * 1 + 3 * 2 + 7 * 1);
+    });
+
+    it('every row at the default agrees with the flat term exactly', () => {
+      const per = gs.getManaPerItem();
+      gs.setPerItemManaTable(Object.fromEntries(Object.keys(INV).map((k) => [k, per])), per);
+      gs.recalculateMaxMana({ inventory: INV });
+      expect(gs.getMaxMana()).toBe(flatOf(INV));
+    });
+
+    it('setting and clearing the table recompute at once from the cached inventory', () => {
+      gs.recalculateMaxMana({ inventory: INV });
+      gs.setPerItemManaTable({ 'Strength Boost': 0, 'Pocket Money': 0, Other: 0 });
+      expect(gs.getMaxMana()).toBe(gs.defaultMaxMana);
+      gs.setPerItemManaTable(null);
+      expect(gs.getMaxMana()).toBe(flatOf(INV));
+    });
+
+    it('the includePerItemMaxMana toggle still governs the whole item term', () => {
+      gs.setPerItemManaTable({ 'Pocket Money': 5 });
+      gs.recalculateMaxMana({ inventory: INV });
+      gs.setIncludePerItemMaxMana(false);
+      expect(gs.getMaxMana()).toBe(gs.defaultMaxMana);
     });
   });
 

@@ -2,13 +2,17 @@
   "activeLayout": "vibecoding",
   "moduleSettings": {
     "regionGraph": {
-      "checkAllLocationsInRegion": false,
-      "addToPath": false,
-      "overwritePath": false,
-      "addLocationsToPath": false,
-      "movePlayerOneStep": false,
-      "movePlayerDirectly": false,
-      "showRegionInPanel": false,
+      "clickActions": {
+        "enabled": true,
+        "region": {
+          "path.route": false,
+          "path.checkAll": false,
+          "regions.open": false
+        },
+        "location": {
+          "path.check": "now"
+        }
+      },
       "forceHideLocations": true,
       "forceHideEdgeLabels": true
     }

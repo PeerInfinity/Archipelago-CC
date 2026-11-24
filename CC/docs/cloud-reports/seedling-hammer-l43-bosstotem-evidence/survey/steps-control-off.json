@@ -1,0 +1,2768 @@
+[
+ {
+  "step": 150,
+  "level": 43,
+  "boot": {
+   "kind": "staged",
+   "source": "r8-solve-11",
+   "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L43@176,448 \u2014 R8 slice 8's construction for r8-solve-18",
+   "block": {
+    "level": 43,
+    "x": 176,
+    "y": 448
+   },
+   "check": null,
+   "strippedTimedClears": [],
+   "saveGrant": {
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "items": [
+     "canSwim",
+     "hasFeather",
+     "hasFire",
+     "hasShield",
+     "hasSpear",
+     "hasTorch"
+    ],
+    "latched": [
+     "hasSword"
+    ],
+    "from": [
+     {
+      "step": 10,
+      "item": "Progressive Sword",
+      "grants": "latched hasSword"
+     },
+     {
+      "step": 11,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d71"
+     },
+     {
+      "step": 15,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d72"
+     },
+     {
+      "step": 18,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d73"
+     },
+     {
+      "step": 25,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d74"
+     },
+     {
+      "step": 28,
+      "item": "Red Key",
+      "grants": "save.keys[0]"
+     },
+     {
+      "step": 28,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d75"
+     },
+     {
+      "step": 29,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasShield"
+     },
+     {
+      "step": 34,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d76"
+     },
+     {
+      "step": 36,
+      "item": "Green Key",
+      "grants": "save.keys[1]"
+     },
+     {
+      "step": 38,
+      "item": "Light",
+      "grants": "seam.items.hasTorch"
+     },
+     {
+      "step": 39,
+      "item": "Fire",
+      "grants": "seam.items.hasFire"
+     },
+     {
+      "step": 39,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d77"
+     },
+     {
+      "step": 45,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d78"
+     },
+     {
+      "step": 47,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d79"
+     },
+     {
+      "step": 54,
+      "item": "Progressive Swim",
+      "grants": "seam.items.canSwim"
+     },
+     {
+      "step": 58,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d710"
+     },
+     {
+      "step": 65,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d71"
+     },
+     {
+      "step": 66,
+      "item": "Purple Key",
+      "grants": "save.keys[2]"
+     },
+     {
+      "step": 66,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d711"
+     },
+     {
+      "step": 66,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d72"
+     },
+     {
+      "step": 72,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d712"
+     },
+     {
+      "step": 74,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d713"
+     },
+     {
+      "step": 81,
+      "item": "Blue Key",
+      "grants": "save.keys[3]"
+     },
+     {
+      "step": 88,
+      "item": "Progressive Swim",
+      "grants": "seam.items.hasFeather"
+     },
+     {
+      "step": 89,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d714"
+     },
+     {
+      "step": 97,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d73"
+     },
+     {
+      "step": 99,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d74"
+     },
+     {
+      "step": 113,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d715"
+     },
+     {
+      "step": 127,
+      "item": "Ghost Spear",
+      "grants": "seam.items.hasSpear"
+     },
+     {
+      "step": 137,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d75"
+     },
+     {
+      "step": 142,
+      "item": "Yellow Key",
+      "grants": "save.keys[4]"
+     }
+    ],
+    "saveCounts": {
+     "seal_parts": 15,
+     "totem_parts": 5
+    },
+    "unpresentable": []
+   },
+   "stagedSave": {
+    "totem_parts": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "seal_parts": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14
+    ]
+   }
+  },
+  "withCommittedDeclarations": null,
+  "goals": [
+   {
+    "kind": "collect-placement",
+    "placement": {
+     "x": 144,
+     "y": 224
+    },
+    "why": "Level 043 - Wand (sphere 9.1) \u2192 Wand",
+    "location": "Level 043 - Wand"
+   },
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 144,
+     "y": 64
+    },
+    "why": "teleporter@144,64 \u2192 L37"
+   }
+  ],
+  "views": {
+   "boot": ".cache/seedling-survey/through-end/views/step-150-boot.json"
+  },
+  "clock": {
+   "gameTime": 8607,
+   "refusal": null
+  },
+  "verdict": "REFUSED",
+  "refusal": "solverBot(survey-step-150) reach-exit (144,64)->L37 -> wand stance (magicallock@144,112): the re-planned corridor failed too \u2014 solverBot(survey-step-150) reach-exit (144,64)->L37 -> wand stance (magicallock@144,112) waypoint 0 (168,184): not reached within 400 ticks; stalled at (178.5677669529664,423.6215908221288) v=(-0.8270292269908041,-0.8270292269908041) in level 43, aiming at (168,184), after grazing 82 solid(s): tile:Blue Wall at (168,456) on the X axis, at (178.5677669529664,449.0516504294495) in level 43, aiming at (168,184); tile:Blue Wall at (168,456) on the X axis, at (178.5677669529664,447.7123106012293) in level 43, aiming at (168,184); tile:Blue Wall at (168,456) on the X axis, at (178.5677669529664,446.5497474683058) in level 43, aiming at (168,184).",
+  "ticks": null,
+  "traceRows": null,
+  "replans": null,
+  "passes": null,
+  "declarations": null,
+  "replay": null,
+  "ms": 396,
+  "knownAnswer": null,
+  "knownTicks": null,
+  "agreesWithKnown": null,
+  "visit": 1,
+  "family": "unclassified \u2014 see the refusal text"
+ },
+ {
+  "step": 152,
+  "level": 12,
+  "boot": {
+   "kind": "staged",
+   "source": "r8-solve-11",
+   "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L12@592,16 \u2014 R8 slice 8's construction for r8-solve-18",
+   "block": {
+    "level": 12,
+    "x": 592,
+    "y": 16
+   },
+   "check": null,
+   "strippedTimedClears": [],
+   "saveGrant": {
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "items": [
+     "canSwim",
+     "hasFeather",
+     "hasFire",
+     "hasShield",
+     "hasSpear",
+     "hasTorch",
+     "hasWand"
+    ],
+    "latched": [
+     "hasSword"
+    ],
+    "from": [
+     {
+      "step": 10,
+      "item": "Progressive Sword",
+      "grants": "latched hasSword"
+     },
+     {
+      "step": 11,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d71"
+     },
+     {
+      "step": 15,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d72"
+     },
+     {
+      "step": 18,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d73"
+     },
+     {
+      "step": 25,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d74"
+     },
+     {
+      "step": 28,
+      "item": "Red Key",
+      "grants": "save.keys[0]"
+     },
+     {
+      "step": 28,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d75"
+     },
+     {
+      "step": 29,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasShield"
+     },
+     {
+      "step": 34,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d76"
+     },
+     {
+      "step": 36,
+      "item": "Green Key",
+      "grants": "save.keys[1]"
+     },
+     {
+      "step": 38,
+      "item": "Light",
+      "grants": "seam.items.hasTorch"
+     },
+     {
+      "step": 39,
+      "item": "Fire",
+      "grants": "seam.items.hasFire"
+     },
+     {
+      "step": 39,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d77"
+     },
+     {
+      "step": 45,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d78"
+     },
+     {
+      "step": 47,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d79"
+     },
+     {
+      "step": 54,
+      "item": "Progressive Swim",
+      "grants": "seam.items.canSwim"
+     },
+     {
+      "step": 58,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d710"
+     },
+     {
+      "step": 65,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d71"
+     },
+     {
+      "step": 66,
+      "item": "Purple Key",
+      "grants": "save.keys[2]"
+     },
+     {
+      "step": 66,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d711"
+     },
+     {
+      "step": 66,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d72"
+     },
+     {
+      "step": 72,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d712"
+     },
+     {
+      "step": 74,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d713"
+     },
+     {
+      "step": 81,
+      "item": "Blue Key",
+      "grants": "save.keys[3]"
+     },
+     {
+      "step": 88,
+      "item": "Progressive Swim",
+      "grants": "seam.items.hasFeather"
+     },
+     {
+      "step": 89,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d714"
+     },
+     {
+      "step": 97,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d73"
+     },
+     {
+      "step": 99,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d74"
+     },
+     {
+      "step": 113,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d715"
+     },
+     {
+      "step": 127,
+      "item": "Ghost Spear",
+      "grants": "seam.items.hasSpear"
+     },
+     {
+      "step": 137,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d75"
+     },
+     {
+      "step": 142,
+      "item": "Yellow Key",
+      "grants": "save.keys[4]"
+     },
+     {
+      "step": 150,
+      "item": "Wand",
+      "grants": "seam.items.hasWand"
+     }
+    ],
+    "saveCounts": {
+     "seal_parts": 15,
+     "totem_parts": 5
+    },
+    "unpresentable": []
+   },
+   "stagedSave": {
+    "totem_parts": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "seal_parts": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14
+    ]
+   }
+  },
+  "withCommittedDeclarations": null,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 0,
+     "y": 352
+    },
+    "why": "teleporter@0,352 \u2192 L95"
+   }
+  ],
+  "views": {
+   "boot": ".cache/seedling-survey/through-end/views/step-152-boot.json",
+   "walk": ".cache/seedling-survey/through-end/views/step-152-walk.json"
+  },
+  "clock": {
+   "gameTime": 8607,
+   "refusal": null
+  },
+  "verdict": "SOLVED",
+  "refusal": null,
+  "ticks": 1269,
+  "traceRows": 2,
+  "replans": 0,
+  "passes": [
+   {
+    "pass": 1,
+    "kind": "solve",
+    "ticks": 1269
+   }
+  ],
+  "declarations": [],
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 95,
+   "transitions": [
+    "undefined->undefined@1269"
+   ],
+   "earnedClears": [
+    "{12,2}"
+   ]
+  },
+  "ms": 1643,
+  "knownAnswer": null,
+  "knownTicks": null,
+  "agreesWithKnown": null,
+  "visit": 12,
+  "family": null
+ },
+ {
+  "step": 163,
+  "level": 12,
+  "boot": {
+   "kind": "staged",
+   "source": "r8-solve-11",
+   "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L12@168,384 \u2014 R8 slice 8's construction for r8-solve-18",
+   "block": {
+    "level": 12,
+    "x": 168,
+    "y": 384
+   },
+   "check": null,
+   "strippedTimedClears": [],
+   "saveGrant": {
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "items": [
+     "canSwim",
+     "hasFeather",
+     "hasFire",
+     "hasShield",
+     "hasSpear",
+     "hasTorch",
+     "hasWand"
+    ],
+    "latched": [
+     "hasSword"
+    ],
+    "from": [
+     {
+      "step": 10,
+      "item": "Progressive Sword",
+      "grants": "latched hasSword"
+     },
+     {
+      "step": 11,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d71"
+     },
+     {
+      "step": 15,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d72"
+     },
+     {
+      "step": 18,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d73"
+     },
+     {
+      "step": 25,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d74"
+     },
+     {
+      "step": 28,
+      "item": "Red Key",
+      "grants": "save.keys[0]"
+     },
+     {
+      "step": 28,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d75"
+     },
+     {
+      "step": 29,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasShield"
+     },
+     {
+      "step": 34,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d76"
+     },
+     {
+      "step": 36,
+      "item": "Green Key",
+      "grants": "save.keys[1]"
+     },
+     {
+      "step": 38,
+      "item": "Light",
+      "grants": "seam.items.hasTorch"
+     },
+     {
+      "step": 39,
+      "item": "Fire",
+      "grants": "seam.items.hasFire"
+     },
+     {
+      "step": 39,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d77"
+     },
+     {
+      "step": 45,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d78"
+     },
+     {
+      "step": 47,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d79"
+     },
+     {
+      "step": 54,
+      "item": "Progressive Swim",
+      "grants": "seam.items.canSwim"
+     },
+     {
+      "step": 58,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d710"
+     },
+     {
+      "step": 65,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d71"
+     },
+     {
+      "step": 66,
+      "item": "Purple Key",
+      "grants": "save.keys[2]"
+     },
+     {
+      "step": 66,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d711"
+     },
+     {
+      "step": 66,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d72"
+     },
+     {
+      "step": 72,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d712"
+     },
+     {
+      "step": 74,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d713"
+     },
+     {
+      "step": 81,
+      "item": "Blue Key",
+      "grants": "save.keys[3]"
+     },
+     {
+      "step": 88,
+      "item": "Progressive Swim",
+      "grants": "seam.items.hasFeather"
+     },
+     {
+      "step": 89,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d714"
+     },
+     {
+      "step": 97,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d73"
+     },
+     {
+      "step": 99,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d74"
+     },
+     {
+      "step": 113,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d715"
+     },
+     {
+      "step": 127,
+      "item": "Ghost Spear",
+      "grants": "seam.items.hasSpear"
+     },
+     {
+      "step": 137,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d75"
+     },
+     {
+      "step": 142,
+      "item": "Yellow Key",
+      "grants": "save.keys[4]"
+     },
+     {
+      "step": 150,
+      "item": "Wand",
+      "grants": "seam.items.hasWand"
+     },
+     {
+      "step": 161,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d716"
+     }
+    ],
+    "saveCounts": {
+     "seal_parts": 16,
+     "totem_parts": 5
+    },
+    "unpresentable": []
+   },
+   "stagedSave": {
+    "totem_parts": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "seal_parts": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ]
+   }
+  },
+  "withCommittedDeclarations": null,
+  "goals": [
+   {
+    "kind": "encounter",
+    "at": {
+     "x": 416,
+     "y": 384
+    },
+    "drop": {
+     "item": "Progressive Sword"
+    },
+    "then": null,
+    "why": "Level 012 - Witch (sphere 10.1) \u2192 Progressive Sword",
+    "location": "Level 012 - Witch"
+   },
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 592,
+     "y": 0
+    },
+    "why": "teleporter@592,0 \u2192 L37"
+   }
+  ],
+  "views": {
+   "boot": ".cache/seedling-survey/through-end/views/step-163-boot.json",
+   "walk": ".cache/seedling-survey/through-end/views/step-163-walk.json"
+  },
+  "clock": {
+   "gameTime": 8607,
+   "refusal": null
+  },
+  "verdict": "SOLVED",
+  "refusal": null,
+  "ticks": 1189,
+  "traceRows": 5,
+  "replans": 0,
+  "passes": [
+   {
+    "pass": 1,
+    "kind": "solve",
+    "ticks": 1189
+   }
+  ],
+  "declarations": [],
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 37,
+   "transitions": [
+    "undefined->undefined@1189"
+   ],
+   "earnedClears": [
+    "{12,5}",
+    "{12,1}"
+   ]
+  },
+  "ms": 2485,
+  "knownAnswer": null,
+  "knownTicks": null,
+  "agreesWithKnown": null,
+  "visit": 13,
+  "family": null
+ },
+ {
+  "step": 168,
+  "level": 43,
+  "boot": {
+   "kind": "staged",
+   "source": "r8-solve-11",
+   "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L43@176,448 \u2014 R8 slice 8's construction for r8-solve-18",
+   "block": {
+    "level": 43,
+    "x": 176,
+    "y": 448
+   },
+   "check": null,
+   "strippedTimedClears": [],
+   "saveGrant": {
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "items": [
+     "canSwim",
+     "hasDarkSword",
+     "hasFeather",
+     "hasFire",
+     "hasShield",
+     "hasSpear",
+     "hasTorch",
+     "hasWand"
+    ],
+    "latched": [
+     "hasSword"
+    ],
+    "from": [
+     {
+      "step": 10,
+      "item": "Progressive Sword",
+      "grants": "latched hasSword"
+     },
+     {
+      "step": 11,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d71"
+     },
+     {
+      "step": 15,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d72"
+     },
+     {
+      "step": 18,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d73"
+     },
+     {
+      "step": 25,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d74"
+     },
+     {
+      "step": 28,
+      "item": "Red Key",
+      "grants": "save.keys[0]"
+     },
+     {
+      "step": 28,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d75"
+     },
+     {
+      "step": 29,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasShield"
+     },
+     {
+      "step": 34,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d76"
+     },
+     {
+      "step": 36,
+      "item": "Green Key",
+      "grants": "save.keys[1]"
+     },
+     {
+      "step": 38,
+      "item": "Light",
+      "grants": "seam.items.hasTorch"
+     },
+     {
+      "step": 39,
+      "item": "Fire",
+      "grants": "seam.items.hasFire"
+     },
+     {
+      "step": 39,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d77"
+     },
+     {
+      "step": 45,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d78"
+     },
+     {
+      "step": 47,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d79"
+     },
+     {
+      "step": 54,
+      "item": "Progressive Swim",
+      "grants": "seam.items.canSwim"
+     },
+     {
+      "step": 58,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d710"
+     },
+     {
+      "step": 65,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d71"
+     },
+     {
+      "step": 66,
+      "item": "Purple Key",
+      "grants": "save.keys[2]"
+     },
+     {
+      "step": 66,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d711"
+     },
+     {
+      "step": 66,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d72"
+     },
+     {
+      "step": 72,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d712"
+     },
+     {
+      "step": 74,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d713"
+     },
+     {
+      "step": 81,
+      "item": "Blue Key",
+      "grants": "save.keys[3]"
+     },
+     {
+      "step": 88,
+      "item": "Progressive Swim",
+      "grants": "seam.items.hasFeather"
+     },
+     {
+      "step": 89,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d714"
+     },
+     {
+      "step": 97,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d73"
+     },
+     {
+      "step": 99,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d74"
+     },
+     {
+      "step": 113,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d715"
+     },
+     {
+      "step": 127,
+      "item": "Ghost Spear",
+      "grants": "seam.items.hasSpear"
+     },
+     {
+      "step": 137,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d75"
+     },
+     {
+      "step": 142,
+      "item": "Yellow Key",
+      "grants": "save.keys[4]"
+     },
+     {
+      "step": 150,
+      "item": "Wand",
+      "grants": "seam.items.hasWand"
+     },
+     {
+      "step": 161,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d716"
+     },
+     {
+      "step": 163,
+      "item": "Progressive Sword",
+      "grants": "seam.items.hasDarkSword"
+     }
+    ],
+    "saveCounts": {
+     "seal_parts": 16,
+     "totem_parts": 5
+    },
+    "unpresentable": []
+   },
+   "stagedSave": {
+    "totem_parts": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "seal_parts": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ]
+   }
+  },
+  "withCommittedDeclarations": null,
+  "goals": [
+   {
+    "kind": "clear-tag",
+    "tag": {
+     "level": 43,
+     "tag": 5
+    },
+    "at": {
+     "x": 152,
+     "y": 168
+    },
+    "obstacle": "bosstotem@152,168",
+    "report": {
+     "level": 43,
+     "tag": 5
+    },
+    "why": "Level 043 - Totem of Lacste (sphere 10.2) \u2192 Seal \u2014 the kill's report {43,5} (`totem`)",
+    "location": "Level 043 - Totem of Lacste"
+   },
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 144,
+     "y": 64
+    },
+    "why": "teleporter@144,64 \u2192 L37"
+   }
+  ],
+  "views": {
+   "boot": ".cache/seedling-survey/through-end/views/step-168-boot.json"
+  },
+  "clock": {
+   "gameTime": 8607,
+   "refusal": null
+  },
+  "verdict": "REFUSED",
+  "refusal": "solverBot(survey-step-168) clear-tag {43,5} bosstotem@152,168: 'totem' cannot act on bosstotem@152,168 with this run's bag \u2014 bosstotem@152,168 sleeps while wand@144,224 stands \u2014 it wakes on `classCount(Wand) <= 0` (`BossTotem.as:291`), so the Wand is collected first (its fade, dialogue and the rocks' drop); this verb does not order the pickup",
+  "ticks": null,
+  "traceRows": null,
+  "replans": null,
+  "passes": null,
+  "declarations": null,
+  "replay": null,
+  "ms": 11,
+  "knownAnswer": null,
+  "knownTicks": null,
+  "agreesWithKnown": null,
+  "visit": 2,
+  "family": "unclassified \u2014 see the refusal text"
+ },
+ {
+  "step": 170,
+  "level": 12,
+  "boot": {
+   "kind": "staged",
+   "source": "r8-solve-11",
+   "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L12@592,16 \u2014 R8 slice 8's construction for r8-solve-18",
+   "block": {
+    "level": 12,
+    "x": 592,
+    "y": 16
+   },
+   "check": null,
+   "strippedTimedClears": [],
+   "saveGrant": {
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "items": [
+     "canSwim",
+     "hasDarkSword",
+     "hasFeather",
+     "hasFire",
+     "hasShield",
+     "hasSpear",
+     "hasTorch",
+     "hasWand"
+    ],
+    "latched": [
+     "hasSword"
+    ],
+    "from": [
+     {
+      "step": 10,
+      "item": "Progressive Sword",
+      "grants": "latched hasSword"
+     },
+     {
+      "step": 11,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d71"
+     },
+     {
+      "step": 15,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d72"
+     },
+     {
+      "step": 18,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d73"
+     },
+     {
+      "step": 25,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d74"
+     },
+     {
+      "step": 28,
+      "item": "Red Key",
+      "grants": "save.keys[0]"
+     },
+     {
+      "step": 28,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d75"
+     },
+     {
+      "step": 29,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasShield"
+     },
+     {
+      "step": 34,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d76"
+     },
+     {
+      "step": 36,
+      "item": "Green Key",
+      "grants": "save.keys[1]"
+     },
+     {
+      "step": 38,
+      "item": "Light",
+      "grants": "seam.items.hasTorch"
+     },
+     {
+      "step": 39,
+      "item": "Fire",
+      "grants": "seam.items.hasFire"
+     },
+     {
+      "step": 39,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d77"
+     },
+     {
+      "step": 45,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d78"
+     },
+     {
+      "step": 47,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d79"
+     },
+     {
+      "step": 54,
+      "item": "Progressive Swim",
+      "grants": "seam.items.canSwim"
+     },
+     {
+      "step": 58,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d710"
+     },
+     {
+      "step": 65,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d71"
+     },
+     {
+      "step": 66,
+      "item": "Purple Key",
+      "grants": "save.keys[2]"
+     },
+     {
+      "step": 66,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d711"
+     },
+     {
+      "step": 66,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d72"
+     },
+     {
+      "step": 72,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d712"
+     },
+     {
+      "step": 74,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d713"
+     },
+     {
+      "step": 81,
+      "item": "Blue Key",
+      "grants": "save.keys[3]"
+     },
+     {
+      "step": 88,
+      "item": "Progressive Swim",
+      "grants": "seam.items.hasFeather"
+     },
+     {
+      "step": 89,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d714"
+     },
+     {
+      "step": 97,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d73"
+     },
+     {
+      "step": 99,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d74"
+     },
+     {
+      "step": 113,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d715"
+     },
+     {
+      "step": 127,
+      "item": "Ghost Spear",
+      "grants": "seam.items.hasSpear"
+     },
+     {
+      "step": 137,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d75"
+     },
+     {
+      "step": 142,
+      "item": "Yellow Key",
+      "grants": "save.keys[4]"
+     },
+     {
+      "step": 150,
+      "item": "Wand",
+      "grants": "seam.items.hasWand"
+     },
+     {
+      "step": 161,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d716"
+     },
+     {
+      "step": 163,
+      "item": "Progressive Sword",
+      "grants": "seam.items.hasDarkSword"
+     },
+     {
+      "step": 168,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d717"
+     }
+    ],
+    "saveCounts": {
+     "seal_parts": 17,
+     "totem_parts": 5
+    },
+    "unpresentable": []
+   },
+   "stagedSave": {
+    "totem_parts": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "seal_parts": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ]
+   }
+  },
+  "withCommittedDeclarations": null,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 0,
+     "y": 352
+    },
+    "why": "teleporter@0,352 \u2192 L95"
+   }
+  ],
+  "views": {
+   "boot": ".cache/seedling-survey/through-end/views/step-170-boot.json",
+   "walk": ".cache/seedling-survey/through-end/views/step-170-walk.json"
+  },
+  "clock": {
+   "gameTime": 8607,
+   "refusal": null
+  },
+  "verdict": "SOLVED",
+  "refusal": null,
+  "ticks": 1269,
+  "traceRows": 2,
+  "replans": 0,
+  "passes": [
+   {
+    "pass": 1,
+    "kind": "solve",
+    "ticks": 1269
+   }
+  ],
+  "declarations": [],
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 95,
+   "transitions": [
+    "undefined->undefined@1269"
+   ],
+   "earnedClears": [
+    "{12,2}"
+   ]
+  },
+  "ms": 1510,
+  "knownAnswer": null,
+  "knownTicks": null,
+  "agreesWithKnown": null,
+  "visit": 14,
+  "family": null
+ },
+ {
+  "step": 177,
+  "level": 68,
+  "boot": {
+   "kind": "staged",
+   "source": "r8-solve-11",
+   "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L68@16,64 \u2014 R8 slice 8's construction for r8-solve-18",
+   "block": {
+    "level": 68,
+    "x": 16,
+    "y": 64
+   },
+   "check": null,
+   "strippedTimedClears": [],
+   "saveGrant": {
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "items": [
+     "canSwim",
+     "hasDarkSword",
+     "hasFeather",
+     "hasFire",
+     "hasShield",
+     "hasSpear",
+     "hasTorch",
+     "hasWand"
+    ],
+    "latched": [
+     "hasSword"
+    ],
+    "from": [
+     {
+      "step": 10,
+      "item": "Progressive Sword",
+      "grants": "latched hasSword"
+     },
+     {
+      "step": 11,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d71"
+     },
+     {
+      "step": 15,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d72"
+     },
+     {
+      "step": 18,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d73"
+     },
+     {
+      "step": 25,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d74"
+     },
+     {
+      "step": 28,
+      "item": "Red Key",
+      "grants": "save.keys[0]"
+     },
+     {
+      "step": 28,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d75"
+     },
+     {
+      "step": 29,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasShield"
+     },
+     {
+      "step": 34,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d76"
+     },
+     {
+      "step": 36,
+      "item": "Green Key",
+      "grants": "save.keys[1]"
+     },
+     {
+      "step": 38,
+      "item": "Light",
+      "grants": "seam.items.hasTorch"
+     },
+     {
+      "step": 39,
+      "item": "Fire",
+      "grants": "seam.items.hasFire"
+     },
+     {
+      "step": 39,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d77"
+     },
+     {
+      "step": 45,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d78"
+     },
+     {
+      "step": 47,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d79"
+     },
+     {
+      "step": 54,
+      "item": "Progressive Swim",
+      "grants": "seam.items.canSwim"
+     },
+     {
+      "step": 58,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d710"
+     },
+     {
+      "step": 65,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d71"
+     },
+     {
+      "step": 66,
+      "item": "Purple Key",
+      "grants": "save.keys[2]"
+     },
+     {
+      "step": 66,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d711"
+     },
+     {
+      "step": 66,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d72"
+     },
+     {
+      "step": 72,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d712"
+     },
+     {
+      "step": 74,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d713"
+     },
+     {
+      "step": 81,
+      "item": "Blue Key",
+      "grants": "save.keys[3]"
+     },
+     {
+      "step": 88,
+      "item": "Progressive Swim",
+      "grants": "seam.items.hasFeather"
+     },
+     {
+      "step": 89,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d714"
+     },
+     {
+      "step": 97,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d73"
+     },
+     {
+      "step": 99,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d74"
+     },
+     {
+      "step": 113,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d715"
+     },
+     {
+      "step": 127,
+      "item": "Ghost Spear",
+      "grants": "seam.items.hasSpear"
+     },
+     {
+      "step": 137,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d75"
+     },
+     {
+      "step": 142,
+      "item": "Yellow Key",
+      "grants": "save.keys[4]"
+     },
+     {
+      "step": 150,
+      "item": "Wand",
+      "grants": "seam.items.hasWand"
+     },
+     {
+      "step": 161,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d716"
+     },
+     {
+      "step": 163,
+      "item": "Progressive Sword",
+      "grants": "seam.items.hasDarkSword"
+     },
+     {
+      "step": 168,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d717"
+     }
+    ],
+    "saveCounts": {
+     "seal_parts": 17,
+     "totem_parts": 5
+    },
+    "unpresentable": []
+   },
+   "stagedSave": {
+    "totem_parts": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "seal_parts": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ]
+   }
+  },
+  "withCommittedDeclarations": null,
+  "goals": [
+   {
+    "kind": "collect-placement",
+    "placement": {
+     "x": 16,
+     "y": 16
+    },
+    "why": "Level 068 - Health (sphere 10.3) \u2192 Health",
+    "location": "Level 068 - Health"
+   }
+  ],
+  "views": {
+   "boot": ".cache/seedling-survey/through-end/views/step-177-boot.json"
+  },
+  "clock": {
+   "gameTime": 8607,
+   "refusal": null
+  },
+  "verdict": "REFUSED",
+  "refusal": "solverBot(survey-step-177): no corridor for goal collect-placement toward (8,8) in level 68. Obstacle: pickup:health (health@16,16). Strategy 'collect' failed to apply. Planner said: no walkable tile path in level 68 from tile (1,3) to (0,0). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+  "ticks": null,
+  "traceRows": null,
+  "replans": null,
+  "passes": null,
+  "declarations": null,
+  "replay": null,
+  "ms": 98,
+  "knownAnswer": null,
+  "knownTicks": null,
+  "agreesWithKnown": null,
+  "visit": 1,
+  "family": "VERB-APPLY \u2014 the 'collect' strategy IS registered and did not apply here"
+ },
+ {
+  "step": 179,
+  "level": 12,
+  "boot": {
+   "kind": "staged",
+   "source": "r8-solve-11",
+   "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L12@16,80 \u2014 R8 slice 8's construction for r8-solve-18",
+   "block": {
+    "level": 12,
+    "x": 16,
+    "y": 80
+   },
+   "check": null,
+   "strippedTimedClears": [],
+   "saveGrant": {
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "items": [
+     "canSwim",
+     "hasDarkSword",
+     "hasFeather",
+     "hasFire",
+     "hasShield",
+     "hasSpear",
+     "hasTorch",
+     "hasWand"
+    ],
+    "latched": [
+     "hasSword"
+    ],
+    "from": [
+     {
+      "step": 10,
+      "item": "Progressive Sword",
+      "grants": "latched hasSword"
+     },
+     {
+      "step": 11,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d71"
+     },
+     {
+      "step": 15,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d72"
+     },
+     {
+      "step": 18,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d73"
+     },
+     {
+      "step": 25,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d74"
+     },
+     {
+      "step": 28,
+      "item": "Red Key",
+      "grants": "save.keys[0]"
+     },
+     {
+      "step": 28,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d75"
+     },
+     {
+      "step": 29,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasShield"
+     },
+     {
+      "step": 34,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d76"
+     },
+     {
+      "step": 36,
+      "item": "Green Key",
+      "grants": "save.keys[1]"
+     },
+     {
+      "step": 38,
+      "item": "Light",
+      "grants": "seam.items.hasTorch"
+     },
+     {
+      "step": 39,
+      "item": "Fire",
+      "grants": "seam.items.hasFire"
+     },
+     {
+      "step": 39,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d77"
+     },
+     {
+      "step": 45,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d78"
+     },
+     {
+      "step": 47,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d79"
+     },
+     {
+      "step": 54,
+      "item": "Progressive Swim",
+      "grants": "seam.items.canSwim"
+     },
+     {
+      "step": 58,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d710"
+     },
+     {
+      "step": 65,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d71"
+     },
+     {
+      "step": 66,
+      "item": "Purple Key",
+      "grants": "save.keys[2]"
+     },
+     {
+      "step": 66,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d711"
+     },
+     {
+      "step": 66,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d72"
+     },
+     {
+      "step": 72,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d712"
+     },
+     {
+      "step": 74,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d713"
+     },
+     {
+      "step": 81,
+      "item": "Blue Key",
+      "grants": "save.keys[3]"
+     },
+     {
+      "step": 88,
+      "item": "Progressive Swim",
+      "grants": "seam.items.hasFeather"
+     },
+     {
+      "step": 89,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d714"
+     },
+     {
+      "step": 97,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d73"
+     },
+     {
+      "step": 99,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d74"
+     },
+     {
+      "step": 113,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d715"
+     },
+     {
+      "step": 127,
+      "item": "Ghost Spear",
+      "grants": "seam.items.hasSpear"
+     },
+     {
+      "step": 137,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d75"
+     },
+     {
+      "step": 142,
+      "item": "Yellow Key",
+      "grants": "save.keys[4]"
+     },
+     {
+      "step": 150,
+      "item": "Wand",
+      "grants": "seam.items.hasWand"
+     },
+     {
+      "step": 161,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d716"
+     },
+     {
+      "step": 163,
+      "item": "Progressive Sword",
+      "grants": "seam.items.hasDarkSword"
+     },
+     {
+      "step": 168,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d717"
+     }
+    ],
+    "saveCounts": {
+     "seal_parts": 17,
+     "totem_parts": 5
+    },
+    "unpresentable": [
+     {
+      "step": 177,
+      "item": "Health",
+      "why": "'health' \u2192 hitsMax is not a boolean grant ({\"flash_name\":\"health\",\"class\":\"main\",\"property\":\"hitsMax\",\"op\":\"add\",\"value\":1,\"base\":3}) \u2014 a boot presentation declares a flag, it cannot add."
+     }
+    ]
+   },
+   "stagedSave": {
+    "totem_parts": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "seal_parts": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ]
+   }
+  },
+  "withCommittedDeclarations": null,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 32,
+     "y": 848
+    },
+    "why": "teleporter@32,848 \u2192 L83"
+   }
+  ],
+  "views": {
+   "boot": ".cache/seedling-survey/through-end/views/step-179-boot.json",
+   "walk": ".cache/seedling-survey/through-end/views/step-179-walk.json"
+  },
+  "clock": {
+   "gameTime": 8607,
+   "refusal": null
+  },
+  "verdict": "SOLVED",
+  "refusal": null,
+  "ticks": 1825,
+  "traceRows": 3,
+  "replans": 0,
+  "passes": [
+   {
+    "pass": 1,
+    "kind": "solve",
+    "ticks": 1825
+   }
+  ],
+  "declarations": [],
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 83,
+   "transitions": [
+    "undefined->undefined@1825"
+   ],
+   "earnedClears": [
+    "{12,12}",
+    "{12,7}"
+   ]
+  },
+  "ms": 984,
+  "knownAnswer": null,
+  "knownTicks": null,
+  "agreesWithKnown": null,
+  "visit": 15,
+  "family": null
+ },
+ {
+  "step": 200,
+  "level": 12,
+  "boot": {
+   "kind": "staged",
+   "source": "r8-solve-11",
+   "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L12@592,16 \u2014 R8 slice 8's construction for r8-solve-18",
+   "block": {
+    "level": 12,
+    "x": 592,
+    "y": 16
+   },
+   "check": null,
+   "strippedTimedClears": [],
+   "saveGrant": {
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "items": [
+     "canSwim",
+     "hasDarkShield",
+     "hasDarkSuit",
+     "hasDarkSword",
+     "hasFeather",
+     "hasFire",
+     "hasShield",
+     "hasSpear",
+     "hasTorch",
+     "hasWand"
+    ],
+    "latched": [
+     "hasSword"
+    ],
+    "from": [
+     {
+      "step": 10,
+      "item": "Progressive Sword",
+      "grants": "latched hasSword"
+     },
+     {
+      "step": 11,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d71"
+     },
+     {
+      "step": 15,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d72"
+     },
+     {
+      "step": 18,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d73"
+     },
+     {
+      "step": 25,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d74"
+     },
+     {
+      "step": 28,
+      "item": "Red Key",
+      "grants": "save.keys[0]"
+     },
+     {
+      "step": 28,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d75"
+     },
+     {
+      "step": 29,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasShield"
+     },
+     {
+      "step": 34,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d76"
+     },
+     {
+      "step": 36,
+      "item": "Green Key",
+      "grants": "save.keys[1]"
+     },
+     {
+      "step": 38,
+      "item": "Light",
+      "grants": "seam.items.hasTorch"
+     },
+     {
+      "step": 39,
+      "item": "Fire",
+      "grants": "seam.items.hasFire"
+     },
+     {
+      "step": 39,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d77"
+     },
+     {
+      "step": 45,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d78"
+     },
+     {
+      "step": 47,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d79"
+     },
+     {
+      "step": 54,
+      "item": "Progressive Swim",
+      "grants": "seam.items.canSwim"
+     },
+     {
+      "step": 58,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d710"
+     },
+     {
+      "step": 65,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d71"
+     },
+     {
+      "step": 66,
+      "item": "Purple Key",
+      "grants": "save.keys[2]"
+     },
+     {
+      "step": 66,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d711"
+     },
+     {
+      "step": 66,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d72"
+     },
+     {
+      "step": 72,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d712"
+     },
+     {
+      "step": 74,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d713"
+     },
+     {
+      "step": 81,
+      "item": "Blue Key",
+      "grants": "save.keys[3]"
+     },
+     {
+      "step": 88,
+      "item": "Progressive Swim",
+      "grants": "seam.items.hasFeather"
+     },
+     {
+      "step": 89,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d714"
+     },
+     {
+      "step": 97,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d73"
+     },
+     {
+      "step": 99,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d74"
+     },
+     {
+      "step": 113,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d715"
+     },
+     {
+      "step": 127,
+      "item": "Ghost Spear",
+      "grants": "seam.items.hasSpear"
+     },
+     {
+      "step": 137,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d75"
+     },
+     {
+      "step": 142,
+      "item": "Yellow Key",
+      "grants": "save.keys[4]"
+     },
+     {
+      "step": 150,
+      "item": "Wand",
+      "grants": "seam.items.hasWand"
+     },
+     {
+      "step": 161,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d716"
+     },
+     {
+      "step": 163,
+      "item": "Progressive Sword",
+      "grants": "seam.items.hasDarkSword"
+     },
+     {
+      "step": 168,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d717"
+     },
+     {
+      "step": 183,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d718"
+     },
+     {
+      "step": 185,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasDarkShield"
+     },
+     {
+      "step": 191,
+      "item": "Dark Suit",
+      "grants": "seam.items.hasDarkSuit"
+     }
+    ],
+    "saveCounts": {
+     "seal_parts": 18,
+     "totem_parts": 5
+    },
+    "unpresentable": [
+     {
+      "step": 177,
+      "item": "Health",
+      "why": "'health' \u2192 hitsMax is not a boolean grant ({\"flash_name\":\"health\",\"class\":\"main\",\"property\":\"hitsMax\",\"op\":\"add\",\"value\":1,\"base\":3}) \u2014 a boot presentation declares a flag, it cannot add."
+     }
+    ]
+   },
+   "stagedSave": {
+    "totem_parts": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "seal_parts": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ]
+   }
+  },
+  "withCommittedDeclarations": null,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 0,
+     "y": 352
+    },
+    "why": "teleporter@0,352 \u2192 L95"
+   }
+  ],
+  "views": {
+   "boot": ".cache/seedling-survey/through-end/views/step-200-boot.json",
+   "walk": ".cache/seedling-survey/through-end/views/step-200-walk.json"
+  },
+  "clock": {
+   "gameTime": 8607,
+   "refusal": null
+  },
+  "verdict": "SOLVED",
+  "refusal": null,
+  "ticks": 1269,
+  "traceRows": 2,
+  "replans": 0,
+  "passes": [
+   {
+    "pass": 1,
+    "kind": "solve",
+    "ticks": 1269
+   }
+  ],
+  "declarations": [],
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 95,
+   "transitions": [
+    "undefined->undefined@1269"
+   ],
+   "earnedClears": [
+    "{12,2}"
+   ]
+  },
+  "ms": 1585,
+  "knownAnswer": null,
+  "knownTicks": null,
+  "agreesWithKnown": null,
+  "visit": 16,
+  "family": null
+ },
+ {
+  "step": 207,
+  "level": 12,
+  "boot": {
+   "kind": "staged",
+   "source": "r8-solve-11",
+   "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L12@16,80 \u2014 R8 slice 8's construction for r8-solve-18",
+   "block": {
+    "level": 12,
+    "x": 16,
+    "y": 80
+   },
+   "check": null,
+   "strippedTimedClears": [],
+   "saveGrant": {
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "items": [
+     "canSwim",
+     "hasDarkShield",
+     "hasDarkSuit",
+     "hasDarkSword",
+     "hasFeather",
+     "hasFire",
+     "hasShield",
+     "hasSpear",
+     "hasTorch",
+     "hasWand"
+    ],
+    "latched": [
+     "hasSword"
+    ],
+    "from": [
+     {
+      "step": 10,
+      "item": "Progressive Sword",
+      "grants": "latched hasSword"
+     },
+     {
+      "step": 11,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d71"
+     },
+     {
+      "step": 15,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d72"
+     },
+     {
+      "step": 18,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d73"
+     },
+     {
+      "step": 25,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d74"
+     },
+     {
+      "step": 28,
+      "item": "Red Key",
+      "grants": "save.keys[0]"
+     },
+     {
+      "step": 28,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d75"
+     },
+     {
+      "step": 29,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasShield"
+     },
+     {
+      "step": 34,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d76"
+     },
+     {
+      "step": 36,
+      "item": "Green Key",
+      "grants": "save.keys[1]"
+     },
+     {
+      "step": 38,
+      "item": "Light",
+      "grants": "seam.items.hasTorch"
+     },
+     {
+      "step": 39,
+      "item": "Fire",
+      "grants": "seam.items.hasFire"
+     },
+     {
+      "step": 39,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d77"
+     },
+     {
+      "step": 45,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d78"
+     },
+     {
+      "step": 47,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d79"
+     },
+     {
+      "step": 54,
+      "item": "Progressive Swim",
+      "grants": "seam.items.canSwim"
+     },
+     {
+      "step": 58,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d710"
+     },
+     {
+      "step": 65,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d71"
+     },
+     {
+      "step": 66,
+      "item": "Purple Key",
+      "grants": "save.keys[2]"
+     },
+     {
+      "step": 66,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d711"
+     },
+     {
+      "step": 66,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d72"
+     },
+     {
+      "step": 72,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d712"
+     },
+     {
+      "step": 74,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d713"
+     },
+     {
+      "step": 81,
+      "item": "Blue Key",
+      "grants": "save.keys[3]"
+     },
+     {
+      "step": 88,
+      "item": "Progressive Swim",
+      "grants": "seam.items.hasFeather"
+     },
+     {
+      "step": 89,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d714"
+     },
+     {
+      "step": 97,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d73"
+     },
+     {
+      "step": 99,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d74"
+     },
+     {
+      "step": 113,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d715"
+     },
+     {
+      "step": 127,
+      "item": "Ghost Spear",
+      "grants": "seam.items.hasSpear"
+     },
+     {
+      "step": 137,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d75"
+     },
+     {
+      "step": 142,
+      "item": "Yellow Key",
+      "grants": "save.keys[4]"
+     },
+     {
+      "step": 150,
+      "item": "Wand",
+      "grants": "seam.items.hasWand"
+     },
+     {
+      "step": 161,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d716"
+     },
+     {
+      "step": 163,
+      "item": "Progressive Sword",
+      "grants": "seam.items.hasDarkSword"
+     },
+     {
+      "step": 168,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d717"
+     },
+     {
+      "step": 183,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d718"
+     },
+     {
+      "step": 185,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasDarkShield"
+     },
+     {
+      "step": 191,
+      "item": "Dark Suit",
+      "grants": "seam.items.hasDarkSuit"
+     },
+     {
+      "step": 205,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d719"
+     }
+    ],
+    "saveCounts": {
+     "seal_parts": 19,
+     "totem_parts": 5
+    },
+    "unpresentable": [
+     {
+      "step": 177,
+      "item": "Health",
+      "why": "'health' \u2192 hitsMax is not a boolean grant ({\"flash_name\":\"health\",\"class\":\"main\",\"property\":\"hitsMax\",\"op\":\"add\",\"value\":1,\"base\":3}) \u2014 a boot presentation declares a flag, it cannot add."
+     }
+    ]
+   },
+   "stagedSave": {
+    "totem_parts": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "seal_parts": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ]
+   }
+  },
+  "withCommittedDeclarations": null,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 32,
+     "y": 848
+    },
+    "why": "teleporter@32,848 \u2192 L83"
+   }
+  ],
+  "views": {
+   "boot": ".cache/seedling-survey/through-end/views/step-207-boot.json",
+   "walk": ".cache/seedling-survey/through-end/views/step-207-walk.json"
+  },
+  "clock": {
+   "gameTime": 8607,
+   "refusal": null
+  },
+  "verdict": "SOLVED",
+  "refusal": null,
+  "ticks": 1825,
+  "traceRows": 3,
+  "replans": 0,
+  "passes": [
+   {
+    "pass": 1,
+    "kind": "solve",
+    "ticks": 1825
+   }
+  ],
+  "declarations": [],
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 83,
+   "transitions": [
+    "undefined->undefined@1825"
+   ],
+   "earnedClears": [
+    "{12,12}",
+    "{12,7}"
+   ]
+  },
+  "ms": 1084,
+  "knownAnswer": null,
+  "knownTicks": null,
+  "agreesWithKnown": null,
+  "visit": 17,
+  "family": null
+ }
+]

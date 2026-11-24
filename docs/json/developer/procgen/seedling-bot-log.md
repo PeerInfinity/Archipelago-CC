@@ -28224,6 +28224,16 @@ L40 train-tier rows red (hammer-owned pins among them). The local survey's 11 sp
 SOLVED / 2 REFUSED), every solve hitless, the four L39 steps 184–228 ticks SHORTER ON. A flip owes re-records and the
 hammer arc's signature on its pins, so it waits for a licence.
 
+### Seedling hammer-phase DRILL-EXIT-FLIP — `DRILL_EXIT_PASS` ON by default
+
+⚖ The user, 2026-11-11: *"DRILL_EXIT_PASS flip"* (the hammer replan after the volley flip). The switch now reads
+`SEEDLING_DRILL_EXIT_PASS !== '0'`, default `true`; `=0` opts out. It was ready once fidelity's DRILL-WATER put the
+drill's hop into water in the model (`drillTerrainSwitch` ON): L91's two legs across `drill@64,80` both solve with the
+armed timed pass, 718 (L89 arrival → L92) in 190 ticks and 719 (the whole-game walk's L91 → L89) in 223, each certified
+on a fork and hitless. A walk that solves is never pre-empted and a walk that refuses after spending ticks keeps its
+refusal (L88's 704), so the flip moves only door legs whose walk refuses on a live drill before a tick is spent.
+`hammerDrillExitPass.test.js` pins both arms explicitly; its switch row now pins the default ON.
+
 ### Seedling fidelity AFTERROWS — every `withL40Flip(false)` BEFORE pin in fidelity gets its AFTER at the shipped defaults
 
 Planner `seedling-fidelity-planning-19`, wave 41 (⚖ the user 2026-11-12, *"AFTER rows at L40 defaults"*). Base
@@ -28247,6 +28257,26 @@ Six BEFORE properties are not covered at the defaults; four of them have no sing
 shows a model gap: the bombpusher's last shot is 3 ticks early from t1703, so the witness is recorded through t1702.
 ⚠ The BEFORE witness builders now run into the flip: `l40Bk2PocketTape` and `l40LatchOrbitTape` throw at the defaults.
 Re-record a BEFORE witness only under `withL40Flip(false)`.
+
+### Seedling hammer-phase KILLLOCK-FLIP — `KILLLOCK_CHASER_REWIND` and `KILLLOCK_LINE_STANCE` ON by default
+
+⚖ The user, 2026-11-11: *"Page play, then flip both"* (the WALK-WALLS answer), and 2026-11-12: *"Stack all three"* (this
+flip rides one branch with the drill-exit flip and YETI-TALK, OFF). Both switches now read `SEEDLING_<NAME> !== '0'`,
+default `true`; `=0` opts out. The evidence is WALK-L53-PAGE's: with both on, L53's `r2c2 → r14c9` crossing (the
+whole-game walk's BK3 kill-lock) solves in 608 ticks and plays hitless on the game page (p4g, 0 divergences, arrives
+L54), and the whole-game walk passes entry 24 with the same plan digest. `KILLLOCK_LINE_STANCE` is read only with
+`KILLLOCK_CHASER_REWIND` on and a rewind, so the two flip together. `hammerL53Killlock.test.js` and
+`hammerNewLocks.test.js` pin each arm explicitly; their switch rows now pin the defaults ON.
+
+### Seedling hammer-phase KILLLOCK-FLIP, revised — `KILLLOCK_LINE_STANCE` back OFF (`KILLLOCK_CHASER_REWIND` stays ON)
+
+⚖ The user, 2026-11-14: *"Land, LINE_STANCE OFF"*. The hammer stack's route survey to the end measured `KILLLOCK_LINE_STANCE`
+making step 227 (L98 Chest → L99) solve by taking 2 hits it never billed: `spinningaxe@128,64` at t358 and t381, on a
+483-tick plan whose rows are brave, kill and walk (no forced-hit row). A plan that tanks a hit does not ship. With the
+switch off and the rewind on, the same step solves in 520 ticks with 0 hits. Step 228 (L99), which the line stance had
+reached, refuses again, on the shake-band question about whether a lavarunner is on screen. The game sweeps' L98 legs were
+hitless in every arm. The switch reads `SEEDLING_KILLLOCK_LINE_STANCE === '1'` again (default `false`), and
+`hammerNewLocks.test.js`'s switch row pins all three OFF.
 
 ### Seedling fidelity ROCKBUTTON — a landed FallRock is a Solid that holds a Button down (`fallRockHoldsButton`, OFF)
 
@@ -28307,3 +28337,135 @@ pattern by goal: 35 (L22) and 84 (L88) hit-taking solves → by-name refusals (t
 t110); 119 (L88) REFUSED → SOLVED 192 t; 41 (L22) 406 t, 2 deaths → 126 t clean; 193 (L77) 475 t, 1 hit → 491 t clean —
 the three ON plans played on p4g, hits 0, clock shift [0]. No hitless leg becomes hit-taking. Acceptance `391322d6`
 in every arm; the 293 committed tapes' streams identical.
+
+### Seedling fidelity DARKSUITSTATIC — the dark suit's retaliation into a static body (`darkSuitStaticRetaliation`, OFF)
+
+Planner `seedling-fidelity-planning-21`, wave 46 (⚖ the user's GO 2026-11-16, *"Darktrap Dark Suit (Recommended)"*).
+Base `d24a057d99`. The report is `CC/docs/cloud-reports/seedling-fidelity-darksuitstatic.md`; it answers hammer
+SMALL-WALLS §9's L63 `darktrap@128,272` hand-over.
+
+**D1** (census): the static scan reaches `IceTrap`, `SandTrap`, `DarkTrap` and, under `STATIC_SWORD_ARM`, `Turret`.
+`DarkTrap.hit` is empty and `IceTrap` sets `canHit = false`: no-ops. `SandTrap` is `Enemy.hit` with an empty
+`knockback`, on F4's damage row. `Turret` reads `hitsTimer` in its fire gate after `super.update()`, a half the model
+steps above the scan: not declared. Other call sites with `e` and no `retaliate`: `shieldBossStab`, `owlBody`, `bobBoss`,
+`bossBody` (boss arms, not this slice).
+
+**D2** (`darkSuitStaticRetaliation`, OFF, last key): the scan passes the declared `retaliate`; a SandTrap kill is staged
+as the sword's, plus the graphic step `World.update` gives a blow inside the body's own update (removal 18 ticks after
+the blow, not 19). The Turret's refusal gains its D1 reason. OFF byte-identical (acceptance `391322d6` base / OFF / ON).
+
+**D3** (ON, measured; no flip): 8 seed-1 legs (906 at L63, seven at L101) and 5 survey steps (208, 211, 230, 236, 241)
+hold the suit in such a room. The survey rows are identical OFF/ON; leg 906 (node) refuses before any darktrap contact,
+ON = OFF; the bounded set and the two train files of the icetrap rooms move nothing ON.
+
+### Seedling fidelity L39HIT — the walk's L39 hit; a spinner forecast steps the room's pulsers (`pulserForecastPulse`, OFF)
+
+**D1** (diagnosis): the walk's request was rebuilt on p4g (an inv leg at the walk's sphere-6.7 inventory) and seam-swept in
+node. Seams 30036–30038 give the walk's exact 2864 t kill,l39shaft,rope,walk dashless plan. A fresh p4g page plays it with
+the hit at t1522 (`spinner@112,88`'s hammer), at 0 px with the model, and the walk's two hit samples are that run's rows bit for
+bit, game_time included. The model steps the hit; the plan was accepted because its walk segment (t1310–t1679) was certified
+against a forecast that never stepped `pulser@64,96`'s t1317 pulse on that body, and `unbilledDamageGate` (the backstop) is
+OFF.
+
+**D2** (`pulserForecastPulse`, OFF, last key, `SEEDLING_PULSER_FORECAST_PULSE`): the three spinner forecasts step a copy of
+the room's pulsers after the bodies and apply the enemy arm. ON: the forecast is exact through the hit and prices the hammer
+at t1522. The request plans 3813 t, played hitless on p4g. Survey L39 rows are shorter (65: 2740→2477; 95/133/148/165:
+2624→2359; 172: 2626→2288), the L40 rows are unchanged, no verdict moves, and nothing turns hit-taking. Acceptance `391322d6`
+in every arm. ON movers: `fidelityL39Shaft` D2 (a re-record) and its t300 row (a strike-schedule refusal, handed to hammer),
+and `pressKillCost` r5-press-glide (the shift is bypassed by design).
+
+
+### Seedling fidelity DARKSUITBOSSES — the dark suit's retaliation into a boss (`darkSuitBossRetaliation`, OFF)
+
+Planner `seedling-fidelity-planning-21`, wave 48 (⚖ the user's GO 2026-11-16, *"Dark Suit boss arms (Recommended)"*).
+Base `56dd7a3872` (the w46+w47 harvest). The report is `CC/docs/cloud-reports/seedling-fidelity-darksuitbosses.md`; it
+answers wave 46's "other call sites" hand-over.
+
+**D1** (census): every `applyPlayerHit` site whose AS3 passes `e` declares a `retaliate` except four boss arms, and each
+passes the boss itself. ShieldBoss stab: `ShieldBoss.hit` arms an unarmed boss and is otherwise a no-op (the damaging
+frames are in "stab", and `startStab` needs "sit"): held state. BobBoss body and swords: `bobBossHit(…, "Suit")`: held
+state, but the write lands mid-update. BossTotem body: `onlyHitBy = "Wand"`, no `justKnock`: a no-op. Owl body:
+`justKnock` writes `v` before the phase arms read it, and the model bills after them: not declared.
+
+**D2** (`darkSuitBossRetaliation`, OFF, last key, `SEEDLING_DARK_SUIT_BOSS_RETALIATION`): the three declared arms pass
+`retaliate`; BobBoss's bill moves inside `stepBobBossBody` (`onPlayerHit`, suit only), so form 2's re-seed precedes
+`spin` (the mutant: blade 0 at 3π/2 instead of 3π/2 − π/20 after a form-2 body contact). The suit alone kills every
+Bob form, and the third writes `{32,3}`. The Owl's refusal gains its D1 reason. OFF byte-identical.
+
+**D3** (ON, measured; no flip): only L112 is met with the suit (legs 786–789, survey step 246), and the Owl stays refused;
+survey 246 is identical OFF/ON (an ENCOUNTER-GATE refusal before any contact). Acceptance `391322d6` base / OFF / ON.
+
+### Seedling hammer-phase TALK-FLIP — `TALK_CLEAR_GOAL` ON by default
+
+⚖ The user, 2026-11-17: *"Flip; sweeps now (Recommended)"* (the hammer replan after wave 6). The whole-game wasm walk
+(re-measure-4, 24/48 on seed 1) stopped first at the L58 yeti's `flag:L58:1`: the page's goal mapper refused it
+`no-verb` because no strategy row names `solid:yeti`. YETI-TALK's mapper fix (`jsRuntimeSolver.TALK_CLEAR_GOAL`) asks the
+solver's own talk arm instead, and it shipped OFF. The switch now reads `SEEDLING_TALK_CLEAR_GOAL !== '0'`, default
+`true`, and on the page's MAIN thread `?seedlingSolverEnv=SEEDLING_TALK_CLEAR_GOAL=0` opts out through
+`solverEnvChannel.pageSolverEnvSwitchOff`, the opt-out twin of `pageSolverEnvSwitchOn`. Only a Solid that the solver's
+clear-tag arm talks maps differently, and in the shipped rules that is the L58 yeti alone. The stack sweep had shown its
+leg (`level_58__r3c3 <- in_tentacle_beast_mouth_L57_56_96 …`) as the switch's one real gain. `jsRuntimeSolverTalkClearGoal.test.js`
+pins the default ON and the page-side opt-out; its OFF and ON rows name their arm.
+
+### Seedling hammer-phase HIT-TIEBREAK + HIT-FLIP — `HIT_AWARE_ANSWER` ON by default
+
+⚖ The user, 2026-11-17: *"Slice it now (Recommended)"*. Then, for the flip, 2026-11-18: *"Flip ON, 3 sweeps (Recommended)"*.
+`betterAnswer` used to rank the anytime passes' plans on length alone. A shorter plan that the model itself plays into
+a hit therefore beat a longer one it plays hitless. Two cases: L30 `bosslock@64,32` from L31 (dashless 255 t hitless
+vs full 191 t with three hits and a death), and L12 `bosslock@416,240` from L95 under FADE_MOVE. With
+`jsRuntimeSolver.HIT_AWARE_ANSWER` ON, `solveFromTape` stamps each plan with `modelHits`, taken from the ended run's own
+`playerHits` ledger and deaths with the prefix excluded. When two plans' verdicts differ, `betterAnswer` ranks by the
+verdict alone; otherwise the old rule stands. The switch reads `SEEDLING_HIT_AWARE_ANSWER !== '0'`, default `true`.
+It runs only inside `solveAnytime` (the solve worker, or node), so the worker's env channel
+`?seedlingSolverEnv=SEEDLING_HIT_AWARE_ANSWER=0` is the whole page opt-out. `hammerHitTiebreak.test.js` pins the
+default and both arms. Its OFF rows wrap `withHitAwareAnswer(false, …)`.
+
+### Seedling hammer-phase L28 FLIP — `RESTING_HOLDER` + `KILL_STANCE_SIGHT` ON by default
+
+⚖ The user, 2026-11-19: *"Flip both, sweeps now (Recommended)"*. Seed 2's whole-game walk stopped in L28 with "no
+REACHABLE stance inside button@112,240". In the game, a rope drops `fallrock@112,240` onto that button, and the rock holds
+`grasslock@176,208` open. Three switches together solve the leg hitless. Fidelity's `fallRockHoldsButton` (already ON)
+makes the model count the landed rock as a presser. ROCK-HOLDER-WAIT's `RESTING_HOLDER` makes the solver wait out the
+lock's fade instead of looking for a press. L28-BOBSOLDIER's `KILL_STANCE_SIGHT` prices the chaser arm's kill stances
+with the sword's own Solid line test, so the bobsoldier beyond the lock dies from a stance the swing really reaches:
+L30 at t448, 0 hits, and 0 diverging samples on p4g. Both solver switches now read `SEEDLING_<NAME> !== '0'`, default
+`true`. They run in the solve worker, so the env channel is the page opt-out. `hammerRockHolderWait.test.js` and
+`hammerKillStanceSight.test.js` pin the defaults. The rows that pin another switch's behaviour (the wait alone, and
+L53's `KILLLOCK_CHASER_REWIND`) now hold `KILL_STANCE_SIGHT` OFF explicitly. ON, 9002's plan goes from 959 to 750 t, still hitless.
+**The guard rides with it** (⚖ the user, 2026-11-20: *"Add the guard flip (Recommended)"*). The first landing attempt was
+stopped on the route survey's step 227 (L98: the Chest, then the L99 stairs). `KILL_STANCE_SIGHT` re-times the kill-lock
+kill there, and the player's stand-out after the last kill sits in `spinningaxe@128,64`'s sweep: 477 t and one hit, where
+main had 520 t and none. `KILLLOCK_STANDOUT_GUARD` (from the L98-L99 slice) drives that stand-out on a replay and refuses
+the attempt on a hit, so it now ships ON too (`!== '0'`). Step 227 then solves in 537 t with no hit.
+`hammerL98L99.train.test.js` pins both arms of the shipped defaults.
+
+### Seedling hammer-phase PKC + FH FLIP — `PRESS_KILL_CHASERS` and `HIT_AVOID_PASS` ON by default
+
+⚖ The user, 2026-11-20: *"Flip PKC alone, with FH (Recommended)"*, and for FEWER-HITS *"Flip it after landing
+(Recommended)"*. **PKC** (`pressKillCost.PRESS_KILL_CHASERS`): the press kill's per-tick step prefers a hammer-clear key set
+that is also chaser-clear. L40-PAIR measured that it alone answers the L40 spinner corner. L40 flag 12 and the Chest from L39
+solve hitless at arrival clocks 5241/5242, and p4g plays 1615/1615 ticks with 0 hits. It leaves every other clock, all 54
+spinner-room legs, every survey step and the c3/c4/c6 identity rows unchanged. `PRESS_ESCAPE_SHIELD_CLAIM` stays OFF: with or
+without PKC, it makes L43 clocks take hits. **FH** (`jsRuntimeSolver.HIT_AVOID_PASS`): when the plan in hand still takes a
+model hit, a third pass re-runs the first pass's search after 1..16 idle ticks. It takes L30's bosslock continuation (leg
+302) from 1 hit to 0 and never runs on a hitless plan. `FEWER_HITS_RANK` stays OFF (it moves nothing at seed 1). Both read
+`SEEDLING_<NAME> !== '0'` and run in the solve worker. The Solver section's note names a `hit-avoid` plan and its wait
+(`seedlingSolveWatch`). Rows that need a press kill's death as their witness (`hammerPressKillGuards` HO2,
+`hammerOpportunisticStrike` step 67, `hammerChooserPair.train` 853) hold PKC OFF.
+
+### Seedling hammer-phase ROCKLOCK + FADE FLIP — `ROCKLOCK_KILL`, `KILLLOCK_CLEAR_WRITE` and `FADE_MOVE` ON by default
+
+⚖ The user, 2026-11-22: *"Flip the pair, stack with FADE_MOVE (Recommended)"* and *"Build now, sweeps at 20:00
+(Recommended)"*. **The pair** (`solverBot.ROCKLOCK_KILL` + `solverBot.KILLLOCK_CLEAR_WRITE`, NEW-LOCKS): a `rocklock` whose
+`tset` is −1 is a kill-lock, so the kill work order takes it, and the clear-tag finishes on the run's own kill-lock write.
+L26's `rocklock@112,208` crossings then solve, 0 hits (ROCKLOCK-MAPPER's p4g plays). The AP-chest rules route reaches L26
+through it. **FADE_MOVE**: during a latched fade the player waits at a fork-certified hitless refuge instead of standing in
+reach. That takes the L12 keylock family hitless at OFF's length. `FADE_MOVE_ATTACK` stays OFF. Each switch reads
+`SEEDLING_<NAME> !== '0'`. `ROCKLOCK_KILL` also reads the page URL's opt-out (`pageSolverEnvSwitchOff`), because the
+main-thread goal mapper reads it too. The defaults rows are re-pinned.
+
+The flip also takes in L26-KILL's `KILLLOCK_STANCE_AS_FORECAST`, ON by default (⚖ the user, 2026-11-22: *"Add it ON to
+tonight's stack (Recommended)"*). The kill-lock chaser arm walks to its stance undashed, as the stance forecast priced
+it. Walking there dashed arrived about 120 ticks early, inside the second puncher's dwell. On the AP-chest route, survey
+step 35 (L26 from the L25 arrival) solves in 508 t with 0 hits into L28, and the p4g game agrees. Other kill-lock rooms
+change ticks only, with 0 hits. `SEEDLING_KILLLOCK_STANCE_AS_FORECAST=0` opts out (worker).

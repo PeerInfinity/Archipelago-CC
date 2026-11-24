@@ -17,12 +17,26 @@
         "run": 42869375330,
         "job": 130016210205,
         "ms": 334247
+      },
+      "scripts/procgen/derive-seedling-wallflyer-nohit.train.test.js": {
+        "run": 44206171848,
+        "job": 134472565046,
+        "ms": 176968
+      },
+      "scripts/procgen/extract-seedling-map.train.test.js": {
+        "run": 44206171848,
+        "job": 134472565046,
+        "ms": 590
       }
     },
     "local": {
       "frontend/modules/seedlingDemo/hammerNewLocks.train.test.js": {
         "by": "seedling-hammer-new-locks, cloud box (4 cores, under a concurrent page sweep), 2026-11-10",
         "ms": 14400
+      },
+      "frontend/modules/seedlingDemo/hammerKill880StandHold.train.test.js": {
+        "by": "seedling-hammer-kill880, cloud box (4 cores, under a concurrent phase sweep and acceptance run), 2026-11-23",
+        "ms": 257840
       }
     }
   },
@@ -42,14 +56,17 @@
     "frontend/modules/seedlingDemo/hammerGhostKillRung.train.test.js": 277,
     "frontend/modules/seedlingDemo/fidelityCorpseBump2.train.test.js": 275,
     "frontend/modules/seedlingDemo/hammerTurretApproach.train.test.js": 264,
+    "frontend/modules/seedlingDemo/hammerKill880StandHold.train.test.js": 258,
     "frontend/modules/seedlingDemo/hammerPocketBurn.train.test.js": 238,
     "frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.latchSandwich.train.test.js": 235,
     "frontend/modules/seedlingDemo/hammerChooserPair.train.test.js": 234,
+    "scripts/procgen/derive-seedling-wallflyer-nohit.train.test.js": 177,
     "frontend/modules/seedlingDemo/hammerPitWest.train.test.js": 158,
     "frontend/modules/seedlingDemo/hammerClearTagChain.train.test.js": 102,
     "frontend/modules/seedlingDemo/hammerBombPhase.train.test.js": 70,
     "frontend/modules/mazeRoom/tileSpike/learnLattice.train.test.js": 55,
     "frontend/modules/seedlingDemo/hammerKeylockTurret.train.test.js": 35,
-    "frontend/modules/seedlingDemo/hammerNewLocks.train.test.js": 15
+    "frontend/modules/seedlingDemo/hammerNewLocks.train.test.js": 15,
+    "scripts/procgen/extract-seedling-map.train.test.js": 1
   }
 }

@@ -144,7 +144,11 @@ describe('flash_seedling — the atlas install knob (S2 D1)', () => {
         //   (the L111 door) each hold doors.
         // ⛓ rules-no-hit-directional: 185 -> 187 — the witnessed no-hit gates split L22 (r0c6 the L21/L29 doors, r8c0 the
         //   L25/L30 doors) and L25 (r2c7 the L22/L28 doors, r3c2 the L26 door) at their wallflyer bands.
-        expect(entry.zoneCount).toBe(187);
+        // ⛓ rules-lavatrap-neck: 187 -> 188 — rule T splits L77 between its two doors: r2c0 (the L76 door) and r15c6
+        //   (the L78 door) each hold one; L78's new sub-regions hold none (its doors stay in r0c2 / r0c16).
+        // ⛓ rules-k-pursuit-resume: 188 -> 191 — rule K + (b) splits L72, L74 and L75 at their lavarunners' leash cuts, so
+        //   each one's two doors fall in two zones (L72 r0c11 / r11c6, L74 r2c2 / r8c18, L75 r0c4 / r13c3).
+        expect(entry.zoneCount).toBe(191);
         entry.prepareSphereGrowth({ params: {} });
         expect(entry.rulesJsonBlocks().region_atlas.atlas_id).toBe(SEEDLING_STARTER_ATLAS.atlas_id);
     });

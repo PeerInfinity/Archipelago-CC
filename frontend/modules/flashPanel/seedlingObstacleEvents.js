@@ -59,6 +59,41 @@ export function parseObstacleEventId(id) {
     return m ? { level: Number(m[1]), tag: Number(m[2]) } : null;
 }
 
+/**
+ * ⛓ rules-spinner-alias-guards (b) — **NO EVENT ON A TAG −1 ALIAS SLOT.** A writer carrying tag −1 in level N+1 writes
+ * `levelPersistence[30(N+1) − 1]` = `{N, 29}` (`Main.as:222`, no bounds check; `Game.as:1902-1904`), so an event minted
+ * there would be collected by that writer's kill or break, an action its rule never prices. Refused BY NAME, with the
+ * writer(s) named.
+ *
+ * Pure like the rest of this module: `writers` is `seedlingDemo/outOfBandAliases.aliasWritersOf(map)` — `[{level, tag,
+ * from, id, as3}]`, `level`/`tag` the alias address — handed in by the producer.
+ *
+ * @param {object[]} events every event the producer will compile (`fields.event_id` = `flag:L<level>:<tag>`)
+ * @param {object[]} writers the map's tag −1 writers and the address each lands on
+ * @returns {object[]} `events`, unchanged, when none sits on an alias slot
+ */
+export function refuseAliasedEvents(events, writers) {
+    if (!Array.isArray(writers)) throw new Error('alias events: `writers` must be the map\'s tag -1 writers (an array)');
+    const at = new Map();
+    for (const w of writers) {
+        const k = obstacleEventId(w);
+        if (!at.has(k)) at.set(k, []);
+        at.get(k).push(`${w.id} (L${w.from}, ${w.as3})`);
+    }
+    const refused = [];
+    for (const e of events ?? []) {
+        const id = e?.fields?.event_id;
+        if (at.has(id)) {
+            refused.push(`"${e.name}" (${id}) sits on the slot the tag -1 write of ${at.get(id).join(', ')} clears — `
+                + 'Main.as:222 indexes level * 30 + tag with no bounds check, so -1 in level N+1 is {N,29}');
+        }
+    }
+    if (refused.length > 0) {
+        throw new Error(`alias events: ${refused.length} event(s) on a tag -1 alias slot refused —\n  ${refused.join('\n  ')}`);
+    }
+    return events;
+}
+
 /** The event's display name (also its event item's name). */
 export const obstacleEventName = ({ level, tag, cls, x, y }) => `L${level} flag ${tag}: ${cls}@${x},${y} cleared`;
 
@@ -94,20 +129,12 @@ export function rowVerdict(row) {
 }
 
 /**
- * Census rows → the compiler's `events` + `exitGates`.
- *
- * @param {object[]} rows `arrivalSolidCensus` rows
- * @param {object} ctx
- * @param {(landing:object) => {region_id:string, exit_id:string}|Array<{region_id:string, exit_id:string}>} ctx.departure
- *   the atlas endpoint(s) whose connection lands on the landing (⛓ ER E4a: under a shuffled layout, the doc's
- *   connections that end at its arrival exit — each gets the gate)
- * @param {(row:object, solid:{cls,x,y}) => {region_id:string, sub_region?:string, side:string, across?:string[]}} ctx.place
- *   where the event sits (the obstacle's open side); throws by name when it cannot say
- * @param {(row:object, solid:{cls,x,y}) => object|null} ctx.rule the obstacle's own crossing cost as a
- *   rules.json rule, null when the transcription prices none
- * @returns {{events:object[], exitGates:object[], skipped:string[], refused:string[]}}
+ * ⛓ The SELECTION pass of `deriveObstacleEvents` — which census rows become events (`rowVerdict`, one solid per flag),
+ * keyed by flag, and the landings they gate. It depends on the rows alone (no atlas), so a reader that needs only the
+ * NAMES the producer will mint (`obstacleEventNames`) asks the same pass the events are made from (session
+ * tile-fire-breaks-rocks: a rock's own cleared event is credited only where it is minted). Throws by name on a refusal.
  */
-export function deriveObstacleEvents(rows, ctx) {
+export function selectObstacleEvents(rows) {
     const byFlag = new Map();
     const byLanding = new Map();
     const skipped = [];
@@ -131,6 +158,31 @@ export function deriveObstacleEvents(rows, ctx) {
     if (refused.length > 0) {
         throw new Error(`obstacle events: ${refused.length} census row(s) refused —\n  ${refused.join('\n  ')}`);
     }
+    return { byFlag, byLanding, skipped, refused };
+}
+
+/** The names of the obstacle events `deriveObstacleEvents(rows, …)` mints, in its order. */
+export function obstacleEventNames(rows) {
+    return [...selectObstacleEvents(rows).byFlag].sort(([a], [b]) => a.localeCompare(b, 'en', { numeric: true }))
+        .map(([, { row, solid }]) => obstacleEventName({ ...row.flag, ...solid }));
+}
+
+/**
+ * Census rows → the compiler's `events` + `exitGates`.
+ *
+ * @param {object[]} rows `arrivalSolidCensus` rows
+ * @param {object} ctx
+ * @param {(landing:object) => {region_id:string, exit_id:string}|Array<{region_id:string, exit_id:string}>} ctx.departure
+ *   the atlas endpoint(s) whose connection lands on the landing (⛓ ER E4a: under a shuffled layout, the doc's
+ *   connections that end at its arrival exit — each gets the gate)
+ * @param {(row:object, solid:{cls,x,y}) => {region_id:string, sub_region?:string, side:string, across?:string[]}} ctx.place
+ *   where the event sits (the obstacle's open side); throws by name when it cannot say
+ * @param {(row:object, solid:{cls,x,y}) => object|null} ctx.rule the obstacle's own crossing cost as a
+ *   rules.json rule, null when the transcription prices none
+ * @returns {{events:object[], exitGates:object[], skipped:string[], refused:string[]}}
+ */
+export function deriveObstacleEvents(rows, ctx) {
+    const { byFlag, byLanding, skipped, refused } = selectObstacleEvents(rows);
 
     const events = [];
     const nameOf = new Map();
@@ -299,11 +351,18 @@ export function deriveLockEvents(projection, ctx) {
  *   does); `reach` = the farthest an across-the-cut arm reaches it from (default `a.reach`); `through: false` = no
  *   arm that passes a `Solid` hurts this body (it is then reached only by standing in the side)
  * @param {number} [a.reach] the farthest an across-the-cut arm reaches from the player's centre
+ * @param {(start:number[], tiles:Set<string>) => number[][]} [a.reachable] ⛓⛓ RULES l99-sided-killlock: the player's
+ *   reachable CENTRES (pixels) from the cell `start`, never leaving `tiles` (the side's tile flood). When given, a side
+ *   is one component of those points, not of tiles — a tile side the model's own solids cut in two (L99: a cliffside's
+ *   pixel mask) is two sides — and a body's distance is measured from those points, the way a chaser measures its
+ *   `runRange` (`Bob.as:58`: to the player's position), not from the nearest corner of a tile no centre reaches. Without
+ *   it, the tile reading stands (every caller before this one).
  * @returns {{steps:{tile:number[], dir:string}[], size:number, verdict:'clears'|'cannot'|'across',
- *   beyond:string[], across:string[]}[]} per side: the steps INTO the lock from it, and why
+ *   beyond:string[], across:string[], nearest?:object}[]} per side: the steps INTO the lock from it, and why
+ *   (`nearest`, with `reachable`: per body not standing in the side, its distance from the side's nearest centre)
  */
 export const ENCOUNTER_DIRS = Object.freeze({ N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] });
-export function encounterLockSides({ width, height, tile, passable, lockTiles, closed, bodies, reach }) {
+export function encounterLockSides({ width, height, tile, passable, lockTiles, closed, bodies, reach, reachable }) {
     const inGrid = (x, y) => x >= 0 && y >= 0 && x < width && y < height;
     const walk = (x, y) => inGrid(x, y) && !closed.has(`${x},${y}`) && passable(x, y);
     const flood = (sx, sy) => {
@@ -326,6 +385,22 @@ export function encounterLockSides({ width, height, tile, passable, lockTiles, c
             // The step INTO the lock moving `dir` starts on the cell behind it.
             const [nx, ny] = [tx - dx, ty - dy];
             if (!walk(nx, ny)) continue;
+            if (reachable) {
+                // ⛓⛓ RULES l99-sided-killlock: the start cell's reachable centres, inside its tile side.
+                const tileSide = sides.find((s) => s.tileSide.has(`${nx},${ny}`))?.tileSide ?? flood(nx, ny);
+                const points = reachable([nx, ny], tileSide);
+                // A cell the tile flood walks but where the player's box has no free position is no step into the lock.
+                if (points.length === 0) continue;
+                let side = sides.find((s) => s.tileSide === tileSide && points.some(([x, y]) => s.keys.has(`${x},${y}`)));
+                if (!side) {
+                    const keys = new Set(points.map(([x, y]) => `${x},${y}`));
+                    const tiles = new Set(points.map(([x, y]) => `${Math.floor(x / tile)},${Math.floor(y / tile)}`));
+                    side = { tiles, tileSide, points, keys, steps: [] };
+                    sides.push(side);
+                }
+                side.steps.push({ tile: [tx, ty], dir });
+                continue;
+            }
             let side = sides.find((s) => s.tiles.has(`${nx},${ny}`));
             if (!side) {
                 side = { tiles: flood(nx, ny), steps: [] };
@@ -334,9 +409,14 @@ export function encounterLockSides({ width, height, tile, passable, lockTiles, c
             side.steps.push({ tile: [tx, ty], dir });
         }
     }
-    // The nearest a point of the side's tiles comes to a body's centre.
+    // The nearest a point of the side's tiles comes to a body's centre (⛓⛓ RULES l99-sided-killlock: with `reachable`,
+    // the nearest reachable centre).
     const distance = (side, [cx, cy]) => {
         let best = Infinity;
+        if (side.points) {
+            for (const [x, y] of side.points) best = Math.min(best, Math.hypot(x - cx, y - cy));
+            return best;
+        }
         for (const k of side.tiles) {
             const [x, y] = k.split(',').map(Number);
             const px = Math.max(x * tile, Math.min(cx, (x + 1) * tile));
@@ -353,14 +433,16 @@ export function encounterLockSides({ width, height, tile, passable, lockTiles, c
     return sides.map((side) => {
         const beyond = [];
         const across = [];
+        const nearest = {};
         for (const b of bodies) {
             if (standsIn(side, b.centre)) continue;
             const d = distance(side, b.centre);
+            if (side.points) nearest[b.at] = Math.round(d * 10) / 10;
             if (b.through !== false && (d <= (b.reach ?? reach) || (b.runRange !== null && d <= b.runRange))) across.push(b.at);
             else beyond.push(b.at);
         }
         const verdict = beyond.length > 0 ? 'cannot' : across.length > 0 ? 'across' : 'clears';
-        return { steps: side.steps, size: side.tiles.size, verdict, beyond, across };
+        return { steps: side.steps, size: side.tiles.size, verdict, beyond, across, ...(side.points ? { nearest } : {}) };
     });
 }
 

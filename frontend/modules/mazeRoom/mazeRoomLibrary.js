@@ -50,6 +50,10 @@ import { MAZE_CONCEPT_REALISATIONS } from './mazeConcepts.js';
 import {
     MAZE_CONTENT_ROLES, MAZE_DEFAULT_CONTENT_PACK, presentingPlaceFromRules, presentingRegionCore,
 } from './mazeContent.js';
+import { thingsDeserializer, thingsRegionCore, thingsSerializer } from './mazeThings.js';
+import { tileKindsDeserializer } from './mazeTileKinds.js';
+import { tileKindsRegionCore, tileKindsSerializer } from './mazeTileKindsGen.js';
+import { MAZE_BIOME_KEY, MAZE_BIOME_SEED_KEY, TILE_KINDS_KEY, mazeBiomeRegionParams, regionBiomeOf } from './mazeRegionBiomes.js';
 import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
 import {
     DEFAULT_MAZE_PROCGEN_PARAMS,
@@ -149,7 +153,10 @@ export const substrateRegistryEntry = Object.freeze({
         'arbitrary_location_rules',
         'arbitrary_exit_rules',
     ]),
-    deserializeWorld: tileGridDeserializer,
+    // ⛓ CONTENT SETS S2 — the engine's deserializer, then the region's `things` copied back (`mazeThings.js`):
+    // the engine copies named fields, so it would drop them.
+    // ⛓ CONTENT SETS TILE-3 — and its placed tile kinds (`mazeTileKinds.js`), which the engine drops the same way.
+    deserializeWorld: tileKindsDeserializer(thingsDeserializer(tileGridDeserializer)),
 
     /**
      * ⛓⛓ CONCEPT LIBRARY T1 — **WHAT THE MAZE REALISES** (`mazeConcepts.js`;
@@ -279,11 +286,16 @@ export const substrateRegistryEntry = Object.freeze({
     // Build-time adapters
     // ⛓ CONTENT SETS R2 — the engine, then `mazeContent.js`'s presentation pass
     // (concept rows' looks from `params.contentSet`).
-    generateRegionCore: presentingRegionCore(spatialCore),
+    // ⛓ CONTENT SETS S2 — and the region's THING recorded on the world, with no position yet (`mazeThings.js`).
+    // ⛓ CONTENT SETS GEN-1 — OUTERMOST: a region biome (`mazeRegionBiomes.js`) hands the engine its base and records
+    //   the tile kinds to place (`mazeTileKindsGen.js`); any other biome passes through untouched.
+    generateRegionCore: tileKindsRegionCore(thingsRegionCore(presentingRegionCore(spatialCore))),
     placeFromItems: itemBasedPlacer,
     placeFromRules: presentingPlaceFromRules(ruleGatePlacer),
     extractPathsAndObstacles: tileGridPathExtractor,
-    serializeWorld: tileGridSerializer,
+    // ⛓ CONTENT SETS S2 — the engine's serializer, then each thing given a free floor cell and written as `things`.
+    // ⛓ CONTENT SETS GEN-1 — OUTERMOST: with a plan, the kinds placed under the law after the things are seated.
+    serializeWorld: tileKindsSerializer(thingsSerializer(tileGridSerializer)),
     // ⛓ PRESET SIDECARS D0 — what `serializeWorld` writes, declared beside the
     // serializer itself (`mazeSerializer.js`); `text_adventure` carries the
     // same object, and `check-sidecar-fields.mjs` holds the corpus to it.
@@ -351,6 +363,15 @@ export const substrateRegistryEntry = Object.freeze({
     defaultProcgenParams: DEFAULT_MAZE_PROCGEN_PARAMS,
     renderProcgenParams: renderMazeProcgenParams,
     buildLibraryRegionParams: buildMazeLibraryRegionParams,
+    // ⛓ CONTENT SETS GEN-1 (⚖ Robert 2026-11-22: "controlled by the biome, and the generation settings"; Q8 "A per-room
+    //   mix") — the world's maze biome (one id or a weighted list) and the tile numbers, each in regionParams ONLY when
+    //   not the default (refused by name at settings time); `regionBiomeOf` is the pipeline's hook for a region whose
+    //   spec names no biome (the mix picked by hash of the seed and the region id, no rng draw).
+    buildRegionParams: mazeBiomeRegionParams,
+    regionBiomeOf,
+    // The regionParams keys the drivers record in `procgen_metadata[p]` (`worldContent.recordedContentOf`); the mix's
+    // seed with it, so a rebuilt world (an append) picks every room as before.
+    recordedRegionParams: Object.freeze([MAZE_BIOME_KEY, MAZE_BIOME_SEED_KEY, TILE_KINDS_KEY]),
     renderLibraryProcgenParams: renderMazeLibraryProcgenParams,
 
     // --- Region-atlas content-source hook (region-atlas Phase 6) ---

@@ -59,9 +59,9 @@ function solveChest(on) {
 }
 
 describe('hammer-phase PKC — the press kill prices the chasers beside its walks', () => {
-    it.skipIf(ENV.SEEDLING_PRESS_KILL_CHASERS !== undefined)('ships OFF', () => {
-        expect(PRESS_KILL_CHASERS.enabled).toBe(false);
-        expect(PRESS_KILL_CHASERS_DEFAULT).toBe(false);
+    it.skipIf(ENV.SEEDLING_PRESS_KILL_CHASERS !== undefined)('ships ON since the PKC flip (=0 opts out)', () => {
+        expect(PRESS_KILL_CHASERS.enabled).toBe(true);
+        expect(PRESS_KILL_CHASERS_DEFAULT).toBe(true);
     });
 
     it('step 67: OFF the kill walks into bob@736,752 and dies; ON it takes no hit, and the keys are OFF\'s until the '

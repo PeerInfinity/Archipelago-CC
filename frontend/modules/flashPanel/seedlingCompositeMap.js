@@ -40,6 +40,7 @@ import {
     SEEDLING_BACKGROUND, bakeLevel, levelRecordFor, levelWorldFor, loadSeedlingArt, recordWorldOf,
 } from '../seedlingDemo/seedlingLevelBake.js';
 import { TILE } from '../seedlingDemo/seedlingSkinRenderer.js';
+import { dirOfExit } from '../seedlingDemo/seedlingDoorDirection.js';
 import SUBREGION_PARTITION from './atlases/seedling-subregion-partition.json' with { type: 'json' };
 
 /** The dim laid over a sub-region cell's tiles that belong to the rest of its level. */
@@ -166,6 +167,177 @@ export function unplacedSeedlingLocations(region, ctx = {}) {
     const placed = new Set(seedlingLocationTiles(region, ctx).map((t) => t.location));
     return rulesLocationsOf(ctx.rules, ctx.playerId, region?.region_id)
         .map((l) => l?.name).filter((n) => typeof n === 'string' && !placed.has(n));
+}
+
+/**
+ * ⛓ The layout KIND of a Seedling exit, off its `exit_id` prefix — the only stairs/pit signal a compiled sidecar
+ * carries (every exit's `kind` is `teleporter`: Seedling's own Teleporter object, which the game uses for walk-off
+ * edges and doorways alike). `out_stairsdown_*` and `out_pit_*` go DOWN, `out_stairsup_*` UP, every other exit
+ * (`out_teleporter_*`, the boss doors) is a `join` here; `seedlingLayoutGraph` then makes each one that is not an
+ * edge transition a `warp` (`seedlingEdgeTransitionOf`).
+ */
+export function seedlingExitLayoutKind(exitId) {
+    const id = String(exitId ?? '');
+    if (id.startsWith('out_stairsdown') || id.startsWith('out_pit')) return 'down';
+    if (id.startsWith('out_stairsup')) return 'up';
+    return 'join';
+}
+
+/**
+ * ⛓⛓ **IS THIS EXIT AN EDGE TRANSITION?** (region-map placement (A); ⚖ user 2026-11-16/17: ONLY a walk-off-edge
+ * transition is a `join`; a doorway into a dungeon, an in-game teleporter or any other non-spatial warp is not.)
+ * An exit is an edge transition when its door tile (`exit_tiles[0]`) lies ON the border of its source level AND its
+ * arrival (`target_spawn`, pixels) lies within `EDGE_ARRIVAL_TILES` tiles of the OPPOSITE border of the target
+ * level. MEASURED on `seedling_playthrough`: every one of the 184 edge exits arrives 0–1 tiles from that border;
+ * every one of the 46 others arrives ≥ 2 (one at exactly 2: `level_28 → level_27`).
+ * @param {object} exit      a sidecar exit (`exit_tiles`, `target_spawn`)
+ * @param {{w,h}|null} srcPx  the source level's size in PIXELS (`seedlingLevelPixelSize`)
+ * @param {{w,h}|null} tgtPx  the target level's size in PIXELS
+ * @returns {boolean|null} null when the data cannot say (a size, the door tile or the arrival is missing)
+ */
+export const EDGE_ARRIVAL_TILES = 1;
+export function seedlingEdgeTransitionOf(exit, srcPx, tgtPx, ts = TILE) {
+    const tile = Array.isArray(exit?.exit_tiles) ? exit.exit_tiles[0] : null;
+    const ax = exit?.target_spawn?.x;
+    const ay = exit?.target_spawn?.y;
+    if (!srcPx || !tgtPx || !Array.isArray(tile) || !Number.isFinite(ax) || !Number.isFinite(ay)) return null;
+    const sw = Math.round(srcPx.w / ts);
+    const sh = Math.round(srcPx.h / ts);
+    const tw = Math.round(tgtPx.w / ts);
+    const th = Math.round(tgtPx.h / ts);
+    const [x, y] = tile;
+    const sides = [];
+    if (x <= 0) sides.push('W');
+    if (x >= sw - 1) sides.push('E');
+    if (y <= 0) sides.push('N');
+    if (y >= sh - 1) sides.push('S');
+    const tx = Math.floor(ax / ts);
+    const ty = Math.floor(ay / ts);
+    // distance (tiles) from the arrival to the target border OPPOSITE each source side
+    const opposite = { W: tw - 1 - tx, E: tx, N: th - 1 - ty, S: ty };
+    return sides.some((d) => opposite[d] <= EDGE_ARRIVAL_TILES);
+}
+
+/**
+ * A display region's level size in PIXELS, `{w, h}`, or null: a generated room's embedded record (`width`/`height`
+ * in tiles), else the payload's atlas region `bounds` (tiles) from `atlases[atlas_ref]`. An atlas the caller does
+ * not hold (a CUSTOM set's derived atlas, unless handed in) gives null, and its links then carry no direction.
+ */
+function seedlingLevelPixelSize(payload, atlases) {
+    const ts = Number.isFinite(payload?.tile_size) ? payload.tile_size : TILE;
+    const rec = payload?.record;
+    if (rec && Number.isInteger(rec.width) && Number.isInteger(rec.height)) return { w: rec.width * ts, h: rec.height * ts };
+    const atlas = atlases?.[payload?.atlas_ref];
+    const region = atlas?.regions?.find?.((r) => r.region_id === payload?.atlas_region);
+    const b = region?.bounds;
+    return b && b.w > 0 && b.h > 0 ? { w: b.w * ts, h: b.h * ts } : null;
+}
+
+/**
+ * ⛓⛓ `compositeMap.layoutGraph(ctx)` — region-map step 3a's SEEDLING ADAPTER (`procgenCore/regionLayoutResolve.js`
+ * finds it through the registry). `ctx = {sidecars, displayRegionOf, atlases?}` → `{nodes, links}`:
+ *   · nodes = the DISPLAY regions (`level_N__rRcC` folds onto `level_N` by its payload), in sidecar order;
+ *   · links = every sidecar exit with a `targetRegion` in the sidecars, display-folded (a link inside one level is
+ *     dropped), `kind` by `seedlingExitLayoutKind` — a `join` that `seedlingEdgeTransitionOf` says is NOT an edge
+ *     transition becomes `warp` (no `dir`; one it cannot judge stays `join`) — and — for a `join` — `dir` by `dirOfExit` (`seedlingDemo/seedlingDoorDirection.js`, re-exported by `seedlingSetMap`) (the E3
+ *     door rule: the door's side of its level, else the arrival's side of the target, reversed). The door is the
+ *     exit's first `exit_tiles` cell (level tiles → pixels), the arrival its `target_spawn` (pixels). Stairs and pits
+ *     carry no `dir` (they are vertical), and an interior door gets `null` from `dirOfExit` itself.
+ * ⛔ Pure, and reads the PAYLOADS only — never a preset or region name.
+ */
+export function seedlingLayoutGraph({ sidecars = {}, displayRegionOf = seedlingDisplayRegionOf, atlases = null } = {}) {
+    const displayOf = (name) => displayRegionOf(name, sidecars[name]);
+    const nodes = [];
+    const seen = new Set();
+    const size = new Map();
+    for (const [name, sc] of Object.entries(sidecars)) {
+        const d = displayOf(name);
+        if (!seen.has(d)) {
+            seen.add(d);
+            nodes.push(d);
+        }
+        if (!size.has(d)) size.set(d, seedlingLevelPixelSize(sc?.playable_payload, atlases));
+    }
+    const links = [];
+    for (const [name, sc] of Object.entries(sidecars)) {
+        const payload = sc?.playable_payload;
+        const ts = Number.isFinite(payload?.tile_size) ? payload.tile_size : TILE;
+        for (const e of payload?.exits ?? []) {
+            const to = e?.targetRegion;
+            if (typeof to !== 'string' || !sidecars[to]) continue;
+            const from = displayOf(name);
+            const target = displayOf(to);
+            if (from === target) continue;
+            let kind = seedlingExitLayoutKind(e.exit_id);
+            // ⛓ (A) a `join` that is not an edge transition is a `warp` (drawn, never joins); unknown stays `join`
+            if (kind === 'join' && seedlingEdgeTransitionOf(e, size.get(from), size.get(target), ts) === false) kind = 'warp';
+            let dir = null;
+            const tile = Array.isArray(e.exit_tiles) ? e.exit_tiles[0] : null;
+            if (kind === 'join' && Array.isArray(tile)) {
+                const door = {
+                    x: tile[0] * ts, y: tile[1] * ts,
+                    playerx: e.target_spawn?.x, playery: e.target_spawn?.y,
+                };
+                dir = dirOfExit(door, size.get(from), size.get(target), ts).dir;
+            }
+            links.push({ from, to: target, kind, dir });
+        }
+    }
+    return { nodes, links };
+}
+
+/**
+ * ⛓ region-map step 3b — `compositeMap.regionExtent(region, ctx)` → `{w, h}` in LEVEL TILES, or null: how big the
+ * region's whole level is, so the Region Map can size its cells by level (⚖ user 2026-11-15, "sized by level" the
+ * default). A generated room's embedded `record` (`width`/`height`), else the payload's atlas region `bounds` from
+ * `ctx.atlases[atlas_ref]` — the same sizes `seedlingLayoutGraph` reads for door directions. A custom set's derived
+ * atlas answers only when the caller hands it in; null then, and the panel falls back to its uniform size.
+ * ⛔ Pure, additive, reads the PAYLOAD only.
+ */
+export function seedlingRegionExtent(region, { atlases = null } = {}) {
+    const payload = region?.playable_payload ?? null;
+    const px = seedlingLevelPixelSize(payload, atlases);
+    if (!px) return null;
+    const ts = Number.isFinite(payload?.tile_size) ? payload.tile_size : TILE;
+    return { w: Math.round(px.w / ts), h: Math.round(px.h / ts) };
+}
+
+/**
+ * ⛓ region-map step 3b — `compositeMap.remoteLocationTiles(region, ctx)` → `[{location, displayRegion, x, y, kind}]`:
+ * the region's events whose object is in ANOTHER level (`obstacle.level` ≠ the payload's level — the residue
+ * `seedlingLocationTiles` leaves out and `unplacedSeedlingLocations` names), placed in the display region of the
+ * first sidecar whose payload shows that level, in that payload's tiles (its `tile_size`, as `seedlingRegionExtent`).
+ * `ctx = {rules, playerId, sidecars, displayRegionOf}`. An event whose
+ * level no sidecar shows is left out (the panel lists it as "not on map").
+ * ⛔ Pure, additive, reads the PAYLOADS and the rules' `obstacle` only.
+ */
+export function seedlingRemoteLocationTiles(region, {
+    rules = null, playerId = null, sidecars = null, displayRegionOf = seedlingDisplayRegionOf,
+} = {}) {
+    const payload = region?.playable_payload ?? null;
+    const out = [];
+    let byLevel = null;
+    for (const l of rulesLocationsOf(rules, playerId, region?.region_id)) {
+        const o = l?.obstacle;
+        if (!o || !Number.isFinite(o.x) || !Number.isFinite(o.y) || !Number.isInteger(o.level)) continue;
+        if (o.level === payload?.level) continue;
+        if (!byLevel) {
+            byLevel = new Map();
+            for (const [name, sc] of Object.entries(sidecars ?? {})) {
+                const p = sc?.playable_payload;
+                const lv = p?.level;
+                if (Number.isInteger(lv) && !byLevel.has(lv)) {
+                    byLevel.set(lv, { displayRegion: displayRegionOf(name, sc), ts: Number.isFinite(p.tile_size) ? p.tile_size : TILE });
+                }
+            }
+        }
+        const host = byLevel.get(o.level);
+        if (host?.displayRegion == null) continue;
+        // ⛓ the obstacle's pixels are the HOST level's, so its tile size divides them (as `seedlingRegionExtent`
+        //   honours `tile_size`); every committed payload says 16 = TILE.
+        out.push({ location: l.name, displayRegion: host.displayRegion, x: Math.floor(o.x / host.ts), y: Math.floor(o.y / host.ts), kind: 'event' });
+    }
+    return out;
 }
 
 function rulesLocationsOf(rules, playerId, regionName) {

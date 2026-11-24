@@ -1,0 +1,5 @@
+LEG 395 goal=cleartag door=1 idle=100 ok=true ms=10860 ticks=718
+  verbs=["keylock","walk"] FRESH hits=[] deaths=0 open=true dead=true transition=null
+  KEYLOCK_TURRET_COUNTS={"stances":[{"lock":"bosslock@480,352","t":100,"turrets":["iceturret@472,400"],"live":["iceturret@472,400"],"stance":{"x":488,"y":376}}],"kills":[{"lock":"bosslock@480,352","turret":"iceturret@472,400","t":100,"dead":true,"ticks":563,"side":"right","wait":29,"forks":70}]}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS={"asked":[]}
+  TURRET_APPROACH_COUNTS={"approaches":[{"turret":"iceturret@472,400","t":663,"side":"right","via":null,"wait":29,"forks":70,"order":"volley","anchor":32,"rank":5}]}

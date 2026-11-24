@@ -72,6 +72,14 @@
  *     TWO documents: the maze's committed pack does not close, so the button is
  *     shown DISABLED with the core's own sentence; the Seedling set is linked,
  *     so the same button is ENABLED and one press runs the chain.
+ * 13. **THE REGION ATLAS CROSSES WITH THE RULES** (lab-apworld-door-map) — the
+ *     same press carries the set's region atlas, its id the one the handed
+ *     rules name, and the HOST's `atlasCache` holds it before the editor's Apply.
+ * 14. **THE LEVEL SET CROSSES WITH THE RULES** (lab-apworld-door-play) — the
+ *     same press carries the set's level-set document, its id the one the
+ *     handed rules' `region_atlas[p].level_set` names, and the HOST's
+ *     `levelSetCache` HOLDS it under the rules' content hash (computed by the
+ *     host) before the editor's Apply, so the Flash panel can play it.
  * 10. **ZERO CONSOLE ERRORS** at the end, host page and both frames.
  *
  * ⛔ EVERY WAIT IS ON A CONDITION, never on a readout merely EXISTING (traps
@@ -1504,6 +1512,70 @@ try {
     check(hubDoc?.source === 'hand-off · the Seedling watch page (SET arm)',
         '⛔ …with the door NAMED in its base tag: six controls publish this channel now, and '
         + '"hand-off" alone no longer says which one a reader pressed', json(hubDoc?.source));
+
+    /**
+     * ⛓⛓⛓ CLAIM 13 — THE REGION ATLAS CROSSES WITH THE RULES (lab-apworld-door-map, ⚖ Robert 2026-11-21, "Map via
+     * APWorld door"). The rules name their atlas by `region_atlas[p].atlas_id` and carry no body; the page now hands
+     * the atlas its own `atlasAtDoor` gives for the REPORT it handed over, and the host lab panel files it in the app's
+     * `procgenCore/atlasCache` BEFORE forwarding. ⛔ Read on the HOST: the frame has its own realm and its own cache,
+     * so only the host's instance says the Region Map can find it. ⛔ MUTANT: the page sends no atlas
+     * (`apworldEditor.open(rep.rules)`) — every check below reds.
+     */
+    const handedId = handoff?.data?.jsonData?.region_atlas?.['1']?.atlas_id ?? null;
+    const sentAtlases = reverse?.data?.atlases;
+    check(Array.isArray(sentAtlases) && sentAtlases.length === 1 && typeof handedId === 'string'
+        && sentAtlases[0]?.atlas_id === handedId,
+    '⛓⛓⛓ CLAIM 13 — the reverse link carries ONE region atlas, and its id is the one the handed-over rules name',
+    `${json(sentAtlases?.map?.((a) => a?.atlas_id))} vs rules ${json(handedId)}`);
+    const pageSaid = await seedFrame.evaluate(() => globalThis.__editorSetApworldAtlasIds ?? null);
+    check(json(pageSaid) === json([handedId]),
+        '⛓ …the page\'s own readout says the same id', json(pageSaid));
+    const hostHeld = await page.evaluate(async (id) => {
+        const { atlasCache } = await import(new URL('./modules/procgenCore/atlasCache.js', document.baseURI).href);
+        const a = atlasCache.get(id);
+        return a ? { atlas_id: a.atlas_id, regions: a.regions?.length ?? 0 } : null;
+    }, handedId);
+    check(hostHeld?.atlas_id === handedId && hostHeld.regions === sentAtlases?.[0]?.regions?.length,
+        '⛓⛓ …and the HOST\'s atlasCache holds it under that id (the store the Region Map reads), region for region',
+        json(hostHeld));
+    const panelNote = await page.evaluate((id) => [...document.querySelectorAll('.procgen-lab-root')]
+        .find((n) => n.dataset.iframeId === id)?.querySelector('[data-role="note"]')?.textContent ?? null, seed.iframeId);
+    check(typeof panelNote === 'string' && panelNote.includes(`region atlas ${handedId} filed for the Region Map`)
+        && !panelNote.includes('REFUSED'),
+    '⛓ …and the lab panel SAYS it filed it, refusing nothing', json(panelNote));
+
+    /**
+     * ⛓⛓⛓ CLAIM 14 — THE LEVEL SET CROSSES WITH THE RULES (lab-apworld-door-play, ⚖ Robert 2026-11-21, "Play via
+     * APWorld door"). The rules name the set their rooms came from (`region_atlas[p].level_set = {set_id,
+     * content_hash}`) and carry no body; the page now hands the `level-set` member of its own download beside them,
+     * and the host lab panel HOLDS it in the app's `procgenCore/levelSetCache` — under the hash the HOST computes —
+     * BEFORE forwarding, so the Flash panel's load after Apply plays its rooms. ⛔ Read on the HOST (the frame has its
+     * own realm and cache). ⛔ MUTANT: the page sends no set (`apworldEditor.open(rep.rules, atlases)`) — every
+     * check below reds.
+     */
+    const handedRef = handoff?.data?.jsonData?.region_atlas?.['1']?.level_set ?? null;
+    const sentSets = reverse?.data?.levelSets;
+    check(Array.isArray(sentSets) && sentSets.length === 1 && typeof handedRef?.set_id === 'string'
+        && sentSets[0]?.set_id === handedRef.set_id,
+    '⛓⛓⛓ CLAIM 14 — the reverse link carries ONE level set, and its id is the one the handed-over rules name',
+    `${json(sentSets?.map?.((d) => d?.set_id))} vs rules ${json(handedRef)}`);
+    const pageSaidSets = await seedFrame.evaluate(() => globalThis.__editorSetApworldLevelSetIds ?? null);
+    check(json(pageSaidSets) === json([handedRef?.set_id]),
+        '⛓ …the page\'s own readout says the same set id', json(pageSaidSets));
+    const hostSet = await page.evaluate(async (ref) => {
+        const { levelSetCache } = await import(new URL('./modules/procgenCore/levelSetCache.js', document.baseURI).href);
+        const { levelSetContentHash } = await import(new URL('./modules/procgenCore/levelSetReference.js', document.baseURI).href);
+        const got = ref ? levelSetCache.get(ref.set_id, ref.content_hash) : null;
+        return got ? { status: got.status, rooms: got.set?.rooms?.length ?? 0,
+            computed: got.set ? levelSetContentHash(got.set) : null } : null;
+    }, handedRef);
+    check(hostSet?.status === 'held' && hostSet.rooms === sentSets?.[0]?.rooms?.length && hostSet.rooms > 0
+        && hostSet.computed === handedRef?.content_hash,
+    '⛓⛓ …and the HOST\'s levelSetCache HOLDS it under the rules\' content hash (computed on the host), room for room',
+    json(hostSet));
+    check(typeof panelNote === 'string' && panelNote.includes(`level set ${handedRef?.set_id} held for the player`)
+        && !panelNote.includes('REFUSED'),
+    '⛓ …and the lab panel SAYS it holds it, refusing nothing', json(panelNote));
 
     /* ── CLAIM 10: zero console errors ─────────────────────────────── */
     const benign = notFound.filter((u) => BENIGN_404.some((b) => new URL(u).pathname === b));

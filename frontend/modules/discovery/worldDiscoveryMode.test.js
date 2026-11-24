@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
+  ACTION_NODES_BUNDLE,
+  ACTION_NODES_OVERRIDES,
   DISCOVERY_OFF_OVERRIDES,
   LOOP_MODE_OVERRIDES,
   OVERRIDE_KEYS,
@@ -7,6 +9,7 @@ import {
   createOverrideApplier,
   readWorldDiscoveryMode,
   resolveDiscoveryOverrides,
+  settingsChangeSteps,
 } from './worldDiscoveryMode.js';
 
 const PREFIX = 'moduleSettings.discovery.';
@@ -124,5 +127,57 @@ describe('createOverrideApplier', () => {
     await apply(LOOP_MODE_OVERRIDES).catch(() => {});
     await apply(LOOP_MODE_OVERRIDES);
     expect(sm.overrides.size).toBe(8);
+  });
+});
+
+describe('⛓ the actionNodes bundle (AN-1b)', () => {
+  it('a block with bundle "actionNodes" reads as that mode; enabled:false still means off', () => {
+    expect(readWorldDiscoveryMode({ discovery_mode: { 1: { enabled: true, bundle: ACTION_NODES_BUNDLE } } }, '1')).toBe(ACTION_NODES_BUNDLE);
+    expect(readWorldDiscoveryMode({ discovery_mode: { 1: { enabled: false, bundle: ACTION_NODES_BUNDLE } } }, '1')).toBe('off');
+  });
+  it('it is Loop mode\'s bundle with autoDiscoverLocations on, forced with Loop mode ON and OFF', () => {
+    expect(ACTION_NODES_OVERRIDES).toEqual({ ...LOOP_MODE_OVERRIDES, autoDiscoverLocations: true });
+    expect(resolveDiscoveryOverrides({ worldMode: ACTION_NODES_BUNDLE, loopActive: true })).toBe(ACTION_NODES_OVERRIDES);
+    expect(resolveDiscoveryOverrides({ worldMode: ACTION_NODES_BUNDLE, loopActive: false })).toBe(ACTION_NODES_OVERRIDES);
+    for (const k of Object.keys(ACTION_NODES_OVERRIDES)) expect(OVERRIDE_KEYS).toContain(k);
+  });
+  it('⛔ PIN: every other row of the table is unchanged', () => {
+    expect(resolveDiscoveryOverrides({ worldMode: null, loopActive: true })).toBe(LOOP_MODE_OVERRIDES);
+    expect(resolveDiscoveryOverrides({ worldMode: null, loopActive: false })).toBe(null);
+    expect(resolveDiscoveryOverrides({ worldMode: 'on', loopActive: false })).toBe(WALK_TO_REVEAL_OVERRIDES);
+    expect(resolveDiscoveryOverrides({ worldMode: 'off', loopActive: true })).toBe(DISCOVERY_OFF_OVERRIDES);
+    expect(LOOP_MODE_OVERRIDES.autoDiscoverLocations).toBe(false);
+  });
+});
+
+describe('⛓ the order trap: the applier writes the trigger BEFORE autoDiscoverLocations (AN-1b)', () => {
+  // Apply the bundle key by key, in the applier's own order, from the defaults, and collect the steps the module
+  // would run after each write (index.js handleSettingsChanged).
+  const DEFAULTS = { regionDiscoveryTrigger: 'onEnter', autoDiscoverLocations: false };
+  function stepsWhileApplying(bundle) {
+    let cur = { ...DEFAULTS };
+    const seen = [];
+    for (const key of OVERRIDE_KEYS) {
+      if (!Object.prototype.hasOwnProperty.call(bundle, key)) continue;
+      const next = { ...cur, [key]: bundle[key] };
+      const steps = settingsChangeSteps(cur, next);
+      for (const [name, on] of Object.entries(steps)) if (on) seen.push(`${name}@${key}`);
+      cur = next;
+    }
+    return seen;
+  }
+  it('the precondition: the trigger key comes first', () => {
+    expect(OVERRIDE_KEYS.indexOf('regionDiscoveryTrigger')).toBeLessThan(OVERRIDE_KEYS.indexOf('autoDiscoverLocations'));
+  });
+  it('the actionNodes bundle runs the cascade while locations are off, THEN the location step', () => {
+    expect(stepsWhileApplying(ACTION_NODES_OVERRIDES)).toEqual([
+      'cascade@regionDiscoveryTrigger', 'cascadeLocations@autoDiscoverLocations',
+    ]);
+  });
+  it('Loop mode\'s bundle runs the cascade only (its locations stay hidden, as before)', () => {
+    expect(stepsWhileApplying(LOOP_MODE_OVERRIDES)).toEqual(['cascade@regionDiscoveryTrigger']);
+  });
+  it('walk-to-reveal (trigger onEnter) runs neither', () => {
+    expect(stepsWhileApplying(WALK_TO_REVEAL_OVERRIDES)).toEqual([]);
   });
 });

@@ -21,6 +21,33 @@ export function getPlayerWorld(staticData) {
 }
 
 /**
+ * The loaded document's location names, for matching proof steps to them
+ * (ProofBaseState._resolveLocationNames). Null when static data has none.
+ * @param {Object} staticData
+ * @returns {Set<string>|null}
+ */
+export function getDocLocationNames(staticData) {
+  const locations = staticData?.locations;
+  if (!locations) return null;
+  const names = new Set();
+  const add = (key, value) => {
+    const name = value?.name ?? key;
+    if (typeof name === 'string') names.add(name);
+  };
+  if (locations instanceof Map) {
+    for (const [key, value] of locations) add(key, value);
+  } else if (Array.isArray(locations)) {
+    for (const entry of locations) {
+      if (Array.isArray(entry)) add(entry[0], entry[1]);
+      else add(undefined, entry);
+    }
+  } else if (typeof locations === 'object') {
+    for (const [key, value] of Object.entries(locations)) add(key, value);
+  }
+  return names.size > 0 ? names : null;
+}
+
+/**
  * Sync a proof state from a stateManager snapshot.
  * Handles the { snapshot: ... } wrapper and falls back to getLatestStateSnapshot().
  *
@@ -112,11 +139,14 @@ export function initializeProofState(state, staticData, log, wirePublishing) {
     return false;
   }
 
-  // If already loaded (UI handler may have loaded it first), just wire up
-  // event bus publishing without re-loading or overwriting existing callbacks.
-  if (state.isLoaded) {
+  // Already loaded from THIS document (the UI's rulesLoaded handler may have
+  // loaded it first): just make sure the bus publishing is wired. A state
+  // loaded from an earlier document (the mode's boot preset, before a connect
+  // loaded the room's rules) is reloaded below, so the goal is the room's, open
+  // panel or not.
+  if (state.isLoaded && state.loadedSlotData === slotData) {
     log('info', 'Structure already loaded, wiring event bus publishing');
-    wirePublishing();
+    wirePublishingOnce(state, wirePublishing);
     syncStateFromSnapshot(state);
     return true;
   }
@@ -127,7 +157,8 @@ export function initializeProofState(state, staticData, log, wirePublishing) {
   const success = state.loadFromSlotData(
     slotData,
     playerWorld.name_substitutions,
-    playerWorld.options
+    playerWorld.options,
+    getDocLocationNames(staticData)
   );
 
   if (!success) {
@@ -138,6 +169,16 @@ export function initializeProofState(state, staticData, log, wirePublishing) {
   log('info', `Loaded ${structureType} "${state.theoremName}" with ${state.steps.size} steps`);
 
   syncStateFromSnapshot(state);
-  wirePublishing();
+  wirePublishingOnce(state, wirePublishing);
   return true;
+}
+
+/**
+ * Wire a module's event-bus publishing onto a state once: the wiring chains
+ * onto the state's callbacks, so a second call would publish every event twice.
+ */
+function wirePublishingOnce(state, wirePublishing) {
+  if (state._busPublishingWired) return;
+  state._busPublishingWired = true;
+  wirePublishing();
 }

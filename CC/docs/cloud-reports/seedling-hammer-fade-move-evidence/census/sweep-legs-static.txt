@@ -1,0 +1,57 @@
+# seed-1 divergence-sweep legs (stage-edge-events arm, 923 legs) whose GOAL is an activator a covered wait opens.
+# A keylock goal (bosslock) always reaches the BossLock key fade; lock/wandlock/rocklock goals reach a kill-lock or
+# latched fade only when that lock is a kill-lock (tset -1) or its group latched. Exits through these levels can also
+# reach a covered wait (the frontier arm): the survey census is the measured part of that.
+bosslock 105 level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared
+bosslock 106 level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared
+bosslock 116 level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+bosslock 117 level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+bosslock 127 level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+bosslock 128 level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+bosslock 138 level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bosslock@416,240 cleared
+bosslock 139 level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,240 cleared
+bosslock 149 level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared
+bosslock 150 level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,240 cleared
+bosslock 160 level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared
+bosslock 161 level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared
+bosslock 171 level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,240 cleared
+bosslock 172 level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared
+bosslock 179 level_12__r13c6 <- in_L5_16_16 -> location:L12 flag 11: bosslock@112,192 cleared
+bosslock 181 level_12__r40c4 <- in_L24_32_144 -> location:L12 flag 3: bosslock@80,656 cleared
+bosslock 185 level_12__r42c28 <- in_L83_32_64 -> location:L12 flag 12: bosslock@32,864 cleared
+lock 223 level_18__r1c1 <- in_L16_352_80 -> location:L18 flag 0: lock@144,112 cleared
+rocklock 273 level_26__r2c4 <- in_L25_0_96 -> location:L26 flag 0: rocklock@112,208 cleared
+rocklock 276 level_26__r2c4 <- in_L27_32_0 -> location:L26 flag 0: rocklock@112,208 cleared
+bosslock 302 level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared
+bosslock 303 level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 2: bosslock@224,208 cleared
+bosslock 308 level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 0: bosslock@64,32 cleared
+bosslock 309 level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 2: bosslock@224,208 cleared
+bosslock 314 level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared
+bosslock 315 level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 2: bosslock@224,208 cleared
+bosslock 320 level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 0: bosslock@64,32 cleared
+bosslock 321 level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 2: bosslock@224,208 cleared
+bosslock 324 level_31__r5c24 <- in_L29_112_32 -> location:L31 flag 0: bosslock@192,432 cleared
+bosslock 326 level_31__r5c24 <- in_pit_L30_3_34 -> location:L31 flag 0: bosslock@192,432 cleared
+wandlock 351 level_38 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,592 cleared
+wandlock 355 level_38 <- in_L39_144_624 -> location:L39 flag 8: wandlock@144,592 cleared
+wandlock 361 level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 7: wandlock@208,128 cleared
+wandlock 364 level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 7: wandlock@208,128 cleared
+lock 495 level_60__r5c0 <- in_L59_304_128 -> location:L60 flag 0: lock@128,80 cleared
+bosslock 579 level_68__r3c1 <- in_L65_184_64 -> location:L68 flag 0: bosslock@16,32 cleared
+rocklock 789 level_112__r2c2 <- in_L111_128_48 -> location:L112 flag 1: rocklock@112,16 cleared
+bosslock 852 level_19__r3c3 <- in_L20_192_48 ~> level_19__r1c1 -> location:L19 flag 1: bosslock@48,32 cleared
+bosslock 853 level_19__r3c3 <- in_L18_176_112 ~> level_19__r5c5 -> location:L19 flag 1: bosslock@48,32 cleared
+lock 854 level_20__r1c12 <- in_L19_16_96 ~> level_20__r1c4 -> location:L20 flag 4: lock@32,80 cleared
+wandlock 856 level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:L40 flag 1: wandlock@176,80 cleared
+wandlock 858 level_40__r4c4 <- in_L42_240_336 ~> level_40__r0c53 -> location:L40 flag 1: wandlock@176,80 cleared
+bosslock 859 level_40__r23c29 <- in_L41_0_160 ~> level_40__r0c53 -> location:L40 flag 8: bosslock@480,352 cleared
+bosslock 860 level_40__r23c29 <- in_L42_240_336 ~> level_40__r0c53 -> location:L40 flag 8: bosslock@480,352 cleared
+bosslock 861 level_40__r23c29 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 8: bosslock@480,352 cleared
+bosslock 862 level_40__r23c29 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 8: bosslock@480,352 cleared
+wandlock 865 level_40__r48c54 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+wandlock 866 level_40__r48c54 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+bosslock 898 level_48__r2c10 <- in_L47_216_112 ~> level_48__r18c7 -> location:L48 flag 1: bosslock@48,144 cleared
+lock 900 level_53__r9c10 <- in_L48_0_112 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared
+lock 901 level_53__r9c10 <- in_L51_176_144 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared
+lock 902 level_53__r9c10 <- in_L54_144_0 ~> level_53__r14c9 -> location:L53 flag 2: lock@144,208 cleared
+# counts {'bosslock': 35, 'lock': 6, 'rocklock': 3, 'wandlock': 8}

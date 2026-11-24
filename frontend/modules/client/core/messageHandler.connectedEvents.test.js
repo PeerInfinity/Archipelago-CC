@@ -124,7 +124,7 @@ describe('a connected check WITH a server ID is unchanged', () => {
     expect(passedUp()).toEqual([]);
   });
 
-  it('offline, every check (ID or not) is passed up as before', async () => {
+  it('offline, every check (ID or not) is passed up as before (ID checks are offered at the next connect: messageHandler.offlineProgress.test.js)', async () => {
     connectionMock.isConnected.mockReturnValue(false);
     await handleUserLocationCheckForClient(CARD('Level 010 - Sword'), 'user:locationCheck');
     await handleUserLocationCheckForClient(CARD(ROCK), 'user:locationCheck');

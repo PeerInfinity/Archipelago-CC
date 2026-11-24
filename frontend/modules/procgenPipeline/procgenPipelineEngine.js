@@ -9,6 +9,7 @@
  */
 
 import { createRng } from '../shared/rng.js';
+import { cellExtent, isSignedCell, recordedGridBox } from '../procgenCore/cellExtent.js';
 import { regionsOf, startRegionsOf, walkRulesGraph } from '../procgenCore/rulesGraph.js';
 import { namespaceNamed } from '../procgenCore/apIdNamespaces.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
@@ -55,7 +56,7 @@ import {
 } from '../procgenCore/itemIntroduction.js';
 import { goalContainerReportOfSidecars } from '../procgenCore/goalContainer.js';
 import { scheduleSphereIntroductions } from './sphereIntroductions.js';
-import { assertContentLoaded, RECORDED_CONTENT_KEY, recordedContentOf } from './worldContent.js';
+import { assertContentLoaded, RECORDED_CONTENT_KEY, recordedContentOf, recordedRegionParamKeys, recordedWorldSettingsOf } from './worldContent.js';
 
 /** The registry entry for an id, or `undefined` (a library / atlas source id): the planner's lookup. */
 const registryEntryOf = (substrateId) => substrateRegistry.get(substrateId);
@@ -260,14 +261,46 @@ export const DEFAULT_REGION_SIZE = Object.freeze({ width: 8, height: 6 });
 // Cell-to-region storage for the grid-growth pipeline. Each cell
 // holds a Region = the driver-composed output of a substrate (see
 // buildSubstrateRegion below) augmented with its grid position.
+//
+// ⛓⛓ THE BOX (unbounded grid, slice S2; ⚖ user 2026-11-15/16, Q1: signed storage, the start room at (0,0)).
+// Cells are SIGNED `{gx, gy}`; nothing here assumes the top-left cell is (0,0). A Grid is one of two kinds:
+//   · BOUNDED — `new Grid({width, height, minX = 0, minY = 0})`: the box `[minX, minX + width) × [minY, minY +
+//     height)`. Omitting `minX/minY` is exactly the Grid every driver builds today. `width`, `height`, `minX`,
+//     `minY` are plain own fields.
+//   · UNBOUNDED — `new Grid(null)`: every integer cell is in bounds, so `neighborCell` never answers null. `width`,
+//     `height`, `minX`, `minY` are DERIVED from the placed cells (`procgenCore/cellExtent`); an EMPTY unbounded
+//     grid is 0×0 at (0,0), so no loop ever iterates or divides by NaN. `null` and not `{unbounded: true}`
+//     because the survey's engine-side setting is "a `gridDims` of null = unbounded" (§5): a driver's existing
+//     `new Grid(gridDims)` then takes it with no branch at the call site. S2 builds none; S3 turns it on.
+// `grid.bounded` says which. `procgenCore/cellExtent.gridOriginOf(grid)` reads `minX/minY` (S1's readers).
+
+/** The unbounded Grids (`new Grid(null)`): a side table, so a bounded Grid's own fields stay exactly today's. */
+const UNBOUNDED_GRIDS = new WeakSet();
 
 export class Grid {
-    constructor({ width, height }) {
-        if (!Number.isInteger(width) || !Number.isInteger(height) || width < 1 || height < 1) {
-            throw new Error(`Grid: invalid dimensions ${width}x${height}`);
+    constructor(box) {
+        if (box === null) {
+            UNBOUNDED_GRIDS.add(this);
+            // Own accessors, so a bounded Grid keeps plain data fields (its shape is unchanged).
+            Object.defineProperties(this, {
+                width: { enumerable: true, get: () => this._extent()?.width ?? 0 },
+                height: { enumerable: true, get: () => this._extent()?.height ?? 0 },
+                minX: { enumerable: true, get: () => this._extent()?.minX ?? 0 },
+                minY: { enumerable: true, get: () => this._extent()?.minY ?? 0 },
+            });
+        } else {
+            const { width, height, minX = 0, minY = 0 } = box ?? {};
+            if (!Number.isInteger(width) || !Number.isInteger(height) || width < 1 || height < 1) {
+                throw new Error(`Grid: invalid dimensions ${width}x${height}`);
+            }
+            if (!Number.isInteger(minX) || !Number.isInteger(minY)) {
+                throw new Error(`Grid: invalid origin (${minX},${minY})`);
+            }
+            this.width = width;
+            this.height = height;
+            this.minX = minX;
+            this.minY = minY;
         }
-        this.width = width;
-        this.height = height;
         this.cells = new Map();
         // Teleporter mappings keyed by EXIT — `${fromCellKey}:${exitId}`
         // (built by teleporterKey, the one spelling) → toCellKey. Used
@@ -281,29 +314,62 @@ export class Grid {
         this.teleporters = new Map();
     }
 
+    /** True for a box (`{width, height, minX, minY}`), false for `new Grid(null)`. */
+    get bounded() {
+        return !UNBOUNDED_GRIDS.has(this);
+    }
+
+    /** The placed cells' extent (`cellExtent`), or null for an empty grid. Read from the KEYS, the one spelling. */
+    _extent() {
+        return cellExtent([...this.cells.keys()].map((k) => {
+            const [gx, gy] = k.split(',').map(Number);
+            return { gx, gy };
+        }));
+    }
+
     isInBounds(cell) {
-        return cell.gx >= 0 && cell.gx < this.width
-            && cell.gy >= 0 && cell.gy < this.height;
+        if (!this.bounded) return Number.isInteger(cell?.gx) && Number.isInteger(cell?.gy);
+        return cell.gx >= this.minX && cell.gx < this.minX + this.width
+            && cell.gy >= this.minY && cell.gy < this.minY + this.height;
     }
 
     // Grow-only resize (sphere-append: a new wave may need cells beyond the
-    // original bounds). Cells and teleporters are keyed by "gx,gy" and bounded
-    // only by width/height via isInBounds, so bumping the dimensions keeping the
-    // origin is lossless — every existing region / teleporter stays at the same
-    // coordinate, no re-keying or re-realisation. Shrinking is rejected (it
-    // could orphan cells); a symmetric "add margin on all sides" would need to
-    // translate every cell and isn't required for append (growth extends from
-    // the existing origin and the placement pre-pass finds the new cells).
-    resize({ width, height }) {
-        if (!Number.isInteger(width) || !Number.isInteger(height)) {
-            throw new Error(`Grid.resize: invalid dimensions ${width}x${height}`);
+    // original bounds). Cells and teleporters are keyed by their SIGNED
+    // "gx,gy" and bounded only by the box via isInBounds, so growing the box
+    // is lossless — every existing region / teleporter stays at the same
+    // coordinate, no re-keying or re-realisation.
+    //
+    // ⛓ S2: the box may grow on EITHER side. `minX/minY` default to the
+    // current origin (today's callers pass only `{width, height}` and keep
+    // it); the new box must CONTAIN the old one on every side, so growing to
+    // the negative side is "lower minX and raise width by as much". Shrinking
+    // any side is rejected (it could orphan cells). An UNBOUNDED grid has no
+    // box to grow: resize throws, so a caller that believes it set a cap
+    // finds out.
+    resize({ width, height, minX = this.minX, minY = this.minY }) {
+        if (!this.bounded) {
+            throw new Error('Grid.resize: an unbounded grid has no box to resize');
         }
-        if (width < this.width || height < this.height) {
+        if (!Number.isInteger(width) || !Number.isInteger(height)
+                || !Number.isInteger(minX) || !Number.isInteger(minY)) {
+            throw new Error(`Grid.resize: invalid dimensions ${width}x${height} at (${minX},${minY})`);
+        }
+        if (minX === this.minX && minY === this.minY
+                && (width < this.width || height < this.height)) {
+            // Today's message, byte for byte, for today's (origin-keeping) call.
             throw new Error(`Grid.resize is grow-only: ${width}x${height} < `
                 + `${this.width}x${this.height}`);
         }
+        if (minX > this.minX || minY > this.minY
+                || minX + width < this.minX + this.width
+                || minY + height < this.minY + this.height) {
+            throw new Error(`Grid.resize is grow-only: ${width}x${height} at (${minX},${minY}) does not contain `
+                + `${this.width}x${this.height} at (${this.minX},${this.minY})`);
+        }
         this.width = width;
         this.height = height;
+        this.minX = minX;
+        this.minY = minY;
         return this;
     }
 
@@ -538,9 +604,14 @@ export function serializeGrid(grid) {
     if (!grid || !(grid instanceof Grid)) {
         throw new Error('serializeGrid: expected a Grid instance');
     }
+    // ⛓ S2: the box as today (`width`, `height`) — plus `minX/minY` ONLY when the origin is not (0,0), so every
+    //   min-0 grid serialises byte for byte as before — or `unbounded: true` (no size: it is derived).
+    const box = !grid.bounded ? { unbounded: true }
+        : (grid.minX !== 0 || grid.minY !== 0)
+            ? { width: grid.width, height: grid.height, minX: grid.minX, minY: grid.minY }
+            : { width: grid.width, height: grid.height };
     return {
-        width: grid.width,
-        height: grid.height,
+        ...box,
         teleporters: [...grid.teleporters.entries()],
         cells: [...grid.cells.entries()].map(
             ([key, region]) => [key, _encodeGridValue(region)]),
@@ -557,7 +628,9 @@ export function deserializeGrid(obj) {
     if (!obj || typeof obj !== 'object') {
         throw new Error('deserializeGrid: expected an object');
     }
-    const grid = new Grid({ width: obj.width, height: obj.height });
+    // ⛓ S2: a grid serialised before S2 carries no origin and reads as min (0,0).
+    const grid = obj.unbounded === true ? new Grid(null)
+        : new Grid({ width: obj.width, height: obj.height, minX: obj.minX ?? 0, minY: obj.minY ?? 0 });
     for (const [key, region] of obj.cells ?? []) {
         grid.cells.set(key, _decodeGridValue(region));
     }
@@ -581,13 +654,17 @@ export function deserializeGrid(obj) {
  */
 export function findDisconnectedCell(grid, rng, minGap = 2) {
     const built = grid.allRegions();
+    // ⛓ S2: the scan runs over the box FROM ITS ORIGIN (min (0,0) for every driver today, so the same cells in the
+    //   same order). An unbounded grid's box is its placed cells' extent; an empty one is 0×0 at (0,0), so the
+    //   empty branch answers (0,0), the start cell. The window an unbounded grid should search is S3's.
+    const { minX: x0, minY: y0, width: W, height: H } = grid;
     if (built.length === 0) {
         // Anywhere in the grid is fine; pick a deterministic cell.
-        return { gx: Math.floor(grid.width / 2), gy: Math.floor(grid.height / 2) };
+        return { gx: x0 + Math.floor(W / 2), gy: y0 + Math.floor(H / 2) };
     }
     const candidates = [];
-    for (let gx = 0; gx < grid.width; gx++) {
-        for (let gy = 0; gy < grid.height; gy++) {
+    for (let gx = x0; gx < x0 + W; gx++) {
+        for (let gy = y0; gy < y0 + H; gy++) {
             if (grid.hasRegion({ gx, gy })) continue;
             let minDist = Infinity;
             for (const r of built) {
@@ -615,12 +692,15 @@ function findDisconnectedCellFromOccupied(occupiedKeys, dims, rng, minGap = 2) {
         const [gx, gy] = k.split(',').map(Number);
         return { gx, gy };
     });
+    // ⛓ S2: `dims` may carry an origin (`minX/minY`, as a Grid box does); absent, it is (0,0) as before.
+    const x0 = dims.minX ?? 0;
+    const y0 = dims.minY ?? 0;
     if (built.length === 0) {
-        return { gx: Math.floor(dims.width / 2), gy: Math.floor(dims.height / 2) };
+        return { gx: x0 + Math.floor(dims.width / 2), gy: y0 + Math.floor(dims.height / 2) };
     }
     const candidates = [];
-    for (let gx = 0; gx < dims.width; gx++) {
-        for (let gy = 0; gy < dims.height; gy++) {
+    for (let gx = x0; gx < x0 + dims.width; gx++) {
+        for (let gy = y0; gy < y0 + dims.height; gy++) {
             if (occupiedKeys.has(`${gx},${gy}`)) continue;
             let minDist = Infinity;
             for (const r of built) {
@@ -1150,6 +1230,8 @@ function buildSubstrateRegion({
     // ⛓ CONTENT SETS C3 — a region whose packs were never loaded is refused by name (no-op when none are needed).
     //   C4: a region needing only its default pack, handed no set, takes it from the preload cache.
     params = assertContentLoaded(params, substrate);
+    // ⛓ CONTENT SETS GEN-1 — the world's biome for a region that names none (see `generateRegionProcedural`).
+    if (biome == null) biome = adapter.regionBiomeOf?.({ params, regionId: region_id }) ?? null;
     if (typeof adapter.generateRegionCore !== 'function') {
         throw new Error(
             `Substrate '${substrate}' has no generateRegionCore — it is a `
@@ -3433,6 +3515,13 @@ function generateRegionProcedural(spec) {
     //   C4: a region needing only its default pack, handed no set, takes it from the preload cache.
     const contentParams = assertContentLoaded(spec.params, spec.substrate);
     if (contentParams !== spec.params) spec = { ...spec, params: contentParams };
+    // ⛓ CONTENT SETS GEN-1 — a region whose spec names no biome takes the world's, through the substrate's own
+    //   hook (the maze's `regionBiomeOf`: one biome, or a mix picked by hash of the seed and the region id; no rng
+    //   draw). No hook, or no world setting, leaves it null, so the sizing below and the core see what they saw.
+    if (spec.biome == null) {
+        const picked = adapter.regionBiomeOf?.({ params: spec.params, regionId: spec.region_id }) ?? null;
+        if (picked) spec = { ...spec, biome: picked };
+    }
 
     // Core exit specs — size-independent, so reused across retry-grow
     // attempts below.
@@ -5264,12 +5353,17 @@ export function recordedConceptsOf(regionParams) {
  * comes back the same way, as `regionParams.content`; a caller's own wins. The
  * loaded set does not: the rebuild is synchronous, so its caller awaits
  * `worldContent.attachContentSet` before it generates (an append).
+ * ⛓ CONTENT SETS PL-1 — `exists` and `numbers` (Z.5) come back the same way, validated by name.
  * Nothing recorded ⇒ exactly `opts.regionParams ?? {}`, as before T0b.
  */
 export function rebuildRegionParams(meta, optsRegionParams) {
     const recorded = {
         ...recordedConceptsOf({ concepts: meta?.[RECORDED_CONCEPTS_KEY] }),
-        ...recordedContentOf({ [RECORDED_CONTENT_KEY]: meta?.[RECORDED_CONTENT_KEY] }),
+        ...recordedContentOf({
+            [RECORDED_CONTENT_KEY]: meta?.[RECORDED_CONTENT_KEY], ...recordedWorldSettingsOf(meta),
+            // ⛓ CONTENT SETS GEN-1 — a substrate's own recorded settings (the maze's biome) come back as they went.
+            ...Object.fromEntries(recordedRegionParamKeys().filter((k) => meta?.[k] !== undefined).map((k) => [k, meta[k]])),
+        }),
     };
     if (!Object.keys(recorded).length) return optsRegionParams ?? {};
     return { ...recorded, ...(optsRegionParams ?? {}) };
@@ -5300,12 +5394,24 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     const nodes = treeMeta.nodes.map((n) => ({ ...n, usedSides: new Set(n.usedSides ?? []) }));
 
     // Size the grid from grid_dims (or the node cells), then rebuild each region.
-    let width = meta.grid_dims?.width ?? 0;
-    let height = meta.grid_dims?.height ?? 0;
+    // ⛓ S2: the box is anchored at the slot's `grid_origin` (else (0,0), as `grid_dims` is written), spans
+    //   `grid_dims` from there, and is widened to every node cell on either side; floored at 5 as before. For a
+    //   document without `grid_origin` (every committed one) that is width = max(grid_dims, gx + 1): unchanged.
+    const origin = isSignedCell(meta.grid_origin) ? meta.grid_origin : { gx: 0, gy: 0 };
+    let minX = origin.gx;
+    let minY = origin.gy;
+    let maxX = origin.gx + (meta.grid_dims?.width ?? 0) - 1;
+    let maxY = origin.gy + (meta.grid_dims?.height ?? 0) - 1;
     for (const n of nodes) {
-        if (n.cell) { width = Math.max(width, n.cell.gx + 1); height = Math.max(height, n.cell.gy + 1); }
+        if (!n.cell) continue;
+        minX = Math.min(minX, n.cell.gx);
+        minY = Math.min(minY, n.cell.gy);
+        maxX = Math.max(maxX, n.cell.gx);
+        maxY = Math.max(maxY, n.cell.gy);
     }
-    const grid = new Grid({ width: Math.max(5, width), height: Math.max(5, height) });
+    const grid = new Grid({
+        width: Math.max(5, maxX - minX + 1), height: Math.max(5, maxY - minY + 1), minX, minY,
+    });
     let regionSize = opts.regionSize ?? null;
     for (const node of nodes) {
         if (!node.cell) continue;
@@ -5354,7 +5460,7 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     }
     const root = nodes.find((n) => n.parent == null);
     const startCell = root?.cell
-        ?? { gx: Math.floor(grid.width / 2), gy: Math.floor(grid.height / 2) };
+        ?? { gx: grid.minX + Math.floor(grid.width / 2), gy: grid.minY + Math.floor(grid.height / 2) };
 
     // Recover the config from the rules.json (overridable via opts).
     const victoryItem = rulesJson.game_info?.[playerId]?.completion_condition?.item ?? null;
@@ -5427,7 +5533,10 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
         placed: new Set(nodes.map((n) => n.index)),
         batchStart: plan.spheres.length,
         totalNodes: nodes.length,
-        dims: { width: grid.width, height: grid.height },
+        // ⛓ S2: the origin only when it is not (0,0) (the envelope's `dims` is unchanged for every document today).
+        dims: grid.minX !== 0 || grid.minY !== 0
+            ? { width: grid.width, height: grid.height, minX: grid.minX, minY: grid.minY }
+            : { width: grid.width, height: grid.height },
         startCell,
     };
 }
@@ -8107,22 +8216,19 @@ export function buildRulesJson(grid, opts = {}) {
     // don't care continue to produce identical output.
     if (procgenMetadata) {
         const allRegions = [...grid.allRegions()];
-        let maxGx = -1, maxGy = -1;
-        for (const region of allRegions) {
-            const cell = region.cell;
-            if (!cell) continue;
-            if (cell.gx > maxGx) maxGx = cell.gx;
-            if (cell.gy > maxGy) maxGy = cell.gy;
-        }
+        // ⛓ S2 (unbounded grid): `grid_dims` is the cells' box widened to (0,0), and `grid_origin` its top-left ONLY
+        //   when that is negative (`procgenCore/cellExtent.recordedGridBox`). With every cell ≥ 0 that is max + 1
+        //   and no origin, byte for byte what this block wrote before — including the slots whose lowest cell is
+        //   above 0 (`seedling_atlas_sphere` AP_1 starts at (4,4)). The readers (`compositeMapDocument.mapBoundsFor`,
+        //   `sidecarIssues` GRID_CELL_OUTSIDE, the sphere-tree rebuild) anchor `grid_dims` at `grid_origin`, else (0,0).
+        const recorded = recordedGridBox(allRegions.map((r) => r.cell));
         // ⛓ P1a (⚖ user 2026-09-27) — the block is the SLOT's: `{[playerId]: block}`,
         //   the shape `preset_sidecars` has.
         const slotMetadata = {
             ...procgenMetadata,
             region_count: allRegions.length,
-            grid_dims: {
-                width: maxGx >= 0 ? maxGx + 1 : 0,
-                height: maxGy >= 0 ? maxGy + 1 : 0,
-            },
+            grid_dims: recorded.grid_dims,
+            ...(recorded.grid_origin ? { grid_origin: recorded.grid_origin } : {}),
         };
         // ⛓⛓ THE INTRODUCTIONS REPORT (slice 2b; `procgenCore/itemIntroduction.js`) — how many regions configured to
         // introduce an item got one, and why the rest did not, folded from the notes each driver left on the

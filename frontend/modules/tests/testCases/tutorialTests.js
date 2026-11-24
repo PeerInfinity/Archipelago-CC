@@ -32,6 +32,10 @@ import {
 } from '../../tutorials/tutorialExecutor.js';
 import { buildContext } from '../../tutorials/tutorialContext.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
+import { REGION_MAP_WALK } from '../../tutorials/content/tracker/regionMap.js';
+import { REGION_MAP_CLICK_ACTIONS_KEY } from '../../regionMap/regionMapClickActions.js';
+import { panelInstances as regionMapPanels } from '../../regionMap/regionMapSettings.js';
+import { LOCATION_CLICKED, REGION_CLICKED, defaultClickActions, withInitialValues } from '../../regionView/clickActions.js';
 
 const CATEGORY = 'Tutorials';
 const WALK_CATEGORY = 'Tutorial walks';
@@ -401,6 +405,53 @@ async function tutorialUrlRequestStartsTheTutorial(tc) {
  * outside step: its stand-in), each `done` waited for, and the result graded
  * by the ratchet against the tutorial's record (tutorialWalk.js).
  */
+/**
+ * ⛓ PER-TUTORIAL ROW HOOKS — what one walk ROW does around its walk: `before(tc, ctx)` pins the start state (session
+ * overrides through the row's own `ctx.setSetting`, put back by `ctx.restoreSettings()` however the walk ends) and
+ * may subscribe to the bus; `after(tc, state)` asserts what only a row can hear, once the walk completed;
+ * `state.dispose()` always runs. ⚖ In-app tests set their own initial state (the user, 2026-09-26).
+ */
+/** JSON with every object's keys sorted: two settings objects compare by content, not by key order. */
+const canonical = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x)
+    ? Object.fromEntries(Object.keys(x).sort().map((key) => [key, x[key]])) : x));
+
+const WALK_HOOKS = Object.freeze({
+    'tracker-region-map': {
+        async before(tc, ctx) {
+            // The Map's click actions at their defaults (with the panel actions' first values, all off), and Follow on.
+            const want = withInitialValues('regionMap', defaultClickActions()).settings;
+            await ctx.setSetting(REGION_MAP_CLICK_ACTIONS_KEY, want);
+            await ctx.setSetting('moduleSettings.regionMap.followPlayer', true);
+            for (const p of regionMapPanels) {
+                p.follow = true;
+                if (p.controls?.follow) p.controls.follow.checked = true;
+            }
+            const heard = [];
+            const unsubs = [REGION_CLICKED, LOCATION_CLICKED].map((name) => tc.eventBus.subscribe(name, (d) => {
+                if (d?.panelId === 'regionMap') heard.push({ name, regionName: d.regionName, locationName: d.locationName });
+            }, 'tests'));
+            return { want: canonical(want), heard, dispose: () => unsubs.forEach((u) => u?.()) };
+        },
+        async after(tc, { want, heard }) {
+            const { pathRegion, location, centreRegion } = REGION_MAP_WALK;
+            const saw = (name, pred) => heard.some((h) => h.name === name && pred(h));
+            tc.reportCondition(`the Map published ${REGION_CLICKED} {panelId: 'regionMap'} for ${pathRegion} and ${centreRegion} `
+                + `(${JSON.stringify(heard)})`, saw(REGION_CLICKED, (h) => h.regionName === pathRegion)
+                && saw(REGION_CLICKED, (h) => h.regionName === centreRegion));
+            tc.reportCondition(`the Map published ${LOCATION_CLICKED} {panelId: 'regionMap'} for ${location}`,
+                saw(LOCATION_CLICKED, (h) => h.locationName === location));
+            // ⛓ The last step put every option back: the Map's click actions as the row set them, Follow on.
+            // (The defaults with every panel action's first value, read now that every panel has registered its actions.)
+            const held = canonical(await settingsManager.getSetting(REGION_MAP_CLICK_ACTIONS_KEY, null));
+            const wantNow = canonical(withInitialValues('regionMap', defaultClickActions()).settings);
+            tc.reportCondition(`the Map's click actions are back at the defaults (held ${held}; want ${wantNow}; the row set ${want})`,
+                held === wantNow);
+            const p = [...regionMapPanels][0];
+            tc.reportCondition('the Map follows the player again', p?.follow === true && p?.controls?.follow?.checked === true);
+        },
+    },
+});
+
 async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
     // ⛓ A RUNTIME VARIANT (`runtime`: the Flash runtime the walk plays in) is a SESSION override, put back in `finally`:
     // the tutorial itself uses whichever runtime is set and never changes it (⚖ the user, 2026-10-26: "Work in both").
@@ -418,12 +469,18 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
     const loopModeBefore = loopModeActive();
     const ui = await freshPanel(tc, { autoAdvance: false, animateCursor: false, showOutline: false });
     if (!ui) return tc.getOverallResult();
+    const hook = WALK_HOOKS[tutorial.id] ?? null;
+    const hookState = hook ? await hook.before(tc, ctx) : null;
     // A bot step plays at test speed (botTestSpeed.js); the person's saved settings are untouched.
     const restoreSpeed = await startAppBotTestSpeed();
+    let measure = null;
+    let walkOutcome = null;
     try {
         ui.start(tutorial.id);
         // Each step's own time (its action + its done wait), so a doneTimeoutMs margin is measured, not assumed.
         const stepStarts = [];
+        // The walk instrument (below): null, and no await, unless a ?measure* param is set.
+        measure = MEASURE_ACTIVE ? await startMeasureSampler(tutorial, stepStarts, ui) : null;
         const outcome = await walkTutorial(tutorial, {
             onStep: ({ index, step }) => { stepStarts.push({ id: step.id, at: performance.now() }); ui._goTo(index); },
             perform: async () => {
@@ -437,12 +494,15 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
                 const ok = await waitFor(async () => {
                     if (ui.doneSteps.has(step.id) || await step.done(ui.ctx)) return true;
                     failed = step.failed ? (await step.failed(ui.ctx)) || null : null;
+                    // The walk instrument's skip probe (?measureSkipRefusals=N) takes a bot error itself, N times.
+                    if (failed && measure?.skipsLeft?.() > 0 && /Playback Bot says "error/.test(failed)) failed = null;
                     return Boolean(failed);
-                }, step.doneTimeoutMs ?? DEFAULT_DONE_TIMEOUT_MS, 250);
+                }, measureStepTimeout(step.doneTimeoutMs ?? DEFAULT_DONE_TIMEOUT_MS), 250);
                 if (failed) throw new Error(`the app shows it cannot finish: ${failed}`);
                 return Boolean(ok);
             },
         });
+        walkOutcome = outcome;
         if (outcome.end !== 'complete') {
             // What the app showed when the walk ended, so a red row needs no rerun to read.
             const bot = document.querySelector('.playback-bot .playback-bot-status')?.textContent.trim();
@@ -457,7 +517,13 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
         const verdict = ratchetVerdict(tutorial, outcome);
         tc.log?.(`${tutorial.id}: ${verdict.message}`);
         tc.reportCondition(`${tutorial.id} — ${verdict.message}`, verdict.ok);
+        if (hook && outcome.end === 'complete') await hook.after(tc, hookState);
     } finally {
+        hookState?.dispose?.();
+        if (hook) {
+            try { await ctx.restoreSettings(); } catch (e) { tc.log?.(`could not restore the row's settings: ${e.message}`); }
+        }
+        measure?.stop(walkOutcome);
         await restoreSpeed();
         // A walk that ended early never reached its own restore step (a feature check's ctx.setSetting).
         try { await ui.ctx.restoreSettings(); } catch (e) { tc.log?.(`could not restore the step settings: ${e.message}`); }
@@ -477,6 +543,115 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
         }
     }
     return tc.getOverallResult();
+}
+
+// ── The walk instrument (whole-game walk measure) ─────────────────────────────
+// INERT unless one of its URL params is set; app.spec.js passes each from a
+// TEST_MEASURE_* env var, and scripts/procgen/walk-seedling-whole-game.mjs sets
+// them (docs: procgen/seedling-bot.md § Running the whole-game walk). With no
+// param set: no sampler, no import, no timer, every timeout and runtime as before.
+//   ?measureStepTimeoutMs=  raises every walk step's done-wait to at least that
+//   ?measureBotStallMs=     lifts botCannotFinish's stall window (procgen.js reads it)
+//   ?measureFlashRuntime=   js|wasm: plain walk rows play under that Flash runtime
+//   ?measureSkipRefusals=N  on a bot error, count the head as seen and play on, N times
+//                           (a probe of what lies past a stop; it fixes nothing)
+// With any of them set, a `[MEASURE tick]` line is logged every 15 s and a
+// `[MEASURE end]` line once, carrying the walk's end and its `why`.
+const MEASURE_PARAMS = (() => {
+    try { return new URLSearchParams(globalThis.location?.search ?? ''); } catch { return new URLSearchParams(); }
+})();
+const MEASURE_STEP_MS = Number(MEASURE_PARAMS.get('measureStepTimeoutMs')) || 0;
+const MEASURE_STALL_MS = Number(MEASURE_PARAMS.get('measureBotStallMs')) || 0;
+const MEASURE_RUNTIME = MEASURE_PARAMS.get('measureFlashRuntime') || null;
+const MEASURE_SKIPS = Number(MEASURE_PARAMS.get('measureSkipRefusals')) || 0;
+const MEASURE_ACTIVE = MEASURE_STEP_MS > 0 || MEASURE_STALL_MS > 0 || MEASURE_SKIPS > 0 || MEASURE_RUNTIME !== null;
+const measureStepTimeout = (ms) => (MEASURE_STEP_MS > 0 ? Math.max(ms, MEASURE_STEP_MS) : ms);
+
+function wasmMemoryBytes() {
+    let best = null;
+    for (const f of document.querySelectorAll('iframe')) {
+        try {
+            const w = f.contentWindow;
+            const n = w?.HEAPU8?.byteLength ?? w?.Module?.HEAPU8?.byteLength ?? w?.wasmMemory?.buffer?.byteLength ?? null;
+            if (Number.isFinite(n)) best = Math.max(best ?? 0, n);
+        } catch { /* cross-origin or torn down */ }
+    }
+    return best;
+}
+
+async function startMeasureSampler(tutorial, stepStarts, ui) {
+    // Imported here, not at the top: an inert run loads nothing it did not load before.
+    const [{ getActivePanel: getActiveBotPanel }, { getActivePanelInstance: getActiveFlashPanel }, { measureEndExtra, measureLine }] = await Promise.all([
+        import('../../playbackBot/index.js'),
+        import('../../flashPanel/index.js'),
+        import('../walkMeasureLine.js'),
+    ]);
+    const t0 = performance.now();
+    let regionChanges = 0;
+    let lastRegion = null;
+    const unsub = eventBus.subscribe('gameState:regionChanged', (d) => {
+        regionChanges += 1;
+        lastRegion = d?.newRegion ?? d?.region ?? d?.to ?? lastRegion;
+    }, 'tests');
+    const botStatusText = () => document.querySelector('.playback-bot .playback-bot-status')?.textContent.trim() ?? null;
+    const sample = (tag, extra = '') => {
+        try {
+            const bot = getActiveBotPanel()?.getBot?.() ?? getActiveBotPanel()?.bot ?? null;
+            const snap = ui.ctx.snapshot();
+            const checked = (snap?.checkedLocations ?? []).length;
+            const fp = getActiveFlashPanel();
+            const mem = wasmMemoryBytes();
+            const heap = performance.memory?.usedJSHeapSize ?? null;
+            const head = bot?._queue?.[bot?._cursor] ?? null;
+            // ONE line (`walkMeasureLine.js`): a multi-line status (a ladder refusal's rung lines) rides whole, escaped.
+            const line = measureLine(tag, tutorial.id, {
+                t: ((performance.now() - t0) / 1000).toFixed(0), step: stepStarts.at(-1)?.id ?? '?', checked,
+                botQueue: bot?._queue?.length ?? '?', botCursor: bot?._cursor ?? '?', botChecked: bot?._checkedSoFar?.size ?? '?',
+                botHead: head?.locationName ?? null, botRegion: bot?._currentRegion ?? null, lastRegionEvent: lastRegion,
+                regionChanges, wasmPushes: fp?.adapter?.invocationPushes ?? '?', transport: fp?.transport ?? '?',
+                wasmMemMB: mem == null ? '?' : (mem / 1048576).toFixed(0), jsHeapMB: heap == null ? '?' : (heap / 1048576).toFixed(0),
+                status: botStatusText(), extra,
+            });
+            console.log(line);
+        } catch (e) {
+            console.log(`[MEASURE ${tag}] sampler threw: ${e?.message ?? e}`);
+        }
+    };
+    const timer = setInterval(() => sample('tick'), 15000);
+    // The skip probe: on a bot error, log it, count the refused head as seen and play on from the next entry.
+    // It FIXES nothing; an entry after a skipped item may refuse only because that item was never collected.
+    let skips = 0;
+    let skipping = false;
+    const skipTimer = MEASURE_SKIPS > 0 ? setInterval(async () => {
+        if (skipping || skips >= MEASURE_SKIPS) return;
+        if (!(botStatusText() ?? '').startsWith('error')) return;
+        const bot = getActiveBotPanel()?.getBot?.();
+        const head = bot?._queue?.[bot._cursor];
+        if (!bot || !head) return;
+        skipping = true;
+        skips += 1;
+        sample(`skip ${skips}`);
+        console.log(`[MEASURE skip ${skips}] t=${((performance.now() - t0) / 1000).toFixed(0)}s skipping entry ${bot._cursor + 1}/${bot._queue.length} "${head.locationName}" (sphere ${head.sphereIndex}${head.fractionalIndex != null ? '.' + head.fractionalIndex : ''})`);
+        try {
+            bot.stop();
+            bot._checkedSoFar.add(head.locationName);
+            await bot.play();
+        } catch (e) {
+            console.log(`[MEASURE skip ${skips}] play threw: ${e?.message ?? e}`);
+        } finally {
+            skipping = false;
+        }
+    }, 1000) : null;
+    return {
+        skipsLeft: () => MEASURE_SKIPS - skips,
+        // `outcome` is walkTutorial's: { end: 'complete' } | { end, stepId, why }; null when the walk threw.
+        stop: (outcome) => {
+            clearInterval(timer);
+            if (skipTimer) clearInterval(skipTimer);
+            sample('end', measureEndExtra(outcome));
+            try { unsub?.(); } catch { /* */ }
+        },
+    };
 }
 
 // The generator games' tutorials switch modules on in the Modules panel and
@@ -584,7 +759,7 @@ for (const { tutorial, id, kind, category } of walkRows) {
                 : tutorial.status === 'terminal' ? `needs a terminal: it must stop at ${terminalStep(tutorial)?.step.id}`
                     : `in progress: firstFailingStep ${tutorial.firstFailingStep ?? 'null'}`}). Reloads the world loaded before.`,
         // Named per row: the registry tells test functions apart by name.
-        testFunction: { [fn]: (tc) => tutorialWalkRow(tc, tutorial) }[fn],
+        testFunction: { [fn]: (tc) => tutorialWalkRow(tc, tutorial, { runtime: MEASURE_RUNTIME }) }[fn],
         category,
         enabled: false,
     });

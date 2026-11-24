@@ -1,0 +1,6 @@
+entries base 91 tip 91
+entry 75 sphere 11.7 differs; with sub-region names folded to their level, equal: True
+  key player_data
+   player 1 new_accessible_regions only base: ['level_77'] only tip: ['level_77__r12c6', 'level_77__r15c6', 'level_77__r2c0', 'level_78__r1c10', 'level_78__r3c1', 'level_78__r3c9', 'level_78__r4c4', 'level_78__r5c6', 'level_78__r6c9']
+entries differing: 1
+sphere_locations identical per entry: True

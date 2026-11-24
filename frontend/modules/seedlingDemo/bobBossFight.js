@@ -200,13 +200,21 @@ function spin(b) {
  * @param {object} ctx.playerBox   the player's box at that point
  * @param {boolean} ctx.frozen     `Game.freezeObjects` when the boss updates
  * @param {function} ctx.blocked   `(box) => boolean`, the `Mobile.solids` test
+ * @param {?function} ctx.onPlayerHit `(hit) => void`, called at each `Player.hit` in the game's order (optional)
  * @returns {{playerHits: Array, transition: ?object, spawn: ?object}}
  *   `playerHits` are `Player.hit` calls in the order the game makes them;
  *   `transition` is `death()`'s write this frame, if any; `spawn` names what
  *   the end of the transition adds (`{form}` or `{fire: true}`).
  */
-export function stepBobBossBody(b, { player, playerBox, frozen, blocked }) {
+export function stepBobBossBody(b, { player, playerBox, frozen, blocked, onPlayerHit = null }) {
     const out = { playerHits: [], transition: null, spawn: null };
+    // ⛓ fidelity DARKSUITBOSSES D2: `onPlayerHit(h)` bills a `Player.hit` WHERE the game makes it (a dark-suit
+    // retaliation writes into this body mid-update); absent, the caller bills `playerHits` after the step.
+    let billedTo = out.playerHits.length;
+    const billed = () => {
+        if (onPlayerHit) for (const h of out.playerHits.slice(billedTo)) onPlayerHit(h);
+        billedTo = out.playerHits.length;
+    };
     if (frozen) return out;
     b.age++;
     if (b.formingTimer > 0) {
@@ -246,6 +254,7 @@ export function stepBobBossBody(b, { player, playerBox, frozen, blocked }) {
         if (b.hitsTimer > 0) b.hitsTimer--;
         if (b.hitsTimer <= 0 && overlapsStrict(bobBossBox(b), playerBox)) {
             out.playerHits.push({ arm: 'body', force: 3, damage: b.damage, from: { x: b.x, y: b.y } });
+            billed();
         }
     }
     // ── BobSoldier.update's own tail (note 3) ──────────────────────────
@@ -256,6 +265,7 @@ export function stepBobBossBody(b, { player, playerBox, frozen, blocked }) {
         if (collideLineSolid([playerBox], l.x0, l.y0, l.x1, l.y1)) {
             out.playerHits.push({ arm: `sword${i}`, force: 3 * b.damage, damage: b.damage,
                 from: { x: b.x, y: b.y } });
+            billed();
         }
     }
     return out;

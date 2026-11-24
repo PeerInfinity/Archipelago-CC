@@ -3,6 +3,25 @@
 These are data directories loaded by `frontend/modules/contentPacks/`. They live under `frontend/` because
 GitHub Pages serves only `frontend/`.
 
+⚠ **Not every pack is MIT.** Each pack's `pack.json` names its own `licence`: `seedling` is the Unlicense (the
+original game's), and the others are MIT. A source in a layer's provenance block may name its own `licence` too.
+
+**Layers.** A pack provides one or more of: `art`, `sfx`, `music` (resolved at play, by key); `concepts`, `text`
+(the words: a world's content set); and, since content packs PL-1, `structure` (what exists: tasks, stats,
+resources, boons and places, as ids and links), `numbers` (magnitudes, one set per game; defaults) and `bindings`
+(per game, what only that game needs). The last three carry logic and are never read by a content set. No committed
+pack carries them yet. `frontend/modules/packStructure/` reads them; `fixtures/packs/` there holds examples.
+
+**Provenance.** Every layer manifest carries a `provenance` block naming where its entries came from:
+`sources` (each a `game`, `person`, `model`, `authored` or `derived` source, with that type's fields), a `default`
+source, optional `groups` (a key prefix → a source), and an optional `src` on an entry that differs. The loader
+refuses a layer whose entries do not all resolve, naming the pack, the layer and the key. A model source names the
+exact model id, taken from the commit trailer (`Co-Authored-By`) of the files it wrote, or `"unrecorded"` with its
+family; `approved` is recorded only where the user approved the entries. `node scripts/procgen/report-pack-provenance.mjs`
+counts the entries per source. When you add or change entries, name their source in the block, and add a source
+when it is new: an image a person contributed is a `person` source under the name they chose to be credited by.
+Details are in `docs/json/developer/procgen/concepts.md` § Provenance.
+
 - `packs.json` is the hand-kept registry. It lists the packs and the named **stacks** a consumer loads, in
   override order (a later pack wins per key). For example, `graphics.seedling = ["seedling", "archipelago"]`
   is what the Seedling JS runtime page's `?graphics=seedling` loads.
@@ -46,16 +65,43 @@ GitHub Pages serves only `frontend/`.
   reads them off the canvas. (Content sets R5) three more recipes are named by the theme's own concepts as their
   `art`: the Gate (a square with two dot eyes and a keyhole), Progressive Sword and Progressive Swim. A maze draws a
   concept gate or item from the art key of the latest pack concept that presents its mechanic
-  (`mazeTileArt.conceptArtKeys`), else its baked colour and symbol (`mazeRoom/mazeConceptArt.test.js`). The art is
+  (`mazeTileArt.conceptArtKeys`), else its baked colour and symbol (`mazeRoom/mazeConceptArt.test.js`). (Content
+  sets TIDY-1) The composite map's maze cell (the APWorld Editor's Map tab, the pipeline's map) draws the same tiles,
+  gates, items and things through the same seams once the world's stack has loaded, and a world with no theme draws
+  as before (`mazeRoom/mazeCompositeArt.test.js`; the in-app row `meta-trial-composite-map-art`). (Content sets
+  TILE-1) Both views draw every tile kind but the map's player through one fallback chain, `mazeTileArt.drawMazeTile`:
+  the theme's art, the kind's default, its declared base, a placeholder (`mazeRoom/mazeTileFallback.test.js`). (Content
+  sets TILE-2) A pack's concept row may declare a tile kind's `base` beside its `art` key (`packConcepts.PACK_TILE_BASES`),
+  read through `mazeTileArt.mazeTileKind`. (TILE-3) The maze lab's editor places one on a floor cell (`?packs=` names
+  the stack; the payload field `tileKinds`), and both views draw it. (PASS-1) A kind's passability is declared in the
+  pack's `structure` layer (a `terrain` entry, `pass` walkable, blocked, needs or one-way, that the concept presents);
+  the editor bakes it per placed kind and lowers `blocked` to a wall, (PASS-2) `needs: <mechanic concept>` to a rule
+  obstacle on the cell and (PASS-3) `one-way` with `dirs` to the engine's `entry_gates`. (GEN-1) A `terrain` entry
+  with `generate: true` lets the generator place the kind in a room of the "Randomly placed tiles" maze biome, when
+  the world names the pack under "what exists" (never from a theme), and only where the room's logic stays exactly
+  as it was. The art is
   play-time only, so an edit to it owes no preset rebuild. It presents the guardian as **the Gate** (a `look`,
   `#a0a8b8` / `#`, for the maze's gate role; the `blocked` and `passedWith` lines for the text adventure's), gives
   the sword's and the swim's checks a line that knows it is a check (their names stay the AP item names, and the
   theme gives them no look, so the baked colour and symbol stay the default; their art key draws the pickup), and offers twelve `place` concepts for the text
   adventure's rooms. It does NOT present water: water falls through to each substrate's default pack. ⛔ No line
-  may claim something untrue of the world: a place describes only what every generated room has. HAND-MADE, written
+  may claim something untrue of the world: a place describes only what every generated room has, and a
+  `description` is not a template, so it names no item or region (the Gate's says only that it knows its own rule;
+  the rule itself is in its `blocked` and `passedWith` lines, as `{item}`). HAND-MADE, written
   for this repository, MIT (see `pack.json`). `procgenPipeline/metaTrialWorld.test.js` and the committed
   `frontend/presets/meta_trial/` hold its words; an edit here owes `make-seedling-spiral-room-preset.mjs
   --state=meta-trial`.
+
+- `furniture/` (content sets GEN-2) is the first committed **"what exists"** pack whose tile kinds the generator
+  places: a rug (`walkable`) and a pillar (`blocked`), each a `structure` terrain entry with `generate: true`, a
+  `concepts` row that presents it (its maze `base`: `marker` and `wall`) and an `art` shape recipe (the meta theme's
+  format, drawn over the cell by the tile-kind overlay). A world names it under `params.exists` (never as a theme:
+  `packs.json`'s `content` table does not list it), and the "Randomly placed tiles" maze biome then places the two
+  kinds where the room's logic stays exactly as it was. The demo world is the shipped pipeline preset
+  `tile-kinds-demo` (committed as `frontend/presets/tile_kinds_demo/`). HAND-MADE for this repository, MIT (see
+  `pack.json`). `mazeRoom/mazeFurniturePack.test.js` pins the pack; an edit to its `structure` or `concepts` layer
+  owes `make-seedling-spiral-room-preset.mjs --state=tile-kinds-demo` (the placed kinds are baked into the world),
+  an edit to its art none.
 
 ⛔ **The seedling and archipelago packs are GENERATED. Do not edit them.** Regenerate with
 `node scripts/procgen/extract-seedling-art-packs.mjs`, and check with the same command plus `--check`. The sheets

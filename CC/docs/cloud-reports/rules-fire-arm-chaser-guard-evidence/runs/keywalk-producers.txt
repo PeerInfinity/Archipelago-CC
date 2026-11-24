@@ -1,0 +1,83 @@
+######## frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json
+271 difference(s)
+[folded] 266 x .../atlas_ref: "seedling-88e3788c" -> "seedling-626182a8"
+[folded] 2 x .../atlas_id: "seedling-88e3788c" -> "seedling-626182a8"
+/regions/1/level_100__r4c10/exits/0/access_rule/children
+  - "len 3"
+  + "len 2"
+/regions/1/level_73__r0c4/exits/0/access_rule/children
+  - "len 4"
+  + "len 3"
+/regions/1/level_73__r3c7/exits/0/access_rule/children
+  - "len 4"
+  + "len 3"
+######## frontend/modules/flashPanel/atlases/seedling-playthrough.json
+5 difference(s)
+[folded] 1 x .../atlas_id: "seedling-88e3788c" -> "seedling-626182a8"
+[folded] 1 x .../content_hash: "88e3788c" -> "626182a8"
+/regions/73/subgraph/internal_exits/0/access_rule/children
+  - "len 4"
+  + "len 3"
+/regions/99/subgraph/internal_exits
+  - "len 2"
+  + "len 1"
+/regions/99/subgraph/internal_exits/0/bidirectional
+  - false
+  + true
+######## frontend/modules/flashPanel/atlases/seedling-subregion-partition.json
+2 difference(s)
+/atlases/seedling-626182a8
+  - "<absent>"
+  + {"atlas": "seedling-playthrough.json", "tile_size": 16, "regions": {"level_0": {"level": 0, "origin": [0, 0], "width": 20, "height": 20, "sub_regions": ["r1c6", "r2c13", "r4c16", "r6c5", "r7c6", "r11c19", "r14c0"], "rows": ["....................", "......AAAAAA........", "....AAAA..AA.BB.....", "....AAAA..AA.BB.....", "........AAAA.BB.CC..", "........AAAA.B..CC..", ".....D..AAAA.....CC.", "......E
+/atlases/seedling-88e3788c
+  - {"atlas": "seedling-playthrough.json", "tile_size": 16, "regions": {"level_0": {"level": 0, "origin": [0, 0], "width": 20, "height": 20, "sub_regions": ["r1c6", "r2c13", "r4c16", "r6c5", "r7c6", "r11c19", "r14c0"], "rows": ["....................", "......AAAAAA........", "....AAAA..AA.BB.....", "....AAAA..AA.BB.....", "........AAAA.BB.CC..", "........AAAA.B..CC..", ".....D..AAAA.....CC.", "......E
+  + "<absent>"
+######## frontend/presets/seedling_er/AP_1/AP_1_rules.json
+272 difference(s)
+[folded] 266 x .../atlas_ref: "seedling-88e3788c" -> "seedling-626182a8"
+[folded] 3 x .../atlas_id: "seedling-88e3788c" -> "seedling-626182a8"; "seedling-d98dcb06" -> "seedling-e2c191a2"
+/regions/1/level_100__r4c10/exits/0/access_rule/children
+  - "len 3"
+  + "len 2"
+/regions/1/level_73__r0c4/exits/0/access_rule/children
+  - "len 4"
+  + "len 3"
+/regions/1/level_73__r3c7/exits/0/access_rule/children
+  - "len 4"
+  + "len 3"
+######## frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json
+12 difference(s)
+[folded] 1 x .../atlas_id: "seedling-d6f5bf4b" -> "seedling-d35c71c1"
+/preset_sidecars/1/level_100__r2c3/playable_payload/action_lib/fire
+  - {"item": "Fire", "primitive": "strike", "condition": "strikes", "key": "c", "footprint": {"N": [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]], "E": [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]], "S": [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]], "W": [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]]}}
+  + "<absent>"
+/preset_sidecars/1/level_100__r2c3/playable_payload/obstacleLib/rock_8_9
+  - {"id": "rock_8_9", "name": "rock (sword or spear or fire)", "kind": "rock", "clear_set": [], "struck_by": ["sword", "spear", "fire"], "struck_from": {"fire": ["9,8,N", "9,8,E", "9,8,S", "9,8,W", "9,9,N", "9,9,E", "9,9,S", "9,9,W"]}, "at": "8,9", "color": "#7a6a55"}
+  + "<absent>"
+/preset_sidecars/1/level_100__r2c3/playable_payload/obstacleLib/rock_sword_spear
+  - "<absent>"
+  + {"id": "rock_sword_spear", "name": "rock (sword or spear)", "kind": "rock", "clear_set": [], "struck_by": ["sword", "spear"], "color": "#7a6a55"}
+/preset_sidecars/1/level_100__r2c3/playable_payload/obstacles/6/id
+  - "rock_8_9"
+  + "rock_sword_spear"
+/preset_sidecars/1/level_73__r0c4/playable_payload/action_lib/fire
+  - {"item": "Fire", "primitive": "strike", "condition": "strikes", "key": "c", "footprint": {"N": [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]], "E": [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]], "S": [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]], "W": [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]]}}
+  + "<absent>"
+/preset_sidecars/1/level_73__r0c4/playable_payload/obstacleLib/rock_4_3
+  - {"id": "rock_4_3", "name": "rock (sword or spear or fire)", "kind": "rock", "clear_set": [], "struck_by": ["sword", "spear", "fire"], "struck_from": {"fire": ["3,2,N", "3,2,E", "3,2,S", "3,2,W", "4,2,N", "4,2,E", "4,2,S", "4,2,W", "5,2,N", "5,2,E", "5,2,S", "5,2,W", "4,4,N", "4,4,E", "4,4,S", "4,4,W", "5,4,N", "5,4,E", "5,4,S", "5,4,W"]}, "at": "4,3", "color": "#7a6a55"}
+  + "<absent>"
+/preset_sidecars/1/level_73__r0c4/playable_payload/obstacleLib/rock_sword_spear
+  - "<absent>"
+  + {"id": "rock_sword_spear", "name": "rock (sword or spear)", "kind": "rock", "clear_set": [], "struck_by": ["sword", "spear"], "color": "#7a6a55"}
+/preset_sidecars/1/level_73__r0c4/playable_payload/obstacles/21/id
+  - "rock_4_3"
+  + "rock_sword_spear"
+/regions/1/level_100__r4c10/exits/0/access_rule/children
+  - "len 3"
+  + "len 2"
+/regions/1/level_73__r0c4/exits/0/access_rule/children
+  - "len 4"
+  + "len 3"
+/regions/1/level_73__r3c7/exits/0/access_rule/children
+  - "len 4"
+  + "len 3"

@@ -3699,7 +3699,7 @@
         "locations": [
           {
             "name": "Victory",
-            "id": null,
+            "id": 1042,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -3790,8 +3790,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "event": true
+            "locked": true
           }
         ]
       },
@@ -3891,7 +3890,7 @@
         "locations": [
           {
             "name": "Check 1",
-            "id": 1042,
+            "id": 1043,
             "access_rule": {
               "rule": "True_"
             },
@@ -4032,7 +4031,7 @@
         "locations": [
           {
             "name": "Check 7",
-            "id": 1043,
+            "id": 1044,
             "access_rule": {
               "rule": "True_"
             },
@@ -4086,7 +4085,7 @@
         "locations": [
           {
             "name": "Check 12",
-            "id": 1044,
+            "id": 1045,
             "access_rule": {
               "rule": "True_"
             },
@@ -4146,7 +4145,7 @@
         "locations": [
           {
             "name": "Check 62",
-            "id": 1045,
+            "id": 1046,
             "access_rule": {
               "rule": "True_"
             },
@@ -4231,7 +4230,7 @@
         "locations": [
           {
             "name": "Check 50",
-            "id": 1046,
+            "id": 1047,
             "access_rule": {
               "rule": "True_"
             },
@@ -4312,7 +4311,7 @@
         "locations": [
           {
             "name": "Check 76",
-            "id": 1047,
+            "id": 1048,
             "access_rule": {
               "rule": "True_"
             },
@@ -4369,7 +4368,7 @@
         "locations": [
           {
             "name": "Check 65",
-            "id": 1048,
+            "id": 1049,
             "access_rule": {
               "rule": "True_"
             },
@@ -4486,7 +4485,7 @@
         "locations": [
           {
             "name": "Check 24",
-            "id": 1049,
+            "id": 1050,
             "access_rule": {
               "rule": "True_"
             },
@@ -4603,7 +4602,7 @@
         "locations": [
           {
             "name": "Check 4",
-            "id": 1050,
+            "id": 1051,
             "access_rule": {
               "rule": "True_"
             },
@@ -4733,7 +4732,7 @@
         "locations": [
           {
             "name": "Check 8",
-            "id": 1051,
+            "id": 1052,
             "access_rule": {
               "rule": "True_"
             },
@@ -4805,7 +4804,7 @@
         "locations": [
           {
             "name": "Check 22",
-            "id": 1052,
+            "id": 1053,
             "access_rule": {
               "rule": "True_"
             },
@@ -4878,7 +4877,7 @@
         "locations": [
           {
             "name": "Check 23",
-            "id": 1053,
+            "id": 1054,
             "access_rule": {
               "rule": "True_"
             },
@@ -4933,7 +4932,7 @@
         "locations": [
           {
             "name": "Check 27",
-            "id": 1054,
+            "id": 1055,
             "access_rule": {
               "rule": "True_"
             },
@@ -5011,7 +5010,7 @@
         "locations": [
           {
             "name": "Check 64",
-            "id": 1055,
+            "id": 1056,
             "access_rule": {
               "rule": "True_"
             },
@@ -5151,7 +5150,7 @@
         "locations": [
           {
             "name": "Check 14",
-            "id": 1056,
+            "id": 1057,
             "access_rule": {
               "rule": "True_"
             },
@@ -5207,7 +5206,7 @@
         "locations": [
           {
             "name": "Check 15",
-            "id": 1057,
+            "id": 1058,
             "access_rule": {
               "rule": "True_"
             },
@@ -5264,7 +5263,7 @@
         "locations": [
           {
             "name": "Check 48",
-            "id": 1058,
+            "id": 1059,
             "access_rule": {
               "rule": "True_"
             },
@@ -5342,7 +5341,7 @@
         "locations": [
           {
             "name": "Check 47",
-            "id": 1059,
+            "id": 1060,
             "access_rule": {
               "rule": "True_"
             },
@@ -5398,7 +5397,7 @@
         "locations": [
           {
             "name": "Check 52",
-            "id": 1060,
+            "id": 1061,
             "access_rule": {
               "rule": "True_"
             },
@@ -5482,7 +5481,7 @@
         "locations": [
           {
             "name": "Check 74",
-            "id": 1061,
+            "id": 1062,
             "access_rule": {
               "rule": "True_"
             },
@@ -5542,7 +5541,7 @@
         "locations": [
           {
             "name": "Check 75",
-            "id": 1062,
+            "id": 1063,
             "access_rule": {
               "rule": "True_"
             },
@@ -5619,7 +5618,7 @@
         "locations": [
           {
             "name": "Check 46",
-            "id": 1063,
+            "id": 1064,
             "access_rule": {
               "rule": "True_"
             },
@@ -5715,7 +5714,7 @@
         "locations": [
           {
             "name": "Check 45",
-            "id": 1064,
+            "id": 1065,
             "access_rule": {
               "rule": "True_"
             },
@@ -5859,7 +5858,7 @@
         "locations": [
           {
             "name": "Check 6",
-            "id": 1065,
+            "id": 1066,
             "access_rule": {
               "rule": "True_"
             },
@@ -5917,7 +5916,7 @@
         "locations": [
           {
             "name": "Check 67",
-            "id": 1066,
+            "id": 1067,
             "access_rule": {
               "rule": "True_"
             },
@@ -5976,7 +5975,7 @@
         "locations": [
           {
             "name": "Check 70",
-            "id": 1067,
+            "id": 1068,
             "access_rule": {
               "rule": "True_"
             },
@@ -6035,7 +6034,7 @@
         "locations": [
           {
             "name": "Check 61",
-            "id": 1068,
+            "id": 1069,
             "access_rule": {
               "rule": "True_"
             },
@@ -6111,7 +6110,7 @@
         "locations": [
           {
             "name": "Check 28",
-            "id": 1069,
+            "id": 1070,
             "access_rule": {
               "rule": "True_"
             },
@@ -6164,7 +6163,7 @@
         "locations": [
           {
             "name": "Check 54",
-            "id": 1070,
+            "id": 1071,
             "access_rule": {
               "rule": "True_"
             },
@@ -6245,7 +6244,7 @@
         "locations": [
           {
             "name": "Check 66",
-            "id": 1071,
+            "id": 1072,
             "access_rule": {
               "rule": "True_"
             },
@@ -6326,7 +6325,7 @@
         "locations": [
           {
             "name": "Check 68",
-            "id": 1072,
+            "id": 1073,
             "access_rule": {
               "rule": "True_"
             },
@@ -6409,7 +6408,7 @@
         "locations": [
           {
             "name": "Check 69",
-            "id": 1073,
+            "id": 1074,
             "access_rule": {
               "rule": "True_"
             },
@@ -6487,7 +6486,7 @@
         "locations": [
           {
             "name": "Check 59",
-            "id": 1074,
+            "id": 1075,
             "access_rule": {
               "rule": "True_"
             },
@@ -6569,7 +6568,7 @@
         "locations": [
           {
             "name": "Check 60",
-            "id": 1075,
+            "id": 1076,
             "access_rule": {
               "rule": "True_"
             },
@@ -6620,7 +6619,7 @@
         "locations": [
           {
             "name": "Check 11",
-            "id": 1076,
+            "id": 1077,
             "access_rule": {
               "rule": "True_"
             },
@@ -7204,18 +7203,15 @@
       },
       "Victory": {
         "name": "Victory",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
+        "id": 11,
         "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
+        "groups": [
+          "Everything"
+        ]
       },
       "Button: 7": {
         "name": "Button: 7",
-        "id": 11,
+        "id": 12,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -7245,7 +7241,7 @@
       },
       "Button: 4": {
         "name": "Button: 4",
-        "id": 12,
+        "id": 13,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -7352,7 +7348,7 @@
       },
       "Button: 5": {
         "name": "Button: 5",
-        "id": 13,
+        "id": 14,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -7602,7 +7598,7 @@
       },
       "Button: 6": {
         "name": "Button: 6",
-        "id": 14,
+        "id": 15,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -16333,7 +16329,8 @@
         "trash_per_sphere": 1,
         "max_branches": 5,
         "randomize_items": true,
-        "goal": "all_locations"
+        "goal": "all_locations",
+        "reports_goal_by_server_item": true
       },
       "web": {
         "theme": "grass",
@@ -16410,6 +16407,7 @@
       "Check 77": "Junk",
       "Check 38": "Junk",
       "Check 3": "Button: 9",
+      "Victory": "Victory",
       "Check 1": "Button: 7",
       "Check 7": "Junk",
       "Check 12": "Button: 4",

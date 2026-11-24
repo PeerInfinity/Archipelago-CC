@@ -157,7 +157,9 @@ function l4StairsSword() {
         solverGoal: { kind: 'reach-exit', exit: { x: tp.x, y: tp.y } }, scratchPersistence: rt.run.scratchPersistence === true };
 }
 const counter = () => { let n = 0; return () => n++; };
-const rows = (r) => r.passes.map(({ ms, ...row }) => row);
+// `modelHits` (HIT_AWARE_ANSWER, ON since the HIT-FLIP) is the plan's hit verdict, pinned in `hammerHitTiebreak.test.js`;
+// these rows pin the passes' windows and budgets, so it drops with the wall-clock `ms`.
+const rows = (r) => r.passes.map(({ ms, modelHits, ...row }) => row);
 
 describe('the solver honours it — L4 stairs with the sword (the full pass: 61 units; today it needs a window of 84)', () => {
     // ⛓ planning-14's wave-32 flip (signed by hammer-2 2026-10-26): `holdWaitPriced` prices L4's hold tail, so each pass

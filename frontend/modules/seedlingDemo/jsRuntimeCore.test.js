@@ -117,22 +117,31 @@ describe('jsRuntimeCore — the bridge contract', () => {
         expect(rt.arrival).toEqual({ level, x, y });
     });
 
-    it('queueItems flag writes are idempotent: a re-pushed write changes nothing, a new one reboots once', () => {
+    it('queueItems flag writes are idempotent: a re-pushed write changes nothing, a new one is written into the LIVE run once (no boot)', () => {
+        // ⛓ seedling-js-item-live-delivery — restated from "… a new one reboots once": a delivery boots nothing now.
         const { rt, reports } = started();
         reports.length = 0;
         const boots = () => rt.events.filter((e) => e.type === 'boot').length;
+        const delivered = () => rt.events.filter((e) => e.type === 'delivery' && e.changed).length;
         const b0 = boots();
+        const run0 = rt.run;
         const write = { class: 'main', property: 'hasSword', value: true };
         rt.queueItems([write]);
         rt.tick();
         expect(rt.flags.hasSword).toBe(true);
-        expect(boots()).toBe(b0 + 1);
+        expect(rt.run.inventory.hasSword).toBe(true);
+        expect(boots()).toBe(b0);
+        expect(rt.run).toBe(run0);
+        expect(delivered()).toBe(1);
         expect(reports).toEqual([['hasSword', true]]);
         for (let i = 0; i < 5; i += 1) { rt.queueItems([write]); rt.tick(); }
-        expect(boots()).toBe(b0 + 1);
+        expect(boots()).toBe(b0);
+        expect(delivered()).toBe(1);
+        expect(rt.run.inventorySlots).toEqual([0]);
         expect(reports).toEqual([['hasSword', true]]);
-        // ⛔ The reboot keeps the ROOM's arrival — a death still respawns at the door.
+        // ⛔ The room's arrival is untouched — a death still respawns at the door.
         expect(rt.arrival).toEqual({ level: 0, x: 128, y: 32 });
+        expect(rt.run.worldCtor).toEqual({ x: 128, y: 32 });
     });
 
     it('the JS capability row is the eligibility module\'s, and declares apitem', () => {
@@ -263,7 +272,7 @@ describe('⛓ KEY DELIVERY — the JS page keeps the session\'s KEYS and SLOT OR
     }
     const keyMask = (rt) => JSON.parse(rt.game.readState()).keyMask;
 
-    it('`Main.hasKeySet(i, true)` is MODELLED: the run holds the key (a reboot in place), keyMask reports it — no "not modelled" note', () => {
+    it('`Main.hasKeySet(i, true)` is MODELLED: the run holds the key (written live), keyMask reports it — no "not modelled" note', () => {
         const notes = [];
         const rt = vanillaAt(86, 56, 56, { log: (m) => notes.push(m) });
         expect([...rt.run.keys]).toEqual([]);
@@ -292,7 +301,7 @@ describe('⛓ KEY DELIVERY — the JS page keeps the session\'s KEYS and SLOT OR
         expect(keyMask(rt)).toBe(0b1001);
     });
 
-    it('the SLOT ORDER is the acquisition order and survives an item-flag reboot, a teleport and a Restart: Fire, then the sword = [1, 0]', () => {
+    it('the SLOT ORDER is the acquisition order and survives a live item delivery, a teleport and a Restart: Fire, then the sword = [1, 0]', () => {
         const rt = vanillaAt(86, 56, 56);
         rt.queueItems([flag('hasFire')]);
         rt.tick();
@@ -306,12 +315,15 @@ describe('⛓ KEY DELIVERY — the JS page keeps the session\'s KEYS and SLOT OR
         rt.queueItems([teleportTo(0, 16, 128)]);
         rt.tick();
         expect(rt.run.inventorySlots).toEqual([1, 0]);
-        rt.queueItems([keyCall(1)]);                     // a key reboot keeps it too
+        rt.queueItems([keyCall(1)]);                     // a key delivery keeps it too
         rt.tick();
         expect(rt.run.inventorySlots).toEqual([1, 0]);
     });
 
-    it('a slot whose item the flags no longer hold is dropped (the model refuses it); the rest keep their order', () => {
+    it('a slot whose item the flags no longer hold stays for the visit (the game\'s `addItemsFromSave` only appends) and is dropped at the next boot', () => {
+        // ⛓ seedling-js-item-live-delivery — restated from "… is dropped (the model refuses it)": the removal is written
+        // live (`Main.hasSword = false`) and the game keeps the slot (`Inventory.as:291-331` never removes one for a
+        // false flag); the next boot stages the order without it (`carriedSlots`, as before).
         const rt = vanillaAt(86, 56, 56);
         rt.queueItems([flag('hasFire')]);
         rt.tick();
@@ -321,6 +333,10 @@ describe('⛓ KEY DELIVERY — the JS page keeps the session\'s KEYS and SLOT OR
         rt.tick();
         expect(rt.run.inventorySlots).toEqual([1, 0, 2]);
         rt.queueItems([{ class: 'main', property: 'hasSword', value: false }]);
+        rt.tick();
+        expect(rt.run.inventory.hasSword).toBe(false);
+        expect(rt.run.inventorySlots).toEqual([1, 0, 2]);
+        rt.queueItems([teleportTo(19, 16, 144)]);
         rt.tick();
         expect(rt.run.inventorySlots).toEqual([1, 2]);
     });
@@ -342,14 +358,20 @@ describe('⛓ SEAL DELIVERY — the JS page models the FILL setters, carries the
     }
     const slots = (rt) => { const s = JSON.parse(rt.game.readState()); return Array.from({ length: 16 }, (_, i) => s[`sealSlot${i}`]); };
 
-    it('`Main.hasSealPartSet(slot, identity)` is MODELLED: the readouts report the slot, the next boot stages the log, the model reads it', () => {
+    it('`Main.hasSealPartSet(slot, identity)` is MODELLED: the readouts report the slot, the live run holds it, the next boot stages the log', () => {
         const notes = [];
         const rt = vanillaAt(86, 56, 56, { log: (m) => notes.push(m) });
         expect(slots(rt)).toEqual(Array(16).fill(-1));
+        const run0 = rt.run;
         rt.queueItems([sealCall(0, 0), sealCall(1, 1)]);
         rt.tick();
         expect(slots(rt).slice(0, 3)).toEqual([0, 1, -1]);
-        expect(rt.session.staging.save.seal_parts).toEqual([0, 1]);           // the reboot in place staged it
+        // ⛓ seedling-js-item-live-delivery — restated from "the reboot in place staged it": the same run, written live
+        expect(rt.run).toBe(run0);
+        expect(rt.run.deliveries.map((d) => [d.kind, d.slot, d.identity])).toEqual([['seal', 0, 0], ['seal', 1, 1]]);
+        rt.queueItems([teleportTo(86, 56, 56)]);                              // the next boot stages the log
+        rt.tick();
+        expect(rt.session.staging.save.seal_parts).toEqual([0, 1]);
         expect(rt.run.saveState.bootSealParts).toEqual([0, 1]);
         expect(notes.filter((m) => /not modelled/.test(m))).toEqual([]);
         rt.queueItems([teleportTo(19, 16, 144)]);                             // a host teleport keeps it
@@ -357,20 +379,32 @@ describe('⛓ SEAL DELIVERY — the JS page models the FILL setters, carries the
         expect(rt.run.saveState.bootSealParts).toEqual([0, 1]);
     });
 
-    it('sixteen seals fill the LAST slot — the FinalDoor\'s predicate, in the run the page booted', () => {
+    it('sixteen seals fill the LAST slot — the FinalDoor\'s predicate, in the LIVE run and in the next boot', () => {
         const rt = vanillaAt(86, 56, 56);
         rt.queueItems(Array.from({ length: 16 }, (_, i) => sealCall(i, i)));
         rt.tick();
         expect(slots(rt)[15]).toBe(15);
+        // ⛓ seedling-js-item-live-delivery — the live run reads it (the FinalDoor's gate), with no boot
+        expect(rt.run.finalDoorGate.hasAllSealParts).toBe(true);
+        expect(rt.run.finalDoorGate.sealSlotsFilled).toBe(16);
+        rt.queueItems([teleportTo(86, 56, 56)]);
+        rt.tick();
         expect(rt.run.saveState.bootSealParts).toHaveLength(16);
     });
 
     it('`Main.hasTotemPartSet(i, true)` is MODELLED: totemCount and the totemPart readouts report it; staged at the next boot', () => {
         const rt = vanillaAt(86, 56, 56);
+        const boots0 = rt.events.filter((e) => e.type === 'boot').length;
         rt.queueItems([totemCall(0), totemCall(2)]);
         rt.tick();
         const s = JSON.parse(rt.game.readState());
         expect([s.totemPart0, s.totemPart1, s.totemPart2, s.totemCount]).toEqual([true, false, true, 2]);
+        // ⛓ seedling-js-item-live-delivery — the LIVE run holds them (no boot) …
+        expect(rt.run.saveState.totem_parts).toEqual([true, false, true, false, false]);
+        expect(rt.events.filter((e) => e.type === 'boot')).toHaveLength(boots0);
+        // … and the next boot stages them
+        rt.queueItems([teleportTo(86, 56, 56)]);
+        rt.tick();
         expect(rt.session.staging.save.totem_parts).toEqual([0, 2]);
         expect(rt.run.saveState.totem_parts).toEqual([true, false, true, false, false]);
     });

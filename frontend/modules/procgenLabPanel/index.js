@@ -15,6 +15,7 @@
 
 import { ProcgenLabPanelUI } from './procgenLabPanelUI.js';
 import { HOST_TO_PAGE, PAGE_TO_HOST } from '../procgenCore/labProtocol.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 export const moduleInfo = {
     name: 'procgenLabPanel',
@@ -37,6 +38,14 @@ export const moduleInfo = {
      * would be declaring a dependency the failure of which nobody would notice.
      */
     requires: ['iframeAdapter'],
+    /**
+     * The shared document library (`procgenCore/documentLibrary*.js`): the lab
+     * sets people make. Declared once here for every writer (⚖ js-22, B2);
+     * writers never re-declare: the declared-twice pin refuses it.
+     */
+    storage: [
+        { idb: 'archipelago-cc-document-library', kind: STORAGE_KINDS.user, label: 'Lab sets: saved versions and drafts (document library)' },
+    ],
 };
 
 export function register(registrationApi) {

@@ -474,7 +474,7 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.block_sinks !== undefined) {
         world.blockSinks = checkBlockSinks(sidecar.block_sinks, width, height, 'deserializeMazeWorld');
     }
-    // ⛓ STRUCK FROM A STANCE: an obstacle entry without `struck_from` is struck through its cells, as before.
+    // ⛓ STRUCK FROM A STANCE: an action an obstacle entry does not name in `struck_from` strikes it through its cells, as before.
     checkStruckFrom(obstacleLib, world.actionLib, width, height, 'deserializeMazeWorld');
     // ⛓ PULLS: absent on every other sidecar, so `world.pulls` stays undefined and a move is never pulled.
     if (sidecar.pulls !== undefined) world.pulls = checkPulls(sidecar.pulls, world, 'deserializeMazeWorld');
@@ -619,20 +619,25 @@ function checkFootprint(fp, id, who) {
 }
 
 /**
- * ⛓⛓ STRUCK FROM A STANCE (session tile-primitives-lightpoles, ⚖ 2026-10-28 "Rope-shaped, stances"). A rope-shaped
- * obstacle entry (it `activates` a token, at one canonical cell `at`) may carry `struck_from: {<actionId>: ["x,y,F"…]}`:
- * the STANCES — a cell and a facing — from which a use of that action strikes it. Such an entry is struck ONLY from
- * them, never through its own cells: Seedling's LightPole is hit in its 10×16 bob box, which no 16×16 cell holds (L62's
- * straddles two columns), and its cells are the DarkTraps its light kills, whose `hit()` is empty (`DarkTrap.as:56-59`).
- * The stances are derived by the producer from the game's hit rect against the real box (`poleThrustStances`, the rules'
- * own), so maze and rules read one set. ⛔ An entry that is not rope-shaped, an action it is not `struck_by` or the world
- * lacks, a malformed stance or one off the grid is refused BY NAME.
+ * ⛓⛓ STRUCK FROM A STANCE (session tile-primitives-lightpoles, ⚖ 2026-10-28 "Rope-shaped, stances"). An obstacle entry
+ * with one canonical cell `at` (where its one broken state is recorded) may carry `struck_from: {<actionId>: ["x,y,F"…]}`:
+ * the STANCES — a cell and a facing — from which a use of that action strikes it. ⛓ PER ACTION (session
+ * tile-fire-breaks-rocks): an action the entry NAMES in `struck_from` strikes it only from those stances, never through
+ * its cells; an action it is `struck_by` but does not name strikes it through its cells, as an entry without
+ * `struck_from` is struck. Seedling's LightPole names every arm it is struck by (its bob box is not a cell, L62's
+ * straddles two columns, and its cells are the DarkTraps its light kills, whose `hit()` is empty, `DarkTrap.as:56-59`), so
+ * it is struck from stances only. An ordinary BreakableRock names Fire alone: the slash and the thrust hit it through its
+ * cell (`Player.as:924,989` → `genericHit`), the flame from the stances whose flame reaches that rock and no other
+ * responder (`Player.as:1015-1035`; the rules' own `seedlingRockBreakers.rockFireSides`). The stances are derived by the
+ * producer from the game's hit rects (`poleThrustStances`, `rockFireSides`, the rules' own), so maze and rules read one
+ * set. ⛔ An entry without `at`, an action it is not `struck_by` or the world lacks, a malformed stance or one off the
+ * grid is refused BY NAME.
  */
 function checkStruckFrom(lib, actionLib, width, height, who) {
     for (const [id, entry] of Object.entries(lib ?? {})) {
         if (entry?.struck_from === undefined) continue;
         const bad = (m) => new Error(`${who}: obstacleLib.${id}.struck_from ${m}`);
-        if (!entry.activates || typeof entry.at !== 'string') throw bad('needs a rope-shaped entry (`activates` + `at`)');
+        if (typeof entry.at !== 'string') throw bad('needs one canonical cell (`at`) to record its strike at');
         const sf = entry.struck_from;
         if (!sf || typeof sf !== 'object' || Array.isArray(sf) || Object.keys(sf).length === 0) {
             throw bad(`must be a non-empty object {actionId: ["x,y,F"…]}, got ${JSON.stringify(sf)}`);
@@ -657,11 +662,40 @@ function checkStruckFrom(lib, actionLib, width, height, who) {
  */
 export function stanceStrikes(world, state, actionId) {
     if (state?.facing === undefined) return [];
-    const stance = `${state.player_pos.x},${state.player_pos.y},${state.facing}`;
-    const out = new Set();
-    for (const { entry } of ropesOf(world)) if (entry.struck_from?.[actionId]?.includes(stance)) out.add(entry.at);
-    return [...out].sort();
+    const hit = stanceIndexOf(world).get(`${state.player_pos.x},${state.player_pos.y},${state.facing}`)?.get(actionId);
+    return hit === undefined ? [] : hit;
 }
+
+/**
+ * The world's `struck_from` stances INDEXED: "x,y,F" → actionId → the sorted canonical cells (`at`) struck from there.
+ * CACHED per (obstacle map, library) and rebuilt when either object or the obstacle count changes (an edit), as
+ * `ropesOf` is: `step` asks on every use of every search, so a stance is one lookup, never a walk of the obstacles.
+ */
+const STANCE_CACHE = new WeakMap();
+function stanceIndexOf(world) {
+    const lib = world.obstacleLib;
+    if (!lib || !world.obstacles) return EMPTY_STANCES;
+    const hit = STANCE_CACHE.get(world.obstacles);
+    if (hit && hit.lib === lib && hit.size === world.obstacles.size) return hit.index;
+    const sets = new Map();
+    for (const id of new Set(world.obstacles.values())) {
+        const entry = lib[id];
+        if (entry?.struck_from === undefined) continue;
+        for (const [actionId, stances] of Object.entries(entry.struck_from)) {
+            for (const stance of stances) {
+                if (!sets.has(stance)) sets.set(stance, new Map());
+                const byAction = sets.get(stance);
+                if (!byAction.has(actionId)) byAction.set(actionId, new Set());
+                byAction.get(actionId).add(entry.at);
+            }
+        }
+    }
+    const index = new Map([...sets].map(([stance, byAction]) => [stance,
+        new Map([...byAction].map(([actionId, ats]) => [actionId, Object.freeze([...ats].sort())]))]));
+    STANCE_CACHE.set(world.obstacles, { lib, size: world.obstacles.size, index });
+    return index;
+}
+const EMPTY_STANCES = new Map();
 
 /**
  * The cells a use of `actionId` hits from `state` (its stance + facing), in the grid: the entry's `footprint` for the
@@ -1603,8 +1637,8 @@ export function strikeTargets(world, state, actionId) {
         const obstacleId = getObstacle(world, cell.x, cell.y);
         if (!obstacleId) continue;
         const entry = world.obstacleLib?.[obstacleId];
-        // ⛓ An entry struck from its stances (`struck_from`) is never struck through its own cells.
-        if (entry?.struck_from !== undefined) continue;
+        // ⛓ An action an entry is struck by from its stances (`struck_from`) never strikes it through its own cells.
+        if (entry?.struck_from?.[actionId] !== undefined) continue;
         const struckBy = entry?.struck_by;
         if (!Array.isArray(struckBy) || !struckBy.includes(actionId)) continue;
         const key = entry?.at ?? posKey(cell.x, cell.y);
@@ -2513,6 +2547,10 @@ function ghostStep(world, state, input) {
     const nx = state.player_pos.x + delta.dx;
     const ny = state.player_pos.y + delta.dy;
     if (!isFloor(world, nx, ny)) return null;
+    // ⛓ CONTENT SETS PASS-3 — an entry gate with `gate: null` is GEOMETRY ("no entry that way at all"), exactly as a
+    //   wall is: refused here, as `step` refuses it (`shutEntryAt`). A gated entry (an id) is a clearance, which this
+    //   walk is transparent to, as it is to an obstacle; `entryGateCrossed` annotates it.
+    if (entryRefused(world, nx, ny, input)) return null;
     const next = cloneState(state);
     next.player_pos.x = nx;
     next.player_pos.y = ny;
@@ -2533,17 +2571,42 @@ function ghostStep(world, state, input) {
 function obstaclesAlongPath(world, startState, plan) {
     const seen = [];
     const seenSet = new Set();
+    const note = (id) => {
+        if (id && !seenSet.has(id)) {
+            seen.push(id);
+            seenSet.add(id);
+        }
+    };
     let s = startState;
     for (const input of plan) {
         s = ghostStep(world, s, input);
         if (!s) break;
-        const obstacleId = getObstacle(world, s.player_pos.x, s.player_pos.y);
-        if (obstacleId && !seenSet.has(obstacleId)) {
-            seen.push(obstacleId);
-            seenSet.add(obstacleId);
-        }
+        // ⛓ PASS-3 — the gate on ENTERING the cell this way, then the cell's own obstacle (the order a walk meets them).
+        note(entryGateCrossed(world, s.player_pos.x, s.player_pos.y, input));
+        note(getObstacle(world, s.player_pos.x, s.player_pos.y));
     }
     return seen;
+}
+
+/**
+ * ⛓ CONTENT SETS PASS-3 — **THE EXTRACTOR READS ENTRY GATES** (content-sets-passability-design § 1.3: on a plain world
+ * the extractor reported a `null`-gated exit reachable with no rule while `step` refused the walk). `entryRefused`:
+ * entering (x, y) moving `dir` has an entry gate of `null` (no entry that way). `entryGateCrossed`: the gate id that
+ * move must clear, or null. A world without `entry_gates` answers false / null everywhere, so its extraction is
+ * byte-identical.
+ */
+function entryRefused(world, x, y, dir) {
+    const key = `${x},${y},${dir}`;
+    return world.entryGates?.has(key) === true && world.entryGates.get(key) === null;
+}
+
+function entryGateCrossed(world, x, y, dir) {
+    return world.entryGates?.get(`${x},${y},${dir}`) ?? null;
+}
+
+/** The direction of the one-cell move from `a` to `b` (adjacent cells), as an input. */
+function stepDir(a, b) {
+    return Object.keys(DELTAS).find((d) => a.x + DELTAS[d].dx === b.x && a.y + DELTAS[d].dy === b.y) ?? null;
 }
 
 /**
@@ -2623,7 +2686,9 @@ const routeSetOrder = (a, b) => popcount(a) - popcount(b) || (a < b ? -1 : a > b
 
 function minimalObstacleSets(world) {
     const start = createState(world).player_pos;
-    const ids = [...new Set(world.obstacles.values())];
+    // ⛓ PASS-3 — the entry gates' ids join the axis AFTER the cell obstacles', so a world without entry gates keeps
+    //   every bit (and so every mask, and every ordering by mask) it had.
+    const ids = [...new Set([...world.obstacles.values(), ...[...(world.entryGates?.values() ?? [])].filter((g) => g !== null)])];
     const bit = new Map(ids.map((id, i) => [id, 1n << BigInt(i)]));
     const key = (x, y) => `${x},${y}`;
     const labels = new Map([[key(start.x, start.y), [0n]]]);
@@ -2654,8 +2719,10 @@ function minimalObstacleSets(world) {
             const nx = x + DELTAS[input].dx;
             const ny = y + DELTAS[input].dy;
             if (!isFloor(world, nx, ny)) continue;
+            if (entryRefused(world, nx, ny, input)) continue;
             const id = getObstacle(world, nx, ny);
-            const next = id ? mask | bit.get(id) : mask;
+            const gate = entryGateCrossed(world, nx, ny, input);
+            const next = (id ? bit.get(id) : 0n) | (gate ? bit.get(gate) : 0n) | mask;
             if (!keep(key(nx, ny), next)) continue;
             const label = `${key(nx, ny)}|${next}`;
             if (!parent.has(label)) parent.set(label, `${key(x, y)}|${mask}`);
@@ -2668,10 +2735,17 @@ function minimalObstacleSets(world) {
     /** The obstacles the route that kept `mask` at `position` crosses, in encounter order. */
     const routeObstacles = (position, mask) => {
         const cells = [];
-        for (let at = `${key(position.x, position.y)}|${mask}`; parent.has(at); at = parent.get(at)) cells.push(at.split('|')[0]);
+        let at = `${key(position.x, position.y)}|${mask}`;
+        for (; parent.has(at); at = parent.get(at)) cells.push(at.split('|')[0]);
+        cells.push(at.split('|')[0]); // the route's start, so its first step has a direction (⛓ PASS-3)
         const seen = [];
-        for (const cell of cells.reverse()) {
-            const id = world.obstacles.get(cell);
+        const xy = (cell) => { const [x, y] = cell.split(',').map(Number); return { x, y }; };
+        const ordered = cells.reverse();
+        for (let i = 1; i < ordered.length; i++) {
+            const to = xy(ordered[i]);
+            const gate = world.entryGates ? entryGateCrossed(world, to.x, to.y, stepDir(xy(ordered[i - 1]), to)) : null;
+            if (gate && !seen.includes(gate)) seen.push(gate);
+            const id = world.obstacles.get(ordered[i]);
             if (id && !seen.includes(id)) seen.push(id);
         }
         return seen;
@@ -3146,6 +3220,7 @@ export function floorReachableSet(world) {
             const nx = p.x + d.dx;
             const ny = p.y + d.dy;
             if (!isFloor(world, nx, ny)) continue;
+            if (entryRefused(world, nx, ny, input)) continue; // ⛓ PASS-3: ghostStep's semantics, which this promises
             const k = posKey(nx, ny);
             if (visited.has(k)) continue;
             visited.add(k);

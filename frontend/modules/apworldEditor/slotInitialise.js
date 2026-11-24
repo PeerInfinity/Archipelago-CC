@@ -62,6 +62,7 @@ import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { makeTrueRule } from '../shared/rulesJsonBuilder.js';
 import { createRng } from '../shared/rng.js';
 import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
+import { recordedGridBox } from '../procgenCore/cellExtent.js';
 import { SUBSTRATE_CONFIGS_KEY, recordableConfigsFor } from '../procgenCore/substrateConfigRecord.js';
 import { grantedLibraryItems, grantsUsedBy } from '../procgenPipeline/topDownSteps.js';
 import {
@@ -532,17 +533,10 @@ export function itemIdsOf(doc, player) {
     return new Set(Object.values(doc?.items?.[player] ?? {}).map((d) => d?.id).filter(Number.isInteger));
 }
 
-/** ⛓ The extent of the cells, as `buildRulesJson` records `grid_dims`. */
-function cellExtent(entries) {
-    let w = 0;
-    let h = 0;
-    for (const e of Object.values(entries)) {
-        const c = e?.grid_cell;
-        if (!c) continue;
-        w = Math.max(w, c.gx + 1);
-        h = Math.max(h, c.gy + 1);
-    }
-    return { width: w, height: h };
+/** ⛓ `{grid_dims[, grid_origin]}` for the slot's `procgen_metadata`, from the entries' `grid_cell`s. */
+function gridRecordOf(entries) {
+    const { grid_dims, grid_origin } = recordedGridBox(Object.values(entries).map((e) => e?.grid_cell));
+    return grid_origin ? { grid_dims, grid_origin } : { grid_dims };
 }
 
 /**
@@ -634,7 +628,9 @@ export function initialiseSlot(args) {
         source_counts: computeSourceCounts(doc, a.player),
         stop_reason: layout.stats.stopReason,
         region_count: Object.keys(entries).length,
-        grid_dims: cellExtent(entries),
+        // ⛓ S2: the shared writer (`procgenCore/cellExtent.recordedGridBox`), as `buildRulesJson` records it: the
+        //   cells' box widened to (0,0) — `max + 1` for cells ≥ 0, as before — and `grid_origin` only when negative.
+        ...gridRecordOf(entries),
         ...(configs ? { [SUBSTRATE_CONFIGS_KEY]: configs } : {}),
     };
     return {

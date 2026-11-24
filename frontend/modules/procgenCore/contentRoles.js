@@ -40,7 +40,7 @@
  * `contentRoles.test.js`, which reads this file's source).
  */
 
-import { PACK_CONCEPT_KINDS } from '../packConcepts/packConcepts.js';
+import { PACK_CONCEPT_KINDS, presentsStructure } from '../packConcepts/packConcepts.js';
 import { ConceptContractError, realisationsOf } from './concepts.js';
 
 /** The fields a role declaration may carry. */
@@ -151,6 +151,14 @@ export function contentRolesOf(entryOrRoles) {
  * the wrong kind (or not presenting an accepted concept), no `look`, no `art`,
  * then each text slot in the role's order.
  *
+ * ⛓ CONTENT SETS S1 — **A PRESENTER NEVER FILLS A KIND ROLE.** A concept that
+ * `presents` a mechanic is that mechanic's look (a gate, a found item), not
+ * scenery: a role that accepts `kinds` refuses it, right after the kind check.
+ * So the default pack's guardian (kind `character`, presents `guardian`) is
+ * never a bystander in a room, and a theme that wants water as a gate AND as a
+ * room writes two concepts, of which only the gate one declares `presents` —
+ * C1's one-presenter-per-mechanic-per-pack rule holds unchanged.
+ *
  * ⚠ A text slot is checked for PRESENCE on the concept (its key), not for the
  * key resolving in a text library: the pack layer already holds every slot to a
  * namespaced key, and resolution is the consumer's, with its stack.
@@ -165,6 +173,9 @@ export function roleRefusal(role, packConcept) {
     if (accepts.kinds) {
         if (!accepts.kinds.includes(packConcept.kind)) {
             return `${who} is a ${packConcept.kind}; the role accepts ${accepts.kinds.join(', ')}`;
+        }
+        if (packConcept.presents !== undefined && packConcept.presents !== null) {
+            return `${who} presents "${packConcept.presents}", so it is that mechanic's look and fills no kind role`;
         }
     } else if (accepts.presents) {
         if (!accepts.presents.includes(packConcept.presents)) {
@@ -211,12 +222,19 @@ export function candidatesForRole(entryOrRoles, roleId, packConcepts) {
  * Reads the WINNING entries (an override that drops `presents` is not checked
  * for the entry it replaced).
  *
+ * ⛓ CONTENT SETS PL-1 — a NAMESPACED `presents` (`<pack>:task/<slug>`) names
+ * a STRUCTURE entry, not a mechanic concept (Z.1), so it is not looked up here:
+ * the words never load the structure layer. Its form is the pack layer's
+ * (`packConcepts.STRUCTURE_ID_PATTERN`); that it names a real entry is
+ * `packStructure.assertPresentsStructure`'s, where both layers are loaded.
+ *
  * @param {object} packConcepts a `createPackConcepts(stack)` object
  * @param {Record<string, object>} concepts the mechanic concept table
  */
 export function assertPresents(packConcepts, concepts) {
     for (const key of packConcepts.keys()) {
         const c = packConcepts.get(key);
+        if (presentsStructure(c.presents)) continue;
         if (c.presents !== undefined && !concepts?.[c.presents]) {
             fail(`content roles: pack "${c.pack}" concept "${key}" presents "${c.presents}", which the concept table does not hold`);
         }
@@ -232,4 +250,64 @@ export function assertPresents(packConcepts, concepts) {
 export function rolesFilledBy(entryOrRoles, packConcepts) {
     const roles = contentRolesOf(entryOrRoles);
     return Object.keys(roles).map((role) => ({ role, concepts: candidatesForRole(roles, role, packConcepts) }));
+}
+
+/** ⛓ S2 — the text key a substrate's own line lives at, beside the shared `key` (`resolveRole`'s `variant`). */
+export const textVariantKey = (key, variant) => `${key}/${variant}`;
+
+/**
+ * ⛓⛓ CONTENT SETS S1 — **THE ONE SHARED RESOLVER.** The pack concepts of a
+ * content set that fill `roleId`, each with every text slot the role needs
+ * RESOLVED through the set's text library, latest pack in the stack first
+ * (`contentSet.ids` order; within one pack, the library's declaration order).
+ * A candidate whose any needed key does not resolve is left out, so it falls
+ * through to an earlier pack — in the end the substrate's default pack.
+ * `presents`, when given, narrows to the concepts presenting that mechanic.
+ *
+ *   → [{ key, concept, text: { <slot>: <template> } }, …]   (possibly empty)
+ *
+ * `roleRefusal` stays a pure question about ONE concept (the chart's
+ * `rolesFilledBy` asks it with no text library); this is the consumer's
+ * question, asked once here so no substrate re-filters on its own. Templates
+ * are returned verbatim: filling them is the consumer's.
+ *
+ * ⛓⛓ CONTENT SETS S2 — **`variant`: ONE LINE PER SUBSTRATE WHERE THE SHARED ONE
+ * WOULD BE UNTRUE** (⚖ the user, 2026-11-14, option A). With a `variant` (the
+ * consumer's substrate id), each needed slot's key is first asked as
+ * `<key>/<variant>` (`textVariantKey`), then as `<key>`. So a pack writes one
+ * line for every substrate and, beside it, the line a substrate needs instead
+ * (the `meta` Narrator's line names a room's PLACE, which a substrate with no
+ * `place` role does not have). Without a variant nothing changes. (A key may not hold `@`: the pack
+ * layer's `KEY_PATTERN`.)
+ *
+ * @param {object} entryOrRoles an entry or its `contentRoles` object
+ * @param {string} roleId
+ * @param {{ids: string[], concepts: object, text: object}} contentSet
+ * @param {{presents?: string, variant?: string}} [opts]
+ */
+export function resolveRole(entryOrRoles, roleId, contentSet, { presents, variant } = {}) {
+    const role = roleOf(entryOrRoles, roleId);
+    const { ids = [], concepts, text } = contentSet ?? {};
+    if (!concepts) return [];
+    const slots = role.needs?.text ?? [];
+    const rank = (key) => ids.indexOf(concepts.get(key).pack);
+    const keys = candidatesForRole(entryOrRoles, roleId, concepts)
+        .filter((key) => presents === undefined || concepts.get(key).presents === presents);
+    // A stable sort, latest pack first: within one pack the library's order holds.
+    const ordered = keys.map((key, i) => ({ key, i })).sort((a, b) => (rank(b.key) - rank(a.key)) || (a.i - b.i));
+    const out = [];
+    for (const { key } of ordered) {
+        const concept = concepts.get(key);
+        const resolved = {};
+        let whole = true;
+        for (const slot of slots) {
+            const key = concept.text[slot];
+            const template = (variant ? text?.string?.(textVariantKey(key, variant)) : null)
+                ?? text?.string?.(key) ?? null;
+            if (template === null) { whole = false; break; }
+            resolved[slot] = template;
+        }
+        if (whole) out.push({ key, concept, text: resolved });
+    }
+    return out;
 }

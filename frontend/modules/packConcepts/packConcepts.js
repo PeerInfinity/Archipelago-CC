@@ -29,14 +29,89 @@ import { ContentPackError, KEY_PATTERN, mergeKeyed } from '../contentPacks/conte
 /**
  * The pack-concept kinds (Q2). This module OWNS the list: the roles contract
  * imports it. `info` is a piece of information (a clue).
+ *
+ * ⛓ CONTENT SETS PL-1 (S6, Z.1; ⚖ the user 2026-11-15): `task`, `stat`,
+ * `resource` and `boon` join the four. They are the kinds of the `structure`
+ * layer (`packStructure/`), so a pack concept that NAMES a task (presents a
+ * structure entry) has kind `task`. `object` stays for scenery; something
+ * counted is a `resource`; a `boon` is something kept.
+ *
+ * ⛓ PASS-1: `terrain` — a tile kind whose passability a `structure` terrain entry
+ * declares (it presents that entry; `STRUCTURE_KINDS`).
  */
-export const PACK_CONCEPT_KINDS = Object.freeze(['character', 'place', 'object', 'info']);
+export const PACK_CONCEPT_KINDS = Object.freeze(['character', 'place', 'object', 'info', 'task', 'stat', 'resource', 'boon', 'terrain']);
 
-/** The fields an entry may carry; any other is refused. */
-export const PACK_CONCEPT_FIELDS = Object.freeze(['kind', 'name', 'description', 'look', 'art', 'text', 'presents']);
+/**
+ * The kinds a structure entry may have (`packStructure` re-uses this list): the four of S6, and `place`.
+ *
+ * ⛓ CONTENT SETS PASS-1 (declared passability; ⚖ the user 2026-11-18: "Pack declares, world copies"): `terrain`, a
+ * TILE KIND's passability (`pass`, one of `TERRAIN_PASSES`). It is LOGIC, so it lives here in `structure` and never on
+ * the concept row (Z.1): a tile-kind concept of kind `terrain` PRESENTS a terrain entry, and a concept that presents
+ * none is `walkable`.
+ */
+export const STRUCTURE_KINDS = Object.freeze(['task', 'stat', 'resource', 'boon', 'place', 'terrain']);
+
+/**
+ * ⛓ PASS-1 — **THE PASSABILITY VALUES A TERRAIN ENTRY MAY DECLARE**, a closed list that grows ONE VALUE PER SLICE
+ * (⚖ the user 2026-11-18: "One per slice"): `needs` (PASS-2) and `one-way` (PASS-3) join it, each with its lowering
+ * into a maze primitive and its reachability pin. This module OWNS the names (as it owns `PACK_TILE_BASES`); the
+ * structure parser refuses any other, and the maze payload's `tileKinds[].pass` enum is this list.
+ *   · `walkable` — enter and leave freely (the default: TILE-3's "placed kinds are walkable");
+ *   · `blocked`  — never entered: the editor lowers it to a wall under the kind;
+ *   · `needs`    — (⛓ PASS-2) entered only while the inventory holds what a MECHANIC concept (`needs: "swim"`, a bare
+ *                  `procgenCore/concepts.js` id, never an AP item name: Q8) realises as; the editor lowers it to a rule
+ *                  obstacle on the kind's floor cell;
+ *   · `one-way`  — (⛓ PASS-3) entered only by a move in one of `dirs` (`TERRAIN_DIRS`, the MOVE's direction: `["E"]`
+ *                  is entered moving east, i.e. from the west); leaving is free. The editor lowers it to the engine's
+ *                  `entry_gates`, `gate: null` for every other direction.
+ */
+export const TERRAIN_PASSES = Object.freeze(['walkable', 'blocked', 'needs', 'one-way']);
+
+/** ⛓ PASS-3 — the pass whose terrain entry names the directions a move may ENTER the cell in. */
+export const ONE_WAY_PASS = 'one-way';
+
+/** ⛓ PASS-3 — the move directions a `one-way` entry's `dirs` names (the maze engine's inputs, in its order). */
+export const TERRAIN_DIRS = Object.freeze(['N', 'S', 'E', 'W']);
+
+/** ⛓ PASS-2 — the pass whose terrain entry names a mechanic concept (`needs`). */
+export const NEEDS_PASS = 'needs';
+
+/** ⛓ PASS-1 — the value of a tile kind that presents no terrain entry, and the one a world never writes. */
+export const DEFAULT_TERRAIN_PASS = 'walkable';
+
+/**
+ * The fields an entry may carry; any other is refused. `src` names the entry's
+ * provenance source when it differs from the manifest's default
+ * (`contentPacks/provenance.js`, ⛓ PL-1).
+ */
+export const PACK_CONCEPT_FIELDS = Object.freeze(['kind', 'name', 'description', 'look', 'art', 'base', 'text', 'presents', 'src']);
+
+/**
+ * ⛓ CONTENT SETS TILE-2 — **THE TILE BASES A CONCEPT MAY DECLARE** (`base`, beside
+ * its `art` key). A base says what a tile kind IS when nothing draws it as itself:
+ * the maze's fallback chain (`mazeRoom/mazeTileArt.drawMazeTile`) draws the base's
+ * one default draw when the theme has no art for the kind. The set is CLOSED, and
+ * this module OWNS the names (as it owns `PACK_CONCEPT_KINDS`):
+ * `mazeTileArt.MAZE_TILE_BASES` holds one draw per name and refuses at load to
+ * drift from this list. A row with no `base` is valid; a kind with neither art nor
+ * a base is drawn as the placeholder, never a throw.
+ */
+export const PACK_TILE_BASES = Object.freeze(['floor', 'wall', 'marker', 'character']);
+
+/**
+ * ⛓ PL-1 — `presents` takes TWO forms (Z.1). A BARE id (`guardian`) names a
+ * mechanic concept in `procgenCore/concepts.js`, as before. A NAMESPACED id
+ * (`omsi:task/pick-locks`) names a STRUCTURE entry: `<pack>:<kind>/<slug>`,
+ * whose kind is one of `STRUCTURE_KINDS` and the presenting concept's own kind.
+ * The one-presenter-per-pack rule and latest-pack-wins hold for both.
+ */
+export const STRUCTURE_ID_PATTERN = new RegExp(`^([a-z][a-z0-9-]*):(${STRUCTURE_KINDS.join('|')})\\/([a-z0-9][a-z0-9-]*)$`);
+
+/** True when a `presents` value is the namespaced (structure) form. */
+export const presentsStructure = (presents) => typeof presents === 'string' && presents.includes(':');
 
 const LOOK_FIELDS = Object.freeze(['color', 'symbol']);
-const MANIFEST_FIELDS = Object.freeze(['schema_version', 'concepts', '_comment']);
+const MANIFEST_FIELDS = Object.freeze(['schema_version', 'concepts', 'provenance', '_comment']);
 const COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/;
 
 const fail = (message) => { throw new ContentPackError(`pack concepts: ${message}`); };
@@ -74,6 +149,9 @@ export function parseConceptsManifest(json, packId) {
         if ('art' in entry && (typeof entry.art !== 'string' || !KEY_PATTERN.test(entry.art))) {
             fail(`${at}: art ${JSON.stringify(entry.art)} is not a namespaced art-library key`);
         }
+        if ('base' in entry && !PACK_TILE_BASES.includes(entry.base)) {
+            fail(`${at}: base ${JSON.stringify(entry.base)} is not one of ${PACK_TILE_BASES.join(', ')}`);
+        }
         if ('text' in entry) {
             if (!isObject(entry.text)) fail(`${at}: text must be { <slot>: <text-library key> }`);
             for (const [slot, ref] of Object.entries(entry.text)) {
@@ -82,6 +160,12 @@ export function parseConceptsManifest(json, packId) {
             }
         }
         if ('presents' in entry && !isText(entry.presents)) fail(`${at}: presents must be a non-empty mechanic concept id`);
+        if ('presents' in entry && presentsStructure(entry.presents)) {
+            const m = STRUCTURE_ID_PATTERN.exec(entry.presents);
+            if (!m) fail(`${at}: presents ${JSON.stringify(entry.presents)} is not a structure id (<pack>:<kind>/<slug>, kind one of ${STRUCTURE_KINDS.join(', ')})`);
+            if (m[2] !== entry.kind) fail(`${at}: presents the ${m[2]} "${entry.presents}", but its own kind is ${entry.kind} (a concept that presents a ${m[2]} has kind ${m[2]})`);
+        }
+        if ('src' in entry && !isText(entry.src)) fail(`${at}: src must be a provenance source id`);
     }
     return json;
 }

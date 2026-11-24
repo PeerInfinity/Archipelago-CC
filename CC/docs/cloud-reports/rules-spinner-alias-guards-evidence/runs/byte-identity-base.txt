@@ -1,0 +1,39 @@
+gen:frontend/presets/seedling/AP_14089154938208861744/AP_14089154938208861744_rules.json REFUSED 67f394e9852b780ce8b75f5dd892e5f1 generated Seedling set: these rules carry no flash_seedling_gen sidecar, so there is no ge
+gen:frontend/presets/seedling_atlas/AP_1/AP_1_rules.json REFUSED 67f394e9852b780ce8b75f5dd892e5f1 generated Seedling set: these rules carry no flash_seedling_gen sidecar, so there is no ge
+gen:frontend/presets/seedling_atlas_host/AP_1/AP_1_rules.json REFUSED 67f394e9852b780ce8b75f5dd892e5f1 generated Seedling set: these rules carry no flash_seedling_gen sidecar, so there is no ge
+gen:frontend/presets/seedling_atlas_location/AP_1/AP_1_rules.json REFUSED 67f394e9852b780ce8b75f5dd892e5f1 generated Seedling set: these rules carry no flash_seedling_gen sidecar, so there is no ge
+gen:frontend/presets/seedling_atlas_maze/AP_1/AP_1_rules.json REFUSED 67f394e9852b780ce8b75f5dd892e5f1 generated Seedling set: these rules carry no flash_seedling_gen sidecar, so there is no ge
+gen:frontend/presets/seedling_atlas_sphere/AP_1/AP_1_rules.json REFUSED 67f394e9852b780ce8b75f5dd892e5f1 generated Seedling set: these rules carry no flash_seedling_gen sidecar, so there is no ge
+gen:frontend/presets/seedling_er/AP_1/AP_1_rules.json REFUSED 67f394e9852b780ce8b75f5dd892e5f1 generated Seedling set: these rules carry no flash_seedling_gen sidecar, so there is no ge
+gen:frontend/presets/seedling_generated_chestdoor/AP_1/AP_1_rules.json 61e2013edec452609994483aee24d5d6 table=36fd5642d74e5de5de10ebc46b4aed07 report=ca52969ef17041b8d6fcf3fa4cdbd1a8
+gen:frontend/presets/seedling_generated_host/AP_1/AP_1_rules.json 2888ca7831d240bfed38098aad917be5 table=d85109f66a942a074a144149359553d4 report=efbc926d59b9545ae836334ad92975f5
+gen:frontend/presets/seedling_generated_leaf/AP_1/AP_1_rules.json ec0724dcd3c9ddfc7cbd05414acc6abd table=a0dd0a03a61e6abbcb33921f83795ca3 report=55b724a92588299f504f60f486a87ef5
+gen:frontend/presets/seedling_generated_room/AP_1/AP_1_rules.json 22b6a77387132b6d7af46dd2dc62d7f3 table=8c5de58f5ba9237d3d9280261f86e5dc report=d3f1500f47ae51563c6961b081a225b4
+gen:frontend/presets/seedling_generated_swim/AP_1/AP_1_rules.json ff95b9245c0845344048c662855cb81e table=b28d5a76d92f90975c7694f619742eeb report=77ea7d927802895df5fdd02d05ac3e7a
+gen:frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json REFUSED 67f394e9852b780ce8b75f5dd892e5f1 generated Seedling set: these rules carry no flash_seedling_gen sidecar, so there is no ge
+gen:frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json REFUSED 67f394e9852b780ce8b75f5dd892e5f1 generated Seedling set: these rules carry no flash_seedling_gen sidecar, so there is no ge
+gen:frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json REFUSED 67f394e9852b780ce8b75f5dd892e5f1 generated Seedling set: these rules carry no flash_seedling_gen sidecar, so there is no ge
+gen:frontend/presets/seedling_sphere_room/AP_1/AP_1_rules.json REFUSED 67f394e9852b780ce8b75f5dd892e5f1 generated Seedling set: these rules carry no flash_seedling_gen sidecar, so there is no ge
+gen:frontend/presets/seedling_spiral_room/AP_1/AP_1_rules.json REFUSED 67f394e9852b780ce8b75f5dd892e5f1 generated Seedling set: these rules carry no flash_seedling_gen sidecar, so there is no ge
+validate:frontend/modules/seedlingDemo/fixtures/seedling-vanilla-set.json ok=true errors=0 d751713988987e9331980363e24189ce warnings=2f29e508fbce71c62265ff3ffcf682ae
+rewrite:canonical:entries 7e1354d3fce182e3875bcde54663fac0
+rewrite:canonical:allocated 19:3,29:1,40:14,55:0,67:0,39:5,40:20,40:25,41:3,42:0,115:0
+rewrite:canonical:set 791a15a7f69fa355b77f0656ccf1ed33
+atlastable:frontend/presets/seedling/AP_14089154938208861744/AP_14089154938208861744_rules.json SKIP no indexed atlas for null
+atlastable:frontend/presets/seedling_atlas/AP_1/AP_1_rules.json entries=1 5d8f23d98664e687d1f2fded3c9bd7be retags=0 d751713988987e9331980363e24189ce refused=0
+atlastable:frontend/presets/seedling_atlas_host/AP_1/AP_1_rules.json entries=0 d751713988987e9331980363e24189ce retags=0 d751713988987e9331980363e24189ce refused=0
+atlastable:frontend/presets/seedling_atlas_location/AP_1/AP_1_rules.json entries=1 3c57806bc27f2e07462dbcf3ea4509b9 retags=0 d751713988987e9331980363e24189ce refused=0
+atlastable:frontend/presets/seedling_atlas_maze/AP_1/AP_1_rules.json entries=0 d751713988987e9331980363e24189ce retags=0 d751713988987e9331980363e24189ce refused=0
+atlastable:frontend/presets/seedling_atlas_sphere/AP_1/AP_1_rules.json SKIP no indexed atlas for null
+atlastable:frontend/presets/seedling_er/AP_1/AP_1_rules.json entries=30 5b0087d15967ae68fc5b5c5d52db3881 retags=11 b854077b8d44aa90b6f708b97ef2e403 refused=59
+atlastable:frontend/presets/seedling_generated_chestdoor/AP_1/AP_1_rules.json SKIP no indexed atlas for null
+atlastable:frontend/presets/seedling_generated_host/AP_1/AP_1_rules.json SKIP no indexed atlas for null
+atlastable:frontend/presets/seedling_generated_leaf/AP_1/AP_1_rules.json SKIP no indexed atlas for null
+atlastable:frontend/presets/seedling_generated_room/AP_1/AP_1_rules.json SKIP no indexed atlas for null
+atlastable:frontend/presets/seedling_generated_swim/AP_1/AP_1_rules.json SKIP no indexed atlas for null
+atlastable:frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json entries=30 5b0087d15967ae68fc5b5c5d52db3881 retags=11 b854077b8d44aa90b6f708b97ef2e403 refused=59
+atlastable:frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json entries=30 5b0087d15967ae68fc5b5c5d52db3881 retags=11 b854077b8d44aa90b6f708b97ef2e403 refused=59
+atlastable:frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json SKIP no indexed atlas for "seedling-94cd96dd"
+atlastable:frontend/presets/seedling_sphere_room/AP_1/AP_1_rules.json entries=0 d751713988987e9331980363e24189ce retags=0 d751713988987e9331980363e24189ce refused=0
+atlastable:frontend/presets/seedling_spiral_room/AP_1/AP_1_rules.json entries=0 d751713988987e9331980363e24189ce retags=0 d751713988987e9331980363e24189ce refused=0
+aliases:vanilla-map n/a (base: no outOfBandAliases module)

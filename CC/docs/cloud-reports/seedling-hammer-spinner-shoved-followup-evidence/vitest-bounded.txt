@@ -1,0 +1,49 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerFightFallback.test.js [2m([22m[2m15 tests[22m[2m)[22m[33m 77253[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the rewound run IS the live run: at every kill start and every 50th tick of a solve, byte for byte [33m 5657[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's [33m 35702[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence [33m 2199[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing [33m 4534[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ inert while the fight itself is on (the retry would be the same path) [33m 12891[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged [33m 901[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged [33m 5342[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the rewind that solves is a plan whose `expected` IS a replay of its keys, row by row [33m 4867[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON, the deadline tripping AFTER the rewind solved: the plan's `expected` IS a replay of its keys [33m 5049[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPressKillChasers.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 81929[2mms[22m[39m
+     [33m[2m✓[22m[39m step 67: OFF the kill walks into bob@736,752 and dies; ON it takes no hit, and the keys are OFF's until the step that met the bob [33m 81926[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverEnvChannel.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 1462[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing set = defaults: CHOOSER_PAIR at its shipped default (solverBot alone), no SEEDLING_* in the env [33m 330[2mms[22m[39m
+     [33m[2m✓[22m[39m the result records the switches set (and carries no stamp at the defaults) [33m 338[2mms[22m[39m
+     [33m[2m✓[22m[39m an unknown switch refuses BY NAME in the worker too: every solve, nothing installed [33m 528[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerSlashRect.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 1124[2mms[22m[39m
+     [33m[2m✓[22m[39m always: the press forecast's throw is REFUSED by name (it threw `PressError` at the base) [33m 516[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the aim waits a tick instead (no forecast at -1), and the solve meets the kill's own refusal [33m 601[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerBodyGate.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 1058[2mms[22m[39m
+     [33m[2m✓[22m[39m the corner is a CORPSE's body: the press of t719 was the killing hit, and no key set meets a line [33m 439[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: every key set is a step out there (the body is not billed, the line misses) [33m 383[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerOppPressFallback.test.js [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerShovedLookahead.test.js [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js [2m([22m[2m17 tests[22m[2m)[22m[33m 106064[2mms[22m[39m
+     [33m[2m✓[22m[39m t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick [33m 2920[2mms[22m[39m
+     [33m[2m✓[22m[39m t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA) [33m 3263[2mms[22m[39m
+     [33m[2m✓[22m[39m K = 0 is OFF's pass: past the budget a cell is asked OFF's floor, so ON with no previews returns OFF's strike [33m 3270[2mms[22m[39m
+     [33m[2m✓[22m[39m the budget is taken: t190 needs eight previews for ON's earlier strike, t1450 more than sixteen [33m 6287[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it is G1's OFF walk for 602 ticks (the kill's first landing at t501 is shared), then it parts [33m 863[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is the kill across the death) [33m 55049[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t778), and the executed prefix is the witness's first 778 ticks [33m 34386[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityF1c.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 35331[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ where no corner forms the rung never fires (the residue the window had before F1c) [33m 3156[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the committed window IS at the chain's residue, and IS the solve, key for key: no stall is needed there, no hit, the crossing to L19 [33m 4309[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ where a corner DOES form (the witness's residue 42, the escape OFF by the switch) the rung solves: a stall meets the line at another phase, no hit, the crossing to L19 [33m 9208[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ with the escape ON (the default) the same two residues solve with NO stall: 42 (the witness's) and 18 (the rebound's), no hit, the crossing to L19 [33m 4152[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ the remainder is NAMED (the escape OFF by the switch): a residue whose corner a landing's rebound makes refuses with the landing in its words [33m 2375[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the witness walks the rung's solve at its own residue through its declared tick: the solve depends on the residue, not the absolute clock [33m 8500[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ F5: the solver, asked the chain-window staging, DECLARES the game's spelling — its pending row is the ledger's removal + the v9 fade [33m 3569[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+[2m      Tests [22m [1m[32m81 passed[39m[22m[90m (81)[39m
+[2m   Start at [22m 21:41:32
+[2m   Duration [22m 117.25s[2m (transform 5.50s, setup 797ms, import 14.89s, tests 304.23s, environment 1ms)[22m
+

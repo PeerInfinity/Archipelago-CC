@@ -56,7 +56,7 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
     // pocket opens through (one boundary exit rule); every count holds.
     // ⛓ RULES kill-locks — restamped (ae491163 -> 5c55890f): a decided kill-lock's rule is its room's bodies'
     // (L18/L26/L53/L60 widen to Wand | Dark Shield; L98's stairs under the lock are charged); every count holds.
-    it('115 regions, 56 carry a subgraph: 207 sub-regions, 312 internal exits, 207 of them need Progressive Swim', () => {
+    it('the regions, the ones with a subgraph, their sub-regions, internal exits and Swim rows (counts pinned in the body)', () => {
         // ⛓ RULES game-truth-gaps — restamped (5c55890f -> db0a4f7f): L57 is lifted from never-enter (⚖ 2026-10-06),
         //   so 113 -> 114 regions (L57 is all water, no subgraph); every other count holds. The landing gates are rules-only.
         // ⛓ R4b (rules-boss-locations) — restamped (db0a4f7f -> db4c2681): L69 is lifted from never-enter (the Lights
@@ -121,7 +121,23 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   t2-button column).
         // ⛓ rules-no-hit-directional — restamped (e3ae176e -> 3a6a7579): L22 and L25 each split in two at their directional
         //   no-hit gate (⚖ the user 2026-11-11, a per-room table for now). No door or swim row moves.
-        expect(c.atlasId).toBe('seedling-3a6a7579');
+        // ⛓ tile-fire-breaks-rocks — restamped (e3ae176e -> 32298df9): an ordinary rock also breaks to Fire from a side with a
+        //   clean flame stance (rules-6's rule), so four two-way internal rows split into one-way pairs (L0 r6c5<->r7c6 and
+        //   r11c19<->r7c6, L100 r2c3<->r4c10, L16 r3c7<->r6c8: one side keeps the swing). No door or sub-region moves.
+        // ⛓ merged (rules-no-hit-directional + tile-fire-breaks-rocks): 308 -> 316 internal exits (no-hit's 4 + this slice's 4); atlas 88e3788c.
+        // ⛓ rules-l99-sided-killlock — restamped (88e3788c -> 2ac275e8): L99's lock@80,96 is cleared only from the lower floor
+        //   (the west pocket wakes one lavarunner of three), so its two-way internal row splits. No door or sub-region moves.
+        // ⛓ rules-fire-arm-chaser-guard: 317 -> 316 internal exits (L100's rock row is two-way again: the flyer guards its Fire
+        // arm, so both halves are the swing's); L73's two rows lose Fire in place. Atlas 2ac275e8 -> 630fbc4c. Swim unmoved.
+        // ⛓ rules-nohit-wand-crosscheck: the Wand joins L22 south-to-north's arms (game witness l22-25-21-wand); one internal
+        //   row's rule widens, no exit or door moves; atlas 88e3788c -> df2a42ee.
+        // ⛓ rules-remerge-wand-nohit: both slices merged (L99 sided kill-lock + L22 Wand); re-recorded from the producers
+        //   (2ac275e8 -> 77a4c0ea; one internal row's rule widens, no exit or door moves).
+        // ⛓ land/rules-move-fireguard: the Fire guard re-merged onto train 140 (L22 Wand); re-recorded from the producers (77a4c0ea -> 5ca88dfe; 316 internal exits).
+        // ⛓ rules-lavatrap-neck: rule T gates L77's and L78's lavatrap discs.
+        // ⛓ rules-remerge-lavatrap: rule T re-merged onto main (train 146); re-recorded from the producers (5ca88dfe -> ea1ef5ba).
+        // ⛓ rules-k-pursuit-resume: rule K + (b) on the line-cut pull disc; re-recorded from the producers (ea1ef5ba -> b856f0fc).
+        expect(c.atlasId).toBe('seedling-b856f0fc');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
@@ -133,12 +149,22 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   r23c29 -> r26c13. Swim rows unmoved.
         // ⛓ rules-no-hit-directional: 54 -> 56 regions with a subgraph, 203 -> 207 sub-regions, 308 -> 312 internal exits
         //   (per room, L22 and L25: the priced crossing and its free reverse). Swim rows unmoved.
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 56, 207, 312, 207]);
+        // ⛓ tile-fire-breaks-rocks: 308 -> 312 internal exits (four two-way rock rows split into one-way pairs).
+        // ⛓ rules-l99-sided-killlock: 316 -> 317 internal exits (L99's lock row splits into the floor's weapon row and the
+        //   pocket's latch return). Swim rows unmoved.
+        // ⛓ rules-lavatrap-neck: 56 -> 57 regions with a subgraph (L77), 207 -> 216 sub-regions (L77 +3, L78 +6), 316 -> 355
+        //   internal exits (rule T's gated discs split both rooms). Swim rows unmoved.
+        // ⛓ rules-k-pursuit-resume: 57 -> 60 regions with a subgraph (L72, L74, L75), 216 -> 251 sub-regions, 355 -> 489
+        //   internal exits (rule K + (b): the lavarunners' leash cuts; sub-regions/rows L72 +9/+36, L73 +3/+6, L74 +4/+6, L75 +9/+36, L78 +4/+36, L80 +3/+8, L99 +3/+6). Swim rows unmoved.
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 60, 251, 489, 207]);
         expect(c.swimLevels).toHaveLength(23);
+        // ⛓ rules-k-pursuit-resume: the second most common internal rule is now K's lava crossing, the Dark Suit AND the
+        //   kill-lock arm (75 rows: a leash cut over lava, mostly L72's and L75's), above Has(Swim, 2) (32, unmoved).
         expect(c.byRule.slice(0, 2)).toEqual([
             { rule: 'Has(Progressive Swim)', count: 166 },
-            { rule: 'Has(Progressive Swim, 2)', count: 32 },
+            { rule: 'And(Has(Dark Suit), Or(Has(Progressive Sword), Has(Ghost Spear), Has(Wand), Has(Progressive Shield, 2)))', count: 75 },
         ]);
+        expect(c.byRule.find((r) => r.rule === 'Has(Progressive Swim, 2)').count).toBe(32);
     });
 
     // ⛓ RULES logical-links: 18 -> 17, L93 has no swim row left (above). ⛓ RULES footprints: 17 -> 16, L94 neither.

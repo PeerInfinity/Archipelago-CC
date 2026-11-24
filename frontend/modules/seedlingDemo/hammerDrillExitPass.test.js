@@ -1,5 +1,5 @@
 /**
- * seedlingDemo/hammerDrillExitPass.test — ⛓⛓ SEEDLING HAMMER-PHASE DRILL-EXIT-PASS (`DRILL_EXIT_PASS`, OFF): when a door
+ * seedlingDemo/hammerDrillExitPass.test — ⛓⛓ SEEDLING HAMMER-PHASE DRILL-EXIT-PASS (`DRILL_EXIT_PASS`, ON since the drill-exit flip): when a door
  * leg's walk refuses on a live drill before a tick is spent, residue D-A's timed pass to the crossing
  * (`execDrillTimedPassExit`) is asked ARMED — a held weapon does not skip it, and its wake test's walk is planned to the
  * door (the door allowed, `plannedWalkSamples`' `allowTeleporter`).
@@ -106,9 +106,9 @@ const ON = (fn) => withDrillExitPass(true, fn);
 const OFF = (fn) => withDrillExitPass(false, fn);
 
 describe('hammer-phase DRILL-EXIT-PASS: the switch', () => {
-    it('ships OFF, and the env alone turns it on', () => {
-        expect(DRILL_EXIT_PASS_DEFAULT).toBe(false);
-        expect(DRILL_EXIT_PASS.enabled).toBe(globalThis.process?.env?.SEEDLING_DRILL_EXIT_PASS === '1');
+    it('ships ON since the drill-exit flip, and the env alone (=0) turns it off', () => {
+        expect(DRILL_EXIT_PASS_DEFAULT).toBe(true);
+        expect(DRILL_EXIT_PASS.enabled).toBe(globalThis.process?.env?.SEEDLING_DRILL_EXIT_PASS !== '0');
         ON(() => expect(DRILL_EXIT_PASS.enabled).toBe(true));
         OFF(() => expect(DRILL_EXIT_PASS.enabled).toBe(false));
     });

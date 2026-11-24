@@ -7,10 +7,12 @@ Seedling rooms play in the **wasm** build of the original game by default. The *
 ## Play
 
 1. Load **Seedling Playthrough — the whole map as a world** (seed 1) — in the **Presets** panel, or by opening the page with `?game=seedling_playthrough&seed=1`. **Do it** loads it for you.
-2. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game*, or, on the JS runtime, *JS runtime loaded* or *configured* (the first time, the browser fetches the game's runtime).
-3. Press **▶ Start** in the game, if the game shows one. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
-4. Open the **Playback Bot** tab. It says "Sphere log loaded" — the world's solution, sphere by sphere.
-5. Press **▶** (Play) and open the **Flash Panel** tab: the bot walks the player to the first sphere's chests. Watch it make its first check.
-6. Back in the **Playback Bot** tab, press **⏹** (Stop): the bot pauses where it is, and **▶** would resume it. The *Seedling: the bot through the whole game* tutorial lets it run to the end.
+2. Open the **Flash Panel** tab.
+3. Start from no save: in the panel's **Settings** section, press **Clear this room's save** on the **JS** runtime, or **Clear the Flash save** on the **Flash** (Ruffle) runtime (the panel's log says what it removed). On wasm there is no such save, and nothing to press.
+4. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game*, or, on the JS runtime, *JS runtime loaded* or *configured* (the first time, the browser fetches the game's runtime).
+5. Press **▶ Start** in the game, if the game shows one. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
+6. Open the **Playback Bot** tab. It says "Sphere log loaded" — the world's solution, sphere by sphere.
+7. Press **▶** (Play) and open the **Flash Panel** tab: the bot walks the player to the first sphere's chests. Watch it make its first check.
+8. Back in the **Playback Bot** tab, press **⏹** (Stop): the bot pauses where it is, and **▶** would resume it. The *Seedling: the bot through the whole game* tutorial lets it run to the end.
 
 <!-- GENERATED from frontend/modules/tutorials/content/seedling/seedling.js by scripts/tutorials/generate-tutorial-docs.mjs — edit the tutorial, then run the generator; a hand edit here fails the pin. -->

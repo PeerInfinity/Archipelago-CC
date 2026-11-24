@@ -5,13 +5,22 @@ import discoveryStateSingleton from './singleton.js'; // <<< IMPORT SINGLETON
 // Import singletons needed for injection
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { registerClickAction, unregisterClickAction, PANEL_ACTION_IDS } from '../regionView/clickActions.js';
+import { makeDiscoverAction } from './discoveryClickActions.js';
 import { getLastRawJsonData } from '../stateManager/index.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import {
+  ACTION_NODES_BUNDLE,
   createOverrideApplier,
   readWorldDiscoveryMode,
   resolveDiscoveryOverrides,
+  settingsChangeSteps,
 } from './worldDiscoveryMode.js';
+import {
+  cascadeTargetsOf,
+  revealExits as revealExitsCore,
+  revealStartNeighbourhood,
+} from './revealCore.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -147,6 +156,11 @@ export function register(registrationApi) {
     ({ loopActive = false } = {}) => syncDiscoveryOverrides(loopActive));
   registrationApi.registerPublicFunction(moduleInfo.name, 'getWorldDiscoveryMode',
     () => _worldDiscoveryMode);
+  // ActionNodes AN-1b: reveal named exits with their targets and the targets'
+  // locations, with NO random pick (revealCore.js). The ActionNodes runtime
+  // calls it on a node's first clear.
+  registrationApi.registerPublicFunction(moduleInfo.name, 'revealExits',
+    (regionName, exitNames) => revealExits(regionName, exitNames));
 
   // Register dispatcher receivers for loop events
   registrationApi.registerDispatcherReceiver(
@@ -267,10 +281,10 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     );
     _unsubscribeHandles.push(settingsChangedUnsubscribe);
 
-    // Subscribe to UI click events for discovery handling
+    // Subscribe to UI click events for discovery handling. A MAP click (the Region Graph, the Region Map) discovers
+    // through the registered `discovery.discover` click action instead (CA-S4, below), which runs the same handler.
     log('info', '[Discovery Module] Subscribing to UI click events');
     _unsubscribeHandles.push(
-      _moduleEventBus.subscribe('regionGraph:nodeSelected', handleRegionClicked),
       _moduleEventBus.subscribe('ui:regionHeaderClicked', handleRegionClicked),
       // user:locationCheck and user:exitClicked are handled via dispatcher chains
       _moduleEventBus.subscribe('gameState:regionChanged', handlePlayerRegionChanged)
@@ -281,6 +295,10 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     );
   }
 
+  // ⛓ CA-S4: a map click's "discover the region" (`discovery.discover`), still gated by the settings bundle.
+  try { registerClickAction(makeDiscoverAction(handleRegionClicked)); }
+  catch (e) { log('warn', `[Discovery Module] discovery.discover not registered: ${e.message}`); }
+
   log('info', '[Discovery Module] Initialization complete.');
 
   // Return cleanup function
@@ -288,6 +306,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     log('info', '[Discovery Module] Cleaning up... Unsubscribing & disposing.');
     _unsubscribeHandles.forEach((unsubscribe) => unsubscribe());
     _unsubscribeHandles = [];
+    unregisterClickAction(PANEL_ACTION_IDS.discover);
 
     if (
       discoveryStateSingleton && // <<< Use singleton
@@ -343,6 +362,7 @@ function handleRulesLoaded(eventData) {
     if (_settings.regionDiscoveryTrigger === 'onExitDiscovered') {
       applyExitDiscoveryCascade(discoveryStateSingleton.getStartRegions());
     }
+    applyWorldReveals();
   } catch (error) {
     log('error',
       '[Discovery Module] Error clearing/initializing DiscoveryState from rulesLoaded:',
@@ -466,16 +486,17 @@ function handleMoveCompleted(eventData) {
 // --- UI Click Event Handlers ---
 
 /**
- * Handle region click from region graph or regions panel.
- * Discovers the region if clickDiscoversRegion is enabled.
+ * Handle a region click: the Regions panel's `ui:regionHeaderClicked`, and a map click's `discovery.discover` action
+ * (CA-S4; before it, the Region Graph's `regionGraph:nodeSelected`). Discovers the region if clickDiscoversRegion is
+ * enabled. → `{ ok, reason?, discovered? }` (the click action's result; the event ignores it).
  */
-function handleRegionClicked(eventData) {
-  if (!_settings.enableDiscoveryMode || !_settings.clickDiscoversRegion) return;
-  if (!discoveryStateSingleton) return;
+export function handleRegionClicked(eventData) {
+  if (!_settings.enableDiscoveryMode || !_settings.clickDiscoversRegion) return { ok: false, reason: 'not-enabled' };
+  if (!discoveryStateSingleton) return { ok: false, reason: 'no-discovery-state' };
 
-  // regionGraph:nodeSelected uses nodeId, ui:regionHeaderClicked uses regionName
+  // ui:regionHeaderClicked and the click action pass regionName (a legacy payload's nodeId is still read)
   const regionName = eventData?.regionName || eventData?.nodeId;
-  if (!regionName) return;
+  if (!regionName) return { ok: false, reason: 'no-region' };
 
   if (!discoveryStateSingleton.isRegionDiscovered(regionName)) {
     log('info', `[Discovery Module] Discovering region via click: ${regionName}`);
@@ -484,7 +505,9 @@ function handleRegionClicked(eventData) {
       autoDiscoverLocationsInRegion(regionName);
       autoDiscoverExitsInRegion(regionName);
     }
+    return { ok: true, discovered: !!wasNewlyDiscovered };
   }
+  return { ok: true, discovered: false };
 }
 
 /**
@@ -552,7 +575,7 @@ function handleExitClickedForDiscovery(eventData) {
   // worlds — hand-enabled discovery, the discovery-* settings modes and loop
   // mode keep the click-only-discovers behaviour below.
   const { exitName: clickedExit, sourceRegion: clickedSource } = eventData || {};
-  const walkMove = _worldDiscoveryMode === 'on'
+  const walkMove = (_worldDiscoveryMode === 'on' || _worldDiscoveryMode === ACTION_NODES_BUNDLE)
     && !isLoopModeActive()
     && !!discoveryStateSingleton?.isExitDiscovered(clickedSource, clickedExit);
 
@@ -669,13 +692,17 @@ function handleRawJsonDataLoaded(payload) {
 
   log('info', `[Discovery Module] World discovery mode: ${next ?? 'same as loop mode'}`);
   const allDiscovered = next === 'off';
-  if (discoveryStateSingleton && discoveryStateSingleton.allDiscovered !== allDiscovered) {
+  // Entering or leaving the actionNodes bundle also starts discovery afresh: its
+  // reveals (revealStartNeighbourhood) belong to its world only.
+  const bundleMoved = (next === ACTION_NODES_BUNDLE) !== (previous === ACTION_NODES_BUNDLE);
+  if (discoveryStateSingleton && (discoveryStateSingleton.allDiscovered !== allDiscovered || bundleMoved)) {
     discoveryStateSingleton.allDiscovered = allDiscovered;
     // Static data may still be the previous world's; rulesLoaded re-clears.
     if (discoveryStateSingleton.stateManager?.getStaticData?.()?.regions) {
       discoveryStateSingleton.clearDiscovery();
     }
   }
+  applyWorldReveals();
   syncDiscoveryOverrides(isLoopModeActive());
 }
 
@@ -735,8 +762,9 @@ async function handleSettingsChanged({ key }) {
   if (key === '*' || key.startsWith('moduleSettings.discovery')) {
     log('info', '[Discovery Module] Settings changed, reloading...');
     const previousEnableMode = _settings.enableDiscoveryMode;
-    const previousTrigger = _settings.regionDiscoveryTrigger;
+    const previous = { ..._settings };
     await loadSettings();
+    const steps = settingsChangeSteps(previous, _settings);
 
     // If enableDiscoveryMode changed, publish the modeChanged event
     if (_settings.enableDiscoveryMode !== previousEnableMode && _moduleEventBus) {
@@ -752,9 +780,18 @@ async function handleSettingsChanged({ key }) {
     // all discovered regions causes amplification: the first cascade discovers
     // new regions, then the second cascade expands from the larger set.
     // Cascading from start regions is idempotent and matches handleRulesLoaded.
-    if (_settings.regionDiscoveryTrigger === 'onExitDiscovered' && previousTrigger !== 'onExitDiscovered') {
+    if (steps.cascade) {
       if (discoveryStateSingleton) {
         applyExitDiscoveryCascade(discoveryStateSingleton.getStartRegions());
+      }
+    }
+    // AN-1b, the order trap: the applier writes the trigger BEFORE
+    // autoDiscoverLocations, so the cascade above ran with locations off. When
+    // they turn on, re-run its location step (worldDiscoveryMode.js
+    // settingsChangeSteps).
+    if (steps.cascadeLocations && discoveryStateSingleton) {
+      for (const region of cascadeTargetsOf(staticRegions(), discoveryStateSingleton.getStartRegions())) {
+        if (discoveryStateSingleton.isRegionDiscovered(region)) autoDiscoverLocationsInRegion(region);
       }
     }
 
@@ -849,6 +886,39 @@ function applyExitDiscoveryCascade(regionNames) {
   } catch (error) {
     log('error', '[Discovery Module] Error in applyExitDiscoveryCascade:', error);
   }
+}
+
+// --- Reveals without exploring (ActionNodes AN-1b; revealCore.js) --- //
+
+function staticRegions() {
+  try {
+    return stateManager?.getStaticData?.()?.regions ?? new Map();
+  } catch {
+    return new Map();
+  }
+}
+
+/**
+ * Reveal `exitNames` of `regionName`: each exit, its target region, the
+ * target's locations and the target's exits straight back. No random pick.
+ */
+export function revealExits(regionName, exitNames = []) {
+  if (!discoveryStateSingleton) return null;
+  const out = revealExitsCore(discoveryStateSingleton, staticRegions(), regionName, exitNames);
+  log('info', `[Discovery Module] Revealed ${regionName}: ${out.exits.length} exits, ${out.regions.length} regions, ${out.locations.length} locations`);
+  return out;
+}
+
+/**
+ * The world's own reveals after discovery starts afresh. The actionNodes
+ * bundle: the start node fully discovered and its neighbours with their
+ * contents (D1, D2). Every other world: nothing.
+ */
+function applyWorldReveals() {
+  if (_worldDiscoveryMode !== ACTION_NODES_BUNDLE || !discoveryStateSingleton) return;
+  const regions = staticRegions();
+  if (!regions.size) return;
+  revealStartNeighbourhood(discoveryStateSingleton, regions, discoveryStateSingleton.getStartRegions());
 }
 
 /**

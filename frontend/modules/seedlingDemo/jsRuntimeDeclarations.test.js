@@ -189,7 +189,7 @@ describe('jsRuntime S3 — scratch persistence on vanilla rooms (⚖ Q4)', () =>
         expect(checksOf(reports)).toHaveLength(1);
     });
 
-    it('the clear is CARRIED: a re-boot in the room and a later visit find the lock gone, nothing re-reported', () => {
+    it('the clear is CARRIED: a delivery, a re-boot in the room and a later visit find the lock gone, nothing re-reported', () => {
         // Kill, then stop in L5 (not cross): walk the solver plan until the lock opens.
         const m = midRoom({ region: 'level_5__r1c5', fromId: 'in_L4_64_16', toId: 'out_teleporter_48_112', walkTicks: 40 });
         const { rt, reports } = m;
@@ -202,9 +202,16 @@ describe('jsRuntime S3 — scratch persistence on vanilla rooms (⚖ Q4)', () =>
         expect(rt.run.level).toBe(5);
         expect(rt.session.staging.persistence).toEqual(expect.arrayContaining([expect.objectContaining(KILL_LOCK)]));
         expect(lockStands(rt.run)).toBe(false);
-        // An item flag re-boots the run in place: still gone.
+        // ⛓ seedling-js-item-live-delivery — restated from "an item flag re-boots the run in place": an item flag is
+        // written into the live run (the same run, still gone) …
         const runBefore = rt.run;
         rt.queueItems([{ class: 'Main', property: 'hasSword', value: true }]);
+        rt.tick();
+        rt.tick();
+        expect(rt.run).toBe(runBefore);
+        expect(lockStands(rt.run)).toBe(false);
+        // … and the one reboot in place left, the RE2 restore, re-boots it: still gone.
+        expect(rt.restoreSave(rt.exportSave())).toEqual({ ok: true });
         rt.tick();
         rt.tick();
         expect(rt.run).not.toBe(runBefore);

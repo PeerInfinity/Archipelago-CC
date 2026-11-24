@@ -165,7 +165,7 @@ describe('⛓ FORCED-HIT CONSUMER — the plan carries `forcedHits` / `damage`, 
  *   r1 the reboot stages nothing (`carriedDamage` → null) → '…the game\'s hits SURVIVE…' red (0/0 after the reboot)
  *   r2 `botStatus` without `hits` / `hits_timer`         → both rows red (`playerDamageFromStatus` refuses)
  */
-describe('⛓ STAGEDHITS CONSUMER — an in-place reboot keeps the player\'s damage, and botStatus reports it', () => {
+describe('⛓ STAGEDHITS CONSUMER — a delivery keeps the player\'s damage (the same Player), and botStatus reports it', () => {
     /** The page at L73's arrival from L74 with the sphere-7.3 kit, after `ticks` of `down+right`. */
     function hitPage() {
         const rt = createJsRuntime();
@@ -178,25 +178,31 @@ describe('⛓ STAGEDHITS CONSUMER — an in-place reboot keeps the player\'s dam
         return rt;
     }
 
-    it('the game\'s hits SURVIVE the item-flag reboot: staged from the run, the i-frame counting on from where it was', () => {
+    it('the game\'s hits SURVIVE an item delivery: the same Player, the i-frame counting on from where it was', () => {
+        // ⛓ seedling-js-item-live-delivery — restated from "… SURVIVE the item-flag reboot: staged from the run": the
+        // delivery is written into the live run, so nothing is re-staged — the run's own `damage` simply continues.
         const rt = hitPage();
         const before = playerDamageFromStatus(JSON.parse(rt.game.botStatus()));
         expect(before.hits).toBe(1);
         expect(before.hits_timer).toBeGreaterThan(1);
         expect(rt.run.damage).toMatchObject({ hits: before.hits, hitsTimer: before.hits_timer });
+        const run0 = rt.run;
         const world0 = rt.run.world;
+        const boots0 = rt.events.filter((e) => e.type === 'boot').length;
         rt.queueItems([{ class: 'Main', property: 'hasDarkSuit', value: true }]);
         rt.tick(new Set());
-        // rebooted in place (a new world, the same level) …
-        expect(rt.run.world).not.toBe(world0);
+        // no reboot: the same run, the same world, the same level …
+        expect(rt.run).toBe(run0);
+        expect(rt.run.world).toBe(world0);
         expect(rt.run.level).toBe(73);
-        expect(rt.events.at(-1).message).toMatch(/boot level 73 at .* — an item flag changed$/);
-        // … with the damage staged as it stood, and one tick of the i-frame since
-        expect(rt.run.stagedDamage).toMatchObject({ hits: before.hits, hitsTimer: before.hits_timer });
+        expect(rt.events.filter((e) => e.type === 'boot')).toHaveLength(boots0);
+        expect(rt.run.inventory.hasDarkSuit).toBe(true);
+        // … nothing staged, and one tick of the i-frame since
+        expect(rt.run.stagedDamage).toBe(null);
         expect(playerDamageFromStatus(JSON.parse(rt.game.botStatus()))).toEqual({ hits: before.hits, hits_timer: before.hits_timer - 1 });
     });
 
-    it('a reboot with NO damage stages none (the boot is the one before), and botStatus reads 0 / 0', () => {
+    it('a delivery with NO damage stages none (no boot at all), and botStatus reads 0 / 0', () => {
         const rt = createJsRuntime();
         rt.setVanilla(MAP);
         rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [86, 48, 48] }]);
@@ -204,7 +210,8 @@ describe('⛓ STAGEDHITS CONSUMER — an in-place reboot keeps the player\'s dam
         expect(playerDamageFromStatus(JSON.parse(rt.game.botStatus()))).toEqual({ hits: 0, hits_timer: 0 });
         rt.queueItems([{ class: 'Main', property: 'hasSword', value: true }]);
         rt.tick(new Set());
-        expect(rt.events.at(-1).message).toMatch(/— an item flag changed$/);
+        // ⛓ seedling-js-item-live-delivery — restated from "/— an item flag changed$/": the last note is the delivery
+        expect(rt.events.at(-1)).toMatchObject({ type: 'delivery', kind: 'flag', property: 'hasSword', changed: true });
         expect(rt.run.stagedDamage).toBe(null);
         expect(playerDamageFromStatus(JSON.parse(rt.game.botStatus()))).toEqual({ hits: 0, hits_timer: 0 });
     });

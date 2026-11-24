@@ -322,6 +322,19 @@ export const TERMS = Object.freeze([
         seeAlso: ['zone', 'shuffled-spiral', 'substrate', 'rng-stream'],
     }),
     t({
+        id: 'content-pack',
+        term: 'a content pack',
+        aliases: ['content set', 'theme pack'],
+        area: 'pipeline',
+        plain: 'A folder of names, words, looks and pictures that a generated world can be dressed in, '
+            + 'without changing how the world plays.',
+        detail: 'A pack (`frontend/packs/<id>/`) carries layers such as `concepts`, `text` and `art`. A world '
+            + 'stacks several, and a later pack wins per key (`contentPacks.loadPackStack`). A concept row may '
+            + 'declare a tile `base`, which makes it a tile kind the maze lab\'s editor can place (`?packs=`).',
+        where: [{ label: 'concepts.md § A world\'s content stack', doc: 'docs/json/developer/procgen/concepts.md#a-worlds-content-stack' }],
+        seeAlso: ['content-source', 'palette'],
+    }),
+    t({
         id: 'zone',
         term: 'a zone',
         aliases: [],
@@ -2122,7 +2135,10 @@ export const TERMS = Object.freeze([
             + 'what makes `ELEMENT_TABLE.needs` gating free — a pre-sword `killgate` refuses '
             + 'without spending a solve — and the two Seedling palettes now differ ONLY in '
             + 'their `items`. ⛔ Do not confuse with a [skeleton kind](#skeleton-kind), even '
-            + 'though the kinds ARE the maze\'s own biome names.',
+            + 'though the kinds ARE the maze\'s own biome names. ⛓ An AP maze REGION\'s biome '
+            + '(its sidecar `biome`, the world setting `mazeBiome`) is a skeleton kind or a REGION biome '
+            + '(content sets GEN-1, `mazeRoom/mazeRegionBiomes.js`): `scattered`, "Randomly placed tiles", '
+            + 'is `classic` walls plus declared tile kinds placed where the logic stays exactly as it was.',
         where: [{ label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE }],
         seeAlso: ['palette', 'boot-items', 'skeleton-kind', 'element-head'],
     }),

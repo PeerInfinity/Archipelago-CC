@@ -82,7 +82,13 @@ describe('the families — one NON-default fact each, that a neighbour\'s copy w
         const maze = substrateRegistry.get('maze');
         expect(ta.sidecarFields).not.toBe(maze.sidecarFields);
         const f = fieldsOf('text_adventure');
-        const tileKeys = Object.entries(fieldsOf('maze')).filter(([, d]) => d.owner === 'substrate').map(([k]) => k);
+        // ⛓ CONTENT SETS S2 — `things` is declared by both, each in its own shape (a maze thing has a cell, a
+        //   room's does not): it is not a tile key.
+        const shared = Object.keys(fieldsOf('maze')).filter((k) => k in f && fieldsOf('maze')[k].owner === 'substrate');
+        expect(shared).toEqual(['things']);
+        expect(f.things).not.toEqual(fieldsOf('maze').things);
+        const tileKeys = Object.entries(fieldsOf('maze'))
+            .filter(([k, d]) => d.owner === 'substrate' && !shared.includes(k)).map(([k]) => k);
         expect(tileKeys).toEqual(expect.arrayContaining(['tiles', 'width', 'height']));
         const payload = { exits: [], fogEnabled: true, exitGates: {}, locations: [] };
         expect(sidecarPayloadErrors(f, payload)).toEqual([]);
@@ -235,7 +241,13 @@ describe('⛓ G0 — the `regionGeometry` slot', () => {
         expect(zoneGames.length).toBeGreaterThan(0);
         expect(tileFreeCores.length).toBeGreaterThan(0);
         expect(contentLibraries.filter((id) => !zoneGames.includes(id)).length).toBeGreaterThan(0);
-        expect(sides.sort()).toEqual([...new Set([...zoneGames, ...tileFreeCores, ...contentLibraries])].sort());
+        // ⛓ ActionNodes AN-1: a fourth population, the COMPILED substrates — no realiser hook at all, because
+        // a standalone compiler writes their regions (`actionNodes/actionGraphCompiler.js`): a node has no
+        // tiles, so its exits are sides only.
+        const REALISER_HOOKS = ['extractZoneRules', 'generateRegionCore', 'instantiateLibraryEntry', 'generateZoneForSpecs'];
+        const compiled = ENTRIES.filter((e) => REALISER_HOOKS.every((k) => typeof e[k] !== 'function')).map((e) => e.id);
+        expect(compiled.length).toBeGreaterThan(0);
+        expect(sides.sort()).toEqual([...new Set([...zoneGames, ...tileFreeCores, ...contentLibraries, ...compiled])].sort());
         expect(geometryOf(substrateRegistry.get('maze'))).toBe(REGION_GEOMETRY.TILES);
     });
 });

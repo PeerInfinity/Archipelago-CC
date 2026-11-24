@@ -218,6 +218,10 @@ describe('R-A3: the derived-rule table on a shuffled doc', () => {
  *   - it is VISIBLE ONLY AS A REFUSAL RATE under the mode's 'placed' sweep (more draws refused — the speculative sweep
  *     catches the capped graph and GER refuses), and not at all under GER's all-state ('events').
  * The refusal counts are a MEASUREMENT of the committed rules: a rules move re-records them (re-run this row).
+ * ⛓ rules-l99-sided-killlock re-recorded 'placed' {on 7, off 9} -> {on 9, off 6}: L99's crossing from its west pocket now
+ *   needs the lock's event (earned on the lower floor), which moves the binding's reach. ⚠ The DIRECTION inverted: at
+ *   this rules state the mutant refuses FEWER draws than the guard, not more, so "more draws refused" above is no longer
+ *   what is measured; it stays live (>= 35 of 40 differ) and never incomplete, which is what the row asserts.
  */
 describe('E3\'s dead-end mutant over the real Seedling stairs graph (40 seeds)', () => {
     const E = { mod: null };
@@ -249,7 +253,7 @@ describe('E3\'s dead-end mutant over the real Seedling stairs graph (40 seeds)',
         E.mod = await imp('frontend/modules/procgenCore/entranceRandomizer.js');
         E.rng = (await imp('frontend/modules/mazeRoom/procgenRng.js')).rngFor;
     });
-    for (const [sweep, refused] of [['placed', { on: 7, off: 9 }], ['events', { on: 0, off: 0 }]]) {
+    for (const [sweep, refused] of [['placed', { on: 9, off: 6 }], ['events', { on: 0, off: 0 }]]) {
         it(`sweep '${sweep}': live, never incomplete, refusals ${refused.on} → ${refused.off}`, () => {
             const on = measure(sweep, true);
             const off = measure(sweep, false);

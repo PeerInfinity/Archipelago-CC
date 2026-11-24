@@ -106,12 +106,21 @@ describe('census-seedling-er-doorways — the committed playthrough atlas', () =
     });
 
     it('(A) the producer\'s link readers are scanned, none unmeasured; the stairs-exposed ones are named', () => {
-        expect(c.scan.readers).toEqual(['arrivalSolidCensus', 'buildLevelWorld', 'censusFallsOntoDoors', 'deriveAtlas',
-            'gameLandings', 'poleKillsOf', 'returnSpawnTable']);
+        // ⛓ tile-fire-breaks-rocks: + `buildRockFireSides` / `doorLandingTiles` (the flame-stance census, `rockFireSides`).
+        expect(c.scan.readers).toEqual(['arrivalSolidCensus', 'buildLevelWorld', 'buildRockFireSides', 'censusFallsOntoDoors',
+            'deriveAtlas', 'doorLandingTiles', 'gameLandings', 'poleKillsOf', 'returnSpawnTable']);
         expect(c.exposure.unmeasured).toEqual([]);
         const exposed = c.exposure.rows.filter((r) => r.stairsLandings.length).map((r) => `${r.fn}:${r.reads}`);
+        // ⛓ tile-fire-breaks-rocks: `rockFireRaw` (the flame-stance census) reads every landing INTO a rock level (its isolated-landing arm: L3's L11
+        // pocket), 12 of them through stairs — ARRIVAL-side, named here for the ER arc (a shuffle that moved where a level is
+        // landed in would move a stance only where the landing tile is isolated).
+        // ⛓ rules-lavatrap-neck: `playthroughTrapKillArms` (rule T's kill-arm walk) builds the trap level's world; its domain
+        // is the room's own links (DEPARTURE side), its stairs rows the scanner's static all-landings scope, so a coupled
+        // shuffle (which retargets where a door leads, never where it stands) recomputes nothing for it.
         expect(exposed).toEqual([
-            'doorTilesOf:gameLandings', 'doorwaysBesideLanding:returnSpawnTable', 'derivePlaythroughLayer:deriveAtlas', 'pitChainsFor:censusFallsOntoDoors',
+            'rockFireRaw:buildRockFireSides', 'rockFireRaw:doorLandingTiles', 'rockFireSides:buildRockFireSides', 'rockFireSides:buildRockFireSides',
+            'doorTilesOf:gameLandings', 'doorwaysBesideLanding:returnSpawnTable', 'playthroughTrapKillArms:buildLevelWorld',
+            'derivePlaythroughLayer:deriveAtlas', 'pitChainsFor:censusFallsOntoDoors',
             'playthroughBlockStoppers:poleKillsOf', 'barrierAnalysis:poleKillsOf', 'barrierAnalysis:buildLevelWorld', 'barrierAnalysis:gameLandings',
             'playthroughRopeEvents:gameLandings', 'RETURN_SPAWNS:returnSpawnTable', 'arrivalSpawnFor:returnSpawnTable',
             'playthroughLandingGates:returnSpawnTable',
@@ -134,7 +143,7 @@ describe('census-seedling-er-doorways — the committed playthrough atlas', () =
             'level_12__r13c6 -> level_5__r1c1 LANDING/terrain',
             'level_16__r3c7 -> level_17 DEPARTURE',
             'level_17 -> level_16__r3c7 LANDING',
-            'level_98 -> level_99__r2c7 DEPARTURE',
+            'level_98 -> level_99__r7c5 DEPARTURE',   // ⛓ rules-k-pursuit-resume: L99's stairs member re-keyed r2c7 -> r7c5
         ]);
         expect(c.gates.stairsRows.every((r) => r.owners.every((o) => o.owner !== 'UNATTRIBUTED'))).toBe(true);
     });

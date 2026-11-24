@@ -1,0 +1,60 @@
+row keys sample ['arrival', 'verdict', 'by', 'problem', 'certifierLabel', 'counts', 'partial', 'kind', 'key', 'region', 'name', 'target', 'derived', 'ap', 'direct', 'echoed', 'arrivalDependent', 'elementPartial', 'compare', 'overridable', 'label', 'exact']
+rows 752 -> 816
+L71: ('exit', 'derived') -> None x2
+L71: None -> ('exit', 'derived') x2
+L72: ('exit', 'derived') -> None x2
+L72: None -> ('exit', 'derived') x2
+L72: None -> ('pair', 'derived') x4
+L72: None -> ('pair', 'path-vs-edge') x12
+L73: ('exit', 'derived') -> None x2
+L73: ('pair', 'derived') -> ('pair', 'path-vs-edge') x1
+L73: ('pair', 'derived') -> None x1
+L73: None -> ('exit', 'derived') x2
+L73: None -> ('pair', 'derived') x2
+L73: None -> ('pair', 'path-vs-edge') x5
+L74: ('exit', 'derived') -> None x2
+L74: ('location', 'derived') -> None x1
+L74: None -> ('exit', 'derived') x2
+L74: None -> ('location', 'derived') x1
+L74: None -> ('pair', 'derived') x2
+L74: None -> ('pair', 'path-vs-edge') x4
+L75: ('exit', 'derived') -> None x2
+L75: None -> ('exit', 'derived') x2
+L75: None -> ('pair', 'derived') x2
+L75: None -> ('pair', 'path-vs-edge') x14
+L78: ('pair', 'derived') -> None x3
+L78: ('pair', 'path-vs-edge') -> None x1
+L78: None -> ('pair', 'derived') x5
+L78: None -> ('pair', 'path-vs-edge') x7
+L80: ('pair', 'derived') -> None x3
+L80: ('pair', 'path-vs-edge') -> None x1
+L80: None -> ('pair', 'derived') x6
+L80: None -> ('pair', 'path-vs-edge') x4
+L98: ('exit', 'derived') -> None x1
+L98: None -> ('exit', 'derived') x1
+L99: ('exit', 'derived') -> None x1
+L99: ('location', 'derived') -> None x1
+L99: ('pair', 'derived') -> ('pair', 'path-vs-edge') x1
+L99: ('pair', 'derived') -> None x1
+L99: None -> ('exit', 'derived') x1
+L99: None -> ('location', 'derived') x1
+L99: None -> ('pair', 'derived') x5
+L99: None -> ('pair', 'path-vs-edge') x2
+unpriced + {'99': 9, '78': 92, '80': 20, '75': 56, '73': 9, '72': 56, '74': 6}  - {'78': 24, '80': 6}
+<class 'dict'> ('level_0__r2c13', {'class': 'walk-in from another member', 'arrivals': ['landing 15,1']})
+level_72 {"class": "overridable", "arrivals": ["landing 1,16"]} => null
+level_72__r0c11 null => {"class": "walk-in from another member", "arrivals": ["landing 11,1"]}
+level_72__r11c6 null => {"class": "walk-in from another member", "arrivals": ["entrance"]}
+level_73__r3c7 {"class": "walk-in from another member", "arrivals": ["entrance"]} => null
+level_73__r8c2 null => {"class": "walk-in from another member", "arrivals": ["entrance"]}
+level_74 {"class": "overridable", "arrivals": ["landing 1,8"]} => null
+level_74__r2c2 null => {"class": "walk-in from another member", "arrivals": ["landing 1,8"]}
+level_74__r8c18 null => {"class": "walk-in from another member", "arrivals": ["entrance"]}
+level_75 {"class": "overridable", "arrivals": ["landing 4,1"]} => null
+level_75__r0c4 null => {"class": "walk-in from another member", "arrivals": ["entrance"]}
+level_75__r13c3 null => {"class": "walk-in from another member", "arrivals": ["entrance"]}
+level_99__r2c7 {"class": "walk-in from another member", "arrivals": ["entrance"]} => null
+level_99__r7c5 null => {"class": "walk-in from another member", "arrivals": ["entrance"]}
+overridable {'75': (2, 0), '74': (3, 0), '72': (2, 0)}
+exact {'75': (2, 0), '74': (3, 0), '72': (2, 0)}
+echoed {}

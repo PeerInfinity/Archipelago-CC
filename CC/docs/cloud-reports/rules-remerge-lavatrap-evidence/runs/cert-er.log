@@ -1,0 +1,135 @@
+CHANNEL: headless logic-only (no wasm: a node measurement of the maze certifier)
+    at StateManagerProxy.initializeWorker (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:251:25)
+    at new StateManagerProxy (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:119:10)
+    at file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async file:///home/user/Archipelago-CC/scripts/procgen/registerPipelineSubstrates.js:56:17
+    at async buildSeedlingErSource (file:///home/user/Archipelago-CC/scripts/procgen/make-seedling-er-preset.mjs:66:5)
+    at async main (file:///home/user/Archipelago-CC/scripts/procgen/probe-seedling-whole-game-certify.mjs:146:14)
+    at async file:///home/user/Archipelago-CC/scripts/procgen/probe-seedling-whole-game-certify.mjs:115:41
+SOURCE: er — shuffled atlas seedling-964d7ba4 over rooms seedling-ea1ef5ba, 48 departure(s) moved, in 24779 ms
+DERIVED-RULE TABLE: 16 row(s) skipped by name (moved exits)
+BUILT: 115 levels, 275 regions, 2076501 B in 18695 ms
+PERMISSIVE: 1 — level_66/out_teleporter_72_64
+ARM new: 1 problems (derived-true/atlas-false 1, derived-false/atlas-true 0, other 0) / 16 accepted / 0 threw; 100 row(s) skip unadmitted landing points; clean 114/115 levels; 782 lines; wall 55588 ms
+  PROBLEM[new] level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false
+  ACCEPTED[new] {"label":"level_0__r2c13 → level_0__r1c6","source":"level_0__r2c13","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_39__r25c9 → level_39__r0c9","source":"level_39__r25c9","by":"L39 flag 8: wandlock@144,592 cleared"}
+  ACCEPTED[new] {"label":"level_39__r25c9 → level_39__r2c11","source":"level_39__r25c9","by":"L39 flag 8: wandlock@144,592 cleared"}
+  ACCEPTED[new] {"label":"level_57 @ Level 057 - Tentacled Beast","source":"level_57","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)","source":"level_63__r6c9","by":"Ghost Spear"}
+  ACCEPTED[new] {"label":"level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r10c2","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r10c2","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r5c14","source":"level_63__r6c9","by":"Ghost Spear"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r5c14","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r5c14","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r6c15","source":"level_63__r6c9","by":"Ghost Spear"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r6c15","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r6c15","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  ACCEPTED[new] {"label":"level_82 @ Level 082 - King of Fire","source":"level_82","by":"Dark Suit"}
+  SKIPPED[unadmitted][new] level_0__r11c19 → level_12__r0c19 (landing 18,11): 45 of 96 points
+  SKIPPED[unadmitted][new] level_0__r2c13 → level_89__r11c12 (landing 15,1): 29 of 96 points
+  SKIPPED[unadmitted][new] level_0__r6c5 → level_1 (landing 5,7): 45 of 96 points
+  SKIPPED[unadmitted][new] level_101__r4c9 → level_15__r1c9 (landing 9,5): 32 of 128 points
+  SKIPPED[unadmitted][new] level_111 → level_112__r2c2 (landing 18,11): 1 of 2 points
+  SKIPPED[unadmitted][new] level_111 → level_3__r0c4 (landing 18,11): 1 of 2 points
+  SKIPPED[unadmitted][new] level_112__r0c7 → level_113 (landing 7,1): 8 of 16 points
+  SKIPPED[own event][new] level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 1,1): 14 of 192 points
+  SKIPPED[own event][new] level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 7,1): 14 of 192 points
+  SKIPPED[unadmitted][new] level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 7,1): 84 of 192 points
+  SKIPPED[own event][new] level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 8,1): 14 of 192 points
+  SKIPPED[unadmitted][new] level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 8,1): 84 of 192 points
+  SKIPPED[unadmitted][new] level_113 → level_112__r0c7 (landing 7,1): 84 of 192 points
+  SKIPPED[unadmitted][new] level_113 → level_112__r0c7 (landing 8,1): 84 of 192 points
+  SKIPPED[unadmitted][new] level_113 → level_114 (landing 7,1): 84 of 192 points
+  SKIPPED[unadmitted][new] level_113 → level_114 (landing 8,1): 84 of 192 points
+  SKIPPED[unadmitted][new] level_113 → level_115__r9c4 (landing 7,1): 84 of 192 points
+  SKIPPED[unadmitted][new] level_113 → level_115__r9c4 (landing 8,1): 84 of 192 points
+  SKIPPED[unadmitted][new] level_115__r9c4 → level_113 (landing 4,8): 17 of 36 points
+  SKIPPED[unadmitted][new] level_115__r9c4 → level_113 (landing 5,8): 17 of 36 points
+  SKIPPED[unadmitted][new] level_12__r0c37 → level_21 (landing 27,35): 4500 of 131072 points
+  SKIPPED[unadmitted][new] level_12__r0c37 → level_37__r12c6 (landing 27,35): 4500 of 131072 points
+  SKIPPED[unadmitted][new] level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44): 2700 of 131072 points
+  SKIPPED[own event][new] level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44): 3600 of 131072 points
+  SKIPPED[unadmitted][new] level_12__r40c4 → level_24 (landing 2,44): 2700 of 131072 points
+  SKIPPED[unadmitted][new] level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54): 11700 of 131072 points
+  SKIPPED[own event][new] level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54): 1800 of 131072 points
+  SKIPPED[unadmitted][new] level_12__r42c28 @ L12 flag 7: magicallock@32,864 cleared (landing 2,54): 11700 of 131072 points
+  SKIPPED[own event][new] level_12__r42c28 @ L12 flag 7: magicallock@32,864 cleared (landing 2,54): 1800 of 131072 points
+  SKIPPED[unadmitted][new] level_12__r42c28 @ Level 012 - Chest (landing 2,54): 11700 of 131072 points
+  SKIPPED[unadmitted][new] level_12__r42c28 → level_83 (landing 2,54): 11700 of 131072 points
+  SKIPPED[unadmitted][new] level_15__r1c9 → level_101__r4c9 (landing 9,2): 16 of 32 points
+  SKIPPED[unadmitted][new] level_16__r3c7 → level_30__r8c13 (landing 7,3): 16 of 32 points
+  SKIPPED[own event][new] level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8): 1 of 4 points
+  SKIPPED[unadmitted][new] level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8): 2 of 4 points
+  SKIPPED[own event][new] level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 6,5): 1 of 4 points
+  SKIPPED[unadmitted][new] level_24 → level_12__r40c4 (landing 3,8): 2 of 4 points
+  SKIPPED[unadmitted][new] level_24 → level_6 (landing 3,8): 2 of 4 points
+  SKIPPED[unadmitted][new] level_30__r8c13 → level_16__r3c7 (landing 14,11): 80 of 256 points
+  SKIPPED[unadmitted][new] level_3__r0c4 → level_111 (landing 1,4): 16 of 32 points
+  SKIPPED[unadmitted][new] level_3__r0c4 → level_2 (landing 1,4): 16 of 32 points
+  SKIPPED[unadmitted][new] level_3__r0c4 → level_4 (landing 1,4): 16 of 32 points
+  SKIPPED[own event][new] level_40__r0c53 @ L40 flag 7: wandlock@208,128 cleared (landing 53,1): 192 of 512 points
+  SKIPPED[unadmitted][new] level_48__r7c0 → level_53__r2c2 (landing 1,7): 6 of 16 points
+  SKIPPED[unadmitted][new] level_49 @ Level 049 - Conch (landing 2,7): 1 of 2 points
+  SKIPPED[unadmitted][new] level_49 → level_50 (landing 2,7): 1 of 2 points
+  SKIPPED[unadmitted][new] level_50 → level_49 (landing 2,1): 1 of 2 points
+  SKIPPED[unadmitted][new] level_50 → level_51__r3c10 (landing 2,1): 1 of 2 points
+  SKIPPED[unadmitted][new] level_51__r14c6 → level_52__r5c10 (landing 15,16): 1 of 2 points
+  SKIPPED[unadmitted][new] level_51__r3c10 → level_20__r1c4 (landing 9,1): 1 of 2 points
+  SKIPPED[unadmitted][new] level_51__r3c10 → level_50 (landing 9,1): 1 of 2 points
+  SKIPPED[unadmitted][new] level_52__r0c7 → level_54__r27c8 (landing 7,1): 1 of 3 points
+  SKIPPED[unadmitted][new] level_52__r2c2 → level_55 (landing 1,3): 1 of 3 points
+  SKIPPED[unadmitted][new] level_53__r14c9 → level_54__r1c8 (landing 9,14): 92 of 192 points
+  SKIPPED[unadmitted][new] level_54__r1c8 → level_53__r14c9 (landing 9,1): 1 of 3 points
+  SKIPPED[unadmitted][new] level_54__r27c8 → level_52__r0c7 (landing 8,28): 1 of 3 points
+  SKIPPED[unadmitted][new] level_55 @ Level 055 - Boss Key 3 (landing 4,3): 1 of 2 points
+  SKIPPED[unadmitted][new] level_55 → level_52__r2c2 (landing 4,3): 1 of 2 points
+  SKIPPED[unadmitted][new] level_56 → level_52__r5c10 (landing 1,7): 16 of 32 points
+  SKIPPED[unadmitted][new] level_56 → level_57 (landing 1,7): 16 of 32 points
+  SKIPPED[unadmitted][new] level_57 @ Level 057 - Tentacled Beast (landing 6,4): 10 of 24 points
+  SKIPPED[unadmitted][new] level_57 → level_58__r4c1 (landing 6,4): 10 of 24 points
+  SKIPPED[unadmitted][new] level_58__r4c1 → level_57 (landing 3,6): 18 of 32 points
+  SKIPPED[unadmitted][new] level_5__r1c1 → level_7 (landing 1,2): 1 of 2 points
+  SKIPPED[unadmitted][new] level_62 → level_61__r0c10 (landing 7,5): 4 of 16 points
+  SKIPPED[unadmitted][new] level_62 → level_61__r0c7 (landing 7,5): 4 of 16 points
+  SKIPPED[unadmitted][new] level_62 → level_63__r0c1 (landing 7,5): 8 of 32 points
+  SKIPPED[unadmitted][new] level_62 → level_64 (landing 7,5): 4 of 16 points
+  SKIPPED[unadmitted][new] level_63__r0c1 @ L62 flag 0: lightpole@120,200 cleared (landing 4,1): 24 of 768 points
+  SKIPPED[unadmitted][new] level_63__r0c1 → level_61__r0c10 (landing 4,1): 24 of 768 points
+  SKIPPED[unadmitted][new] level_63__r0c1 → level_61__r0c7 (landing 4,1): 24 of 768 points
+  SKIPPED[unadmitted][new] level_63__r0c1 → level_62 (landing 4,1): 24 of 768 points
+  SKIPPED[own event][new] level_63__r10c2 @ L63 flag 6: lightpole@48,272 cleared (landing 2,18): 192 of 768 points
+  SKIPPED[unadmitted][new] level_63__r10c2 @ L63 flag 6: lightpole@48,272 cleared (landing 2,18): 192 of 768 points
+  SKIPPED[unadmitted][new] level_63__r10c2 → level_61__r13c12 (landing 2,18): 192 of 768 points
+  SKIPPED[unadmitted][new] level_63__r10c2 → level_65__r0c2 (landing 2,18): 192 of 768 points
+  SKIPPED[own event][new] level_63__r6c9 @ L63 flag 7: lightpole@112,272 cleared (landing 8,18): 192 of 768 points
+  SKIPPED[unadmitted][new] level_63__r6c9 @ L63 flag 7: lightpole@112,272 cleared (landing 8,18): 192 of 768 points
+  SKIPPED[unadmitted][new] level_63__r6c9 → level_65__r0c8 (landing 8,18): 192 of 768 points
+  SKIPPED[unadmitted][new] level_64 → level_62 (landing 2,5): 1 of 4 points
+  SKIPPED[unadmitted][new] level_69 @ Level 069 - Lights (landing 3,8): 1 of 8 points
+  SKIPPED[unadmitted][new] level_69 → level_36 (landing 3,8): 1 of 8 points
+  SKIPPED[own event][new] level_71__r0c6 @ L71 flag 2: shieldlock@288,256 cleared (landing 14,18): 8 of 48 points
+  SKIPPED[unadmitted][new] level_71__r0c6 @ L71 flag 2: shieldlock@288,256 cleared (landing 18,16): 24 of 48 points
+  SKIPPED[own event][new] level_71__r0c6 @ L71 flag 2: shieldlock@288,256 cleared (landing 18,16): 8 of 48 points
+  SKIPPED[unadmitted][new] level_71__r0c6 @ Level 071 - Chest (landing 18,16): 24 of 48 points
+  SKIPPED[unadmitted][new] level_71__r0c6 → level_72 (landing 18,16): 24 of 48 points
+  SKIPPED[unadmitted][new] level_71__r0c6 → level_75 (landing 18,16): 24 of 48 points
+  SKIPPED[unadmitted][new] level_71__r0c6 → level_80__r0c2 (landing 18,16): 24 of 48 points
+  SKIPPED[unadmitted][new] level_82 @ Level 082 - King of Fire (landing 9,1): 5 of 8 points
+  SKIPPED[unadmitted][new] level_82 → level_96 (landing 9,1): 5 of 8 points
+  SKIPPED[unadmitted][new] level_83 → level_12__r42c28 (landing 2,3): 20 of 64 points
+  SKIPPED[unadmitted][new] level_83 → level_84__r2c4 (landing 2,3): 20 of 64 points
+  SKIPPED[unadmitted][new] level_89__r11c12 → level_0__r2c13 (landing 10,18): 1 of 3 points
+  SKIPPED[unadmitted][new] level_89__r11c12 → level_87__r1c3 (landing 10,18): 1 of 3 points
+  SKIPPED[unadmitted][new] level_89__r1c10 @ Level 089 - Feather (landing 13,1): 1 of 3 points
+  SKIPPED[unadmitted][new] level_89__r1c10 → level_91 (landing 13,1): 1 of 3 points
+  SKIPPED[unadmitted][new] level_91 → level_89__r1c10 (landing 1,8): 2 of 3 points
+  SKIPPED[unadmitted][new] level_91 → level_92__r4c2 (landing 1,8): 2 of 3 points
+  SKIPPED[unadmitted][new] level_93__r5c7 → level_98 (landing 7,6): 4 of 12 points
+PASS: arm new measured
+PASS: the ER arm matches scripts/procgen/seedling-er-whole-game-certify-expected.json (1 / 16 / 0)
+ALL CHECKS PASSED

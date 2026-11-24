@@ -29,8 +29,10 @@ Hover a substrate's name to see its card: what it can hold and how its exits are
 2. The **Bounce Demo** tab plays bounce zones: a platformer whose jumps are the progression.
 3. The **Noiz2sa** tab plays Noiz2sa regions: a bullet-hell shooter, where each region is a run of the game's scenes — choose an exit, then survive the run to leave by it.
 4. The **Flash Panel** plays the generated Seedling room in the original game.
-5. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game*, or, on the JS runtime, *JS runtime loaded* or *configured* (the first time, the browser fetches the game's runtime).
-6. Press **▶ Start** in the game, if the game shows one. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
+5. Open the **Flash Panel** tab.
+6. Start from no save: in the panel's **Settings** section, press **Clear this room's save** on the **JS** runtime, or **Clear the Flash save** on the **Flash** (Ruffle) runtime (the panel's log says what it removed). On wasm there is no such save, and nothing to press.
+7. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game*, or, on the JS runtime, *JS runtime loaded* or *configured* (the first time, the browser fetches the game's runtime).
+8. Press **▶ Start** in the game, if the game shows one. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
 
 Mazes play in the **Maze Room**, as before. When the player walks into a region, the app brings its panel forward.
 

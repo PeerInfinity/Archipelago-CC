@@ -169,7 +169,7 @@
             }
           },
           {
-            "name": "region_5_5__loc_1__2_4",
+            "name": "region_5_5__loc_1__3_4",
             "id": 1002,
             "access_rule": {
               "rule": "True_"
@@ -498,7 +498,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "victory",
+              "name": "Victory",
               "player": 1,
               "advancement": true,
               "type": "progression"
@@ -707,8 +707,8 @@
           "Everything"
         ]
       },
-      "victory": {
-        "name": "victory",
+      "Victory": {
+        "name": "Victory",
         "id": 8,
         "classification": "progression",
         "groups": [
@@ -731,7 +731,7 @@
       "Progressive Swim": 1,
       "Region Library Filler": 1,
       "key_yellow": 1,
-      "victory": 1
+      "Victory": 1
     }
   },
   "world": {
@@ -745,7 +745,7 @@
     "1": {
       "completion_condition": {
         "type": "item_check",
-        "item": "victory"
+        "item": "Victory"
       }
     }
   },
@@ -759,12 +759,12 @@
     "1": {
       "region_4_5__loc_0__6_2": "key_red",
       "region_5_5__loc_0__2_0": "key_blue",
-      "region_5_5__loc_1__2_4": "Ghost Spear",
+      "region_5_5__loc_1__3_4": "Ghost Spear",
       "region_6_5__loc_0__3_2": "key_green",
       "region_6_5__loc_1__5_2": "Progressive Swim",
       "Starting House - Chest": "Region Library Filler",
       "region_4_7__loc_0__6_0": "key_yellow",
-      "region_6_7__loc_0__0_3": "victory"
+      "region_6_7__loc_0__0_3": "Victory"
     }
   },
   "progression_mapping": {
@@ -786,22 +786,9 @@
           "width": 8,
           "height": 6,
           "tiles": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
             1,
             1,
             0,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
             0,
             0,
             1,
@@ -811,15 +798,28 @@
             1,
             0,
             1,
-            0,
+            1,
+            1,
             1,
             1,
             0,
             0,
             0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
             0,
             1,
             0,
+            0,
+            0,
+            0,
+            1,
+            1,
             0,
             0,
             1,
@@ -894,10 +894,10 @@
               "locationName": "region_5_5__loc_0__2_0"
             },
             {
-              "x": 2,
+              "x": 3,
               "y": 4,
               "id": "Ghost Spear",
-              "locationName": "region_5_5__loc_1__2_4"
+              "locationName": "region_5_5__loc_1__3_4"
             }
           ],
           "obstacleLib": {
@@ -935,7 +935,7 @@
             }
           },
           "itemLib": {},
-          "longestShortestPath": 19,
+          "longestShortestPath": 15,
           "fogEnabled": true
         },
         "biome": {
@@ -4341,7 +4341,7 @@
             {
               "x": 0,
               "y": 3,
-              "id": "victory",
+              "id": "Victory",
               "locationName": "region_6_7__loc_0__0_3"
             }
           ],
@@ -4363,7 +4363,17 @@
               "feature": "logic_gate"
             }
           },
-          "itemLib": {},
+          "itemLib": {
+            "Victory": {
+              "name": "Victory",
+              "id": "Victory",
+              "classification": "progression",
+              "color": "#f5d020",
+              "symbol": "star",
+              "feature": "victory",
+              "is_victory": true
+            }
+          },
           "longestShortestPath": 15,
           "fogEnabled": true
         },
@@ -5333,7 +5343,7 @@
           {
             "sphere": 3,
             "items": [
-              "victory"
+              "Victory"
             ]
           }
         ]
@@ -6042,7 +6052,7 @@
           "new_accessible_locations": [
             "region_4_5__loc_0__6_2",
             "region_5_5__loc_0__2_0",
-            "region_5_5__loc_1__2_4"
+            "region_5_5__loc_1__3_4"
           ],
           "new_accessible_regions": [
             "dungeon1_room1__r0c4",
@@ -6131,7 +6141,7 @@
             "region_5_4"
           ],
           "sphere_locations": [
-            "region_5_5__loc_1__2_4"
+            "region_5_5__loc_1__3_4"
           ]
         }
       }
@@ -6213,10 +6223,10 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "victory": 1
+              "Victory": 1
             },
             "resolved_items": {
-              "victory": 1
+              "Victory": 1
             }
           },
           "new_accessible_locations": [],

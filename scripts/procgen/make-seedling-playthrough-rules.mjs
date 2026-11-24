@@ -78,7 +78,14 @@ const {
 } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
 const { buildLevelWorld, ROLES, PERSISTENCE_RESPONSE, ACTIVATOR_PRESSERS, combatCensusOf, rectsOverlap } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
 const { censusFallsOntoDoors } = await imp('frontend/modules/seedlingDemo/fidelityDescent.js');
-const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
+const { auditFire } = await imp('frontend/modules/seedlingDemo/presses.js');
+const { plannerObstacleAt } = await imp('frontend/modules/seedlingDemo/botDriverV2.js');
+const { buildRockFireSides, doorLandingTiles } = await imp('frontend/modules/flashPanel/seedlingRockBreakers.js');
+const HP = await imp('scripts/procgen/seedlingHolderParking.js');
+const FCG = await imp('scripts/procgen/seedlingFireChaserGuard.js');
+const TT = await imp('scripts/procgen/seedlingTrapTongueGuard.js');
+const KG = await imp('scripts/procgen/seedlingChaserPursuitGuard.js');
+const { seedlingModelOracles, modelFloodTiles, modelFloodPoints, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
 const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
 const { lethalTerrainUnder, arrivalIsLethal } = await imp('frontend/modules/seedlingDemo/seedlingLethalArrivals.js');
 
@@ -86,11 +93,14 @@ const { patchedMapDocument, SEEDLING_SET_PATCHES } = await imp('frontend/modules
 const { arrivalSolidCensus, gameLandings } = await imp('frontend/modules/seedlingDemo/fidelityArrival.js');
 const { levelSourceFromAtlas } = await imp('frontend/modules/seedlingDemo/atlasSource.js');
 const {
-    deriveObstacleEvents, deriveLockEvents, deriveButtonEvents, crossRoomButtonsOf, inRoomLatchButtonsOf, persistenceEffect, obstacleEventName, parseSolidId,
+    deriveObstacleEvents, obstacleEventNames, deriveLockEvents, deriveButtonEvents, crossRoomButtonsOf, inRoomLatchButtonsOf, persistenceEffect, obstacleEventName, parseSolidId,
     deriveTalkEvents, crossRoomPrerequisitesOf,
     poleKillsOf, POLE_LIGHT_ARM, POLE_GHOST_ARM, poleThrustStances, poleSwingStances, inRoomPolesOf, deriveInRoomPoleEvents,
     ropesOf, ropeVerdict, deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges, encounterLockSides,
+    refuseAliasedEvents,
 } = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
+// ⛓ rules-spinner-alias-guards (b): the map's tag -1 writers and the alias slot each clears (one derivation).
+const { aliasWritersOf } = await imp('frontend/modules/seedlingDemo/outOfBandAliases.js');
 const { arrowLane, arrowTrapEntityPoint } = await imp('frontend/modules/seedlingDemo/arrowTrap.js');
 const { contactRect, ENEMY_CLASSES } = await imp('frontend/modules/seedlingDemo/combat.js');
 const { spearHitRect, spearRect, pressRectTouches } = await imp('frontend/modules/seedlingDemo/presses.js');
@@ -196,9 +206,140 @@ const KILL_LOCKS = OV.buildKillLockRulings(MAP);
 const BLOCK_HOLDERS = OV.buildBlockHolders(MAP);
 /** ⛓ RULES kill-locks — the census, for a reader that reports it. Additive. */
 export const playthroughKillLocks = KILL_LOCKS;
+// ⛓⛓ RULES rules-fire-breaks-rocks — each ordinary rock's flame stances and the entry sides that reach one
+// (`seedlingRockBreakers.rockFireSides`, asked of the physics model over the delivered rooms; a landing tile counts
+// where its occupant can only have arrived). The overlay credits Fire on those sides only (`rockFireRuling`).
+let rockFireRawMemo = null;
+const rockFireRaw = () => (rockFireRawMemo ??= buildRockFireSides(LEVELS, { buildLevelWorld, ROLES, auditFire, plannerObstacleAt }, {
+    arrivalTilesOf: (n) => doorLandingTiles(MAP.levels).get(n) ?? [],
+}));
+/**
+ * ⛓⛓ tile-fire-breaks-rocks — THE FIRE ARM DOES NOT COUNT WHERE A PARKED HOLDER NEEDS A KILL. ⚖ Robert 2026-11-12, to
+ * rules-6: "Narrow it generally (Recommended)" (option text: "In the Fire slice, a rock's Fire arm doesn't count where the
+ * census says a parked holder needs a kill, derived from the census with no level literal. L16's crossing stays Spear |
+ * Sword; the other kept Fire rows are unchanged."). The flame does no damage (`Player.as:178` `fireDamage = 0`; an
+ * Enemy's `hit` only knocks back), so a body that SETTLES on a holder block's route stops the block for good unless it is
+ * killed, and Fire cannot kill it. The verdict is the block-stopper census's OWN (`seedlingHolderParking.holderParkVerdicts`:
+ * the lock prices with and without each killable body parked on the cells it meets): where a TIGHTER row's parked price
+ * LOSES `flag:hasFire`, the room's ordinary rocks whose Fire that entry's price came from (each rock re-prices the room with
+ * its own flame stances dropped; it is one when the entry's Fire goes) lose their flame stances, so the rock keeps the swing (as L40's and L41's do).
+ * The maze reads this same map (`playthroughRockFireSides`), so rules and maze drop Fire from one input.
+ */
+let rockFireMemo = null;
+let rockFireNarrowing = false;
+let rockFireForGrid = null;
+export const rockFireNarrowings = [];
+const hasFireTerm = (dnf) => Array.isArray(dnf) && dnf.some((t) => t.split(' & ').includes('flag:hasFire'));
+const losesFire = (row) => row.moved.filter((m) => hasFireTerm(m.price) && Array.isArray(m.parked) && !hasFireTerm(m.parked));
+function narrowRockFireByHolders(raw) {
+    const out = new Map(raw);
+    for (const level of LEVELS) {
+        const heldBy = BLOCK_HOLDERS.get(level.level);
+        if (!heldBy) continue;
+        const rocks = [...raw].filter(([, r]) => r.level === level.level && r.stances.length > 0);
+        if (rocks.length === 0) continue;
+        const grid = gridFor(level, { guards: false });
+        const tileTypes = HP.tileTypesOf(level, grid.width);
+        const bodies = HP.holderRoomBodies(level, grid, tileTypes);
+        const rows = HP.holderParkVerdicts(level, { grid, tileTypes, heldBy, bodies, entitySemantics: playthroughEntitySemantics }) ?? [];
+        const entries = new Map();
+        for (const row of rows.filter((r) => r.holderVerdict === 'TIGHTER')) {
+            for (const m of losesFire(row)) if (!entries.has(m.entry)) entries.set(m.entry, { row, m });
+        }
+        for (const [entry, { row }] of entries) {
+            for (const [key, rock] of rocks) {
+                // Is THIS rock where the entry's Fire comes from (the block's route, or the player's reach to its holder
+                // stances: the search prices both)? Re-price the room with its flame stances dropped.
+                rockFireForGrid = new Map(raw).set(key, { ...rock, stances: [] });
+                let without;
+                try {
+                    const g = gridFor(level, { guards: false });
+                    without = HP.holderPrices(level, g, HP.tileTypesOf(level, g.width), [], { entitySemantics: playthroughEntitySemantics });
+                } finally { rockFireForGrid = null; }
+                if (hasFireTerm(without[entry])) continue;
+                // ⛓ rules-fire-arm-chaser-guard: the fold is the guard's shared one, over the entry so far (the raw rock on
+                // the first fold), so the two narrowings commute; the output is the one this pass always wrote.
+                out.set(key, FCG.foldRockFire(out.get(key), 'narrowed',
+                    { entry, body: row.body, block: `${row.block.type}@${row.block.x},${row.block.y}` }));
+                rockFireNarrowings.push({ level: level.level, rock: key, entry, body: row.body });
+            }
+        }
+    }
+    return out;
+}
+/**
+ * ⛓⛓ rules-fire-arm-chaser-guard — THE FIRE ARM DOES NOT COUNT WHERE A BODY FIRE CANNOT STOP GUARDS THE CROSSING.
+ * ⚖ Robert 2026-11-16: "Build the general fix (Recommended)". A rock loses its flame stances where a body in its room is
+ * (a) unstoppable by the Fire-only state (no Fire damage, no lethal tile on its border), (b) faster than the player on
+ * its terrain and (c) a homer whose leash covers the crossing's corridor (`seedlingFireChaserGuard.chaserGuardVerdict`,
+ * every term derived from the class constants, the patched map's bodies and the tiles; no level literal). ONE pass over
+ * the same map the holder narrowing writes, so rules and maze drop Fire together. Pass order: holders, then this guard;
+ * both decide from the RAW map and only fold Fire away (`foldRockFire`), so the order does not change the map. A rock
+ * both passes narrow carries both reasons (`narrowed`, `guarded`).
+ */
+export const rockFireChaserGuards = [];
+function narrowRockFireByChasers(sides, raw) {
+    const roomOf = (n) => {
+        const level = LEVELS.find((l) => l.level === n);
+        if (!level) return null;
+        const grid = gridFor(level, { guards: false });
+        return { grid, tileTypes: HP.tileTypesOf(level, grid.width), bodies: combatCensusOf(level).enemies };
+    };
+    const { sides: out, narrowings } = FCG.narrowRockFireByChasers(sides, raw, { roomOf });
+    for (const n of narrowings) rockFireChaserGuards.push({ level: n.level, rock: n.rock, guards: n.guards });
+    return out;
+}
+const rockFireSides = () => {
+    if (rockFireForGrid) return rockFireForGrid;
+    if (rockFireMemo) return rockFireMemo;
+    if (rockFireNarrowing) return rockFireRaw();
+    rockFireNarrowing = true;
+    try {
+        const raw = rockFireRaw();
+        rockFireMemo = narrowRockFireByChasers(narrowRockFireByHolders(raw), raw);
+    } finally { rockFireNarrowing = false; }
+    return rockFireMemo;
+};
+/** ⛓ RULES rules-fire-breaks-rocks — the rocks' Fire sides (narrowed by the holder census and the chaser guard), for the maze and the reports. */
+export const playthroughRockFireSides = () => rockFireSides();
+// The fidelity ARRIVAL census over THESE rooms (the obstacle events' rows), computed once: the event layer reads it after
+// the atlas is built, and the rock rulings read the names it will mint before (`mintedRockEvents`).
+let censusMemo = null;
+const arrivalCensusRows = () => (censusMemo ??= arrivalSolidCensus(MAP, levelSourceFromAtlas(MAP)));
+/**
+ * ⛓ tile-fire-breaks-rocks §4 — the obstacle events this producer MINTS, by name: the same selection pass
+ * `playthroughObstacleEvents` makes its events from (`obstacleEventNames`), over the same census rows. The rock ruling
+ * credits a rock's own cleared event only when it is here (`seedlingPlaythroughOverlay.rockOwnEvent`).
+ */
+let mintedMemo = null;
+export const mintedObstacleEvents = () => (mintedMemo ??= new Set(obstacleEventNames(arrivalCensusRows())));
+/**
+ * ⛓ tile-fire-breaks-rocks §4 — the rock events the rock rulings CREDIT (a rock with a flame stance whose own cleared
+ * event is minted: `OV.rockOwnEvent`), by name.
+ */
+export function creditedRockEvents() {
+    const sides = rockFireSides();
+    const minted = mintedObstacleEvents();
+    const out = [];
+    for (const level of LEVELS) {
+        for (const e of level.entities ?? []) {
+            if (e.type !== 'breakablerock' || !(sides.get(`L${level.level}:${e.type}@${e.x},${e.y}`)?.stances.length > 0)) continue;
+            const own = OV.rockOwnEvent(e, { level: level.level, mintedEvents: minted });
+            if (own) out.push(own.event);
+        }
+    }
+    return out;
+}
+/** The credited rock events that are no event location of `eventNames`, each as a refusal naming it (empty: sound). */
+export function unmintedRockEvents(credited, eventNames) {
+    const made = new Set(eventNames);
+    return credited.filter((n) => !made.has(n))
+        .map((n) => `a rock ruling credits "${n}", which no event location of this run grants (an unminted event is a Has of no item)`);
+}
 const entityOverride = (entity, base, level) => {
     return OV.overlayEntitySemantics(entity, base, {
         level: level.level, crossLevelOpeners: CROSS_LEVEL_OPENERS, groupOpeners: GROUP_OPENERS, scriptOpeners: SCRIPT_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
+        ...(entity?.type === 'breakablerock' ? { rockFire: rockFireSides(), mintedEvents: mintedObstacleEvents() } : {}),
     });
 };
 /** The overlay's entity ruling as the grid builder applies it (a census reads a lock's `opensFrom`/`heldBy` off it). */
@@ -418,10 +559,150 @@ const gridFor = (level, options = {}) => {
     if (gate === null) return base;
     return { ...base, cells: base.cells.map((c) => (c.kind === 'gated' && gateKeyOf(c) === gate ? { ...c, kind: 'open', conditions: [] } : c)) };
 };
-const baseGridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = true, encounter = true } = {}) => {
+const baseGridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = true, encounter = true, guards = true } = {}) => {
     const grid = rawBaseGridFor(level, { directionalLocks, arrivals });
-    return encounter ? stampEncounterLocks(level, grid) : grid;
+    const stamped = encounter ? stampEncounterLocks(level, grid) : grid;
+    // ⛓⛓ rules-lavatrap-neck: RULE T's gates price the PLAYER's walk. They are left off (`guards: false`) where a census
+    // models something else on the grid: a kinds-only call (`arrivals: false`, the pit census's: the gates add no kind, and
+    // their landing exemption reads the atlas that census is part of, a cycle); the rock Fire narrowings (the holder census
+    // and the chaser guard decide from the rooms as they were); and the block push model (a block is not stopped by a
+    // tongue: `seedlingBlockPaths` refuses a block on any gated cell).
+    // ⛓⛓ rules-k-pursuit-speed: RULE K (with term (b)) is measured on the grid before T and stamped after T, under the same
+    // exclusions (a block is not stopped by a body's leash either), so T's arms and seal test read the grid they read before K.
+    return arrivals && guards ? stampChaserGuards(level, stamped, stampTrapTongues(level, stamped)) : stamped;
 };
+/**
+ * ⛓⛓ rules-k-pursuit-speed — RULE K with TERM (b) (`seedlingChaserPursuitGuard.js` holds the rule, its terms, the measured
+ * speeds and their citations; ⚖ Robert 2026-11-18 "Wire (b) after T"): every cell on the leash cut of a contact chaser that
+ * OUTRUNS the player on some tile of its own flood is a GATED cell costing that body's kill-lock arm, the kill-lock shape,
+ * so the analyzer prices a route that cannot avoid the cut and leaves one that can. Stamped over T's grid with T's own
+ * `stampOccupancy` (a cell holding the arm or a disjunct of it is left; a T cell gains the arm beside T's gate). Read off the
+ * patched map's bodies, the class constants, the ports and the grid; no level literal.
+ */
+export const playthroughChaserGuards = new Map();
+function stampChaserGuards(level, grid, onto) {
+    const bodies = combatCensusOf(level).enemies;
+    if (bodies.length === 0) return onto;
+    const toIndex = ([x, y]) => (y - (grid.origin?.y ?? 0)) * grid.width + (x - (grid.origin?.x ?? 0));
+    // Never charged: an arrival landing (landing there is not crossing), a door (stepping on it leaves the room) and a
+    // LavaTrap's own tile (the pull's landing, which `applyLavaTrapPulls` and the maze's `pulls` need as a sub-region).
+    const exempt = new Set([
+        ...arrivalTilesFor(level.level).map(toIndex),
+        ...[...doorTilesOf(level)].map((k) => toIndex(k.split(',').map(Number))),
+        ...playthroughLavaTrapPulls(level).map((p) => toIndex(p.tile)),
+    ]);
+    const centreOf = (b) => {
+        const ctor = ENEMY_CLASSES[b.tag]?.ctor;
+        if (!ctor) throw new Error(`chaser guards: L${level.level} ${b.tag}@${b.x},${b.y} has no ENEMY_CLASSES ctor row`);
+        return [b.x + ctor.dx, b.y + ctor.dy];
+    };
+    const out = KG.stampChaserGuards({ grid, onto, tileTypes: HP.tileTypesOf(level, grid.width), bodies, centreOf, exempt });
+    if (out.refused.length) throw new Error(`chaser guards: L${level.level}: ${out.refused.join('; ')}`);
+    if (out.guards.length || out.dropped.length) {
+        playthroughChaserGuards.set(level.level, { guards: out.guards, dropped: out.dropped, charged: out.charged });
+    }
+    return out.grid;
+}
+/**
+ * ⛓⛓ rules-lavatrap-neck — RULE T (`seedlingTrapTongueGuard.js` holds the rule, its terms and its citations; ⚖ Robert
+ * 2026-11-17 "T wired + K measured, 2 parallel"): every cell in a killing trap's clear-line reach is a GATED cell costing
+ * `Or(Dark Suit, <the arms that kill it from outside its reach>)`, the kill-lock shape, so the analyzer prices a route that
+ * cannot avoid the reach and leaves one that can. Stamped last, over the finished grid (the encounter locks included), so a
+ * gate already on a cell is ANDed, never replaced. The arms are derived per level from the room's own geometry (the 1 px
+ * flood of the player through the room's solids, from its landings, avoiding every live reach), memoized per level.
+ * Read off the patched map's traps, the class constants and the grid; no level literal.
+ */
+export const playthroughTrapTongues = new Map();
+/**
+ * ⛓⛓ rules-lavatrap-pull-line — ONE LavaTrap disc per level (⚖ Robert 2026-11-20 "Fix pull disc, then K"): `OV.lavaTrapPulls`
+ * cut by the game's launch line (`LavaTrap.as:86-88` `!collideLine("Solid", trap, player)`), with this producer's analyzer
+ * grid's `wall` cells standing for `"Solid"`: the tiles `Tile.as:24-27` types `"Solid"` and the scenery that sets `type =
+ * "Solid"` (trees, rocks, statues, …) are the grid's walls; a pit, lava or water tile is `"Tile"` and never cuts (the tongue
+ * crosses it: L108's ferry). A gated solid (a lock, a breakable rock, a chain) is not a wall: the disc is the cleared
+ * state's, the state in which a player stands beside it. The walls are the RAW grid's (`rawBaseGridFor`): no stamp (the
+ * encounter locks, the off-grid solids, rule T) turns a cell into or out of `wall`, so every grid variant reads the same
+ * walls. Rule T's reach (`stampTrapTongues`), its arms (`playthroughTrapKillArms`), the lifts (`applyLavaTrapPulls`) and the
+ * maze's `pull` rows (`seedlingMazeProjectionDeps({lavaPulls})`) all read THIS disc: the tiles the tongue kills on are the
+ * tiles it reels from. No level literal.
+ */
+const lavaTrapPullsMemo = new Map();
+export function playthroughLavaTrapPulls(level) {
+    if (lavaTrapPullsMemo.has(level.level)) return lavaTrapPullsMemo.get(level.level);
+    const placed = (level.entities ?? []).some((e) => e.type === OV.LAVATRAP_PULL.tag);
+    let solid = null;
+    if (placed) {
+        const g = rawBaseGridFor(level, { directionalLocks: DIRECTIONAL_LOCKS, arrivals: true });
+        const ox = g.origin?.x ?? 0;
+        const oy = g.origin?.y ?? 0;
+        solid = (x, y) => g.cells[(y - oy) * g.width + (x - ox)]?.kind === 'wall';
+    }
+    const out = placed ? OV.lavaTrapPulls(level, TILE, { solid }) : [];
+    lavaTrapPullsMemo.set(level.level, out);
+    return out;
+}
+/** Every level's line-cut LavaTrap pulls (`playthroughLavaTrapPulls`), `level number -> pulls`, for the maze compile. */
+export const playthroughLavaTrapPullMap = () => new Map(LEVELS.map((l) => [l.level, playthroughLavaTrapPulls(l)]).filter(([, p]) => p.length > 0));
+const trapKillArmsMemo = new Map();
+export function playthroughTrapKillArms(level, grid = null) {
+    if (trapKillArmsMemo.has(level.level)) return trapKillArmsMemo.get(level.level);
+    const pulls = playthroughLavaTrapPulls(level).map((p) => ({ ...p, tag: OV.LAVATRAP_PULL.tag }));
+    if (!pulls.some((p) => TT.tongueKills(p.tag))) {
+        trapKillArmsMemo.set(level.level, []);
+        return [];
+    }
+    const g = grid ?? stampEncounterLocks(level, rawBaseGridFor(level, { directionalLocks: DIRECTIONAL_LOCKS, arrivals: true }));
+    const ox = g.origin?.x ?? 0;
+    const oy = g.origin?.y ?? 0;
+    const tilesOf = (e) => SEM.entityClaims(e, playthroughEntitySemantics(e, level) ?? SEM.entitySemantics(e), { pixelMaskFootprints: true })
+        .map((c) => c.tile);
+    // The world WITHOUT every entity that claims a cell the grid calls `gated` (the L99 sided kill-lock's permissive
+    // world): the grid prices those (`enterable` asks the arm's items), and what stays solid is what no item removes.
+    const world = buildLevelWorld({
+        ...level,
+        entities: (level.entities ?? []).filter((e) => !((playthroughEntitySemantics(e, level) ?? SEM.entitySemantics(e)) && tilesOf(e)
+            .some(([x, y]) => g.cells[(y - oy) * g.width + (x - ox)]?.kind === 'gated'))),
+    });
+    const room = TT.tongueRoomOf({
+        level, grid: g, world, pulls, seeds: arrivalTilesFor(level.level),
+        resolveCondition: (c) => analyzerOptions.resolveCondition(c),
+    });
+    const out = TT.trapKillArms(room);
+    trapKillArmsMemo.set(level.level, out);
+    return out;
+}
+function stampTrapTongues(level, grid) {
+    const pulls = playthroughLavaTrapPulls(level).map((p) => ({ ...p, tag: OV.LAVATRAP_PULL.tag }));
+    if (pulls.length === 0) return grid;
+    const toIndex = ([x, y]) => (y - (grid.origin?.y ?? 0)) * grid.width + (x - (grid.origin?.x ?? 0));
+    // Never charged: an arrival landing and a door (the trap's own tile is left out by `trapTongueCells`).
+    const exempt = new Set([
+        ...arrivalTilesFor(level.level).map(toIndex),
+        ...[...doorTilesOf(level)].map((k) => toIndex(k.split(',').map(Number))),
+    ]);
+    const killArms = new Map(playthroughTrapKillArms(level, grid).map((r) => [r.id, r.arms]));
+    // The seal test's anchors: the derived region's exits and locations (the atlas the analyzer prices, as `entryGateOf`
+    // reads it) and the landings. A cell is passable WITHOUT the Dark Suit when every condition it holds is satisfied by
+    // every item but the suit.
+    if (!derivedRegionsByLevel) {
+        const { atlas } = derivePlaythroughLayer(LEVELS, { quiet: true });
+        derivedRegionsByLevel = new Map(atlas.regions.map((r) => [r.map_ref, r]));
+    }
+    const region = derivedRegionsByLevel.get(level.level);
+    const anchors = [
+        ...(region?.exits ?? []).map((e) => e.entrance_tile), ...(region?.locations ?? []).map((l) => l.tile), ...arrivalTilesFor(level.level),
+    ].filter(Boolean).map(toIndex);
+    const suit = new Set(Object.keys(TT.inventoryOf(analyzerOptions.resolveCondition(OV.LAVATRAP_PULL.condition))));
+    const allButSuit = new Proxy({}, { get: (_, item) => (suit.has(item) ? 0 : Infinity) });
+    const passable = (i) => {
+        const cell = grid.cells[i];
+        if (!cell || HP.BLOCKING.has(cell.kind)) return false;
+        const conds = [...(cell.conditions ?? []), ...Object.values(cell.dirs ?? {}).flatMap((g) => (Array.isArray(g) ? g : g ? [g] : []))];
+        return conds.every((c) => TT.satisfies(analyzerOptions.resolveCondition(c), allButSuit));
+    };
+    const out = TT.stampTrapTongues({ grid, exempt, pulls, killArms, anchors, passable });
+    playthroughTrapTongues.set(level.level, { traps: out.traps, sealed: out.sealed });
+    return out.grid;
+}
 const rawBaseGridFor = (level, { directionalLocks, arrivals }) => {
     const build = (extra) => SEM.buildSeedlingRegionGrid(
         { x: 0, y: 0, w: level.width, h: level.height }, level,
@@ -495,6 +776,19 @@ const stampNoHitGates = (level, grid) => stampNoHitDirectionalGates(grid, playth
  *     latch from that side (`latchLocksOf` hands the analyzer both halves);
  *   - else the arms alone, as an `enter` gate (no side mints an event the side could wait for).
  * A cross-level lock is left alone, as before.
+ *
+ * ⛓⛓ RULES l99-sided-killlock — **A SIDE IS WHERE THE PLAYER CAN STAND, AND A CHASER WAKES ON A CENTRE.** (⚖ Robert
+ * 2026-11-15, "Rule + ER regen slice (Recommended)"; the game witness `rules-l99-l6-witness`.) The tile flood above walks
+ * every cell but wall and sink, so a tile a pixel mask covers in part (a `CliffSide`, `Scenery/CliffSide.as:33`) joins
+ * what the player's own box cannot: L99's west plateau (the L100 landing) and its lower floor were ONE side, and the room
+ * was priced `clears` from both. Each side is now refined by the model's 1 px flood of the player's box
+ * (`seedlingModelOracles.modelFloodPoints`), kept inside the side's tiles and run over the level WITHOUT its gated
+ * entities (the tile flood's permissive direction, kept), and a body's distance is measured from those reachable
+ * CENTRES (`Bob.as:58`: a chaser measures `runRange` to the player's position). From L99's pocket the nearest centres
+ * to its three lavarunners are 74, 82.6 and 98.5 px (the witness's own flood: the same three numbers), so two never
+ * wake (`runRange` 80, `Bob.as:21,59`), the pocket `cannot`, and the lock is a latch from it: the crossing needs
+ * `L99 flag 0`, earned on the lower floor. Every other kill-lock's sides, verdicts and across/beyond lists read the same
+ * (the census, before and after, in the slice's report). The maze reads the same rows (`playthroughEncounterLockOpeners`).
  */
 const THROUGH_SOLID_ARMS = Object.freeze({ hasSpear: 'hasSpear', hasSword: 'hasGhostSword' });
 const ENCOUNTER_CHASE_KINDS = new Set(['chase', 'chase-through-walls', 'teleport-hop']);
@@ -542,6 +836,18 @@ export function encounterLocksOf(level, grid = null) {
         };
     });
     const armsOf = new Map(bodies.map((b) => [b.at, b.arms]));
+    // ⛓⛓ RULES l99-sided-killlock — THE PIXEL FLOOD IS AS PERMISSIVE AS THE TILE FLOOD. The tile flood walks gated
+    // material (a rock an item breaks, a lock a key opens): "a side clears MORE rooms, the old rule's direction". So the
+    // model is asked over the level WITHOUT every entity that claims a cell the grid itself calls `gated` (the room's
+    // shut kill-locks among them: their tiles are never entered, `closed`). What stays solid is what no item removes:
+    // the tiles, the pixel masks (a CliffSide, `Scenery/CliffSide.as:33`; a Building) and every ungated entity. Read off
+    // the grid, never a class list. Without it, L53's jellyfish room is cut at `breakablerock@128,160`.
+    let permissiveMemo = null;
+    const permissive = () => (permissiveMemo ??= {
+        ...level,
+        entities: (level.entities ?? []).filter((e) => !((playthroughEntitySemantics(e, level) ?? SEM.entitySemantics(e)) && tilesOf(e)
+            .some(([x, y]) => g.cells[(y - oy) * g.width + (x - ox)]?.kind === 'gated'))),
+    });
     const out = lockEntities.map((e) => {
         const tag = Number(e.attrs?.tag);
         const lock = { level: level.level, tag, cls: e.type, x: e.x, y: e.y };
@@ -550,6 +856,9 @@ export function encounterLocksOf(level, grid = null) {
             width: g.width, height: g.height, tile: TILE,
             passable: (x, y) => !['wall', 'sink'].includes(g.cells[(y - oy) * g.width + (x - ox)]?.kind ?? 'wall'),
             lockTiles: tilesOf(e), closed, bodies,
+            // ⛓⛓ RULES l99-sided-killlock: a side is what the player's own box reaches with the lock shut (the model's
+            // 1 px flood, inside the side's tiles), and a chaser wakes on a reachable CENTRE within its runRange.
+            reachable: (start, tiles) => modelFloodPoints(permissive(), [start], (x, y) => tiles.has(`${x},${y}`)),
         });
         const crossLevel = CROSS_LEVEL_OPENERS.has(`${level.level}:${e.attrs?.tag}`);
         const clears = sides.some((s) => s.verdict === 'clears');
@@ -1483,7 +1792,7 @@ function chargeSealedPockets(atlas, regionId, level, analysis, options) {
  * gated on the Dark Suit. A pull inside one sub-region is nothing to add.
  */
 function applyLavaTrapPulls(atlas, regionId, level, analysis) {
-    const pulls = OV.lavaTrapPulls(level, TILE);
+    const pulls = playthroughLavaTrapPulls(level);
     if (pulls.length === 0) return;
     const region = atlas.regions.find((r) => r.region_id === regionId);
     const subs = new Set(region?.subgraph?.sub_regions ?? []);
@@ -1493,23 +1802,50 @@ function applyLavaTrapPulls(atlas, regionId, level, analysis) {
         const i = indexOf[y * level.width + x];
         return i >= 0 && subs.has(components[i].id) ? components[i].id : null;
     };
-    const added = new Set();
+    // ⛓⛓ rules-lavatrap-neck: a disc tile RULE T gated (`seedlingTrapTongueGuard`) is no sub-region of its own; the player
+    // steps onto it from a sub-region beside it (paying its gate, which the lift's own Dark Suit implies), so the lift
+    // leaves from those.
+    // ⛓⛓ rules-k-pursuit-speed: a disc tile RULE K gated (a lavarunner's leash cut, `seedlingChaserPursuitGuard`) is no
+    // sub-region of its own either; the player stands on it to be reeled, so the lift leaves from the sub-regions beside it
+    // and costs the Dark Suit AND the cell's K arm (the suit does not imply the arm: a tile both rules gate needs both).
+    const tGated = new Set((playthroughTrapTongues.get(level.level)?.traps ?? []).flatMap((t) => t.cells.map(([x, y]) => `${x},${y}`)));
+    const kArms = new Map();
+    for (const g of playthroughChaserGuards.get(level.level)?.guards ?? []) {
+        for (const [x, y] of g.cut) kArms.set(`${x},${y}`, g.arm);
+    }
+    const ruleFor = ([x, y]) => {
+        const arm = kArms.get(`${x},${y}`);
+        return arm ? { rule: 'And', children: [DARKSUIT_RULE, analyzerOptions.resolveCondition(arm)] } : DARKSUIT_RULE;
+    };
+    const fromSubs = ([x, y]) => {
+        const own = subOf([x, y]);
+        if (own) return [{ from: own, rule: DARKSUIT_RULE }];
+        if (!tGated.has(`${x},${y}`) && !kArms.has(`${x},${y}`)) return [];
+        const rule = ruleFor([x, y]);
+        return [[0, -1], [1, 0], [0, 1], [-1, 0]].map(([dx, dy]) => [x + dx, y + dy])
+            .filter(([nx, ny]) => nx >= 0 && ny >= 0 && nx < level.width && ny < level.height).map(subOf).filter(Boolean)
+            .map((from) => ({ from, rule }));
+    };
+    const added = new Map();
     for (const pull of pulls) {
         const to = subOf(pull.tile);
         if (!to) continue;
-        for (const tile of pull.from) {
-            const from = subOf(tile);
-            if (!from || from === to || added.has(`${from}>${to}`)) continue;
-            added.add(`${from}>${to}`);
-            region.subgraph.internal_exits.push({
-                from, to, bidirectional: false, source: 'manual', access_rule: DARKSUIT_RULE,
-            });
+        for (const { from, rule } of pull.from.flatMap(fromSubs)) {
+            if (from === to) continue;
+            const k = `${from}>${to}`;
+            const prev = added.get(k);
+            // one lift per pair: a plain Dark Suit lift subsumes a K-charged one; two K-charged ones carry the same arm
+            if (prev && (prev.access_rule === DARKSUIT_RULE || rule !== DARKSUIT_RULE)) continue;
+            if (prev) { prev.access_rule = rule; continue; }
+            const exit = { from, to, bidirectional: false, source: 'manual', access_rule: rule };
+            added.set(k, exit);
+            region.subgraph.internal_exits.push(exit);
         }
     }
     if (added.size === 0) return;
     region.subgraph.internal_exits.sort((a, b) => a.from.localeCompare(b.from) || a.to.localeCompare(b.to));
     region.annotations.rules_source = 'mixed';
-    lavaTrapLifts.push(...[...added].map((k) => `${regionId}/${k}`));
+    lavaTrapLifts.push(...[...added.keys()].map((k) => `${regionId}/${k}`));
     note(`${regionId}: ${added.size} LavaTrap lift(s) added, one-way and gated on the Dark Suit — `
         + `${OV.LAVATRAP_PULL.why} (${OV.LAVATRAP_PULL.cite})`);
 }
@@ -1755,7 +2091,7 @@ const regionAnalyses = new Map();
  *     the event costs what crossing the obstacle costs; none (a rock-placement puzzle) = True_.
  * Run after `buildPlaythroughAtlas(…)` on the document it returned.
  */
-export function playthroughObstacleEvents(doc, { rows = arrivalSolidCensus(MAP, levelSourceFromAtlas(MAP)), departures = departuresLandingAt } = {}) {
+export function playthroughObstacleEvents(doc, { rows = arrivalCensusRows(), departures = departuresLandingAt } = {}) {
     const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
     const entityOf = (level, { cls, x, y }) => {
         const e = (level.entities ?? []).find((en) => en.type === cls && en.x === x && en.y === y);
@@ -2307,7 +2643,8 @@ export function playthroughBlockCrossingCases(doc) {
         const region = doc.regions.find((r) => r.region_id === regionId);
         const analysis = regionAnalyses.get(regionId);
         if (!region?.subgraph?.sub_regions || !analysis) continue;
-        const grid = gridFor(level);
+        // ⛓ rules-lavatrap-neck: the push model's grid carries no T gates (`baseGridFor` says why).
+        const grid = gridFor(level, { guards: false });
         if ((grid.origin?.x ?? 0) !== 0 || (grid.origin?.y ?? 0) !== 0) throw new Error(`block crossings: L${level.level}'s grid is not whole-level`);
         const { indexOf, components } = analysis.componentsResult;
         const subOf = (i) => (indexOf[i] >= 0 && region.subgraph.sub_regions.includes(components[indexOf[i]].id) ? components[indexOf[i]].id : null);
@@ -2956,6 +3293,8 @@ export function compilePlaythroughRules(doc, { table = DERIVED_TABLE, rekey = nu
     const { obstacle, locks, buttons, poles, talks } = layer;
     const landingGates = playthroughLandingGates(doc);
     const ropes = playthroughRopeEvents(doc);
+    // ⛓ rules-spinner-alias-guards (b): no event on a slot a tag -1 writer clears (Main.as:222) — refused by name.
+    refuseAliasedEvents([...layer.events, ...ropes.events], aliasWritersOf(MAP));
     const { rules, report } = compileRegionAtlas(doc, {
         mapDoc: MAP,
         gameName,
@@ -3001,8 +3340,10 @@ export function compilePlaythroughRules(doc, { table = DERIVED_TABLE, rekey = nu
     const mintedRopes = new Set(ropes.events.map((e) => e.name));
     const named = [...new Set(ROPES.map((r) => ropeEventName(r)).filter((n) => rulesText.includes(JSON.stringify(n))))];
     const stray = named.filter((n) => !mintedRopes.has(n));
+    // ⛓ tile-fire-breaks-rocks §4: every rock event the rock rulings credit is an event location this run made.
+    const strayRockEvents = unmintedRockEvents(creditedRockEvents(), layer.events.map((e) => e.name));
 
-    return { rules, report, layer, landingGates, ropes, override, disagrees, uncharged, stray, rulesText };
+    return { rules, report, layer, landingGates, ropes, override, disagrees, uncharged, stray, strayRockEvents, rulesText };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
@@ -3019,7 +3360,7 @@ function main() {
     if (!result.ok) process.exit(1);
 
     const compiled = compilePlaythroughRules(doc);
-    const { layer, landingGates, ropes, override, disagrees, uncharged, stray, rulesText, report } = compiled;
+    const { layer, landingGates, ropes, override, disagrees, uncharged, stray, strayRockEvents, rulesText, report } = compiled;
     const { obstacle, locks, buttons, poles, talks } = layer;
     if (disagrees.length) {
         for (const d of disagrees) console.error(`ERROR: ${TBL.composedDisagreeMessage(d)}`);
@@ -3035,6 +3376,10 @@ function main() {
     }
     if (stray.length) {
         console.error(`ERROR: the rules name rope event(s) never minted: ${stray.join(', ')}`);
+        process.exit(1);
+    }
+    if (strayRockEvents.length) {
+        console.error(`ERROR: ${strayRockEvents[0]}`);
         process.exit(1);
     }
 

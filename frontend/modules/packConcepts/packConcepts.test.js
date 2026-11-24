@@ -8,7 +8,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { ContentPackError, loadPackStack, parseRegistry } from '../contentPacks/contentPacks.js';
-import { PACK_CONCEPT_FIELDS, PACK_CONCEPT_KINDS, createPackConcepts, parseConceptsManifest } from './packConcepts.js';
+import { PACK_CONCEPT_FIELDS, PACK_CONCEPT_KINDS, PACK_TILE_BASES, createPackConcepts, parseConceptsManifest } from './packConcepts.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const PACKS_BASE = pathToFileURL(`${join(dirname(fileURLToPath(import.meta.url)), '../../packs')}/`).href;
 const fsJson = async (url) => JSON.parse(readFileSync(fileURLToPath(url), 'utf8'));
@@ -16,7 +17,7 @@ const fsJson = async (url) => JSON.parse(readFileSync(fileURLToPath(url), 'utf8'
 const MEM = 'mem:/packs/';
 const packJson = (id) => ({ schema_version: 1, id, title: id, licence: 'CC0', layers: { concepts: 'concepts/manifest.json' } });
 
-/** The brief's manifest, verbatim. */
+/** The brief's manifest, verbatim, plus TILE-2's `base` on the narrator (so every accepted field is exercised). */
 const META = {
     schema_version: 1,
     concepts: {
@@ -26,8 +27,12 @@ const META = {
             description: 'Knows this is a game.',
             look: { color: '#c0a040', symbol: 'N' },
             art: 'meta:character/narrator',
+            // ⛓ TILE-2 — what the tile kind IS when nothing draws it as itself (`PACK_TILE_BASES`).
+            base: 'character',
             text: { greeting: 'meta:narrator/greeting' },
             presents: 'guardian',
+            // ⛓ PL-1 — the entry's provenance source (`withFixtureProvenance` lists `fixture`).
+            src: 'fixture',
         },
         'meta:place/lobby': { kind: 'place', name: 'The Lobby' },
         'meta:object/save-crystal': { kind: 'object', name: 'A Save Crystal', look: { color: '#40a0c0', symbol: '*' } },
@@ -52,10 +57,10 @@ const memReader = (files) => async (url) => {
 
 const stackOf = (manifests) => loadPackStack(Object.keys(manifests), {
     base: MEM,
-    readJson: memReader(Object.fromEntries(Object.entries(manifests).flatMap(([id, m]) => [
+    readJson: withFixtureProvenance(memReader(Object.fromEntries(Object.entries(manifests).flatMap(([id, m]) => [
         [`/${id}/pack.json`, packJson(id)],
         [`/${id}/concepts/manifest.json`, m],
-    ]))),
+    ])))),
 });
 
 describe('the manifest, read through loadPackStack', () => {
@@ -85,9 +90,9 @@ describe('the manifest, read through loadPackStack', () => {
         expect(Object.isFrozen(e) && Object.isFrozen(e.look) && Object.isFrozen(e.text)).toBe(true);
     });
 
-    it('PACK_CONCEPT_KINDS is frozen and carries the four kinds of Q2', () => {
+    it('PACK_CONCEPT_KINDS is frozen and carries the four kinds of Q2, the four of S6 (⛓ PL-1) and terrain (⛓ PASS-1)', () => {
         expect(Object.isFrozen(PACK_CONCEPT_KINDS)).toBe(true);
-        expect([...PACK_CONCEPT_KINDS].sort()).toEqual(['character', 'info', 'object', 'place']);
+        expect([...PACK_CONCEPT_KINDS].sort()).toEqual(['boon', 'character', 'info', 'object', 'place', 'resource', 'stat', 'task', 'terrain']);
     });
 });
 
@@ -131,6 +136,44 @@ describe('⛔ REFUSAL BY NAME', () => {
         expect(err.message).toMatch(pattern);
     };
     const one = (over) => ({ 'bad:character/x': { ...NARRATOR, ...over } });
+
+    // ⛓ PL-1 — `presents` takes two forms (Z.1): a bare mechanic id, or a namespaced structure id.
+    const task = (presents, kind = 'task') => ({ 'bad:task/x': { kind, name: 'X', presents } });
+    it('a namespaced presents that is not <pack>:<kind>/<slug>', () => refuse(task('bad:quest/x'), /presents "bad:quest\/x" is not a structure id/));
+    it('a namespaced presents of another kind than the concept\'s own', () => refuse(task('bad:stat/x'), /presents the stat "bad:stat\/x", but its own kind is task/));
+    it('two entries of ONE pack presenting the same structure id', () => refuse(
+        { 'bad:task/a': { kind: 'task', name: 'A', presents: 'g:task/x' }, 'bad:task/b': { kind: 'task', name: 'B', presents: 'g:task/x' } },
+        /concepts "bad:task\/a" and "bad:task\/b" both present "g:task\/x"/,
+    ));
+    it('a src that is not a string', () => refuse(one({ src: 3 }), /src must be a provenance source id/));
+
+    // ⛓ TILE-2 — `base` beside `art`: one of the closed set, refused by name otherwise; absent is valid.
+    it('a base outside the closed set is refused BY NAME, naming the set', () => {
+        for (const bad of ['lamp', 'Marker', '', 3, null]) {
+            const want = `concept "bad:character/x": base ${JSON.stringify(bad)} is not one of ${PACK_TILE_BASES.join(', ')}`;
+            refuse(one({ base: bad }), new RegExp(want.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+        }
+    });
+    it('each base of the closed set parses, with or without an art key; a row with no base parses', () => {
+        for (const base of PACK_TILE_BASES) {
+            for (const art of [undefined, 'ok:tile/x']) {
+                const entry = { kind: 'object', name: 'X', base, ...(art ? { art } : {}) };
+                const pc = createPackConcepts([{ id: 'ok', layers: { concepts: { schema_version: 1, concepts: { 'ok:object/x': entry } } } }]);
+                expect(pc.get('ok:object/x').base).toBe(base);
+            }
+        }
+        const pc = createPackConcepts([{ id: 'ok', layers: { concepts: { schema_version: 1, concepts: { 'ok:object/x': { kind: 'object', name: 'X', art: 'ok:tile/x' } } } } }]);
+        expect('base' in pc.get('ok:object/x')).toBe(false);
+    });
+    it('PACK_TILE_BASES is frozen and is TILE-1\'s closed set', () => {
+        expect(Object.isFrozen(PACK_TILE_BASES)).toBe(true);
+        expect([...PACK_TILE_BASES].sort()).toEqual(['character', 'floor', 'marker', 'wall']);
+    });
+    it('a namespaced presents of the right form and kind parses (each structure kind)', () => {
+        for (const kind of ['task', 'stat', 'resource', 'boon', 'place']) {
+            expect(() => createPackConcepts([{ id: 'ok', layers: { concepts: { schema_version: 1, concepts: { [`ok:${kind}/x`]: { kind, name: 'X', presents: `g:${kind}/x` } } } } }])).not.toThrow();
+        }
+    });
 
     it('an unknown schema version', () => {
         let err;
@@ -178,5 +221,31 @@ describe('the committed packs', () => {
         const pc = createPackConcepts(stack);
         const declared = stack.flatMap((l) => Object.keys(l.layers.concepts?.concepts ?? {}));
         expect(pc.keys().sort()).toEqual([...new Set(declared)].sort());
+    });
+});
+
+describe('⛓ TILE-2 — a row that declares a base keeps per-entry provenance, as any concept row', () => {
+    const tilePack = (row, provenance) => ({
+        schema_version: 1,
+        concepts: { 'lamps:object/lantern': { kind: 'object', name: 'A Lantern', art: 'lamps:tile/lantern', base: 'marker', ...row } },
+        provenance,
+    });
+    const load = (manifest) => loadPackStack(['lamps'], {
+        base: MEM,
+        readJson: memReader({ '/lamps/pack.json': packJson('lamps'), '/lamps/concepts/manifest.json': manifest }),
+    });
+    const BLOCK = { sources: { hand: { type: 'authored', by: 'a test' }, other: { type: 'authored', by: 'another test' } }, default: 'hand' };
+
+    it('the row resolves to its own src, else the default, through the loader\'s check', async () => {
+        const { provenanceCounts } = await import('../contentPacks/provenance.js');
+        const [own] = await load(tilePack({ src: 'other' }, BLOCK));
+        expect(provenanceCounts(own).concepts).toEqual({ hand: 0, other: 1 });
+        const [dflt] = await load(tilePack({}, BLOCK));
+        expect(provenanceCounts(dflt).concepts).toEqual({ hand: 1, other: 0 });
+        expect(createPackConcepts([dflt]).get('lamps:object/lantern')).toMatchObject({ base: 'marker', art: 'lamps:tile/lantern', pack: 'lamps' });
+    });
+
+    it('an unlisted src on a base-declaring row is refused at load, naming the pack, the layer and the key', async () => {
+        await expect(load(tilePack({ src: 'nobody' }, BLOCK))).rejects.toThrow(/content pack "lamps" layer "concepts" provenance key "lamps:object\/lantern": src "nobody" is not a listed source/);
     });
 });

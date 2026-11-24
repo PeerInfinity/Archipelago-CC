@@ -43,7 +43,7 @@ import { newEnvelope as newSphereEnvelope, runToStep as runSphereToStep } from '
 import { newSpiralEnvelope, runSpiralToStep } from './spiralSteps.js';
 import { buildTopDownEnvelope, runTopDownToStep } from './topDownSteps.js';
 import { newEntranceEnvelope, runEntranceToStep, entranceShuffleHooksFor } from './entranceShuffleSteps.js';
-import { effectiveContentStack, loadContentSet, recordedContentOf } from './worldContent.js';
+import { assertWorldNumbers, effectiveContentStack, loadContentSet, recordedContentOf } from './worldContent.js';
 
 export const DEFAULT_PARAMS = {
     seed: 1,
@@ -779,7 +779,8 @@ export function worldContentSubstrateIds(state, { resolvedLibraries = [] } = {})
 /** The world's effective content stack (`worldContent.effectiveContentStack` over `worldContentSubstrateIds`). */
 export function worldContentStackOf(state, opts = {}) {
     return effectiveContentStack({
-        substrateIds: worldContentSubstrateIds(state, opts), content: state?.params?.content ?? [],
+        substrateIds: worldContentSubstrateIds(state, opts), exists: state?.params?.exists ?? [],
+        content: state?.params?.content ?? [],
     });
 }
 
@@ -794,7 +795,10 @@ export function worldContentStackOf(state, opts = {}) {
 export async function prepareRunFromState(bundle, { io = {}, ...opts } = {}) {
     const defaults = opts.defaults ?? panelDefaultParams();
     const state = normalisedRunState(bundle, defaults);
-    const contentSet = await loadContentSet(worldContentStackOf(state, opts), io);
+    // ⛓ CONTENT SETS PL-1 — a `params.numbers` pack for another substrate or another `exists` is refused by name
+    //   before anything is built (Z.5). Names none ⇒ reads nothing.
+    await assertWorldNumbers(state?.params, { substrateIds: worldContentSubstrateIds(state, opts), ...io });
+    const contentSet = await loadContentSet(worldContentStackOf(state, opts), { ...io, exists: state?.params?.exists ?? [] });
     return buildRunFromState(bundle, { ...opts, defaults, contentSet });
 }
 

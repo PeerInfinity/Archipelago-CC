@@ -1471,6 +1471,11 @@ export const CONTACT_FIDELITY = {
      * the chest verb and refused *"NEVER OPENED"*. ON: such a chest is open in `openChests` from the build, its flag is
      * banked like `open()`'s, and a `collect-placement` at it is satisfied (`arm: 'seal-removed'`). OFF:
      * byte-identical. `SEEDLING_CHEST_SEAL_REMOVAL=0|1`.
+     * ⛓ THE LIVE HALF (seedling-js-item-live-delivery, ⚖ Robert 2026-11-18; no new key): the sixteenth seal can also
+     * ARRIVE mid-visit from the host (`levelRun.deliver`). `Chest.update`'s own `checkBySeal()` (`Chest.as:59-61`)
+     * then writes the flag on the next frame (banked the same way) and its `FP.world.remove` lands at that frame's
+     * `updateLists()` (`Engine.as:69-76`): a wall to the Player that frame, gone from the next (`levelRun`'s
+     * `liveSealVisit` / `sealRemovedAt`). No committed tape takes the sixteenth seal mid-visit.
      */
     chestSealRemoval: true,
     /**
@@ -2044,6 +2049,292 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_CORRIDOR_FORECAST_MEMO=0|1` for a node measurement.
      */
     corridorForecastMemo: true,
+    /**
+     * fidelity WALLFLYERCORPSE D2 (wave 45) — A WALLFLYER THE RUN NO LONGER HOLDS LIVE IS NOT PRICED AT ITS PLACEMENT.
+     * `dangerMap.staticEnemyDanger` priced every wallflyer at its `.oel` placement box for the whole visit, including
+     * one the run had killed (hammer WALLFLYER-GAPS §3: survey step 35, L22 → L29, the kill arm takes
+     * `wallflyer@48,112` at t134 and `wallflyer@64,80` at t311, and at t432 the dashless corridor meets the dead
+     * @64,80's placement at (81.0,96.7) and the ladder EXHAUSTS; the JS runtime's L22 → L29 refusal is the same ghost).
+     * The drills already skip a removed body (`liveDrill?.removed`); wallflyers had no equivalent. The game: a wallflyer
+     * touches the player only through `Enemy.hitPlayer`, gated `!destroy && currentAnim != "die" && hitsTimer <= 0`
+     * (`Enemies/Enemy.as:211-221`), called from `Enemy.update` only when `!destroy` (`:106-111`); `WallFlyer.startDeath`
+     * plays "die" (`Enemies/WallFlyer.as:47-51`) and the anim's `endAnim` sets `destroy` (`:99-110`); `Player.hit` has
+     * no other wallflyer caller. So a DYING body (the "die" anim on, then `destroy` while it fades) never hurts, and a
+     * removed one is not in the world. ON: a wallflyer whose id has no LIVE row in `run.entities('wallFlyerBodies')`
+     * (live = `!destroy && dieAnim === null`, the family's own reading) is skipped, when the family is an array. A LIVE
+     * flyer keeps its placement price (the WAIT arm has no other wallflyer price; D1(b) in the slice report).
+     * OFF: byte-identical. Shipped OFF (⚖ user 2026-11-15, "OFF key, flip later"); ON since the WALLFLYERCORPSE flip
+     * (⚖ user, planning-21's session; licence bound to this flip's SHA). `SEEDLING_WALLFLYER_CORPSE_GONE=0|1`.
+     */
+    wallFlyerCorpseGone: true,
+    /**
+     * fidelity DARKSUITSTATIC D2 (wave 46) — THE DARK SUIT RETALIATES INTO A STATIC BODY. `Player.hit` calls
+     * `if (e && hasDarkSuit) e.hit(darkSuitForce 1, new Point(x, y), darkSuitDamage 1, "Suit")` inside its own gate
+     * (`Player.as:1384-1387`), and `Enemy.hitPlayer` passes the body as `e` (`p.hit(this, 3, …)`, `Enemies/Enemy.as:
+     * 211-221`). The static scan (`levelRun.stepContactsNow`) passed no `retaliate`, so every static contact under the
+     * suit was refused by name (`playerHit`'s `byEnemy`) — met by hammer at L63 `darktrap@128,272`. D1's census of the
+     * scan's classes (`IceTrap`, `SandTrap`, `DarkTrap`, and `Turret` relabelled by `STATIC_SWORD_ARM`), from the AS3:
+     * `DarkTrap.hit` is EMPTY (`Enemies/DarkTrap.as:56-59`) and `IceTrap` sets `canHit = false` (`Enemies/IceTrap.as:32`,
+     * `Enemy.as:147`) — no effect; `SandTrap` takes `Enemy.hit` (empty `knockback`) on F4's damage row: hits, the
+     * 30-tick i-frames that gate its own `hitPlayer`, the `hitByDarkStuff` latch, and a third hit's "die" staged as the
+     * sword arm stages it plus the one graphic step `World.update` gives a blow inside the body's own update. `Turret`
+     * is NOT declared: its fire gate reads `hitsTimer` after `super.update()` (`Enemies/Turret.as:45-79`) and the model
+     * steps that half above the scan, so it stays refused, and the refusal now says why. ON: the scan passes the
+     * declared `retaliate`, and the row lands in `playerHits[].retaliation`. OFF: byte-identical.
+     * `SEEDLING_DARK_SUIT_STATIC_RETALIATION=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    darkSuitStaticRetaliation: false,
+    /**
+     * fidelity L39HIT D2 (wave 47) — A SPINNER FORECAST STEPS THE ROOM'S PULSERS, AND THEIR PULSE HITS ITS BODIES.
+     *
+     * `Pulser.hit` (`Pulser.as:87-116`) collects every "Enemy" within `radiusHit` 22 and calls `Enemy.hit(force 6,
+     * pulser point, damage 1, "Pulse")` (`Enemy.as:141-181`: `hits += 1`, `hitsTimer` 30, an atan2 knockback), and a
+     * pulser whose group latched pulses forever. `advance` steps that (`levelRun.stepPulsersNow`'s enemy arm, after the
+     * bodies: `Game.as:2357` adds the pulser before `:2416` the spinner, and `World.addUpdate` prepends), but every
+     * spinner FORECAST stepped only the bodies, so a body a periodic pulse was about to shove stayed on its old line.
+     * MEASURED (L39, the seed-1 whole-game walk's 2864 t dashless plan, rebuilt at seam 30036 and game-witnessed on a
+     * fresh p4g page at 0 px): `pulser@64,96` hits `spinner@112,88` at t1317; the walk segment's forecast (cut at t1310)
+     * is 5.75 px off from t1318 and ~88 px off at t1522, where the walk took the body's hammer (`Spinner.as:66-76`,
+     * `Player.hit`), on the game and in the model alike, with 0 hits billed. ON: `levelRun.spinnerForecast` steps the
+     * room's pulsers after the bodies on every row (armed as now: latched, or pressed by the player's box now) and
+     * applies their enemy arm (`hitSpinner`); such a forecast is never shifted. OFF: byte-identical. ⛔ OFF by default
+     * (no licence); `SEEDLING_PULSER_FORECAST_PULSE=0|1` for a node measurement.
+     */
+    pulserForecastPulse: false,
+    /**
+     * fidelity DARKSUITBOSSES D2 (wave 48) — THE DARK SUIT RETALIATES INTO A BOSS. `Player.hit` calls
+     * `if (e && hasDarkSuit) e.hit(darkSuitForce 1, new Point(x, y), darkSuitDamage 1, "Suit")` inside its own gate
+     * (`Player.as:1384-1387`). Four boss arms passed `e` and no `retaliate`, so under the suit each was refused by name
+     * (`playerHit`'s `byEnemy`). D1's census, from the AS3 (each `e` is the boss itself):
+     *   · `shieldBossStab`: `ShieldBoss.hitPlayer` → `p.hit(this, swingForce, …)` on the "stab" frames 5-8
+     *     (`Enemies/ShieldBoss.as:105-114`). `ShieldBoss.hit` (`:130-151`) arms first (`if (!activated) { activated = true;
+     *     return; }`); armed, the anim is "stab", so it takes the `playedSound`/`startStab(true)` arm, and `startStab`
+     *     needs "sit" (`:172`): a no-op. ON: `shieldBossTakesHit(…, t 'Suit')` on the model's row, between the entity
+     *     step and its graphic step, as in the game.
+     *   · `bobBoss` (body `Enemy.hitPlayer`, swords `BobSoldier.swordHitting`, `Enemies/BobSoldier.as:160-172`):
+     *     `BobBoss.hit` (`Enemies/BobBoss.as:163-175`) re-seeds form 2's blades, then `Enemy.hit(0, null, d, "Suit")`:
+     *     hits, i-frames, the `hitByDarkStuff` latch, a kill's `destroy` (`bobBossHit`). ON (with the suit): the bill
+     *     lands INSIDE `stepBobBossBody` (its `onPlayerHit`), so the re-seed precedes `spin` and the later sword lines
+     *     as it does in `BobSoldier.update`.
+     *   · `bossBody`: `Enemy.hitPlayer` from `BossTotem.update`'s `super.update()` (`Enemies/BossTotem.as:301`).
+     *     `BossTotem.hit` (`:719-725`) → `Enemy.hit`: `onlyHitBy = "Wand"` (`:262`) and `justKnock` false
+     *     (`Enemy.as:42`, `:149-180`), and `knockback` is empty (`:727`). A no-op row.
+     *   · `owlBody` is NOT declared. `FinalBoss.hit` is `Enemy.hit`; `onlyHitBy = "Lava"` and `justKnock` (`Enemies/
+     *     FinalBoss.as:61-62`), so a "Suit" hit is `knockback(1, p)` into `v` inside `super.update()`, and the phase
+     *     arms then read `v.length` (`:126-155`). The model bills the contact AFTER `stepFinalBoss`'s arms, so it stays
+     *     refused, and the refusal now says why.
+     * The row lands in `playerHits[].retaliation`. OFF: byte-identical. `SEEDLING_DARK_SUIT_BOSS_RETALIATION=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    darkSuitBossRetaliation: false,
+    /**
+     * fidelity OWLSUIT D2 (wave 49) — THE OWL'S BODY CONTACT AT ITS AS3 SLOT, AND HIS "Suit" RETALIATION. `FinalBoss.update`
+     * calls `super.update()` (`Enemies/FinalBoss.as:110`) → `Enemy.update` → `mobileUpdate` (friction, the move), then
+     * `hitUpdate()` and `hitPlayer()` (`Enemies/Enemy.as:106-111`; `hitPlayer` not overridden: `p.hit(this, 3, new
+     * Point(x, y), damage)` behind `!destroy && currentAnim != "die" && hitsTimer <= 0`, `:211-221`), and only THEN the
+     * lava test (`FinalBoss.as:116-124`), the `v.length > 4` cap and the phase arms (`:126-182`). The model billed
+     * `owlBody` AFTER `stepFinalBoss`'s arms, so four reads were wrong: (1) under the suit, `Player.hit`'s `e.hit(1, new
+     * Point(x, y), 1, "Suit")` (`Player.as:1384-1387`) is `Enemy.hit` with `onlyHitBy = "Lava"` and `justKnock`
+     * (`FinalBoss.as:61-62`) → `knockback(1, p)` into `v`, which the cap and the walk/coast split `v.length <= moveSpeed`
+     * read on the same tick (refused by name before); (2) the player's knockback `p.v`, which the barrage aim reads
+     * (`:144`; refused before on a rock-spawn tick); (3) the Owl's `hitsTimer`/`destroy`, which a lava hit on the same
+     * tick sets (`:120`) — the late bill skipped a contact the game lands; (4) his point, which the pod snap (`:176-177`)
+     * moves. ON: `stepFinalBoss` calls the caller's `onHitPlayer` at that slot; `levelRun` bills there with `retaliate`
+     * declared (`owlSuitRetaliation` → `finalBossHit(…, 'Suit')`: the clamp, the `canHit` gate, the `justKnock` shove;
+     * no hits, no i-frame), the barrage aim reads the player LIVE, and the rock-spawn refusal is retired (the order is
+     * the game's). The row lands in `playerHits[].retaliation` (with the Owl's `v` after the shove). Composes with
+     * `darkSuitBossRetaliation`: ON here declares the Owl whatever that key says; OFF here leaves wave 48's refusal
+     * (and its D1 text when that key is ON) exactly as it was. OFF: byte-identical. `SEEDLING_OWL_CONTACT_IN_STEP=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    owlContactInStep: false,
+    /**
+     * fidelity TURRETSUIT D2 (wave 50) — A TURRET'S BODY CONTACT AT ITS AS3 SLOT, AND ITS "Suit" RETALIATION.
+     * `Turret.update` calls `super.update()` FIRST (`Enemies/Turret.as:47`) → `Enemy.update` → `hitUpdate()` and
+     * `hitPlayer()` (`Enemies/Enemy.as:106-111`; `p.hit(this, 3, new Point(x, y), damage)` behind `!destroy &&
+     * currentAnim != "die" && hitsTimer <= 0`, `:211-221`), and only THEN the "die" return (`Turret.as:48-51`) and the
+     * fire gate `else if (hitsTimer <= 0)` (`:64`). Under the suit `Player.hit` calls `e.hit(1, new Point(x, y), 1,
+     * "Suit")` (`Player.as:1384-1387`); `Turret` has no `hit` override, so it is `Enemy.hit` (`Enemy.as:141-181`):
+     * `hits += 1`, `hitsTimer = 30`, the `hitByDarkStuff` latch, and at `hitsMax` `startDeath` = `play("die")`
+     * (`Turret.as:91-95`; `knockback` is empty, `:86-89`). The model billed the turret's contact in the static scan
+     * (`STATIC_SWORD_ARM`'s relabel), BELOW `stepShootersNow`, so the fire gate and the "die" return had already read
+     * the pre-hit row: wave 46 (DARKSUITSTATIC) left Turret undeclared and refused for that reason. ON: `stepShootersNow`
+     * calls the caller's `onHitPlayer` at the top of each turret's turn (after `stepStaticBodiesNow`'s `hitUpdate`, as
+     * `Enemy.update` orders it); `levelRun` bills the contact there with `retaliate` declared (`turretSuitHit`:
+     * `enemyHit` on F4's row; a third hit stages "die" as the sword arm does, plus its graphic step on the blow's tick),
+     * so the fire gate reads `hitsTimer` 30 and a dying turret returns (a shot in the barrel is replaced). The static
+     * scan skips the turret (it was billed in its slot), with or without the suit; a freeze that starts later in the
+     * same tick (a pickup, a dialogue: their updates run BEFORE the turret's in the game) is refused by name.
+     * Composes with `darkSuitStaticRetaliation`: ON here declares the Turret whatever that key says (that key's Turret
+     * arm is never reached); OFF here leaves wave 46's refusal exactly as it was. OFF: byte-identical.
+     * `SEEDLING_TURRET_SUIT_RETALIATION=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    turretSuitRetaliation: false,
+    /**
+     * fidelity PICKUPFREEZE D2 (wave 51) — A PICKUP'S FIRST FRAME FREEZES THE FAMILIES THAT UPDATE AFTER IT.
+     * `Game.loadlevel` adds `drill` (`Game.as:2290`), `turret` (`:2295`), `iceturret` (`:2296`) and `beamtower`
+     * (`:2297`) BEFORE every placed pickup (`:2330-2351`), and `World.addUpdate` PREPENDS (`net/flashpunk/World.as:937-
+     * 947`), so a pickup updates first. On its first frame `Pickup.update` → `pick_up()` sets `Game.freezeObjects =
+     * true` for a `special` pickup (`Pickups/Pickup.as:78-95`), and each of the four returns on it before its own
+     * update (`Turret.as:48`, `IceTurret.as:58`, `BeamTower.as:54`, `Drill.as:54`; the graphic still steps). The bot
+     * gates at frame START (`Bot.as:3201`), so the model's collecting tick T stands for frames F..F+150: F (the touch),
+     * the 149 frames `specialTimer` runs out on, and F+150, where a TEXT-LESS pickup's `pick_up` lowers the freeze
+     * (`:106-112`) BEFORE the four update, and a texted one's NPC keeps it up. The model detected the touch AFTER the
+     * four stepped (`frozen: ceremony !== null`, so UNFROZEN on T), then ran the turrets' 150 frozen frames
+     * (`stepShootersThroughFreeze`). ON: the touch is predicted before the four step (the detection's own pure tests,
+     * re-checked at the detection; a disagreement is refused by name). The turrets step FROZEN on T; their lump is 150
+     * frozen frames for a texted pickup, and 149 frozen plus one UNFROZEN release frame (spits frozen, then the turrets,
+     * with wave 50's slot contact when `turretSuitRetaliation` is ON) for a text-less one. The ice turret, the beam
+     * tower and the drill have no lump in this model, so their T step is frozen for a texted pickup and is left as the
+     * release frame for a text-less one. With `turretSuitRetaliation` ON the T slot bills nothing (the game's
+     * `Player.hit` is refused by `!Game.freezeObjects`), so wave 50's pickup-freeze refusal is never reached.
+     * A dialogue's FIRST frame does not freeze (`NPC.talk` raises the flag only once `talking`, `NPCs/NPC.as:193-195`)
+     * and is not touched. OFF: byte-identical. `SEEDLING_PICKUP_TICK_FREEZE=0|1`. ⛔ OFF by default (no flip licence).
+     * ⛓ fidelity FROZENTICK D2 (wave 53): on a TEXTED pickup's T the beam tower's main slot does NOT step at all (it
+     * stepped frozen, and then `runFrozenTick`'s frozen step ran again: two updates for one frame, wave 51's row
+     * `[true, true]`); `runFrozenTick`'s step is the frame's one frozen update, the skip `dialogueFrameFreeze` takes.
+     */
+    pickupTickFreeze: false,
+    /**
+     * fidelity DIALOGUEFREEZE D2 (wave 52) — A DIALOGUE'S LATER FRAMES FREEZE THE FAMILIES THAT UPDATE AFTER THE NPC.
+     * `Game.loadlevel` adds `drill` (`Game.as:2290`), `turret` (`:2295`), `iceturret` (`:2296`) and `beamtower`
+     * (`:2297`) BEFORE every texted NPC (`introchar :2389` … `watcher :2394` … `sign :2400`, `statue :2405-2406`), and
+     * `World.addUpdate` PREPENDS, so the NPC updates first. `NPC.update` is `super.update(); talk();`
+     * (`NPCs/NPC.as:128-132`), and `talk()` raises `Game.freezeObjects` only inside `if (talking)` (`:193-195`): NOT on
+     * the frame `startTalking()` runs (`talking` was false at that test; the setter writes `Game.talking` only,
+     * `:264-271`), and on the LAST frame the same block lowers it again before the families update (`talking = false`
+     * → the setter's `Game.freezeObjects = false`, `:207-214`, `:253-255`; and the out-of-range arm, `:230-236`).
+     * `Game.update`'s tail lowers it on every dialogue frame (`!canInventory()` → `inventory.open = false`, `Game.as:
+     * 1044-1050`, `Inventory.as:151-154`), so every dialogue frame is a LIVE tape tick (`Bot.as:3201`). The model
+     * stepped the four UNFROZEN in their main-tick slots on every dialogue tick (`frozen: ceremony !== null`; a
+     * dialogue is not a ceremony) and then `return runFrozenTick(…)`, which stepped the beam tower a SECOND time
+     * (frozen). ON: each slot asks a pure prediction of the talker and watcher arms (`dialogueFreezeAheadNow`: an NPC
+     * already `talking` whose `stepNpcDialogue` this tick would not close it), re-checked against the arms' answer
+     * (a disagreement is refused by name, as is a predicted dialogue frame another freeze pre-empts). On a predicted
+     * frame the drill, the ice turret and the turret (no aim, no `shootTimer`, no shot, no `hitPlayer` bill: `Player.hit`
+     * is refused under the freeze) step FROZEN, and the beam tower's main slot does not step at all: `runFrozenTick`'s
+     * step is its one frozen update, in the game's place (after the NPC). The start frame and the closing frame are
+     * untouched (unfrozen, as the game). Composes with `pickupTickFreeze` (a slot is frozen if either says so; a
+     * dialogue and a ceremony up together stay refused by name) and with `turretSuitRetaliation` (the frozen slot bills
+     * nothing, so wave 50's refusal is never reached for a dialogue). OFF: byte-identical.
+     * `SEEDLING_DIALOGUE_FRAME_FREEZE=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    dialogueFrameFreeze: false,
+    /**
+     * fidelity FROZENTICK D2 (wave 53) — WHAT RUNS UNDER `Game.freezeObjects` RUNS ON THE MODEL'S FROZEN FRAMES TOO.
+     * `Mobile.mobileUpdate` gates only friction, `input()` and the two sweeps (`Mobile.as:33-44`); `Enemy.update`'s
+     * terrain switch, its pit descent, `Mobile.death`'s fade, `hitUpdate()` (the `hitsTimer` drain, `Enemy.as:223-241`)
+     * and `hitPlayer()` (refused by `Player.hit`'s `!freezeObjects`) are ungated (`Enemy.as:62-111`), and so are
+     * `Jellyfish`'s and `Puncher`'s chase blocks (`Jellyfish.as:45-75`, `Puncher.as:53-119`: no freeze test; Bob,
+     * BobSoldier and Bulb return on it, LavaRunner and Flyer return above everything). `Game.loadlevel` adds every
+     * chaser (`Game.as:2276-2301`) before the texted NPCs (`:2389-2406`), the `Button` (`:2341`) and the `FallRock`
+     * (`:2353`), and `addUpdate` prepends, so on a dialogue's frozen frame and a falling rock's frames the flag is
+     * already up when the chasers update. The model returned above `stepChasersNow` on those frozen ticks
+     * (`runFrozenTick`) and stepped no chaser through a rock's collapsed span, so their i-frames, fades and pit falls
+     * stood still. ON: `runFrozenTick` runs the chasers' frozen update (`stepChasersNow` with the freeze held, the update
+     * a pickup ceremony's frames already run under `ceremonyShove`) on a placed talker's or watcher's frozen frame and a
+     * button-dropped rock's frozen frame; and on every frozen frame of a rock's span (`dropRock`, `dropRocksTogether`;
+     * the release frame, which the rock unfreezes before the chasers update, is not stepped: named). And the PUSHABLE
+     * BLOCKS: `PushableBlock.update` and `PushableBlockFire.update` override `Mobile.update` WITHOUT calling
+     * `mobileUpdate` (`PushableBlock.as:96-111`, `PushableBlockFire.as:125-142`), so a block glides through EVERY frozen
+     * frame. The model's main-tick slot already steps them on a frozen tick (right); ON it also steps them on the dead
+     * frames it collapses: a ceremony's and a seal piece's stepped lump, the inventory hold, a rock's span (ahead of the
+     * rock and the chasers: `:2382-2384` are added after both), a text-less pickup's 150 frames and the wand's approach
+     * fade. The Lights intro, the Owl intro, the final door, the moonrock and the two arenas are untouched (their raisers
+     * sit between the chaser classes in the add order, or are runtime adds, and no placed chaser shares their rooms:
+     * named), and the tree cutscene is not a freeze. OFF: byte-identical.
+     * `SEEDLING_FROZEN_TICK_UNGATED=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    frozenTickUngated: false,
+    /**
+     * fidelity CEREMONYTOWER D2 (wave 54) — THE ONE UPDATE A FAMILY TAKES ON A FREEZE'S EDGE FRAMES: a texted pickup's
+     * later frames, and a falling rock's release frame.
+     * (1) THE BEAM TOWER ON A TEXTED CEREMONY'S DIALOGUE FRAMES. On every frame after T, `Pickup.update` calls
+     * `pick_up()` again (`specialTimer < specialTimerMax`, `Pickups/Pickup.as:57-60`), which re-raises
+     * `Game.freezeObjects` (`:95`) every frame until its text NPC is gone (`NPCs/NPC.as:71-79` nulls `myText` when it is
+     * removed); the pickups (`Game.as:2330-2351`) are added after the tower (`:2297`) and `addUpdate` prepends, so the
+     * tower's one update on each such frame is frozen. The model stepped it twice there: the main slot (`frozen:
+     * ceremony !== null`), then `runFrozenTick` (wave 53's measured hand-over, `t2F:[true,true]`). ON the main slot does
+     * not step it on a tick whose ceremony holds through (its dialogue does not finish this tick, read off a CLONE with
+     * the tick's own talk-key release, `stepDialogue`): `runFrozenTick`'s frozen step is the frame's one update, waves 52
+     * and 53's shape. The finishing tick is untouched (one step, the main slot's; it falls through, no `runFrozenTick`).
+     * The ceremony branch re-checks the prediction and refuses a disagreement by name.
+     * (2) A FALLING ROCK'S RELEASE FRAME. `FallRock.update` lowers the flag on the frame its camera hold runs out
+     * (`Scenery/FallRock.as:92-96`) and the rock (`Game.as:2353`) updates before every family added above it: the
+     * turrets (`:2295`), the drills (`:2290`), the chasers (`:2276-2301`) and the boss totem (`:2281`) take ONE UNFROZEN
+     * update there, a dead frame the tape never sees. The model stepped only the player (`pendingFreeSteps`). ON, on
+     * that frame of `dropRock` (a rope's pull) and `dropRocksTogether` (a button's or the wand's drop), in the game's
+     * order: the spits (runtime adds, ahead of the rock: frozen), the turrets unfrozen (their aim, `shootTimer`, fire
+     * gate and, with wave 50's slot, `hitPlayer`), the drills unfrozen (`dropRocksTogether` only; `dropRock` already
+     * does under `drillTimedPass`), the chasers unfrozen (their move, chase and `hitPlayer`), and the boss totem with
+     * the flag down. The turrets' anim runs through the span's frozen frames (and a button-dropped rock's frame A), so
+     * those are stepped frozen ahead of it (`stepShootersThroughFreeze`, the shape a text-less pickup's F+150 uses).
+     * A rock room holding an ice turret or a beam tower is REFUSED by name at the release frame (no shipped one does).
+     * Composes with `frozenTickUngated` (its frozen chaser frames are the span's others), `pickupTickFreeze`,
+     * `dialogueFrameFreeze` (their predicates are asked by the main slot only) and `turretSuitRetaliation`. OFF:
+     * byte-identical. `SEEDLING_FREEZE_EDGE_FRAMES=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    freezeEdgeFrames: false,
+    /**
+     * fidelity RELEASETICK D2 (wave 55) — A TEXTED CEREMONY'S FINISHING TICK: THE RELEASE FRAME'S ONE UNFROZEN UPDATE.
+     * The finishing tick stands for two game frames. The close C: `NPC.talk()`'s last page lowers `Game.freezeObjects`
+     * through the `talking` setter (`NPCs/NPC.as:207-214,250-263`) and removes the NPC deferred, and `Pickup.update`
+     * re-raises it (`Pickups/Pickup.as:57-60,95`: `myText` is still set). The release R: `NPC.removed()` has nulled
+     * `myText` (`:71-85`), so `pick_up`'s `!myText` arm lowers the flag and calls `removeSelf()` (`Pickup.as:106-112`).
+     * The pickups (`Game.as:2330-2351`) update before the beam tower (`:2297`), the ice turret (`:2296`), the turret
+     * (`:2295`) and the drill (`:2290`; `addUpdate` prepends), so the four are FROZEN on C and UNFROZEN on R. The model
+     * stepped each once, frozen, in its main slot (`ceremony` still set): C's update, and R's was missing (wave 54's
+     * measured hand-over, `t23-C:[true]`). ON the ceremony branch's finishing arm takes R's update
+     * (`stepCeremonyReleaseFamiliesNow`): the runtime adds frozen (spits, blasts), then the flag held down for the call:
+     * the tower, the ice turret, the turrets (with wave 50's slot, `turretHitPlayerNow`) and the drills, in the game's
+     * order, below the chasers' C (`stepCeremonyReleaseFrameNow`) and above the chasers' and the player's R (the tick's
+     * fall-through). A text-less pickup has no C and is untouched (its R is F+150: `pickupTickFreeze` for the turrets,
+     * T's step for the other three); a Seed keeps the flag up and is untouched. C is the observed frame and R a dead one
+     * (`setTemp` raises `Game.talking`, so `Game.as:1044-1051` lowers the flag at the end of every dialogue frame but
+     * not C's): phase A's 149 dead frames and R are the measured 150. ⚠ With a `Game.time` the tower's anim is already
+     * unknown here (phase A is not stepped for it, pre-existing); R's step keeps it so.
+     * The rope rock's player release step needs no key: the pull frame is itself frozen for the player (the pull runs
+     * inside `Player.update` above `super.update()`), so the model's pull-tick step IS the release frame's
+     * (game-witnessed, `rockbutton-l28-livefall`, Δ 0). Composes with `freezeEdgeFrames` (its tower skip is on the hold
+     * ticks, this is the finishing tick), `frozenTickUngated`, `pickupTickFreeze`, `dialogueFrameFreeze` (their
+     * predicates are asked by the main slots only) and `turretSuitRetaliation`. No shipped room holds a texted ceremony
+     * beside one of the four. OFF: byte-identical. `SEEDLING_FREEZE_RELEASE_TICK=0|1`. ⛔ OFF by default (no flip
+     * licence).
+     */
+    freezeReleaseTick: false,
+    /**
+     * fidelity RELEASEPICKUP D2 (wave 56) — THE UPDATES INSIDE A FREEZE'S DEAD SPAN THAT THE MODEL DID NOT TAKE: THE
+     * BEAM TOWER'S GRAPHIC THROUGH A TEXTED PICKUP'S PHASE A, AND (AN INTERIM REFUSAL) A PICKUP THE GAME COLLECTS
+     * INSIDE A ROCK'S SPAN.
+     * (1) The tower. `BeamTower.update` returns at its first line under `Game.freezeObjects`
+     * (`Puzzlements/BeamTower.as:54-57`), but `World.update` runs every entity's graphic outside that gate
+     * (`net/flashpunk/World.as:58`), so through phase A's 149 dead frames (`Pickups/Pickup.as:57-60,95-98`; the pickups,
+     * `Game.as:2330-2351`, update before the tower, `:2297`) its Spritemap plays on and `animEnd` turns it: a pure
+     * function of the frame count, no `y` drift, no beam test. The model stepped the turrets and the bombs through the
+     * lump and not the tower, so with a `Game.time` its `lastClock` test failed from T on and a tower room with a texted
+     * pickup refused rather than modelled. ON the lump steps every tower 149 frames frozen
+     * (`stepBeamTowersThroughPhaseANow`, beside `stepShootersThroughFreeze`) for a TEXTED ceremony (placed, or the
+     * runtime Seed, DarkSword and Fire), and claims the anim KNOWN only where every other frame of the ceremony steps
+     * the tower exactly once: `pickupTickFreeze` (T's one frozen step), `freezeEdgeFrames` (one per dialogue frame) and
+     * `freezeReleaseTick` (R's unfrozen step, whose `lastClock` the finishing tick's frozen C step is relabelled one
+     * frame back for: the clock reads R's `Game.time` there). Without all three the lump still steps the anim and marks
+     * it UNKNOWN (OFF the jump test does, except where the tower has no step before T: a ceremony on the room's first
+     * tick, where OFF claims an anim 150 frames stale). A text-less pickup is not lumped: its F+150 is UNFROZEN for the
+     * tower and T's main-slot step stands for it at T's anim phase (wave 51's stand-in), so a lump would count right and
+     * test the beam at the wrong phase — named, not modelled.
+     * (2) The pickups. `Pickup.update`'s `collide("Player")` has NO freeze gate (only `super.update()`, `Mobile`'s move,
+     * has one: `Mobile.as:31-41`), so the game asks every pickup on EVERY frame of a rock's span, not only on its release
+     * frame R: a pickup under the player at R was under it from the span's first frame (the player does not move through
+     * the span) and is collected THERE, and its ceremony then runs INSIDE the rock's span (`pick_up` re-raises the flag
+     * after the rock every frame, so R does not release: two concurrent freezes, which the model does not hold — the
+     * STOP). The model's own detection already asked every span position but two: a button's frame A (the player's
+     * post-move position, which the next detection meets only after the release step) and the wand's landing snap. ON
+     * either one with a pickup under the player is REFUSED by name (`assertNoPickupInRockSpanNow`): avoidance as a
+     * named INTERIM. No shipped rock room puts a pickup there. Composes with `freezeReleaseTick`, `freezeEdgeFrames`,
+     * `frozenTickUngated`, `pickupTickFreeze`, `dialogueFrameFreeze` and `turretSuitRetaliation` (no predicate is
+     * asked). OFF: byte-identical. `SEEDLING_FREEZE_SPAN_UPDATES=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    freezeSpanUpdates: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2447,6 +2738,42 @@ if (globalThis.process?.env?.SEEDLING_FALL_ROCK_HOLDS_BUTTON === '0') CONTACT_FI
 // ⛓ fidelity CORRIDORFLIP D2: `SEEDLING_CORRIDOR_FORECAST_MEMO=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_CORRIDOR_FORECAST_MEMO === '1') CONTACT_FIDELITY.corridorForecastMemo = true;
 if (globalThis.process?.env?.SEEDLING_CORRIDOR_FORECAST_MEMO === '0') CONTACT_FIDELITY.corridorForecastMemo = false;
+// ⛓ fidelity WALLFLYERCORPSE D2: `SEEDLING_WALLFLYER_CORPSE_GONE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WALLFLYER_CORPSE_GONE === '1') CONTACT_FIDELITY.wallFlyerCorpseGone = true;
+if (globalThis.process?.env?.SEEDLING_WALLFLYER_CORPSE_GONE === '0') CONTACT_FIDELITY.wallFlyerCorpseGone = false;
+// ⛓ fidelity DARKSUITSTATIC D2: `SEEDLING_DARK_SUIT_STATIC_RETALIATION=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DARK_SUIT_STATIC_RETALIATION === '1') CONTACT_FIDELITY.darkSuitStaticRetaliation = true;
+if (globalThis.process?.env?.SEEDLING_DARK_SUIT_STATIC_RETALIATION === '0') CONTACT_FIDELITY.darkSuitStaticRetaliation = false;
+// ⛓ fidelity L39HIT D2: `SEEDLING_PULSER_FORECAST_PULSE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PULSER_FORECAST_PULSE === '1') CONTACT_FIDELITY.pulserForecastPulse = true;
+if (globalThis.process?.env?.SEEDLING_PULSER_FORECAST_PULSE === '0') CONTACT_FIDELITY.pulserForecastPulse = false;
+// ⛓ fidelity DARKSUITBOSSES D2: `SEEDLING_DARK_SUIT_BOSS_RETALIATION=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DARK_SUIT_BOSS_RETALIATION === '1') CONTACT_FIDELITY.darkSuitBossRetaliation = true;
+if (globalThis.process?.env?.SEEDLING_DARK_SUIT_BOSS_RETALIATION === '0') CONTACT_FIDELITY.darkSuitBossRetaliation = false;
+// ⛓ fidelity OWLSUIT D2: `SEEDLING_OWL_CONTACT_IN_STEP=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_OWL_CONTACT_IN_STEP === '1') CONTACT_FIDELITY.owlContactInStep = true;
+if (globalThis.process?.env?.SEEDLING_OWL_CONTACT_IN_STEP === '0') CONTACT_FIDELITY.owlContactInStep = false;
+// ⛓ fidelity TURRETSUIT D2: `SEEDLING_TURRET_SUIT_RETALIATION=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_TURRET_SUIT_RETALIATION === '1') CONTACT_FIDELITY.turretSuitRetaliation = true;
+if (globalThis.process?.env?.SEEDLING_TURRET_SUIT_RETALIATION === '0') CONTACT_FIDELITY.turretSuitRetaliation = false;
+// ⛓ fidelity PICKUPFREEZE D2: `SEEDLING_PICKUP_TICK_FREEZE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PICKUP_TICK_FREEZE === '1') CONTACT_FIDELITY.pickupTickFreeze = true;
+if (globalThis.process?.env?.SEEDLING_PICKUP_TICK_FREEZE === '0') CONTACT_FIDELITY.pickupTickFreeze = false;
+// ⛓ fidelity DIALOGUEFREEZE D2: `SEEDLING_DIALOGUE_FRAME_FREEZE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DIALOGUE_FRAME_FREEZE === '1') CONTACT_FIDELITY.dialogueFrameFreeze = true;
+if (globalThis.process?.env?.SEEDLING_DIALOGUE_FRAME_FREEZE === '0') CONTACT_FIDELITY.dialogueFrameFreeze = false;
+// ⛓ fidelity FROZENTICK D2: `SEEDLING_FROZEN_TICK_UNGATED=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FROZEN_TICK_UNGATED === '1') CONTACT_FIDELITY.frozenTickUngated = true;
+if (globalThis.process?.env?.SEEDLING_FROZEN_TICK_UNGATED === '0') CONTACT_FIDELITY.frozenTickUngated = false;
+// ⛓ fidelity CEREMONYTOWER D2: `SEEDLING_FREEZE_EDGE_FRAMES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FREEZE_EDGE_FRAMES === '1') CONTACT_FIDELITY.freezeEdgeFrames = true;
+if (globalThis.process?.env?.SEEDLING_FREEZE_EDGE_FRAMES === '0') CONTACT_FIDELITY.freezeEdgeFrames = false;
+// ⛓ fidelity RELEASETICK D2: `SEEDLING_FREEZE_RELEASE_TICK=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FREEZE_RELEASE_TICK === '1') CONTACT_FIDELITY.freezeReleaseTick = true;
+if (globalThis.process?.env?.SEEDLING_FREEZE_RELEASE_TICK === '0') CONTACT_FIDELITY.freezeReleaseTick = false;
+// ⛓ fidelity RELEASEPICKUP D2: `SEEDLING_FREEZE_SPAN_UPDATES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FREEZE_SPAN_UPDATES === '1') CONTACT_FIDELITY.freezeSpanUpdates = true;
+if (globalThis.process?.env?.SEEDLING_FREEZE_SPAN_UPDATES === '0') CONTACT_FIDELITY.freezeSpanUpdates = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

@@ -7,6 +7,8 @@ import { dashShapeSchemaProps } from './seedlingDashShapeSettings.js';
 import { graphicsSchemaProps } from './seedlingGraphicsSettings.js';
 import { gameSpeedSchemaProps } from './seedlingGameSpeedSettings.js';
 import { soundSchemaProps } from './seedlingSoundSettings.js';
+import { jsSaveSchemaProps } from './seedlingJsSave.js';
+import { ruffleSaveSchemaProps } from './seedlingRuffleSave.js';
 import { touchControlsSchemaProps } from './touchControls.js';
 import { SOLVE_PROGRESS_INTERVAL_MS, SOLVE_PROGRESS_INTERVALS_MS } from '../seedlingDemo/solveProgressTap.js';
 import { SOLVE_DEMO_EVENT } from './seedlingSolveDemo.js';
@@ -83,6 +85,7 @@ export const moduleInfo = {
   requires: ['stateManager'],
   storage: [
     { pattern: '/shrumsave$', kind: STORAGE_KINDS.user, label: 'Seedling save (a Ruffle SharedObject; the key starts with the host and SWF path)' },
+    { prefix: 'seedlingRuffleSaveAside_', kind: STORAGE_KINDS.user, label: 'Seedling Flash save set aside while "Use the save" is off (comes back when it is on)' },
     { prefix: 'seedlingJsSave_', kind: STORAGE_KINDS.user, label: 'Seedling JS runtime save, one per room (the broken rocks, keys, seals, slot order)' },
     { key: 'flashPanel_sections', kind: STORAGE_KINDS.state, label: 'Flash panel: which sections are open (Solver, Settings, Tools)' },
   ],
@@ -317,6 +320,10 @@ export function register(registrationApi) {
       ...gameSpeedSchemaProps(),
       // ⛓ SOUND EFFECTS — the JS page's sound on/off and volume (applied live), and its ▶ Start mode (`seedlingSoundSettings.js`).
       ...soundSchemaProps(),
+      // ⛓ USE THE SAVE — the JS runtime's per-room save, read and written only when on (default OFF; `seedlingJsSave.js`).
+      ...jsSaveSchemaProps(),
+      // ⛓ USE THE SAVE — the Flash (Ruffle) save `…/shrumsave`, seen by the game only when on (default OFF; `seedlingRuffleSave.js`).
+      ...ruffleSaveSchemaProps(),
       // ⛓ TOUCH CONTROLS — generic: on-screen controls for a game whose config declares `touch_controls` (auto | on | off).
       ...touchControlsSchemaProps(),
     },
@@ -328,7 +335,6 @@ export function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent('stateManager:inventoryChanged');
   registrationApi.registerEventBusSubscriberIntent('stateManager:ready');
   registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
-  registrationApi.registerEventBusSubscriberIntent('regionGraph:nodeSelected');
   registrationApi.registerEventBusSubscriberIntent(FLASH_SEEDLING_LOAD_REGION_EVENT);
   // ⛓ LOOP-MODE RESTART — the glue hears the loops' reset (`seedlingRegionGlue.handleLoopReset`).
   registrationApi.registerEventBusSubscriberIntent(LOOP_RESET_EVENT);

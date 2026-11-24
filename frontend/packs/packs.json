@@ -6,7 +6,9 @@
     { "id": "archipelago", "title": "Archipelago — the fork's AP item pickup" },
     { "id": "text-adventure", "title": "Text adventure — the built-in prose" },
     { "id": "maze", "title": "Maze — the built-in looks" },
-    { "id": "meta", "title": "Meta — a world that knows it is a generated game" }
+    { "id": "meta", "title": "Meta — a world that knows it is a generated game" },
+    { "id": "example-village", "title": "The Village — ActionNodes' example graph, as a pack (structure, words, numbers)" },
+    { "id": "furniture", "title": "Furniture — a rug and a pillar a generated room may hold (what exists: two tile kinds the \"Randomly placed tiles\" biome places)" }
   ],
   "graphics": {
     "seedling": ["seedling", "archipelago"]

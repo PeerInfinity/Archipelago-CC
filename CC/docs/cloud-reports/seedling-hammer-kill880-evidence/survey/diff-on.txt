@@ -1,0 +1,4 @@
+OFF {"SOLVED":224,"REFUSED":26} | ON {"SOLVED":224,"REFUSED":26}
+step 96 L40 [L40 flag 12: wandlock@480,560 cleared + Level 040 - Boss Key 2]: REFUSED -> REFUSED | OFF de4464c591 solverBot(survey-step-96) collect (656,528) stance (ladder-routed: no corridor from (888.2497303124467,776.4935031361972) to a stance that c | ON 7d6a2af9ec solverBot(survey-step-96) collect (656,528) stance (ladder-routed: no corridor from (888.2497303124467,776.4935031361972) to a stance that c
+step 149 L40 [L40 flag 7: wandlock@208,128 cleared + Level 040 - Totem Part 64,144]: REFUSED -> REFUSED | OFF 890e83c12b solverBot(survey-step-149) collect (64,144) stance (ladder-routed: no corridor from (280.3669873047385,216.60071614521746) to a stance that  | ON c17630ca76 solverBot(survey-step-149) collect (64,144) stance (ladder-routed: no corridor from (280.3669873047385,216.60071614521746) to a stance that 
+2 step(s) moved; steps that GAINED a hit ON: none

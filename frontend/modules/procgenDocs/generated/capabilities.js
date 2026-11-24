@@ -23,6 +23,62 @@ const frz = (v) => {
 export const CAPABILITIES = frz({
     "cards": [
         {
+            "id": "action_nodes",
+            "label": "Action Nodes",
+            "lines": [
+                {
+                    "group": "play",
+                    "statement": "You can play its regions by hand",
+                    "text": null
+                },
+                {
+                    "group": "loop",
+                    "statement": "What you can queue for it",
+                    "text": "moves between regions, performing each node's action"
+                },
+                {
+                    "group": "loop",
+                    "statement": "You can play it outside loop mode",
+                    "text": null
+                },
+                {
+                    "group": "loop",
+                    "statement": "It shares the loop-mode mana pool",
+                    "text": null
+                },
+                {
+                    "group": "loop",
+                    "statement": "It shares consumable items with other substrates",
+                    "text": "its list comes from the running game — see the Substrate Registry panel"
+                },
+                {
+                    "group": "loop",
+                    "statement": "The host keeps its per-loop stats",
+                    "text": "its list comes from the loaded world's own data"
+                },
+                {
+                    "group": "loop",
+                    "statement": "The host keeps its per-loop resources",
+                    "text": "its list comes from the loaded world's own data"
+                },
+                {
+                    "group": "generate",
+                    "statement": "A world of it can start with an empty inventory",
+                    "text": null
+                },
+                {
+                    "group": "edit",
+                    "statement": "An exit can be moved to another side (and a side can hold more than one)",
+                    "text": "and a side can hold more than one"
+                },
+                {
+                    "group": "edit",
+                    "statement": "The editor's validity report checks its location and exit names",
+                    "text": null
+                }
+            ]
+        },
+        {
             "id": "bounce",
             "label": "Bounce Demo",
             "lines": [
@@ -559,7 +615,7 @@ export const CAPABILITIES = frz({
                 {
                     "group": "play",
                     "statement": "Themeable",
-                    "text": "gate, item"
+                    "text": "gate, item, character, object, info"
                 },
                 {
                     "group": "loop",
@@ -877,7 +933,7 @@ export const CAPABILITIES = frz({
                 {
                     "group": "play",
                     "statement": "Themeable",
-                    "text": "gate, item, place"
+                    "text": "gate, item, place, character, object, info"
                 },
                 {
                     "group": "loop",
@@ -964,6 +1020,10 @@ export const CAPABILITIES = frz({
     ],
     "columns": [
         {
+            "id": "action_nodes",
+            "label": "Action Nodes"
+        },
+        {
             "id": "bounce",
             "label": "Bounce Demo"
         },
@@ -1001,11 +1061,11 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 105,
-        "fieldsRead": 40,
-        "fieldsUnread": 62,
-        "statements": 30,
-        "substrates": 9
+        "fields": 117,
+        "fieldsRead": 42,
+        "fieldsUnread": 72,
+        "statements": 32,
+        "substrates": 10
     },
     "fieldsRead": [
         "apExitNamesOf",
@@ -1043,6 +1103,8 @@ export const CAPABILITIES = frz({
         "sharing.items",
         "sharing.mana",
         "sharing.mana.loopActionDelegation",
+        "sharing.resources",
+        "sharing.stats",
         "startingInventory",
         "supportedFeatures",
         "takeLastRecording",
@@ -1077,7 +1139,9 @@ export const CAPABILITIES = frz({
                 "L8",
                 "L9",
                 "L10",
-                "L11"
+                "L11",
+                "L12",
+                "L13"
             ]
         },
         {
@@ -1108,6 +1172,21 @@ export const CAPABILITIES = frz({
     "rows": [
         {
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "yes",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "panelComponentType",
+                            "value": "actionNodesPanel"
+                        },
+                        {
+                            "field": "deserializeWorld",
+                            "value": "fn"
+                        }
+                    ]
+                },
                 {
                     "id": "bounce",
                     "kind": "yes",
@@ -1255,6 +1334,21 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "getPlaybackController",
+                            "value": "—"
+                        },
+                        {
+                            "field": "playbackScope",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "yes",
                     "text": null,
@@ -1401,6 +1495,17 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "compositeMap.drawRegion",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "no",
                     "text": null,
@@ -1509,6 +1614,21 @@ export const CAPABILITIES = frz({
         },
         {
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "libraryItems",
+                            "value": "—"
+                        },
+                        {
+                            "field": "supportedFeatures",
+                            "value": "[]"
+                        }
+                    ]
+                },
                 {
                     "id": "bounce",
                     "kind": "yes",
@@ -1656,6 +1776,17 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "supportedFeatures",
+                            "value": "[]"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "yes",
                     "text": "locations placed anywhere",
@@ -1764,6 +1895,17 @@ export const CAPABILITIES = frz({
         },
         {
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "conceptRealisations",
+                            "value": "—"
+                        }
+                    ]
+                },
                 {
                     "id": "bounce",
                     "kind": "no",
@@ -1886,6 +2028,17 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "no",
                     "text": null,
@@ -1943,11 +2096,11 @@ export const CAPABILITIES = frz({
                 {
                     "id": "maze",
                     "kind": "yes",
-                    "text": "gate, item",
+                    "text": "gate, item, character, object, info",
                     "why": [
                         {
                             "field": "contentRoles",
-                            "value": "{gate, item}"
+                            "value": "{character, gate, info, item, object}"
                         }
                     ]
                 },
@@ -1976,11 +2129,11 @@ export const CAPABILITIES = frz({
                 {
                     "id": "text_adventure",
                     "kind": "yes",
-                    "text": "gate, item, place",
+                    "text": "gate, item, place, character, object, info",
                     "why": [
                         {
                             "field": "contentRoles",
-                            "value": "{gate, item, place}"
+                            "value": "{character, gate, info, item, object, place}"
                         }
                     ]
                 }
@@ -1994,6 +2147,17 @@ export const CAPABILITIES = frz({
         },
         {
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "loopSupport.manual",
+                            "value": "no"
+                        }
+                    ]
+                },
                 {
                     "id": "bounce",
                     "kind": "yes",
@@ -2104,6 +2268,17 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "yes",
+                    "text": "moves between regions, performing each node's action",
+                    "why": [
+                        {
+                            "field": "loopSupport.queueActions",
+                            "value": "regionMove, act"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "yes",
                     "text": "moves between regions, location checks",
@@ -2212,6 +2387,21 @@ export const CAPABILITIES = frz({
         },
         {
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "loopSupport.record",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.playback",
+                            "value": "—"
+                        }
+                    ]
+                },
                 {
                     "id": "bounce",
                     "kind": "yes",
@@ -2359,6 +2549,21 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "na",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "takeLastRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "yes",
                     "text": "applies the result instantly",
@@ -2504,6 +2709,21 @@ export const CAPABILITIES = frz({
         },
         {
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "loopSupport.instant",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
+                        }
+                    ]
+                },
                 {
                     "id": "bounce",
                     "kind": "yes",
@@ -2651,6 +2871,21 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "loopSupport.executeVia",
+                            "value": "—"
+                        },
+                        {
+                            "field": "sharing.mana.loopActionDelegation",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "yes",
                     "text": "the game's own automation walks it",
@@ -2796,6 +3031,33 @@ export const CAPABILITIES = frz({
         },
         {
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "na",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "loopSupport.instant",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.executeVia",
+                            "value": "—"
+                        },
+                        {
+                            "field": "takeLastRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
+                            "value": "—"
+                        }
+                    ]
+                },
                 {
                     "id": "bounce",
                     "kind": "na",
@@ -3054,6 +3316,17 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "yes",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "loopSupport.requiresLoopMode",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "yes",
                     "text": null,
@@ -3163,6 +3436,17 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "yes",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.mana",
+                            "value": "{}"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "no",
                     "text": null,
@@ -3271,6 +3555,17 @@ export const CAPABILITIES = frz({
         },
         {
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "yes",
+                    "text": "its list comes from the running game — see the Substrate Registry panel",
+                    "why": [
+                        {
+                            "field": "sharing.items",
+                            "value": "{getTypes}"
+                        }
+                    ]
+                },
                 {
                     "id": "bounce",
                     "kind": "no",
@@ -3401,6 +3696,17 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "describeAction",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "no",
                     "text": null,
@@ -3509,6 +3815,265 @@ export const CAPABILITIES = frz({
         },
         {
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "yes",
+                    "text": "its list comes from the loaded world's own data",
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "{getTypes}"
+                        }
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "cloudberry",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "maze",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "noiz2sa",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "omsi",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "text_adventure",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                }
+            ],
+            "fields": [
+                "sharing.stats"
+            ],
+            "group": "loop",
+            "id": "L12",
+            "statement": "The host keeps its per-loop stats"
+        },
+        {
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "yes",
+                    "text": "its list comes from the loaded world's own data",
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "{getTypes}"
+                        }
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "cloudberry",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "maze",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "noiz2sa",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "omsi",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "text_adventure",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                }
+            ],
+            "fields": [
+                "sharing.resources"
+            ],
+            "group": "loop",
+            "id": "L13",
+            "statement": "The host keeps its per-loop resources"
+        },
+        {
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": "only as content from its own game",
+                    "why": [
+                        {
+                            "field": "generateRegionCore",
+                            "value": "—"
+                        },
+                        {
+                            "field": "generateZoneForSpecs",
+                            "value": "—"
+                        },
+                        {
+                            "field": "generateZoneForSpecsGen",
+                            "value": "—"
+                        }
+                    ]
+                },
                 {
                     "id": "bounce",
                     "kind": "yes",
@@ -3693,6 +4258,25 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "zoneCount",
+                            "value": "—"
+                        },
+                        {
+                            "field": "zoneSourceLabel",
+                            "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "yes",
                     "text": "5",
@@ -3876,6 +4460,17 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "na",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "generationCost",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "yes",
                     "text": null,
@@ -3984,6 +4579,21 @@ export const CAPABILITIES = frz({
         },
         {
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "captureLibraryEntry",
+                            "value": "—"
+                        },
+                        {
+                            "field": "instantiateLibraryEntry",
+                            "value": "—"
+                        }
+                    ]
+                },
                 {
                     "id": "bounce",
                     "kind": "yes",
@@ -4131,6 +4741,21 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "canHostExitGates",
+                            "value": "—"
+                        },
+                        {
+                            "field": "supportedFeatures",
+                            "value": "[]"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "yes",
                     "text": null,
@@ -4277,6 +4902,17 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "renderProcgenParams",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "yes",
                     "text": null,
@@ -4385,6 +5021,17 @@ export const CAPABILITIES = frz({
         },
         {
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "yes",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "startingInventory",
+                            "value": "—"
+                        }
+                    ]
+                },
                 {
                     "id": "bounce",
                     "kind": "no",
@@ -4495,6 +5142,17 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "na",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "locationCapacity",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "na",
                     "text": null,
@@ -4603,6 +5261,17 @@ export const CAPABILITIES = frz({
         },
         {
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "roomEditor",
+                            "value": "—"
+                        }
+                    ]
+                },
                 {
                     "id": "bounce",
                     "kind": "yes",
@@ -4713,6 +5382,17 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "regionRoundTrip",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "yes",
                     "text": null,
@@ -4822,6 +5502,17 @@ export const CAPABILITIES = frz({
         {
             "cells": [
                 {
+                    "id": "action_nodes",
+                    "kind": "yes",
+                    "text": "and a side can hold more than one",
+                    "why": [
+                        {
+                            "field": "exitSides",
+                            "value": "{keys, relabel}"
+                        }
+                    ]
+                },
+                {
                     "id": "bounce",
                     "kind": "partial",
                     "text": "one exit per side",
@@ -4930,6 +5621,21 @@ export const CAPABILITIES = frz({
         },
         {
             "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "yes",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "apLocationNamesOf",
+                            "value": "fn"
+                        },
+                        {
+                            "field": "apExitNamesOf",
+                            "value": "fn"
+                        }
+                    ]
+                },
                 {
                     "id": "bounce",
                     "kind": "yes",
@@ -5086,7 +5792,10 @@ export const CAPABILITIES = frz({
         "canHostExitGatesBraid",
         "compositeMap.artwork",
         "compositeMap.displayRegionOf",
+        "compositeMap.layoutGraph",
         "compositeMap.locationTiles",
+        "compositeMap.regionExtent",
+        "compositeMap.remoteLocationTiles",
         "defaultContentPack",
         "defaultProcgenParams",
         "driftItems",
@@ -5095,6 +5804,7 @@ export const CAPABILITIES = frz({
         "exitGateVeto",
         "extractPathsAndObstacles",
         "extractZoneRules",
+        "fillRules",
         "fillerItem",
         "gateHostingHint",
         "gateableItems",
@@ -5113,8 +5823,12 @@ export const CAPABILITIES = frz({
         "label",
         "libraryEntryRefusal",
         "loadRegionEvent",
+        "loopBot",
+        "loopSupport.actionGate",
+        "loopSupport.authoredCosts",
         "loopSupport.customQueues",
         "loopSupport.playClock",
+        "loopSupport.strictQueueActions",
         "onContentEdit",
         "pipelineConfigFromParams",
         "pipelineConfigKeys",
@@ -5124,6 +5838,8 @@ export const CAPABILITIES = frz({
         "priceRegions",
         "procgenParamsFromPayload",
         "recordablePipelineConfig",
+        "recordedRegionParams",
+        "regionBiomeOf",
         "regionEditStatus",
         "regionGeometry",
         "regionSourceDefault",

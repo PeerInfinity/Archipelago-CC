@@ -20,6 +20,7 @@ import { ExpansionStateManager } from './expansionStateManager.js';
 import { NavigationManager } from './navigationManager.js';
 import { RegionRenderer } from './regionRenderer.js';
 import { EventCoordinator } from './eventCoordinator.js';
+import { clearRegionsLoading, showRegionsLoading } from './regionsLoadingState.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -750,11 +751,11 @@ export class RegionUI {
         'warn',
         '[RegionUI] Static region data or snapshot not ready. Displaying loading message.'
       );
-      if (this.regionsContainer) {
-        this.regionsContainer.innerHTML = '<p>Loading region data...</p>';
-      }
+      // NOT `regionsContainer.innerHTML = …`: that destroyed the section skeleton, and nothing rebuilds it.
+      showRegionsLoading(this.regionsContainer);
       return;
     }
+    clearRegionsLoading(this.regionsContainer);
 
     // Ensure original region order is available (for sorting)
     if (!this.originalRegionOrder || this.originalRegionOrder.length === 0) {

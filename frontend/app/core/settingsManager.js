@@ -599,6 +599,25 @@ export class SettingsManager {
   }
 
   /**
+   * Does `key` hold a value of its own — a session override, or a persisted (or preset-supplied) value — rather than
+   * only a schema / call-site default? `getSetting` cannot say: a schema-backed key always answers. A one-time
+   * migration uses it to run only while its target was never written (the Region Graph's `clickActions`).
+   *
+   * @param {string} key
+   * @returns {Promise<boolean>}
+   */
+  async hasStoredSetting(key) {
+    await this.ensureLoaded();
+    if (this._overrides.has(key)) return true;
+    let current = this.settings;
+    for (const k of key.split('.')) {
+      if (current && typeof current === 'object' && k in current) current = current[k];
+      else return false;
+    }
+    return true;
+  }
+
+  /**
    * Drop a single session override. Reads via getSetting subsequently
    * fall back to the persisted base. Fires settings:changed so
    * subscribers re-read (the effective value may have changed).

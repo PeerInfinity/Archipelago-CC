@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { LoopModeRunner } from './loopModeRunner.js';
+import { LoopModeRunner, appendContinuation } from './loopModeRunner.js';
 
 // Menu --GameStart--> Overworld (Gate)
 function makeGame({ costsLoaded = true, loopMode = true, substrate = () => false } = {}) {
@@ -282,5 +282,166 @@ describe('LoopModeRunner', () => {
         game.gameState.currentMana = 10;
         vi.advanceTimersByTime(10000);
         expect(count()).toBe(after);
+    });
+});
+
+// ⛓ AN-3a: a substrate's own loop plan (`loopBot.planLoop`, via `deps.substrateLoopPlanner`).
+describe('LoopModeRunner — a substrate that plans its own loops', () => {
+    const PATH = [
+        { type: 'regionMove', sourceRegion: 'Menu', destinationRegion: 'Overworld', exitUsed: 'GameStart', instanceNumber: 1 },
+        { type: 'customAction', actionName: 'act', params: { nodeId: 'Overworld' }, sourceRegion: 'Overworld', instanceNumber: 1 },
+    ];
+
+    it('asks the substrate planner for the whole loop, writes its path, and hands its reasoning lines on', () => {
+        const { game, runner } = makeGame({ substrate: () => true });
+        const contexts = [];
+        const reasoning = [];
+        runner._d.substrateLoopPlanner = () => ({
+            substrateId: 'fake',
+            planLoop: (ctx) => { contexts.push(ctx); return { kind: 'checks', path: PATH, reason: 'Chose: act', lines: ['Chose: act', '  other: short'], key: 'k' }; },
+        });
+        runner._d.getSnapshot = () => ({ inventory: { Boost: 1 }, checkedLocations: ['A'] });
+        runner._d.onReasoning = (lines) => reasoning.push(...lines);
+        game.gameState.getRegionXP = (r) => (r === 'Overworld' ? { level: 1, xp: 5 } : { level: 0, xp: 0 });
+        runner.start();
+        expect(game.paths.at(-1)).toEqual(PATH);
+        expect(game.loopState.restartFromStart).toHaveBeenCalledTimes(1);
+        // a substrate region with no Bot / Playback mode is NOT "unplayable" for its own plan
+        expect(game.statuses.at(-1)).toMatch(/^loop 1: Chose: act/);
+        expect(reasoning).toEqual(['loop 1: Chose: act', 'loop 1:   other: short']);
+        expect(contexts[0]).toMatchObject({ startRegion: 'Menu', maxMana: 100, inventory: { Boost: 1 }, checkedLocations: ['A'] });
+        // total XP: level 1 takes 100, plus 5 of progress
+        expect(contexts[0].regionXp('Overworld')).toBe(105);
+        expect(contexts[0].regionXp('Menu')).toBe(0);
+    });
+
+    it('its done finishes the run; its unreachable waits and retries', () => {
+        const { game, runner } = makeGame();
+        let kind = 'unreachable';
+        runner._d.substrateLoopPlanner = () => ({ substrateId: 'fake', planLoop: () => ({ kind, path: [], reason: 'nothing open', lines: [] }) });
+        runner.start();
+        expect(game.statuses.at(-1)).toMatch(/waiting: nothing open/);
+        kind = 'done';
+        vi.advanceTimersByTime(1000);
+        expect(game.statuses.at(-1)).toMatch(/^finished/);
+        expect(runner.isActive()).toBe(false);
+    });
+
+    it('a planner that throws is a named wait, not a crash', () => {
+        const { game, runner } = makeGame();
+        runner._d.substrateLoopPlanner = () => ({ substrateId: 'fake', planLoop: () => { throw new Error('boom'); } });
+        runner.start();
+        expect(game.statuses.at(-1)).toMatch(/the fake loop plan failed — boom/);
+    });
+
+    it('⛓ with no substrate planner (null) the plan is planNextLoop\'s, exactly as before', () => {
+        const a = makeGame();
+        a.runner._d.substrateLoopPlanner = () => null;
+        a.runner.start();
+        const b = makeGame();
+        b.runner.start();
+        expect(a.game.paths).toEqual(b.game.paths);
+        expect(a.game.statuses).toEqual(b.game.statuses);
+    });
+});
+
+// ⛓ AN-3b, limit (b): the mid-loop replan of a substrate plan whose state diverged (an item arrived during the loop).
+describe('LoopModeRunner — the mid-loop replan (AN-3b)', () => {
+    const PATH = [
+        { type: 'regionMove', sourceRegion: 'Menu', destinationRegion: 'Overworld', exitUsed: 'GameStart', instanceNumber: 1 },
+        { type: 'customAction', actionName: 'act', params: { nodeId: 'Overworld' }, sourceRegion: 'Overworld', instanceNumber: 1 },
+    ];
+    const REST = [
+        { type: 'regionMove', sourceRegion: 'Overworld', destinationRegion: 'Cave', exitUsed: 'In', instanceNumber: 1 },
+        { type: 'customAction', actionName: 'act', params: { nodeId: 'Cave' }, sourceRegion: 'Cave', instanceNumber: 1 },
+    ];
+    /** A runner on a fake substrate; `inventory` is what the snapshot holds now. */
+    function setUp({ mana = 40 } = {}) {
+        const { game, runner } = makeGame({ substrate: () => true });
+        const contexts = [];
+        const state = { inventory: {}, path: [] };
+        runner._d.substrateLoopPlanner = () => ({
+            substrateId: 'fake',
+            planLoop: (ctx) => {
+                contexts.push(ctx);
+                return ctx.continueFrom
+                    ? { kind: 'checks', path: REST, reason: 'Chose: cave', lines: ['Chose: cave'], key: 'k2' }
+                    : { kind: 'checks', path: PATH, reason: 'Chose: act', lines: ['Chose: act'], key: 'k1' };
+            },
+        });
+        runner._d.getSnapshot = () => ({ inventory: { ...state.inventory }, checkedLocations: [] });
+        game.gameState.currentMana = mana;
+        game.gameState.getCurrentRegion = () => 'Overworld';
+        game.gameState.getPath = () => state.path;
+        const setPath = game.gameState.setPath;
+        game.gameState.setPath = (p) => { state.path = p; setPath(p); };
+        game.loopState.resumeProcessing = vi.fn();
+        return { game, runner, contexts, state };
+    }
+
+    it('an item arrived during the loop and mana is left: plan the rest from the player\'s region, append it, resume — no new loop', () => {
+        const { game, runner, contexts, state } = setUp();
+        runner.start();
+        expect(runner.getLoopCount()).toBe(1);
+        state.inventory = { Boost: 1 };
+        game.publish('loopState:queueCompleted');
+        expect(contexts).toHaveLength(2);
+        expect(contexts[1].continueFrom).toEqual({ region: 'Overworld', mana: 40 });
+        expect(contexts[1].inventory).toEqual({ Boost: 1 });
+        expect(state.path.map((e) => e.destinationRegion ?? e.sourceRegion)).toEqual(['Overworld', 'Overworld', 'Cave', 'Cave']);
+        expect(game.loopState.resumeProcessing).toHaveBeenCalledTimes(1);
+        expect(game.loopState.restartFromStart).toHaveBeenCalledTimes(1);
+        expect(runner.getLoopCount()).toBe(1);
+        expect(runner.getReplanCount()).toBe(1);
+        expect(runner.getLastPlan().reason).toMatch(/replanned mid-loop/);
+        // the continuation's own end, nothing new received: the loop ends, the next one is planned
+        game.publish('loopState:queueCompleted');
+        vi.advanceTimersByTime(0);
+        expect(runner.getLoopCount()).toBe(2);
+        expect(contexts.at(-1).continueFrom).toBeUndefined();
+    });
+
+    it('nothing received: the queue\'s end ends the loop exactly as before (no replan)', () => {
+        const { game, runner, contexts } = setUp();
+        runner.start();
+        game.publish('loopState:queueCompleted');
+        vi.advanceTimersByTime(0);
+        expect(contexts.filter((c) => c.continueFrom)).toHaveLength(0);
+        expect(game.loopState.resumeProcessing).not.toHaveBeenCalled();
+        expect(runner.getLoopCount()).toBe(2);
+    });
+
+    it('no mana left: no replan', () => {
+        const { game, runner, contexts, state } = setUp({ mana: 0 });
+        runner.start();
+        state.inventory = { Boost: 1 };
+        game.publish('loopState:queueCompleted');
+        vi.advanceTimersByTime(0);
+        expect(contexts.filter((c) => c.continueFrom)).toHaveLength(0);
+        expect(runner.getLoopCount()).toBe(2);
+    });
+
+    it('⛓ a non-substrate world never replans: its queue\'s end ends the loop as before', () => {
+        const { game, runner } = makeGame();
+        game.loopState.resumeProcessing = vi.fn();
+        runner._d.substrateLoopPlanner = () => null;
+        runner._d.getSnapshot = () => ({ inventory: { Anything: 5 } });
+        runner.start();
+        const before = game.paths.length;
+        game.publish('loopState:queueCompleted');
+        vi.advanceTimersByTime(0);
+        expect(game.loopState.resumeProcessing).not.toHaveBeenCalled();
+        expect(game.paths.length).toBe(before + 1); // a NEW loop's path, not an appended one
+        expect(runner.getReplanCount()).toBe(0);
+    });
+
+    it('appendContinuation numbers the appended instances after the path\'s own', () => {
+        const out = appendContinuation(PATH, [
+            { type: 'regionMove', sourceRegion: 'Overworld', destinationRegion: 'Menu', instanceNumber: 1 },
+            { type: 'regionMove', sourceRegion: 'Menu', destinationRegion: 'Overworld', instanceNumber: 1 },
+            { type: 'customAction', actionName: 'act', sourceRegion: 'Overworld', instanceNumber: 1 },
+        ]);
+        expect(out.slice(2).map((e) => e.instanceNumber)).toEqual([1, 2, 2]);
+        expect(out.slice(0, 2)).toEqual(PATH);
     });
 });

@@ -14,7 +14,7 @@
  *        `Nothing` is the one row that reaches nothing by design;
  *     3. THE SEALS: the sixteen AP Seals fill the game's seal LOG — sixteen distinct identities, its LAST slot
  *        filled (`SealController.hasAllSealParts()`, the FinalDoor's predicate); W: `botStatus.save.seal_parts`
- *        and `has_all_seal_parts`; J: the readouts and the booted run's `saveState.bootSealParts`;
+ *        and `has_all_seal_parts`; J: the readouts and the LIVE run's `finalDoorGate.sealSlotsFilled` (seals are delivered into the live run, not staged by a boot);
  *     4. W only — THE FINALDOOR (the user's witness): the player is put three tiles under `finaldoor@112,0` in
  *        L113, inside its 32 px circle (`new Game(113, 112, 32)`, the circle `r6-final-door` crosses at t36).
  *        CONTROL first, the Watcher NOT talked to: the seal ceremony runs and the door stays (`{113,0}` not
@@ -216,7 +216,7 @@ async function main() {
             state: rs,
             save: st?.save ?? null,
             cleared: st?.persistence_cleared ?? null,
-            jsBootSeals: run?.saveState?.bootSealParts ?? null,
+            jsLiveSeals: run?.finalDoorGate ?? null,
             ap: Object.fromEntries(Object.entries(snap.inventory ?? {}).filter(([, v]) => v > 0)),
             checked,
         };
@@ -295,7 +295,7 @@ async function main() {
             // 3. THE SEALS.
             const log = Array.from({ length: 16 }, (_, i) => s.state[`sealSlot${i}`]);
             const filled = log.filter((v) => Number.isInteger(v) && v !== -1);
-            out('seals', { log, wasmSave: s.save?.seal_parts ?? null, hasAll: s.save?.has_all_seal_parts ?? null, jsBootSeals: s.jsBootSeals, apSeals: s.ap.Seal ?? 0 });
+            out('seals', { log, wasmSave: s.save?.seal_parts ?? null, hasAll: s.save?.has_all_seal_parts ?? null, jsLiveSeals: s.jsLiveSeals, apSeals: s.ap.Seal ?? 0 });
             if (CONTROL) {
                 check(`${S}: CONTROL — the AP holds 16 Seals and the game's seal log is EMPTY`, (s.ap.Seal ?? 0) === 16 && filled.length === 0, JSON.stringify(log));
             } else {
@@ -305,8 +305,8 @@ async function main() {
                     check('W: botStatus agrees — save.seal_parts is that log and has_all_seal_parts is true',
                         JSON.stringify(s.save?.seal_parts) === JSON.stringify(log) && s.save?.has_all_seal_parts === true, JSON.stringify(s.save));
                 } else {
-                    check('J: the booted run holds the 16 (saveState.bootSealParts — what the model reads)',
-                        Array.isArray(s.jsBootSeals) && s.jsBootSeals.length === 16, JSON.stringify(s.jsBootSeals));
+                    check('J: the live run holds the 16 (finalDoorGate.sealSlotsFilled — what the live run holds)',
+                        s.jsLiveSeals?.sealSlotsFilled === 16, JSON.stringify(s.jsLiveSeals));
                 }
             }
 
