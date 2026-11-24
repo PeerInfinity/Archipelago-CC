@@ -7344,5 +7344,24 @@
         "has_procgen_data": true
       }
     }
+  },
+  "action_nodes_omsi_town": {
+    "name": "Action Nodes Omsi Town",
+    "folders": {
+      "AP_3": {
+        "seed": 3,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Action Nodes"
+          }
+        ],
+        "files": [
+          "AP_3_rules.json"
+        ],
+        "has_procgen_data": true
+      }
+    }
   }
 }
