@@ -1,0 +1,41 @@
+=== frontend/modules/seedlingDemo/fidelityL40Latch.train.test.js
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Duration  489.19s (transform 1.77s, setup 186ms, import 2.21s, tests 486.68s, environment 0ms)
+=== frontend/modules/seedlingDemo/hammerApproachOrder.train.test.js
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Duration  337.27s (transform 1.70s, setup 159ms, import 2.17s, tests 334.83s, environment 0ms)
+=== frontend/modules/seedlingDemo/hammerBk2Combat.train.test.js
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Duration  379.54s (transform 1.69s, setup 177ms, import 2.12s, tests 377.15s, environment 0ms)
+=== frontend/modules/seedlingDemo/hammerEscapeExact.train.test.js
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Duration  551.54s (transform 1.67s, setup 169ms, import 2.13s, tests 549.13s, environment 0ms)
+=== frontend/modules/seedlingDemo/hammerIceTurretStatic.train.test.js
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Duration  623.26s (transform 1.77s, setup 162ms, import 2.28s, tests 620.70s, environment 0ms)
+=== frontend/modules/seedlingDemo/hammerKeylockTurret.train.test.js
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Duration  17.79s (transform 2.40s, setup 219ms, import 2.94s, tests 14.51s, environment 0ms)
+=== frontend/modules/seedlingDemo/hammerLatchWeigh.train.test.js
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Duration  528.12s (transform 2.25s, setup 184ms, import 2.77s, tests 525.04s, environment 0ms)
+=== frontend/modules/seedlingDemo/hammerSouthDoor.train.test.js
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Duration  253.83s (transform 1.81s, setup 184ms, import 2.23s, tests 251.32s, environment 0ms)
+=== frontend/modules/seedlingDemo/hammerSpinnerPress.train.test.js
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Duration  408.20s (transform 1.83s, setup 196ms, import 2.30s, tests 405.60s, environment 0ms)
+=== frontend/modules/seedlingDemo/hammerWallFlyerDrillKill.train.test.js
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Duration  82.15s (transform 2.16s, setup 195ms, import 2.72s, tests 79.14s, environment 0ms)
+DONE

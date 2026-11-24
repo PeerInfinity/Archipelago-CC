@@ -44,23 +44,144 @@ export function squareSide(frame, zoom, minPx = MIN_SQUARE_PX) {
 
 /**
  * ⛓ The squares of one frame, on screen: `[{location, kind, sx, sy, side}]` (`sx, sy` the centre), centred on
- * each location's tile.
+ * each location's tile. A tile carrying `size` (a generic place: its side in tiles) is drawn that size, never under
+ * `minPx`; a tile without one (a substrate's own tile) is `squareSide` — unchanged.
  */
 export function frameSquares(frame, tiles, cam, vp, minPx = MIN_SQUARE_PX) {
     const side = squareSide(frame, cam.zoom, minPx);
     return (tiles ?? []).map((t) => {
         const c = tileCentre(frame, t.x, t.y);
         const s = worldToScreen(cam, vp, c.x, c.y);
-        return { location: t.location, kind: t.kind, sx: s.x, sy: s.y, side };
+        const q = Number.isFinite(t.size) ? Math.max(minPx, t.size * frame.tilePx * cam.zoom) : side;
+        return { location: t.location, kind: t.kind, sx: s.x, sy: s.y, side: q };
     });
 }
 
 /**
+ * ⛓ THE DOOR RING'S SIZE (drawn by `regionMapUI._drawLinks` at a line's door-tile end; art-ends). A dark halo
+ * (`DOOR_RING_WIDTH_PX` + 2 wide) under a `DOOR_RING_WIDTH_PX` stroke.
+ *
+ * ⛓ THE RING NEVER OUTGROWS ITS TILE (⚖ the user, session 84c8ab35, 2026-11-23: "I don't want the circles to grow
+ * larger than the size of the tile they are circling, even if that makes them too small to see when zooming out"):
+ * `doorRingRadius` — the ring's OUTER edge (halo included) is at most half the tile's on-screen side, and its stroke
+ * centre at most `DOOR_RING_MAX_R_PX` (the zoomed-in cap). There is no minimum: a ring whose stroke centre would be
+ * under `DOOR_RING_SKIP_R_PX` is NOT drawn (counted in `lastPaint.doorRingsSkipped`), so a zoomed-out door shows no ring.
+ */
+export const DOOR_RING_MAX_R_PX = 9;
+export const DOOR_RING_WIDTH_PX = 1.5;
+/** A ring whose stroke centre is under this many screen px is skipped (not drawn at sub-pixel). */
+export const DOOR_RING_SKIP_R_PX = 1;
+/** Half the ring's halo width: the outer edge sits this far beyond its stroke centre. */
+export const DOOR_RING_HALO_HALF_PX = (DOOR_RING_WIDTH_PX + 2) / 2;
+
+/**
+ * ⛓ A door ring's stroke-centre radius (screen px) for a tile `tileScreenPx` on screen, or null when it is skipped:
+ *   `r = min(DOOR_RING_MAX_R_PX, tileScreenPx / 2 − DOOR_RING_HALO_HALF_PX)`, skipped when `r < DOOR_RING_SKIP_R_PX`.
+ * So the drawn ring's diameter (outer edge, halo included) is ≤ the tile's side at every zoom.
+ */
+export function doorRingRadius(tileScreenPx) {
+    const r = Math.min(DOOR_RING_MAX_R_PX, tileScreenPx / 2 - DOOR_RING_HALO_HALF_PX);
+    return r >= DOOR_RING_SKIP_R_PX ? r : null;
+}
+
+/**
+ * ⛓ THE CELL LABEL'S GEOMETRY (drawn by `regionMapUI._drawLabel`; here so the generic square places can stay clear of
+ * it). The label is SCREEN-sized: drawn only when the cell is at least `LABEL_MIN_CELL_PX` wide on screen, its font
+ * `cellPx / LABEL_FONT_CELL_DIVISOR` clamped to `LABEL_FONT_MIN_PX`..`LABEL_FONT_MAX_PX`, its box from 2 px below the
+ * cell's top to `font + LABEL_BOX_BOTTOM_PAD_PX` below it.
+ */
+export const LABEL_MIN_CELL_PX = 60;
+export const LABEL_FONT_MIN_PX = 9;
+export const LABEL_FONT_MAX_PX = 13;
+export const LABEL_FONT_CELL_DIVISOR = 14;
+export const LABEL_BOX_BOTTOM_PAD_PX = 7;
+/** Clear screen px between the label box's bottom and the first row of generic squares. */
+export const LABEL_SQUARE_CLEAR_PX = 2;
+
+/** The label's font size (px) for a cell `cellPx` wide on screen, or null when no label is drawn there. */
+export function labelFontPx(cellPx) {
+    if (!(cellPx >= LABEL_MIN_CELL_PX)) return null;
+    return Math.max(LABEL_FONT_MIN_PX, Math.min(LABEL_FONT_MAX_PX, cellPx / LABEL_FONT_CELL_DIVISOR));
+}
+
+/** The label box's bottom, in screen px below the cell's top, for a cell `cellPx` wide (null: no label). */
+export function labelBottomPx(cellPx) {
+    const size = labelFontPx(cellPx);
+    return size == null ? null : size + LABEL_BOX_BOTTOM_PAD_PX;
+}
+
+/**
+ * ⛓ GENERIC SQUARES (⚖ the user, session 84c8ab35, 2026-11-23: "double their current width and height. They can be
+ * scaled back down for regions that have too many locations to fit at the bigger size"): a square is
+ * `GENERIC_SQUARE_FRACTION` of its grid pitch, the pitch at most `GENERIC_PITCH_MAX_TILES` tiles — so a region with
+ * room gets 1.4-tile squares, twice the 0.7-tile square every location had before. A crowded region's pitch drops in
+ * steps of `GENERIC_PITCH_STEP_TILES` until all its locations fit inside the extent, below the label band.
+ */
+export const GENERIC_PITCH_MAX_TILES = 2;
+export const GENERIC_SQUARE_FRACTION = 0.7;
+export const GENERIC_PITCH_STEP_TILES = 1 / 16;
+export const GENERIC_PITCH_MIN_TILES = 1 / 16;
+/** The margin (tiles) between the grid and the extent's left, right and bottom edges. */
+export const GENERIC_MARGIN_TILES = 0.5;
+
+/**
+ * ⛓ THE LABEL BAND (⚖ the user, same session: "move the location boxes lower so that the title text doesn't overlap
+ * it"), in tiles from the extent's top: where the first row's square CENTRES go. The rule is ZOOM-INDEPENDENT — the
+ * squares are placed once, as if the label were drawn, so they sit the same whether it is (cell ≥ 60 px) or not:
+ *
+ *   the label's box is screen-sized, so in WORLD units it is tallest at the smallest zoom it is drawn at (the cell
+ *   `LABEL_MIN_CELL_PX` wide: zoom = 60 / cell width). The band holds the box's bottom there, plus
+ *   `LABEL_SQUARE_CLEAR_PX`, plus the first row's half-side there — the larger of its `minPx` floor and its own
+ *   half-side. Zoomed in, every term in screen px grows no faster than the cell, so the gap only widens.
+ *
+ * In tiles of an extent `w` wide (a generic cell's frame is its cell: `w` tiles = the cell width; the label scales
+ * with the CELL, so this is in units of the cell's width and holds in either cell-size mode):
+ *   `centreY = max((bottom + clear + minPx / 2) · w / 60,  (bottom + clear) · w / 60 + side / 2)`.
+ */
+export function labelBandCentreTiles(w, sideTiles, minPx = MIN_SQUARE_PX) {
+    const perPx = w / LABEL_MIN_CELL_PX;
+    const top = (labelBottomPx(LABEL_MIN_CELL_PX) + LABEL_SQUARE_CLEAR_PX) * perPx;
+    return Math.max(top + (minPx / 2) * perPx, top + sideTiles / 2);
+}
+
+/**
  * ⛓ GENERIC SQUARE PLACES for a region whose substrate places none (no `compositeMap.locationTiles` — a classic
- * AP world): its locations in reading order on a grid inside its extent, below a two-row label band.
- * → `[{location, x, y, kind: 'item'}]` in that extent's tiles.
+ * AP world): its locations in reading order on a grid inside its extent, below the label band
+ * (`labelBandCentreTiles`), at the largest pitch ≤ `GENERIC_PITCH_MAX_TILES` that fits them all.
+ * → `[{location, x, y, kind: 'item', size}]`: `x, y` in that extent's tiles (fractional: the tile whose centre is the
+ * square's centre), `size` the square's side in tiles (`frameSquares` reads it).
  */
 export function genericLocationTiles(names, ext) {
+    const fitAt = (p) => {
+        const side = GENERIC_SQUARE_FRACTION * p;
+        const cy = labelBandCentreTiles(ext.w, side);
+        const cols = Math.max(1, Math.floor((ext.w - 2 * GENERIC_MARGIN_TILES) / p));
+        const lastCentre = ext.h - GENERIC_MARGIN_TILES - p / 2;
+        const rows = Math.max(1, 1 + Math.floor((lastCentre - cy) / p + 1e-9));
+        return { p, side, cy, cols, rows };
+    };
+    let g = fitAt(GENERIC_PITCH_MAX_TILES);
+    for (let k = 1; g.cols * g.rows < names.length; k += 1) {
+        const p = GENERIC_PITCH_MAX_TILES - k * GENERIC_PITCH_STEP_TILES;
+        if (p < GENERIC_PITCH_MIN_TILES) break;
+        g = fitAt(p);
+    }
+    const x0 = GENERIC_MARGIN_TILES + g.p / 2;
+    return names.map((location, i) => ({
+        location,
+        x: x0 + (i % g.cols) * g.p - 0.5,
+        y: g.cy + Math.floor(i / g.cols) * g.p - 0.5,
+        kind: 'item',
+        size: g.side,
+    }));
+}
+
+/**
+ * ⛓ THE PRE-2026-11-23 GENERIC PLACES (base 6dbadc7364, verbatim): a 2-tile (else 1-tile) grid below a two-row band,
+ * no `size` (so `squareSide`'s 0.7-tile square). Kept for the cells `regionMapModel`'s `usesBigGenericPlaces` leaves
+ * out — see there.
+ */
+export function legacyGenericLocationTiles(names, ext) {
     const fits = (step) => Math.max(1, Math.floor((ext.w - 1) / step)) * Math.max(1, Math.floor((ext.h - 3) / step));
     const step = names.length <= fits(2) ? 2 : 1;
     const cols = Math.max(1, Math.floor((ext.w - 1) / step));

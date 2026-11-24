@@ -6,7 +6,7 @@
  * The measured case is LEASH's leg 622 (L73, the arrival from L74, `lavarunner@72,24` diagonally adjacent): the game
  * bills the walker's crossing at t2 (`leash-l73-622-up-lavarunner`), and every input over 36 held sets is hit by t2.
  */
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, beforeAll, afterAll } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -23,6 +23,14 @@ import { arrivalSolverGoal, arrivalSolveRequest } from './wasmArrival.js';
 import { createInPlaceProduceService } from './wasmWalkTape.js';
 import { ANYTIME_PASSES } from './jsRuntimeSolver.js';
 import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
+import { HIT_AVOID_PASS as __HIT_AVOID_PASS_HOLD } from './jsRuntimeSolver.js';
+
+// ⛓ `HIT_AVOID_PASS` held OFF for this whole file: it ships ON since the PKC + FH flip (⚖ the user, 2026-11-20). ON, the third pass re-asks the forced-hit leg after idle ticks, adding its own billed proof rows (the same one proven hit).
+// These rows predate the flip and pin other switches; held OFF they are byte-for-byte their pre-flip selves. The
+// flip's own effect is measured by its sweeps and survey.
+let __heldWas;
+beforeAll(() => { __heldWas = __HIT_AVOID_PASS_HOLD.enabled; __HIT_AVOID_PASS_HOLD.enabled = false; });
+afterAll(() => { __HIT_AVOID_PASS_HOLD.enabled = __heldWas; });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const witness = (n) => JSON.parse(readFileSync(join(HERE, 'fixtures', 'chaser-witness', `${n}.json`), 'utf8'));

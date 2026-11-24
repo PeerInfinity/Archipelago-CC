@@ -36,7 +36,7 @@ import { SolverRefusal, solveSegment } from './solverBot.js';
 import {
     OPPORTUNISTIC_STRIKE, OPPORTUNISTIC_STRIKE_COUNTS, OPPORTUNISTIC_STRIKE_DEFAULT, OPPORTUNISTIC_STRIKE_TRACE,
     REFUGE_ETA_CUT_COUNTS,
-    resetOpportunisticStrikeCounts, resetRefugeEtaCutCounts, withOpportunisticStrike,
+    resetOpportunisticStrikeCounts, resetRefugeEtaCutCounts, withOpportunisticStrike, withPressKillChasers,
 } from './pressKillCost.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -74,8 +74,10 @@ function solveChest(on, cap) {
     resetRefugeEtaCutCounts();
     let error = null;
     try {
-        withOpportunisticStrike(on, () => solveSegment({ run, goals: [{ kind: 'collect-placement',
-            placement: { x: 880, y: 816 } }], name: 'opp', boot: staging.boot, dashMode: 'all' }));
+        // PRESS_KILL_CHASERS held OFF: ON by default since the PKC flip (2026-11-20), it steps the kill clear of the chaser,
+        // so the death this row needs as its witness never happens (L40-PAIR §5). The row keeps pinning its own switch.
+        withPressKillChasers(false, () => withOpportunisticStrike(on, () => solveSegment({ run, goals: [{ kind: 'collect-placement',
+            placement: { x: 880, y: 816 } }], name: 'opp', boot: staging.boot, dashMode: 'all' })));
     } catch (e) {
         error = e;
     } finally {

@@ -110,10 +110,12 @@ const turretOf = (r, id) => r.frames.map((f) => f.turrets.find((t) => t[0] === i
 
 describe('CEREMONYTOWER — the key', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_FREEZE_EDGE_FRAMES)(
-        'ships OFF, appended last, with a worker env name', () => {
+        'ships OFF, appended after frozenTickUngated, with a worker env name', () => {
             expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe(KEY);
+            // ⛓ wave 55: RELEASETICK `freezeReleaseTick` was appended after this key.
+            const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['freezeReleaseTick', 'freezeSpanUpdates']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FREEZE_EDGE_FRAMES');
         });
 });

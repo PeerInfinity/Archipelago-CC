@@ -103,3 +103,59 @@ export function reportStorageWriteFailure({ key, value, chars, error, owner } = 
     }
     return notice;
 }
+
+/**
+ * Whether a library write's `{failed, why}` answer is the browser saying "full".
+ * `why` is `"<error name>: <message>"` (documentLibrary.js `run`), so the name
+ * is read off its front when no error object is at hand.
+ */
+function isQuotaWhy(why) {
+    return typeof why === 'string' && /^(QuotaExceededError|NS_ERROR_DOM_QUOTA_REACHED)\b/.test(why);
+}
+
+/**
+ * Report an IndexedDB write that the browser refused: the document library's
+ * `saveVersion` answering `{status: 'failed', why}` (lab arc B2; B3's writers
+ * call this with that answer). Feeds the SAME listeners, and so the same banner
+ * ("Open Storage panel"), as `reportStorageWriteFailure`.
+ *
+ * Returns the notice when the failure is a quota failure (an `error` that
+ * `isQuotaExceededError` accepts, or a `why` that names QuotaExceededError).
+ * For any other failure it returns null and notifies nobody: the caller keeps
+ * its own handling (the lab's "NOT saved — <why>" status line), exactly as a
+ * non-quota localStorage error is the caller's.
+ *
+ * @param {object} failure
+ * @param {string} [failure.why]      the library's answer text ("QuotaExceededError: …")
+ * @param {Error}  [failure.error]    the error itself, when the caller has it
+ * @param {number} [failure.bytes]    the size of what did not fit, in bytes
+ * @param {string} [failure.owner]    who wrote it, for the message ("Seedling lab")
+ * @param {string} [failure.database] the database name (the notice's `key`; the library's
+ *                                    `DEFAULT_LIBRARY_DB_NAME`, passed by the writer)
+ */
+export function reportLibraryWriteFailure({ why, error, bytes, owner, database } = {}) {
+    if (!isQuotaExceededError(error) && !isQuotaWhy(why)) return null;
+    const notice = {
+        kind: 'idb',
+        key: database ?? null,
+        owner: owner ?? null,
+        attemptedBytes: Number.isFinite(bytes) ? bytes : null,
+        why: why ?? (error ? `${error.name}: ${error.message}` : null),
+        message: 'Browser storage for this site is full. '
+            + `${owner ? `${owner}: saving` : 'Saving'} to the document library`
+            + `${Number.isFinite(bytes) ? ` (${fmt(bytes)} bytes)` : ''} was NOT saved. `
+            + 'Your work is still open on the page and can be downloaded; '
+            + 'the Storage panel lists the saved sets and can clear old ones.',
+    };
+    if (listeners.size === 0) {
+        console.warn(`[storageQuota] ${notice.message}`);
+    }
+    for (const listener of listeners) {
+        try {
+            listener(notice);
+        } catch (e) {
+            console.error('[storageQuota] a write-failure listener threw:', e);
+        }
+    }
+    return notice;
+}

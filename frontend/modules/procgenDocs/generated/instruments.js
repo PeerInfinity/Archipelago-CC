@@ -58,8 +58,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 65,
-            "count": 105,
+            "browser": 66,
+            "count": 106,
             "id": "check"
         },
         {
@@ -259,13 +259,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 538,
-        "browser": 228,
-        "cited": 296,
-        "files": 560,
+        "blockStyle": 539,
+        "browser": 229,
+        "cited": 297,
+        "files": 561,
         "lineStyle": 22,
-        "withDocblock": 560,
-        "withFlags": 477
+        "withDocblock": 561,
+        "withFlags": 478
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3049,7 +3049,8 @@ export const INSTRUMENTS = frz({
             "category": "check",
             "citedBy": [
                 "docs/json/developer/procgen/maze-lab.md",
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-editor.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -4841,6 +4842,41 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-lab-art — THE LAB ARC L2 ACCEPTANCE ROW (seedling-lab-static-art): does `watch.html` boot, load the Seedling art, and draw the room in it (statically) in every arm — and fall back to the rectangles when told?",
             "path": "scripts/procgen/check-seedling-lab-art.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-editor.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-seedling-lab-library.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "check-seedling-lab-library — DOCUMENT LIBRARY B3: the Seedling lab saves into the document library by itself. \"Save points make versions; reload opens clean.\" (⚖ Robert Q1 \"Save points\", Q2 \"Draft, marked won't play\".)",
+            "path": "scripts/procgen/check-seedling-lab-library.mjs"
         },
         {
             "argvHelpers": [
@@ -12314,7 +12350,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "compare",
                 "expect-flag",
+                "expect-median",
                 "moved",
+                "paired",
+                "paired-first",
+                "paired-order",
+                "paired-tip",
                 "ref",
                 "tip"
             ],
@@ -12336,7 +12377,37 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "expect-median"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "moved"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "paired"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "paired-first"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "paired-order"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "paired-tip"
                 },
                 {
                     "how": [

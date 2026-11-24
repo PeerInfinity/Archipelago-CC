@@ -2275,6 +2275,66 @@ export const CONTACT_FIDELITY = {
      * byte-identical. `SEEDLING_FREEZE_EDGE_FRAMES=0|1`. ⛔ OFF by default (no flip licence).
      */
     freezeEdgeFrames: false,
+    /**
+     * fidelity RELEASETICK D2 (wave 55) — A TEXTED CEREMONY'S FINISHING TICK: THE RELEASE FRAME'S ONE UNFROZEN UPDATE.
+     * The finishing tick stands for two game frames. The close C: `NPC.talk()`'s last page lowers `Game.freezeObjects`
+     * through the `talking` setter (`NPCs/NPC.as:207-214,250-263`) and removes the NPC deferred, and `Pickup.update`
+     * re-raises it (`Pickups/Pickup.as:57-60,95`: `myText` is still set). The release R: `NPC.removed()` has nulled
+     * `myText` (`:71-85`), so `pick_up`'s `!myText` arm lowers the flag and calls `removeSelf()` (`Pickup.as:106-112`).
+     * The pickups (`Game.as:2330-2351`) update before the beam tower (`:2297`), the ice turret (`:2296`), the turret
+     * (`:2295`) and the drill (`:2290`; `addUpdate` prepends), so the four are FROZEN on C and UNFROZEN on R. The model
+     * stepped each once, frozen, in its main slot (`ceremony` still set): C's update, and R's was missing (wave 54's
+     * measured hand-over, `t23-C:[true]`). ON the ceremony branch's finishing arm takes R's update
+     * (`stepCeremonyReleaseFamiliesNow`): the runtime adds frozen (spits, blasts), then the flag held down for the call:
+     * the tower, the ice turret, the turrets (with wave 50's slot, `turretHitPlayerNow`) and the drills, in the game's
+     * order, below the chasers' C (`stepCeremonyReleaseFrameNow`) and above the chasers' and the player's R (the tick's
+     * fall-through). A text-less pickup has no C and is untouched (its R is F+150: `pickupTickFreeze` for the turrets,
+     * T's step for the other three); a Seed keeps the flag up and is untouched. C is the observed frame and R a dead one
+     * (`setTemp` raises `Game.talking`, so `Game.as:1044-1051` lowers the flag at the end of every dialogue frame but
+     * not C's): phase A's 149 dead frames and R are the measured 150. ⚠ With a `Game.time` the tower's anim is already
+     * unknown here (phase A is not stepped for it, pre-existing); R's step keeps it so.
+     * The rope rock's player release step needs no key: the pull frame is itself frozen for the player (the pull runs
+     * inside `Player.update` above `super.update()`), so the model's pull-tick step IS the release frame's
+     * (game-witnessed, `rockbutton-l28-livefall`, Δ 0). Composes with `freezeEdgeFrames` (its tower skip is on the hold
+     * ticks, this is the finishing tick), `frozenTickUngated`, `pickupTickFreeze`, `dialogueFrameFreeze` (their
+     * predicates are asked by the main slots only) and `turretSuitRetaliation`. No shipped room holds a texted ceremony
+     * beside one of the four. OFF: byte-identical. `SEEDLING_FREEZE_RELEASE_TICK=0|1`. ⛔ OFF by default (no flip
+     * licence).
+     */
+    freezeReleaseTick: false,
+    /**
+     * fidelity RELEASEPICKUP D2 (wave 56) — THE UPDATES INSIDE A FREEZE'S DEAD SPAN THAT THE MODEL DID NOT TAKE: THE
+     * BEAM TOWER'S GRAPHIC THROUGH A TEXTED PICKUP'S PHASE A, AND (AN INTERIM REFUSAL) A PICKUP THE GAME COLLECTS
+     * INSIDE A ROCK'S SPAN.
+     * (1) The tower. `BeamTower.update` returns at its first line under `Game.freezeObjects`
+     * (`Puzzlements/BeamTower.as:54-57`), but `World.update` runs every entity's graphic outside that gate
+     * (`net/flashpunk/World.as:58`), so through phase A's 149 dead frames (`Pickups/Pickup.as:57-60,95-98`; the pickups,
+     * `Game.as:2330-2351`, update before the tower, `:2297`) its Spritemap plays on and `animEnd` turns it: a pure
+     * function of the frame count, no `y` drift, no beam test. The model stepped the turrets and the bombs through the
+     * lump and not the tower, so with a `Game.time` its `lastClock` test failed from T on and a tower room with a texted
+     * pickup refused rather than modelled. ON the lump steps every tower 149 frames frozen
+     * (`stepBeamTowersThroughPhaseANow`, beside `stepShootersThroughFreeze`) for a TEXTED ceremony (placed, or the
+     * runtime Seed, DarkSword and Fire), and claims the anim KNOWN only where every other frame of the ceremony steps
+     * the tower exactly once: `pickupTickFreeze` (T's one frozen step), `freezeEdgeFrames` (one per dialogue frame) and
+     * `freezeReleaseTick` (R's unfrozen step, whose `lastClock` the finishing tick's frozen C step is relabelled one
+     * frame back for: the clock reads R's `Game.time` there). Without all three the lump still steps the anim and marks
+     * it UNKNOWN (OFF the jump test does, except where the tower has no step before T: a ceremony on the room's first
+     * tick, where OFF claims an anim 150 frames stale). A text-less pickup is not lumped: its F+150 is UNFROZEN for the
+     * tower and T's main-slot step stands for it at T's anim phase (wave 51's stand-in), so a lump would count right and
+     * test the beam at the wrong phase — named, not modelled.
+     * (2) The pickups. `Pickup.update`'s `collide("Player")` has NO freeze gate (only `super.update()`, `Mobile`'s move,
+     * has one: `Mobile.as:31-41`), so the game asks every pickup on EVERY frame of a rock's span, not only on its release
+     * frame R: a pickup under the player at R was under it from the span's first frame (the player does not move through
+     * the span) and is collected THERE, and its ceremony then runs INSIDE the rock's span (`pick_up` re-raises the flag
+     * after the rock every frame, so R does not release: two concurrent freezes, which the model does not hold — the
+     * STOP). The model's own detection already asked every span position but two: a button's frame A (the player's
+     * post-move position, which the next detection meets only after the release step) and the wand's landing snap. ON
+     * either one with a pickup under the player is REFUSED by name (`assertNoPickupInRockSpanNow`): avoidance as a
+     * named INTERIM. No shipped rock room puts a pickup there. Composes with `freezeReleaseTick`, `freezeEdgeFrames`,
+     * `frozenTickUngated`, `pickupTickFreeze`, `dialogueFrameFreeze` and `turretSuitRetaliation` (no predicate is
+     * asked). OFF: byte-identical. `SEEDLING_FREEZE_SPAN_UPDATES=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    freezeSpanUpdates: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2708,6 +2768,12 @@ if (globalThis.process?.env?.SEEDLING_FROZEN_TICK_UNGATED === '0') CONTACT_FIDEL
 // ⛓ fidelity CEREMONYTOWER D2: `SEEDLING_FREEZE_EDGE_FRAMES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FREEZE_EDGE_FRAMES === '1') CONTACT_FIDELITY.freezeEdgeFrames = true;
 if (globalThis.process?.env?.SEEDLING_FREEZE_EDGE_FRAMES === '0') CONTACT_FIDELITY.freezeEdgeFrames = false;
+// ⛓ fidelity RELEASETICK D2: `SEEDLING_FREEZE_RELEASE_TICK=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FREEZE_RELEASE_TICK === '1') CONTACT_FIDELITY.freezeReleaseTick = true;
+if (globalThis.process?.env?.SEEDLING_FREEZE_RELEASE_TICK === '0') CONTACT_FIDELITY.freezeReleaseTick = false;
+// ⛓ fidelity RELEASEPICKUP D2: `SEEDLING_FREEZE_SPAN_UPDATES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FREEZE_SPAN_UPDATES === '1') CONTACT_FIDELITY.freezeSpanUpdates = true;
+if (globalThis.process?.env?.SEEDLING_FREEZE_SPAN_UPDATES === '0') CONTACT_FIDELITY.freezeSpanUpdates = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

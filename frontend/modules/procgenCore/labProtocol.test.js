@@ -21,7 +21,9 @@ import {
     LAB_VALIDATORS, LabProtocolError, PAGE_TO_HOST, SUBSTRATES, addressedTo, assertLabPayload,
     assertLevelChanged, assertLoad, assertNavigate, assertReady, assertRequestState,
     assertOpenInApworldEditor, assertSelectTile, assertStateChanged,
+    LAB_OPTIONAL_PAYLOAD_FIELDS, atlasIdsNamedBy, labAtlasRefusal, labLevelSetVerdicts, levelSetRefsNamedBy,
 } from './labProtocol.js';
+import { levelSetContentHash } from './levelSetReference.js';
 
 /** ⛓ ONE GOOD PAYLOAD PER EVENT, spelled out — never derived from the field
  *  list, because a fixture built from the code under test is a fixed point. */
@@ -254,6 +256,165 @@ describe('labProtocol — the per-field types', () => {
         expect(() => assertOpenInApworldEditor({ ...good, source: 7 }))
             .toThrow(/must be a string/);
         expect(() => assertOpenInApworldEditor({ ...good })).not.toThrow();
+    });
+
+    /**
+     * ⛓ lab-apworld-door-map — `atlases` is the ONE optional field: absent is accepted (it means `[]`, what every
+     * page sent before), present must be an ARRAY, and its name is now no longer an "unexpected field".
+     */
+    it('⛓ openInApworldEditor.atlases: absent accepted, an array accepted, anything else refused', () => {
+        const good = GOOD[LAB_EVENTS.openInApworldEditor];
+        expect([...LAB_OPTIONAL_PAYLOAD_FIELDS[LAB_EVENTS.openInApworldEditor]]).toEqual(['atlases', 'levelSets']);
+        expect(Object.keys(LAB_OPTIONAL_PAYLOAD_FIELDS)).toEqual([LAB_EVENTS.openInApworldEditor]);
+        expect(() => assertOpenInApworldEditor({ ...good })).not.toThrow();
+        expect(() => assertOpenInApworldEditor({ ...good, atlases: [] })).not.toThrow();
+        expect(() => assertOpenInApworldEditor({ ...good, atlases: [{ atlas_id: 'a', regions: [] }] })).not.toThrow();
+        for (const bad of [null, {}, 'a', { atlas_id: 'a' }]) {
+            expect(() => assertOpenInApworldEditor({ ...good, atlases: bad })).toThrow(/atlases must be an array/);
+        }
+        // ⛔ still only on THIS event: another event carrying `atlases` is an unexpected field
+        expect(() => assertSelectTile({ ...GOOD[LAB_EVENTS.selectTile], atlases: [] }))
+            .toThrow(/unexpected field "atlases"/);
+    });
+
+    /**
+     * ⛓ lab-apworld-door-play — `levelSets` is the second optional field, on the same terms: absent accepted (≡ `[]`),
+     * an array accepted whatever is in it (a bad member is the host's per-set refusal), anything else refuses the
+     * whole payload by name. MUTANT: drop the type check — the four bad shapes are accepted and this reds.
+     */
+    it('⛓ openInApworldEditor.levelSets: absent accepted, an array accepted, anything else refused', () => {
+        const good = GOOD[LAB_EVENTS.openInApworldEditor];
+        expect(() => assertOpenInApworldEditor({ ...good })).not.toThrow();
+        expect(() => assertOpenInApworldEditor({ ...good, levelSets: [] })).not.toThrow();
+        expect(() => assertOpenInApworldEditor({ ...good, atlases: [], levelSets: [{ set_id: 's', rooms: [] }, 7] }))
+            .not.toThrow();
+        for (const bad of [null, {}, 's', { set_id: 's', rooms: [] }]) {
+            expect(() => assertOpenInApworldEditor({ ...good, levelSets: bad })).toThrow(/levelSets must be an array/);
+        }
+        expect(() => assertOpenInApworldEditor({ ...good, levelSets: { set_id: 'abc', rooms: [] } }))
+            .toThrow(/levelSets must be an array of level-set documents — got an object with set_id "abc"/);
+        expect(() => assertSelectTile({ ...GOOD[LAB_EVENTS.selectTile], levelSets: [] }))
+            .toThrow(/unexpected field "levelSets"/);
+    });
+
+    /** ⛓ the host's per-atlas refusal: shape, then the id named by SOME player of the rules (every player read). */
+    it('⛓ labAtlasRefusal: refuses a non-atlas and an id no player names; accepts any player\'s id', () => {
+        const rules = { region_atlas: { 1: { atlas_id: 'a1' }, 2: { atlas_id: 'a2' }, 3: {} } };
+        expect(atlasIdsNamedBy(rules)).toEqual(['a1', 'a2']);
+        expect(atlasIdsNamedBy({})).toEqual([]);
+        expect(labAtlasRefusal({ atlas_id: 'a1', regions: [] }, rules)).toBeNull();
+        expect(labAtlasRefusal({ atlas_id: 'a2', regions: [] }, rules)).toBeNull();
+        expect(labAtlasRefusal({ atlas_id: 'zz', regions: [] }, rules))
+            .toBe('atlas "zz" is not the one the rules name (region_atlas names "a1", "a2")');
+        expect(labAtlasRefusal({ atlas_id: 'a1' }, {})).toMatch(/region_atlas names none/);
+        for (const bad of [null, [], { atlas_id: '' }, { regions: [] }, 7n]) {
+            expect(labAtlasRefusal(bad, rules)).toMatch(/^not a region atlas/);
+        }
+        const cyclic = { atlas_id: 5 };
+        cyclic.self = cyclic;
+        expect(labAtlasRefusal(cyclic, rules)).toBe('not a region atlas (no non-empty atlas_id): an object with keys [atlas_id, self]');
+        expect(() => assertOpenInApworldEditor({ ...GOOD[LAB_EVENTS.openInApworldEditor], atlases: cyclic }))
+            .toThrow(/atlases must be an array of region atlases — got an object with keys \[atlas_id, self\]/);
+    });
+});
+
+/* ── lab-apworld-door-play — which carried level sets the host may hold ── */
+
+/** A level set of `n` rooms; `tag` changes the body (so the computed content hash changes). */
+const setDoc = (setId, tag = 'a', rooms = 2) => ({
+    set_id: setId, schema_version: 1, rooms: Array.from({ length: rooms }, (_, i) => ({ id: i, tag })),
+});
+const refOf = (doc) => ({ set_id: doc.set_id, content_hash: levelSetContentHash(doc) });
+const rulesNaming = (...slots) => ({
+    region_atlas: Object.fromEntries(slots.map((ref, i) => [String(i + 1), { atlas_id: `a${i + 1}`, ...(ref ? { level_set: ref } : {}) }])),
+});
+const verdicts = (docs, rules) => labLevelSetVerdicts(docs, rules, { contentHashOf: levelSetContentHash });
+
+describe('labProtocol — labLevelSetVerdicts (lab-apworld-door-play): the hash the HOST computes decides', () => {
+    it('levelSetRefsNamedBy reads every player, in player order, one row per player', () => {
+        const a = setDoc('s-a');
+        const rules = rulesNaming(refOf(a), null, refOf(a));
+        expect(levelSetRefsNamedBy(rules)).toEqual([
+            { player: '1', ...refOf(a) }, { player: '3', ...refOf(a) }]);
+        expect(levelSetRefsNamedBy({})).toEqual([]);
+        expect(levelSetRefsNamedBy(rulesNaming({ set_id: '', content_hash: 'x' }))).toEqual([]);
+    });
+    it('a set whose computed hash and id are the ones the rules name is ok; the player is carried', () => {
+        const a = setDoc('s-a');
+        const v = verdicts([a], rulesNaming(refOf(a)));
+        expect(v.ok).toEqual([a]);
+        expect(v.ok[0]).toBe(a);
+        expect(v.refused).toEqual([]);
+        expect(v.players).toEqual([{ player: '1', ...refOf(a), carried: true }]);
+    });
+    /**
+     * ⛔⛔ (J1) THE DOCUMENT'S SELF-CLAIM IS NEVER READ: its `provenance.content_hash` says the rules' hash, but a room
+     * was edited after the stamp, so the hash computed over the body is another one — refused, named, not ok.
+     * MUTANT: compare `doc.provenance.content_hash` instead of `contentHashOf(doc)` — the edited body is accepted.
+     */
+    it('⛔ (J1) a set whose self-declared hash matches but whose rooms were edited is REFUSED', () => {
+        const a = setDoc('s-a');
+        const ref = refOf(a);
+        const lying = { ...structuredClone(a), provenance: { content_hash: ref.content_hash } };
+        expect(refOf(lying).content_hash).toBe(ref.content_hash); // provenance is outside the hash
+        lying.rooms[1].tag = 'edited after the stamp';
+        const v = verdicts([lying], rulesNaming(ref));
+        expect(v.ok).toEqual([]);
+        expect(v.refused).toEqual([{ set_id: 's-a', why: `set "s-a" hashes to ${levelSetContentHash(lying)}, not the `
+            + `content hash the rules name for it (player 1: ${ref.content_hash}) — a different version of the set` }]);
+        expect(v.players[0].carried).toBe(false);
+    });
+    it('a set the rules do not name, a non-set, and an unhashable doc are refused by name; ok ones survive', () => {
+        const a = setDoc('s-a');
+        const other = setDoc('s-other');
+        const v = verdicts([7, { set_id: 'x' }, other, a, null], rulesNaming(refOf(a)));
+        expect(v.ok).toEqual([a]);
+        expect(v.refused.map((r) => r.set_id)).toEqual([null, null, 's-other', null]);
+        expect(v.refused[2].why).toBe(`set "s-other" is not one the rules name (level_set names player 1: "s-a" @ ${refOf(a).content_hash})`);
+        expect(v.refused[0].why).toMatch(/^not a level set/);
+        const throwing = labLevelSetVerdicts([a], rulesNaming(refOf(a)), { contentHashOf: () => { throw new Error('boom'); } });
+        expect(throwing.refused).toEqual([{ set_id: 's-a', why: 'set "s-a" could not be hashed: boom' }]);
+        expect(() => labLevelSetVerdicts([a], rulesNaming(refOf(a)))).toThrow(/contentHashOf/);
+    });
+    it('rules that name no set: every carried set is refused, no player listed', () => {
+        const a = setDoc('s-a');
+        const v = verdicts([a], rulesNaming(null));
+        expect(v).toEqual({ ok: [], refused: [{ set_id: 's-a', why: 'set "s-a" is not one the rules name (level_set names none)' }], players: [] });
+        expect(verdicts(undefined, rulesNaming(null))).toEqual({ ok: [], refused: [], players: [] });
+    });
+    /**
+     * ⛓ (J3) TWO PLAYERS NAMING THE SAME `set_id` UNDER DIFFERENT HASHES, each checked on its own. (i) Only player 1's
+     * version carried: it is ok, player 2 is NOT carried (its player will be refused by name), nothing is refused.
+     * (ii) Player 1's good version + a doc that claims to be player 2's but is a third version: player 1's survives,
+     * the third is refused. (iii) Good documents for BOTH: the host holds one set per id, so both are refused by name
+     * and neither is ok. MUTANT: drop the rivals check — (iii) returns two ok documents for one id.
+     */
+    it('⛓ (J3) two players, one set_id, two content hashes — each checked on its own', () => {
+        const v1 = setDoc('s-shared', 'one');
+        const v2 = setDoc('s-shared', 'two');
+        const v3 = setDoc('s-shared', 'three');
+        const rules = rulesNaming(refOf(v1), refOf(v2));
+        const i = verdicts([v1], rules);
+        expect(i.ok).toEqual([v1]);
+        expect(i.refused).toEqual([]);
+        expect(i.players.map((p) => p.carried)).toEqual([true, false]);
+        const ii = verdicts([v1, v3], rules);
+        expect(ii.ok).toEqual([v1]);
+        expect(ii.refused.map((r) => r.why)).toEqual([`set "s-shared" hashes to ${levelSetContentHash(v3)}, not the `
+            + `content hash the rules name for it (player 1: ${refOf(v1).content_hash}, player 2: ${refOf(v2).content_hash})`
+            + ' — a different version of the set']);
+        expect(ii.players.map((p) => p.carried)).toEqual([true, false]);
+        const iii = verdicts([v1, v2], rules);
+        expect(iii.ok).toEqual([]);
+        expect(iii.refused).toHaveLength(2);
+        expect(iii.refused[0].why).toMatch(/under 2 content hashes .* the host holds one set per id — none of them is put$/);
+        expect(iii.players.map((p) => p.carried)).toEqual([false, false]);
+    });
+    it('two players naming the SAME set and hash: one document, both carried, put once', () => {
+        const a = setDoc('s-a');
+        const v = verdicts([a, structuredClone(a)], rulesNaming(refOf(a), refOf(a)));
+        expect(v.ok).toEqual([a]);
+        expect(v.players.map((p) => p.carried)).toEqual([true, true]);
     });
 });
 

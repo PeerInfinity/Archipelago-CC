@@ -6,6 +6,7 @@ import { getRegionMovesFromPath } from '../shared/pathUtils.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { getNodeLabelProvider, getEdgeVisibilityFilter, getAccessibilityVisibilityFilter } from './index.js';
+import { dropStalePendingCentre } from './regionGraphCentreAction.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -514,6 +515,8 @@ export class GraphDataManager {
 
     this.ui.cy.elements().remove();
     this.ui.cy.add(elements);
+    // ⛓ G4: a pending centre (regionGraphCentreAction.js) on a node this graph no longer draws is dropped.
+    dropStalePendingCentre(this.ui);
     // The remove took every drawn location node with it.
     this.ui.locationsVisible = false;
 

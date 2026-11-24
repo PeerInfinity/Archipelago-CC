@@ -1,0 +1,8 @@
+MUTANT predicates
+predicted: the composition row alone (1): under pickupTickFreeze the predicate finds the feather still underfoot and freezes R
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 53 passed (54)
+restored: 0
+rows (re-run):
+RELEASETICK — composition (waves 50 to 54 ON underneath) > every family leads by one tick with all five ON, and nothing refuses

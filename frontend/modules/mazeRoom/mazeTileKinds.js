@@ -11,7 +11,8 @@
  *     and nothing that reads reachability (the engine, the extractor, the compiler) ever sees the field. The engine's
  *     own `deserializeMazeWorld` (in the engine closure) drops it; `withTileKinds` copies it back afterwards, as
  *     `mazeThings.thingsDeserializer` does for `things`.
- *   · Only the EDITOR writes it today (`mazeRoomEditor`'s `setTileKind`); no generator rule places one.
+ *   · The EDITOR writes it (`mazeRoomEditor`'s `setTileKind`), and ⛓ GEN-1 the GENERATOR in a room of the "Randomly
+ *     placed tiles" biome (`mazeTileKindsGen.js`, logic-preserving placements only).
  *
  * ⛓⛓ CONTENT SETS PASS-1 — **DECLARED PASSABILITY** (⚖ the user 2026-11-18: "One per slice", "Pack declares,
  * world copies", "Separate, no lying looks"). The pack declares each kind's `pass` in its `structure` layer (a

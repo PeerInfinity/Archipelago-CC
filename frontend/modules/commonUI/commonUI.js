@@ -3,6 +3,7 @@
 import { evaluateRule } from '../shared/ruleEngine.js';
 // Import the function directly from its source file
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { isRegionReachable } from '../regionView/regionViewModel.js';
 import { helperDefinitionFor } from './helperDefinition.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
@@ -2856,11 +2857,7 @@ class CommonUI {
     const rawStatus = snapshot?.regionReachability?.[regionName];
     let displayStatus; // Will be true (accessible), false (inaccessible), or undefined (unknown)
 
-    if (
-      rawStatus === 'reachable' ||
-      rawStatus === 'checked' ||
-      rawStatus === true
-    ) {
+    if (isRegionReachable(snapshot, regionName)) {
       displayStatus = true;
     } else if (rawStatus === undefined) {
       displayStatus = undefined; // Explicitly undefined if not in snapshot or snapshot missing
@@ -2961,12 +2958,7 @@ class CommonUI {
     const isChecked = checkedLocations.has(locationName);
 
     // Check if the region is accessible
-    const regionStatus = snapshot?.regionReachability?.[regionName];
-    const isRegionAccessible = (
-      regionStatus === 'reachable' ||
-      regionStatus === 'checked' ||
-      regionStatus === true
-    );
+    const isRegionAccessible = isRegionReachable(snapshot, regionName);
 
     // Location is only truly accessible if both location AND region are accessible
     const isFullyAccessible = isLocationAccessible && isRegionAccessible;

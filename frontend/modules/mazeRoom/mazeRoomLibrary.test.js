@@ -72,8 +72,10 @@ describe('mazeRoomLibrary substrateRegistryEntry', () => {
         expect(typeof substrateRegistryEntry.renderLibraryProcgenParams).toBe('function');
         expect(typeof substrateRegistryEntry.renderProcgenParams).toBe('function');
         // The flags are read only by a LIBRARY entry's instantiate, so the maze
-        // contributes nothing to a quota-driven world's regionParams.
-        expect(substrateRegistryEntry.buildRegionParams).toBeUndefined();
+        // contributes nothing to a quota-driven world's regionParams — ⛓ CONTENT SETS GEN-1: unless the world
+        // sets a maze biome (or its tile numbers); with neither, still nothing, so every world is byte-equal.
+        expect(substrateRegistryEntry.buildRegionParams({ params: { ...substrateRegistryEntry.defaultProcgenParams, seed: 3 }, mode: 'sphere' })).toEqual({});
+        expect(substrateRegistryEntry.buildRegionParams({ params: { mazeBiome: 'scattered' }, mode: 'topDown' })).toEqual({ mazeBiome: 'scattered' });
     });
 
     it('declares the maze identity, panel type, and load event', () => {

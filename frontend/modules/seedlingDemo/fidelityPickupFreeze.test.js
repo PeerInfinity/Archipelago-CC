@@ -82,7 +82,7 @@ describe('PICKUPFREEZE — the key', () => {
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
             // ⛓ wave 52: DIALOGUEFREEZE `dialogueFrameFreeze` was appended after this key.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['dialogueFrameFreeze', 'frozenTickUngated', 'freezeEdgeFrames']);
+            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['dialogueFrameFreeze', 'frozenTickUngated', 'freezeEdgeFrames', 'freezeReleaseTick', 'freezeSpanUpdates']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_PICKUP_TICK_FREEZE');
         });
 });

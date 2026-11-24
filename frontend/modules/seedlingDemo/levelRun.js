@@ -3949,8 +3949,15 @@ export function createLevelRun({
      *     anim reached "sit" during the span HOPS (`Drill.update` runs its hop below `super.update()`).
      * Measured on p4g (`timedpass-l28-fire-l26` / `-l25`): the drill parked under the stance hops onto it in the pull's
      * own tick, and its contact lands only when the returning camera brings it on screen (t134, seven ticks on).
-     * ⚠ Not modelled, named: the player's own release-frame step (a player at rest takes none) and the span's other
-     * entities (this is reached only with the switch ON; L28's only other bodies are its drills and the bobsoldier).
+     * ⚠ Not modelled, named: the span's other entities (this is reached only with the switch ON; L28's only other
+     * bodies are its drills and the bobsoldier).
+     * ⛓ fidelity RELEASETICK D1: the player's release-frame step IS modelled, as the pull tick's own step. The pull
+     * runs inside `Player.update` above `super.update()` (`slash()` / `spear()` / `fire()`, `Player.as:562-575`), so
+     * `fall()` raises the flag before `Mobile.mobileUpdate`'s gated `friction(); input(); moveX; moveY`
+     * (`Mobile.as:35-41`): the game's player takes NO step on the pull frame and ONE on the release frame, the
+     * model's one step of the pull tick, below this span. Game-witnessed: `rockbutton-l28-livefall` matches the model
+     * to Δ 0 after the cut, mid-motion. (A button's rock is raised by the `Button`'s own update, ahead of the player,
+     * and resolved through `runFrozenTick`, which takes no player step: so `dropRocksTogether` banks one.)
      */
     const fallRockFrozenFrame = (r, frame) => {
         // ⚠ `view()` reads the target the PREVIOUS frame's rock wrote (measured: the release frame's camera still
@@ -14853,6 +14860,126 @@ export function createLevelRun({
     }
     const ceremonyLumps = [];
     /**
+     * ⛓⛓ fidelity RELEASETICK D2 (`CONTACT_FIDELITY.freezeReleaseTick`, ON only) — A TEXTED CEREMONY'S RELEASE FRAME R,
+     * FOR THE FOUR FAMILIES THAT UPDATE AFTER THE PICKUP. The finishing tick stands for two game frames: the close C
+     * (`NPC.talk()`'s last page lowers the flag through the `talking` setter, `NPCs/NPC.as:207-214,250-263`, and removes
+     * itself deferred; `Pickup.update` re-raises it, `Pickups/Pickup.as:57-60,95`, because `myText` is still set) and
+     * the release R (`NPC.removed()` has nulled `myText`, `:71-85`, so `pick_up`'s `!myText` arm lowers the flag and
+     * calls `removeSelf()`, `Pickup.as:106-112`). The pickups (`Game.as:2330-2351`) update before the beam tower
+     * (`:2297`), the ice turret (`:2296`), the turret (`:2295`) and the drill (`:2290`), so those four are FROZEN on C and
+     * UNFROZEN on R. The main slots step each once there, frozen (`ceremony` is still set): that is C's update. This is
+     * R's, at the ceremony branch's finishing arm (below the main slots and the chasers' C, above the chasers' and the
+     * player's R, which are the tick's own fall-through): the runtime adds first, frozen (the spits and the ice turret's
+     * blasts update ahead of the pickup), then — the flag held DOWN for the call and restored — the tower, the ice
+     * turret, the turrets (with wave 50's slot, `turretHitPlayerNow`: its `turretSlotContact` is the tick's own, and the
+     * static scan below reads it) and the drills, in the game's order. The pickup and dialogue predicates are not asked
+     * (R is not a pickup's T). R is a DEAD frame and C the observed one: `setTemp` raises `Game.talking` when the NPC
+     * is added (`NPC.as:95-100`), so `Game.update`'s `inventory.open = false` (`Game.as:1044-1051`) lowers the flag at
+     * the end of phase A's last frame and of every dialogue frame, but not at C's (the NPC has cleared `Game.talking`):
+     * phase A is 149 dead frames, R the 150th (the measured 150, `fixtures/dead-frame-observations.json`). The clock's
+     * phase-A spend of 150 counts R's frame, so `clock.now()` on the finishing tick is R's `Game.time`. ⚠ With a
+     * `Game.time` the tower's anim is unknown here anyway (phase A's frames are not stepped for it, so its `lastClock`
+     * test fails from T on: pre-existing), and R's step keeps it so. A text-less pickup has no C (no NPC): its R is
+     * F+150, which `pickupTickFreeze` models (the turrets) and T's step stands for (the lump-less three); a Seed's
+     * `removeSelf` keeps the flag up.
+     */
+    function stepCeremonyReleaseFamiliesNow() {
+        if (!CONTACT_FIDELITY.freezeReleaseTick || noclip || ceremony === null || !ceremony.dialogue) return;
+        stepBlastsNow();
+        stepSpitsNow();
+        const held = ceremony;
+        ceremony = null;
+        try {
+            // ⛓ fidelity RELEASEPICKUP D2 (`freezeSpanUpdates` ON only): C's step was the frame before R's.
+            relabelBeamTowerCloseFrameNow();
+            if (beamTowersStepped()) stepBeamTowersNow({ frozen: false });
+            stepIceTurretsNow({ mainSlot: false });
+            stepShootersNow(CONTACT_FIDELITY.turretSuitRetaliation && STATIC_SWORD_ARM.enabled
+                ? turretHitPlayerNow : undefined, { frozen: false });
+            if (CONTACT_FIDELITY.drillLive) stepDrillsNow();
+        } finally {
+            ceremony = held;
+        }
+    }
+    /**
+     * ⛓⛓ fidelity RELEASEPICKUP D2 (`CONTACT_FIDELITY.freezeSpanUpdates`, ON only) — EVERY BEAM TOWER THROUGH A TEXTED
+     * PICKUP'S PHASE A. `BeamTower.update` returns on the flag (`Puzzlements/BeamTower.as:54-57`) and `World.update`
+     * runs its graphic anyway (`net/flashpunk/World.as:58`), so each of the 149 dead frames is one frozen
+     * `stepBeamTowerFrame`: the Spritemap and `animEnd`'s turn, no drift, no beam test. Called at the contact, after the
+     * clock's phase-A spend, beside `stepShootersThroughFreeze`. The frames carry no trace row (they are dead).
+     * The anim is claimed KNOWN (`lastClock` set to the frame before the next stepped one) only where the rest of the
+     * ceremony steps the tower exactly once per frame — `pickupTickFreeze` (T's one frozen step, `runFrozenTick`'s),
+     * `freezeEdgeFrames` (one per dialogue frame) and `freezeReleaseTick` (R's) — and only from a continuous history
+     * (`lastClock` is T's frame or the one before it: under `pickupTickFreeze` T's step comes after the lump, and frozen
+     * anim steps commute; or none yet, the tower's first step being T's). Without the three the anim is marked UNKNOWN:
+     * the jump test alone cannot see phase A when the tower has no step before T (a ceremony on the room's first tick —
+     * OFF then claims an anim 150 frames stale), so the lump does not leave it to that test. A text-less pickup is not
+     * lumped (the key's doc). The game's T is `clock.now() - 150`; the lump is its frames T+1..T+149.
+     */
+    function stepBeamTowersThroughPhaseANow() {
+        if (!CONTACT_FIDELITY.freezeSpanUpdates || noclip || !beamTowersStepped()) return;
+        if (ceremony === null || !ceremony.dialogue) return;
+        const st = beamTowerStateFor(level);
+        if (st.size === 0) return;
+        const exact = CONTACT_FIDELITY.pickupTickFreeze && CONTACT_FIDELITY.freezeEdgeFrames
+            && CONTACT_FIDELITY.freezeReleaseTick;
+        const clockNow = clock.now();
+        const contact = clockNow === null ? null : clockNow - CEREMONY_DEAD_FRAMES.pickup;
+        for (const t of st.values()) {
+            for (let k = 1; k < CEREMONY_DEAD_FRAMES.pickup; k += 1) stepBeamTowerFrame(t, { time: null, frozen: true });
+            if (!exact) t.animKnown = false;
+            else if (contact !== null && (t.lastClock === null || t.lastClock === contact || t.lastClock === contact - 1)) {
+                t.lastClock = clockNow - 1;
+            }
+        }
+    }
+    /**
+     * ⛓ fidelity RELEASEPICKUP D2 (ON only): R's step follows C's in the same tick, at the same `clock.now()` (R's
+     * `Game.time`, the phase-A spend having counted R); C's frozen step was the frame before. Relabelled so the jump
+     * test sees the two frames it is. Only under `stepBeamTowersThroughPhaseANow`'s `exact` set, and only a tower whose
+     * C step read this very clock (a continuous history).
+     */
+    function relabelBeamTowerCloseFrameNow() {
+        if (!CONTACT_FIDELITY.freezeSpanUpdates || noclip || !beamTowersStepped()) return;
+        if (!(CONTACT_FIDELITY.pickupTickFreeze && CONTACT_FIDELITY.freezeEdgeFrames)) return;
+        const clockNow = clock.now();
+        if (clockNow === null) return;
+        for (const t of beamTowerStateFor(level).values()) if (t.lastClock === clockNow) t.lastClock = clockNow - 1;
+    }
+    /**
+     * ⛓⛓ fidelity RELEASEPICKUP D2 (`CONTACT_FIDELITY.freezeSpanUpdates`, ON only) — A PICKUP THE GAME COLLECTS INSIDE
+     * A ROCK'S SPAN: REFUSED BY NAME (the interim; the model does not hold a ceremony nested in a rock's freeze).
+     * `Pickup.update`'s `collide("Player")` is outside `Mobile`'s freeze gate (`Pickups/Pickup.as:63-84`,
+     * `Mobile.as:31-41`), so a pickup under the player on any span frame is collected on the first such frame, and
+     * `pick_up` then re-raises the flag after the rock every frame (`:95`) — the rock's release does not release. The
+     * player is still through the span, so the positions are the frame-A position (a button: the post-move box, which
+     * `Button.update` presses from, ahead of the pickups at `Game.as:2330-2340`) and a landing's snap
+     * (`Scenery/FallRock.as:54-60`, ahead of every pickup). `at` is the snapped position, or null for the run's own;
+     * `skip` is the ceremony's own pickup (the wand, whose finishing tick drops L43's rocks).
+     *
+     * @param {string} what the rock's source, for the refusal
+     * @param {{x: number, y: number}|null} at
+     */
+    function assertNoPickupInRockSpanNow(what, at = null) {
+        if (!CONTACT_FIDELITY.freezeSpanUpdates || noclip) return;
+        const skip = ceremony !== null && ceremony.pickup && !ceremony.pickup.runtime
+            ? pickupKey(level, ceremony.pickup) : null;
+        const hits = [];
+        pickupUnderfoot((p, box) => {
+            if (pickupKey(level, p) !== skip && rectsOverlap(box, p.rect)) hits.push(`${p.tag ?? 'pickup'}@${p.x},${p.y}`);
+        }, at);
+        if (at === null && ceremony === null) {
+            const start = predictPickupCeremonyStart();
+            if (start !== null && hits.length === 0) hits.push(`a runtime ${start.tag}`);
+        }
+        if (hits.length === 0) return;
+        throw new Error(`levelRun: ${what} at tick ${ticksCompleted} in level ${level} freezes the world with the player `
+            + `on ${hits.join(', ')}${at === null ? '' : ` (the landing's snap, y = ${at.y})`}. \`Pickup.update\`'s `
+            + 'collide has no freeze gate (`Pickups/Pickup.as:63-84`), so the game collects it INSIDE the rock\'s span '
+            + 'and its ceremony re-raises the flag past the rock\'s release: a ceremony nested in a rock\'s freeze is not '
+            + 'modelled. Refused by name (fidelity RELEASEPICKUP).');
+    }
+    /**
      * ⛓⛓⛓ seedling-js-inventory-menu — THE V MENU'S HOLD: the frozen frames a menu session spends, which the TAPE
      * never sees and the WORLD does (fidelity-15's W0 ACK, C1-C3).
      *
@@ -15354,14 +15481,15 @@ export function createLevelRun({
 
     /** ⛓ fidelity CORPSEBUMP D1: a puncher's reach in one update, px — `moveSpeed` 1 plus knockback headroom (a bound). */
     const CORPSE_PUNCHER_PAD = 4;
-    function stepIceTurretsNow() {
+    function stepIceTurretsNow({ mainSlot = true } = {}) {
         const st = turretStateFor(level);
         if (st.size === 0) return;
         const ids = [...st.keys()].reverse();
         // ⛓ fidelity PICKUPFREEZE D2 (ON only): a texted pickup touched this tick froze it first (`Game.as:2296`).
-        const frozenAhead = pickupFreezesFamilyNow('iceturret', { lump: false });
+        // ⛓ fidelity RELEASETICK D2: asked from the main slot only (a ceremony's release frame is not a pickup's T).
+        const frozenAhead = mainSlot && pickupFreezesFamilyNow('iceturret', { lump: false });
         // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): a texted NPC's later frame froze it first (`Game.as:2296`).
-        const dialogueAhead = dialogueFreezeAheadNow('iceturret');
+        const dialogueAhead = mainSlot && dialogueFreezeAheadNow('iceturret');
         for (const id of ids) {
             const t = st.get(id);
             if (t.removed) continue;
@@ -22931,6 +23059,8 @@ export function createLevelRun({
                         + 'this path returns above `stepPullsNow`. Refused by name (U12-swim D1).');
                 }
                 const ids = pendingButtonFalls;
+                // ⛓ fidelity RELEASEPICKUP D2 (ON only): frame A's position, which the pickups ask inside the span.
+                assertNoPickupInRockSpanNow('a button-dropped fallrock');
                 pendingButtonFalls = null;
                 prevHeld = new Set(held);
                 buttonFallsInFlight = new Set(ids);
@@ -23565,6 +23695,8 @@ export function createLevelRun({
                         seed: { id: seed.id, arm: seed.arm },
                         dialogue: beginDialogue(seed.text, { framesThisCharacter }),
                     };
+                    // ⛓ fidelity RELEASEPICKUP D2 (ON only): the beam towers' graphic through phase A.
+                    stepBeamTowersThroughPhaseANow();
                 }
             }
             // ⛓⛓ ENCOUNTERS D3: the runtime `DarkSword` `Witch.doneTalking()`
@@ -23598,6 +23730,8 @@ export function createLevelRun({
                             dialogue: beginDialogue(DARK_SWORD.text, { framesThisCharacter }),
                         };
                         armCeremonyLumpNow('darksword');
+                        // ⛓ fidelity RELEASEPICKUP D2 (ON only): the beam towers' graphic through phase A.
+                        stepBeamTowersThroughPhaseANow();
                     }
                 }
             }
@@ -23620,6 +23754,8 @@ export function createLevelRun({
                         totemPart: null,
                         dialogue: beginDialogue(BOB_BOSS_FIRE.text, { framesThisCharacter }),
                     };
+                    // ⛓ fidelity RELEASEPICKUP D2 (ON only): the beam towers' graphic through phase A.
+                    stepBeamTowersThroughPhaseANow();
                 }
             }
             if (ceremony === null) {
@@ -23675,6 +23811,8 @@ export function createLevelRun({
                         stepShootersThroughFreeze(CEREMONY_DEAD_FRAMES.pickup - 1);
                         stepShooterReleaseFrameNow();
                     } else if (!noclip) stepShootersThroughFreeze(CEREMONY_DEAD_FRAMES.pickup);
+                    // ⛓ fidelity RELEASEPICKUP D2 (ON only): and the beam towers' graphic, for a texted pickup.
+                    stepBeamTowersThroughPhaseANow();
                     // ⛓ seedling-fidelity-bombpusher: and for the lobber and its bombs.
                     if (!noclip) stepBombsThroughFreeze(CEREMONY_DEAD_FRAMES.pickup);
                     // ⛓ fidelity FROZENTICK D2 (ON only): and the blocks, which no freeze gates, through phase A's dead
@@ -23820,6 +23958,8 @@ export function createLevelRun({
                     // taken rather than skipped so that the two completions
                     // do not become two models of one frame.
                 } else if (finishing) {
+                    // ⛓ fidelity RELEASETICK D2 (ON only): the release frame's one UNFROZEN update of the four families.
+                    stepCeremonyReleaseFamiliesNow();
                     // `removeSelf()` -> `removed()`: the property write and
                     // `Game.setPersistence`. The item lands HERE and not on
                     // contact, which is the whole difference between a real
@@ -23990,6 +24130,10 @@ export function createLevelRun({
                         // is frozen, so the LAST snap is where the next live
                         // tick starts from.
                         if (dropped.snapY !== null) state.y = dropped.snapY;
+                        // ⛓ fidelity RELEASEPICKUP D2 (ON only): the snapped position, which the pickups ask too.
+                        if (dropped.snapY !== null) {
+                            assertNoPickupInRockSpanNow('the wand\'s fallrocks', { x: state.x, y: state.y });
+                        }
                     }
                     collected.push({
                         t: ticksCompleted + 1,

@@ -74,6 +74,16 @@ Interaction with the state is a one-way data flow designed for performance and c
 7.  **Cache & Event:** The `StateManagerProxy` receives the snapshot, caches it internally, and publishes a `stateManager:snapshotUpdated` event on the global `eventBus`.
 8.  **UI Update:** UI modules listen for `stateManager:snapshotUpdated` and re-render themselves using the new data, which they can get instantly from the proxy's cache (`getLatestStateSnapshot()`).
 
+### Replies and the pending-query map
+
+A proxy call that waits for an answer (`pingWorker`, `sendQueryToWorker`, and `_sendCommand` with `expectResponse`, such as `checkLocation` or `syncCheckedLocationsFromServer`) registers an entry in the proxy's `pendingQueries` map under the message's `queryId`. The worker echoes that id on its reply, and the reply settles that entry. Three rules keep every awaited call settling, with its own reply:
+
+- **One id space.** Every path takes its id from `_allocateQueryId()`, which skips ids still in the map (an entry that timed out stays in the map until its late reply arrives). Before this, `_sendCommand` numbered its messages from its own counter. When the two counters met, a command overwrote an in-flight ping's entry. The ping's reply then resolved the command, and the ping's caller waited forever (found live in a 100-check offline push, about 1 play in 3).
+- **No overwrite.** `_registerPending()` refuses an id already in use rather than replacing its entry.
+- **A timeout settles its own entry.** Each timer holds a reference to the entry it guards and rejects that entry's caller unless it was already answered. It does not look the entry up by id, which a lost or replaced entry would defeat.
+
+Pinned by `frontend/modules/stateManager/stateManagerProxy.queryIds.test.js`.
+
 ## State Snapshots
 
 A snapshot is the primary way the UI learns about the game state. It's a read-only object containing everything needed for display and local rule evaluation.

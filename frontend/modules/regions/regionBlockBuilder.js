@@ -1,6 +1,7 @@
 // regionBlockBuilder.js
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { isRegionReachable } from '../regionView/regionViewModel.js';
 import { renderLogicTree } from '../commonUI/index.js';
 import commonUI from '../commonUI/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
@@ -560,10 +561,7 @@ export class RegionBlockBuilder {
         }
         
         // Check if source region is reachable
-        const sourceRegionReachable =
-          snapshot.regionReachability?.[entrance.sourceRegion] === true ||
-          snapshot.regionReachability?.[entrance.sourceRegion] === 'reachable' ||
-          snapshot.regionReachability?.[entrance.sourceRegion] === 'checked';
+        const sourceRegionReachable = isRegionReachable(snapshot, entrance.sourceRegion);
           
         const isTraversable = sourceRegionReachable && entranceAccessible;
         
@@ -744,10 +742,7 @@ export class RegionBlockBuilder {
         }
         
         const connectedRegionName = exitDef.connected_region;
-        const connectedRegionReachable =
-          snapshot.regionReachability?.[connectedRegionName] === true ||
-          snapshot.regionReachability?.[connectedRegionName] === 'reachable' ||
-          snapshot.regionReachability?.[connectedRegionName] === 'checked';
+        const connectedRegionReachable = isRegionReachable(snapshot, connectedRegionName);
         const isTraversable =
           regionIsReachable && exitAccessible && connectedRegionReachable;
 

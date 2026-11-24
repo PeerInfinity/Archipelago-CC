@@ -1,0 +1,139 @@
+{
+ "rocks": [
+  {
+   "level": 28,
+   "rocks": [
+    "fallrock@112,240 {\"tset\":\"1\",\"tag\":\"1\"}"
+   ],
+   "sources": [
+    "rope@160,64 {\"tset\":\"1\",\"tag\":\"0\"}",
+    "button@112,240 {\"tset\":\"0\"}"
+   ],
+   "pickups": []
+  },
+  {
+   "level": 29,
+   "rocks": [
+    "fallrock@112,112 {\"tset\":\"0\",\"tag\":\"0\"}"
+   ],
+   "sources": [
+    "button@112,128 {\"tset\":\"0\"}"
+   ],
+   "pickups": [
+    "bosskey@112,64 {\"keyType\":\"1\"}"
+   ]
+  },
+  {
+   "level": 32,
+   "rocks": [
+    "fallrocklarge@64,128 {\"tset\":\"0\",\"tag\":\"1\",\"bossrock\":\"1\",\"thirdboss\":\"1\"}"
+   ],
+   "sources": [],
+   "pickups": []
+  },
+  {
+   "level": 37,
+   "rocks": [
+    "fallrock@288,32 {\"tset\":\"0\",\"tag\":\"4\"}"
+   ],
+   "sources": [],
+   "pickups": []
+  },
+  {
+   "level": 39,
+   "rocks": [
+    "fallrock@144,624 {\"tset\":\"6\",\"tag\":\"10\"}"
+   ],
+   "sources": [
+    "button@144,112 {\"tset\":\"4\"}",
+    "button@112,144 {\"tset\":\"3\"}",
+    "button@176,144 {\"tset\":\"5\"}",
+    "button@144,128 {\"tset\":\"1\"}",
+    "button@128,144 {\"tset\":\"0\"}",
+    "button@160,144 {\"tset\":\"2\"}",
+    "rope@96,384 {\"tset\":\"6\",\"tag\":\"9\"}"
+   ],
+   "pickups": [
+    "totempart@72,40 {\"totempart\":\"2\"}"
+   ]
+  },
+  {
+   "level": 43,
+   "rocks": [
+    "fallrock@96,336 {\"tset\":\"0\",\"tag\":\"2\"}",
+    "fallrock@192,336 {\"tset\":\"0\",\"tag\":\"1\"}",
+    "fallrock@176,384 {\"tset\":\"0\",\"tag\":\"3\"}"
+   ],
+   "sources": [
+    "wand@144,224 {\"tag\":\"0\"}"
+   ],
+   "pickups": [
+    "wand@144,224 {\"tag\":\"0\"}"
+   ]
+  },
+  {
+   "level": 74,
+   "rocks": [
+    "fallrock@288,144 {\"tset\":\"0\",\"tag\":\"2\"}"
+   ],
+   "sources": [
+    "button@288,128 {\"tset\":\"0\"}"
+   ],
+   "pickups": [
+    "darkshield@48,32 {\"tag\":\"0\"}"
+   ]
+  },
+  {
+   "level": 82,
+   "rocks": [
+    "fallrocklarge@128,224 {\"tset\":\"0\",\"tag\":\"1\",\"bossrock\":\"1\",\"thirdboss\":\"0\"}"
+   ],
+   "sources": [
+    "button@192,240 {\"tset\":\"1\"}"
+   ],
+   "pickups": []
+  }
+ ],
+ "towers": [
+  {
+   "level": 103,
+   "towers": [
+    "beamtower@208,248 {\"direction\":\"2\",\"rate\":\"4\",\"speed\":\"0.25\"}",
+    "beamtower@144,200 {\"direction\":\"0\",\"rate\":\"2\",\"speed\":\"0.5\"}"
+   ],
+   "pickups": []
+  },
+  {
+   "level": 104,
+   "towers": [
+    "beamtower@16,56 {\"direction\":\"0\",\"rate\":\"1\",\"speed\":\"1\"}"
+   ],
+   "pickups": []
+  },
+  {
+   "level": 105,
+   "towers": [
+    "beamtower@48,40 {\"direction\":\"0\",\"rate\":\"1\",\"speed\":\"1\"}"
+   ],
+   "pickups": []
+  },
+  {
+   "level": 107,
+   "towers": [
+    "beamtower@208,120 {\"direction\":\"0\",\"rate\":\"2\",\"speed\":\"0.5\"}",
+    "beamtower@208,136 {\"direction\":\"2\",\"rate\":\"2\",\"speed\":\"0.5\"}"
+   ],
+   "pickups": []
+  },
+  {
+   "level": 108,
+   "towers": [
+    "beamtower@160,56 {\"direction\":\"2\",\"rate\":\"4\",\"speed\":\"0.25\"}",
+    "beamtower@96,104 {\"direction\":\"0\",\"rate\":\"4\",\"speed\":\"0.25\"}",
+    "beamtower@160,152 {\"direction\":\"2\",\"rate\":\"4\",\"speed\":\"0.25\"}",
+    "beamtower@96,200 {\"direction\":\"0\",\"rate\":\"4\",\"speed\":\"0.25\"}"
+   ],
+   "pickups": []
+  }
+ ]
+}

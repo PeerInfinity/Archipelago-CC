@@ -16,7 +16,15 @@
  *   fewer-hits ranking reads the counts with its switch OFF   -> 'OFF: …' rows red
  */
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll, afterAll } from 'vitest';
+import { FADE_MOVE as __FADE_MOVE_HOLD } from './solverBot.js';
+
+// ⛓ `FADE_MOVE` held OFF for this whole file: it ships ON since the ROCKLOCK + FADE flip (⚖ the user, 2026-11-22).
+// ON, L30 t57's dashless pass is already hitless (103 t, was 1 hit), so the hit-avoid pass has nothing to do. These rows pin other switches;
+// held OFF they are byte for byte their pre-flip selves.
+let __fadeWas;
+beforeAll(() => { __fadeWas = __FADE_MOVE_HOLD.enabled; __FADE_MOVE_HOLD.enabled = false; });
+afterAll(() => { __FADE_MOVE_HOLD.enabled = __fadeWas; });
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -60,10 +68,10 @@ function solveLeg(leg, { avoid }) {
 }
 
 describe('FEWER-HITS — the switches', () => {
-    it('both are OFF by default, named on the env channel, and restored after a throw', () => {
-        expect(HIT_AVOID_PASS_DEFAULT).toBe(false);
+    it('HIT_AVOID_PASS ON by default since the FH flip (=0 opts out), FEWER_HITS_RANK OFF; named on the env channel, restored after a throw', () => {
+        expect(HIT_AVOID_PASS_DEFAULT).toBe(true);
         expect(FEWER_HITS_RANK_DEFAULT).toBe(false);
-        expect(HIT_AVOID_PASS.enabled).toBe(ENV.SEEDLING_HIT_AVOID_PASS === '1');
+        expect(HIT_AVOID_PASS.enabled).toBe(ENV.SEEDLING_HIT_AVOID_PASS !== '0');
         expect(FEWER_HITS_RANK.enabled).toBe(ENV.SEEDLING_FEWER_HITS_RANK === '1');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_HIT_AVOID_PASS');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FEWER_HITS_RANK');

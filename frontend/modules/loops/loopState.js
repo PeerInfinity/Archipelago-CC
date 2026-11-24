@@ -58,6 +58,8 @@ import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
  * Record park IS the visit's recorded duration.
  */
 const TIME_DRAIN_INTERVAL_MS = 1000;
+// Percent-of-progress slack for "the pool pays exactly this action" (LOOPS-I1).
+const PROGRESS_EPSILON = 1e-9;
 
 /** A play-clock `stats` object reduced to its finite-number fields (N4): it is stored in a recording. */
 function plainNumbers(stats) {
@@ -143,6 +145,10 @@ export class LoopState {
 
     // Action queue manager (will be initialized after gameState is set)
     this.actionQueueManager = null;
+    // ⚖ LOOPS-I2: the price each in-flight action was given when it started
+    // (pathIndex → mana), read while its progress is above 0. See
+    // _startedActionPrice.
+    this._startedActionPrices = new Map();
 
     // Resources (mana, manaPerItem) and region XP live in gameState now —
     // accessed below via delegating getters/setters for backward compat.
@@ -3453,12 +3459,16 @@ export class LoopState {
    *   - gs.addRegionXP + gameState:xpChanged event for fine-grained UI updates
    *
    * Zero-cost actions, the global instantMode debug flag, and a per-block
-   * Instant toggle (M3) all complete the action in a single frame.
+   * Instant toggle (M3) all complete an AFFORDABLE action in a single frame.
+   * No path spends more than the pool holds (LOOPS-I1): an unaffordable
+   * action drains it and stays incomplete, so Instant ends where normal
+   * speed does, only sooner. Every speed charges the price the action had
+   * when it started (_startedActionPrice, LOOPS-I2).
    */
   _advanceActionProgress(deltaTime) {
-    const actionCost = this._calculateActionCost(this.currentAction);
     const currentProgress =
       this.actionQueueManager.getProgress(this.currentAction.pathIndex) || 0;
+    const actionCost = this._startedActionPrice(this.currentAction, currentProgress);
 
     let progressIncrement;
     if (actionCost === 0 || this.instantMode || this._currentBlockIsInstant()) {
@@ -3468,6 +3478,26 @@ export class LoopState {
       progressIncrement = (deltaTime / 1000) * (20 / actionCost);
     }
 
+    // ⚖ LOOPS-I1 (2026-11-21): a frame spends AT MOST what the pool holds.
+    // An action whose remaining cost exceeds the pool drains it, banks the
+    // drained mana as XP, does NOT complete, and the OOM reset follows. One
+    // rule for every path: Instant and a per-block Instant used to complete
+    // any action in one frame whatever the mana (deductMana clamps to 0 and
+    // completion runs before the OOM check), and a normal-speed frame could
+    // do the same on its last frame. With the debt flag on the pool runs
+    // negative instead, so nothing is capped.
+    const gs = this._gs();
+    let drainsPool = false;
+    if (gs && actionCost > 0 && !gs.noManaDepletionReset) {
+      const affordable = (Math.max(0, gs.currentMana) / actionCost) * 100;
+      // The tolerance keeps an action that costs EXACTLY the pool (up to
+      // float noise) affordable: it completes, then the OOM reset fires.
+      if (progressIncrement - affordable > PROGRESS_EPSILON) {
+        progressIncrement = affordable;
+        drainsPool = true;
+      }
+    }
+
     const newProgress = currentProgress + progressIncrement;
     this.actionQueueManager.setProgress(
       this.currentAction.pathIndex,
@@ -3475,15 +3505,20 @@ export class LoopState {
     );
     this.currentAction.progress = newProgress;
 
-    const manaCost = (progressIncrement / 100) * actionCost;
-    const gs = this._gs();
+    // A capped frame spends the pool EXACTLY: recomputing it as
+    // (mana / cost × 100) / 100 × cost leaves a ~1e-14 residue about one
+    // time in ten, and a pool above 0 never fires the OOM reset — the queue
+    // would drain slivers forever.
+    const manaCost = drainsPool
+      ? Math.max(0, gs.currentMana)
+      : (progressIncrement / 100) * actionCost;
     if (gs) {
       gs.deductMana(manaCost);
       if (manaCost > 0) this._passManaSpent += manaCost;
     }
 
     if (this.currentAction.sourceRegion) {
-      const xpGain = (progressIncrement / 100) * actionCost;
+      const xpGain = manaCost; // XP = mana spent, 1:1
       this.addRegionXP(this.currentAction.sourceRegion, xpGain);
       const xpData = this.getRegionXP(this.currentAction.sourceRegion);
       this.eventBus.publish('gameState:xpChanged', {
@@ -3491,6 +3526,31 @@ export class LoopState {
         xpData,
       });
     }
+  }
+
+  /**
+   * The price of `action` for this frame: the price it had when it STARTED.
+   *
+   * ⚖ Ruling A (Robert, 2026-11-21, LOOPS-I2): an action is priced ONCE, at
+   * the region level it has when it starts, at every speed. Normal speed
+   * used to re-price every frame, so the XP an action banked could level the
+   * region up and make the rest of it cheaper. Live play, Record, Instant and
+   * the Loop Stats predictions all charge an action once at its start price
+   * (blockModes.test.js "ONE ECONOMY"), so normal speed was the odd one out.
+   *
+   * The price is taken whenever the action's progress is 0 (a new action, or
+   * one a reset or a cancel sent back to 0), so a fresh start re-prices and
+   * nothing has to remember to clear it. An action found mid-way with no
+   * price stored (progress restored from a save) is priced now.
+   */
+  _startedActionPrice(action, progress) {
+    const key = action.pathIndex;
+    if (progress > 0 && this._startedActionPrices.has(key)) {
+      return this._startedActionPrices.get(key);
+    }
+    const price = this._calculateActionCost(action);
+    this._startedActionPrices.set(key, price);
+    return price;
   }
 
   /**
@@ -4109,6 +4169,7 @@ export class LoopState {
     if (!this.actionQueueManager) return;
     // Clear all progress tracking
     this.actionQueueManager.resetProgress();
+    this._startedActionPrices.clear();
     // Reset current action index so startProcessing() starts from the beginning
     this.currentActionIndex = 0;
     this.currentAction = null;
