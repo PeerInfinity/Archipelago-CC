@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 31,
-        "headings": 1353,
+        "headings": 1354,
         "indexHeadings": 2,
-        "lines": 37186,
+        "lines": 37201,
         "pages": 4,
-        "words": 573679
+        "words": 574460
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -109,8 +109,8 @@ export const DOCS_INDEX = frz({
             "description": "The substrate-free editing machinery in `frontend/modules/procgenCore/`: the edit core and editor view that every level editor is built on, the adapter contract a substrate implements, the shared toolkit for `rules.json` and region-atlas documents, and the set editor that edits a whole collection of rooms.",
             "file": "editing-core.md",
             "h1": "Procgen Editing Core",
-            "headings": 23,
-            "lines": 239,
+            "headings": 24,
+            "lines": 253,
             "links": [
                 "architecture.md",
                 "maze-lab.md",
@@ -120,14 +120,14 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/editing-core.md",
-            "words": 5851
+            "words": 6392
         },
         {
             "description": "How Seedling rooms and level sets are edited: the room op vocabulary and its adapter, the set session that edits a whole level set with its overlay, the world session that joins several set documents, and the EDIT arm of `seedlingDemo/watch.html` that puts them on a page.",
             "file": "seedling-editor.md",
             "h1": "The Seedling Editor",
             "headings": 19,
-            "lines": 339,
+            "lines": 340,
             "links": [
                 "architecture.md",
                 "editing-core.md",
@@ -135,7 +135,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-editor.md",
-            "words": 9737
+            "words": 9977
         },
         {
             "description": "The Region Map's shared layout gives every world's display regions an integer cell in one unbounded, signed frame, with the start region at exactly (0, 0).",
