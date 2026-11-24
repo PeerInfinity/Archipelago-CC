@@ -15,3 +15,9 @@ report); nothing in the app imports them.
 | `m1/hkAC-*` | `HOOK_EB_KT=1 HOOK_ANCHOR_EDGE=1` |
 | `m1/A-*-{off,hkA}.txt` | `legA.mjs` (worker budget 640): base vs edge-first |
 | `m1/isk-*` | `SEEDLING_ICETURRET_STATIC_KILL=1`: A1 (fixture) and leg 395's exit goal, base / `HOOK_EB_ISK` / `HOOK_ISK_APPROACH`; `isk-kta-a1-640` = ICEST + KT-ARRIVAL both ON |
+| `m4/head-md5.txt` | acceptance md5 at the head (OFF) |
+| `m4/{A,U}-*-on.txt` | `SEEDLING_KEYLOCK_TURRET_EDGE_BAIT=1`: `legA.mjs` (worker, 640) and `leg.mjs` (unbounded) on legs 853/854 (395/412 in the tools' names), clear-tag goal, idle 0/100/150 |
+| `m4/a1-{off,eb,kta,kta-eb}.txt` | A1 29:11 (fixture) with neither switch / EDGE_BAIT / KEYLOCK_TURRET_ARRIVAL / both |
+| `gates/` | acceptance md5 (base, head); the bounded vitest file list and its OFF / ON summaries |
+| `survey/l40-l98-{off,on,kta,kta-on}-rows.jsonl` | `survey-seedling-route --through=end --only=66,96,134,136,149,166,173,227`, rows without `ms`/`traceRows`/`replay` (refusals cut to 400 chars); identity was computed on the full rows minus `ms` |
+| `page/` | the p4g sweep (`--mode=inv`) of legs 853/854 by key, OFF and `--solver-env=SEEDLING_KEYLOCK_TURRET_EDGE_BAIT=1` (`granted` dropped); `legs-853-854.jsonl` the two legs as `seedling-divergence-legs.mjs` wrote them at this base |
