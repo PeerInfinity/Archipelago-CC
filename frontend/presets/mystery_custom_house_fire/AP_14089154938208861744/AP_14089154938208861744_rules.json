@@ -34,7 +34,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "The night watch book",
+              "name": "What Mr. Odell told me",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -48,7 +48,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "What Mr. Prout told me",
+              "name": "The quay gate-keeper's night book",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -62,7 +62,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "The harbour commissioners' notice",
+              "name": "The harbour log, Tuesday night",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -79,9 +79,9 @@
               }
             },
             "item": {
-              "name": "What the landlord of the Anchor told me",
+              "name": "Nothing new",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -90,16 +90,13 @@
             "name": "Question 05",
             "id": 1004,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "item_names": [
-                  "The night watch book",
-                  "What Silas Crouch told me"
-                ]
+                "item_name": "The night watch book"
               }
             },
             "item": {
-              "name": "A note to the carter",
+              "name": "Three passes from the gate-keeper's file",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -116,7 +113,7 @@
               }
             },
             "item": {
-              "name": "What the potboy told me",
+              "name": "The Marigold's log, October",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -127,18 +124,15 @@
             "name": "Question 07",
             "id": 1006,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "item_names": [
-                  "The harbour log, Tuesday night",
-                  "What Mrs. Rowe told me"
-                ]
+                "item_name": "The harbour log, Tuesday night"
               }
             },
             "item": {
-              "name": "Nothing new",
+              "name": "What the landlord of the Anchor told me",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -157,7 +151,7 @@
               }
             },
             "item": {
-              "name": "What Mr. Odell told me",
+              "name": "Dr. Hume's note",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -194,7 +188,7 @@
               }
             },
             "item": {
-              "name": "The Marigold's log, September",
+              "name": "The bond ledger: the Marigold entries",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -248,7 +242,7 @@
               }
             },
             "item": {
-              "name": "What Mrs. Finch told me",
+              "name": "The harbour commissioners' notice",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -268,7 +262,7 @@
               }
             },
             "item": {
-              "name": "What Silas Crouch told me",
+              "name": "The Marigold's log, September",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -285,7 +279,7 @@
               }
             },
             "item": {
-              "name": "The harbour log, Tuesday night",
+              "name": "What Mr. Prout told me",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -305,9 +299,9 @@
               }
             },
             "item": {
-              "name": "Three passes from the gate-keeper's file",
+              "name": "Nothing new",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -322,7 +316,7 @@
               }
             },
             "item": {
-              "name": "What Sam Tully told me",
+              "name": "The night watch book",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -336,7 +330,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "The bond ledger: the Marigold entries",
+              "name": "What Sam Tully told me",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -350,15 +344,13 @@
               "rule": "HasAll",
               "args": {
                 "item_names": [
-                  "The night watch book",
                   "What Mr. Odell told me",
-                  "What Silas Crouch told me",
                   "What the potboy told me"
                 ]
               }
             },
             "item": {
-              "name": "The quay gate-keeper's night book",
+              "name": "What the station-master told me",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -374,14 +366,13 @@
                 "item_names": [
                   "The harbour log, Tuesday night",
                   "What Mr. Prout told me",
-                  "What Mrs. Rowe told me",
                   "What the landlord of the Anchor told me",
                   "What the potboy told me"
                 ]
               }
             },
             "item": {
-              "name": "Dr. Hume's note",
+              "name": "What Silas Crouch told me",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -400,8 +391,6 @@
                   "The night watch book",
                   "What Mr. Prout told me",
                   "What Mrs. Finch told me",
-                  "What Mrs. Rowe told me",
-                  "What Sam Tully told me",
                   "What the baker told me",
                   "What the landlord of the Anchor told me",
                   "What the potboy told me"
@@ -420,21 +409,34 @@
             "name": "Question 22",
             "id": 1021,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "item_names": [
-                  "A note to the carter",
-                  "The Marigold's log, September",
-                  "The bond ledger: the Marigold entries",
-                  "The harbour commissioners' notice",
-                  "The quay gate-keeper's night book"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "item_names": [
+                      "A note to the carter",
+                      "The bond ledger: the Marigold entries",
+                      "The quay gate-keeper's night book"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "item_names": [
+                      "The Marigold's log, September",
+                      "The bond ledger: the Marigold entries",
+                      "The harbour commissioners' notice"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
-              "name": "Nothing new",
+              "name": "What Mrs. Finch told me",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -453,7 +455,7 @@
               }
             },
             "item": {
-              "name": "The Marigold's log, October",
+              "name": "What the potboy told me",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -464,19 +466,32 @@
             "name": "Question 24",
             "id": 1023,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "item_names": [
-                  "A note to the carter",
-                  "The Marigold's log, September",
-                  "The bond ledger: the Marigold entries",
-                  "The harbour commissioners' notice",
-                  "The quay gate-keeper's night book"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "item_names": [
+                      "A note to the carter",
+                      "The bond ledger: the Marigold entries",
+                      "The quay gate-keeper's night book"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "item_names": [
+                      "The Marigold's log, September",
+                      "The bond ledger: the Marigold entries",
+                      "The harbour commissioners' notice"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
-              "name": "What the station-master told me",
+              "name": "A note to the carter",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -490,26 +505,8 @@
               "rule": "HasAll",
               "args": {
                 "item_names": [
-                  "A note to the carter",
-                  "Dr. Hume's note",
-                  "The Marigold's log, October",
-                  "The Marigold's log, September",
-                  "The bond ledger: the Marigold entries",
-                  "The harbour commissioners' notice",
-                  "The harbour log, Tuesday night",
                   "The night watch book",
-                  "The quay gate-keeper's night book",
-                  "Three passes from the gate-keeper's file",
-                  "What Mr. Odell told me",
-                  "What Mr. Prout told me",
-                  "What Mrs. Finch told me",
-                  "What Mrs. Rowe told me",
-                  "What Sam Tully told me",
-                  "What Silas Crouch told me",
-                  "What the baker told me",
-                  "What the landlord of the Anchor told me",
-                  "What the potboy told me",
-                  "What the station-master told me"
+                  "What Mr. Prout told me"
                 ]
               }
             },
@@ -929,7 +926,8 @@
       "slot_data": {
         "mystery": {
           "story": "custom-house-fire",
-          "version": "dd0448338832",
+          "version": "d3081189acf2",
+          "answers": "evidence",
           "goal": "q.who",
           "locations": {
             "Question 01": "q.set",

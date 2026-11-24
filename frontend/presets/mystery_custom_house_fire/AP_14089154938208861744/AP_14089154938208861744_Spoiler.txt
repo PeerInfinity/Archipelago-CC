@@ -30,30 +30,30 @@ The railway timetable
 
 Locations:
 
-Question 01: The night watch book
-Question 02: What Mr. Prout told me
-Question 03: The harbour commissioners' notice
-Question 04: What the landlord of the Anchor told me
-Question 05: A note to the carter
-Question 06: What the potboy told me
-Question 07: Nothing new
-Question 08: What Mr. Odell told me
+Question 01: What Mr. Odell told me
+Question 02: The quay gate-keeper's night book
+Question 03: The harbour log, Tuesday night
+Question 04: Nothing new
+Question 05: Three passes from the gate-keeper's file
+Question 06: The Marigold's log, October
+Question 07: What the landlord of the Anchor told me
+Question 08: Dr. Hume's note
 Question 09: Nothing new
-Question 10: The Marigold's log, September
+Question 10: The bond ledger: the Marigold entries
 Question 11: What Mrs. Rowe told me
 Question 12: What the baker told me
-Question 13: What Mrs. Finch told me
-Question 14: What Silas Crouch told me
-Question 15: The harbour log, Tuesday night
-Question 16: Three passes from the gate-keeper's file
-Question 17: What Sam Tully told me
-Question 18: The bond ledger: the Marigold entries
-Question 19: The quay gate-keeper's night book
-Question 20: Dr. Hume's note
+Question 13: The harbour commissioners' notice
+Question 14: The Marigold's log, September
+Question 15: What Mr. Prout told me
+Question 16: Nothing new
+Question 17: The night watch book
+Question 18: What Sam Tully told me
+Question 19: What the station-master told me
+Question 20: What Silas Crouch told me
 Question 21: Nothing new
-Question 22: Nothing new
-Question 23: The Marigold's log, October
-Question 24: What the station-master told me
+Question 22: What Mrs. Finch told me
+Question 23: What the potboy told me
+Question 24: A note to the carter
 The case solved: Victory
 
 Playthrough:
@@ -65,49 +65,45 @@ Playthrough:
   What Mr. Pell told me
 }
 1: {
-  Question 01: The night watch book
-  Question 02: What Mr. Prout told me
-  Question 03: The harbour commissioners' notice
-  Question 18: The bond ledger: the Marigold entries
+  Question 01: What Mr. Odell told me
+  Question 02: The quay gate-keeper's night book
+  Question 03: The harbour log, Tuesday night
+  Question 18: What Sam Tully told me
 }
 2: {
-  Question 04: What the landlord of the Anchor told me
-  Question 13: What Mrs. Finch told me
-  Question 14: What Silas Crouch told me
+  Question 06: The Marigold's log, October
+  Question 07: What the landlord of the Anchor told me
 }
 3: {
-  Question 05: A note to the carter
-  Question 17: What Sam Tully told me
+  Question 10: The bond ledger: the Marigold entries
 }
 4: {
-  Question 06: What the potboy told me
+  Question 13: The harbour commissioners' notice
 }
 5: {
-  Question 08: What Mr. Odell told me
+  Question 14: The Marigold's log, September
 }
 6: {
-  Question 19: The quay gate-keeper's night book
+  Question 12: What the baker told me
+  Question 22: What Mrs. Finch told me
+  Question 24: A note to the carter
 }
 7: {
-  Question 16: Three passes from the gate-keeper's file
+  Question 17: The night watch book
 }
 8: {
-  Question 15: The harbour log, Tuesday night
-  Question 23: The Marigold's log, October
+  Question 05: Three passes from the gate-keeper's file
 }
 9: {
-  Question 10: The Marigold's log, September
+  Question 15: What Mr. Prout told me
+  Question 23: What the potboy told me
 }
 10: {
-  Question 12: What the baker told me
-  Question 24: What the station-master told me
+  Question 08: Dr. Hume's note
+  Question 19: What the station-master told me
+  Question 20: What Silas Crouch told me
+  The case solved: Victory
 }
 11: {
   Question 11: What Mrs. Rowe told me
-}
-12: {
-  Question 20: Dr. Hume's note
-}
-13: {
-  The case solved: Victory
 }

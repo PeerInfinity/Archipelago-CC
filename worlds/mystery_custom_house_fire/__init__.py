@@ -124,30 +124,30 @@ class MysteryWorld(RuleWorldMixin, World):
     # Original seed placements - actual item placements from the original seed generation
     # Used by _place_original_items() to reproduce exact original item placement
     original_seed_placements: ClassVar[Dict[str, str]] = {
-        "Question 01": "The night watch book",
-        "Question 02": "What Mr. Prout told me",
-        "Question 03": "The harbour commissioners' notice",
-        "Question 04": "What the landlord of the Anchor told me",
-        "Question 05": "A note to the carter",
-        "Question 06": "What the potboy told me",
-        "Question 07": "Nothing new",
-        "Question 08": "What Mr. Odell told me",
+        "Question 01": "What Mr. Odell told me",
+        "Question 02": "The quay gate-keeper's night book",
+        "Question 03": "The harbour log, Tuesday night",
+        "Question 04": "Nothing new",
+        "Question 05": "Three passes from the gate-keeper's file",
+        "Question 06": "The Marigold's log, October",
+        "Question 07": "What the landlord of the Anchor told me",
+        "Question 08": "Dr. Hume's note",
         "Question 09": "Nothing new",
-        "Question 10": "The Marigold's log, September",
+        "Question 10": "The bond ledger: the Marigold entries",
         "Question 11": "What Mrs. Rowe told me",
         "Question 12": "What the baker told me",
-        "Question 13": "What Mrs. Finch told me",
-        "Question 14": "What Silas Crouch told me",
-        "Question 15": "The harbour log, Tuesday night",
-        "Question 16": "Three passes from the gate-keeper's file",
-        "Question 17": "What Sam Tully told me",
-        "Question 18": "The bond ledger: the Marigold entries",
-        "Question 19": "The quay gate-keeper's night book",
-        "Question 20": "Dr. Hume's note",
+        "Question 13": "The harbour commissioners' notice",
+        "Question 14": "The Marigold's log, September",
+        "Question 15": "What Mr. Prout told me",
+        "Question 16": "Nothing new",
+        "Question 17": "The night watch book",
+        "Question 18": "What Sam Tully told me",
+        "Question 19": "What the station-master told me",
+        "Question 20": "What Silas Crouch told me",
         "Question 21": "Nothing new",
-        "Question 22": "Nothing new",
-        "Question 23": "The Marigold's log, October",
-        "Question 24": "What the station-master told me",
+        "Question 22": "What Mrs. Finch told me",
+        "Question 23": "What the potboy told me",
+        "Question 24": "A note to the carter",
         "The case solved": "Victory",
     }
 
@@ -157,10 +157,10 @@ class MysteryWorld(RuleWorldMixin, World):
         "Question 01": True,
         "Question 02": True,
         "Question 03": True,
-        "Question 04": True,
+        "Question 04": False,
         "Question 05": True,
         "Question 06": True,
-        "Question 07": False,
+        "Question 07": True,
         "Question 08": True,
         "Question 09": False,
         "Question 10": True,
@@ -169,13 +169,13 @@ class MysteryWorld(RuleWorldMixin, World):
         "Question 13": True,
         "Question 14": True,
         "Question 15": True,
-        "Question 16": True,
+        "Question 16": False,
         "Question 17": True,
         "Question 18": True,
         "Question 19": True,
         "Question 20": True,
         "Question 21": False,
-        "Question 22": False,
+        "Question 22": True,
         "Question 23": True,
         "Question 24": True,
         "The case solved": True,
@@ -186,7 +186,7 @@ class MysteryWorld(RuleWorldMixin, World):
         # Game-specific world attributes
         self.world_class_name = 'MysteryWorld'
         self.world_description = 'Mystery - The Fire at the Custom House for Archipelago.\n\nAuto-generated world implementation.'
-        self.slot_data = {'mystery': {'story': 'custom-house-fire', 'version': 'dd0448338832', 'goal': 'q.who', 'locations': {'Question 01': 'q.set', 'Question 02': 'q.aim', 'Question 03': 'q.oil', 'Question 04': 'q.door', 'Question 05': 'q.round', 'Question 06': 'q.crouch', 'Question 07': 'q.bell', 'Question 08': 'q.liar', 'Question 09': 'q.pell', 'Question 10': 'q.venn', 'Question 11': 'q.garrick', 'Question 12': 'q.sep3', 'Question 13': 'q.sep24', 'Question 14': 'q.dated', 'Question 15': 'q.passes', 'Question 16': 'q.cart', 'Question 17': 'q.cloak', 'Question 18': 'q.knew', 'Question 19': 'q.sender', 'Question 20': 'q.gap', 'Question 21': 'q.figure', 'Question 22': 'q.entries', 'Question 23': 'q.inside', 'Question 24': 'q.why', 'The case solved': 'q.who'}, 'items': {"The Board's letter to the Collector": 'board_letter', 'What Mr. Pell told me': 'pell', "Dr. Hume's note": 'doctor', 'What Mrs. Finch told me': 'housekeeper', 'The night watch book': 'watch_book', 'What Silas Crouch told me': 'crouch', 'What the potboy told me': 'potboy', 'What Mr. Odell told me': 'odell', 'The harbour log, Tuesday night': 'harbour_log', 'What Mrs. Rowe told me': 'rowe', 'What the landlord of the Anchor told me': 'landlord', 'What Mr. Prout told me': 'prout', 'What the baker told me': 'baker', 'What Sam Tully told me': 'fisherman', 'The tide table': 'tide_table', "The Marigold's log, September": 'ship_log_sept', "The Marigold's log, October": 'ship_log_oct', 'The bond ledger: the Marigold entries': 'ledger', "The harbour commissioners' notice": 'harbour_notice', "Three passes from the gate-keeper's file": 'passes', "The quay gate-keeper's night book": 'gate_book', 'A note to the carter': 'garrick_note', 'The railway timetable': 'timetable', 'What the station-master told me': 'station_master'}}}
+        self.slot_data = {'mystery': {'story': 'custom-house-fire', 'version': 'd3081189acf2', 'answers': 'evidence', 'goal': 'q.who', 'locations': {'Question 01': 'q.set', 'Question 02': 'q.aim', 'Question 03': 'q.oil', 'Question 04': 'q.door', 'Question 05': 'q.round', 'Question 06': 'q.crouch', 'Question 07': 'q.bell', 'Question 08': 'q.liar', 'Question 09': 'q.pell', 'Question 10': 'q.venn', 'Question 11': 'q.garrick', 'Question 12': 'q.sep3', 'Question 13': 'q.sep24', 'Question 14': 'q.dated', 'Question 15': 'q.passes', 'Question 16': 'q.cart', 'Question 17': 'q.cloak', 'Question 18': 'q.knew', 'Question 19': 'q.sender', 'Question 20': 'q.gap', 'Question 21': 'q.figure', 'Question 22': 'q.entries', 'Question 23': 'q.inside', 'Question 24': 'q.why', 'The case solved': 'q.who'}, 'items': {"The Board's letter to the Collector": 'board_letter', 'What Mr. Pell told me': 'pell', "Dr. Hume's note": 'doctor', 'What Mrs. Finch told me': 'housekeeper', 'The night watch book': 'watch_book', 'What Silas Crouch told me': 'crouch', 'What the potboy told me': 'potboy', 'What Mr. Odell told me': 'odell', 'The harbour log, Tuesday night': 'harbour_log', 'What Mrs. Rowe told me': 'rowe', 'What the landlord of the Anchor told me': 'landlord', 'What Mr. Prout told me': 'prout', 'What the baker told me': 'baker', 'What Sam Tully told me': 'fisherman', 'The tide table': 'tide_table', "The Marigold's log, September": 'ship_log_sept', "The Marigold's log, October": 'ship_log_oct', 'The bond ledger: the Marigold entries': 'ledger', "The harbour commissioners' notice": 'harbour_notice', "Three passes from the gate-keeper's file": 'passes', "The quay gate-keeper's night book": 'gate_book', 'A note to the carter': 'garrick_note', 'The railway timetable': 'timetable', 'What the station-master told me': 'station_master'}}}
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -436,7 +436,7 @@ class MysteryWorld(RuleWorldMixin, World):
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
         return {**self._with_embedded_rules({
-            "mystery": {'story': 'custom-house-fire', 'version': 'dd0448338832', 'goal': 'q.who', 'locations': {'Question 01': 'q.set', 'Question 02': 'q.aim', 'Question 03': 'q.oil', 'Question 04': 'q.door', 'Question 05': 'q.round', 'Question 06': 'q.crouch', 'Question 07': 'q.bell', 'Question 08': 'q.liar', 'Question 09': 'q.pell', 'Question 10': 'q.venn', 'Question 11': 'q.garrick', 'Question 12': 'q.sep3', 'Question 13': 'q.sep24', 'Question 14': 'q.dated', 'Question 15': 'q.passes', 'Question 16': 'q.cart', 'Question 17': 'q.cloak', 'Question 18': 'q.knew', 'Question 19': 'q.sender', 'Question 20': 'q.gap', 'Question 21': 'q.figure', 'Question 22': 'q.entries', 'Question 23': 'q.inside', 'Question 24': 'q.why', 'The case solved': 'q.who'}, 'items': {"The Board's letter to the Collector": 'board_letter', 'What Mr. Pell told me': 'pell', "Dr. Hume's note": 'doctor', 'What Mrs. Finch told me': 'housekeeper', 'The night watch book': 'watch_book', 'What Silas Crouch told me': 'crouch', 'What the potboy told me': 'potboy', 'What Mr. Odell told me': 'odell', 'The harbour log, Tuesday night': 'harbour_log', 'What Mrs. Rowe told me': 'rowe', 'What the landlord of the Anchor told me': 'landlord', 'What Mr. Prout told me': 'prout', 'What the baker told me': 'baker', 'What Sam Tully told me': 'fisherman', 'The tide table': 'tide_table', "The Marigold's log, September": 'ship_log_sept', "The Marigold's log, October": 'ship_log_oct', 'The bond ledger: the Marigold entries': 'ledger', "The harbour commissioners' notice": 'harbour_notice', "Three passes from the gate-keeper's file": 'passes', "The quay gate-keeper's night book": 'gate_book', 'A note to the carter': 'garrick_note', 'The railway timetable': 'timetable', 'What the station-master told me': 'station_master'}},
+            "mystery": {'story': 'custom-house-fire', 'version': 'd3081189acf2', 'answers': 'evidence', 'goal': 'q.who', 'locations': {'Question 01': 'q.set', 'Question 02': 'q.aim', 'Question 03': 'q.oil', 'Question 04': 'q.door', 'Question 05': 'q.round', 'Question 06': 'q.crouch', 'Question 07': 'q.bell', 'Question 08': 'q.liar', 'Question 09': 'q.pell', 'Question 10': 'q.venn', 'Question 11': 'q.garrick', 'Question 12': 'q.sep3', 'Question 13': 'q.sep24', 'Question 14': 'q.dated', 'Question 15': 'q.passes', 'Question 16': 'q.cart', 'Question 17': 'q.cloak', 'Question 18': 'q.knew', 'Question 19': 'q.sender', 'Question 20': 'q.gap', 'Question 21': 'q.figure', 'Question 22': 'q.entries', 'Question 23': 'q.inside', 'Question 24': 'q.why', 'The case solved': 'q.who'}, 'items': {"The Board's letter to the Collector": 'board_letter', 'What Mr. Pell told me': 'pell', "Dr. Hume's note": 'doctor', 'What Mrs. Finch told me': 'housekeeper', 'The night watch book': 'watch_book', 'What Silas Crouch told me': 'crouch', 'What the potboy told me': 'potboy', 'What Mr. Odell told me': 'odell', 'The harbour log, Tuesday night': 'harbour_log', 'What Mrs. Rowe told me': 'rowe', 'What the landlord of the Anchor told me': 'landlord', 'What Mr. Prout told me': 'prout', 'What the baker told me': 'baker', 'What Sam Tully told me': 'fisherman', 'The tide table': 'tide_table', "The Marigold's log, September": 'ship_log_sept', "The Marigold's log, October": 'ship_log_oct', 'The bond ledger: the Marigold entries': 'ledger', "The harbour commissioners' notice": 'harbour_notice', "Three passes from the gate-keeper's file": 'passes', "The quay gate-keeper's night book": 'gate_book', 'A note to the carter': 'garrick_note', 'The railway timetable': 'timetable', 'What the station-master told me': 'station_master'}},
         }), **_spoiler_hook_client.slot_data(self)}
 
     def _with_embedded_rules(self, data: Dict[str, Any]) -> Dict[str, Any]:
