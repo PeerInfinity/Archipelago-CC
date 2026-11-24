@@ -89,9 +89,66 @@ export function affordablePrefix(model, state, plan, costs) {
     return n;
 }
 
-/** The plan to perform `target` from `state` that is short of mana by the least, ignoring mana. Null: never. */
-function leastShortPlan(model, state, target, costs, budget) {
-    const { entries } = enumerateLoop(model, { start: state, costs, ignoreMana: true, budget });
+/**
+ * The nodes that can matter to performing `target` from `state` — the **relevance cone** the ignore-mana searches walk
+ * instead of the whole graph (slice AN-OMSI-1: on a town-sized graph the whole-graph walk passed the state budget,
+ * 911,712 states against 200,000, because every unrelated repeatable node multiplies the count vectors).
+ *
+ * A node is relevant when it is the target, or, for a relevant node N:
+ *   - a member of any of N's `after` sets (a way in);
+ *   - a producer of a stat N requires that `state` does not already meet (stats only go up, so a met stat minimum
+ *     stays met and its producers cannot help);
+ *   - a producer of a resource N requires or spends (resources go down, so no "already met" shortcut);
+ * and, whatever the target, every node whose mana result is at least its price (it never raises a shortfall, and it
+ * can lower one or lengthen how far a plan runs).
+ *
+ * What does not change, and why. Drop every performance of an irrelevant node from a plan that performs the target:
+ * what remains is still legal (no relevant node's way in, stat or resource came from a dropped node; a dropped node
+ * that spent a resource only leaves more), and each dropped node cost more mana than it gave, so every later step is
+ * short by no more. So:
+ *   - **the least shortfall is the same** over the cone as over the whole graph, always;
+ *   - **when it is above 0, the whole answer is the same** (plan, shortfall, how far it runs): a dropped node that
+ *     costs mana raises the last step's shortfall, or runs after the first step that cannot be paid, so no plan with
+ *     one beats the plan without it; and the cone's states come in the whole walk's breadth-first order, so a tie
+ *     falls the same way;
+ *   - **when it is 0** (the target is affordable outright), the whole-graph walk's "runs furthest" tie-break prefers
+ *     plans padded with any affordable node; the cone returns the unpadded plan. No caller reads that plan: an
+ *     affordable target is earned by the main search, and the reasoning lines read only the shortfall there.
+ *
+ * @returns {boolean[]} by node index
+ */
+export function relevantNodes(model, state, target, costs) {
+    const n = model.nodes.length;
+    const statProducers = model.statIds.map(() => []);
+    const resProducers = model.resourceIds.map(() => []);
+    model.nodes.forEach((node, i) => {
+        for (const [s, k] of node.addStats) if (k > 0) statProducers[s].push(i);
+        for (const [r, k] of node.addRes) if (k > 0) resProducers[r].push(i);
+    });
+    const keep = new Array(n).fill(false);
+    const queue = [];
+    const add = (i) => { if (!keep[i]) { keep[i] = true; queue.push(i); } };
+    add(target);
+    model.nodes.forEach((node, i) => { if (i !== model.startIndex && node.addMana >= priceOf(model, i, costs)) add(i); });
+    while (queue.length) {
+        const node = model.nodes[queue.shift()];
+        for (const set of node.after) for (const m of set) add(m);
+        for (const [s, k] of node.reqStats) if (state.stats[s] < k) statProducers[s].forEach(add);
+        for (const [r] of node.reqRes) resProducers[r].forEach(add);
+        for (const [r, k] of node.addRes) if (k < 0) resProducers[r].forEach(add);
+    }
+    return keep;
+}
+
+/**
+ * The plan to perform `target` from `state` that is short of mana by the least, ignoring mana. Null: never.
+ * `cone: false` walks the whole graph instead of the relevance cone: the pre-AN-OMSI-1 search, kept only so a test can
+ * hold the two to the same answer.
+ * @returns {null | {plan: number[], short: number, runs: number}}
+ */
+export function leastShortPlan(model, state, target, costs, budget = DEFAULT_STATE_BUDGET, { cone = true } = {}) {
+    const allowed = cone ? relevantNodes(model, state, target, costs) : undefined;
+    const { entries } = enumerateLoop(model, { start: state, costs, ignoreMana: true, budget, allowed });
     // Least short first; then the plan that runs furthest before it runs out (so the mana is spent on the way to
     // the target, not stranded before an Eat Bread that would have covered it); then the shortest.
     let best = null;
@@ -225,7 +282,8 @@ function notThisLoop(model, start, t, costs, budget) {
     const s = leastShortPlan(model, start, t, costs, budget);
     if (s) return `short by ${formatMana(s.short)} mana (${describePlan(model, s.plan)})`;
     // Not even with unlimited mana: name the first requirement the node itself fails at its best state.
-    const { entries } = enumerateLoop(model, { start, costs, ignoreMana: true, budget });
+    const allowed = relevantNodes(model, start, t, costs);
+    const { entries } = enumerateLoop(model, { start, costs, ignoreMana: true, budget, allowed });
     const reached = entries.filter(({ state }) => whyNot(model, state, t, { costs, ignoreMana: true })?.code !== 'not-reached');
     if (!reached.length) return 'not reached this loop with what is held';
     const refusal = whyNot(model, reached[reached.length - 1].state, t, { costs, ignoreMana: true });

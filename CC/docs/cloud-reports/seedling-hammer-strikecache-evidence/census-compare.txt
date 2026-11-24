@@ -1,0 +1,136 @@
+off vs lean: 147 requests, 147 identical answers (answer+work+kind+passes), 147 identical progress traces; wall 1625 s -> 1072 s
+meter vs leanmeter: 147 requests, 147 identical answers (answer+work+kind+passes), 147 identical progress traces; wall 361 s -> 344 s
+off vs meter: 147 requests, 40 identical answers (answer+work+kind+passes), 37 identical progress traces; wall 1625 s -> 361 s
+  MOVER 3:1 Level 086 - Chest: off null/58/36fbfb8fcac4 -> meter null/62/36fbfb8fcac4
+  MOVER 3:3 Level 086 - Chest: off null/84/70014a700f91 -> meter null/92/70014a700f91
+  MOVER 4:3 Level 036 - Chest: off null/42/68412fba1551 -> meter null/45/68412fba1551
+  MOVER 4:1 Level 036 - Chest: off null/122/3e7df4d9c1ff -> meter null/137/3e7df4d9c1ff
+  MOVER 4:2 Level 036 - Chest: off null/152/4a5f224d5169 -> meter null/193/4a5f224d5169
+  MOVER 5:0 Level 017 - Chest: off null/66/fc2858520a87 -> meter null/72/fc2858520a87
+  MOVER 5:2 Level 017 - Chest: off null/126/6f3fd7ec5b81 -> meter null/149/6f3fd7ec5b81
+  MOVER 5:1 Level 017 - Chest: off null/149/715d72684614 -> meter null/189/715d72684614
+  MOVER 5:5 Level 017 - Chest: off null/321/4881e0596b75 -> meter null/323/4881e0596b75
+  MOVER 5:4 Level 017 - Chest: off null/99/db5fd4b94d13 -> meter null/110/db5fd4b94d13
+  MOVER 5:6 Level 017 - Chest: off null/63/ec752efab65b -> meter null/70/ec752efab65b
+  MOVER 5:7 Level 017 - Chest: off null/170/4ef7e74de551 -> meter null/174/4ef7e74de551
+  MOVER 6:0 Level 019 - Boss Key 0: off null/44/e2af257cb85e -> meter null/45/e2af257cb85e
+  MOVER 6:3 Level 019 - Boss Key 0: off null/133/b0255c571df8 -> meter null/141/b0255c571df8
+  MOVER 6:1 Level 019 - Boss Key 0: off null/318/c0a7d7c74485 -> meter null/327/c0a7d7c74485
+  MOVER 6:2 Level 019 - Boss Key 0: off null/76/5bbc5c518ade -> meter null/108/5bbc5c518ade
+  MOVER 8:0 Level 020 - Shield: off null/150/795edf3b20ac -> meter null/160/795edf3b20ac
+  MOVER 8:1 Level 020 - Shield: off null/43/71280758af23 -> meter null/46/71280758af23
+  MOVER 9:0 Level 025 - Chest: off null/53/25a7b2fc3705 -> meter null/54/25a7b2fc3705
+  MOVER 9:2 Level 025 - Chest: off null/132/c630ffc9a519 -> meter null/154/c630ffc9a519
+  MOVER 9:3 Level 025 - Chest: off null/52/2c94de465db7 -> meter null/54/2c94de465db7
+  MOVER 9:4 Level 025 - Chest: off null/124/131f351c6749 -> meter null/144/131f351c6749
+  MOVER 9:5 Level 025 - Chest: off null/642/29090a254529 -> meter null/641/29090a254529
+  MOVER 9:9 Level 025 - Chest: off null/24/63b5d2caa12b -> meter null/25/63b5d2caa12b
+  MOVER 9:8 Level 025 - Chest: off null/817/78614fcbef7f -> meter null/965/78614fcbef7f
+  MOVER 11:0 Level 030 - Torchpickup: off null/37/38f2acf11279 -> meter null/39/38f2acf11279
+  MOVER 10:2 Level 029 - Boss Key 1: off null/100/ba462f2839f7 -> meter null/114/ba462f2839f7
+  MOVER 11:1 Level 030 - Torchpickup: off null/170/d33cf470a285 -> meter null/189/d33cf470a285
+  MOVER 11:2 Level 030 - Torchpickup: off null/184/fd190112594c -> meter null/194/fd190112594c
+  MOVER 10:1 Level 029 - Boss Key 1: off null/642/6485ba65c223 -> meter null/643/6485ba65c223
+  MOVER 12:0 Level 032 - Bob Boss: off null/101/6179eaf56144 -> meter null/108/6179eaf56144
+  MOVER 14:1 Level 012 - Chest: off null/377/6822fc6a1a3b -> meter null/403/6822fc6a1a3b
+  MOVER 14:2 Level 012 - Chest: off null/376/88f5621dc344 -> meter null/466/88f5621dc344
+  MOVER 14:5 Level 012 - Chest: off null/72/48d5cb7275ac -> meter null/74/48d5cb7275ac
+  MOVER 15:0 Level 038 - Chest: off null/273/c8a79859b240 -> meter null/397/c8a79859b240
+  MOVER 15:1 Level 038 - Chest: off null/148/a872e08d116c -> meter null/165/a872e08d116c
+  MOVER 15:2 Level 038 - Chest: off null/152/845b0dd2d230 -> meter null/161/845b0dd2d230
+  MOVER 16:2 Level 049 - Conch: off null/140/8f4963b9423b -> meter null/172/8f4963b9423b
+  MOVER 16:3 Level 049 - Conch: off null/100/727325c1ec6f -> meter null/108/727325c1ec6f
+  MOVER 16:4 Level 049 - Conch: off null/125/cc48385600bb -> meter null/149/cc48385600bb
+  MOVER 16:5 Level 049 - Conch: off null/132/fe3c255eb650 -> meter null/154/fe3c255eb650
+  MOVER 16:6 Level 049 - Conch: off null/128/d001f6562397 -> meter null/153/d001f6562397
+  MOVER 14:6 Level 012 - Chest: off null/642/00202603014b -> meter null/641/00202603014b
+  MOVER 16:9 Level 049 - Conch: off null/98/1c4063bd7ae1 -> meter null/103/1c4063bd7ae1
+  MOVER 17:3 Level 015 - Chest: off null/110/de282fc5960d -> meter null/125/de282fc5960d
+  MOVER 16:8 Level 049 - Conch: off null/1384/465a41f144c4 -> meter null/1493/465a41f144c4
+  MOVER 17:2 Level 015 - Chest: off null/56/da966c0a50fa -> meter null/61/da966c0a50fa
+  MOVER 18:0 Level 039 - Totem Part 72,40: off null/109/f1a8af48f075 -> meter null/122/f1a8af48f075
+  MOVER 18:1 Level 039 - Totem Part 72,40: off null/39/2f98dfe2a76b -> meter null/40/2f98dfe2a76b
+  MOVER 18:2 Level 039 - Totem Part 72,40: off null/52/1177bb0b62b1 -> meter null/54/1177bb0b62b1
+  MOVER 18:3 Level 039 - Totem Part 72,40: off null/121/25992e1d32b6 -> meter null/141/25992e1d32b6
+  MOVER 18:5 Level 039 - Totem Part 72,40: off null/134/5a305d6f3fde -> meter null/159/5a305d6f3fde
+  MOVER 18:4 Level 039 - Totem Part 72,40: off null/191/92fa949ace5f -> meter null/199/92fa949ace5f
+  MOVER 18:6 Level 039 - Totem Part 72,40: off null/88/b16263c22cc3 -> meter null/93/b16263c22cc3
+  MOVER 18:7 Level 039 - Totem Part 72,40: off null/43/671a4d383d98 -> meter null/45/671a4d383d98
+  MOVER 19:0 Level 040 - Chest: off null/36/a39227153503 -> meter null/37/a39227153503
+  MOVER 18:8 Level 039 - Totem Part 72,40: off null/642/a52db2c93b64 -> meter null/641/a52db2c93b64
+  MOVER 21:0 Level 046 - Chest: off null/118/235f7d32072f -> meter null/137/235f7d32072f
+  MOVER 21:1 Level 046 - Chest: off null/191/92fa949ace5f -> meter null/199/92fa949ace5f
+  MOVER 21:3 Level 046 - Chest: off null/105/0f12b97f54f5 -> meter null/116/0f12b97f54f5
+  MOVER 21:4 Level 046 - Chest: off null/134/7ed221f406be -> meter null/163/7ed221f406be
+  MOVER 21:5 Level 046 - Chest: off null/142/17716172a963 -> meter null/177/17716172a963
+  MOVER 22:0 Level 048 - Chest: off null/140/8d88b6ae56d2 -> meter null/142/8d88b6ae56d2
+  MOVER 22:1 Level 048 - Chest: off null/126/6818d77999b0 -> meter null/151/6818d77999b0
+  MOVER 22:2 Level 048 - Chest: off null/115/18ef889799ef -> meter null/127/18ef889799ef
+  MOVER 23:0 Level 055 - Boss Key 3: off null/112/bd8d697b3268 -> meter null/124/bd8d697b3268
+  MOVER 23:1 Level 055 - Boss Key 3: off null/98/75e4bdfb9bca -> meter null/105/75e4bdfb9bca
+  MOVER 23:3 Level 055 - Boss Key 3: off null/174/efdb2b974e45 -> meter null/232/efdb2b974e45
+  MOVER 23:2 Level 055 - Boss Key 3: off null/174/efdb2b974e45 -> meter null/232/efdb2b974e45
+  MOVER 23:5 Level 055 - Boss Key 3: off null/106/b56851ac3fd3 -> meter null/117/b56851ac3fd3
+  MOVER 23:4 Level 055 - Boss Key 3: off null/106/b56851ac3fd3 -> meter null/117/b56851ac3fd3
+  MOVER 23:8 Level 055 - Boss Key 3: off null/142/df7c7d430064 -> meter null/191/df7c7d430064
+  MOVER 23:9 Level 055 - Boss Key 3: off null/118/8a220e9480b5 -> meter null/137/8a220e9480b5
+  MOVER 23:7 Level 055 - Boss Key 3: off null/2110/c4360b3cadd1 -> meter null/2289/c4360b3cadd1
+  MOVER 23:10 Level 055 - Boss Key 3: off null/118/8a220e9480b5 -> meter null/137/8a220e9480b5
+  MOVER 23:11 Level 055 - Boss Key 3: off null/94/1b71e6c10fca -> meter null/98/1b71e6c10fca
+  MOVER 24:0 Level 089 - Feather: off null/40/d645ee6ba302 -> meter null/41/d645ee6ba302
+  MOVER 24:1 Level 089 - Feather: off null/40/d645ee6ba302 -> meter null/41/d645ee6ba302
+  MOVER 24:2 Level 089 - Feather: off null/146/59051355e86c -> meter null/185/59051355e86c
+  MOVER 24:3 Level 089 - Feather: off null/134/f51292dd0c6d -> meter null/154/f51292dd0c6d
+  MOVER 24:5 Level 089 - Feather: off null/118/cb0a21e13142 -> meter null/134/cb0a21e13142
+  MOVER 24:4 Level 089 - Feather: off null/190/8a33f7ace69c -> meter null/206/8a33f7ace69c
+  MOVER 24:6 Level 089 - Feather: off null/100/8df1f566fc8e -> meter null/104/8df1f566fc8e
+  MOVER 24:7 Level 089 - Feather: off null/100/8df1f566fc8e -> meter null/104/8df1f566fc8e
+  MOVER 24:8 Level 089 - Feather: off refusal/110/7a183280bda8 -> meter refusal/111/7a183280bda8
+  MOVER 24:9 Level 089 - Feather: off null/102/d638696bfa03 -> meter null/110/d638696bfa03
+  MOVER 24:10 Level 089 - Feather: off null/130/0b32bd9e5468 -> meter null/158/0b32bd9e5468
+  MOVER 24:11 Level 089 - Feather: off null/134/b15bedaf2d74 -> meter null/163/b15bedaf2d74
+  MOVER 24:12 Level 089 - Feather: off null/40/4ba416d94cf8 -> meter null/42/4ba416d94cf8
+  MOVER 24:13 Level 089 - Feather: off null/170/b0946c81a8b9 -> meter null/224/b0946c81a8b9
+  MOVER 24:14 Level 089 - Feather: off null/150/3b013414edcc -> meter null/163/3b013414edcc
+  MOVER 24:17 Level 089 - Feather: off null/110/3292f58f68f9 -> meter null/124/3292f58f68f9
+  MOVER 25:0 Level 090 - Chest: off null/138/c49093fcd6cd -> meter null/170/c49093fcd6cd
+  MOVER 25:1 Level 090 - Chest: off null/138/766213173a83 -> meter null/170/766213173a83
+  MOVER 25:2 Level 090 - Chest: off null/138/098370349242 -> meter null/170/098370349242
+  MOVER 24:16 Level 089 - Feather: off null/1455/54915ffd6edf -> meter null/1520/54915ffd6edf
+  MOVER 25:3 Level 090 - Chest: off null/138/f093a50e7976 -> meter null/170/f093a50e7976
+  MOVER 26:1 Level 040 - Boss Key 2: off null/137/76718a4f3092 -> meter null/170/76718a4f3092
+  MOVER 26:2 Level 040 - Boss Key 2: off null/144/05cf8632df10 -> meter null/175/05cf8632df10
+  MOVER 26:3 Level 040 - Boss Key 2: off null/43/3c470457fd49 -> meter null/45/3c470457fd49
+  MOVER 26:5 Level 040 - Boss Key 2: off null/62/1b729ff66a18 -> meter null/65/1b729ff66a18
+  MOVER 26:4 Level 040 - Boss Key 2: off null/146/371c0acc9ff2 -> meter null/183/371c0acc9ff2
+  MOVER 26:7 Level 040 - Boss Key 2: off null/1322/fc9de9928f02 -> meter null/1332/fc9de9928f02
+  MOVER 26:10 Level 040 - Boss Key 2: off null/457/78b88bac90df -> meter null/459/78b88bac90df
+  MOVER 26:9 Level 040 - Boss Key 2: off null/2099/9b2d5216a2d5 -> meter null/2233/9b2d5216a2d5
+  MOVER 19:1 Level 040 - Chest: off refusal/112/8ef0debe2bb9 -> meter refusal/642/223fd2322f97
+  MOVER 26:11 Level 040 - Boss Key 2: off refusal/642/432ec5f5b196 -> meter refusal/642/432ec5f5b196
+
+leg | key | requests | wall s: off lean meter leanmeter
+26 | Level 040 - Boss Key 2 | 12 | 1182.2 777.0 136.7 122.4
+19 | Level 040 - Chest | 2 | 241.4 131.5 78.7 63.7
+24 | Level 089 - Feather | 18 | 30.0 23.0 24.3 24.8
+14 | Level 012 - Chest | 7 | 29.4 25.1 21.6 23.8
+9 | Level 025 - Chest | 10 | 23.9 24.8 16.8 19.6
+23 | Level 055 - Boss Key 3 | 12 | 20.3 13.5 14.4 15.7
+12 | Level 032 - Bob Boss | 2 | 18.8 16.6 14.0 15.2
+16 | Level 049 - Conch | 10 | 18.1 12.5 11.5 13.2
+18 | Level 039 - Totem Part 72,40 | 9 | 12.3 9.3 8.2 10.3
+5 | Level 017 - Chest | 9 | 8.6 6.6 6.3 5.9
+10 | Level 029 - Boss Key 1 | 3 | 7.1 6.1 4.2 4.8
+6 | Level 019 - Boss Key 0 | 5 | 7.1 5.6 4.6 4.6
+21 | Level 046 - Chest | 6 | 5.1 3.9 4.0 4.2
+15 | Level 038 - Chest | 3 | 4.4 3.3 3.3 3.3
+4 | Level 036 - Chest | 4 | 2.7 1.8 1.9 1.8
+11 | Level 030 - Torchpickup | 3 | 2.6 2.7 1.7 1.8
+25 | Level 090 - Chest | 5 | 2.6 2.0 2.0 2.1
+22 | Level 048 - Chest | 3 | 1.9 1.2 1.1 1.2
+17 | Level 015 - Chest | 4 | 1.5 1.3 1.1 1.5
+20 | Level 040 - Totem Part 160,640 | 1 | 1.5 1.1 1.4 1.3
+1 | Level 010 - Sword | 10 | 1.5 1.5 1.4 1.4
+3 | Level 086 - Chest | 5 | 1.4 1.1 0.9 0.9
+8 | Level 020 - Shield | 2 | 0.9 0.6 0.6 0.6
+2 | Level 011 - Chest | 2 | 0.1 0.1 0.1 0.2

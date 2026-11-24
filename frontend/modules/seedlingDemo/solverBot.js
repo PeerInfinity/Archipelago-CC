@@ -3096,6 +3096,45 @@ export function withChaserPass(enabled, fn) {
 }
 
 /**
+ * ⛓ hammer-phase FACE 1 (`GOAL_START_WAIT`, OFF) — **A CLEAR-TAG GOAL WHOSE COMBAT LADDER IS EXHAUSTED IS ASKED AGAIN
+ * AFTER THE PLAYER IDLES WHERE THE GOAL BEGAN.**
+ *
+ * Every rung of the ladder asks its question NOW: the walk, the stance scan, the forecast all start on the tick the goal
+ * starts. A room whose bodies MOVE WITHOUT THE PLAYER (a patrolling body walks its own route whatever the player does)
+ * can refuse every rung at that tick and admit a hitless line a little later, when the patrol is elsewhere. No rung
+ * waits for that: TIME is a last-mile tool, and the stance scan's forecast waits only at the stance. MEASURED (seed 1,
+ * re-measure-6 A1 26:9, L40 flag 12): the ladder EXHAUSTS on all 91 arrival clocks of a period, and the same request
+ * with the arrival idled 50 ticks first solves hitless (`face1` report §3).
+ *
+ * ON: when the clear-tag goal refuses with the combat ladder EXHAUSTED (and no deadline has tripped), the segment is
+ * REWOUND to the goal's first tick (the B3 rewind, `rewind.to`), the player idles `waits[k]` ticks there (no keys), and
+ * the goal is asked again — over `waits` in order, the first that solves is kept. An idle that takes a hit, dies, or
+ * crosses a level edge is not asked further (no later wait is either: a longer idle contains it). The segment's per-goal
+ * state (trace rows, records, the walk logs, exemptions, the strategy bound) is cut back with the keys, so a kept retry
+ * reads as if it were the first ask. Every wait refused → the FIRST refusal is re-thrown, unchanged. A wait is only
+ * ever a prefix of no keys; the goal's own answer is the ladder's, so the no-hit rules are the same rules.
+ * Nothing reads a level, a coordinate or an enemy class. No rewind (no `forkRun`) → never asked.
+ * OFF: never asked. `SEEDLING_GOAL_START_WAIT=1` / `withGoalStartWait(enabled, fn)`. Worker thread (the solve).
+ */
+export const GOAL_START_WAIT = { enabled: globalThis.process?.env?.SEEDLING_GOAL_START_WAIT === '1',
+    /** The idles tried, in order (ticks). */
+    waits: [50, 100, 200, 400, 800] };
+export const GOAL_START_WAIT_DEFAULT = false;
+/** Per-run rows (ON only): one per ask, `{t, wait, ok, why}`. */
+export const GOAL_START_WAIT_COUNTS = { tries: [] };
+
+/** Run `fn` with `GOAL_START_WAIT` set to `enabled`, restoring the previous value. */
+export function withGoalStartWait(enabled, fn) {
+    return withSwitch(GOAL_START_WAIT, enabled, fn);
+}
+
+/** Is `e` the combat ladder's EXHAUSTED refusal (the one `GOAL_START_WAIT` re-asks)? */
+export function isLadderExhausted(e) {
+    return e instanceof SolverRefusal && typeof e.message === 'string'
+        && e.message.includes('the combat ladder is EXHAUSTED');
+}
+
+/**
  * ⛓ hammer-phase BAIT-REMOVED (`BAIT_TARGET_GONE`, OFF) — **A BAIT WHOSE BODY THE ROOM REMOVED DURING THE STANCE WALK IS
  * DONE, NOT REFUSED.** The bait arm's whole purpose is that the body leaves the world (the room's own kill region
  * removes it) so the corridor it blocked re-plans. The walk to the stance is an ordinary walk, and the body chases the
@@ -7189,7 +7228,14 @@ export function previewWalk(run, wps, tolerance = 0,
          * policy is asked with on each tick (`oppStrikeOffer`: the press kill offers only the bodies whose strike lands
          * clear of the spinners, in its preview exactly as in its drive). `null` (every other caller) changes nothing.
          */
-        strikeOffer = null } = {}) {
+        strikeOffer = null,
+        /**
+         * ⛓ hammer-phase STRIKECACHE (`STRIKE_PREVIEW_LEAN`) — an OPT-IN for a caller that reads a TRUNCATED walk's
+         * `truncated` and nothing else (`deriveStrike`'s `walkTo`): the spinner rows are taken at the walk's end and a
+         * truncated walk's are never taken; with no strike policy the forecasts are output only, so they too are stepped
+         * at the end and never for a truncated walk (`leanDeferrable`). `false` (every other caller) changes nothing.
+         */
+        lean = false } = {}) {
     const startTick = run.ticksCompleted;
     const step = run.previewStepper();
     // ⛓ fidelity L105 D1 (`previewBeamTowerDrift`, OFF: the options as before): each step is told its previewed tick,
@@ -7267,8 +7313,12 @@ export function previewWalk(run, wps, tolerance = 0,
      */
     let spinPrev = spinCursor ? new Map((run.entities('spinnerBodies') ?? []).map((b) => [b.id,
         { hitsTimer: b.hitsTimer ?? 0, destroy: b.destroy === true }])) : null;
+    // ⛓ STRIKECACHE (`lean`): each row's inputs, in order, until the walk's end (`spinRow` is output only: nothing in
+    // the walk reads `sample.spinners`, and the cursor is the walk's own)
+    let spinDeferred = lean && spinCursor ? [] : null;
     const spinRow = (sample, state) => {
         if (!spinCursor) return;
+        if (spinDeferred !== null) { spinDeferred.push([sample, state.x, state.y, spinPress]); return; }
         spinCursor.advance({ x: state.x, y: state.y }, spinPress);
         const i = spinCursor.rows.length - 1;
         const now = spinCursor.bodies[i];
@@ -7642,6 +7692,8 @@ export function previewWalk(run, wps, tolerance = 0,
             }
         }
     };
+    // ⛓ STRIKECACHE (`lean`): the transit's forecast inputs (`[sample, pre-move state]`), when they are output only
+    const deferred = lean && leanDeferrable(run, { strike, steer, stopWhen, stall, standFor, chasers }) ? [] : null;
     for (const wp of wps) {
         wpIndex += 1;
         let spent = 0;
@@ -7669,7 +7721,8 @@ export function previewWalk(run, wps, tolerance = 0,
             // the live tick does — `stepArrowTrapsNow` runs above `stepV2`.
             tick += 1;
             spent += 1;
-            const arrows = forecast ? forecast.step(st) : null;
+            // ⛓ STRIKECACHE (`lean`, `leanDeferrable`): the forecasts are output only here, so they step at the walk's end
+            const arrows = deferred === null && forecast ? forecast.step(st) : null;
             /**
              * ⛔⛔ THE SAMPLE IS THE PRE-MOVE BOX, PAIRED WITH THE ARROWS THAT
              * HAVE ALREADY MOVED — which is the game's own pairing and not a
@@ -7690,7 +7743,7 @@ export function previewWalk(run, wps, tolerance = 0,
             // the previous tick left. Sampling the post-move player against
             // the same bodies would test a pair that never meets, which is
             // the arrows' note verbatim and true here for the same reason.
-            const chaserBodies = chasers
+            const chaserBodies = deferred === null && chasers
                 ? chasers.step(st, { slashing: slashState?.slashing === true }) : null;
             // ⛓ R9 slice 12c′ — the sample carries WHICH LEG it belongs to, so a
             // caller can measure a corridor's own length rather than the whole
@@ -7698,13 +7751,14 @@ export function previewWalk(run, wps, tolerance = 0,
             // trap 587), and a bound nobody can evaluate per leg is a bound
             // nobody can respect.
             const sample = { x: st.x, y: st.y, tick, arrows, chasers: chaserBodies, wp: wpIndex };
+            if (deferred !== null) deferred.push([sample, st]);
             // ⛓ U15-swim D2: a spit updates before the player too (run-time
             // added, prepended), so it pairs with this PRE-move box.
-            if (spitForecast) {
+            else if (spitForecast) {
                 sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
             }
-            if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
-            if (corridorForecast) {
+            if (deferred === null && grenadeForecast) sample.grenades = grenadeForecast.step(st);
+            if (deferred === null && corridorForecast) {
                 sample.corridorBodies = corridorForecast.step(st, { slashing: slashState?.slashing === true });
             }
             samples.push(sample);
@@ -7805,6 +7859,11 @@ export function previewWalk(run, wps, tolerance = 0,
      * ⚠ A TRUNCATED WALK GETS NO TAIL. The player is not where the caller
      * thinks, so standing "there" would be standing somewhere else.
      */
+    // ⛓ STRIKECACHE (`lean`): a walk that arrived steps its deferred forecasts now, tick by tick in the transit's order
+    if (deferred !== null) {
+        if (!truncated) leanForecastReplay(deferred, { forecast, chasers, spitForecast, grenadeForecast, corridorForecast });
+        else STRIKE_PREVIEW_LEAN_COUNTS.forecastTicksSkipped += deferred.length;
+    }
     const tailHeld = !truncated && standFor > 0 && standKeys ? standKeys() : null;
     if (tailHeld) strikeArmed = false;
     if (!truncated && standFor > 0) {
@@ -7863,7 +7922,16 @@ export function previewWalk(run, wps, tolerance = 0,
         }
     }
     // ⛓ hammer-phase D1 — every sample is a previewed player state: the progress tile map's unit
+    // ⛓ STRIKECACHE (`lean`): a walk that arrived takes its spinner rows now, in order; a truncated one never does
+    if (spinDeferred !== null) {
+        const rows = spinDeferred;
+        spinDeferred = null;
+        if (!truncated) for (const [sm, x, y, press] of rows) { spinPress = press; spinRow(sm, { x, y }); }
+        else STRIKE_PREVIEW_LEAN_COUNTS.spinRowsSkipped += rows.length;
+    }
     if (activeProgress !== null) progressPreview(run, samples);
+    // ⛓ hammer-phase SPINNER880 — the preview meter's count (`PREVIEW_METER`, OFF ⇒ not reached)
+    if (PREVIEW_METER.enabled) meterPreviewStates(samples.length);
     return { samples, startTick, truncated, stood: standFor, plannedStruck };
 }
 
@@ -13229,6 +13297,7 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
         }
     }
     if (run.progress('primary') !== slots.indexOf(blade)) ctx.equip(slots.indexOf(blade));
+    const edge = resolved.edgeBait ? approachEdgePoint(run, t, stage, opts) : null; // ⛓ KT-ARRIVAL (null OFF)
     // 2. the tries, each on a fork
     const noWalk = () => { throw new SolverRefusal('a fork does not walk'); };
     const onSnap = (f) => {
@@ -13279,6 +13348,8 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
                         : 'crossed a door';
                 };
                 const aim = via ?? { x: side.x, y: side.y };
+                // ⛓ hammer-phase KT-ARRIVAL (a caller's `edgeBait` only): the try first stops at the range's edge
+                if (edge !== null && !walkOn([edge])) { count('edge-hit', hitWhy()); return null; }
                 const wps = planWaypointsOrNull(f.world, f.state, aim, null, solverPlanOpts(f, exempt));
                 // ⛔ every try of a route starts from the same staging state, so a route with no corridor has none at
                 // any wait: the route is done (measured: without this, L40 legs 860/861 spent their `crusher-fork`
@@ -13404,6 +13475,27 @@ function approachVolleyAnchor(f, id, aim, exempt) {
     }
     return null;
 }
+
+/**
+ * ⛓ hammer-phase KT-ARRIVAL — the approach's EDGE BAIT (asked only when a caller sets `resolved.edgeBait`): the point on
+ * the straight line from the staging point `stage` to the turret's own position (the origin `IceTurret.update`'s
+ * `FP.distance` measures from) that stands `TURRET_APPROACH_EDGE_DEPTH` px inside its attack range. Every try first stops
+ * there: the volley clock starts at the range's edge, where the player has just entered and nothing has fired, and the
+ * try's own route and waits run from that state (the stop is a timing knob the waits at the route's first waypoint, the
+ * kill stance, do not have: measured on L40's south arrival, every such wait was hit). null where the point is not
+ * plannable floor (the tries are OFF's).
+ */
+function approachEdgePoint(run, turret, stage, opts) {
+    const dx = turret.x - stage.x;
+    const dy = turret.y - stage.y;
+    const len = Math.hypot(dx, dy);
+    const along = len - (ICE_TURRET.attackRange - TURRET_APPROACH_EDGE_DEPTH);
+    if (!(along > 0)) return null;
+    const p = { x: Math.round(stage.x + (dx / len) * along), y: Math.round(stage.y + (dy / len) * along) };
+    return plannerObstacleAt(run.world, p.x, p.y, null, opts) === null ? p : null;
+}
+/** KT-ARRIVAL: the edge bait stands this far inside the turret's attack range, px (L40's south arrival; its prototype solved at 1, 4, 8 and 16). */
+const TURRET_APPROACH_EDGE_DEPTH = 4;
 
 /** The waits 0 … `TURRET_APPROACH_WAIT_MAX` from `anchor` outward, the earlier of a pair first; null = ascending (OFF's). */
 export function approachWaitOrder(anchor) {
@@ -14994,6 +15086,96 @@ function strikeScanBox(cells, floor, reach) {
     };
 }
 
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE STRIKECACHE — **WHAT A STRIKE PREVIEW'S READER NEVER READS IS NOT COMPUTED**
+ * (`STRIKE_PREVIEW_LEAN`, OFF).
+ *
+ * ⚖ The user approved "Cheaper deriveStrike" on 2026-11-23 (planner `seedling-hammer-phase-planning-14`), from
+ * SPINNER880's residue: the press kill re-derives its strike on every tick it holds none, and on L40 that is 93 % of
+ * the kill's CPU (`seedling-hammer-spinner880.md` §3.1). MEASURED (`seedling-hammer-strikecache.md` §3) on P1 19:1:
+ * 96 % of each derivation's walks repeat the tick before's (same cell, same start state — the player stands on its
+ * refuge), but only 4 % repeat it whole: the bodies move every tick, so no exact cross-tick memo hits. What repeats is
+ * the SHAPE: 58 % of the walks (82 % of the previewed states) are 400-tick `stalled` walks that move 19 ticks, then
+ * stand pinned against geometry for 381, stepping forecasts nobody reads — `walkTo` reads a truncated walk's
+ * `truncated` and nothing else.
+ *
+ * ON, `deriveStrike`'s `walkTo` asks `previewWalk` with `lean: true`, which changes two things, each exact for every
+ * reader `walkTo` has (a walk that arrived is the same walk, sample for sample; a truncated one the same `truncated`):
+ *   · the spinner rows (`spinRow`, the fight cursor — output only) are taken at the walk's end, in order, and never for
+ *     a truncated walk;
+ *   · with no strike policy (the OPP fallback's redo, and any press kill with `OPPORTUNISTIC_STRIKE` off) the
+ *     forecasts — arrows, chasers, spits, grenades, corridor bodies — are output only too (`leanDeferrable`), so the
+ *     transit steps the player alone and they are stepped at the end over the same pre-move states
+ *     (`leanForecastReplay`), and never for a truncated walk.
+ * With a strike policy the chasers' bodies are the policy's input, so those forecasts step as before.
+ * OFF: `walkTo` asks exactly as before, byte-identical.
+ *
+ * ⛓ THE SWITCH: `SEEDLING_STRIKE_PREVIEW_LEAN=1` in a node process (or the page's
+ * `?seedlingSolverEnv=SEEDLING_STRIKE_PREVIEW_LEAN=1`), `withStrikePreviewLean(enabled, fn)` for a row or a witness.
+ * It runs where `deriveStrike` runs (the solve worker, and node); no main-thread mapper reads it.
+ */
+export const STRIKE_PREVIEW_LEAN = {
+    enabled: globalThis.process?.env?.SEEDLING_STRIKE_PREVIEW_LEAN === '1',
+};
+export const STRIKE_PREVIEW_LEAN_DEFAULT = false;
+
+/** Run `fn` with `STRIKE_PREVIEW_LEAN` set to `enabled`, restoring the previous value. */
+export function withStrikePreviewLean(enabled, fn) {
+    return withSwitch(STRIKE_PREVIEW_LEAN, enabled, fn);
+}
+
+/** The switch's instrument: the forecast ticks and spinner rows a truncated walk never took, and the walks replayed. */
+export const STRIKE_PREVIEW_LEAN_COUNTS = { forecastTicksSkipped: 0, forecastReplays: 0, spinRowsSkipped: 0 };
+export function resetStrikePreviewLeanCounts() {
+    for (const k of Object.keys(STRIKE_PREVIEW_LEAN_COUNTS)) STRIKE_PREVIEW_LEAN_COUNTS[k] = 0;
+}
+
+/**
+ * ⛓ STRIKECACHE — the walks `deriveStrike` previews, as a sink (`{run, bodyId, cell, armed, strikeFor, out}` per walk
+ * it computed, the run not yet advanced past it): an INSTRUMENT for the report's census and the exactness rows, `null`
+ * (nothing asked) unless a tool sets it.
+ */
+export const STRIKE_WALK_TRACE = { sink: null };
+
+/**
+ * ⛓ STRIKECACHE — MAY THIS WALK STEP ITS FORECASTS AT ITS END? Only where nothing in the walk reads them and nothing
+ * they could do would end the walk another way:
+ *   · no strike policy: its keys read the chasers' bodies, its swing hits them and the corridor bodies; without it the
+ *     transit's keys are `chooseHeld`'s and the step the stepper's, functions of the player's state alone, and the
+ *     forecasts' outputs ride the samples and nothing else;
+ *   · no steer, no early stop (`stopWhen` reads a sample as it is taken), no stall inside the walk and no standing tail
+ *     (both step the same forecasts mid-walk);
+ *   · and no throw skipped: the forecasts throw at construction (before the walk, unchanged) or on a malformed body
+ *     (which the live run steps every tick), except the chaser forecast's `onScreenAt`, which throws only inside a
+ *     camera BAND — and a band opens only from a shake. So with chasers the camera must be exact now: `run.shake` 0 and
+ *     no `run.cameraNow.band`.
+ */
+function leanDeferrable(run, { strike, steer, stopWhen, stall, standFor, chasers }) {
+    if (strike || steer !== null || stopWhen !== null || stall !== null || standFor > 0) return false;
+    if (chasers && (run.shake !== 0 || (run.cameraNow?.band ?? null) !== null)) return false;
+    return true;
+}
+
+/**
+ * ⛓ STRIKECACHE — THE DEFERRED FORECASTS, STEPPED: one tick per `[sample, state]` in the transit's order, each
+ * forecast with the pre-move state the transit would have handed it (`slashing` false: no strike policy, no slash
+ * state), and each sample rebuilt in the transit's key order (`arrows`, `chasers`, then `spits`, `grenades`,
+ * `corridorBodies`, then `held`) so it is the transit's sample byte for byte.
+ */
+function leanForecastReplay(deferred, { forecast, chasers, spitForecast, grenadeForecast, corridorForecast }) {
+    STRIKE_PREVIEW_LEAN_COUNTS.forecastReplays += 1;
+    for (const [sample, st] of deferred) {
+        sample.arrows = forecast ? forecast.step(st) : null;
+        sample.chasers = chasers ? chasers.step(st, { slashing: false }) : null;
+        const { held } = sample;
+        delete sample.held;
+        if (spitForecast) sample.spits = spitForecast.step(st, { slashing: false });
+        if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
+        if (corridorForecast) sample.corridorBodies = corridorForecast.step(st, { slashing: false });
+        sample.held = held;
+    }
+}
+
 /** ⛓ hammer-phase P1: exported for `pressKillCost.test.js` (one derivation, ON against OFF). */
 export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = false, strikeFor = null } = {}) {
     const index = (run.entities('spinnerBodies') ?? []).findIndex((b) => b.id === bodyId);
@@ -15098,9 +15280,13 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         try {
             // ⛓ hammer-phase OPP: with `strikeFor` (the press kill under `OPPORTUNISTIC_STRIKE`) the walk strikes as the drive does
             const armed = strikeFor !== null ? strikeFor() : null;
+            // ⛓ hammer-phase STRIKECACHE (`STRIKE_PREVIEW_LEAN`, OFF ⇒ the two calls as before): a truncated walk is read
+            // as `truncated` only, so the preview defers what only an arrived walk's reader reads
+            const lean = STRIKE_PREVIEW_LEAN.enabled ? { lean: true } : null;
             walk = armed !== null
-                ? previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE, armed)
-                : previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE);
+                ? previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE, lean ? { ...armed, ...lean } : armed)
+                : (lean ? previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE, lean)
+                    : previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE));
             // ⛓ the certifying walk's own strikes (aim and press rows), carried on the strike it certifies
             if (armed?.strike) walk.previewStrikes = oppStrikeRows(armed.strike);
         } catch (e) {
@@ -15134,6 +15320,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         }
         const out = { walk, eta: walk.samples.length, unsafe };
         walks.set(cell, out);
+        STRIKE_WALK_TRACE.sink?.({ run, bodyId, cell, armed: strikeFor !== null, strikeFor, out });
         return out;
     };
     /**
@@ -18140,6 +18327,49 @@ export function resetKeylockTurretCounts() {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE KT-ARRIVAL — **THE STANCE WAS DERIVED, AND THE TURRET IS STILL ALIVE ON THE WALK TO IT**
+ * (`KEYLOCK_TURRET_ARRIVAL`, OFF).
+ *
+ * ⚖ The user (2026-11-23/24), asked how they passed a boss lock inside an ice turret's range: *"Kill the ice turret
+ * first"*. `KEYLOCK_TURRET` does that only where `deriveKeylockStance` finds 0 cells (the disc removes them all). When
+ * the frontier's own `brave` row has already put the turret's disc in the walk's contacts, the cells are NOT empty:
+ * the arm derives the stance with the turret alive, and the frontier's stance walk meets the live turret's BODY. The
+ * general walker's ladder then refuses (`the combat ladder is EXHAUSTED`: avoid has no corridor past the body, and the
+ * kill rung refuses a static Enemy body's arrow death by name, §11.4). Measured on the whole-game walk's L40 arrival
+ * from the south (re-measure-7's A1 29:11): the walk refuses at t100 with no tick of its own spent, and the keylock
+ * arm's turret kill is never reached.
+ *
+ * ON (`keylockTurretArrival`), when a keylock's stance walk refuses that way with NO tick spent, the refusal's danger
+ * names only live ice turrets, and the stance is inside each one's disc (the arm's own question: its proximity hazard
+ * removes the stance cell with the disc not exempt), the walk becomes `KEYLOCK_TURRET`'s prerequisite: each turret
+ * killed by `keylockTurretFirst` (APPROACH's fork-certified search, `approachKillForCorpse`, under `requireVerb`), its
+ * death read back, then the stance walk with the discs exempt. The executor then leans and holds as before. Any other
+ * refusal is thrown as it was. The kill's own refusal (no hitless try) propagates by name.
+ *
+ * OFF by default. `SEEDLING_KEYLOCK_TURRET_ARRIVAL=1` turns it on in a node process (the page's WORKER reads it
+ * through the solver env channel: the decision is on the worker thread, inside the frontier loop), and
+ * `withKeylockTurretArrival(enabled, fn)` is for a test or a witness. OFF, nothing below is asked: byte-identical.
+ */
+export const KEYLOCK_TURRET_ARRIVAL = { enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET_ARRIVAL === '1' };
+export const KEYLOCK_TURRET_ARRIVAL_DEFAULT = false;
+
+/** Run `fn` with `KEYLOCK_TURRET_ARRIVAL` set to `enabled`, restoring the previous value. */
+export function withKeylockTurretArrival(enabled, fn) {
+    return withSwitch(KEYLOCK_TURRET_ARRIVAL, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only ON and read by nothing that decides: `asked` each stance-walk refusal the arm
+ * took over (`{lock, t, turrets, stance}`). The kills themselves are `KEYLOCK_TURRET_COUNTS.kills` (the same arm).
+ */
+export const KEYLOCK_TURRET_ARRIVAL_COUNTS = { asked: [] };
+
+/** Zero `KEYLOCK_TURRET_ARRIVAL_COUNTS`. */
+export function resetKeylockTurretArrivalCounts() {
+    Object.assign(KEYLOCK_TURRET_ARRIVAL_COUNTS, { asked: [] });
+}
+
+/**
  * `FIFTH_ORDER` (OFF): the strategy bound admits a FIFTH application when the four before it are distinct and it is
  * a fifth distinct one (`fifthOrderAdmits`); a repeat is still bounded at four, and nothing is admitted past five.
  * ⚖ The bound is named rather than generous (`MAX_STRATEGIES_PER_GOAL`), so the fifth is its own switch, argued from
@@ -21025,11 +21255,127 @@ function preLockStance(run, lock, contacts) {
  * success is byte-identical. With no rewind (or `mode: 'whole'`) the refusal goes out un-retried and the caller that
  * can build a fresh run re-solves the whole segment instead (`twoPassSolve`, `procgenOracle.solve`).
  */
+/**
+ * ⛓ hammer-phase KILL880 (`PRESS_KILL_HOLD`, OFF) — **A PRESS KILL CORNERED ON ITS WAY OUT OF A STAND IS REDONE AFTER A
+ * LONGER STAND.**
+ *
+ * The HAMMER-PHASE rung (F1c) holds the kill's approach walk only near the corner it previews (walk-offsets `c − 1 … 0`,
+ * holds of `1 … maxTicks`, one hammer period), and only while a walk is in flight. A body that PATROLS toward the stand
+ * the player just left is a corner that the walk meets head-on a few ticks out, with no offset left to hold at, so the
+ * rung tries nothing and `safeStep` refuses *"There is no step out"* (`HAMMER_SAFETY`). MEASURED (seed 1, re-measure-6
+ * P1 19:1, L40 Chest; `kill880` report §3): the kill stands still t545–635 after its first press, walks down the
+ * one-tile shaft from t636 toward its (knocked-back) target and meets the other patrolling body's hammer at t654.
+ * The same line held 100 ticks longer where it stood, then asked again, solves with 0 hits.
+ *
+ * ON (a segment that can rewind, no deadline tripped): when the press kill refuses `HAMMER_SAFETY` — after every
+ * fallback already inside it (`OPP_PRESS_FALLBACK`, `HAMMER_FIGHT_FALLBACK`) — the kill's LAST STAND is found on its own
+ * keys (the last tick in `[kill start, refusal)` with no key held; the stand ends on the tick after it). If the walk out
+ * of it is what refused (the stand ended before the refusal), the segment is REWOUND to the stand's end, the player
+ * idles `k × HAMMER_PHASE_RUNG.horizon` more ticks there (`k` = 1 … `maxPeriods`: whole hammer periods, so the line's
+ * phase at the walk's restart is the phase the stand ended on, and only the bodies' patrol has moved), and the kill is
+ * admitted again on the held run (`derivePressKill`, from the admission's own inputs) and redone. The first redo that
+ * kills with no player hit since the rewind is kept. An idle tick that is hit, dies or crosses a door ends the search
+ * (a longer idle contains it); a redo that refuses or is hit is UNDONE. All refused → the original refusal is thrown,
+ * plus one sentence. Nothing reads a level, a coordinate or an entity id. OFF: never asked.
+ * `SEEDLING_PRESS_KILL_HOLD=1` / `withPressKillHold(enabled, fn)`. Worker thread (the solve).
+ */
+export const PRESS_KILL_HOLD = { enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_HOLD === '1',
+    /** The idles tried at the stand, in whole hammer periods: 1 … maxPeriods. */
+    maxPeriods: 4 };
+export const PRESS_KILL_HOLD_DEFAULT = false;
+/** Per-run rows (ON only): one per refusal answered, `{t, stand, refusedAt, tries: [{wait, verdict, why}], verdict}`. */
+export const PRESS_KILL_HOLD_COUNTS = { rows: [] };
+
+/** Run `fn` with `PRESS_KILL_HOLD` set to `enabled`, restoring the previous value. */
+export function withPressKillHold(enabled, fn) {
+    return withSwitch(PRESS_KILL_HOLD, enabled, fn);
+}
+
+/** The tick a kill's last stand ends on (its last no-key tick in `[from, keys.length)`, plus one), or null. */
+export function lastStandEnd(keys, from) {
+    for (let i = keys.length - 1; i >= from; i -= 1) if (keys[i].size === 0) return i + 1;
+    return null;
+}
+
+/** `PRESS_KILL_HOLD`'s retry around the press kill's own dispatch (see the switch). */
+function execKillByPressHold(run, perTick, resolved, ctx, dispatch) {
+    const t0 = perTick.length;
+    try {
+        return dispatch(run, resolved);
+    } catch (e) {
+        if (!(e instanceof SolverBotError) || e.code !== HAMMER_SAFETY || activeDeadline?.first) throw e;
+        const stand = lastStandEnd(perTick, t0);
+        const row = { t: t0, stand, refusedAt: perTick.length, tries: [], verdict: 'refused' };
+        PRESS_KILL_HOLD_COUNTS.rows.push(row);
+        if (stand === null || stand >= perTick.length) {
+            row.why = stand === null ? 'the kill never stood' : 'the refusal is on the stand itself';
+            throw e;
+        }
+        const admission = PRESS_ADMISSIONS.get(resolved.plans) ?? null;
+        for (let k = 1; k <= PRESS_KILL_HOLD.maxPeriods; k += 1) {
+            if (activeDeadline?.first) break;
+            const wait = k * HAMMER_PHASE_RUNG.horizon;
+            const { run: fresh, undo } = ctx.rewind.to(stand);
+            const clock0 = fresh.ticksCompleted;
+            const h0 = (fresh.ledger('playerHits') ?? []).length;
+            const d0 = (fresh.ledger('playerDeaths') ?? []).length;
+            let idleWhy = null;
+            for (let i = 0; i < wait && idleWhy === null; i += 1) {
+                perTick.push(NO_HELD_PREVIEW);
+                if (fresh.advance(NO_HELD_PREVIEW).transition) idleWhy = 'the idle crossed a door';
+                else if ((fresh.ledger('playerHits') ?? []).length > h0
+                    || (fresh.ledger('playerDeaths') ?? []).length > d0) idleWhy = `the idle is hit at its tick ${i + 1}`;
+            }
+            if (idleWhy !== null) {
+                undo();
+                row.tries.push({ wait, verdict: 'idle', why: idleWhy });
+                break;
+            }
+            try {
+                const press = admission === null ? null : derivePressKill(fresh, admission.bodies, admission.contacts);
+                const again = press?.first ? { ...resolved, first: press.first, plans: press.plans } : resolved;
+                const record = dispatch(fresh, again);
+                const hits = playerHitsSince(ctx.rewind.replay(perTick.length), clock0);
+                if (hits.length > 0) {
+                    undo();
+                    row.tries.push({ wait, verdict: 'hit', why: `the redo killed with ${hits.length} player hit(s)` });
+                    continue;
+                }
+                row.tries.push({ wait, verdict: 'solved', why: null });
+                row.verdict = 'solved';
+                ctx.rewind.note({ ...row, how: 'press-kill-hold' });
+                return { ...record, pressKillHold: row };
+            } catch (e2) {
+                if (e2 instanceof PendingDeclaration || e2?.undeclaredKillLock) {
+                    row.tries.push({ wait, verdict: 'solved', why: e2?.undeclaredKillLock ? 'undeclaredKillLock' : e2.name });
+                    row.verdict = 'solved';
+                    ctx.rewind.note({ ...row, how: 'press-kill-hold' });
+                    throw e2;
+                }
+                undo();
+                if (!(e2 instanceof SolverBotError) && !(e2 instanceof SolverRefusal)) throw e2;
+                row.tries.push({ wait, verdict: 'refused', why: String(e2?.message ?? e2).split('\n')[0].slice(0, 200) });
+            }
+        }
+        const out = new SolverBotError(`${e.message} The stand hold (\`PRESS_KILL_HOLD\`) rewound to the kill's last `
+            + `stand (t${stand}) and idled ${row.tries.map((x) => `${x.wait} (${x.verdict})`).join(', ') || 'nothing'}; `
+            + 'no redo killed hitless.', { code: e.code, boundTicks: e.boundTicks });
+        for (const k of ['fightFallback', 'oppPressFallback']) if (e[k]) out[k] = e[k];
+        out.pressKillHold = row;
+        throw out;
+    }
+}
+
 function execKillByPress(run, perTick, resolved, ctx) {
     // ⛓ the exactness gate's kill-start probe (`REWIND_PROBE`): read only, inert unless a sink is set
     if (REWIND_PROBE.sink !== null && ctx.rewind) {
         const t = perTick.length;
         REWIND_PROBE.sink({ t, kind: 'kill-start', live: run, rewound: () => ctx.rewind.replay(t) });
+    }
+    // ⛓ hammer-phase KILL880 (`PRESS_KILL_HOLD`, OFF): the dispatch below, retried after a longer stand
+    if (PRESS_KILL_HOLD.enabled && ctx.rewind) {
+        return execKillByPressHold(run, perTick, resolved, ctx, (r, res) => (OPP_PRESS_FALLBACK.enabled
+            && OPPORTUNISTIC_STRIKE.enabled ? execKillByPressOppFallback : execKillByPressFightFallback)(r, perTick, res, ctx));
     }
     // ⛓ hammer-phase L40-FLIP-BUILD (`OPP_PRESS_FALLBACK`): OPP's refused kill redone once with OPP off (`oppPressFallback.js`)
     if (OPP_PRESS_FALLBACK.enabled && OPPORTUNISTIC_STRIKE.enabled && ctx.rewind) {
@@ -23186,7 +23532,8 @@ function keylockTurretFirst(run, perTick, resolved, ctx) {
         const dir = Math.abs(dy) >= Math.abs(dx) ? { dx: 0, dy: Math.sign(dy) || -1 } : { dx: Math.sign(dx), dy: 0 };
         let record;
         try {
-            record = approachKillForCorpse(run, perTick, { corpse: { turret: id, dir }, exempt }, { walkTo: ctx.walkTo,
+            record = approachKillForCorpse(run, perTick, { corpse: { turret: id, dir }, exempt,
+                ...(resolved.turretFirst.edgeBait ? { edgeBait: true } : {}) }, { walkTo: ctx.walkTo,
                 goal: ctx.goal, equip: ctx.equip, fork: ctx.fork, what: `${ctx.what} -> kill (${id})` });
         } catch (e) {
             KEYLOCK_TURRET_COUNTS.kills.push({ lock: resolved.lock, turret: id, t: from, dead: false,
@@ -23206,6 +23553,42 @@ function keylockTurretFirst(run, perTick, resolved, ctx) {
             ...(KEYLOCK_WAIT_PRICED.enabled && lockRow?.keyLine ? keylockStandWalk(run, resolved) : {}),
         });
     }
+}
+
+/**
+ * ⛓ hammer-phase KT-ARRIVAL (`KEYLOCK_TURRET_ARRIVAL` ON) — the frontier's keylock stance walk refused (`error`) with
+ * no tick spent since `from`: when the refusal is the general walker's exhausted ladder, its danger names only LIVE ice
+ * turrets of this room, and the stance is inside each one's disc, run `keylockTurretFirst` (the turrets killed by the
+ * arm's existing kill path, then the stance walk with their discs exempt) and answer `true`. Anything else answers
+ * `false` and the caller throws the refusal as it was.
+ */
+function keylockTurretArrival(run, perTick, plan, error, from, contacts, ctx) {
+    const resolved = plan.resolved;
+    if (plan.strategy !== 'keylock' || !resolved?.stance || resolved.turretFirst || perTick.length !== from) return false;
+    if (!(error instanceof SolverRefusal) || !String(error.message).includes('the combat ladder is EXHAUSTED')) return false;
+    const ob = error.obstacle;
+    if (ob?.kind !== 'danger') return false;
+    const named = [...new Set((ob.sources ?? [`?:${ob.id}`]).map((s) => s.slice(s.indexOf(':') + 1)))];
+    const iceTurrets = new Set(run.world.iceTurrets?.map((t) => t.id) ?? []);
+    const live = named.filter((id) => {
+        const t = iceTurrets.has(id) ? run.entities('turrets')?.get?.(id) ?? null : null;
+        return t !== null && !t.dead && !t.removed;
+    });
+    if (live.length === 0 || live.length !== named.length) return false;
+    // The stance is inside each turret's disc: with that disc NOT exempt, its proximity hazard removes the stance cell.
+    const inDisc = (id) => {
+        const without = new Set([...contacts].filter((c) => c !== `proximity-hazard:${id}`));
+        const h = plannerObstacleAt(run.world, resolved.stance.x, resolved.stance.y, null,
+            solverPlanOpts(run, without, { nodeMargin: 0, triggerMargin: 0 }));
+        return h?.kind === 'proximity-hazard' && h.blocker && `${h.blocker.tag}@${h.blocker.x},${h.blocker.y}` === id;
+    };
+    if (!live.every(inDisc)) return false;
+    const exempt = new Set([...contacts, ...live.map((id) => `proximity-hazard:${id}`)]);
+    KEYLOCK_TURRET_ARRIVAL_COUNTS.asked.push({ lock: resolved.lock, t: run.ticksCompleted, turrets: live,
+        stance: { ...resolved.stance } });
+    keylockTurretFirst(run, perTick, { ...resolved,
+        turretFirst: { kill: live, stance: resolved.stance, exempt, edgeBait: true } }, ctx);
+    return true;
 }
 
 /**
@@ -28878,6 +29261,67 @@ export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
 export const WALK_CHECK_TICKS = 32;
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE SPINNER880 — **THE PREVIEW METER: PREVIEWED STATES ARE WORK** (`PREVIEW_METER`, OFF;
+ * `SEEDLING_PREVIEW_METER=1`). ⚖ The user, 2026-11-23: *"One slice for both (Recommended)"* — the L40 corner and why
+ * its solves burn wall time without spending work.
+ *
+ * ⛔ WHAT IT FIXES, MEASURED (`profile-seedling-solve-wall.mjs`, `CC/docs/cloud-reports/seedling-hammer-spinner880.md`):
+ * a work unit is one `shouldStop` ask, and a segment's drive asks the `walk` site once every `WALK_CHECK_TICKS` ticks.
+ * The press kill re-derives its strike EVERY driven tick (`deriveStrike`, whose per-cell `previewWalk`s are the cost),
+ * so on a busy room one walk unit stood for 10–23 s of node wall: whole-game P1 19:1 spent 98 % of its 182 s in 16 such
+ * gaps (work 112), P1 26:11 97 % of its 904 s in 48 (work 642: a 640 cut the page's 300 s backstop kills first). In
+ * both, 93 % of the kill's samples are `deriveStrike` → `previewWalk`: 917 k and 9.95 M previewed states, unmetered.
+ *
+ * ⇒ ON, every state `previewWalk` samples under a FINE deadline (`fineCheckpoints`) is counted on that deadline, and
+ * the drive's `walk` site is asked once more for every `statesPerUnit` of them (`previewUnitDue`): the budget and the
+ * held retry see the preview's wall, and a trip refuses by name exactly as the walk site's own trip does. No deadline,
+ * or one that did not opt into fine checkpoints ⇒ nothing is counted and nothing is asked. A count, never the clock.
+ *
+ * `statesPerUnit` = 1024: a previewed state is one player step (~0.07–0.12 ms on the 4-core cloud box, measured on the
+ * two requests above), and a walk unit is `WALK_CHECK_TICKS` driven ticks at ~2–3 ms each on L40 (the constant's own
+ * note), so ~1024 previewed states cost about one walk unit's wall. A row may set it.
+ */
+export const PREVIEW_METER = { enabled: globalThis.process?.env?.SEEDLING_PREVIEW_METER === '1', statesPerUnit: 1024 };
+export const PREVIEW_METER_DEFAULT = false;
+
+/** The meter's instrument: states counted, units asked, and the asks that tripped. */
+export const PREVIEW_METER_COUNTS = { states: 0, asked: 0, tripped: 0 };
+
+/** Run `fn` with `PREVIEW_METER` set to `enabled`, restoring the previous value (also on a throw). */
+export function withPreviewMeter(enabled, fn) {
+    const was = PREVIEW_METER.enabled;
+    PREVIEW_METER.enabled = enabled === true;
+    try { return fn(); } finally { PREVIEW_METER.enabled = was; }
+}
+
+/** ⛓ PREVIEW_METER — `n` previewed states, counted on the active FINE deadline (none ⇒ nothing). */
+function meterPreviewStates(n) {
+    const d = activeDeadline;
+    if (d === null || d.fine !== true) return;
+    d.previewStates = (d.previewStates ?? 0) + n;
+    PREVIEW_METER_COUNTS.states += n;
+}
+
+/**
+ * ⛓ PREVIEW_METER — the drive's extra `walk` asks: one per `statesPerUnit` previewed states not yet charged. `true`
+ * when an ask tripped (the caller refuses by name, as the walk site's own trip does).
+ */
+function previewUnitDue() {
+    const d = activeDeadline;
+    if (d === null || d.fine !== true) return false;
+    const k = PREVIEW_METER.statesPerUnit;
+    while ((d.previewStates ?? 0) - (d.previewCharged ?? 0) >= k) {
+        d.previewCharged = (d.previewCharged ?? 0) + k;
+        PREVIEW_METER_COUNTS.asked += 1;
+        if (fineDeadlineReached('walk')) {
+            PREVIEW_METER_COUNTS.tripped += 1;
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
  * ⛓⛓ SEEDLING FIDELITY BOBSOLDIER2, D3 — **THE FORK'S REPLAY, ON THE RUN'S OWN CLOCK** (`solveSegment`'s `fork`).
  *
  * A fork is `perTick` (the prefix and every tick this segment drove) replayed onto a fresh run, with the
@@ -29496,6 +29940,11 @@ function solveSegmentUnder({
             if ((activeDeadline !== null || activeProgress !== null) && tapeTick > prefix.length
                 && (tapeTick - prefix.length) % WALK_CHECK_TICKS === 0 && fineDeadlineReached('walk')) {
                 refuseWalkDeadline(`after ${tapeTick - prefix.length} tick(s) of the segment's drive`);
+            }
+            // ⛓ hammer-phase SPINNER880 — the previews' share of the work clock (`PREVIEW_METER`, OFF ⇒ not reached)
+            if (PREVIEW_METER.enabled && tapeTick > prefix.length && previewUnitDue()) {
+                refuseWalkDeadline(`after ${tapeTick - prefix.length} tick(s) of the segment's drive, on the `
+                    + `previewed states the drive spent (PREVIEW_METER: one ask per ${PREVIEW_METER.statesPerUnit})`);
             }
             const deaths0 = DRIVE_DEATH_REFUSED.enabled ? inner.ledger('playerDeaths').length : 0;
             const out = advanceNamingRefusals(inner, held); // ⛓ housekeep D1: a coded throw named on its way out
@@ -34397,6 +34846,7 @@ function solveSegmentUnder({
                         // see a re-entry (`STANCE_REENTRY`, above).
                         const walking = `${plan.strategy}(${plan.obstacle.id})#${perTick.length}`;
                         stanceWalks.add(walking);
+                        const stanceFrom = perTick.length; // ⛓ KT-ARRIVAL: a refusal with no tick spent
                         try {
                             walkTo(goal, plan.resolved.stance, {
                                 what: `${what} -> ${plan.strategy} stance `
@@ -34418,6 +34868,10 @@ function solveSegmentUnder({
                                 // walk is undashed. `shield` exists only while `crusherBaitPressGoal` is ON.
                                 ...(plan.strategy === 'bait' && plan.resolved.shield ? { undashed: true } : {}),
                             });
+                        } catch (e) {
+                            // ⛓ hammer-phase KT-ARRIVAL (`KEYLOCK_TURRET_ARRIVAL`, OFF): the turret the arm kills dies first
+                            if (!(KEYLOCK_TURRET_ARRIVAL.enabled && keylockTurretArrival(run, perTick, plan, e, stanceFrom,
+                                contacts, { walkTo, goal, equip, fork, what: `${what} -> ${plan.strategy}` }))) throw e;
                         } finally {
                             stanceWalks.delete(walking);
                         }
@@ -35948,6 +36402,65 @@ function solveSegmentUnder({
             ...(drillPass ? { drillPass } : {}) });
     };
 
+    /**
+     * ⛓ hammer-phase FACE 1 (`GOAL_START_WAIT`, OFF) — `execClearTag`, re-asked after an idle at the goal's first
+     * tick when its combat ladder EXHAUSTS (see the switch). The per-goal state is cut back with the rewind.
+     */
+    const execClearTagWaiting = (goal) => {
+        const t0 = perTick.length;
+        const logs = [rows, records, grazes, dangerQueries, hypothesisLedger, dashWalks, fineLatticeWalks, phaseDriveLeft,
+            lapseNarrowWalks, forcedHits, rewinds];
+        const lengths = logs.map((a) => a.length);
+        const sets = [[exemptions, new Set(exemptions)], [refusedOrders, new Set(refusedOrders)]];
+        // the progress frames the refused ask left open (an exception unwound past them) are closed with its reason
+        const seg = activeProgress?.seg ?? null;
+        const depth = seg?.stack?.length ?? 0;
+        let first = null;
+        try {
+            execClearTag(goal);
+            return;
+        } catch (e) {
+            if (!isLadderExhausted(e) || rewind === null || activeDeadline?.first) throw e;
+            first = e;
+        }
+        for (const wait of GOAL_START_WAIT.waits) {
+            if (activeDeadline?.first) break;
+            if (seg !== null && seg === (activeProgress?.seg ?? null) && seg.stack.length > depth) {
+                progressLeave(seg.stack[depth], first);
+            }
+            rewind.to(t0);
+            logs.forEach((a, i) => { a.length = lengths[i]; });
+            for (const [set, was] of sets) { set.clear(); for (const v of was) set.add(v); }
+            applied = [];
+            openerChain = [];
+            goalPlanExtra = {};
+            goalRides = new Set();
+            const h0 = (run.ledger('playerHits') ?? []).length;
+            const d0 = (run.ledger('playerDeaths') ?? []).length;
+            let idleWhy = null;
+            for (let i = 0; i < wait && idleWhy === null; i += 1) {
+                perTick.push(NO_HELD_PREVIEW);
+                const { transition } = run.advance(NO_HELD_PREVIEW);
+                if (transition) idleWhy = `the idle crossed to level ${transition.to_level}`;
+                else if ((run.ledger('playerHits') ?? []).length > h0
+                    || (run.ledger('playerDeaths') ?? []).length > d0) idleWhy = `the idle is hit at its tick ${i + 1}`;
+            }
+            if (idleWhy !== null) {
+                GOAL_START_WAIT_COUNTS.tries.push({ t: t0, wait, ok: false, why: idleWhy });
+                break;
+            }
+            try {
+                execClearTag(goal);
+                GOAL_START_WAIT_COUNTS.tries.push({ t: t0, wait, ok: true, why: null });
+                return;
+            } catch (e) {
+                GOAL_START_WAIT_COUNTS.tries.push({ t: t0, wait, ok: false, why: String(e?.message ?? e).slice(0, 200) });
+                if (!(e instanceof SolverRefusal)) throw e;
+            }
+        }
+        throw first;
+    };
+
     // ── the goals, in order ───────────────────────────────────────────
     let dropKillGoal = 0;
     for (const goal of goals) {
@@ -36163,7 +36676,8 @@ function solveSegmentUnder({
             continue;
         }
         if (goal.kind === 'clear-tag') {
-            execClearTag(goal);
+            if (GOAL_START_WAIT.enabled) execClearTagWaiting(goal);
+            else execClearTag(goal);
             continue;
         }
         if (goal.kind === 'encounter') {

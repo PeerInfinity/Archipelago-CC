@@ -96,7 +96,9 @@ import { drawMazeTileKinds } from './mazeTileKindOverlay.js';
 import { placedTileKindDrift, placedTileKindRefusals } from './mazeTileKinds.js';
 import { drawMazeThings, mazeThingLines, thingAt } from './mazeThingOverlay.js';
 import { browserDecoder, browserRasteriser } from '../artLibrary/artLibrary.js';
-import { browserPackIo, documentContentOf, effectiveContentStack } from '../procgenPipeline/worldContent.js';
+import {
+    RECORDED_EXISTS_KEY, browserPackIo, documentContentOf, documentWorldSettingsOf, effectiveContentStack,
+} from '../procgenPipeline/worldContent.js';
 /**
  * ⛓ DEDUP M6 — the ONE pixel→tile conversion, DOM-free and unit-tested. The
  * lab page's canvas has used it since editor v3; the panel divided by the
@@ -642,6 +644,36 @@ export class MazeRoomUI {
     }
 
     /**
+     * ⛓ CONTENT SETS GEN-2 — **A NEW DOCUMENT WITHOUT THE PANEL'S ROOM UNBINDS THAT ROOM.** In playback the panel (and
+     * its playthrough visualizer) stay bound to the region `_adoptLoadedRegion` gave them until another region is
+     * adopted. A document that has no sidecar for that region (a plain preset: Adventure) adopts none, so the old
+     * room stayed bound, and the Playback Bot — whose controller for a non-procgen preset is the maze's whenever the
+     * panel is mounted — walked the NEW world's targets on the OLD room: tiles resolved by name in it, its `reset`
+     * (the visualizer's `freshStart()`) re-armed its playthrough and `instant` played it, publishing
+     * `system:locationCheck` for the old room's locations into the new world. Measured: `playback-bot-tile-kinds-demo`
+     * (top-down over Adventure: its rooms carry Adventure's region and location names) then `playback-bot-walk-order`
+     * (plain Adventure) — Chalice Home checked behind the bot's back, its own last check never sent, and every walk
+     * order STUCK. Unbinding returns the panel to its state before any region was adopted (no world, no region: what
+     * walk-order meets on main), where a walk the maze cannot take falls to the bot's direct play. A document that
+     * still has the region (a reload of the same world, the APWorld editor's regenerate) keeps it, and a standalone
+     * world (no region) is never touched.
+     */
+    _unbindStaleRegion(rulesJson, player) {
+        const region = this.currentRegionId ?? this._visualizer?.regionId ?? null;
+        if (!region) return;
+        if (rulesJson?.preset_sidecars?.[String(player ?? '1')]?.[region]) return;
+        this._visualizer?.stop();
+        this._visualizer?.setWorld(null, null);
+        this.world = null;
+        this.state = null;
+        this.currentRegionId = null;
+        this.arrivalDoorId = null;
+        this.externalInventory = null;
+        this.externalCheckedLocations = null;
+        this.message = '';
+    }
+
+    /**
      * Cache the raw rules.json content so the savedQueueStore can key
      * its buckets by a stable content-hash. Subscribes to
      * stateManager:rawJsonDataLoaded so the cache stays in sync when
@@ -657,6 +689,7 @@ export class MazeRoomUI {
             // the boot rules), so the panel keeps its own copy.
             this._cachedRulesPlayer = playerOfRawPayload(payload);
             if (this._seedlingArt?.status !== 'loading') this._seedlingArt = null;
+            this._unbindStaleRegion(payload?.rawJsonData ?? null, this._cachedRulesPlayer);
         };
         eventBus.subscribe('stateManager:rawJsonDataLoaded', handler, 'mazeRoom');
         this._unsubRulesLoaded =
@@ -3982,19 +4015,25 @@ export class MazeRoomUI {
      * it declares one) then the loaded slot's recorded `procgen_metadata[p].content` (⚠ a per-player map), through
      * `worldContent.effectiveContentStack` — the one stack rule, so a later pack wins per key by `mergeKeyed`. The
      * substrate set is the maze alone, as the region job's `attachJobContent` reads it (`[args.substrate]`).
+     * ⛓ GEN-2 — and the slot's recorded "what exists" packs (`procgen_metadata[p].exists`), under the content, as the
+     * one stack rule orders them: a tile kind the generator placed from such a pack draws from its art.
      */
     _tileArtStack() {
         let content = [];
+        let exists = [];
         if (Array.isArray(this._tileArtContentOverride)) {
             return effectiveContentStack({ substrateIds: [substrateRegistryEntry.id], content: this._tileArtContentOverride });
         }
         try {
             const { rules, player } = this._loadedRules();
-            if (rules && player !== null && player !== undefined) content = documentContentOf(rules, player);
+            if (rules && player !== null && player !== undefined) {
+                content = documentContentOf(rules, player);
+                exists = documentWorldSettingsOf(rules, player)[RECORDED_EXISTS_KEY];
+            }
         } catch (err) {
             console.warn(`[mazeRoom] tile art: the world's content list is unreadable (${err.message}); drawing without it`);
         }
-        return effectiveContentStack({ substrateIds: [substrateRegistryEntry.id], content });
+        return effectiveContentStack({ substrateIds: [substrateRegistryEntry.id], exists, content });
     }
 
     /**

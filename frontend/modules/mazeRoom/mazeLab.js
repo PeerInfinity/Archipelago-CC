@@ -1804,10 +1804,26 @@ export function levelOfPayload(payload) {
  * `certified: true` in a file is somebody else's assertion, and this page's
  * certification is its own oracle's answer or nothing.
  */
+/**
+ * ⛓⛓ LAB BIOME — **A SIDECAR'S `biome` IS THE REGION BIOME, NOT A PALETTE NAME**, so it never reaches `paletteFor`.
+ * The two words collided exactly as the note above `MAZE_BIOMES` predicted: `generateRegionCore` has recorded the
+ * region biome (`{id: 'classic'}`, `mazeRoomBiomeLibrary` / `mazeRegionBiomes`) on every pipeline maze sidecar since
+ * 794d343444, and `loadPayload` read it as `?biome=`, refusing every such room. Decided by SHAPE, the way
+ * `levelOfPayload` decides it: an envelope (`playable_payload` present) is a sidecar and its `biome` is the region's;
+ * anything else is a lab payload or a bare level, whose `biome` IS the palette and is still refused when unknown.
+ * ⚠ The region biome changes nothing the lab draws — the room's walls are its `tiles`, already concrete — so it is
+ * carried on the state as `regionBiome` (absent otherwise) for a reader, not looked up.
+ */
+function isSidecarEnvelope(payload) {
+    return !!payload && typeof payload === 'object' && payload.playable_payload !== undefined;
+}
+
 export function loadPayload(payload, { biome = DEFAULT_MAZE_BIOME } = {}) {
     const world = deserializeMazeLevel(levelOfPayload(payload));
     const seed = Number.isInteger(payload?.seed) ? payload.seed : 1;
-    const palette = paletteFor(payload?.biome ?? biome);
+    const sidecar = isSidecarEnvelope(payload);
+    const paletteName = sidecar ? biome : (payload?.biome ?? biome);
+    const palette = paletteFor(paletteName);
     /**
      * ⛔ THE MODEL IS REBUILT AROUND THE LOADED WORLD'S OWN GOAL, not around
      * the seed's. A payload may have been edited — its exit MOVED — and a model
@@ -1837,7 +1853,8 @@ export function loadPayload(payload, { biome = DEFAULT_MAZE_BIOME } = {}) {
     });
     return Object.freeze({
         seed,
-        biome: payload?.biome ?? biome,
+        biome: paletteName,
+        ...(sidecar && payload.biome !== undefined ? { regionBiome: payload.biome } : {}),
         palette,
         roster: payload?.roster ?? null,
         step: 0,

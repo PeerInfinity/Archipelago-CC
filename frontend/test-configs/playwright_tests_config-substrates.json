@@ -2112,7 +2112,7 @@
             "id": "region-map-seedling-paints",
             "enabled": true,
             "category": "Region Map: Seedling",
-            "_comment": "REGION MAP step 3b (2026-11-15): seedling_playthrough — N cells = the layout's display regions, the art bakes, squares = the visible levels' tiles (>= minSquarePx at the minimum zoom), the cell-size toggle. Batch playback-bot (on push). Counts derived at run time."
+            "_comment": "REGION MAP step 3b (2026-11-15): seedling_playthrough — N cells = the layout's display regions, the art bakes, squares = the visible levels' tiles (at the minimum zoom: never larger than their tile, a 1 px dot at least; tiled-squares-cap 2026-11-24), the cell-size toggle. Batch playback-bot (on push). Counts derived at run time."
         },
         {
             "id": "region-map-follow-player",
@@ -2443,6 +2443,12 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "loop-mode-bot S1: the Playback Bot plays a PLAIN rules.json directly (Adventure, loop mode off, no substrate, no controller): its own checks and moves, counted only when they land. Done = every sphere-log location checked. Fast batch."
+        },
+        {
+            "id": "playback-bot-tile-kinds-demo",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "Content sets GEN-2: the committed tile_kinds_demo preset (the \"Randomly placed tiles\" maze biome: the furniture pack's rugs and pillars in a scattered 2 : classic 1 mix over Adventure) played to the end by the bot through the maze controller, loop mode off; every sphere-log location checked, and the Maze Room panel's art stack takes the recorded exists pack. Batch playback-bot (on push)."
         },
         {
             "id": "playback-bot-walk-order",

@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 import {
     ACTION_COMPILE_REFUSALS, ACTION_NODES_DISCOVERY_BUNDLE, ACTION_NODES_SUBSTRATE_ID, ACT_ACTION, compileActionGraph,
-    placementsFromRules,
+    fillAttemptSeeds, placementsFromRules,
 } from './actionGraphCompiler.js';
 import { ACTION_NODES_BUNDLE, readWorldDiscoveryMode } from '../discovery/worldDiscoveryMode.js';
 import { buildActionModel } from './actionModel.js';
@@ -180,5 +180,18 @@ describe('⛓ the A6 proof', () => {
     });
     it('is deterministic for a seed', () => {
         expect(stringifyRulesJson(compileActionGraph(EXAMPLE, { graphPath: GRAPH_PATH, exists: [...DEFAULT_EXISTS] }).rules)).toBe(stringifyRulesJson(rules));
+    });
+});
+
+describe('⛓ the fill retry (AN-OMSI-1)', () => {
+    it('attempt 1 is the seed itself; later attempts draw from another stream, deterministically', () => {
+        const seeds = fillAttemptSeeds(7, 5);
+        expect(seeds[0]).toBe(7);
+        expect(new Set(seeds).size).toBe(5);
+        expect(fillAttemptSeeds(7, 5)).toEqual(seeds);
+        expect(fillAttemptSeeds(7, 3)).toEqual(seeds.slice(0, 3));
+    });
+    it('the example fills first time, so its report carries no fill block (the preset keeps its bytes)', () => {
+        expect(report.fill).toBeUndefined();
     });
 });
