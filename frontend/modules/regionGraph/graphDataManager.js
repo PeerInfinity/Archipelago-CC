@@ -1,4 +1,4 @@
-import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '../stateManager/index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import * as vm from '../regionView/regionViewModel.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
@@ -7,6 +7,11 @@ import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { getNodeLabelProvider, getEdgeVisibilityFilter, getAccessibilityVisibilityFilter } from './index.js';
 import { dropStalePendingCentre } from './regionGraphCentreAction.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import {
+  normaliseSubRegionView, isRegionGroupNode, multiMemberGroups, groupNodeElements, groupState, groupClasses,
+  GROUP_STATE_CLASSES,
+} from './subRegionGroups.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -230,6 +235,18 @@ export class GraphDataManager {
         position: this.ui.nodePositions.get(regionName) || { x: Math.random() * 500, y: Math.random() * 500 },
         classes: nodeClasses
       });
+    }
+
+    // ⛓ subRegionView = nested (region-graph-groups-a): a compound parent per display group of 2+ members, its
+    // members as children. `separate` adds nothing here, so its element set is the one the graph drew before.
+    const regionNodeCount = elements.nodes.length;
+    if (this.subRegionView() === 'nested') {
+      const { nodes: groupNodes, parentOf } = groupNodeElements(this.multiMemberGroups(regions));
+      for (const node of elements.nodes) {
+        const parent = parentOf.get(node.data.id);
+        if (parent) node.data.parent = parent;
+      }
+      elements.nodes.unshift(...groupNodes);
     }
 
     // Track all exits for directionality analysis
@@ -523,7 +540,8 @@ export class GraphDataManager {
     // Auto-apply hub detection if enabled
     this.autoApplyHubDetection();
 
-    if (this.ui.nodePositions.size === 0 || this.ui.nodePositions.size !== elements.nodes.length) {
+    // Saved positions are REGION positions (a group box's position is its children's; never saved).
+    if (this.ui.nodePositions.size === 0 || this.ui.nodePositions.size !== regionNodeCount) {
       this.ui.runLayout(false);
     } else {
       this.ui.cy.fit(30);
@@ -554,7 +572,49 @@ export class GraphDataManager {
 
     this.redrawLocationNodesForMode();
 
-    this.ui.updateStatus(`Loaded ${elements.nodes.length} regions, ${elements.edges.length} connections`);
+    this.ui.updateStatus(`Loaded ${regionNodeCount} regions, ${elements.edges.length} connections`);
+  }
+
+  /** The panel's `subRegionView` (loaded from the settings by `RegionGraphUI.loadDisplaySettings`). */
+  subRegionView() {
+    return normaliseSubRegionView(this.ui.subRegionView);
+  }
+
+  /** The display groups of 2+ members over `regions` (`subRegionGroups.multiMemberGroups`, the view model's fold). */
+  multiMemberGroups(regions) {
+    const last = getLastRawJsonData?.();
+    return multiMemberGroups(regions.keys(), {
+      rules: last?.rawJsonData ?? null,
+      playerId: String(last?.selectedPlayerInfo?.playerId ?? '1'),
+      registry: substrateRegistry,
+    });
+  }
+
+  /**
+   * Re-colour every group box from its MEMBERS' state, computed off the snapshot by the view model (never read back
+   * off the member nodes' classes): `groupState` → `groupClasses`. Its label is the display key, `???` while the
+   * group is an undiscovered placeholder (named when `showUndiscoveredRegionNames` says so).
+   */
+  updateGroupNodes(snapshot, staticData, discoveryCtx) {
+    const groups = this.ui.cy.nodes().filter((n) => isRegionGroupNode(n));
+    groups.forEach((node) => {
+      const members = (node.data('members') ?? []).map((name) => {
+        const regionData = staticData.regions.get(name);
+        return {
+          counts: this.calculateLocationCounts(name, regionData),
+          reachable: vm.isRegionReachable(snapshot, name),
+          color: vm.regionColorState(snapshot, name, discoveryCtx),
+          visibility: vm.regionDiscovery(name, discoveryCtx).visibility,
+        };
+      });
+      const state = groupState(members);
+      node.removeClass(GROUP_STATE_CLASSES);
+      node.addClass(groupClasses(state).join(' '));
+      const key = node.data('groupKey');
+      const named = state.visibility !== 'placeholder' || discoveryCtx.settings?.showUndiscoveredRegionNames;
+      node.data('label', named ? key : '???');
+      node.data('groupCounts', state.counts);
+    });
   }
 
   /**
@@ -604,8 +664,8 @@ export class GraphDataManager {
     const hubNodes = [];
 
     this.ui.cy.nodes().forEach(node => {
-      // Skip player node
-      if (node.hasClass('player')) {
+      // Skip player node and group boxes (a box has no edges of its own)
+      if (node.hasClass('player') || isRegionGroupNode(node)) {
         return;
       }
 
@@ -674,8 +734,8 @@ export class GraphDataManager {
     this.ui.cy.nodes().forEach(node => {
       const regionName = node.id();
 
-      // Skip player node
-      if (node.hasClass('player')) {
+      // Skip player node, and a group box (subRegionView = nested; re-coloured from its members below)
+      if (node.hasClass('player') || isRegionGroupNode(node)) {
         return;
       }
 
@@ -793,6 +853,8 @@ export class GraphDataManager {
         }
       }
     });
+
+    this.updateGroupNodes(snapshot, staticData, discoveryCtx);
 
     // Update edge colors based on exit accessibility and directionality
     this.ui.cy.edges().forEach(edge => {

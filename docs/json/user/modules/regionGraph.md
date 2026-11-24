@@ -65,6 +65,15 @@ Click the +/- toggle at the top to expand the control panel:
 ### Go to (instead of clicking a node)
 A folded section under the main controls. Type or choose a **Region** or a **Location** by name: it does exactly what clicking that node does (the **On click** strip's actions apply), and centres the view on it. The lists hold the regions the graph shows and every location in them, drawn as a node right now or not. Useful when a node is hard to find or click, or from the keyboard.
 
+### Sub-regions
+Some worlds split one region into several **sub-regions** (a Seedling level is cut into rooms, `level_7__r0c3`, `level_7__r1c0`, …). **Draw as** chooses how the graph shows them:
+- **Separate nodes** (the default) — every sub-region is its own node, as the graph always drew it.
+- **Nested in region boxes** — each region split into two or more sub-regions gets a dashed box labelled with the region's name (`level_7`), with its sub-regions drawn inside. Exits still connect the exact sub-regions. A region with a single sub-region has no box. The box's border and tint follow its sub-regions together: green when any of them is accessible, gray when none is, and the fill sums their locations (dark green, gold, red, or black when all are checked) — the same rule the [Region Map](regionMap.md) uses for a whole region. A box is not a region: clicking it does nothing (click a sub-region inside it), it is not in the **Go to** list, and it is never part of a path.
+
+Worlds without sub-regions (most Archipelago worlds) look the same either way. Changing it redraws the graph, keeping the regions where they were. The setting is `moduleSettings.regionGraph.subRegionView` (`separate` or `nested`); later options will add more ways to group sub-regions.
+
+The force-directed layouts (**Force-Directed**, COSE) arrange the boxes around their sub-regions. The layouts that do not know about boxes (breadth-first, circle, grid, concentric, the procgen grid, a preset) place the sub-regions as usual and draw each box around wherever its sub-regions landed, so a box can be large or overlap another; use **Re-layout** with a force-directed layout for a tidy picture.
+
 ### Location Visibility
 - **Always show/hide locations** — Override zoom-based location visibility
 - **Max location nodes** — Limit the number of location nodes rendered (0 = unlimited)
