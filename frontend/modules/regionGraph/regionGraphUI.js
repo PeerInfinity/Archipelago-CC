@@ -18,6 +18,7 @@ import { defaultClickActions } from '../regionView/clickActions.js';
 import { mountClickActionsStrip } from '../regionView/clickActionsUI.js';
 import { CLICK_ACTIONS_KEY, loadRegionGraphClickActions, saveRegionGraphClickActions } from './clickActionsSettings.js';
 import { applyPendingCentre } from './regionGraphCentreAction.js';
+import { SUB_REGION_VIEW_KEY, normaliseSubRegionView, GROUP_STYLES } from './subRegionGroups.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -223,6 +224,15 @@ export class RegionGraphUI {
       logger.error('Failed to load display settings:', error);
       this.useSubstitutedNames = true;
     }
+    // ⛓ region-graph-groups-a: how sub-regions draw. No call-site default: the schema's is the only one.
+    try {
+      this.subRegionView = normaliseSubRegionView(await settingsManager.getSetting(SUB_REGION_VIEW_KEY));
+    } catch (error) {
+      logger.warn('Could not load subRegionView; using the schema default:', error);
+      this.subRegionView = normaliseSubRegionView(undefined);
+    }
+    const select = this.controlPanel?.querySelector?.('#subRegionView');
+    if (select) select.value = this.subRegionView;
   }
 
   getRegionDisplayText(regionData, regionName) {
@@ -772,7 +782,9 @@ export class RegionGraphUI {
             'visibility': 'hidden',
             'events': 'no'
           }
-        }
+        },
+        // ⛓ subRegionView = nested: the group boxes (compound parents; subRegionGroups.js)
+        ...GROUP_STYLES
       ],
       
       layout: {
