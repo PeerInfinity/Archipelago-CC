@@ -122,5 +122,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The case solved", player),
-        HasAll('The night watch book', 'What Mr. Prout told me')
+        Has('The night watch book', 1)
     )

@@ -502,12 +502,9 @@
             "name": "The case solved",
             "id": 1024,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "item_names": [
-                  "The night watch book",
-                  "What Mr. Prout told me"
-                ]
+                "item_name": "The night watch book"
               }
             },
             "item": {
@@ -926,7 +923,7 @@
       "slot_data": {
         "mystery": {
           "story": "custom-house-fire",
-          "version": "d3081189acf2",
+          "version": "afed4c87068e",
           "answers": "evidence",
           "goal": "q.who",
           "locations": {
@@ -981,7 +978,8 @@
             "A note to the carter": "garrick_note",
             "The railway timetable": "timetable",
             "What the station-master told me": "station_master"
-          }
+          },
+          "case": "cases/custom-house-fire"
         }
       },
       "web": {

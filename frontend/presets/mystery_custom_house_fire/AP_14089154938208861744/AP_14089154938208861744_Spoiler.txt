@@ -93,6 +93,7 @@ Playthrough:
 }
 8: {
   Question 05: Three passes from the gate-keeper's file
+  The case solved: Victory
 }
 9: {
   Question 15: What Mr. Prout told me
@@ -102,7 +103,6 @@ Playthrough:
   Question 08: Dr. Hume's note
   Question 19: What the station-master told me
   Question 20: What Silas Crouch told me
-  The case solved: Victory
 }
 11: {
   Question 11: What Mrs. Rowe told me
