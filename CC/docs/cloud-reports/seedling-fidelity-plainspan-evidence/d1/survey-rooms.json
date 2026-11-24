@@ -1,0 +1,26 @@
+[
+ {
+  "level": 15,
+  "chests": [
+   "chest@144,96: button@112,32 d=72"
+  ]
+ },
+ {
+  "level": 38,
+  "chests": [
+   "chest@144,112: button@80,192 d=102"
+  ]
+ },
+ {
+  "level": 40,
+  "chests": [
+   "chest@880,816: totempart@64,144 d=1057, button@480,384 d=589, button@816,400 d=421, totempart@160,640 d=741, button@768,400 d=431, bosskey@656,528 d=365"
+  ]
+ },
+ {
+  "level": 71,
+  "chests": [
+   "chest@160,256: button@112,176 d=93"
+  ]
+ }
+]
