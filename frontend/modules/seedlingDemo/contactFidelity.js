@@ -2371,6 +2371,34 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_NESTED_ROCK_CEREMONY=0|1`. ⛔ OFF by default (no flip licence).
      */
     nestedRockCeremony: false,
+    /**
+     * ⛓⛓ fidelity PLAINSPAN D2 (wave 59) — A PLAIN PICKUP (`Pickups/APItem`) TAKEN ON A FRAME THE SOLVER'S CONTACT CALL
+     * DOES NOT SEE. `Pickup.update`'s `collide("Player", x, y)` (`Pickups/Pickup.as:63-84`) has no freeze gate, and an
+     * `APItem` never sets `special`, so `pick_up()` is `removeSelf()` (`:120-123`) and `APItem.removed()` writes
+     * `Game.setPersistence(tag, false)` — the check report, `pendingCheck` (`APItem.as:127-133`, `Game.as:1902-1910`) —
+     * on the FIRST frame the box it tests overlaps it, frozen or not. Every `APItem` entity updates on every frame, so
+     * EVERY apitem under that box is taken on that frame. The box is the post-(F−1) one (the apitems are added at
+     * `Game.as:2330`, before the player at `:2250` updates; `addUpdate` prepends). Measured against the solver's call
+     * (`solverBot.apItemTakenOnTick`: the pre-tick box, at most ONE apitem a tick, none on a tick that began in a
+     * ceremony): a SINGLE apitem under the box on a freeze's first frame — a button's frame A, a rope's pull P, a pickup
+     * ceremony's contact tick T — is already taken on the game's tick, because the player's box does not move from
+     * F−1 through the span or phase A. What the call misses: (1) the SECOND and later apitems under that box — the game
+     * takes them on F, the call takes one a tick and then meets the rock's release-step box (late, or never) or a
+     * ceremony's `inCeremony` ticks (late, until the ceremony ends); (2) the wand's fallrocks' landing snap
+     * (`FallRock.as:54-60`, applied mid-span by `dropRocksTogether`'s caller): the game takes an apitem under the
+     * snapped box on the landing frame, inside the drop tick; the call asks it a tick later; (3) a DEFERRED release step
+     * (`pendingFreeSteps`): the game's R+1 tests the post-R box, the call tests the pre-R one. ON
+     * (`takePlainPickupsInFreezeNow`): the run takes every open apitem under the game's box at those frames — frame A
+     * (above the frozen tick), the pull (`dropRock`), a ceremony's T (below the starts), the wand's snap, and the
+     * deferred step's box — and banks each exactly as `takeApItem` does (`apItemFlags`, `pendingEarnedClears`), with
+     * the tick a solver report of the same tick would carry; `plainFreezeTakes` lists them. A later report of the same
+     * take is the existing no-op. Not modelled, named: coins (`Coin`, `Enemy.dropCoins`/`Chest`: cosmetic, nothing reads a
+     * count); the one-a-tick rule on LIVE ticks (the solver's and the JS page's, not a freeze's); the wand's approach
+     * fade. Needs no other key; composes with `nestedRockCeremony` (its union's T is this key's T site),
+     * `freezeSpanUpdates`, `freezeReleaseTick`, `pickupTickFreeze` and `dialogueFrameFreeze`. OFF: byte-identical.
+     * `SEEDLING_PLAIN_PICKUP_IN_FREEZE=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    plainPickupInFreeze: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2813,6 +2841,9 @@ if (globalThis.process?.env?.SEEDLING_FREEZE_SPAN_UPDATES === '0') CONTACT_FIDEL
 // ⛓ fidelity NESTEDFREEZE D2: `SEEDLING_NESTED_ROCK_CEREMONY=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_NESTED_ROCK_CEREMONY === '1') CONTACT_FIDELITY.nestedRockCeremony = true;
 if (globalThis.process?.env?.SEEDLING_NESTED_ROCK_CEREMONY === '0') CONTACT_FIDELITY.nestedRockCeremony = false;
+// ⛓ fidelity PLAINSPAN D2: `SEEDLING_PLAIN_PICKUP_IN_FREEZE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PLAIN_PICKUP_IN_FREEZE === '1') CONTACT_FIDELITY.plainPickupInFreeze = true;
+if (globalThis.process?.env?.SEEDLING_PLAIN_PICKUP_IN_FREEZE === '0') CONTACT_FIDELITY.plainPickupInFreeze = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
