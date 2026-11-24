@@ -79,4 +79,20 @@ takes its `biome` only from a lab payload (`?gen=` or a host's `procgenLab:load`
 
 ## 7. CI at the tip
 
-Appended below once measured.
+**At `8b55948a8d`** (code `27a735d84a` + the report; all success):
+
+| Run | Id | Result |
+|---|---|---|
+| `unittests` (push) | 45428202047 | success |
+| JSUT (dispatch; the report-only push does not trigger it) | 45428255939 | success; suite 30,037 passed / 0 failed; slow battery 446 passed |
+| TT (dispatch) | 45428201314 | success; headroom OK on every batch (fast 56%, fast bundled 56%, seedling-js 48%, apworld 36%, seedling-js-solver 32%, seedling-wasm 30%, playback-bot 24%) |
+| feature-checks (manual batch) | 45428206587 | success |
+
+No in-app lab row was touched, so no other batch was owed. The code-tip JSUT push run (45428004908) was cancelled as
+superseded. This section is the only change after `8b55948a8d`; JSUT is dispatched again at the final tip and its id
+goes to the planner.
+
+## 8. Residue
+
+- `tile_kinds_demo` (GEN-2) scattered room in the lab: owed once GEN-2 lands. The census pin covers it automatically.
+- `regionBiome` is carried on the lab state but not shown on the identity line. Nothing in the lab draws by it today.
