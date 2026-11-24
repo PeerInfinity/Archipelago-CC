@@ -1,0 +1,95 @@
+ -45 52084   331  13313ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph23 covered
+ -44 52085   331  16479ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph24 covered
+ -43 52086   331  16194ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph25 covered
+ -42 52087   331  13246ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph25 covered
+ -41 52088   331  17616ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph26 covered
+ -40 52089   331  16121ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph27 covered
+ -39 52090   331  17413ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph27 covered
+ -38 52091   331  15933ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph28 covered
+ -37 52092   331  15318ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph29 covered
+ -36 52093   331  15075ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph29 covered
+ -35 52094   331  14357ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph29 covered
+ -34 52095   331  13346ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph30 covered
+ -33 52096   331  14558ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph31 covered
+ -32 52097   331  15490ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph31 covered
+ -31 52098   331  13000ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph32 covered
+ -30 52099   331  14665ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -29 52100   331  13724ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -28 52101   331  14948ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -27 52102   331  14132ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -26 52103   331  12928ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -25 52104   331  15735ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -24 52105   331  11582ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -23 52106   331  13023ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -22 52107   331  14992ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -21 52108   331  13825ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -20 52109   331  14322ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=505@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -19 52110   331  14776ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=505@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -18 52111   331  14935ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=504@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -17 52112   331  15627ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=503@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -16 52113   331  15741ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=503@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -15 52114   331  14639ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=502@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -14 52115   331  16042ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=502@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -13 52116   331  17693ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=502@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -12 52117   331  15999ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -11 52118   331  13687ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+ -10 52119   331  14028ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  -9 52120   331  14920ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  -8 52121   331  14451ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  -7 52122   331  15652ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  -6 52123   331  12583ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  -5 52124   331  14337ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph20 covered
+  -4 52125   331  13752ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph20 covered
+  -3 52126   331  13362ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph21 covered
+  -2 52127   331  13206ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph22 covered
+  -1 52128   331  12036ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph23 covered
+   0 52129   331  11463ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph23 covered
+   1 52130   331  11153ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph24 covered
+   2 52131   331  11748ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph25 covered
+   3 52132   331  13585ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph25 covered
+   4 52133   331  11554ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph26 covered
+   5 52134   331  13580ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph27 covered
+   6 52135   331  12375ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph27 covered
+   7 52136   331  11627ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph28 covered
+   8 52137   331  13066ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph29 covered
+   9 52138   331  13655ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph29 covered
+  10 52139   331  11140ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph29 covered
+  11 52140   331  10271ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph30 covered
+  12 52141   331  13003ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph31 covered
+  13 52142   331  14147ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph31 covered
+  14 52143   331  12533ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph32 covered
+  15 52144   331  11744ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  16 52145   331  12537ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  17 52146   331  13048ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  18 52147   331  11870ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  19 52148   331  12292ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  20 52149   331  12592ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  21 52150   331  11981ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  22 52151   331  12777ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  23 52152   331  10332ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  24 52153   331  11505ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  25 52154   331  11845ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=505@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  26 52155   331  10054ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=505@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  27 52156   331  11557ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=504@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  28 52157   331  11151ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=503@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  29 52158   331  11382ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=503@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  30 52159   331   8616ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=502@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  31 52160   331   8721ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=502@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  32 52161   331   9451ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=502@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  33 52162   331   7740ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  34 52163   331   9031ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  35 52164   331   8408ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  36 52165   331   7810ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  37 52166   331   9049ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  38 52167   331   9085ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  39 52168   331   9279ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered
+  40 52169   331   9989ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph20 covered
+  41 52170   331   8264ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph20 covered
+  42 52171   331   9894ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph21 covered
+  43 52172   331   8885ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph22 covered
+  44 52173   331   6848ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph23 covered
+  45 52174   331   7344ms EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=506@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph23 covered
+
+TALLY (phase and forecast tick folded):
+  41 EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=@spinner:spinner@816,848 narrow=spinner:spinner@816,848@ph* covered
+  50 EXHAUSTED ct -> burn stance (burnabletree@872,784) first=chaser:bob@736,752 armfc=@spinner:spinner@816,848 narrow=the corridor walked with the pre-lapse strike admissions is  covered

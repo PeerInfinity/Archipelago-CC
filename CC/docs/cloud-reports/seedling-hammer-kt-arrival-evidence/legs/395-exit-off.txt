@@ -1,0 +1,7 @@
+LEG 395 goal=exit door=1 ok=false ms=2666 ticks=null
+  message=solverBot(kt-leg) reach-exit (944,96)->L41 -> keylock stance (bosslock@480,352): the combat ladder is EXHAUSTED. The corridor passes through danger at (471.6,441.1) — enemy:iceturret@472,400 (a live ice turret, priced at the hull of its rest two-cycle (487.5,424 / 488,423.5) — `input()` snaps it before `hitPlayer` in the same update, so its ctor box (488,416) is never a contact (the run's turret has not been on screen yet; `turretSnapPricing`)) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 17 volume(s) forbidden — no walkable tile path in level 40 from tile (30,56) to (30,23). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by wat
+  time: the aim is 528 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME
+  KEYLOCK_TURRET_COUNTS={"stances":[],"kills":[]}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS={"asked":[]}
+  TURRET_APPROACH_COUNTS={"approaches":[]}

@@ -33,6 +33,10 @@
       "frontend/modules/seedlingDemo/hammerNewLocks.train.test.js": {
         "by": "seedling-hammer-new-locks, cloud box (4 cores, under a concurrent page sweep), 2026-11-10",
         "ms": 14400
+      },
+      "frontend/modules/seedlingDemo/hammerKill880StandHold.train.test.js": {
+        "by": "seedling-hammer-kill880, cloud box (4 cores, under a concurrent phase sweep and acceptance run), 2026-11-23",
+        "ms": 257840
       }
     }
   },
@@ -52,6 +56,7 @@
     "frontend/modules/seedlingDemo/hammerGhostKillRung.train.test.js": 277,
     "frontend/modules/seedlingDemo/fidelityCorpseBump2.train.test.js": 275,
     "frontend/modules/seedlingDemo/hammerTurretApproach.train.test.js": 264,
+    "frontend/modules/seedlingDemo/hammerKill880StandHold.train.test.js": 258,
     "frontend/modules/seedlingDemo/hammerPocketBurn.train.test.js": 238,
     "frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.latchSandwich.train.test.js": 235,
     "frontend/modules/seedlingDemo/hammerChooserPair.train.test.js": 234,
