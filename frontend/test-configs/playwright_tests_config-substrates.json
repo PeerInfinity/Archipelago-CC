@@ -2112,7 +2112,7 @@
             "id": "region-map-seedling-paints",
             "enabled": true,
             "category": "Region Map: Seedling",
-            "_comment": "REGION MAP step 3b (2026-11-15): seedling_playthrough — N cells = the layout's display regions, the art bakes, squares = the visible levels' tiles (>= minSquarePx at the minimum zoom), the cell-size toggle. Batch playback-bot (on push). Counts derived at run time."
+            "_comment": "REGION MAP step 3b (2026-11-15): seedling_playthrough — N cells = the layout's display regions, the art bakes, squares = the visible levels' tiles (at the minimum zoom: never larger than their tile, a 1 px dot at least; tiled-squares-cap 2026-11-24), the cell-size toggle. Batch playback-bot (on push). Counts derived at run time."
         },
         {
             "id": "region-map-follow-player",
