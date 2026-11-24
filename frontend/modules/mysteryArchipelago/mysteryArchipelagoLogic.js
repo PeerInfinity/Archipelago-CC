@@ -106,15 +106,18 @@ export class MysteryArchipelagoLogic {
    * @param {{publish: Function}} deps.dispatcher
    * @param {() => Object|null} deps.getStaticData
    * @param {() => Object|null} deps.getSnapshot
+   * @param {() => {connected: boolean, slot: number|null, team: number|null}} deps.getConnection - asked
+   *   every time, never remembered: this module may be enabled after the app has connected, and a
+   *   connect event it was not there for must not leave it saying "offline".
    * @param {(level: string, message: string, ...data: any[]) => void} [deps.log]
    */
-  constructor({ eventBus, dispatcher, getStaticData, getSnapshot, log = () => {} }) {
+  constructor({ eventBus, dispatcher, getStaticData, getSnapshot, getConnection, log = () => {} }) {
     this._eventBus = eventBus;
     this._dispatcher = dispatcher;
     this._getStaticData = getStaticData;
     this._getSnapshot = getSnapshot;
     this._log = log;
-    this._connection = { connected: false, slot: null, team: null };
+    this._getConnection = getConnection;
     // The page has asked at least once; until then nothing is sent (no page, nobody to tell).
     this._pageAsked = false;
     this._lastSent = null;
@@ -124,24 +127,14 @@ export class MysteryArchipelagoLogic {
     const sub = (event, handler) => this._eventBus.subscribe(event, handler);
     sub(MYSTERY_EVENTS.QUESTION_SOLVED, (data) => this.handleQuestionSolved(data));
     sub(MYSTERY_EVENTS.REQUEST_STATE, (data) => this.handleRequestState(data));
-    sub('game:connected', (data) => this.handleGameConnected(data));
+    // The connection events only say WHEN to look; what is so is asked of the client each time.
+    sub('game:connected', () => this.sendStateIfChanged());
     // After the client has applied the server's checked locations and items.
     sub('client:connectedStateApplied', () => this.sendStateIfChanged());
-    sub('connection:close', () => this.handleDisconnected());
+    sub('connection:close', () => this.sendStateIfChanged());
     sub('game:itemsReceived', () => this.sendStateIfChanged());
     sub('stateManager:rulesLoaded', () => this.sendStateIfChanged());
     sub('stateManager:snapshotUpdated', () => this.sendStateIfChanged());
-  }
-
-  handleGameConnected(data) {
-    this._connection = { connected: true, slot: data?.slot ?? null, team: data?.team ?? null };
-    this.sendStateIfChanged();
-  }
-
-  handleDisconnected() {
-    if (!this._connection.connected) return;
-    this._connection = { ...this._connection, connected: false };
-    this.sendStateIfChanged();
   }
 
   /** Why the page's `{story, version}` is refused, or null. A missing `version` is not checked. */
@@ -169,7 +162,7 @@ export class MysteryArchipelagoLogic {
     const block = mysteryBlockOf(this._getStaticData());
     const reason = this.refusalFor(block, request);
     if (reason) return this._refuse(reason, block);
-    this._send(mysteryStateOf(block, this._getSnapshot(), this._connection));
+    this._send(mysteryStateOf(block, this._getSnapshot(), this._getConnection()));
   }
 
   /** Send the state when the page has asked and the state differs from the last one sent. */
@@ -177,7 +170,7 @@ export class MysteryArchipelagoLogic {
     if (!this._pageAsked) return;
     const block = mysteryBlockOf(this._getStaticData());
     if (!block) return;
-    const state = mysteryStateOf(block, this._getSnapshot(), this._connection);
+    const state = mysteryStateOf(block, this._getSnapshot(), this._getConnection());
     if (JSON.stringify(state) === this._lastSent) return;
     this._send(state);
   }

@@ -24,14 +24,14 @@ const staticData = (over = {}) => ({
 
 /** A logic instance over a fake bus, with the world and snapshot held in `env`. */
 function setup({ data = staticData(), snapshot = { inventory: {}, checkedLocations: [] } } = {}) {
-  const env = { data, snapshot, published: [], dispatched: [], handlers: new Map() };
+  const env = { data, snapshot, connection: { connected: false, slot: null, team: null }, published: [], dispatched: [], handlers: new Map() };
   const eventBus = {
     subscribe: (event, handler) => env.handlers.set(event, handler),
     publish: (event, payload) => env.published.push({ event, payload }),
   };
   const dispatcher = { publish: (event, payload, direction) => env.dispatched.push({ event, payload, direction }) };
   const logic = new MysteryArchipelagoLogic({
-    eventBus, dispatcher, getStaticData: () => env.data, getSnapshot: () => env.snapshot,
+    eventBus, dispatcher, getStaticData: () => env.data, getSnapshot: () => env.snapshot, getConnection: () => env.connection,
   });
   logic.initialize();
   env.fire = (event, payload) => env.handlers.get(event)(payload);
@@ -145,13 +145,22 @@ describe('MysteryArchipelagoLogic', () => {
   it('connecting and disconnecting change the state: connected, and the game string', () => {
     const env = setup();
     env.fire(MYSTERY_EVENTS.REQUEST_STATE, { story: 'custom-house-fire' });
+    env.connection = { connected: true, slot: 3, team: 0 };
     env.fire('game:connected', { slot: 3, team: 0 });
     env.fire('client:connectedStateApplied');
+    env.connection = { connected: false, slot: null, team: null };
     env.fire('connection:close');
     env.fire('connection:close');
     expect(env.states().map((s) => [s.connected, s.game])).toEqual([
       [false, 'offline:777:1'], [true, '777:0:3'], [false, 'offline:777:1'],
     ]);
+  });
+
+  it('enabled after the app connected (no connect event seen), it still says connected', () => {
+    const env = setup();
+    env.connection = { connected: true, slot: 2, team: 0 };
+    env.fire(MYSTERY_EVENTS.REQUEST_STATE, { story: 'custom-house-fire' });
+    expect(env.states().map((s) => [s.connected, s.game])).toEqual([[true, '777:0:2']]);
   });
 
   it('turns a solved question into a location check the client never logic-gates', () => {

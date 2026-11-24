@@ -5,6 +5,7 @@
 
 import { MysteryArchipelagoLogic, MYSTERY_EVENTS } from './mysteryArchipelagoLogic.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 // --- Module Info ---
 export const moduleInfo = {
@@ -29,6 +30,16 @@ function log(level, message, ...data) {
 
 let logicInstance = null;
 
+/** The client's own answer, asked each time: connected means the socket is open AND the slot is assigned. */
+function connectionNow() {
+  const info = centralRegistry.getPublicFunction?.('client', 'getConnectionInfo')?.();
+  return {
+    connected: !!(info?.isConnected && info?.isHandshakeComplete),
+    slot: info?.slot ?? null,
+    team: info?.team ?? null,
+  };
+}
+
 export async function register(registrationApi) {
   // Dispatcher: this module sends location checks upward
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
@@ -52,6 +63,7 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     dispatcher: initializationApi.getDispatcher(),
     getStaticData: () => stateManagerProxySingleton.getStaticData(),
     getSnapshot: () => stateManagerProxySingleton.getSnapshot(),
+    getConnection: connectionNow,
     log,
   });
   logicInstance.initialize();
