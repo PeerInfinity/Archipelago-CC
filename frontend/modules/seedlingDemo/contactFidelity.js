@@ -2335,6 +2335,42 @@ export const CONTACT_FIDELITY = {
      * asked). OFF: byte-identical. `SEEDLING_FREEZE_SPAN_UPDATES=0|1`. ⛔ OFF by default (no flip licence).
      */
     freezeSpanUpdates: false,
+    /**
+     * fidelity NESTEDFREEZE D2 (wave 57) — A PICKUP CEREMONY THAT STARTS INSIDE A BUTTON-DROPPED ROCK'S SPAN, ON ITS
+     * FRAME A: the union of the two freezes, modelled (wave 56's STOP; its interim refusal at frame A is REPLACED under
+     * this key only).
+     * The game. `Button.update` (`Puzzlements/Button.as:27-39`, no freeze gate) presses from the player's post-(A−1) box
+     * and `FallRock.fall()` raises the flag (`Scenery/FallRock.as:103-109`); every pickup tests the SAME box on frame A
+     * (`Pickups/Pickup.as:63-84`, outside `Mobile`'s gate), so a pickup under it is collected on A — before the button
+     * (`bosskey` … `seed`, `Game.as:2348-2351`) or after it (`apitem` … `fire`, `:2330-2340`), the same frame either way
+     * (`addUpdate` prepends; the rock, `:2353`, updates first and is not triggered yet on A). From A the two run
+     * together: the rock's wait, fall and camera hold (`:64-97`: 60 + 21 + 91 = 172 frames on L29, its release R at
+     * A+172) and the pickup's `specialTimer` (`:95-105`: the flag re-raised AFTER the rock on every frame, the NPC added
+     * at A+149). No frame of A+1..A+149 has a writer that lowers the flag, so they are phase A's 149 dead frames, with
+     * the rock landing inside them (A+81). A texted pickup's dialogue frames follow (`Game.update`'s
+     * `inventory.open = false`, `Game.as:1044-1051`, lowers the flag at each one's end); the rock's camera timer counts
+     * down through them, and its R (`cameraTimer == 0` → `freezeObjects = false; resetCamera()`) writes a flag that is
+     * already down there and that the pickup re-raises after it — R moves only the camera. A text-less pickup lowers the
+     * flag on A+150 (`:106-112`, nothing re-raises it), so it ends the union EARLY: the rock's last 22 frames are live,
+     * the camera still at the rock. Either way the union's dead frames are the ceremony's own 150, not 172 + 150, and the
+     * player takes no rock release step (the ceremony holds it, or the pickup's F+150 is its step).
+     * ON (`nestedRockCeremonyAtFrameANow` / `startNestedRockSpanNow`): at frame A, with a ceremony predicted
+     * (`predictPickupCeremonyStart`: a placed pickup, the Seed, the DarkSword, the Fire), the button's frozen tick does not
+     * return: the tick falls through as the pickup's contact tick T = A, the ceremony starts on its own path (its phase-A
+     * lumps step every family through A+1..A+149, the rock's span frames there), and the rock is resolved at the
+     * detection ALONE (`dropRocksTogether`'s `nested`: the rock's own steps, its landing and its write; no family step, no
+     * clock spend, no release step) — its row carries `deadFrames: 0` and `spanFrames`. Every family sees the union as
+     * the ceremony's: nothing composes twice. Not modelled, named: the rock's camera (the button path models none: wave
+     * 56's residue), now on dialogue or live frames; the rope (its pull is `genericHit`, which returns under the flag a
+     * pickup collected on P raised: `Player.as:1073-1078`, so the two never nest) and the wand's landing snap (mid-span,
+     * beside L43's boss totem: wave 56's refusal stands); the plain pickups (an `APItem`'s contact is not modelled, it is
+     * TOLD, `takeApItem`; coins are not modelled at all). Needs no other key to be exact in its own claim (T, the end
+     * frame, the dead frames, the rock); each family is as exact as the ceremony's keys make it. Composes with
+     * `freezeSpanUpdates` (whose frame-A refusal it replaces when it models), `freezeReleaseTick`, `freezeEdgeFrames`,
+     * `frozenTickUngated`, `pickupTickFreeze`, `dialogueFrameFreeze` and `turretSuitRetaliation`. OFF: byte-identical.
+     * `SEEDLING_NESTED_ROCK_CEREMONY=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    nestedRockCeremony: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2774,6 +2810,9 @@ if (globalThis.process?.env?.SEEDLING_FREEZE_RELEASE_TICK === '0') CONTACT_FIDEL
 // ⛓ fidelity RELEASEPICKUP D2: `SEEDLING_FREEZE_SPAN_UPDATES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FREEZE_SPAN_UPDATES === '1') CONTACT_FIDELITY.freezeSpanUpdates = true;
 if (globalThis.process?.env?.SEEDLING_FREEZE_SPAN_UPDATES === '0') CONTACT_FIDELITY.freezeSpanUpdates = false;
+// ⛓ fidelity NESTEDFREEZE D2: `SEEDLING_NESTED_ROCK_CEREMONY=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_NESTED_ROCK_CEREMONY === '1') CONTACT_FIDELITY.nestedRockCeremony = true;
+if (globalThis.process?.env?.SEEDLING_NESTED_ROCK_CEREMONY === '0') CONTACT_FIDELITY.nestedRockCeremony = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
