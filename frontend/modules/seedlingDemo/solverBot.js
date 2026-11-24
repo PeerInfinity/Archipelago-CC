@@ -12433,6 +12433,54 @@ function execSpearPress(run, perTick, p, ctx, what) {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE SKIPWALLS — **A BRIDGE THIS VISIT ALREADY OPENED IS NO STRAY** (`BRIDGE_OPEN_STRAY`, OFF).
+ *
+ * The bridge verb's stance audit (`resolveBridgeStrategy`) drops a stance whose spear rect reaches any press responder
+ * other than the bridge it aims at, because a stray bridge decrement is an opening the run did not plan (`auditPress`).
+ * But `world.bridgeTiles` is every bridge tile the LEVEL built, open or closed. A bridge two or more tiles long opens
+ * one tile at a time, and the 32x5 rect reaches two tiles, so after the near tile opened, every stance that reaches the
+ * far tile ALSO reaches the open one. The audit then calls each of them a stray and refuses. Measured on re-measure-7's
+ * skip probe (P1 33:5, survey step 155): bridge (10,13) was open (`openBridges`), and all three axis stances for (11,13)
+ * were dropped for reaching it.
+ *
+ * A Spear hit on an OPEN bridge is a no-op in the game and in the model: `genericHit`'s `Tile` arm decrements
+ * `bridgeOpeningTimer` unconditionally, the timer goes negative, and the `<= 0` arm keeps the tile walkable
+ * (`bridges.bridgeHit`; `levelRun`'s press records the first press only). So ON, a stray that is a `Tile` whose
+ * bridge id the run's `openBridges` already holds is not a stray. A CLOSED stray bridge still refuses, as before.
+ *
+ * OFF by default. `SEEDLING_BRIDGE_OPEN_STRAY=1` turns it on in a node process (the page's WORKER reads it through the
+ * solver env channel: the decision is on the worker thread, inside the frontier loop), and
+ * `withBridgeOpenStray(enabled, fn)` is for a test or a witness. OFF, nothing below is asked: byte-identical.
+ */
+export const BRIDGE_OPEN_STRAY = { enabled: globalThis.process?.env?.SEEDLING_BRIDGE_OPEN_STRAY === '1' };
+export const BRIDGE_OPEN_STRAY_DEFAULT = false;
+
+/** Run `fn` with `BRIDGE_OPEN_STRAY` set to `enabled`, restoring the previous value. */
+export function withBridgeOpenStray(enabled, fn) {
+    return withSwitch(BRIDGE_OPEN_STRAY, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only ON and read by nothing that decides: `waived` each stray it let through
+ * (`{bridge, stance, open}`: the obstacle id, the stance phrase, the open tile's id).
+ */
+export const BRIDGE_OPEN_STRAY_COUNTS = { waived: [] };
+
+/** Zero `BRIDGE_OPEN_STRAY_COUNTS`. */
+export function resetBridgeOpenStrayCounts() {
+    Object.assign(BRIDGE_OPEN_STRAY_COUNTS, { waived: [] });
+}
+
+/** True when the audit's stray `r` is a bridge tile this visit has already opened (a hit there is a no-op). */
+export function bridgeStrayAlreadyOpen(run, obstacle, at, r) {
+    if (r.as3 !== 'Tile' || !r.tile) return false;
+    const open = `${r.tile.tx},${r.tile.ty}`;
+    if (!(run.entities('openBridges') ?? new Set()).has(open)) return false;
+    BRIDGE_OPEN_STRAY_COUNTS.waived.push({ bridge: obstacle.id, stance: at, open });
+    return true;
+}
+
+/**
  * ⛓⛓⛓ fidelity RULESREF (wave 32, `CONTACT_FIDELITY.spearBridgeVerb`) — **A CLOSED SPEAR BRIDGE ON THE FRONTIER IS
  * OPENED BY A THRUST, NOT ROUTED AROUND.**
  *
@@ -12490,7 +12538,8 @@ function resolveBridgeStrategy(run, obstacle, contacts) {
             }
             const stray = auditPress(run.world, spearHitRect(c.x, c.y, facing), {
                 weapon: 'spear', intended: [{ as3: 'Tile', tx, ty }], pushables,
-            }).illegal.filter((r) => PRESS_ARM_POLICY[r.as3]?.policy !== 'inert');
+            }).illegal.filter((r) => PRESS_ARM_POLICY[r.as3]?.policy !== 'inert')
+                .filter((r) => !(BRIDGE_OPEN_STRAY.enabled && bridgeStrayAlreadyOpen(run, obstacle, at, r)));
             if (stray.length) {
                 tried.push(`${at}'s rect also reaches ${stray.map((r) => `${r.tag}@${r.x},${r.y}`).join(', ')}`);
                 continue;
