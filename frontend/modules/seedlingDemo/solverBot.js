@@ -13297,6 +13297,7 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
         }
     }
     if (run.progress('primary') !== slots.indexOf(blade)) ctx.equip(slots.indexOf(blade));
+    const edge = resolved.edgeBait ? approachEdgePoint(run, t, stage, opts) : null; // ⛓ KT-ARRIVAL (null OFF)
     // 2. the tries, each on a fork
     const noWalk = () => { throw new SolverRefusal('a fork does not walk'); };
     const onSnap = (f) => {
@@ -13347,6 +13348,8 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
                         : 'crossed a door';
                 };
                 const aim = via ?? { x: side.x, y: side.y };
+                // ⛓ hammer-phase KT-ARRIVAL (a caller's `edgeBait` only): the try first stops at the range's edge
+                if (edge !== null && !walkOn([edge])) { count('edge-hit', hitWhy()); return null; }
                 const wps = planWaypointsOrNull(f.world, f.state, aim, null, solverPlanOpts(f, exempt));
                 // ⛔ every try of a route starts from the same staging state, so a route with no corridor has none at
                 // any wait: the route is done (measured: without this, L40 legs 860/861 spent their `crusher-fork`
@@ -13472,6 +13475,27 @@ function approachVolleyAnchor(f, id, aim, exempt) {
     }
     return null;
 }
+
+/**
+ * ⛓ hammer-phase KT-ARRIVAL — the approach's EDGE BAIT (asked only when a caller sets `resolved.edgeBait`): the point on
+ * the straight line from the staging point `stage` to the turret's own position (the origin `IceTurret.update`'s
+ * `FP.distance` measures from) that stands `TURRET_APPROACH_EDGE_DEPTH` px inside its attack range. Every try first stops
+ * there: the volley clock starts at the range's edge, where the player has just entered and nothing has fired, and the
+ * try's own route and waits run from that state (the stop is a timing knob the waits at the route's first waypoint, the
+ * kill stance, do not have: measured on L40's south arrival, every such wait was hit). null where the point is not
+ * plannable floor (the tries are OFF's).
+ */
+function approachEdgePoint(run, turret, stage, opts) {
+    const dx = turret.x - stage.x;
+    const dy = turret.y - stage.y;
+    const len = Math.hypot(dx, dy);
+    const along = len - (ICE_TURRET.attackRange - TURRET_APPROACH_EDGE_DEPTH);
+    if (!(along > 0)) return null;
+    const p = { x: Math.round(stage.x + (dx / len) * along), y: Math.round(stage.y + (dy / len) * along) };
+    return plannerObstacleAt(run.world, p.x, p.y, null, opts) === null ? p : null;
+}
+/** KT-ARRIVAL: the edge bait stands this far inside the turret's attack range, px (L40's south arrival; its prototype solved at 1, 4, 8 and 16). */
+const TURRET_APPROACH_EDGE_DEPTH = 4;
 
 /** The waits 0 … `TURRET_APPROACH_WAIT_MAX` from `anchor` outward, the earlier of a pair first; null = ascending (OFF's). */
 export function approachWaitOrder(anchor) {
@@ -18300,6 +18324,49 @@ export const KEYLOCK_TURRET_COUNTS = { stances: [], kills: [] };
 /** Zero `KEYLOCK_TURRET_COUNTS`. */
 export function resetKeylockTurretCounts() {
     Object.assign(KEYLOCK_TURRET_COUNTS, { stances: [], kills: [] });
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE KT-ARRIVAL — **THE STANCE WAS DERIVED, AND THE TURRET IS STILL ALIVE ON THE WALK TO IT**
+ * (`KEYLOCK_TURRET_ARRIVAL`, OFF).
+ *
+ * ⚖ The user (2026-11-23/24), asked how they passed a boss lock inside an ice turret's range: *"Kill the ice turret
+ * first"*. `KEYLOCK_TURRET` does that only where `deriveKeylockStance` finds 0 cells (the disc removes them all). When
+ * the frontier's own `brave` row has already put the turret's disc in the walk's contacts, the cells are NOT empty:
+ * the arm derives the stance with the turret alive, and the frontier's stance walk meets the live turret's BODY. The
+ * general walker's ladder then refuses (`the combat ladder is EXHAUSTED`: avoid has no corridor past the body, and the
+ * kill rung refuses a static Enemy body's arrow death by name, §11.4). Measured on the whole-game walk's L40 arrival
+ * from the south (re-measure-7's A1 29:11): the walk refuses at t100 with no tick of its own spent, and the keylock
+ * arm's turret kill is never reached.
+ *
+ * ON (`keylockTurretArrival`), when a keylock's stance walk refuses that way with NO tick spent, the refusal's danger
+ * names only live ice turrets, and the stance is inside each one's disc (the arm's own question: its proximity hazard
+ * removes the stance cell with the disc not exempt), the walk becomes `KEYLOCK_TURRET`'s prerequisite: each turret
+ * killed by `keylockTurretFirst` (APPROACH's fork-certified search, `approachKillForCorpse`, under `requireVerb`), its
+ * death read back, then the stance walk with the discs exempt. The executor then leans and holds as before. Any other
+ * refusal is thrown as it was. The kill's own refusal (no hitless try) propagates by name.
+ *
+ * OFF by default. `SEEDLING_KEYLOCK_TURRET_ARRIVAL=1` turns it on in a node process (the page's WORKER reads it
+ * through the solver env channel: the decision is on the worker thread, inside the frontier loop), and
+ * `withKeylockTurretArrival(enabled, fn)` is for a test or a witness. OFF, nothing below is asked: byte-identical.
+ */
+export const KEYLOCK_TURRET_ARRIVAL = { enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET_ARRIVAL === '1' };
+export const KEYLOCK_TURRET_ARRIVAL_DEFAULT = false;
+
+/** Run `fn` with `KEYLOCK_TURRET_ARRIVAL` set to `enabled`, restoring the previous value. */
+export function withKeylockTurretArrival(enabled, fn) {
+    return withSwitch(KEYLOCK_TURRET_ARRIVAL, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only ON and read by nothing that decides: `asked` each stance-walk refusal the arm
+ * took over (`{lock, t, turrets, stance}`). The kills themselves are `KEYLOCK_TURRET_COUNTS.kills` (the same arm).
+ */
+export const KEYLOCK_TURRET_ARRIVAL_COUNTS = { asked: [] };
+
+/** Zero `KEYLOCK_TURRET_ARRIVAL_COUNTS`. */
+export function resetKeylockTurretArrivalCounts() {
+    Object.assign(KEYLOCK_TURRET_ARRIVAL_COUNTS, { asked: [] });
 }
 
 /**
@@ -23465,7 +23532,8 @@ function keylockTurretFirst(run, perTick, resolved, ctx) {
         const dir = Math.abs(dy) >= Math.abs(dx) ? { dx: 0, dy: Math.sign(dy) || -1 } : { dx: Math.sign(dx), dy: 0 };
         let record;
         try {
-            record = approachKillForCorpse(run, perTick, { corpse: { turret: id, dir }, exempt }, { walkTo: ctx.walkTo,
+            record = approachKillForCorpse(run, perTick, { corpse: { turret: id, dir }, exempt,
+                ...(resolved.turretFirst.edgeBait ? { edgeBait: true } : {}) }, { walkTo: ctx.walkTo,
                 goal: ctx.goal, equip: ctx.equip, fork: ctx.fork, what: `${ctx.what} -> kill (${id})` });
         } catch (e) {
             KEYLOCK_TURRET_COUNTS.kills.push({ lock: resolved.lock, turret: id, t: from, dead: false,
@@ -23485,6 +23553,42 @@ function keylockTurretFirst(run, perTick, resolved, ctx) {
             ...(KEYLOCK_WAIT_PRICED.enabled && lockRow?.keyLine ? keylockStandWalk(run, resolved) : {}),
         });
     }
+}
+
+/**
+ * ⛓ hammer-phase KT-ARRIVAL (`KEYLOCK_TURRET_ARRIVAL` ON) — the frontier's keylock stance walk refused (`error`) with
+ * no tick spent since `from`: when the refusal is the general walker's exhausted ladder, its danger names only LIVE ice
+ * turrets of this room, and the stance is inside each one's disc, run `keylockTurretFirst` (the turrets killed by the
+ * arm's existing kill path, then the stance walk with their discs exempt) and answer `true`. Anything else answers
+ * `false` and the caller throws the refusal as it was.
+ */
+function keylockTurretArrival(run, perTick, plan, error, from, contacts, ctx) {
+    const resolved = plan.resolved;
+    if (plan.strategy !== 'keylock' || !resolved?.stance || resolved.turretFirst || perTick.length !== from) return false;
+    if (!(error instanceof SolverRefusal) || !String(error.message).includes('the combat ladder is EXHAUSTED')) return false;
+    const ob = error.obstacle;
+    if (ob?.kind !== 'danger') return false;
+    const named = [...new Set((ob.sources ?? [`?:${ob.id}`]).map((s) => s.slice(s.indexOf(':') + 1)))];
+    const iceTurrets = new Set(run.world.iceTurrets?.map((t) => t.id) ?? []);
+    const live = named.filter((id) => {
+        const t = iceTurrets.has(id) ? run.entities('turrets')?.get?.(id) ?? null : null;
+        return t !== null && !t.dead && !t.removed;
+    });
+    if (live.length === 0 || live.length !== named.length) return false;
+    // The stance is inside each turret's disc: with that disc NOT exempt, its proximity hazard removes the stance cell.
+    const inDisc = (id) => {
+        const without = new Set([...contacts].filter((c) => c !== `proximity-hazard:${id}`));
+        const h = plannerObstacleAt(run.world, resolved.stance.x, resolved.stance.y, null,
+            solverPlanOpts(run, without, { nodeMargin: 0, triggerMargin: 0 }));
+        return h?.kind === 'proximity-hazard' && h.blocker && `${h.blocker.tag}@${h.blocker.x},${h.blocker.y}` === id;
+    };
+    if (!live.every(inDisc)) return false;
+    const exempt = new Set([...contacts, ...live.map((id) => `proximity-hazard:${id}`)]);
+    KEYLOCK_TURRET_ARRIVAL_COUNTS.asked.push({ lock: resolved.lock, t: run.ticksCompleted, turrets: live,
+        stance: { ...resolved.stance } });
+    keylockTurretFirst(run, perTick, { ...resolved,
+        turretFirst: { kill: live, stance: resolved.stance, exempt, edgeBait: true } }, ctx);
+    return true;
 }
 
 /**
@@ -34742,6 +34846,7 @@ function solveSegmentUnder({
                         // see a re-entry (`STANCE_REENTRY`, above).
                         const walking = `${plan.strategy}(${plan.obstacle.id})#${perTick.length}`;
                         stanceWalks.add(walking);
+                        const stanceFrom = perTick.length; // ⛓ KT-ARRIVAL: a refusal with no tick spent
                         try {
                             walkTo(goal, plan.resolved.stance, {
                                 what: `${what} -> ${plan.strategy} stance `
@@ -34763,6 +34868,10 @@ function solveSegmentUnder({
                                 // walk is undashed. `shield` exists only while `crusherBaitPressGoal` is ON.
                                 ...(plan.strategy === 'bait' && plan.resolved.shield ? { undashed: true } : {}),
                             });
+                        } catch (e) {
+                            // ⛓ hammer-phase KT-ARRIVAL (`KEYLOCK_TURRET_ARRIVAL`, OFF): the turret the arm kills dies first
+                            if (!(KEYLOCK_TURRET_ARRIVAL.enabled && keylockTurretArrival(run, perTick, plan, e, stanceFrom,
+                                contacts, { walkTo, goal, equip, fork, what: `${what} -> ${plan.strategy}` }))) throw e;
                         } finally {
                             stanceWalks.delete(walking);
                         }
