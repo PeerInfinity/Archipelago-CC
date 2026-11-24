@@ -1,1 +1,2 @@
 hammerApproachOrder.train.test.js:       Tests  7 passed (7)
+hammerBaitRemoved.train.test.js:       Tests  3 passed (3)
