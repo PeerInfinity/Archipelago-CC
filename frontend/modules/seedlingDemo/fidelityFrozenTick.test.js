@@ -85,7 +85,7 @@ describe('FROZENTICK — the key', () => {
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
             // ⛓ wave 54: CEREMONYTOWER's `freezeEdgeFrames` is appended after it
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['freezeEdgeFrames', 'freezeReleaseTick']);
+            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['freezeEdgeFrames', 'freezeReleaseTick', 'freezeSpanUpdates']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FROZEN_TICK_UNGATED');
         });
 });
