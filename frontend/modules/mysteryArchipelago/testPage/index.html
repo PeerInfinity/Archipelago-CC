@@ -9,14 +9,15 @@
   A stand-in for the mystery clue game's page, for the in-app row `mystery-bridge-round-trip`.
   It speaks the same four messages through AdapterClient and records what the host sends, so the
   test can read it off `window.__mysteryStub`. It is not the game: the real page lives in the
-  repository mystery-clue-game. Load it with `?iframeId=mystery&story=<story>[&version=<version>]`.
+  repository mystery-clue-game. It is framed as the real page is, with `?case=cases/<story>` (the
+  Mystery Game panel adds `iframeId` and `hostOrigin`); `story` and `version` may be given outright.
 -->
 <pre id="log"></pre>
 <script type="module">
 import { AdapterClient } from '../../shared/adapterClient.js';
 
 const params = new URLSearchParams(location.search);
-const story = params.get('story');
+const story = params.get('story') ?? (params.get('case') ?? '').split('/').pop();
 const version = params.get('version') ?? undefined;
 const stub = { ready: false, states: [], refusals: [] };
 window.__mysteryStub = stub;

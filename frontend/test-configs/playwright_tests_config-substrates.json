@@ -2551,7 +2551,7 @@
             "id": "mystery-bridge-round-trip",
             "enabled": true,
             "category": "Mystery Bridge",
-            "_comment": "The Mystery Archipelago bridge (modules/mysteryArchipelago, disabled by default; the row enables it and puts it back). It loads the committed mystery_custom_house_fire preset and frames a stand-in page (modules/mysteryArchipelago/testPage/, not the real game): state on request, a solved question as a check that comes back solved, a repeat, and refusals by name. No server, so it is the host's offline path. Category unclaimed by testBatches.js, so batch fast (on push)."
+            "_comment": "The Mystery Game module (modules/mysteryArchipelago, disabled by default; the row enables it and puts it back, and points its page address at a stand-in page for the session, modules/mysteryArchipelago/testPage/, not the real game). Enabling opens the panel; loading the committed mystery_custom_house_fire preset makes the panel frame the case: state on request, a solved question as a check that comes back solved, a repeat, and refusals by name. No server, so it is the host's offline path. Category unclaimed by testBatches.js, so batch fast (on push)."
         },
         {
             "id": "document-library-idb",
