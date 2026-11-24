@@ -5,7 +5,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { buildActionModel, loopStartState } from './actionModel.js';
-import { livePrices, manaShortfall, PLAN_KINDS, planLoop, playToGoal } from './actionPlanner.js';
+import {
+    leastShortPlan, livePrices, manaShortfall, PLAN_KINDS, planLoop, playToGoal, relevantNodes,
+} from './actionPlanner.js';
 import { compileActionGraph, placementsFromRules } from './actionGraphCompiler.js';
 import { itemCombinations } from './actionSearch.js';
 
@@ -75,5 +77,34 @@ describe('⛓ playToGoal: the headless bot reaches the goal under every placemen
             expect(playToGoal(model, { placements: pl }).reachedGoal, JSON.stringify(pl)).toBe(true);
         }
         expect(itemCombinations(model).length).toBeGreaterThan(1);
+    });
+});
+
+describe('⛓ the relevance cone (AN-OMSI-1): the ignore-mana search gives the whole graph\'s answer', () => {
+    it('every target, every item combination, full and short pools: the same shortfall; above 0, the same answer', () => {
+        let compared = 0;
+        for (const items of itemCombinations(model)) {
+            for (const mana of [undefined, 30, 5]) {
+                const base = loopStartState(model, items);
+                const start = mana === undefined ? base : { ...base, mana };
+                for (const t of [...model.checkIndices, model.goalIndex]) {
+                    const a = leastShortPlan(model, start, t);
+                    const b = leastShortPlan(model, start, t, undefined, undefined, { cone: false });
+                    const label = `${model.nodes[t].id} with ${items}, mana ${start.mana}`;
+                    expect(a?.short, label).toBe(b?.short);
+                    if (b && b.short > 0) { expect(a, label).toEqual(b); compared += 1; }
+                }
+            }
+        }
+        expect(compared).toBeGreaterThan(0);
+    });
+    it('the cone keeps the target, its ways in, and the producers of what it lacks; drops what cannot help', () => {
+        const keep = relevantNodes(model, loopStartState(model), ix('leave-the-village'));
+        const kept = model.nodes.filter((_, i) => keep[i]).map((n) => n.id);
+        // Leave the Village: after Move the Boulder (after Train); Strength from Train, Knowledge from Read the Notice;
+        // Eat Bread gives more mana than it costs. Guard's Locker and Bribe the Guard give it nothing.
+        expect(kept).toEqual(expect.arrayContaining(['leave-the-village', 'move-the-boulder', 'train', 'read-the-notice', 'eat-bread']));
+        expect(kept).not.toContain('guards-locker');
+        expect(kept).not.toContain('bribe-the-guard');
     });
 });

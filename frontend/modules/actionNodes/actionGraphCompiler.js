@@ -105,10 +105,56 @@ function ruleOf(model, combos) {
 const satisfies = (combos, held) => combos.some((c) => c.every((n, i) => n <= held[i]));
 
 /**
+ * How many times the assumed fill is tried before the compile is refused (`fill-failed`). The fill is one random
+ * draw over the open checks at each step, so a graph with few checks open at the start can paint itself into a corner
+ * on one draw and not on the next. Measured (AN-OMSI-1) on the omsi first-town test fixture (20 nodes, 18 checks, 5
+ * open with no items): seeds 1–20, attempt 1 fills 6 and every seed fills by attempt 6; seeds 1–200, attempt 1 fills
+ * 120, every seed fills, the worst needs 6 and the mean is 1.61. An attempt costs one fill, not a search (the logic is
+ * derived once), so the default sits far past the worst measured. A graph whose first attempt fills (the example)
+ * never draws another.
+ */
+export const DEFAULT_FILL_ATTEMPTS = 32;
+
+/** The stream retries draw from is not the fill's own: mixed so it never replays attempt 1's draws. */
+const FILL_RETRY_STREAM = 0x5bd1e995;
+
+/**
+ * The seed of each fill attempt. Attempt 1 is `seed` itself, so a world that fills first time is byte-identical to
+ * one compiled before retries existed; attempts 2.. draw their seeds from a separate stream derived from `seed`.
+ * @returns {number[]} `attempts` seeds
+ */
+export function fillAttemptSeeds(seed, attempts) {
+    const stream = createRng((seed ^ FILL_RETRY_STREAM) | 0);
+    const seeds = [seed];
+    while (seeds.length < attempts) seeds.push(Math.floor(stream.next() * 0x100000000) | 0);
+    return seeds;
+}
+
+/**
+ * The assumed fill, tried up to `attempts` times (seeds from `fillAttemptSeeds`). Refused by name, with the number of
+ * attempts made, when every attempt fails.
+ * @returns {{placement: Map<number, number>, attempt: number, seed: number}}
+ */
+export function fillWithRetries(model, logic, pool, progression, seed, attempts = DEFAULT_FILL_ATTEMPTS) {
+    let last = null;
+    const seeds = fillAttemptSeeds(seed, attempts);
+    for (let k = 0; k < seeds.length; k += 1) {
+        try {
+            return { placement: assumedFill(model, logic, pool, progression, seeds[k]), attempt: k + 1, seed: seeds[k] };
+        } catch (e) {
+            if (e?.code !== ACTION_COMPILE_REFUSALS.FILL_FAILED) throw e;
+            last = e;
+        }
+    }
+    throw new ActionCompileError(ACTION_COMPILE_REFUSALS.FILL_FAILED,
+        `${seeds.length} fill attempt${seeds.length === 1 ? '' : 's'} failed; the last: ${last.message.replace(/^\[[^\]]*\] /, '')}`);
+}
+
+/**
  * The item pool, one entry per copy: every boon `count` times, then the filler boon to match the check count.
  * @returns {number[]} boon indices
  */
-function itemPoolOf(model, graph) {
+export function itemPoolOf(model, graph) {
     const pool = model.boons.flatMap((b, i) => Array.from({ length: b.count }, () => i));
     const short = model.checkIndices.length - pool.length;
     if (short > 0) {
@@ -118,13 +164,22 @@ function itemPoolOf(model, graph) {
     return pool;
 }
 
+/** The boon indices any derived rule names: the progression items. */
+export function progressionOf(logic) {
+    const progression = new Set();
+    for (const rows of [...logic.perform.map((ws) => ws.map((w) => w.items)), ...logic.reach]) {
+        for (const c of rows) c.forEach((n, i) => { if (n > 0) progression.add(i); });
+    }
+    return progression;
+}
+
 /**
  * Assumed fill over the derived rules: each progression copy goes to an empty check that is in logic with every copy
  * not yet placed, plus whatever the placed copies then unlock; the rest go to the remaining checks. Seeded and
  * deterministic.
  * @returns {Map<number, number>} check node index → boon index
  */
-function assumedFill(model, logic, pool, progression, seed) {
+export function assumedFill(model, logic, pool, progression, seed) {
     const rng = createRng(seed);
     const checks = model.checkIndices;
     const placed = new Map();
@@ -194,6 +249,7 @@ function payloadOf(graph, model, id, { locationName, exits }) {
  * @param {object} [opts]
  * @param {number} [opts.playerId=1]
  * @param {number} [opts.seed=1]
+ * @param {number} [opts.fillAttempts=DEFAULT_FILL_ATTEMPTS] - fill attempts before `fill-failed` (`fillAttemptSeeds`)
  * @param {number} [opts.budget] - the one-loop state budget
  * @param {string} [opts.graphPath] - where the graph lives, recorded in `procgen_metadata[p]`
  * @param {string[]|null} [opts.exists] - the content packs the graph is the resolved structure of (`frontend/packs/`
@@ -203,6 +259,7 @@ function payloadOf(graph, model, id, { locationName, exits }) {
  */
 export function compileActionGraph(graph, {
     playerId = 1, seed = 1, budget = DEFAULT_STATE_BUDGET, graphPath = null, exists = null,
+    fillAttempts = DEFAULT_FILL_ATTEMPTS,
 } = {}) {
     const model = buildActionModel(graph);
     const logic = deriveActionLogic(model, { budget });
@@ -222,13 +279,10 @@ export function compileActionGraph(graph, {
         }
     });
 
-    // Items: progression when any derived rule names them.
-    const progression = new Set();
-    for (const rows of [...logic.perform.map((ws) => ws.map((w) => w.items)), ...logic.reach]) {
-        for (const c of rows) c.forEach((n, i) => { if (n > 0) progression.add(i); });
-    }
+    const progression = progressionOf(logic);
     const pool = itemPoolOf(model, graph);
-    const placement = assumedFill(model, logic, pool, progression, seed);
+    const fill = fillWithRetries(model, logic, pool, progression, seed, fillAttempts);
+    const placement = fill.placement;
 
     const ns = namespaceNamed('action-nodes');
     const goalNode = model.nodes[model.goalIndex];
@@ -320,7 +374,7 @@ export function compileActionGraph(graph, {
     }
     rules.sphere_log = sphereLog;
 
-    const report = proofReportOf(graph, model, logic, sphereLog, { p, placement, progression, budget });
+    const report = proofReportOf(graph, model, logic, sphereLog, { p, placement, progression, budget, fill });
     rules.procgen_metadata = {
         [p]: {
             driver: ACTION_GRAPH_DRIVER,
@@ -398,7 +452,7 @@ function loopCostsOf(graph, model, settings) {
 }
 
 /** The logic and A6 report recorded in `procgen_metadata[p].action_logic`. */
-function proofReportOf(graph, model, logic, sphereLog, { p, placement, progression, budget }) {
+function proofReportOf(graph, model, logic, sphereLog, { p, placement, progression, budget, fill }) {
     const ruleText = (combos) => (combos.some((c) => c.every((n) => n === 0)) ? 'True'
         : combos.map((c) => Object.entries(combinationByName(model, c)).map(([k, n]) => (n > 1 ? `Has(${k}, ${n})` : `Has(${k})`)).join(' & ')).join(' | '));
     const targets = {};
@@ -444,6 +498,8 @@ function proofReportOf(graph, model, logic, sphereLog, { p, placement, progressi
         targets,
         exits,
         placements: Object.fromEntries([...placement].map(([c, b]) => [model.nodes[c].name, model.boons[b].name])),
+        // Only when a retry was needed: a world that filled first time keeps the bytes it had before retries existed.
+        ...(fill.attempt > 1 ? { fill: { attempt: fill.attempt, seed: fill.seed } } : {}),
         progression_items: [...progression].map((i) => model.boons[i].name).sort(),
         a6: {
             every_check_earnable: true,

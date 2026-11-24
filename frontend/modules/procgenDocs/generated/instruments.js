@@ -297,6 +297,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "line",
             "documentedFlags": [
                 "exists",
+                "fill-attempts",
                 "seed"
             ],
             "file": "action-nodes-compile.mjs",
@@ -312,6 +313,12 @@ export const INSTRUMENTS = frz({
                         "valueOf"
                     ],
                     "name": "exists"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "fill-attempts"
                 },
                 {
                     "how": [
