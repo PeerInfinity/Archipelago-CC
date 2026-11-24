@@ -1,0 +1,12 @@
+CENSUS PROBE (a temporary line at the two ON sites — `stepBeamTowersThroughPhaseANow` past its guards (a texted ceremony
+in a room holding a beam tower, the towers stepped) and `assertNoPickupInRockSpanNow` past its key guard (every button
+frame A and every wand snap, hit or not) — pushing to globalThis.__CENSUS_PROBE and writing `CENSUS-PROBE …` to stderr;
+copied in and restored, `grep -c CENSUS-PROBE levelRun.js` = 0 after, and levelRun.js equal to the D2 commit):
+  294 committed tapes, KEY=freezeSpanUpdates ON (tools/tape-onoff-probe.mjs): 294 ON = OFF, probe hits 0 (d3/tapes-onoff.txt)
+  batch-seedling-acceptance.mjs, SEEDLING_FREEZE_SPAN_UPDATES=1: probe hits 0; md5 391322d681b7aa0229d94b3f6906d024
+  survey steps 36 (L29), 167, 174 (L43), 191 (L74), 232 (L103), OFF / ON / ON with the three: probe hits 0, 0, 0
+  can it fire?
+    tools/rockspan-pickup.mjs, L29 + feather@112,127, walking up onto the button: `span-ask a button-dropped fallrock L29 t24`
+    tools/tower-phasea.mjs, L29 + beamtower@112,40 + feather@144,28: `tower-lump L29 t2`
+So: no committed tape and no acceptance row presses L29's or L74's button (no frame A is ever asked), none drops the
+wand's rocks onto the player, and none collects a texted pickup in a tower room.

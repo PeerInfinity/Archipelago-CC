@@ -27,7 +27,7 @@ import { displayRegionReader, resolveRegionLayout } from '../procgenCore/regionL
 import { regionsOf } from '../procgenCore/rulesGraph.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { DEFAULT_EXTENT } from './regionMapFrames.js';
-import { genericLocationTiles } from './regionMapOverlay.js';
+import { genericLocationTiles, legacyGenericLocationTiles } from './regionMapOverlay.js';
 
 /** An exit's door tile in its own level's tiles, or null: `x, y` (the maze/text-adventure shape), else `exit_tiles[0]`. */
 export function exitTileOf(exit) {
@@ -39,6 +39,20 @@ export function exitTileOf(exit) {
 const safe = (fn, fallback) => {
     try { return fn(); } catch { return fallback; }
 };
+
+/**
+ * ⛓ WHICH UNTILED CELLS GET THE BIGGER, LOWER SQUARES (region-map-squares-rings). An untiled cell (no substrate
+ * `locationTiles`) that still DRAWS ART (`cell.region`: e.g. a maze level) may read as "tiled" to the user.
+ * `GENERIC_ART_CELLS_GET_BIG_PLACES` is the one switch: true → every untiled cell gets `genericLocationTiles`;
+ * false → an art-drawing untiled cell keeps the pre-slice `legacyGenericLocationTiles`, byte-identical.
+ * ⚖ The user, session 84c8ab35, 2026-11-23T21:05:24Z: "Only levels without art (Recommended)" — "The 116 maze levels
+ * that draw art keep today's boxes, so the bigger boxes don't cover the art. The other 190 maze levels, and worlds
+ * like A Link to the Past, get the change."
+ */
+export const GENERIC_ART_CELLS_GET_BIG_PLACES = false;
+export function usesBigGenericPlaces(cell) {
+    return GENERIC_ART_CELLS_GET_BIG_PLACES || !cell?.region;
+}
 
 /**
  * @param {object} args
@@ -116,7 +130,7 @@ export function buildRegionMapModel({ rules, player = null, registry = substrate
         const names = cell.members.flatMap((m) => (regions[m]?.locations ?? []).map((l) => l?.name))
             .filter((n) => typeof n === 'string' && !placed.has(n));
         for (const n of names) placed.add(n);
-        cell.tiles = genericLocationTiles(names, cell.extent ?? DEFAULT_EXTENT);
+        cell.tiles = (usesBigGenericPlaces(cell) ? genericLocationTiles : legacyGenericLocationTiles)(names, cell.extent ?? DEFAULT_EXTENT);
         cell.tileSource = 'generic';
     }
     const unplaced = [];
