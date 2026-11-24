@@ -3356,3 +3356,48 @@ describe('MazeRoomUI — a delegated walk advances the panel\'s OWN turn counter
         expect(panel.state.turn).toBe(7);
     });
 });
+
+/**
+ * ⛓ CONTENT SETS GEN-2 — A NEW DOCUMENT WITHOUT THE PANEL'S ROOM UNBINDS IT (`_unbindStaleRegion`, called on every
+ * `stateManager:rawJsonDataLoaded`). Measured in the in-app batch: `playback-bot-tile-kinds-demo` then
+ * `playback-bot-walk-order` went STUCK while the panel stayed bound to the demo's YellowCastle room, whose name the
+ * plain Adventure world it then walked shares.
+ */
+describe('GEN-2 — _unbindStaleRegion', () => {
+    const bound = () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.render = () => {};
+        panel.applyLoadedRegion({ region_id: 'YellowCastle', world: makeWorld(), arrivedFrom: null });
+        return panel;
+    };
+
+    it('a document with no sidecar for the bound region returns the panel to its unbound state (visualizer too)', () => {
+        const panel = bound();
+        expect(panel.currentRegionId).toBe('YellowCastle');
+        expect(panel.world).not.toBeNull();
+        panel._unbindStaleRegion({ preset_sidecars: {} }, '1');
+        expect(panel.world).toBeNull();
+        expect(panel.state).toBeNull();
+        expect(panel.currentRegionId).toBeNull();
+        expect(panel.externalInventory).toBeNull();
+        expect(panel._visualizer.regionId).toBeNull();
+        expect(panel.getPlaybackController().walkTo({ kind: 'location', name: 'Chalice Home' })).toBe(false);
+    });
+
+    it('a document that still has the region (a reload, a regenerate) keeps the binding', () => {
+        const panel = bound();
+        const world = panel.world;
+        panel._unbindStaleRegion({ preset_sidecars: { 1: { YellowCastle: { substrate: 'maze' } } } }, '1');
+        expect(panel.world).toBe(world);
+        expect(panel.currentRegionId).toBe('YellowCastle');
+    });
+
+    it('a standalone world (no region) is never touched', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.render = () => {};
+        const world = makeWorld();
+        panel.world = world;
+        panel._unbindStaleRegion({ preset_sidecars: {} }, '1');
+        expect(panel.world).toBe(world);
+    });
+});

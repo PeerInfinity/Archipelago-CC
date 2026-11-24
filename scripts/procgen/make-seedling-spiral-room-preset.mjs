@@ -49,8 +49,14 @@
  *            `meta` selected (`content: ['meta']`, content sets R3): the same
  *            logic, presented by the theme pack `frontend/packs/meta/`, from
  *            `META_TRIAL_STATE`.
+ *   tile-kinds-demo → `tile_kinds_demo`: the TOP-DOWN world over the committed
+ *            Adventure seed-1 preset (the row's `topDownSource`, with its sphere
+ *            log: what a plain page load has loaded), every region a 16×12 maze
+ *            room, the pack `furniture` named under "what exists" and the maze
+ *            biome mix scattered 2 : classic 1 (content sets GEN-2), from
+ *            `TILE_KINDS_DEMO_STATE`.
  *
- * ONE recipe, eleven states: the same assembly, the same bytes rule, the same
+ * ONE recipe, twelve states: the same assembly, the same bytes rule, the same
  * `--check`.
  *
  * The preset is a FUNCTION of that committed state, never a hand edit: this
@@ -72,10 +78,11 @@
  * `check-seedling-generated-host-play.mjs`, `check-seedling-generated-swim-play.mjs`,
  * the in-app row `seedling-wasm-generated-chestdoor-chest` (for `generated-chestdoor`),
  * `check-seedling-atlas-host-play.mjs`, `check-seedling-atlas-location-play.mjs`,
- * `check-concept-trial-play.mjs` and the in-app row `meta-trial-plays` (for `meta-trial`).
+ * `check-concept-trial-play.mjs`, the in-app row `meta-trial-plays` (for `meta-trial`) and the in-app row
+ * `playback-bot-tile-kinds-demo` (for `tile-kinds-demo`).
  *
  * Usage:
- *   node scripts/procgen/make-seedling-spiral-room-preset.mjs [--state=spiral|sphere|generated|generated-leaf|generated-host|generated-swim|generated-chestdoor|atlas-host|atlas-location|concept-trial|meta-trial] [--check]
+ *   node scripts/procgen/make-seedling-spiral-room-preset.mjs [--state=spiral|sphere|generated|generated-leaf|generated-host|generated-swim|generated-chestdoor|atlas-host|atlas-location|concept-trial|meta-trial|tile-kinds-demo] [--check]
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -87,7 +94,7 @@ argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../..');
 /** Each preset this recipe writes: the presetDefs export it is a function of, and where it goes. */
-const PRESETS = Object.freeze({
+export const PRESETS = Object.freeze({
     spiral: Object.freeze({ stateExport: 'SEEDLING_SPIRAL_ROOM_STATE', gameId: 'seedling_spiral_room' }),
     sphere: Object.freeze({ stateExport: 'SEEDLING_SPHERE_ROOM_STATE', gameId: 'seedling_sphere_room' }),
     generated: Object.freeze({ stateExport: 'SEEDLING_GENERATED_ROOM_STATE', gameId: 'seedling_generated_room' }),
@@ -101,8 +108,27 @@ const PRESETS = Object.freeze({
         gameId: 'seedling_atlas_location' }),
     'concept-trial': Object.freeze({ stateExport: 'CONCEPT_TRIAL_STATE', gameId: 'concept_trial' }),
     'meta-trial': Object.freeze({ stateExport: 'META_TRIAL_STATE', gameId: 'meta_trial' }),
+    // ⛓ GEN-2 — a top-down state realises a SOURCE: the committed preset it was recorded over (its sphere log beside it).
+    'tile-kinds-demo': Object.freeze({
+        stateExport: 'TILE_KINDS_DEMO_STATE', gameId: 'tile_kinds_demo',
+        topDownSource: 'frontend/presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json',
+    }),
 });
 const imp = (rel) => import(pathToFileURL(path.join(repoRoot, rel)));
+
+/**
+ * ⛓ GEN-2 — a top-down row's source: `{ topDownSource, sphereLog }` read from the committed preset it names (the
+ * `_sphere_log.jsonl` beside it, the log a page load of that preset reads), or `{}` for a row with none.
+ */
+export function topDownContextOf(preset) {
+    if (!preset.topDownSource) return {};
+    const rules = path.join(repoRoot, preset.topDownSource);
+    const log = rules.replace(/_rules\.json$/, '_sphere_log.jsonl');
+    return {
+        topDownSource: JSON.parse(fs.readFileSync(rules, 'utf8')),
+        sphereLog: fs.readFileSync(log, 'utf8').split('\n').filter((l) => l.trim()).map((l) => JSON.parse(l)),
+    };
+}
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main();
 
@@ -126,7 +152,7 @@ async function main() {
 
     // ⛓ CONTENT SETS C3 — the world's content set loads first (an empty stack reads nothing).
     const { rulesJson, ms } = await runPresetHeadless(
-        await prepareRunFromState(structuredClone(state), { io: nodePackIo() }));
+        await prepareRunFromState(structuredClone(state), { io: nodePackIo(), ...topDownContextOf(preset) }));
     const text = JSON.stringify(rulesJson, null, 2);
     const rel = path.relative(repoRoot, OUT_FILE);
     const sidecars = Object.entries(rulesJson.preset_sidecars?.['1'] ?? {});

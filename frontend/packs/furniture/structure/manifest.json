@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "_comment": "WHAT EXISTS in a furnished room (content sets GEN-2): two terrain kinds, a rug you walk over and a pillar you walk around. Both say `generate: true`, so a world that names this pack under \"what exists\" (`params.exists`) lets the \"Randomly placed tiles\" maze biome place them, only where the room's logic stays exactly as it was. Never offered by a theme (⚖ Q4).",
+  "provenance": {
+    "sources": {
+      "gen2": {
+        "type": "model",
+        "model": "claude-opus-5-5",
+        "date": "2026-11-22",
+        "note": "the furniture pack, content sets GEN-2 (Co-Authored-By: Claude Opus 5.5). No approval of its names or shapes is recorded"
+      }
+    },
+    "default": "gen2"
+  },
+  "entries": {
+    "furniture:terrain/rug": { "kind": "terrain", "pass": "walkable", "generate": true },
+    "furniture:terrain/pillar": { "kind": "terrain", "pass": "blocked", "generate": true }
+  }
+}
