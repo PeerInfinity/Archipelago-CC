@@ -7363,5 +7363,24 @@
         "has_procgen_data": true
       }
     }
+  },
+  "action_nodes_same_monday": {
+    "name": "Action Nodes The Same Monday",
+    "folders": {
+      "AP_1": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Action Nodes"
+          }
+        ],
+        "files": [
+          "AP_1_rules.json"
+        ],
+        "has_procgen_data": true
+      }
+    }
   }
 }

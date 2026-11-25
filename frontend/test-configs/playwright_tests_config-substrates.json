@@ -94,6 +94,12 @@
             "_comment": "AN-TIME-2 (Robert's Q6, minimal form): a node performed in loop 1 is marked 'completed before · loop 1' in loop 2 (not in loop 1), the panel lists the set, saved per world."
         },
         {
+            "id": "an-same-monday-clock",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-TIME-4: the committed timed preset The Same Monday: the pool is loop.mana (3 h, not 100), the Time line at 09:00 and after one visit, the start gate refuses a visit whose paper is not held."
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
