@@ -1,0 +1,8 @@
+COUNTS 29:11 env GSW=- PM=- PKH=- SPL=- KTA=- enabled GSW=false PM=false PKH=false SPL=false KTA=false
+  result kind=refusal ok=false work=74 answer=c7b1b22b2c60 ms=2126 | live answer=5f46423586e1 work=642 kind=null solverEnv=SEEDLING_GOAL_START_WAIT=1;SEEDLING_KEYLOCK_TURRET_ARRIVAL=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PREVIEW_METER=1;SEEDLING_STRIKE_PREVIEW_LEAN=1
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":0,"asked":0,"tripped":0}
+  PRESS_KILL_HOLD_COUNTS.rows=[]
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":0,"forecastReplays":0,"spinRowsSkipped":0}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]
+  KEYLOCK_TURRET_COUNTS={"stances":[],"kills":[]}

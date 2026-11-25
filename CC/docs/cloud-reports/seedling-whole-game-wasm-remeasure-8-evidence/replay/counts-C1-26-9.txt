@@ -1,0 +1,8 @@
+COUNTS 26:9 env GSW=- PM=- PKH=- SPL=- KTA=- enabled GSW=false PM=false PKH=false SPL=false KTA=false
+  result kind=refusal ok=false work=331 answer=2dbe6e74fcc8 ms=7501 | live answer=2dbe6e74fcc8 work=331 kind=refusal solverEnv=null
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":0,"asked":0,"tripped":0}
+  PRESS_KILL_HOLD_COUNTS.rows=[]
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":0,"forecastReplays":0,"spinRowsSkipped":0}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]
+  KEYLOCK_TURRET_COUNTS={"stances":[],"kills":[]}

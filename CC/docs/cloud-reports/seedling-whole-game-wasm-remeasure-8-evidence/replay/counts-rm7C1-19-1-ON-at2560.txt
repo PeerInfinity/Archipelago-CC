@@ -1,0 +1,8 @@
+COUNTS 19:1 budget=2560 env GSW=1 PM=1 PKH=1 SPL=1 KTA=1 enabled GSW=true PM=true PKH=true SPL=true KTA=true
+  result kind=null ok=true work=2561 answer=517e4c5d19e2 ms=96585 | live answer=9d91691740df work=112 kind=refusal solverEnv=null
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":1795819,"asked":1750,"tripped":1}
+  PRESS_KILL_HOLD_COUNTS.rows=[{"t":0,"stand":636,"refusedAt":653,"tries":[{"wait":45,"verdict":"solved","why":null}],"verdict":"solved"}]
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":669200,"forecastReplays":1170,"spinRowsSkipped":766800}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]
+  KEYLOCK_TURRET_COUNTS={"stances":[],"kills":[]}
