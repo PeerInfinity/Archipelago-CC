@@ -1,0 +1,23 @@
+// MEASUREMENT-ONLY: solve the P1 32:10 fixture ON and write prefix+plan as a staged tape (for a game record), plus the model's stream.
+import { writeFileSync } from 'node:fs';
+const ROOT = '/home/user/Archipelago-CC';
+const { readFileSync } = await import('node:fs');
+const { restoreRequest } = await import(`${ROOT}/scripts/procgen/seedlingSolveRequestCodec.js`);
+const { ANYTIME_PASSES, solveAnytime } = await import(`${ROOT}/frontend/modules/seedlingDemo/jsRuntimeSolver.js`);
+const { atlasLevelSource } = await import(`${ROOT}/frontend/modules/seedlingDemo/levelSource.js`);
+const { buildStagedTape } = await import(`${ROOT}/frontend/modules/seedlingDemo/botDriverV1.js`);
+const sb = await import(`${ROOT}/frontend/modules/seedlingDemo/solverBot.js`);
+const fx = JSON.parse(readFileSync(`${ROOT}/frontend/modules/seedlingDemo/fixtures/press-kill-start-wait/P1-32-10.request.json`, 'utf8'));
+const { passes = ANYTIME_PASSES, ...tape } = restoreRequest(fx.request);
+const base = atlasLevelSource();
+const own = new Map(fx.levels.map(([level, record]) => [level, restoreRequest(record)]));
+const levelSource = (level) => own.get(level) ?? base(level);
+const a = sb.withPressKillStartWait(true, () => solveAnytime({ ...tape, levelSource }, { passes }));
+if (!a.ok) throw new Error('not solved');
+const equips = [...(tape.staging.equips ?? [])];
+for (const [i, slot] of tape.equips ?? []) equips.push({ t: i, slot });
+for (const [i, slot] of a.plan.equipsAt ?? []) equips.push({ t: tape.perTick.length + i, slot });
+console.log('staging keys', Object.keys(tape.staging).join(','), 'equips', JSON.stringify(equips).slice(0, 300), 'prefix', tape.perTick.length, 'plan', a.plan.solution.length);
+const t = buildStagedTape({ staging: { ...tape.staging, equips }, perTick: [...tape.perTick, ...a.plan.solution], name: process.argv[2] });
+writeFileSync(process.argv[3], `${JSON.stringify(t, null, 4)}\n`);
+console.log('wrote', process.argv[3]);
