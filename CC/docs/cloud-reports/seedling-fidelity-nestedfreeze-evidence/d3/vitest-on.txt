@@ -1,0 +1,278 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ❯ frontend/modules/seedlingDemo/fidelityNestedRockCeremony.test.js (8 tests | 1 failed | 1 skipped) 957ms
+     ↓ ships OFF, appended last, with a worker env name
+     × texted (a feather, after the button): OFF serialises 172 + 150; wave 56 refuses; ON the union is the ceremony's 150 139ms
+     ✓ text-less (L29's green key, before the button): ON the union ends on A+150, the pickup's F+150 step 77ms
+     ✓ every family sees the union as the ceremony: per tick, ON = the same walk with the button removed 147ms
+     ✓ composition: with waves 50 to 56's keys and the Owl's ON the union is the same, and = the no-rock ceremony 206ms
+     ✓ a pickup reached only by the release step (collected on R+1, the game's frame too): ON = OFF, the whole result 82ms
+     ✓ the button with no pickup: ON = OFF, the whole result 82ms
+     ✓ the rope rock (`rockbutton-l28-livefall`): a pull is `genericHit`, so no pickup nests in it — ON = OFF 222ms
+ ✓ frontend/modules/seedlingDemo/fidelityLapseCost.test.js (14 tests) 49665ms
+     ✓ ON: leg 403 solves inside the page budget, with OFF's plan key for key (642 t)  24020ms
+     ✓ ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (116 t)  802ms
+     ✓ MUTANT (the companion off): ON, the same request is refused at the DETOUR rung's budget  1943ms
+     ✓ AFTER (the shipped defaults) of the MUTANT: still refused at 160 (the companion still solves it, 776 t) — but by the dashless pass's `bait` refusal at work 113, then the full pass's budget at `kill-chaser`  22429ms
+     ✓ ON: leg 773's request (its live digest re-derived ON, as a page with the switch sends it) solves in 423 t with no hit  317ms
+ ✓ frontend/modules/seedlingDemo/fidelityCorridorBody.test.js (11 tests) 81365ms
+     ✓ step 53 (L22): OFF the walk dies twice to wallflyers; ON it walks clean  7679ms
+     ✓ step 45 (L22): ON keeps the base's clean 6-window dash chain — certified WHOLE (no 1-window prefix is clean)  5538ms
+     ✓ step 170 (L77): the lavarunner's contact gate reads its own i-frame, not the dark shield's — ON walks clean  29736ms
+     ✓ ON = OFF on a whole solve: step 53 (L22) and step 45 (L22, the dash chain) plan the same ticks  37770ms
+ ✓ scripts/procgen/seedlingSolverSurface.test.js (36 tests) 42696ms
+     ✓ (iv) the family file list equals the import closure  822ms
+     ✓ the import door's closure is the simulation's: solverView.js pulls in no family file  538ms
+     ✓ (a) a run method NO family file reaches (adoptWindowClock), read in dangerMap.js ⇒ RED  1754ms
+     ✓ (a′) run.equipNow (reached by botDriverV2.js and solverBot.js), read in dangerMap.js ⇒ RED through `files`  1879ms
+     ✓ (b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js ⇒ RED twice: not in the table, and around the door  1817ms
+     ✓ (c) the one run.worldCtor read removed from director.js ⇒ RED "RETIRED"  1526ms
+     ✓ (d) a COMMENT mentioning run.notAMember ⇒ GREEN (the census reads code, not comments)  1774ms
+     ✓ (a) dangerMap.js imports SPINNER from spinner.js directly (around the door) ⇒ RED, the door rule  1519ms
+     ✓ (b) solverView.js re-exports a levelWorld symbol no family file imports ⇒ RED "RETIRED"  1483ms
+     ✓ (b′) solverView.js re-exports a name its module does not export (WATER_STATE is levelWorld-private) ⇒ RED twice  1832ms
+     ✓ (c) blocksMover exported by the door AND imported through it in mover.js ⇒ RED "not in the contract table"  1638ms
+     ✓ (d) a COMMENT naming a simulation module in a family file ⇒ GREEN  1658ms
+     ✓ (a) a DIRECT run.pushables read in dangerMap.js ⇒ RED "folded behind run.entities", once  1701ms
+     ✓ (b) run.entities('pushable') — a typo ⇒ RED "unknown entity family"  1699ms
+     ✓ (c) run.entities(name) with a variable ⇒ RED, a named blind spot  1765ms
+     ✓ (d) the pushables entry removed from ENTITY_FAMILIES in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the table  1807ms
+     ✓ (e) a COMMENT naming run.pushables in a family file ⇒ GREEN  1800ms
+     ✓ (a) a DIRECT run.inventory read in dangerMap.js ⇒ RED "folded behind run.progress", once  1598ms
+     ✓ (a′) a DIRECT run.collected read ⇒ RED "folded behind run.ledger", once  1777ms
+     ✓ (b) run.ledger('chestOpen') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS  1590ms
+     ✓ (c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name)  1838ms
+     ✓ (d) the inventory entry removed from PROGRESS_FIELDS in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the dispatch table  1716ms
+     ✓ (d′) the collected entry pointed at another arrow (collected: sealCollectionsNow) ⇒ GREEN here — the census sees keys, not values; levelRun.test.js's query-equals-getter rows are what hold the values  1518ms
+     ✓ (e) COMMENTS naming run.inventory and run.collected in a family file ⇒ GREEN  1672ms
+     ✓ (f) a getter listed in two folds (keys added to LEDGER_KIND_NAMES) ⇒ RED "folded behind both"  1550ms
+ ✓ frontend/modules/seedlingDemo/fidelityL100Lattice.test.js (10 tests) 17564ms
+     ✓ OFF: the break-stance walk is planned at 16 px, aims (124,140) past the pool node, and stalls on the mask  460ms
+     ✓ ON, DASH_CERT_SIGHT OFF: the walk is planned on FINE_LATTICE, the rock breaks, and the plan IS the game witness, key for key  4655ms
+     ✓ ON, DASH_CERT_SIGHT ON: the plan IS the DASHCERT game witness, key for key, hitless, into L101  3920ms
+     ✓ ON: step 168 (L66 → L70) — the keylock stance fineFrontierFlood found is walked on 8 px; the plan IS the witness  597ms
+     ✓ ON: a walk the 16 px lattice answers is untouched — the L89 control (W35 step 89) solves to the same keys  2059ms
+     ✓ ON: step 172 (L12, the wand stance (40,888), off the 8 px grid) walks axis-aligned — the OFF keys  2709ms
+     ✓ ON: step 200 (L12, the wand stance (40,888), off the 8 px grid) walks axis-aligned — the OFF keys  3042ms
+ ✓ frontend/modules/seedlingDemo/fidelityL39Hit.test.js (9 tests) 10479ms
+     ✓ the rebuilt request plans the walk's plan at the defaults: 2864 t dashless, the full pass stopped at block-route  4041ms
+     ✓ OFF: the forecast cut at the walk's first tick leaves the body's line at t1318, ~88 px off at the hit, its hammer unpriced  579ms
+     ✓ ON: the same forecast is the stepped body through t1524, and prices the hammer at t1522 (the game's tick, ±0)  588ms
+     ✓ ON: the walk's request plans a 3813 t dashless walk whose drive takes no hit  4921ms
+ ✓ frontend/modules/seedlingDemo/seedlingSoundCues.test.js (65 tests) 17544ms
+     ✓ r5-l40-part0: the cue list per tick; it contains Projectiles/Explosion.as:48, Puzzlements/ButtonRoom.as:72, Puzzlements/BreakableRock.as:62  425ms
+     ✓ r5-bobboss-fire: the cue list per tick; it contains Enemies/Enemy.as:165, Enemies/Enemy.as:160, Scenery/FallRockLarge.as:102  300ms
+     ✓ crusher-l42-round-trip: the cue list per tick; it contains Puzzlements/Crusher.as:79  707ms
+     ✓ the Owl: a grenade Explosion per `exploded`; the Bob Boss: each form's hits, its last a death  311ms
+     ✓ the crusher: re-played only once its ONE channel has run 10 %, never on two consecutive ticks  711ms
+     ✓ u15-turret-spit: digests after every tick, the checks and the ticks are identical — no sound / off / muted / locked / refused / on / quarter-speed / speed-16  516ms
+     ✓ r5-l40-part0: digests after every tick, the checks and the ticks are identical — no sound / off / muted / locked / refused / on / quarter-speed / speed-16  4508ms
+     ✓ pushblock-l65-reach-l63: digests after every tick, the checks and the ticks are identical — no sound / off / muted / locked / refused / on / quarter-speed / speed-16  1149ms
+     ✓ r6-totem-kill: digests after every tick, the checks and the ticks are identical — no sound / off / muted / locked / refused / on / quarter-speed / speed-16  2524ms
+     ✓ lavaboss-witness/kof-policy-kill: digests after every tick, the checks and the ticks are identical — no sound / off / muted / locked / refused / on / quarter-speed / speed-16  2774ms
+ ✓ frontend/modules/seedlingDemo/escapeCrossPassCache.test.js (19 tests) 119899ms
+     ✓ ⛓⛓⛓ L18 residue 21: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with cross-pass hits  17219ms
+     ✓ ⛓⛓⛓ L18 residue 21, STRIKE_ETA_FLOOR ON: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with cross-pass hits  12351ms
+     ✓ ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included  21477ms
+     ✓ ⛓⛓⛓ every hit recomputed and compared: 0 mismatches, and the bytes are OFF's  11250ms
+     ✓ ⛓⛓⛓ every hit recomputed and compared: 0 mismatches (floor ON), and the bytes are OFF's  7319ms
+     ✓ ⛓⛓ maxEntries 0: OFF exactly, and a full scope misses rather than evicts  9603ms
+     ✓ ⛓⛓ maxEntries 1: OFF exactly, and a full scope misses rather than evicts  10400ms
+     ✓ ⛓⛓ maxEntries 7: OFF exactly, and a full scope misses rather than evicts  10289ms
+     ✓ ⛓⛓⛓ two solves back to back: the second's first lookup misses, and it hits exactly as the first did  6359ms
+     ✓ ⛓⛓⛓ the clocked hazard: one call at two seam times across the hammer's phase is two entries, and the two answers differ  1711ms
+     ✓ ⛓⛓⛓ a drifting beam tower inside a SEARCH (L18 + a tower): two seam times a hammer period apart — the drift alone parts the answers, two entries, verify 0 mismatches  3393ms
+     ✓ ⛓⛓⛓ the digest's `visit` part is in the key: one seam, one tick, one clock, the tower drifted from two ticks — the digests differ in `visit` ALONE, and the answers differ  2250ms
+     ✓ ⛓⛓⛓ the arguments: `pressAt` and the held sets' ORDER are in the key — each variant is OFF's answer  3299ms
+     ✓ ⛓⛓⛓ the deadline's presence is in the key; a tripped miss is never stored; an entry stored before a trip is never read after one  2672ms
+ ✓ scripts/procgen/oneSpelling.test.js (11 tests) 8577ms
+     ✓ ⛓⛓⛓ each transcription is defined EXACTLY ONCE in the model  551ms
+     ✓ ⛔⛔ no live second spelling anywhere in the transcription's reach  1013ms
+     ✓ ⛓ the subject is derived from imports, and prose does not join it  1121ms
+     ✓ ⛓⛓ the excluded population is enumerated, not implied  2742ms
+     ✓ ⛓ the same spelling outside the subject is not a finding  3141ms
+ ✓ frontend/modules/seedlingDemo/hammerAxisStrikes.test.js (7 tests) 8527ms
+     ✓ AXIS-L12HITS: L12 leg 149 ON takes 0 hits and answers OFF's plan; without the hold's tail it is punched  4072ms
+     ✓ AXISON: on L95 flag 4 and L105 the axis strikes alone build no policy and answer OFF's plan  4064ms
+ ✓ frontend/modules/seedlingDemo/solverDeadline.test.js (16 tests) 7746ms
+     ✓ swordless L14: the chaser arm refuses on the missing sword without its stance scan; DETOUR then solves; with the sword it still solves  2641ms
+     ✓ `detour` is a named site, and a trip there refuses swordless L14 BY NAME (no hook: it solves)  1537ms
+     ✓ `time` in a solve: bare L6 from (208,32) runs the TIME rung's search; a trip there FALLS THROUGH to BAIT, and the climb says why  429ms
+     ✓ untripped, opted out: one ask (the entry), the stance unchanged; opted in: one ask per cell and per candidate, the stance unchanged  1904ms
+ ✓ frontend/modules/seedlingDemo/levelRun.test.js (137 tests) 8356ms
+     ✓ r5-l42-part4: the query equals the getter for every family at every tick, and the tape makes crushers, crushersParked, pushables, spinnerBodies, turrets, turretDamage, turretsSettled non-trivial  558ms
+     ✓ r8-d2: the query equals the getter for every folded member at every tick, and the tape makes appliedTimedClears, bankedClears, collected, earnedClears, inCeremony, inputRefused, inventory, keyOpens, keys, lockSnaps, presses, roomWrites, saveState, shieldBossKills, shieldBossStabs, slashInfo, spinnerKillLockOpens, spinnerPressHits, spinnerWrites, takenPickups non-trivial  755ms
+     ✓ r9-solve-16: the query equals the getter for every folded member at every tick, and the tape makes arrowVolleys, chaserKillLockOpens, ropePulls non-trivial  314ms
+     ✓ r5-l40-part5-control: the query equals the getter for every folded member at every tick, and the tape makes blastFreezes, frozenTimer, turretKills non-trivial  694ms
+     ✓ r5-bobboss-fire: the query equals the getter for every folded member at every tick, and the tape makes bobBossEvents non-trivial  721ms
+     ✓ r5-shaft, walked up into its latched pulser after tick 2000: a pulserPlayerHits entry, through the query  809ms
+ ✓ frontend/modules/seedlingDemo/fidelityTurretCircle.test.js (18 tests) 10241ms
+     ✓ OFF (CORPSEBUMP's set): the Sword alone refuses by name, as CORPSEBUMP left it  4857ms
+     ✓ ON: SOLVED — the corpse weigh's kill is a circling one (cw from corner 3, delay 0, three swings)  1657ms
+     ✓ the Ghost Sword keeps CORPSEBUMP's standing kill: its recorded plan is unchanged with the key ON  1369ms
+     ✓ the recorded tape is the solver's plan, input for input  1337ms
+ ✓ frontend/modules/seedlingDemo/r5Totem.test.js (133 tests) 4684ms
+     ✓ drives all three baits, and each starts where the last one ended  598ms
+     ✓ ⛓⛓⛓ …then six pushes, a fade nobody holds, and the fourth ceremony  611ms
+     ✓ ⛔⛔ …with the crusher still on `button@248,232` and never once touched  681ms
+     ✓ ⛓⛓⛓ A's chain goes W then S then E in one bait, 208 px, zero contacts  331ms
+ ✓ scripts/procgen/seedlingConstantsCensus.test.js (24 tests) 6599ms
+     ✓ blank lines inserted above statements in a temp copy move lines and no key  1061ms
+     ✓ (a) PREDICTED RED: a new `const SPEED_X = 0.37` in a physics file names its key  1023ms
+     ✓ (b) PREDICTED GREEN: a new literal inside a cosmetic table  1465ms
+     ✓ (c) PREDICTED RED: a committed physics row's statement deleted must be RETIRED  1012ms
+     ✓ (d) PREDICTED RED: a hand edit inside the doc region is a stale doc  1111ms
+     ✓ MUTANT, PREDICTED RED: a fields row whose class contradicts PROFILE_FIELDS names the key  651ms
+ ✓ frontend/modules/seedlingDemo/levelRunDigestRead.test.js (11 tests) 5924ms
+     ✓ a fresh boot, before its first tick: no getter moves a part  776ms
+     ✓ a fresh boot, after one tick: no getter moves a part  1131ms
+     ✓ each getter alone, on a fresh boot of its own (L16 and L41, before the first tick): no part moves  3400ms
+ ✓ scripts/procgen/seedlingFootprints.test.js (12 tests) 5191ms
+     ✓ the playthrough generator runs with it: L0 (10,18) is open in its grid  4535ms
+     ✓ the probe boots on the cells the atlas names: r10c7 for the pool, the L98 landing for the reverse  602ms
+ ✓ frontend/modules/seedlingDemo/fidelityFireBreak.test.js (36 tests) 4807ms
+     ✓ with the Sword selected alone, ON plans what OFF plans, tick for tick (a swing)  336ms
+     ✓ L53 from the L48 landing: `breakablerock@128,160`'s stance is behind `breakablerock@112,128`, so that rock is the prerequisite order (`rockHypothesis` admits a rock for a Fire run) — and its walk meets the room's puncher, which a run with no Sword cannot fight  2972ms
+ ✓ frontend/modules/seedlingDemo/seedlingMachineSkin.test.js (52 tests) 4637ms
+     ✓ the L40-wire run: every tick's machines  514ms
+     ✓ the skin dropped (L40-wire)  346ms
+     ✓ L40-wire: the stream, the end state, the ledgers, the stateLog and stateDigest identical with the renderer on and off  714ms
+ ✓ frontend/modules/seedlingDemo/fidelityBeamLane.test.js (9 tests) 4071ms
+     ✓ OFF: the 640-unit request runs out at the PHASE arm's stall grid (the gap, measured)  1593ms
+     ✓ ON: seam 5564 solves inside the first request's 640 units, and the plan reaches L102 with zero hits on the model  584ms
+     ✓ ON: seam 5594 solves inside the first request's 640 units, and the plan reaches L102 with zero hits on the model  408ms
+     ✓ ON: seam 5605 solves inside the first request's 640 units, and the plan reaches L102 with zero hits on the model  455ms
+     ✓ ON: seam 5622 solves inside the first request's 640 units, and the plan reaches L102 with zero hits on the model  323ms
+     ✓ ON: seam 5643 solves inside the first request's 640 units, and the plan reaches L102 with zero hits on the model  319ms
+     ✓ ON: seam 5656 solves inside the first request's 640 units, and the plan reaches L102 with zero hits on the model  373ms
+ ✓ frontend/modules/seedlingDemo/fidelityFencepost.test.js (10 tests) 3708ms
+     ✓ OFF: the named fencepost is exactly t1278 on the D0 game witness (the model lists the corpse one read longer)  463ms
+     ✓ ON: ZERO fencepost ticks on the D0 game witness — every spinner row equals the game's at 0 px on all 121 ticks  331ms
+     ✓ at the game's first gone read (t1278): OFF lists the corpse at alpha <= 0, ON does not, and no other row differs  495ms
+     ✓ one read earlier (t1277, the game's last listed read) and one later (t1279): ON equals OFF byte for byte  1004ms
+     ✓ ONE CLOCK: the removal ledger is untouched — `spinnerWrites`, `spinnerKillLockOpens` and the observation stream are identical ON and OFF  1002ms
+ ✓ frontend/modules/seedlingDemo/r8Acceptance.test.js (95 tests) 5470ms
+     ✓ ⛔ the two exposed tapes are DERIVED by driving the roster, not declared (the model it was stated on: fireSpinnerArm OFF)  4849ms
+ ✓ frontend/modules/seedlingDemo/fidelityFireSpinner.test.js (13 tests) 1882ms
+     ✓ a press whose flame reaches the spinner's .oel CELL (the body ~80 px off) throws  738ms
+ ✓ frontend/modules/seedlingDemo/contactFidelity.test.js (62 tests | 1 skipped) 2309ms
+     ✓ leg 243 — the shipped defaults: fixed rows at 0 px, residue at its tick  610ms
+ ✓ frontend/modules/seedlingDemo/fidelityRockGone.test.js (14 tests) 1609ms
+     ✓ rockgone-l40-plain: the recorded tape is the one the module builds  361ms
+     ✓ ON: the model replays the plan = the game on every sampled tick (x, y, vx, vy, hits, hits_timer)  582ms
+     ✓ OFF: the first difference is t1256, player.x — game 194.673 (still pinned), model 191.593 (through the cell)  401ms
+ ✓ frontend/modules/seedlingDemo/fidelityL39Phantom.test.js (9 tests) 1477ms
+     ✓ the model kills it on the game's tick and agrees on every spinner row but the one named fencepost  412ms
+ ✓ frontend/modules/seedlingDemo/fidelityL105.test.js (5 tests) 1232ms
+     ✓ ON: the leg solves hitless to L106 in 307 t, key for key the game witness (0 px, no hit, L106 at t307)  754ms
+ ✓ frontend/modules/seedlingDemo/fidelityRockButton.test.js (9 tests) 1615ms
+     ✓ HAND-OVER (re-pinned): ON, the solver refuses at the button's stance with `RESTING_HOLDER` OFF, waits ON  1150ms
+ ✓ frontend/modules/seedlingDemo/tapeEnvelope.test.js (23 tests) 1024ms
+     ✓ agrees with parseTape on every envelope field, for every committed tape  978ms
+ ✓ frontend/modules/seedlingDemo/levelRunStateDigest.test.js (13 tests) 1023ms
+ ✓ frontend/modules/seedlingDemo/fidelityRockFire.test.js (20 tests) 646ms
+ ❯ frontend/modules/seedlingDemo/fidelityFreezeSpanUpdates.test.js (10 tests | 1 failed) 921ms
+     ✓ ships OFF, appended last, with a worker env name 2ms
+     ✓ OFF the clock jumps at T and the tower refuses at R; ON (with the three) its anim is known and R bills the beam 81ms
+     ✓ ON alone (or with any of the three OFF): the lump steps the anim but claims nothing — the same refusal 147ms
+     ✓ composition: all seven (waves 50 to 55, and the Owl's) ON give the same answer, and nothing refuses 63ms
+     ✓ T on the tower's first stepped tick: OFF (T and dialogue keys ON) claims an anim 150 frames stale; ON fixes or refuses 109ms
+     ✓ a text-less pickup (L29's green key there) is not lumped: ON = OFF, the whole result, with the three ON 31ms
+     × under the player at frame A: OFF its ceremony starts after the 172-frame span; ON refused by name there 51ms
+     ✓ reached only by the release step: collected on R+1 — the game's frame too — and ON = OFF, the whole result 99ms
+     ✓ the rope rock (`rockbutton-l28-livefall`): the span holds the pull tick's own position — ON = OFF 238ms
+     ✓ no freeze (L29 + the tower, idle, no pickup): ON = OFF, the whole result 96ms
+ ✓ frontend/modules/seedlingDemo/fidelityFreezeEdgeFrames.test.js (11 tests) 860ms
+ ✓ frontend/modules/seedlingDemo/fidelityLadder2.test.js (12 tests) 871ms
+     ✓ every arm agrees on K = 0, and each class has a positive control  429ms
+ ✓ frontend/modules/seedlingDemo/fidelityFreezeReleaseTick.test.js (10 tests) 823ms
+ ✓ frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js (12 tests) 621ms
+ ✓ frontend/modules/seedlingDemo/fidelityDarkSuitBosses.test.js (11 tests) 622ms
+ ✓ frontend/modules/seedlingDemo/fidelityFrozenTick.test.js (10 tests) 529ms
+ ✓ frontend/modules/seedlingDemo/fidelityCeremonyShove.test.js (17 tests) 412ms
+ ✓ frontend/modules/seedlingDemo/fidelityDrillWater.test.js (12 tests) 392ms
+     ✓ drillwater-l91-drown  336ms
+ ✓ frontend/modules/seedlingDemo/fidelityPickupFreeze.test.js (11 tests) 483ms
+ ✓ frontend/modules/seedlingDemo/fidelityFrozenPress.test.js (11 tests) 389ms
+ ✓ frontend/modules/seedlingDemo/fidelityBeamTower.test.js (15 tests) 478ms
+ ✓ frontend/modules/seedlingDemo/fidelityTurretSnap.test.js (9 tests) 450ms
+stderr | frontend/modules/seedlingDemo/contactFidelityHook.test.js
+[centralRegistry] CentralRegistry initialized
+
+stderr | frontend/modules/seedlingDemo/contactFidelityHook.test.js
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:251:25)
+    at new StateManagerProxy (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:119:10)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+    at VitestModuleRunner.cachedRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1053:73)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/index.js:85:1
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+
+stdout | frontend/modules/seedlingDemo/contactFidelityHook.test.js
+[flashPanelModule] [FlashPanel Module] Registering...
+[flashPanelModule] [FlashPanel Module] Registration complete.
+
+ ✓ frontend/modules/seedlingDemo/fidelityOwlSuit.test.js (7 tests) 232ms
+ ✓ frontend/modules/seedlingDemo/fidelityCeremonyExact.test.js (10 tests) 169ms
+ ✓ frontend/modules/seedlingDemo/contactFidelityHook.test.js (156 tests) 282ms
+ ✓ frontend/modules/seedlingDemo/hazards.test.js (23 tests) 162ms
+ ✓ frontend/modules/seedlingDemo/fidelityTurretSuit.test.js (9 tests) 176ms
+ ✓ frontend/modules/seedlingDemo/fidelityCeremony126.test.js (11 tests) 173ms
+ ✓ frontend/modules/seedlingDemo/fidelityDarkSuitStatic.test.js (8 tests) 134ms
+ ✓ frontend/modules/seedlingDemo/decisionTrace.test.js (25 tests) 24ms
+ ✓ frontend/modules/seedlingDemo/playerDamage.test.js (34 tests) 11ms
+ ✓ frontend/modules/seedlingDemo/fidelityHousekeepWalker.test.js (4 tests) 54ms
+ ✓ frontend/modules/seedlingDemo/fidelityWallFlyerCorpse.test.js (7 tests) 6ms
+ ✓ scripts/procgen/lintGateLabels.test.js (14 tests) 138ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  frontend/modules/seedlingDemo/fidelityFreezeSpanUpdates.test.js > RELEASEPICKUP — a pickup inside a rock's span (staged on L29's button) > under the player at frame A: OFF its ceremony starts after the 172-frame span; ON refused by name there
+AssertionError: expected [ [ 24, 'fallrock@112,112', +0 ] ] to deeply equal [ [ 25, 'fallrock@112,112', 172 ] ]
+
+- Expected
++ Received
+
+  [
+    [
+-     25,
++     24,
+      "fallrock@112,112",
+-     172,
++     0,
+    ],
+  ]
+
+ ❯ frontend/modules/seedlingDemo/fidelityFreezeSpanUpdates.test.js:180:27
+    178|         const on = run(walk(127), { [KEY]: true });
+    179|         expect(off.thrown).toBe(null);
+    180|         expect(off.falls).toEqual([[25, 'fallrock@112,112', 172]]);
+       |                           ^
+    181|         expect(off.starts).toEqual([[25, 'feather']]);
+    182|         expect(on.thrown).toMatch(/^levelRun: a button-dropped fallroc…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  frontend/modules/seedlingDemo/fidelityNestedRockCeremony.test.js > NESTEDFREEZE — a pickup collected on a button's frame A (staged on L29) > texted (a feather, after the button): OFF serialises 172 + 150; wave 56 refuses; ON the union is the ceremony's 150
+TypeError: .toMatch() expects to receive a string, but got object
+ ❯ frontend/modules/seedlingDemo/fidelityNestedRockCeremony.test.js:112:60
+    110|         expect(off.spans.slice(1)).toEqual([[25, 'freeze', 172], [25, …
+    111|         // wave 56's interim, unchanged with this key OFF
+    112|         expect(run(s, { freezeSpanUpdates: true }).thrown).toMatch(/^l…
+       |                                                            ^
+    113|         const on = run(s, { [KEY]: true });
+    114|         expect(on.thrown).toBe(null);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 54 passed (56)
+      Tests  2 failed | 1366 passed | 2 skipped (1370)
+   Start at  03:53:13
+   Duration  168.16s (transform 8.34s, setup 3.90s, import 39.69s, tests 450.94s, environment 7ms)
+

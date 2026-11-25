@@ -1,0 +1,5 @@
+git diff --name-only 49307847962c0c6032ac5ff572c7c7653629072b b519de0b | grep -aE 'fixtures/|golden|tapes/' →
+(end; empty above = byte-inert)
+39	0	frontend/modules/seedlingDemo/contactFidelity.js
+88	5	frontend/modules/seedlingDemo/levelRun.js
+1	1	frontend/modules/seedlingDemo/solverEnvChannel.js
