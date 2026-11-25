@@ -17,8 +17,13 @@
  *     (`mergeGroupEdges`). A click on the node runs the REGION click actions on `regionOfCell(key, members)`, the
  *     region the Region Map's cell click picks. A group of one draws as before, so a world with no
  *     `displayRegionOf` hook draws exactly as in `separate`.
- *   · a later slice adds `collapsible` (C: B, a click opens a group into A); the setting switching between them is
- *     option D.
+ *   · `collapsible` (option C; region-graph-groups-c; ⚖ the user, 2026-11-24: "Small +/− badge") — B by default
+ *     (every group CLOSED: drawn exactly as `merged`), and a small + badge on a closed group's corner OPENS that one
+ *     group into A's box; a − badge on the open box closes it again. The badges are DOM buttons over the canvas
+ *     (`groupBadgeLayer.js`), never Cytoscape elements, so no reader sees them. The open set is per world and
+ *     session-only (`openGroupKeys`). An open group's members keep their own edges; the closed groups merge
+ *     (`collapsibleGroups` → `mergeGroupEdges` with the closed groups' `nodeOf` only).
+ *   The setting switching between the four values IS option D.
  *
  * ⚠ A group node is NOT a region. It has no `regionName`, its id is `GROUP_ID_PREFIX + key` (never a rules region
  * name), and it carries `GROUP_CLASS` (never `region`). Every reader of the graph's nodes finds it through
@@ -35,11 +40,11 @@ export const SUB_REGION_VIEW_KEY = 'moduleSettings.regionGraph.subRegionView';
 export const SUB_REGION_VIEW_SCHEMA = Object.freeze({
     type: 'string',
     default: 'separate',
-    enum: Object.freeze(['separate', 'nested', 'merged']),
+    enum: Object.freeze(['separate', 'nested', 'merged', 'collapsible']),
     label: 'Sub-regions',
     description: 'How a region split into sub-regions is drawn: each sub-region its own node (separate), the '
-        + 'sub-regions inside one box per region (nested), or one node per region with its sub-regions merged '
-        + '(merged).',
+        + 'sub-regions inside one box per region (nested), one node per region with its sub-regions merged '
+        + '(merged), or merged with a + badge that opens one region into its box (collapsible).',
 });
 
 /** The control's option labels, by value (the select in the Controls' "Sub-regions" section). */
@@ -47,6 +52,7 @@ export const SUB_REGION_VIEW_LABELS = Object.freeze({
     separate: 'Separate nodes',
     nested: 'Nested in region boxes',
     merged: 'Merged into one node per region',
+    collapsible: 'Collapsible (click + to open)',
 });
 
 export const GROUP_CLASS = 'region-group';
@@ -126,6 +132,43 @@ export function mergedGroupElements(groups) {
         for (const m of members) nodeOf.set(m, id);
     }
     return { nodes, nodeOf };
+}
+
+/* ── subRegionView = collapsible (option C; region-graph-groups-c) ─────────────────────────────────────────────── */
+
+/**
+ * Split `groups` (from `multiMemberGroups`) by the open set: `open` groups draw as A's box (`groupNodeElements`),
+ * `closed` ones as B's merged node (`mergedGroupElements`). Both maps keep the fold order. With every group closed
+ * this is `merged`'s input; with every group open, `nested`'s.
+ * @param {Map<string, string[]>} groups
+ * @param {Set<string>} openKeys - the display keys that are open
+ */
+export function collapsibleGroups(groups, openKeys) {
+    const open = new Map();
+    const closed = new Map();
+    for (const [key, members] of groups) (openKeys?.has(key) ? open : closed).set(key, members);
+    return { open, closed };
+}
+
+/**
+ * ⛓ THE BADGE (⚖ "Small +/− badge"): a DOM button over the canvas at the group node's top-right corner, in SCREEN
+ * pixels (its size does not follow the zoom). VISIBLE square `BADGE_SIZE_PX`; HIT square `BADGE_HIT_PX` (the button's
+ * own box: a transparent margin round the visible square), sized for a finger on the 390 px phone. It shows at every
+ * zoom where region labels show (`zoom >= zoomLevels.showRegionNames`) and is hidden below it (the node body still
+ * runs its click actions there).
+ */
+export const BADGE_SIZE_PX = 20;
+export const BADGE_HIT_PX = 36;
+
+/** The badge's centre on screen for a node's RENDERED bounding box (`node.renderedBoundingBox()`): its top-right corner. */
+export function badgeCentre(rbb) {
+    return { x: rbb.x2, y: rbb.y1 };
+}
+
+/** The badge's glyph and its accessible label: + opens a closed group, − closes an open one. */
+export function badgeText(key, open) {
+    return open ? { glyph: '\u2212', title: `Close ${key} back into one node` }
+        : { glyph: '+', title: `Open ${key} into its sub-regions` };
 }
 
 /** The label a merged node shows: the display key, then the summed counts the way a region's label shows them. */

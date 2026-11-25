@@ -699,15 +699,30 @@ export class LayoutControlsManager {
   /**
    * The saved-position store for the view the graph draws: `separate` and `nested` share `ui.nodePositions` (region
    * positions); `merged` has its own, `ui.mergedNodePositions` (its group nodes and the regions drawn beside them), so
-   * a `merged` layout never writes over `separate`'s saved one. Neither is persisted.
+   * a `merged` layout never writes over `separate`'s saved one. ⛓ `collapsible` (region-graph-groups-c) has its own
+   * too, `ui.collapsibleNodePositions` (closed group nodes, open members and the regions beside them). None is
+   * persisted.
    */
   positionStore() {
+    if (this.ui.subRegionView === 'collapsible') {
+      if (!this.ui.collapsibleNodePositions) this.ui.collapsibleNodePositions = new Map();
+      return this.ui.collapsibleNodePositions;
+    }
     if (this.ui.subRegionView !== 'merged') return this.ui.nodePositions;
     if (!this.ui.mergedNodePositions) this.ui.mergedNodePositions = new Map();
     return this.ui.mergedNodePositions;
   }
 
   saveNodePositions() {
+    if (this.ui.subRegionView === 'collapsible') {
+      // ⛓ collapsible: every drawn node but an open group's box, location nodes and the player, into its own store.
+      // Not cleared first: a closed group keeps its members' last arrangement for the next open.
+      const store = this.positionStore();
+      this.ui.cy.nodes().not('.location-node').filter((n) => !n.hasClass('player') && !isRegionGroupNode(n, 'box')).forEach((node) => {
+        store.set(node.id(), { x: node.position('x'), y: node.position('y') });
+      });
+      return;
+    }
     if (this.ui.subRegionView === 'merged') {
       // ⛓ merged: every drawn node but location nodes and the player, into merged's own store.
       const store = this.positionStore();
