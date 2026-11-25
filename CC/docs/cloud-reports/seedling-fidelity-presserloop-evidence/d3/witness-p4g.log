@@ -1,0 +1,18 @@
+# box lock: TAKEN by hang-witness.mjs (browser, pid 1161) — head fbdd2ab68, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+btn-btn: {"finished":false,"tick":1,"buffered":1,"dead_frames":20,"level":38,"x":152,"y":200,"cleared":"","errors":6,"firstError":{"ms":2962,"kind":"pageerror","text":"Maximum call stack size exceeded"},"drained":1}
+btn-rope: {"finished":false,"tick":1,"buffered":1,"dead_frames":20,"level":38,"x":152,"y":200,"cleared":"","errors":6,"firstError":{"ms":2849,"kind":"pageerror","text":"Maximum call stack size exceeded"},"drained":1}
+rope-rope: {"finished":true,"tick":90,"buffered":91,"dead_frames":40,"level":37,"x":296,"y":28.700000000000006,"cleared":"37,4 38,5","errors":5,"firstError":null,"drained":91}
+rope-rope-pulled: {"finished":false,"tick":0,"buffered":0,"dead_frames":1,"level":38,"x":152,"y":200,"cleared":"38,10","errors":6,"firstError":{"ms":2130,"kind":"pageerror","text":"Maximum call stack size exceeded"},"drained":0}
+br0-btn: {"finished":false,"tick":24,"buffered":24,"dead_frames":20,"level":38,"x":152,"y":226.35000000000002,"cleared":"","errors":6,"firstError":{"ms":3615,"kind":"pageerror","text":"Maximum call stack size exceeded"},"drained":24}
+btn-br0: {"finished":false,"tick":24,"buffered":24,"dead_frames":20,"level":38,"x":152,"y":226.35000000000002,"cleared":"","errors":6,"firstError":{"ms":3529,"kind":"pageerror","text":"Maximum call stack size exceeded"},"drained":24}
+br0-br0: {"finished":false,"tick":24,"buffered":24,"dead_frames":20,"level":38,"x":152,"y":226.35000000000002,"cleared":"","errors":6,"firstError":{"ms":3562,"kind":"pageerror","text":"Maximum call stack size exceeded"},"drained":24}
+br0-rope: {"finished":false,"tick":24,"buffered":24,"dead_frames":20,"level":38,"x":152,"y":226.35000000000002,"cleared":"","errors":6,"firstError":{"ms":3598,"kind":"pageerror","text":"Maximum call stack size exceeded"},"drained":24}
+br1-rope-rope: {"finished":false,"tick":24,"buffered":24,"dead_frames":20,"level":38,"x":152,"y":226.35000000000002,"cleared":"","errors":6,"firstError":{"ms":3637,"kind":"pageerror","text":"Maximum call stack size exceeded"},"drained":24}
+btn-br0-boot: {"finished":false,"tick":0,"buffered":0,"dead_frames":1,"level":38,"x":152,"y":200,"cleared":"38,10","errors":6,"firstError":{"ms":2299,"kind":"pageerror","text":"Maximum call stack size exceeded"},"drained":0}
+br1-btn: {"finished":true,"tick":90,"buffered":91,"dead_frames":40,"level":37,"x":296,"y":28.700000000000006,"cleared":"37,4 38,5 38,10","errors":5,"firstError":null,"drained":91}
+btn-br1: {"finished":true,"tick":90,"buffered":91,"dead_frames":40,"level":37,"x":296,"y":28.700000000000006,"cleared":"37,4 38,5 38,10","errors":5,"firstError":null,"drained":91}
+br0-br1: {"finished":true,"tick":90,"buffered":91,"dead_frames":40,"level":37,"x":296,"y":28.700000000000006,"cleared":"37,4 38,5 38,10 38,11","errors":5,"firstError":null,"drained":91}
+br1-br0: {"finished":true,"tick":90,"buffered":91,"dead_frames":40,"level":37,"x":296,"y":28.700000000000006,"cleared":"37,4 38,5 38,10","errors":5,"firstError":null,"drained":91}
+brx-btn: {"finished":true,"tick":90,"buffered":91,"dead_frames":40,"level":37,"x":296,"y":28.700000000000006,"cleared":"37,4 38,5 38,10","errors":5,"firstError":null,"drained":91}
+btn-solo: {"finished":true,"tick":90,"buffered":91,"dead_frames":40,"level":37,"x":296,"y":28.700000000000006,"cleared":"37,4 38,5","errors":5,"firstError":null,"drained":91}
