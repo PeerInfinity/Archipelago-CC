@@ -15,7 +15,7 @@ the oracle certifies it. No vanilla, delivered or generated room has the shape (
 |---|---|
 | Start (base) | `478a0fed4c833592cdfbbf502202e4fabc020ef0` (the W59 harvest, `fidelity-harvest/plainpickup-w59`) |
 | Code head (last code commit) | `69764869ba4a3c48cdc967cd5bf3eeee6011dcf7` |
-| Commits | `86de9a58` (key + model + pins + shared module), `1f2ab082` (rows + p4g witness + tapes), `db5abfee` (censuses), `69764869` (solver-surface regen, probe evidence, module note), then this report |
+| Commits | `86de9a58` (key + model + pins + shared module), `1f2ab082` (rows + p4g witness + tapes), `db5abfee` (censuses), `69764869` (solver-surface regen, probe evidence, module note), then the report (docs only) |
 | Harness branch | `claude/chest-cover-tick-order-i4hzpy` (local branch `seedling-fidelity-chestcover`) |
 | Keys / ON / `SOLVER_ENV_NAMES` | base **149 / 126 / 246**, head **150 / 126 / 247**, measured by importing `contactFidelity.js` and `solverEnvChannel.js`. The env list is sorted, with no duplicates |
 
@@ -193,14 +193,37 @@ The sources were restored after each one (`git status` clean).
     flags' `buttonroom{-1, flip 0}` (`procgenSeedling.js:2791`, one flag per symbol).
   - **⛔ The hand editor can** (`watchEdit.ENTITY_ROSTER`: `button {tset: '0'}`). That is the STOP at the top. No
     committed edit list in the tests places two buttons.
-- **ON movers**: FILL
+- **ON movers: none.** I ran the same 277 fast-tier files with `SEEDLING_CHEST_COVER_FENCEPOST=1`. The file list is
+  the brief's globs, every `grep -a -l` file (`stepActivators`, `stepChestsNow`, `openActivatorIds`,
+  `activatorStateFor`, `chestStateFor`, the key), every key-order pin, the named gate files, and every fast-tier test
+  that names `chest`, `Chest`, `cover`, `Cover` or `activators`.
+  - Result: **277/277 files, 7713 passed, 2 skipped by design**: the two "OFF in this process" rows, this file's and
+    `contactFidelity.test.js`'s defaults row.
+  - **The 12 `.train.`/`.slow.` files** that name a chest, cover or activators, ON, **one at a time** under their own
+    config: `deriveLevelWorldLogic.slow`, `atlasMazeBot.slow`, `sphereAtlas.slow`, `hammerKill880StandHold.train`,
+    `hammerL98L99.train`, `hammerShovedLookahead.train`, `hammerSouthDoor.train`, `hammerTurretApproach.train`,
+    `seedlingGenGoalChestPipeline.slow`, `seedlingGenGoalLootSweep.slow`, `strategySwitchTable.slow` and
+    `strikePreviewLean.slow`. **All green**, with no movers.
 - **Censuses.**
   - Solver surface: `--write`, 374 rows, line numbers only (57), then GREEN.
   - Constants: `--check` PASS (7179 literals; 0 new, 0 vanished, 825 moved), so no `--write` was needed.
     `--profile-rows` was not needed either (no row changed).
 - `check-procgen-docs.mjs`: ALL CHECKS PASSED. `generate-procgen-reference.mjs --check`: all 7 modules and 5 regions
   match.
-- FILL GATES
+- **Bounded vitest** (`--maxWorkers=3`):
+  - **Before**, at the base: the brief's gate list plus every `grep -a -l` file and every key-order pin, 49 files:
+    **49/49, 1324 passed**.
+  - **After**, at `69764869`: that list plus this file and every fast-tier file naming a chest, cover or activators,
+    277 files: **277/277, 7715 passed**.
+- `ci-producer-checks.mjs --jobs=3`: **99 run, 0 red, 1 skipped** (the standing browser arm), 0 known-red.
+- The six `solve-seedling-{r8-battery,r8-d2-chain,r8-l18,r8-tail,r9-l3,r9-campaign}.mjs --check`: **all checks green**
+  OFF (default), and all green ON with the probe armed (above).
+- **CI** (`JavaScript Unit Tests`, the push run at the last code head `69764869`, run 45712755727): **success**.
+  - The suite: **30169 passed / 0 failed / 0 skipped** over 3 shards.
+  - The slow battery: **460 passed**.
+  - The train tier does not run on a slice push. Dispatch `unittests_frontend.yml -f train_only=true` at `69764869`
+    (the planner's; I get 403 here). Locally, the train files that name a chest, cover or activators are green with the
+    key ON (above).
 - **Game witness** (`tools/chestcover-witness.mjs`, recorded here on **p4g**, the default page; `d3/witness-p4g.json`
   keeps the whole drained stream):
 
