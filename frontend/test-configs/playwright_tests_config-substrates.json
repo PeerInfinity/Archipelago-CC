@@ -2554,6 +2554,12 @@
             "_comment": "helper-script P4: the Rule Converter's Exact engine — real exporter analyzer + world_generator under Pyodide (CDN, booted on the first Convert). A helper script both ways through the Convert buttons, and the loaded alttp_worldgen preset's 36 helpers round-trip with its options. Category unclaimed by testBatches.js, so batch fast (on push)."
         },
         {
+            "id": "mystery-bridge-round-trip",
+            "enabled": true,
+            "category": "Mystery Bridge",
+            "_comment": "The Mystery Game module (modules/mysteryArchipelago, disabled by default; the row enables it and puts it back, and points its page address at a stand-in page for the session, modules/mysteryArchipelago/testPage/, not the real game). Enabling opens the panel; loading the committed mystery_custom_house_fire preset makes the panel frame the case: state on request, a solved question as a check that comes back solved, a repeat, and refusals by name. No server, so it is the host's offline path. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
             "id": "document-library-idb",
             "enabled": true,
             "category": "Document library",
