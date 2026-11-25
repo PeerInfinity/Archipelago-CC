@@ -1,0 +1,39 @@
+== frontend/modules/seedlingDemo/hammerApproachOrder.train.test.js
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+== frontend/modules/seedlingDemo/hammerBaitRemoved.train.test.js
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+== frontend/modules/seedlingDemo/hammerBaitSubwalkGoal.train.test.js
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+== frontend/modules/seedlingDemo/hammerBodyGate.train.test.js
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+== frontend/modules/seedlingDemo/hammerChooserPair.train.test.js
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+== frontend/modules/seedlingDemo/hammerClearTagChain.train.test.js
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+== frontend/modules/seedlingDemo/hammerKeylockTurret.train.test.js
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+== frontend/modules/seedlingDemo/hammerL53Killlock.train.test.js
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+== frontend/modules/seedlingDemo/hammerL98L99.train.test.js
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+== frontend/modules/seedlingDemo/hammerOppDashDefers.train.test.js
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+== frontend/modules/seedlingDemo/hammerPitWest.train.test.js
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+== frontend/modules/seedlingDemo/hammerShovedLookahead.train.test.js
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+== frontend/modules/seedlingDemo/hammerWallFlyerDrillKill.train.test.js
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
