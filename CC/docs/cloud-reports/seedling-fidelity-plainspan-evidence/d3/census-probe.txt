@@ -1,0 +1,6 @@
+census probe: a temporary line at takePlainPickupsInFreezeNow (after the key check), copied in and restored; counts every ON-site ask and every ask whose box overlaps an apitem.
+tapes: see tapes-onoff.txt (77 asks, 0 hits, alone and with the nine)
+acceptance batch (on): asks 684 hits 0
+       684 a ceremony's T L900
+acceptance batch (all): asks 684 hits 0
+       684 a ceremony's T L900

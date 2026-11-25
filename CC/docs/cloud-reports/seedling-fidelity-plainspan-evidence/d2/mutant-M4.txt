@@ -1,0 +1,3 @@
+     × the wand's drop, a deferred release step: OFF a tick late; ON on the tick whose R+1 tests the post-R box 78ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 44 passed (45)
