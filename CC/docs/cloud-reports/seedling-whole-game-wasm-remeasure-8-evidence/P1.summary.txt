@@ -1,0 +1,1 @@
+52/48 (+2 skipped), stop: entry 34 "Level 043 - Wand" in level_43__r13c7, cause: stall "done check threw: the app shows it cannot finish: the Playback Bot has said \"blocked: the check of \"Level 043 - Wand\" did not land\" for 300 s" (transport wasm; walk 3762 s, run 3785 s)
