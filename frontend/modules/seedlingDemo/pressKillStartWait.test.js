@@ -7,7 +7,8 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import {
-    PRESS_KILL_START_WAIT, PRESS_KILL_START_WAIT_COUNTS, PRESS_KILL_START_WAIT_DEFAULT, resetPressKillStartWaitCounts,
+    HAMMER_PHASE_RUNG, PRESS_KILL_START_WAIT, PRESS_KILL_START_WAIT_COUNTS, PRESS_KILL_START_WAIT_DEFAULT,
+    resetPressKillStartWaitCounts,
     withPressKillStartWait,
 } from './solverBot.js';
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
@@ -29,6 +30,21 @@ describe('PRESS_KILL_START_WAIT (hammer-phase STEP149)', () => {
             expect(Number.isInteger(w[i]) && w[i] >= 0).toBe(true);
             if (i > 0) expect(w[i]).toBeGreaterThan(w[i - 1]);
         }
+    });
+
+    it('the bound is whole hammer periods (the rung\'s own horizon), at least one, read at the refusal', () => {
+        expect(Number.isInteger(PRESS_KILL_START_WAIT.maxPeriods)).toBe(true);
+        expect(PRESS_KILL_START_WAIT.maxPeriods).toBeGreaterThan(0);
+        expect(HAMMER_PHASE_RUNG.horizon).toBeGreaterThan(0);
+        const wrapper = SOURCE.slice(SOURCE.indexOf('function execKillByPressStartWait('),
+            SOURCE.indexOf('function execKillByPress(run, perTick, resolved, ctx) {'));
+        expect(wrapper).toContain('const span = PRESS_KILL_START_WAIT.maxPeriods * HAMMER_PHASE_RUNG.horizon;');
+        const gate = wrapper.slice(wrapper.indexOf('if (row.refusedAt - t0 > span) {'));
+        expect(gate.length).toBeLessThan(wrapper.length);
+        // refused past the bound: counted as not asked, and the ORIGINAL refusal re-thrown before any rewind
+        expect(gate.slice(0, 260)).toContain("row.verdict = 'not-asked';");
+        expect(gate.slice(0, 260)).toContain('throw e;');
+        expect(gate.indexOf('throw e;')).toBeLessThan(gate.indexOf('ctx.rewind.to(t0)'));
     });
 
     it('withPressKillStartWait sets the switch inside and restores it after, also on a throw', () => {

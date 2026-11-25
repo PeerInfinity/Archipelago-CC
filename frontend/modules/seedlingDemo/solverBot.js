@@ -21501,10 +21501,10 @@ function execKillByPressHold(run, perTick, resolved, ctx, dispatch) {
  * `HAMMER_SAFETY`, while a kill begun a few ticks later, or searched whole (`HAMMER_FIGHT`), is hitless. MEASURED (seed
  * 1, L40 Totem 64,144; `step149` report §3): re-measure-8 P1 32:10 refuses on 38 of 45 arrival clocks round the page's
  * and is hitless on 4; the fight search (`HAMMER_FIGHT`) from the kill's first tick solves P1 32:10 hitless; survey
- * step 149 refuses with the fight from its first tick and solves hitless with the fight after a 2-tick idle there.
+ * step 149's kill refuses with the fight from its first tick and kills hitless with the fight after a 2-tick idle.
  *
  * ON (a segment that can rewind, no deadline tripped): when the press kill refuses with a `FIGHT_FALLBACK_CODES` code —
- * after every fallback already inside it — the segment is REWOUND to the kill's first tick, the player idles `waits[k]`
+ * after every fallback already inside it — within `maxPeriods` hammer periods of its first tick, the segment is REWOUND to the kill's first tick, the player idles `waits[k]`
  * ticks there (no keys; `0` is no idle), and the kill is admitted again on the idled run (`derivePressKill`, from the
  * admission's own inputs) and redone with `HAMMER_FIGHT` on for that redo only. Over `waits` in order, the first redo
  * that kills with NO player hit since the rewind is kept. An idle tick that is hit, dies or crosses a door ends the
@@ -21515,8 +21515,15 @@ function execKillByPressHold(run, perTick, resolved, ctx, dispatch) {
  * `withPressKillStartWait(enabled, fn)`. Worker thread (the solve).
  */
 export const PRESS_KILL_START_WAIT = { enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_START_WAIT === '1',
-    /** The idles tried at the kill's first tick, in order (ticks). */
-    waits: [0, 1, 2, 3, 4, 6, 8, 12, 16, 24, 32] };
+    /** The idles tried at the kill's first tick, in order (ticks; `0` = the fight from the first tick itself). */
+    waits: [0, 1, 2, 3, 4, 6, 8, 12, 16, 24, 32],
+    /**
+     * Asked only when the refused kill cornered within this many hammer periods (`HAMMER_PHASE_RUNG.horizon`) of its
+     * first tick: a kill that fought on long past its start is not a phase-unlucky START, and a long fight redone is
+     * the cost (MEASURED: survey step 96's L40 kill refuses 1336 ticks in; asked, its redo kills but the step still
+     * refuses later, in 257 s against OFF's 56 s — over the survey's 120 s step timeout).
+     */
+    maxPeriods: 4 };
 export const PRESS_KILL_START_WAIT_DEFAULT = false;
 /** Per-run rows (ON only): one per refusal answered, `{t, refused, tries: [{wait, verdict, why}], verdict}`. */
 export const PRESS_KILL_START_WAIT_COUNTS = { rows: [] };
@@ -21550,6 +21557,13 @@ function execKillByPressStartWait(run, perTick, resolved, ctx) {
         if (!(e instanceof SolverBotError) || !FIGHT_FALLBACK_CODES.includes(e.code) || activeDeadline?.first) throw e;
         const row = { t: t0, refused: e.code, refusedAt: perTick.length, tries: [], verdict: 'refused' };
         PRESS_KILL_START_WAIT_COUNTS.rows.push(row);
+        // a kill that fought on past its start before cornering is not a phase-unlucky START: not asked
+        const span = PRESS_KILL_START_WAIT.maxPeriods * HAMMER_PHASE_RUNG.horizon;
+        if (row.refusedAt - t0 > span) {
+            row.verdict = 'not-asked';
+            row.why = `the refused kill ran ${row.refusedAt - t0} tick(s) from its first tick (bound ${span})`;
+            throw e;
+        }
         const admission = PRESS_ADMISSIONS.get(resolved.plans) ?? null;
         for (const wait of PRESS_KILL_START_WAIT.waits) {
             if (activeDeadline?.first) break;
