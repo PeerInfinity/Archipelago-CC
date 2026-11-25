@@ -163,8 +163,28 @@ No markdown link was added, so the doc-link census does not move.
 | feature-checks (manual batch) | 45445288026 | success |
 | `train_only` (dispatch) | 45445292160 | success, 3/3 train shards |
 
-**Still owed:** the ONE merge of main, once GEN-2 and LAB-BIOME land (the planner sends the SHA). After it: re-check
-that `tile_kinds_demo` does not move (it places no `needs` kind), plus the gates and CI at the merged tip.
+### 5.2 The merge of main (`7bdde43ea9`, main `73c96473f5`: GEN-2 in train 208, LAB-BIOME + AN-OMSI-1 in 209)
+
+- Merged ONCE. The only conflicts were the generated `procgen/README.md` and `docsIndex.js`. Both were resolved by
+  regenerating; `generate-procgen-reference --check` gives ALL MATCH.
+- **One pin moved, a merge interaction:** GEN-2's `mazeFurniturePack.test.js` required the furniture pack's passes to
+  equal *every* generated pass. GEN-3 added `needs`, and the furniture pack has no `needs` kind (adding one is out of
+  scope). The pin now names the two halves the demo shows, `walkable` and `blocked`. Its per-entry check ("each pass
+  is one the generator places") is unchanged.
+- **`tile_kinds_demo` is unmoved:**
+  - `make-seedling-spiral-room-preset.mjs --state=tile-kinds-demo --check` gives OK (a fresh build matches);
+  - md5 `99b1c64f6ca07712533155b438619edc`, GEN-2's own figure;
+  - `tileKindsDemoWorld.test.js` (the byte pin) passes.
+- **LAB-BIOME's census pin** `mazeConvertedLoad.test.js` passes.
+- **The rest, after the merge:**
+  - the closure is still `74ae60f5…` (42 files), and closure ∩ diff = ∅ (the diff against main is 11 files + this pin);
+  - no preset differs from main, and 0 gitlinks changed;
+  - the bounded vitest (`mazeRoom` without `tileSpike`, `procgenPipeline`, `packStructure`, `procgenDocs`): 157
+    files, 4,288 tests, the one red above fixed and re-run green;
+  - the slow tier: 9 passed;
+  - `check-sidecar-fields`: ALL PASS (2,433 entries, 0 issues; rule agreement 0 FAIL);
+  - `check-procgen-docs` and `check-maze-lab`: ALL CHECKS PASSED.
+- CI at the final tip: in the report back.
 
 ## 6. What the code overturned
 
