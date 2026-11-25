@@ -1111,11 +1111,20 @@ async function omsiTownRow(tc) {
         tc.assertEqual('the queue ran to its end', true, await runQueue(tc, 'queue finished'));
         tc.assertEqual('no start-gate refusal', null, loopStateSingleton.lastActionRefusal);
         tc.assertEqual(`${node.name} performed once this loop`, 1, countOf(node.node_id));
-        tc.assertEqual('the pool paid the node\'s authored price', mana0 - node.time + (node.results.mana ?? 0), gs().getCurrentMana());
         const checked = await tc.pollForCondition(
             () => (tc.stateManager.getLatestStateSnapshot()?.checkedLocations ?? []).includes(node.location),
             `${node.location} is checked`, 5000, 100);
         tc.reportCondition(`its check (${node.location}, holding ${itemAt[node.location]}) is sent`, !!checked);
+        // ⛓ The check's item arrives at once (A4) and adds its own starting-mana boost to the pool — asynchronously,
+        // so the pool is read once the item has landed: the price paid, the node's own mana result, plus that boost
+        // (read from the preset's boosts table). Measured in CI: read before the item, 87; after it, 97 (+10).
+        const item = itemAt[node.location];
+        const boostMana = block.boosts?.[item]?.mana ?? block.mana_per_item_default ?? 0;
+        const wantMana = mana0 - node.time + (node.results.mana ?? 0) + boostMana;
+        const paid = await tc.pollForCondition(() => gs().getCurrentMana() === wantMana,
+            `the pool is ${wantMana}`, 5000, 50);
+        tc.log(`pool: ${mana0} - ${node.time} (price) + ${node.results.mana ?? 0} (result) + ${boostMana} (${item}) = ${wantMana}; now ${gs().getCurrentMana()}`);
+        tc.reportCondition(`the pool paid the node's authored price, then gained ${item}'s mana (${wantMana})`, !!paid);
         const doneCard = await tc.pollForCondition(() => textOf(cardOf(node.node_id)).includes(CHECK_MARK),
             `${node.name}: the check mark`, 5000, 100);
         tc.reportCondition(`${node.name}: its card shows the check mark`, !!doneCard);
