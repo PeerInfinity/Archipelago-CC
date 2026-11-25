@@ -2,7 +2,7 @@
 
 Session `actionnodes-omsi2` (Opus; the AN-OMSI-2 session, continued), 2026-11-25, for planner
 `concept-library-content-planning-5`. Branch `an-omsi3`, based on `origin/an-omsi2` `775449f1b3` (AN-OMSI-2, which
-has its land OK and is queued as train 214). Code commit `1cb8bd2369`; this report is the commit after it.
+has its land OK and is queued as train 214). Code commits `1cb8bd2369` and `a909998e38` (the fix in § 6); this report is the commit after them.
 
 **Robert's license** (2026-11-25, just before 03:05:35Z): "Both, in parallel" (AN-OMSI-3 and the AN-TIME design).
 
@@ -20,8 +20,9 @@ Both rows live in `frontend/modules/tests/testCases/actionNodesTests.js` and are
 - The goal's supplier is blocked at load with its unmet line. The supplier is found as the node whose result the goal
   requires, so the row does not name Buy Supplies.
 - One performance: the first free check node next to the start (Wander) is played through the Loops queue. It runs
-  with no refusal, is counted once, pays its authored price, sends its check (which holds Combat Training at seed 3)
-  and shows the check mark.
+  with no refusal, is counted once, sends its check (which holds Combat Training at seed 3) and shows the check mark.
+- The pool is then read once the check's item has landed: price paid + the node's mana result + the item's boost from
+  the preset's `boosts` table (100 − 13 + 0 + 10 = 97). See § 6.
 - Every number is read from the preset; none is typed in the row.
 
 **`an-omsi-bot-plays-to-goal`**: category "Playback Bot", batch `playback-bot`, 21–24 s.
@@ -77,8 +78,29 @@ expected 6, got 7`. The constant was then restored.
 
 ## 5. CI at the tip, and the repeat rate
 
-The run ids, the headroom at the tip and the `test-substrates-repeat.yml` ×8 rate for `an-omsi-bot-plays-to-goal`
-are in the planner's report back and in memory. A commit cannot quote its own runs.
+**Repeat rate at the first tip `3c7dc4f968`** (`test-substrates-repeat.yml`, `an-omsi-bot-plays-to-goal` ×8): run
+`45540468665`, **8/8 passed**.
+
+The run ids at the final tip, the headroom there, and the ×8 rates (the bot row, and the town row after § 6) are in
+the planner's report back and in memory. A commit cannot quote its own runs.
+
+## 6. A defect my first CI run found (fixed)
+
+**What happened.** TT `45540462287` at `3c7dc4f968`: the fast batch (unbundled) failed on `an-omsi-town-load-and-act`,
+on the condition *the pool paid the node's authored price*: expected 87, got 97. The bundled boot, the local solo runs
+and the local fast batch had passed.
+
+**The cause.** It was a race in the row, not the runtime. Wander's check holds Combat Training. A received item adds
+its starting-mana boost (+10) to the pool at once (A4), but it arrives through the state worker, asynchronously. The
+local runs read the pool before the item landed (87); CI read it after (97).
+
+The example's `an-load-and-act-once` never met this: it performs a non-check node.
+
+**The fix** (`a909998e38`). The row waits for the check to be sent, then polls for the pool to equal price paid +
+result + the item's boost (read from `action_nodes[p].boosts[<item>].mana`). It logs the sum. Solo ×3 locally:
+PASSED, `pool: 100 - 13 (price) + 0 (result) + 10 (Combat Training) = 97; now 97`.
+
+The town row also gets a ×8 repeat dispatch (§ 5), beside the bot row's.
 
 ## Next
 
