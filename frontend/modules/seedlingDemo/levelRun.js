@@ -56,8 +56,8 @@ import {
 } from './endingChain.js';
 import {
     RESPONDERS, createActivatorState, fallRocksArmedBy, opensOnTick, openActivatorIds,
-    openActivatorIdsBeforeLatestStep, latchAtBuild, pressedGroups, presserDown, ropePublish, rockLockFadeStep,
-    stepActivators,
+    openActivatorIdsBeforeLatestStep, latchAtBuild, pressedGroups, presserDown, previewOpenActivatorIds, ropePublish,
+    rockLockFadeStep, stepActivators,
 } from './activators.js';
 import {
     FALL_ROCK, createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
@@ -8433,6 +8433,68 @@ export function createLevelRun({
      *   removes a chest whose flag is off — so the clear has to survive the
      *   visit and be cashed at the destination's build.
      */
+    /**
+     * ⛓ fidelity APCHESTCOVER (`CONTACT_FIDELITY.apChestCoverOrder`, ON only): what an AP chest's gate read this tick
+     * from `apChestCoverOpenNow`, for the responders over it (`open`: id → not Solid), re-checked by
+     * `apChestCoverAgreeNow` at the tick's own `stepActivators`. `null` OFF, always.
+     */
+    let apChestCoverPreview = null;
+    /**
+     * ⛓ fidelity APCHESTCOVER — THE RESPONDERS AS AN APCHEST SEES THEM: AFTER THIS FRAME'S UPDATE OF THEM.
+     *
+     * `World.addUpdate` PREPENDS, so the update list is reverse add order. p4h adds `apitem` (`Pickups/APChest`) at
+     * `Game.as:2335`, BEFORE `button` (`:2348`) and `cover` (`:2367`), so a frame runs `Cover.update`, then
+     * `Button.update`, then `APChest.update`, then the Player: the APChest's `collide("Solid", x, y)`
+     * (`Pickups/APChest.as:75`) sees the cover's `type` as THIS frame's `Cover.update` left it (`type = ""` on the
+     * update whose `alpha -= 0.1` reaches 0, `Puzzlements/Cover.as:41-48`). The vanilla `Chest` (`:2384`) updates
+     * BEFORE its cover and reads the previous frame's; that is the `activators` object, and it stays the vanilla's.
+     * The `Button` between them writes `cover.activate` (`Button.as:39,50-60`), which the cover reads on its NEXT
+     * update, and never `type`; so nothing between the Cover and the APChest changes what the APChest reads.
+     *
+     * The model takes that update at the END of the tick (`stepActivators`, from the post-move box). This is the same
+     * step on a copy (`previewOpenActivatorIds`), from the box the chest step holds (the pre-move one) and the moving
+     * solids as they stand here. The step's other inputs (alpha, open, held, latched, roomWritten, the inventory and
+     * key set) are the state the real step starts from. The box and the moving solids are not final here, so the
+     * real step is re-checked against this answer (`apChestCoverAgreeNow`) for every responder over the chest.
+     */
+    const apChestCoverOpenNow = (activators, chestBox) => {
+        const open = previewOpenActivatorIds(activators, world, playerBoxAt(state.x, state.y),
+            { inventory, keys, movingSolids: movingSolidsNow() });
+        const over = world.activators.filter((a) => rectsOverlap(a.rect, chestBox));
+        if (over.length > 0) {
+            if (apChestCoverPreview === null || apChestCoverPreview.t !== ticksCompleted) {
+                apChestCoverPreview = { t: ticksCompleted, level, entries: worldEntries, open: new Map() };
+            }
+            for (const a of over) apChestCoverPreview.open.set(a.id, open.has(a.id));
+        }
+        return open;
+    };
+    /**
+     * ⛓ fidelity APCHESTCOVER — THE RE-CHECK, after the tick's own `stepActivators` (the main tick's and
+     * `runFrozenTick`'s, both after `ticksCompleted++`). A responder over an AP chest whose real step disagrees with
+     * the copy the chest read is the case whose input was NOT final at the chest step: the player (or a block) moved
+     * on or off a presser, or into or out of the responder's own box, in the very tick the responder's state turned.
+     * The game's update of the responder reads only state older than the frame (`activate` from the previous frame's
+     * `Button.update`, the Player's position before it moves), so the model's two labellings part there. REFUSED BY
+     * NAME rather than guessed. A stale record (a tick that never reached its own step) is dropped.
+     */
+    const apChestCoverAgreeNow = () => {
+        const p = apChestCoverPreview;
+        if (p === null || ticksCompleted === p.t) return;
+        apChestCoverPreview = null;
+        if (ticksCompleted !== p.t + 1 || p.level !== level || p.entries !== worldEntries) return;
+        const now = openActivatorIds(activatorStateFor(level));
+        for (const [id, open] of p.open) {
+            if (now.has(id) !== open) {
+                throw Object.assign(new Error(`levelRun: apChestCoverOrder: at tick ${p.t} in level ${level} the AP `
+                    + `chest under ${id} read it ${open ? 'OPEN' : 'SOLID'} from the box the chest step holds, and `
+                    + `the tick's own \`stepActivators\` (the post-move box) left it ${open ? 'SOLID' : 'OPEN'}. The `
+                    + 'responder\'s input was not final at the chest step (a press or an occupancy changed in the '
+                    + 'tick it turned). Refused by name (fidelity APCHESTCOVER, named STOP).'),
+                { code: 'AP_CHEST_COVER_NOT_FINAL' });
+            }
+        }
+    };
     function stepChestsNow(activators) {
         const st = chestStateFor(level);
         if (st.size === 0) return;
@@ -8446,9 +8508,12 @@ export function createLevelRun({
                     x: c.x, y: c.y, right: c.x + 16, bottom: c.y + 16,
                 };
                 const openChests = new Set([c.id, ...(openChestIdsNow() ?? [])]);
+                // ⛓ fidelity APCHESTCOVER (ON, an AP chest only): the responders after THIS frame's update of them.
+                const openActivators = (c.apChest && CONTACT_FIDELITY.apChestCoverOrder)
+                    ? apChestCoverOpenNow(activators, box) : openActivatorIds(activators);
                 return !!world.collidesSolid(box, normalizeLiveOpts(liveSolidOpts({
                     beforeTypeFlip: firstTickInWorld,
-                    openActivators: openActivatorIds(activators),
+                    openActivators,
                     openChests,
                 })));
             },
@@ -16654,6 +16719,7 @@ export function createLevelRun({
             applyLockEvents(stepActivators(activators, world,
                 playerBoxAt(state.x, state.y),
                 { inventory, keys, movingSolids: movingSolidsNow() }));
+            apChestCoverAgreeNow(); // ⛓ fidelity APCHESTCOVER (a no-op OFF)
             // ⛓ SWIM T3: a Button keeps updating through a freeze, so a press
             // here WOULD drop a rock — inside a span already frozen, which the
             // button arm does not nest. Refused by name.
@@ -25002,6 +25068,7 @@ export function createLevelRun({
                 applyLockEvents(stepActivators(activators, world,
                     playerBoxAt(next.x, next.y),
                     { inventory, keys, movingSolids: movingSolidsNow() }));
+                apChestCoverAgreeNow(); // ⛓ fidelity APCHESTCOVER (a no-op OFF)
                 // ⛓ SWIM T3: and a Button's publication reaches a rock of its
                 // group — set here, resolved at the top of the next tick.
                 if (!next.transition) armButtonFallRocks(playerBoxAt(next.x, next.y));

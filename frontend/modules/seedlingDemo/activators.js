@@ -1021,6 +1021,23 @@ export function openActivatorIds(state) {
 }
 
 /**
+ * ⛓ fidelity APCHESTCOVER (`CONTACT_FIDELITY.apChestCoverOrder`) — THE IDS THAT ARE NOT SOLID **AFTER** THE NEXT
+ * `stepActivators`, WITHOUT TAKING IT: the same step run on a COPY of `state` (its `byId` rows, `roomWritten` and
+ * `latched`, the only fields the step writes), so `state` is untouched and the events are dropped.
+ *
+ * For a body that updates AFTER the responders in a frame and BEFORE the Player: `Pickups/APChest` (added at
+ * p4h `Game.as:2335`, before `cover` `:2367` and every Lock-family add `:2362-2373`; `World.addUpdate` prepends). The
+ * caller passes the box it holds at that slot; the real step later reads the post-move box, so the caller re-checks.
+ */
+export function previewOpenActivatorIds(state, world, playerBox, opts = {}) {
+    const byId = new Map();
+    for (const [id, s] of state.byId) byId.set(id, { ...s });
+    const copy = { ...state, byId, roomWritten: new Set(state.roomWritten), latched: new Map(state.latched) };
+    stepActivators(copy, world, playerBox, opts);
+    return openActivatorIds(copy);
+}
+
+/**
  * ⛓ fidelity L40RES — THE IDS A BODY THAT UPDATES **BEFORE** THE RESPONDERS SEES OPEN: `openActivatorIds` minus a
  * fade responder that turned off on the LATEST `stepActivators` (`CONTACT_FIDELITY.spinnerLockLag`).
  *

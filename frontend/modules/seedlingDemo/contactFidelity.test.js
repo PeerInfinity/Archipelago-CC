@@ -98,6 +98,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_PICKUP_TICK_FREEZE || !!process.env.SEEDLING_DIALOGUE_FRAME_FREEZE
         || !!process.env.SEEDLING_FROZEN_TICK_UNGATED
         || !!process.env.SEEDLING_FREEZE_EDGE_FRAMES
+        || !!process.env.SEEDLING_AP_CHEST_COVER_ORDER
         || !!process.env.SEEDLING_ARROW_LANE_CROSSING
         || !!process.env.SEEDLING_AXE_TIMING_RUNG || !!process.env.SEEDLING_AXE_GATE_TRANSIT
         || !!process.env.SEEDLING_STATUE_TALK_RANGE
@@ -431,7 +432,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity FROZENTICK D2 (wave 53): the chasers' and the blocks' ungated update runs on the frozen frames too — OFF.
             frozenTickUngated: false,
             // ⛓ fidelity CEREMONYTOWER D2 (wave 54): a texted ceremony's later frames step the beam tower once, and a rock's release frame steps the families after it — OFF.
-            freezeEdgeFrames: false });
+            freezeEdgeFrames: false,
+            // ⛓ fidelity APCHESTCOVER D2 (wave 60): a p4h APChest reads its cover after this frame's `Cover.update` — OFF.
+            apChestCoverOrder: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

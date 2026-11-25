@@ -2275,6 +2275,25 @@ export const CONTACT_FIDELITY = {
      * byte-identical. `SEEDLING_FREEZE_EDGE_FRAMES=0|1`. ⛔ OFF by default (no flip licence).
      */
     freezeEdgeFrames: false,
+    /**
+     * fidelity APCHESTCOVER D2 (wave 60) — A p4h `APChest` READS ITS COVER AFTER THIS FRAME'S `Cover.update`.
+     * `World.addUpdate` PREPENDS, so a frame updates in reverse `Game.loadlevel` add order. p4h (`p4h-as3` @169247c4c4)
+     * adds `apitem` (`Pickups/APChest`, `Game.as:2335`) BEFORE `button` (`:2348`), `cover` (`:2367`) and every
+     * Lock-family responder (`:2362-2373`), and the vanilla `chest` (`:2384`) AFTER them: a frame runs Chest → Cover →
+     * Button → APChest → … → Player (`:2250`). `Cover.update` sets `type = ""` on the update whose `alpha -= 0.1` reaches
+     * 0 (`Puzzlements/Cover.as:41-48`); the `Button` between them writes `activate` (read on the cover's NEXT update,
+     * `Button.as:39,50-60`) and never `type`. So the APChest's `!collide("Solid", x, y)` (`Pickups/APChest.as:75`) sees
+     * the cover's opening frame at once, and opens ONE TICK BEFORE the vanilla order whenever the player is in its band
+     * as the cover completes (and sees a cover's reset one tick before it too). The model steps the responders at the
+     * END of the tick (`stepActivators`, from the post-move box), and the chest step reads the previous tick's state,
+     * which stays the vanilla `Chest`'s. ON, for an AP chest only: its gate reads `previewOpenActivatorIds`, the same
+     * step on a copy, from the box the chest step holds and the moving solids as they stand there; the tick's own step
+     * re-checks every responder over an AP chest against it, and a disagreement (an input that was not final at the
+     * chest step) is REFUSED by name (`AP_CHEST_COVER_NOT_FINAL`, the named STOP). p4g (no APChest) and every vanilla
+     * chest: untouched. Composes with every key (it changes one gate's read and nothing else). OFF: byte-identical.
+     * `SEEDLING_AP_CHEST_COVER_ORDER=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    apChestCoverOrder: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2708,6 +2727,9 @@ if (globalThis.process?.env?.SEEDLING_FROZEN_TICK_UNGATED === '0') CONTACT_FIDEL
 // ⛓ fidelity CEREMONYTOWER D2: `SEEDLING_FREEZE_EDGE_FRAMES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FREEZE_EDGE_FRAMES === '1') CONTACT_FIDELITY.freezeEdgeFrames = true;
 if (globalThis.process?.env?.SEEDLING_FREEZE_EDGE_FRAMES === '0') CONTACT_FIDELITY.freezeEdgeFrames = false;
+// ⛓ fidelity APCHESTCOVER D2: `SEEDLING_AP_CHEST_COVER_ORDER=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_AP_CHEST_COVER_ORDER === '1') CONTACT_FIDELITY.apChestCoverOrder = true;
+if (globalThis.process?.env?.SEEDLING_AP_CHEST_COVER_ORDER === '0') CONTACT_FIDELITY.apChestCoverOrder = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
