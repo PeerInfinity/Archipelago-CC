@@ -2,6 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_PAGE_URL, mysteryPageUrl } from './mysteryPage.js';
 
 describe('mysteryPageUrl', () => {
+  it('by default frames this app\'s own copy of the game', () => {
+    expect(DEFAULT_PAGE_URL).toBe('./modules/mystery-clue-game/index.html');
+    expect(mysteryPageUrl({ story: 'x', case: 'cases/x' })).toBe('./modules/mystery-clue-game/index.html?case=cases/x');
+  });
+
   it('names the case by its story under cases/', () => {
     expect(mysteryPageUrl({ story: 'custom-house-fire' }))
       .toBe(`${DEFAULT_PAGE_URL}?case=cases/custom-house-fire`);

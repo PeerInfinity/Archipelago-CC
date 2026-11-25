@@ -921,7 +921,7 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/user/modules/mysteryArchipelago.md",
         "title": "Mystery Game",
         "section": "user/modules",
-        "summary": "The Mystery Game panel opens the mystery clue game for the world you have loaded, and connects it to Archipelago. The game itself is a separate page (the repository mystery-clue-game); this panel…"
+        "summary": "The Mystery Game panel opens the mystery clue game for the world you have loaded, and connects it to Archipelago. The game itself is a separate page from the repository mystery-clue-game. This app…"
     },
     {
         "path": "docs/json/user/modules/noiz2sa.md",
