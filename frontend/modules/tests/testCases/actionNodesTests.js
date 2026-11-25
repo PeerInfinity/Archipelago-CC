@@ -36,6 +36,13 @@ import { ACT_CLICK_ID, PLAN_SOURCE_PREFIX, lastPerformResult } from '../../actio
 import { PERFORM_ALL_LABEL } from '../../actionNodes/nodeCard.js';
 
 const PRESET_RULES = './presets/action_nodes_example/AP_1/AP_1_rules.json';
+/**
+ * The omsi town (AN-OMSI-2/3): omsi-loops' first town as a committed preset. Its rows read every number from the preset;
+ * the one number typed here is the bot's loop count, pinned exactly as the headless pins pin it
+ * (`actionNodesTownScale.slow.test.js`, the bot at XP scale 1) — a change to it is a change to the town or the planner.
+ */
+const OMSI_TOWN_RULES = './presets/action_nodes_omsi_town/AP_3/AP_3_rules.json';
+const OMSI_TOWN_BOT_LOOPS = 7;
 const CATEGORY = 'ActionNodes';
 const P = '1';
 
@@ -43,8 +50,8 @@ const gs = () => getGameStateSingleton();
 const runtime = () => getActionNodesRuntime();
 
 /** The preset as committed: payloads, the block, and the item each check location holds. */
-async function readPreset() {
-    const rules = await (await fetch(PRESET_RULES, { cache: 'no-store' })).json();
+async function readPreset(path = PRESET_RULES) {
+    const rules = await (await fetch(path, { cache: 'no-store' })).json();
     const payloads = Object.fromEntries(Object.entries(rules.preset_sidecars[P]).map(([k, v]) => [k, v.playable_payload]));
     const itemAt = {};
     for (const region of Object.values(rules.regions[P])) {
@@ -54,8 +61,8 @@ async function readPreset() {
 }
 
 /** Load the preset; wait for the runtime and loop mode (the preset carries loop_costs). */
-async function loadExample(tc) {
-    await tc.loadRulesFromFile(PRESET_RULES);
+async function loadExample(tc, path = PRESET_RULES) {
+    await tc.loadRulesFromFile(path);
     await tc.stateManager.pingWorker('after-rules-load', 3000);
     const ok = await tc.pollForCondition(
         () => runtime().isLoaded() && gs()?.isLoopModeActive === true,
@@ -761,15 +768,23 @@ async function nodeCardRow(tc) {
 // ─── 11. The Playback Bot plays the example to the goal (AN-3a; category Playback Bot) ──
 
 async function botPlaysToGoal(tc) {
-    const { rules, block, payloads } = await readPreset();
+    return botPlaysPresetToGoal(tc, { path: PRESET_RULES, logName: 'embedded:actionNodesExample' });
+}
+
+/**
+ * The bot plays a committed ActionNodes preset to its goal in Loop mode. `loops`, when given, is the EXACT loop count
+ * the in-app run, the pure planner and the headless live path must all reach.
+ */
+async function botPlaysPresetToGoal(tc, { path, logName, loops: exactLoops = null, finishMs = 60000 }) {
+    const { rules, block, payloads } = await readPreset(path);
     tc.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
     const panel = await tc.pollForValue(() => getActivePanel(), 'playback bot panel instance', 5000, 100);
     const bot = panel?.getBot?.();
     tc.reportCondition('bot reachable', !!bot);
     if (!bot) return tc.getOverallResult();
     bot.reset();
-    if (!await loadExample(tc)) return tc.getOverallResult();
-    await getSphereStateSingleton().loadSphereLog('embedded:actionNodesExample',
+    if (!await loadExample(tc, path)) return tc.getOverallResult();
+    await getSphereStateSingleton().loadSphereLog(logName,
         (rules.sphere_log ?? []).map((e) => JSON.stringify(e)).join('\n'));
     bot.refresh();
     const restore = freshQueue();
@@ -781,7 +796,7 @@ async function botPlaysToGoal(tc) {
     try {
         await bot.play();
         const finished = await tc.pollForCondition(() => (bot.getStatus() || '').startsWith('finished'),
-            'the bot finishes the world in Loop mode', 60000, 200);
+            'the bot finishes the world in Loop mode', finishMs, 200);
         const loops = bot.getLoopRunner?.()?.getLoopCount?.() ?? 0;
         tc.reportCondition(`the bot finished (status: "${bot.getStatus()}", loops: ${loops})`, !!finished);
         const checked = new Set(tc.stateManager.getLatestStateSnapshot()?.checkedLocations ?? []);
@@ -806,6 +821,9 @@ async function botPlaysToGoal(tc) {
         tc.assertEqual('a replan\'s reasoning is in the log', true, log.some((l) => /^loop \d+ \(replan\): /.test(l)));
         tc.assertEqual(`the goal in EXACTLY the pure planner's loop count (pure ${pure.loops.length})`, pure.loops.length, loops);
         tc.assertEqual(`… and the headless live path's (live ${sim.loops.length})`, sim.loops.length, loops);
+        if (exactLoops !== null) {
+            tc.assertEqual(`the pure planner's loop count is the pinned ${exactLoops}`, exactLoops, pure.loops.length);
+        }
         tc.assertEqual('the Q1 attempt is named in the log', true, log.some((l) => /attempting /.test(l)));
         tc.assertEqual('no queue refusal', null, loopStateSingleton.lastActionRefusal);
     } finally {
@@ -1042,6 +1060,77 @@ async function cardsAfterReopen(tc) {
     return tc.getOverallResult();
 }
 
+// ─── 15. The omsi town: it loads, its cards show the preset's numbers, one performance works (AN-OMSI-3) ──
+
+/** The text a card shows for a requirement, from the payload (`<name> <amount>`). */
+const needsOf = (payload) => [...Object.values(payload.requires.stats), ...Object.values(payload.requires.resources)]
+    .map((v) => `${v.name} ${v.amount}`);
+
+async function omsiTownRow(tc) {
+    const { block, payloads, itemAt } = await readPreset(OMSI_TOWN_RULES);
+    if (!await loadExample(tc, OMSI_TOWN_RULES)) return tc.getOverallResult();
+    // The runtime holds THIS world (not the example left by an earlier row).
+    tc.assertEqual(`the runtime holds the omsi town (${block.graph_id})`, block.graph_id, runtime().snapshot().graphId);
+    tc.assertEqual('the runtime has one node per preset node', Object.keys(payloads).length, runtime().snapshot().nodes.length);
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'regionGraphPanel' }, 'tests');
+    const ids = Object.keys(payloads);
+    const allCards = await tc.pollForCondition(() => !!cyOf() && ids.every((id) => cardOf(id)), 'a card per node', 10000, 100);
+    tc.reportCondition(`one card per node (${cards().length} of ${ids.length})`, !!allCards);
+    const restore = freshQueue();
+    try {
+        // The start's forward neighbours are discovered at load (the actionNodes bundle): each card shows its name,
+        // its price and every requirement, as the preset states them.
+        const neighbours = payloads[block.start].exits.filter((e) => !e.reverse).map((e) => payloads[e.targetRegion]);
+        tc.assertEqual('the start has forward neighbours', true, neighbours.length > 0);
+        for (const n of neighbours) {
+            const ok = await tc.pollForCondition(() => textOf(cardOf(n.node_id)).includes(n.name), `${n.name}: its card shows`, 3000, 50);
+            const text = textOf(cardOf(n.node_id));
+            tc.reportCondition(`${n.name}: its card shows its name`, !!ok);
+            tc.assertEqual(`${n.name}: ${n.time} mana`, true, text.includes(`${n.time} mana`));
+            tc.assertEqual(`${n.name}: 0/${n.limit}`, true, text.includes(`0/${n.limit}`));
+            for (const need of needsOf(n)) tc.assertEqual(`${n.name}: needs ${need}`, true, text.includes(need));
+        }
+        // The goal's way out: the node whose result the goal requires (Buy Supplies → Supplies), blocked at load with
+        // its unmet line, its gold price from the preset.
+        const goal = payloads[block.goal];
+        const supplier = Object.values(payloads).find((p) => Object.keys(goal.requires.resources)
+            .some((r) => (p.results.resources[r]?.amount ?? 0) > 0));
+        tc.assertEqual('a node produces what the goal requires', true, !!supplier);
+        const sc = cardOf(supplier.node_id);
+        tc.log(`${supplier.name} card: ${textOf(sc)} [${sc?.dataset.state}]`);
+        if (!neighbours.includes(supplier)) {
+            for (const need of needsOf(supplier)) tc.assertEqual(`${supplier.name}: needs ${need}`, true, textOf(sc).includes(need));
+        }
+        tc.assertEqual(`${supplier.name}: blocked at load, the unmet line marked`, true,
+            sc?.dataset.state === NODE_STATES.BLOCKED && !!sc.querySelector('.an-card__unmet'));
+        // One performance: a start neighbour with no requirement, performed once through the Loops queue.
+        const node = neighbours.find((n) => !needsOf(n).length && n.kind === 'check');
+        tc.log(`acting once at ${node.name} (${node.time} mana)`);
+        const mana0 = gs().getCurrentMana();
+        author(payloads, routeFrom(block, [node.node_id, { act: node.node_id }]));
+        tc.assertEqual('the queue ran to its end', true, await runQueue(tc, 'queue finished'));
+        tc.assertEqual('no start-gate refusal', null, loopStateSingleton.lastActionRefusal);
+        tc.assertEqual(`${node.name} performed once this loop`, 1, countOf(node.node_id));
+        tc.assertEqual('the pool paid the node\'s authored price', mana0 - node.time + (node.results.mana ?? 0), gs().getCurrentMana());
+        const checked = await tc.pollForCondition(
+            () => (tc.stateManager.getLatestStateSnapshot()?.checkedLocations ?? []).includes(node.location),
+            `${node.location} is checked`, 5000, 100);
+        tc.reportCondition(`its check (${node.location}, holding ${itemAt[node.location]}) is sent`, !!checked);
+        const doneCard = await tc.pollForCondition(() => textOf(cardOf(node.node_id)).includes(CHECK_MARK),
+            `${node.name}: the check mark`, 5000, 100);
+        tc.reportCondition(`${node.name}: its card shows the check mark`, !!doneCard);
+    } finally {
+        restore();
+    }
+    return tc.getOverallResult();
+}
+
+async function omsiTownBotPlaysToGoal(tc) {
+    return botPlaysPresetToGoal(tc, {
+        path: OMSI_TOWN_RULES, logName: 'embedded:actionNodesOmsiTown', loops: OMSI_TOWN_BOT_LOOPS, finishMs: 180000,
+    });
+}
+
 const ROWS = [
     ['an-load-and-act-once', 'ActionNodes: load the preset and act once',
         'Loads the example, queues a move and one act, runs the queue: the node is performed once, its result is in the ledger, the pool paid its authored price.', actOnce],
@@ -1067,6 +1156,8 @@ const ROWS = [
         'With only actionNodes.act on in the strip: a click on a ready node\'s card queues the route then ONE act (Loop mode); again, one more act and no hop; a blocked node and a done one are refused by name; the queue runs. On the Region Map the same. With Loop mode off the click performs at once.', clickPerformsOnce],
     ['an-perform-all-button', 'ActionNodes: the "perform all remaining" button',
         'The button exists only on nodes whose limit is greater than 1; it queues the route and every remaining performance, says so on the card, is refused by name when nothing remains, and is capped by mana.', performAllButton],
+    ['an-omsi-town-load-and-act', 'ActionNodes: the omsi town loads, its cards show the preset\'s numbers, one performance works',
+        'Loads the omsi town preset (Beginnersville): a card per node; each neighbour of the start shows its price, used/limit and needs as the preset states them; the node that makes what the goal needs is blocked with its unmet line; one performance at a free check node runs through the Loops queue, pays its price and sends its check.', omsiTownRow],
     ['an-cards-after-reopen', 'ActionNodes: the node cards come back when the Region Graph panel is closed and reopened',
         'Loads the example with the Region Graph open (a card per node), closes the panel, opens a new one: a card per node again, with no world reload (AN-3a\'s pending-slot limit).', cardsAfterReopen],
 ];
@@ -1074,6 +1165,16 @@ const ROWS = [
 for (const [id, name, description, testFunction] of ROWS) {
     registerTest({ id, name, description, testFunction, category: CATEGORY, enabled: false });
 }
+
+registerTest({
+    id: 'an-omsi-bot-plays-to-goal',
+    name: 'Playback Bot: the omsi town to Start Journey in Loop mode, in exactly the pinned loop count',
+    description: 'Loads the omsi town preset and presses the bot\'s Play with "log reasoning" on, as the example\'s row does: '
+        + `the goal is checked in EXACTLY ${OMSI_TOWN_BOT_LOOPS} loops, the same as the pure planner and the headless live path.`,
+    testFunction: omsiTownBotPlaysToGoal,
+    category: 'Playback Bot',
+    enabled: false,
+});
 
 registerTest({
     id: 'an-bot-plays-to-goal',

@@ -148,7 +148,7 @@ It compiles to the committed preset `frontend/presets/action_nodes_omsi_town/AP_
 
 It declares no playback controller (the live bot plays through the Loops queue), so the capability chart shows ✗ for a Bot block.
 
-Unit tests: `frontend/modules/actionNodes/*.test.js`; in the browser, the category "ActionNodes" of the substrates test mode (batch `fast`), and `an-bot-plays-to-goal` in the category "Playback Bot" (batch `playback-bot`).
+Unit tests: `frontend/modules/actionNodes/*.test.js`; in the browser, the category "ActionNodes" of the substrates test mode (batch `fast`), and `an-bot-plays-to-goal` in the category "Playback Bot" (batch `playback-bot`). The omsi town has two rows of its own (AN-OMSI-3): `an-omsi-town-load-and-act` (category "ActionNodes", batch `fast`: the preset loads, the start's neighbours' cards show the preset's prices and needs, the goal's supplier is blocked with its unmet line, one performance sends its check) and `an-omsi-bot-plays-to-goal` (category "Playback Bot", batch `playback-bot`: the bot reaches Start Journey in exactly 7 loops, equal to the pure planner and the headless live path).
 
 ## Related documentation
 
