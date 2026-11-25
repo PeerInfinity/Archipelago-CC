@@ -10,13 +10,16 @@
  *   - `loopBot.planLoop(context)` (AN-3a): the whole loop's plan for the Playback Bot's loop runner, when every region
  *     of the loaded world is an ActionNodes node (`actionLoopBot.js`; the runner's seam,
  *     `playbackBot/substrateLoopPlanner.js`).
- *   - `loopSupport`: the queue verbs `regionMove` and `act`, ENFORCED (`strictQueueActions`, AN-1b: no explore);
+ *   - `loopSupport`: the queue verbs `regionMove`, `act` and (AN-TIME-2) `wait`, ENFORCED (`strictQueueActions`, AN-1b: no explore);
  *     `actionGate`, the start gate Loops asks before an entry
  *     starts; `authoredCosts`, so a cost pass (the pipeline's, the Loops panel's Generate Costs) copies the
  *     compiler's `loop_costs` entries instead of re-pricing them. NOT `manual`: a Manual block parks the queue for
  *     live play, and in Loop mode this substrate's panel QUEUES an `act` (every performance is a queue entry), so a
  *     park would wait for nothing. NOT `record` / `playback`: the strict action gate's pair; the start gate does
  *     that job. NOT `executeVia` / `botActsAtOnce`: they need the playback controller (slice 3).
+ *     AN-TIME-2: `pool()`, the loaded world's name and unit for the pool (`{name, unit}`: its `pool`, else "Mana"),
+ *     which the Loops and Resources panels show in place of "Mana" (`resourceChannels/poolName.js`), and `clockLine(mana)`, the Resources panel's Time line (null with no
+ *     `clock`). On `loopSupport`, not `sharing.mana`: the registry validates `sharing.mana`'s fields (shared/).
  *   - `sharing`: `mana` (outside Loop mode the runtime charges the shared pool itself), `items` (its resources, so a
  *     cross-substrate grant lands in the ledger), `stats` and `resources` (the host ledger keeps them), each list read
  *     from the loaded world.
@@ -40,6 +43,7 @@ import { ACTION_NODE_KINDS, knowledgeLocationNameOf } from './actionGraph.js';
 import { ACTION_NODES_SUBSTRATE_ID, ACT_ACTION } from './actionGraphCompiler.js';
 import { getActionNodesRuntime } from './actionNodesRuntime.js';
 import { planLiveLoop } from './actionLoopBot.js';
+import { WAIT_ACTION } from '../shared/procgen/loopCustomActions.js';
 
 /** `{<knowledge id>: {name}}` (AN-TIME-1): a node's required or learned knowledge flags, names resolved. */
 const NAMED_FLAGS = Object.freeze({
@@ -178,13 +182,18 @@ export const substrateRegistryEntry = Object.freeze({
     // moved onto the entry in AN-1b).
     fillRules: Object.freeze(['P1', 'T1', 'L1', 'L2', 'W1', 'B1', 'R4', 'AN1', 'AN2', 'AN-flat']),
     loopSupport: Object.freeze({
-        queueActions: Object.freeze(['regionMove', ACT_ACTION]),
+        queueActions: Object.freeze(['regionMove', ACT_ACTION, WAIT_ACTION]),
         // ⚖ D6 (Robert 2026-11-16T19:59:48Z): no explore action in ActionNodes. The list above is ENFORCED: a custom
         // action it does not hold is refused at queue time and by the start gate (`loops/strictQueueActions.js`).
         strictQueueActions: true,
         manual: false,
         authoredCosts: true,
         actionGate: (action) => getActionNodesRuntime().gate(action),
+        pool: () => {
+            const rt = getActionNodesRuntime();
+            return rt.isLoaded() ? { name: rt.poolName(), unit: rt.poolUnit() } : null;
+        },
+        clockLine: (mana) => getActionNodesRuntime().clockLine(mana),
     }),
     // ⛓ The live bot (design §7, AN-3a). `context`: {startRegion, maxMana, inventory, checkedLocations, regionXp}.
     loopBot: Object.freeze({
@@ -194,7 +203,7 @@ export const substrateRegistryEntry = Object.freeze({
             // AN-3b: a continuation (`context.continueFrom`) plans the rest of the running loop from the runtime's
             // live counts, stats and resources.
             const continueFrom = context.continueFrom ? { ...context.continueFrom, state: rt.liveState() } : null;
-            return planLiveLoop({ ...context, model: rt.model, continueFrom });
+            return planLiveLoop({ ...context, model: rt.model, continueFrom, known: rt.knownIds(), unit: rt.poolUnit() });
         },
     }),
     sharing: Object.freeze({

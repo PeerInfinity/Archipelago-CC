@@ -67,6 +67,8 @@ export function nodeCardView({ runtime, loopState = () => null, loopMode = () =>
         basis,
         isDiscovered,
         checked: (loc) => runtime.checked.has(loc) || runtime.sentChecks.has(loc),
+        // AN-TIME-2: the earlier loop a node was first performed in (the card's "completed before" tag), or null.
+        completedBefore: (nodeId) => runtime.completedBeforeLoopOf?.(nodeId) ?? null,
     };
 }
 

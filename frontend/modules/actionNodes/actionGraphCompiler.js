@@ -63,6 +63,8 @@ export const ACTION_NODES_GAME = Object.freeze({
 export const ACTION_NODES_BLOCK_VERSION = 1;
 /** The Loops queue verb that performs a node (⚖ user 2026-11-15, Q4). */
 export const ACT_ACTION = 'act';
+/** The `event_kind` of a knowledge event location (AN-TIME-2): never auto-collected; the runtime collects it on perform. */
+export const KNOWLEDGE_EVENT_KIND = 'substrate_state';
 /** The `discovery_mode[p].bundle` a compiled world names (discovery/worldDiscoveryMode.js `ACTION_NODES_BUNDLE`). */
 export const ACTION_NODES_DISCOVERY_BUNDLE = 'actionNodes';
 /** The `procgen_metadata[p].driver` a compiled world records. */
@@ -376,6 +378,9 @@ export function compileActionGraph(graph, {
             ev.item = { name: knowledgeItemNameOf(flag.name), player: Number(p), advancement: true, type: 'None' };
             ev.locked = true;
             ev.event = true;
+            // AN-TIME-2: learned by PERFORMING the node, so the state manager must not collect it on reach
+            // (stateManager/core/eventKinds.js); the runtime collects it on the action.
+            ev.event_kind = KNOWLEDGE_EVENT_KIND;
             locations.push(ev);
         }
         regions[id] = makeRegion(id, exitsOut, locations);
@@ -484,6 +489,8 @@ export function actionNodesBlockOf(graph, model = buildActionModel(graph)) {
         settings: resolvedSettingsOf(graph),
         // AN-TIME-1: only when the graph has them (byte identity for every older graph).
         ...(graph.clock ? { clock: { ...graph.clock } } : {}),
+        // AN-TIME-2: the pool's display name, only when the graph names one.
+        ...(graph.pool ? { pool: { ...graph.pool } } : {}),
         ...(graph.knowledge ? { knowledge: Object.fromEntries(Object.entries(graph.knowledge).map(([k, v]) => [k, { name: v.name, item: knowledgeItemNameOf(v.name) }])) } : {}),
     };
 }

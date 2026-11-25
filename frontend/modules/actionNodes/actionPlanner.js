@@ -24,7 +24,7 @@
 import { applyRegionXpCostEffect, levelFromXP } from '../shared/procgen/xpFormulas.js';
 import { resolvedSettingsOf } from './actionGraph.js';
 import {
-    applyBoost, describePlan, formatMana, loopStartState, perform, priceOf, waitNote, waitOf, whyNot,
+    applyBoost, describePlan, formatMana, loopStartState, perform, poolAmountOf, poolWordOf, priceOf, waitNote, waitOf, whyNot,
 } from './actionModel.js';
 import { DEFAULT_STATE_BUDGET, enumerateLoop, planTo } from './actionSearch.js';
 
@@ -225,7 +225,7 @@ export function planLoop(model, { items = {}, checked = [], xp = {}, start, budg
     if (goalAt >= 0) {
         const plan = planTo(entries, goalAt);
         const left = entries[goalAt].state.mana;
-        lines.push(`Goal reachable: ${name(goal)} via ${describePlan(model, plan)} (${plan.length} performance${plan.length === 1 ? '' : 's'}, ${formatMana(left)} mana left)${waitsAlong(model, first, plan, costs)}.`);
+        lines.push(`Goal reachable: ${name(goal)} via ${describePlan(model, plan)} (${plan.length} performance${plan.length === 1 ? '' : 's'}, ${poolAmountOf(model, left)} left)${waitsAlong(model, first, plan, costs)}.`);
         return { kind: PLAN_KINDS.GOAL, plan: ids(plan), attempt: null, earns: [name(goal)], manaLeft: left, lines };
     }
 
@@ -247,15 +247,15 @@ export function planLoop(model, { items = {}, checked = [], xp = {}, start, budg
     if (best) {
         const plan = planTo(entries, best.k);
         const earnedNames = best.earned.map(name);
-        lines.push(`Chose: ${describePlan(model, plan)}, earning ${earnedNames.join(', ')} (${formatMana(best.state.mana)} mana left)${waitsAlong(model, first, plan, costs)}.`);
+        lines.push(`Chose: ${describePlan(model, plan)}, earning ${earnedNames.join(', ')} (${poolAmountOf(model, best.state.mana)} left)${waitsAlong(model, first, plan, costs)}.`);
         for (const c of openChecks) {
             if (best.earned.includes(c)) continue;
             const a = alone.get(c);
             if (a) {
                 const after = leastShortPlan(model, best.state, c, costs, budget);
-                const why = after && after.short > 0 ? `short by ${formatMana(after.short)} mana after ${earnedNames.join(', ')}`
+                const why = after && after.short > 0 ? `short by ${poolAmountOf(model, after.short)} after ${earnedNames.join(', ')}`
                     : `not together with ${earnedNames.join(', ')}`;
-                lines.push(`  ${name(c)}: ${why} (alone: ${describePlan(model, a.plan)}, ${formatMana(a.left)} mana left).`);
+                lines.push(`  ${name(c)}: ${why} (alone: ${describePlan(model, a.plan)}, ${poolAmountOf(model, a.left)} left).`);
             } else {
                 lines.push(`  ${name(c)}: ${notThisLoop(model, first, c, costs, budget)}.`);
             }
@@ -277,7 +277,7 @@ export function planLoop(model, { items = {}, checked = [], xp = {}, start, budg
         if (learn) {
             const plan = planTo(entries, learn.k);
             const names = learn.got.map((f) => model.knowledge[f].name);
-            lines.push(`No check can be earned this loop. Learning ${names.join(', ')}: ${describePlan(model, plan)} (${formatMana(learn.state.mana)} mana left)${waitsAlong(model, first, plan, costs)}.`);
+            lines.push(`No check can be earned this loop. Learning ${names.join(', ')}: ${describePlan(model, plan)} (${poolAmountOf(model, learn.state.mana)} left)${waitsAlong(model, first, plan, costs)}.`);
             for (const t of [...openChecks, goal]) lines.push(`  ${name(t)}: ${notThisLoop(model, first, t, costs, budget)}.`);
             return { kind: PLAN_KINDS.LEARN, plan: ids(plan), attempt: null, earns: [], learns: names, manaLeft: learn.state.mana, lines };
         }
@@ -305,9 +305,9 @@ export function planLoop(model, { items = {}, checked = [], xp = {}, start, budg
             if (refusal.code === 'mana' && state.mana > 0) attempt = i;
             break;
         }
-        lines.push(`No check can be earned this loop. Closest: ${name(closest.t)}, short by ${formatMana(closest.short)} mana `
+        lines.push(`No check can be earned this loop. Closest: ${name(closest.t)}, short by ${poolAmountOf(model, closest.short)} `
             + `(${describePlan(model, closest.plan)}).`);
-        lines.push(`Spending it for region XP: ${describePlan(model, plan)}${attempt !== null ? `, then attempting ${name(attempt)} with ${formatMana(state.mana)} mana` : ''}.`);
+        lines.push(`Spending it for region XP: ${describePlan(model, plan)}${attempt !== null ? `, then attempting ${name(attempt)} with ${poolAmountOf(model, state.mana)}` : ''}.`);
         for (const t of targets) if (t !== closest.t) lines.push(`  ${name(t)}: ${notThisLoop(model, first, t, costs, budget)}.`);
         return {
             kind: PLAN_KINDS.XP, plan: ids(plan), attempt: attempt === null ? null : model.nodes[attempt].id,
@@ -319,8 +319,8 @@ export function planLoop(model, { items = {}, checked = [], xp = {}, start, budg
     let most = 0;
     entries.forEach(({ state }, k) => { if (state.spent > entries[most].state.spent + 1e-9) most = k; });
     const plan = planTo(entries, most);
-    lines.push(`Waiting for an item: no remaining check can be earned with what is held, whatever the mana.`);
-    lines.push(`Spending ${formatMana(entries[most].state.spent)} mana for region XP: ${describePlan(model, plan)}.`);
+    lines.push(`Waiting for an item: no remaining check can be earned with what is held, whatever the ${poolWordOf(model)}.`);
+    lines.push(`Spending ${poolAmountOf(model, entries[most].state.spent)} for region XP: ${describePlan(model, plan)}.`);
     for (const t of targets) lines.push(`  ${name(t)}: ${notThisLoop(model, first, t, costs, budget)}.`);
     return { kind: PLAN_KINDS.WAIT, plan: ids(plan), attempt: null, earns: [], manaLeft: entries[most].state.mana, lines };
 }
@@ -343,7 +343,7 @@ function neededKnowledge(model, start, done) {
 /** Why target `t` cannot be earned this loop: short of mana by how much, or what requirement no plan meets. */
 function notThisLoop(model, start, t, costs, budget) {
     const s = leastShortPlan(model, start, t, costs, budget);
-    if (s) return `short by ${formatMana(s.short)} mana (${describePlan(model, s.plan)})`;
+    if (s) return `short by ${poolAmountOf(model, s.short)} (${describePlan(model, s.plan)})`;
     // Not even with unlimited mana: name the first requirement the node itself fails at its best state.
     const allowed = relevantNodes(model, start, t, costs);
     const { entries } = enumerateLoop(model, { start, costs, ignoreMana: true, budget, allowed });

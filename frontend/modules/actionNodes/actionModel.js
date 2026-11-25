@@ -105,6 +105,7 @@ export function buildActionModel(graph) {
         knowledgeIds, knowIx, knowledge,
         windowed: nodes.some((n) => n.from > -Infinity || n.until < Infinity),
         clock: graph.clock ? { ...graph.clock } : null,
+        pool: graph.pool ? { ...graph.pool } : null,
         startIndex,
         goalIndex: nodes.findIndex((n) => n.kind === 'goal'),
         checkIndices: nodes.flatMap((n, i) => (n.kind === 'check' ? [i] : [])),
@@ -177,6 +178,34 @@ export function waitOf(model, state, i) {
     return Math.max(0, from - (state.clock ?? 0));
 }
 
+/** The pool's name when a world names none (design §4). */
+export const DEFAULT_POOL_NAME = 'Mana';
+
+/** The pool's display name: the world's `pool.name` (AN-TIME-2), else "Mana". */
+export function poolNameOf(model) {
+    return model?.pool?.name || DEFAULT_POOL_NAME;
+}
+
+/** The pool's name inside a sentence ("mana", "time"). */
+export function poolWordOf(model) {
+    return poolNameOf(model).toLowerCase();
+}
+
+/**
+ * An amount of the pool in a sentence: "2 h" when the world names a unit, else "2 mana" / "2 time" (the name). With
+ * no `pool` this is exactly the old "<n> mana".
+ */
+export function poolAmountOf(model, n) {
+    const unit = model?.pool?.unit;
+    return unit ? `${formatMana(n)} ${unit}` : `${formatMana(n)} ${poolWordOf(model)}`;
+}
+
+/** A length of time with the pool's unit when it has one ("2 h"), else the bare number ("2"). */
+export function unitAmountOf(model, n) {
+    const unit = model?.pool?.unit;
+    return unit ? `${formatMana(n)} ${unit}` : formatMana(n);
+}
+
 /** Is flag `k` known in `state`? */
 const knows = (state, k) => (state.known?.[k] ?? 0) > 0;
 
@@ -201,7 +230,7 @@ export function formatClock(model, units) {
 export function whyNot(model, state, i, { costs, ignoreMana = false } = {}) {
     const node = model.nodes[i];
     if (i === model.startIndex) return { code: 'start', text: 'the start is not an action' };
-    if (!ignoreMana && state.mana <= EPSILON) return { code: 'loop-over', text: 'no mana left: the loop is over' };
+    if (!ignoreMana && state.mana <= EPSILON) return { code: 'loop-over', text: `no ${poolWordOf(model)} left: the loop is over` };
     if (!isReached(model, state, i)) return { code: 'not-reached', text: 'not reached this loop' };
     if (state.counts[i] >= node.limit) return { code: 'limit', text: `done ${node.limit}/${node.limit} this loop` };
     for (const [s, n] of node.reqStats) {
@@ -229,8 +258,8 @@ export function whyNot(model, state, i, { costs, ignoreMana = false } = {}) {
     }
     const price = priceOf(model, i, costs) + wait;
     if (!ignoreMana && state.mana + EPSILON < price) {
-        const waits = wait > 0 ? ` (waits ${formatMana(wait)}, opens ${formatClock(model, node.from)})` : '';
-        return { code: 'mana', text: `short by ${formatMana(price - state.mana)} mana${waits}`, short: price - state.mana };
+        const waits = wait > 0 ? ` (waits ${unitAmountOf(model, wait)}, opens ${formatClock(model, node.from)})` : '';
+        return { code: 'mana', text: `short by ${poolAmountOf(model, price - state.mana)}${waits}`, short: price - state.mana };
     }
     return null;
 }
@@ -241,7 +270,7 @@ export function whyNot(model, state, i, { costs, ignoreMana = false } = {}) {
  */
 export function waitNote(model, state, i) {
     const wait = waitOf(model, state, i);
-    return wait > 0 ? `waits ${formatMana(wait)} (opens ${formatClock(model, model.nodes[i].from)})` : null;
+    return wait > 0 ? `waits ${unitAmountOf(model, wait)} (opens ${formatClock(model, model.nodes[i].from)})` : null;
 }
 
 /** Perform node `i` once. The caller has checked `whyNot` is null. Returns a new state. */
@@ -260,6 +289,18 @@ export function perform(model, state, i, { costs } = {}) {
     return {
         counts, mana: state.mana - price - wait + node.addMana, stats, resources, spent: state.spent + price,
         clock: (state.clock ?? 0) + wait + price, known,
+    };
+}
+
+/**
+ * A wait of `units` (AN-TIME-2: a Loops `wait` entry): the clock moves on and the pool pays it. Nothing else changes.
+ * No region-XP discount: an hour waited is an hour.
+ */
+export function applyWait(model, state, units) {
+    const u = Math.max(0, Number(units) || 0);
+    return {
+        ...state, counts: state.counts.slice(), mana: state.mana - u, clock: (state.clock ?? 0) + u,
+        known: (state.known ?? []).slice(),
     };
 }
 

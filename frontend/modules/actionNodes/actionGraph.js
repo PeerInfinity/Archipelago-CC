@@ -86,6 +86,8 @@ export const ACTION_GRAPH_REFUSALS = Object.freeze({
     BAD_WINDOW: 'bad-window',
     WINDOW_ON_START: 'window-on-start',
     BAD_CLOCK: 'bad-clock',
+    // The pool's display name (AN-TIME-2, design §4): `pool: {name, unit?}`.
+    BAD_POOL: 'bad-pool',
     // ⚖ Robert 2026-11-25 (Q4): an item may add time at the END of the day, never move its start — an earlier start
     // makes the minimal-set logic unsound (design §1: 107 of 1,000 random graphs). Refused by name so a graph that
     // wants it says so.
@@ -110,7 +112,7 @@ export class ActionGraphError extends Error {
 }
 
 const TOP_FIELDS = Object.freeze(['kind', 'schema_version', 'graph_id', 'name', 'loop', 'stats', 'resources',
-    'boons', 'filler', 'start', 'settings', 'nodes', 'provenance', 'clock', 'knowledge']);
+    'boons', 'filler', 'start', 'settings', 'nodes', 'provenance', 'clock', 'knowledge', 'pool']);
 const NODE_FIELDS = Object.freeze(['name', 'kind', 'time', 'requires', 'results', 'limit', 'after', 'position',
     'src', 'window']);
 const BOON_FIELDS = Object.freeze(['name', 'count', 'gives', 'src']);
@@ -222,6 +224,16 @@ export function validateActionGraph(graph) {
             || typeof c.start !== 'string' || !/^([01]\d|2[0-3]):[0-5]\d$/.test(c.start)
             || !isPosInt(c.minutesPerUnit)) {
             err(R.BAD_CLOCK, 'clock', '`clock` must be {start: "HH:MM", minutesPerUnit: <a whole number of at least 1>}');
+        }
+    }
+
+    // The pool's name (display only, AN-TIME-2): what the loop's resource is called ("Time"), and its unit ("h").
+    if (graph.pool !== undefined) {
+        const pl = graph.pool;
+        if (!isPlainObject(pl) || Object.keys(pl).some((k) => k !== 'name' && k !== 'unit')
+            || typeof pl.name !== 'string' || !pl.name.trim()
+            || (pl.unit !== undefined && (typeof pl.unit !== 'string' || !pl.unit.trim()))) {
+            err(R.BAD_POOL, 'pool', '`pool` must be {name: <a non-empty string>, unit?: <a non-empty string>}');
         }
     }
 

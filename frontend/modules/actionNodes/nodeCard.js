@@ -8,7 +8,10 @@
  *
  * ```
  * Do Chores        ✓ 0/2      ← name, a check mark once its location is checked (🏁 on the goal), used/limit
- * 5 mana                      ← the live price (region-XP discounted)
+ * completed before · loop 1   ← AN-TIME-2: first performed in an EARLIER loop (⚖ Q6: a "loop N" tag, not grey)
+ * available 12:00–13:00       ← AN-TIME-2, a windowed world only: the node's window ("any time" without one)
+ * 5 mana                      ← the live price (region-XP discounted), in the world's pool name ("1 h")
+ * click: waits 1 h (opens 12:00), then 1 h   ← AN-TIME-2: what a click queues when the node is early
  * needs  –                    ← minimums; the unmet line is marked when the node is blocked
  * gives  Gold +3
  * [perform all remaining]     ← AN-3b: `.an-card__actions[data-slot="perform-all-remaining"]`, on a node whose limit > 1
@@ -33,6 +36,23 @@
  */
 
 import { NODE_STATES } from './nodeStates.js';
+import { formatClock, poolAmountOf, poolNameOf, unitAmountOf } from './actionModel.js';
+
+/** The "completed before" marker's text (AN-TIME-2, ⚖ Robert's Q6: a tag naming the loop, not a grey card). */
+export const completedBeforeText = (loop) => `completed before · loop ${loop}`;
+
+/**
+ * A node's window line (AN-TIME-2) on the world's clock: "available 12:00–13:00", "available until 10:00",
+ * "available from 12:00", or "any time".
+ */
+export function windowText(model, window) {
+    const from = typeof window?.from === 'number' ? formatClock(model, window.from) : null;
+    const until = typeof window?.until === 'number' ? formatClock(model, window.until) : null;
+    if (from && until) return `available ${from}–${until}`;
+    if (until) return `available until ${until}`;
+    if (from) return `available from ${from}`;
+    return 'any time';
+}
 
 /** The slot of the "perform all remaining" button (⚖ Robert 2026-11-17T21:35:22Z; AN-3a reserved it, AN-3b fills it). */
 export const PERFORM_ALL_SLOT = 'perform-all-remaining';
@@ -54,12 +74,12 @@ const amountsText = (named, fmt) => {
     const parts = Object.values(named ?? {}).map(fmt);
     return parts.length ? parts.join(', ') : '–';
 };
-const givesOf = (payload) => {
+const givesOf = (payload, model) => {
     const parts = [
         amountsText(payload.results?.stats, (v) => `${v.name} ${v.amount > 0 ? '+' : ''}${v.amount}`),
         amountsText(payload.results?.resources, (v) => `${v.name} ${v.amount > 0 ? '+' : ''}${v.amount}`),
     ].filter((t) => t !== '–');
-    if (payload.results?.mana) parts.push(`Mana +${payload.results.mana}`);
+    if (payload.results?.mana) parts.push(`${model ? poolNameOf(model) : 'Mana'} +${payload.results.mana}`);
     return parts.length ? parts.join(', ') : '–';
 };
 const needsOf = (payload) => {
@@ -96,9 +116,12 @@ export function cardVisibility(model, nodeId, isDiscovered) {
  * @param {string} input.visibility  `cardVisibility`
  * @param {boolean} input.checked    its location is checked
  * @param {string|null} [input.message]  the last "perform all remaining" answer for this node
+ * @param {object} [input.model]     the runtime model (AN-TIME-2: its clock, windows and pool name)
+ * @param {number|null} [input.completedBefore]  the earlier loop this node was first performed in, or null
  * @returns {object|null} null: not drawn
  */
-export function nodeCardModel({ payload, state, visibility = 'shown', checked = false, message = null }) {
+export function nodeCardModel({ payload, state, visibility = 'shown', checked = false, message = null, model = null,
+    completedBefore = null }) {
     if (!payload || !state || visibility === 'hidden') return null;
     const nodeId = payload.node_id;
     if (visibility === 'placeholder' || state.state === NODE_STATES.UNDISCOVERED) {
@@ -106,6 +129,16 @@ export function nodeCardModel({ payload, state, visibility = 'shown', checked = 
     }
     const isStart = payload.kind === 'start';
     const unmetCode = state.unmet?.code ?? null;
+    const windowed = !!model?.windowed && !isStart;
+    const wait = state.wait ?? 0;
+    const time = {};
+    if (windowed) time.window = windowText(model, payload.window);
+    if (windowed && wait > 0 && state.state === NODE_STATES.READY) {
+        time.click = `click: waits ${unitAmountOf(model, wait)} (opens ${formatClock(model, payload.window.from)}), then ${poolAmountOf(model, state.price)}`;
+    }
+    if (completedBefore !== null && completedBefore !== undefined && !isStart) time.completedBefore = completedBeforeText(completedBefore);
+    const unmetLine = unmetCode === 'mana' ? 'mana' : unmetCode === 'too-late' ? 'window'
+        : (/below 0/.test(state.unmet?.text ?? '') ? 'gives' : 'needs');
     return {
         nodeId,
         placeholder: false,
@@ -118,11 +151,13 @@ export function nodeCardModel({ payload, state, visibility = 'shown', checked = 
         used: isStart ? null : `${state.count}/${state.limit}`,
         repeatable: payload.limit > 1,
         message: message ?? null,
-        mana: isStart ? null : `${manaText(state.price)} mana`,
+        mana: isStart ? null : (model ? poolAmountOf(model, state.price) : `${manaText(state.price)} mana`),
         needs: needsOf(payload),
-        gives: givesOf(payload),
-        // The unmet line: a requirement marks `needs`; a resource that would go below 0 marks `gives`; mana marks `mana`.
-        unmet: state.unmet ? { line: unmetCode === 'mana' ? 'mana' : (/below 0/.test(state.unmet.text) ? 'gives' : 'needs'), text: state.unmet.text } : null,
+        gives: givesOf(payload, model),
+        // The unmet line: a requirement marks `needs`; a resource that would go below 0 marks `gives`; mana marks `mana`;
+        // too late (AN-TIME-2) marks the window line.
+        unmet: state.unmet ? { line: unmetLine, text: state.unmet.text } : null,
+        ...time,
     };
 }
 
@@ -165,6 +200,11 @@ export function updateNodeCard(el, card, { onPerformAll = null } = {}) {
     head.appendChild(line(doc, 'an-card__marks', marks.join(' ')));
     el.appendChild(head);
     if (card.goal) el.appendChild(line(doc, 'an-card__goal', 'goal'));
+    if (card.completedBefore) {
+        const tag = line(doc, 'an-card__completed-before', card.completedBefore);
+        tag.style.cssText = 'color:#9ecbff;font-style:italic;';
+        el.appendChild(tag);
+    }
     const mark = (name, e) => {
         if (card.unmet?.line === name) {
             e.classList.add('an-card__unmet');
@@ -173,9 +213,11 @@ export function updateNodeCard(el, card, { onPerformAll = null } = {}) {
         }
         return e;
     };
+    if (card.window) el.appendChild(mark('window', line(doc, 'an-card__window', card.window)));
     if (card.mana) el.appendChild(mark('mana', line(doc, 'an-card__mana', card.mana)));
     el.appendChild(mark('needs', line(doc, 'an-card__needs', `needs  ${card.needs}`)));
     el.appendChild(mark('gives', line(doc, 'an-card__gives', `gives  ${card.gives}`)));
+    if (card.click) el.appendChild(line(doc, 'an-card__click', card.click));
     if (card.unmet) el.appendChild(line(doc, 'an-card__why', card.unmet.text));
     // ⛓ The "perform all remaining" button of a repeatable node (limit > 1); the slot stays empty and hidden otherwise.
     const slot = line(doc, 'an-card__actions', '', { 'data-slot': PERFORM_ALL_SLOT });
@@ -250,6 +292,8 @@ export function createNodeCardProvider({ getView, getStamp = () => null, documen
             visibility: cardVisibility(v.model, nodeId, v.isDiscovered),
             checked: !!payload.location && v.checked(payload.location),
             message: messages.get(nodeId) ?? null,
+            model: v.model,
+            completedBefore: v.completedBefore?.(nodeId) ?? null,
         });
     };
     return {

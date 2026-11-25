@@ -30,6 +30,21 @@
  *   - **Both resets** (`gameState:loopReset`, `loopState:loopReset`) and a world load start a new loop: counts to
  *     zero, the ledger to its base plus the held boosts.
  *
+ * ⛓ TIME (AN-TIME-2). The runtime keeps the loop's CLOCK (time spent this loop: every price paid plus every wait,
+ *   zero at each loop's start) and reads each node's `window` from its payload, so the gate and `whyNotAct` apply the
+ *   model's window rule: past `until` is `too-late`. An `act` that would start before `from` is refused by the start
+ *   gate as `too-early` (a hand-queued entry): the click and the bot queue a `wait` entry first
+ *   (`shared/procgen/loopCustomActions.js`, priced by its own `params.units`, no region-XP discount); its completion
+ *   advances the clock. Outside Loop mode `actNow` pays the wait with the price (E2).
+ * ⛓ KNOWLEDGE (AN-TIME-2). The runtime keeps its own LEARNED set, filled by `perform` (a node's `results.learns`),
+ *   held across loops and cleared by a world load; the gate reads it ("needs to know …"). The flag's event location
+ *   carries `event_kind: 'substrate_state'`, so the state manager never collects it on reach; `perform` collects it
+ *   (`env.collectEvent`, a forced local check), and a snapshot that holds a flag's event item adds it here (a reload,
+ *   a /sync reset).
+ * ⛓ COMPLETED BEFORE (AN-TIME-2, ⚖ Robert's Q6, minimal form). Each node performed at least once is kept with the loop
+ *   it was FIRST performed in (`completedLoops`, node id → loop number; loop 1 is the load's). The card's marker and
+ *   the panel show it for a node first performed in an EARLIER loop. Kept per world through `env.historyStore`.
+ *
  * The node data come from the compiled world: `action_nodes[p]` (the block) and each node's `playable_payload`.
  * The model has the shape `actionModel.buildActionModel` returns, so its pure rules (`whyNot`, `isReached`,
  * `isCleared`) are the ones the compiler's search and the bot use: ONE definition of "can this node be performed".
@@ -37,11 +52,16 @@
  * No DOM. Every effect goes through the injected `env` (index.js wires the app's; the tests a fake).
  */
 
-import { whyNot, isCleared, isReached } from './actionModel.js';
+import { whyNot, isCleared, isReached, waitOf, formatClock, formatMana } from './actionModel.js';
+import { knowledgeItemNameOf, knowledgeLocationNameOf } from './actionGraph.js';
 import { nodeStates, viewStateOf } from './nodeStates.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { strictQueueRefusal } from '../loops/strictQueueActions.js';
 import { ACTION_NODES_SUBSTRATE_ID, ACT_ACTION } from './actionGraphCompiler.js';
+import { WAIT_ACTION, waitUnitsOf } from '../shared/procgen/loopCustomActions.js';
+
+/** The pool's name when the world names none (design §4). */
+export const DEFAULT_POOL_NAME = 'Mana';
 
 export const ACTION_NODES_STATE_EVENT = 'actionNodes:stateChanged';
 
@@ -52,6 +72,7 @@ export const RUNTIME_REFUSALS = Object.freeze({
     notCleared: 'not-cleared',
     targetNotReached: 'target-not-reached',
     queueElsewhere: 'queue-ends-elsewhere',
+    tooEarly: 'too-early',
 });
 
 const amountPairs = (named, ix) => Object.entries(named ?? {})
@@ -73,6 +94,11 @@ export function runtimeModelOf(block, payloads) {
     const statIx = new Map(statIds.map((id, i) => [id, i]));
     const resIx = new Map(resourceIds.map((id, i) => [id, i]));
     const nodeIx = new Map(nodeIds.map((id, i) => [id, i]));
+    // AN-TIME-1/2: the knowledge flags (the block's table order, as the compiler's model) and each node's window.
+    const knowledgeIds = Object.keys(block.knowledge ?? {});
+    const knowIx = new Map(knowledgeIds.map((id, i) => [id, i]));
+    const flagsOf = (named) => Object.keys(named && typeof named === 'object' ? named : {})
+        .map((k) => knowIx.get(k)).filter((k) => k !== undefined);
     const nodes = nodeIds.map((id) => {
         const p = payloads[id];
         return Object.freeze({
@@ -88,6 +114,10 @@ export function runtimeModelOf(block, payloads) {
             addMana: p.results?.mana ?? 0,
             after: (p.after ?? []).map((set) => set.map((ref) => nodeIx.get(ref)).filter((i) => i !== undefined)),
             location: typeof p.location === 'string' && p.location ? p.location : null,
+            from: typeof p.window?.from === 'number' ? p.window.from : -Infinity,
+            until: typeof p.window?.until === 'number' ? p.window.until : Infinity,
+            reqKnow: flagsOf(p.requires?.knowledge),
+            learns: flagsOf(p.results?.learns),
             exits: (p.exits ?? []).map((e) => ({
                 name: e.exitName ?? e.exit_id, target: e.targetRegion ?? e.exit_id, reverse: e.reverse === true,
             })),
@@ -101,12 +131,22 @@ export function runtimeModelOf(block, payloads) {
         resources: amountPairs(b.resources, resIx),
         gives: { stats: { ...(b.stats ?? {}) }, resources: { ...(b.resources ?? {}) }, mana: b.mana },
     }));
+    const knowledge = knowledgeIds.map((id, k) => Object.freeze({
+        id,
+        name: block.knowledge[id]?.name ?? id,
+        item: block.knowledge[id]?.item ?? knowledgeItemNameOf(block.knowledge[id]?.name ?? id),
+        learners: nodes.flatMap((n, i) => (n.learns.includes(k) ? [i] : [])),
+    }));
     return Object.freeze({
         graph: { stats: block.stats ?? {}, resources: block.resources ?? {} },
         block,
         statIds, resourceIds, nodeIds,
         statIx, resIx, nodeIx,
         nodes, boons,
+        knowledgeIds, knowIx, knowledge,
+        windowed: nodes.some((n) => n.from > -Infinity || n.until < Infinity),
+        clock: block.clock ? { ...block.clock } : null,
+        pool: block.pool ? { ...block.pool } : null,
         startIndex: nodeIx.get(block.start),
         goalIndex: nodes.findIndex((n) => n.kind === 'goal'),
         loopMana: block.loop?.mana ?? 0,
@@ -160,9 +200,18 @@ export class ActionNodesRuntime {
         this.sentChecks = new Set();
         this.discovered = new Set();
         this.checked = new Set();
+        this.clock = 0;
+        this.known = new Set();
+        this.loopNumber = 1;
+        this.completedLoops = new Map();
+        this.historyKey = null;
         if (hadWorld) {
             try { this.env.ledger?.()?.clear(); } catch { /* ignore */ }
             try { this.env.gameState?.()?.setPerItemManaTable?.(null); } catch { /* ignore */ }
+            try {
+                const gs = this.env.gameState?.();
+                if (gs?.getSubstrateMaxManaBonus?.(ACTION_NODES_SUBSTRATE_ID)) gs.setSubstrateMaxManaBonus(ACTION_NODES_SUBSTRATE_ID, 0);
+            } catch { /* ignore */ }
             this._changed('unload');
         }
     }
@@ -186,6 +235,8 @@ export class ActionNodesRuntime {
         this.model = runtimeModelOf(block, payloads);
         this.payloads = Object.freeze(payloads);
         this.playerId = p;
+        this.historyKey = historyKeyOf(rulesJson, p, block);
+        this._loadHistory();
         const ledger = this.env.ledger?.();
         ledger?.configure({
             owner: ACTION_NODES_SUBSTRATE_ID,
@@ -206,6 +257,82 @@ export class ActionNodesRuntime {
 
     resourceIds() { return this.model ? [...this.model.resourceIds] : []; }
 
+    /** The pool's display name: the world's `pool.name`, else "Mana" (design §4). */
+    poolName() { return this.model?.pool?.name || DEFAULT_POOL_NAME; }
+
+    /** The pool's unit ("h"), or '' when the world names none. */
+    poolUnit() { return this.model?.pool?.unit || ''; }
+
+    /** An amount of the pool with its unit: "2 h", or "2" with no unit. */
+    formatAmount(n) {
+        const u = this.poolUnit();
+        return u ? `${formatMana(n)} ${u}` : formatMana(n);
+    }
+
+    /** The knowledge flag ids learned (this world, every loop so far). */
+    knownIds() { return this.model ? this.model.knowledge.filter((f) => this.known.has(f.id)).map((f) => f.id) : []; }
+
+    /**
+     * The Resources panel's clock line (design §4, picture 1), or null when the world declares no `clock`:
+     * `{now: '11:00', left: 6, leftText: '6 h', ends: '17:00'}` — `left` the pool's mana, `ends` the clock after
+     * spending it all.
+     * @param {number} [mana] - the pool's current mana (default: the gameState's)
+     */
+    clockLine(mana) {
+        if (!this.model?.clock) return null;
+        const left = typeof mana === 'number' ? mana : this.env.gameState?.()?.getCurrentMana?.();
+        if (typeof left !== 'number' || !Number.isFinite(left)) return null;
+        return {
+            now: formatClock(this.model, this.clock), left, leftText: this.formatAmount(left),
+            ends: formatClock(this.model, this.clock + Math.max(0, left)),
+        };
+    }
+
+    /**
+     * Nodes performed in an EARLIER loop than the current one (⚖ Q6, minimal form): `[{nodeId, name, loop}]`, by the
+     * loop they were first performed in, then the graph's order.
+     */
+    completedBefore() {
+        if (!this.model) return [];
+        return this.model.nodes
+            .filter((n) => (this.completedLoops.get(n.id) ?? Infinity) < this.loopNumber)
+            .map((n) => ({ nodeId: n.id, name: n.name, loop: this.completedLoops.get(n.id) }))
+            .sort((a, b) => a.loop - b.loop || this.nodeIndex(a.nodeId) - this.nodeIndex(b.nodeId));
+    }
+
+    /** The loop node `nodeId` was first performed in, when that is an earlier loop than this one; else null. */
+    completedBeforeLoopOf(nodeId) {
+        const n = this.completedLoops.get(nodeId);
+        return n !== undefined && n < this.loopNumber ? n : null;
+    }
+
+    _loadHistory() {
+        this.completedLoops = new Map();
+        this.loopNumber = 1;
+        if (!this.historyKey) return;
+        let saved = null;
+        try { saved = this.env.historyStore?.load?.(this.historyKey) ?? null; } catch { saved = null; }
+        if (!saved || typeof saved !== 'object') return;
+        const known = new Set(this.model.nodeIds);
+        for (const [id, n] of Object.entries(saved.completed ?? {})) {
+            if (known.has(id) && Number.isInteger(n) && n > 0) this.completedLoops.set(id, n);
+        }
+        // A reload starts a loop: after the saved one when something was done in it, else that same number.
+        if (Number.isInteger(saved.loop) && saved.loop > 0) this.loopNumber = saved.loop + (saved.progressed ? 1 : 0);
+    }
+
+    _saveHistory() {
+        if (!this.historyKey || !this.env.historyStore?.save) return;
+        try {
+            this.env.historyStore.save(this.historyKey, {
+                version: 1, loop: this.loopNumber, progressed: this._progressed(),
+                completed: Object.fromEntries(this.completedLoops),
+            });
+        } catch (e) {
+            this._log('warn', `[actionNodes] the history could not be saved: ${e?.message ?? e}`);
+        }
+    }
+
     // ── Loops, boosts ────────────────────────────────────────────────────
 
     /** Counts to zero (the start cleared), the ledger to its base plus every held boost. */
@@ -213,6 +340,8 @@ export class ActionNodesRuntime {
         if (!this.model) return;
         this.counts = this.model.nodes.map(() => 0);
         this.counts[this.model.startIndex] = this.model.nodes[this.model.startIndex].limit;
+        this.clock = 0;
+        this._applyLoopPool();
         const totals = { stats: {}, resources: {} };
         for (const b of this.model.boons) {
             const k = this.held.get(b.name) ?? 0;
@@ -227,9 +356,38 @@ export class ActionNodesRuntime {
         this._changed(source);
     }
 
+    /**
+     * ⛓ THE LOOP'S POOL (AN-TIME-2; found by the an-time rows). The shared pool starts at gameState's default (100)
+     * plus the substrates' bonuses; nothing applied the graph's `loop.mana` before, which every committed world sets to
+     * 100, so the two agreed by coincidence. A timed world's day is its `loop.mana` (the harbour fixture's is 8 h), so
+     * the runtime states the difference as its substrate bonus, and refills the pool when the bonus moved (this is a
+     * loop's start). A world at 100 sets a bonus of 0: no change at all.
+     */
+    _applyLoopPool() {
+        const gs = this.env.gameState?.();
+        if (!gs?.setSubstrateMaxManaBonus || typeof gs.defaultMaxMana !== 'number') return;
+        const want = this.model.loopMana - gs.defaultMaxMana;
+        if ((gs.getSubstrateMaxManaBonus?.(ACTION_NODES_SUBSTRATE_ID) ?? 0) === want) return;
+        gs.setSubstrateMaxManaBonus(ACTION_NODES_SUBSTRATE_ID, want);
+        // Every caller starts a loop here, so the pool is the loop's full starting pool.
+        gs.refillMana?.();
+    }
+
     /** A loop reset (either flow). */
     onLoopReset(source = 'reset') {
+        if (!this.model) return;
+        // ⛓ A loop is numbered only when something was done in it: a world load's own `loopState:loopReset`
+        // (`resetForNewRules`) and a reset straight after another one do not start a new number.
+        if (this._progressed()) {
+            this.loopNumber += 1;
+            this._saveHistory();
+        }
         this._startLoop(source);
+    }
+
+    /** Has anything been performed or waited this loop? */
+    _progressed() {
+        return this.clock > 0 || this.counts.some((c, i) => i !== this.model.startIndex && c > 0);
     }
 
     /**
@@ -240,6 +398,15 @@ export class ActionNodesRuntime {
     onSnapshot(snapshot) {
         if (!this.model || !snapshot) return;
         for (const loc of snapshot.checkedLocations ?? []) this.checked.add(loc);
+        // A flag whose event item the app holds is known (a reload, a /sync reset: the state manager re-adds it).
+        let learned = false;
+        for (const f of this.model.knowledge) {
+            if (!this.known.has(f.id) && (snapshot.inventory?.[f.item] ?? 0) > 0) {
+                this.known.add(f.id);
+                learned = true;
+            }
+        }
+        if (learned) this._changed('knowledge');
         const held = new Map();
         for (const b of this.model.boons) {
             const n = snapshot.inventory?.[b.name] ?? 0;
@@ -306,6 +473,8 @@ export class ActionNodesRuntime {
             resources: this.model.resourceIds.map((id) => ledger?.getResource(id) ?? 0),
             mana: Number.POSITIVE_INFINITY,
             spent: 0,
+            clock: this.clock,
+            known: this.model.knowledge.map((f) => (this.known.has(f.id) ? 1 : 0)),
         };
     }
 
@@ -432,7 +601,17 @@ export class ActionNodesRuntime {
                 };
             }
             const why = this.whyNotAct(nodeId);
-            return why ? { ok: false, reason: why.text, code: why.code } : { ok: true };
+            if (why) return { ok: false, reason: why.text, code: why.code };
+            // AN-TIME-2: an act never waits silently. Early, it is refused: the click and the bot queue a `wait` first.
+            const early = this.waitBefore(nodeId);
+            if (early > 0) {
+                const node = this.node(nodeId);
+                return {
+                    ok: false, code: RUNTIME_REFUSALS.tooEarly,
+                    reason: `${node.name} opens at ${formatClock(this.model, node.from)}: queue a wait first (${this.formatAmount(early)})`,
+                };
+            }
+            return { ok: true };
         }
         if (action?.type === 'customAction') {
             // ⚖ D6 (Robert 2026-11-16T19:59:48Z): no explore — or any other custom action — in ActionNodes. The entry's
@@ -447,6 +626,12 @@ export class ActionNodesRuntime {
             return why ? { ok: false, reason: why.text, code: why.code } : { ok: true };
         }
         return { ok: true };
+    }
+
+    /** How long node `nodeId` would wait now before it may start (0 inside or past its window). */
+    waitBefore(nodeId) {
+        const i = this.nodeIndex(nodeId);
+        return i === undefined ? 0 : waitOf(this.model, this.liveState(), i);
     }
 
     // ── Performing ───────────────────────────────────────────────────────
@@ -471,7 +656,15 @@ export class ActionNodesRuntime {
             this._log('warn', `[actionNodes] ${nodeId}: the ledger refused the results — ${applied.text}`);
             return { ok: false, code: applied.code, text: applied.text };
         }
+        // ⛓ The clock: the wait (outside Loop mode only: in Loop mode a `wait` entry ran first) plus the price paid.
+        const firstThisLoop = !this._progressed();
+        const wait = waitOf(this.model, this.liveState(), i);
+        this.clock += wait + this._livePrice(i);
         this.counts[i] += 1;
+        const firstEver = !this.completedLoops.has(nodeId);
+        if (firstEver) this.completedLoops.set(nodeId, this.loopNumber);
+        if (firstEver || firstThisLoop) this._saveHistory();
+        const learned = this._learn(node);
         if (node.addMana > 0) this.env.gainMana?.({ substrateId: ACTION_NODES_SUBSTRATE_ID, amount: node.addMana });
         const cleared = this.counts[i] >= node.limit;
         const forward = node.exits.filter((e) => !e.reverse);
@@ -490,12 +683,48 @@ export class ActionNodesRuntime {
             this.env.dispatch?.('user:locationCheck', { locationName: node.location, regionName: nodeId, fromLoop }, { initialTarget: 'bottom' });
         }
         this._changed(`act:${nodeId}`);
-        return { ok: true, cleared, checkSent };
+        return { ok: true, cleared, checkSent, learned, wait };
+    }
+
+    _livePrice(i) {
+        const n = this.model.nodes[i];
+        return this.env.xpAdjustedCost ? this.env.xpAdjustedCost(n.time, n.id) : n.time;
+    }
+
+    /** Learn what node `node` teaches: the runtime's set, and the flag's event location collected in the app. */
+    _learn(node) {
+        const learned = [];
+        for (const k of node.learns ?? []) {
+            const flag = this.model.knowledge[k];
+            if (!flag || this.known.has(flag.id)) continue;
+            this.known.add(flag.id);
+            learned.push(flag.id);
+            try {
+                this.env.collectEvent?.(knowledgeLocationNameOf(node.name, flag.name));
+            } catch (e) {
+                this._log('warn', `[actionNodes] ${node.id}: collecting '${flag.name}' failed — ${e?.message ?? e}`);
+            }
+        }
+        return learned;
+    }
+
+    /** A `wait` entry completed: the clock moves on by its length (the queue charged the pool). */
+    onWaitCompleted(units) {
+        if (!this.model) return;
+        const first = !this._progressed();
+        this.clock += Math.max(0, Number(units) || 0);
+        if (first) this._saveHistory();
+        this._changed('wait');
     }
 
     /** Loops' `loop:actionCompleted`: the queue paid for and ran one `act`. */
     onActionCompleted({ actionName, regionName, params } = {}) {
-        if (!this.model || actionName !== ACT_ACTION) return null;
+        if (!this.model) return null;
+        if (actionName === WAIT_ACTION) {
+            this.onWaitCompleted(waitUnitsOf({ params }));
+            return { ok: true, waited: waitUnitsOf({ params }) };
+        }
+        if (actionName !== ACT_ACTION) return null;
         return this.perform(params?.nodeId ?? regionName, { fromLoop: true });
     }
 
@@ -509,12 +738,14 @@ export class ActionNodesRuntime {
         if (why) return { ok: false, completed: false, ...why };
         const node = this.node(nodeId);
         const gs = this.env.gameState?.();
-        const price = this.env.xpAdjustedCost ? this.env.xpAdjustedCost(node.time, nodeId) : node.time;
+        // E2: an early start waits for the window and pays the wait (no region-XP discount on it).
+        const price = (this.env.xpAdjustedCost ? this.env.xpAdjustedCost(node.time, nodeId) : node.time) + this.waitBefore(nodeId);
         const have = gs?.getCurrentMana?.() ?? Number.POSITIVE_INFINITY;
         if (have + 1e-9 < price) {
             if (have > 0) this.env.chargeMana?.({ substrateId: ACTION_NODES_SUBSTRATE_ID, amount: have, regionId: nodeId });
             this.env.fireReset?.();
-            return { ok: false, completed: false, code: 'mana', text: `short of mana: ${node.name} costs ${price}, ${have} left — the loop ends`, price };
+            const pool = this.poolName().toLowerCase();
+            return { ok: false, completed: false, code: 'mana', text: `short of ${pool}: ${node.name} costs ${this.formatAmount(price)}, ${this.formatAmount(have)} left — the loop ends`, price };
         }
         const charged = price > 0
             ? this.env.chargeMana?.({ substrateId: ACTION_NODES_SUBSTRATE_ID, amount: price, regionId: nodeId })
@@ -546,12 +777,29 @@ export class ActionNodesRuntime {
             held: Object.fromEntries(this.held),
             sentChecks: [...this.sentChecks],
             discovered: [...this.discovered],
+            clock: this.clock,
+            clockText: this.model.clock || this.model.windowed ? formatClock(this.model, this.clock) : null,
+            known: this.knownIds(),
+            loop: this.loopNumber,
+            completedBefore: this.completedBefore(),
+            poolName: this.poolName(),
         };
     }
 
     _changed(source) {
         try { this.env.publish?.(ACTION_NODES_STATE_EVENT, { source, loaded: this.isLoaded() }); } catch { /* ignore */ }
     }
+}
+
+/**
+ * The key a world's history is saved under: the graph, the generation seed and the slot (design §5: "keyed like the
+ * game's save"). Null when the rules carry no graph id.
+ */
+export function historyKeyOf(rulesJson, playerId, block) {
+    const graph = block?.graph_id;
+    if (!graph) return null;
+    const seed = rulesJson?.seed_name || rulesJson?.generation_seed || '';
+    return `${graph}:${seed}:${playerId}`;
 }
 
 let _runtime = null;
