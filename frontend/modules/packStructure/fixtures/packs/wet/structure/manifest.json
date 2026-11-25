@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "_comment": "A TEST FIXTURE (mazeTileKindsGen.test.js, needsTileKindsWorld.slow.test.js): one needs kind that opts in to the generator (GEN-3).",
+  "provenance": {
+    "sources": { "gen3": { "type": "authored", "by": "content sets GEN-3's proof pins" } },
+    "default": "gen3"
+  },
+  "entries": {
+    "wet:terrain/pool": { "kind": "terrain", "pass": "needs", "needs": "swim", "generate": true }
+  }
+}

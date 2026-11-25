@@ -77,7 +77,9 @@ describe('GEN-2 — its structure layer: terrain the generator places', () => {
             expect(e.generate, id).toBe(true);
         }
         // the demo shows both halves of the law: a kind that changes no tile, and one that walls its cell
-        expect(new Set(TERRAIN.map(([, e]) => e.pass))).toEqual(new Set(GENERATED_TILE_KIND_PASSES));
+        // ⛓ GEN-3 added `needs` to the generated passes; the furniture pack carries none (a needs kind there is a
+        //   later slice), so the pin names the two halves it shows rather than every pass the generator places.
+        expect(new Set(TERRAIN.map(([, e]) => e.pass))).toEqual(new Set(['walkable', 'blocked']));
     });
 });
 

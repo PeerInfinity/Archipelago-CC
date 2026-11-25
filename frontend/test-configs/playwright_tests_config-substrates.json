@@ -2259,6 +2259,12 @@
             "_comment": "REGION GRAPH GROUPS A (2026-11-23): on seedling_atlas (11 regions, 2 boxes: moved off seedling_playthrough, whose 307-region load cost fast ~20 s; its 60/251/56 counts are pinned by subRegionView.nested.test.js), subRegionView = nested (set session-only by the row, restored at its end) draws one compound box per display group of 2+ (count DERIVED from the same fold at run time), members inside; a box tap runs no click, a member tap runs its click action (default actions: the path extends to it) once; restored, the graph draws no box. Runs right before test_region_graph_click_default. Reloads the world loaded before. On push (fast batch)."
         },
         {
+            "id": "test_region_graph_sub_region_merged",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "REGION GRAPH GROUPS B (2026-11-24): on seedling_atlas (11 regions, 2 groups: the nested row's world), subRegionView = merged (set session-only by the row, restored at its end) draws one node per display group of 2+ in place of its members (counts DERIVED from the same fold at run time), no self-loop; a tap on a group node runs the REGION click on regionOfCell(key, members), the Region Map's rule, published once; restored, every region is its own node. Runs right after test_region_graph_sub_region_nested, before test_region_graph_click_default. Reloads the world loaded before. On push (fast batch)."
+        },
+        {
             "id": "test_region_graph_click_default",
             "enabled": true,
             "category": "Region Graph",
@@ -2546,6 +2552,12 @@
             "enabled": true,
             "category": "Rule Converter",
             "_comment": "helper-script P4: the Rule Converter's Exact engine — real exporter analyzer + world_generator under Pyodide (CDN, booted on the first Convert). A helper script both ways through the Convert buttons, and the loaded alttp_worldgen preset's 36 helpers round-trip with its options. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
+            "id": "mystery-bridge-round-trip",
+            "enabled": true,
+            "category": "Mystery Bridge",
+            "_comment": "The Mystery Game module (modules/mysteryArchipelago, disabled by default; the row enables it and puts it back, and points its page address at a stand-in page for the session, modules/mysteryArchipelago/testPage/, not the real game). Enabling opens the panel; loading the committed mystery_custom_house_fire preset makes the panel frame the case: state on request, a solved question as a check that comes back solved, a repeat, and refusals by name. No server, so it is the host's offline path. Category unclaimed by testBatches.js, so batch fast (on push)."
         },
         {
             "id": "document-library-idb",

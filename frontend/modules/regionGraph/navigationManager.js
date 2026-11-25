@@ -5,7 +5,7 @@ import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import * as actions from '../regionView/regionActions.js';
-import { isRegionGroupNode } from './subRegionGroups.js';
+import { isRegionGroupNode, graphNodeIdOf } from './subRegionGroups.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -79,7 +79,12 @@ export class NavigationManager {
     if (this.ui.cy) {
       this.ui.cy.nodes().forEach(node => {
         // Skip location nodes, player nodes and group boxes - only update region nodes
-        if (node.hasClass('location-node') || node.hasClass('player') || isRegionGroupNode(node)) {
+        if (node.hasClass('location-node') || node.hasClass('player') || isRegionGroupNode(node, 'box')) {
+          return;
+        }
+        // ⛓ merged: a group node's path count is its members' summed, on its own label
+        if (isRegionGroupNode(node, 'merged')) {
+          this._labelMergedNodeWithPathCount(node);
           return;
         }
 
@@ -141,6 +146,26 @@ export class NavigationManager {
     }
   }
 
+  /**
+   * ⛓ merged: a group node in the path shows its members' visits summed, the way a region shows its own: its name
+   * (or `???` while it is a placeholder) then ` (N)`, with the path classes.
+   */
+  _labelMergedNodeWithPathCount(node) {
+    const count = (node.data('members') ?? []).reduce((a, m) => a + (this.ui.regionPathCounts.get(m) || 0), 0);
+    const key = node.data('groupKey');
+    const named = !node.hasClass('group-placeholder') || this.ui.discoverySettings?.showUndiscoveredRegionNames;
+    const base = named ? key : '???';
+    if (count > 0 && !node.hasClass('group-placeholder')) {
+      node.data('label', `${base} (${count})`);
+      node.addClass('in-path');
+      node.removeClass(count === 1 ? 'path-multiple' : 'path-single');
+      node.addClass(count === 1 ? 'path-single' : 'path-multiple');
+    } else {
+      node.data('label', base);
+      node.removeClass('in-path path-single path-multiple');
+    }
+  }
+
   updatePlayerLocation(regionName) {
     if (!this.ui.cy) return;
 
@@ -149,8 +174,8 @@ export class NavigationManager {
     // Remove existing player node
     this.ui.cy.remove('#player');
 
-    // Find the target region node
-    const regionNode = this.ui.cy.getElementById(regionName);
+    // Find the target region node (⛓ merged: its group node when it is a member)
+    const regionNode = this.ui.cy.getElementById(graphNodeIdOf(this.ui, regionName));
     if (!regionNode || regionNode.length === 0) {
       // Region may not exist yet (e.g. placeholder before rules load) or in this graph
       const staticData = stateManager.getStaticData?.();
@@ -228,7 +253,12 @@ export class NavigationManager {
     this.ui.highlightCurrentRegion(regionName);
   }
 
-  getIncomingExitEdgePosition(targetRegionName, sourceRegionName, exitName) {
+  getIncomingExitEdgePosition(targetRegion, sourceRegion, exitName) {
+    // ⛓ merged: the regions' nodes (a member's is its group node). A step inside one group has no edge: the default
+    // position is used.
+    const targetRegionName = graphNodeIdOf(this.ui, targetRegion);
+    const sourceRegionName = graphNodeIdOf(this.ui, sourceRegion);
+    if (targetRegionName === sourceRegionName) return null;
     // Find the edge that corresponds to the incoming connection
     const sourceNode = this.ui.cy.getElementById(sourceRegionName);
     const targetNode = this.ui.cy.getElementById(targetRegionName);
@@ -255,7 +285,8 @@ export class NavigationManager {
         const hasCorrectExitName = edgeData.exitName === exitName ||
           edgeData.forwardExitName === exitName ||
           edgeData.reverseExitName === exitName ||
-          (edgeData.label && edgeData.label.includes(exitName));
+          (edgeData.label && edgeData.label.includes(exitName)) ||
+          (Array.isArray(edgeData.exitNames) && edgeData.exitNames.includes(exitName));
 
         if (hasCorrectExitName) {
           const sourcePos = sourceNode.position();

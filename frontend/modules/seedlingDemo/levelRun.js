@@ -4078,9 +4078,13 @@ export function createLevelRun({
      * would be 186 ticks late.
      *
      * @param {Array<[string, object]>} rocks  `[id, state]` pairs to drop
+     * @param {{nested?: string|false}} [opts] ⛓ fidelity NESTEDFREEZE D2 (`nestedRockCeremony` ON only): the tag of a
+     *   pickup ceremony that started on the rocks' frame A. Its phase A IS their span's first 149 frames, and its
+     *   lumps step every family through them, so the rocks are stepped ALONE: no family step, no clock spend, no
+     *   release step; `landedAt` is the span frame of the first landing.
      * @returns {{frames: number, dropped: Array, snapY: number|null}}
      */
-    const dropRocksTogether = (rocks) => {
+    const dropRocksTogether = (rocks, { nested = false } = {}) => {
         const started = [];
         for (const [id, rock] of rocks) {
             const pub = publishActivate(rock, true);
@@ -4093,18 +4097,25 @@ export function createLevelRun({
         let frames = 0;
         let snapY = null;
         let unfroze = false;
+        let landedAt = null;
         for (let i = 1; i <= 2000 && !unfroze; i += 1) {
             // ⛓ fidelity FROZENTICK D2 (ON only): the blocks update before the rocks (`Game.as:2382` vs `:2353`).
-            stepPushablesDeadFrameNow();
+            if (nested === false) stepPushablesDeadFrameNow();
             for (const e of started) {
                 const r = stepFallRock(e.state, playerBoxAt(state.x, state.y),
                     { cleared: true });
                 e.state = r.state;
                 if (r.snapY !== null) snapY = r.snapY;
+                if (nested !== false && r.landed && landedAt === null) landedAt = i;
                 // ⛔ THE FIRST rock to release ends the span for every one of
                 // them, which is why this is `||` over the set and not a
                 // per-rock loop that runs to its own end.
                 if (r.unfroze) unfroze = true;
+            }
+            // ⛓ fidelity NESTEDFREEZE D2 (ON only): nested, the rocks alone (the ceremony's lumps carry the families).
+            if (nested !== false) {
+                frames = i;
+                continue;
             }
             // ⛓ fidelity CEREMONYTOWER D2 (ON only): the turrets after the rocks, frozen; unfrozen on the release frame.
             stepRockSpanShootersNow(unfroze);
@@ -4138,6 +4149,16 @@ export function createLevelRun({
                 });
             }
             frames = i;
+        }
+        // ⛓ fidelity NESTEDFREEZE D2 (ON only): no dead frame of the rocks' own (the union's are the ceremony's 150).
+        if (nested !== false) {
+            const dropped = started.map((e) => {
+                rockFalls.push({ id: e.id, level, t: ticksCompleted,
+                    flag: e.write ? outOfBandFlagFor(level, e.write.tag) : null,
+                    deadFrames: 0, spanFrames: frames, landedAt, nestedIn: nested });
+                return { id: e.id, state: { ...e.state, landed: true }, write: e.write };
+            });
+            return { frames, dropped, snapY, landedAt };
         }
         spendFrozen(frames, 'fallrocks-together');
         // ⛓ THE RELEASE FRAME IS A LIVE PLAYER FRAME. The rock that expires
@@ -16092,7 +16113,7 @@ export function createLevelRun({
                 && !buttonFallsInFlight.has(r.id));
         if (armed.length > 0) pendingButtonFalls = armed.map((r) => r.id);
     };
-    const resolveButtonFalls = (ids) => {
+    const resolveButtonFalls = (ids, { nested = false } = {}) => {
         const rocks = fallRockStateFor(level);
         const groups = new Set(ids.map((id) => rocks.get(id).t));
         const pulsing = [...pulserStateFor(level)].filter(([, p]) => groups.has(p.t));
@@ -16103,7 +16124,7 @@ export function createLevelRun({
                 + ' whose phase the freeze advances. The button arm models the rock and '
                 + 'the clock only; refused rather than approximated.');
         }
-        const dropped = dropRocksTogether(ids.map((id) => [id, rocks.get(id)]));
+        const dropped = dropRocksTogether(ids.map((id) => [id, rocks.get(id)]), { nested });
         for (const d of dropped.dropped) {
             rocks.set(d.id, d.state);
             if (!d.write) continue;
@@ -16118,7 +16139,60 @@ export function createLevelRun({
                 + 'pairs them (L29, L74), so a snap here is a stance nobody derived. '
                 + 'Move the stance.');
         }
+        return dropped;
     };
+    /**
+     * ⛓⛓ fidelity NESTEDFREEZE D2 (`CONTACT_FIDELITY.nestedRockCeremony`, ON only) — A BUTTON'S FRAME A THAT IS ALSO A
+     * PICKUP'S T. `Button.update` presses from the post-(A−1) box (`Puzzlements/Button.as:27-39`) and every pickup's
+     * collide tests that same box on frame A (`Pickups/Pickup.as:63-84`, no freeze gate), so a pickup under it is
+     * collected on A and its ceremony runs together with the rock's span (the key's doc). Asked at the top of the
+     * frame-A branch: with a ceremony predicted, the branch does not run — the tick falls through as that ceremony's
+     * contact tick, its own path (and lumps), and `startNestedRockSpanNow` resolves the rocks at the detection. The ids
+     * are held in flight so no activator step re-arms them before then. OFF (or no ceremony): false, nothing touched.
+     *
+     * @param {Array<string>} ids the rocks frame A drops (`pendingButtonFalls`)
+     * @returns {boolean} true when the branch is replaced by the union
+     */
+    function nestedRockCeremonyAtFrameANow(ids) {
+        if (!CONTACT_FIDELITY.nestedRockCeremony || noclip || ceremony !== null) return false;
+        const start = predictPickupCeremonyStart();
+        if (start === null) return false;
+        nestedRockFall = { t: ticksCompleted, level, ids, start };
+        pendingButtonFalls = null;
+        buttonFallsInFlight = new Set(ids);
+        return true;
+    }
+    /** ⛓ fidelity NESTEDFREEZE D2: the frame-A rocks awaiting their ceremony's detection (`{t, level, ids, start}`). */
+    let nestedRockFall = null;
+    /**
+     * ⛓⛓ fidelity NESTEDFREEZE D2 (ON only) — THE ROCKS OF A UNION, AT ITS CEREMONY'S DETECTION (below the runtime and
+     * placed starts, so the ceremony has spent its phase A and run its lumps). The rocks are stepped ALONE
+     * (`resolveButtonFalls`' refusals, then `dropRocksTogether`'s `nested`): their landing must fall inside phase A's
+     * dead frames (on L29 it is span frame 81 of 172), or the Solid would appear on an observed frame — refused by name.
+     * A detection that started no ceremony, or another one, is refused: the prediction at frame A is the premise. The
+     * union is read off `rockFalls` (`nestedIn`, `spanFrames`, `landedAt`, `deadFrames: 0`).
+     */
+    function startNestedRockSpanNow() {
+        if (nestedRockFall === null) return;
+        const nf = nestedRockFall;
+        nestedRockFall = null;
+        const started = ceremonyStarts.at(-1);
+        if (ceremony === null || nf.t !== ticksCompleted || nf.level !== level || !started
+            || started.t !== ticksCompleted || started.tag !== nf.start.tag) {
+            throw new Error(`levelRun: a button's frame A at tick ${nf.t} in level ${nf.level} predicted a `
+                + `${nf.start.tag} ceremony nested in [${nf.ids.join(', ')}]'s span, and tick ${ticksCompleted}'s `
+                + `detection ${ceremony === null ? 'started none' : `started ${started?.tag} at t${started?.t}`}. `
+                + 'Refused by name (fidelity NESTEDFREEZE).');
+        }
+        buttonFallsInFlight = new Set();
+        const dropped = resolveButtonFalls(nf.ids, { nested: started.tag });
+        if (dropped.landedAt === null || dropped.landedAt >= CEREMONY_DEAD_FRAMES.pickup) {
+            throw new Error(`levelRun: [${nf.ids.join(', ')}] nested in a ${started.tag} ceremony at tick `
+                + `${ticksCompleted} in level ${level} land on span frame ${dropped.landedAt}, outside phase A's `
+                + `${CEREMONY_DEAD_FRAMES.pickup - 1} dead frames: the Solid would appear on an observed frame. Not `
+                + 'modelled; refused by name (fidelity NESTEDFREEZE).');
+        }
+    }
 
     /**
      * Fold this tick's touch-responder events into the window state. The
@@ -16586,6 +16660,12 @@ export function createLevelRun({
      *   chasers update (its raiser updates before them), so `frozenTickUngated` ON runs their frozen update here.
      */
     const runFrozenTick = (activators, what, { chasers = false } = {}) => {
+        // ⛓ fidelity NESTEDFREEZE D2 (ON only): a frame-A fall-through that froze before its ceremony's detection.
+        if (nestedRockFall !== null) {
+            throw new Error(`levelRun: a button's frame A at tick ${nestedRockFall.t} in level ${level} fell through for a `
+                + `${nestedRockFall.start.tag} ceremony, and the tick froze first for ${what}. Refused by name `
+                + '(fidelity NESTEDFREEZE).');
+        }
         // ⛓ fidelity TURRETSUIT D2 (ON only): a freeze that starts AFTER a turret's contact was answered in its slot.
         if (turretSlotContact !== null && turretSlotContact.t === ticksCompleted + 1) {
             throw new Error(`levelRun: ${turretSlotContact.id}'s contact was answered in its own slot at tick `
@@ -23050,7 +23130,8 @@ export function createLevelRun({
             // Frame A of `pendingButtonFalls`' docblock: live to the tape,
             // frozen to the player. The dead span behind it is resolved after
             // the frozen tick so the clock spends it in the game's order.
-            if (pendingButtonFalls !== null && !noclip) {
+            // ⛓ fidelity NESTEDFREEZE D2 (ON only): …unless frame A is also a pickup's T — then the tick is its contact tick.
+            if (pendingButtonFalls !== null && !noclip && !nestedRockCeremonyAtFrameANow(pendingButtonFalls)) {
                 // ⛔ U12-swim D1: this frozen tick returns above the pulls' slot,
                 // and `Pull` has no freeze gate — refused rather than skipped.
                 if (pullsFor(level).length > 0) {
@@ -23822,6 +23903,8 @@ export function createLevelRun({
                     }
                 }
             }
+            // ⛓ fidelity NESTEDFREEZE D2 (ON only): a union's rocks, once its ceremony has started.
+            if (nestedRockFall !== null) startNestedRockSpanNow();
             // ⛓ fidelity PICKUPFREEZE D2 (ON only): the slots' prediction against what the detection found.
             if (pickupFreezeAhead !== null) assertPickupFreezeAheadHeld();
             if (ceremony !== null) {

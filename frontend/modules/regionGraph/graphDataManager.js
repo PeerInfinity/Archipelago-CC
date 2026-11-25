@@ -10,7 +10,7 @@ import { dropStalePendingCentre } from './regionGraphCentreAction.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
   normaliseSubRegionView, isRegionGroupNode, multiMemberGroups, groupNodeElements, groupState, groupClasses,
-  GROUP_STATE_CLASSES,
+  GROUP_STATE_CLASSES, MERGED_CLASS, mergedGroupElements, mergeGroupEdges, mergedEdgeState, mergedGroupLabel,
 } from './subRegionGroups.js';
 
 const logger = createUniversalLogger('regionGraph');
@@ -247,6 +247,29 @@ export class GraphDataManager {
         if (parent) node.data.parent = parent;
       }
       elements.nodes.unshift(...groupNodes);
+    }
+    // ⛓ subRegionView = merged (region-graph-groups-b): ONE node per display group of 2+, in place of its members
+    // (at the first member's place in the node order). `ui.mergedNodeOf` (member → node) is how every reader finds
+    // the node that draws a region (`graphNodeIdOf`); it is null in any other view.
+    const merged = this.subRegionView() === 'merged';
+    this.ui.mergedNodeOf = null;
+    let mergedNodeOf = null;
+    if (merged) {
+      const { nodes: groupNodes, nodeOf } = mergedGroupElements(this.multiMemberGroups(regions));
+      mergedNodeOf = nodeOf;
+      this.ui.mergedNodeOf = nodeOf;
+      const groupById = new Map(groupNodes.map((n) => [n.data.id, n]));
+      const placed = new Set();
+      const out = [];
+      for (const node of elements.nodes) {
+        const gid = nodeOf.get(node.data.id);
+        if (!gid) { out.push(node); continue; }
+        if (placed.has(gid)) continue;
+        placed.add(gid);
+        out.push(groupById.get(gid));
+      }
+      elements.nodes = out;
+      this.placeMergedNodes(elements.nodes);
     }
 
     // Track all exits for directionality analysis
@@ -501,6 +524,20 @@ export class GraphDataManager {
       processedEdges.add(reverseEdgeId);
     }
 
+    // ⛓ merged: the edge rule (`mergeGroupEdges`): internal edges dropped, the rest re-targeted to the group nodes,
+    // parallel ones merged with every exit kept. A group node's depth is its shallowest member's.
+    this.lastMergeStats = null;
+    if (merged) {
+      const { edges, stats } = mergeGroupEdges(elements.edges, mergedNodeOf);
+      elements.edges = edges;
+      this.lastMergeStats = stats;
+      for (const [member, gid] of mergedNodeOf) {
+        const d = bfsDepth.get(member);
+        if (d === undefined) continue;
+        if (!bfsDepth.has(gid) || d < bfsDepth.get(gid)) bfsDepth.set(gid, d);
+      }
+    }
+
     // Store hierarchy depths on node data for layout positioning.
     // Cytoscape's breadthfirst uses its own BFS which ignores our depth computation,
     // so we store depths on nodes for a custom preset layout to use.
@@ -530,6 +567,7 @@ export class GraphDataManager {
       this.ui.isLayoutRunning = false;
     }
 
+    this.ui.interactionManager?.hideHover?.();
     this.ui.cy.elements().remove();
     this.ui.cy.add(elements);
     // ⛓ G4: a pending centre (regionGraphCentreAction.js) on a node this graph no longer draws is dropped.
@@ -541,7 +579,15 @@ export class GraphDataManager {
     this.autoApplyHubDetection();
 
     // Saved positions are REGION positions (a group box's position is its children's; never saved).
-    if (this.ui.nodePositions.size === 0 || this.ui.nodePositions.size !== regionNodeCount) {
+    // ⛓ merged keeps its OWN store (`ui.mergedNodePositions`), never `nodePositions` (`separate`'s layout stays as it
+    // was): it fits when that store covers the graph, or when every node was placed from `separate`'s saved layout
+    // (`placeMergedNodes`), and lays out otherwise.
+    if (merged) {
+      const store = this.ui.mergedNodePositions;
+      const covered = (store && store.size === elements.nodes.length) || this._mergedPlacedFromSeparate;
+      if (covered) this.ui.cy.fit(30);
+      else this.ui.runLayout(false);
+    } else if (this.ui.nodePositions.size === 0 || this.ui.nodePositions.size !== regionNodeCount) {
       this.ui.runLayout(false);
     } else {
       this.ui.cy.fit(30);
@@ -573,6 +619,32 @@ export class GraphDataManager {
     this.redrawLocationNodesForMode();
 
     this.ui.updateStatus(`Loaded ${regionNodeCount} regions, ${elements.edges.length} connections`);
+  }
+
+  /**
+   * ⛓ merged: each node's start position, without touching `separate`'s saved layout. A node `merged` saved
+   * (`ui.mergedNodePositions`) goes there; else a group node goes to the centroid of its members' `separate`
+   * positions and a region node to its own. When every node was placed from `separate`'s saved layout
+   * (`_mergedPlacedFromSeparate`), the builder fits instead of laying out.
+   */
+  placeMergedNodes(nodes) {
+    const own = this.ui.mergedNodePositions;
+    const sep = this.ui.nodePositions;
+    let allSaved = sep.size > 0 && !(own && own.size === nodes.length);
+    for (const node of nodes) {
+      const id = node.data.id;
+      const mine = own?.get(id);
+      if (mine) { node.position = { ...mine }; continue; }
+      const members = node.data.merged ? node.data.members : [id];
+      const pts = members.map((m) => sep.get(m)).filter(Boolean);
+      if (pts.length === members.length && pts.length > 0) {
+        node.position = { x: pts.reduce((a, p) => a + p.x, 0) / pts.length, y: pts.reduce((a, p) => a + p.y, 0) / pts.length };
+      } else {
+        allSaved = false;
+        if (node.data.merged) node.position = { x: Math.random() * 500, y: Math.random() * 500 };
+      }
+    }
+    this._mergedPlacedFromSeparate = allSaved;
   }
 
   /** The panel's `subRegionView` (loaded from the settings by `RegionGraphUI.loadDisplaySettings`). */
@@ -612,7 +684,14 @@ export class GraphDataManager {
       node.addClass(groupClasses(state).join(' '));
       const key = node.data('groupKey');
       const named = state.visibility !== 'placeholder' || discoveryCtx.settings?.showUndiscoveredRegionNames;
-      node.data('label', named ? key : '???');
+      if (isRegionGroupNode(node, 'merged')) {
+        // A merged node's label is a region's: its name, then its counts (none for a placeholder, nor under an
+        // external label provider).
+        const withCounts = !getNodeLabelProvider() && state.visibility !== 'placeholder';
+        node.data('label', mergedGroupLabel(named ? key : '???', state.counts, { withCounts }));
+      } else {
+        node.data('label', named ? key : '???');
+      }
       node.data('groupCounts', state.counts);
     });
   }
@@ -656,7 +735,7 @@ export class GraphDataManager {
       return;
     }
     const regions = new Set();
-    this.ui.cy.nodes('.location-node').forEach((n) => { regions.add(n.data('parentRegion')); });
+    this.ui.cy.nodes('.location-node').forEach((n) => { regions.add(n.data('anchorNode') ?? n.data('parentRegion')); });
     for (const regionId of regions) this.updateLocationNodePositions(regionId);
   }
 
@@ -664,8 +743,8 @@ export class GraphDataManager {
     const hubNodes = [];
 
     this.ui.cy.nodes().forEach(node => {
-      // Skip player node and group boxes (a box has no edges of its own)
-      if (node.hasClass('player') || isRegionGroupNode(node)) {
+      // Skip player node and group boxes (a box has no edges of its own); a merged group node has edges, and counts
+      if (node.hasClass('player') || isRegionGroupNode(node, 'box')) {
         return;
       }
 
@@ -862,9 +941,18 @@ export class GraphDataManager {
       // Handle region-location edges - hide them if parent region is hidden
       if (edge.hasClass('region-location-edge')) {
         edge.removeClass('discovery-hidden');
-        if (isDiscoveryModeActive && vm.regionVisibility(edge.source().id(), discoveryCtx) === 'hidden') {
+        const anchor = edge.source();
+        const hidden = isRegionGroupNode(anchor) ? anchor.hasClass('discovery-hidden')
+          : vm.regionVisibility(anchor.id(), discoveryCtx) === 'hidden';
+        if (isDiscoveryModeActive && hidden) {
           edge.addClass('discovery-hidden');
         }
+        return;
+      }
+
+      // ⛓ merged: an edge that stands for exits (`mergeGroupEdges`) is coloured from EACH exit's own state.
+      if (edge.data('exits')) {
+        this.updateMergedEdge(edge, snapshot, staticData, snapshotInterface, discoveryCtx);
         return;
       }
 
@@ -933,6 +1021,36 @@ export class GraphDataManager {
     });
   }
 
+  /**
+   * ⛓ merged: one edge that stands for several exits. Each exit's state is the view model's for that one exit
+   * (`exitState`, from its own member region, one way); the edge's colour is `mergedEdgeState`'s BEST STATE WINS
+   * (accessible when any exit is traversable), with `mixed-exits` when they disagree. It is hidden when every exit is
+   * hidden (discovery, or the external edge filter), and `undiscovered` while no exit is discovered. The per-exit
+   * states are kept for the hover (`scratch('_rgExitStates')`).
+   */
+  updateMergedEdge(edge, snapshot, staticData, snapshotInterface, discoveryCtx) {
+    const exits = edge.data('exits') ?? [];
+    const filter = getEdgeVisibilityFilter();
+    const states = exits.map((e) => {
+      const st = vm.exitState(snapshot, staticData, {
+        source: e.from, target: e.to, forwardRule: e.rule, reverseRule: null, bidirectional: false,
+      }, { snapshotInterface, onError: (err) => logger.warn(`Error evaluating exit rule ${e.name}:`, err) });
+      const disc = discoveryCtx.active
+        ? vm.exitDiscovery({ source: e.from, target: e.to, forwardExitName: e.name, reverseExitName: '' }, discoveryCtx)
+        : { discovered: true, visibility: 'shown' };
+      const filtered = filter ? !filter(e.from, e.to) : false;
+      return { traversable: st.traversable, discovered: disc.discovered, hidden: disc.visibility === 'hidden' || filtered };
+    });
+    edge.scratch('_rgExitStates', states);
+    const merged = mergedEdgeState(states);
+    edge.removeClass('accessible inaccessible bidirectional undiscovered discovery-hidden mixed-exits');
+    if (discoveryCtx.active && states.length && states.every((s) => !s.discovered)) edge.addClass('undiscovered');
+    if (states.length && states.every((s) => s.hidden)) edge.addClass('discovery-hidden');
+    if (edge.data('isBidirectional')) edge.addClass('bidirectional');
+    edge.addClass(merged.traversable ? 'accessible' : 'inaccessible');
+    if (merged.mixed) edge.addClass('mixed-exits');
+  }
+
   showAllLocationNodes() {
     // Don't proceed if mode says locations should stay hidden.
     if (this.ui.locationVisibilityMode === 'force-hide') return;
@@ -952,11 +1070,10 @@ export class GraphDataManager {
 
     // Collect region info with distances and location counts
     const regionInfos = [];
-    this.ui.cy.nodes('.region').forEach(region => {
+    this.ui.cy.nodes(`.region, .${MERGED_CLASS}`).forEach(region => {
       if (!region.hasClass('player') && !region.hasClass('location-node')) {
         const regionId = region.id();
-        const regionData = staticData.regions.get(regionId);
-        const locationCount = regionData?.locations?.length || 0;
+        const locationCount = this.locationEntriesOf(regionId).length;
 
         if (locationCount === 0) return;
 
@@ -1078,9 +1195,26 @@ export class GraphDataManager {
     this.ui.locationsVisible = true;
   }
 
+  /**
+   * The locations a node draws around it, as `[{ region, location }]`: a region node's own; a merged group node's
+   * (subRegionView = merged) are its members' in member order, each keeping its own region.
+   */
+  locationEntriesOf(nodeId) {
+    const staticData = stateManager.getStaticData();
+    const node = this.ui.cy?.getElementById(nodeId);
+    const regionIds = node && isRegionGroupNode(node, 'merged') ? (node.data('members') ?? []) : [nodeId];
+    const out = [];
+    for (const r of regionIds) {
+      for (const location of staticData?.regions?.get(r)?.locations ?? []) out.push({ region: r, location });
+    }
+    return out;
+  }
+
   createLocationNodesForRegion(regionId) {
     const region = this.ui.cy.getElementById(regionId);
     const staticData = stateManager.getStaticData();
+    // ⛓ merged: a group node draws its members' locations around it (`createGroupLocationNodes`).
+    if (region && region.length > 0 && isRegionGroupNode(region, 'merged')) return this.createGroupLocationNodes(region);
     // Use Map methods
     const regionData = staticData?.regions?.get(regionId);
 
@@ -1168,6 +1302,52 @@ export class GraphDataManager {
     return elements;
   }
 
+  /**
+   * ⛓ merged: the location nodes of a group node, in a ring around it. Each keeps its OWN region (`parentRegion`, so
+   * a click on it runs on that member, and its colour is that member's) and names the node it hangs on
+   * (`anchorNode`); its edge runs from the group node. Ids are the member's (`loc_<member>_<name>`), so a location
+   * node is the same node whichever view draws it.
+   */
+  createGroupLocationNodes(groupNode) {
+    const entries = this.locationEntriesOf(groupNode.id());
+    if (entries.length === 0) return [];
+    const staticData = stateManager.getStaticData();
+    const snapshot = stateManager.getLatestStateSnapshot();
+    const discoveryCtx = this._discoveryCtx(staticData.regions, { withAccessibility: true });
+    const anchor = groupNode.id();
+    const pos = groupNode.position();
+    const radius = 80 + (Math.sqrt(entries.length) * 15);
+    const elements = [];
+    entries.forEach(({ region: regionId, location }, i) => {
+      const angle = (2 * Math.PI * i) / entries.length - Math.PI / 2;
+      const locationStatus = this.getLocationStatus(regionId, location);
+      const regionAccessClass = vm.regionColorState(snapshot, regionId, discoveryCtx) === 'accessible'
+        ? 'region-accessible' : 'region-inaccessible';
+      const locationDisc = vm.locationDiscovery(location.name, regionId, discoveryCtx);
+      if (locationDisc.placeholder && !discoveryCtx.showUndiscovered) return;
+      let nodeClasses = `location-node ${regionAccessClass} location-${locationStatus}`;
+      if (locationDisc.placeholder) nodeClasses += ' undiscovered';
+      if (locationDisc.regionHidden) nodeClasses += ' discovery-hidden';
+      const id = `loc_${regionId}_${location.name}`;
+      elements.push({
+        group: 'nodes',
+        data: {
+          id, label: locationDisc.placeholder ? '???' : this.ui.getLocationDisplayText(location),
+          locationName: location.name, parentRegion: regionId, anchorNode: anchor, isLocation: true,
+          isDiscovered: locationDisc.discovered, locked: true,
+        },
+        position: { x: pos.x + radius * Math.cos(angle), y: pos.y + radius * Math.sin(angle) },
+        classes: nodeClasses,
+      });
+      elements.push({
+        group: 'edges',
+        data: { id: `edge_${regionId}_${location.name}`, source: anchor, target: id },
+        classes: `region-location-edge${locationDisc.regionHidden ? ' discovery-hidden' : ''}`,
+      });
+    });
+    return elements;
+  }
+
   hideAllLocationNodes() {
     this.ui.cy.remove('.location-node');
     this.ui.cy.remove('.region-location-edge');
@@ -1184,13 +1364,13 @@ export class GraphDataManager {
     const elements = this.createLocationNodesForRegion(regionId);
     if (elements.length === 0) return;
     this.ui.cy.add(elements);
-    this.ui.cy.nodes(`[parentRegion="${regionId}"]`).lock();
+    this.ui.cy.nodes(`[parentRegion="${regionId}"], [anchorNode="${regionId}"]`).lock();
   }
 
   /** Remove just one region's location nodes + their edges. */
   hideLocationNodesForRegion(regionId) {
     if (!this.ui.cy) return;
-    this.ui.cy.remove(`node[parentRegion="${regionId}"]`);
+    this.ui.cy.remove(`node[parentRegion="${regionId}"], node[anchorNode="${regionId}"]`);
     this.ui.cy.remove(`edge[source="${regionId}"].region-location-edge`);
   }
 
@@ -1208,20 +1388,15 @@ export class GraphDataManager {
     if (!region || region.length === 0) return;
 
     const pos = region.position();
-    const staticData = stateManager.getStaticData();
-    // Use Map methods
-    const regionData = staticData?.regions?.get(regionId);
+    // A region's own locations; a merged group node's are its members' (`locationEntriesOf`).
+    const entries = this.locationEntriesOf(regionId);
+    if (entries.length === 0) return;
 
-    if (!regionData) return;
+    const radius = 80 + (Math.sqrt(entries.length) * 15);
 
-    const locations = regionData.locations || [];
-    if (locations.length === 0) return;
-
-    const radius = 80 + (Math.sqrt(locations.length) * 15);
-
-    locations.forEach((location, i) => {
-      const angle = (2 * Math.PI * i) / locations.length - Math.PI/2;
-      const locationNode = this.ui.cy.getElementById(`loc_${regionId}_${location.name}`);
+    entries.forEach(({ region: ownRegion, location }, i) => {
+      const angle = (2 * Math.PI * i) / entries.length - Math.PI/2;
+      const locationNode = this.ui.cy.getElementById(`loc_${ownRegion}_${location.name}`);
 
       if (locationNode && locationNode.length > 0) {
         // Unlock, update position, and re-lock
@@ -1245,7 +1420,7 @@ export class GraphDataManager {
 
     // Calculate distance for each region and sort
     const regionDistances = [];
-    this.ui.cy.nodes('.region').forEach(region => {
+    this.ui.cy.nodes(`.region, .${MERGED_CLASS}`).forEach(region => {
       if (!region.hasClass('player') && !region.hasClass('location-node')) {
         const pos = region.position();
         const distance = Math.sqrt(Math.pow(pos.x - centerX, 2) + Math.pow(pos.y - centerY, 2));
@@ -1269,7 +1444,7 @@ export class GraphDataManager {
       const zIndex = maxZIndex - Math.floor((index / regionDistances.length) * zIndexRange);
 
       // Update all location nodes for this region
-      this.ui.cy.nodes(`[parentRegion="${item.regionId}"]`).forEach(locationNode => {
+      this.ui.cy.nodes(`[parentRegion="${item.regionId}"], [anchorNode="${item.regionId}"]`).forEach(locationNode => {
         locationNode.style('z-index', zIndex);
       });
 

@@ -11,9 +11,12 @@ import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
 
 import {
-    GENERATED_TILE_KIND_PASSES, TILE_KIND_LAW, TILE_KIND_PLAN_FIELD, generatedTileKinds, placeTileKinds,
-    tileKindLawBase, tileKindLawRefusal, tileKindSlotCount, tileKindsRegionCore, tileKindsSerializer,
+    GENERATED_TILE_KIND_PASSES, RULES_COMPARE, TILE_KIND_LAW, TILE_KIND_PASS_LAWS, TILE_KIND_PLAN_FIELD, arrivalTiles,
+    equivalentRule, equivalentRules, generatedTileKinds, placeTileKinds, realisableTileKinds, tileKindLawBase,
+    tileKindLawRefusal, tileKindSlotCount, tileKindsRegionCore, tileKindsSerializer,
 } from './mazeTileKindsGen.js';
+import { deserializeMazeWorldWithKinds } from './mazeTileKinds.js';
+import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { deserializeMazeWorld, extractPathsAndObstacles, getTile, TILE_WALL } from './mazeRoomEngine.js';
 import { serializeMazeWorld } from './mazeSerializer.js';
 import { createPackConcepts } from '../packConcepts/packConcepts.js';
@@ -47,7 +50,7 @@ describe('GEN-1 — which kinds qualify', () => {
         // ground: rug (walkable, generate), pillar (blocked, wall look, generate), pool (needs, generate: false),
         // ledge (one-way, no generate), lamp (an object, no terrain)
         expect(generatedTileKinds(await groundSet())).toEqual([RUG, PILLAR]);
-        expect(GENERATED_TILE_KIND_PASSES).toEqual(['walkable', 'blocked']);
+        expect(GENERATED_TILE_KIND_PASSES).toEqual(['walkable', 'blocked', 'needs']);
     });
 
     it('⛔ a theme cannot place a kind: no "what exists" pack ⇒ no structure ⇒ none (⚖ Q4)', async () => {
@@ -104,7 +107,7 @@ describe('GEN-1 — the law, cell by cell, on committed rooms', () => {
         expect(stats.slots).toBe(8);
         expect(stats.placed).toBe(8);
         const after = tileKindLawBase(w, LIGHT_WORLD[1]);
-        expect(after.rules).toBe(before.rules);
+        expect(after.rules).toEqual(before.rules);
         expect(after.lsp).toBe(before.lsp);
         for (const c of before.reach) expect(after.reach.has(c) || w.tileKinds.has(c), c).toBe(true);
         expect([...run().w.tileKinds]).toEqual([...w.tileKinds]);
@@ -177,5 +180,151 @@ describe('GEN-1 — outside the engine closure', () => {
             'packStructure/packStructure.js']) {
             expect(closure.some((p) => p.endsWith(f)), f).toBe(false);
         }
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ CONTENT SETS GEN-3 — `needs` kinds: the qualify check, the equivalence (law b), law (d) from every arrival tile.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const POOL = { kind: 'wet:terrain/pool', pass: 'needs', needs: 'swim' };
+const SWIM = { rule: 'Has', args: { item_name: 'Progressive Swim' } };
+const META_SWIM_ROOM = ['frontend/presets/meta_trial/AP_1/AP_1_rules.json', 'region_2_3'];
+
+/** The fixture `wet` (a pool: needs swim, generate: true) named under "what exists". */
+async function wetSet() {
+    const io = nodePackIo({ base: FIXTURES });
+    const stack = await loadPackStack(['wet'], { ...io, only: ['concepts'] });
+    const structure = createStructure(await loadPackStack(['wet'], { ...io, only: ['structure'] }));
+    return { ids: ['wet'], concepts: createPackConcepts(stack), structure, structureIds: ['wet'] };
+}
+
+/**
+ * THE POCKET ROOM (a fixture, 6×3): the entrance (0,1) on a corridor east; a Swim gate on (2,1) guards the pocket
+ * (3..5,1), whose end holds a location (Victory at (5,1)) and no exit. Off the corridor's first cell, a free location
+ * (Progressive Sword at (1,0)), and a linked exit on (0,0): an arrival tile.
+ *
+ *     y0:  X S # # # #        X exit (arrival)   S free location   G Swim gate   V the pocket's location
+ *     y1:  E . G . . V        E entrance
+ *     y2:  # # # # # #
+ */
+const POCKET = () => ({
+    width: 6,
+    height: 3,
+    tiles: [0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1],
+    entrance: { x: 0, y: 1 },
+    exits: [{ exit_id: 'back', x: 0, y: 0, side: 'N', exitName: 'back', targetRegion: 'elsewhere', targetExitId: 'pocket', isBackExit: true, isTeleporter: false }],
+    obstacles: [{ x: 2, y: 1, id: 'water_gate_0' }],
+    items: [{ x: 5, y: 1, id: 'Victory', locationName: 'pocket__V' }, { x: 1, y: 0, id: 'Progressive Sword', locationName: 'pocket__S' }],
+    obstacleLib: { water_gate_0: { name: 'Water', id: 'water_gate_0', clear_set_type: 'rule', clear_rule: SWIM, feature: 'logic_gate', concept: 'water' } },
+    itemLib: {
+        'Progressive Swim': { name: 'Progressive Swim', id: 'Progressive Swim', classification: 'progression' },
+        'Progressive Sword': { name: 'Progressive Sword', id: 'Progressive Sword', classification: 'progression' },
+    },
+});
+
+describe('GEN-3 — which needs kinds qualify', () => {
+    it('a generate: true needs kind from a "what exists" pack qualifies, carrying its concept', async () => {
+        expect(generatedTileKinds(await wetSet())).toEqual([POOL]);
+        // ground's pool says generate: false: still out (GEN-1's row)
+        expect(generatedTileKinds(await groundSet())).toEqual([RUG, PILLAR]);
+    });
+
+    it('only where this world realises the item (needsRealisationRefusal on its item library)', async () => {
+        const kinds = [RUG, POOL];
+        expect(realisableTileKinds(kinds, deserializeMazeWorld(POCKET()))).toEqual(kinds);
+        const dry = POCKET();
+        delete dry.itemLib['Progressive Swim'];
+        expect(realisableTileKinds(kinds, deserializeMazeWorld(dry))).toEqual([RUG]);
+    });
+
+    it('the region core records only the kinds its world realises', async () => {
+        const set = await wetSet();
+        const coreOf = (itemLib) => tileKindsRegionCore(() => ({ world: { itemLib }, biome: null }));
+        const rng = { getState: () => 9 };
+        expect(coreOf({ 'Progressive Swim': {} })({ biome: { id: 'scattered' }, rng, params: { contentSet: set } })
+            .world[TILE_KIND_PLAN_FIELD].kinds).toEqual([POOL]);
+        expect(coreOf({})({ biome: { id: 'scattered' }, rng, params: { contentSet: set } })
+            .world[TILE_KIND_PLAN_FIELD].kinds).toEqual([]);
+    });
+
+    it('the passes set is data: each placed pass has its law row', () => {
+        expect(Object.keys(TILE_KIND_PASS_LAWS)).toEqual(GENERATED_TILE_KIND_PASSES);
+        expect(TILE_KIND_PASS_LAWS.needs).toMatchObject({ lowers: true, rules: RULES_COMPARE.equivalent, fromArrivals: true });
+        expect(TILE_KIND_PASS_LAWS.blocked).toMatchObject({ lowers: true, rules: RULES_COMPARE.bytes, fromArrivals: false });
+    });
+});
+
+describe('GEN-3 — the equivalence form', () => {
+    const A = { rule: 'Has', args: { item_name: 'A' } };
+    it('And(Swim, Swim) is Swim; nesting, order, duplicates and True_ in an And do not count', () => {
+        expect(equivalentRule({ rule: 'And', children: [SWIM, SWIM] })).toEqual(SWIM);
+        expect(equivalentRule({ rule: 'And', children: [A, { rule: 'And', children: [SWIM, A] }, { rule: 'True_' }] }))
+            .toEqual(equivalentRule({ rule: 'And', children: [SWIM, A] }));
+        expect(equivalentRule({ rule: 'Or', children: [{ rule: 'And', children: [SWIM, SWIM] }, A] }))
+            .toEqual(equivalentRule({ rule: 'Or', children: [A, SWIM] }));
+        expect(equivalentRule({ rule: 'And', children: [{ rule: 'True_' }] })).toEqual({ rule: 'True_' });
+    });
+    it('a different requirement stays different', () => {
+        expect(equivalentRule({ rule: 'And', children: [SWIM, A] })).not.toEqual(equivalentRule(SWIM));
+        expect(equivalentRule({ rule: 'Or', children: [SWIM, A] })).not.toEqual(equivalentRule({ rule: 'And', children: [SWIM, A] }));
+    });
+});
+
+describe('GEN-3 — the law for a needs kind', () => {
+    it('arrival tiles: the linked exits, the entrance left out; a zone room has none', () => {
+        const w = deserializeMazeWorld(sidecarOf(...META_SWIM_ROOM).playable_payload);
+        // exit `exit` (0,1) is linked; exit region_2_2 sits on the entrance (4,0)
+        expect(arrivalTiles(w)).toEqual([{ x: 0, y: 1 }]);
+        expect(arrivalTiles({ ...w, arrival: 'zone' })).toEqual([]);
+        expect(arrivalTiles(deserializeMazeWorld(POCKET()))).toEqual([{ x: 0, y: 0 }]);
+    });
+
+    it('✅ the pool on the approach to the Swim gate\'s pocket is ACCEPTED: (b) equivalent, (d) from the back exit too', () => {
+        const w = deserializeMazeWorld(POCKET());
+        const base = tileKindLawBase(w, 'pocket');
+        expect(tileKindLawRefusal(w, 4, 1, POOL, 'pocket', base)).toBeNull();
+        // not vacuous: the pool's rule does reach the compile, as a second Has Swim
+        const raw = JSON.stringify(compileRegion(extractPathsAndObstacles(w, { regionId: 'pocket' }), { obstacleLib: w.obstacleLib }));
+        expect(raw).toContain(JSON.stringify({ rule: 'And', children: [SWIM, SWIM] }));
+        expect(raw).not.toBe(base.rules[RULES_COMPARE.bytes]); // byte-equality alone would refuse it
+    });
+
+    it('⛔ a pool that adds Swim to a free location is REJECTED by (b)', () => {
+        const w = deserializeMazeWorld(POCKET());
+        const base = tileKindLawBase(w, 'pocket');
+        // (1,1) is the only way to the Sword at (1,0)
+        expect(tileKindLawRefusal(w, 1, 1, POOL, 'pocket', base)).toBe(TILE_KIND_LAW.changesRules);
+    });
+
+    it('⛔ s5-swim-pool (meta_trial region_2_3 (3,2)): (b) accepts it, (d) REJECTS it — it strands an arrival on exit `exit`', () => {
+        const w = deserializeMazeWorld(sidecarOf(...META_SWIM_ROOM).playable_payload);
+        const base = tileKindLawBase(w, META_SWIM_ROOM[1]);
+        expect(tileKindLawRefusal(w, 3, 2, POOL, META_SWIM_ROOM[1], base)).toBe(TILE_KIND_LAW.strandsArrival);
+        // with no arrival measured, (b) alone keeps it: from the entrance the pool sits behind the gate
+        const w2 = deserializeMazeWorld(sidecarOf(...META_SWIM_ROOM).playable_payload);
+        const bOnly = { ...tileKindLawBase(w2, META_SWIM_ROOM[1]), arrivals: { [RULES_COMPARE.equivalent]: [] } };
+        expect(tileKindLawRefusal(w2, 3, 2, POOL, META_SWIM_ROOM[1], bOnly)).toBeNull();
+    });
+
+    it('placeTileKinds puts the pool on a legal cell; the serializer ships the pre-placement rules and the owned gate', () => {
+        const w = deserializeMazeWorld(POCKET());
+        const rules = { ...extractPathsAndObstacles(w, { regionId: 'pocket' }), region_id: 'pocket' };
+        const plain = serializeMazeWorld(w, rules);
+        w[TILE_KIND_PLAN_FIELD] = { seedKey: 1, kinds: [POOL], numbers: { percent: 25, cap: 4, min: 1 } };
+        const obstaclesBefore = [...w.obstacles];
+        const out = tileKindsSerializer((world, r) => serializeMazeWorld(world, r))(w, rules);
+        expect(out.tileKinds.length).toBeGreaterThan(0);
+        for (const k of out.tileKinds) {
+            expect(k).toMatchObject({ kind: POOL.kind, pass: 'needs', needs: 'swim' });
+            expect([[3, 1], [4, 1]]).toContainEqual([k.x, k.y]); // the pocket's approach, never (1,1)
+            expect(out.obstacles).toContainEqual({ x: k.x, y: k.y, id: `tilekind_gate_${k.x}_${k.y}` });
+        }
+        expect([...w.obstacles]).toEqual(obstaclesBefore); // the world itself untouched
+        // the payload loads back with its kinds (the ownership check), and its re-derived rules are equivalent
+        const back = deserializeMazeWorldWithKinds(out);
+        expect(back.tileKinds.size).toBe(out.tileKinds.length);
+        const eq = (x) => JSON.stringify(equivalentRules(compileRegion(extractPathsAndObstacles(x, { regionId: 'pocket' }), { obstacleLib: x.obstacleLib })));
+        expect(eq(back)).toBe(eq(deserializeMazeWorld(plain)));
     });
 });

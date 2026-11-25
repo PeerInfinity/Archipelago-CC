@@ -918,6 +918,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Modules panel shows all loaded frontend modules and lets you enable or disable them at runtime."
     },
     {
+        "path": "docs/json/user/modules/mysteryArchipelago.md",
+        "title": "Mystery Game",
+        "section": "user/modules",
+        "summary": "The Mystery Game panel opens the mystery clue game for the world you have loaded, and connects it to Archipelago. The game itself is a separate page (the repository mystery-clue-game); this panel…"
+    },
+    {
         "path": "docs/json/user/modules/noiz2sa.md",
         "title": "Noiz2sa Panel",
         "section": "user/modules",
@@ -1254,6 +1260,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/mazeRoom.md",
             "docs/json/user/modules/metaGamePanel.md",
             "docs/json/user/modules/modules.md",
+            "docs/json/user/modules/mysteryArchipelago.md",
             "docs/json/user/modules/noiz2sa.md",
             "docs/json/user/modules/pathAnalyzerPanel.md",
             "docs/json/user/modules/playbackBot.md",
