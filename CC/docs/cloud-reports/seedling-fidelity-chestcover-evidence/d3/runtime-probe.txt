@@ -1,0 +1,14 @@
+== positive control (the rows file, ON)
+      3 CHESTCOVER_PROBE: the ON branch changes the answer at chest@144,112 level 38 tick 11
+== every committed tape, ON (probe armed)
+(see below)
+== acceptance batch, ON (probe armed)
+rc=0 probe-hits=0 md5=391322d681b7aa0229d94b3f6906d024  -
+tapes with the probe armed: OVER {} tapes 294: identical 294, differ 0
+DIFFERS lines: 0
+r8-battery ON+probe rc=0 probe=0 all checks green
+r8-d2-chain ON+probe rc=0 probe=0 all checks green
+r8-l18 ON+probe rc=0 probe=0 all checks green
+r8-tail ON+probe rc=0 probe=0 all checks green
+r9-l3 ON+probe rc=0 probe=0 all checks green
+r9-campaign ON+probe rc=0 probe=0 all checks green

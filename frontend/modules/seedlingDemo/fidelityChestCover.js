@@ -9,6 +9,10 @@
  *     ⚠ The move is NOT optional: two `Button`s in one group recurse without end in the game (`Button.as:42-60`: the
  *     setter's `activateAll` sets the other, whose setter sets this one, …) — wave 60's first staging hung the page at
  *     tick 1 with `Maximum call stack size exceeded`. Level DATA, loaded through `botLoadLevels`; no game edit.
+ *     The family is wider than two Buttons (wave 61's census, `-evidence/tools/census.mjs`): `RopeStart.set activate`
+ *     (`RopeStart.as:79-90`) re-publishes unconditionally too, and a `ButtonRoom {room -1, flip 0}`
+ *     (`ButtonRoom.as:67-98`) re-publishes `true`, so any two of those in one group recurse once the group is true.
+ *     The model presses each independently and has no such failure (named, not modelled).
  *   · the TAPES: `{boot, one held key, ticks}` on the L25 survey tape's header (its pins, save, rng and seam), the shape
  *     wave 58/60 played (`l38-cover-button`: up for 30 ticks from 144,128).
  *   · the REPLAY: the model's row before each tape tick (`{level, x, y}`, the game's drained shape), the tick the
