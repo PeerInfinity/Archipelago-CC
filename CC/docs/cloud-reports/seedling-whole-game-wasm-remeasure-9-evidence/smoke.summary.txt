@@ -1,0 +1,1 @@
+4/48, stop: entry 5 "Level 017 - Chest" in level_0__r7c6, cause: budget: the step's wait ran out (status "Sphere 2.2 → routing via \"level_0__r7c6 -> level_13\" → level_17 (5/48) — playing tick 78/215") (transport wasm; walk 180 s, run 205 s)
