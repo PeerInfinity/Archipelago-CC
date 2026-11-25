@@ -2292,6 +2292,11 @@ export const CONTACT_FIDELITY = {
      * chest step) is REFUSED by name (`AP_CHEST_COVER_NOT_FINAL`, the named STOP). p4g (no APChest) and every vanilla
      * chest: untouched. Composes with every key (it changes one gate's read and nothing else). OFF: byte-identical.
      * `SEEDLING_AP_CHEST_COVER_ORDER=0|1`. ⛔ OFF by default (no flip licence).
+     * ⛔⛔ REFUTED BY THE GAME (wave 60, p4h page, the staged L38 room: `seedling-fidelity-apchestcover-evidence`): the
+     * APChest opens on tick 12, which is OFF's tick (ON says 11), and a vanilla `Chest` in the same room opens on 13 (the
+     * model says 12 in both arms). The one-tick order between the two chests is real; the model's `activators` at the
+     * chest step is already "after this frame's responder update" (the R3 labelling, `stepActivators`' docblock), so the
+     * AP chest is right OFF and the VANILLA chest is one tick early. ⛔ DO NOT FLIP; the hand-over is the vanilla fencepost.
      */
     apChestCoverOrder: false,
 };

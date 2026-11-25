@@ -9,8 +9,10 @@
  * APChest reads it as THIS frame's `Cover.update` left it (`Puzzlements/Cover.as:41-48`, `Pickups/APChest.as:75`).
  * `CONTACT_FIDELITY.apChestCoverOrder` (OFF by default) models that for an AP chest only.
  *
- * ⛔ Nothing here is a game witness: the L38 rooms are staged (`coverButtonRecord` and the shifted button below);
- * the delivered L38 is not stageable on the page without a probe that places the cover state (see the report).
+ * ⛔⛔ THE GAME REFUTES ON (wave 60). The p4h page played the staged room (`coverButtonRecord`, with `button@80,192`
+ * moved out of group 0: two `Button`s of one group recurse in `Button.as:42-60`), loaded as level data through
+ * `botLoadLevels`: the APChest opens on 12 (OFF's tick; ON says 11) and a vanilla `Chest` opens on 13 (the model says
+ * 12). The rows below pin what the model does in each arm, and the last block reads the committed game results.
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -186,5 +188,32 @@ describe('composition: with the base\'s last four OFF keys ON', () => {
         const a = off(() => replay(tapeOf('l25-below'), DELIVERED, P4H_CAPS), LAST4);
         const b = on(() => replay(tapeOf('l25-below'), DELIVERED, P4H_CAPS), LAST4);
         expect(whole(b)).toBe(whole(a));
+    });
+});
+
+describe('the game witness (committed: `CC/docs/cloud-reports/seedling-fidelity-apchestcover-evidence/d3/`)', () => {
+    const W = (f) => JSON.parse(readFileSync(join(ROOT, 'CC/docs/cloud-reports/seedling-fidelity-apchestcover-evidence/d3', f), 'utf8')).rows[0];
+    /** The staged room the page played: `coverButtonRecord`, and `button@80,192` out of group 0. */
+    const PAGE_ROOM = (src) => (n) => {
+        const r = coverButtonRecord(src(n));
+        if (r?.level !== 38) return r;
+        return { ...r, entities: r.entities.map((e) => (e.type === 'button' && e.x === 80 && e.y === 192
+            ? { ...e, attrs: { ...e.attrs, tset: '5' } } : e)) };
+    };
+    it('APChest: the game opens on OFF\'s tick, not ON\'s; both replays are its stream at 0 px', () => {
+        const g = W('witness.json');
+        const tape = tapeOf('l38-cover-button');
+        const offTick = off(() => replay(tape, PAGE_ROOM(DELIVERED), P4H_CAPS).openTick);
+        const onTick = on(() => replay(tape, PAGE_ROOM(DELIVERED), P4H_CAPS).openTick);
+        expect([g.gameOpenTick, g.model.off, g.model.on]).toEqual([offTick, offTick, onTick]);
+        expect(g.gameOpenTick).not.toBe(onTick);
+        expect([g.positions.off.worst, g.positions.on.worst]).toEqual([0, 0]);
+    });
+    it('⛔ residue: a vanilla Chest in the same room opens one tick AFTER the model (the vanilla fencepost, handed over)', () => {
+        const g = W('witness-vanilla.json');
+        const tape = tapeOf('l38-cover-button');
+        const model = off(() => replay(tape, PAGE_ROOM(VANILLA), P4H_CAPS).openTick);
+        expect(g.model.off).toBe(model);
+        expect(g.gameOpenTick).toBe(model + 1);
     });
 });
