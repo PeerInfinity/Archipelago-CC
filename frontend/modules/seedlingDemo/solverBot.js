@@ -21491,7 +21491,125 @@ function execKillByPressHold(run, perTick, resolved, ctx, dispatch) {
     }
 }
 
+/**
+ * ⛓ hammer-phase STEP149 (`PRESS_KILL_START_WAIT`, OFF) — **A REFUSED PRESS KILL IS REDONE FROM ITS FIRST TICK AS ONE
+ * FIGHT SEARCH, AFTER THE PLAYER IDLES THERE.**
+ *
+ * The press kill plans its approach on the tick it starts, against the bodies' phase on that tick. Bodies that move
+ * without the player (a billiard spinner bounces on its own) give a phase-unlucky start: every rung inside the kill
+ * (the HAMMER-PHASE rung, the escape, `OPP_PRESS_FALLBACK`, `PRESS_KILL_HOLD`) answers from the same start and refuses
+ * `HAMMER_SAFETY`, while a kill begun a few ticks later, or searched whole (`HAMMER_FIGHT`), is hitless. MEASURED (seed
+ * 1, L40 Totem 64,144; `step149` report §3): re-measure-8 P1 32:10 refuses on 38 of 45 arrival clocks round the page's
+ * and is hitless on 4; the fight search (`HAMMER_FIGHT`) from the kill's first tick solves P1 32:10 hitless; survey
+ * step 149 refuses with the fight from its first tick and solves hitless with the fight after a 2-tick idle there.
+ *
+ * ON (a segment that can rewind, no deadline tripped): when the press kill refuses with a `FIGHT_FALLBACK_CODES` code —
+ * after every fallback already inside it — the segment is REWOUND to the kill's first tick, the player idles `waits[k]`
+ * ticks there (no keys; `0` is no idle), and the kill is admitted again on the idled run (`derivePressKill`, from the
+ * admission's own inputs) and redone with `HAMMER_FIGHT` on for that redo only. Over `waits` in order, the first redo
+ * that kills with NO player hit since the rewind is kept. An idle tick that is hit, dies or crosses a door ends the
+ * search (a longer idle contains it); a redo that refuses or is hit is UNDONE. All refused → the original refusal is
+ * thrown, plus one sentence. A wait is only a prefix of no keys and the redo is the fight's own certificate under
+ * `safeStep`, so no plan with a hit is kept (unlike `HAMMER_FIGHT_FALLBACK`, whose retry keeps any kill). Nothing reads
+ * a level, a coordinate or an entity id. OFF: never asked. `SEEDLING_PRESS_KILL_START_WAIT=1` /
+ * `withPressKillStartWait(enabled, fn)`. Worker thread (the solve).
+ */
+export const PRESS_KILL_START_WAIT = { enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_START_WAIT === '1',
+    /** The idles tried at the kill's first tick, in order (ticks). */
+    waits: [0, 1, 2, 3, 4, 6, 8, 12, 16, 24, 32] };
+export const PRESS_KILL_START_WAIT_DEFAULT = false;
+/** Per-run rows (ON only): one per refusal answered, `{t, refused, tries: [{wait, verdict, why}], verdict}`. */
+export const PRESS_KILL_START_WAIT_COUNTS = { rows: [] };
+/** Nesting guard: the redo's own dispatch is the kill as OFF runs it, never another start-wait. */
+let pressKillStartWaitDepth = 0;
+
+/** Run `fn` with `PRESS_KILL_START_WAIT` set to `enabled`, restoring the previous value. */
+export function withPressKillStartWait(enabled, fn) {
+    return withSwitch(PRESS_KILL_START_WAIT, enabled, fn);
+}
+
+/** Clear `PRESS_KILL_START_WAIT_COUNTS` (an instrument; nothing that decides reads it). */
+export function resetPressKillStartWaitCounts() {
+    PRESS_KILL_START_WAIT_COUNTS.rows = [];
+}
+
+/** `PRESS_KILL_START_WAIT`'s retry around the whole press kill (see the switch). */
+function execKillByPressStartWait(run, perTick, resolved, ctx) {
+    const t0 = perTick.length;
+    const inner = (r, res) => {
+        pressKillStartWaitDepth += 1;
+        try {
+            return execKillByPress(r, perTick, res, ctx);
+        } finally {
+            pressKillStartWaitDepth -= 1;
+        }
+    };
+    try {
+        return inner(run, resolved);
+    } catch (e) {
+        if (!(e instanceof SolverBotError) || !FIGHT_FALLBACK_CODES.includes(e.code) || activeDeadline?.first) throw e;
+        const row = { t: t0, refused: e.code, refusedAt: perTick.length, tries: [], verdict: 'refused' };
+        PRESS_KILL_START_WAIT_COUNTS.rows.push(row);
+        const admission = PRESS_ADMISSIONS.get(resolved.plans) ?? null;
+        for (const wait of PRESS_KILL_START_WAIT.waits) {
+            if (activeDeadline?.first) break;
+            const { run: fresh, undo } = ctx.rewind.to(t0);
+            const clock0 = fresh.ticksCompleted;
+            const h0 = (fresh.ledger('playerHits') ?? []).length;
+            const d0 = (fresh.ledger('playerDeaths') ?? []).length;
+            let idleWhy = null;
+            for (let i = 0; i < wait && idleWhy === null; i += 1) {
+                perTick.push(NO_HELD_PREVIEW);
+                if (fresh.advance(NO_HELD_PREVIEW).transition) idleWhy = 'the idle crossed a door';
+                else if ((fresh.ledger('playerHits') ?? []).length > h0
+                    || (fresh.ledger('playerDeaths') ?? []).length > d0) idleWhy = `the idle is hit at its tick ${i + 1}`;
+            }
+            if (idleWhy !== null) {
+                undo();
+                row.tries.push({ wait, verdict: 'idle', why: idleWhy });
+                break;
+            }
+            try {
+                const press = admission === null ? null : derivePressKill(fresh, admission.bodies, admission.contacts);
+                const again = press?.first ? { ...resolved, first: press.first, plans: press.plans } : resolved;
+                const record = withHammerFight(true, () => inner(fresh, again));
+                const hits = playerHitsSince(ctx.rewind.replay(perTick.length), clock0);
+                if (hits.length > 0) {
+                    undo();
+                    row.tries.push({ wait, verdict: 'hit', why: `the redo killed with ${hits.length} player hit(s)` });
+                    continue;
+                }
+                row.tries.push({ wait, verdict: 'solved', why: null, endedAt: perTick.length });
+                row.verdict = 'solved';
+                ctx.rewind.note({ ...row, how: 'press-kill-start-wait' });
+                return { ...record, pressKillStartWait: row };
+            } catch (e2) {
+                if (e2 instanceof PendingDeclaration || e2?.undeclaredKillLock) {
+                    row.tries.push({ wait, verdict: 'solved', why: e2?.undeclaredKillLock ? 'undeclaredKillLock' : e2.name });
+                    row.verdict = 'solved';
+                    ctx.rewind.note({ ...row, how: 'press-kill-start-wait' });
+                    throw e2;
+                }
+                undo();
+                if (!(e2 instanceof SolverBotError) && !(e2 instanceof SolverRefusal)) throw e2;
+                row.tries.push({ wait, verdict: 'refused', why: String(e2?.message ?? e2).split('\n')[0].slice(0, 200) });
+            }
+        }
+        const out = new SolverBotError(`${e.message} The start wait (\`PRESS_KILL_START_WAIT\`) rewound to the kill's `
+            + `first tick (t${t0}) and redid it as one fight search (\`HAMMER_FIGHT\`) after idling `
+            + `${row.tries.map((x) => `${x.wait} (${x.verdict})`).join(', ') || 'nothing'}; no redo killed hitless.`,
+        { code: e.code, boundTicks: e.boundTicks });
+        for (const k of ['fightFallback', 'oppPressFallback', 'pressKillHold']) if (e[k]) out[k] = e[k];
+        out.pressKillStartWait = row;
+        throw out;
+    }
+}
+
 function execKillByPress(run, perTick, resolved, ctx) {
+    // ⛓ hammer-phase STEP149 (`PRESS_KILL_START_WAIT`, OFF): the whole kill below, redone after an idle at its first tick
+    if (PRESS_KILL_START_WAIT.enabled && ctx.rewind && pressKillStartWaitDepth === 0) {
+        return execKillByPressStartWait(run, perTick, resolved, ctx);
+    }
     // ⛓ the exactness gate's kill-start probe (`REWIND_PROBE`): read only, inert unless a sink is set
     if (REWIND_PROBE.sink !== null && ctx.rewind) {
         const t = perTick.length;
