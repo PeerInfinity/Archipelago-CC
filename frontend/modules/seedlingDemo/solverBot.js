@@ -3116,10 +3116,11 @@ export function withChaserPass(enabled, fn) {
  * Nothing reads a level, a coordinate or an enemy class. No rewind (no `forkRun`) → never asked.
  * OFF: never asked. `SEEDLING_GOAL_START_WAIT=1` / `withGoalStartWait(enabled, fn)`. Worker thread (the solve).
  */
-export const GOAL_START_WAIT = { enabled: globalThis.process?.env?.SEEDLING_GOAL_START_WAIT === '1',
+// ⚖ ON in the BOS/GSW/PM flip (⚖ the user 2026-11-25: "Flip BOS+GSW+PM (Recommended)"): `SEEDLING_GOAL_START_WAIT=0` opts out.
+export const GOAL_START_WAIT = { enabled: globalThis.process?.env?.SEEDLING_GOAL_START_WAIT !== '0',
     /** The idles tried, in order (ticks). */
     waits: [50, 100, 200, 400, 800] };
-export const GOAL_START_WAIT_DEFAULT = false;
+export const GOAL_START_WAIT_DEFAULT = true;
 /** Per-run rows (ON only): one per ask, `{t, wait, ok, why}`. */
 export const GOAL_START_WAIT_COUNTS = { tries: [] };
 
@@ -12452,8 +12453,9 @@ function execSpearPress(run, perTick, p, ctx, what) {
  * solver env channel: the decision is on the worker thread, inside the frontier loop), and
  * `withBridgeOpenStray(enabled, fn)` is for a test or a witness. OFF, nothing below is asked: byte-identical.
  */
-export const BRIDGE_OPEN_STRAY = { enabled: globalThis.process?.env?.SEEDLING_BRIDGE_OPEN_STRAY === '1' };
-export const BRIDGE_OPEN_STRAY_DEFAULT = false;
+// ⚖ ON in the BOS/GSW/PM flip (⚖ the user 2026-11-25: "Flip BOS+GSW+PM (Recommended)"): `SEEDLING_BRIDGE_OPEN_STRAY=0` opts out.
+export const BRIDGE_OPEN_STRAY = { enabled: globalThis.process?.env?.SEEDLING_BRIDGE_OPEN_STRAY !== '0' };
+export const BRIDGE_OPEN_STRAY_DEFAULT = true;
 
 /** Run `fn` with `BRIDGE_OPEN_STRAY` set to `enabled`, restoring the previous value. */
 export function withBridgeOpenStray(enabled, fn) {
@@ -29407,7 +29409,8 @@ export const WALK_CHECK_TICKS = 32;
  * two requests above), and a walk unit is `WALK_CHECK_TICKS` driven ticks at ~2–3 ms each on L40 (the constant's own
  * note), so ~1024 previewed states cost about one walk unit's wall. A row may set it.
  */
-export const PREVIEW_METER = { enabled: globalThis.process?.env?.SEEDLING_PREVIEW_METER === '1', statesPerUnit: 1024,
+// ⚖ ON in the BOS/GSW/PM flip (⚖ the user 2026-11-25: "Flip BOS+GSW+PM (Recommended)"): `SEEDLING_PREVIEW_METER=0` opts out.
+export const PREVIEW_METER = { enabled: globalThis.process?.env?.SEEDLING_PREVIEW_METER !== '0', statesPerUnit: 1024,
     /**
      * ⛓ hammer-phase FLIPBLOCK — **THE PREVIEWS EVERY PAID UNIT CARRIES FOR FREE.** The meter exists for the stretches
      * where previews swamp the work clock (L40: ~16,000 previewed states per work unit, one walk unit = 10–23 s). A
@@ -29420,7 +29423,7 @@ export const PREVIEW_METER = { enabled: globalThis.process?.env?.SEEDLING_PREVIE
      * `statesPerUnit`. 0 = the SPINNER880 meter exactly (every state charged). A count, never the clock.
      */
     freeStatesPerAsk: 1024 };
-export const PREVIEW_METER_DEFAULT = false;
+export const PREVIEW_METER_DEFAULT = true;
 
 /** The meter's instrument: states counted, units asked, and the asks that tripped. */
 export const PREVIEW_METER_COUNTS = { states: 0, asked: 0, tripped: 0 };
