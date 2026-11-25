@@ -16,6 +16,11 @@ import {
 
 const logger = createUniversalLogger('regionGraph');
 
+/** ⛓ collapsible: the ring an opened group's members take when they have no saved arrangement (model px). */
+export const ringRadius = (n) => 50 + 12 * n;
+/** ⛓ collapsible: the farthest an opened group's member is placed from the closed node's spot (model px). */
+export const openRadius = (n) => 60 + 30 * Math.sqrt(n);
+
 /**
  * GraphDataManager - Handles graph data structure and visual updates.
  * WHAT a region / location / exit is (reachable, counts, discovered, shown) comes from the renderer-agnostic view
@@ -754,9 +759,13 @@ export class GraphDataManager {
         const pts = members.map((r) => from.get(r));
         const cx = pts.reduce((a, q) => a + q.x, 0) / pts.length;
         const cyy = pts.reduce((a, q) => a + q.y, 0) / pts.length;
-        members.forEach((r, i) => store.set(r, { x: p.x + pts[i].x - cx, y: p.y + pts[i].y - cyy }));
+        // Kept compact round the node: an arrangement wider than `openRadius` is scaled down to it (the separate
+        // layout spreads a level's rooms over the whole graph).
+        const far = Math.max(...pts.map((q) => Math.hypot(q.x - cx, q.y - cyy)));
+        const k = far > 0 ? Math.min(1, openRadius(members.length) / far) : 1;
+        members.forEach((r, i) => store.set(r, { x: p.x + k * (pts[i].x - cx), y: p.y + k * (pts[i].y - cyy) }));
       } else {
-        const radius = 50 + 12 * members.length;
+        const radius = ringRadius(members.length);
         members.forEach((r, i) => {
           const a = (2 * Math.PI * i) / members.length;
           store.set(r, { x: p.x + radius * Math.cos(a), y: p.y + radius * Math.sin(a) });

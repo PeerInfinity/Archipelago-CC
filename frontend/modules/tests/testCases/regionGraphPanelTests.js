@@ -683,6 +683,54 @@ export async function testRegionGraphSubRegionMerged(testController) {
     testController.reportCondition(`a tap on group node "${node.data('groupKey')}" runs the region click on regionOfCell = "${region}" `
       + `once (${rec.seen.map(([, d]) => d?.regionName).join(', ')})`,
       published && rec.seen.length === 1 && rec.seen[0][1]?.regionName === region);
+    rec.stop();
+    rec = null;
+
+    // ⛓ region-graph-groups-c: collapsible (C) on the same graph and setup — every group closed draws as merged, with
+    // a + badge each; a + press opens ONE group into its box, a − press closes it, and neither runs a click action;
+    // a body tap still does.
+    const badges = () => [...document.querySelectorAll('.region-graph-panel-container .rg-group-badge')];
+    const boxes = () => graphCy()?.nodes().filter((n) => isRegionGroupNode(n, 'box')) ?? null;
+    const probe2 = merged()[0];
+    const t1 = performance.now();
+    await ctx.setSetting(SUB_REGION_VIEW_KEY, 'collapsible');
+    const closedOk = await testController.pollForCondition(() => !!probe2?.removed() && merged()?.length === expected.size
+      && boxes()?.length === 0 && badges().length === expected.size, `collapsible drew ${expected.size} closed groups with a badge each`, MAX_WAIT_TIME, 50);
+    const colMs = Math.round(performance.now() - t1);
+    testController.reportCondition(`collapsible: every group closed (${merged()?.length} merged nodes = ${expected.size}, 0 boxes), `
+      + `${badges().length} + badges (switch ${colMs} ms)`, closedOk && badges().every((b) => b.dataset.open === 'false'));
+    rec = recordEvents(testController, ['regionView:regionClicked']);
+    const plus = badges()[0];
+    const key = plus.dataset.groupKey;
+    const r = plus.getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    testController.reportCondition(`the + badge on "${key}" is shown (${Math.round(r.width)}×${Math.round(r.height)} px hit square) and a tap at its centre hits the badge, not the canvas`,
+      plus.style.display === 'block' && !!hit && plus.contains(hit));
+    const groupSize = expected.get(key)?.length ?? 0;
+    const t2 = performance.now();
+    plus.click();
+    const opened = await testController.pollForCondition(() => boxes()?.length === 1 && boxes()[0].data('groupKey') === key
+      && boxes()[0].children().length === groupSize, `"${key}" opened into its box`, 5000, 20);
+    const openMs = Math.round(performance.now() - t2);
+    testController.reportCondition(`a + press opens "${key}": 1 box with ${boxes()?.[0]?.children().length} members = ${groupSize}, `
+      + `${merged()?.length} groups still closed (open ${openMs} ms)`, opened && merged()?.length === expected.size - 1);
+    const minus = badges().find((b) => b.dataset.groupKey === key);
+    testController.reportCondition('the open box carries a − badge', minus?.dataset.open === 'true');
+    const t3 = performance.now();
+    minus?.click();
+    const closed = await testController.pollForCondition(() => boxes()?.length === 0 && merged()?.length === expected.size,
+      `"${key}" closed again`, 5000, 20);
+    const closeMs = Math.round(performance.now() - t3);
+    await new Promise((res) => setTimeout(res, 150));
+    testController.reportCondition(`a − press closes it (${boxes()?.length} boxes, close ${closeMs} ms), and no badge press ran a click action `
+      + `(${rec.seen.length} regionClicked)`, closed && rec.seen.length === 0);
+    const body = merged()[0];
+    const bodyRegion = regionOfCell(body.data('groupKey'), body.data('members'));
+    body.emit('tap');
+    const ran = await testController.pollForCondition(() => rec.seen.length >= 1, 'the body tap is published', 5000, 50);
+    testController.reportCondition(`a body tap on closed "${body.data('groupKey')}" runs its click action, once, on "${bodyRegion}"`,
+      ran && rec.seen.length === 1 && rec.seen[0][1]?.regionName === bodyRegion);
+    testController.log(`[subRegionView] seedling_atlas collapsible: switch=${colMs}ms open=${openMs}ms close=${closeMs}ms badge=${Math.round(r.width)}px`);
     moved = true;
   } catch (error) {
     testController.reportCondition(`subRegionView merged test error-free: ${error.message}`, false);
@@ -1129,11 +1177,11 @@ registerTest({
 
 registerTest({
   id: 'test_region_graph_sub_region_merged',
-  name: 'Region Graph: sub-regions merged into one node per region (subRegionView = merged)',
+  name: 'Region Graph: sub-regions merged into one node per region (subRegionView = merged, then collapsible)',
   category: 'Region Graph',
   testFunction: testRegionGraphSubRegionMerged,
   enabled: false, // runs where a roster enrols it (the substrates config)
-  description: 'region-graph-groups-b: on seedling_atlas (2 groups), subRegionView = merged (session-only) draws one node per display group of 2+ in place of its members, no self-loop; a tap on a group node runs the region click on regionOfCell(key, members), once; the setting is restored and every region is its own node again'
+  description: 'region-graph-groups-b: on seedling_atlas (2 groups), subRegionView = merged (session-only) draws one node per display group of 2+ in place of its members, no self-loop; a tap on a group node runs the region click on regionOfCell(key, members), once; then (region-graph-groups-c) subRegionView = collapsible draws every group closed with a + badge, a + press opens one group into its box and a − press closes it, neither running a click action, and a body tap runs it; the setting is restored and every region is its own node again'
 });
 
 registerTest({

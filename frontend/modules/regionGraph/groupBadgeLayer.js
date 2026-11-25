@@ -111,7 +111,10 @@ export class GroupBadgeLayer {
 
     /** The badge's action: open (or close) the group. Runs no click action. → `setSubRegionGroupOpen`'s result. */
     press(key, open) {
-        return this.ui.dataManager?.setSubRegionGroupOpen?.(key, open) ?? { changed: false, ms: 0 };
+        const res = this.ui.dataManager?.setSubRegionGroupOpen?.(key, open) ?? { changed: false, ms: 0 };
+        // The last open / close time (ms, the rebuild included), readable off the layer by the shots and the row.
+        if (res.changed && this._layer?.dataset) this._layer.dataset.lastToggleMs = String(Math.round(res.ms * 10) / 10);
+        return res;
     }
 
     scheduleSync() {

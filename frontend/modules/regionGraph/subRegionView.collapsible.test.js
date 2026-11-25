@@ -47,7 +47,7 @@ vi.mock('../shared/procgen/substrateRegistry.js', () => {
     return { substrateRegistry: { get: (id) => entries[id] ?? null } };
 });
 
-const { GraphDataManager } = await import('./graphDataManager.js');
+const { GraphDataManager, openRadius, ringRadius } = await import('./graphDataManager.js');
 const { GraphInteractionManager } = await import('./graphInteractionManager.js');
 const { LayoutControlsManager } = await import('./layoutControlsManager.js');
 const { NavigationManager } = await import('./navigationManager.js');
@@ -347,10 +347,16 @@ describe('⛓ collapsible: positions (no layout on open / close)', () => {
         const centre = { x: pts.reduce((a, p) => a + p.x, 0) / pts.length, y: pts.reduce((a, p) => a + p.y, 0) / pts.length };
         expect(centre.x).toBeCloseTo(5000, 6);
         expect(centre.y).toBeCloseTo(-3000, 6);
-        // The members keep separate's arrangement (shifted).
-        const s0 = ui.nodePositions.get(members[0]);
-        const s1 = ui.nodePositions.get(members[1]);
-        expect(pts[1].x - pts[0].x).toBeCloseTo(s1.x - s0.x, 6);
+        // The members keep separate's arrangement, shifted and scaled down to `openRadius` round the node.
+        const sp = members.map((m) => ui.nodePositions.get(m));
+        const sc = { x: sp.reduce((a, p) => a + p.x, 0) / sp.length, y: sp.reduce((a, p) => a + p.y, 0) / sp.length };
+        const far = Math.max(...sp.map((p) => Math.hypot(p.x - sc.x, p.y - sc.y)));
+        const k = Math.min(1, openRadius(members.length) / far);
+        members.forEach((m, i) => {
+            expect(pts[i].x - 5000).toBeCloseTo(k * (sp[i].x - sc.x), 6);
+            expect(pts[i].y + 3000).toBeCloseTo(k * (sp[i].y - sc.y), 6);
+            expect(Math.hypot(pts[i].x - 5000, pts[i].y + 3000)).toBeLessThanOrEqual(openRadius(members.length) + 1e-6);
+        });
         // Another node the user dragged stays where it is.
         const other = mergedNodes(ui.cy)[0];
         other.position({ x: -777, y: 888 });
@@ -361,10 +367,15 @@ describe('⛓ collapsible: positions (no layout on open / close)', () => {
         expect(layouts).toBe(0);
         expect(ui.cy.getElementById(G.groupNodeId(key)).position()).toEqual(centre2);
         expect(ui.cy.getElementById(other.id()).position()).toEqual({ x: -777, y: 888 });
-        // Re-open: the members' last arrangement, round the node.
+        // Re-open: the members' last arrangement (the same shape), round the node.
+        const at = ui.cy.getElementById(G.groupNodeId(key)).position();
         dm.setSubRegionGroupOpen(key, true);
-        expect(ui.cy.getElementById(members[0]).position().x - ui.cy.getElementById(members[1]).position().x)
-            .toBeCloseTo(pts2[0].x - pts2[1].x, 6);
+        const pts3 = members.map((m) => ui.cy.getElementById(m).position());
+        const c3 = { x: pts3.reduce((a, p) => a + p.x, 0) / pts3.length, y: pts3.reduce((a, p) => a + p.y, 0) / pts3.length };
+        expect(c3.x).toBeCloseTo(at.x, 6);
+        expect(c3.y).toBeCloseTo(at.y, 6);
+        const ratio = (pts3[0].x - pts3[1].x) / (pts2[0].x - pts2[1].x);
+        expect((pts3[0].y - pts3[1].y)).toBeCloseTo(ratio * (pts2[0].y - pts2[1].y), 6);
         // Never written: separate's store, merged's store; collapsible's has no box.
         expect(JSON.stringify([...ui.nodePositions])).toBe(sepSaved);
         expect(ui.mergedNodePositions ?? null).toBeNull();
@@ -394,7 +405,7 @@ describe('⛓ collapsible: positions (no layout on open / close)', () => {
         dm.setSubRegionGroupOpen(node.data('groupKey'), true);
         expect(layouts).toBe(1);
         const ms = node.data('members').map((m) => ui.cy.getElementById(m).position());
-        const r = 50 + 12 * ms.length;
+        const r = ringRadius(ms.length);
         for (const q of ms) expect(Math.hypot(q.x - p.x, q.y - p.y)).toBeCloseTo(r, 6);
     });
 });
