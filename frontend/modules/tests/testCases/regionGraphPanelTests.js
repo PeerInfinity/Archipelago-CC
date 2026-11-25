@@ -702,10 +702,17 @@ export async function testRegionGraphSubRegionMerged(testController) {
     rec = recordEvents(testController, ['regionView:regionClicked']);
     const plus = badges()[0];
     const key = plus.dataset.groupKey;
+    // ⛓ The badge layer places (and shows) its badges on the next frame after a viewport change (layoutstop, fit), so
+    // the badge can exist a frame before it is laid out: wait for its layout box to be non-zero, never a sleep. The
+    // zoom is in the text: below `showRegionNames` the badge is hidden by design and this poll goes STUCK.
+    const laidOut = () => { const b = plus.getBoundingClientRect(); return plus.style.display === 'block' && b.width > 0 && b.height > 0; };
+    const shownOk = await testController.pollForCondition(laidOut, `the + badge on "${key}" is laid out (non-zero box)`, 5000, 20);
     const r = plus.getBoundingClientRect();
     const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-    testController.reportCondition(`the + badge on "${key}" is shown (${Math.round(r.width)}×${Math.round(r.height)} px hit square) and a tap at its centre hits the badge, not the canvas`,
-      plus.style.display === 'block' && !!hit && plus.contains(hit));
+    const zoomNow = graphCy()?.zoom();
+    testController.reportCondition(`the + badge on "${key}" is shown (${Math.round(r.width)}×${Math.round(r.height)} px hit square, `
+      + `zoom ${zoomNow?.toFixed?.(2)}) and a tap at its centre hits the badge, not the canvas`,
+      shownOk && !!hit && plus.contains(hit));
     const groupSize = expected.get(key)?.length ?? 0;
     const t2 = performance.now();
     plus.click();
