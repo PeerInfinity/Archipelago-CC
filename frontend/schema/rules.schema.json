@@ -700,6 +700,26 @@
                 "xpEffect": { "type": "string", "description": "As a `loop_costs` region's `xpEffect`." }
               },
               "additionalProperties": false
+            },
+            "clock": {
+              "type": "object",
+              "description": "AN-TIME-1, only on a TIMED graph: the clock a node's `window` is shown on. `start` is the clock time of a loop's time 0 (HH:MM), `minutesPerUnit` how many minutes one unit of time is. Display only: a window is read against time spent this loop.",
+              "properties": {
+                "start": { "type": "string", "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$" },
+                "minutesPerUnit": { "type": "integer", "minimum": 1 }
+              },
+              "required": ["start", "minutesPerUnit"],
+              "additionalProperties": false
+            },
+            "knowledge": {
+              "type": "object",
+              "description": "AN-TIME-1, only when the graph has knowledge: flag id -> {name, item}. A flag is learned by performing a node that teaches it and kept across loops; `item` is the EVENT item that stands for it in the logic (`Knows: <name>`).",
+              "additionalProperties": {
+                "type": "object",
+                "properties": { "name": { "type": "string" }, "item": { "type": "string" } },
+                "required": ["name", "item"],
+                "additionalProperties": false
+              }
             }
           },
           "required": ["schema_version", "graph_id", "loop", "stats", "resources", "boosts", "mana_per_item_default", "start", "goal", "action"],

@@ -23,11 +23,32 @@
 
 import { applyRegionXpCostEffect, levelFromXP } from '../shared/procgen/xpFormulas.js';
 import { resolvedSettingsOf } from './actionGraph.js';
-import { applyBoost, describePlan, formatMana, loopStartState, perform, priceOf, whyNot } from './actionModel.js';
+import {
+    applyBoost, describePlan, formatMana, loopStartState, perform, priceOf, waitNote, waitOf, whyNot,
+} from './actionModel.js';
 import { DEFAULT_STATE_BUDGET, enumerateLoop, planTo } from './actionSearch.js';
 
 /** The kinds of plan `planLoop` returns. */
-export const PLAN_KINDS = Object.freeze({ GOAL: 'goal', CHECKS: 'checks', XP: 'xp', WAIT: 'wait', DONE: 'done' });
+export const PLAN_KINDS = Object.freeze({ GOAL: 'goal', CHECKS: 'checks', LEARN: 'learn', XP: 'xp', WAIT: 'wait', DONE: 'done' });
+
+/** What one performance of node `i` takes from the pool at `s`: its price plus any wait for its window. */
+const costAt = (model, s, i, costs) => priceOf(model, i, costs) + waitOf(model, s, i);
+
+/**
+ * The waits along `plan` from `state`, as a reasoning-line suffix ("; Watch the Ferry waits 2 (opens 12:00)"), or ''
+ * when nothing waits — so a windowless graph's lines are exactly what they were.
+ */
+function waitsAlong(model, state, plan, costs) {
+    if (!model.windowed) return '';
+    const notes = [];
+    let s = state;
+    for (const i of plan) {
+        const note = waitNote(model, s, i);
+        if (note) notes.push(`${model.nodes[i].name} ${note}`);
+        s = perform(model, s, i, { costs });
+    }
+    return notes.length ? `; ${notes.join('; ')}` : '';
+}
 
 /** Live prices: each node's time after its region-XP discount (`xpFormulas.js`, the formula every Loops cost uses). */
 export function livePrices(model, xp = {}) {
@@ -39,12 +60,11 @@ export function livePrices(model, xp = {}) {
  * How far short of mana `plan` is when run from `state` (0 = affordable). Walked with mana allowed to go negative.
  */
 export function manaShortfall(model, state, plan, costs) {
-    let m = state.mana;
+    let s = state;
     let worst = 0;
     for (const i of plan) {
-        const price = priceOf(model, i, costs);
-        worst = Math.max(worst, price - m);
-        m = m - price + model.nodes[i].addMana;
+        worst = Math.max(worst, costAt(model, s, i, costs) - s.mana);
+        s = perform(model, s, i, { costs });
     }
     return worst;
 }
@@ -64,26 +84,28 @@ export function orderForMana(model, state, plan, costs) {
     while (left.length) {
         const legal = left.map((i, k) => ({ i, k })).filter(({ i }) => !whyNot(model, s, i, { costs, ignoreMana: true }));
         if (!legal.length) return plan;
-        const net = ({ i }) => model.nodes[i].addMana - priceOf(model, i, costs);
-        const affordable = legal.filter(({ i }) => s.mana > 1e-9 && s.mana + 1e-9 >= priceOf(model, i, costs));
+        const net = ({ i }) => model.nodes[i].addMana - costAt(model, s, i, costs);
+        const affordable = legal.filter(({ i }) => s.mana > 1e-9 && s.mana + 1e-9 >= costAt(model, s, i, costs));
         const pick = (affordable.length ? affordable : legal).reduce((a, b) => (affordable.length
             ? (net(b) > net(a) ? b : a)
-            : (priceOf(model, b.i, costs) < priceOf(model, a.i, costs) ? b : a)));
+            : (costAt(model, s, b.i, costs) < costAt(model, s, a.i, costs) ? b : a)));
         out.push(pick.i);
         left.splice(pick.k, 1);
         s = perform(model, s, pick.i, { costs });
     }
+    // ⛓ AN-TIME-1: the target is checked too. A reorder ends at the same counts, so without windows the target is
+    // exactly as legal as in `plan`; with an `until` window a reorder can bring it too late — keep `plan` then.
+    if (whyNot(model, s, last, { costs, ignoreMana: true })) return plan;
     return [...out, last];
 }
 
 /** How many steps of `plan` complete from `state` before one cannot be paid for. */
 export function affordablePrefix(model, state, plan, costs) {
-    let m = state.mana;
+    let s = state;
     let n = 0;
     for (const i of plan) {
-        const price = priceOf(model, i, costs);
-        if (m <= 1e-9 || m + 1e-9 < price) break;
-        m = m - price + model.nodes[i].addMana;
+        if (s.mana <= 1e-9 || s.mana + 1e-9 < costAt(model, s, i, costs)) break;
+        s = perform(model, s, i, { costs });
         n += 1;
     }
     return n;
@@ -101,6 +123,11 @@ export function affordablePrefix(model, state, plan, costs) {
  *   - a producer of a resource N requires or spends (resources go down, so no "already met" shortcut);
  * and, whatever the target, every node whose mana result is at least its price (it never raises a shortfall, and it
  * can lower one or lengthen how far a plan runs).
+ *   - (AN-TIME-1) every node that teaches a knowledge flag N requires and `state` does not already know.
+ *
+ * Windows (AN-TIME-1). A dropped node only makes every later step start EARLIER; an `until` stays met, and a node
+ * that is now early waits (⚖ Q2), which ends at the same `from` and costs the time the dropped node did. So the
+ * argument below holds unchanged — measured: 0 of 14,744 cases differ (design §2 row 4).
  *
  * What does not change, and why. Drop every performance of an irrelevant node from a plan that performs the target:
  * what remains is still legal (no relevant node's way in, stat or resource came from a dropped node; a dropped node
@@ -136,6 +163,7 @@ export function relevantNodes(model, state, target, costs) {
         for (const [s, k] of node.reqStats) if (state.stats[s] < k) statProducers[s].forEach(add);
         for (const [r] of node.reqRes) resProducers[r].forEach(add);
         for (const [r, k] of node.addRes) if (k < 0) resProducers[r].forEach(add);
+        for (const k of node.reqKnow ?? []) if (!state.known?.[k]) model.knowledge[k].learners.forEach(add);
     }
     return keep;
 }
@@ -197,7 +225,7 @@ export function planLoop(model, { items = {}, checked = [], xp = {}, start, budg
     if (goalAt >= 0) {
         const plan = planTo(entries, goalAt);
         const left = entries[goalAt].state.mana;
-        lines.push(`Goal reachable: ${name(goal)} via ${describePlan(model, plan)} (${plan.length} performance${plan.length === 1 ? '' : 's'}, ${formatMana(left)} mana left).`);
+        lines.push(`Goal reachable: ${name(goal)} via ${describePlan(model, plan)} (${plan.length} performance${plan.length === 1 ? '' : 's'}, ${formatMana(left)} mana left)${waitsAlong(model, first, plan, costs)}.`);
         return { kind: PLAN_KINDS.GOAL, plan: ids(plan), attempt: null, earns: [name(goal)], manaLeft: left, lines };
     }
 
@@ -219,7 +247,7 @@ export function planLoop(model, { items = {}, checked = [], xp = {}, start, budg
     if (best) {
         const plan = planTo(entries, best.k);
         const earnedNames = best.earned.map(name);
-        lines.push(`Chose: ${describePlan(model, plan)}, earning ${earnedNames.join(', ')} (${formatMana(best.state.mana)} mana left).`);
+        lines.push(`Chose: ${describePlan(model, plan)}, earning ${earnedNames.join(', ')} (${formatMana(best.state.mana)} mana left)${waitsAlong(model, first, plan, costs)}.`);
         for (const c of openChecks) {
             if (best.earned.includes(c)) continue;
             const a = alone.get(c);
@@ -233,6 +261,26 @@ export function planLoop(model, { items = {}, checked = [], xp = {}, start, budg
             }
         }
         return { kind: PLAN_KINDS.CHECKS, plan: ids(plan), attempt: null, earns: earnedNames, manaLeft: best.state.mana, lines };
+    }
+
+    // 2b. (AN-TIME-1) No check this loop, but knowledge some target needs can be learned: learn the most of it (ties:
+    // most mana left, then fewest performances). It is kept across loops, so this loop is not wasted.
+    const needed = neededKnowledge(model, first, done);
+    if (needed.length) {
+        let learn = null;
+        entries.forEach(({ state }, k) => {
+            const got = needed.filter((f) => state.known?.[f]);
+            if (!got.length) return;
+            if (!learn || got.length > learn.got.length
+                || (got.length === learn.got.length && state.mana > learn.state.mana + 1e-9)) learn = { k, got, state };
+        });
+        if (learn) {
+            const plan = planTo(entries, learn.k);
+            const names = learn.got.map((f) => model.knowledge[f].name);
+            lines.push(`No check can be earned this loop. Learning ${names.join(', ')}: ${describePlan(model, plan)} (${formatMana(learn.state.mana)} mana left)${waitsAlong(model, first, plan, costs)}.`);
+            for (const t of [...openChecks, goal]) lines.push(`  ${name(t)}: ${notThisLoop(model, first, t, costs, budget)}.`);
+            return { kind: PLAN_KINDS.LEARN, plan: ids(plan), attempt: null, earns: [], learns: names, manaLeft: learn.state.mana, lines };
+        }
     }
 
     // 3. No check this loop: the target short of mana by the least.
@@ -277,6 +325,21 @@ export function planLoop(model, { items = {}, checked = [], xp = {}, start, budg
     return { kind: PLAN_KINDS.WAIT, plan: ids(plan), attempt: null, earns: [], manaLeft: entries[most].state.mana, lines };
 }
 
+/**
+ * The knowledge flags not known at `start` that some node still worth performing requires: the requirement of an
+ * unchecked check or the goal, or of any node on a way to one (every node requiring a flag counts — a cheap,
+ * conservative reading; a flag nothing open needs is never chosen).
+ */
+function neededKnowledge(model, start, done) {
+    if (!model.knowledge?.length) return [];
+    const out = new Set();
+    model.nodes.forEach((node, i) => {
+        if ((node.kind === 'check' || node.kind === 'goal') && done.has(node.id)) return;
+        for (const k of node.reqKnow ?? []) if (!start.known?.[k]) out.add(k);
+    });
+    return [...out].sort((a, b) => a - b);
+}
+
 /** Why target `t` cannot be earned this loop: short of mana by how much, or what requirement no plan meets. */
 function notThisLoop(model, start, t, costs, budget) {
     const s = leastShortPlan(model, start, t, costs, budget);
@@ -287,6 +350,7 @@ function notThisLoop(model, start, t, costs, budget) {
     const reached = entries.filter(({ state }) => whyNot(model, state, t, { costs, ignoreMana: true })?.code !== 'not-reached');
     if (!reached.length) return 'not reached this loop with what is held';
     const refusal = whyNot(model, reached[reached.length - 1].state, t, { costs, ignoreMana: true });
+    if (refusal?.code === 'knowledge' || refusal?.code === 'too-late') return refusal.text;
     return refusal ? `${refusal.text}, needs an item` : 'needs an item';
 }
 
@@ -301,7 +365,8 @@ function notThisLoop(model, start, t, costs, budget) {
  */
 export function playToGoal(model, { placements = {}, xpGainScale, maxLoops = 100, budget } = {}) {
     const scale = xpGainScale ?? resolvedSettingsOf(model.graph).xpGainScale;
-    const items = Object.fromEntries(model.boons.map((b) => [b.id, 0]));
+    // Boons by id, then knowledge flags by id (`itemVectorOf` reads both): a flag learned in a loop is held from the next.
+    const items = Object.fromEntries([...model.boons.map((b) => [b.id, 0]), ...(model.knowledge ?? []).map((f) => [f.id, 0])]);
     const checked = new Set();
     const xp = {};
     const loops = [];
@@ -347,6 +412,7 @@ export function playToGoal(model, { placements = {}, xpGainScale, maxLoops = 100
             }
             break;
         }
+        (model.knowledge ?? []).forEach((f, k) => { if (state.known?.[k]) items[f.id] = 1; });
         if (checked.has(model.nodes[model.goalIndex].id)) return { reachedGoal: true, loops, xp };
     }
     return { reachedGoal: false, loops, xp };

@@ -12,6 +12,17 @@
  * breaks any of these is refused here by name, so the search never has to check (`gotchas.md` § A minimal-set
  * search over an item lattice assumes monotonicity).
  *
+ * ⛓ TIME WINDOWS KEEP IT (AN-TIME-1; design `actionnodes-time-design` §1–§2, ⚖ Robert 2026-11-25 Q1–Q4). A node's
+ * `window: {from?, until?}` is read against the time SPENT this loop (waits included): a performance may START at
+ * most at `until`, and one started before `from` first WAITS until `from`, the wait paid from the pool. Items never
+ * move that clock (an item's time lengthens the loop at its END), so a plan that works with some items works
+ * unchanged with more. The two readings that break it are refused by shape: a boost part that would start the clock
+ * earlier (`unsupported-earlier-start`), and there is no "time left" reading at all.
+ *
+ * ⛓ KNOWLEDGE KEEPS IT. `knowledge` flags are learned by performing a node (`results.learns`) and kept across loops;
+ * `requires.knowledge` is a minimum (every listed flag known). In the logic a flag is an EVENT item placed at each
+ * node that teaches it, so it joins the item lattice as one more 0/1 dimension and only ever helps.
+ *
  * ⛓ THE PER-ITEM STARTING-MANA BOOST (⚖ user, 2026-11-15: "I want to make the mana boost provided by each item
  * configurable. I still want the default to be 10."). A boon's `gives.mana` is the mana that item adds to every
  * loop's starting pool. When a boon does not state it, it is `DEFAULT_MANA_PER_ITEM` (10, the same constant the
@@ -71,6 +82,17 @@ export const ACTION_GRAPH_REFUSALS = Object.freeze({
     GROWING_LIMIT: 'unsupported-growing-limit',
     MODIFIES: 'unsupported-modifies',
     MAXIMUM_REQUIREMENT: 'unsupported-maximum-requirement',
+    // Time windows and the clock (AN-TIME-1).
+    BAD_WINDOW: 'bad-window',
+    WINDOW_ON_START: 'window-on-start',
+    BAD_CLOCK: 'bad-clock',
+    // ⚖ Robert 2026-11-25 (Q4): an item may add time at the END of the day, never move its start — an earlier start
+    // makes the minimal-set logic unsound (design §1: 107 of 1,000 random graphs). Refused by name so a graph that
+    // wants it says so.
+    EARLIER_START: 'unsupported-earlier-start',
+    // Knowledge (AN-TIME-1, ⚖ Q8 brought forward): flags learned by performing a node, kept across loops.
+    UNKNOWN_KNOWLEDGE: 'unknown-knowledge',
+    KNOWLEDGE_NEVER_LEARNED: 'knowledge-never-learned',
     // Provenance (Z.7): presence and form.
     NO_PROVENANCE: 'no-provenance',
     BAD_PROVENANCE: 'bad-provenance',
@@ -88,17 +110,34 @@ export class ActionGraphError extends Error {
 }
 
 const TOP_FIELDS = Object.freeze(['kind', 'schema_version', 'graph_id', 'name', 'loop', 'stats', 'resources',
-    'boons', 'filler', 'start', 'settings', 'nodes', 'provenance']);
+    'boons', 'filler', 'start', 'settings', 'nodes', 'provenance', 'clock', 'knowledge']);
 const NODE_FIELDS = Object.freeze(['name', 'kind', 'time', 'requires', 'results', 'limit', 'after', 'position',
-    'src']);
+    'src', 'window']);
 const BOON_FIELDS = Object.freeze(['name', 'count', 'gives', 'src']);
 const AMOUNT_GROUPS = Object.freeze(['stats', 'resources']);
-const RESULT_FIELDS = Object.freeze(['stats', 'resources', 'mana']);
+const REQUIRE_FIELDS = Object.freeze([...AMOUNT_GROUPS, 'knowledge']);
+const RESULT_FIELDS = Object.freeze(['stats', 'resources', 'mana', 'learns']);
 const GIVES_FIELDS = Object.freeze(['stats', 'resources', 'mana']);
+/** Boost parts that would move the START of the clock (Q3 (b)): refused by name, never read. */
+const EARLIER_START_FIELDS = Object.freeze(['earlier', 'clock', 'start']);
 const SETTINGS_FIELDS = Object.freeze(['xpGainScale', 'xpEffect']);
+const WINDOW_FIELDS = Object.freeze(['from', 'until']);
+const CLOCK_FIELDS = Object.freeze(['start', 'minutesPerUnit']);
+const KNOWLEDGE_FIELDS = Object.freeze(['name', 'src']);
 
 /** The graph-wide settings a graph may leave out, and their values (design §8). */
 export const DEFAULT_GRAPH_SETTINGS = Object.freeze({ xpGainScale: 1, xpEffect: 'cost' });
+/**
+ * What a TIMED graph (one that declares a `clock`) defaults differently (⚖ Robert 2026-11-25, Q5: region XP off, so
+ * an hour always costs an hour and the clock matches the pool). A graph's own `settings` still win. Data, not a
+ * branch: a later default for timed graphs is one more key here.
+ */
+export const TIMED_GRAPH_SETTINGS = Object.freeze({ xpEffect: 'none' });
+
+/** The name of the Archipelago EVENT item that stands for a knowledge flag in the compiled logic. */
+export const knowledgeItemNameOf = (name) => `Knows: ${name}`;
+/** The name of the event location where node `nodeName` teaches flag `flagName`. */
+export const knowledgeLocationNameOf = (nodeName, flagName) => `${nodeName} (learns ${flagName})`;
 
 const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 const isNonNegInt = (v) => Number.isInteger(v) && v >= 0;
@@ -117,9 +156,19 @@ export function resolvedBoostOf(boon) {
     };
 }
 
-/** The graph's settings with defaults applied. */
+/** Is the graph TIMED: does it declare a `clock`? */
+export function isTimedGraph(graph) {
+    return isPlainObject(graph?.clock);
+}
+
+/** The graph's settings with defaults applied (a timed graph's defaults first: `TIMED_GRAPH_SETTINGS`). */
 export function resolvedSettingsOf(graph) {
-    return { ...DEFAULT_GRAPH_SETTINGS, ...(graph?.settings ?? {}) };
+    return { ...DEFAULT_GRAPH_SETTINGS, ...(isTimedGraph(graph) ? TIMED_GRAPH_SETTINGS : {}), ...(graph?.settings ?? {}) };
+}
+
+/** Does any node carry a time window? */
+export function hasWindows(graph) {
+    return Object.values(isPlainObject(graph?.nodes) ? graph.nodes : {}).some((n) => n?.window !== undefined);
 }
 
 /**
@@ -166,6 +215,26 @@ export function validateActionGraph(graph) {
         }
     }
 
+    // The clock (display only): when a loop's time 0 is, and how many minutes one unit of time is.
+    if (graph.clock !== undefined) {
+        const c = graph.clock;
+        if (!isPlainObject(c) || Object.keys(c).some((k) => !CLOCK_FIELDS.includes(k))
+            || typeof c.start !== 'string' || !/^([01]\d|2[0-3]):[0-5]\d$/.test(c.start)
+            || !isPosInt(c.minutesPerUnit)) {
+            err(R.BAD_CLOCK, 'clock', '`clock` must be {start: "HH:MM", minutesPerUnit: <a whole number of at least 1>}');
+        }
+    }
+
+    // Knowledge: `{<id>: {name}}`. A flag is learned by performing a node (`results.learns`) and kept across loops.
+    const knowledge = isPlainObject(graph.knowledge) ? graph.knowledge : {};
+    if (graph.knowledge !== undefined && !isPlainObject(graph.knowledge)) err(R.BAD_FIELD, 'knowledge', 'must be an object');
+    const checkFlags = (path, value) => {
+        if (value === undefined) return;
+        if (!Array.isArray(value) || value.length === 0) { err(R.BAD_FIELD, path, 'a non-empty list of knowledge ids'); return; }
+        if (new Set(value).size !== value.length) err(R.BAD_FIELD, path, 'a knowledge id is listed twice');
+        for (const id of value) if (!Object.hasOwn(knowledge, id)) err(R.UNKNOWN_KNOWLEDGE, path, `no knowledge '${id}'`);
+    };
+
     // Amount maps: `{<id>: <integer>}` over a declared stat or resource table.
     const checkAmounts = (path, value, { sign, group }) => {
         if (value === undefined) return;
@@ -202,7 +271,11 @@ export function validateActionGraph(graph) {
         else poolSize += boon.count;
         const gives = boon.gives ?? {};
         if (!isPlainObject(gives)) { err(R.BAD_FIELD, `${path}.gives`, 'must be an object'); continue; }
-        for (const key of Object.keys(gives)) if (!GIVES_FIELDS.includes(key)) err(R.UNKNOWN_FIELD, `${path}.gives.${key}`, 'not a boost part');
+        for (const key of Object.keys(gives)) {
+            if (EARLIER_START_FIELDS.includes(key)) {
+                err(R.EARLIER_START, `${path}.gives.${key}`, 'an item may add time at the end of a loop, never move its start');
+            } else if (!GIVES_FIELDS.includes(key)) err(R.UNKNOWN_FIELD, `${path}.gives.${key}`, 'not a boost part');
+        }
         checkAmounts(`${path}.gives.stats`, gives.stats, { sign: 'boost', group: 'stats' });
         checkAmounts(`${path}.gives.resources`, gives.resources, { sign: 'boost', group: 'resources' });
         if (gives.mana !== undefined) {
@@ -214,6 +287,16 @@ export function validateActionGraph(graph) {
     if (graph.filler !== undefined && !Object.hasOwn(boons, graph.filler)) {
         err(R.BAD_FILLER, 'filler', `'${graph.filler}' is not a boon`);
     }
+    // Knowledge entries. An id may not also be a boon id: the item vectors and `{id: count}` objects share one key
+    // space (`actionModel.js` `itemVectorOf`). Each flag's EVENT item name is claimed like any item name.
+    for (const [id, def] of Object.entries(knowledge)) {
+        const path = `knowledge.${id}`;
+        if (!isPlainObject(def) || typeof def.name !== 'string' || !def.name) { err(R.BAD_FIELD, path, 'needs a name'); continue; }
+        for (const key of Object.keys(def)) if (!KNOWLEDGE_FIELDS.includes(key)) err(R.UNKNOWN_FIELD, `${path}.${key}`, 'not a knowledge field');
+        if (Object.hasOwn(boons, id)) err(R.BAD_FIELD, path, `'${id}' is also a boon id`);
+        claimName(knowledgeItemNameOf(def.name), path);
+    }
+    const learned = new Set();
 
     // Nodes.
     const nodes = isPlainObject(graph.nodes) ? graph.nodes : {};
@@ -247,11 +330,24 @@ export function validateActionGraph(graph) {
             else {
                 for (const key of Object.keys(node.requires)) {
                     if (key === 'max' || key === 'maximums') err(R.MAXIMUM_REQUIREMENT, `${path}.requires.${key}`, 'requirements are minimums');
-                    else if (!AMOUNT_GROUPS.includes(key)) err(R.UNKNOWN_FIELD, `${path}.requires.${key}`, 'stats or resources');
+                    else if (!REQUIRE_FIELDS.includes(key)) err(R.UNKNOWN_FIELD, `${path}.requires.${key}`, 'stats, resources or knowledge');
                 }
                 checkAmounts(`${path}.requires.stats`, node.requires.stats, { sign: 'minimum', group: 'stats' });
                 checkAmounts(`${path}.requires.resources`, node.requires.resources, { sign: 'minimum', group: 'resources' });
+                checkFlags(`${path}.requires.knowledge`, node.requires.knowledge);
             }
+        }
+        // The time window: when a performance may START, in units of time spent this loop (design §1, ⚖ Q1–Q3).
+        if (node.window !== undefined) {
+            const w = node.window;
+            const keys = isPlainObject(w) ? Object.keys(w) : [];
+            if (!isPlainObject(w) || keys.length === 0 || keys.some((k) => !WINDOW_FIELDS.includes(k))
+                || keys.some((k) => !isNonNegInt(w[k]))) {
+                err(R.BAD_WINDOW, `${path}.window`, '{from?, until?}: whole numbers ≥ 0, at least one');
+            } else if (w.from !== undefined && w.until !== undefined && w.from > w.until) {
+                err(R.BAD_WINDOW, `${path}.window`, `opens at ${w.from} after it closes at ${w.until}`);
+            }
+            if (node.kind === 'start') err(R.WINDOW_ON_START, `${path}.window`, 'the start is not an action');
         }
         // Results.
         if (node.results !== undefined) {
@@ -259,8 +355,10 @@ export function validateActionGraph(graph) {
             else {
                 for (const key of Object.keys(node.results)) {
                     if (key === 'when') err(R.RESULT_TIMING, `${path}.results.when`, 'results apply after every performance in version 1');
-                    else if (!RESULT_FIELDS.includes(key)) err(R.UNKNOWN_FIELD, `${path}.results.${key}`, 'stats, resources or mana');
+                    else if (!RESULT_FIELDS.includes(key)) err(R.UNKNOWN_FIELD, `${path}.results.${key}`, 'stats, resources, mana or learns');
                 }
+                checkFlags(`${path}.results.learns`, node.results.learns);
+                for (const k of Array.isArray(node.results.learns) ? node.results.learns : []) learned.add(k);
                 checkAmounts(`${path}.results.stats`, node.results.stats, { sign: 'stat-result', group: 'stats' });
                 checkAmounts(`${path}.results.resources`, node.results.resources, { sign: 'nonzero', group: 'resources' });
                 if (node.results.mana !== undefined && !(Number.isInteger(node.results.mana) && node.results.mana >= 1)) {
@@ -298,6 +396,9 @@ export function validateActionGraph(graph) {
         err(R.START_NOT_ONE, 'start', `'${graph.start}' is not the start node`);
     }
     if (goals !== 1) err(R.GOAL_NOT_ONE, 'nodes', `exactly one goal node (found ${goals})`);
+    for (const id of Object.keys(knowledge)) {
+        if (!learned.has(id)) err(R.KNOWLEDGE_NEVER_LEARNED, `knowledge.${id}`, 'no node learns it (`results.learns`)');
+    }
 
     // Every node can be reached through `after` from the start, at least structurally.
     if (errors.length === 0) {
@@ -344,7 +445,7 @@ function validateProvenance(graph, err) {
         err(unlistedDefault ? R.UNLISTED_SOURCE : R.BAD_PROVENANCE, unlistedDefault ? 'provenance.default' : 'provenance', e.message);
         return;
     }
-    for (const [group, table] of [['nodes', graph.nodes], ['boons', graph.boons]]) {
+    for (const [group, table] of [['nodes', graph.nodes], ['boons', graph.boons], ['knowledge', graph.knowledge]]) {
         for (const [id, entry] of Object.entries(isPlainObject(table) ? table : {})) {
             if (entry?.src !== undefined && !Object.hasOwn(prov.sources, entry.src)) {
                 err(R.UNLISTED_SOURCE, `${group}.${id}.src`, `'${entry.src}' is not a listed source`);

@@ -16,12 +16,26 @@
  * order makes each state's recorded plan one with the fewest performances. A state budget bounds it: past the budget
  * the search is REFUSED by name (`search-budget-exceeded`), never cut short silently (design §2, Limits).
  *
+ * ⛓ WINDOWS AND THE STATE KEY (AN-TIME-1, design §2 row 3). With no window a state's clock is a function of its
+ * counts, so the key stays the counts and the walk is exactly what it always was. With a window an early node WAITS,
+ * so two plans to the same counts can reach different clocks. All plans to one count vector have the same length, so
+ * they are all in one BFS layer: the walk goes layer by layer and keeps, per count vector, the EARLIEST clock (then
+ * the most mana; prices are fixed within a walk, so the mana left is the pool + gains − clock and the earliest clock
+ * dominates). Measured exact against a full-state search on 1,000 random windowed graphs; the plain counts key
+ * differs on 5. The first-found entry wins a tie, and entries are appended in the order the plain walk finds them,
+ * so a windowless graph would come out the same either way — the merge still runs only for a windowed graph.
+ *
+ * ⛓ KNOWLEDGE IN THE LATTICE. `itemCombinations` enumerates each boon from 0 to its `count`, then each knowledge flag
+ * 0/1: a flag known from an earlier loop is one more item dimension (compiled as an event item). With no knowledge
+ * the combinations are exactly what they were.
+ *
  * Pure: no registry, no DOM, no I/O.
  */
 
 import {
     describePlan, isReached, loopStartState, perform, stateKey, whyNot,
 } from './actionModel.js';
+import { knowledgeItemNameOf } from './actionGraph.js';
 
 /** The default state budget of ONE loop's enumeration. */
 export const DEFAULT_STATE_BUDGET = 200_000;
@@ -61,6 +75,38 @@ export function enumerateLoop(model, {
     const first = start ?? loopStartState(model, items);
     const entries = [{ state: first, parent: -1, via: -1 }];
     const seen = new Set([stateKey(first)]);
+    const refuse = () => new ActionSearchError(ACTION_SEARCH_REFUSALS.STATE_BUDGET,
+        `one loop has more than ${budget} states; the exact search refuses this graph (a hand-set path is the fallback, not built yet)`);
+    if (model.windowed) {
+        // Layer by layer; per count vector the earliest clock, then the most mana (see the header).
+        let layer = [0];
+        while (layer.length) {
+            const best = new Map();
+            for (const head of layer) {
+                const { state } = entries[head];
+                for (let i = 0; i < model.nodes.length; i += 1) {
+                    if (allowed && !allowed[i]) continue;
+                    if (whyNot(model, state, i, { costs, ignoreMana })) continue;
+                    const next = perform(model, state, i, { costs });
+                    const key = stateKey(next);
+                    if (seen.has(key)) continue;
+                    const b = best.get(key);
+                    if (!b || next.clock < b.state.clock - 1e-9
+                        || (Math.abs(next.clock - b.state.clock) <= 1e-9 && next.mana > b.state.mana + 1e-9)) {
+                        best.set(key, { state: next, parent: head, via: i });
+                    }
+                }
+            }
+            layer = [];
+            for (const [key, entry] of best) {
+                seen.add(key);
+                entries.push(entry);
+                layer.push(entries.length - 1);
+                if (entries.length > budget) throw refuse();
+            }
+        }
+        return { start: first, entries };
+    }
     for (let head = 0; head < entries.length; head += 1) {
         const { state } = entries[head];
         for (let i = 0; i < model.nodes.length; i += 1) {
@@ -71,10 +117,7 @@ export function enumerateLoop(model, {
             if (seen.has(key)) continue;
             seen.add(key);
             entries.push({ state: next, parent: head, via: i });
-            if (entries.length > budget) {
-                throw new ActionSearchError(ACTION_SEARCH_REFUSALS.STATE_BUDGET,
-                    `one loop has more than ${budget} states; the exact search refuses this graph (a hand-set path is the fallback, not built yet)`);
-            }
+            if (entries.length > budget) throw refuse();
         }
     }
     return { start: first, entries };
@@ -87,17 +130,28 @@ export function planTo(entries, k) {
     return plan.reverse();
 }
 
-/** Every item combination, as boon-count vectors, smallest total first. */
+/** The upper bound of each logic dimension: every boon's `count`, then 1 per knowledge flag. */
+export function logicDimensionsOf(model) {
+    return [...model.boons.map((b) => b.count), ...(model.knowledge ?? []).map(() => 1)];
+}
+
+/** The Archipelago item each logic dimension stands for: the boon names, then each flag's event item. */
+export function logicItemNamesOf(model) {
+    return [...model.boons.map((b) => b.name), ...(model.knowledge ?? []).map((k) => knowledgeItemNameOf(k.name))];
+}
+
+/** Every item combination, as vectors over the logic dimensions (boons, then knowledge), smallest total first. */
 export function itemCombinations(model, budget = DEFAULT_COMBINATION_BUDGET) {
-    const total = model.boons.reduce((p, b) => p * (b.count + 1), 1);
+    const dims = logicDimensionsOf(model);
+    const total = dims.reduce((p, n) => p * (n + 1), 1);
     if (total > budget) {
         throw new ActionSearchError(ACTION_SEARCH_REFUSALS.COMBINATION_BUDGET,
             `${total} item combinations exceed the budget of ${budget}`);
     }
     let combos = [[]];
-    for (const b of model.boons) {
+    for (const max of dims) {
         const next = [];
-        for (const c of combos) for (let k = 0; k <= b.count; k += 1) next.push([...c, k]);
+        for (const c of combos) for (let k = 0; k <= max; k += 1) next.push([...c, k]);
         combos = next;
     }
     const sum = (v) => v.reduce((a, n) => a + n, 0);
@@ -160,10 +214,10 @@ export function deriveActionLogic(model, { budget = DEFAULT_STATE_BUDGET, combin
     };
 }
 
-/** A combination as `{"Strength Boost": 1}` (only the items it needs). */
+/** A combination as `{"Strength Boost": 1, "Knows: …": 1}` (only the items it needs). */
 export function combinationByName(model, items) {
     const out = {};
-    model.boons.forEach((b, i) => { if (items[i] > 0) out[b.name] = items[i]; });
+    logicItemNamesOf(model).forEach((name, i) => { if (items[i] > 0) out[name] = items[i]; });
     return out;
 }
 

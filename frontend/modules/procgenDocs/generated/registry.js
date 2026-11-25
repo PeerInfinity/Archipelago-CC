@@ -9517,7 +9517,7 @@ export const REGISTRY = frz({
                 {
                     "id": "action_nodes",
                     "present": true,
-                    "short": "11 keys",
+                    "short": "12 keys",
                     "type": "object",
                     "value": [
                         "after",
@@ -9530,7 +9530,8 @@ export const REGISTRY = frz({
                         "position",
                         "requires",
                         "results",
-                        "time"
+                        "time",
+                        "window"
                     ]
                 },
                 {

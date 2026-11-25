@@ -1,0 +1,49 @@
+{
+  "kind": "action-graph",
+  "schema_version": 1,
+  "graph_id": "visits-day",
+  "name": "A Day of Visits",
+  "provenance": {
+    "sources": {
+      "an-time": {
+        "type": "model",
+        "model": "claude-opus-5-5",
+        "date": "2026-11-25",
+        "session": "actionnodes-time-design",
+        "note": "Test fixture for knowledge gates (slice AN-TIME-1). The STRUCTURE of a miniature case's visits (five visits, their costs, one same-day `after`, three knowledge gates, a day of 3), with neutral names: the case's own names are not ruled for this repository. Each visit teaches that its paper has been read; the goal stands for the question, needing three of the papers. A test fixture, not a preset."
+      }
+    },
+    "default": "an-time"
+  },
+  "clock": { "start": "09:00", "minutesPerUnit": 60 },
+  "loop": { "mana": 3 },
+  "stats": {},
+  "resources": {},
+  "knowledge": {
+    "read-a": { "name": "Paper A" },
+    "read-b": { "name": "Paper B" },
+    "read-c": { "name": "Paper C" },
+    "read-d": { "name": "Paper D" },
+    "read-e": { "name": "Paper E" }
+  },
+  "boons": {
+    "nothing": { "name": "Nothing Much", "count": 1, "gives": { "mana": 0 } }
+  },
+  "filler": "nothing",
+  "start": "morning",
+  "nodes": {
+    "morning": { "name": "Morning", "kind": "start", "time": 0, "limit": 1 },
+    "visit-a": { "name": "Visit A", "kind": "check", "time": 1, "limit": 1, "after": [["morning"]],
+      "results": { "learns": ["read-a"] } },
+    "visit-b": { "name": "Visit B", "kind": "check", "time": 1, "limit": 1, "after": [["morning"]],
+      "results": { "learns": ["read-b"] } },
+    "visit-c": { "name": "Visit C", "kind": "check", "time": 2, "limit": 1, "after": [["visit-b"]],
+      "requires": { "knowledge": ["read-b"] }, "results": { "learns": ["read-c"] } },
+    "visit-d": { "name": "Visit D", "kind": "check", "time": 1, "limit": 1, "after": [["morning"]],
+      "requires": { "knowledge": ["read-a"] }, "results": { "learns": ["read-d"] } },
+    "visit-e": { "name": "Visit E", "kind": "check", "time": 1, "limit": 1, "after": [["morning"]],
+      "requires": { "knowledge": ["read-d"] }, "results": { "learns": ["read-e"] } },
+    "answer": { "name": "Answer the Question", "kind": "goal", "time": 0, "limit": 1, "after": [["morning"]],
+      "requires": { "knowledge": ["read-a", "read-b", "read-c"] } }
+  }
+}
