@@ -1,0 +1,4 @@
+294 committed tapes, KEY=plainPickupInFreeze: 294 ON = OFF, 0 differ []
+census probe: 0 tape(s) reach the ON site; ON-site asks (ON, with apitems in the room or not): 77
+294 committed tapes, KEY=plainPickupInFreeze (+ nestedRockCeremony,freezeSpanUpdates,freezeReleaseTick,freezeEdgeFrames,frozenTickUngated,pickupTickFreeze,dialogueFrameFreeze,turretSuitRetaliation,owlContactInStep on both sides): 294 ON = OFF, 0 differ []
+census probe: 0 tape(s) reach the ON site; ON-site asks (ON, with apitems in the room or not): 77

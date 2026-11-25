@@ -4011,6 +4011,8 @@ export function createLevelRun({
     const dropRock = (rockState, id) => {
         const pub = publishActivate(rockState, true);
         if (!pub.fell) return { state: rockState, fell: false };
+        // ⛓ fidelity PLAINSPAN D2 (ON only): the pull frame's apitems, all of them, under the post-(P−1) box.
+        takePlainPickupsInFreezeNow(playerBoxAt(state.x, state.y), 'the pull');
         let s = pub.state;
         let frames = 0;
         let snapY = null;
@@ -16164,6 +16166,39 @@ export function createLevelRun({
     }
     /** ⛓ fidelity NESTEDFREEZE D2: the frame-A rocks awaiting their ceremony's detection (`{t, level, ids, start}`). */
     let nestedRockFall = null;
+    /** ⛓ fidelity PLAINSPAN D2: the apitems the run took itself, `{id, level, tag, t, why, banked}` (OFF: empty). */
+    const plainFreezeTakes = [];
+    /** ⛓ fidelity PLAINSPAN D2: `"<visit>:<level>:<id>"` of every apitem this key took (a `tag -1` one banks nothing). */
+    const plainFreezeTaken = new Set();
+    /**
+     * ⛓⛓ fidelity PLAINSPAN D2 (`CONTACT_FIDELITY.plainPickupInFreeze`; OFF never called past its first line) — EVERY
+     * PLAIN PICKUP UNDER THE BOX THE GAME TESTS ON A FREEZE'S FRAME. `Pickup.update`'s collide has no freeze gate and an
+     * `APItem`'s `pick_up()` is `removeSelf()` (`Pickups/Pickup.as:63-84,120-123`), whose `removed()` writes the slot
+     * and the check report (`APItem.as:127-133`) — for every apitem under the box, on that frame (the key's doc). Banked
+     * as `takeApItem` banks a told take (`apItemFlags`, `pendingEarnedClears`), with `t` = the tick's end, the tick a
+     * solver report of this same tick carries; an apitem already banked (told or taken here) is skipped, so a later
+     * report is `takeApItem`'s own no-op. Every take is listed in `plainFreezeTakes` with the site (`why`).
+     *
+     * @param {{x:number, y:number, right:number, bottom:number}} box the player box the game's apitems test
+     * @param {string} why the frame (`frame A`, `the pull`, `a ceremony's T`, `the wand's snap`, `the deferred step`)
+     */
+    function takePlainPickupsInFreezeNow(box, why) {
+        if (!CONTACT_FIDELITY.plainPickupInFreeze || noclip) return;
+        for (const a of world.apItems ?? []) {
+            const visitKey = `${transitions.length}:${level}:${a.id}`;
+            if (plainFreezeTaken.has(visitKey)) continue;
+            if (a.tag >= 0 && apItemFlags.has(`${level}:${a.tag}`)) continue;
+            if (!rectsOverlap(box, a.rect)) continue;
+            plainFreezeTaken.add(visitKey);
+            const t = ticksCompleted + 1;
+            if (a.tag >= 0) {
+                apItemFlags.set(`${level}:${a.tag}`, { id: a.id, level, tag: a.tag, t });
+                if (!pendingEarnedClears.has(level)) pendingEarnedClears.set(level, new Set());
+                pendingEarnedClears.get(level).add(a.tag);
+            }
+            plainFreezeTakes.push({ id: a.id, level, tag: a.tag, t, why, banked: a.tag >= 0 });
+        }
+    }
     /**
      * ⛓⛓ fidelity NESTEDFREEZE D2 (ON only) — THE ROCKS OF A UNION, AT ITS CEREMONY'S DETECTION (below the runtime and
      * placed starts, so the ceremony has spent its phase A and run its lumps). The rocks are stepped ALONE
@@ -20319,6 +20354,8 @@ export function createLevelRun({
          */
         get treeBurns() { return treeBurnsNow(); },
         get rockFalls() { return rockFalls.map((r) => ({ ...r, flag: r.flag && { ...r.flag } })); },
+        /** ⛓ fidelity PLAINSPAN D2 (`plainPickupInFreeze` ON; OFF always empty): the apitems the run took itself. */
+        get plainFreezeTakes() { return plainFreezeTakes.map((r) => ({ ...r })); },
         /**
          * ⛓ U14-swim D1: the moonrock — `beam` and `rockSet` (the two save
          * statics, live), this room's rocks, and the events the run made
@@ -23140,6 +23177,8 @@ export function createLevelRun({
                         + 'this path returns above `stepPullsNow`. Refused by name (U12-swim D1).');
                 }
                 const ids = pendingButtonFalls;
+                // ⛓ fidelity PLAINSPAN D2 (ON only): frame A's apitems, all of them, under the post-(A−1) box.
+                takePlainPickupsInFreezeNow(playerBoxAt(state.x, state.y), 'frame A');
                 // ⛓ fidelity RELEASEPICKUP D2 (ON only): frame A's position, which the pickups ask inside the span.
                 assertNoPickupInRockSpanNow('a button-dropped fallrock');
                 pendingButtonFalls = null;
@@ -23903,6 +23942,11 @@ export function createLevelRun({
                     }
                 }
             }
+            // ⛓ fidelity PLAINSPAN D2 (ON only): a ceremony's T — its apitems, all of them, under the box its start tested.
+            if (CONTACT_FIDELITY.plainPickupInFreeze && ceremonyStarts.at(-1)?.t === ticksCompleted
+                && ceremonyStarts.at(-1).level === level) {
+                takePlainPickupsInFreezeNow(playerBoxAt(state.x, state.y), 'a ceremony\'s T');
+            }
             // ⛓ fidelity NESTEDFREEZE D2 (ON only): a union's rocks, once its ceremony has started.
             if (nestedRockFall !== null) startNestedRockSpanNow();
             // ⛓ fidelity PICKUPFREEZE D2 (ON only): the slots' prediction against what the detection found.
@@ -24213,6 +24257,8 @@ export function createLevelRun({
                         // is frozen, so the LAST snap is where the next live
                         // tick starts from.
                         if (dropped.snapY !== null) state.y = dropped.snapY;
+                        // ⛓ fidelity PLAINSPAN D2 (ON only): the landing frame's apitems, under the snapped box.
+                        if (dropped.snapY !== null) takePlainPickupsInFreezeNow(playerBoxAt(state.x, state.y), 'the wand\'s snap');
                         // ⛓ fidelity RELEASEPICKUP D2 (ON only): the snapped position, which the pickups ask too.
                         if (dropped.snapY !== null) {
                             assertNoPickupInRockSpanNow('the wand\'s fallrocks', { x: state.x, y: state.y });
@@ -24818,6 +24864,8 @@ export function createLevelRun({
                         + (unobserved.death ? ` (It was a DEATH, \`${unobserved.death.source}\`.)` : ''));
                 }
                 state = unobserved;
+                // ⛓ fidelity PLAINSPAN D2 (ON only): R+1's apitems test the post-R box, this deferred step's.
+                takePlainPickupsInFreezeNow(playerBoxAt(state.x, state.y), 'the deferred step');
             }
             pendingFreeSteps = 0;
             // ── ⛓⛓⛓ R6 SLICE 3: `if (!dying) super.update()` ─────────
