@@ -1,0 +1,12 @@
+CONTROL wave 60 first staging (expect one of each): levels 1; chests 1; with a responder over them 1; groups with two plain Buttons 1; recursion shapes 1
+  covered: L38 chest@144,112 under cover@144,112 (t 0)
+  two Buttons: L38 t 0: button@80,192, button@144,128
+  recursion: L38 t 0: button@80,192[always], button@144,128[always]
+CONTROL Button + ButtonRoom{-1, flip 0} (expect a recursion, no two Buttons): levels 1; chests 1; with a responder over them 1; groups with two plain Buttons 0; recursion shapes 1
+  covered: L38 chest@144,112 under cover@144,112 (t 0)
+  recursion: L38 t 0: button@80,192[always], buttonroom@144,128[true]
+CONTROL Button + ButtonRoom{-1, flip 1} (expect none): levels 1; chests 1; with a responder over them 1; groups with two plain Buttons 0; recursion shapes 0
+  covered: L38 chest@144,112 under cover@144,112 (t 0)
+vanilla atlas: levels 116; chests 16; with a responder over them 1; groups with two plain Buttons 0; recursion shapes 0
+  covered: L38 chest@144,112 under cover@144,112 (t 0)
+delivered (playthrough AP_1, p4g): levels 116; chests 0; with a responder over them 0; groups with two plain Buttons 0; recursion shapes 0
