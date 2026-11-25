@@ -145,9 +145,59 @@ at full viewport. There were 0 page errors.
 | `4-card-buy-supplies.png` | The exit cluster's card: needs Combat 2, Magic 2, Gold 6; "needs Combat 2 (has 1)" |
 | `4-card-warrior-lessons.png` | A card not reached yet (Investigate not cleared this loop) |
 
-## 7. CI at the tip
+## 7. CI
 
-PENDING (filled in by the next commit's text, or the planner's report back; a commit cannot quote its own runs).
+**At the pre-merge tip `599b38c5c3`** (all success):
+- unittests `45476415142`.
+- JSUT `45476415038`: 30,075 / 0 failed, slow 457/457, Producer --checks green (with the `action-nodes-compile` row).
+- TT `45476525255`: fast 53 %, fast bundled 57 %, playback-bot 19 % of the budget; `an-*` 13/13 on both boots, `an-bot` 1/1.
+- feature-checks `45476530845`.
+
+**At the final tip** (the commit after the merge, this report): the planner's report back and memory carry the ids.
+A commit cannot quote its own runs.
+
+## 8. Also in the diff: a comment-only workflow edit
+
+`.github/workflows/unittests_frontend.yml` changes only comments, in the `producer-checks` job's header:
+- the glob list now names `action-nodes-compile.mjs` (its `--check` covers every committed ActionNodes preset);
+- its import closure needs only the `shared/` submodule (measured), which the job already checks out.
+
+No step, trigger or path filter changed.
+
+## 9. The merge of main `73c96473f5` (train 209: AN-OMSI-1 + LAB-BIOME, on GEN-2's `c2cdfaac3e`)
+
+Merged once, as merge commit `35af60ac77`. Three files conflicted, and each was resolved by regeneration, not by
+picking a side:
+- `preset_files.json`: main's file plus the one `action_nodes_omsi_town` entry. Every other key equals main's
+  (checked).
+- The procgen `README.md` and `docsIndex.js`, plus `instruments.js`: rewritten by `generate-procgen-reference.mjs`.
+  `--check` matches. `check-procgen-docs.mjs`: all passed. It was queued behind another session's box lock with
+  `--wait-for-box`.
+
+**Identity after the merge:**
+- `action-nodes-compile.mjs --check`: both presets byte-identical.
+- Against main, `frontend/presets` differs only by the new preset and its one entry; `action_nodes_example` is
+  unchanged.
+- Gitlinks 0.
+- Closure ∩ diff = ∅ (43 lines, `a3565f4e6866438e`).
+
+**The roster delta re-measured, base = main `73c96473f5` → the merge.** It is the same shape as § 3, shifted by
+GEN-2's preset. The sweep was 444 default-tier files, including `procgenDocs/` and `quickLaunch/` whole. The base
+was emulated with the preset unstaged and moved aside, then restored from HEAD.
+
+| Roster | Base → tip |
+|---|---|
+| `jsonSchemaCheck.test.js` | all **228** → all **229** |
+| `actionGraphCompiler.test.js` | +2 omsi rows; the roster row is red at the emulated base by construction |
+| `check-sidecar-fields.mjs` | documents 228 (59) → 229 (60); entries 2,433 → 2,453 (`action_nodes` 10 → 30); 0 issues both sides |
+| everything else | no test name moved |
+
+**Reds in that run, none from this slice:**
+- 13 files need the wasm `builds.json`, the same as before.
+- The extra reds at the tip were `seedlingSolverSurface` (a hook timeout), `seedlingErProducerDecoupling`,
+  `fidelityLightPole`, `mazeInputOutputSplit`, `seedlingWasmPlayback` and `certifyEventLocations`. Each was green when
+  re-run alone. `mapDocumentPath` and `probeSeedlingErRetarget` hit the same wasm ENOENT.
+- Docs pins (`procgenDocs/`) stayed at 453 links after the merge: main moved no link.
 
 ## Next
 
