@@ -584,9 +584,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 28,
         "lightsVerb.js": 1,
-        "solverBot.js": 256
+        "solverBot.js": 257
       },
-      "sites": 398,
+      "sites": 399,
       "seen": "both",
       "via": [
         "direct",
@@ -690,7 +690,7 @@
         },
         "openBridges": {
           "botDriverV2.js": 4,
-          "solverBot.js": 1
+          "solverBot.js": 2
         },
         "openChests": {
           "botDriverV2.js": 7,

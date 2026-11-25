@@ -1,0 +1,4 @@
+L61: 2 bridge tile(s) [11,13 10,13] NEAR PAIRS (10,13)-(11,13)
+L63: 1 bridge tile(s) [2,9]
+L66: 1 bridge tile(s) [7,9]
+L93: 1 bridge tile(s) [7,13]

@@ -1,0 +1,7 @@
+LEGA 395 goal=cleartag door=1 idle=0 env[HOOK_EB_KT=1] ok=false work=642 ticks=null ms=22752
+  passes=[{"pass":"dashless","ok":false,"kind":"refusal","ticks":null,"work":641,"deadline":"crusher-fork","limit":"budget"},{"pass":"full","ok":false,"kind":"refusal","ticks":null,"work":1,"deadline":"stance-hypothesis","limit":"budget"}]
+  message=solverBot(kt-leg) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (488,904): solverBot: no REACHABLE stance on bosslock@480,352's key line in level 40 — 0 cell(s) put the player box on the line when walked into the lock, none with a corridor from (488,904). ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `stance-hypothesis`) and refused 1 `stance-hypothesis` scan(s) — this refusal may be the deadline's, not the room's.
+  KEYLOCK_TURRET_COUNTS={"stances":[{"lock":"bosslock@480,352","t":0,"turrets":["iceturret@472,400"],"live":["iceturret@472,400"],"stance":{"x":488,"y":376}},{"lock":"bosslock@480,352","t":0,"turrets":["iceturret@472,400"],"live":["iceturret@472,400"],"stance":null}],"kills":[{"lock":"bosslock@480,352","turret":"iceturret@472,400","t":0,"dead":false,"ticks":284,"why":"solverBot(kt-leg) clear-tag {40,8} bosslock@480,352 -> keylock -> kill (iceturret@472,400): deadline at the `crusher-fork` site after 68 approach tr(ies)"}]}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS={"asked":[]}
+  TURRET_APPROACH_COUNTS={"approaches":[]}
+  ICETURRET_STATIC_KILL_COUNTS={"handed":[],"kills":[]}
