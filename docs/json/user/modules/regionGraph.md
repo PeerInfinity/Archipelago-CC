@@ -74,6 +74,12 @@ Some worlds split one region into several **sub-regions** (a Seedling level is c
 
 Worlds without sub-regions (most Archipelago worlds) look the same in every option. Changing it redraws the graph, keeping the regions where they were. The setting is `moduleSettings.regionGraph.subRegionView` (`separate`, `nested`, `merged` or `collapsible`).
 
+**Node look** (beside **Draw as**) chooses how each node is drawn:
+- **Graph nodes** (the default) — the graph's own coloured nodes, as above.
+- **Region Map cells** — each node is drawn as that region's cell on the [Region Map](regionMap.md): the level's picture (on worlds with level art, such as Seedling; a plain dark cell on worlds without, such as A Link to the Past), its location squares coloured by state (green accessible, red not yet, grey checked, light grey unknown), and its name in the top-left corner once the cell is wide enough. It is the Region Map's own drawing, so the two panels always look alike. The nodes stay where the graph's layout put them; each becomes a rectangle shaped like its level. The border keeps the graph's colours (green when accessible, yellow for the player's region, purple on the path, red when selected), and the edges, the player marker and the location nodes are drawn on top. Click a location square to run the **On click** Location actions on that location, as on the Region Map; click anywhere else on the node to run the Region actions, as usual. A region with no Region Map cell (Seedling's `Menu`) keeps its graph node.
+
+  **Region Map cells** works with **Draw as: Merged into one node per region** only, the view that draws one node per region as the Region Map does. With any other **Draw as** the nodes are drawn as **Graph nodes**, and the **Node look** box is greyed out with a note saying so; your choice is kept and comes back when you switch to **Merged**. Changing **Node look** does not redraw or re-arrange the graph. The setting is `moduleSettings.regionGraph.nodeLook` (`graph` or `map`).
+
 The force-directed layouts (**Force-Directed**, COSE) arrange the boxes around their sub-regions. The layouts that do not know about boxes (breadth-first, circle, grid, concentric, the procgen grid, a preset) place the sub-regions as usual and draw each box around wherever its sub-regions landed, so a box can be large or overlap another; use **Re-layout** with a force-directed layout for a tidy picture.
 
 ### Location Visibility

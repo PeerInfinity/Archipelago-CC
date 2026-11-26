@@ -15,7 +15,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gunzipSync } from 'node:zlib';
 
-import { HAMMER_PHASE_RUNG, PRESS_KILL_HOLD_COUNTS, withPressKillHold } from './solverBot.js';
+import { HAMMER_PHASE_RUNG, PRESS_KILL_HOLD_COUNTS, withPressKillHold, withPreviewMeter } from './solverBot.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { ANYTIME_PASSES, replayTape, solveAnytime } from './jsRuntimeSolver.js';
@@ -36,7 +36,10 @@ function solve(on, budgetWork) {
 
 describe('hammer-phase KILL880: PRESS_KILL_HOLD on the captured L40 Chest press-kill corner (train)', () => {
     it('OFF: the press kill refuses HAMMER_SAFETY ("There is no step out"), and no hold is asked', () => {
-        const { answer, tape, rows } = solve(false, CAPTURED.request.budgetWork);
+        // ⛓ `PREVIEW_METER` held OFF for this row: it ships ON since the BOS/GSW/PM flip (⚖ the user, 2026-11-25), and ON the
+        //   meter's asks carry this same refusal to the 640 budget's edge (work 641, the same message). The row pins the
+        //   in-budget HAMMER_SAFETY refusal PRESS_KILL_HOLD answers; the meter's effect is measured by the flip's sweeps.
+        const { answer, tape, rows } = withPreviewMeter(false, () => solve(false, CAPTURED.request.budgetWork));
         expect(answer.ok).toBe(false);
         expect(answer.kind).toBe('refusal');
         expect(answer.message).toContain('kill (spinner@880,848) by press');

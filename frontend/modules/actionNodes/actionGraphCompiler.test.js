@@ -1,6 +1,6 @@
 // actionNodes/actionGraphCompiler — the compiled world, its A6 proof, and the committed preset.
 import { describe, expect, it } from 'vitest';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -18,7 +18,9 @@ import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { sidecarFieldsOf, sidecarPayloadErrors } from '../procgenCore/sidecarFields.js';
 import { substrateRegistryEntry } from './actionNodesLibrary.js';
-import { DEFAULT_EXISTS, DEFAULT_GRAPH, DEFAULT_OUT } from '../../../scripts/procgen/action-nodes-compile.mjs';
+import {
+    DEFAULT_EXISTS, DEFAULT_GRAPH, DEFAULT_OUT, committedActionPresets,
+} from '../../../scripts/procgen/action-nodes-compile.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '../../..');
@@ -40,6 +42,28 @@ describe('⛓ the committed preset IS the compiled example', () => {
         expect(row.folders.AP_1.seed).toBe(1);
         expect(row.folders.AP_1.files).toEqual(['AP_1_rules.json']);
         expect(row.folders.AP_1.games[0].game).toBe(rules.game_name);
+    });
+});
+
+describe('⛓ EVERY committed ActionNodes preset IS its compiled graph (the CLI\'s derived roster, AN-OMSI-2)', () => {
+    const roster = committedActionPresets();
+    const index = JSON.parse(readFileSync(join(REPO, 'frontend/presets/preset_files.json'), 'utf8'));
+    it('the roster derives the example\'s recipe exactly, and names every ActionNodes graph under graphs/', () => {
+        expect(roster).toContainEqual({ out: DEFAULT_OUT, graph: DEFAULT_GRAPH, seed: 1, exists: [...DEFAULT_EXISTS] });
+        // A shipped graph with no preset is a graph nothing compiles; a preset's graph outside graphs/ is unshipped.
+        const shipped = readdirSync(join(HERE, 'graphs')).filter((f) => f.endsWith('.json'))
+            .map((f) => `frontend/modules/actionNodes/graphs/${f}`).sort();
+        expect([...new Set(roster.map((r) => r.graph))].sort()).toEqual(shipped);
+    });
+    it.each(roster.map((r) => [r.out, r]))('%s is byte-identical to its recipe', (_, r) => {
+        const graph = JSON.parse(readFileSync(join(REPO, r.graph), 'utf8'));
+        const compiled = compileActionGraph(graph, { seed: r.seed, graphPath: r.graph, exists: r.exists });
+        expect(readFileSync(join(REPO, r.out), 'utf8')).toBe(`${stringifyRulesJson(compiled.rules)}\n`);
+    });
+    it.each(roster.map((r) => [r.out, r]))('⛔ %s: its preset_files.json row\'s seed IS the compiled seed (else ?seed= loads the DEFAULT preset)', (_, r) => {
+        const [, dir, folder] = r.out.match(/^frontend\/presets\/([^/]+)\/([^/]+)\//);
+        expect(index[dir].folders[folder].seed).toBe(r.seed);
+        expect(folder).toBe(`AP_${r.seed}`);
     });
 });
 

@@ -76,6 +76,12 @@
             "_comment": "AN-3b limit (a): the Region Graph panel closed and reopened shows a card per node again with no world reload (regionGraph:panelMounted → ActionNodes re-registers)."
         },
         {
+            "id": "an-omsi-town-load-and-act",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-OMSI-3: the omsi town preset (action_nodes_omsi_town) loads; a card per node; the start's neighbours show price, used/limit and needs as the preset states them; the goal's supplier (Buy Supplies) is blocked with its unmet line; one performance at a free check node pays its price and sends its check."
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
@@ -2262,7 +2268,7 @@
             "id": "test_region_graph_sub_region_merged",
             "enabled": true,
             "category": "Region Graph",
-            "_comment": "REGION GRAPH GROUPS B (2026-11-24): on seedling_atlas (11 regions, 2 groups: the nested row's world), subRegionView = merged (set session-only by the row, restored at its end) draws one node per display group of 2+ in place of its members (counts DERIVED from the same fold at run time), no self-loop; a tap on a group node runs the REGION click on regionOfCell(key, members), the Region Map's rule, published once; restored, every region is its own node. Runs right after test_region_graph_sub_region_nested, before test_region_graph_click_default. Reloads the world loaded before. On push (fast batch)."
+            "_comment": "REGION GRAPH GROUPS B (2026-11-24): on seedling_atlas (11 regions, 2 groups: the nested row's world), subRegionView = merged (set session-only by the row, restored at its end) draws one node per display group of 2+ in place of its members (counts DERIVED from the same fold at run time), no self-loop; a tap on a group node runs the REGION click on regionOfCell(key, members), the Region Map's rule, published once; restored, every region is its own node. REGION GRAPH MAP LOOK (2026-11-25): in merged it also sets nodeLook = map (session-only; no rebuild), reads that every node with a Region Map cell painted as one, and a pointer click on a location square runs the LOCATION click on it once; in collapsible the stored map takes no effect; restored, nodeLook reads graph and no map canvas is left. Runs right after test_region_graph_sub_region_nested, before test_region_graph_click_default. Reloads the world loaded before. On push (fast batch)."
         },
         {
             "id": "test_region_graph_click_default",
@@ -2498,6 +2504,12 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "AN-3a (design §7): the ActionNodes example in Loop mode; the runner asks the entry's loopBot.planLoop for each loop (free hops + acts) until the goal is checked; each loop's reason is in the log (logReasoning on). AN-3b: the runner replans mid-loop when an item arrives (the replan in the log, the goal in <= the pure planner's loop count, the Q1 attempt named; Instant can complete the attempt a loop early: a known Loops gap)."
+        },
+        {
+            "id": "an-omsi-bot-plays-to-goal",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "AN-OMSI-3: the Playback Bot plays the omsi town to Start Journey in Loop mode in EXACTLY 7 loops (XP scale 1), equal to the pure planner and the headless live path (pinned headless in actionNodesTownScale.slow.test.js)."
         },
         {
             "id": "playback-bot-loop-mode-maze",

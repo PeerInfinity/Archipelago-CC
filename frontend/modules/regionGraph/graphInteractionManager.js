@@ -23,7 +23,7 @@ export class GraphInteractionManager {
   }
 
   setupEventHandlers() {
-    this.ui.cy.on('tap', 'node', (evt) => this.onNodeTap(evt.target));
+    this.ui.cy.on('tap', 'node', (evt) => this.onNodeTap(evt.target, evt));
 
     this.ui.cy.on('layoutstop', () => {
       // Keep isLayoutRunning true during animation to prevent premature player positioning
@@ -182,9 +182,14 @@ export class GraphInteractionManager {
    * (`moduleSettings.regionGraph.clickActions.location`, the "On click" strip; slice CA-S2).
    */
   handleLocationNodeClick(node) {
-    const locationName = node.data('locationName') || node.data('label');
-    const parentRegion = node.data('parentRegion');
+    return this.handleLocationClick(node.data('locationName') || node.data('label'), node.data('parentRegion'));
+  }
 
+  /**
+   * A click on location `locationName` of rules region `parentRegion`: a location node's tap, or (nodeLook = map;
+   * region-graph-map-look) a tap on that location's square in its region's map cell.
+   */
+  handleLocationClick(locationName, parentRegion) {
     logger.debug(`Location node clicked: ${locationName} in ${parentRegion}`);
     // ⛓ CA-S4: the generic click event (design §4.3), before the actions, as the Region Map publishes it.
     this.eventBus.publish(LOCATION_CLICKED, { panelId: 'regionGraph', regionName: parentRegion, locationName });
@@ -257,9 +262,12 @@ export class GraphInteractionManager {
    * marker and a group box (subRegionView = nested: a compound parent, not a region) run none.
    * → the click's result, or null when nothing ran.
    */
-  onNodeTap(node) {
+  onNodeTap(node, evt = null) {
     if (node.hasClass('player') || isRegionGroupNode(node, 'box')) return null;
     if (node.hasClass('location-node')) return this.handleLocationNodeClick(node);
+    // ⛓ nodeLook = map (region-graph-map-look): a tap on a location SQUARE acts as that location, as on the Region Map.
+    const square = this.ui.mapLook?.squareAtNode?.(node, evt?.renderedPosition);
+    if (square) return this.handleLocationClick(square.location, square.region);
     // ⛓ merged: a group node ACTS, on the region the Region Map's cell click picks for that group.
     if (isRegionGroupNode(node, 'merged')) return this.handleRegionNodeClick(node, this.regionOfGroupNode(node));
     return this.handleRegionNodeClick(node);

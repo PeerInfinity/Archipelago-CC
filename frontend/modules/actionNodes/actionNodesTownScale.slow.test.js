@@ -1,6 +1,9 @@
 // actionNodes at TOWN SIZE (slice AN-OMSI-1): the planner's relevance cone and the compiler's fill retry, pinned on
-// the omsi first-town test fixture (`fixtures/omsi-first-town.json`: 20 nodes, 18 checks, 18 items). Slow tier: one
+// the SHIPPED omsi first-town graph (`graphs/omsi-first-town.json`: 20 nodes, 18 checks, 18 items). Slow tier: one
 // logic derivation (~4 s) and two headless plays to the goal are synchronous, CPU-bound work.
+// ⛓ ONE COPY (AN-OMSI-2): AN-OMSI-1 pinned these on a test-fixture copy of the town; that copy was deleted when the
+// graph shipped, so a change to the shipped town is measured here, never against a frozen twin that drifts from it.
+// (The fixture's graph_id and name differed; neither feeds the search or the fill, measured: same placement.)
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -15,7 +18,7 @@ import {
 } from './actionGraphCompiler.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const TOWN = JSON.parse(readFileSync(join(HERE, 'fixtures/omsi-first-town.json'), 'utf8'));
+const TOWN = JSON.parse(readFileSync(join(HERE, 'graphs/omsi-first-town.json'), 'utf8'));
 const town = buildActionModel(TOWN);
 const ALL_ITEMS = Object.fromEntries(town.boons.map((b) => [b.id, b.count]));
 const targetsOf = (model) => [...model.checkIndices, model.goalIndex];
