@@ -866,8 +866,7 @@ export async function testRegionGraphSubRegionMerged(testController) {
       const cx = b.left + b.width / 2; const cy2 = b.top + b.height / 2;
       return { b, dx: at.x - rbb.x2, dy: at.y - rbb.y1, rbb, pending: ui.groupBadges?._frame != null,
         shown: plus.style.display === 'block' && b.width > 0 && b.height > 0, layout: !colLayouts.idle(),
-        // covers the corner: within half its hit square (a node style change that resizes the node moves no position
-        // and fires no viewport event, so the badge can sit a few px off the exact corner; it still covers it)
+        // covers the corner: within half its hit square (the wait's condition; the exact corner is asserted below)
         onCorner: Math.abs(at.x - rbb.x2) <= b.width / 2 && Math.abs(at.y - rbb.y1) <= b.height / 2,
         inside: cx >= box.left && cx <= box.right && cy2 >= box.top && cy2 <= box.bottom };
     };
@@ -885,6 +884,12 @@ export async function testRegionGraphSubRegionMerged(testController) {
       + `(hit ${plus.contains(hit) ? 'the badge' : hitName}; layout ${colLayouts.state()}, on corner ${st.onCorner} `
       + `[dx ${st.dx.toFixed(1)}, dy ${st.dy.toFixed(1)}, node ${st.rbb.w.toFixed(1)}×${st.rbb.h.toFixed(1)}], sync pending ${st.pending}, inside ${st.inside})`,
       shownOk && !!hit && plus.contains(hit));
+    // ⛓ region-graph-badge-resize: a style change that resizes the node (the map look's size bypass leaving, a class)
+    // moves no position and fires no viewport event; the layer re-places the badge on the node's `style` event, so
+    // once nothing is pending the badge sits EXACTLY on the corner (it sat dx −4.8, dy 3.8 off before).
+    testController.reportCondition(`the + badge on "${key}" sits exactly on its node's corner after the map look `
+      + `(|dx| ${Math.abs(st.dx).toFixed(2)}, |dy| ${Math.abs(st.dy).toFixed(2)} ≤ 0.5 px)`,
+      shownOk && Math.abs(st.dx) <= 0.5 && Math.abs(st.dy) <= 0.5);
     const groupSize = expected.get(key)?.length ?? 0;
     const t2 = performance.now();
     plus.click();
