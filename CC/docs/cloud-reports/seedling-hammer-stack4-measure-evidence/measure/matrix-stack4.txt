@@ -1,0 +1,152 @@
+leg376-l40 | level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144 (seam 5271 capture) | off     | SOLVED 1614 t | work 567 | ans 330c2f595a6b | hits: t1248 bomb:bombpusher@112,128#9 <- row1112 kill | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg376-l40 | level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144 (seam 5271 capture) | all4    | SOLVED 1599 t | work 322 | ans e1a48e4ab2b2 | hits: none | deaths 0 | pksw 0 pkrb 40/28 dss 3 lhm 0/0m
+leg376-l40 | level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144 (seam 5271 capture) | noPKRB  | SOLVED 1614 t | work 567 | ans 330c2f595a6b | hits: t1248 bomb:bombpusher@112,128#9 <- row1112 kill | deaths 0 | pksw 0 pkrb 0/0 dss 3 lhm 1/0m
+leg376-l40 | level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144 (seam 5271 capture) | noLHM   | SOLVED 1599 t | work 322 | ans e1a48e4ab2b2 | hits: none | deaths 0 | pksw 0 pkrb 40/28 dss 3 lhm 0/0m
+leg376-l40 | level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144 (seam 5271 capture) | noDSS   | SOLVED 1599 t | work 322 | ans e1a48e4ab2b2 | hits: none | deaths 0 | pksw 0 pkrb 40/28 dss 0 lhm 0/0m
+
+leg371-l40 | level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144 | off     | SOLVED 1805 t | work 406 | ans f85c79c425cf | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg371-l40 | level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144 | all4    | SOLVED 1678 t | work 455 | ans 16ae75667c23 | hits: none | deaths 0 | pksw 0 pkrb 44/28 dss 2 lhm 2/2m
+leg371-l40 | level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144 | noPKRB  | SOLVED 1796 t | work 430 | ans 3d1bccefb626 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 3 lhm 1/1m
+leg371-l40 | level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144 | noLHM   | REFUSED apitem (64,144) contact -> hold: the hold stands still for up to 131 t | work 283 | ans d0eca1954299 | hits: - | deaths None | pksw 0 pkrb 44/28 dss 2 lhm 0/0m
+leg371-l40 | level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144 | noDSS   | SOLVED 1678 t | work 455 | ans 16ae75667c23 | hits: none | deaths 0 | pksw 0 pkrb 44/28 dss 0 lhm 2/2m
+
+chest-L39 | level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest | off     | SOLVED 1317 t | work 1899 | ans adb8f1aa327a | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+chest-L39 | level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest | all4    | SOLVED 1317 t | work 1899 | ans adb8f1aa327a | hits: none | deaths 0 | pksw 0 pkrb 8/0 dss 0 lhm 0/0m
+chest-L39 | level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest | noPKRB  | SOLVED 1317 t | work 1899 | ans adb8f1aa327a | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+chest-L39 | level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest | noLHM   | SOLVED 1317 t | work 1899 | ans adb8f1aa327a | hits: none | deaths 0 | pksw 0 pkrb 8/0 dss 0 lhm 0/0m
+chest-L39 | level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest | noDSS   | SOLVED 1317 t | work 1899 | ans adb8f1aa327a | hits: none | deaths 0 | pksw 0 pkrb 8/0 dss 0 lhm 0/0m
+
+leg873-l39-l40-bk2 | level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | off     | SOLVED 4491 t | work 2561 | ans 535a61951b01 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg873-l39-l40-bk2 | level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | all4    | SOLVED 4491 t | work 2561 | ans 535a61951b01 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg873-l39-l40-bk2 | level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | noPKRB  | SOLVED 4491 t | work 2561 | ans 535a61951b01 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg873-l39-l40-bk2 | level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | noLHM   | SOLVED 4491 t | work 2561 | ans 535a61951b01 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg873-l39-l40-bk2 | level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | noDSS   | SOLVED 4491 t | work 2561 | ans 535a61951b01 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+
+leg874-l43-l40-bk2 | level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | off     | SOLVED 4308 t | work 1706 | ans a9ccf0f57ae7 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg874-l43-l40-bk2 | level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | all4    | SOLVED 4308 t | work 1706 | ans a9ccf0f57ae7 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg874-l43-l40-bk2 | level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | noPKRB  | SOLVED 4308 t | work 1706 | ans a9ccf0f57ae7 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg874-l43-l40-bk2 | level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | noLHM   | SOLVED 4308 t | work 1706 | ans a9ccf0f57ae7 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg874-l43-l40-bk2 | level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | noDSS   | SOLVED 4308 t | work 1706 | ans a9ccf0f57ae7 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+
+leg398-l39-l40-flag8 | level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared | off     | SOLVED 718 t | work 1482 | ans 981a17d6218e | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg398-l39-l40-flag8 | level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared | all4    | SOLVED 718 t | work 1482 | ans 981a17d6218e | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 1 lhm 0/0m
+leg398-l39-l40-flag8 | level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared | noPKRB  | SOLVED 718 t | work 1482 | ans 981a17d6218e | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 1 lhm 0/0m
+leg398-l39-l40-flag8 | level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared | noLHM   | SOLVED 718 t | work 1482 | ans 981a17d6218e | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 1 lhm 0/0m
+leg398-l39-l40-flag8 | level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared | noDSS   | SOLVED 718 t | work 1482 | ans 981a17d6218e | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+
+leg388-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21 | off     | SOLVED 1156 t | work 525 | ans 9637801db14d | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg388-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21 | all4    | SOLVED 1156 t | work 525 | ans 9637801db14d | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg388-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21 | noPKRB  | SOLVED 1156 t | work 525 | ans 9637801db14d | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg388-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21 | noLHM   | SOLVED 1156 t | work 525 | ans 9637801db14d | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg388-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21 | noDSS   | SOLVED 1156 t | work 525 | ans 9637801db14d | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+
+leg387-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21 | off     | SOLVED 1034 t | work 482 | ans 77cdce01efe4 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg387-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21 | all4    | SOLVED 1034 t | work 482 | ans 77cdce01efe4 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg387-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21 | noPKRB  | SOLVED 1034 t | work 482 | ans 77cdce01efe4 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg387-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21 | noLHM   | SOLVED 1034 t | work 482 | ans 77cdce01efe4 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg387-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21 | noDSS   | SOLVED 1034 t | work 482 | ans 77cdce01efe4 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+
+leg403-l40-l43 | level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21 | off     | SOLVED 527 t | work 191 | ans 4b6d58820416 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg403-l40-l43 | level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21 | all4    | SOLVED 527 t | work 191 | ans 4b6d58820416 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg403-l40-l43 | level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21 | noPKRB  | SOLVED 527 t | work 191 | ans 4b6d58820416 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg403-l40-l43 | level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21 | noLHM   | SOLVED 527 t | work 191 | ans 4b6d58820416 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg403-l40-l43 | level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21 | noDSS   | SOLVED 527 t | work 191 | ans 4b6d58820416 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+
+leg377-l42-l40 | level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared | off     | SOLVED 1482 t | work 641 | ans f2a421ec7677 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg377-l42-l40 | level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared | all4    | SOLVED 1438 t | work 615 | ans 3e3fbf4bfa4a | hits: none | deaths 0 | pksw 0 pkrb 44/28 dss 1 lhm 0/0m
+leg377-l42-l40 | level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared | noPKRB  | SOLVED 1482 t | work 641 | ans f2a421ec7677 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 2 lhm 0/0m
+leg377-l42-l40 | level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared | noLHM   | SOLVED 1438 t | work 615 | ans 3e3fbf4bfa4a | hits: none | deaths 0 | pksw 0 pkrb 44/28 dss 1 lhm 0/0m
+leg377-l42-l40 | level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared | noDSS   | SOLVED 1438 t | work 615 | ans 3e3fbf4bfa4a | hits: none | deaths 0 | pksw 0 pkrb 44/28 dss 0 lhm 0/0m
+
+leg871-l39-l40 | level_40__r48c54 <- in_L39_144_0 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared | off     | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 645 | ans 785fcf0cd37f | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg871-l39-l40 | level_40__r48c54 <- in_L39_144_0 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared | all4    | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 645 | ans 785fcf0cd37f | hits: - | deaths None | pksw 0 pkrb 76/0 dss 0 lhm 0/0m
+leg871-l39-l40 | level_40__r48c54 <- in_L39_144_0 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared | noPKRB  | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 645 | ans 785fcf0cd37f | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg871-l39-l40 | level_40__r48c54 <- in_L39_144_0 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared | noLHM   | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 645 | ans 785fcf0cd37f | hits: - | deaths None | pksw 0 pkrb 76/0 dss 0 lhm 0/0m
+leg871-l39-l40 | level_40__r48c54 <- in_L39_144_0 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared | noDSS   | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 645 | ans 785fcf0cd37f | hits: - | deaths None | pksw 0 pkrb 76/0 dss 0 lhm 0/0m
+
+leg872-l43-l40 | level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared | off     | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 645 | ans 785fcf0cd37f | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg872-l43-l40 | level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared | all4    | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 645 | ans 785fcf0cd37f | hits: - | deaths None | pksw 0 pkrb 69/0 dss 0 lhm 0/0m
+leg872-l43-l40 | level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared | noPKRB  | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 645 | ans 785fcf0cd37f | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg872-l43-l40 | level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared | noLHM   | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 645 | ans 785fcf0cd37f | hits: - | deaths None | pksw 0 pkrb 69/0 dss 0 lhm 0/0m
+leg872-l43-l40 | level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared | noDSS   | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 645 | ans 785fcf0cd37f | hits: - | deaths None | pksw 0 pkrb 69/0 dss 0 lhm 0/0m
+
+leg356-l40 | level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144 | off     | SOLVED 1702 t | work 540 | ans ae37c251645d | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg356-l40 | level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144 | all4    | SOLVED 1702 t | work 540 | ans ae37c251645d | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 2 lhm 0/0m
+leg356-l40 | level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144 | noPKRB  | SOLVED 1702 t | work 540 | ans ae37c251645d | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 2 lhm 0/0m
+leg356-l40 | level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144 | noLHM   | SOLVED 1702 t | work 540 | ans ae37c251645d | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 2 lhm 0/0m
+leg356-l40 | level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144 | noDSS   | SOLVED 1702 t | work 540 | ans ae37c251645d | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+
+leg853-l40 | level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | off     | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 2562 | ans 22a13cc16402 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg853-l40 | level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | all4    | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 2562 | ans 22a13cc16402 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg853-l40 | level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | noPKRB  | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 2562 | ans 22a13cc16402 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg853-l40 | level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | noLHM   | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 2562 | ans 22a13cc16402 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg853-l40 | level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 | noDSS   | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 2562 | ans 22a13cc16402 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+
+leg367-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21 | off     | SOLVED 955 t | work 425 | ans bef31d3abaf6 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg367-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21 | all4    | SOLVED 955 t | work 425 | ans bef31d3abaf6 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg367-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21 | noPKRB  | SOLVED 955 t | work 425 | ans bef31d3abaf6 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg367-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21 | noLHM   | SOLVED 955 t | work 425 | ans bef31d3abaf6 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg367-l40-l43 | level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21 | noDSS   | SOLVED 955 t | work 425 | ans bef31d3abaf6 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+
+leg855-l41-l40-totem64 | level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144 | off     | REFUSED apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor  | work 38 | ans 28f07ce9897a | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg855-l41-l40-totem64 | level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144 | all4    | REFUSED apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor  | work 38 | ans 28f07ce9897a | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg855-l41-l40-totem64 | level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144 | noPKRB  | REFUSED apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor  | work 38 | ans 28f07ce9897a | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg855-l41-l40-totem64 | level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144 | noLHM   | REFUSED apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor  | work 38 | ans 28f07ce9897a | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg855-l41-l40-totem64 | level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144 | noDSS   | REFUSED apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor  | work 38 | ans 28f07ce9897a | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+
+leg857-l42-l40-totem64 | level_40__r4c4 <- in_L42_240_336 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144 | off     | SOLVED 1239 t | work 155 | ans ae1624a3c5be | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg857-l42-l40-totem64 | level_40__r4c4 <- in_L42_240_336 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144 | all4    | SOLVED 1239 t | work 155 | ans ae1624a3c5be | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg857-l42-l40-totem64 | level_40__r4c4 <- in_L42_240_336 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144 | noPKRB  | SOLVED 1239 t | work 155 | ans ae1624a3c5be | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg857-l42-l40-totem64 | level_40__r4c4 <- in_L42_240_336 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144 | noLHM   | SOLVED 1239 t | work 155 | ans ae1624a3c5be | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg857-l42-l40-totem64 | level_40__r4c4 <- in_L42_240_336 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144 | noDSS   | SOLVED 1239 t | work 155 | ans ae1624a3c5be | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+
+leg368 | level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144 | off     | SOLVED 1714 t | work 516 | ans b142543aace2 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+leg368 | level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144 | all4    | SOLVED 1599 t | work 573 | ans fdbc9fe9932a | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 2 lhm 1/1m
+leg368 | level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144 | noPKRB  | SOLVED 1599 t | work 573 | ans fdbc9fe9932a | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 2 lhm 1/1m
+leg368 | level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144 | noLHM   | SOLVED 1714 t | work 516 | ans b142543aace2 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 2 lhm 0/0m
+leg368 | level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144 | noDSS   | SOLVED 1599 t | work 573 | ans fdbc9fe9932a | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 1/1m
+
+A1 32:10 seam=+0 | off     | REFUSED tion-40) apitem (64,144) contact -> hold stance (wandlock@176,208) ->  | work 220 | ans 5b043103efee | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+A1 32:10 seam=+0 | all4    | SOLVED 651 t | work 453 | ans 48df428d9405 | hits: none | deaths 0 | pksw 2 pkrb 144/122 dss 1 lhm 1/0m
+A1 32:10 seam=+0 | noPKRB  | SOLVED 797 t | work 569 | ans 353a67c41561 | hits: t1690 bomb:bombpusher@112,128#9 <- row1663 kill | deaths 0 | pksw 2 pkrb 0/0 dss 2 lhm 0/0m
+A1 32:10 seam=+0 | noLHM   | SOLVED 651 t | work 453 | ans 48df428d9405 | hits: none | deaths 0 | pksw 2 pkrb 144/122 dss 1 lhm 0/0m
+A1 32:10 seam=+0 | noDSS   | SOLVED 651 t | work 453 | ans 48df428d9405 | hits: none | deaths 0 | pksw 2 pkrb 144/122 dss 0 lhm 1/0m
+
+A1 32:12 seam=+0 | off     | REFUSED apitem (64,144) contact -> hold: the hold stands still for up to 131 t | work 2561 | ans 599d2ef41b84 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+A1 32:12 seam=+0 | all4    | SOLVED 1889 t | work 1866 | ans a404ddf42e41 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 1 lhm 2/2m
+A1 32:12 seam=+0 | noPKRB  | SOLVED 1889 t | work 1866 | ans a404ddf42e41 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 1 lhm 2/2m
+A1 32:12 seam=+0 | noLHM   | REFUSED apitem (64,144) contact -> hold: the hold stands still for up to 131 t | work 2561 | ans 599d2ef41b84 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+A1 32:12 seam=+0 | noDSS   | SOLVED 1889 t | work 1866 | ans a404ddf42e41 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 2/2m
+
+P1 32:10 seam=-20 | off     | SOLVED 618 t | work 454 | ans 1f12bd37804e | hits: t1598 bomb:bombpusher@112,128#7 <- row1534 kill; t1644 bomb:bombpusher@112,128#8 <- row1534 kill | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+P1 32:10 seam=-20 | all4    | SOLVED 793 t | work 486 | ans 677230dedea6 | hits: none | deaths 0 | pksw 2 pkrb 72/68 dss 1 lhm 0/0m
+P1 32:10 seam=-20 | noPKRB  | SOLVED 618 t | work 454 | ans 1f12bd37804e | hits: t1598 bomb:bombpusher@112,128#7 <- row1534 kill; t1644 bomb:bombpusher@112,128#8 <- row1534 kill | deaths 0 | pksw 0 pkrb 0/0 dss 1 lhm 0/0m
+P1 32:10 seam=-20 | noLHM   | SOLVED 793 t | work 486 | ans 677230dedea6 | hits: none | deaths 0 | pksw 2 pkrb 72/68 dss 1 lhm 0/0m
+P1 32:10 seam=-20 | noDSS   | SOLVED 793 t | work 486 | ans 677230dedea6 | hits: none | deaths 0 | pksw 2 pkrb 72/68 dss 0 lhm 0/0m
+
+P1 32:10 seam=+0 | off     | REFUSED tion-40) apitem (64,144) contact -> hold stance (wandlock@176,208) ->  | work 208 | ans 3b4bc4163c9b | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+P1 32:10 seam=+0 | all4    | SOLVED 722 t | work 443 | ans 4248256301bc | hits: none | deaths 0 | pksw 2 pkrb 0/0 dss 2 lhm 0/0m
+P1 32:10 seam=+0 | noPKRB  | SOLVED 722 t | work 443 | ans 4248256301bc | hits: none | deaths 0 | pksw 2 pkrb 0/0 dss 2 lhm 0/0m
+P1 32:10 seam=+0 | noLHM   | SOLVED 722 t | work 443 | ans 4248256301bc | hits: none | deaths 0 | pksw 2 pkrb 0/0 dss 2 lhm 0/0m
+P1 32:10 seam=+0 | noDSS   | SOLVED 722 t | work 443 | ans 4248256301bc | hits: none | deaths 0 | pksw 2 pkrb 0/0 dss 0 lhm 0/0m
+
+P1 32:10 seam=+7 | off     | SOLVED 738 t | work 462 | ans 8b13e0019082 | hits: t1644 bomb:bombpusher@112,128#8 <- row1534 kill | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+P1 32:10 seam=+7 | all4    | SOLVED 719 t | work 474 | ans 19aa9b7416fa | hits: t1644 bomb:bombpusher@112,128#8 <- row1534 kill | deaths 0 | pksw 0 pkrb 16/12 dss 2 lhm 0/0m
+P1 32:10 seam=+7 | noPKRB  | SOLVED 741 t | work 520 | ans 13ff50ee643e | hits: t1644 bomb:bombpusher@112,128#8 <- row1534 kill | deaths 0 | pksw 0 pkrb 0/0 dss 1 lhm 1/1m
+P1 32:10 seam=+7 | noLHM   | SOLVED 719 t | work 474 | ans 19aa9b7416fa | hits: t1644 bomb:bombpusher@112,128#8 <- row1534 kill | deaths 0 | pksw 0 pkrb 16/12 dss 2 lhm 0/0m
+P1 32:10 seam=+7 | noDSS   | SOLVED 719 t | work 474 | ans 19aa9b7416fa | hits: t1644 bomb:bombpusher@112,128#8 <- row1534 kill | deaths 0 | pksw 0 pkrb 16/12 dss 0 lhm 0/0m
+
+F1(rm9) 32:12 seam=+0 | off     | REFUSED apitem (64,144) contact -> hold: the hold stands still for up to 131 t | work 2561 | ans 599d2ef41b84 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+F1(rm9) 32:12 seam=+0 | all4    | SOLVED 1889 t | work 1866 | ans a404ddf42e41 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 1 lhm 2/2m
+F1(rm9) 32:12 seam=+0 | noPKRB  | SOLVED 1889 t | work 1866 | ans a404ddf42e41 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 1 lhm 2/2m
+F1(rm9) 32:12 seam=+0 | noLHM   | REFUSED apitem (64,144) contact -> hold: the hold stands still for up to 131 t | work 2561 | ans 599d2ef41b84 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+F1(rm9) 32:12 seam=+0 | noDSS   | SOLVED 1889 t | work 1866 | ans a404ddf42e41 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 2/2m
+
+F1(rm9) 32:10 seam=+0 | off     | REFUSED tion-40) apitem (64,144) contact -> hold stance (wandlock@176,208) ->  | work 220 | ans cd02c0916e6c | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+F1(rm9) 32:10 seam=+0 | all4    | SOLVED 926 t | work 361 | ans 851256c5b984 | hits: t1799 chaser:bob@272,112 <- row1755 kill | deaths 0 | pksw 0 pkrb 101/74 dss 0 lhm 0/0m
+F1(rm9) 32:10 seam=+0 | noPKRB  | SOLVED 797 t | work 563 | ans 353a67c41561 | hits: t1690 bomb:bombpusher@112,128#9 <- row1663 kill | deaths 0 | pksw 2 pkrb 0/0 dss 2 lhm 0/0m
+F1(rm9) 32:10 seam=+0 | noLHM   | SOLVED 926 t | work 361 | ans 851256c5b984 | hits: t1799 chaser:bob@272,112 <- row1755 kill | deaths 0 | pksw 0 pkrb 101/74 dss 0 lhm 0/0m
+F1(rm9) 32:10 seam=+0 | noDSS   | SOLVED 926 t | work 361 | ans 851256c5b984 | hits: t1799 chaser:bob@272,112 <- row1755 kill | deaths 0 | pksw 0 pkrb 101/74 dss 0 lhm 0/0m
+F1(rm9) 32:10 seam=+0 | pkrbDss | SOLVED 926 t | work 361 | ans 851256c5b984 | hits: t1799 chaser:bob@272,112 <- row1755 kill | deaths 0 | pksw 0 pkrb 101/74 dss 0 lhm 0/0m
+F1(rm9) 32:10 seam=+0 | pkrbOnly | SOLVED 926 t | work 361 | ans 851256c5b984 | hits: t1799 chaser:bob@272,112 <- row1755 kill | deaths 0 | pksw 0 pkrb 101/74 dss 0 lhm 0/0m
+

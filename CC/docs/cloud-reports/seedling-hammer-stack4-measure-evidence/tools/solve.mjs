@@ -41,6 +41,9 @@ if (a.ok) {
   a.plan.solution.forEach((h, k) => {
     const s = a.plan.equipsAt?.get?.(k); if (s !== undefined) run.equipNow(s);
     const n = run.playerHits.length; run.advance(h);
+    if (process.env.DUMP_KEYS) { const [lo, hi] = process.env.DUMP_KEYS.split(',').map(Number); if (P + k >= lo && P + k <= hi) {
+      const ch = ['chasers', 'spinnerBodies', 'bombs'].map((n) => `${n}=` + (run.entities(n) ?? []).map((e) => `${e.id}(${(+e.x).toFixed(0)},${(+e.y).toFixed(0)})`).join(' ')).join(' | ');
+      console.error('K', P + k, run.state.x.toFixed(1), run.state.y.toFixed(1), [...h].join('+'), ch); } }
     for (const x of run.playerHits.slice(n)) {
       const own = rows.filter((r) => r.tick <= P + k).at(-1);
       const st = own?.strategy; const verb = st?.verb ?? st?.kind ?? (typeof st === 'string' ? st : null);
@@ -48,6 +51,12 @@ if (a.ok) {
     }
   });
   deaths = run.playerDeaths.length - d0;
+  if (process.env.DUMP_KT) { const [lo, hi] = process.env.DUMP_KT.split(',').map(Number); const seen = new Set();
+    for (const x of globalThis.__KT ?? []) if (x.k >= lo && x.k <= hi) { const s = JSON.stringify(x); if (!seen.has(s)) { seen.add(s); console.error('KT', s.slice(0, 300)); } } }
+  if (process.env.DUMP_ROWS) {
+    const [lo, hi] = process.env.DUMP_ROWS.split(',').map(Number);
+    rowsets.forEach((rs, si) => { for (const r of rs) if (r.tick >= lo && r.tick <= hi) console.error('SEG', si, 'ROW', r.tick, JSON.stringify(r.strategy ?? null).slice(0, 300), '|', JSON.stringify(r.goal ?? null).slice(0, 120), '|', String(r.saw ?? '').slice(0, 200)); });
+  }
 }
 console.log(JSON.stringify({ src: file.split('/').pop() + (id !== undefined ? `#${id}:${i}` : ''), key, seam: shift, variant: process.env.VARIANT ?? null,
   ok: a.ok, work: a.work, ticks: a.plan?.solution?.length ?? null, answer: createHash('sha1').update(text).digest('hex').slice(0, 12),

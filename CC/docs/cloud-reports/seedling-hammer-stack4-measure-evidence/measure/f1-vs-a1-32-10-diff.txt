@@ -1,0 +1,1 @@
+F1(rm9) 32:10 vs A1(rm8) 32:10: the requests differ in ONE field, staging.seam.time 79143 (A1) vs 81985 (F1) — measured by a recursive JSON diff.
