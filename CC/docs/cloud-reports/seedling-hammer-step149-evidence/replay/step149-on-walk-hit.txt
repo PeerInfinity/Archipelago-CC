@@ -1,0 +1,55 @@
+# survey step 149, main defaults, PRESS_KILL_START_WAIT=1 (final code): the walk view replayed (tools/tapehits.mjs), ticks 1600-1935
+HIT 1930 {"t":1930,"level":40,"source":"chaser","id":"bob@288,80","hits":1,"hitsMax":3,"died":false,"shake":5,"knockback":{"dx":-2.9731727115053506,"dy":0,"landed":{"x":true,"y":false}}} at 229.4 124.4
+ticks 2150 final undefined 72.5 142.7
+POS 1600 252.7 102.7 up
+POS 1610 255.3 90.2 up
+POS 1620 252.5 88.0 
+POS 1630 247.7 93.6 down+left
+POS 1640 236.3 105.0 down+left
+POS 1650 232.2 117.2 down
+POS 1660 231.9 120.2 
+POS 1670 226.4 128.5 right
+POS 1680 216.1 135.7 right
+POS 1690 216.1 135.7 
+POS 1700 208.2 135.8 left
+POS 1710 199.3 136.6 
+POS 1720 197.9 136.4 
+POS 1730 197.9 136.4 
+POS 1740 184.9 136.4 left
+POS 1750 168.7 136.4 
+POS 1760 179.1 146.8 down+right
+POS 1770 186.5 154.1 left+up
+POS 1780 175.2 142.9 left+up
+POS 1790 168.7 136.4 
+POS 1800 174.1 141.8 down+right
+POS 1810 185.3 153.0 
+POS 1820 179.5 147.2 left+up
+POS 1830 169.3 136.9 
+POS 1840 169.5 137.2 down+right
+POS 1850 181.4 149.1 down+right
+POS 1860 184.2 151.9 left+up
+POS 1870 172.5 140.2 
+POS 1880 168.7 136.4 
+POS 1890 183.9 136.4 right
+POS 1900 213.5 136.4 right
+POS 1910 229.4 136.4 right
+POS 1916 232.7 136.4 
+POS 1917 232.2 136.4 
+POS 1918 231.9 136.4 
+POS 1919 231.8 136.4 
+POS 1920 231.8 136.4 up
+POS 1921 231.8 135.6 up
+POS 1922 231.8 134.2 right
+POS 1923 232.6 133.1 primary
+POS 1924 233.3 132.2 left+up
+POS 1925 233.0 130.7 up
+POS 1926 232.7 129.5 up
+POS 1927 232.5 128.5 up
+POS 1928 232.4 126.9 up
+POS 1929 232.2 125.6 up
+POS 1930 229.4 124.4 up+right
+POS 1931 226.7 123.3 up+right+primary
+POS 1932 226.7 122.3 up+right
+POS 1933 226.7 121.3 up+right
+POS 1934 226.7 120.4 up+right
+POS 1935 226.7 119.6 up+right

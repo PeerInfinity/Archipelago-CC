@@ -1,0 +1,30 @@
+Node.js v22.23.5
+Node.js v22.23.5
+{"fx":"chest-L39-request.json.gz","on":false,"ok":true,"work":1899,"ticks":1317,"answer":"adb8f1aa327a","hits":[],"ms":24036,"pksw":[],"msg":null}
+{"fx":"chest-L39-request.json.gz","on":true,"ok":true,"work":1899,"ticks":1317,"answer":"adb8f1aa327a","hits":[],"ms":25366,"pksw":[],"msg":null}
+{"fx":"leg873-l39-l40-bk2-request.json.gz","on":false,"ok":true,"work":2561,"ticks":4491,"answer":"535a61951b01","hits":[],"ms":45519,"pksw":[],"msg":null}
+{"fx":"leg873-l39-l40-bk2-request.json.gz","on":true,"ok":true,"work":2561,"ticks":4491,"answer":"535a61951b01","hits":[],"ms":44993,"pksw":[],"msg":null}
+{"fx":"leg874-l43-l40-bk2-request.json.gz","on":false,"ok":true,"work":1706,"ticks":4308,"answer":"a9ccf0f57ae7","hits":[],"ms":35204,"pksw":[],"msg":null}
+{"fx":"leg874-l43-l40-bk2-request.json.gz","on":true,"ok":true,"work":1706,"ticks":4308,"answer":"a9ccf0f57ae7","hits":[],"ms":32067,"pksw":[],"msg":null}
+{"fx":"leg398-l39-l40-flag8-request.json.gz","on":false,"ok":true,"work":1482,"ticks":718,"answer":"981a17d6218e","hits":[],"ms":16909,"pksw":[],"msg":null}
+{"fx":"leg398-l39-l40-flag8-request.json.gz","on":true,"ok":true,"work":1482,"ticks":718,"answer":"981a17d6218e","hits":[],"ms":15925,"pksw":[],"msg":null}
+{"fx":"leg388-l40-l43-request.json.gz","on":false,"ok":true,"work":525,"ticks":1156,"answer":"9637801db14d","hits":[],"ms":16999,"pksw":[],"msg":null}
+{"fx":"leg388-l40-l43-request.json.gz","on":true,"ok":true,"work":525,"ticks":1156,"answer":"9637801db14d","hits":[],"ms":18385,"pksw":[],"msg":null}
+{"fx":"leg387-l40-l43-request.json.gz","on":false,"ok":true,"work":482,"ticks":1034,"answer":"77cdce01efe4","hits":[],"ms":16543,"pksw":[],"msg":null}
+{"fx":"leg387-l40-l43-request.json.gz","on":true,"ok":true,"work":482,"ticks":1034,"answer":"77cdce01efe4","hits":[],"ms":17107,"pksw":[],"msg":null}
+{"fx":"leg403-l40-l43-request.json.gz","on":false,"ok":true,"work":191,"ticks":527,"answer":"4b6d58820416","hits":[],"ms":5559,"pksw":[],"msg":null}
+{"fx":"leg403-l40-l43-request.json.gz","on":true,"ok":true,"work":191,"ticks":527,"answer":"4b6d58820416","hits":[],"ms":6159,"pksw":[],"msg":null}
+{"fx":"leg377-l42-l40-request.json.gz","on":false,"ok":true,"work":641,"ticks":1482,"answer":"f2a421ec7677","hits":[],"ms":23015,"pksw":[],"msg":null}
+{"fx":"leg377-l42-l40-request.json.gz","on":true,"ok":true,"work":641,"ticks":1482,"answer":"f2a421ec7677","hits":[],"ms":24085,"pksw":[],"msg":null}
+{"fx":"leg871-l39-l40-request.json.gz","on":false,"ok":false,"work":645,"ticks":null,"answer":"785fcf0cd37f","hits":null,"ms":17552,"pksw":[],"msg":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) clear-tag {40,12} wa"}
+{"fx":"leg871-l39-l40-request.json.gz","on":true,"ok":false,"work":645,"ticks":null,"answer":"785fcf0cd37f","hits":null,"ms":18449,"pksw":[],"msg":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) clear-tag {40,12} wa"}
+{"fx":"leg872-l43-l40-request.json.gz","on":false,"ok":false,"work":645,"ticks":null,"answer":"785fcf0cd37f","hits":null,"ms":31641,"pksw":[],"msg":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) clear-tag {40,12} wa"}
+{"fx":"leg872-l43-l40-request.json.gz","on":true,"ok":false,"work":645,"ticks":null,"answer":"785fcf0cd37f","hits":null,"ms":31614,"pksw":[],"msg":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) clear-tag {40,12} wa"}
+{"fx":"leg356-l40-request.json.gz","on":false,"ok":true,"work":540,"ticks":1702,"answer":"ae37c251645d","hits":[],"ms":14548,"pksw":[],"msg":null}
+{"fx":"leg356-l40-request.json.gz","on":true,"ok":true,"work":540,"ticks":1702,"answer":"ae37c251645d","hits":[],"ms":14704,"pksw":[],"msg":null}
+{"fx":"leg853-l40-request.json.gz","on":false,"ok":false,"work":2562,"ticks":null,"answer":"22a13cc16402","hits":null,"ms":30789,"pksw":[],"msg":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) con"}
+{"fx":"leg853-l40-request.json.gz","on":true,"ok":false,"work":2562,"ticks":null,"answer":"22a13cc16402","hits":null,"ms":26726,"pksw":[],"msg":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) con"}
+{"fx":"leg367-l40-l43-request.json.gz","on":false,"ok":true,"work":425,"ticks":955,"answer":"bef31d3abaf6","hits":[],"ms":14498,"pksw":[],"msg":null}
+{"fx":"leg367-l40-l43-request.json.gz","on":true,"ok":true,"work":425,"ticks":955,"answer":"bef31d3abaf6","hits":[],"ms":13795,"pksw":[],"msg":null}
+{"fx":"leg376-l40-request.json.gz","on":false,"ok":true,"work":567,"ticks":1614,"answer":"330c2f595a6b","hits":["t1248 bomb:bombpusher@112,128#9"],"ms":22780,"pksw":[],"msg":null}
+{"fx":"leg376-l40-request.json.gz","on":true,"ok":true,"work":567,"ticks":1614,"answer":"330c2f595a6b","hits":["t1248 bomb:bombpusher@112,128#9"],"ms":20989,"pksw":[],"msg":null}

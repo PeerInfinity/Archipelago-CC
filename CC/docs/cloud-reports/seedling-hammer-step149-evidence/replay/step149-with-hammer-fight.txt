@@ -1,0 +1,6 @@
+## SEEDLING_HAMMER_FIGHT=1
+REFUSED None null 47956 S_FALLBACK`) rewound to the kill's first tick (t1503) and redid the kill with `OPPORTUNISTIC_STRIKE` off; it did not kill (HAMMER_SAFETY: solverBot(survey-step-149) collect (64,144) stance (ladder-routed: no corridor from (280.3669873047385,216.60071614521746) to a stance that can collect totempar).
+##COUNTS## PKSW=[]
+## SEEDLING_HAMMER_FIGHT=1 SEEDLING_PRESS_KILL_START_WAIT=1
+SOLVED 2116 {"hits": 0, "deaths": 0, "endLevel": 40, "transitions": [], "earnedClears": ["{40,7}", "{40,1}", "{40,22}", "{40,24}", "{40,23}"]} 56946 
+##COUNTS## PKSW=[{"t":1503,"refused":"HAMMER_SAFETY","refusedAt":1523,"tries":[{"wait":0,"verdict":"refused","why":"solverBot(survey-step-149) collect (64,144) stance (ladder-routed: no corridor from (280.3669873047385,216.60071614521746) to a stance that can collect totempart@64,144 — 22 walkable candidate(s) in r"},{"wait":1,"verdict":"refused","why":"solverBot(survey-step-149) collect (64,144

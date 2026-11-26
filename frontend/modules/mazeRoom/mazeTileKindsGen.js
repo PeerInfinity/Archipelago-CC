@@ -1,15 +1,18 @@
 /**
  * mazeRoom/mazeTileKindsGen — **THE GENERATOR PLACES DECLARED TILE KINDS** (⛓ CONTENT SETS GEN-1: the "Randomly placed
- * tiles" biome, `mazeRegionBiomes.js` `scattered`; walkable and blocked kinds. ⛓ GEN-3: `needs` kinds).
+ * tiles" biome, `mazeRegionBiomes.js` `scattered`; walkable and blocked kinds. ⛓ GEN-3: `needs` kinds. ⛓ GEN-4: `one-way`).
  *
  * ⚖ Robert, 2026-11-22: kinds qualify only with `generate: true` (Q3), only from the world's "what exists" packs, never
  * a theme (Q4), and placement must preserve the logic (Q5). Q6 (planner): walkable and blocked first.
  *
  * THE LAW. A kind is kept on a cell only if, with it lowered there (`mazeTileKinds.lowerTileKind`):
- *   (a) every floor cell reachable from the entrance before is still reachable (walls; obstacles transparent);
+ *   (a) every floor cell reachable from the entrance before is still reachable (walls and ⛓ GEN-4 `gate: null` entry
+ *       gates; obstacles transparent);
  *   (b) the region's compiled rules — `compileRegion(extractPathsAndObstacles(world))` — are byte-equal;
- *   (c) `longestShortestPath` (the loop-mode cost per tile) is unchanged;
- *   (d) ⛓ GEN-3 — for a pass that says so (`needs`), (b) holds from EVERY ARRIVAL TILE too (`arrivalTiles`: the exits a
+ *   (c) the walk is unchanged (`tileKindWalk`): `longestShortestPath` (the loop-mode cost per tile) in a room with no
+ *       entry gate; ⛓ GEN-4 — with gates, the same measure in both directions through them, plus the pairs walkable
+ *       one way only;
+ *   (d) ⛓ GEN-3 — for a pass that says so (`needs`, ⛓ GEN-4 `one-way`), (b) holds from EVERY ARRIVAL TILE too (`arrivalTiles`: the exits a
  *       linked reverse exit lands on), each extracted as if it were the entrance. The extractor measures from the
  *       entrance only; a pool on a back exit's only corridor would strand a player who arrives there without the item.
  * ⛓ GEN-3 — for `needs`, (b) and (d) ask for EQUIVALENCE, not bytes (`equivalentRules`: `And`/`Or` flattened, `True_`
@@ -35,11 +38,11 @@
  *
  * ⛔ OUTSIDE THE ENGINE CLOSURE: it only CALLS the engine (`extractPathsAndObstacles`).
  */
-import { extractPathsAndObstacles, getTile, TILE_FLOOR } from './mazeRoomEngine.js';
+import { extractPathsAndObstacles, getTile, isFloor, TILE_FLOOR } from './mazeRoomEngine.js';
 import { computeLongestShortestPath } from './mazeGeometry.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import {
-    BLOCKED_PASS, DEFAULT_TERRAIN_PASS, NEEDS_PASS, liftTileKind, lowerTileKind, needsRealisationRefusal, occupiedWorldCells, tileKindRefusal,
+    BLOCKED_PASS, DEFAULT_TERRAIN_PASS, NEEDS_PASS, ONE_WAY_PASS, liftTileKind, lowerTileKind, needsRealisationRefusal, occupiedWorldCells, tileKindRefusal,
 } from './mazeTileKinds.js';
 import { terrainGenerates, terrainOf } from '../packStructure/packStructure.js';
 import { engineBiomeOf, isRegionBiome, nonDefaultTileKinds, placesTileKinds, resolvedTileKinds, TILE_KINDS_KEY } from './mazeRegionBiomes.js';
@@ -61,6 +64,9 @@ export const TILE_KIND_PASS_LAWS = Object.freeze({
         lowers: true, rules: RULES_COMPARE.equivalent, fromArrivals: true,
         qualify: (d, world) => needsRealisationRefusal(world, d.kind, d.needs),
     }),
+    // ⛓ GEN-4 — a one-way kind owns its cell's entry gates (`lowerTileKind`: a `gate: null` entry for every direction
+    //   not in its baked `dirs`). It adds no requirement, so (b) stays byte-equal; it can strand a way in, so (d).
+    [ONE_WAY_PASS]: Object.freeze({ lowers: true, rules: RULES_COMPARE.bytes, fromArrivals: true }),
 });
 /** The passes the generator places (the keys of `TILE_KIND_PASS_LAWS`). */
 export const GENERATED_TILE_KIND_PASSES = Object.freeze(Object.keys(TILE_KIND_PASS_LAWS));
@@ -160,25 +166,89 @@ export function arrivalTiles(world) {
     return out;
 }
 
-/** Floor cells reachable from the entrance over the grid (law a). */
+/** The four moves, each by the direction it ENTERS the next cell moving (an entry gate's key, `TERRAIN_DIRS`). */
+const MOVES = Object.freeze([['N', 0, -1], ['S', 0, 1], ['E', 1, 0], ['W', -1, 0]]);
+/** ⛓ GEN-4 — entering (x, y) moving `dir` is refused by a `gate: null` entry (a one-way kind's; `mazeRoomEngine`'s
+ *  `step` reads the same key). A gate with an id is a clearance, transparent here as an obstacle is. */
+const entryShut = (world, x, y, dir) => world.entryGates?.has(`${x},${y},${dir}`) === true
+    && world.entryGates.get(`${x},${y},${dir}`) === null;
+
+/** Floor cells reachable from the entrance over the grid and its `null` entry gates (law a; GEN-D § 2.4). */
 function floorReach(world) {
     const start = `${world.entrance.x},${world.entrance.y}`;
     const seen = new Set([start]);
     const queue = [[world.entrance.x, world.entrance.y]];
     while (queue.length) {
         const [x, y] = queue.pop();
-        for (const [dx, dy] of [[0, -1], [0, 1], [1, 0], [-1, 0]]) {
+        for (const [dir, dx, dy] of MOVES) {
             const nx = x + dx;
             const ny = y + dy;
             const k = `${nx},${ny}`;
             if (nx < 0 || ny < 0 || nx >= world.width || ny >= world.height || seen.has(k)) continue;
-            if (getTile(world, nx, ny) !== TILE_FLOOR) continue;
+            if (getTile(world, nx, ny) !== TILE_FLOOR || entryShut(world, nx, ny, dir)) continue;
             seen.add(k);
             queue.push([nx, ny]);
         }
     }
     return seen;
 }
+
+/** The directed walk from `from` to `to` over floor and `null` entry gates, in steps; null when there is none. */
+function directedWalk(world, from, to) {
+    if (!isFloor(world, from.x, from.y) || !isFloor(world, to.x, to.y)) return null;
+    if (from.x === to.x && from.y === to.y) return 0;
+    const seen = new Set([`${from.x},${from.y}`]);
+    let frontier = [[from.x, from.y]];
+    for (let d = 1; frontier.length; d++) {
+        const next = [];
+        for (const [x, y] of frontier) {
+            for (const [dir, dx, dy] of MOVES) {
+                const nx = x + dx;
+                const ny = y + dy;
+                const k = `${nx},${ny}`;
+                if (nx < 0 || ny < 0 || nx >= world.width || ny >= world.height || seen.has(k)) continue;
+                if (!isFloor(world, nx, ny) || entryShut(world, nx, ny, dir)) continue;
+                if (nx === to.x && ny === to.y) return d;
+                seen.add(k);
+                next.push([nx, ny]);
+            }
+        }
+        frontier = next;
+    }
+    return null;
+}
+
+/**
+ * ⛓ GEN-4 — **THE WALK (law c)**, `{ length, oneWayPairs }`. With no entry gate on the room, `length` is
+ * `computeLongestShortestPath` exactly as GEN-1 measured it (the loop-mode cost's denominator, the payload's
+ * `longestShortestPath`) and `oneWayPairs` is 0 (an undirected grid has none). With entry gates, `length` is the same
+ * longest shortest path between the entrance and the exits, but measured in BOTH directions of every pair and through
+ * the gates, and `oneWayPairs` counts the pairs walkable one way only: `computeLongestShortestPath` is undirected and
+ * blind to the gates, so a ledge that forces a detour, or that makes a pair one-way (an unwalkable pair is skipped by
+ * the length), would otherwise never move it. Held equal, the payload's recorded value stays the true walk.
+ */
+export function tileKindWalk(world) {
+    if (!world?.entryGates?.size) return { length: computeLongestShortestPath(world), oneWayPairs: 0 };
+    const ends = [];
+    const add = (p) => { if (!ends.some((q) => q.x === p.x && q.y === p.y)) ends.push({ x: p.x, y: p.y }); };
+    if (world.entrance) add(world.entrance);
+    for (const e of world.exits?.values?.() ?? []) add(e);
+    if (ends.length < 2) return { length: 1, oneWayPairs: 0 };
+    let longest = 0;
+    let oneWayPairs = 0;
+    for (let i = 0; i < ends.length; i++) {
+        for (let j = i + 1; j < ends.length; j++) {
+            const there = directedWalk(world, ends[i], ends[j]);
+            const back = directedWalk(world, ends[j], ends[i]);
+            if ((there === null) !== (back === null)) oneWayPairs++;
+            for (const len of [there, back]) if (len !== null && len > longest) longest = len;
+        }
+    }
+    return { length: longest > 0 ? longest : 1, oneWayPairs };
+}
+
+/** The walk's length alone (`tileKindWalk`). */
+export const tileKindWalkLength = (world) => tileKindWalk(world).length;
 
 /** The law's three refusals, by name (`tileKindLawRefusal`). */
 export const TILE_KIND_LAW = Object.freeze({
@@ -202,7 +272,7 @@ export function tileKindLawBase(world, regionId, passes = GENERATED_TILE_KIND_PA
         rules[l.rules] ??= compiledRules(world, regionId, l.rules);
         if (l.fromArrivals) arrivals[l.rules] ??= tiles.map((at) => ({ at, rules: compiledRules(world, regionId, l.rules, at) }));
     }
-    return { reach: floorReach(world), lsp: computeLongestShortestPath(world), rules, arrivals };
+    return { reach: floorReach(world), walk: tileKindWalk(world), rules, arrivals };
 }
 
 /**
@@ -215,10 +285,13 @@ export function tileKindLawRefusal(world, x, y, d, regionId, base) {
     if (!law) throw new Error(`tileKindLawRefusal: the generator places no "${d.pass}" kind (${GENERATED_TILE_KIND_PASSES.join(', ')})`);
     lowerTileKind(world, x, y, d);
     if (!law.lowers) return null;
-    const key = `${x},${y}`;
+    // The kind's own cell is exempt only when it lowered to a wall (a pillar); a kind that keeps it floor must stay
+    // reachable itself (⛓ GEN-4: a ledge no move can enter would be a wall that looks like a ledge).
+    const own = getTile(world, x, y) === TILE_FLOOR ? null : `${x},${y}`;
     const after = floorReach(world);
-    for (const c of base.reach) if (c !== key && !after.has(c)) return TILE_KIND_LAW.cutsOffFloor;
-    if (computeLongestShortestPath(world) !== base.lsp) return TILE_KIND_LAW.movesWalkLength;
+    for (const c of base.reach) if (c !== own && !after.has(c)) return TILE_KIND_LAW.cutsOffFloor;
+    const walk = tileKindWalk(world);
+    if (walk.length !== base.walk.length || walk.oneWayPairs !== base.walk.oneWayPairs) return TILE_KIND_LAW.movesWalkLength;
     if (compiledRules(world, regionId, law.rules) !== base.rules[law.rules]) return TILE_KIND_LAW.changesRules;
     if (law.fromArrivals) {
         for (const a of base.arrivals[law.rules]) {

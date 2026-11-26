@@ -1,0 +1,6 @@
+{"fx":"leg855-l41-l40-totem64-request.json.gz","on":false,"ok":false,"work":38,"ticks":null,"answer":"28f07ce9897a","hits":null,"ms":3489,"pksw":[],"msg":"solverBot(wasm-location-40) apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (840.3,120.5) — chaser:puncher@816,12"}
+{"fx":"leg855-l41-l40-totem64-request.json.gz","on":true,"ok":false,"work":38,"ticks":null,"answer":"28f07ce9897a","hits":null,"ms":3733,"pksw":[],"msg":"solverBot(wasm-location-40) apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (840.3,120.5) — chaser:puncher@816,12"}
+{"fx":"leg857-l42-l40-totem64-request.json.gz","on":false,"ok":true,"work":155,"ticks":1239,"answer":"ae1624a3c5be","hits":[],"ms":2719,"pksw":[],"msg":null}
+{"fx":"leg857-l42-l40-totem64-request.json.gz","on":true,"ok":true,"work":155,"ticks":1239,"answer":"ae1624a3c5be","hits":[],"ms":2811,"pksw":[],"msg":null}
+{"fx":"leg371-l40-request.json.gz","on":false,"ok":true,"work":406,"ticks":1805,"answer":"f85c79c425cf","hits":[],"ms":17606,"pksw":[],"msg":null}
+{"fx":"leg371-l40-request.json.gz","on":true,"ok":true,"work":406,"ticks":1805,"answer":"f85c79c425cf","hits":[],"ms":19310,"pksw":[],"msg":null}
