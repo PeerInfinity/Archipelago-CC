@@ -37,14 +37,18 @@ export const MYSTERY_IFRAME_ID = 'mystery';
  * under all three: the questions are the region's checks either way.
  */
 export const MYSTERY_LOCKS = Object.freeze({
-    /** Everything can be read anywhere; questions can be answered only in the region. */
-    ANSWERS: 'answers',
-    /** As `answers`, and reading that is new (paragraphs, arrived papers) opens only in the region. */
+    /**
+     * Everything can be read anywhere; every player ACTION is locked away from the region: linking,
+     * trust, and with them answering (⚖ Robert 2026-11-26: a link whose effect is held back would
+     * confuse; in a case whose answers are marked from the evidence, linking IS answering).
+     */
+    ACTIONS: 'actions',
+    /** As `actions`, and reading that is new (paragraphs, arrived papers) opens only in the region. */
     NEW_READING: 'new-reading',
     /** The game is shown only in the region. */
     EVERYTHING: 'everything',
 });
-export const DEFAULT_MYSTERY_LOCK = MYSTERY_LOCKS.ANSWERS;
+export const DEFAULT_MYSTERY_LOCK = MYSTERY_LOCKS.ACTIONS;
 const LOCK_VALUES = Object.freeze(Object.values(MYSTERY_LOCKS));
 
 /** Every reason this entry refuses, by name. A test asserts the name, never a sentence. */
@@ -220,8 +224,8 @@ export const MYSTERY_SIDECAR_FIELDS = Object.freeze({
     }),
     lock: Object.freeze({
         type: 'string', required: true, derived: true, enum: LOCK_VALUES,
-        description: 'What is locked while the player is not in this region: `answers` (answering only), `new-reading` '
-            + '(answering and reading that is new) or `everything` (the game is shown only here). The world\'s rule, from the '
+        description: 'What is locked while the player is not in this region: `actions` (every player action: linking, trust, answering; reading stays), `new-reading` '
+            + '(the actions and reading that is new) or `everything` (the game is shown only here). The world\'s rule, from the '
             + `installed config, by ${WRITER}.`,
     }),
     ap_locations: Object.freeze({

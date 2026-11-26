@@ -18,7 +18,7 @@
 // A GENERATED world may hold the case as one region of several (the `mystery` substrate,
 // mysterySubstrateLibrary.js). The map is then that region's payload (`ap_locations`, `papers`),
 // and the state carries two more fields: `lock`, the world's rule for what is locked while the
-// player is not in the case's region (`answers`, `new-reading`, `everything`), and `inOffice`,
+// player is not in the case's region (`actions`, `new-reading`, `everything`), and `inOffice`,
 // whether the player is in it now. Both are absent for a world whose case is its slot's (one
 // region, always "in the office"). A question solved away from the region is not checked.
 //

@@ -57,8 +57,8 @@ The installed config is also recorded in `procgen_metadata[player].substrate_con
 
 | Value | Locked away from the region |
 |---|---|
-| `answers` (default) | Answering questions. Everything can be read anywhere. |
-| `new-reading` | Answering, and reading that is new. What was already read stays readable. |
+| `actions` (default) | Every player action: linking, trust, and with them answering. Everything can be read anywhere. |
+| `new-reading` | The actions, and reading that is new. What was already read stays readable. |
 | `everything` | The whole game: it is shown only in the region. |
 
 The logic is the same under all three: the questions are the region's checks either way. The value is written and declared today; nothing enforces it yet.

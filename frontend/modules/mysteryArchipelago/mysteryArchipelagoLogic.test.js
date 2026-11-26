@@ -206,7 +206,7 @@ describe('MysteryArchipelagoLogic', () => {
 
 /** A `mystery` region's payload, as mysterySubstrateLibrary.js writes it. */
 const officePayload = (over = {}) => ({
-  story: 'custom-house-fire', version: 'abc123', case: 'cases/custom-house-fire', lock: 'answers',
+  story: 'custom-house-fire', version: 'abc123', case: 'cases/custom-house-fire', lock: 'actions',
   ap_locations: { 'q.set': 'Question 01', 'q.door': 'Question 02', 'q.who': 'Question 03' },
   papers: { 'The night watch book': 'watch_book', "Dr. Hume's note": 'doctor' },
   ...over,
@@ -224,7 +224,7 @@ describe('a case that is a region of a generated world', () => {
     const block = mysteryBlockOfRegion('The case', officePayload(), { playerId: '2', seed_name: 9 });
     expect(block.locationOfQuestion.get('q.door')).toBe('Question 02');
     expect(block.questionOfLocation['Question 03']).toBe('q.who');
-    expect([block.player, block.seedName, block.regionId, block.lock, block.case]).toEqual(['2', '9', 'The case', 'answers', 'cases/custom-house-fire']);
+    expect([block.player, block.seedName, block.regionId, block.lock, block.case]).toEqual(['2', '9', 'The case', 'actions', 'cases/custom-house-fire']);
     expect(mysteryBlockOfRegion('x', { story: 'x' }, {})).toBeNull();
   });
 
@@ -271,7 +271,7 @@ describe('a case that is a region of a generated world', () => {
   });
 
   it('a question is checked in the office and not away from it, under every lock', () => {
-    for (const lock of ['answers', 'new-reading', 'everything']) {
+    for (const lock of ['actions', 'new-reading', 'everything']) {
       const env = inWorld({ lock });
       const solved = { story: 'custom-house-fire', questionId: 'q.door' };
       env.fire(MYSTERY_EVENTS.QUESTION_SOLVED, solved);

@@ -8,7 +8,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 
 <!-- GENERATED:procgen-docs-index BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**32 documents · 4 pages · 575,313 words.**
+**32 documents · 4 pages · 575,321 words.**
 
 Order: `README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — the reading order. A document missing from that list fails the generator, so every document is indexed.
 
@@ -47,7 +47,7 @@ Descriptions: the document's own first paragraph, collapsed onto one line; past 
 | [JtA Substrate](./jta.md) | The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the Journey to Ascension fork, an incremental game in the `frontend/modules/journey-to-ascension/` submodule, in a same-origin iframe as a loop-mode substrate. One AP region is one JtA zone, and the game's energy is mirrored into the host's shared mana pool. | 3807 |
 | [Omsi Substrate (Idle Loops)](./omsi.md) | The omsi substrate (`frontend/modules/omsiSubstrateWrapper/`, id `omsi`) runs the `PeerInfinity/omsi-loops` fork of Idle Loops, from the `frontend/modules/omsi-loops/` submodule, in a same-origin iframe as a loop-mode substrate. The host owns the game clock, and the game's per-loop mana budget is the shared mana pool. | 4321 |
 | [Noiz2sa Substrate](./noiz2sa.md) | The Noiz2sa substrate (`frontend/modules/noiz2saSubstrate/`, id `noiz2sa`) plays Kenta Cho's BulletML shoot-'em-up from the `frontend/modules/bulletml-dodge/` submodule (`PeerInfinity/bulletml-dodge`, `branch = substrate`) in a same-origin iframe, as a summary loop-mode substrate. | 8034 |
-| [Mystery Substrate](./mystery.md) | The mystery substrate (`frontend/modules/mysteryArchipelago/mysterySubstrateLibrary.js`, id `mystery`) makes one case of the mystery clue game a procgen region: the office. The game is the git submodule `frontend/modules/mystery-clue-game/`, framed as a page by the Mystery Game panel. | 779 |
+| [Mystery Substrate](./mystery.md) | The mystery substrate (`frontend/modules/mysteryArchipelago/mysterySubstrateLibrary.js`, id `mystery`) makes one case of the mystery clue game a procgen region: the office. The game is the git submodule `frontend/modules/mystery-clue-game/`, framed as a page by the Mystery Game panel. | 787 |
 
 **The four pages.** These are not `.md` files: they render in a browser, and only `frontend/` is published to Pages.
 
