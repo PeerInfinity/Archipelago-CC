@@ -22494,7 +22494,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "replay",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -24546,6 +24547,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "budget-s",
+                "capture-requests",
                 "log",
                 "min",
                 "port",
@@ -24553,6 +24555,7 @@ export const INSTRUMENTS = frz({
                 "runtime",
                 "seed",
                 "skip-refusals",
+                "solver-env",
                 "stall-s",
                 "wait-for-box"
             ],
@@ -24563,6 +24566,12 @@ export const INSTRUMENTS = frz({
                         "case"
                     ],
                     "name": "budget-s"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "capture-requests"
                 },
                 {
                     "how": [
@@ -24605,6 +24614,12 @@ export const INSTRUMENTS = frz({
                         "case"
                     ],
                     "name": "skip-refusals"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "solver-env"
                 },
                 {
                     "how": [
