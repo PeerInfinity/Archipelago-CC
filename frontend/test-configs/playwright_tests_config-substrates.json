@@ -2478,7 +2478,7 @@
             "id": "playback-bot-tile-kinds-demo",
             "enabled": true,
             "category": "Playback Bot",
-            "_comment": "Content sets GEN-2: the committed tile_kinds_demo preset (the \"Randomly placed tiles\" maze biome: the furniture pack's rugs and pillars in a scattered 2 : classic 1 mix over Adventure) played to the end by the bot through the maze controller, loop mode off; every sphere-log location checked, and the Maze Room panel's art stack takes the recorded exists pack. Batch playback-bot (on push)."
+            "_comment": "Content sets GEN-2: the committed tile_kinds_demo preset (the \"Randomly placed tiles\" maze biome: the furniture pack's rugs and pillars and, since GEN-5, the ledges pack's one-way ledges in a scattered 2 : classic 1 mix over Adventure) played to the end by the bot through the maze controller, loop mode off; every sphere-log location checked, and the Maze Room panel's art stack takes the recorded exists packs. Batch playback-bot (on push)."
         },
         {
             "id": "playback-bot-walk-order",

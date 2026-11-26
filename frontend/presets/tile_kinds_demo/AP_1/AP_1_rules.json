@@ -1062,6 +1062,34 @@
             0,
             0,
             0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1162,34 +1190,6 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
             0,
             0,
             0,
@@ -1457,18 +1457,26 @@
             {
               "x": 5,
               "y": 2,
-              "kind": "furniture:terrain/rug"
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
             },
             {
               "x": 1,
               "y": 4,
-              "kind": "furniture:terrain/rug"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 11,
               "y": 7,
-              "kind": "furniture:terrain/pillar",
-              "pass": "blocked"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 3,
@@ -1484,19 +1492,78 @@
             {
               "x": 14,
               "y": 9,
-              "kind": "furniture:terrain/rug"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 4,
               "y": 10,
-              "kind": "furniture:terrain/pillar",
-              "pass": "blocked"
+              "kind": "furniture:terrain/rug"
             },
             {
               "x": 9,
               "y": 11,
               "kind": "furniture:terrain/pillar",
               "pass": "blocked"
+            }
+          ],
+          "entry_gates": [
+            {
+              "x": 11,
+              "y": 7,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 7,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 7,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "dir": "W",
+              "gate": null
             }
           ],
           "fogEnabled": true
@@ -1820,6 +1887,79 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             1,
             0,
             0,
@@ -1882,17 +2022,6 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             1,
             0,
             0,
@@ -1912,68 +2041,6 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
             0,
             0,
             0,
@@ -2110,13 +2177,13 @@
             {
               "x": 11,
               "y": 0,
-              "kind": "furniture:terrain/pillar",
-              "pass": "blocked"
+              "kind": "furniture:terrain/rug"
             },
             {
               "x": 5,
               "y": 3,
-              "kind": "furniture:terrain/rug"
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
             },
             {
               "x": 4,
@@ -2132,7 +2199,11 @@
             {
               "x": 0,
               "y": 8,
-              "kind": "furniture:terrain/rug"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 2,
@@ -2143,13 +2214,76 @@
             {
               "x": 14,
               "y": 9,
-              "kind": "furniture:terrain/rug"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 4,
               "y": 10,
-              "kind": "furniture:terrain/pillar",
-              "pass": "blocked"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            }
+          ],
+          "entry_gates": [
+            {
+              "x": 0,
+              "y": 8,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 8,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 8,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 4,
+              "y": 10,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 4,
+              "y": 10,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 4,
+              "y": 10,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "dir": "W",
+              "gate": null
             }
           ],
           "fogEnabled": true
@@ -2282,7 +2416,7 @@
             0,
             0,
             0,
-            0,
+            1,
             0,
             0,
             0,
@@ -2313,7 +2447,6 @@
             0,
             0,
             0,
-            1,
             0,
             0,
             0,
@@ -2339,7 +2472,8 @@
             0,
             0,
             0,
-            1,
+            0,
+            0,
             0,
             0,
             0,
@@ -2483,6 +2617,12 @@
           "longestShortestPath": 16,
           "tileKinds": [
             {
+              "x": 6,
+              "y": 6,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
               "x": 15,
               "y": 7,
               "kind": "furniture:terrain/pillar",
@@ -2491,23 +2631,24 @@
             {
               "x": 5,
               "y": 8,
-              "kind": "furniture:terrain/pillar",
-              "pass": "blocked"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 1,
               "y": 9,
-              "kind": "furniture:terrain/rug"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 15,
               "y": 9,
-              "kind": "furniture:terrain/pillar",
-              "pass": "blocked"
-            },
-            {
-              "x": 11,
-              "y": 10,
               "kind": "furniture:terrain/rug"
             },
             {
@@ -2519,12 +2660,72 @@
             {
               "x": 11,
               "y": 11,
-              "kind": "furniture:terrain/rug"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 13,
               "y": 11,
               "kind": "furniture:terrain/rug"
+            }
+          ],
+          "entry_gates": [
+            {
+              "x": 5,
+              "y": 8,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 5,
+              "y": 8,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 5,
+              "y": 8,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 9,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 9,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 9,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 11,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 11,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 11,
+              "dir": "W",
+              "gate": null
             }
           ],
           "fogEnabled": true
@@ -2841,6 +3042,56 @@
           "tiles": [
             0,
             0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -2920,56 +3171,6 @@
             0,
             0,
             1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -3097,35 +3298,46 @@
             {
               "x": 2,
               "y": 0,
-              "kind": "furniture:terrain/rug"
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
             },
             {
               "x": 0,
               "y": 5,
-              "kind": "furniture:terrain/pillar",
-              "pass": "blocked"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 4,
               "y": 6,
-              "kind": "furniture:terrain/pillar",
-              "pass": "blocked"
+              "kind": "furniture:terrain/rug"
             },
             {
               "x": 0,
               "y": 7,
-              "kind": "furniture:terrain/rug"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 8,
               "y": 7,
-              "kind": "furniture:terrain/pillar",
-              "pass": "blocked"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 2,
               "y": 8,
-              "kind": "furniture:terrain/rug"
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
             },
             {
               "x": 12,
@@ -3137,6 +3349,62 @@
               "x": 11,
               "y": 11,
               "kind": "furniture:terrain/rug"
+            }
+          ],
+          "entry_gates": [
+            {
+              "x": 8,
+              "y": 7,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 8,
+              "y": 7,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 8,
+              "y": 7,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 7,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 7,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 7,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 5,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 5,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 5,
+              "dir": "W",
+              "gate": null
             }
           ],
           "fogEnabled": true
@@ -3200,6 +3468,88 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             1,
             0,
             0,
@@ -3232,50 +3582,6 @@
             0,
             0,
             0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -3283,44 +3589,6 @@
             0,
             0,
             1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -3393,14 +3661,16 @@
             {
               "x": 1,
               "y": 2,
-              "kind": "furniture:terrain/pillar",
-              "pass": "blocked"
+              "kind": "furniture:terrain/rug"
             },
             {
               "x": 1,
               "y": 4,
-              "kind": "furniture:terrain/pillar",
-              "pass": "blocked"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 3,
@@ -3416,23 +3686,88 @@
             {
               "x": 9,
               "y": 9,
-              "kind": "furniture:terrain/rug"
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
             },
             {
               "x": 7,
               "y": 10,
-              "kind": "furniture:terrain/rug"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 14,
               "y": 10,
-              "kind": "furniture:terrain/rug"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 3,
               "y": 11,
               "kind": "furniture:terrain/pillar",
               "pass": "blocked"
+            }
+          ],
+          "entry_gates": [
+            {
+              "x": 14,
+              "y": 10,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 10,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 10,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 10,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 10,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 10,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "dir": "W",
+              "gate": null
             }
           ],
           "fogEnabled": true
@@ -3742,6 +4077,110 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
             1,
             0,
             0,
@@ -3777,111 +4216,7 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             1,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -3939,25 +4274,30 @@
             {
               "x": 13,
               "y": 1,
-              "kind": "furniture:terrain/pillar",
-              "pass": "blocked"
-            },
-            {
-              "x": 15,
-              "y": 4,
               "kind": "furniture:terrain/rug"
             },
             {
               "x": 15,
+              "y": 4,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 15,
               "y": 6,
-              "kind": "furniture:terrain/pillar",
-              "pass": "blocked"
+              "kind": "furniture:terrain/rug"
             },
             {
               "x": 1,
               "y": 7,
-              "kind": "furniture:terrain/pillar",
-              "pass": "blocked"
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
             },
             {
               "x": 3,
@@ -3968,7 +4308,8 @@
             {
               "x": 5,
               "y": 8,
-              "kind": "furniture:terrain/rug"
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
             },
             {
               "x": 3,
@@ -3978,7 +4319,46 @@
             {
               "x": 8,
               "y": 10,
-              "kind": "furniture:terrain/rug"
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            }
+          ],
+          "entry_gates": [
+            {
+              "x": 15,
+              "y": 4,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 15,
+              "y": 4,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 15,
+              "y": 4,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 7,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 7,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 7,
+              "dir": "W",
+              "gate": null
             }
           ],
           "fogEnabled": true
@@ -4256,7 +4636,8 @@
         ]
       },
       "exists": [
-        "furniture"
+        "furniture",
+        "ledges"
       ],
       "mazeBiome": [
         {
