@@ -2425,6 +2425,37 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_CHEST_COVER_FENCEPOST=0|1`. ⛔ OFF by default (no flip licence).
      */
     chestCoverFencepost: false,
+    /**
+     * ⛓ fidelity PRESSERLOOP D2 (wave 62) — A GROUP WHOSE RE-PUBLISHING SETTERS REACH EACH OTHER HANGS THE GAME (wave
+     * 61's named STOP, `CC/docs/cloud-reports/seedling-fidelity-presserloop.md`).
+     * The game. Three `Activators` setters re-publish to every other `Activators` of their `t`: `Button.set activate`
+     * (`Puzzlements/Button.as:42-61`, `activateAll`), `RopeStart.set activate` (`RopeStart.as:79-91`), both for every
+     * value, and `ButtonRoom.set activate` with `room == -1` (`ButtonRoom.as:67-98`), only for a true, publishing
+     * `true` with `flip = 0` and `false` with `flip = 1`. The other ten subclasses store the flag. So a false loops
+     * between two pass-throughs (Button/RopeStart) and a true among the pass-throughs and the flip-0 ButtonRooms
+     * (`levelWorld.presserRecursionGroups`). `Button.update` publishes every frame; `check()` publishes for a pulled
+     * rope and a pressed ButtonRoom.
+     * MEASURED on the game (p4g, and p4d for five shapes; staged L38 rooms, group 6, through `botLoadLevels`;
+     * `-evidence/d3/witness-p4g.json`): each recursing shape throws "Maximum call stack size exceeded" ONCE and then
+     * NO later frame runs — the tick, `dead_frames`, the position and the persistence readout are frozen for the rest of
+     * the sample, no door is reached and nothing is written. Button+Button and Button+Rope: after observation 0 (tick
+     * 1). Two pulled ropes, and a Button with a pressed-at-boot flip-0 ButtonRoom: inside the first frame's `check()`,
+     * before observation 0. A flip-0 ButtonRoom with a Button / a second flip-0 / a rope, and a flip-1 ButtonRoom with
+     * two ropes: in the frame of the press (24 observations drained). The near misses play out to L37: two unpulled
+     * ropes, a flip-1 ButtonRoom with a Button (either one pressed), flip 0 + flip 1, a cross-room ButtonRoom, one
+     * presser.
+     * ON. A world whose recursion fires on the build's first frame (`firstFrame`, `bootBy`) is refused at build by name
+     * (`LevelWorldError`): the game cannot run one frame of it. A publish during a run — a Button or ButtonRoom pressed
+     * (`stepActivators`, every caller), a rope pulled (`publishRopeGroup`), the wand's tset-0 sweep — into a group it
+     * loops in marks the activator state hung (`presserHang`) and the step does nothing else; the tick it ends is the
+     * game's last observation, and the run's NEXT `advance` throws `PresserRecursionHang` by name: the game runs no
+     * later frame, so the solver cannot certify past it. OFF: nothing read or written, byte-identical. Not modelled,
+     * named: `FinalBoss`'s `Button.activateAll(null, 0, true)` (the model does not publish that sweep); the order of the
+     * entities that update before the throwing setter in the hang frame (no later frame observes them).
+     * Needs no other key; composes with every key (one more refusal, before or instead of a step).
+     * `SEEDLING_PRESSER_RECURSION_HANG=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    presserRecursionHang: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2873,6 +2904,9 @@ if (globalThis.process?.env?.SEEDLING_PLAIN_PICKUP_IN_FREEZE === '0') CONTACT_FI
 // ⛓ fidelity CHESTCOVER D2: `SEEDLING_CHEST_COVER_FENCEPOST=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_CHEST_COVER_FENCEPOST === '1') CONTACT_FIDELITY.chestCoverFencepost = true;
 if (globalThis.process?.env?.SEEDLING_CHEST_COVER_FENCEPOST === '0') CONTACT_FIDELITY.chestCoverFencepost = false;
+// ⛓ fidelity PRESSERLOOP D2: `SEEDLING_PRESSER_RECURSION_HANG=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PRESSER_RECURSION_HANG === '1') CONTACT_FIDELITY.presserRecursionHang = true;
+if (globalThis.process?.env?.SEEDLING_PRESSER_RECURSION_HANG === '0') CONTACT_FIDELITY.presserRecursionHang = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
