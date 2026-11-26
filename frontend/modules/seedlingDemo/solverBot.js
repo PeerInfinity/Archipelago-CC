@@ -11811,8 +11811,17 @@ function execHold(run, perTick, resolved, ctx) {
         }
     }
     // ⛓ seedling-fidelity-movingwait D2: `null` unless MOVING_WAIT is ON and the still wait prices a bomb.
-    const pace = pacedHoldPlan(run, resolved, ctx.what);
-    if (pace === null) lobberHoldRefusal(run, resolved.hold.ticks, ctx.what);
+    let pace;
+    try {
+        pace = pacedHoldPlan(run, resolved, ctx.what);
+        if (pace === null) lobberHoldRefusal(run, resolved.hold.ticks, ctx.what);
+    } catch (e) {
+        // ⛓ hammer-phase LATCHED-HOLD (`LATCHED_HOLD_MOVE`, OFF): only where the still and paced waits both refuse
+        const moved = LATCHED_HOLD_MOVE.enabled && e instanceof SolverRefusal
+            ? latchedHoldMove(run, perTick, resolved, ctx, e) : null;
+        if (moved === null) throw e;
+        return moved;
+    }
     if (resolved.latched === true && resolved.stance === null) {
         return runLatchedWait(run, perTick, resolved, ctx.what, pace);
     }
@@ -12129,6 +12138,174 @@ function pacedHoldPlan(run, resolved, what) {
         + `the wait may pace, and no pacing is clean (MOVING_WAIT, ${out.tried.length} tried): `
         + `${out.tried.slice(0, 4).join('; ')}${out.tried.length > 4 ? ' …' : ''}.`,
     { obstacle: { kind: 'danger', id: lobber } });
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE LATCHED-HOLD — **A HOLD WHOSE LATCH HAS FIRED WAITS WHERE NO BOMB LANDS**
+ * (`LATCHED_HOLD_MOVE`, OFF — `SEEDLING_LATCHED_HOLD_MOVE=1` / `withLatchedHoldMove(enabled, fn)`; a behaviour switch).
+ *
+ * A `room = -1` ButtonRoom's setter only ever writes `true` (*"Can't be reset to false!!"*, `ButtonRoom.as:67-98`), and
+ * it sets every responder of its group then; a `Lock`'s fade runs from `activate`, whoever stands where. So once the
+ * live run reports the presser's group LATCHED (`latchedGroups`), standing on the presser keeps nothing open: the rest
+ * of the hold is a wait that may be spent anywhere in the room. OFF, a presser hold stands on its stance (or paces it,
+ * `MOVING_WAIT`, each cycle back on the stance bit-for-bit); where a lobber's bomb lands on that stance and no pacing is
+ * clean, the hold refuses (`lobberHoldRefusal` / `pacedHoldPlan`). MEASURED (the whole-game walk's captured request
+ * A1 32:12, L40's Totem Part from the south): the stance is a 16 px pocket 36 px from the lobber, every pacing meets a
+ * wall, the blast or a spinner, and the group is already latched when the hold begins (the stance walk's arrival).
+ *
+ * ON, asked ONLY where OFF refuses one of those two refusals, for a presser hold with an observed `until` whose group the
+ * live run reports latched: the free, plannable cells on a `TILE_SIZE` lattice round the player (within `radius`, nearest
+ * first, none touching another presser) are played on the segment's FORK — the walk (`forkWalkTo`) then the empty-input
+ * stand until the hold's own `until`, inside the hold's bound. A cell is refused on any player hit or death, a level
+ * crossing, a group newly latched on the way (a side effect the plan never chose), or no open inside the bound. Of the
+ * accepted cells (all `maxForks` are asked), the wait ENDS where the planned route on to the caller's aim (`ctx.aim`,
+ * FADE_MOVE's) is shortest on the fork's own world, the group now open — the user's FADE-MOVE ruling: wait towards
+ * where the walk goes next (MEASURED on A1 32:12: the nearest hitless cell, behind a spinner shaft from the route,
+ * leaves the goal walk a bomb hit at t1690; the route-nearest cells solve hitless). Ties and no aim: fewer ticks. Its
+ * keys are replayed on the live run, which must agree (no new hit, `until` true), or the executor refuses by name.
+ * Nothing accepted: OFF's refusal stands, unchanged. No level, coordinate or entity id is read.
+ * `LATCHED_HOLD_MOVE_COUNTS` records each asking (measurement; no decision reads it).
+ */
+export const LATCHED_HOLD_MOVE = {
+    enabled: globalThis.process?.env?.SEEDLING_LATCHED_HOLD_MOVE === '1',
+    /** The cells asked: within this many px of the player, centre to centre. */
+    radius: 96,
+    /** At most this many forks per asking. */
+    maxForks: 12,
+};
+export const LATCHED_HOLD_MOVE_DEFAULT = false;
+export const LATCHED_HOLD_MOVE_COUNTS = { asked: 0, moves: [], declined: [] };
+
+/** Clear `LATCHED_HOLD_MOVE_COUNTS` (an instrument; nothing that decides reads it). */
+export function resetLatchedHoldMoveCounts() {
+    LATCHED_HOLD_MOVE_COUNTS.asked = 0;
+    LATCHED_HOLD_MOVE_COUNTS.moves = [];
+    LATCHED_HOLD_MOVE_COUNTS.declined = [];
+}
+
+/** Run `fn` with `LATCHED_HOLD_MOVE` set to `enabled`, restoring the previous value. */
+export function withLatchedHoldMove(enabled, fn) {
+    return withSwitch(LATCHED_HOLD_MOVE, enabled, fn);
+}
+
+/** The cells `latchedHoldMove` asks, nearest the player first: `{x, y, d}` (free, not on another presser). */
+function latchedHoldCells(run, presser, opts) {
+    const geo = run.liveGeometryOpts();
+    const others = (run.world.pressers ?? []).filter((p) => p !== presser);
+    const x0 = run.state.x;
+    const y0 = run.state.y;
+    const n = Math.floor(LATCHED_HOLD_MOVE.radius / TILE_SIZE);
+    const out = [];
+    for (let j = -n; j <= n; j += 1) {
+        for (let i = -n; i <= n; i += 1) {
+            const p = { x: Math.round(x0 + i * TILE_SIZE), y: Math.round(y0 + j * TILE_SIZE) };
+            const d = Math.hypot(p.x - x0, p.y - y0);
+            if (d < TILE_SIZE / 2 || d > LATCHED_HOLD_MOVE.radius) continue;
+            const box = playerBoxAt(p.x, p.y);
+            if (run.world.collidesSolid(box, geo)) continue;
+            if (plannerObstacleAt(run.world, p.x, p.y, null, opts) !== null) continue;
+            if (others.some((q) => q.rect && rectsOverlap(box, q.rect))) continue;
+            out.push({ ...p, d });
+        }
+    }
+    return out.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+}
+
+/**
+ * `LATCHED_HOLD_MOVE`'s decision and drive (see the switch). `refusal` is OFF's; `null` = it stands (no tick spent),
+ * else the hold's record, the player where the accepted cell's stand left it.
+ */
+function latchedHoldMove(run, perTick, resolved, ctx, refusal) {
+    const hold = resolved.hold;
+    if (refusal?.obstacle?.kind !== 'danger' || !resolved.stance || !resolved.target || !hold?.until) return null;
+    if (hold.latched !== true && resolved.latched !== true) return null;
+    const presser = (run.world.pressers ?? []).find((p) => p.x === resolved.target.x && p.y === resolved.target.y);
+    if (!presser) return null;
+    LATCHED_HOLD_MOVE_COUNTS.asked += 1;
+    const row = { level: run.level, t: perTick.length, presser: `${presser.tag}@${presser.x},${presser.y}`,
+        group: presser.t, what: String(ctx.what ?? '').slice(0, 160) };
+    const decline = (why) => {
+        LATCHED_HOLD_MOVE_COUNTS.declined.push({ ...row, why: String(why).slice(0, 1200) });
+        return null;
+    };
+    const latchedNow = () => [...(run.entities('latchedGroups') ?? [])].sort().join(',');
+    if (!(run.entities('latchedGroups') ?? new Set()).has(presser.t)) return decline('the group is not latched yet');
+    if (typeof ctx?.fork !== 'function') return decline('no fork (the segment has no `forkRun`)');
+    if (hold.until.test(run)) return decline('already open');
+    const level = run.level;
+    const bound = hold.ticks;
+    const hits0 = (run.ledger('playerHits') ?? []).length;
+    const deaths0 = (run.ledger('playerDeaths') ?? []).length;
+    const latched0 = latchedNow();
+    const opts = solverPlanOpts(run, new Set([...senseContacts(run)]));
+    const open = (r) => hold.until.test(r);
+    const tried = [];
+    let forks = 0;
+    const accepted = [];
+    for (const c of latchedHoldCells(run, presser, opts)) {
+        if (forks >= LATCHED_HOLD_MOVE.maxForks) { tried.push(`the ${LATCHED_HOLD_MOVE.maxForks}-fork bound`); break; }
+        if (planWaypointsOrNull(run.world, run.state, c, null, opts) === null) continue;
+        const f = ctx.fork();
+        if (!f) { tried.push('the fork tripped the deadline'); break; }
+        forks += 1;
+        const keys = [];
+        const w = forkWalkTo(f, keys, c, opts, null, hits0, deaths0);
+        if (w.why) { tried.push(`(${c.x},${c.y}): ${w.why}`); continue; }
+        if (keys.length > bound) { tried.push(`(${c.x},${c.y}): the walk (${keys.length} t) outlasts the bound`); continue; }
+        const st = fadeForkStand(f, keys, open, bound - keys.length + 1, hits0, deaths0);
+        if (!st.opened) { tried.push(`(${c.x},${c.y}): ${st.why}`); continue; }
+        if (f.level !== level) { tried.push(`(${c.x},${c.y}): left level ${level}`); continue; }
+        const latchedF = [...(f.entities('latchedGroups') ?? [])].sort().join(',');
+        if (latchedF !== latched0) { tried.push(`(${c.x},${c.y}): latched [${latchedF}], not [${latched0}]`); continue; }
+        accepted.push({ c, keys, stand: st.ticks, route: latchedHoldRoute(f, ctx.aim) });
+    }
+    if (accepted.length === 0) return decline(`no hitless wait (${forks} fork(s)): ${tried.slice(0, 16).join(' | ')}`);
+    // where the wait should END: the shortest planned route on to the caller's aim, the group open (the fork's own
+    // world); no aim or no route ranks last; then the fewer ticks, then the cells' own order
+    const rank = (x) => (Number.isFinite(x.route) ? x.route : Infinity);
+    const best = accepted.reduce((p, q) => (rank(q) < rank(p) || (rank(q) === rank(p) && q.keys.length < p.keys.length)
+        ? q : p));
+    const { c, keys } = best;
+    // ── the live replay, key for key; `until` read only ──
+    const from = perTick.length;
+    for (const k of keys) {
+        perTick.push(k);
+        const { transition } = run.advance(k);
+        if (transition) fail(`${ctx.what}: LATCHED_HOLD_MOVE's replay crossed to level ${transition.to_level}`);
+    }
+    if ((run.ledger('playerHits') ?? []).length !== hits0 || !open(run)) {
+        throw new SolverRefusal(`${ctx.what}: LATCHED_HOLD_MOVE's wait at (${c.x},${c.y}) (${keys.length} t) did not `
+            + `replay on the live run — ${open(run) ? 'a player hit' : hold.until.why} (the fork is not this run).`,
+        { obstacle: { kind: 'solid', id: row.presser } });
+    }
+    const openNow = run.entities('openActivators');
+    const openBefore = ctx.before?.open ?? null;
+    const moved = { target: { x: c.x, y: c.y }, from, ticks: keys.length, walk: keys.length - best.stand, forks,
+        route: Number.isFinite(best.route) ? Math.round(best.route) : null, accepted: accepted.length,
+        refused: String(refusal.message).slice(0, 240) };
+    LATCHED_HOLD_MOVE_COUNTS.moves.push({ ...row, ...moved });
+    return {
+        presser: { tag: presser.tag, x: presser.x, y: presser.y, t: presser.t },
+        latched: true, ticks: bound, heldFor: keys.length, stoppedOn: hold.until.why, at: { ...run.state },
+        opened: (run.world.activators ?? []).filter((a) => a.t === presser.t && openNow.has(a.id)
+            && (openBefore === null || !openBefore.has(a.id))).map((a) => a.id),
+        armed: [], traps: [], volleys: 0, wrote: [], latchedMove: moved,
+    };
+}
+
+/** The planned route length (px) from fork `f`'s player to `aim` on `f`'s own world, or `Infinity` (no aim, no plan). */
+function latchedHoldRoute(f, aim) {
+    if (!aim) return Infinity;
+    const opts = solverPlanOpts(f, new Set([...senseContacts(f)]));
+    const wps = planWaypointsOrNull(f.world, f.state, aim, null, opts);
+    if (wps === null) return Infinity;
+    let len = 0;
+    let at = { x: f.state.x, y: f.state.y };
+    for (const p of [...wps, aim]) {
+        len += Math.hypot(p.x - at.x, p.y - at.y);
+        at = p;
+    }
+    return len;
 }
 
 /**
