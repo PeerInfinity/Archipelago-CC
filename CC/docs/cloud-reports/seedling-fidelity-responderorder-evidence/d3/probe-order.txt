@@ -1,0 +1,30 @@
+tapes 323; totals {"deferred":192800,"ranDeferred":192596,"seeded":669,"steps":192571,"tapeEndPending":204,"transitionDrop":441,"staleDrop":25,"threw":1,"enemyPress":397}
+  frontend/modules/seedlingDemo/fixtures/hammer-g1-ghostkill-witness/hammer-g1-l40-ghostkill.tape.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/hammer-sf-strikefloor-witness/hammer-sf-l40-strikefloor.tape.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l74-phase-a.tape.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-fade-stand-86.tape.json: {"enemyPress":0,"enemyHold":0,"staleDrop":2}
+  frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-fade-stand.tape.json: {"enemyPress":0,"enemyHold":0,"staleDrop":2}
+  frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-fresh-stand.tape.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-k4-stand.tape.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-k8.tape.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-k9-rebuild.tape.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-leg649.tape.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/l40contact-spinnerwall-witness/l40contact-a-sword-floorplan.tape.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/l40contact-spinnerwall-witness/l40contact-a-sword-spinnerwall.tape.json: {"enemyPress":0,"enemyHold":0,"staleDrop":2}
+  frontend/modules/seedlingDemo/fixtures/l40guard-witness/l40guard-spinner-los.tape.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/l40guard-witness/l40guard-walk-east.tape.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json: {"enemyPress":19,"enemyHold":0,"staleDrop":0}
+  frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json: {"enemyPress":4,"enemyHold":0,"staleDrop":0}
+  frontend/modules/seedlingDemo/fixtures/tapes/r3-bobboss-death.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/tapes/r3-drown.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/tapes/r3-lava.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/tapes/r3-pit-death.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5-control.json: {"enemyPress":39,"enemyHold":0,"staleDrop":0}
+  frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json: {"enemyPress":39,"enemyHold":0,"staleDrop":0}
+  frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft-control.json: {"enemyPress":111,"enemyHold":0,"staleDrop":0}
+  frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft.json: {"enemyPress":185,"enemyHold":0,"staleDrop":0}
+  frontend/modules/seedlingDemo/fixtures/tapes/r6-contact-pair-heart.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/tapes/r6-contact-pair-live.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/tapes/r6-seed-credits.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+  frontend/modules/seedlingDemo/fixtures/tapes/r6-watcher-blood.json: {"enemyPress":0,"enemyHold":0,"staleDrop":1}
+EXIT 0

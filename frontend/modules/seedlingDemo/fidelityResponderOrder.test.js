@@ -272,4 +272,13 @@ describe('RESPONDERORDER — the committed tapes (ON vs OFF: the movers, every o
         const writes = (over) => JSON.parse(tapeResult('l40button-l42-part0', over)).lockWrites.filter((x) => x.flag.tag === 2).map((x) => x.t);
         expect([writes({ [KEY]: true }), writes({})]).toEqual([[1437], [1470]]);
     });
+    it('corpsebump2-walk-press (the L40 t2 wandlocks, a corpse on their Button): the game\'s hold-cut says ON\'s stamp', () => {
+        const W = readJson(`${W65}/d2/witness-corpsebump2.json`).shapes[0];
+        const at = (n) => W.cuts.find((c) => c.n === n).cleared.some((c) => c.level === 40 && c.tag === 9);
+        expect([at(1302), at(1303)]).toEqual([false, true]);
+        const w = JSON.parse(readFileSync(join(HERE, 'fixtures/l40latch-witness/corpsebump2-walk-press.json'), 'utf8'));
+        const stamp = (on) => withContactFidelity({ [KEY]: on }, () => runTape(parseTape(JSON.stringify(w.tape)), { levelSource: VANILLA }))
+            .lockWrites.find((x) => x.flag.level === 40 && x.flag.tag === 9).t;
+        expect([stamp(true), stamp(false)]).toEqual([1302, 1301]);
+    });
 });

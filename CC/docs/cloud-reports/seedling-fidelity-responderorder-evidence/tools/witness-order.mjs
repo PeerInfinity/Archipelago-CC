@@ -113,7 +113,11 @@ try {
     for (const name of TAPES) {
         // An old tape is raised to the hold-cut's v12 with the fields it predates filled empty (no despawn, an empty
         // save) and the L25 template's rng (no RNG reader in these rooms).
-        const raw = JSON.parse(readFileSync(join(REPO, 'frontend/modules/seedlingDemo/fixtures/tapes', `${name}.json`), 'utf8'));
+        // a name is a committed tape (`fixtures/tapes/<name>.json`); a path (with a '/') is a repo file, its `.tape`
+        // when it is a witness recording
+        const read = JSON.parse(readFileSync(name.includes('/') ? join(REPO, name)
+            : join(REPO, 'frontend/modules/seedlingDemo/fixtures/tapes', `${name}.json`), 'utf8'));
+        const raw = read.tape ?? read;
         const l25raw = JSON.parse(readFileSync(join(REPO, L25.L25_TAPE), 'utf8'));
         const tape = { despawn: [], save: { totem_parts: [], keys: [], seal_parts: [] }, rng: l25raw.rng, ...raw };
         const t0 = Date.now();
