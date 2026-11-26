@@ -21712,10 +21712,11 @@ function preLockStance(run, lock, contacts) {
  * plus one sentence. Nothing reads a level, a coordinate or an entity id. OFF: never asked.
  * `SEEDLING_PRESS_KILL_HOLD=1` / `withPressKillHold(enabled, fn)`. Worker thread (the solve).
  */
-export const PRESS_KILL_HOLD = { enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_HOLD === '1',
+// MEASUREMENT PROBE (not for landing as-is): PKH ON by default to measure a PKH flip; `SEEDLING_PRESS_KILL_HOLD=0` opts out.
+export const PRESS_KILL_HOLD = { enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_HOLD !== '0',
     /** The idles tried at the stand, in whole hammer periods: 1 … maxPeriods. */
     maxPeriods: 4 };
-export const PRESS_KILL_HOLD_DEFAULT = false;
+export const PRESS_KILL_HOLD_DEFAULT = true;
 /** Per-run rows (ON only): one per refusal answered, `{t, stand, refusedAt, tries: [{wait, verdict, why}], verdict}`. */
 export const PRESS_KILL_HOLD_COUNTS = { rows: [] };
 
