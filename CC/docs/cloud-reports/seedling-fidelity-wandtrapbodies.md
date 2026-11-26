@@ -168,7 +168,18 @@ re-measure-10's.
   refused). No route through L63 solves ON at the captured request, so there is no L63 route that could stand in a blast; the
   `d-*` witnesses stand 21.3 px from it, outside the 20 px disc, and take nothing.
 - **ON movers** (key ON by env over every test naming `WandShot`, `wand`, `darkTrap`, `placedGrenade`, `grenade` or `pressEnemies`):
-  ON_MOVERS_PLACEHOLDER
+  **140 fast files** (4965 rows): 2 red ON, **neither a model mover**.
+  - `frontend/modules/seedlingDemo/contactFidelity.test.js` › *"the shipped defaults: all three ON"* — **OFF-contract**: the row pins
+    the LIVE process's `CONTACT_FIDELITY` to the shipped defaults, so any key set by env reds it (its `skipIf` list names
+    only some envs). Green OFF.
+  - `scripts/procgen/boxLock.test.js` › *"takes conditionally exactly where a headless arm would have been queued"* — **not this
+    slice's model**: the new probe takes the box inside `main()` and had to be declared in the import-door list. Red OFF as
+    well; **fixed** (`dc69918c`), green.
+  - The slow files that name them, one at a time, ON: `deriveLevelWorldLogic.latchSandwich.slow` (3/3), `deriveLevelWorldLogic.slow`
+    (2/2), `strategySwitchEscape.slow` (2/2), `fidelityWandTrapBodies.slow` (3/3) — all green.
+  - The `.train.` files: none names a shot, a darktrap, a grenade or `pressEnemies`; ten name `wandlock` (L40's, a `Lock`) only.
+    They were **not run** (their rooms hold no trap body, so the key's code is unreachable there); the planner's dispatched
+    `train_only` run at the head is the measurement.
 - **The named sweep** (the keyed ON-arm, shards = min(10, legs)): the survey legs whose route fires a wand in **L63, L75 or
   L101** (the rooms ON can now fire in; L59/L62/L65/L78 still refuse on residue). The survey cache is not in this container, so
   the legs cannot be counted here; the planner's sweep should filter on those three levels (L63: re-measure-10's entry 37,
@@ -176,7 +187,23 @@ re-measure-10's.
 
 ## Gates
 
-GATES_PLACEHOLDER
+Last CODE head: **`dc69918c51af6b28908ddf22a9a593cf9421db72`** (it touches `scripts/procgen/`, a filtered path).
+
+| gate | base `6a8ceed9f4` | head |
+|---|---|---|
+| bounded vitest (`--maxWorkers=3`): `contactFidelity*`, `levelRun*`, `levelWorld*`, `wand*`, `fidelityWand*`, `fidelityL12Doors*`, `fidelityLadder2*`, `enemyDamage*`, `oneSpelling`, every file naming `assertWandShotSolidsBound` / `wandShotBlockerAt` / `darkTrapStateFor` / `placedGrenadeStates` / the key, every key-order pin file, `r8Acceptance`, `tapeEnvelope`, `solverDeadline`, `decisionTrace`, `lintGateLabels`, `seedlingConstantsCensus`, `seedlingSolverSurface` (no `placedGrenade*`, `darkTrap*` or `fidelityStaticLadder*` test file exists) | 53 files, 1448 passed, 1 skipped | **54 files, 1497 passed** (the first head run had 2 red — the DEADFRAME appended-last pin and a census row read mid-`--write`; both fixed / green on re-run) |
+| `boxLock.test.js` | — | 26/26 (after the fix) |
+| `fidelityWandTrapBodies.slow.test.js` | — | 3/3 |
+| `ci-producer-checks.mjs --jobs=3` | — | 99 run, 0 red, 1 skipped, 0 known-red |
+| `check-procgen-docs.mjs` | — | ALL CHECKS PASSED |
+| `generate-procgen-reference.mjs --check` | match | red on the new probe (instruments) → regenerated → **ALL 7 MODULES AND 5 REGIONS MATCH** |
+| `census-seedling-constants.mjs --check` (after `--write`; `--profile-rows` rewrote its csv byte-identically) | — | PASS (0 new, 0 moved) |
+| `census-seedling-solver-surface.mjs --check` (after `--write`: line moves only) | — | GREEN, 374 rows |
+| `solve-seedling-{r8-battery,r8-d2-chain,r8-l18,r8-tail,r9-l3,r9-campaign}.mjs --check` | — | all six green |
+| CI `JavaScript Unit Tests` at `dc69918c` | — | CI_PLACEHOLDER |
+
+⛔ No unfiltered vitest, no `pytest`, no `standing-values --write`. **For the planner:** dispatch
+`unittests_frontend.yml -f train_only=true` at the head (this session cannot dispatch).
 
 ## What the brief got wrong (measured)
 
