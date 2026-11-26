@@ -1081,7 +1081,7 @@ export function stepActivators(state, world, playerBox, opts = {}) {
             if (!s.open && !coverHeld) s.alpha = 1;   // `if (type == normType) alpha = 1`
             // returnToNormal / reset — BOTH are guarded by occupancy, and
             // the guard is why a crossing is possible at all.
-            if (!occupied(a.rect, responder.fade !== 0.1)) {
+            if (!occupied(a.rect, responder.guard === 'occupancy')) {
                 // `returnToNormal`'s `if (type == "")` — the write happens
                 // only for a lock that really was open, which is why this
                 // reads `s.open` BEFORE clearing it.
