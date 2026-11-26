@@ -140,6 +140,23 @@ describe('DEADFRAME — the dead frames, counted (the game\'s `dead_frames`, the
         const falls = (name) => replay(name, { [DEAD]: true, [ENEMY]: true }).rockFalls.map((r) => [r.t, r.deadFrames]);
         expect(['d-span', 'e-fly-rock', 'e-spin-rock'].map(falls)).toEqual([[[24, 167]], [[15, 182]], [[72, 182]]]);
     });
+    it('ON, the model steps the responders on exactly the game\'s dead frames (both `responderStepAfterReaders` arms; OFF none)', () => {
+        const spans = (name, over) => replay(name, { [DEAD]: true, [ENEMY]: true, ...over }).deadResponderFrames.map((r) => [r.t, r.why, r.frames]);
+        const WANT = {
+            'd-key': [[24, 'bosskey\'s phase A', 150]], 'd-health': [[26, 'health\'s phase A', 149]],
+            'd-span': [[24, 'a button\'s or the wand\'s rocks', 167]],
+            'e-fly-rock': [[15, 'a button\'s or the wand\'s rocks', 182]], 'e-spin-rock': [[72, 'a button\'s or the wand\'s rocks', 182]],
+        };
+        for (const [name, want] of Object.entries(WANT)) {
+            expect([name, spans(name, {})]).toEqual([name, want]);
+            // `responderStepAfterReaders` ON runs the queue at the next advance's top, before its readers: the same stamp (the
+            // OFF flush is past the tick's `ticksCompleted++`).
+            expect([name, spans(name, { [RSAR]: true })]).toEqual([name, want]);
+            expect([name, replay(name).deadResponderFrames]).toEqual([name, []]);
+        }
+        expect(replay('e-fly-rock', { [ENEMY]: true }).enemyRockPresses).toEqual([{ t: 14, level: 38, ids: ['fallrock@64,272'] }]);
+        expect(replay('e-spin-rock', { [ENEMY]: true }).enemyRockPresses).toEqual([{ t: 71, level: 38, ids: ['fallrock@64,272'] }]);
+    });
 });
 
 describe('DEADFRAME — composition', () => {

@@ -112,7 +112,8 @@ export function replayDeadFrame(tape, levelSource) {
     } catch (e) {
         error = { name: e?.name ?? 'Error', message: String(e?.message ?? e).slice(0, 400) };
     }
-    return { rows, error, rockFalls: run?.rockFalls ?? [], hits: run?.playerHits?.length ?? null };
+    return { rows, error, rockFalls: run?.rockFalls ?? [], deadResponderFrames: run?.deadResponderFrames ?? [],
+        enemyRockPresses: run?.enemyRockPresses ?? [], hits: run?.playerHits?.length ?? null };
 }
 
 /**

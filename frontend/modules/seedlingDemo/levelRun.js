@@ -16169,6 +16169,10 @@ export function createLevelRun({
      * advance, before its readers (`'top'`). See the key's doc.
      */
     let pendingDeadResponderFrames = null;
+    /** ⛓ fidelity DEADFRAME D2: every flushed queue, `{t, level, why, frames, changed}` (`changed`: the frames on which a responder's open or alpha moved). OFF: empty. */
+    const deadResponderFrames = [];
+    /** ⛓ fidelity DEADFRAME D2: every FallRock arm an enemy made, `{t, level, ids}`. OFF: empty. */
+    const enemyRockPresses = [];
     const queueDeadResponderFramesNow = (n, why, solidsAt = null) => {
         if (!CONTACT_FIDELITY.deadFrameResponderStep || noclip || n <= 0) return;
         const w = worldFor(level);
@@ -16188,9 +16192,14 @@ export function createLevelRun({
         pendingDeadResponderFrames = null;
         // A queue whose world a level change or a rebuild tore down: that world runs no later frame.
         if (p.level !== level || activatorStateFor(level) !== p.state) return;
+        const look = () => [...p.state.byId.values()].map((r) => `${r.open ? 1 : 0}:${r.alpha}`).join();
+        let changed = 0;
         for (const movingSolids of p.frames) {
+            const before = look();
             applyLockEvents(stepActivators(p.state, p.world, p.box, { inventory, keys, movingSolids, enemies: p.enemies }));
+            if (look() !== before) changed += 1;
         }
+        deadResponderFrames.push({ t: ticksCompleted, level, why: p.why, frames: p.frames.length, changed });
     };
     /**
      * ── ⛓⛓⛓ SWIM T3: THE BUTTON THAT DROPS A ROCK ───────────────────────
@@ -16252,6 +16261,7 @@ export function createLevelRun({
             ...wallFlyerBodiesNow().map((b, i) => ({ id: `wallflyer#${i}`, rect: wallFlyerRect(b) }))];
         if (enemies.length === 0) return;
         armButtonFallRocks(ENEMY_PRESS_NO_BOX, enemies);
+        if (pendingButtonFalls !== null) enemyRockPresses.push({ t: ticksCompleted, level, ids: [...pendingButtonFalls] });
     };
     const resolveButtonFalls = (ids, { nested = false } = {}) => {
         const rocks = fallRockStateFor(level);
@@ -20516,6 +20526,10 @@ export function createLevelRun({
          */
         get treeBurns() { return treeBurnsNow(); },
         get rockFalls() { return rockFalls.map((r) => ({ ...r, flag: r.flag && { ...r.flag } })); },
+        /** ⛓ fidelity DEADFRAME D2: the dead-frame responder queues run (`deadFrameResponderStep` ON; OFF empty). */
+        get deadResponderFrames() { return deadResponderFrames.map((r) => ({ ...r })); },
+        /** ⛓ fidelity DEADFRAME D2: the FallRock arms an enemy made (`enemyPressesFallRockButton` ON; OFF empty). */
+        get enemyRockPresses() { return enemyRockPresses.map((r) => ({ ...r, ids: [...r.ids] })); },
         /** ⛓ fidelity PLAINSPAN D2 (`plainPickupInFreeze` ON; OFF always empty): the apitems the run took itself. */
         get plainFreezeTakes() { return plainFreezeTakes.map((r) => ({ ...r })); },
         /**
