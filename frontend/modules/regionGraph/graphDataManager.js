@@ -589,6 +589,8 @@ export class GraphDataManager {
     this.ui.interactionManager?.hideHover?.();
     this.ui.cy.elements().remove();
     this.ui.cy.add(elements);
+    // ⛓ region-graph-map-look: the map node look re-applies to the new nodes (a no-op while it is off).
+    this.ui.mapLook?.onGraphBuilt?.();
     // ⛓ G4: a pending centre (regionGraphCentreAction.js) on a node this graph no longer draws is dropped.
     dropStalePendingCentre(this.ui);
     // The remove took every drawn location node with it.

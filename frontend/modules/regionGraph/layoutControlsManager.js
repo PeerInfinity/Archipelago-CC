@@ -4,6 +4,7 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { isRegionGroupNode, SUB_REGION_VIEW_KEY, SUB_REGION_VIEW_SCHEMA, SUB_REGION_VIEW_LABELS } from './subRegionGroups.js';
+import { NODE_LOOK_KEY, NODE_LOOK_SCHEMA, NODE_LOOK_LABELS, NODE_LOOK_HINT, syncNodeLookControl } from './nodeLook.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -53,6 +54,13 @@ export class LayoutControlsManager {
               ${SUB_REGION_VIEW_SCHEMA.enum.map((v) => `<option value="${v}">${SUB_REGION_VIEW_LABELS[v] ?? v}</option>`).join('')}
             </select>
           </label>
+          <label style="display: block; margin: 3px 0;">
+            <span style="margin-right: 5px;">Node look:</span>
+            <select id="nodeLook" style="padding: 2px;">
+              ${NODE_LOOK_SCHEMA.enum.map((v) => `<option value="${v}">${NODE_LOOK_LABELS[v] ?? v}</option>`).join('')}
+            </select>
+          </label>
+          <div id="nodeLookHint" style="display: none; margin: 0 0 3px 0; font-size: 11px; color: #aaa;">${NODE_LOOK_HINT}</div>
         </details>
         <details open style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
           <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">Location Visibility:</summary>
@@ -210,6 +218,20 @@ export class LayoutControlsManager {
           await settingsManager.updateSetting(SUB_REGION_VIEW_KEY, e.target.value);
         } catch (error) {
           logger.warn(`Failed to save setting ${SUB_REGION_VIEW_KEY}:`, error);
+        }
+      });
+    }
+
+    // ⛓ Node look (region-graph-map-look): the select writes the setting; the panel's settings:changed handler reloads
+    // it and turns the map look on or off WITHOUT a rebuild. Disabled (with a hint) unless Draw as is merged.
+    const nodeLookSelect = this.ui.controlPanel.querySelector('#nodeLook');
+    if (nodeLookSelect) {
+      syncNodeLookControl(this.ui);
+      nodeLookSelect.addEventListener('change', async (e) => {
+        try {
+          await settingsManager.updateSetting(NODE_LOOK_KEY, e.target.value);
+        } catch (error) {
+          logger.warn(`Failed to save setting ${NODE_LOOK_KEY}:`, error);
         }
       });
     }
