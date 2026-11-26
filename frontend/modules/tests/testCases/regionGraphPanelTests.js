@@ -9,6 +9,7 @@ import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import { SUB_REGION_VIEW_KEY, multiMemberGroups, isRegionGroupNode, groupNodeId } from '../../regionGraph/subRegionGroups.js';
 import { regionOfCell } from '../../regionView/regionViewModel.js';
 import { NODE_LOOK_KEY } from '../../regionGraph/nodeLook.js';
+import { layoutRunOf } from '../../regionGraph/layoutRun.js';
 
 const PANEL_ID = 'regionGraphPanel';
 const MAX_WAIT_TIME = 10000;
@@ -30,31 +31,25 @@ function graphShowsWorld() {
   return ids.length === regions.size && ids.every((id) => regions.has(id)) && cy.edges().length > 0;
 }
 /**
- * ⛓ Watch the layouts on `cy` from now: `idle()` is true when none started since, or the last one has STOPPED (its
- * `layoutstop`, which an animated layout emits when its animation ends). A layout that was running before the watch is
- * stopped by the rebuild that follows it (`GraphDataManager` stops `currentLayout`), so watch from just before the
- * switch that rebuilds. `dispose()` removes the listeners.
+ * ⛓ The panel's own "settled" signal (region-graph-layout-settled, `layoutRun.js`): `idle()` is true when no panel
+ * layout run is going, i.e. none started or the last one SETTLED (its own layoutstop, after its last position change;
+ * a superseded run never settles, so a switch that replaces a running layout reads "running" until the replacement
+ * settles). Nothing moves after it. `dispose()` is kept for the call sites (it has nothing to remove).
  */
 function layoutWatch(cy) {
-  let lastStart = 0; let lastStop = 0; let seq = 0;
-  const onStart = () => { lastStart = ++seq; };
-  const onStop = () => { lastStop = ++seq; };
-  cy.on('layoutstart', onStart);
-  cy.on('layoutstop', onStop);
+  const run = () => layoutRunOf(cy);
   return {
-    idle: () => lastStart === 0 || lastStop > lastStart,
-    state: () => (lastStart === 0 ? 'none started' : lastStop > lastStart ? 'stopped' : 'running'),
-    dispose: () => { cy.off('layoutstart', onStart); cy.off('layoutstop', onStop); },
+    idle: () => !run()?.running,
+    state: () => (!run() ? 'none started' : run().running ? 'running' : `settled (${run().settled} runs)`),
+    dispose: () => {},
   };
 }
-/** Poll until no region node moved for one interval: no layout is running. */
+/** Wait until no panel layout is running (the settle signal); fails the poll, as before, if one never settles. */
 function layoutSettled(testController, cy) {
-  let last = null;
-  return testController.pollForCondition(() => {
-    const now = JSON.stringify(regionNodes(cy).map((n) => n.position()));
-    const still = now === last; last = now; return still;
-  }, 'the layout settled', MAX_WAIT_TIME, 300);
+  return testController.pollForCondition(() => !layoutRunOf(cy)?.running, 'the layout settled', MAX_WAIT_TIME, 50);
 }
+/** Resolve after `n` animation frames (Cytoscape renders on one, the map look paints on the next). */
+const frames = (n) => new Promise((resolve) => { const step = (k) => (k === 0 ? resolve() : requestAnimationFrame(() => step(k - 1))); step(n); });
 /**
  * Reload the world loaded before a row that changed it (a `./presets/` path
  * only). `always`: also when it is still the loaded one, for a row that
@@ -674,7 +669,7 @@ export async function testRegionGraphSubRegionMerged(testController) {
 
     const probe = regionNodes(graphCy())[0];
     // ⛓ The merged switch may start an ANIMATED layout (no saved merged positions, e.g. when the row runs alone):
-    // the map step below waits for it to stop before it reads a square's screen spot.
+    // the map step below waits for it to SETTLE before it reads a square's screen spot.
     const mergedLayouts = layoutWatch(graphCy());
     const t0 = performance.now();
     await ctx.setSetting(SUB_REGION_VIEW_KEY, 'merged');
@@ -713,10 +708,19 @@ export async function testRegionGraphSubRegionMerged(testController) {
     // LOCATION click on that location. No rebuild: the same nodes stay.
     const mapCanvas = () => document.querySelector('.region-graph-panel-container .rg-map-look-canvas');
     const sameNode = merged()[0];
-    // A square's screen spot is read from the map look's last paint: wait for any layout the switch started to stop
+    // A square's screen spot is read from the map look's last paint: wait for any layout the switch started to settle
     // (else the nodes, and the squares, move on after the read), then fit; the map look's first paint follows the fit.
-    const settledOk = await testController.pollForCondition(() => mergedLayouts.idle(), 'the merged layout stopped', MAX_WAIT_TIME, 20);
+    const settledOk = await testController.pollForCondition(() => mergedLayouts.idle(), 'the merged layout settled', MAX_WAIT_TIME, 20);
     testController.reportCondition(`the merged view's layout has settled (${mergedLayouts.state()}) before the map look`, settledOk);
+    // ⛓ region-graph-layout-settled: "settled" means the nodes have stopped. Every node box (rendered, so the view is in
+    // it) is traced over 10 animation frames from the settle: none may change.
+    const boxSig = () => JSON.stringify(graphCy().nodes().filter((n) => !n.hasClass('player') && !n.hasClass('location-node'))
+      .map((n) => { const b = n.renderedBoundingBox({ includeLabels: false }); return [n.id(), +b.x1.toFixed(1), +b.y1.toFixed(1), +b.x2.toFixed(1), +b.y2.toFixed(1)]; }));
+    const atSettle = boxSig();
+    const movedFrames = [];
+    for (let f = 1; f <= 10; f += 1) { await frames(1); if (boxSig() !== atSettle) movedFrames.push(f); }
+    testController.reportCondition(`no node moves after the settle: 10 frames traced, changed at frames [${movedFrames.join(', ')}]`,
+      settledOk && movedFrames.length === 0);
     mergedLayouts.dispose();
     graphCy().fit(30);
     const mapLayouts = layoutWatch(graphCy());
@@ -731,10 +735,9 @@ export async function testRegionGraphSubRegionMerged(testController) {
     testController.reportCondition(`nodeLook = map: ${mapCanvas()?.dataset.cells} cells painted = ${withCell} nodes with a Region Map cell `
       + `of ${drawn} (${cellLess} without: they keep the graph look), no rebuild (switch ${mapMs} ms)`,
       mapOk && Number(mapCanvas().dataset.cells) === withCell && withCell >= drawn - 1 && withCell > 0 && !sameNode.removed());
-    // ⛓ The squares' screen spots are the map look's LAST paint. Read them only once that paint is stable and agrees with
-    // the nodes as they are now: the same zoom, pan, node boxes and squares over 3 polls 50 ms apart (frames between
-    // them), no layout running, no paint pending, and every square inside its node's rendered box. A paint taken before
-    // the nodes or the view moved on leaves a square where its node no longer is: the hit test there finds nothing.
+    // ⛓ The squares' screen spots are the map look's LAST paint. Read them once no layout is running (the panel's settle
+    // signal: nothing moves after it), the paint that follows the last move has run (three frames: Cytoscape renders,
+    // the map look paints on the next), no paint is pending, and every square lies inside its node's rendered box.
     const paintNow = () => {
       const c = graphCy(); const d = layer?.getDebugState(); const z = c.zoom(); const p = c.pan();
       const idOf = new Map((d?.nodeKeys ?? []).map(([id, k]) => [k, id]));
@@ -744,20 +747,17 @@ export async function testRegionGraphSubRegionMerged(testController) {
         const bb = c.getElementById(idOf.get(q.key) ?? '').renderedBoundingBox({ includeLabels: false });
         return !(q.sx >= bb.x1 && q.sx <= bb.x2 && q.sy >= bb.y1 && q.sy <= bb.y2);
       }).map((q) => `${q.location} at (${Math.round(q.sx)}, ${Math.round(q.sy)})`);
-      const sig = JSON.stringify([+z.toFixed(4), Math.round(p.x), Math.round(p.y), boxes,
-        (d?.squares ?? []).map((q) => [q.key, q.location, Math.round(q.sx), Math.round(q.sy)])]);
-      return { sig, off, paints: d?.stats?.paints ?? 0, pending: layer?._paintHandle != null, zoom: z, pan: p, boxes };
+      return { off, paints: d?.stats?.paints ?? 0, pending: layer?._paintHandle != null, zoom: z, pan: p, boxes };
     };
-    let lastSig = null; let same = 0; let lastPaint = null;
-    const paintStable = await testController.pollForCondition(() => {
+    const mapSettled = await testController.pollForCondition(() => mapLayouts.idle(), 'the layout settled before the map look read', MAX_WAIT_TIME, 20);
+    await frames(3);
+    let lastPaint = null;
+    const paintStable = mapSettled && await testController.pollForCondition(() => {
       const s = paintNow(); lastPaint = s;
-      const ok = mapLayouts.idle() && !s.pending && s.off.length === 0;
-      same = ok && s.sig === lastSig ? same + 1 : 0;
-      lastSig = s.sig;
-      return same >= 2;
-    }, 'the map look paint is stable and on its nodes', MAX_WAIT_TIME, 50);
-    testController.reportCondition(`the map look's last paint is stable and every square lies on its node (layout ${mapLayouts.state()}, `
-      + `${lastPaint?.paints} paints, pending ${lastPaint?.pending}, off their node: ${lastPaint?.off.join('; ') || 'none'})`, paintStable);
+      return mapLayouts.idle() && !s.pending && s.off.length === 0;
+    }, 'the map look paint is on its nodes', MAX_WAIT_TIME, 50);
+    testController.reportCondition(`the map look's last paint follows the settle and every square lies on its node (layout ${mapLayouts.state()}, `
+      + `${lastPaint?.paints} paints, pending ${lastPaint?.pending}, off their node: ${lastPaint?.off.join('; ') || 'none'})`, !!paintStable);
     mapLayouts.dispose();
     // ⛓ The spot to click: a point inside a square that Cytoscape's own hit-test gives to the square's node AND that
     // the layer maps back to that square (`squareAtNode`). Map-look §12: a square under another element (the player
@@ -841,8 +841,7 @@ export async function testRegionGraphSubRegionMerged(testController) {
     if (playerRegion && graphCy().getElementById('player').length) ui.updatePlayerLocation(playerRegion);
     ui.currentLayoutPreset = layoutBefore;
     if (presetSel && presetBefore !== null) presetSel.value = presetBefore;
-    ui.layoutGeneration += 1; // a pending layoutstop save of this run is dropped
-    ui.isLayoutRunning = false;
+    // (`animate: false`: the run settled inside runDirectionLayout, its save already written; the store is put back next)
     const store = lcm.positionStore();
     store.clear();
     for (const [id, p] of savedStore) store.set(id, p);
@@ -861,9 +860,8 @@ export async function testRegionGraphSubRegionMerged(testController) {
     const boxes = () => graphCy()?.nodes().filter((n) => isRegionGroupNode(n, 'box')) ?? null;
     const probe2 = merged()[0];
     const t1 = performance.now();
-    // A layout the switch starts (no saved collapsible positions → `runLayout`) ends with a `layoutstop` (after its
-    // animation): watched from here, so the badge check below waits for the layout itself, not the panel's
-    // `isLayoutRunning`, which it clears ~1 s later.
+    // A layout the switch starts (no saved collapsible positions → `runLayout`) SETTLES after its last move (the
+    // panel's signal, layoutRun.js): the badge check below waits for that.
     const colLayouts = layoutWatch(graphCy());
     await ctx.setSetting(SUB_REGION_VIEW_KEY, 'collapsible');
     const closedOk = await testController.pollForCondition(() => !!probe2?.removed() && merged()?.length === expected.size
@@ -880,14 +878,14 @@ export async function testRegionGraphSubRegionMerged(testController) {
     // places it, but when the rebuild had no saved positions `runLayout` starts an ANIMATED layout: the node (and the
     // fit) keep moving for its duration, and the badge layer re-places the badge one frame after each move. A hit-test
     // in that window can land outside the panel or under another element (the race seen on the bundled boot). So wait
-    // until (1) no layout is running (none started, or its `layoutstop` came), (2) the badge layer has no re-placement pending (`_frame`), (3) the badge covers
+    // until (1) no layout is running (none started, or it settled), (2) the badge layer has no re-placement pending (`_frame`), (3) the badge covers
     // its node's rendered top-right corner and (4) its centre is inside the graph's container. The zoom is in the text: below
     // `showRegionNames` the badge is hidden by design and this poll goes STUCK.
     const plusNode = graphCy().getElementById(groupNodeId(key));
-    // The row sets its own view for the hit-test: once the switch's layout has stopped, centre on the node at a zoom
+    // The row sets its own view for the hit-test: once the switch's layout has settled, centre on the node at a zoom
     // where badges show (`showRegionNames`; the fit alone can leave a spread-out graph below it, the badge then hidden
     // by design).
-    await testController.pollForCondition(() => colLayouts.idle(), 'the collapsible layout stopped', MAX_WAIT_TIME, 20);
+    await testController.pollForCondition(() => colLayouts.idle(), 'the collapsible layout settled', MAX_WAIT_TIME, 20);
     graphCy().zoom(Math.max(graphCy().zoom(), 1));
     graphCy().center(plusNode);
     const badgeState = () => {

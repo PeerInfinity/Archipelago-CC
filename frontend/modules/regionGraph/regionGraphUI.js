@@ -42,8 +42,8 @@ export class RegionGraphUI {
     // the cose / hierarchical fallback — so the Region Graph's
     // spatial layout matches the maze panel's grid.
     this.gridLayout = null;
+    // ⛓ true from a layout run's start to its settle (layoutRun.js); `whenLayoutSettled(ui)` waits for it.
     this.isLayoutRunning = false;
-    this.layoutGeneration = 0;
     this.pathFinder = new PathFinder(stateManager);
     this.dataManager = new GraphDataManager(this);
     this.interactionManager = new GraphInteractionManager(this);
@@ -1064,6 +1064,11 @@ export class RegionGraphUI {
 
   runLayout(force = false) {
     return this.layoutControlsManager.runLayout(force);
+  }
+
+  /** ⛓ layoutRun.js calls this once per settled layout run (after its last position change). */
+  onLayoutSettled(info) {
+    return this.interactionManager.onLayoutSettled(info);
   }
 
   saveNodePositions() {

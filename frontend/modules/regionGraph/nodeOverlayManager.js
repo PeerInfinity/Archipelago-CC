@@ -1,4 +1,5 @@
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import { LAYOUT_SETTLED_EVENT } from './layoutRun.js';
 
 const logger = createUniversalLogger('regionGraph:overlays');
 
@@ -178,7 +179,9 @@ export class NodeOverlayManager {
     const onPosition = () => this._syncPositions();
 
     this.ui.cy.on('viewport', onViewport);
-    this.ui.cy.on('layoutstop', onLayoutStop);
+    // ⛓ after a panel layout run SETTLES (layoutRun.js), not on any layoutstop: a superseded layout's stop would shrink
+    // the nodes the next run pre-sized while it is still moving.
+    this.ui.cy.on(LAYOUT_SETTLED_EVENT, onLayoutStop);
     this.ui.cy.on('position', 'node', onPosition);
 
     this._cyListeners = { onViewport, onLayoutStop, onPosition };
@@ -187,7 +190,7 @@ export class NodeOverlayManager {
   _unbindCyEvents() {
     if (!this._cyListeners || !this.ui.cy) return;
     this.ui.cy.off('viewport', this._cyListeners.onViewport);
-    this.ui.cy.off('layoutstop', this._cyListeners.onLayoutStop);
+    this.ui.cy.off(LAYOUT_SETTLED_EVENT, this._cyListeners.onLayoutStop);
     this.ui.cy.off('position', 'node', this._cyListeners.onPosition);
     this._cyListeners = null;
   }

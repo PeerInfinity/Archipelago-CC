@@ -81,7 +81,6 @@ export function makeUi(cytoscape, extra = {}) {
         isDiscoveryModeActive: false,
         discoverySettings: null,
         nodePositions: new Map(),
-        layoutGeneration: 0,
         locationVisibilityMode: 'force-hide',
         runLayout() {},
         updateStatus() {},

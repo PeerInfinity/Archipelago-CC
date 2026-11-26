@@ -1,5 +1,6 @@
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { startLayout } from './layoutRun.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -7,7 +8,7 @@ export class RegionGraphLayoutEditor {
   constructor(cy, controlPanel) {
     this.cy = cy;
     this.controlPanel = controlPanel;
-    this.isLayoutRunning = false;
+    // ⛓ The layouts it applies run as the panel's (layoutRun.js `startLayout`): one run at a time, settled once.
     this.currentLayout = null;
     
     this.layoutPresets = {
@@ -523,8 +524,7 @@ export class RegionGraphLayoutEditor {
     }
     regionGraphUI.currentLayoutPreset = 'procgen-grid';
     regionGraphUI.updateStatus('Running procgen grid layout...');
-    this.currentLayout = this.cy.layout(gridOptions);
-    this.currentLayout.run();
+    this.currentLayout = startLayout(regionGraphUI, gridOptions);
     this.showJsonSuccess('Procgen grid layout applied!');
   }
 
@@ -613,21 +613,17 @@ export class RegionGraphLayoutEditor {
         );
         if (hasDepths && regionGraphUI.layoutControlsManager) {
           const customLayout = regionGraphUI.layoutControlsManager.buildHierarchyLayout();
-          this.isLayoutRunning = true;
           regionGraphUI.updateStatus('Running hierarchical layout...');
-          this.currentLayout = this.cy.layout(customLayout);
-          this.currentLayout.run();
+          this.currentLayout = startLayout(regionGraphUI, customLayout);
           this.showJsonSuccess('Layout applied successfully!');
           this.layoutPresets['custom'] = layoutOptions;
           return;
         }
       }
 
-      this.isLayoutRunning = true;
       regionGraphUI.updateStatus('Running custom layout...');
 
-      this.currentLayout = this.cy.layout(layoutOptions);
-      this.currentLayout.run();
+      this.currentLayout = startLayout(regionGraphUI, layoutOptions);
       
       this.showJsonSuccess('Layout applied successfully!');
       

@@ -1,5 +1,6 @@
 import { RegionGraphLayoutEditor } from './regionGraphLayoutEditor.js';
 import { pickerHTML, setupNodePicker } from './nodePicker.js';
+import { startLayout } from './layoutRun.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
@@ -475,12 +476,11 @@ export class LayoutControlsManager {
   }
 
   /**
-   * Run the Direction-aware layout on the graph as drawn (positions saved on layoutstop, as every layout's).
+   * Run the Direction-aware layout on the graph as drawn (positions saved when the run settles, as every layout's).
    * `animate: false` (the in-app row) places the nodes at once instead of over the 1 s animation.
    */
   runDirectionLayout({ animate = true } = {}) {
     if (!this.ui.cy) return null;
-    if (this.ui.currentLayout && this.ui.isLayoutRunning) this.ui.currentLayout.stop?.();
     const built = this.buildDirectionLayout();
     const { report } = built;
     const options = animate ? built.options : { ...built.options, animate: false };
@@ -492,15 +492,14 @@ export class LayoutControlsManager {
       const err = report.meanAngleError == null ? 'no exit directions in this world' : `mean direction error ${report.meanAngleError.toFixed(0)}°`;
       status.textContent = `${report.nodes} nodes in ${Math.round(report.totalMs)} ms, ${report.overlaps} overlaps, ${err}`;
     }
-    this.ui.isLayoutRunning = true;
     this.ui.updateStatus?.('Running Direction-aware layout...');
-    this.ui.currentLayout = this.ui.cy.layout(options);
     // The player marker is a LOCKED node (no layout moves it): re-seat it on its region once the nodes have landed.
-    this.ui.currentLayout.one?.('layoutstop', () => {
-      const region = this.ui.getCurrentPlayerLocation?.();
-      if (region && this.ui.cy.getElementById('player').length) this.ui.updatePlayerLocation?.(region);
+    startLayout(this.ui, options, {
+      beforeSettle: () => {
+        const region = this.ui.getCurrentPlayerLocation?.();
+        if (region && this.ui.cy.getElementById('player').length) this.ui.updatePlayerLocation?.(region);
+      },
     });
-    this.ui.currentLayout.run();
     return report;
   }
 
@@ -644,7 +643,6 @@ export class LayoutControlsManager {
       return;
     }
 
-    this.ui.isLayoutRunning = true;
     this.ui.updateStatus('Running layout...');
 
     // Pre-size nodes for overlays so layout spaces them correctly
@@ -662,8 +660,7 @@ export class LayoutControlsManager {
         if (layoutPresetSelect) layoutPresetSelect.value = 'procgen-grid';
         this.ui.currentLayoutPreset = 'procgen-grid';
         logger.debug(`Applying procgen grid layout (${this.ui.gridLayout.size} regions)`);
-        this.ui.currentLayout = this.ui.cy.layout(gridOptions);
-        this.ui.currentLayout.run();
+        startLayout(this.ui, gridOptions);
         return;
       }
     }
@@ -709,8 +706,7 @@ export class LayoutControlsManager {
     }
     this.ui.currentLayoutPreset = selectedPreset;
 
-    this.ui.currentLayout = this.ui.cy.layout(layoutOptions);
-    this.ui.currentLayout.run();
+    startLayout(this.ui, layoutOptions);
   }
 
   /**
