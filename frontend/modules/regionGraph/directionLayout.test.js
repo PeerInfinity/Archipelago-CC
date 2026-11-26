@@ -315,6 +315,18 @@ describe('⛓ 8. the panel: positions are written as every layout writes them', 
         for (const [id, p] of positions) expect(store.get(id)).toEqual(p);
         expect(ui.lastDirectionLayout.overlaps).toBe(0);
     });
+    it('the player marker (a locked node no layout moves) is re-seated on its region when the layout stops', () => {
+        const { ui, lcm } = build('seedling_atlas', 'merged');
+        const region = ui.cy.nodes('.region')[0].id();
+        ui.cy.add({ data: { id: 'player' }, classes: 'player', position: { x: -9999, y: -9999 } }).lock();
+        const seated = [];
+        ui.getCurrentPlayerLocation = () => region;
+        ui.updatePlayerLocation = (r) => seated.push(r);
+        const report = lcm.runDirectionLayout({ animate: false });
+        expect(report.overlaps).toBe(0);
+        expect(seated).toEqual([region]);
+        expect(ui.cy.getElementById('player').position()).toEqual({ x: -9999, y: -9999 }); // the layout itself never moved it
+    });
     it('collapsible: opening or closing a group KEEPS the positions (no layout runs); a re-run gives the same digest', () => {
         const { ui, lcm, dm, layouts } = build('seedling_playthrough', 'collapsible');
         const first = lcm.buildDirectionLayout();

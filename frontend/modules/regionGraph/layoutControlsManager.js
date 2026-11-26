@@ -495,6 +495,11 @@ export class LayoutControlsManager {
     this.ui.isLayoutRunning = true;
     this.ui.updateStatus?.('Running Direction-aware layout...');
     this.ui.currentLayout = this.ui.cy.layout(options);
+    // The player marker is a LOCKED node (no layout moves it): re-seat it on its region once the nodes have landed.
+    this.ui.currentLayout.one?.('layoutstop', () => {
+      const region = this.ui.getCurrentPlayerLocation?.();
+      if (region && this.ui.cy.getElementById('player').length) this.ui.updatePlayerLocation?.(region);
+    });
     this.ui.currentLayout.run();
     return report;
   }
