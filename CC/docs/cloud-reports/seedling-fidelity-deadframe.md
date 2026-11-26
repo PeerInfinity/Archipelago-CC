@@ -12,7 +12,7 @@ md5s, so a flip of either key re-records nothing.
 | | |
 |---|---|
 | Start (base) | `29df7d90664a85d5e436e395ec7c756a7a8bbd04` (wave 65's final tip, `claude/seedling-responder-step-order-fazdoz`) |
-| Head | the report commit on top of the last code commit, `@@CODEHEAD@@` |
+| Head | the report commit on top of the last code commit, `7cfef447` |
 | Harness branch | `claude/seedling-wave-66-deadframes-3j11d7` (local `seedling-fidelity-deadframe`) |
 | Page | `seedling_bot_ap_p4g`, `scripts/serve-nocache.py 9798` (stopped by PID at the end) |
 | Key count | 153 → 155 keys (126 ON unchanged); the last two are `deadFrameResponderStep` then `enemyPressesFallRockButton`; `SOLVER_ENV_NAMES` 250 → 252 (sorted, unique) |
@@ -184,8 +184,9 @@ each arm carries its own row.
 **`fidelityDeadFrame.slow.test.js`** (slow tier): every committed tape is byte-identical with both keys ON, alone and
 with the last 5 beside them.
 
-**Key-order pins** (28 files: the `indexOf(…)+1` and `includes` lists, `slice(-7)`→`(-9)`, `slice(-6)`→`(-8)`, and
-wave 65's `.at(-1)` → `indexOf`), plus `contactFidelity.test.js`'s defaults table and its env skip list.
+**Key-order pins:** 28 files (the `indexOf(…)+1` and `includes` lists, `slice(-7)`→`(-9)`, `slice(-6)`→`(-8)`), plus wave
+65's `.at(-1)` → `indexOf` in `fidelityResponderOrder.test.js`, and `contactFidelity.test.js`'s defaults table and its env
+skip list.
 
 ### Mutants (`d3/mutants.txt`; applied in a worktree at the head and restored)
 
@@ -237,19 +238,40 @@ wave 65's `.at(-1)` → `indexOf`), plus `contactFidelity.test.js`'s defaults ta
 
 ### The ON test sweep
 
-@@SWEEP@@
+Both keys ON (`SEEDLING_DEAD_FRAME_RESPONDER_STEP=1 SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON=1`) over every seedlingDemo
+and `scripts/procgen` test file that names the families: **563 files** (`d3/sweep.txt`).
+- **527 fast-tier files**, in 18 batches of 30 (`--maxWorkers=2`): 12,016 passed, 4 failed.
+- **36 `.slow.`/`.train.` files**, one at a time under their own configs: **127 passed, 0 failed**. These include
+  `fidelityCorpseBump2.train`, `hammerChooserPair.train`, `hammerEscapeExact.train`, `hammerSpinnerPress.train` and
+  `fidelityL40Latch.train`, the files wave 65's key moved.
+
+**0 rows move because of the model.** The 4 failures, by file:row and class:
+- **OFF-contract (the env channel), 3 rows:**
+  - `dashOnlyWindow.test.js` "the default adds no field (today's request key list exactly)";
+  - `dashOnlyWindow.test.js` "`stampHooks` is the service's one stamping door…";
+  - `dashShape.test.js` "the defaults add no field…".
+  - Any set `SEEDLING_*` switch is carried into the solve request. With wave 65's `SEEDLING_RESPONDER_STEP_AFTER_READERS=1`
+    as the control, the same 3 rows fail; with no env they pass.
+- **Not this slice, 1 row:** `standingValues.test.js` "a gate that sleeps past the deadline is KILLED…". It fails
+  identically with no env: this container's process-group kill.
+- **Game-witnessed and solver re-plan: 0 rows.**
+
+Wave 65's rows (`fidelityResponderOrder.test.js`) pass with both keys ON.
+
+**Not run:** each key alone over the whole sweep. Both together move nothing. With each key alone, every tape, the
+batch, the probe and the 18 witnesses are measured (above).
 
 ## Gates
 
 All at the head with both keys OFF.
 - **Bounded vitest:**
   - before, at the base (a clean worktree at `29df7d90`): 61 files, **1773 passed**;
-  - after, at the head: @@AFTER@@.
+  - after, at the head: 62 files, **1805 passed**, 0 failed (the base's 61 files plus `fidelityDeadFrame.test.js`, 30 tests).
   - The set is the brief's families, every `grep -a -l` file for `stepPushablesDeadFrameNow`, `armButtonFallRocks`,
     `stepActivators`, `responderStepAfterReaders` and the new key names, every key-order pin file, `r8Acceptance`,
     `tapeEnvelope`, `solverDeadline`, `decisionTrace`, `lintGateLabels`, `seedlingConstantsCensus`,
     `seedlingSolverSurface` and `oneSpelling`.
-- **CI at the last code head:** @@CI@@
+- **CI at the last code head:** `7cfef447` (`ci-vitest-summary.mjs`, run 45875077285): suite: vitest (unfiltered), 1446 files, **30370 passed, 0 failed**; slow battery 40 files, **462 passed**. The commits after it are evidence and this report only.
 - **The train tier is NOT run in CI at this head.** For the planner: `gh workflow run unittests_frontend.yml -R
   PeerInfinity/Archipelago-CC --ref claude/seedling-wave-66-deadframes-3j11d7 -f train_only=true`. I can't dispatch.
 - **The six solve `--check`s exit 0:** r8-battery, r8-d2-chain, r8-l18, r8-tail, r9-l3 and r9-campaign.
@@ -257,8 +279,10 @@ All at the head with both keys OFF.
   - `check-procgen-docs`;
   - `generate-procgen-reference --check`;
   - the constants census `--check`. It was re-derived with `--write`; `--profile-rows` left the fields table unchanged.
-    11 new structural literals, the rest line moves;
-  - `census-seedling-solver-surface --check` (re-derived with `--write`, line numbers only, 374 rows).
+    15 new structural literals, the rest line moves;
+  - `census-seedling-solver-surface --check`. It was re-derived with `--write`: 374 rows, line numbers, and the run's
+    surface `properties` 255 → 257 / `getter` 221 → 223. Those are the two new read-only ledgers, `deadResponderFrames` and
+    `enemyRockPresses`.
 - **`ci-producer-checks --jobs=2`:** 99 run, 1 skipped, 0 known-red. The one red, `regenerate-procgen-topdown-presets`
   ("registerBackend: duplicate id 'empty'"), came from running in a worktree whose `shared` submodule is a symlink. It
   is 12/12 green in the primary tree at the same head.
@@ -267,7 +291,7 @@ All at the head with both keys OFF.
 ## What the brief got wrong (measured)
 
 - **"A count of 0 says the gap needs a staged witness":** true of all three gaps, and stronger than the brief allowed
-  for. Under each key, ON moves no committed tape, no acceptance seed and (§ The ON test sweep) @@SWEEPSHORT@@. The keys
+  for. Under each key, ON moves no committed tape, no acceptance seed and (§ The ON test sweep) no test row (563 files). The keys
   are pure model coverage today.
 - **"Stage a responder whose state changes during a pickup lump, then one during a span frame":** the span that lacks
   a step is the button's / the wand's (`dropRocksTogether`). The rope's span (`dropRock`) has been stepped since
@@ -285,7 +309,7 @@ All at the head with both keys OFF.
 ### Planner (fidelity)
 
 - PASS. Both keys are ready for a flip decision. A flip re-records nothing measured here: 0 tape movers, 0 md5 moves.
-  @@SWEEPHAND@@
+  A flip moves only the key-contract rows (`fidelityDeadFrame` "are OFF in this process" and the defaults table).
 - CI: dispatch `unittests_frontend.yml -f train_only=true` at the head (I can't dispatch).
 - The census tools (`census-scratch.py`) count any dead span a responder would change. Rerun them on a new corpus before
   trusting "0".
