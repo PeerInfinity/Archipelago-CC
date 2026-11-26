@@ -9396,6 +9396,27 @@ function resolveCollectStrategy(run, placement) {
 }
 
 /**
+ * ⛓ hammer-phase W59-OPEN — write the apitems `run` took ITSELF since its `plainFreezeTakes` held `from` rows (fidelity
+ * PLAINSPAN's `CONTACT_FIDELITY.plainPickupInFreeze`) into a segment's take ledger `taken` (`"level:id"` →
+ * `{tick, level, apItem}`), at `tick`, unless the ledger already holds them. `items` are the level's apitems before the
+ * tick (for the record's `apItem`). A run without the list, or one whose list did not grow, writes nothing. Returns the
+ * keys written. The segment view calls it after each `advance`, before it filters what is still `open`.
+ */
+export function recordRunSideApItemTakes(run, from, items, tick, taken) {
+    const list = run.plainFreezeTakes;
+    if (!Array.isArray(list) || list.length <= from) return [];
+    const wrote = [];
+    for (const r of list.slice(from)) {
+        const k = `${r.level}:${r.id}`;
+        if (taken.has(k)) continue;
+        const apItem = items.find((it) => it.id === r.id) ?? { id: r.id, tag: r.tag };
+        taken.set(k, { tick, level: r.level, apItem });
+        wrote.push(k);
+    }
+    return wrote;
+}
+
+/**
  * ⛓⛓⛓ SEEDLING FIDELITY F2, D1a: **THE APITEM CONTACT, THE GAME'S RULE.**
  *
  * `Pickup.update` tests `collide("Player", x, y)` (`Pickups/Pickup.as:63-84`).
@@ -30077,6 +30098,8 @@ function solveSegmentUnder({
                 deaths: inner.ledger('playerDeaths').length,
                 transitions: inner.transitions.length,
             };
+            // ⛓ hammer-phase W59-OPEN — the run's own takes before this tick (absent / OFF ⇒ 0, nothing more is read)
+            const runTakes0 = pre === null ? 0 : (inner.plainFreezeTakes?.length ?? 0);
             /**
              * ⛓ FIDELITY CHECKPOINTS — the `walk` site, every `WALK_CHECK_TICKS`
              * ticks this segment drives (counted from its own first tick, so the
@@ -30099,6 +30122,16 @@ function solveSegmentUnder({
                 dashTicks.push(tapeTick);
             }
             if (pre) {
+                /**
+                 * ⛓⛓ hammer-phase W59-OPEN — **AN APITEM THE RUN TOOK ITSELF IS THE SEGMENT'S TAKE, ON THE TICK IT
+                 * TOOK IT.** With fidelity PLAINSPAN's `CONTACT_FIDELITY.plainPickupInFreeze` ON, the run banks every
+                 * apitem under the box on a freeze's frame itself (`run.plainFreezeTakes`), with no report from here.
+                 * The segment's own ledger must see that take: otherwise the apitem stays `open` below and is recorded
+                 * at the LATER tick the view next meets it (or never), and `replayTakes` re-tells it there. So the
+                 * takes this tick added are written into `apItemsTaken` at this tick first (the run already banked
+                 * them, so no report is sent). Key OFF, or a run without the list ⇒ the list never grows: unchanged.
+                 */
+                recordRunSideApItemTakes(inner, runTakes0, items, tapeTick, apItemsTaken);
                 const open = items.filter((a) => !apItemsTaken.has(`${pre.level}:${a.id}`));
                 const a = apItemTakenOnTick(open, pre, {
                     level: inner.level, deaths: inner.ledger('playerDeaths').length,
