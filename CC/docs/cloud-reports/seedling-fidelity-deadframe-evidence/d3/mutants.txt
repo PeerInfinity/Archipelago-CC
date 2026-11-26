@@ -1,0 +1,36 @@
+M1 the queue is never flushed 10
+    d-key (gap 1)
+    d-health (gap 1)
+    d-span (gap 1)
+    d-key-at100 (gap 1)
+    d-health-at100 (gap 1)
+    d-span-at100 (gap 1)
+    `deadFrameResponderStep` alone: the dead-frame shapes (and OFF's agreeing edges), both `responderStepAfterReaders` arms
+    ON, the model steps the responders on exactly the game's dead frames (both `responderStepAfterReaders` arms; OFF none)
+    with the base's last five OFF keys ON beside both: every shape is still the game at 0 px
+    each named tape plays byte-identically with both keys ON (every tape, and the last five beside them: `fidelityDeadFrame.slow.test.js`)
+M2 ON flushes at the site (inside the contact / frame-A advance), not at the next top 12
+    d-key (gap 1)
+    d-health (gap 1)
+    d-span (gap 1)
+    d-key-at100 (gap 1)
+    d-health-at100 (gap 1)
+    d-span-at100 (gap 1)
+    d-key-at101 (gap 1)
+    d-health-at101 (gap 1)
+    d-span-at101 (gap 1)
+    `deadFrameResponderStep` alone: the dead-frame shapes (and OFF's agreeing edges), both `responderStepAfterReaders` arms
+    ON, the model steps the responders on exactly the game's dead frames (both `responderStepAfterReaders` arms; OFF none)
+    with the base's last five OFF keys ON beside both: every shape is still the game at 0 px
+M3 the enemy arm is read at the tick's end (as the player's), not after the readers 6
+    e-fly-rock (gap 3)
+    e-spin-rock (gap 3)
+    `enemyPressesFallRockButton` alone: the FallRock shapes (and OFF's agreeing edges), both arms
+    a text-less lump is 150 dead frames, a texted one 149, a button rock's span 167, an enemy-dropped rock's 182 (each right after its contact / frame A)
+    ON, the model steps the responders on exactly the game's dead frames (both `responderStepAfterReaders` arms; OFF none)
+    with the base's last five OFF keys ON beside both: every shape is still the game at 0 px
+M4 a texted lump counted 150, not 149 1
+    ON, the model steps the responders on exactly the game's dead frames (both `responderStepAfterReaders` arms; OFF none)
+M5 a span's landed rock is never a Solid to the dead steps 0
+restored; git diff NOT CLEAN
+(the head-wt's 'NOT CLEAN' is its symlinked submodule dirs; levelRun.js itself diffs clean against HEAD — checked)
