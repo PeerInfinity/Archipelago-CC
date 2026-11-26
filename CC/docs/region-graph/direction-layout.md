@@ -303,6 +303,19 @@ test failed in train 220's TT on the bundled boot (run 45867180328), and content
   merge of main `16acf42ce6`, `5bb4d82896` (see the packet).
 - An app observation (not a missed tap): a node style change that resizes a node (no position / viewport event)
   leaves its badge a few px off the exact corner (dx −4.8, dy 3.8 on an 85 × 64 node); it still covers the corner.
+- **A second square-click race** (js-23, from badge-resize's cut): repeat ×16 bundled at `2c939354c5` (45895715651)
+  gave **15/16**, red "an uncovered point lies on a location square (1 squares; centres covered by: nothing)": the
+  square was read from a paint taken before its node moved on. A per-frame trace (test-only, at `26272296f8`, since
+  removed) measured it: after nodeLook = map, with NO `layoutstart` seen and the switch's layout already past
+  `layoutstop`, the node boxes go on moving relative to each other (10–60 px), and the pan settles where a fit leaves
+  it, for **0.8–1.15 s on bundled, 0.24–0.44 s on ES**. A square was off its node at **0 frames in 10/16 bundled runs**,
+  at isolated single frames in 6, and at two consecutive samples (96 and 134 ms) in 1. On ES it was **0 in 8/8**. On
+  screen the squares and nodes always agree: the map look repaints on every cy `render`. The mismatch exists only
+  between a position update and the next render, as it does for any node while it animates. Ruled test-side by cc-23
+  (option a). **The fix:** the row waits for no layout running (a watch from just before nodeLook = map), no paint
+  pending, every square inside its node's rendered box, and zoom / pan / boxes / squares unchanged over 3 polls 50 ms
+  apart. A red names the squares, zoom, pan and boxes. Repeat ×16 at `0ccd10dae8`: **bundled 16/16** (45896641991),
+  **ES 16/16** (45896645410). Traced at `26272296f8`: **bundled 16/16** (45897269462), **ES 8/8** (45897272553).
 
 ## 11. Follow-ups
 
@@ -316,3 +329,6 @@ test failed in train 220's TT on the bundled boot (run 45867180328), and content
    hierarchical / the procgen grid, for every layout; Direction-aware follows that rule. A remembered layout choice
    would be a setting of its own.
 5. A strength above 1, or a per-side weight, if the user wants the map even tighter.
+6. **`layoutstop` is not "settled".** Nodes keep moving ~1 s after `layoutstop` following a subRegionView switch
+   (`runLayout`'s cose: `animate: true, animationDuration: 1000`), measured in §10b. Not changed here; cc-23 is putting
+   it to the user as an optional follow-up.

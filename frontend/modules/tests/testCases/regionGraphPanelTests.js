@@ -748,20 +748,9 @@ export async function testRegionGraphSubRegionMerged(testController) {
         (d?.squares ?? []).map((q) => [q.key, q.location, Math.round(q.sx), Math.round(q.sy)])]);
       return { sig, off, paints: d?.stats?.paints ?? 0, pending: layer?._paintHandle != null, zoom: z, pan: p, boxes };
     };
-    // A per-frame trace while the wait runs: when a square was off its node (ms after the first read), and what moved.
-    const trace = { t0: performance.now(), frames: 0, offFrames: 0, offFirst: null, offLast: null, first: null, last: null, stop: false };
-    const traceFrame = () => {
-      if (trace.stop) return;
-      const c = graphCy(); const s = paintNow(); const t = Math.round(performance.now() - trace.t0);
-      const geo = { t, zoom: +c.zoom().toFixed(4), pan: [Math.round(c.pan().x), Math.round(c.pan().y)], boxes: s.boxes.map((bx) => bx.slice(1)) };
-      trace.frames += 1; trace.first ??= geo; trace.last = geo;
-      if (s.off.length) { trace.offFrames += 1; trace.offFirst ??= t; trace.offLast = t; }
-      requestAnimationFrame(traceFrame);
-    };
-    requestAnimationFrame(traceFrame);
-    let lastSig = null; let same = 0; let lastPaint = null; let firstPaint = null; let polls = 0;
+    let lastSig = null; let same = 0; let lastPaint = null;
     const paintStable = await testController.pollForCondition(() => {
-      const s = paintNow(); lastPaint = s; firstPaint ??= s; polls += 1;
+      const s = paintNow(); lastPaint = s;
       const ok = mapLayouts.idle() && !s.pending && s.off.length === 0;
       same = ok && s.sig === lastSig ? same + 1 : 0;
       lastSig = s.sig;
@@ -769,12 +758,6 @@ export async function testRegionGraphSubRegionMerged(testController) {
     }, 'the map look paint is stable and on its nodes', MAX_WAIT_TIME, 50);
     testController.reportCondition(`the map look's last paint is stable and every square lies on its node (layout ${mapLayouts.state()}, `
       + `${lastPaint?.paints} paints, pending ${lastPaint?.pending}, off their node: ${lastPaint?.off.join('; ') || 'none'})`, paintStable);
-    // One line per run, so a repeat's log says whether the first read would have been stale (the race this wait closes).
-    console.log(`[rg-merged map-look] first read: layout ${mapLayouts.state()}, pending ${firstPaint?.pending}, off their node: `
-      + `${firstPaint?.off.join('; ') || 'none'}, first==settled ${firstPaint?.sig === lastPaint?.sig}; settled after ${polls} polls`);
-    trace.stop = true;
-    console.log(`[rg-merged map-look] trace: ${trace.frames} frames over ${trace.last?.t} ms; off their node in ${trace.offFrames} `
-      + `frames, from ${trace.offFirst} to ${trace.offLast} ms; first ${JSON.stringify(trace.first)} last ${JSON.stringify(trace.last)}`);
     mapLayouts.dispose();
     // ⛓ The spot to click: a point inside a square that Cytoscape's own hit-test gives to the square's node AND that
     // the layer maps back to that square (`squareAtNode`). Map-look §12: a square under another element (the player
