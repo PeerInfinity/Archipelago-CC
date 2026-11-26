@@ -1,0 +1,3 @@
+tapes 322 (throws 1); tapes with a read-differs query: 0
+hit ticks by reader: {}
+  threw: frontend/modules/seedlingDemo/fixtures/refuted/r8-solve-5.tape.json: the player entered Water in level 5 at (47.00324793668, 56.39999999999999) on a tape that does not pin "sound". `Player.as:530` adds `0.25 * int(Music.soundPosi

@@ -18,6 +18,12 @@ behaves as the shipped one (`globalThis.__RO?.x` is undefined):
   E5 activators.js  `__RO.pressLag` -> the presses (`pressedGroups`, the room = -1 latch) read the player box the
                     PREVIOUS step was given (the Button's publish of the frame before; `pulserPublishLag`'s rule,
                     for the responders); the occupancy guard keeps the current box.
+  E6-E9             `__RO.occ` -> (a) the Lock family's occupancy guard counts the spinners' and wallflyers' boxes
+                    (`Lock.hitables` holds "Enemy"; a Cover's does not), passed by the main tick as `enemies`; (b) after
+                    the main tick's readers have stepped, a reset the LATEST step made is undone when a reader now
+                    stands in the box, and a hold that only a reader kept is reset when it has left (the game's
+                    responder update of this frame sees the readers where THIS frame left them). Positions only:
+                    the persistence ledger of an undone reset is not rewritten.
 """
 import shutil, subprocess, sys, os
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', '..'))
@@ -85,6 +91,37 @@ EDITS = [
     ('activators.js',
      "        const byPlayer = rectsOverlap(playerBox, p.rect);",
      "        const byPlayer = rectsOverlap(pressBox, p.rect);"),
+    ('activators.js',
+     "        if (s.lagReopen) delete s.lagReopen;\n        const responder = RESPONDERS[a.tag];",
+     "        if (s.lagReopen) delete s.lagReopen;\n        const responder = RESPONDERS[a.tag];\n        if (globalThis.__RO) s.__roReset = false;"),
+    ('activators.js',
+     "            if (!occupied(a.rect)) {\n                // `returnToNormal`'s",
+     "            const roEnemy = !!globalThis.__RO?.occ && responder.fade !== 0.1 && (opts.enemies ?? []).some((e) => rectsOverlap(e, a.rect));\n"
+     "            if (globalThis.__RO?.occ) s.__roHeldByReader = s.open && !rectsOverlap(playerBox, a.rect) && (roEnemy || movingSolids.some((m) => rectsOverlap(m.rect, a.rect)));\n"
+     "            if (!occupied(a.rect) && !roEnemy) {\n"
+     "                if (globalThis.__RO && s.open) s.__roReset = true;\n"
+     "                // `returnToNormal`'s"),
+    ('levelRun.js',
+     "                    playerBoxAt(next.x, next.y),\n                    { inventory, keys, movingSolids: movingSolidsNow() }));",
+     "                    playerBoxAt(next.x, next.y),\n"
+     "                    { inventory, keys, movingSolids: movingSolidsNow(), enemies: globalThis.__RO?.occ ? [...spinnerBodiesNow().map((b) => b.rect),\n"
+     "                        ...wallFlyerBodiesNow().map((w) => ({ x: w.x - 7, y: w.y - 7, w: 14, h: 14, right: w.x + 7, bottom: w.y + 7 }))] : undefined }));"),
+    ('levelRun.js',
+     "            if (!noclip && pushState.byId.size > 0) stepPushables(pushState, pushableCtx());\n",
+     "            if (!noclip && pushState.byId.size > 0) stepPushables(pushState, pushableCtx());\n"
+     "            if (globalThis.__RO?.occ && !noclip) {\n"
+     "                const roSt = activatorStateFor(level);\n"
+     "                const roReaders = [...[...pushableRects(pushState).values()].filter((r) => !r.removed).map((r) => ({ rect: r.rect, enemy: false })),\n"
+     "                    ...spinnerBodiesNow().map((b) => ({ rect: b.rect, enemy: true })),\n"
+     "                    ...wallFlyerBodiesNow().map((w) => ({ rect: { x: w.x - 7, y: w.y - 7, w: 14, h: 14, right: w.x + 7, bottom: w.y + 7 }, enemy: true }))];\n"
+     "                for (const a of world.activators) {\n"
+     "                    const s = roSt.byId.get(a.id);\n"
+     "                    if (!s) continue;\n"
+     "                    const hit = roReaders.some((r) => (a.tag !== 'cover' || !r.enemy) && rectsOverlap(r.rect, a.rect));\n"
+     "                    if (s.__roReset && hit) { s.open = true; s.alpha = 0; s.__roReset = false; }\n"
+     "                    else if (s.__roHeldByReader && !hit && !rectsOverlap(playerBoxAt(state.x, state.y), a.rect)) { s.open = false; s.__roHeldByReader = false; }\n"
+     "                }\n"
+     "            }\n"),
 ]
 
 

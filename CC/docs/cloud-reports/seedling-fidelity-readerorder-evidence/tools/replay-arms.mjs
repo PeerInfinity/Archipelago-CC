@@ -27,6 +27,10 @@ const over = ARM === 'iii' ? { spinnerLockLag: false } : {};
 if (ARM === 'ii') globalThis.__RO = { arm: 'before', hits: [] };
 if (ARM === 'iv') globalThis.__RO = { pressLag: true, hits: [] };
 if (ARM === 'ii+iv') globalThis.__RO = { arm: 'before', pressLag: true, hits: [] };
+// ARM=v: (ii) + (iv) + `__RO.occ` (Enemy occupancy for the Lock family, and the responders' occupancy judged where THIS
+// frame's readers left them); ARM=ii+v: (ii) + occ, no press lag.
+if (ARM === 'v') globalThis.__RO = { arm: 'before', pressLag: true, occ: true, hits: [] };
+if (ARM === 'ii+occ') globalThis.__RO = { arm: 'before', occ: true, hits: [] };
 
 const out = [];
 for (const w of W.shapes) {
@@ -44,7 +48,8 @@ for (const w of W.shapes) {
     let compared = 0;
     let lastT = null;
     const perTick = [];
-    for (let t = 0; t < m.rows.length; t++) {
+    // From t1: a t0 `botMobiles` sample can be read before the boot's world swap (a1-ctl, b1-r124: no readers yet).
+    for (let t = 1; t < m.rows.length; t++) {
         const g = game.get(t);
         const r = m.rows[t];
         if (!g || !r || r.level !== S.LEVEL) continue;

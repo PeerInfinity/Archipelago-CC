@@ -2,7 +2,7 @@
  {
   "shape": "a1-open",
   "arm": "iii",
-  "compared": 141,
+  "compared": 140,
   "first": {
    "t": 102,
    "px": 1,
@@ -57,32 +57,6 @@
   },
   "error": null,
   "perTick": [
-   {
-    "t": 0,
-    "d": 0,
-    "gameLock": false,
-    "modelLockPrev": null,
-    "gameReaders": [
-     [
-      80,
-      48
-     ]
-    ],
-    "modelReaders": [
-     [
-      80,
-      48
-     ]
-    ],
-    "gamePlayer": [
-     40,
-     56
-    ],
-    "modelPlayer": [
-     40,
-     56
-    ]
-   },
    {
     "t": 1,
     "d": 0,
@@ -3728,31 +3702,9 @@
  {
   "shape": "a1-ctl",
   "arm": "iii",
-  "compared": 241,
-  "first": {
-   "t": 0,
-   "px": null,
-   "game": {
-    "player": [
-     40,
-     56
-    ],
-    "readers": []
-   },
-   "model": {
-    "player": [
-     40,
-     56
-    ],
-    "readers": [
-     [
-      80,
-      48
-     ]
-    ]
-   }
-  },
-  "worstPx": "Infinity",
+  "compared": 240,
+  "first": null,
+  "worstPx": 0,
   "lockFirst": null,
   "end": {
    "t": 240,
@@ -3777,27 +3729,6 @@
   },
   "error": null,
   "perTick": [
-   {
-    "t": 0,
-    "d": null,
-    "gameLock": false,
-    "modelLockPrev": null,
-    "gameReaders": [],
-    "modelReaders": [
-     [
-      80,
-      48
-     ]
-    ],
-    "gamePlayer": [
-     40,
-     56
-    ],
-    "modelPlayer": [
-     40,
-     56
-    ]
-   },
    {
     "t": 1,
     "d": 0,
@@ -10043,7 +9974,7 @@
  {
   "shape": "a2-reset",
   "arm": "iii",
-  "compared": 191,
+  "compared": 190,
   "first": {
    "t": 156,
    "px": 0.5,
@@ -10102,32 +10033,6 @@
   },
   "error": null,
   "perTick": [
-   {
-    "t": 0,
-    "d": 0,
-    "gameLock": false,
-    "modelLockPrev": null,
-    "gameReaders": [
-     [
-      176,
-      48
-     ]
-    ],
-    "modelReaders": [
-     [
-      176,
-      48
-     ]
-    ],
-    "gamePlayer": [
-     40,
-     40
-    ],
-    "modelPlayer": [
-     40,
-     40
-    ]
-   },
    {
     "t": 1,
     "d": 0,
@@ -15073,7 +14978,7 @@
  {
   "shape": "a2-r149",
   "arm": "iii",
-  "compared": 190,
+  "compared": 189,
   "first": {
    "t": 156,
    "px": 0.5,
@@ -15132,32 +15037,6 @@
   },
   "error": null,
   "perTick": [
-   {
-    "t": 0,
-    "d": 0,
-    "gameLock": false,
-    "modelLockPrev": null,
-    "gameReaders": [
-     [
-      176,
-      48
-     ]
-    ],
-    "modelReaders": [
-     [
-      176,
-      48
-     ]
-    ],
-    "gamePlayer": [
-     40,
-     40
-    ],
-    "modelPlayer": [
-     40,
-     40
-    ]
-   },
    {
     "t": 1,
     "d": 0,
@@ -20077,7 +19956,7 @@
  {
   "shape": "a2-r151",
   "arm": "iii",
-  "compared": 192,
+  "compared": 191,
   "first": null,
   "worstPx": 0,
   "lockFirst": {
@@ -20108,32 +19987,6 @@
   },
   "error": null,
   "perTick": [
-   {
-    "t": 0,
-    "d": 0,
-    "gameLock": false,
-    "modelLockPrev": null,
-    "gameReaders": [
-     [
-      176,
-      48
-     ]
-    ],
-    "modelReaders": [
-     [
-      176,
-      48
-     ]
-    ],
-    "gamePlayer": [
-     40,
-     40
-    ],
-    "modelPlayer": [
-     40,
-     40
-    ]
-   },
    {
     "t": 1,
     "d": 0,
@@ -25105,7 +24958,7 @@
  {
   "shape": "a2-ctl",
   "arm": "iii",
-  "compared": 181,
+  "compared": 180,
   "first": null,
   "worstPx": 0,
   "lockFirst": {
@@ -25136,32 +24989,6 @@
   },
   "error": null,
   "perTick": [
-   {
-    "t": 0,
-    "d": 0,
-    "gameLock": false,
-    "modelLockPrev": null,
-    "gameReaders": [
-     [
-      176,
-      48
-     ]
-    ],
-    "modelReaders": [
-     [
-      176,
-      48
-     ]
-    ],
-    "gamePlayer": [
-     40,
-     40
-    ],
-    "modelPlayer": [
-     40,
-     40
-    ]
-   },
    {
     "t": 1,
     "d": 0,
@@ -29847,7 +29674,7 @@
  {
   "shape": "b1-spinner",
   "arm": "iii",
-  "compared": 166,
+  "compared": 165,
   "first": {
    "t": 132,
    "px": 0.7071,
@@ -29906,32 +29733,6 @@
   },
   "error": null,
   "perTick": [
-   {
-    "t": 0,
-    "d": 0,
-    "gameLock": false,
-    "modelLockPrev": null,
-    "gameReaders": [
-     [
-      152,
-      168
-     ]
-    ],
-    "modelReaders": [
-     [
-      152,
-      168
-     ]
-    ],
-    "gamePlayer": [
-     72,
-     280
-    ],
-    "modelPlayer": [
-     72,
-     280
-    ]
-   },
    {
     "t": 1,
     "d": 0,
@@ -34227,7 +34028,7 @@
  {
   "shape": "b1-occ",
   "arm": "iii",
-  "compared": 168,
+  "compared": 167,
   "first": {
    "t": 134,
    "px": 0.7071,
@@ -34286,32 +34087,6 @@
   },
   "error": null,
   "perTick": [
-   {
-    "t": 0,
-    "d": 0,
-    "gameLock": false,
-    "modelLockPrev": null,
-    "gameReaders": [
-     [
-      152,
-      168
-     ]
-    ],
-    "modelReaders": [
-     [
-      152,
-      168
-     ]
-    ],
-    "gamePlayer": [
-     72,
-     280
-    ],
-    "modelPlayer": [
-     72,
-     280
-    ]
-   },
    {
     "t": 1,
     "d": 0,
@@ -38659,7 +38434,7 @@
  {
   "shape": "b1-ctl",
   "arm": "iii",
-  "compared": 201,
+  "compared": 200,
   "first": null,
   "worstPx": 0,
   "lockFirst": null,
@@ -38686,32 +38461,6 @@
   },
   "error": null,
   "perTick": [
-   {
-    "t": 0,
-    "d": 0,
-    "gameLock": false,
-    "modelLockPrev": null,
-    "gameReaders": [
-     [
-      152,
-      168
-     ]
-    ],
-    "modelReaders": [
-     [
-      152,
-      168
-     ]
-    ],
-    "gamePlayer": [
-     72,
-     248
-    ],
-    "modelPlayer": [
-     72,
-     248
-    ]
-   },
    {
     "t": 1,
     "d": 0,
@@ -43917,7 +43666,7 @@
  {
   "shape": "b2-flyer",
   "arm": "iii",
-  "compared": 185,
+  "compared": 184,
   "first": {
    "t": 160,
    "px": 2,
@@ -43976,32 +43725,6 @@
   },
   "error": null,
   "perTick": [
-   {
-    "t": 0,
-    "d": 0,
-    "gameLock": false,
-    "modelLockPrev": null,
-    "gameReaders": [
-     [
-      152,
-      152
-     ]
-    ],
-    "modelReaders": [
-     [
-      152,
-      152
-     ]
-    ],
-    "gamePlayer": [
-     136,
-     232
-    ],
-    "modelPlayer": [
-     136,
-     232
-    ]
-   },
    {
     "t": 1,
     "d": 0,
@@ -48791,7 +48514,7 @@
  {
   "shape": "b2-occ",
   "arm": "iii",
-  "compared": 186,
+  "compared": 185,
   "first": {
    "t": 161,
    "px": 4,
@@ -48850,32 +48573,6 @@
   },
   "error": null,
   "perTick": [
-   {
-    "t": 0,
-    "d": 0,
-    "gameLock": false,
-    "modelLockPrev": null,
-    "gameReaders": [
-     [
-      152,
-      152
-     ]
-    ],
-    "modelReaders": [
-     [
-      152,
-      152
-     ]
-    ],
-    "gamePlayer": [
-     136,
-     232
-    ],
-    "modelPlayer": [
-     136,
-     232
-    ]
-   },
    {
     "t": 1,
     "d": 0,
@@ -53691,7 +53388,7 @@
  {
   "shape": "b2-ctl",
   "arm": "iii",
-  "compared": 61,
+  "compared": 60,
   "first": null,
   "worstPx": 0,
   "lockFirst": null,
@@ -53718,32 +53415,6 @@
   },
   "error": null,
   "perTick": [
-   {
-    "t": 0,
-    "d": 0,
-    "gameLock": false,
-    "modelLockPrev": null,
-    "gameReaders": [
-     [
-      152,
-      152
-     ]
-    ],
-    "modelReaders": [
-     [
-      152,
-      152
-     ]
-    ],
-    "gamePlayer": [
-     152,
-     264
-    ],
-    "modelPlayer": [
-     152,
-     264
-    ]
-   },
    {
     "t": 1,
     "d": 0,
@@ -55309,31 +54980,37 @@
  {
   "shape": "b1-r124",
   "arm": "iii",
-  "compared": 165,
+  "compared": 164,
   "first": {
-   "t": 0,
-   "px": null,
+   "t": 132,
+   "px": 0.7071,
    "game": {
     "player": [
-     72,
-     280
-    ],
-    "readers": []
-   },
-   "model": {
-    "player": [
-     72,
+     63,
      280
     ],
     "readers": [
      [
-      152,
-      168
+      "Spinner",
+      153.4142135623731,
+      221.0330085889915
+     ]
+    ]
+   },
+   "model": {
+    "player": [
+     63,
+     280
+    ],
+    "readers": [
+     [
+      153.4142135623731,
+      220.32590180780494
      ]
     ]
    }
   },
-  "worstPx": "Infinity",
+  "worstPx": 45.9619,
   "lockFirst": {
    "t": 131,
    "game": true,
@@ -55362,27 +55039,6 @@
   },
   "error": null,
   "perTick": [
-   {
-    "t": 0,
-    "d": null,
-    "gameLock": false,
-    "modelLockPrev": null,
-    "gameReaders": [],
-    "modelReaders": [
-     [
-      152,
-      168
-     ]
-    ],
-    "gamePlayer": [
-     72,
-     280
-    ],
-    "modelPlayer": [
-     72,
-     280
-    ]
-   },
    {
     "t": 1,
     "d": 0,
