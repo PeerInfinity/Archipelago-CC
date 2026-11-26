@@ -2884,8 +2884,12 @@ export function createLevelRun({
         // (`chaserRectsNow`, read by `wandShotBlockerAt`); under `noclip || noDamage` it has none and still refuses.
         const chaserIds = CONTACT_FIDELITY.wandShotChaserBodies && !noclip && !noDamage
             ? new Set(chaserStateFor(n).keys()) : null;
+        // ⛓ fidelity WANDTRAPBODIES (`wandShotTrapBodies`, OFF): a darktrap or a placed grenade the run STEPS has a live
+        // box (`wandTrapBodiesNow`, read by `wandShotBlockerAt`); under `noclip || noDamage` it has none and still refuses.
+        const trapIds = CONTACT_FIDELITY.wandShotTrapBodies ? wandTrapBodyIdsFor(n) : null;
         const unboxed = (w.pressEnemies ?? []).filter((e) => !boxed.has(`${e.x},${e.y}`)
-            && !(chaserIds && chaserIds.has(`${e.tag}@${e.x},${e.y}`)));
+            && !(chaserIds && chaserIds.has(`${e.tag}@${e.x},${e.y}`))
+            && !(trapIds && trapIds.has(`${e.tag}@${e.x},${e.y}`)));
         if (unboxed.length > 0) {
             const names = unboxed.map((e) => `${e.tag}@${e.x},${e.y}`).join(', ');
             throw new Error(`levelRun: a WandShot in level ${n} would collide with `
@@ -2966,14 +2970,102 @@ export function createLevelRun({
         for (const sp of spinnerRectsNow() ?? []) {
             if (rectsOverlap(box, sp.rect)) return { kind: 'enemy', id: sp.id, spinner: true };
         }
+        // ⛓ fidelity WANDTRAPBODIES (`wandShotTrapBodies`, OFF): the darktraps and placed grenades, read FIRST so a box
+        // that also overlaps one of the arms below (whose `hit` is not empty) refuses instead of choosing an order.
+        const trap = CONTACT_FIDELITY.wandShotTrapBodies ? wandTrapBodyAt(box) : null;
+        const only = (hit) => {
+            if (trap === null) return hit;
+            throw new Error(`levelRun: a wand shot at (${x}, ${y}) in level ${level} overlaps ${trap.id} AND `
+                + `${hit.id} on the same step. \`collideTypes\` returns the first "Enemy" in the type list, and this `
+                + 'run does not hold that order; the two `hit`s differ. Refused by name (WANDTRAPBODIES).');
+        };
+        for (const b of (bossRectsNow() ?? new Map()).values()) {
+            if (b.activated && b.bodyRect && rectsOverlap(box, b.bodyRect)) {
+                return only({ kind: 'enemy', id: b.id, boss: true });
+            }
+        }
+        for (const sp of spinnerRectsNow() ?? []) {
+            if (rectsOverlap(box, sp.rect)) return only({ kind: 'enemy', id: sp.id, spinner: true });
+        }
         // ⛓ fidelity L12DOORS D1 (`wandShotChaserBodies`, OFF): a live bridged chaser, behind the stepper's own gate.
         if (CONTACT_FIDELITY.wandShotChaserBodies && !noclip && !noDamage) {
             for (const c of chaserRectsNow() ?? []) {
-                if (rectsOverlap(box, c.rect)) return { kind: 'enemy', id: c.id, chaser: true };
+                if (rectsOverlap(box, c.rect)) return only({ kind: 'enemy', id: c.id, chaser: true });
             }
         }
+        if (trap !== null) return { kind: 'enemy', id: trap.id };
         return null;
     };
+    /**
+     * ⛓ fidelity WANDTRAPBODIES (`wandShotTrapBodies`) — THE DARKTRAPS AND PLACED GRENADES A SHOT CAN MEET.
+     *
+     * The ids the run STEPS in level `n` (`assertWandShotSolidsBound`'s exemption). A darktrap is stepped by
+     * `stepDarkTrapsNow` (behind `darkTrapLight` and `!noclip`), a placed grenade by `stepPlacedGrenadesNow`; under
+     * `noclip || noDamage` neither has a box here (the chasers' gate), so the room still refuses.
+     *
+     * ⛔ A darktrap within a placed grenade's blast light (`Grenade.animEnd` adds `new Light(x, endY, …, hitRadius,
+     * hitRadius)`, a non-dark `Light`: `radiusMin` 20) would start dying on a light this model does not place —
+     * refused by name. None stands that near on the extract (the census row).
+     */
+    const wandTrapBodyIds = new Map();
+    function wandTrapBodyIdsFor(n) {
+        if (wandTrapBodyIds.has(n)) return wandTrapBodyIds.get(n);
+        const out = new Set();
+        if (noclip || noDamage) {
+            wandTrapBodyIds.set(n, out);
+            return out;
+        }
+        const census = worldFor(n).combat?.enemies ?? [];
+        const grenades = census.filter((e) => e.tag === 'grenade');
+        for (const e of census) {
+            if (e.as3 !== 'DarkTrap' || !CONTACT_FIDELITY.darkTrapLight) continue;
+            const lit = grenades.find((g) => Math.hypot(g.cx - e.cx, g.cy - e.cy) <= PLACED_GRENADE.hitRadius);
+            if (lit) {
+                throw new Error(`levelRun: ${e.tag}@${e.x},${e.y} in level ${n} stands within ${PLACED_GRENADE.hitRadius} px `
+                    + `of ${lit.tag}@${lit.x},${lit.y}'s blast light (\`Grenade.animEnd\`'s \`Light\`, radiusMin `
+                    + `${PLACED_GRENADE.hitRadius}), which \`DarkTrap.update\` reads and this model does not place. `
+                    + 'Refused by name (WANDTRAPBODIES).');
+            }
+            out.add(`${e.tag}@${e.x},${e.y}`);
+        }
+        for (const g of grenades) out.add(`${g.tag}@${g.x},${g.y}`);
+        wandTrapBodyIds.set(n, out);
+        return out;
+    }
+    /**
+     * The first live trap body whose box overlaps `box`, as `{id, as3}`, or null.
+     *
+     *   DarkTrap  `SandTrap`'s `setHitbox(16, 16, 8, 8)` at the constructed point (the roster's `rect`), from the visit's
+     *             start until `stepDarkTrapsNow` removes it — through the 30-update `deathCounter` and the `"die1"`
+     *             anim: `DarkTrap.endAnim`'s `FP.world.remove` lands at the frame's end, and the shot updates first.
+     *   Grenade   `setHitbox(6, 6, 3, 3)` at its live point, while `collidable` (the `Entity` default before its first
+     *             fall update, then whatever its last update wrote: `false` falling, `true` resting) and not removed.
+     *             The shot updates before the grenade, so this reads the previous tick's grenade.
+     */
+    function wandTrapBodyAt(box) {
+        if (noclip || noDamage) return null;
+        const ids = wandTrapBodyIdsFor(level);
+        if (ids.size === 0) return null;
+        if (CONTACT_FIDELITY.darkTrapLight) {
+            for (const b of darkTrapStateFor(level).values()) {
+                if (!b.removed && ids.has(b.id) && rectsOverlap(box, b.rect)) return { id: b.id, as3: 'DarkTrap' };
+            }
+        }
+        const census = worldFor(level).combat?.enemies ?? [];
+        if (!census.some((e) => e.tag === 'grenade')) return null;
+        const list = placedGrenadeStates.get(level);
+        if (!list) {
+            throw new Error(`levelRun: a wand shot is in flight in level ${level} before \`stepPlacedGrenadesNow\` built `
+                + 'the room\'s grenades, so their live boxes are unknown. Refused by name (WANDTRAPBODIES).');
+        }
+        const { w, h, ox, oy } = PLACED_GRENADE.box;
+        for (const g of list) {
+            if (g.removed || g.collidable === false) continue;
+            const r = { x: g.x - ox, y: g.y - oy, right: g.x - ox + w, bottom: g.y - oy + h };
+            if (rectsOverlap(box, r)) return { id: g.id, as3: 'Grenade' };
+        }
+        return null;
+    }
     /**
      * ── ⛔⛔ R5 SLICE 15: ONE OPTIONS BUILDER FOR EVERY LIVE-GEOMETRY QUERY
      *    IN THIS FILE ─────────────────────────────────────────────────────
@@ -10610,6 +10702,16 @@ export function createLevelRun({
         // are the BODY's and live on the body. The event is amended with
         // the verdict the body gave, so a reader of `wandShotHits` never
         // sees a `landed: true` the boss refused.
+        // ⛓ fidelity WANDTRAPBODIES (`wandShotTrapBodies`, OFF): `DarkTrap.hit` and `Grenade.hit` are EMPTY overrides
+        // (`DarkTrap.as:56-58`, `Grenade.as:70-71`): the shot stops and dies, and the body is untouched.
+        const trapBody = CONTACT_FIDELITY.wandShotTrapBodies && wandTrapBodyIdsFor(level).has(event.id)
+            ? (event.id.startsWith('darktrap@') ? 'DarkTrap' : 'Grenade') : null;
+        if (trapBody !== null) {
+            event.trapBody = trapBody;
+            event.landed = false;
+            event.spentWithoutDamage = true;
+            return;
+        }
         const boss = bossStateFor(level).get(event.id);
         if (!boss) {
             throw new Error(`levelRun: a wand shot (${s.id}) reached the enemy `
@@ -12657,7 +12759,9 @@ export function createLevelRun({
         for (const g of list) {
             if (g.removed) continue;
             const armedBefore = g.armedAt;
-            const ev = stepPlacedGrenade(g, state.x, state.y, { solidAt });
+            // ⛓ fidelity WANDTRAPBODIES (ON only): the `collidable` its update writes, for a wand shot's next read.
+            const ev = stepPlacedGrenade(g, state.x, state.y, CONTACT_FIDELITY.wandShotTrapBodies
+                ? { solidAt, onCollidable: (c) => { g.collidable = c; } } : { solidAt });
             if (armedBefore === null && g.armedAt !== null) {
                 placedGrenadeEvents.push({ t: ticksCompleted, level, id: g.id, what: 'armed',
                     dist: null, hitPlayer: false });
