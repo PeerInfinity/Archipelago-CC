@@ -1,0 +1,6 @@
+d-key {"responderStepAfterReaders":true}: 222 ticks; 0 px; worst 0; L differs from t25 (77 ticks; game opens 25, model 102); rock agrees (null)
+d-health {"responderStepAfterReaders":true}: 290 ticks; 0 px; worst 0; L differs from t27 (75 ticks; game opens 27, model 102); rock agrees (null)
+d-span {"responderStepAfterReaders":true}: 222 ticks; 0 px; worst 0; L differs from t25 (77 ticks; game opens 25, model 102); rock agrees (24)
+w-fly-rest {"responderStepAfterReaders":true}: 220 ticks; 0 px; worst 0; L agrees every tick (opens 116); rock agrees (null)
+e-fly-rock {"responderStepAfterReaders":true}: 260 ticks; 0 px; worst 0; L agrees every tick (opens null); rock differs at t15 (game 15, model null)
+e-spin-rock {"responderStepAfterReaders":true}: 300 ticks; 0 px; worst 0; L agrees every tick (opens null); rock differs at t72 (game 72, model null)
