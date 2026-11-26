@@ -29,6 +29,24 @@ function graphShowsWorld() {
   const ids = regionNodes(cy).map((n) => n.id());
   return ids.length === regions.size && ids.every((id) => regions.has(id)) && cy.edges().length > 0;
 }
+/**
+ * ⛓ Watch the layouts on `cy` from now: `idle()` is true when none started since, or the last one has STOPPED (its
+ * `layoutstop`, which an animated layout emits when its animation ends). A layout that was running before the watch is
+ * stopped by the rebuild that follows it (`GraphDataManager` stops `currentLayout`), so watch from just before the
+ * switch that rebuilds. `dispose()` removes the listeners.
+ */
+function layoutWatch(cy) {
+  let lastStart = 0; let lastStop = 0; let seq = 0;
+  const onStart = () => { lastStart = ++seq; };
+  const onStop = () => { lastStop = ++seq; };
+  cy.on('layoutstart', onStart);
+  cy.on('layoutstop', onStop);
+  return {
+    idle: () => lastStart === 0 || lastStop > lastStart,
+    state: () => (lastStart === 0 ? 'none started' : lastStop > lastStart ? 'stopped' : 'running'),
+    dispose: () => { cy.off('layoutstart', onStart); cy.off('layoutstop', onStop); },
+  };
+}
 /** Poll until no region node moved for one interval: no layout is running. */
 function layoutSettled(testController, cy) {
   let last = null;
@@ -655,6 +673,9 @@ export async function testRegionGraphSubRegionMerged(testController) {
     const nodesExpected = regions.size - members + expected.size;
 
     const probe = regionNodes(graphCy())[0];
+    // ⛓ The merged switch may start an ANIMATED layout (no saved merged positions, e.g. when the row runs alone):
+    // the map step below waits for it to stop before it reads a square's screen spot.
+    const mergedLayouts = layoutWatch(graphCy());
     const t0 = performance.now();
     await ctx.setSetting(SUB_REGION_VIEW_KEY, 'merged');
     const ok = await testController.pollForCondition(() => !!probe?.removed() && merged()?.length === expected.size
@@ -692,6 +713,11 @@ export async function testRegionGraphSubRegionMerged(testController) {
     // LOCATION click on that location. No rebuild: the same nodes stay.
     const mapCanvas = () => document.querySelector('.region-graph-panel-container .rg-map-look-canvas');
     const sameNode = merged()[0];
+    // A square's screen spot is read from the map look's last paint: wait for any layout the switch started to stop
+    // (else the nodes, and the squares, move on after the read), then fit; the map look's first paint follows the fit.
+    const settledOk = await testController.pollForCondition(() => mergedLayouts.idle(), 'the merged layout stopped', MAX_WAIT_TIME, 20);
+    testController.reportCondition(`the merged view's layout has settled (${mergedLayouts.state()}) before the map look`, settledOk);
+    mergedLayouts.dispose();
     graphCy().fit(30);
     const t4 = performance.now();
     await ctx.setSetting(NODE_LOOK_KEY, 'map');
@@ -763,7 +789,7 @@ export async function testRegionGraphSubRegionMerged(testController) {
     const store = lcm.positionStore();
     store.clear();
     for (const [id, p] of savedStore) store.set(id, p);
-    const offPlace = graphCy().nodes().filter((n) => { const p = posBefore.get(n.id()); return p && (n.position('x') !== p.x || n.position('y') !== p.y); }).length;
+    const offPlace = graphCy().nodes().filter((n) => { const p = posBefore.get(n.id()); return p && !n.hasClass('player') && (n.position('x') !== p.x || n.position('y') !== p.y); }).length;
     testController.reportCondition(`restored: the layout preset reads "${presetSel?.value}" again, merged's saved positions are back (${store.size}), `
       + `${offPlace} nodes off their place and the view at zoom ${graphCy().zoom().toFixed(2)} (was ${viewBefore.zoom.toFixed(2)})`,
       (presetSel?.value ?? null) === presetBefore && store.size === savedStore.size && offPlace === 0
@@ -778,6 +804,10 @@ export async function testRegionGraphSubRegionMerged(testController) {
     const boxes = () => graphCy()?.nodes().filter((n) => isRegionGroupNode(n, 'box')) ?? null;
     const probe2 = merged()[0];
     const t1 = performance.now();
+    // A layout the switch starts (no saved collapsible positions → `runLayout`) ends with a `layoutstop` (after its
+    // animation): watched from here, so the badge check below waits for the layout itself, not the panel's
+    // `isLayoutRunning`, which it clears ~1 s later.
+    const colLayouts = layoutWatch(graphCy());
     await ctx.setSetting(SUB_REGION_VIEW_KEY, 'collapsible');
     const closedOk = await testController.pollForCondition(() => !!probe2?.removed() && merged()?.length === expected.size
       && boxes()?.length === 0 && badges().length === expected.size, `collapsible drew ${expected.size} closed groups with a badge each`, MAX_WAIT_TIME, 50);
@@ -789,16 +819,40 @@ export async function testRegionGraphSubRegionMerged(testController) {
     rec = recordEvents(testController, ['regionView:regionClicked']);
     const plus = badges()[0];
     const key = plus.dataset.groupKey;
-    // ⛓ The badge layer places (and shows) its badges on the next frame after a viewport change (layoutstop, fit), so
-    // the badge can exist a frame before it is laid out: wait for its layout box to be non-zero, never a sleep. The
-    // zoom is in the text: below `showRegionNames` the badge is hidden by design and this poll goes STUCK.
-    const laidOut = () => { const b = plus.getBoundingClientRect(); return plus.style.display === 'block' && b.width > 0 && b.height > 0; };
-    const shownOk = await testController.pollForCondition(laidOut, `the + badge on "${key}" is laid out (non-zero box)`, 5000, 20);
-    const r = plus.getBoundingClientRect();
+    // ⛓ A STABLE badge before the hit-test, never a sleep. The badge is shown (non-zero box) as soon as the rebuild
+    // places it, but when the rebuild had no saved positions `runLayout` starts an ANIMATED layout: the node (and the
+    // fit) keep moving for its duration, and the badge layer re-places the badge one frame after each move. A hit-test
+    // in that window can land outside the panel or under another element (the race seen on the bundled boot). So wait
+    // until (1) no layout is running (none started, or its `layoutstop` came), (2) the badge layer has no re-placement pending (`_frame`), (3) the badge covers
+    // its node's rendered top-right corner and (4) its centre is inside the graph's container. The zoom is in the text: below
+    // `showRegionNames` the badge is hidden by design and this poll goes STUCK.
+    const plusNode = graphCy().getElementById(groupNodeId(key));
+    const badgeState = () => {
+      const b = plus.getBoundingClientRect();
+      const rbb = plusNode.renderedBoundingBox({ includeLabels: false });
+      const at = { x: parseFloat(plus.style.left) + b.width / 2, y: parseFloat(plus.style.top) + b.height / 2 };
+      const box = graphCy().container().getBoundingClientRect();
+      const cx = b.left + b.width / 2; const cy2 = b.top + b.height / 2;
+      return { b, dx: at.x - rbb.x2, dy: at.y - rbb.y1, rbb, pending: ui.groupBadges?._frame != null,
+        shown: plus.style.display === 'block' && b.width > 0 && b.height > 0, layout: !colLayouts.idle(),
+        // covers the corner: within half its hit square (a node style change that resizes the node moves no position
+        // and fires no viewport event, so the badge can sit a few px off the exact corner; it still covers it)
+        onCorner: Math.abs(at.x - rbb.x2) <= b.width / 2 && Math.abs(at.y - rbb.y1) <= b.height / 2,
+        inside: cx >= box.left && cx <= box.right && cy2 >= box.top && cy2 <= box.bottom };
+    };
+    const stable = () => { const st = badgeState(); return st.shown && !st.layout && !st.pending && st.onCorner && st.inside; };
+    const shownOk = await testController.pollForCondition(stable,
+      `the + badge on "${key}" is shown, settled on its node's corner, inside the graph, with no layout running`, 5000, 20);
+    colLayouts.dispose();
+    const st = badgeState();
+    const r = st.b;
     const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
     const zoomNow = graphCy()?.zoom();
+    const hitName = hit ? `${hit.tagName.toLowerCase()}${hit.className ? `.${String(hit.className).split(' ')[0]}` : ''}` : 'nothing';
     testController.reportCondition(`the + badge on "${key}" is shown (${Math.round(r.width)}×${Math.round(r.height)} px hit square, `
-      + `zoom ${zoomNow?.toFixed?.(2)}) and a tap at its centre hits the badge, not the canvas`,
+      + `zoom ${zoomNow?.toFixed?.(2)}) and a tap at its centre hits the badge, not the canvas `
+      + `(hit ${plus.contains(hit) ? 'the badge' : hitName}; layout ${colLayouts.state()}, on corner ${st.onCorner} `
+      + `[dx ${st.dx.toFixed(1)}, dy ${st.dy.toFixed(1)}, node ${st.rbb.w.toFixed(1)}×${st.rbb.h.toFixed(1)}], sync pending ${st.pending}, inside ${st.inside})`,
       shownOk && !!hit && plus.contains(hit));
     const groupSize = expected.get(key)?.length ?? 0;
     const t2 = performance.now();
