@@ -8,6 +8,7 @@ import { getLastRawJsonData } from '../../stateManager/index.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import { SUB_REGION_VIEW_KEY, multiMemberGroups, isRegionGroupNode, groupNodeId } from '../../regionGraph/subRegionGroups.js';
 import { regionOfCell } from '../../regionView/regionViewModel.js';
+import { NODE_LOOK_KEY } from '../../regionGraph/nodeLook.js';
 
 const PANEL_ID = 'regionGraphPanel';
 const MAX_WAIT_TIME = 10000;
@@ -686,6 +687,43 @@ export async function testRegionGraphSubRegionMerged(testController) {
     rec.stop();
     rec = null;
 
+    // ⛓ region-graph-map-look: nodeLook = map (session-only) draws each merged node as its Region Map cell on the
+    // canvas under Cytoscape's; a REAL pointer click (mouse events at its screen spot) on a location square runs the
+    // LOCATION click on that location. No rebuild: the same nodes stay.
+    const mapCanvas = () => document.querySelector('.region-graph-panel-container .rg-map-look-canvas');
+    const sameNode = merged()[0];
+    graphCy().fit(30);
+    const t4 = performance.now();
+    await ctx.setSetting(NODE_LOOK_KEY, 'map');
+    const mapOk = await testController.pollForCondition(() => Number(mapCanvas()?.dataset.cells ?? 0) > 0,
+      'the map look painted its cells', MAX_WAIT_TIME, 20);
+    const mapMs = Math.round(performance.now() - t4);
+    const layer = mapCanvas()?.mapLook;
+    const withCell = layer?.getDebugState().nodes ?? 0;
+    const cellLess = drawn - withCell;
+    testController.reportCondition(`nodeLook = map: ${mapCanvas()?.dataset.cells} cells painted = ${withCell} nodes with a Region Map cell `
+      + `of ${drawn} (${cellLess} without: they keep the graph look), no rebuild (switch ${mapMs} ms)`,
+      mapOk && Number(mapCanvas().dataset.cells) === withCell && withCell >= drawn - 1 && withCell > 0 && !sameNode.removed());
+    const sq = layer?.getDebugState().squares[0] ?? null;
+    testController.reportCondition(`the map cells drew ${mapCanvas()?.dataset.squares} location squares`, !!sq);
+    if (sq) {
+      rec = recordEvents(testController, ['regionView:locationClicked', 'regionView:regionClicked']);
+      const top = [...document.querySelectorAll('.region-graph-panel-container div[id^="cy-"] canvas')]
+        .filter((c) => !c.classList.contains('rg-map-look-canvas')).pop();
+      const r = top.getBoundingClientRect();
+      const at = { clientX: r.left + sq.sx, clientY: r.top + sq.sy, bubbles: true, cancelable: true, button: 0, buttons: 1 };
+      top.dispatchEvent(new MouseEvent('mousedown', at));
+      top.dispatchEvent(new MouseEvent('mouseup', { ...at, buttons: 0 }));
+      const clicked = await testController.pollForCondition(() => rec.seen.length >= 1, 'the square click is published', 5000, 20);
+      await new Promise((res) => setTimeout(res, 200));
+      testController.reportCondition(`a pointer click on the square of "${sq.location}" runs the LOCATION click on it, once `
+        + `(${rec.seen.map(([n, d]) => `${n.split(':')[1]}=${d?.locationName ?? d?.regionName}`).join(', ')})`,
+        clicked && rec.seen.length === 1 && rec.seen[0][0] === 'regionView:locationClicked' && rec.seen[0][1]?.locationName === sq.location);
+      rec.stop();
+      rec = null;
+    }
+    testController.log(`[nodeLook] seedling_atlas merged map: cells=${withCell}/${drawn} squares=${mapCanvas()?.dataset.squares} switchMs=${mapMs}`);
+
     // ⛓ region-graph-groups-c: collapsible (C) on the same graph and setup — every group closed draws as merged, with
     // a + badge each; a + press opens ONE group into its box, a − press closes it, and neither runs a click action;
     // a body tap still does.
@@ -699,6 +737,8 @@ export async function testRegionGraphSubRegionMerged(testController) {
     const colMs = Math.round(performance.now() - t1);
     testController.reportCondition(`collapsible: every group closed (${merged()?.length} merged nodes = ${expected.size}, 0 boxes), `
       + `${badges().length} + badges (switch ${colMs} ms)`, closedOk && badges().every((b) => b.dataset.open === 'false'));
+    testController.reportCondition('nodeLook = map takes no effect in collapsible: no map canvas, no map node',
+      !mapCanvas() && !graphCy().nodes().some((n) => n.scratch('_rgMapKey') != null));
     rec = recordEvents(testController, ['regionView:regionClicked']);
     const plus = badges()[0];
     const key = plus.dataset.groupKey;
@@ -748,6 +788,9 @@ export async function testRegionGraphSubRegionMerged(testController) {
     const back = await testController.pollForCondition(() => graphShowsWorld() && merged()?.length === 0,
       'the graph rebuilt as separate', MAX_WAIT_TIME, 50);
     testController.reportCondition(`restored: subRegionView reads "${restored}" again and every region is its own node`, restored === 'separate' && back);
+    const lookBack = await settingsManager.getSetting(NODE_LOOK_KEY);
+    testController.reportCondition(`restored: nodeLook reads "${lookBack}" (the default) and no map canvas is left`,
+      lookBack === 'graph' && !document.querySelector('.region-graph-panel-container .rg-map-look-canvas'));
     await restoreWorld(testController, ctx, before, { always: moved });
     ctx.dispose();
   }
@@ -1188,7 +1231,7 @@ registerTest({
   category: 'Region Graph',
   testFunction: testRegionGraphSubRegionMerged,
   enabled: false, // runs where a roster enrols it (the substrates config)
-  description: 'region-graph-groups-b: on seedling_atlas (2 groups), subRegionView = merged (session-only) draws one node per display group of 2+ in place of its members, no self-loop; a tap on a group node runs the region click on regionOfCell(key, members), once; then (region-graph-groups-c) subRegionView = collapsible draws every group closed with a + badge, a + press opens one group into its box and a − press closes it, neither running a click action, and a body tap runs it; the setting is restored and every region is its own node again'
+  description: 'region-graph-groups-b: on seedling_atlas (2 groups), subRegionView = merged (session-only) draws one node per display group of 2+ in place of its members, no self-loop; a tap on a group node runs the region click on regionOfCell(key, members), once; then (region-graph-map-look) nodeLook = map (session-only) paints every node with a Region Map cell as that cell with no rebuild, and a pointer click on a location square runs the location click on it, once; then (region-graph-groups-c) subRegionView = collapsible draws every group closed with a + badge, a + press opens one group into its box and a − press closes it, neither running a click action, and a body tap runs it, and the stored nodeLook = map takes no effect there; the settings are restored (nodeLook graph) and every region is its own node again'
 });
 
 registerTest({
