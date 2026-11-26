@@ -33,7 +33,15 @@ import panelManager from '../../../app/core/panelManager.js';
 import { getPanelInstances as getRegionMapPanels } from '../../regionMap/index.js';
 import { REGION_MAP_CLICK_ACTIONS_KEY, regionOfCell } from '../../regionMap/regionMapClickActions.js';
 import { ACT_CLICK_ID, PLAN_SOURCE_PREFIX, lastPerformResult } from '../../actionNodes/nodeClickAction.js';
-import { PERFORM_ALL_LABEL } from '../../actionNodes/nodeCard.js';
+import { PERFORM_ALL_LABEL, completedBeforeText } from '../../actionNodes/nodeCard.js';
+import { compileActionGraph } from '../../actionNodes/actionGraphCompiler.js';
+import { knowledgeItemNameOf } from '../../actionNodes/actionGraph.js';
+import { formatClock } from '../../actionNodes/actionModel.js';
+import { queueEndState } from '../../actionNodes/nodeStates.js';
+import { actionNodesPanelModel } from '../../actionNodes/actionNodesPanel.js';
+import { HISTORY_STORAGE_PREFIX } from '../../actionNodes/historyStore.js';
+import { resourcesPanelModel } from '../../resourceChannels/resourcesPanel.js';
+import { loadedWorldSubstrates } from '../../resourceChannels/poolName.js';
 
 const PRESET_RULES = './presets/action_nodes_example/AP_1/AP_1_rules.json';
 /**
@@ -1060,6 +1068,219 @@ async function cardsAfterReopen(tc) {
     return tc.getOverallResult();
 }
 
+// ─── AN-TIME-2: time in the app (windows, the wait, knowledge, "completed before") ─────────────────
+
+const FIXTURES = './modules/actionNodes/fixtures';
+/** The harbour world as the rows play it: the AN-TIME-1 fixture with a pool name (the slice's one format addition). */
+const TIME_POOL = Object.freeze({ name: 'Time', unit: 'h' });
+
+/**
+ * Compile an AN-TIME-1 fixture in the page (it is a fixture, not a preset: AN-TIME-4 makes the first timed preset) and
+ * load it as a rules file. Its "completed before" history is removed first, so the row starts from loop 1.
+ */
+async function loadFixture(tc, file, extra = {}) {
+    const graph = { ...(await (await fetch(`${FIXTURES}/${file}`, { cache: 'no-store' })).json()), ...extra };
+    const { rules } = compileActionGraph(graph);
+    clearHistoryOf(graph.graph_id);
+    // The in-memory load (the editor's and the pipeline's path): Loops reads the embedded loop_costs from the event, so
+    // the world comes up in Loop mode as a preset does.
+    const loadedEvt = tc.waitForEvent('stateManager:rulesLoaded', 10000);
+    tc.eventBus.publish('files:jsonLoaded', { jsonData: rules, selectedPlayerId: P, sourceName: `an-time-fixture-${graph.graph_id}` }, 'tests');
+    await loadedEvt;
+    await tc.stateManager.pingWorker('after-rules-load', 3000);
+    const ok = await tc.pollForCondition(
+        () => runtime().isLoaded() && runtime().model.block.graph_id === graph.graph_id && gs()?.isLoopModeActive === true,
+        `the runtime holds ${graph.graph_id} and loop mode is on`, 8000, 100);
+    if (!ok) {
+        tc.log(`DIAG load: runtime loaded ${runtime().isLoaded()} graph ${runtime().model?.block?.graph_id ?? '-'} loopMode `
+            + `${gs()?.isLoopModeActive} costs ${centralRegistry.getPublicFunction?.('loops', 'getLoopState')?.()?.costDataManager?.isLoaded?.()}`);
+    }
+    tc.reportCondition(`the runtime holds ${graph.graph_id} and loop mode is on`, !!ok);
+    const payloads = Object.fromEntries(Object.entries(rules.preset_sidecars[P]).map(([k, v]) => [k, v.playable_payload]));
+    return ok ? { graph, rules, payloads } : null;
+}
+
+/** Remove every saved history of `graphId` (any seed, any slot). */
+function clearHistoryOf(graphId) {
+    try {
+        for (const k of Object.keys(localStorage)) if (k.startsWith(`${HISTORY_STORAGE_PREFIX}${graphId}:`)) localStorage.removeItem(k);
+    } catch { /* storage unavailable: nothing saved either */ }
+}
+
+const appInventory = (tc) => tc.stateManager.getLatestStateSnapshot()?.inventory ?? {};
+const timeLine = () => resourcesPanelModel({
+    ledger: getResourceLedger().snapshot(),
+    mana: { current: gs().getCurrentMana(), max: gs().getMaxMana() },
+    substrates: loadedWorldSubstrates(),
+}).manaText;
+
+async function windowAndWait(tc) {
+    const loaded = await loadFixture(tc, 'harbour-morning.json', { pool: { ...TIME_POOL } });
+    if (!loaded) return tc.getOverallResult();
+    const { graph, payloads } = loaded;
+    const m = runtime().model;
+    const at = (u) => formatClock(m, u);
+    const ctx = buildContext({ eventBus: tc.eventBus });
+    const restore = freshQueue();
+    try {
+        if (!await graphWithCards(tc, payloads)) return tc.getOverallResult();
+        await ctx.setSetting(GRAPH_CLICK_ACTIONS, ACT_ONLY);
+        await tc.pollForCondition(() => graphStrip().includes('perform once'), 'the strip shows "perform once"', 5000, 50);
+        const quay = graph.nodes.quay;
+        const land = graph.nodes.landlady;
+        // The window line and the click text (picture node-cards-window.png), at the loop's start.
+        const win = `available ${at(quay.window.from)}–${at(quay.window.until)}`;
+        const ok = await tc.pollForCondition(() => textOf(cardOf('quay')).includes(win), 'the quay card shows its window', 5000, 50);
+        tc.reportCondition(`${quay.name}: "${win}" (${textOf(cardOf('quay'))})`, !!ok);
+        const click = `click: waits ${quay.window.from} ${TIME_POOL.unit} (opens ${at(quay.window.from)}), then ${quay.time} ${TIME_POOL.unit}`;
+        tc.assertEqual(`${quay.name}: "${click}"`, true, textOf(cardOf('quay')).includes(click));
+        tc.assertEqual(`${land.name}: "available until ${at(land.window.until)}"`, true, textOf(cardOf('landlady')).includes(`available until ${at(land.window.until)}`));
+        tc.assertEqual(`${graph.nodes.walk.name}: "any time"`, true, textOf(cardOf('walk')).includes('any time'));
+        // The Time line (picture 1), at the start of the loop.
+        const day = graph.loop.mana;
+        tc.assertEqual('the Resources panel\'s Time line at the loop\'s start',
+            `${TIME_POOL.name}: ${at(0)} · ${day} ${TIME_POOL.unit} left · the day ends ${at(day)}`, timeLine());
+
+        // Too late: two walks pass the landlady's window. The card says so, the click is refused, the gate too.
+        clickCard('walk');
+        clickCard('walk');
+        const lateText = `too late: after ${at(land.window.until)} (it is ${at(2 * graph.nodes.walk.time)})`;
+        const late = await tc.pollForCondition(() => textOf(cardOf('landlady')).includes(lateText), 'the landlady card: too late', 5000, 50);
+        tc.reportCondition(`${land.name} after the queued walks: "${lateText}" (${textOf(cardOf('landlady'))})`, !!late);
+        const r = clickCard('landlady');
+        tc.assertEqual(`${land.name}: the click is refused by name, too late`, true, r?.ok === false && r.code === 'blocked' && r.text.includes(lateText));
+        // A hand-queued act anyway (moves to the node, then the act): the start gate refuses it live (too-late), the walks
+        // before it ran.
+        let from = 'walk';
+        for (const to of hopsBetween(payloads, from, 'landlady')) {
+            gs().updatePath(to, `${from} -> ${to}`, from);
+            from = to;
+        }
+        gs().addCustomAction('act', { nodeId: 'landlady', label: land.name, regionName: 'landlady' });
+        await runQueue(tc, 'queue stopped');
+        tc.assertEqual('the start gate refused the late act: too-late', 'too-late', loopStateSingleton.lastActionRefusal?.code ?? null);
+        tc.assertEqual('the gate\'s reason names the clock', true, (loopStateSingleton.lastActionRefusal?.reason ?? '').includes(lateText));
+        tc.assertEqual('the two walks ran first', 2, countOf('walk'));
+
+        // One wait performed: a fresh loop; a click on the ferry queues the route, the wait, then the act.
+        loopStateSingleton.clearQueue();
+        loopStateSingleton._resetLoop();
+        await tc.pollForCondition(() => runtime().clock === 0, 'a fresh loop: the clock at 0', 3000, 50);
+        const q = clickCard('quay');
+        tc.log(`click ${quay.name}: ${JSON.stringify(q)}`);
+        const queue = loopStateSingleton.getActionQueue();
+        const waitEntry = queue.find((e) => e.actionName === 'wait');
+        tc.assertEqual(`${quay.name}: queued, with a wait of ${quay.window.from}`, true, q?.ok === true && q.waited === quay.window.from);
+        tc.assertEqual('the wait entry is in the Loops queue, before the act, labelled with the opening',
+            `Wait ${quay.window.from} ${TIME_POOL.unit} (opens ${at(quay.window.from)})`, waitEntry?.params?.label ?? null);
+        tc.assertEqual('the wait comes before the act', true, queue.indexOf(waitEntry) < queue.findIndex((e) => e.actionName === 'act'));
+        const pure = queueEndState(m, runtime().liveViewState(), queue, { costs: runtime().liveCosts() });
+        const mana0 = gs().getCurrentMana();
+        tc.assertEqual('the queue ran to its end', true, await runQueue(tc, 'queue finished'));
+        tc.assertEqual('no start-gate refusal', null, loopStateSingleton.lastActionRefusal);
+        tc.assertEqual(`${quay.name} performed once`, 1, countOf('quay'));
+        const end = quay.window.from + quay.time;
+        tc.assertEqual('the clock: the wait plus the act (live)', end, runtime().clock);
+        tc.assertEqual('pure == live: the end of the planned queue\'s clock', pure.state.clock, runtime().clock);
+        tc.assertEqual('the pool paid the wait (no region-XP discount) and the act', mana0 - end, gs().getCurrentMana());
+        tc.assertEqual('the Time line after the wait and the act',
+            `${TIME_POOL.name}: ${at(end)} · ${day - end} ${TIME_POOL.unit} left · the day ends ${at(day)}`, timeLine());
+    } finally {
+        await ctx.restoreSettings();
+        ctx.dispose();
+        restore();
+        clearHistoryOf(graph.graph_id);
+    }
+    return tc.getOverallResult();
+}
+
+async function knowledgeGate(tc) {
+    const loaded = await loadFixture(tc, 'visits-day.json');
+    if (!loaded) return tc.getOverallResult();
+    const { graph, payloads } = loaded;
+    const ctx = buildContext({ eventBus: tc.eventBus });
+    const restore = freshQueue();
+    const A = graph.knowledge['read-a'].name;
+    const D = graph.knowledge['read-d'].name;
+    const actD = { type: 'customAction', actionName: 'act', sourceRegion: 'visit-d', params: { nodeId: 'visit-d' } };
+    try {
+        if (!await graphWithCards(tc, payloads)) return tc.getOverallResult();
+        await ctx.setSetting(GRAPH_CLICK_ACTIONS, ACT_ONLY);
+        await tc.pollForCondition(() => graphStrip().includes('perform once'), 'the strip shows "perform once"', 5000, 50);
+        // Before: Visit A's rule holds (it is reachable from the start), yet the app does NOT hold the flag.
+        await tc.stateManager.pingWorker('before the knowledge checks', 3000);
+        tc.assertEqual(`the app does not hold "${knowledgeItemNameOf(A)}" before Visit A is performed`, 0, appInventory(tc)[knowledgeItemNameOf(A)] ?? 0);
+        const g0 = runtime().gate(actD);
+        tc.assertEqual(`the gate refuses ${graph.nodes['visit-d'].name}: "needs to know ${A}"`, true,
+            g0.ok === false && g0.code === 'knowledge' && g0.reason === `needs to know ${A}`);
+        tc.assertEqual(`${graph.nodes['visit-d'].name}'s card names what it needs to know`, true, textOf(cardOf('visit-d')).includes(`needs to know ${A}`));
+        // The teaching node, then the gated one: both queued by a click (at the queue's end A is known).
+        const ra = clickCard('visit-a');
+        const rd = clickCard('visit-d');
+        tc.log(`click A: ${JSON.stringify(ra)} / click D: ${JSON.stringify(rd)}`);
+        tc.assertEqual('both clicks queue (D after A: known at the queue\'s end)', true, ra?.ok === true && rd?.ok === true);
+        tc.assertEqual('the queue ran to its end', true, await runQueue(tc, 'queue finished'));
+        tc.assertEqual('no start-gate refusal', null, loopStateSingleton.lastActionRefusal);
+        tc.assertEqual('Visit A and Visit D performed', '1,1', `${countOf('visit-a')},${countOf('visit-d')}`);
+        const held = await tc.pollForCondition(() => (appInventory(tc)[knowledgeItemNameOf(A)] ?? 0) === 1
+            && (appInventory(tc)[knowledgeItemNameOf(D)] ?? 0) === 1, 'the app holds both flags', 5000, 100);
+        tc.reportCondition(`after the performances the app holds "${knowledgeItemNameOf(A)}" and "${knowledgeItemNameOf(D)}"`, !!held);
+        tc.assertEqual('the runtime knows them', JSON.stringify(['read-a', 'read-d']), JSON.stringify(runtime().knownIds()));
+        // A new loop: the flag is kept, so the gate passes from the loop's start.
+        loopStateSingleton.clearQueue();
+        loopStateSingleton._resetLoop();
+        tc.assertEqual('the next loop: the gate passes from its start (the flag is kept)', true, runtime().gate(actD).ok === true);
+    } finally {
+        await ctx.restoreSettings();
+        ctx.dispose();
+        restore();
+        clearHistoryOf(graph.graph_id);
+    }
+    return tc.getOverallResult();
+}
+
+async function completedBeforeRow(tc) {
+    const loaded = await loadFixture(tc, 'harbour-morning.json', { pool: { ...TIME_POOL } });
+    if (!loaded) return tc.getOverallResult();
+    const { graph, payloads } = loaded;
+    const ctx = buildContext({ eventBus: tc.eventBus });
+    const restore = freshQueue();
+    try {
+        if (!await graphWithCards(tc, payloads)) return tc.getOverallResult();
+        await ctx.setSetting(GRAPH_CLICK_ACTIONS, ACT_ONLY);
+        await tc.pollForCondition(() => graphStrip().includes('perform once'), 'the strip shows "perform once"', 5000, 50);
+        tc.assertEqual('loop 1 at the start', 1, runtime().loopNumber);
+        tc.assertEqual('loop 1: no "completed before" mark anywhere', 0, cards().filter((c) => c.querySelector('.an-card__completed-before')).length);
+        clickCard('walk');
+        tc.assertEqual('the queue ran to its end', true, await runQueue(tc, 'queue finished'));
+        tc.assertEqual(`${graph.nodes.walk.name} performed in loop 1`, 1, countOf('walk'));
+        tc.assertEqual('loop 1, the node just performed: still no mark (completed THIS loop)', null,
+            cardOf('walk')?.querySelector('.an-card__completed-before') ?? null);
+        loopStateSingleton.clearQueue();
+        loopStateSingleton._resetLoop();
+        tc.assertEqual('loop 2 after the reset', 2, runtime().loopNumber);
+        const tag = completedBeforeText(1);
+        const marked = await tc.pollForCondition(() => textOf(cardOf('walk')).includes(tag), 'the walk card: completed before', 5000, 50);
+        tc.reportCondition(`loop 2: ${graph.nodes.walk.name}'s card shows "${tag}" (${textOf(cardOf('walk'))})`, !!marked);
+        const others = cards().filter((c) => c.dataset.nodeId !== 'walk' && c.querySelector('.an-card__completed-before'));
+        tc.assertEqual('loop 2: no other card is marked', 0, others.length);
+        const panel = actionNodesPanelModel({ payload: payloads.walk, runtime: runtime(), loopMode: true });
+        tc.assertEqual('the panel lists the set, each entry tagged with its loop',
+            JSON.stringify([`${graph.nodes.walk.name} · loop 1`]), JSON.stringify(panel.completedBefore.map((c) => c.text)));
+        tc.assertEqual('pure == live: the panel\'s list is the runtime\'s', JSON.stringify(runtime().completedBefore()),
+            JSON.stringify(panel.completedBefore.map(({ text, ...c }) => c)));
+        const saved = Object.keys(localStorage).filter((k) => k.startsWith(`${HISTORY_STORAGE_PREFIX}${graph.graph_id}:`));
+        tc.assertEqual('saved per world under the declared prefix', 1, saved.length);
+        tc.assertEqual('the saved set is the runtime\'s', 1, JSON.parse(localStorage.getItem(saved[0]) ?? '{}')?.completed?.walk ?? null);
+    } finally {
+        await ctx.restoreSettings();
+        ctx.dispose();
+        restore();
+        clearHistoryOf(graph.graph_id);
+    }
+    return tc.getOverallResult();
+}
+
 // ─── 15. The omsi town: it loads, its cards show the preset's numbers, one performance works (AN-OMSI-3) ──
 
 /** The text a card shows for a requirement, from the payload (`<name> <amount>`). */
@@ -1169,6 +1390,12 @@ const ROWS = [
         'Loads the omsi town preset (Beginnersville): a card per node; each neighbour of the start shows its price, used/limit and needs as the preset states them; the node that makes what the goal needs is blocked with its unmet line; one performance at a free check node runs through the Loops queue, pays its price and sends its check.', omsiTownRow],
     ['an-cards-after-reopen', 'ActionNodes: the node cards come back when the Region Graph panel is closed and reopened',
         'Loads the example with the Region Graph open (a card per node), closes the panel, opens a new one: a card per node again, with no world reload (AN-3a\'s pending-slot limit).', cardsAfterReopen],
+    ['an-time-window-and-wait', 'ActionNodes time: the window line, too late, and one wait performed',
+        'AN-TIME-2 over the harbour fixture (compiled in the page, a pool named Time): each card\'s window line and the early card\'s click text; the Resources Time line; two walks make the landlady too late (the card, the click and the start gate say so); a click on the ferry queues the route, a wait and the act; it runs, the clock advances by the wait and the act (pure == live) and the pool pays both.', windowAndWait],
+    ['an-time-knowledge-gate', 'ActionNodes time: the knowledge gate refuses, then passes after the teaching node',
+        'AN-TIME-2 over the visits fixture: before Visit A is performed the app does NOT hold its Knows: flag and the gate refuses Visit D ("needs to know Paper A"); a click on A then D queues both; after they run the app holds both flags; the next loop the gate passes from its start.', knowledgeGate],
+    ['an-time-completed-before', 'ActionNodes time: "completed before" in loop 2, tagged loop 1',
+        'AN-TIME-2 (Robert\'s Q6, minimal form): a node performed in loop 1 shows no mark in loop 1 and "completed before · loop 1" in loop 2; no other card is marked; the panel lists the set tagged by loop; it is saved per world under the declared prefix.', completedBeforeRow],
 ];
 
 for (const [id, name, description, testFunction] of ROWS) {

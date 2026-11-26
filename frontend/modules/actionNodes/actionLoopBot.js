@@ -10,15 +10,18 @@
  *      (⚖ A17). Its reasoning lines come back with it.
  *   3. The route: the Loops path. `Menu → start`, then for each performance the free hops from where the player is
  *      (a shortest path over exits whose TARGET is reached at that point of the plan — the multi-entry rule, so the
- *      start gate never refuses a hop; AN-1b's `hopsBetween` shape), then the `act` entry. An `attempt` (a node
+ *      start gate never refuses a hop; AN-1b's `hopsBetween` shape), then the `act` entry. An act that would start
+ *      before its window opens is preceded by a `wait` entry of the exact length (AN-TIME-2: the start gate refuses an
+ *      early act, so the bot never leaves a wait to the gate). An `attempt` (a node
  *      started without the mana to finish, ⚖ Q1) is the last act: it drains the pool as region XP and ends the loop.
  *
  * Pure apart from what `context` hands in: no registry, no DOM, no I/O.
  */
 
-import { isReached, loopStartState, perform } from './actionModel.js';
+import { formatClock, formatMana, isReached, loopStartState, perform, waitOf } from './actionModel.js';
 import { PLAN_KINDS, livePrices, planLoop } from './actionPlanner.js';
 import { ACT_ACTION } from './actionGraphCompiler.js';
+import { WAIT_ACTION } from '../shared/procgen/loopCustomActions.js';
 
 /** The runtime model with what the planner reads: settings, the check nodes, uncapped boons. */
 export function plannerModelOf(model) {
@@ -64,11 +67,13 @@ export function hopsBetween(model, state, from, to) {
  * @param {object} start - the loop's start state
  * @param {string[]} plan
  * @param {string|null} attempt
- * @param {{startRegion: string, from?: string|null}} opts - the loop's start region (the world's `Menu`); `from`: a
- *   node the player stands on mid-loop (AN-3b's continuation): the route starts there, with no `Menu → start` hop
+ * @param {{startRegion: string, from?: string|null, costs?: number[], unit?: string}} opts - the loop's start region
+ *   (the world's `Menu`); `from`: a node the player stands on mid-loop (AN-3b's continuation): the route starts there,
+ *   with no `Menu → start` hop; `costs`: the live prices the plan was made with (the clock follows them); `unit`: the
+ *   pool's unit for a wait's label
  * @returns {object[]}
  */
-export function routeOfPlan(model, start, plan, attempt, { startRegion, from = null }) {
+export function routeOfPlan(model, start, plan, attempt, { startRegion, from = null, costs, unit = '' }) {
     const startNode = model.nodes[model.startIndex].id;
     const instances = new Map();
     const path = [];
@@ -89,16 +94,27 @@ export function routeOfPlan(model, start, plan, attempt, { startRegion, from = n
     if (!fromNode && startRegion && startRegion !== startNode) move(startRegion, startNode, `${startRegion} -> ${startNode}`);
     let at = fromNode ?? startNode;
     let state = start;
+    const wait = (id, units) => {
+        const node = model.nodes[model.nodeIx.get(id)];
+        const amount = unit ? `${formatMana(units)} ${unit}` : formatMana(units);
+        path.push({
+            type: 'customAction', actionName: WAIT_ACTION,
+            params: { nodeId: id, units, regionName: id, label: `Wait ${amount} (opens ${formatClock(model, node.from)})` },
+            sourceRegion: id, instanceNumber: instances.get(id) ?? 1,
+        });
+    };
     const visit = (id) => {
         const hops = hopsBetween(model, state, at, id);
         if (!hops) throw new Error(`actionLoopBot: no open route from '${at}' to '${id}'`);
         for (const h of hops) move(h.from, h.to, h.exit);
         at = id;
+        const w = waitOf(model, state, model.nodeIx.get(id));
+        if (w > 0) wait(id, w);
         act(id);
     };
     for (const id of plan) {
         visit(id);
-        state = perform(model, state, model.nodeIx.get(id), { costs: undefined });
+        state = perform(model, state, model.nodeIx.get(id), { costs });
     }
     if (attempt) visit(attempt);
     return path;
@@ -121,9 +137,14 @@ export function routeOfPlan(model, start, plan, attempt, { startRegion, from = n
  *   attempt: string|null, earns: string[]}}
  */
 export function planLiveLoop({ model: runtimeModel, inventory = {}, checkedLocations = [], regionXp = () => 0,
-    maxMana, startRegion, continueFrom = null }) {
+    maxMana, startRegion, continueFrom = null, known = [], unit = '' }) {
     const model = plannerModelOf(runtimeModel);
-    const items = Object.fromEntries(model.boons.map((b) => [b.id, Math.max(0, inventory[b.name] ?? 0)]));
+    // AN-TIME-2: the knowledge the runtime has learned rides in the item vector after the boons (`itemVectorOf`).
+    const knownSet = new Set(known);
+    const items = {
+        ...Object.fromEntries(model.boons.map((b) => [b.id, Math.max(0, inventory[b.name] ?? 0)])),
+        ...Object.fromEntries((model.knowledge ?? []).map((f) => [f.id, knownSet.has(f.id) ? 1 : 0])),
+    };
     const checkedSet = new Set(checkedLocations);
     const checked = model.nodes.filter((n) => n.location && checkedSet.has(n.location)).map((n) => n.id);
     const xp = Object.fromEntries(model.nodes.map((n) => [n.id, Number(regionXp(n.id)) || 0]));
@@ -132,12 +153,14 @@ export function planLiveLoop({ model: runtimeModel, inventory = {}, checkedLocat
     if (continueFrom?.state) {
         const st = continueFrom.state;
         start = { counts: st.counts.slice(), stats: st.stats.slice(), resources: st.resources.slice(),
-            mana: Number(continueFrom.mana) || 0, spent: 0 };
+            mana: Number(continueFrom.mana) || 0, spent: 0, clock: st.clock ?? 0, known: (st.known ?? start.known ?? []).slice() };
     }
     const p = planLoop(model, { items, checked, xp, start });
     const kind = p.kind;
     if (kind === PLAN_KINDS.DONE) return { ...p, kind, path: [], reason: 'the goal is done', key: 'done', lines: p.lines };
-    const path = routeOfPlan(model, start, p.plan, p.attempt, { startRegion, from: continueFrom?.region ?? null });
+    const path = routeOfPlan(model, start, p.plan, p.attempt, {
+        startRegion, from: continueFrom?.region ?? null, costs: livePrices(model, xp), unit,
+    });
     const reason = p.lines[0] ?? kind;
     return { ...p, kind, path, reason, key: `${kind}:${p.earns.join('+') || p.attempt || p.plan.join('>')}`, lines: p.lines, prices: livePrices(model, xp) };
 }

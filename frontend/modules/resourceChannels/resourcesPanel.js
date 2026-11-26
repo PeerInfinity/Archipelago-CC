@@ -8,25 +8,28 @@
  *   - the boosts in effect: which Archipelago item gives what, and how many are held (the owner states them).
  * Other games' item counts live inside those games; showing them needs a report event from each bridge (later).
  *
+ * AN-TIME-2: the pool line reads the loaded world's pool name (`poolName.js`, "Mana" by default), and a world with a
+ * clock shows the Time line instead: "Time: 11:00 · 6 h left · the day ends 17:00".
+ *
  * The rendering is a pure function of a model (`resourcesPanelModel`), so it is tested without a DOM.
  */
 
 import eventBus from '../../app/core/eventBus.js';
-import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { getResourceLedger } from './resourceChannelsLibrary.js';
 import { LEDGER_CHANGED_EVENT } from './resourceLedger.js';
+import { DEFAULT_POOL, clockLineOfWorld, loadedWorldSubstrates, poolAmount, poolOfWorld } from './poolName.js';
 
 export const RESOURCES_PANEL_COMPONENT_TYPE = 'resourcesPanel';
 const MODULE = 'resourceChannels';
 
-/** Format a gives block as "Strength +1, Gold +5, +10 mana". */
-export function describeGives(gives = {}, names = { stats: {}, resources: {} }) {
+/** Format a gives block as "Strength +1, Gold +5, +10 mana" (the pool in the world's name: AN-TIME-2). */
+export function describeGives(gives = {}, names = { stats: {}, resources: {} }, pool = DEFAULT_POOL) {
     const parts = [];
     for (const [id, n] of Object.entries(gives.stats ?? {})) parts.push(`${names.stats?.[id] ?? id} +${n}`);
     for (const [id, n] of Object.entries(gives.resources ?? {})) parts.push(`${names.resources?.[id] ?? id} +${n}`);
-    if (typeof gives.mana === 'number' && gives.mana !== 0) parts.push(`+${gives.mana} mana`);
+    if (typeof gives.mana === 'number' && gives.mana !== 0) parts.push(`+${poolAmount(gives.mana, pool)}`);
     return parts.length ? parts.join(', ') : 'nothing';
 }
 
@@ -34,10 +37,13 @@ export function describeGives(gives = {}, names = { stats: {}, resources: {} }) 
  * The panel's content as data.
  * @param {{ledger: object, mana: {current, max}|null, substrates: string[], registry?: object}} input
  *        `ledger` is a ledger snapshot; `substrates` the ids present in the loaded world
- * @returns {{mana: object|null, sections: Array<{id, label, rows: Array<{kind, label, value}>}>, empty: boolean}}
+ * @returns {{mana: object|null, sections: Array<{id, label, rows: Array<{kind, label, value}>}>, empty: boolean,
+ *   pool: {name, unit}, manaText: string|null}} `manaText` is the pool line: "Mana: 6 / 8 (starting)", or with a
+ *   clock "Time: 11:00 · 6 h left · the day ends 17:00"
  */
 export function resourcesPanelModel({ ledger, mana = null, substrates = [], registry = substrateRegistry }) {
     const sections = [];
+    const pool = poolOfWorld([...new Set(substrates)].sort(), registry);
     for (const id of [...new Set(substrates)].sort()) {
         const entry = registry.get(id);
         const sharing = entry?.sharing;
@@ -52,13 +58,20 @@ export function resourcesPanelModel({ ledger, mana = null, substrates = [], regi
                 rows.push({ kind: 'resource', id: rid, label: ledger.names?.resources?.[rid] ?? rid, value: v });
             }
             for (const b of ledger.boosts ?? []) {
-                rows.push({ kind: 'boost', id: b.item, label: b.item, value: `${b.held} held: ${describeGives(b.gives, ledger.names)}` });
+                rows.push({ kind: 'boost', id: b.item, label: b.item, value: `${b.held} held: ${describeGives(b.gives, ledger.names, pool)}` });
             }
         }
         const categories = ['mana', 'items', 'stats', 'resources'].filter((c) => sharing[c] !== undefined);
         sections.push({ id, label: entry.label ?? id, categories, rows });
     }
-    return { mana, sections, empty: sections.length === 0 };
+    let manaText = null;
+    if (mana) {
+        const clock = clockLineOfWorld(mana.current, [...new Set(substrates)].sort(), registry);
+        manaText = clock
+            ? `${pool.name}: ${clock.now} · ${clock.leftText} left · the day ends ${clock.ends}`
+            : `${pool.name}: ${Math.round(mana.current * 10) / 10} / ${mana.max} (starting)`;
+    }
+    return { mana, sections, empty: sections.length === 0, pool, manaText };
 }
 
 function el(tag, attrs = {}, text = null) {
@@ -76,7 +89,9 @@ export class ResourcesPanel {
         this.container.element.appendChild(this.root);
         this._unsubs = [];
         const rerender = () => this.render();
-        for (const ev of [LEDGER_CHANGED_EVENT, 'gameState:manaChanged', 'stateManager:rulesLoaded', 'procgen:activeSubstrateChanged']) {
+        // `actionNodes:stateChanged`: a substrate's clock moved (a wait, an act) — the Time line reads it (AN-TIME-2).
+        for (const ev of [LEDGER_CHANGED_EVENT, 'gameState:manaChanged', 'stateManager:rulesLoaded', 'procgen:activeSubstrateChanged',
+            'actionNodes:stateChanged']) {
             try {
                 const off = eventBus.subscribe(ev, rerender, MODULE);
                 if (typeof off === 'function') this._unsubs.push(off);
@@ -92,13 +107,7 @@ export class ResourcesPanel {
 
     /** The substrate ids of the loaded world (procgenPlayer's warehouse), or none. */
     _worldSubstrates() {
-        try {
-            const warehouse = centralRegistry.getPublicFunction?.('procgenPlayer', 'getWarehouse')?.();
-            if (!warehouse) return [];
-            return [...warehouse.values()].map((w) => w?.substrate).filter(Boolean);
-        } catch {
-            return [];
-        }
+        return loadedWorldSubstrates();
     }
 
     render() {
@@ -111,8 +120,7 @@ export class ResourcesPanel {
         });
         this.root.replaceChildren();
         if (model.mana) {
-            const m = el('div', { class: 'resources-mana', 'data-testid': 'resources-mana' },
-                `Mana: ${Math.round(model.mana.current * 10) / 10} / ${model.mana.max} (starting)`);
+            const m = el('div', { class: 'resources-mana', 'data-testid': 'resources-mana' }, model.manaText);
             m.style.marginBottom = '6px';
             this.root.appendChild(m);
         }

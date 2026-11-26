@@ -10,6 +10,9 @@
  * when the player really breaks the rock, and collecting it on reach would
  * open the edge it gates with nothing broken in the game. Those are collected
  * by the runtime that watches the game's persistence flag, never here.
+ * `substrate_state` (AN-TIME-2) is the same rule for state a SUBSTRATE's own
+ * runtime keeps: an ActionNodes knowledge flag is held once the node that
+ * teaches it is performed, not once that node is reachable.
  *
  * ⛔ FAIL-CLOSED: an event with NO `event_kind` keeps today's behaviour (every
  * committed event before this slice); a kind is auto-collected only when this
@@ -25,6 +28,11 @@ export const EVENT_KIND_POLICY = Object.freeze({
         autoCollect: false,
         playerCheckable: true,
         why: 'an add-on slot\'s goal event (client/core/upstreamGoal.js): reaching it is not finishing; it is checked like any location (a click, the Timer, a bot, the Loop queue), and that check reports the goal',
+    }),
+    substrate_state: Object.freeze({
+        autoCollect: false,
+        playerCheckable: false,
+        why: 'state a substrate runtime keeps (an ActionNodes knowledge flag, `Knows: <flag>`): it is learned by PERFORMING the node, so the runtime collects it on the action (actionNodes/actionNodesRuntime.js), never on reach',
     }),
 });
 
