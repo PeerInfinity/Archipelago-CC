@@ -53,6 +53,7 @@ export const HANG_SHAPES = Object.freeze([
     { name: 'br1-br0', entities: [br(at.ON, 1, 10), br(at.OFF_A, 0, 11)], clears: [], source: 'none: a false into a ButtonRoom stops' },
     { name: 'brx-btn', entities: [br(at.ON, 0, 10, 37), button(at.OFF_A)], clears: [], source: 'none: a cross-room ButtonRoom publishes nothing here' },
     { name: 'btn-solo', entities: [button(at.ON)], clears: [], source: 'none: one presser' },
+    { name: 'br1-btn-br0', entities: [br(at.ON, 1, 10), button(at.OFF_A), br(at.OFF_B, 0, 11)], clears: [], source: 'none: the flip-1 press publishes false, which only one pass-through hands on' },
 ]);
 
 export const hangShape = (name) => {

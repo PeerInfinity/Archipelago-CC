@@ -42,16 +42,16 @@ const MEASURED = {
     'btn-btn': 'firstFrame', 'btn-rope': 'firstFrame', 'rope-rope-pulled': 'build', 'btn-br0-boot': 'build',
     'br0-btn': 'press', 'btn-br0': 'press', 'br0-br0': 'press', 'br0-rope': 'press', 'br1-rope-rope': 'press',
     'rope-rope': 'none', 'br1-btn': 'none', 'btn-br1': 'none', 'br0-br1': 'none', 'br1-br0': 'none', 'brx-btn': 'none',
-    'btn-solo': 'none',
+    'btn-solo': 'none', 'br1-btn-br0': 'none',
 };
 const srcFor = (shape) => (n) => hangRecord(SETS.vanillaSource(n), shape);
-const replay = (name, over = {}) => withContactFidelity(over, () => {
+const replay = (name, over = {}) => withContactFidelity({ [KEY]: false, ...over }, () => {
     const shape = hangShape(name);
     return hangReplay(hangTape(ROOT, shape), srcFor(shape));
 });
 const whole = (r) => JSON.stringify({ rows: r.rows, error: r.error, result: r.run ? {
     banked: r.run.bankedClears, level: r.run.level, ticks: r.run.ticksCompleted } : null });
-const tapeResult = (name, over, src = VANILLA) => withContactFidelity(over, () => {
+const tapeResult = (name, over, src = VANILLA) => withContactFidelity({ [KEY]: false, ...over }, () => {
     try { return JSON.stringify(runTape(loadTape(name), { levelSource: src })); } catch (e) { return `THROW ${e.name}: ${e.message}`; }
 });
 
@@ -99,6 +99,11 @@ describe('PRESSERLOOP — the recursion census (presserRecursionGroups)', () => 
         expect(presserRecursionHangsOn(g, false)).toBe(true);
         expect(g.firstFrame).toBe(false);
     });
+    it('a group that loops a true only: a flip-1 press (a false) does not hang it', () => {
+        const g = one([br(0, true), b(16), br(32, false)]);
+        expect(g).toMatchObject({ firstFrame: false, trueLoops: true, falseLoops: false });
+        expect(presserRecursionHangsOn(g, false)).toBe(false);
+    });
     it('a ButtonRoom pressed at boot publishes at the build', () => {
         expect(one([b(0), br(16, false, { bootPressed: true })]).bootBy).toMatchObject({ kind: 'br0', boot: true });
         expect(one([br(0, true, { bootPressed: true })], [r(16), r(32)]).bootBy).toMatchObject({ kind: 'br1', boot: false });
@@ -125,6 +130,8 @@ describe('PRESSERLOOP — the staged shapes (the game witness rooms)', () => {
                 expect(on.error.name).toBe('PresserRecursionHang');
                 expect(on.error.message).toMatch(/^levelRun: tick 23 cannot run .*group 6 .*PRESSER RECURSION HANG/);
                 expect(on.rows).toEqual(off.rows.slice(0, 24));
+                // The hang frame writes nothing: the pressed ButtonRoom's own `setPersistence(tag)` is below the recursion.
+                expect(on.run.earnedClears).toEqual(off.run.earnedClears.filter((c) => c.t < 23));
             } else {
                 expect(on.error.name).toBe('LevelWorldError');
                 expect(on.error.message).toMatch(kind === 'build' ? /check\(\) publishes/ : /first live frame/);
@@ -180,7 +187,7 @@ describe('PRESSERLOOP — the hand editor (watchEdit.ENTITY_ROSTER, read only)',
     const tape = hangTape(ROOT, hangShape('btn-solo'));
     it('two roster buttons share group 0: OFF certifies the walk, ON refuses the room by name', () => {
         expect(rosterButton.attrs.tset).toBe('0');
-        const off = hangReplay(tape, src);
+        const off = withContactFidelity({ [KEY]: false }, () => hangReplay(tape, src));
         expect(off.error).toBeNull();
         expect(off.rows.at(-1).level).toBe(37);
         const on = withContactFidelity({ [KEY]: true }, () => hangReplay(tape, src));
