@@ -279,6 +279,31 @@ step (the + badge hit-test) failed on the ES boot (TT 45763382873). The restore 
 layout) and the developer page (`docs/json/developer/modules/regionGraph.md`, a Key Files line and a Layout Management
 bullet) changed below their first paragraph: `generate-docs-index.mjs --check` is current.
 
+## 10b. Addendum: the merged row's races (after the slot was granted)
+
+The merged sub-region row (`test_region_graph_sub_region_merged`) flaked after map-look extended it: the + badge hit
+test failed in train 220's TT on the bundled boot (run 45867180328), and content-6 measured 7/8 on the ES boot
+(45871205912). Re-opened in this slice by the planner (every Region Graph row must stay green).
+
+- **Rate before**, repeat ×8 bundled at `4c0ea92de2` (45875566214): **0/8**. 8/8 on THIS slice's restore check (it
+  counted the player marker, which the step re-seats on purpose: a bug of mine, visible only when the row runs alone),
+  2/8 on map-look's square click.
+- **The mechanism**: with no saved positions (the row alone, or after a rebuild that cleared them), the merged and
+  the collapsible switches start an ANIMATED layout (`runLayout` → cose, ~1 s). The row read a square's screen spot,
+  or the badge's rect and `elementFromPoint`, while the nodes and the fit were still moving; one more red was the
+  collapsible fit leaving zoom 0.50, where badges are hidden by design. A user's tap is not affected: the badge and the
+  squares are re-placed before each paint, so a tap lands on what was painted (no app change; js-23 agreed).
+- **The fix (test only)**: `layoutWatch(cy)` counts `layoutstart` / `layoutstop` from just before each switch, and the
+  row waits for the layout to stop (not for `isLayoutRunning`, cleared ~1 s later); it sets its own view for the badge
+  (zoom ≥ 1, centred on the node) and waits for no pending badge sync, the badge on its node's corner and inside the
+  graph; it clicks a point of a square that Cytoscape's hit-test gives to the square's node and `squareAtNode` maps back
+  (map-look §12: a covered square sends the tap elsewhere). Each condition names what it saw when it fails. No sleeps, no
+  retries.
+- **Rate after**, repeat ×8 at `64b5ae6558`: **bundled 8/8** (45877480016), **ES 8/8** (45877483710); re-gated at the
+  merge of main `16acf42ce6`, `5bb4d82896` (see the packet).
+- An app observation (not a missed tap): a node style change that resizes a node (no position / viewport event)
+  leaves its badge a few px off the exact corner (dx −4.8, dy 3.8 on an 85 × 64 node); it still covers the corner.
+
 ## 11. Follow-ups
 
 1. **Maze directions.** Give the maze substrate a `compositeMap.regionExtent` (its payload has `width` / `height`) —
