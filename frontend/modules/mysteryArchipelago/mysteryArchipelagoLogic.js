@@ -107,6 +107,21 @@ export function mysteryBlockOfRegion(regionId, payload, staticData) {
 }
 
 /**
+ * The `mystery` regions of the runtime player's warehouse (`procgenPlayer`'s `WorldWarehouse`:
+ * `keys()` and `get(regionId) → {substrate, world}`), as `currentMysteryBlock` wants them. `[]`
+ * for no warehouse (a world that is not generated).
+ */
+export function caseRegionsOfWarehouse(warehouse, substrateId) {
+  if (!warehouse || typeof warehouse.keys !== 'function' || typeof warehouse.get !== 'function') return [];
+  const out = [];
+  for (const regionId of warehouse.keys()) {
+    const entry = warehouse.get(regionId);
+    if (entry?.substrate === substrateId && entry.world) out.push({ regionId, payload: entry.world });
+  }
+  return out;
+}
+
+/**
  * The case the page is to be answered about. A generated world's case regions win over the
  * slot's block; among several the one of the asked `story`, else the one the player is in, else
  * the first. Null when the world holds no case.

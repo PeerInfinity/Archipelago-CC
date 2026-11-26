@@ -3,10 +3,11 @@
 // question becomes a location check, and the papers held and questions checked go back to the
 // page. The protocol is described in mysteryArchipelagoLogic.js.
 //
-// The module is disabled by default. Opening its panel (Mystery Game, from Quick Launch) is the one
-// action that turns the bridge on and frames the page for the loaded world (mysteryPanelUI.js).
+// The module is on by default (the bridge and the `mystery` substrate entry are there at boot), and
+// its panel is not in the layout: opening Mystery Game from Quick Launch frames the page for the
+// loaded world (mysteryPanelUI.js).
 
-import { MysteryArchipelagoLogic, MYSTERY_EVENTS } from './mysteryArchipelagoLogic.js';
+import { MysteryArchipelagoLogic, MYSTERY_EVENTS, caseRegionsOfWarehouse } from './mysteryArchipelagoLogic.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import eventBus from '../../app/core/eventBus.js';
@@ -67,13 +68,7 @@ function connectionNow() {
  * is not generated, or that holds no case as a region.
  */
 export function caseRegionsNow() {
-  const warehouse = centralRegistry.getPublicFunction?.('procgenPlayer', 'getWarehouse')?.();
-  if (!warehouse || typeof warehouse.entries !== 'function') return [];
-  const out = [];
-  for (const [regionId, entry] of warehouse.entries()) {
-    if (entry?.substrate === MYSTERY_SUBSTRATE_ID && entry.world) out.push({ regionId, payload: entry.world });
-  }
-  return out;
+  return caseRegionsOfWarehouse(centralRegistry.getPublicFunction?.('procgenPlayer', 'getWarehouse')?.(), MYSTERY_SUBSTRATE_ID);
 }
 
 /** The region the player is in, as the runtime player last announced it. */

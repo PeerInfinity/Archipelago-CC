@@ -2,7 +2,7 @@
 
 The mystery substrate (`frontend/modules/mysteryArchipelago/mysterySubstrateLibrary.js`, id `mystery`) makes one case of the mystery clue game a procgen region: the office. The game is the git submodule `frontend/modules/mystery-clue-game/`, framed as a page by the Mystery Game panel.
 
-This page covers what is built: the registry entry and its build-time half. The runtime half (the panel following the player's region, the lock, the Playback Bot, loop mode) is not built yet, and the last section lists it.
+This page covers what is built: the registry entry, its build-time half, the bridge and panel reading a case from its region, and one committed test world. The last section lists what is not built.
 
 ## One case is one region
 
@@ -61,12 +61,26 @@ The installed config is also recorded in `procgen_metadata[player].substrate_con
 | `new-reading` | The actions, and reading that is new. What was already read stays readable. |
 | `everything` | The whole game: it is shown only in the region. |
 
-The logic is the same under all three: the questions are the region's checks either way. The value is written and declared today; nothing enforces it yet.
+The logic is the same under all three: the questions are the region's checks either way.
+
+## At play
+
+The module `mysteryArchipelago` is on by default, so the entry and the bridge are there at boot. Its panel (Mystery Game) is not in the layout; Quick Launch opens it.
+
+- **Which case.** `currentMysteryBlock` (`mysteryArchipelagoLogic.js`) answers the page about a `mystery` region of the loaded world when there is one, read off the runtime player's warehouse. A world with no such region falls back to its slot's `slot_data.mystery` (the committed non-generated world). Among several cases it takes the story the page asked for, else the region the player is in, else the first.
+- **The state.** For a region's case `mystery:state` carries two more fields: `lock`, and `inOffice` (whether the player is in the case's region). A new state goes out when the player moves (`procgen:activeSubstrateChanged`). A slot's case carries neither.
+- **Answering.** A `mystery:questionSolved` that arrives while the player is not in the case's region is not turned into a check, under every lock. The page sends a solved question again while the state lacks it, so it is checked once the player is back.
+- **The panel** frames the region's case and follows the player. Under `everything` it frames the case only in its region and says where the office is otherwise.
+
+Under `actions` and `new-reading` the page itself must hold the player's actions and new reading back; the host only tells it. That is the game repository's work and is not built.
+
+## The test world
+
+`frontend/presets/mystery_street_test/` is the long case's office beside one maze region, "The street", which holds one of the case's papers. `scripts/test/generate-mystery-street-test-preset.mjs` writes it from the committed mystery world, and `generate-mystery-street-test-preset.test.js` holds the committed file equal to what the generator writes. The in-app row `mystery-region-office-and-street` plays it with a stand-in page.
 
 ## Not built yet
 
-- The panel and the bridge still read the slot's `slot_data.mystery`, not the region's payload, and do not follow the player's region. The module is off by default.
-- The lock is not enforced, and the page has no read-only mode.
+- The page's side of the lock: holding back actions and new reading, and its one line under `everything`.
 - No Playback Bot controller and no loop-mode support.
-- The shuffled spiral and sphere growth cannot place a case: the entry declares no zone table, and top-down does not install a substrate's config by itself, so the caller makes the three calls above.
-- No committed preset holds a mystery region.
+- The shuffled spiral and sphere growth cannot place a case: the entry declares no zone table.
+- Top-down does not install a substrate's config by itself, and the Procgen Pipeline panel cannot assign a region to this substrate from a source's case, so a caller makes the three calls above (the generator script does).

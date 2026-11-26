@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  MYSTERY_EVENTS, MYSTERY_REFUSALS, MysteryArchipelagoLogic, SOURCE_MODULE, currentMysteryBlock, gameKeyOf, mysteryBlockOf,
+  MYSTERY_EVENTS, MYSTERY_REFUSALS, MysteryArchipelagoLogic, SOURCE_MODULE, caseRegionsOfWarehouse, currentMysteryBlock, gameKeyOf,
+  mysteryBlockOf,
   mysteryBlockOfRegion, mysteryStateOf,
 } from './mysteryArchipelagoLogic.js';
 
@@ -226,6 +227,15 @@ describe('a case that is a region of a generated world', () => {
     expect(block.questionOfLocation['Question 03']).toBe('q.who');
     expect([block.player, block.seedName, block.regionId, block.lock, block.case]).toEqual(['2', '9', 'The case', 'actions', 'cases/custom-house-fire']);
     expect(mysteryBlockOfRegion('x', { story: 'x' }, {})).toBeNull();
+  });
+
+  it('finds the mystery regions of the runtime player\'s warehouse (the real class), and none without one', async () => {
+    const { WorldWarehouse } = await import('../procgenPlayer/procgenPlayerEngine.js');
+    const warehouse = new WorldWarehouse();
+    warehouse.regions.set('The street', { substrate: 'maze', world: {} });
+    warehouse.regions.set('The case', { substrate: 'mystery', world: officePayload() });
+    expect(caseRegionsOfWarehouse(warehouse, 'mystery')).toEqual([{ regionId: 'The case', payload: officePayload() }]);
+    expect(caseRegionsOfWarehouse(null, 'mystery')).toEqual([]);
   });
 
   it('the region wins over the slot\'s block, and a world with neither has no case', () => {
