@@ -1,0 +1,13 @@
+# A1 32:10, main defaults, ON: the plan's full replay ledger + the instruments (tools/full.mjs HITS=1, tools/counts-preload.mjs)
+RESULT ok true kind undefined work 569 ms 69453 ticks 797
+full hits [{"t":1690,"level":40,"source":"bomb","id":"bombpusher@112,128#9","hits":1,"hitsMax":3,"died":false,"shake":5,"knockback":{"dx":3.961188099946782,"dy":0,"landed":{"x":true,"y":false}}}] end 40 71.5 152.7
+##COUNTS## PKSW=[{"t":1534,"refused":"HAMMER_SAFETY","refusedAt":1654,"tries":[{"wait":0,"verdict":"solved","why":null,"endedAt":1663}],"verdict":"solved"},{"t":1534,"refused":"HAMMER_SAFETY","refusedAt":1654,"tries":[{"wait":0,"verdict":"solved","why":null,"endedAt":1663}],"verdict":"solved"}]
+##COUNTS## FORCED=[]
+##COUNTS## BPW={"asked":1,"kept":[{"what":"solverBot(wasm-continue-location-40) apitem (64,144) contact -> hold stance (wandlock@176,208) -> break stance (breakablerock@176,128)","arrival":true,"x":267.8134173641598,"y":199.71598825528747,"tick":1690,"kind":"still","ticks":1,"still":1,"paced":0,"probes":1}],"refused":[]}
+# P1 32:10 main OFF at other arrival clocks (SEAM_SHIFT): the shipped plans' hits
+seam -20:
+RESULT ok true kind undefined work 454 ms 9760 ticks 618
+full hits [{"t":1598,"level":40,"source":"bomb","id":"bombpusher@112,128#7","hits":1,"hitsMax":3,"died":false,"shake":5,"knockback":{"dx":-3.9630162521163244,"dy":0,"landed":{"x":true,"y":false}}},{"t":1644,"level":40,"source":"bomb","id":"bombpusher@112,128#8","hits":2,"hitsMax":3,"died":false,"shake":5,"knockback":{"dx":3.9876849372895418,"dy":0,"landed":{"x":true,"y":false}}}] end 40 71.2 152.1
+seam 7:
+RESULT ok true kind undefined work 462 ms 10424 ticks 738
+full hits [{"t":1644,"level":40,"source":"bomb","id":"bombpusher@112,128#8","hits":1,"hitsMax":3,"died":false,"shake":5,"knockback":{"dx":3.9999050500115043,"dy":0,"landed":{"x":true,"y":false}}}] end 40 71.9 152.8
