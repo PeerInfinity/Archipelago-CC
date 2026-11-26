@@ -10,7 +10,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 <!-- GENERATED:substrate-capability-chart BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**32 statements · 11 substrates · 42 registry fields read (45 of the developer matrix's 118, counting the parents of the fields read) · 73 not yet read.**
+**32 statements · 11 substrates · 42 registry fields read (45 of the developer matrix's 120, counting the parents of the fields read) · 75 not yet read.**
 
 ## Play
 
@@ -29,7 +29,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 | | What you can do | Action Nodes | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Mystery case | Noiz2sa | Idle Loops | Text Adventure |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | L1 | You can play it in loop mode | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ | ✓ | ✓ |
-| L2 | What you can queue for it | ✓ moves between regions, performing each node's action | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks, exploring | ✗ | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks, exploring |
+| L2 | What you can queue for it | ✓ moves between regions, performing each node's action, wait | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks, exploring | ✗ | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks, exploring |
 | L3 | You can record a visit and replay it | ✗ | ✓ | ✓ | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ | ✓ | ✓ |
 | L4 | How a replay works | n/a | ✓ applies the result instantly | ✓ applies the result instantly | n/a | n/a | ✓ replays your exact moves | ✓ replays your exact moves | n/a | ✓ applies the result instantly | ✓ replays your exact moves | ✓ re-runs the queued actions |
 | L5 | Instant fast-forward | ✗ | ✓ always — a replay is already instant | ✓ always — a replay is already instant | ✗ | ✗ | ✓ a per-block toggle | ✓ a per-block toggle | ✗ | ✓ always — a replay is already instant | ✓ a per-block toggle | ✓ a per-block toggle |
@@ -117,7 +117,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 ### Action Nodes
 
 - *Play* — You can play its regions by hand
-- *Loop mode* — What you can queue for it: moves between regions, performing each node's action
+- *Loop mode* — What you can queue for it: moves between regions, performing each node's action, wait
 - *Loop mode* — You can play it outside loop mode
 - *Loop mode* — It shares the loop-mode mana pool
 - *Loop mode* — It shares consumable items with other substrates: its list comes from the running game — see the Substrate Registry panel
@@ -342,8 +342,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 ## Fields no statement reads yet
 
-73 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
+75 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
 
-`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `compositeMap.artwork`, `compositeMap.displayRegionOf`, `compositeMap.layoutGraph`, `compositeMap.locationTiles`, `compositeMap.regionExtent`, `compositeMap.remoteLocationTiles`, `defaultContentPack`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `entranceShuffle`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `fillRules`, `fillerItem`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `goalContainer`, `goalContainer.noteOf`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `itemIntroduction`, `itemIntroduction.exhaustedRefusal`, `itemIntroduction.introducibleItems`, `itemIntroduction.replayableItems`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopBot`, `loopSupport.actionGate`, `loopSupport.authoredCosts`, `loopSupport.customQueues`, `loopSupport.playClock`, `loopSupport.strictQueueActions`, `onContentEdit`, `ownContentOnly`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `priceRegions`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `recordedRegionParams`, `regionBiomeOf`, `regionEditStatus`, `regionGeometry`, `regionSourceDefault`, `renderLibraryProcgenParams`, `restartWarp`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `spiralItemCapacity`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
+`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `compositeMap.artwork`, `compositeMap.displayRegionOf`, `compositeMap.layoutGraph`, `compositeMap.locationTiles`, `compositeMap.regionExtent`, `compositeMap.remoteLocationTiles`, `defaultContentPack`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `entranceShuffle`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `fillRules`, `fillerItem`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `goalContainer`, `goalContainer.noteOf`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `itemIntroduction`, `itemIntroduction.exhaustedRefusal`, `itemIntroduction.introducibleItems`, `itemIntroduction.replayableItems`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopBot`, `loopSupport.actionGate`, `loopSupport.authoredCosts`, `loopSupport.clockLine`, `loopSupport.customQueues`, `loopSupport.playClock`, `loopSupport.pool`, `loopSupport.strictQueueActions`, `onContentEdit`, `ownContentOnly`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `priceRegions`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `recordedRegionParams`, `regionBiomeOf`, `regionEditStatus`, `regionGeometry`, `regionSourceDefault`, `renderLibraryProcgenParams`, `restartWarp`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `spiralItemCapacity`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
 
 <!-- GENERATED:substrate-capability-chart END -->

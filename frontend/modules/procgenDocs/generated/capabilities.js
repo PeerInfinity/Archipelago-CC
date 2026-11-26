@@ -34,7 +34,7 @@ export const CAPABILITIES = frz({
                 {
                     "group": "loop",
                     "statement": "What you can queue for it",
-                    "text": "moves between regions, performing each node's action"
+                    "text": "moves between regions, performing each node's action, wait"
                 },
                 {
                     "group": "loop",
@@ -1101,9 +1101,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 118,
+        "fields": 120,
         "fieldsRead": 42,
-        "fieldsUnread": 73,
+        "fieldsUnread": 75,
         "statements": 32,
         "substrates": 11
     },
@@ -2410,11 +2410,11 @@ export const CAPABILITIES = frz({
                 {
                     "id": "action_nodes",
                     "kind": "yes",
-                    "text": "moves between regions, performing each node's action",
+                    "text": "moves between regions, performing each node's action, wait",
                     "why": [
                         {
                             "field": "loopSupport.queueActions",
-                            "value": "regionMove, act"
+                            "value": "regionMove, act, wait"
                         }
                     ]
                 },
@@ -6290,8 +6290,10 @@ export const CAPABILITIES = frz({
         "loopBot",
         "loopSupport.actionGate",
         "loopSupport.authoredCosts",
+        "loopSupport.clockLine",
         "loopSupport.customQueues",
         "loopSupport.playClock",
+        "loopSupport.pool",
         "loopSupport.strictQueueActions",
         "onContentEdit",
         "ownContentOnly",

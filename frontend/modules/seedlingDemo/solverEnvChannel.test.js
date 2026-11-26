@@ -134,6 +134,14 @@ describe('solverEnvChannel — the one table', () => {
         expect(() => parseSolverEnv('SEEDLING_NOPE=1', '--solver-env')).toThrow(/^--solver-env: unknown switch/);
     });
 
+    it('a comma-joined spec refuses BY NAME (one entry whose value holds "="), while a comma list value stays legal', () => {
+        expect(() => parseSolverEnv('SEEDLING_CHOOSER_PAIR=1,SEEDLING_CHOOSER_PAIR_SIZE=3'))
+            .toThrow(/switch "SEEDLING_CHOOSER_PAIR" has "=" in its value \("1,SEEDLING_CHOOSER_PAIR_SIZE=3"\): separate entries with ';', not ','/);
+        expect(() => parseSolverEnv('SEEDLING_CHOOSER_PAIR=a=b')).toThrow(/has "=" in its value/);
+        expect(parseSolverEnv('SEEDLING_CONTACT_FIDELITY=corpseBump,blockSweepBodies'))
+            .toEqual({ SEEDLING_CONTACT_FIDELITY: 'corpseBump,blockSweepBodies' });
+    });
+
     it('the canonical spec sorts the names; format / parse round-trip', () => {
         expect(canonicalSolverEnv(' SEEDLING_CHOOSER_PAIR_SIZE=3 ; SEEDLING_CHOOSER_PAIR=1 ')).toBe(CPAIR3);
         expect(formatSolverEnv(parseSolverEnv(CPAIR3))).toBe(CPAIR3);
