@@ -103,7 +103,8 @@ describe('RELEASEPICKUP — the key', () => {
         'ships OFF, appended last, with a worker env name', () => {
             expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe(KEY);
+            // ⛓ wave 57 (NESTEDFREEZE) appended `nestedRockCeremony` after it, wave 59 (PLAINSPAN) `plainPickupInFreeze`.
+            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(-3)).toEqual([KEY, 'nestedRockCeremony', 'plainPickupInFreeze']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FREEZE_SPAN_UPDATES');
         });
 });

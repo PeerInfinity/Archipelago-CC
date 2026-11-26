@@ -3116,16 +3116,37 @@ export function withChaserPass(enabled, fn) {
  * Nothing reads a level, a coordinate or an enemy class. No rewind (no `forkRun`) → never asked.
  * OFF: never asked. `SEEDLING_GOAL_START_WAIT=1` / `withGoalStartWait(enabled, fn)`. Worker thread (the solve).
  */
-export const GOAL_START_WAIT = { enabled: globalThis.process?.env?.SEEDLING_GOAL_START_WAIT === '1',
+// ⚖ ON in the BOS/GSW/PM flip (⚖ the user 2026-11-25: "Flip BOS+GSW+PM (Recommended)"): `SEEDLING_GOAL_START_WAIT=0` opts out.
+export const GOAL_START_WAIT = { enabled: globalThis.process?.env?.SEEDLING_GOAL_START_WAIT !== '0',
     /** The idles tried, in order (ticks). */
     waits: [50, 100, 200, 400, 800] };
-export const GOAL_START_WAIT_DEFAULT = false;
+export const GOAL_START_WAIT_DEFAULT = true;
 /** Per-run rows (ON only): one per ask, `{t, wait, ok, why}`. */
 export const GOAL_START_WAIT_COUNTS = { tries: [] };
 
 /** Run `fn` with `GOAL_START_WAIT` set to `enabled`, restoring the previous value. */
 export function withGoalStartWait(enabled, fn) {
     return withSwitch(GOAL_START_WAIT, enabled, fn);
+}
+
+/**
+ * ⛓ hammer-phase FLIPBLOCK (`GOAL_START_WAIT`, OFF ⇒ never read) — **THE WAITS ARE THE ANYTIME SOLVE'S LAST WORD, NOT A
+ * NON-LAST PASS'S.** The anytime passes share ONE work budget (`solveAnytime`), so a wait schedule run on a pass that a
+ * later pass follows spends the budget that later pass would have solved with. MEASURED (seed 1 divergence-sweep leg
+ * `level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared`, its 2560 held retry,
+ * `flipblock` report §3): OFF the dashless pass refuses EXHAUSTED at work 2239 and the full pass solves in 21 units
+ * (176 t, 0 hits); ON the dashless pass's first wait runs past 2560 and the full pass gets 1 unit — a budget cut, 3/3.
+ * ⇒ ON, `solveAnytime` marks each pass that has a later pass (`later`), and on such a pass an EXHAUSTED ladder is
+ * thrown as it came (no wait; `deferred` counts it). The last pass (the only one of a single-pass request, e.g. FACE1's
+ * 26:9 held retry) waits exactly as before. Outside `solveAnytime` (`later` false) nothing changes.
+ */
+export const GOAL_START_WAIT_PASS = { later: false };
+
+/** Run `fn` with `GOAL_START_WAIT_PASS.later` = `later` (a later anytime pass follows this one), restoring it. */
+export function withGoalStartWaitLaterPass(later, fn) {
+    const was = GOAL_START_WAIT_PASS.later;
+    GOAL_START_WAIT_PASS.later = later === true;
+    try { return fn(); } finally { GOAL_START_WAIT_PASS.later = was; }
 }
 
 /** Is `e` the combat ladder's EXHAUSTED refusal (the one `GOAL_START_WAIT` re-asks)? */
@@ -9375,6 +9396,27 @@ function resolveCollectStrategy(run, placement) {
 }
 
 /**
+ * ⛓ hammer-phase W59-OPEN — write the apitems `run` took ITSELF since its `plainFreezeTakes` held `from` rows (fidelity
+ * PLAINSPAN's `CONTACT_FIDELITY.plainPickupInFreeze`) into a segment's take ledger `taken` (`"level:id"` →
+ * `{tick, level, apItem}`), at `tick`, unless the ledger already holds them. `items` are the level's apitems before the
+ * tick (for the record's `apItem`). A run without the list, or one whose list did not grow, writes nothing. Returns the
+ * keys written. The segment view calls it after each `advance`, before it filters what is still `open`.
+ */
+export function recordRunSideApItemTakes(run, from, items, tick, taken) {
+    const list = run.plainFreezeTakes;
+    if (!Array.isArray(list) || list.length <= from) return [];
+    const wrote = [];
+    for (const r of list.slice(from)) {
+        const k = `${r.level}:${r.id}`;
+        if (taken.has(k)) continue;
+        const apItem = items.find((it) => it.id === r.id) ?? { id: r.id, tag: r.tag };
+        taken.set(k, { tick, level: r.level, apItem });
+        wrote.push(k);
+    }
+    return wrote;
+}
+
+/**
  * ⛓⛓⛓ SEEDLING FIDELITY F2, D1a: **THE APITEM CONTACT, THE GAME'S RULE.**
  *
  * `Pickup.update` tests `collide("Player", x, y)` (`Pickups/Pickup.as:63-84`).
@@ -12413,6 +12455,55 @@ function execSpearPress(run, perTick, p, ctx, what) {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE SKIPWALLS — **A BRIDGE THIS VISIT ALREADY OPENED IS NO STRAY** (`BRIDGE_OPEN_STRAY`, OFF).
+ *
+ * The bridge verb's stance audit (`resolveBridgeStrategy`) drops a stance whose spear rect reaches any press responder
+ * other than the bridge it aims at, because a stray bridge decrement is an opening the run did not plan (`auditPress`).
+ * But `world.bridgeTiles` is every bridge tile the LEVEL built, open or closed. A bridge two or more tiles long opens
+ * one tile at a time, and the 32x5 rect reaches two tiles, so after the near tile opened, every stance that reaches the
+ * far tile ALSO reaches the open one. The audit then calls each of them a stray and refuses. Measured on re-measure-7's
+ * skip probe (P1 33:5, survey step 155): bridge (10,13) was open (`openBridges`), and all three axis stances for (11,13)
+ * were dropped for reaching it.
+ *
+ * A Spear hit on an OPEN bridge is a no-op in the game and in the model: `genericHit`'s `Tile` arm decrements
+ * `bridgeOpeningTimer` unconditionally, the timer goes negative, and the `<= 0` arm keeps the tile walkable
+ * (`bridges.bridgeHit`; `levelRun`'s press records the first press only). So ON, a stray that is a `Tile` whose
+ * bridge id the run's `openBridges` already holds is not a stray. A CLOSED stray bridge still refuses, as before.
+ *
+ * OFF by default. `SEEDLING_BRIDGE_OPEN_STRAY=1` turns it on in a node process (the page's WORKER reads it through the
+ * solver env channel: the decision is on the worker thread, inside the frontier loop), and
+ * `withBridgeOpenStray(enabled, fn)` is for a test or a witness. OFF, nothing below is asked: byte-identical.
+ */
+// ⚖ ON in the BOS/GSW/PM flip (⚖ the user 2026-11-25: "Flip BOS+GSW+PM (Recommended)"): `SEEDLING_BRIDGE_OPEN_STRAY=0` opts out.
+export const BRIDGE_OPEN_STRAY = { enabled: globalThis.process?.env?.SEEDLING_BRIDGE_OPEN_STRAY !== '0' };
+export const BRIDGE_OPEN_STRAY_DEFAULT = true;
+
+/** Run `fn` with `BRIDGE_OPEN_STRAY` set to `enabled`, restoring the previous value. */
+export function withBridgeOpenStray(enabled, fn) {
+    return withSwitch(BRIDGE_OPEN_STRAY, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only ON and read by nothing that decides: `waived` each stray it let through
+ * (`{bridge, stance, open}`: the obstacle id, the stance phrase, the open tile's id).
+ */
+export const BRIDGE_OPEN_STRAY_COUNTS = { waived: [] };
+
+/** Zero `BRIDGE_OPEN_STRAY_COUNTS`. */
+export function resetBridgeOpenStrayCounts() {
+    Object.assign(BRIDGE_OPEN_STRAY_COUNTS, { waived: [] });
+}
+
+/** True when the audit's stray `r` is a bridge tile this visit has already opened (a hit there is a no-op). */
+export function bridgeStrayAlreadyOpen(run, obstacle, at, r) {
+    if (r.as3 !== 'Tile' || !r.tile) return false;
+    const open = `${r.tile.tx},${r.tile.ty}`;
+    if (!(run.entities('openBridges') ?? new Set()).has(open)) return false;
+    BRIDGE_OPEN_STRAY_COUNTS.waived.push({ bridge: obstacle.id, stance: at, open });
+    return true;
+}
+
+/**
  * ⛓⛓⛓ fidelity RULESREF (wave 32, `CONTACT_FIDELITY.spearBridgeVerb`) — **A CLOSED SPEAR BRIDGE ON THE FRONTIER IS
  * OPENED BY A THRUST, NOT ROUTED AROUND.**
  *
@@ -12470,7 +12561,8 @@ function resolveBridgeStrategy(run, obstacle, contacts) {
             }
             const stray = auditPress(run.world, spearHitRect(c.x, c.y, facing), {
                 weapon: 'spear', intended: [{ as3: 'Tile', tx, ty }], pushables,
-            }).illegal.filter((r) => PRESS_ARM_POLICY[r.as3]?.policy !== 'inert');
+            }).illegal.filter((r) => PRESS_ARM_POLICY[r.as3]?.policy !== 'inert')
+                .filter((r) => !(BRIDGE_OPEN_STRAY.enabled && bridgeStrayAlreadyOpen(run, obstacle, at, r)));
             if (stray.length) {
                 tried.push(`${at}'s rect also reaches ${stray.map((r) => `${r.tag}@${r.x},${r.y}`).join(', ')}`);
                 continue;
@@ -13298,6 +13390,8 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
     }
     if (run.progress('primary') !== slots.indexOf(blade)) ctx.equip(slots.indexOf(blade));
     const edge = resolved.edgeBait ? approachEdgePoint(run, t, stage, opts) : null; // ⛓ KT-ARRIVAL (null OFF)
+    // ⛓ hammer-phase EDGEBAIT (`edgeBait: 'also'`, `KEYLOCK_TURRET_EDGE_BAIT` only): the edge tries are a second family
+    const baitFamilies = resolved.edgeBait === 'also' && edge !== null ? [false, true] : null;
     // 2. the tries, each on a fork
     const noWalk = () => { throw new SolverRefusal('a fork does not walk'); };
     const onSnap = (f) => {
@@ -13349,7 +13443,8 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
                 };
                 const aim = via ?? { x: side.x, y: side.y };
                 // ⛓ hammer-phase KT-ARRIVAL (a caller's `edgeBait` only): the try first stops at the range's edge
-                if (edge !== null && !walkOn([edge])) { count('edge-hit', hitWhy()); return null; }
+                const bait = baitFamilies === null ? edge !== null : extra?.bait === true; // ⛓ EDGEBAIT: the try's family
+                if (bait && !walkOn([edge])) { count('edge-hit', hitWhy()); return null; }
                 const wps = planWaypointsOrNull(f.world, f.state, aim, null, solverPlanOpts(f, exempt));
                 // ⛔ every try of a route starts from the same staging state, so a route with no corridor has none at
                 // any wait: the route is done (measured: without this, L40 legs 860/861 spent their `crusher-fork`
@@ -13425,7 +13520,7 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
     if (TURRET_APPROACH_VOLLEY_ORDER.enabled) {
         // ⛓ hammer-phase BK2-APPROACH-ORDER (`TURRET_APPROACH_VOLLEY_ORDER`, OFF): the same tries, in the volley's order
         const record = approachTriesByVolley(id, sides.map((side) => ({ side, routes: routesOf(side) })), attempt,
-            TRY_ROUTE_DONE, { exempt, fork: () => {
+            TRY_ROUTE_DONE, { exempt, ...(baitFamilies ? { families: baitFamilies } : {}), fork: () => {
                 const f = fineDeadlineReached('crusher-fork') ? null : ctx.fork();
                 if (f === null) refuse(`deadline at the \`crusher-fork\` site after ${forks} approach tr(ies)`);
                 forks += 1;
@@ -13437,6 +13532,16 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
             route: for (const via of routesOf(side)) {
                 for (let w = 0; w <= TURRET_APPROACH_WAIT_MAX; w += 1) {
                     const record = attempt(side, via, w);
+                    if (record === TRY_ROUTE_DONE) continue route;
+                    if (record !== null) return record;
+                }
+            }
+        }
+        // ⛓ hammer-phase EDGEBAIT (`edgeBait: 'also'` only): the edge bait's family after OFF's whole order
+        for (const side of baitFamilies ? sides : []) {
+            route: for (const via of routesOf(side)) {
+                for (let w = 0; w <= TURRET_APPROACH_WAIT_MAX; w += 1) {
+                    const record = attempt(side, via, w, { bait: true });
                     if (record === TRY_ROUTE_DONE) continue route;
                     if (record !== null) return record;
                 }
@@ -13513,15 +13618,22 @@ export function approachWaitOrder(anchor) {
  */
 function approachTriesByVolley(id, sides, attempt, DONE, ctx) {
     let live = sides.flatMap(({ side, routes }) => routes.map((via) => ({ side, via, order: null, anchor: null })));
+    // ⛓ hammer-phase EDGEBAIT (`ctx.families`, `KEYLOCK_TURRET_EDGE_BAIT` only): each route once per family (OFF's
+    // tries, then the edge bait's), so a rank asks every route's k-th wait in both; a twin shares its route's anchor
+    const twins = ctx.families ? new Map() : null;
+    if (twins) live = ctx.families.flatMap((bait) => live.map((rt) => ({ ...rt, bait, key: `${rt.side.key}|${rt.via?.x},${rt.via?.y}` })));
     for (let rank = 0; live.length > 0; rank += 1) {
         const next = [];
         for (const rt of live) {
             if (rt.order === null) {
-                rt.anchor = approachVolleyAnchor(ctx.fork(), id, rt.via ?? { x: rt.side.x, y: rt.side.y }, ctx.exempt);
+                if (twins?.has(rt.key)) rt.anchor = twins.get(rt.key);
+                else rt.anchor = approachVolleyAnchor(ctx.fork(), id, rt.via ?? { x: rt.side.x, y: rt.side.y }, ctx.exempt);
+                twins?.set(rt.key, rt.anchor);
                 rt.order = approachWaitOrder(rt.anchor);
             }
             if (rank >= rt.order.length) continue;
-            const record = attempt(rt.side, rt.via, rt.order[rank], { order: 'volley', anchor: rt.anchor, rank });
+            const record = attempt(rt.side, rt.via, rt.order[rank], { order: 'volley', anchor: rt.anchor, rank,
+                ...(twins ? { bait: rt.bait } : {}) });
             if (record === DONE) continue;
             if (record !== null) return record;
             next.push(rt);
@@ -15114,10 +15226,11 @@ function strikeScanBox(cells, floor, reach) {
  * `?seedlingSolverEnv=SEEDLING_STRIKE_PREVIEW_LEAN=1`), `withStrikePreviewLean(enabled, fn)` for a row or a witness.
  * It runs where `deriveStrike` runs (the solve worker, and node); no main-thread mapper reads it.
  */
+// ⚖ ON in the LEAN/KTA flip (⚖ the user 2026-11-24: "Flip the clean two (Recommended)"): `SEEDLING_STRIKE_PREVIEW_LEAN=0` opts out.
 export const STRIKE_PREVIEW_LEAN = {
-    enabled: globalThis.process?.env?.SEEDLING_STRIKE_PREVIEW_LEAN === '1',
+    enabled: globalThis.process?.env?.SEEDLING_STRIKE_PREVIEW_LEAN !== '0',
 };
-export const STRIKE_PREVIEW_LEAN_DEFAULT = false;
+export const STRIKE_PREVIEW_LEAN_DEFAULT = true;
 
 /** Run `fn` with `STRIKE_PREVIEW_LEAN` set to `enabled`, restoring the previous value. */
 export function withStrikePreviewLean(enabled, fn) {
@@ -18350,8 +18463,9 @@ export function resetKeylockTurretCounts() {
  * through the solver env channel: the decision is on the worker thread, inside the frontier loop), and
  * `withKeylockTurretArrival(enabled, fn)` is for a test or a witness. OFF, nothing below is asked: byte-identical.
  */
-export const KEYLOCK_TURRET_ARRIVAL = { enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET_ARRIVAL === '1' };
-export const KEYLOCK_TURRET_ARRIVAL_DEFAULT = false;
+// ⚖ ON in the LEAN/KTA flip (⚖ the user 2026-11-24: "Flip the clean two (Recommended)"): `SEEDLING_KEYLOCK_TURRET_ARRIVAL=0` opts out.
+export const KEYLOCK_TURRET_ARRIVAL = { enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET_ARRIVAL !== '0' };
+export const KEYLOCK_TURRET_ARRIVAL_DEFAULT = true;
 
 /** Run `fn` with `KEYLOCK_TURRET_ARRIVAL` set to `enabled`, restoring the previous value. */
 export function withKeylockTurretArrival(enabled, fn) {
@@ -18367,6 +18481,40 @@ export const KEYLOCK_TURRET_ARRIVAL_COUNTS = { asked: [] };
 /** Zero `KEYLOCK_TURRET_ARRIVAL_COUNTS`. */
 export function resetKeylockTurretArrivalCounts() {
     Object.assign(KEYLOCK_TURRET_ARRIVAL_COUNTS, { asked: [] });
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE EDGEBAIT — **THE EDGE BAIT FOR `KEYLOCK_TURRET`'S OWN TURRET-FIRST PATH**
+ * (`KEYLOCK_TURRET_EDGE_BAIT`, OFF).
+ *
+ * ⚖ The user (2026-11-24): *"Edge bait follow-up"* — the edge bait KT-ARRIVAL gave its own arm (each approach try first
+ * stops `TURRET_APPROACH_EDGE_DEPTH` px inside the turret's range, so the volley clock starts at a chosen place), offered
+ * to the keylock arm's own turret-first path (`keylockTurretStance` → `turretFirst`, 0 candidates). That path solves
+ * L40's south key line only while its kill starts with the door below the turret still shut (APPROACH then stages
+ * south of the door). Measured: the same staging after a 100- or 150-tick idle (the door open, the staging point the
+ * doorway) refuses with every try hit (504 / 600 forks).
+ *
+ * ⛔ EDGE-FIRST IS NOT THE SHAPE: edge-only tries solve the door-open cases at rank 0 (16 / 10 forks), but the door-shut
+ * case that solves today at rank 0 (8 forks) then needs 462 forks, and the page worker's budget (640) cuts it. So ON,
+ * the bait is a SECOND FAMILY of tries (`approachKillForCorpse`'s `edgeBait: 'also'`): every route is asked once
+ * without the stop (OFF's try, word for word) and once with it, rank by rank in the volley's order
+ * (`approachTriesByVolley`'s `families`: each rank asks OFF's family first), or OFF's whole order then the edge's
+ * (the volley order off). A twin shares its route's anchor (probed from the staging point: probed after the edge stop,
+ * measured worse — 16 → 371 forks). Where the edge point is not plannable floor, the tries are OFF's. Measured ON
+ * (worker budget 640): the four door-open cases solve hitless at rank 0 in the edge family (29–32 forks, the dashless
+ * pass); the door-shut case keeps its 8-fork plan, key for key.
+ *
+ * The arrival arm (`KEYLOCK_TURRET_ARRIVAL`) keeps its edge-only tries (its own `edgeBait`): this switch does not move it.
+ * OFF by default. `SEEDLING_KEYLOCK_TURRET_EDGE_BAIT=1` turns it on in a node process (the page's WORKER reads it
+ * through the solver env channel: the decision is on the worker thread, inside the keylock executor), and
+ * `withKeylockTurretEdgeBait(enabled, fn)` is for a test or a witness. OFF, nothing below is asked: byte-identical.
+ */
+export const KEYLOCK_TURRET_EDGE_BAIT = { enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET_EDGE_BAIT === '1' };
+export const KEYLOCK_TURRET_EDGE_BAIT_DEFAULT = false;
+
+/** Run `fn` with `KEYLOCK_TURRET_EDGE_BAIT` set to `enabled`, restoring the previous value. */
+export function withKeylockTurretEdgeBait(enabled, fn) {
+    return withSwitch(KEYLOCK_TURRET_EDGE_BAIT, enabled, fn);
 }
 
 /**
@@ -21366,7 +21514,139 @@ function execKillByPressHold(run, perTick, resolved, ctx, dispatch) {
     }
 }
 
+/**
+ * ⛓ hammer-phase STEP149 (`PRESS_KILL_START_WAIT`, OFF) — **A REFUSED PRESS KILL IS REDONE FROM ITS FIRST TICK AS ONE
+ * FIGHT SEARCH, AFTER THE PLAYER IDLES THERE.**
+ *
+ * The press kill plans its approach on the tick it starts, against the bodies' phase on that tick. Bodies that move
+ * without the player (a billiard spinner bounces on its own) give a phase-unlucky start: every rung inside the kill
+ * (the HAMMER-PHASE rung, the escape, `OPP_PRESS_FALLBACK`, `PRESS_KILL_HOLD`) answers from the same start and refuses
+ * `HAMMER_SAFETY`, while a kill begun a few ticks later, or searched whole (`HAMMER_FIGHT`), is hitless. MEASURED (seed
+ * 1, L40 Totem 64,144; `step149` report §3): re-measure-8 P1 32:10 refuses on 38 of 45 arrival clocks round the page's
+ * and is hitless on 4; the fight search (`HAMMER_FIGHT`) from the kill's first tick solves P1 32:10 hitless; survey
+ * step 149's kill refuses with the fight from its first tick and kills hitless with the fight after a 2-tick idle.
+ *
+ * ON (a segment that can rewind, no deadline tripped): when the press kill refuses with a `FIGHT_FALLBACK_CODES` code —
+ * after every fallback already inside it — within `maxPeriods` hammer periods of its first tick, the segment is REWOUND to the kill's first tick, the player idles `waits[k]`
+ * ticks there (no keys; `0` is no idle), and the kill is admitted again on the idled run (`derivePressKill`, from the
+ * admission's own inputs) and redone with `HAMMER_FIGHT` on for that redo only. Over `waits` in order, the first redo
+ * that kills with NO player hit since the rewind is kept. An idle tick that is hit, dies or crosses a door ends the
+ * search (a longer idle contains it); a redo that refuses or is hit is UNDONE. All refused → the original refusal is
+ * thrown, plus one sentence. A wait is only a prefix of no keys and the redo is the fight's own certificate under
+ * `safeStep`, so no plan with a hit is kept (unlike `HAMMER_FIGHT_FALLBACK`, whose retry keeps any kill). Nothing reads
+ * a level, a coordinate or an entity id. OFF: never asked. `SEEDLING_PRESS_KILL_START_WAIT=1` /
+ * `withPressKillStartWait(enabled, fn)`. Worker thread (the solve).
+ */
+export const PRESS_KILL_START_WAIT = { enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_START_WAIT === '1',
+    /** The idles tried at the kill's first tick, in order (ticks; `0` = the fight from the first tick itself). */
+    waits: [0, 1, 2, 3, 4, 6, 8, 12, 16, 24, 32],
+    /**
+     * Asked only when the refused kill cornered within this many hammer periods (`HAMMER_PHASE_RUNG.horizon`) of its
+     * first tick: a kill that fought on long past its start is not a phase-unlucky START, and a long fight redone is
+     * the cost (MEASURED: survey step 96's L40 kill refuses 1336 ticks in; asked, its redo kills but the step still
+     * refuses later, in 257 s against OFF's 56 s — over the survey's 120 s step timeout).
+     */
+    maxPeriods: 4 };
+export const PRESS_KILL_START_WAIT_DEFAULT = false;
+/** Per-run rows (ON only): one per refusal answered, `{t, refused, tries: [{wait, verdict, why}], verdict}`. */
+export const PRESS_KILL_START_WAIT_COUNTS = { rows: [] };
+/** Nesting guard: the redo's own dispatch is the kill as OFF runs it, never another start-wait. */
+let pressKillStartWaitDepth = 0;
+
+/** Run `fn` with `PRESS_KILL_START_WAIT` set to `enabled`, restoring the previous value. */
+export function withPressKillStartWait(enabled, fn) {
+    return withSwitch(PRESS_KILL_START_WAIT, enabled, fn);
+}
+
+/** Clear `PRESS_KILL_START_WAIT_COUNTS` (an instrument; nothing that decides reads it). */
+export function resetPressKillStartWaitCounts() {
+    PRESS_KILL_START_WAIT_COUNTS.rows = [];
+}
+
+/** `PRESS_KILL_START_WAIT`'s retry around the whole press kill (see the switch). */
+function execKillByPressStartWait(run, perTick, resolved, ctx) {
+    const t0 = perTick.length;
+    const inner = (r, res) => {
+        pressKillStartWaitDepth += 1;
+        try {
+            return execKillByPress(r, perTick, res, ctx);
+        } finally {
+            pressKillStartWaitDepth -= 1;
+        }
+    };
+    try {
+        return inner(run, resolved);
+    } catch (e) {
+        if (!(e instanceof SolverBotError) || !FIGHT_FALLBACK_CODES.includes(e.code) || activeDeadline?.first) throw e;
+        const row = { t: t0, refused: e.code, refusedAt: perTick.length, tries: [], verdict: 'refused' };
+        PRESS_KILL_START_WAIT_COUNTS.rows.push(row);
+        // a kill that fought on past its start before cornering is not a phase-unlucky START: not asked
+        const span = PRESS_KILL_START_WAIT.maxPeriods * HAMMER_PHASE_RUNG.horizon;
+        if (row.refusedAt - t0 > span) {
+            row.verdict = 'not-asked';
+            row.why = `the refused kill ran ${row.refusedAt - t0} tick(s) from its first tick (bound ${span})`;
+            throw e;
+        }
+        const admission = PRESS_ADMISSIONS.get(resolved.plans) ?? null;
+        for (const wait of PRESS_KILL_START_WAIT.waits) {
+            if (activeDeadline?.first) break;
+            const { run: fresh, undo } = ctx.rewind.to(t0);
+            const clock0 = fresh.ticksCompleted;
+            const h0 = (fresh.ledger('playerHits') ?? []).length;
+            const d0 = (fresh.ledger('playerDeaths') ?? []).length;
+            let idleWhy = null;
+            for (let i = 0; i < wait && idleWhy === null; i += 1) {
+                perTick.push(NO_HELD_PREVIEW);
+                if (fresh.advance(NO_HELD_PREVIEW).transition) idleWhy = 'the idle crossed a door';
+                else if ((fresh.ledger('playerHits') ?? []).length > h0
+                    || (fresh.ledger('playerDeaths') ?? []).length > d0) idleWhy = `the idle is hit at its tick ${i + 1}`;
+            }
+            if (idleWhy !== null) {
+                undo();
+                row.tries.push({ wait, verdict: 'idle', why: idleWhy });
+                break;
+            }
+            try {
+                const press = admission === null ? null : derivePressKill(fresh, admission.bodies, admission.contacts);
+                const again = press?.first ? { ...resolved, first: press.first, plans: press.plans } : resolved;
+                const record = withHammerFight(true, () => inner(fresh, again));
+                const hits = playerHitsSince(ctx.rewind.replay(perTick.length), clock0);
+                if (hits.length > 0) {
+                    undo();
+                    row.tries.push({ wait, verdict: 'hit', why: `the redo killed with ${hits.length} player hit(s)` });
+                    continue;
+                }
+                row.tries.push({ wait, verdict: 'solved', why: null, endedAt: perTick.length });
+                row.verdict = 'solved';
+                ctx.rewind.note({ ...row, how: 'press-kill-start-wait' });
+                return { ...record, pressKillStartWait: row };
+            } catch (e2) {
+                if (e2 instanceof PendingDeclaration || e2?.undeclaredKillLock) {
+                    row.tries.push({ wait, verdict: 'solved', why: e2?.undeclaredKillLock ? 'undeclaredKillLock' : e2.name });
+                    row.verdict = 'solved';
+                    ctx.rewind.note({ ...row, how: 'press-kill-start-wait' });
+                    throw e2;
+                }
+                undo();
+                if (!(e2 instanceof SolverBotError) && !(e2 instanceof SolverRefusal)) throw e2;
+                row.tries.push({ wait, verdict: 'refused', why: String(e2?.message ?? e2).split('\n')[0].slice(0, 200) });
+            }
+        }
+        const out = new SolverBotError(`${e.message} The start wait (\`PRESS_KILL_START_WAIT\`) rewound to the kill's `
+            + `first tick (t${t0}) and redid it as one fight search (\`HAMMER_FIGHT\`) after idling `
+            + `${row.tries.map((x) => `${x.wait} (${x.verdict})`).join(', ') || 'nothing'}; no redo killed hitless.`,
+        { code: e.code, boundTicks: e.boundTicks });
+        for (const k of ['fightFallback', 'oppPressFallback', 'pressKillHold']) if (e[k]) out[k] = e[k];
+        out.pressKillStartWait = row;
+        throw out;
+    }
+}
+
 function execKillByPress(run, perTick, resolved, ctx) {
+    // ⛓ hammer-phase STEP149 (`PRESS_KILL_START_WAIT`, OFF): the whole kill below, redone after an idle at its first tick
+    if (PRESS_KILL_START_WAIT.enabled && ctx.rewind && pressKillStartWaitDepth === 0) {
+        return execKillByPressStartWait(run, perTick, resolved, ctx);
+    }
     // ⛓ the exactness gate's kill-start probe (`REWIND_PROBE`): read only, inert unless a sink is set
     if (REWIND_PROBE.sink !== null && ctx.rewind) {
         const t = perTick.length;
@@ -23533,7 +23813,8 @@ function keylockTurretFirst(run, perTick, resolved, ctx) {
         let record;
         try {
             record = approachKillForCorpse(run, perTick, { corpse: { turret: id, dir }, exempt,
-                ...(resolved.turretFirst.edgeBait ? { edgeBait: true } : {}) }, { walkTo: ctx.walkTo,
+                ...(resolved.turretFirst.edgeBait ? { edgeBait: true }
+                    : (KEYLOCK_TURRET_EDGE_BAIT.enabled ? { edgeBait: 'also' } : {})) }, { walkTo: ctx.walkTo,
                 goal: ctx.goal, equip: ctx.equip, fork: ctx.fork, what: `${ctx.what} -> kill (${id})` });
         } catch (e) {
             KEYLOCK_TURRET_COUNTS.kills.push({ lock: resolved.lock, turret: id, t: from, dead: false,
@@ -29281,8 +29562,21 @@ export const WALK_CHECK_TICKS = 32;
  * two requests above), and a walk unit is `WALK_CHECK_TICKS` driven ticks at ~2–3 ms each on L40 (the constant's own
  * note), so ~1024 previewed states cost about one walk unit's wall. A row may set it.
  */
-export const PREVIEW_METER = { enabled: globalThis.process?.env?.SEEDLING_PREVIEW_METER === '1', statesPerUnit: 1024 };
-export const PREVIEW_METER_DEFAULT = false;
+// ⚖ ON in the BOS/GSW/PM flip (⚖ the user 2026-11-25: "Flip BOS+GSW+PM (Recommended)"): `SEEDLING_PREVIEW_METER=0` opts out.
+export const PREVIEW_METER = { enabled: globalThis.process?.env?.SEEDLING_PREVIEW_METER !== '0', statesPerUnit: 1024,
+    /**
+     * ⛓ hammer-phase FLIPBLOCK — **THE PREVIEWS EVERY PAID UNIT CARRIES FOR FREE.** The meter exists for the stretches
+     * where previews swamp the work clock (L40: ~16,000 previewed states per work unit, one walk unit = 10–23 s). A
+     * room whose solve spends its units ELSEWHERE previews little per unit, and its previews are already paid for by
+     * those units' own wall. MEASURED (seed 1 leg `level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0:
+     * lightpole@144,64 cleared`, its 2560 held retry, `flipblock` report §3): the dashless pass solves at work 2453 of
+     * 2560 in 8.4 s (3.4 ms a unit) with 358,482 previewed states — 146 per unit asked — and the meter's 231 extra asks
+     * pushed it past the budget, 3/3. ⇒ ON, the first `freeStatesPerAsk` states per `shouldStop` ask the segment's
+     * deadline has made (the meter's own asks excluded) are not charged; only the excess is metered at
+     * `statesPerUnit`. 0 = the SPINNER880 meter exactly (every state charged). A count, never the clock.
+     */
+    freeStatesPerAsk: 1024 };
+export const PREVIEW_METER_DEFAULT = true;
 
 /** The meter's instrument: states counted, units asked, and the asks that tripped. */
 export const PREVIEW_METER_COUNTS = { states: 0, asked: 0, tripped: 0 };
@@ -29310,8 +29604,11 @@ function previewUnitDue() {
     const d = activeDeadline;
     if (d === null || d.fine !== true) return false;
     const k = PREVIEW_METER.statesPerUnit;
-    while ((d.previewStates ?? 0) - (d.previewCharged ?? 0) >= k) {
+    // ⛓ FLIPBLOCK — the states the deadline's own asks carry for free (the meter's asks earn none)
+    const free = PREVIEW_METER.freeStatesPerAsk * Math.max(0, (d.asks ?? 0) - (d.meterAsks ?? 0));
+    while ((d.previewStates ?? 0) - free - (d.previewCharged ?? 0) >= k) {
         d.previewCharged = (d.previewCharged ?? 0) + k;
+        d.meterAsks = (d.meterAsks ?? 0) + 1;
         PREVIEW_METER_COUNTS.asked += 1;
         if (fineDeadlineReached('walk')) {
             PREVIEW_METER_COUNTS.tripped += 1;
@@ -29542,6 +29839,7 @@ function askDeadline(site) {
     if (!d.tripped.has(site)) {
         // ⛓ hammer-phase D1 — a call to the caller's `shouldStop` is the JS arc's work unit
         if (activeProgress !== null) progressAsked();
+        if (PREVIEW_METER.enabled) d.asks = (d.asks ?? 0) + 1; // ⛓ FLIPBLOCK — the meter's free allowance (OFF ⇒ not read)
         if (!d.shouldStop(site)) return false;
         d.tripped.add(site);
         d.first ??= site;
@@ -29932,6 +30230,8 @@ function solveSegmentUnder({
                 deaths: inner.ledger('playerDeaths').length,
                 transitions: inner.transitions.length,
             };
+            // ⛓ hammer-phase W59-OPEN — the run's own takes before this tick (absent / OFF ⇒ 0, nothing more is read)
+            const runTakes0 = pre === null ? 0 : (inner.plainFreezeTakes?.length ?? 0);
             /**
              * ⛓ FIDELITY CHECKPOINTS — the `walk` site, every `WALK_CHECK_TICKS`
              * ticks this segment drives (counted from its own first tick, so the
@@ -29954,6 +30254,16 @@ function solveSegmentUnder({
                 dashTicks.push(tapeTick);
             }
             if (pre) {
+                /**
+                 * ⛓⛓ hammer-phase W59-OPEN — **AN APITEM THE RUN TOOK ITSELF IS THE SEGMENT'S TAKE, ON THE TICK IT
+                 * TOOK IT.** With fidelity PLAINSPAN's `CONTACT_FIDELITY.plainPickupInFreeze` ON, the run banks every
+                 * apitem under the box on a freeze's frame itself (`run.plainFreezeTakes`), with no report from here.
+                 * The segment's own ledger must see that take: otherwise the apitem stays `open` below and is recorded
+                 * at the LATER tick the view next meets it (or never), and `replayTakes` re-tells it there. So the
+                 * takes this tick added are written into `apItemsTaken` at this tick first (the run already banked
+                 * them, so no report is sent). Key OFF, or a run without the list ⇒ the list never grows: unchanged.
+                 */
+                recordRunSideApItemTakes(inner, runTakes0, items, tapeTick, apItemsTaken);
                 const open = items.filter((a) => !apItemsTaken.has(`${pre.level}:${a.id}`));
                 const a = apItemTakenOnTick(open, pre, {
                     level: inner.level, deaths: inner.ledger('playerDeaths').length,
@@ -36421,6 +36731,8 @@ function solveSegmentUnder({
             return;
         } catch (e) {
             if (!isLadderExhausted(e) || rewind === null || activeDeadline?.first) throw e;
+            // ⛓ FLIPBLOCK — a later anytime pass follows: it gets the budget, not this pass's waits
+            if (GOAL_START_WAIT_PASS.later) { GOAL_START_WAIT_COUNTS.deferred = (GOAL_START_WAIT_COUNTS.deferred ?? 0) + 1; throw e; }
             first = e;
         }
         for (const wait of GOAL_START_WAIT.waits) {

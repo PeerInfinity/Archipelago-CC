@@ -1,0 +1,2 @@
+{"step":96,"on":true,"rows":[{"t":1419,"refused":"HAMMER_SAFETY","verdict":"not-asked","tries":[]}]}
+{"step":149,"on":true,"rows":[{"t":1503,"refused":"HAMMER_SAFETY","verdict":"solved","tries":["0:refused","1:refused","2:solved"]}]}

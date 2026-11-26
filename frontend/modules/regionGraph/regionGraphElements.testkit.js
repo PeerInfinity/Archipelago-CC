@@ -10,6 +10,7 @@
  * imports this and hands it the stateManager stub to drive.
  */
 import { readFileSync } from 'node:fs';
+import { gunzipSync } from 'node:zlib';
 import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -32,6 +33,18 @@ export function loadCytoscape() {
 /** A committed preset's rules.json. `rel` is relative to `frontend/presets/`. */
 export function loadRules(rel) {
     return JSON.parse(readFileSync(join(FRONTEND, 'presets', rel), 'utf8'));
+}
+
+/**
+ * ⛓ A FROZEN copy of a preset's rules (region-graph-groups-c; the planner's ruling 2026-11-24: no digest pin over a
+ * LIVE committed preset — a legitimate rules change to the preset would trip it). `fixtures/sub-region-view/<name>`
+ * holds the fields the builder reads (`regions`, `start_regions`, `preset_sidecars`, and the world's names), taken
+ * from the presets at 146d8f6ef8. The live preset moves; these do not.
+ */
+export const FROZEN = Object.freeze(['seedling_playthrough', 'alttp', 'procgen_maze', 'seedling_atlas']);
+export function loadFrozenRules(name) {
+    if (!FROZEN.includes(name)) throw new Error(`no frozen rules fixture "${name}"`);
+    return JSON.parse(gunzipSync(readFileSync(join(HERE, 'fixtures', 'sub-region-view', `${name}.rules.json.gz`))).toString('utf8'));
 }
 
 /** `staticData.regions` as the worker hands it to the panel: a Map name → region (with `name`). */

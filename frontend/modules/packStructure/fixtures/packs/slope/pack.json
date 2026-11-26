@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "slope",
+  "title": "A test fixture: a one-way tile kind the generator may place (content sets GEN-4)",
+  "licence": "test fixture",
+  "layers": {
+    "structure": "structure/manifest.json",
+    "concepts": "concepts/manifest.json"
+  }
+}

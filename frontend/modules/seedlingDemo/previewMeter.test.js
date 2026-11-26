@@ -9,6 +9,10 @@
  *   - ON under a deadline that never trips: the same answer, and exactly `asked` more `shouldStop` calls;
  *   - ON under OFF's own total as the budget: the meter's asks spend it, so the solve trips where OFF did not;
  *   - no deadline (or one without fine checkpoints): nothing counted, nothing asked.
+ * Those rows pin the SPINNER880 meter itself, so they run with `freeStatesPerAsk` = 0 (every state charged). The
+ * FLIPBLOCK row runs the shipped allowance (`CC/docs/cloud-reports/seedling-hammer-flipblock.md`): L18's previews are
+ * sparse per work unit, so the allowance covers them — ON asks nothing more and is OFF byte for byte, with OFF's
+ * `shouldStop` calls; and under OFF's own total as the budget it no longer trips where OFF did not.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -32,7 +36,8 @@ function stagingOf(name) {
 const sorted = (k, v) => (v instanceof Set ? [...v].sort() : (v instanceof Map ? [...v] : v));
 
 /**
- * One `twoPassSolve` with the meter at `meter` (`{enabled, statesPerUnit}`) under `deadline` (`null` = none, else
+ * One `twoPassSolve` with the meter at `meter` (`{enabled, statesPerUnit, freeStatesPerAsk}`; an absent
+ * `freeStatesPerAsk` is 0 — the SPINNER880 meter — and `'shipped'` keeps the module's own) under `deadline` (`null` = none, else
  * `(site, calls) => boolean`) with `fine` checkpoints: the answer's bytes, the `shouldStop` calls and the meter's counts.
  */
 async function solve({ meter, deadline = null, fine = true }) {
@@ -44,7 +49,9 @@ async function solve({ meter, deadline = null, fine = true }) {
     let promise = null;
     let report = null;
     const was = PREVIEW_METER.statesPerUnit;
+    const wasFree = PREVIEW_METER.freeStatesPerAsk;
     PREVIEW_METER.statesPerUnit = meter.statesPerUnit ?? was;
+    if (meter.freeStatesPerAsk !== 'shipped') PREVIEW_METER.freeStatesPerAsk = meter.freeStatesPerAsk ?? 0;
     Object.assign(PREVIEW_METER_COUNTS, { states: 0, asked: 0, tripped: 0 });
     try {
         withPreviewMeter(meter.enabled, () => {
@@ -54,6 +61,7 @@ async function solve({ meter, deadline = null, fine = true }) {
         });
     } finally {
         PREVIEW_METER.statesPerUnit = was;
+        PREVIEW_METER.freeStatesPerAsk = wasFree;
     }
     const counts = { ...PREVIEW_METER_COUNTS };
     let r;
@@ -72,8 +80,8 @@ async function solve({ meter, deadline = null, fine = true }) {
 const never = () => false;
 
 describe('PREVIEW_METER — previewed states are work (hammer-phase SPINNER880)', () => {
-    it('ships OFF', () => {
-        expect(PREVIEW_METER.enabled).toBe(globalThis.process?.env?.SEEDLING_PREVIEW_METER === '1');
+    it('ships ON (the BOS/GSW/PM flip)', () => {
+        expect(PREVIEW_METER.enabled).toBe(globalThis.process?.env?.SEEDLING_PREVIEW_METER !== '0');
     });
 
     it('OFF counts nothing; ON with statesPerUnit = ∞ is OFF byte for byte; ON asks exactly `asked` more', async () => {
@@ -116,5 +124,22 @@ describe('PREVIEW_METER — previewed states are work (hammer-phase SPINNER880)'
         expect(coarse.bytes).toBe(coarseOff.bytes);
         expect(coarse.calls).toBe(coarseOff.calls);
         expect(coarse.counts).toEqual({ states: 0, asked: 0, tripped: 0 });
+    }, 300000);
+
+    it('FLIPBLOCK: the shipped allowance covers sparse previews — ON is OFF byte for byte, the same calls, and '
+        + "OFF's own budget no longer trips", async () => {
+        expect(PREVIEW_METER.freeStatesPerAsk).toBe(1024);
+        const off = await solve({ meter: { enabled: false }, deadline: never });
+        const on = await solve({ meter: { enabled: true, freeStatesPerAsk: 'shipped' }, deadline: never });
+        expect(on.counts.states).toBeGreaterThan(0);
+        // the witness's previews are under the allowance per paid ask (else this row would not test the allowance)
+        expect(on.counts.states).toBeLessThan(off.calls * PREVIEW_METER.freeStatesPerAsk);
+        expect(on.counts.asked).toBe(0);
+        expect(on.bytes).toBe(off.bytes);
+        expect(on.calls).toBe(off.calls);
+        const budget = off.calls;
+        const onB = await solve({ meter: { enabled: true, freeStatesPerAsk: 'shipped' }, deadline: (site, n) => n > budget });
+        expect(onB.report).toBe(null);
+        expect(onB.bytes).toBe(off.bytes);
     }, 300000);
 });

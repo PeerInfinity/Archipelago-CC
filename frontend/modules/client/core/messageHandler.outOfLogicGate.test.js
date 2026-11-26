@@ -312,6 +312,7 @@ describe('the game publishers declare reportedByGame', () => {
     'apcalc/index.js',
     'vibeCodingSim/index.js',
     'jtaArchipelago/jtaArchipelagoLogic.js',
+    'mysteryArchipelago/mysteryArchipelagoLogic.js',
   ]) {
     it(rel, () => {
       expect(readFileSync(path.join(modules, rel), 'utf8')).toMatch(/reportedByGame: true/);

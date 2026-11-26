@@ -19,6 +19,8 @@
  *   scripts/utils/regenerate-*-presets.mjs   (procgen_topdown, slice
  *       procgen-topdown-regen 2026-11-11: AP_4–6 went stale against the APCalc
  *       re-export of 31644f2ecf and nothing regenerated them)
+ *   scripts/procgen/action-nodes-compile.mjs  (one named file, AN-OMSI-2: its
+ *       own `--check` derives the committed ActionNodes presets it covers)
  *
  * A new producer enrols itself by its name. Two dialects are both dry under
  * `--check`: the ones that WRITE unless `--check` (the regenerators, the
@@ -68,6 +70,9 @@ export const PRODUCER_GLOBS = Object.freeze([
         test: (f) => /^regenerate-.+-tapes\.mjs$/.test(f),
     },
     { dir: 'scripts/utils', test: (f) => /^regenerate-.+-presets\.mjs$/.test(f) },
+    // The ActionNodes compiler: `--check` with no graph recompiles EVERY committed ActionNodes preset by its own
+    // recorded recipe (its roster is derived from preset_files.json), so one row covers each preset (AN-OMSI-2).
+    { dir: 'scripts/procgen', test: (f) => f === 'action-nodes-compile.mjs' },
 ]);
 
 /**
