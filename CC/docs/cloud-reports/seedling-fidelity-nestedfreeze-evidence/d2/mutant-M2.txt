@@ -1,0 +1,8 @@
+== M2
+     × texted (a feather, after the button): OFF serialises 172 + 150; wave 56 refuses; ON the union is the ceremony's 150 141ms
+     × text-less (L29's green key, before the button): ON the union ends on A+150, the pickup's F+150 step 50ms
+     × every family sees the union as the ceremony: per tick, ON = the same walk with the button removed 81ms
+     × composition: with waves 50 to 56's keys and the Owl's ON the union is the same, and = the no-rock ceremony 70ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed | 3 passed (4)
+      Tests  4 failed | 34 passed (38)

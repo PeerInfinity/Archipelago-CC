@@ -1,0 +1,49 @@
+{
+ "apitemsInDeliveredSet": 39,
+ "levels": 116,
+ "rockRooms": [
+  {
+   "level": 28,
+   "sources": [
+    "fallrock@112,240 tset 1",
+    "rope@160,64 tset 1",
+    "button@112,240 tset 0"
+   ],
+   "apitems": [],
+   "specials": []
+  },
+  {
+   "level": 32,
+   "sources": [
+    "fallrocklarge@88,128 tset 0"
+   ],
+   "apitems": [],
+   "specials": []
+  },
+  {
+   "level": 43,
+   "sources": [
+    "fallrock@96,336 tset 0",
+    "fallrock@192,336 tset 0"
+   ],
+   "apitems": [
+    {
+     "at": "144,224",
+     "tag": "0",
+     "look": "wand",
+     "nearest": []
+    }
+   ],
+   "specials": []
+  },
+  {
+   "level": 82,
+   "sources": [
+    "fallrocklarge@128,224 tset 0",
+    "button@192,240 tset 1"
+   ],
+   "apitems": [],
+   "specials": []
+  }
+ ]
+}

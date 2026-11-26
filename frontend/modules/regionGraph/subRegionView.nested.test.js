@@ -76,7 +76,9 @@ const MAZE = 'procgen_maze/AP_3/AP_3_rules.json';
 
 /** Load a preset into the stateManager stub at state `stateName`; → { rules, regions }. */
 function load(rel, stateName = 'mid') {
-    const rules = kit.loadRules(rel);
+    // ⛓ groups-c: `{ frozen: name }` reads the FROZEN copy (`kit.loadFrozenRules`) — for a pin that must not move
+    // with a legitimate change to the live preset.
+    const rules = rel?.frozen ? kit.loadFrozenRules(rel.frozen) : kit.loadRules(rel);
     const regions = kit.regionsOf(rules);
     sm.rules = rules;
     sm.staticData = { regions, exits: null };
@@ -143,8 +145,8 @@ describe('⛓ nested: the boxes are the view model\'s display groups of 2+', () 
 
 describe('⛓ nested: counts per preset', () => {
     const COUNTS = {};
-    it('seedling_playthrough draws boxes; every region is in a box or a group of one', () => {
-        const { regions } = load(SEEDLING);
+    it('seedling_playthrough (frozen) draws boxes; every region is in a box or a group of one', () => {
+        const { regions } = load({ frozen: 'seedling_playthrough' });
         const { ui } = build(regions, 'nested');
         COUNTS.seedling = countsOf(ui.cy);
         // eslint-disable-next-line no-console
@@ -285,7 +287,7 @@ describe('⛓ the setting', () => {
         expect(schema).toBeTruthy();
         expect(schema.default).toBe('separate');
         expect(schema.default).toBe(groupsMod.SUB_REGION_VIEW_SCHEMA.default);
-        expect(schema.enum).toEqual(['separate', 'nested']);
+        expect(schema.enum).toEqual(['separate', 'nested', 'merged', 'collapsible']);
 
         const { RegionGraphUI } = await import('./regionGraphUI.js');
         const seen = [];
@@ -301,7 +303,13 @@ describe('⛓ the setting', () => {
         settingsStore.set(groupsMod.SUB_REGION_VIEW_KEY, 'nested');
         await RegionGraphUI.prototype.loadDisplaySettings.call(fake);
         expect(fake.subRegionView).toBe('nested');
-        settingsStore.set(groupsMod.SUB_REGION_VIEW_KEY, 'merged'); // a value this build does not draw yet
+        settingsStore.set(groupsMod.SUB_REGION_VIEW_KEY, 'merged'); // groups-b's value: drawn since it landed
+        await RegionGraphUI.prototype.loadDisplaySettings.call(fake);
+        expect(fake.subRegionView).toBe('merged');
+        settingsStore.set(groupsMod.SUB_REGION_VIEW_KEY, 'collapsible'); // groups-c's value: drawn since it landed
+        await RegionGraphUI.prototype.loadDisplaySettings.call(fake);
+        expect(fake.subRegionView).toBe('collapsible');
+        settingsStore.set(groupsMod.SUB_REGION_VIEW_KEY, 'no-such-view'); // a value this build does not draw
         await RegionGraphUI.prototype.loadDisplaySettings.call(fake);
         expect(fake.subRegionView).toBe('separate');
     });

@@ -1,11 +1,14 @@
 /**
  * seedlingDemo/goalStartWait.test — ⛓ hammer-phase FACE 1 (`GOAL_START_WAIT`, OFF): the switch's own contract.
  * The witness (a captured page request the switch solves hitless) is `hammerFace1GoalWait.train.test.js`.
+ * ⛓ FLIPBLOCK: a pass a later anytime pass follows asks no wait (`GOAL_START_WAIT_PASS`); its witness (the L71 leg the
+ * waits used to starve) is `hammerFlipblockWitness.train.test.js`.
  */
 import { describe, expect, it } from 'vitest';
 
 import {
-    GOAL_START_WAIT, GOAL_START_WAIT_COUNTS, GOAL_START_WAIT_DEFAULT, SolverRefusal, isLadderExhausted, withGoalStartWait,
+    GOAL_START_WAIT, GOAL_START_WAIT_COUNTS, GOAL_START_WAIT_DEFAULT, GOAL_START_WAIT_PASS, SolverRefusal, isLadderExhausted,
+    withGoalStartWait, withGoalStartWaitLaterPass,
 } from './solverBot.js';
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 
@@ -40,5 +43,16 @@ describe('GOAL_START_WAIT (hammer-phase FACE 1)', () => {
         // the text alone, on an error that is not a refusal, is a defect and is never re-asked
         expect(isLadderExhausted(new Error('the combat ladder is EXHAUSTED'))).toBe(false);
         expect(isLadderExhausted(null)).toBe(false);
+    });
+
+    it('FLIPBLOCK: outside an anytime pass no later pass is assumed; withGoalStartWaitLaterPass sets it and restores '
+        + 'it, also on a throw', () => {
+        expect(GOAL_START_WAIT_PASS.later).toBe(false);
+        expect(withGoalStartWaitLaterPass(true, () => GOAL_START_WAIT_PASS.later)).toBe(true);
+        expect(GOAL_START_WAIT_PASS.later).toBe(false);
+        expect(withGoalStartWaitLaterPass(true, () => withGoalStartWaitLaterPass(false, () => GOAL_START_WAIT_PASS.later)))
+            .toBe(false);
+        expect(() => withGoalStartWaitLaterPass(true, () => { throw new Error('y'); })).toThrow('y');
+        expect(GOAL_START_WAIT_PASS.later).toBe(false);
     });
 });

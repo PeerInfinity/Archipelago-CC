@@ -1,0 +1,10 @@
+A1 29:11 env[] ok=false work=74 ticks=null ms=5464
+  passes=[{"pass":"dashless","ok":false,"kind":"refusal","ticks":null,"work":37},{"pass":"full","ok":false,"kind":"refusal","ticks":null,"work":37}]
+  message=solverBot(wasm-exit-40) reach-exit (944,96)->L41 -> keylock stance (bosslock@480,352): the combat ladder is EXHAUSTED. The corridor passes through danger at (471.6,441.1) — enemy:iceturret@472,400 (a live ice turret, priced at the hull of its rest two-cycle (487.5,424 / 488,423.5) — `input()` snaps it before `hitPlayer` in the same update, so its ctor box (488,416) is never a contact (the run's turret has not been on screen yet; `turretSnapPricing`)) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 17 volume(s) forbidden — no walkable tile path in level 40 from tile (30,56) to (30,23). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by wat
+  time: the aim is 528 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.
+  bait: NO LIVE BODY's removal admits a corridor — the danger on this corridor is [enemy:iceturret@472,400] and this room's live roster is [bob@320,112, bob@288,112, bob@288,80, bob@304,144, bob@272,112, bobsoldier@880,832, bob@736,752, bob@736,800, bob@192,480, bob@352,448, bob@352,416, bob@208,448, bob@224,496, puncher@128,624, puncher@816,128]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one
+  ICETURRET_STATIC_KILL_COUNTS={"handed":[],"kills":[]}
+  KEYLOCK_TURRET_COUNTS={"stances":[],"kills":[]}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS={"asked":[]}
+  TURRET_APPROACH_COUNTS={"approaches":[]}

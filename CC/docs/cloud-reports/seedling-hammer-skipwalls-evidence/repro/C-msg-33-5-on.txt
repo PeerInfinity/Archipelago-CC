@@ -1,0 +1,1 @@
+{"goal":"wasm-exit-61","budgetWork":640,"ok":true,"kind":null,"work":173,"answer":"7ca39971ac20","ms":397,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":418,"work":39,"modelHits":{"hits":0,"deaths":0}},{"pass":"full","ok":true,"kind":null,"ticks":365,"work":134,"deadline":"sword-dash","limit":"window","modelHits":{"hits":0,"deaths":0}}],"ticks":365,"hits":null}

@@ -1,0 +1,138 @@
+[
+ {
+  "level": 12,
+  "specials": [],
+  "runtimeHosts": [
+   "witch@416,384",
+   "bosslock@416,240",
+   "bosslock@432,240",
+   "bosslock@80,656",
+   "bosslock@112,192",
+   "bosslock@32,864"
+  ],
+  "apitems": [
+   "apitem@320,816 (chest) d=443/584/587/288/658/292"
+  ]
+ },
+ {
+  "level": 19,
+  "specials": [],
+  "runtimeHosts": [
+   "shieldboss@80,32",
+   "bosslock@48,32"
+  ],
+  "apitems": [
+   "apitem@96,64 (bosskey0) d=36/58"
+  ]
+ },
+ {
+  "level": 30,
+  "specials": [],
+  "runtimeHosts": [
+   "bosslock@64,32",
+   "bosslock@224,208"
+  ],
+  "apitems": [
+   "apitem@64,64 (torchpickup) d=32/215"
+  ]
+ },
+ {
+  "level": 31,
+  "specials": [],
+  "runtimeHosts": [
+   "bosslock@192,432"
+  ],
+  "apitems": []
+ },
+ {
+  "level": 40,
+  "specials": [],
+  "runtimeHosts": [
+   "bosslock@480,352"
+  ],
+  "apitems": [
+   "apitem@64,144 (totempart) d=465",
+   "apitem@880,816 (chest) d=613",
+   "apitem@160,640 (totempart) d=431",
+   "apitem@656,528 (bosskey2) d=249"
+  ]
+ },
+ {
+  "level": 43,
+  "specials": [],
+  "runtimeHosts": [
+   "bosstotem@152,168"
+  ],
+  "apitems": [
+   "apitem@144,224 (wand) d=57"
+  ]
+ },
+ {
+  "level": 48,
+  "specials": [],
+  "runtimeHosts": [
+   "bosslock@48,144"
+  ],
+  "apitems": [
+   "apitem@152,184 (chest) d=111"
+  ]
+ },
+ {
+  "level": 56,
+  "specials": [],
+  "runtimeHosts": [
+   "bosslock@96,16"
+  ],
+  "apitems": []
+ },
+ {
+  "level": 66,
+  "specials": [],
+  "runtimeHosts": [
+   "bosslock@72,64"
+  ],
+  "apitems": []
+ },
+ {
+  "level": 68,
+  "specials": [],
+  "runtimeHosts": [
+   "bosslock@16,32"
+  ],
+  "apitems": [
+   "apitem@16,16 (health) d=16"
+  ]
+ },
+ {
+  "level": 69,
+  "specials": [],
+  "runtimeHosts": [
+   "lightbosscontroller@72,72"
+  ],
+  "apitems": []
+ },
+ {
+  "level": 82,
+  "specials": [],
+  "runtimeHosts": [
+   "lavaboss@112,48"
+  ],
+  "apitems": []
+ },
+ {
+  "level": 111,
+  "specials": [],
+  "runtimeHosts": [
+   "frozenboss@96,16"
+  ],
+  "apitems": []
+ },
+ {
+  "level": 112,
+  "specials": [],
+  "runtimeHosts": [
+   "finalboss@64,96"
+  ],
+  "apitems": []
+ }
+]

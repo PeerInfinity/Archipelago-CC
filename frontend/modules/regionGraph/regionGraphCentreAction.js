@@ -8,11 +8,16 @@
  * `nodePicker.js` `centreOn`), and changes nothing else: no selection, no path, no event.
  */
 import { PANEL_ACTION_IDS } from '../regionView/clickActions.js';
+import { graphNodeIdOf } from './subRegionGroups.js';
 
-/** Does `ui`'s graph draw a node `regionName`? */
-function drawsNode(cy, regionName) {
+/**
+ * Does `ui`'s graph draw `regionName`? Its own node, or (subRegionView = merged; region-graph-groups-b) the group
+ * node it is merged into (`graphNodeIdOf`).
+ */
+function drawsNode(ui, regionName) {
+    const cy = ui?.cy;
     if (!cy || typeof cy.getElementById !== 'function') return false;
-    const node = cy.getElementById(regionName);
+    const node = cy.getElementById(graphNodeIdOf(ui, regionName));
     return !!node && !(typeof node.empty === 'function' ? node.empty() : node.length === 0);
 }
 
@@ -26,8 +31,8 @@ function drawsNode(cy, regionName) {
  */
 export function centreGraphOn(ui, regionName) {
     const cy = ui?.cy;
-    if (!drawsNode(cy, regionName)) return false;
-    const node = cy.getElementById(regionName);
+    if (!drawsNode(ui, regionName)) return false;
+    const node = cy.getElementById(graphNodeIdOf(ui, regionName));
     if (typeof cy.width === 'function' && cy.width() === 0) {
         ui.pendingCentreOn = regionName;
         return true;
@@ -47,12 +52,12 @@ export function applyPendingCentre(ui) {
     const name = ui?.pendingCentreOn ?? null;
     if (!name) return false;
     ui.pendingCentreOn = null;
-    return drawsNode(ui.cy, name) && centreGraphOn(ui, name);
+    return drawsNode(ui, name) && centreGraphOn(ui, name);
 }
 
 /** A rebuilt graph that no longer draws the pending name drops it (`graphDataManager.js` after a rebuild). */
 export function dropStalePendingCentre(ui) {
-    if (ui?.pendingCentreOn && !drawsNode(ui.cy, ui.pendingCentreOn)) ui.pendingCentreOn = null;
+    if (ui?.pendingCentreOn && !drawsNode(ui, ui.pendingCentreOn)) ui.pendingCentreOn = null;
 }
 
 /** The descriptor, over `getPanels()` (the live Region Graph panels). */

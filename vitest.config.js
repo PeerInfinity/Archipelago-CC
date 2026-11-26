@@ -25,6 +25,10 @@ export default defineConfig({
       // js-land/** train pushes and on dispatch, never on a slice push and
       // never in this default run.
       '**/*.train.test.js',
+      // The mystery clue game's own tests (a git submodule, another repository's): they are
+      // written for `node --test`, not vitest, and that repository's `npm test` runs them.
+      // What THIS repo holds about the game is mysteryArchipelago/mysteryPin.test.js.
+      'frontend/modules/mystery-clue-game/**',
     ],
 
     // Environment settings

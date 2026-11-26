@@ -1,0 +1,10 @@
+     × button frame A, one apitem: the solver's call already takes it on A; ON banks the same take, no double take 109ms
+     × button frame A, a second apitem under the same box: OFF after the span (late); ON on A 41ms
+     × a ceremony's T (a feather, no button), a second apitem: OFF after the ceremony; ON on T 57ms
+     × the union (`nestedRockCeremony` ON, the feather on the button): ON takes both on T = A 44ms
+     × the rope's pull (`rockbutton-l28-livefall`): the first on P either way; a second OFF after the span, ON on P 179ms
+     × the wand's drop, a deferred release step: OFF a tick late; ON on the tick whose R+1 tests the post-R box 59ms
+     × the wand's drop, a landing snap: OFF a tick late; ON on the drop tick, under the snapped box 57ms
+     × composition (the seven neighbours ON): the same ON takes at frame A, T and the pull 38ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  8 failed | 37 passed (45)

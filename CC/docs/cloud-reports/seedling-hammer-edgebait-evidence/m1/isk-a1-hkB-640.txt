@@ -1,0 +1,7 @@
+A1 29:11 env[HOOK_EB_ISK=1 SEEDLING_ICETURRET_STATIC_KILL=1] ok=false work=642 ticks=null ms=18668
+  passes=[{"pass":"dashless","ok":false,"kind":"refusal","ticks":null,"work":641,"deadline":"crusher-fork","limit":"budget"},{"pass":"full","ok":false,"kind":"refusal","ticks":null,"work":1,"deadline":"walk","limit":"budget"}]
+  message=solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-exit (944,96)->L41's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's.
+  ICETURRET_STATIC_KILL_COUNTS={"handed":[{"id":"iceturret@472,400","t":100,"via":"chooser"}],"kills":[{"id":"iceturret@472,400","t":100,"dead":false,"ticks":300,"why":"solverBot(wasm-exit-40) reach-exit (944,96)->L41 -> keylock stance (bosslock@480,352) -> kill (iceturret@472,400): deadline at the `crusher-fork` site after 46 ice-turret tr(ies)"}]}
+  KEYLOCK_TURRET_COUNTS={"stances":[],"kills":[]}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS={"asked":[]}
+  TURRET_APPROACH_COUNTS={"approaches":[]}

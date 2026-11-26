@@ -6100,6 +6100,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "ci",
             "citedBy": [
+                "docs/json/developer/procgen/action-nodes.md",
                 "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
