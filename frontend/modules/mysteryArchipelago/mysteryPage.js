@@ -3,11 +3,16 @@
 /** The setting that holds the page's address (`moduleSettings.mysteryArchipelago.pageUrl`). */
 export const PAGE_URL_SETTING = 'moduleSettings.mysteryArchipelago.pageUrl';
 
+/** Where the game's repository sits in this one: a git submodule, relative to the repository root. */
+export const GAME_SUBMODULE_PATH = 'frontend/modules/mystery-clue-game';
+
 /**
- * The page as GitHub Pages serves it from the repository mystery-clue-game. It is the setting's
- * schema default; nothing else names the address.
+ * The game's page in this app's own copy of the game (the submodule above), relative to the app.
+ * It is the setting's schema default; nothing else names the address. The copy is pinned to the
+ * commit the committed mystery world was generated from (mysteryPin.test.js), so the page and
+ * the world are one version of the case.
  */
-export const DEFAULT_PAGE_URL = 'https://peerinfinity.github.io/mystery-clue-game/';
+export const DEFAULT_PAGE_URL = './modules/mystery-clue-game/index.html';
 
 /**
  * The page's URL for a world's mystery block: the page address with `case=<the case's directory>`.
