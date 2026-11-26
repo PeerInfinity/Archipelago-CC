@@ -23,7 +23,7 @@ for name, path, old, new in MUTANTS:
     try:
         open(path, 'w', encoding='utf-8').write(src.replace(old, new))
         out = subprocess.run(['npx', 'vitest', 'run', D + 'fidelityPresserHang.test.js', '--maxWorkers=3'],
-                             capture_output=True, text=True).stdout
+                             capture_output=True, text=True); out = out.stdout + out.stderr
         out = re.sub(r'\x1b\[[0-9;]*m', '', out)
         reds = sorted(set(m.group(1).strip() for m in re.finditer(r'FAIL .*?fidelityPresserHang\.test\.js > (.*)', out)))
         tests = re.search(r'Tests\s+(.*)', out)

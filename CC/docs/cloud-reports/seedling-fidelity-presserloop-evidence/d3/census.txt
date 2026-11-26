@@ -1,4 +1,4 @@
-CONTROLS (the staged L38 shapes): rooms 16; recursion groups 10; ON refuses at build 4; wave-61 predicate 12
+CONTROLS (the staged L38 shapes): rooms 17; recursion groups 11; ON refuses at build 4; wave-61 predicate 13
   btn-btn: ON REFUSED; wave-61 predicate 1; t 6: button@144,224[button], button@176,240[button] FIRST-FRAME
   btn-rope: ON REFUSED; wave-61 predicate 1; t 6: button@144,224[button], rope@176,240[rope] FIRST-FRAME
   rope-rope: ON builds; wave-61 predicate 1; t 6: rope@176,240[rope], rope@112,240[rope] on-publish(true/false)
@@ -11,6 +11,7 @@ CONTROLS (the staged L38 shapes): rooms 16; recursion groups 10; ON refuses at b
   btn-br0-boot: ON REFUSED; wave-61 predicate 1; t 6: button@144,224[button], buttonroom@176,240[br0,boot true] AT-BUILD
   br0-br1: ON builds; wave-61 predicate 1; no recursion group
   br1-br0: ON builds; wave-61 predicate 1; no recursion group
+  br1-btn-br0: ON builds; wave-61 predicate 1; t 6: buttonroom@144,224[br1], button@176,240[button], buttonroom@112,240[br0] on-publish(true)
 vanilla atlas: rooms 116; recursion groups 0; ON refuses at build 0; wave-61 predicate 0
 delivered (playthrough AP_1, p4g): rooms 116; recursion groups 0; ON refuses at build 0; wave-61 predicate 0
 generated seedling_generated_chestdoor/AP_1: rooms 3; recursion groups 0; ON refuses at build 0; wave-61 predicate 0
