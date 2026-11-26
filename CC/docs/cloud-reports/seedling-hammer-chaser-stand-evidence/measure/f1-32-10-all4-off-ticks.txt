@@ -1,0 +1,45 @@
+# F1(rm9) 32:10, all4 (PKSW+PKRB+DSS; LHM ON at base), switch OFF: per-tick press-kill key choice (tools/cs-hook.mjs).
+# pre = the walk's key before OPP; opp = the OPP decision; held = the key taken; pkc = every landsClearOfChasers verdict asked that tick (PKC in safeStep).
+# Two passes: the first block is dashless (strike 216,152; the shipped plan), the second the full pass (strike 312,88).
+CS {"k":1780,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":269.6,"y":170,"pkc":["left+up:ok"]}
+CS {"k":1781,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":268.4,"y":170,"pkc":["left+up:ok"]}
+CS {"k":1782,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":267.4,"y":170,"pkc":["left+up:ok"]}
+CS {"k":1783,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":266.5,"y":170,"pkc":["left+up:ok"]}
+CS {"k":1784,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":265,"y":170,"pkc":["left+up:ok"]}
+CS {"k":1785,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":263.7,"y":170,"pkc":["left+up:ok"]}
+CS {"k":1786,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":262.5,"y":170,"pkc":["left+up:ok"]}
+CS {"k":1787,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":261.6,"y":169,"pkc":["left+up:ok"]}
+CS {"k":1788,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":260.7,"y":168.1,"pkc":["left+up:ok"]}
+CS {"k":1789,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":259.3,"y":166.7,"pkc":["left+up:ok"]}
+CS {"k":1790,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":258,"y":165.4,"pkc":["left+up:ok"]}
+CS {"k":1791,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":256.9,"y":164.2,"pkc":["left+up:ok"]}
+CS {"k":1792,"pre":"left+up","opp":"none","held":"down","aim":"strike","charted":false,"stall":false,"x":256,"y":163.3,"pkc":["left+up:HIT",":HIT","right:HIT","up:HIT","left:HIT","down:ok"]}
+CS {"k":1793,"pre":"left+up","opp":"none","held":"","aim":"strike","charted":false,"stall":false,"x":255.3,"y":163.3,"pkc":["left+up:HIT",":ok"]}
+CS {"k":1794,"pre":"left+up","opp":"none","held":"","aim":"strike","charted":false,"stall":false,"x":254.8,"y":163.3,"pkc":["left+up:HIT",":ok"]}
+CS {"k":1795,"pre":"left+up","opp":"none","held":"","aim":"strike","charted":false,"stall":false,"x":254.6,"y":163.3,"pkc":["left+up:HIT",":ok"]}
+CS {"k":1796,"pre":"left+up","opp":"none","held":"","aim":"strike","charted":false,"stall":false,"x":254.6,"y":163.3,"pkc":["left+up:HIT",":ok"]}
+CS {"k":1797,"pre":"left+up","opp":"aim","held":"up","aim":"strike","charted":false,"stall":false,"x":254.6,"y":163.3,"pkc":[]}
+CS {"k":1798,"pre":"left+up","opp":"press","held":"primary","aim":"strike","charted":false,"stall":false,"x":254.6,"y":162.5,"pkc":[]}
+CS {"k":1799,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":252.9,"y":163.9,"pkc":["left+up:ok"]}
+CS {"k":1800,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":251.4,"y":165.1,"pkc":["left+up:ok"]}
+CS {"k":1780,"pre":"up","opp":"aim","held":"right","aim":"strike","charted":false,"stall":false,"x":311.7,"y":143.4,"pkc":[]}
+CS {"k":1781,"pre":"left+up","opp":"press","held":"primary","aim":"strike","charted":false,"stall":false,"x":312.5,"y":142.5,"pkc":[]}
+CS {"k":1782,"pre":"left+up","opp":"none","held":"left+up","aim":"strike","charted":false,"stall":false,"x":313.2,"y":141.7,"pkc":["left+up:ok"]}
+CS {"k":1783,"pre":"left","opp":"none","held":"left","aim":"strike","charted":false,"stall":false,"x":312.8,"y":140.4,"pkc":["left:ok"]}
+CS {"k":1784,"pre":"right","opp":"none","held":"right","aim":"strike","charted":false,"stall":false,"x":311.8,"y":139.3,"pkc":["right:ok"]}
+CS {"k":1785,"pre":"up","opp":"none","held":"up","aim":"strike","charted":false,"stall":false,"x":311.7,"y":138.3,"pkc":["up:ok"]}
+CS {"k":1786,"pre":"right","opp":"none","held":"right","aim":"strike","charted":false,"stall":false,"x":311.6,"y":136.8,"pkc":["right:ok"]}
+CS {"k":1787,"pre":"left","opp":"none","held":"left","aim":"strike","charted":false,"stall":false,"x":312.3,"y":135.6,"pkc":["left:ok"]}
+CS {"k":1788,"pre":"up","opp":"none","held":"up","aim":"strike","charted":false,"stall":false,"x":312.2,"y":134.6,"pkc":["up:ok"]}
+CS {"k":1789,"pre":"up","opp":"none","held":"up","aim":"strike","charted":false,"stall":false,"x":312,"y":133,"pkc":["up:ok"]}
+CS {"k":1790,"pre":"up","opp":"none","held":"up","aim":"strike","charted":false,"stall":false,"x":311.9,"y":131.7,"pkc":["up:ok"]}
+CS {"k":1791,"pre":"up","opp":"none","held":"up","aim":"strike","charted":false,"stall":false,"x":311.8,"y":130.6,"pkc":["up:ok"]}
+CS {"k":1792,"pre":"up","opp":"none","held":"up","aim":"strike","charted":false,"stall":false,"x":311.7,"y":129.7,"pkc":["up:ok"]}
+CS {"k":1793,"pre":"up","opp":"none","held":"up","aim":"strike","charted":false,"stall":false,"x":311.7,"y":128.4,"pkc":["up:ok"]}
+CS {"k":1794,"pre":"up","opp":"none","held":"up","aim":"strike","charted":false,"stall":false,"x":311.7,"y":127.2,"pkc":["up:ok"]}
+CS {"k":1795,"pre":"up","opp":"none","held":"up","aim":"strike","charted":false,"stall":false,"x":311.7,"y":126.3,"pkc":["up:ok"]}
+CS {"k":1796,"pre":"up","opp":"none","held":"up","aim":"strike","charted":false,"stall":false,"x":311.7,"y":124.9,"pkc":["up:ok"]}
+CS {"k":1797,"pre":"up","opp":"none","held":"up","aim":"strike","charted":false,"stall":false,"x":311.7,"y":123.7,"pkc":["up:ok"]}
+CS {"k":1798,"pre":"up","opp":"none","held":"up","aim":"strike","charted":false,"stall":false,"x":311.7,"y":122.8,"pkc":["up:ok"]}
+CS {"k":1799,"pre":"up","opp":"none","held":"up","aim":"strike","charted":false,"stall":false,"x":311.7,"y":121.3,"pkc":["up:ok"]}
+CS {"k":1800,"pre":"up","opp":"none","held":"up","aim":"strike","charted":false,"stall":false,"x":311.7,"y":120.1,"pkc":["up:ok"]}
