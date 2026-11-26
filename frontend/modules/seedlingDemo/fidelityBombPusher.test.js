@@ -178,9 +178,11 @@ describe('BOMBPUSHER D3 — the hold inside the lobber\'s reach is refused by na
         let refusal = null;
         // ⛓ `holdWaitPriced` named OFF (planning-14's wave-32 flip: ON the still hold is priced at its stance walk and
         // the ladder is EXHAUSTED on the tail's bomb — the same obstacle, new text); this row pins the executor's refusal.
-        await withContactFidelity({ bombPusherLive: true, movingWait: false, bombBlastBody: false, holdWaitPriced: false }, async () => {
+        // ⛓ LHM FLIP (⚖ the user 2026-11-26): LATCHED_HOLD_MOVE held OFF — this row witnesses the hold's refusal in a non-default model config; LHM ON moves past it.
+        const { withLatchedHoldMove } = await import('./solverBot.js');
+        await withLatchedHoldMove(false, () => withContactFidelity({ bombPusherLive: true, movingWait: false, bombBlastBody: false, holdWaitPriced: false }, async () => {
             try { await solveFromCluster(); } catch (e) { refusal = e; }
-        });
+        }));
         expect(refusal).toBeInstanceOf(SolverRefusal);
         expect(refusal.message).toMatch(/-> hold: the hold stands still .* inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at/);
         expect(refusal.obstacle).toMatchObject({ kind: 'danger', id: 'bombpusher@112,128' });

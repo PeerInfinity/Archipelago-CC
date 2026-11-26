@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "_comment": "A TEST FIXTURE (mazeTileKindsGen.test.js, oneWayTileKindsWorld.slow.test.js): one one-way kind that opts in to the generator (GEN-4). Its dirs are the fixture ground pack's ledge's (entered moving S only).",
+  "provenance": {
+    "sources": { "gen4": { "type": "authored", "by": "content sets GEN-4's proof pins" } },
+    "default": "gen4"
+  },
+  "entries": {
+    "slope:terrain/ledge": { "kind": "terrain", "pass": "one-way", "dirs": ["S"], "generate": true }
+  }
+}
