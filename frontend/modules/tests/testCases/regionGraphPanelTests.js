@@ -748,9 +748,9 @@ export async function testRegionGraphSubRegionMerged(testController) {
         (d?.squares ?? []).map((q) => [q.key, q.location, Math.round(q.sx), Math.round(q.sy)])]);
       return { sig, off, paints: d?.stats?.paints ?? 0, pending: layer?._paintHandle != null, zoom: z, pan: p, boxes };
     };
-    let lastSig = null; let same = 0; let lastPaint = null; let firstPaint = null; let polls = 0;
+    let lastSig = null; let same = 0; let lastPaint = null;
     const paintStable = await testController.pollForCondition(() => {
-      const s = paintNow(); lastPaint = s; firstPaint ??= s; polls += 1;
+      const s = paintNow(); lastPaint = s;
       const ok = mapLayouts.idle() && !s.pending && s.off.length === 0;
       same = ok && s.sig === lastSig ? same + 1 : 0;
       lastSig = s.sig;
@@ -758,9 +758,6 @@ export async function testRegionGraphSubRegionMerged(testController) {
     }, 'the map look paint is stable and on its nodes', MAX_WAIT_TIME, 50);
     testController.reportCondition(`the map look's last paint is stable and every square lies on its node (layout ${mapLayouts.state()}, `
       + `${lastPaint?.paints} paints, pending ${lastPaint?.pending}, off their node: ${lastPaint?.off.join('; ') || 'none'})`, paintStable);
-    // One line per run, so a repeat's log says whether the first read would have been stale (the race this wait closes).
-    console.log(`[rg-merged map-look] first read: layout ${mapLayouts.state()}, pending ${firstPaint?.pending}, off their node: `
-      + `${firstPaint?.off.join('; ') || 'none'}, first==settled ${firstPaint?.sig === lastPaint?.sig}; settled after ${polls} polls`);
     mapLayouts.dispose();
     // ⛓ The spot to click: a point inside a square that Cytoscape's own hit-test gives to the square's node AND that
     // the layer maps back to that square (`squareAtNode`). Map-look §12: a square under another element (the player
