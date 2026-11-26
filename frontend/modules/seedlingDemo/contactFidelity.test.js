@@ -101,6 +101,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_FREEZE_RELEASE_TICK
         || !!process.env.SEEDLING_FREEZE_SPAN_UPDATES
         || !!process.env.SEEDLING_NESTED_ROCK_CEREMONY
+        || !!process.env.SEEDLING_PLAIN_PICKUP_IN_FREEZE
         || !!process.env.SEEDLING_ARROW_LANE_CROSSING
         || !!process.env.SEEDLING_AXE_TIMING_RUNG || !!process.env.SEEDLING_AXE_GATE_TRANSIT
         || !!process.env.SEEDLING_STATUE_TALK_RANGE
@@ -440,7 +441,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity RELEASEPICKUP D2 (wave 56): the beam tower's graphic through a texted pickup's phase A, and a pickup inside a rock's span refused — OFF.
             freezeSpanUpdates: false,
             // ⛓ fidelity NESTEDFREEZE D2 (wave 57): a pickup ceremony that starts on a button's frame A runs as the union with the rock's span — OFF.
-            nestedRockCeremony: false });
+            nestedRockCeremony: false,
+            // ⛓ fidelity PLAINSPAN D2 (wave 59): every plain pickup (APItem) under the box a freeze's frame tests is taken on that frame — OFF.
+            plainPickupInFreeze: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
