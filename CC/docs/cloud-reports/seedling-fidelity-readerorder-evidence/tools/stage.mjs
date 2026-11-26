@@ -70,7 +70,9 @@ export const SHAPES = [
         steps: (p) => [[[], p.latch], [['right'], p.right], [['down'], p.down], [[], p.release - p.latch - p.right - p.down], [['up'], p.after]] })),
     // (B1) the spinner first crosses L's top on tick 132. release 125: L open after S130, shut after S131 (the
     // meeting). 127: the spinner is inside L's box when the model shuts it (the Enemy-occupancy case).
-    ...[['b1-spinner', 125, 132], ['b1-occ', 127, null]].map(([name, release, meet]) => ({
+    // (added after the first witness, which measured the Button-publish lag: the Player is off the button at 130, so
+    // the game's would-be reset is frame 132, the spinner's crossing — the press-lag-free reader-order meeting.)
+    ...[['b1-spinner', 125, 132], ['b1-occ', 127, null], ['b1-r124', 124, 132]].map(([name, release, meet]) => ({
         name, base: B1, pairing: 'B', meet, expect: 'B spinner → lock, reset Y', defaults: { release, after: 40 },
         steps: (p) => [[[], p.release], [['left'], p.after]] })),
     { name: 'b1-ctl', base: { ...B1, boot: { x: 64, y: 240 } }, pairing: 'B', meet: null, expect: 'the same pair (never pressed)', defaults: { stand: 200 },

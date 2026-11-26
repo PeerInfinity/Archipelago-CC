@@ -1,0 +1,86 @@
+# box lock: TAKEN by readerorder-witness.mjs (browser, pid 2031) — head 059589fa7, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+a1-open: whole tape 140 t, mounted seedling-vanilla-record-23510f80-ro-a1-open, 141 sampled ticks, stream 141, hits 0, 8.0 s
+  cut 99: tick 99 held true L shut PushableBlock(96,48) Player(93.4,56) hits 0
+  cut 100: tick 100 held true L shut PushableBlock(96,48) Player(93.4,56) hits 0
+  cut 101: tick 101 held true L shut PushableBlock(96,48) Player(93.4,56) hits 0
+  cut 102: tick 102 held true L OPEN PushableBlock(96,48) Player(93.4,56) hits 0
+  cut 103: tick 103 held true L OPEN PushableBlock(96.5,48) Player(94.30000000000001,56) hits 0
+  cut 104: tick 104 held true L OPEN PushableBlock(97,48) Player(94.30000000000001,56) hits 0
+a1-ctl: whole tape 240 t, mounted seedling-vanilla-record-23510f80-ro-a1-ctl, 241 sampled ticks, stream 241, hits 0, 11.4 s
+  cut 130: tick 130 held true L OPEN PushableBlock(80,48) Player(40,56) hits 0
+  cut 131: tick 131 held true L OPEN PushableBlock(80,48) Player(40.8,56) hits 0
+  cut 132: tick 132 held true L OPEN PushableBlock(80,48) Player(42.15,56) hits 0
+  cut 133: tick 133 held true L OPEN PushableBlock(80,48) Player(43.25,56) hits 0
+  cut 134: tick 134 held true L OPEN PushableBlock(80,48) Player(44.1,56) hits 0
+  cut 135: tick 135 held true L OPEN PushableBlock(80,48) Player(45.5,56) hits 0
+a2-reset: whole tape 190 t, mounted seedling-vanilla-record-23510f80-ro-a2-reset, 191 sampled ticks, stream 191, hits 0, 9.7 s
+  cut 153: tick 153 held true L OPEN PushableBlockFire(176,48) Player(73.92396804085773,51.11841487572165) hits 0
+  cut 154: tick 154 held true L OPEN PushableBlockFire(176,48) Player(73.92396804085773,50.268414875721646) hits 0
+  cut 155: tick 155 held true L OPEN PushableBlockFire(176,48) Player(73.92396804085773,48.86841487572165) hits 0
+  cut 156: tick 156 held true L OPEN PushableBlockFire(176.5,48) Player(73.92396804085773,47.71841487572165) hits 0
+  cut 157: tick 157 held true L OPEN PushableBlockFire(177,48) Player(73.92396804085773,46.81841487572165) hits 0
+  cut 158: tick 158 held true L OPEN PushableBlockFire(177.5,48) Player(73.92396804085773,45.36841487572165) hits 0
+a2-r149: whole tape 189 t, mounted seedling-vanilla-record-23510f80-ro-a2-r149, 190 sampled ticks, stream 190, hits 0, 9.3 s
+  cut 153: tick 153 held true L OPEN PushableBlockFire(176,48) Player(73.92396804085773,50.268414875721646) hits 0
+  cut 154: tick 154 held true L OPEN PushableBlockFire(176,48) Player(73.92396804085773,48.86841487572165) hits 0
+  cut 155: tick 155 held true L OPEN PushableBlockFire(176,48) Player(73.92396804085773,47.71841487572165) hits 0
+  cut 156: tick 156 held true L OPEN PushableBlockFire(176.5,48) Player(73.92396804085773,46.81841487572165) hits 0
+  cut 157: tick 157 held true L OPEN PushableBlockFire(177,48) Player(73.92396804085773,45.36841487572165) hits 0
+  cut 158: tick 158 held true L OPEN PushableBlockFire(177.5,48) Player(73.92396804085773,44.168414875721645) hits 0
+a2-r151: whole tape 191 t, mounted seedling-vanilla-record-23510f80-ro-a2-r151, 192 sampled ticks, stream 192, hits 0, 9.3 s
+  cut 153: tick 153 held true L OPEN PushableBlockFire(176,48) Player(73.92396804085773,52.21841487572165) hits 0
+  cut 154: tick 154 held true L OPEN PushableBlockFire(176,48) Player(73.92396804085773,51.11841487572165) hits 0
+  cut 155: tick 155 held true L OPEN PushableBlockFire(176,48) Player(73.92396804085773,50.268414875721646) hits 0
+  cut 156: tick 156 held true L OPEN PushableBlockFire(176.5,48) Player(73.92396804085773,48.86841487572165) hits 0
+  cut 157: tick 157 held true L OPEN PushableBlockFire(177,48) Player(73.92396804085773,47.71841487572165) hits 0
+  cut 158: tick 158 held true L OPEN PushableBlockFire(177.5,48) Player(73.92396804085773,46.81841487572165) hits 0
+a2-ctl: whole tape 180 t, mounted seedling-vanilla-record-23510f80-ro-a2-ctl, 181 sampled ticks, stream 181, hits 0, 9.1 s
+  cut 153: tick 153 held true L shut PushableBlockFire(176,48) Player(73.92396804085773,39.46841487572164) hits 0
+  cut 154: tick 154 held true L shut PushableBlockFire(176,48) Player(73.92396804085773,37.918414875721645) hits 0
+  cut 155: tick 155 held true L shut PushableBlockFire(176,48) Player(73.92396804085773,36.61841487572165) hits 0
+  cut 156: tick 156 held true L shut PushableBlockFire(176,48) Player(73.92396804085773,35.56841487572165) hits 0
+  cut 157: tick 157 held true L shut PushableBlockFire(176,48) Player(73.92396804085773,34.76841487572165) hits 0
+  cut 158: tick 158 held true L shut PushableBlockFire(176,48) Player(73.92396804085773,33.41841487572165) hits 0
+b1-spinner: whole tape 165 t, mounted seedling-vanilla-record-23510f80-ro-b1-spinner, 166 sampled ticks, stream 166, hits 0, 8.8 s
+  cut 129: tick 129 held true L OPEN Spinner(151.29289321881345,218.91168824543183) Player(67.90000000000002,280) hits 0
+  cut 130: tick 130 held true L OPEN Spinner(152,219.6187950266184) Player(66.50000000000001,280) hits 0
+  cut 131: tick 131 held true L OPEN Spinner(152.70710678118655,220.32590180780494) Player(65.35000000000001,280) hits 0
+  cut 132: tick 132 held true L OPEN Spinner(153.4142135623731,221.0330085889915) Player(64.45,280) hits 0
+  cut 133: tick 133 held true L OPEN Spinner(154.12132034355966,221.74011537017805) Player(63,280) hits 0
+  cut 134: tick 134 held true L OPEN Spinner(154.8284271247462,222.4472221513646) Player(61.8,280) hits 0
+b1-occ: whole tape 167 t, mounted seedling-vanilla-record-23510f80-ro-b1-occ, 168 sampled ticks, stream 168, hits 0, 8.5 s
+  cut 130: tick 130 held true L OPEN Spinner(152,219.6187950266184) Player(68.75000000000001,280) hits 0
+  cut 131: tick 131 held true L OPEN Spinner(152.70710678118655,220.32590180780494) Player(67.90000000000002,280) hits 0
+  cut 132: tick 132 held true L OPEN Spinner(153.4142135623731,221.0330085889915) Player(66.50000000000001,280) hits 0
+  cut 133: tick 133 held true L OPEN Spinner(154.12132034355966,221.74011537017805) Player(65.35000000000001,280) hits 0
+  cut 134: tick 134 held true L OPEN Spinner(154.8284271247462,222.4472221513646) Player(64.45,280) hits 0
+  cut 135: tick 135 held true L OPEN Spinner(155.53553390593277,223.15432893255115) Player(63,280) hits 0
+b1-ctl: whole tape 200 t, mounted seedling-vanilla-record-23510f80-ro-b1-ctl, 201 sampled ticks, stream 201, hits 0, 9.7 s
+  cut 27: tick 27 held true L shut Spinner(152.70710678118655,148.90811690796306) Player(72,248) hits 0
+  cut 28: tick 28 held true L shut Spinner(153.4142135623731,148.2010101267765) Player(72,248) hits 0
+  cut 29: tick 29 held true L shut Spinner(154.12132034355966,148.2010101267765) Player(72,248) hits 0
+  cut 30: tick 30 held true L shut Spinner(154.8284271247462,148.90811690796306) Player(72,248) hits 0
+  cut 31: tick 31 held true L shut Spinner(155.53553390593277,149.61522368914962) Player(72,248) hits 0
+  cut 32: tick 32 held true L shut Spinner(156.24264068711932,150.32233047033617) Player(72,248) hits 0
+b2-flyer: whole tape 184 t, mounted seedling-vanilla-record-23510f80-ro-b2-flyer, 185 sampled ticks, stream 185, hits 0, 9.2 s
+  cut 157: tick 157 held true L OPEN WallFlyer(152,207) Player(159.75000000000006,232) hits 0
+  cut 158: tick 158 held true L OPEN WallFlyer(152,211) Player(160.60000000000005,232) hits 0
+  cut 159: tick 159 held true L OPEN WallFlyer(152,215) Player(162.00000000000006,232) hits 0
+  cut 160: tick 160 held true L OPEN WallFlyer(152,219) Player(163.15000000000006,232) hits 0
+  cut 161: tick 161 held true L OPEN WallFlyer(152,223) Player(164.05000000000007,232) hits 0
+  cut 162: tick 162 held true L OPEN WallFlyer(152,227) Player(165.50000000000006,232) hits 0
+b2-occ: whole tape 185 t, mounted seedling-vanilla-record-23510f80-ro-b2-occ, 186 sampled ticks, stream 186, hits 0, 9.1 s
+  cut 158: tick 158 held true L OPEN WallFlyer(152,211) Player(159.75000000000006,232) hits 0
+  cut 159: tick 159 held true L OPEN WallFlyer(152,215) Player(160.60000000000005,232) hits 0
+  cut 160: tick 160 held true L OPEN WallFlyer(152,219) Player(162.00000000000006,232) hits 0
+  cut 161: tick 161 held true L OPEN WallFlyer(152,223) Player(163.15000000000006,232) hits 0
+  cut 162: tick 162 held true L OPEN WallFlyer(152,227) Player(164.05000000000007,232) hits 0
+  cut 163: tick 163 held true L OPEN WallFlyer(152,231) Player(165.50000000000006,232) hits 0
+b2-ctl: whole tape 60 t, mounted seedling-vanilla-record-23510f80-ro-b2-ctl, 61 sampled ticks, stream 61, hits 0, 5.0 s
+  cut 17: tick 17 held true L shut WallFlyer(152,216) Player(152,264) hits 0
+  cut 18: tick 18 held true L shut WallFlyer(152,217) Player(152,264) hits 0
+  cut 19: tick 19 held true L shut WallFlyer(152,217) Player(152,264) hits 0
+  cut 20: tick 20 held true L shut WallFlyer(152,217) Player(152,264) hits 0
+  cut 21: tick 21 held true L shut WallFlyer(152,217) Player(152,264) hits 0
+  cut 22: tick 22 held true L shut WallFlyer(152,217) Player(152,264) hits 0
