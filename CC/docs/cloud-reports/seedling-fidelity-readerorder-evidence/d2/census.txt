@@ -1,0 +1,217 @@
+CONTROL a1-open (expect A pushableblock → lock (open only: a latch)): levels 1; rooms with a reader and a responder 1; (A) 1 pair(s) [reset-capable 0]; (B) 0 pair(s) [reset-capable 0]
+  A L38 pushableblock@80,48 → lock@112,48 (t 5; open Y, reset n): block reaches the box
+CONTROL a1-ctl (expect the same pair as a1-open): levels 1; rooms with a reader and a responder 1; (A) 1 pair(s) [reset-capable 0]; (B) 0 pair(s) [reset-capable 0]
+  A L38 pushableblock@80,48 → lock@112,48 (t 5; open Y, reset n): block reaches the box
+CONTROL a2-reset (expect A pushableblockfire → lock, reset Y): levels 1; rooms with a reader and a responder 1; (A) 1 pair(s) [reset-capable 1]; (B) 0 pair(s) [reset-capable 0]
+  A L38 pushableblockfire@176,48 → lock@192,48 (t 5; open Y, reset Y): block reaches the box
+CONTROL a2-r149 (expect A pushableblockfire → lock, reset Y): levels 1; rooms with a reader and a responder 1; (A) 1 pair(s) [reset-capable 1]; (B) 0 pair(s) [reset-capable 0]
+  A L38 pushableblockfire@176,48 → lock@192,48 (t 5; open Y, reset Y): block reaches the box
+CONTROL a2-r151 (expect A pushableblockfire → lock, reset Y): levels 1; rooms with a reader and a responder 1; (A) 1 pair(s) [reset-capable 1]; (B) 0 pair(s) [reset-capable 0]
+  A L38 pushableblockfire@176,48 → lock@192,48 (t 5; open Y, reset Y): block reaches the box
+CONTROL a2-ctl (expect A pushableblockfire → lock, reset Y): levels 1; rooms with a reader and a responder 1; (A) 1 pair(s) [reset-capable 1]; (B) 0 pair(s) [reset-capable 0]
+  A L38 pushableblockfire@176,48 → lock@192,48 (t 5; open Y, reset Y): block reaches the box
+CONTROL b1-spinner (expect B spinner → lock, reset Y): levels 1; rooms with a reader and a responder 1; (A) 0 pair(s) [reset-capable 0]; (B) 2 pair(s) [reset-capable 1]
+  B L38 spinner@144,160 → lock@144,128 (t 9; open n, reset n): reflects off it closed (t28); enters it open (t28)
+  B L38 spinner@144,160 → lock@144,224 (t 5; open Y, reset Y): reflects off it closed (t131); enters it open (t2039)
+CONTROL b1-occ (expect B spinner → lock, reset Y): levels 1; rooms with a reader and a responder 1; (A) 0 pair(s) [reset-capable 0]; (B) 2 pair(s) [reset-capable 1]
+  B L38 spinner@144,160 → lock@144,128 (t 9; open n, reset n): reflects off it closed (t28); enters it open (t28)
+  B L38 spinner@144,160 → lock@144,224 (t 5; open Y, reset Y): reflects off it closed (t131); enters it open (t2039)
+CONTROL b1-ctl (expect the same pair (never pressed)): levels 1; rooms with a reader and a responder 1; (A) 0 pair(s) [reset-capable 0]; (B) 2 pair(s) [reset-capable 1]
+  B L38 spinner@144,160 → lock@144,128 (t 9; open n, reset n): reflects off it closed (t28); enters it open (t28)
+  B L38 spinner@144,160 → lock@144,224 (t 5; open Y, reset Y): reflects off it closed (t131); enters it open (t2039)
+CONTROL b2-flyer (expect B wallflyer → lock, reset Y): levels 1; rooms with a reader and a responder 1; (A) 0 pair(s) [reset-capable 0]; (B) 2 pair(s) [reset-capable 1]
+  B L38 wallflyer@144,144 → lock@144,128 (t 9; open n, reset n): stops on it closed (flight 1)
+  B L38 wallflyer@144,144 → lock@144,224 (t 5; open Y, reset Y): stops on it closed (flight 0)
+CONTROL b2-occ (expect B wallflyer → lock, reset Y): levels 1; rooms with a reader and a responder 1; (A) 0 pair(s) [reset-capable 0]; (B) 2 pair(s) [reset-capable 1]
+  B L38 wallflyer@144,144 → lock@144,128 (t 9; open n, reset n): stops on it closed (flight 1)
+  B L38 wallflyer@144,144 → lock@144,224 (t 5; open Y, reset Y): stops on it closed (flight 0)
+CONTROL b2-ctl (expect the same pair (never pressed)): levels 1; rooms with a reader and a responder 1; (A) 0 pair(s) [reset-capable 0]; (B) 2 pair(s) [reset-capable 1]
+  B L38 wallflyer@144,144 → lock@144,128 (t 9; open n, reset n): stops on it closed (flight 1)
+  B L38 wallflyer@144,144 → lock@144,224 (t 5; open Y, reset Y): stops on it closed (flight 0)
+vanilla atlas: levels 116; rooms with a reader and a responder 7; (A) 42 pair(s) [reset-capable 28]; (B) 38 pair(s) [reset-capable 21]
+  B L18 spinner@48,96 → lock@144,112 (t -1; open Y, reset n): reflects off it closed (t2602); enters it open (t2602)
+  B L18 spinner@112,48 → lock@144,112 (t -1; open Y, reset n): reflects off it closed (t191); enters it open (t191)
+  A L39 pushableblockfire@144,176 → wandlock@144,64 (t 3; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@144,176 → wandlock@144,48 (t 4; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@144,176 → wandlock@144,32 (t 5; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@144,176 → cover@144,112 (t 0; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@144,176 → cover@176,144 (t 1; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@144,176 → cover@112,144 (t 2; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@144,176 → wandlock@48,160 (t 1; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@208,80 → wandlock@144,64 (t 3; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@208,80 → wandlock@144,48 (t 4; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@208,80 → wandlock@144,32 (t 5; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@208,80 → cover@144,112 (t 0; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@208,80 → cover@176,144 (t 1; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@208,80 → cover@112,144 (t 2; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@208,80 → wandlock@48,160 (t 1; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@48,176 → wandlock@144,64 (t 3; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@48,176 → wandlock@144,48 (t 4; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@48,176 → wandlock@144,32 (t 5; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@48,176 → cover@144,112 (t 0; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@48,176 → cover@176,144 (t 1; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@48,176 → cover@112,144 (t 2; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@48,176 → wandlock@48,160 (t 1; open Y, reset Y): block reaches the box
+  B L39 spinner@112,88 → wandlock@144,64 (t 3; open Y, reset Y): reflects off it closed (t1462); enters it open (t1566)
+  B L39 spinner@112,88 → wandlock@144,48 (t 4; open Y, reset Y): enters it open (t1599)
+  B L39 spinner@112,88 → wandlock@144,32 (t 5; open Y, reset Y): enters it open (t1622)
+  B L39 spinner@112,88 → cover@144,112 (t 0; open Y, reset Y): reflects off it closed (t51); enters it open (t51)
+  B L39 spinner@112,88 → cover@176,144 (t 1; open Y, reset Y): reflects off it closed (t313); enters it open (t332)
+  B L39 spinner@112,88 → cover@112,144 (t 2; open Y, reset Y): enters it open (t245)
+  B L39 spinner@112,88 → wandlock@48,160 (t 1; open Y, reset Y): reflects off it closed (t4899)
+  B L39 spinner@224,112 → wandlock@144,64 (t 3; open Y, reset Y): reflects off it closed (t3538); enters it open (t14796)
+  B L39 spinner@224,112 → wandlock@144,48 (t 4; open Y, reset Y): enters it open (t14829)
+  B L39 spinner@224,112 → wandlock@144,32 (t 5; open Y, reset Y): enters it open (t14852)
+  B L39 spinner@224,112 → cover@144,112 (t 0; open Y, reset Y): reflects off it closed (t15107); enters it open (t14659)
+  B L39 spinner@224,112 → cover@176,144 (t 1; open Y, reset Y): reflects off it closed (t744); enters it open (t3850)
+  B L39 spinner@224,112 → cover@112,144 (t 2; open Y, reset Y): reflects off it closed (t686); enters it open (t686)
+  B L39 spinner@224,112 → wandlock@48,160 (t 1; open Y, reset Y): reflects off it closed (t1145)
+  B L39 spinner@224,208 → wandlock@144,64 (t 3; open Y, reset Y): reflects off it closed (t326); enters it open (t10498)
+  B L39 spinner@224,208 → wandlock@144,48 (t 4; open Y, reset Y): enters it open (t10531)
+  B L39 spinner@224,208 → wandlock@144,32 (t 5; open Y, reset Y): enters it open (t10553)
+  B L39 spinner@224,208 → cover@144,112 (t 0; open Y, reset Y): reflects off it closed (t221); enters it open (t221)
+  B L39 spinner@224,208 → cover@176,144 (t 1; open Y, reset Y): reflects off it closed (t9463); enters it open (t6260)
+  B L39 spinner@224,208 → cover@112,144 (t 2; open Y, reset Y): reflects off it closed (t15491); enters it open (t1687)
+  B L39 spinner@224,208 → wandlock@48,160 (t 1; open Y, reset Y): reflects off it closed (t9063)
+  A L40 pushableblockfire@480,480 → wandlock@176,80 (t 1; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@208,128 (t 0; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@208,144 (t 0; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@208,160 (t 0; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@176,208 (t 1; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@480,560 (t 3; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@448,432 (t 2; open Y, reset Y): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@512,480 (t 2; open Y, reset Y): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@800,400 (t 5; open Y, reset Y): block reaches the box
+  A L40 pushableblockfire@480,480 → bosslock@480,352 (t -1; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@176,80 (t 1; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@208,128 (t 0; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@208,144 (t 0; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@208,160 (t 0; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@176,208 (t 1; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@480,560 (t 3; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@448,432 (t 2; open Y, reset Y): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@512,480 (t 2; open Y, reset Y): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@800,400 (t 5; open Y, reset Y): block reaches the box
+  A L40 pushableblockfire@576,576 → bosslock@480,352 (t -1; open Y, reset n): block reaches the box
+  B L40 spinner@192,144 → wandlock@176,80 (t 1; open Y, reset n): enters it open (t7900)
+  B L40 spinner@192,144 → wandlock@208,128 (t 0; open Y, reset n): reflects off it closed (t7); enters it open (t7)
+  B L40 spinner@192,144 → wandlock@208,144 (t 0; open Y, reset n): reflects off it closed (t59); enters it open (t6391)
+  B L40 spinner@192,144 → wandlock@208,160 (t 0; open Y, reset n): reflects off it closed (t85); enters it open (t6395)
+  B L40 spinner@192,144 → wandlock@176,208 (t 1; open Y, reset n): enters it open (t382)
+  B L40 spinner@192,128 → wandlock@208,128 (t 0; open Y, reset n): reflects off it closed (t7); enters it open (t7)
+  B L40 spinner@192,128 → wandlock@208,144 (t 0; open Y, reset n): reflects off it closed (t33); enters it open (t27)
+  B L40 spinner@192,128 → wandlock@208,160 (t 0; open Y, reset n): reflects off it closed (t59); enters it open (t861)
+  B L40 spinner@192,160 → wandlock@176,80 (t 1; open Y, reset n): enters it open (t16005)
+  B L40 spinner@192,160 → wandlock@208,128 (t 0; open Y, reset n): reflects off it closed (t33); enters it open (t28)
+  B L40 spinner@192,160 → wandlock@208,144 (t 0; open Y, reset n): reflects off it closed (t7); enters it open (t7)
+  B L40 spinner@192,160 → wandlock@208,160 (t 0; open Y, reset n): enters it open (t2023)
+  B L40 spinner@192,160 → wandlock@176,208 (t 1; open Y, reset n): enters it open (t13272)
+  B L40 spinner@880,848 → wandlock@480,560 (t 3; open Y, reset n): reflects off it closed (t1306); enters it open (t1306)
+  B L40 spinner@880,848 → bosslock@480,352 (t -1; open Y, reset n): enters it open (t1600)
+  A L41 pushableblockfire@112,144 → cover@112,128 (t 0; open Y, reset Y): block reaches the box
+delivered (playthrough AP_1, p4g): levels 116; rooms with a reader and a responder 7; (A) 42 pair(s) [reset-capable 28]; (B) 43 pair(s) [reset-capable 23]
+  B L18 spinner@48,96 → lock@144,112 (t -1; open Y, reset n): reflects off it closed (t2602); enters it open (t2602)
+  B L18 spinner@112,48 → lock@144,112 (t -1; open Y, reset n): reflects off it closed (t191); enters it open (t191)
+  A L39 pushableblockfire@144,176 → wandlock@144,64 (t 3; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@144,176 → wandlock@144,48 (t 4; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@144,176 → wandlock@144,32 (t 5; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@144,176 → cover@144,112 (t 0; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@144,176 → cover@176,144 (t 1; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@144,176 → cover@112,144 (t 2; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@144,176 → wandlock@48,160 (t 1; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@208,80 → wandlock@144,64 (t 3; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@208,80 → wandlock@144,48 (t 4; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@208,80 → wandlock@144,32 (t 5; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@208,80 → cover@144,112 (t 0; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@208,80 → cover@176,144 (t 1; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@208,80 → cover@112,144 (t 2; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@208,80 → wandlock@48,160 (t 1; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@48,176 → wandlock@144,64 (t 3; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@48,176 → wandlock@144,48 (t 4; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@48,176 → wandlock@144,32 (t 5; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@48,176 → cover@144,112 (t 0; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@48,176 → cover@176,144 (t 1; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@48,176 → cover@112,144 (t 2; open Y, reset Y): block reaches the box
+  A L39 pushableblockfire@48,176 → wandlock@48,160 (t 1; open Y, reset Y): block reaches the box
+  B L39 spinner@112,88 → wandlock@144,64 (t 3; open Y, reset Y): reflects off it closed (t1462); enters it open (t1566)
+  B L39 spinner@112,88 → wandlock@144,48 (t 4; open Y, reset Y): enters it open (t1599)
+  B L39 spinner@112,88 → wandlock@144,32 (t 5; open Y, reset Y): enters it open (t1622)
+  B L39 spinner@112,88 → cover@144,112 (t 0; open Y, reset Y): reflects off it closed (t51); enters it open (t51)
+  B L39 spinner@112,88 → cover@176,144 (t 1; open Y, reset Y): reflects off it closed (t313); enters it open (t332)
+  B L39 spinner@112,88 → cover@112,144 (t 2; open Y, reset Y): enters it open (t245)
+  B L39 spinner@112,88 → wandlock@48,160 (t 1; open Y, reset Y): reflects off it closed (t4899)
+  B L39 spinner@224,112 → wandlock@144,64 (t 3; open Y, reset Y): reflects off it closed (t3538); enters it open (t14796)
+  B L39 spinner@224,112 → wandlock@144,48 (t 4; open Y, reset Y): enters it open (t14829)
+  B L39 spinner@224,112 → wandlock@144,32 (t 5; open Y, reset Y): enters it open (t14852)
+  B L39 spinner@224,112 → cover@144,112 (t 0; open Y, reset Y): reflects off it closed (t15107); enters it open (t14659)
+  B L39 spinner@224,112 → cover@176,144 (t 1; open Y, reset Y): reflects off it closed (t744); enters it open (t3850)
+  B L39 spinner@224,112 → cover@112,144 (t 2; open Y, reset Y): reflects off it closed (t686); enters it open (t686)
+  B L39 spinner@224,112 → wandlock@48,160 (t 1; open Y, reset Y): reflects off it closed (t1145)
+  B L39 spinner@224,208 → wandlock@144,64 (t 3; open Y, reset Y): reflects off it closed (t326); enters it open (t10498)
+  B L39 spinner@224,208 → wandlock@144,48 (t 4; open Y, reset Y): enters it open (t10531)
+  B L39 spinner@224,208 → wandlock@144,32 (t 5; open Y, reset Y): enters it open (t10553)
+  B L39 spinner@224,208 → cover@144,112 (t 0; open Y, reset Y): reflects off it closed (t221); enters it open (t221)
+  B L39 spinner@224,208 → cover@176,144 (t 1; open Y, reset Y): reflects off it closed (t9463); enters it open (t6260)
+  B L39 spinner@224,208 → cover@112,144 (t 2; open Y, reset Y): reflects off it closed (t15491); enters it open (t1687)
+  B L39 spinner@224,208 → wandlock@48,160 (t 1; open Y, reset Y): reflects off it closed (t9063)
+  A L40 pushableblockfire@480,480 → wandlock@176,80 (t 1; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@208,128 (t 0; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@208,144 (t 0; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@208,160 (t 0; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@176,208 (t 1; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@480,560 (t 3; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@448,432 (t 2; open Y, reset Y): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@512,480 (t 2; open Y, reset Y): block reaches the box
+  A L40 pushableblockfire@480,480 → wandlock@800,400 (t 5; open Y, reset Y): block reaches the box
+  A L40 pushableblockfire@480,480 → bosslock@480,352 (t -1; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@176,80 (t 1; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@208,128 (t 0; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@208,144 (t 0; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@208,160 (t 0; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@176,208 (t 1; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@480,560 (t 3; open Y, reset n): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@448,432 (t 2; open Y, reset Y): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@512,480 (t 2; open Y, reset Y): block reaches the box
+  A L40 pushableblockfire@576,576 → wandlock@800,400 (t 5; open Y, reset Y): block reaches the box
+  A L40 pushableblockfire@576,576 → bosslock@480,352 (t -1; open Y, reset n): block reaches the box
+  B L40 spinner@192,144 → wandlock@176,80 (t 1; open Y, reset n): enters it open (t7900)
+  B L40 spinner@192,144 → wandlock@208,128 (t 0; open Y, reset n): reflects off it closed (t7); enters it open (t7)
+  B L40 spinner@192,144 → wandlock@208,144 (t 0; open Y, reset n): reflects off it closed (t59); enters it open (t6391)
+  B L40 spinner@192,144 → wandlock@208,160 (t 0; open Y, reset n): reflects off it closed (t85); enters it open (t6395)
+  B L40 spinner@192,144 → wandlock@176,208 (t 1; open Y, reset n): enters it open (t382)
+  B L40 spinner@192,128 → wandlock@208,128 (t 0; open Y, reset n): reflects off it closed (t7); enters it open (t7)
+  B L40 spinner@192,128 → wandlock@208,144 (t 0; open Y, reset n): reflects off it closed (t33); enters it open (t27)
+  B L40 spinner@192,128 → wandlock@208,160 (t 0; open Y, reset n): reflects off it closed (t59); enters it open (t861)
+  B L40 spinner@192,160 → wandlock@176,80 (t 1; open Y, reset n): enters it open (t16005)
+  B L40 spinner@192,160 → wandlock@208,128 (t 0; open Y, reset n): reflects off it closed (t33); enters it open (t28)
+  B L40 spinner@192,160 → wandlock@208,144 (t 0; open Y, reset n): reflects off it closed (t7); enters it open (t7)
+  B L40 spinner@192,160 → wandlock@208,160 (t 0; open Y, reset n): enters it open (t2023)
+  B L40 spinner@192,160 → wandlock@176,208 (t 1; open Y, reset n): enters it open (t13272)
+  B L40 spinner@816,848 → wandlock@208,128 (t 0; open Y, reset n): enters it open (t7671)
+  B L40 spinner@816,848 → wandlock@208,144 (t 0; open Y, reset n): enters it open (t7649)
+  B L40 spinner@816,848 → wandlock@208,160 (t 0; open Y, reset n): enters it open (t7738)
+  B L40 spinner@816,848 → wandlock@480,560 (t 3; open Y, reset n): reflects off it closed (t1428); enters it open (t1428)
+  B L40 spinner@816,848 → wandlock@448,432 (t 2; open Y, reset Y): enters it open (t1630)
+  B L40 spinner@816,848 → wandlock@512,480 (t 2; open Y, reset Y): enters it open (t6426)
+  B L40 spinner@816,848 → bosslock@480,352 (t -1; open Y, reset n): enters it open (t6730)
+  A L41 pushableblockfire@112,144 → cover@112,128 (t 0; open Y, reset Y): block reaches the box
+generated seedling_generated_chestdoor/AP_1 (3 rooms): levels 3; rooms with a reader and a responder 0; (A) 0 pair(s) [reset-capable 0]; (B) 0 pair(s) [reset-capable 0]
+generated seedling_generated_host/AP_1 (2 rooms): levels 2; rooms with a reader and a responder 0; (A) 0 pair(s) [reset-capable 0]; (B) 0 pair(s) [reset-capable 0]
+generated seedling_generated_leaf/AP_1 (2 rooms): levels 2; rooms with a reader and a responder 0; (A) 0 pair(s) [reset-capable 0]; (B) 0 pair(s) [reset-capable 0]
+generated seedling_generated_room/AP_1 (3 rooms): levels 3; rooms with a reader and a responder 0; (A) 0 pair(s) [reset-capable 0]; (B) 0 pair(s) [reset-capable 0]
+generated seedling_generated_swim/AP_1 (2 rooms): levels 2; rooms with a reader and a responder 0; (A) 0 pair(s) [reset-capable 0]; (B) 0 pair(s) [reset-capable 0]
+generator sweep (skeleton records; kinds empty,winding,branchy,bushy,loopy,open,rooms; seeds 1..40; elements weighgate,holdgate,killgate,shortcut,none): placed 986, rooms 986, with a reader and a responder 368; (A) 32 [reset-capable 32]; (B) 209 [reset-capable 0]
+  A weighgate pushableblock → lock t≥0 reset Y: 32
+  B killgate spinner → lock t-1 reset n: 209
+  e.g. empty weighgate seed 3: pushableblock@32,112 → lock@64,64 (t 29): block reaches the box
+  e.g. empty weighgate seed 6: pushableblock@32,32 → lock@48,16 (t 24): block reaches the box
+  e.g. empty weighgate seed 9: pushableblock@48,48 → lock@16,80 (t 44): block reaches the box
+  e.g. empty weighgate seed 11: pushableblock@32,48 → lock@48,32 (t 25): block reaches the box
+  e.g. empty weighgate seed 13: pushableblock@32,32 → lock@16,96 (t 33): block reaches the box
+  e.g. empty weighgate seed 14: pushableblock@64,32 → lock@16,64 (t 42): block reaches the box
+  e.g. empty weighgate seed 17: pushableblock@64,32 → lock@16,64 (t 53): block reaches the box
+  e.g. empty weighgate seed 20: pushableblock@64,80 → lock@96,48 (t 47): block reaches the box
+  e.g. empty weighgate seed 21: pushableblock@32,32 → lock@16,112 (t 33): block reaches the box
+  e.g. empty weighgate seed 24: pushableblock@48,32 → lock@16,96 (t 43): block reaches the box
+  e.g. empty weighgate seed 29: pushableblock@64,64 → lock@80,48 (t 46): block reaches the box
+  e.g. winding weighgate seed 16: pushableblock@64,96 → lock@80,64 (t 48): block reaches the box

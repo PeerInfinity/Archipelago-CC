@@ -1,0 +1,1940 @@
+{
+ "files": 322,
+ "throws": 1,
+ "hit": 0,
+ "byReader": {},
+ "rows": [
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/bobiframe-witness/l40-chest-l39-s5222-default.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/bobiframe-witness/l40-chest-l39-s5222-walls.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-bw-bombstand-witness/hammer-bw-l42-381-bombstand.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-d-ghostwall-witness/hammer-d-l39-ghostwall.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-dd-walkkill-witness/hammer-dd-l30-walkkill.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-g1-ghostkill-witness/hammer-g1-l40-ghostkill.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-sf-strikefloor-witness/hammer-sf-l40-strikefloor.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l74-phase-a.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-fade-stand-86.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-fade-stand.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-fresh-stand.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-k4-stand.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-k8.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-k9-rebuild.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-leg649.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-survey195-on.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l1516-witness/l16-corner-pit-solve.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l25apitem-witness/step34-on.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40contact-spinnerwall-witness/l40contact-378-ghost-puncher.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40contact-spinnerwall-witness/l40contact-a-sword-floorplan.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40contact-spinnerwall-witness/l40contact-a-sword-spinnerwall.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40guard-witness/l40guard-band-moot.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40guard-witness/l40guard-diag-strike.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40guard-witness/l40guard-spinner-los.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40guard-witness/l40guard-walk-east.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/refuted/dash-l16-sword-refuted.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/refuted/r8-solve-5.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": "the player entered Water in level 5 at (47.00324793668, 56.39999999999999) on a tape that does not pin \"sound\". `Player.as:530` adds `0.25 * int(Music.soundPosi"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/static-sword-witness/c1-l36-sandtraps.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/static-sword-witness/c1-l62-turret.tape.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l12-witch-reported.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l12-witch-server-sword.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l12-witch-slot-held.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l32-both-reported.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l32-fresh-fire-held.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l32-fresh-no-fire.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l32-killed-drop-held.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l43-totem-no-parts.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/axe-l48-reach-l49.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/axe-l61-reach-l62.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/axe-l61-reach-l63.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/axe-l71-reach-l76.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/bobsoldier-corpse.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/bobsoldier-kill.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/bobsoldier-sword.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/bobsoldier2-l30-dash-stance.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/bobsoldier2-l30-torch.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/burn-l24-reach-exit.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/burn-l44-reach-exit.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/cancross-l16-sword-none.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/collide-up-rock.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/cross-level-leg.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/crusher-l42-round-trip.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/dash-l16-sword-all.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/diagonal-run.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/direction-flip.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/enc-l12-witch.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/enc-l32-fallen-door.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/enc-l32-live-arrival.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f1-l5-lock-removal.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f1-l5-open-lock-bait.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f1c-l18-lock-removal.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f1c-l18-phase42.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f4-l8-sandtraps.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f6-l17-reentry.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f6-l2-reentry.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f6-l20-reentry.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f7-l16-reentry.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f7-l16-walkin.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/friction-stop.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/frontier3-l62-door-niche.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/frontier3-l87-pocket.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/ghostmotion-l102-axis.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/ghostmotion-l102-diag.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/ghostsword-l3-rock.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/ghostsword-l3-rockghost.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/ghostsword-l30-bobsoldier.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/grant-sword-room.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/hammer-a-l18-escape15.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/hammer-a-l18-escape21.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/hammer-b1-l18-approach40.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/hammer-b2-l18-fight40.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/hammer-c2-l18-ghostspinner.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/hazard-boot-pit.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/hazard-walk-water.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l100-sliver-rock.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l12keyline-134-round.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l14-swordless-detour.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l30keylock-pit224-before.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l30keylock-pit224.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l30keylock-pit240.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l71-button-lock.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l71-hold-101-shut.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l71-hold-102-open.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l71-lock-shut.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l71-shieldlock-open.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l71-shieldlock-shut.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/ladder2-l104-beam.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/ladder2-l59-grenade.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/lightpole-l101-ghost.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/lightpole-l101-spear.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-83.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l29-key-return.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-chest.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-reach-l39.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l40-turret-contact.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l40-turret-volley.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/pushblock-l65-reach-l63.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/pushblock-l65-reach-l68.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/pushblock-l65-sword-press.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r1-dark-shield-bobboss.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r1-dark-shield-kill.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r1-dark-shield-spinner.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r1-dark-suit-bob.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r1-dark-suit-kill.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r1-dark-suit-spinner.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-terrain-killlock.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-two-teleporters.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-1-sword-shield.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-2-feather.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-3-darksword-torch.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-4-spear.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-5-darkshield.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-6-darksuit.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-full.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-wallflyer-contact.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-wallflyer-suit.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-bobboss-death.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-darkshield.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-darksuit.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-feather.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-shield.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-spear.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-sword.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-torch.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-drown.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-lava.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-pit-death.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-1-sword.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-2-feather.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-3-torch.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-4-spear.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-5-darkshield.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-6-darksuit.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-full.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-iceturret-bobs.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-1-sword.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-2-feather.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-3-torch.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-4-approach.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-5-spear.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-6-health.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-full.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-bobboss-arm.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-bobboss-fire-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-bobboss-fire.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-bosskey-leg.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-bosskey-lock-shut.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-contact-control-off.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-contact-control-on.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-d5-conch.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-feather.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-karlore-fire.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-karlore-plug.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l37-burn-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l37-burn.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l38-fade-boot.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l38-fade-door.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-join-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-join.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part1.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l41-part3-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l41-part3.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l42-part4-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l42-part4.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l43-wand-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l43-wand.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l60-kill-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l60-kill.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-press-delay-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-press-delay.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-press-glide.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-press-repeat.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-swim-cross.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-swim-drown.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-swim-latch.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-waterfall-climb.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-waterfall-shut.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-contact-pair-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-contact-pair-heart.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-contact-pair-live.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-contact-pair-standing.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-final-door-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-final-door.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-owl-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-owl-kill.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-seed-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-seed-credits.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-shield-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-shield-kill.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-totem-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-totem-kill.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-watcher-blood-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-watcher-blood.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-watcher-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-watcher-talk.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-5.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-6.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-full.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r7-ends-meet-1.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r7-ends-meet-2.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r7-ends-meet-full.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-19.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-20.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-hammer-arm.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-hammer-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-l18-spinner-press.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-l6-bob-contact.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-1.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-10.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-11.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-18.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-2.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-20.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-3.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-4.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-5.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-6.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-7.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-8.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-9.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-l0-sword-dash-rest.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-l0-sword-dash.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-l6-bob-press.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-l6-harmless-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-l6-harmless-press.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-l6-sword-dash-hit.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-0-v3.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-0.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-11.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-12.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-13-v2.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-13.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-14.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-15.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-16.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-18.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-19.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-2.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-20.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-21.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-22.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-29.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-3.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-30.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-31.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-32.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/return-l15-conch.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/return-l15-reentry-unclear.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/return-l15-reentry.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/return-l15-walkin.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/robust-l16-l18-sword-conch.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/robust-l16-sword-idle1.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/rulesref-l66-door.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/sealdoor-l113-clear.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/sealdoor-l113-exit.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/sealdoor-l113-noseal-control.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/shuffle-stop.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/slots-l24-burn-cut-110.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/slots-l24-burn-cut-80.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/slots-l24-burn-fencepost.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/slots-l24-burn-fire-first.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/slots-l24-fire-first.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/stance-l46-chest.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/stance-l48-chest.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/stance-l48-keylock-north.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/stance-l48-keylock-open.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/stance-l48-keylock-south.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/statue-press.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/straight-run.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/swim-u5-bobboss-encounter.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/thread-the-gap.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/transition-west-return.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u10-puncher-dwell-refused.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u10-puncher-dwell.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u11-dark-shield-bob.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u11-dark-shield-puncher.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u11-facing-knockback.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u11-facing-puncher.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u12-pull-carry.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u12-pull-cross.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u14-moonrock-beam.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u14-moonrock-set.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u15-turret-shield.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u15-turret-spit.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u7-puncher-kill.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u7-puncher-punch.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u9-shield-bob-shove.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u9-shield-bob-standing.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u9-shield-puncher.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/wall-slide.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/wallflyer-kill-flight.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/wallflyer-kill.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/wallflyer-shield-bump.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/watcher-l114-silent.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/watcher-l114-talk.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/watcher-l37-reach-l38.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/watcher-l37-reach-l44.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/watcher-l37-silent-lean.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/watchertalk-l114-clear-16.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/watchertalk-l114-clear-32.json",
+   "hits": 0,
+   "ticks": [],
+   "error": null
+  }
+ ]
+}
