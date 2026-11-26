@@ -2112,7 +2112,7 @@
             "id": "region-map-seedling-paints",
             "enabled": true,
             "category": "Region Map: Seedling",
-            "_comment": "REGION MAP step 3b (2026-11-15): seedling_playthrough — N cells = the layout's display regions, the art bakes, squares = the visible levels' tiles (>= minSquarePx at the minimum zoom), the cell-size toggle. Batch playback-bot (on push). Counts derived at run time."
+            "_comment": "REGION MAP step 3b (2026-11-15): seedling_playthrough — N cells = the layout's display regions, the art bakes, squares = the visible levels' tiles (at the minimum zoom: never larger than their tile, a 1 px dot at least; tiled-squares-cap 2026-11-24), the cell-size toggle. Batch playback-bot (on push). Counts derived at run time."
         },
         {
             "id": "region-map-follow-player",
@@ -2251,6 +2251,18 @@
             "enabled": true,
             "category": "Region Graph",
             "_comment": "REGION GRAPH CHECKS (2026-11-18): the location-node rebuild bug. force-show written through the settings draws the location nodes, and a later moduleSettings.regionGraph.* write (which rebuilds the graph) leaves them drawn; restores both settings. On push (fast batch)."
+        },
+        {
+            "id": "test_region_graph_sub_region_nested",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "REGION GRAPH GROUPS A (2026-11-23): on seedling_atlas (11 regions, 2 boxes: moved off seedling_playthrough, whose 307-region load cost fast ~20 s; its 60/251/56 counts are pinned by subRegionView.nested.test.js), subRegionView = nested (set session-only by the row, restored at its end) draws one compound box per display group of 2+ (count DERIVED from the same fold at run time), members inside; a box tap runs no click, a member tap runs its click action (default actions: the path extends to it) once; restored, the graph draws no box. Runs right before test_region_graph_click_default. Reloads the world loaded before. On push (fast batch)."
+        },
+        {
+            "id": "test_region_graph_sub_region_merged",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "REGION GRAPH GROUPS B (2026-11-24): on seedling_atlas (11 regions, 2 groups: the nested row's world), subRegionView = merged (set session-only by the row, restored at its end) draws one node per display group of 2+ in place of its members (counts DERIVED from the same fold at run time), no self-loop; a tap on a group node runs the REGION click on regionOfCell(key, members), the Region Map's rule, published once; restored, every region is its own node. Runs right after test_region_graph_sub_region_nested, before test_region_graph_click_default. Reloads the world loaded before. On push (fast batch)."
         },
         {
             "id": "test_region_graph_click_default",
@@ -2439,6 +2451,12 @@
             "_comment": "loop-mode-bot S1: the Playback Bot plays a PLAIN rules.json directly (Adventure, loop mode off, no substrate, no controller): its own checks and moves, counted only when they land. Done = every sphere-log location checked. Fast batch."
         },
         {
+            "id": "playback-bot-tile-kinds-demo",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "Content sets GEN-2: the committed tile_kinds_demo preset (the \"Randomly placed tiles\" maze biome: the furniture pack's rugs and pillars in a scattered 2 : classic 1 mix over Adventure) played to the end by the bot through the maze controller, loop mode off; every sphere-log location checked, and the Maze Room panel's art stack takes the recorded exists pack. Batch playback-bot (on push)."
+        },
+        {
             "id": "playback-bot-walk-order",
             "enabled": true,
             "category": "Playback Bot",
@@ -2534,6 +2552,18 @@
             "enabled": true,
             "category": "Rule Converter",
             "_comment": "helper-script P4: the Rule Converter's Exact engine — real exporter analyzer + world_generator under Pyodide (CDN, booted on the first Convert). A helper script both ways through the Convert buttons, and the loaded alttp_worldgen preset's 36 helpers round-trip with its options. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
+            "id": "mystery-bridge-round-trip",
+            "enabled": true,
+            "category": "Mystery Bridge",
+            "_comment": "The Mystery Game module (modules/mysteryArchipelago, disabled by default; the row enables it and puts it back, and points its page address at a stand-in page for the session, modules/mysteryArchipelago/testPage/, not the real game). Enabling opens the panel; loading the committed mystery_custom_house_fire preset makes the panel frame the case: state on request, a solved question as a check that comes back solved, a repeat, and refusals by name. No server, so it is the host's offline path. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
+            "id": "mystery-real-page-handshake",
+            "enabled": true,
+            "category": "Mystery Bridge",
+            "_comment": "The Mystery Game module at its DEFAULT page address: this app's own copy of the game (the git submodule modules/mystery-clue-game), not the stand-in. The row enables the module, loads the committed mystery_custom_house_fire preset and reads the host's side only: the game's page asked with the story and version the world has, a state went back, nothing was refused. With mysteryArchipelago/mysteryPin.test.js it is the live half of the pin between the submodule and the world. Category unclaimed by testBatches.js, so batch fast (on push)."
         },
         {
             "id": "document-library-idb",

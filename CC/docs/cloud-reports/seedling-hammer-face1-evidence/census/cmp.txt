@@ -1,0 +1,78 @@
+   365 level_40__r26c13 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+       OFF SOLVED 172t h0 work 85 sha 0e6382f3d6be | ON SOLVED 172t h0 work 85 sha 0e6382f3d6be
+   366 level_40__r26c13 <- in_L39_144_0 -> exit:out_teleporter_480_912
+       OFF SOLVED 4t h0 work 9 sha 8a0bca2bf881 | ON SOLVED 4t h0 work 9 sha 8a0bca2bf881
+   367 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_20
+       OFF SOLVED 861t h0 work 105 sha 0f37aba2f2bd | ON SOLVED 861t h0 work 105 sha 0f37aba2f2bd
+   368 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_20
+       OFF SOLVED 913t h0 work 157 sha 547b5fa393e3 | ON SOLVED 913t h0 work 157 sha 547b5fa393e3
+   369 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_13_20
+       OFF SOLVED 1025t h0 work 175 sha 22772dcc478f | ON SOLVED 1025t h0 work 175 sha 22772dcc478f
+   370 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_14_20
+       OFF SOLVED 1088t h0 work 181 sha 4c47347a4501 | ON SOLVED 1088t h0 work 181 sha 4c47347a4501
+   371 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_21
+       OFF SOLVED 844t h0 work 103 sha cdf7e756ab21 | ON SOLVED 844t h0 work 103 sha cdf7e756ab21
+   372 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_21
+       OFF SOLVED 955t h0 work 425 sha 0728087d2e8e | ON SOLVED 955t h0 work 425 sha 0728087d2e8e
+   373 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_13_21
+       OFF SOLVED 1034t h0 work 482 sha 66a142b6e05a | ON SOLVED 1034t h0 work 482 sha 66a142b6e05a
+   374 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_14_21
+       OFF SOLVED 1156t h0 work 525 sha a7534c90edc4 | ON SOLVED 1156t h0 work 525 sha a7534c90edc4
+   375 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_22
+       OFF SOLVED 828t h0 work 101 sha bdc16eb4830d | ON SOLVED 828t h0 work 101 sha bdc16eb4830d
+   376 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_22
+       OFF SOLVED 938t h0 work 420 sha 13c04cdbac99 | ON SOLVED 938t h0 work 420 sha 13c04cdbac99
+   377 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_23
+       OFF SOLVED 809t h0 work 99 sha 6ed397ccf5d1 | ON SOLVED 809t h0 work 99 sha 6ed397ccf5d1
+   378 level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_23
+       OFF SOLVED 909t h0 work 388 sha bcb9607f962d | ON SOLVED 909t h0 work 388 sha bcb9607f962d
+   379 level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+       OFF SOLVED 494t h0 work 65 sha 48af88b77736 | ON SOLVED 494t h0 work 65 sha 48af88b77736
+   380 level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest
+       OFF SOLVED 1022t h0 work 1361 sha f49dcbbcd357 | ON SOLVED 1022t h0 work 1361 sha f49dcbbcd357
+   381 level_40__r26c13 <- in_L43_176_464 -> exit:out_stairsdown_320_576
+       OFF SOLVED 5t h0 work 9 sha 28df935c1e6d | ON SOLVED 5t h0 work 9 sha 28df935c1e6d
+   382 level_40__r26c13 <- in_L43_176_464 -> exit:out_teleporter_480_912
+       OFF SOLVED 417t h0 work 142 sha fdccb59beb05 | ON SOLVED 417t h0 work 142 sha fdccb59beb05
+   383 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_20
+       OFF SOLVED 416t h0 work 153 sha 53c34f6f8f1f | ON SOLVED 416t h0 work 153 sha 53c34f6f8f1f
+   384 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_20
+       OFF SOLVED 480t h0 work 188 sha 7831c9d3e4ba | ON SOLVED 480t h0 work 188 sha 7831c9d3e4ba
+   385 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_13_20
+       OFF SOLVED 642t h0 work 208 sha 0059571acbd2 | ON SOLVED 642t h0 work 208 sha 0059571acbd2
+   386 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_14_20
+       OFF SOLVED 718t h0 work 216 sha beae296fd5e7 | ON SOLVED 718t h0 work 216 sha beae296fd5e7
+   387 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_21
+       OFF SOLVED 482t h0 work 153 sha 9eacb4052e24 | ON SOLVED 482t h0 work 153 sha 9eacb4052e24
+   388 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_21
+       OFF SOLVED 527t h0 work 191 sha ffe03ede6195 | ON SOLVED 527t h0 work 191 sha ffe03ede6195
+   389 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_13_21
+       OFF SOLVED 598t h0 work 206 sha 9d95c7d9a313 | ON SOLVED 598t h0 work 206 sha 9d95c7d9a313
+   390 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_14_21
+       OFF SOLVED 637t h0 work 211 sha cb7f0ac43bab | ON SOLVED 637t h0 work 211 sha cb7f0ac43bab
+   391 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_22
+       OFF SOLVED 340t h0 work 147 sha 3fa95dc85228 | ON SOLVED 340t h0 work 147 sha 3fa95dc85228
+   392 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_22
+       OFF SOLVED 476t h0 work 186 sha 53cd33a04930 | ON SOLVED 476t h0 work 186 sha 53cd33a04930
+   393 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_23
+       OFF SOLVED 433t h0 work 148 sha 57c3f15c207b | ON SOLVED 433t h0 work 148 sha 57c3f15c207b
+   394 level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_23
+       OFF SOLVED 499t h0 work 184 sha 0b9b919007e6 | ON SOLVED 499t h0 work 184 sha 0b9b919007e6
+   395 level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+       OFF SOLVED 118t h0 work 73 sha 06bbaa77ed63 | ON SOLVED 118t h0 work 73 sha 06bbaa77ed63
+   396 level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Chest
+       OFF SOLVED 1144t h0 work 641 sha 42264c18b45f | ON SOLVED 1144t h0 work 641 sha 42264c18b45f
+   860 level_40__r23c29 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 8: bosslock@480,352 cleared
+       OFF SOLVED 718t h0 work 1482 sha 9aed48bc48c1 | ON SOLVED 718t h0 work 1482 sha 9aed48bc48c1
+   861 level_40__r23c29 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 8: bosslock@480,352 cleared
+       OFF SOLVED 559t h0 work 312 sha 0901f6157f19 | ON SOLVED 559t h0 work 312 sha 0901f6157f19
+   862 level_40__r32c36 <- in_L39_144_0 ~> level_40__r26c13 -> location:Level 040 - Boss Key 2
+       OFF SOLVED 4491t h0 work 2561 sha 3f37a7cad556 | ON SOLVED 4491t h0 work 2561 sha 3f37a7cad556
+   863 level_40__r32c36 <- in_L43_176_464 ~> level_40__r26c13 -> location:Level 040 - Boss Key 2
+       OFF SOLVED 4308t h0 work 1706 sha 972936ae8761 | ON SOLVED 4308t h0 work 1706 sha 972936ae8761
+   864 level_40__r48c54 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+       OFF SOLVED 1101t h0 work 1782 sha 2e4ae7cbf0c3 | ON SOLVED 1101t h0 work 1782 sha 2e4ae7cbf0c3
+   865 level_40__r48c54 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+       OFF SOLVED 1132t h0 work 1742 sha 643daa40674a | ON SOLVED 1132t h0 work 1742 sha 643daa40674a
+
+OFF {"SOLVED":38} | ON {"SOLVED":38} | moved 0 | gained a hit 0

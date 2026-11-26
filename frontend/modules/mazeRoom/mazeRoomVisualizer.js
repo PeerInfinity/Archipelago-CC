@@ -153,6 +153,11 @@ export class MazeRoomVisualizer {
         this._regionId = regionId ?? null;
     }
 
+    /** The AP region the visualizer's world is bound to (null with no world). */
+    get regionId() {
+        return this._regionId;
+    }
+
     setWorld(world, regionId, { freshStart = false, spawnAt = null } = {}) {
         const same = this._world === world && this._regionId === regionId;
         this._world = world ?? null;

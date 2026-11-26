@@ -5,6 +5,11 @@ import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { runClickActions, clickStatusOf, REGION_CLICKED, LOCATION_CLICKED } from '../regionView/clickActions.js';
 import { REGION_GRAPH_ORIGINATORS } from './regionGraphOriginators.js';
+import {
+  isRegionGroupNode, graphNodeIdOf, pathNodeSteps, mergedNodeHoverText, mergedEdgeHoverText, GROUP_CLASS, MERGED_CLASS,
+  HOVER_BOX_STYLE,
+} from './subRegionGroups.js';
+import { regionOfCell } from '../regionView/regionViewModel.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -18,23 +23,7 @@ export class GraphInteractionManager {
   }
 
   setupEventHandlers() {
-    this.ui.cy.on('tap', 'node', (evt) => {
-      const node = evt.target;
-
-      // Skip if this is the player node
-      if (node.hasClass('player')) {
-        return;
-      }
-
-      // Handle location node clicks
-      if (node.hasClass('location-node')) {
-        this.handleLocationNodeClick(node);
-        return; // Don't process as region node
-      }
-
-      // Handle region node clicks
-      this.handleRegionNodeClick(node);
-    });
+    this.ui.cy.on('tap', 'node', (evt) => this.onNodeTap(evt.target));
 
     this.ui.cy.on('layoutstop', () => {
       // Keep isLayoutRunning true during animation to prevent premature player positioning
@@ -77,7 +66,7 @@ export class GraphInteractionManager {
     // first so only one region's set is up at a time. Empty graph area
     // and the location ring itself don't trigger hide — locations only
     // disappear when entering a different region or leaving the panel.
-    this.ui.cy.on('mouseover', 'node.region', (evt) => {
+    this.ui.cy.on('mouseover', `node.region, node.${MERGED_CLASS}`, (evt) => {
       if (this.ui.locationVisibilityMode !== 'hover') return;
       const node = evt.target;
       if (node.hasClass('player') || node.hasClass('location-node')) return;
@@ -98,6 +87,24 @@ export class GraphInteractionManager {
         }
       });
     }
+
+    // A dragged group box (subRegionView = nested) moves its members: their location nodes follow. A dragged
+    // merged node (subRegionView = merged) carries its own ring.
+    this.ui.cy.on('drag dragfree', `node.${GROUP_CLASS}`, (evt) => {
+      if (isRegionGroupNode(evt.target, 'merged')) {
+        this.ui.updateLocationNodePositions(evt.target.id());
+        return;
+      }
+      for (const member of evt.target.data('members') ?? []) this.ui.updateLocationNodePositions(member);
+    });
+
+    // ⛓ merged: hovering a merged node lists its sub-regions; hovering an edge that stands for exits lists each exit
+    // with its own state (`hoverTextOf`).
+    this.ui.cy.on('mouseover', `node.${MERGED_CLASS}, edge[exits]`, (evt) => this.showHover(evt.target, evt.originalEvent));
+    this.ui.cy.on('mouseout', `node.${MERGED_CLASS}, edge[exits]`, () => this.hideHover());
+    // Leaving the canvas on an element fires no mouseout, and a pan / zoom moves the element from under the box.
+    this.ui.cy.on('pan zoom', () => this.hideHover());
+    this.ui.graphContainer?.addEventListener?.('mouseleave', () => this.hideHover());
 
     // Update location nodes when region nodes are dragged
     this.ui.cy.on('drag', 'node.region', (evt) => {
@@ -189,8 +196,8 @@ export class GraphInteractionManager {
    * state), publish the generic `regionView:regionClicked` (CA-S4), then run the panel's REGION click actions.
    * CA-S5 retired `regionGraph:nodeSelected`, which was published here first: nothing in the app heard it.
    */
-  handleRegionNodeClick(node) {
-    const regionName = node.id(); // Node ID is the region name
+  handleRegionNodeClick(node, regionName = node.id()) {
+    // Node ID is the region name; a merged group node (subRegionView = merged) is handed the member it acts on.
 
     this.ui.selectedNode = regionName;
 
@@ -245,12 +252,64 @@ export class GraphInteractionManager {
   }
 
 
+  /**
+   * A tap on a node: a location node runs the LOCATION click actions, a region node the REGION ones. The player
+   * marker and a group box (subRegionView = nested: a compound parent, not a region) run none.
+   * → the click's result, or null when nothing ran.
+   */
+  onNodeTap(node) {
+    if (node.hasClass('player') || isRegionGroupNode(node, 'box')) return null;
+    if (node.hasClass('location-node')) return this.handleLocationNodeClick(node);
+    // ⛓ merged: a group node ACTS, on the region the Region Map's cell click picks for that group.
+    if (isRegionGroupNode(node, 'merged')) return this.handleRegionNodeClick(node, this.regionOfGroupNode(node));
+    return this.handleRegionNodeClick(node);
+  }
+
+  /** The rules region a click on a merged group node acts on: `regionOfCell(key, members)` (the Region Map's rule). */
+  regionOfGroupNode(node) {
+    return regionOfCell(node.data('groupKey'), node.data('members') ?? []);
+  }
+
+  /** The hover text of a merged node or of an edge that stands for exits; null for anything else. */
+  hoverTextOf(ele) {
+    if (ele.isNode?.() && isRegionGroupNode(ele, 'merged')) {
+      return mergedNodeHoverText(ele.data('groupKey'), ele.data('members') ?? []);
+    }
+    if (ele.isEdge?.() && ele.data('exits')) return mergedEdgeHoverText(ele.data('exits'), ele.scratch('_rgExitStates') ?? []);
+    return null;
+  }
+
+  /** Show the hover box (one per panel, created on first use) with `ele`'s text, near the pointer. */
+  showHover(ele, originalEvent) {
+    const text = this.hoverTextOf(ele);
+    if (!text || typeof document === 'undefined') return;
+    if (!this.hoverBox) {
+      this.hoverBox = document.createElement('div');
+      this.hoverBox.className = 'rg-hover-box';
+      this.hoverBox.setAttribute('style', HOVER_BOX_STYLE);
+      this.hoverBox.style.position = 'fixed';
+      (this.ui.rootElement ?? document.body).appendChild(this.hoverBox);
+    }
+    this.hoverBox.textContent = text;
+    const x = originalEvent?.clientX ?? 0;
+    const y = originalEvent?.clientY ?? 0;
+    this.hoverBox.style.left = `${Math.max(0, Math.min(x + 24, (globalThis.innerWidth ?? 1e9) - 470))}px`;
+    this.hoverBox.style.top = `${y + 24}px`;
+    this.hoverBox.style.display = 'block';
+    this.hoverBox.dataset.for = ele.id();
+  }
+
+  hideHover() {
+    if (this.hoverBox) this.hoverBox.style.display = 'none';
+  }
+
   highlightCurrentRegion(regionName) {
     if (!this.ui.cy) return;
 
     this.ui.cy.nodes().removeClass('current');
 
-    const node = this.ui.cy.getElementById(regionName);
+    // ⛓ merged: the node that draws the region (its group node when it is a member).
+    const node = this.ui.cy.getElementById(graphNodeIdOf(this.ui, regionName));
     if (node && node.length > 0) {
       node.addClass('current');
     }
@@ -269,6 +328,18 @@ export class GraphInteractionManager {
 
       if (!fullPath || fullPath.length < 1) return;
 
+      // ⛓ merged: each region maps to the node that draws it, and a step inside one group draws nothing
+      // (`pathNodeSteps`). In every other view the map is the identity and this is the path as it was.
+      if (this.ui.mergedNodeOf) {
+        const moves = this.ui.currentPath;
+        const regionsOnPath = moves.length > 0
+          ? [...(moves[0].sourceRegion ? [moves[0].sourceRegion] : []), ...moves.map((m) => m.destinationRegion)] : [];
+        const steps = pathNodeSteps(regionsOnPath, this.ui.mergedNodeOf);
+        for (let i = 0; i < steps.length - 1; i++) {
+          this.ui.cy.edges(`[source="${steps[i]}"][target="${steps[i + 1]}"], [source="${steps[i + 1]}"][target="${steps[i]}"]`)
+            .addClass('in-path');
+        }
+      } else {
       // Highlight edge from start region to first destination
       if (this.ui.currentPath.length > 0 && this.ui.currentPath[0].sourceRegion) {
         const firstSource = this.ui.currentPath[0].sourceRegion;
@@ -290,6 +361,7 @@ export class GraphInteractionManager {
           edge.addClass('in-path');
         }
       }
+      }
 
       // Also highlight edges to checked locations in the path (only if location nodes are visible)
       if (this.ui.locationsVisible) {
@@ -300,7 +372,7 @@ export class GraphInteractionManager {
 
             if (locationNode && locationNode.length > 0) {
               // Highlight the edge from region to location
-              const edge = this.ui.cy.edges(`[source="${entry.sourceRegion}"][target="${locationNodeId}"]`);
+              const edge = this.ui.cy.edges(`[source="${graphNodeIdOf(this.ui, entry.sourceRegion)}"][target="${locationNodeId}"]`);
               if (edge && edge.length > 0) {
                 edge.addClass('in-path');
               }
@@ -439,7 +511,7 @@ export class GraphInteractionManager {
       const isDiscoveryModeActive = this.ui.isDiscoveryModeActive || false;
       const showUndiscoveredNames = this.ui.discoverySettings?.showUndiscoveredRegionNames || false;
       this.ui.cy.nodes().forEach(node => {
-        if (!node.hasClass('location-node') && !node.hasClass('player')) {
+        if (!node.hasClass('location-node') && !node.hasClass('player') && !isRegionGroupNode(node)) {
           const regionName = node.data('regionName') || node.id();
           if (isDiscoveryModeActive && !discoveryStateSingleton.isRegionDiscovered(regionName)) {
             if (showUndiscoveredNames && !node.hasClass('discovery-hidden')) {
@@ -459,6 +531,7 @@ export class GraphInteractionManager {
       // Show location labels if forced (at same zoom as region labels)
       this.ui.cy.style()
         .selector('node.region').style('label', 'data(label)')
+        .selector(`node.${GROUP_CLASS}`).style('label', 'data(label)')
         .selector('.location-node').style('label', forceShowLocationLabels ? 'data(label)' : '')
         .selector('edge').style('label', '')
         .update();
@@ -468,6 +541,7 @@ export class GraphInteractionManager {
       // Show location labels if forced (at same zoom as region labels)
       this.ui.cy.style()
         .selector('node.region').style('label', 'data(label)')
+        .selector(`node.${GROUP_CLASS}`).style('label', 'data(label)')
         .selector('.location-node').style('label', forceShowLocationLabels ? 'data(label)' : '')
         .selector('edge').style('label', '')
         .update();
@@ -477,6 +551,7 @@ export class GraphInteractionManager {
       // Apply all labels except location nodes (unless forced)
       this.ui.cy.style()
         .selector('node.region').style('label', 'data(label)')
+        .selector(`node.${GROUP_CLASS}`).style('label', 'data(label)')
         .selector('node.player').style('label', 'data(label)')
         .selector('.location-node').style('label', forceShowLocationLabels ? 'data(label)' : '')
         .selector('edge[label]').style('label', edgeLabelStyle)
@@ -487,6 +562,7 @@ export class GraphInteractionManager {
       this.updateRegionLabelsWithCounts();
       this.ui.cy.style()
         .selector('node.region').style('label', 'data(label)')
+        .selector(`node.${GROUP_CLASS}`).style('label', 'data(label)')
         .selector('node.player').style('label', 'data(label)')
         .selector('.location-node').style('label', forceShowLocationLabels ? 'data(label)' : '')
         .selector('edge[label]').style('label', edgeLabelStyle)
@@ -497,6 +573,7 @@ export class GraphInteractionManager {
       this.updateRegionLabelsWithCounts();
       this.ui.cy.style()
         .selector('node.region').style('label', 'data(label)')
+        .selector(`node.${GROUP_CLASS}`).style('label', 'data(label)')
         .selector('node.player').style('label', 'data(label)')
         .selector('.location-node').style('label', 'data(label)')
         .selector('edge[label]').style('label', edgeLabelStyle)
@@ -514,7 +591,7 @@ export class GraphInteractionManager {
     const showUndiscoveredNames = this.ui.discoverySettings?.showUndiscoveredRegionNames || false;
     const hasLabelProvider = !!getNodeLabelProvider();
     this.ui.cy.nodes().forEach(node => {
-      if (!node.hasClass('location-node') && !node.hasClass('player')) {
+      if (!node.hasClass('location-node') && !node.hasClass('player') && !isRegionGroupNode(node)) {
         const regionName = node.data('regionName') || node.id();
         // In discovery mode, undiscovered regions show ??? or name depending on setting
         if (isDiscoveryModeActive && !discoveryStateSingleton.isRegionDiscovered(regionName)) {

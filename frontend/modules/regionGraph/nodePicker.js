@@ -22,6 +22,7 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { pickerSelectors, setupGoToPicker } from '../regionView/goToPicker.js';
+import { isRegionGroupNode } from './subRegionGroups.js';
 
 export const PICKER = pickerSelectors('rg-pick');
 
@@ -43,11 +44,18 @@ export function pickerHTML() {
         </details>`;
 }
 
-/** The region nodes the graph shows: name → node. */
+/**
+ * The region nodes the graph shows: name → node. ⛓ subRegionView = merged (region-graph-groups-b): each member of a
+ * merged group node is listed by its own name, and resolves to the group node.
+ */
 function regionNodes(ui) {
     const out = new Map();
     ui.cy?.nodes().forEach((n) => {
         if (n.hasClass('player') || n.hasClass('location-node') || n.hasClass('discovery-hidden')) return;
+        if (isRegionGroupNode(n, 'merged')) {
+            for (const m of n.data('members') ?? []) out.set(m, n);
+            return;
+        }
         const name = n.data('regionName');
         if (name) out.set(name, n);
     });
@@ -83,7 +91,8 @@ export function setupNodePicker(ui) {
         goRegion: (name) => {
             const node = regionNodes(ui).get(name);
             if (!node) return say(`No region "${name}" in the graph.`);
-            ui.interactionManager.handleRegionNodeClick(node);
+            // The region chosen (a merged node's member is handed over by name: the click runs on IT).
+            ui.interactionManager.handleRegionNodeClick(node, name);
             centreOn(ui, node);
             say(`Went to region ${name}.`);
         },

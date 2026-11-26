@@ -50,16 +50,21 @@ export class ActionSearchError extends Error {
  * @param {boolean} [opts.ignoreMana]       treat mana as unlimited (the bot's "short by how much" question)
  * @param {object} [opts.start]             a start state other than `loopStartState(items)`
  * @param {number} [opts.budget]
+ * @param {boolean[]} [opts.allowed]       only these node indices may be performed (the planner's relevance cone,
+ *                                          `actionPlanner.js` `relevantNodes`); absent = every node
  * @returns {{start: object, entries: Array<{state: object, parent: number, via: number}>}}
  *   `entries[0]` is the start; each other entry was reached from `entries[parent]` by performing node `via`.
  */
-export function enumerateLoop(model, { items = {}, costs, ignoreMana = false, start, budget = DEFAULT_STATE_BUDGET } = {}) {
+export function enumerateLoop(model, {
+    items = {}, costs, ignoreMana = false, start, budget = DEFAULT_STATE_BUDGET, allowed,
+} = {}) {
     const first = start ?? loopStartState(model, items);
     const entries = [{ state: first, parent: -1, via: -1 }];
     const seen = new Set([stateKey(first)]);
     for (let head = 0; head < entries.length; head += 1) {
         const { state } = entries[head];
         for (let i = 0; i < model.nodes.length; i += 1) {
+            if (allowed && !allowed[i]) continue;
             if (whyNot(model, state, i, { costs, ignoreMana })) continue;
             const next = perform(model, state, i, { costs });
             const key = stateKey(next);

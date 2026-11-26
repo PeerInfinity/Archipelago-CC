@@ -3,6 +3,7 @@ import { pickerHTML, setupNodePicker } from './nodePicker.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { isRegionGroupNode, SUB_REGION_VIEW_KEY, SUB_REGION_VIEW_SCHEMA, SUB_REGION_VIEW_LABELS } from './subRegionGroups.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -42,6 +43,15 @@ export class LayoutControlsManager {
           <label style="display: block; margin: 3px 0;">
             <span style="margin-right: 5px;">Scroll zoom sensitivity:</span>
             <input type="number" id="wheelSensitivity" min="0.1" max="5" step="0.1" value="1" style="width: 60px; padding: 2px;">
+          </label>
+        </details>
+        <details open class="rg-sub-regions" style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
+          <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">Sub-regions:</summary>
+          <label style="display: block; margin: 3px 0;">
+            <span style="margin-right: 5px;">Draw as:</span>
+            <select id="subRegionView" style="padding: 2px;">
+              ${SUB_REGION_VIEW_SCHEMA.enum.map((v) => `<option value="${v}">${SUB_REGION_VIEW_LABELS[v] ?? v}</option>`).join('')}
+            </select>
           </label>
         </details>
         <details open style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
@@ -189,6 +199,20 @@ export class LayoutControlsManager {
     // Sync edge label visibility flag
     const forceHideEdgeLabelsEl = this.ui.controlPanel.querySelector('#forceHideEdgeLabels');
     this.ui.edgeLabelsHidden = !!forceHideEdgeLabelsEl?.checked;
+
+    // ⛓ Sub-regions (region-graph-groups-a): the select writes the setting; the panel's settings:changed handler
+    // reloads it and REBUILDS the graph (`RegionGraphUI` rebuilds on any moduleSettings.regionGraph.* write).
+    const subRegionSelect = this.ui.controlPanel.querySelector('#subRegionView');
+    if (subRegionSelect) {
+      if (this.ui.subRegionView) subRegionSelect.value = this.ui.subRegionView;
+      subRegionSelect.addEventListener('change', async (e) => {
+        try {
+          await settingsManager.updateSetting(SUB_REGION_VIEW_KEY, e.target.value);
+        } catch (error) {
+          logger.warn(`Failed to save setting ${SUB_REGION_VIEW_KEY}:`, error);
+        }
+      });
+    }
 
     // Setup change handler for discovery checkbox to trigger graph rebuild
     const showUndiscoveredCheckbox = this.ui.controlPanel.querySelector('#graph-show-undiscovered');
@@ -364,11 +388,13 @@ export class LayoutControlsManager {
       return;
     }
 
-    const savedPositions = !force && this.ui.nodePositions.size > 0;
+    // ⛓ merged (region-graph-groups-b) lays out from, and saves to, its own store: `separate`'s is never read here.
+    const store = this.positionStore();
+    const savedPositions = !force && store.size > 0;
 
     if (savedPositions) {
       this.ui.cy.nodes().forEach(node => {
-        const pos = this.ui.nodePositions.get(node.id());
+        const pos = store.get(node.id());
         if (pos) {
           node.position(pos);
         }
@@ -476,7 +502,15 @@ export class LayoutControlsManager {
     const layout = this.ui.gridLayout;
     if (!layout || layout.size === 0) return null;
 
-    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player'));
+    // A group box is sized by its members and placed by them: it takes no grid cell. A merged group node
+    // (subRegionView = merged) takes the mean of its members' cells.
+    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player') && !isRegionGroupNode(n, 'box'));
+    const cellOf = (node) => {
+      if (!isRegionGroupNode(node, 'merged')) return layout.get(node.id());
+      const cells = (node.data('members') ?? []).map((m) => layout.get(m)).filter(Boolean);
+      if (cells.length === 0) return null;
+      return { gx: cells.reduce((a, c) => a + c.gx, 0) / cells.length, gy: cells.reduce((a, c) => a + c.gy, 0) / cells.length };
+    };
     const avgNodeWidth = nodes.reduce((sum, n) => {
       const bb = n.boundingBox({ includeLabels: true });
       return sum + bb.w;
@@ -503,7 +537,7 @@ export class LayoutControlsManager {
     return {
       name: 'preset',
       positions: (node) => {
-        const cell = layout.get(node.id());
+        const cell = cellOf(node);
         if (!cell) return { x: 0, y: 0 };
         return {
           x: (cell.gx - minGx) * cellWidth,
@@ -523,7 +557,9 @@ export class LayoutControlsManager {
    * with computed positions that guarantee no edge connects same-row nodes.
    */
   buildHierarchyLayout() {
-    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player'));
+    // A group box has no depth of its own (its members do): it takes no row slot. A merged group node has its
+    // shallowest member's depth, and takes one.
+    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player') && !isRegionGroupNode(n, 'box'));
 
     // Group nodes by depth
     const depthGroups = new Map();
@@ -610,7 +646,7 @@ export class LayoutControlsManager {
     const adjList = new Map();
 
     // Initialize all nodes
-    this.ui.cy.nodes().filter(n => !n.hasClass('hidden') && !n.hasClass('player')).forEach(node => {
+    this.ui.cy.nodes().filter(n => !n.hasClass('hidden') && !n.hasClass('player') && !isRegionGroupNode(n, 'box')).forEach(node => {
       const id = node.id();
       inDegree.set(id, 0);
       adjList.set(id, []);
@@ -660,11 +696,48 @@ export class LayoutControlsManager {
     return { isDAG };
   }
 
+  /**
+   * The saved-position store for the view the graph draws: `separate` and `nested` share `ui.nodePositions` (region
+   * positions); `merged` has its own, `ui.mergedNodePositions` (its group nodes and the regions drawn beside them), so
+   * a `merged` layout never writes over `separate`'s saved one. ⛓ `collapsible` (region-graph-groups-c) has its own
+   * too, `ui.collapsibleNodePositions` (closed group nodes, open members and the regions beside them). None is
+   * persisted.
+   */
+  positionStore() {
+    if (this.ui.subRegionView === 'collapsible') {
+      if (!this.ui.collapsibleNodePositions) this.ui.collapsibleNodePositions = new Map();
+      return this.ui.collapsibleNodePositions;
+    }
+    if (this.ui.subRegionView !== 'merged') return this.ui.nodePositions;
+    if (!this.ui.mergedNodePositions) this.ui.mergedNodePositions = new Map();
+    return this.ui.mergedNodePositions;
+  }
+
   saveNodePositions() {
+    if (this.ui.subRegionView === 'collapsible') {
+      // ⛓ collapsible: every drawn node but an open group's box, location nodes and the player, into its own store.
+      // Not cleared first: a closed group keeps its members' last arrangement for the next open.
+      const store = this.positionStore();
+      this.ui.cy.nodes().not('.location-node').filter((n) => !n.hasClass('player') && !isRegionGroupNode(n, 'box')).forEach((node) => {
+        store.set(node.id(), { x: node.position('x'), y: node.position('y') });
+      });
+      return;
+    }
+    if (this.ui.subRegionView === 'merged') {
+      // ⛓ merged: every drawn node but location nodes and the player, into merged's own store.
+      const store = this.positionStore();
+      store.clear();
+      this.ui.cy.nodes().not('.location-node').filter((n) => !n.hasClass('player')).forEach((node) => {
+        store.set(node.id(), { x: node.position('x'), y: node.position('y') });
+      });
+      return;
+    }
     this.ui.nodePositions.clear();
     // Location nodes are drawn around their region, never laid out; saving
-    // them would make the next rebuild's size check re-run the layout.
-    this.ui.cy.nodes().not('.location-node').forEach(node => {
+    // them would make the next rebuild's size check re-run the layout. A
+    // group box (subRegionView = nested) is placed by its members: saving it
+    // would leak a position no `separate` graph has.
+    this.ui.cy.nodes().not('.location-node').filter(n => !isRegionGroupNode(n)).forEach(node => {
       this.ui.nodePositions.set(node.id(), {
         x: node.position('x'),
         y: node.position('y')
@@ -674,7 +747,7 @@ export class LayoutControlsManager {
 
   exportNodePositions() {
     const positions = {};
-    this.ui.cy.nodes().forEach(node => {
+    this.ui.cy.nodes().filter(n => !isRegionGroupNode(n)).forEach(node => {
       positions[node.id()] = {
         x: Math.round(node.position('x')),
         y: Math.round(node.position('y'))

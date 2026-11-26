@@ -1,0 +1,11 @@
+off=147 on=147 paired-same-answer=146 moved=1 OFF-vs-page-answer 146/147 wall OFF 1507154 ON 329637
+19:1 Level 040 - Chest | OFF refusal:112:8ef0debe2bb9 209983ms | ON refusal:642:223fd2322f97 77627ms | ON passes [["dashless",false,641,null,null],["full",false,1,null,"walk"]]
+slowest OFF:
+26:11 1013460ms refusal:642:432ec5f5b196 ON 37929ms refusal:642:432ec5f5b196
+19:1 209983ms refusal:112:8ef0debe2bb9 ON 77627ms refusal:642:223fd2322f97
+26:9 45522ms PLAN:2099:9b2d5216a2d5 ON 40848ms PLAN:2233:9b2d5216a2d5
+14:6 18413ms PLAN:642:00202603014b ON 15860ms PLAN:641:00202603014b
+12:1 16679ms PLAN:50:3ba3fa4a3fa5 ON 13702ms PLAN:50:3ba3fa4a3fa5
+26:8 15647ms refusal:645:785fcf0cd37f ON 12589ms refusal:645:785fcf0cd37f
+26:10 12723ms PLAN:457:78b88bac90df ON 9840ms PLAN:459:78b88bac90df
+9:5 12349ms PLAN:642:29090a254529 ON 4902ms PLAN:641:29090a254529
