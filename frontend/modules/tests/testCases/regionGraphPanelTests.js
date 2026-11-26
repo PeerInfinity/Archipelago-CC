@@ -724,6 +724,43 @@ export async function testRegionGraphSubRegionMerged(testController) {
     }
     testController.log(`[nodeLook] seedling_atlas merged map: cells=${withCell}/${drawn} squares=${mapCanvas()?.dataset.squares} switchMs=${mapMs}`);
 
+    // ⛓ region-graph-direction-layout: the Direction-aware layout, once, on the same merged + map graph (the map look's
+    // rectangles are the drawn sizes), placed at once (no 1 s animation); it ends with 0 overlaps between the drawn
+    // boxes on the canvas. Then the layout state is RESTORED: merged's saved positions and the preset select.
+    const ui = layer?.ui;
+    const lcm = ui?.layoutControlsManager;
+    if (!lcm?.runDirectionLayout) throw new Error('the panel has no Direction-aware layout');
+    const savedStore = new Map(lcm.positionStore());
+    const presetSel = ui.controlPanel?.querySelector('#layoutPreset');
+    const presetBefore = presetSel?.value ?? null;
+    const layoutBefore = ui.currentLayoutPreset ?? null;
+    const t5 = performance.now();
+    const dir = lcm.runDirectionLayout({ animate: false });
+    const dirMs = Math.round(performance.now() - t5);
+    const laid = graphCy().nodes().filter((n) => !n.hasClass('player') && !n.hasClass('location-node') && !isRegionGroupNode(n, 'box'));
+    let drawnOverlaps = 0;
+    for (let i = 0; i < laid.length; i += 1) {
+      for (let j = i + 1; j < laid.length; j += 1) {
+        const a = laid[i]; const b = laid[j];
+        if (Math.abs(a.position('x') - b.position('x')) < (a.outerWidth() + b.outerWidth()) / 2 - 1e-6
+          && Math.abs(a.position('y') - b.position('y')) < (a.outerHeight() + b.outerHeight()) / 2 - 1e-6) drawnOverlaps += 1;
+      }
+    }
+    testController.reportCondition(`the Direction-aware layout ran once on ${dir?.nodes} nodes (${dir?.preferredEdges} edges with an exit direction) `
+      + `and finished with ${dir?.overlaps} overlaps, ${drawnOverlaps} between the drawn boxes (${dirMs} ms)`,
+      !!dir && dir.nodes === laid.length && dir.overlaps === 0 && drawnOverlaps === 0);
+    ui.currentLayoutPreset = layoutBefore;
+    if (presetSel && presetBefore !== null) presetSel.value = presetBefore;
+    ui.layoutGeneration += 1; // a pending layoutstop save of this run is dropped
+    ui.isLayoutRunning = false;
+    const store = lcm.positionStore();
+    store.clear();
+    for (const [id, p] of savedStore) store.set(id, p);
+    testController.reportCondition(`restored: the layout preset reads "${presetSel?.value}" again and merged's saved positions are back (${store.size})`,
+      (presetSel?.value ?? null) === presetBefore && store.size === savedStore.size);
+    testController.log(`[directionLayout] seedling_atlas merged map: nodes=${dir?.nodes} preferred=${dir?.preferredEdges} overlaps=${dir?.overlaps} `
+      + `meanErr=${dir?.meanAngleError?.toFixed?.(1)} layoutMs=${dir?.layoutMs?.toFixed?.(1)} totalMs=${dirMs}`);
+
     // ⛓ region-graph-groups-c: collapsible (C) on the same graph and setup — every group closed draws as merged, with
     // a + badge each; a + press opens ONE group into its box, a − press closes it, and neither runs a click action;
     // a body tap still does.
@@ -1231,7 +1268,7 @@ registerTest({
   category: 'Region Graph',
   testFunction: testRegionGraphSubRegionMerged,
   enabled: false, // runs where a roster enrols it (the substrates config)
-  description: 'region-graph-groups-b: on seedling_atlas (2 groups), subRegionView = merged (session-only) draws one node per display group of 2+ in place of its members, no self-loop; a tap on a group node runs the region click on regionOfCell(key, members), once; then (region-graph-map-look) nodeLook = map (session-only) paints every node with a Region Map cell as that cell with no rebuild, and a pointer click on a location square runs the location click on it, once; then (region-graph-groups-c) subRegionView = collapsible draws every group closed with a + badge, a + press opens one group into its box and a − press closes it, neither running a click action, and a body tap runs it, and the stored nodeLook = map takes no effect there; the settings are restored (nodeLook graph) and every region is its own node again'
+  description: 'region-graph-groups-b: on seedling_atlas (2 groups), subRegionView = merged (session-only) draws one node per display group of 2+ in place of its members, no self-loop; a tap on a group node runs the region click on regionOfCell(key, members), once; then (region-graph-map-look) nodeLook = map (session-only) paints every node with a Region Map cell as that cell with no rebuild, and a pointer click on a location square runs the location click on it, once; then (region-graph-groups-c) subRegionView = collapsible draws every group closed with a + badge, a + press opens one group into its box and a − press closes it, neither running a click action, and a body tap runs it, and the stored nodeLook = map takes no effect there; (region-graph-direction-layout) in merged + map the Direction-aware layout runs once and ends with 0 overlaps between the drawn boxes, and the layout preset and the merged view\'s saved positions are restored; the settings are restored (nodeLook graph) and every region is its own node again'
 });
 
 registerTest({

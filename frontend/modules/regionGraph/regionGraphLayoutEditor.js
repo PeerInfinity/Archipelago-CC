@@ -234,6 +234,7 @@ export class RegionGraphLayoutEditor {
             <select id="layoutPreset" style="width: 100%;">
               <option value="procgen-grid">Procgen Grid (from rules.json)</option>
               <option value="cose" selected>COSE (Classic) - Default</option>
+              <option value="direction-aware">Direction-aware (exit sides)</option>
               <option value="fcose-default">Force-Directed</option>
               <option value="fcose-hub">Force-Directed (Hub Optimized)</option>
               <option value="hierarchical">Hierarchical</option>
@@ -348,6 +349,19 @@ export class RegionGraphLayoutEditor {
     if (controls.layoutPreset) {
       controls.layoutPreset.addEventListener('change', (e) => {
         const preset = e.target.value;
+        if (preset === 'direction-aware') {
+          // ⛓ region-graph-direction-layout: positions come from the exits' door sides and the three settings in the
+          // Controls' "Direction-aware layout" section, not from JSON.
+          controls.layoutJson.value = JSON.stringify({
+            name: 'preset',
+            _comment: 'Direction-aware: positions from the exits\' door sides; settings in "Direction-aware layout"',
+          }, null, 2);
+          this.clearJsonMessages();
+          if (controls.autoApplyPreset && controls.autoApplyPreset.checked) {
+            setTimeout(() => regionGraphUI.layoutControlsManager?.runDirectionLayout(), 100);
+          }
+          return;
+        }
         if (preset === 'procgen-grid') {
           // Dynamic layout — positions derive from rules.json's
           // preset_sidecars grid_cell plus current node sizes, so
@@ -507,6 +521,7 @@ export class RegionGraphLayoutEditor {
       this.showJsonError('No procgen grid data in the loaded rules.json (preset_sidecars grid_cell)');
       return;
     }
+    regionGraphUI.currentLayoutPreset = 'procgen-grid';
     regionGraphUI.updateStatus('Running procgen grid layout...');
     this.currentLayout = this.cy.layout(gridOptions);
     this.currentLayout.run();
@@ -522,6 +537,11 @@ export class RegionGraphLayoutEditor {
       this.applyProcgenGridLayout(regionGraphUI);
       return;
     }
+    if (presetSelect?.value === 'direction-aware') {
+      regionGraphUI.layoutControlsManager?.runDirectionLayout();
+      return;
+    }
+    regionGraphUI.currentLayoutPreset = presetSelect?.value ?? null;
 
     const jsonTextarea = this.controlPanel.querySelector('#layoutJson');
     const jsonText = jsonTextarea.value.trim();

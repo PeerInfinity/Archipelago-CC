@@ -17,6 +17,7 @@
 - `frontend/modules/regionGraph/regionGraphOriginators.js` - The `source` / `originator` strings its dispatches carry
 - `frontend/modules/regionGraph/nodeLook.js` - The `nodeLook` setting (`graph` | `map`; `map` takes effect only with `subRegionView` = `merged`) and its control's sync
 - `frontend/modules/regionGraph/mapLookLayer.js` - `nodeLook` = `map`: draws each node as its Region Map cell (the Region Map's model, frames and `regionMap/regionMapCellDraw.js`) on one canvas under Cytoscape's; each map node gets a style bypass (a rectangle at its cell's aspect, body and label transparent); squares re-colour from `regionView/regionViewState.js`; `squareAtNode` lets a tap on a square run the location click
+- `frontend/modules/regionGraph/directionLayout.js` - The Direction-aware layout, pure: the per-exit preferred direction (door tile ÷ level extent: the door's side, tilted by its place along the side), the per-edge preference (a merged node takes its members' exits), a deterministic vector-spring relaxation with a final overlap-free separation, the measures (overlaps, angle errors) and the three settings' schema entries (`directionStrength`, `directionSpacing`, `directionExits`); `layoutControlsManager.js` feeds it the graph as drawn (drawn sizes, the Region Map model from `mapLookLayer.js`'s `regionMapModel()`) and runs the result as a `preset` layout
 
 **Where state and actions live (region map step 2).** The renderer-agnostic answers are in `frontend/modules/regionView/`: `regionViewModel.js` (reachability, location states and counts, the interior and colour states, exit traversability, the one discovery hide/placeholder decision, the `displayRegionOf` fold) and `regionActions.js` (moves, the restart step, path edits, location checks, select/show publishes). `graphDataManager.js` turns those answers into Cytoscape classes and labels; `navigationManager.js` and `graphInteractionManager.js` supply the Region Graph's own handles (its `moduleDispatcher`, its event bus) and show the results (the status bar, the "No path" flash). The Region Graph does not use `regionView/regionViewState.js` for its own nodes; its trigger wiring in `regionGraphUI.js` is unchanged. The one exception is the `map` node look (`mapLookLayer.js`), which colours its squares from a view state of its own, created only while that look is on. Equivalence instrument: `scripts/dev/region-graph-class-snapshot.mjs`.
 
@@ -81,6 +82,7 @@ This module does not register public functions in `centralRegistry`. It is prima
 
 The module supports multiple layout features:
 - COSE-based automatic layout algorithm
+- The Direction-aware layout (`directionLayout.js`): each neighbour placed towards its exit's door side, as a soft preference (vector springs), with Strength / Spacing / Exits used settings; deterministic (node ids sorted, no random, no clock) and overlap-free at the drawn size
 - Manual node dragging with position persistence
 - Layout reset and re-layout functions
 - Export layout positions as JSON
