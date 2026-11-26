@@ -1,0 +1,45 @@
+full-off  failed   ms 7893   seam 5620 env None | tapes [(0, 54317)] | level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0
+full-off  done     ms 22086  seam 5710 env None | tapes [(0, 57838), (354, 64983), (0, 79658)] | level_101__r4c2 <- in_L100_288_96 -> exit:out_stairsup_48_96
+full-off  done     ms 35994  seam 5718 env None | tapes [(0, 57381), (709, 68995)] | level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@1
+full-off  done     ms 8182   seam 5618 env None | tapes [(0, 48940), (122, 52711), (0, 56846)] | level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304
+full-off  done     ms 1296   seam 5608 env None | tapes [(0, 53394), (5, 54274), (0, 54472)] | level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_304_96
+full-off  done     ms 37398  seam 5569 env None | tapes [(0, 44536), (551, 62408), (5, 81480), (0, 81632)] | level_69 <- in_pit_L70_3_8 -> exit:out_lightbosscontroller_72_72
+full-off  done     ms 12359  seam 5639 env None | tapes [(0, 47632), (181, 51472)] | level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest
+full-off  done     ms 10892  seam 5740 env None | tapes [(0, 47372), (176, 50188)] | level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,
+full-off  done     ms 49082  seam 5570 env None | tapes [(0, 44216), (551, 73758)] | level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights
+k-off1    done     ms 33679  seam 5709 env None | tapes [(0, 57309), (709, 66586)] | level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@1
+k-off1    done     ms 11811  seam 5662 env None | tapes [(0, 58212), (176, 63344)] | level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,
+k-off1    done     ms 58567  seam 5567 env None | tapes [(0, 47262), (659, 82974)] | level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights
+k-off2    done     ms 38553  seam 5711 env None | tapes [(0, 58931), (709, 70312)] | level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@1
+k-off2    done     ms 11844  seam 5665 env None | tapes [(0, 59080), (176, 64260)] | level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,
+k-off2    done     ms 62867  seam 5537 env None | tapes [(0, 52559), (593, 94364)] | level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights
+full-gsw  failed   ms 8148   seam 5593 env SEEDLING_GOAL_START_WAIT=1 | tapes [(0, 53012)] | level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0
+full-gsw  done     ms 22403  seam 5715 env SEEDLING_GOAL_START_WAIT=1 | tapes [(0, 57137), (354, 64680), (0, 79254)] | level_101__r4c2 <- in_L100_288_96 -> exit:out_stairsup_48_96
+full-gsw  done     ms 38191  seam 5708 env SEEDLING_GOAL_START_WAIT=1 | tapes [(0, 57131), (709, 68712)] | level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@1
+full-gsw  done     ms 9311   seam 5610 env SEEDLING_GOAL_START_WAIT=1 | tapes [(0, 52453), (122, 57474), (0, 61628)] | level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304
+full-gsw  done     ms 1328   seam 5572 env SEEDLING_GOAL_START_WAIT=1 | tapes [(0, 55376), (5, 56256), (0, 56446)] | level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_304_96
+full-gsw  done     ms 53432  seam 5519 env SEEDLING_GOAL_START_WAIT=1 | tapes [(0, 50897), (587, 83268), (11, 103735), (0, 104265)] | level_69 <- in_pit_L70_3_8 -> exit:out_lightbosscontroller_72_72
+full-gsw  done     ms 15165  seam 5585 env SEEDLING_GOAL_START_WAIT=1 | tapes [(0, 54120), (181, 59927)] | level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest
+full-gsw  failed   ms 4045   seam 5690 env SEEDLING_GOAL_START_WAIT=1 | tapes [(0, 51527)] | level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,
+full-gsw  done     ms 71928  seam 5566 env SEEDLING_GOAL_START_WAIT=1 | tapes [(0, 46953), (586, 98439)] | level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights
+gsw2      failed   ms 5022   seam 5688 env SEEDLING_GOAL_START_WAIT=1 | tapes [(0, 56895)] | level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,
+full-pm   failed   ms 4737   seam 5635 env SEEDLING_PREVIEW_METER=1 | tapes [(0, 46194)] | level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0
+full-pm   done     ms 18310  seam 5747 env SEEDLING_PREVIEW_METER=1 | tapes [(0, 49389), (354, 53526), (0, 67585)] | level_101__r4c2 <- in_L100_288_96 -> exit:out_stairsup_48_96
+full-pm   failed   ms 5788   seam 5746 env SEEDLING_PREVIEW_METER=1 | tapes [(0, 50146)] | level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@1
+full-pm   done     ms 7941   seam 5614 env SEEDLING_PREVIEW_METER=1 | tapes [(0, 49819), (122, 53532), (0, 57647)] | level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304
+full-pm   done     ms 1316   seam 5630 env SEEDLING_PREVIEW_METER=1 | tapes [(0, 53089), (5, 54043), (0, 54221)] | level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_304_96
+full-pm   done     ms 41482  seam 5575 env SEEDLING_PREVIEW_METER=1 | tapes [(0, 44472), (561, 66412), (0, 85521)] | level_69 <- in_pit_L70_3_8 -> exit:out_lightbosscontroller_72_72
+full-pm   done     ms 10777  seam 5642 env SEEDLING_PREVIEW_METER=1 | tapes [(0, 47730), (181, 51598)] | level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest
+full-pm   done     ms 10171  seam 5693 env SEEDLING_PREVIEW_METER=1 | tapes [(0, 52337), (176, 56282)] | level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,
+full-pm   done     ms 80066  seam 5540 env SEEDLING_PREVIEW_METER=1 | tapes [(0, 52190), (682, 107879)] | level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights
+full-pkh  failed   ms 7612   seam 5609 env SEEDLING_PRESS_KILL_HOLD=1 | tapes [(0, 52071)] | level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0
+full-pkh  done     ms 19112  seam 5697 env SEEDLING_PRESS_KILL_HOLD=1 | tapes [(0, 55980), (354, 62778), (0, 74885)] | level_101__r4c2 <- in_L100_288_96 -> exit:out_stairsup_48_96
+full-pkh  done     ms 34960  seam 5702 env SEEDLING_PRESS_KILL_HOLD=1 | tapes [(0, 56223), (709, 66853)] | level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@1
+full-pkh  done     ms 9425   seam 5645 env SEEDLING_PRESS_KILL_HOLD=1 | tapes [(0, 48729), (122, 52441), (0, 58043)] | level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304
+full-pkh  done     ms 1295   seam 5597 env SEEDLING_PRESS_KILL_HOLD=1 | tapes [(0, 53676), (5, 54550), (0, 54739)] | level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_304_96
+full-pkh  done     ms 51416  seam 5525 env SEEDLING_PRESS_KILL_HOLD=1 | tapes [(0, 53390), (567, 83831), (10, 103891), (0, 104311)] | level_69 <- in_pit_L70_3_8 -> exit:out_lightbosscontroller_72_72
+full-pkh  done     ms 15930  seam 5582 env SEEDLING_PRESS_KILL_HOLD=1 | tapes [(0, 55625), (181, 61731)] | level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest
+full-pkh  done     ms 13913  seam 5697 env SEEDLING_PRESS_KILL_HOLD=1 | tapes [(0, 56281), (176, 61570)] | level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,
+full-pkh  timeout  ms 90059  seam 5564 env SEEDLING_PRESS_KILL_HOLD=1 | tapes [(0, 51346), (480, 128085)] | level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights
+k-pkh1    timeout  ms 90162  seam 5554 env SEEDLING_PRESS_KILL_HOLD=1 | tapes [(0, 50802)] | level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights
+k-pkh2    done     ms 42302  seam 5568 env SEEDLING_PRESS_KILL_HOLD=1 | tapes [(0, 44100), (602, 65639)] | level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights

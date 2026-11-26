@@ -1,0 +1,38 @@
+### L29 over={}
+-- one apitem@112,128
+{"thrown":null,"solverTakes":[{"tapeTick":23,"id":"apitem@112,128","run":{"id":"apitem@112,128","level":29,"tag":7,"t":24,"banked":true}}],"starts":[],"collected":[],"runTakes":[],"bank":[[24,"apitem@112,128"]],"falls":[[25,"fallrock@112,112",172]]}
+-- one apitem@112,127
+{"thrown":null,"solverTakes":[{"tapeTick":24,"id":"apitem@112,127","run":{"id":"apitem@112,127","level":29,"tag":7,"t":25,"banked":true}}],"starts":[],"collected":[],"runTakes":[],"bank":[[25,"apitem@112,127"]],"falls":[[25,"fallrock@112,112",172]]}
+-- one apitem@112,126
+{"thrown":null,"solverTakes":[{"tapeTick":25,"id":"apitem@112,126","run":{"id":"apitem@112,126","level":29,"tag":7,"t":26,"banked":true}}],"starts":[],"collected":[],"runTakes":[],"bank":[[26,"apitem@112,126"]],"falls":[[25,"fallrock@112,112",172]]}
+-- one apitem@112,120
+{"thrown":null,"solverTakes":[{"tapeTick":30,"id":"apitem@112,120","run":{"id":"apitem@112,120","level":29,"tag":7,"t":31,"banked":true}}],"starts":[],"collected":[],"runTakes":[],"bank":[[31,"apitem@112,120"]],"falls":[[25,"fallrock@112,112",172]]}
+-- two, frame A
+{"thrown":null,"solverTakes":[{"tapeTick":24,"id":"apitem@112,127","run":{"id":"apitem@112,127","level":29,"tag":7,"t":25,"banked":true}},{"tapeTick":25,"id":"apitem@110,127","run":{"id":"apitem@110,127","level":29,"tag":9,"t":26,"banked":true}}],"starts":[],"collected":[],"runTakes":[],"bank":[[25,"apitem@112,127"],[26,"apitem@110,127"]],"falls":[[25,"fallrock@112,112",172]]}
+-- two + feather, no button
+{"thrown":null,"solverTakes":[{"tapeTick":24,"id":"apitem@112,127","run":{"id":"apitem@112,127","level":29,"tag":7,"t":25,"banked":true}},{"tapeTick":47,"id":"apitem@110,127","run":{"id":"apitem@110,127","level":29,"tag":9,"t":48,"banked":true}}],"starts":[[24,"feather"]],"collected":[[47,"feather"]],"runTakes":[],"bank":[[25,"apitem@112,127"],[48,"apitem@110,127"]],"falls":[]}
+### L29 over={"plainPickupInFreeze":true}
+-- one apitem@112,128
+{"thrown":null,"solverTakes":[{"tapeTick":23,"id":"apitem@112,128","run":{"id":"apitem@112,128","level":29,"tag":7,"t":24,"banked":true}}],"starts":[],"collected":[],"runTakes":[],"bank":[[24,"apitem@112,128"]],"falls":[[25,"fallrock@112,112",172]]}
+-- one apitem@112,127
+{"thrown":null,"solverTakes":[{"tapeTick":24,"id":"apitem@112,127","run":{"id":"apitem@112,127","level":29,"tag":7,"t":25,"banked":true}}],"starts":[],"collected":[],"runTakes":[[25,"apitem@112,127","frame A"]],"bank":[[25,"apitem@112,127"]],"falls":[[25,"fallrock@112,112",172]]}
+-- one apitem@112,126
+{"thrown":null,"solverTakes":[{"tapeTick":25,"id":"apitem@112,126","run":{"id":"apitem@112,126","level":29,"tag":7,"t":26,"banked":true}}],"starts":[],"collected":[],"runTakes":[],"bank":[[26,"apitem@112,126"]],"falls":[[25,"fallrock@112,112",172]]}
+-- one apitem@112,120
+{"thrown":null,"solverTakes":[{"tapeTick":30,"id":"apitem@112,120","run":{"id":"apitem@112,120","level":29,"tag":7,"t":31,"banked":true}}],"starts":[],"collected":[],"runTakes":[],"bank":[[31,"apitem@112,120"]],"falls":[[25,"fallrock@112,112",172]]}
+-- two, frame A
+{"thrown":null,"solverTakes":[{"tapeTick":24,"id":"apitem@112,127","run":{"id":"apitem@112,127","level":29,"tag":7,"t":25,"banked":true}},{"tapeTick":25,"id":"apitem@110,127","run":{"id":"apitem@110,127","level":29,"tag":9,"t":25,"banked":true}}],"starts":[],"collected":[],"runTakes":[[25,"apitem@112,127","frame A"],[25,"apitem@110,127","frame A"]],"bank":[[25,"apitem@112,127"],[25,"apitem@110,127"]],"falls":[[25,"fallrock@112,112",172]]}
+-- two + feather, no button
+{"thrown":null,"solverTakes":[{"tapeTick":24,"id":"apitem@112,127","run":{"id":"apitem@112,127","level":29,"tag":7,"t":25,"banked":true}},{"tapeTick":47,"id":"apitem@110,127","run":{"id":"apitem@110,127","level":29,"tag":9,"t":25,"banked":true}}],"starts":[[24,"feather"]],"collected":[[47,"feather"]],"runTakes":[[25,"apitem@112,127","a ceremony's T"],[25,"apitem@110,127","a ceremony's T"]],"bank":[[25,"apitem@112,127"],[25,"apitem@110,127"]],"falls":[]}
+### rope over={}
+{"solverTakes":[{"tick":156,"id":"apitem@137,48","run":{"id":"apitem@137,48","level":28,"tag":3,"t":156,"banked":true}},{"tick":157,"id":"apitem@138,48","run":{"id":"apitem@138,48","level":28,"tag":4,"t":157,"banked":true}}],"falls":[[155,"fallrock@112,240",181]],"rows":[[150,150,135.5,57.75,4971,false],[151,151,135.5,57.75,4972,false],[152,152,135.5,57.75,4973,false],[153,153,136.3,56.95,4974,false],[154,154,137.72,56.33,4975,false],[155,155,140.75,55.8,4976,false],[156,156,142.73,55.32,5158,false],[157,157,144.47,54.9,5159,false],[158,158,145.96,55.34,5160,false]],"runTakes":[]}
+### wand deferred over={}
+{"thrown":null,"ticks":200,"collected":[[109,"wand"]],"falls":[[108,"fallrock@96,336",186],[108,"fallrock@192,336",186],[108,"fallrock@176,384",186]],"solverTakes":[{"tick":109,"id":"apitem@144,226","run":{"id":"apitem@144,226","level":43,"tag":6,"t":110,"banked":true}}],"runTakes":[],"rows":[[106,152,226.2,"C",null],[107,152,226.2,"C",null],[108,152,227.85,"C",null],[109,152,228.3,"",null],[110,152,228.5,"",null],[111,152,228.5,"",null]]}
+### wand snap over={}
+{"thrown":null,"ticks":200,"collected":[[109,"wand"]],"falls":[[108,"fallrock@96,336",179],[108,"fallrock@192,336",179],[108,"fallrock@176,384",179],[108,"fallrock@144,210",179]],"solverTakes":[{"tick":109,"id":"apitem@144,200","run":{"id":"apitem@144,200","level":43,"tag":6,"t":110,"banked":true}}],"runTakes":[],"rows":[[106,152,226.2,"C",null],[107,152,226.2,"C",null],[108,152,207,"C",null],[109,152,207,"",null],[110,152,207,"",null],[111,152,207,"",null]]}
+### rope over={"plainPickupInFreeze":true}
+{"solverTakes":[{"tick":156,"id":"apitem@137,48","run":{"id":"apitem@137,48","level":28,"tag":3,"t":156,"banked":true}},{"tick":157,"id":"apitem@138,48","run":{"id":"apitem@138,48","level":28,"tag":4,"t":156,"banked":true}}],"falls":[[155,"fallrock@112,240",181]],"rows":[[150,150,135.5,57.75,4971,false],[151,151,135.5,57.75,4972,false],[152,152,135.5,57.75,4973,false],[153,153,136.3,56.95,4974,false],[154,154,137.72,56.33,4975,false],[155,155,140.75,55.8,4976,false],[156,156,142.73,55.32,5158,false],[157,157,144.47,54.9,5159,false],[158,158,145.96,55.34,5160,false]],"runTakes":[{"id":"apitem@137,48","level":28,"tag":3,"t":156,"why":"the pull","banked":true},{"id":"apitem@138,48","level":28,"tag":4,"t":156,"why":"the pull","banked":true}]}
+### wand deferred over={"plainPickupInFreeze":true}
+{"thrown":null,"ticks":200,"collected":[[109,"wand"]],"falls":[[108,"fallrock@96,336",186],[108,"fallrock@192,336",186],[108,"fallrock@176,384",186]],"solverTakes":[{"tick":109,"id":"apitem@144,226","run":{"id":"apitem@144,226","level":43,"tag":6,"t":109,"banked":true}}],"runTakes":[{"id":"apitem@144,226","level":43,"tag":6,"t":109,"why":"the deferred step","banked":true}],"rows":[[106,152,226.2,"C",null],[107,152,226.2,"C",null],[108,152,227.85,"C",null],[109,152,228.3,"",null],[110,152,228.5,"",null],[111,152,228.5,"",null]]}
+### wand snap over={"plainPickupInFreeze":true}
+{"thrown":null,"ticks":200,"collected":[[109,"wand"]],"falls":[[108,"fallrock@96,336",179],[108,"fallrock@192,336",179],[108,"fallrock@176,384",179],[108,"fallrock@144,210",179]],"solverTakes":[{"tick":109,"id":"apitem@144,200","run":{"id":"apitem@144,200","level":43,"tag":6,"t":109,"banked":true}}],"runTakes":[{"id":"apitem@144,200","level":43,"tag":6,"t":109,"why":"the wand's snap","banked":true}],"rows":[[106,152,226.2,"C",null],[107,152,226.2,"C",null],[108,152,207,"C",null],[109,152,207,"",null],[110,152,207,"",null],[111,152,207,"",null]]}

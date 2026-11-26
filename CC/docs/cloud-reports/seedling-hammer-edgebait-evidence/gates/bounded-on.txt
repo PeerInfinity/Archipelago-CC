@@ -1,0 +1,14 @@
+[31m     [31m×[31m L40 leg 412 with the south door shut (no tag 12): ON refuses by name at APPROACH's staging point[39m[33m 5027[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Res.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 200179[2mms[22m[39m
+--
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerKeylockTurret.test.js[2m > [22mhammer-phase KEYLOCK-TURRET: KEYLOCK_TURRET[2m > [22mL40 leg 412 with the south door shut (no tag 12): ON refuses by name at APPROACH's staging point
+[31m[1mAssertionError[22m: expected 'solverBot(wasm-location-40) clear-tag…' to match /-> keylock -> kill \(iceturret@472,40…/[39m
+--
+[31m+ Received:[39m 
+"solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352 -> keylock -> kill (iceturret@472,400): no approach to iceturret@472,400 from the staging point (488,579) is hitless — 36 fork(s), {\"no-plan\":24}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)"
+--
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m86 passed[39m[22m[90m (87)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1072 passed[39m[22m[90m (1073)[39m
+[2m   Start at [22m 19:29:40

@@ -1,0 +1,109 @@
+﻿Archipelago Version 0.6.8  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Mystery - The Fire at the Custom House
+Location Count:                  25
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 No
+Use Canonical Options:           Yes
+Rules In Slot Data Max KB:       1024
+
+
+Starting Items:
+
+The Board's letter to the Collector
+What Mr. Pell told me
+The tide table
+The railway timetable
+
+Locations:
+
+Question 01: What Mr. Odell told me
+Question 02: The quay gate-keeper's night book
+Question 03: The harbour log, Tuesday night
+Question 04: Nothing new
+Question 05: Three passes from the gate-keeper's file
+Question 06: The Marigold's log, October
+Question 07: What the landlord of the Anchor told me
+Question 08: Dr. Hume's note
+Question 09: Nothing new
+Question 10: The bond ledger: the Marigold entries
+Question 11: What Mrs. Rowe told me
+Question 12: What the baker told me
+Question 13: The harbour commissioners' notice
+Question 14: The Marigold's log, September
+Question 15: What Mr. Prout told me
+Question 16: Nothing new
+Question 17: The night watch book
+Question 18: What Sam Tully told me
+Question 19: What the station-master told me
+Question 20: What Silas Crouch told me
+Question 21: Nothing new
+Question 22: What Mrs. Finch told me
+Question 23: What the potboy told me
+Question 24: A note to the carter
+The case solved: Victory
+
+Playthrough:
+
+0: {
+  The Board's letter to the Collector
+  The railway timetable
+  The tide table
+  What Mr. Pell told me
+}
+1: {
+  Question 01: What Mr. Odell told me
+  Question 02: The quay gate-keeper's night book
+  Question 03: The harbour log, Tuesday night
+  Question 18: What Sam Tully told me
+}
+2: {
+  Question 06: The Marigold's log, October
+  Question 07: What the landlord of the Anchor told me
+}
+3: {
+  Question 10: The bond ledger: the Marigold entries
+}
+4: {
+  Question 13: The harbour commissioners' notice
+}
+5: {
+  Question 14: The Marigold's log, September
+}
+6: {
+  Question 12: What the baker told me
+  Question 22: What Mrs. Finch told me
+  Question 24: A note to the carter
+}
+7: {
+  Question 17: The night watch book
+}
+8: {
+  Question 05: Three passes from the gate-keeper's file
+  The case solved: Victory
+}
+9: {
+  Question 15: What Mr. Prout told me
+  Question 23: What the potboy told me
+}
+10: {
+  Question 08: Dr. Hume's note
+  Question 19: What the station-master told me
+  Question 20: What Silas Crouch told me
+}
+11: {
+  Question 11: What Mrs. Rowe told me
+}

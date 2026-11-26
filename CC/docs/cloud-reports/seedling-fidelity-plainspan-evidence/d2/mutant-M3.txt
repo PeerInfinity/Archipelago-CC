@@ -1,0 +1,5 @@
+     × a ceremony's T (a feather, no button), a second apitem: OFF after the ceremony; ON on T 63ms
+     × the union (`nestedRockCeremony` ON, the feather on the button): ON takes both on T = A 58ms
+     × composition (the seven neighbours ON): the same ON takes at frame A, T and the pull 59ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  3 failed | 42 passed (45)

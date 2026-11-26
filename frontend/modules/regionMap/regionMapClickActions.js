@@ -116,11 +116,10 @@ export function regionMapClickActionsSchemaEntry() {
 /**
  * The rules region a click on display cell `key` (with `members`, the rules regions folded into it) moves to: the key
  * itself when it is one of its members (a level and its folded sub-regions: the level), else the first member.
+ * ⛓ It lives in `regionView/regionViewModel.js` since region-graph-groups-b (the Region Graph's merged node clicks on
+ * the same region); re-exported here so no Region Map import changed.
  */
-export function regionOfCell(key, members = []) {
-    if (!members || members.length === 0) return key;
-    return members.includes(key) ? key : members[0];
-}
+export { regionOfCell } from '../regionView/regionViewModel.js';
 
 /**
  * The extra handles the built-in actions read (`clickActions.js` header) on top of the panel's `regionActions`
