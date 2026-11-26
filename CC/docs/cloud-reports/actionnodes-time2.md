@@ -221,3 +221,65 @@ shows:
 - after two walks, the landlady too late with its window line marked;
 - the Resources Time line *Time: 11:00 · 6 h left · the day ends 17:00*;
 - in loop 2, the walk tagged *completed before · loop 1*.
+
+## 11. The one merge: main 16acf42ce6 (train 219)
+
+The merge commit is `96ed2622e0`: `origin/main` 16acf42ce6 merged once into `an-time2` 72e73ccaeb. `an-time1` had no
+merge of its own: `an-time2` contains it, and the two land as one entry.
+
+**Conflicts.** Each resolution keeps both sides, and none changes this slice's logic:
+
+| File | How it was resolved |
+|---|---|
+| `frontend/modules/tests/testCases/actionNodesTests.js` | AN-TIME-2's `windowAndWait`, `knowledgeGate` and `completedBeforeRow`, then AN-OMSI-3's § 15 (`omsiTownRow`, `omsiTownBotPlaysToGoal`). Diffed against the theirs side, the one line the resolution dropped is the `nodeCard.js` import this side extends; diffed against ours, the lines it dropped are main's own auto-merged `readPreset`/`loadExample` edits. The `ROWS` list auto-merged with both sets. |
+| `frontend/test-configs/playwright_tests_config-substrates.json` | The three `an-time-*` rows, then `an-omsi-town-load-and-act`. |
+| `docs/json/developer/procgen/README.md` | Regenerated with `generate-procgen-reference.mjs`, never hand-edited. |
+| `frontend/modules/procgenDocs/generated/docsIndex.js` | Regenerated with `generate-procgen-reference.mjs`, never hand-edited. |
+
+`action-nodes.md` merged without a conflict.
+
+**Gates at the merge tip:**
+- `generate-procgen-reference --check`: all 7 modules and 5 regions match.
+- `check-procgen-docs`: all passed.
+- `action-nodes-compile --check`: OK for both committed presets.
+  - `action_nodes_example`: sha256 315e9af975cbd5bf….
+  - `action_nodes_omsi_town`: AP_3, deadccdd0c135a4e…. Also proven by the recipe (`omsi-first-town.json --seed 3`, then `cmp`).
+  - `git diff origin/main..tip -- frontend/presets` is empty.
+- `ci-producer-checks`: 100 run, 0 red, 1 skipped.
+- `check-sidecar-fields`: rc 0.
+- Bounded vitest (actionNodes, procgenDocs, shared `loopCustomActions`, `stateManager/core`, resourceChannels, loops*,
+  `derivedRuleTableFresh`): 74 files, 1669 tests green.
+- The doc-link census is 453 at main and 453 at the tip: the pin file is unchanged and green.
+- engineMd5 is 74ae60f5, unchanged; `derivedRuleTableFresh` is green. Closure ∩ diff = ∅ (closure 43 files, diff 42).
+- Gitlinks against main: exactly one, `frontend/modules/shared` 71b77de→ecdda89. ecdda89 is an ancestor of
+  archipelago-shared `origin/main`.
+
+**CI at 96ed2622e0:**
+- ut 45867091560: success.
+- JSUT 45867091306: success. The suite is 1451/30338 (0 failed); the slow tier is 42/470.
+- feature-checks 45867228700: success.
+- TT 45867224708: success on attempt 2.
+  - Attempt 1 failed one row, `test_region_graph_sub_region_merged` (row 10/143, the Region Graph `+` badge
+    hit-square; `fast` unbundled only).
+  - That row is groups-c's known badge layout race; it failed bundled at train 215. This diff touches no regionGraph
+    file.
+  - Its rate at this tip is **7/8** (repeat 45871205912).
+  - The failed job was re-run and passed; the row PASSED 1.5 s on the re-run.
+
+**Headroom at 96ed2622e0, against the median of 3 main samples (TT 45865560624 at 16acf42ce6, 45763431625 and
+45763428973 at 0defd21f75):**
+
+| Batch | Main median | Tip |
+|---|---|---|
+| fast | 324.3 s (54%) | 328.7 s (55%); 329.8 s (55%) on the re-run |
+| fast-bundled | 339.6 s (57%) | 319.1 s (53%) |
+| playback-bot | 201.0 s (33%) | 227.1 s (38%) |
+
+- The playback-bot batch holds no row of this slice; its spread on main is 199–213 s.
+- The new rows in `fast` (unbundled / bundled / re-run):
+  - `an-time-window-and-wait`: 0.8 / 0.7 / 0.7 s.
+  - `an-time-knowledge-gate`: 0.6 / 0.6 / 0.6 s.
+  - `an-time-completed-before`: 0.4 / 0.5 / 0.5 s.
+- No batch passes its warn fraction (0.7).
+
+This section is report-only, so JSUT is dispatched at its commit (§ 12 is not written; the id is in the REPORT BACK).
