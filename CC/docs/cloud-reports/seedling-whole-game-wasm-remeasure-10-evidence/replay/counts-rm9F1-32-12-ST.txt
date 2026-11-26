@@ -1,0 +1,13 @@
+COUNTS 32:12 env PKSW=1 PKRB=1 DSS=1 LHM=1 PKH=- enabled PKSW=true PKRB=true DSS=true LHM=true PKH=false BOS=true GSW=true PM=true SPL=true KTA=true KTEB=false HF=false
+  result ok=true kind=null work=1866 answer=a404ddf42e41 ms=31554 ticks=1889 hits=0 deaths=0 []
+  live   ok=false kind=refusal work=2561 answer=599d2ef41b84 solverEnv=SEEDLING_BRIDGE_OPEN_STRAY=1;SEEDLING_GOAL_START_WAIT=1;SEEDLING_PREVIEW_METER=1
+  PRESS_KILL_START_WAIT_COUNTS.rows=[]
+  PRESS_KILL_REFUGE_BOMBS_COUNTS={"asked":0,"refused":0}
+  DASH_STAND_SIGHT.counts={"asks":1}
+  LATCHED_HOLD_MOVE_COUNTS={"asked":2,"moves":[{"level":40,"t":1553,"presser":"buttonroom@160,128","group":1,"what":"solverBot(wasm-location-40) apitem (64,144) contact -> hold","target":{"x":248,"y":103},"from":1553,"ticks":130,"walk":130,"forks":1,"route":229,"refused":"solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.88102975116135,135.24945805128786), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (168,134) 44 tick(s) into "},{"level":40,"t":1553,"presser":"buttonroom@160,128","group":1,"what":"solverBot(wasm-location-40) apitem (64,144) contact -> hold","target":{"x":248,"y":103},"from":1553,"ticks":130,"walk":130,"forks":1,"route":229,"refused":"solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.88102975116135,135.24945805128786), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (168,134) 44 tick(s) into "}],"declined":[]}
+  PRESS_KILL_HOLD_COUNTS.rows=[]
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[]
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":50288,"asked":0,"tripped":0}
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":0,"forecastReplays":0,"spinRowsSkipped":0}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]

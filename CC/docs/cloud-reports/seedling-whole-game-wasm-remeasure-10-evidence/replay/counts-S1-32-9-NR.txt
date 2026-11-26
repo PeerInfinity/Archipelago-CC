@@ -1,0 +1,13 @@
+COUNTS 32:9 env PKSW=1 PKRB=- DSS=1 LHM=1 PKH=- enabled PKSW=true PKRB=false DSS=true LHM=true PKH=false BOS=true GSW=true PM=true SPL=true KTA=true KTEB=false HF=false
+  result ok=true kind=null work=2066 answer=7839897c470f ms=38793 ticks=1449 hits=0 deaths=0 []
+  live   ok=true kind=null work=2066 answer=7839897c470f solverEnv=SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_LATCHED_HOLD_MOVE=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1
+  PRESS_KILL_START_WAIT_COUNTS.rows=[]
+  PRESS_KILL_REFUGE_BOMBS_COUNTS={"asked":0,"refused":0}
+  DASH_STAND_SIGHT.counts={"asks":0}
+  LATCHED_HOLD_MOVE_COUNTS={"asked":0,"moves":[],"declined":[]}
+  PRESS_KILL_HOLD_COUNTS.rows=[]
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[]
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":48066,"asked":0,"tripped":0}
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":0,"forecastReplays":0,"spinRowsSkipped":0}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]

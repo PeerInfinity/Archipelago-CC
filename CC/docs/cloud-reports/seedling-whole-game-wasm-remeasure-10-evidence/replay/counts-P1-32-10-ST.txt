@@ -1,0 +1,13 @@
+COUNTS 32:10 env PKSW=1 PKRB=1 DSS=1 LHM=1 PKH=- enabled PKSW=true PKRB=true DSS=true LHM=true PKH=false BOS=true GSW=true PM=true SPL=true KTA=true KTEB=false HF=false
+  result ok=true kind=null work=524 answer=f2c760f195ad ms=20253 ticks=649 hits=0 deaths=0 []
+  live   ok=true kind=null work=524 answer=f2c760f195ad solverEnv=SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_LATCHED_HOLD_MOVE=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1
+  PRESS_KILL_START_WAIT_COUNTS.rows=[{"t":1534,"refused":"HAMMER_SAFETY","refusedAt":1594,"tries":[{"wait":0,"verdict":"solved","why":null,"endedAt":1663}],"verdict":"solved"},{"t":1534,"refused":"HAMMER_SAFETY","refusedAt":1594,"tries":[{"wait":0,"verdict":"solved","why":null,"endedAt":1663}],"verdict":"solved"}]
+  PRESS_KILL_REFUGE_BOMBS_COUNTS={"asked":144,"refused":124}
+  DASH_STAND_SIGHT.counts={"asks":1}
+  LATCHED_HOLD_MOVE_COUNTS={"asked":1,"moves":[{"level":40,"t":1787,"presser":"buttonroom@160,128","group":1,"what":"solverBot(wasm-continue-location-40) apitem (64,144) contact -> hold","target":{"x":216,"y":87},"from":1787,"ticks":129,"walk":129,"forks":1,"route":196,"refused":"solverBot(wasm-continue-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (168.39839819655512,135.09481224646845), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (169,134) 40 tick"}],"declined":[]}
+  PRESS_KILL_HOLD_COUNTS.rows=[]
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[]
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":29136,"asked":0,"tripped":0}
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":800,"forecastReplays":166,"spinRowsSkipped":800}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]

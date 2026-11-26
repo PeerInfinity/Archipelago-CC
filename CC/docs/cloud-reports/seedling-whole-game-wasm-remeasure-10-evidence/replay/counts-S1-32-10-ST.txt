@@ -1,0 +1,13 @@
+COUNTS 32:10 env PKSW=1 PKRB=1 DSS=1 LHM=1 PKH=- enabled PKSW=true PKRB=true DSS=true LHM=true PKH=false BOS=true GSW=true PM=true SPL=true KTA=true KTEB=false HF=false
+  result ok=true kind=null work=471 answer=ac074b4b9d66 ms=18955 ticks=613 hits=0 deaths=0 []
+  live   ok=true kind=null work=471 answer=ac074b4b9d66 solverEnv=SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_LATCHED_HOLD_MOVE=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1
+  PRESS_KILL_START_WAIT_COUNTS.rows=[{"t":1534,"refused":"HAMMER_SAFETY","refusedAt":1596,"tries":[{"wait":0,"verdict":"solved","why":null,"endedAt":1663}],"verdict":"solved"},{"t":1534,"refused":"HAMMER_SAFETY","refusedAt":1596,"tries":[{"wait":0,"verdict":"solved","why":null,"endedAt":1663}],"verdict":"solved"}]
+  PRESS_KILL_REFUGE_BOMBS_COUNTS={"asked":68,"refused":64}
+  DASH_STAND_SIGHT.counts={"asks":1}
+  LATCHED_HOLD_MOVE_COUNTS={"asked":1,"moves":[],"declined":[{"level":40,"t":1818,"presser":"buttonroom@160,128","group":1,"what":"solverBot(wasm-continue-location-40) apitem (64,144) contact -> hold","why":"no hitless wait (0 fork(s)): "}]}
+  PRESS_KILL_HOLD_COUNTS.rows=[]
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[]
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":49277,"asked":0,"tripped":0}
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":4000,"forecastReplays":170,"spinRowsSkipped":4000}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]
