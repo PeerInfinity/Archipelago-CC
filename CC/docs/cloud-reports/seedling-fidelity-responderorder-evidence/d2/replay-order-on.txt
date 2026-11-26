@@ -1,0 +1,12 @@
+w-latch ARM on: 190 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-latch-boot ARM on: 150 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-block ARM on: 240 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-cover-100 ARM on: 150 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-cover-104 ARM on: 154 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-cover-108 ARM on: 158 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-cover-112 ARM on: 162 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-cover-116 ARM on: 166 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-cover-120 ARM on: 170 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-cover-124 ARM on: 174 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-cover-128 ARM on: 178 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-spin-button ARM on: 300 ticks; 0 px over the stream; worst 0 px; L agrees every tick

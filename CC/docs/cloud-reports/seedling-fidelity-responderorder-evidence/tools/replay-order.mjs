@@ -19,13 +19,16 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 const HERE = new URL('../../seedling-fidelity-readerorder-evidence/tools/', import.meta.url).pathname;
 const ROOT = new URL('../../../../../', import.meta.url).pathname;
-const S = await import(`${HERE}stage.mjs`);
+// STAGE=order: this wave's D1 shapes (`stage-order.mjs`, `--witness=` its `d2/witness-order.json`); L is compared only
+// for a tag-20 lock (a Cover's type is not on the page; its shapes are compared on positions).
+const ORDER = process.env.STAGE === 'order';
+const S = ORDER ? await import(new URL('./stage-order.mjs', import.meta.url).pathname) : await import(`${HERE}stage.mjs`);
 const { atlasLevelSource } = await import(`${ROOT}frontend/modules/seedlingDemo/levelSource.js`);
 const { withContactFidelity } = await import(`${ROOT}frontend/modules/seedlingDemo/contactFidelity.js`);
 const arg = (n, d) => (process.argv.find((a) => a.startsWith(`--${n}=`))?.slice(n.length + 3) ?? d);
 const ARM = process.env.ARM ?? 'off';
 const ONLY = arg('only', null)?.split(',') ?? null;
-const W = { shapes: arg('witness', `${HERE}../d3/witness-p4g.json,${HERE}../d3/witness-p4g-b1r124.json`).split(',')
+const W = { shapes: arg('witness', ORDER ? new URL('../d2/witness-order.json', import.meta.url).pathname : `${HERE}../d3/witness-p4g.json,${HERE}../d3/witness-p4g-b1r124.json`).split(',')
     .flatMap((f) => JSON.parse(readFileSync(f, 'utf8')).shapes) };
 const atlas = atlasLevelSource();
 const over = { ...(ARM === 'on' ? { responderStepAfterReaders: true } : {}), ...JSON.parse(process.env.OVER ?? '{}') };
@@ -45,7 +48,9 @@ for (const w of W.shapes) {
     const tape = S.shapeTape(s, w.params);
     if (JSON.stringify(tape) !== JSON.stringify(w.tape)) throw new Error(`${w.shape}: the rebuilt tape is not the witnessed one`);
     const src = (n) => S.stagedRecord(atlas(n), s);
-    const m = withContactFidelity(over, () => S.replay(tape, src, { lockId: S.L_ID(s.base) }));
+    const lockId = ORDER ? S.RESP_ID(s) : S.L_ID(s.base);
+    const lockSeen = !ORDER || lockId === `lock@${s.base.resp.x},${s.base.resp.y}`;
+    const m = withContactFidelity(over, () => S.replay(tape, src, { lockId }));
     const game = new Map(w.whole.samples.map((g) => [g.tick, g]));
     const READ = /PushableBlock|Spinner|WallFlyer/;
     let first = null;
@@ -70,7 +75,7 @@ for (const w of W.shapes) {
         else for (let i = 0; i < gr.length; i++) dr = Math.max(dr, Math.abs(gr[i].x - mr[i].x), Math.abs(gr[i].y - mr[i].y));
         d = Math.max(d, dr);
         const ml = t > 0 ? m.rows[ARM === 'on' ? t : t - 1]?.lock?.open ?? null : null;
-        const lockMismatch = t > 0 && ml !== null && ml !== g.lockOpen;
+        const lockMismatch = lockSeen && t > 0 && ml !== null && ml !== g.lockOpen;
         if (d > 1e-9 && first === null) first = { t, px: +d.toFixed(4), game: { player: gp && [gp.x, gp.y], readers: gr.map((x) => [x.cls, x.x, x.y]) }, model: { player: [r.x, r.y], readers: mr.map((x) => [x.x, x.y]) } };
         if (lockMismatch && lockFirst === null) lockFirst = { t, game: g.lockOpen, model: ml };
         if (d > worst) worst = d;

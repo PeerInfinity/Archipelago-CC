@@ -2504,20 +2504,28 @@ export const CONTACT_FIDELITY = {
      * block stops one frame after L opens (`a1-open`); a Pulser-driven fire block that read "open" moves in and holds
      * a resetting L open (`a2-r149`); a spinner / wallflyer crossing holds L open (`b1-r124`, `b2-flyer`); a mid-tape
      * press opens L at on + 102 and re-shuts it at off + 2 (`a2-ctl`; the model OFF: + 101, + 1). Wave 63's
-     * `btn-lock` / `btn-cover` (no ButtonRoom) first differ from the model at rows 124 / 34 for the same reason.
+     * `btn-lock` / `btn-cover` (no ButtonRoom) first differ from the model at rows 124 / 34 for the same reason. Wave
+     * 65 (`-responderorder-evidence/d2/witness-order.json`): a ButtonRoom latch pressed MID-tape opens L at on + 102
+     * (`w-latch`; OFF + 101), a block's Button release re-shuts it a frame later than OFF (`w-block`), a spinner meets a
+     * resetting Cover as the read alone says (`w-cover-124`, `-128`), and a spinner crossing a Button PRESSES it (the
+     * Cover of its group opens, `w-spin-button`); an N-tick tape's hold-cut ledger holds no write from the model's
+     * step at the end of advance N (`d2/witness-horizon.json`: `l71-hold-101-shut`, `l30keylock-pit224-before`).
      * ON. The main tick's and a frozen tick's step is DEFERRED (`levelRun.deferResponderStep`) and runs at the top of
      * the next tick after the readers and the Chest, before the Pulser and the player; a span frame and an inventory
      * hold frame step at once (their readers already stepped first). Inside the step the responders run FIRST, on the
      * PREVIOUS step's publish (`state.published`: the Button's / ButtonRoom's press and the latch as they stood), and
      * the presser half (cross-room writes, the latch, wave 63's setters, the new publish) runs after them, on this
      * step's box; a world's first step seeds its publish first (the boot press, as OFF). The Lock family's guard counts
-     * the spinner and wallflyer boxes (`opts.enemies`); a Cover's does not. The Pulser reads the responders' read
+     * the spinner and wallflyer boxes (`opts.enemies`); a Cover's does not; the presser half's press counts them too
+     * (`Button.hitables` / `ButtonRoom.hitables` hold "Enemy"). A tape's last deferred step is past its last frame and
+     * never runs (the game's hold-cut ledger agrees). The Pulser reads the responders' read
      * (`state.responderRead`). So the readers read the plain current set: `spinnerLockLag`'s open lag and
      * `chestCoverFencepost`'s snapshot are NOT applied a second time, nor `pulserPublishLag`'s `pressedLast`. A
-     * transition tick's step still runs at its end in the level being left (OFF's placement). OFF: nothing read or
-     * written, byte-identical. Not modelled, named: a spinner / wallflyer on a Button (`Button.hitables` holds "Enemy";
-     * `movingSolidsNow` has none, wave 64); the other enemies in a Lock's box; the arrow trap's own lag (game-adjudicated,
-     * unchanged); the dead frames' responder update (the model steps none, OFF or ON).
+     * transition tick's step is not run (the level being left runs no later frame; game-witnessed, `w-leave-*`). OFF:
+     * nothing read or written, byte-identical. Not modelled, named: the other enemies in a Lock's box or on a Button (only the spinner
+     * and the wallflyer have model positions here); a spinner / wallflyer on a Button that drops a FallRock
+     * (`armButtonFallRocks` keeps its own press); the arrow trap's own lag (game-adjudicated, unchanged); the dead
+     * frames' responder update (the model steps none, OFF or ON).
      * Composes with every key; `presserRecursionHang`'s early return stays first. `SEEDLING_RESPONDER_STEP_AFTER_READERS=0|1`.
      * ⛔ OFF by default (no flip licence).
      */

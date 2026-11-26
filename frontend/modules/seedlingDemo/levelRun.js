@@ -4006,8 +4006,15 @@ export function createLevelRun({
             if (e.state.type === FALL_ROCK.landedType) solids.push({ id: e.id, rect: fallRockRect(e.state) });
         }
         const box = playerBoxAt(state.x, state.y);
-        applyLockEvents(stepActivators(activatorStateFor(level), worldFor(level), box,
-            { inventory, keys, movingSolids: solids }));
+        // ⛓ RESPONDERORDER (ON only): the span frame's readers (the blocks, the rock) have stepped, so the frame
+        // before's deferred step runs now, on them; this frame's is deferred to the next span frame (or the release).
+        if (CONTACT_FIDELITY.responderStepAfterReaders) {
+            runDeferredResponderStepNow(solids.slice(movingSolidsNow().length));
+            deferResponderStep(activatorStateFor(level), worldFor(level), box);
+        } else {
+            applyLockEvents(stepActivators(activatorStateFor(level), worldFor(level), box,
+                { inventory, keys, movingSolids: solids }));
+        }
         const rocks = fallRockStateFor(level);
         const spanIds = new Set(inSpan.map((e) => e.id));
         const armed = fallRocksArmedBy(worldFor(level), box, solids)
@@ -4049,6 +4056,10 @@ export function createLevelRun({
             // is the pull tick's own end-of-tick `stepActivators` (it runs after this collapsed span, with the rock
             // landed). Measured: stepping the release frame here too opens L28's lock one tick early (game t166).
             if (CONTACT_FIDELITY.fallRockHoldsButton && !r.unfroze) spanActivatorFrameNow([{ id, state: s }]);
+            // ⛓ RESPONDERORDER (ON only): the release frame's readers have stepped; the last span frame's step runs on them.
+            if (CONTACT_FIDELITY.fallRockHoldsButton && r.unfroze && CONTACT_FIDELITY.responderStepAfterReaders && !noclip) {
+                runDeferredResponderStepNow(s.type === FALL_ROCK.landedType ? [{ id, rect: fallRockRect(s) }] : []);
+            }
             // ⛔ THE SNAP. `FallRock.update`'s first arm writes the player's
             // `y` on every tick from the landing, and the player cannot move
             // out from under it — the whole span is frozen. So the LAST snap
@@ -15135,8 +15146,14 @@ export function createLevelRun({
         stepShootersNow();
         if (!noclip && beamTowersStepped()) stepBeamTowersNow({ frozen: true });
         if (!noclip) {
-            applyLockEvents(stepActivators(activators, world, playerBoxAt(state.x, state.y),
-                { inventory, keys, movingSolids: movingSolidsNow() }));
+            // ⛓ RESPONDERORDER (ON only): the frame before's deferred step (the tick's, on frame 1), then this one deferred.
+            if (CONTACT_FIDELITY.responderStepAfterReaders) {
+                runDeferredResponderStepNow();
+                deferResponderStep(activators, world, playerBoxAt(state.x, state.y));
+            } else {
+                applyLockEvents(stepActivators(activators, world, playerBoxAt(state.x, state.y),
+                    { inventory, keys, movingSolids: movingSolidsNow() }));
+            }
             if (pendingButtonFalls === null) {
                 armButtonFallRocks(playerBoxAt(state.x, state.y));
                 if (pendingButtonFalls !== null) {
@@ -16118,7 +16135,7 @@ export function createLevelRun({
      * the player's own position before it updates, so it lands at once. A press into a recursing group hangs the frame
      * (`presserRecursionHang`): this tick does not complete.
      */
-    const runDeferredResponderStepNow = () => {
+    const runDeferredResponderStepNow = (extraSolids = []) => {
         const p = pendingResponderStep;
         if (p === null) return;
         pendingResponderStep = null;
@@ -16127,7 +16144,7 @@ export function createLevelRun({
             return;
         }
         applyLockEvents(stepActivators(p.state, p.world, playerBoxAt(state.x, state.y),
-            { inventory, keys, movingSolids: movingSolidsNow(), enemies: responderEnemiesNow() }));
+            { inventory, keys, movingSolids: [...movingSolidsNow(), ...extraSolids], enemies: responderEnemiesNow() }));
         if (pendingSnapY !== null) {
             state = { ...state, y: pendingSnapY };
             pendingSnapY = null;
@@ -25265,10 +25282,11 @@ export function createLevelRun({
             // ...and THEN Button.update and Lock.update run, against where
             // the player ended up.
             if (!noclip) {
-                // ⛓ RESPONDERORDER (ON only): deferred to the next tick's top, after its readers — but a transition
-                // tick's step still runs here, in the level being left (OFF's placement; the old level has no next tick).
-                if (CONTACT_FIDELITY.responderStepAfterReaders && !next.transition) {
-                    deferResponderStep(activators, world, playerBoxAt(next.x, next.y));
+                // ⛓ RESPONDERORDER (ON only): deferred to the next tick's top, after its readers. A transition tick's
+                // is not run at all: the level being left runs no later frame (game-witnessed, `w-leave-*`: a Lock
+                // whose Button the player walks off into the teleporter never re-closes; OFF writes the close).
+                if (CONTACT_FIDELITY.responderStepAfterReaders) {
+                    if (!next.transition) deferResponderStep(activators, world, playerBoxAt(next.x, next.y));
                 } else {
                     applyLockEvents(stepActivators(activators, world,
                         playerBoxAt(next.x, next.y),

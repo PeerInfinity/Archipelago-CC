@@ -866,6 +866,9 @@ export function presserDown(p, playerBox, movingSolids = []) {
  */
 export function stepActivators(state, world, playerBox, opts = {}) {
     const { inventory = null, keys = null, movingSolids = [], enemies = [] } = opts;
+    // ⛓ RESPONDERORDER (ON only; OFF `enemies` is empty, so this is `movingSolids`): a Button and a ButtonRoom press on
+    // "Enemy" too (`Button.as:15`, `ButtonRoom.as:17`) — the presser half's solids carry the spinner / wallflyer boxes.
+    const pressers = enemies.length > 0 ? [...movingSolids, ...enemies.map((rect, i) => ({ id: `enemy#${i}`, rect }))] : movingSolids;
     // ⛓ fidelity CHESTCOVER (`chestCoverFencepost`, OFF never written): the open set BEFORE this step, for a body that
     // updates before the responders (the vanilla `Chest`) — see `openActivatorIdsBeforeStep`.
     if (CONTACT_FIDELITY.chestCoverFencepost) state.openBefore = openActivatorIds(state);
@@ -877,7 +880,7 @@ export function stepActivators(state, world, playerBox, opts = {}) {
         if (state.presserHang) return [];
         for (const p of world.pressers ?? []) {
             if (p.tag === 'buttonroom' && p.room >= 0) continue;
-            if (!presserDown(p, playerBox, movingSolids)) continue;
+            if (!presserDown(p, playerBox, pressers)) continue;
             const value = p.tag === 'buttonroom' ? !p.flip : true;
             if (markPresserHang(state, world, p.t, value, `${p.tag}@${p.x},${p.y} (pressed)`)) return [];
         }
@@ -893,9 +896,9 @@ export function stepActivators(state, world, playerBox, opts = {}) {
     if (!afterReaders) pressed = pressedGroups(world, playerBox, movingSolids);
     else {
         if (state.published === undefined) {
-            presserHalf(state, world, playerBox, movingSolids, events);
+            presserHalf(state, world, playerBox, pressers, events);
             presserHalfDone = true;
-            state.published = pressedGroups(world, playerBox, movingSolids);
+            state.published = pressedGroups(world, playerBox, pressers);
         }
         pressed = state.published;
         // What the responders read this step, for the one that is stepped outside this pass (`levelRun`'s Pulser).
@@ -1096,8 +1099,8 @@ export function stepActivators(state, world, playerBox, opts = {}) {
     // ⛓ RESPONDERORDER (ON only): the ButtonRoom's and the Button's update, after every responder's — the presser
     // half on this step's box, then the publish the NEXT step's responders read.
     if (afterReaders && !presserHalfDone) {
-        presserHalf(state, world, playerBox, movingSolids, events);
-        state.published = pressedGroups(world, playerBox, movingSolids);
+        presserHalf(state, world, playerBox, pressers, events);
+        state.published = pressedGroups(world, playerBox, pressers);
     }
     return events;
 }

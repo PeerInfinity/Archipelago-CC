@@ -1,0 +1,15 @@
+# box lock: TAKEN by witness-order.mjs (browser, pid 4575) — head 086b70412, 1 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+w-latch: whole tape 190 t, mounted seedling-vanilla-record-23510f80-ro-w-latch, 191 sampled ticks, stream 191, hits 0, 8.8 s
+w-latch-boot: whole tape 150 t, mounted seedling-vanilla-record-23510f80-ro-w-latch-boot, 151 sampled ticks, stream 151, hits 0, 7.4 s
+w-block: whole tape 240 t, mounted seedling-vanilla-record-23510f80-ro-w-block, 241 sampled ticks, stream 241, hits 0, 10.4 s
+w-cover-100: whole tape 150 t, mounted seedling-vanilla-record-23510f80-ro-w-cover-100, 151 sampled ticks, stream 151, hits 0, 7.4 s
+w-cover-104: whole tape 154 t, mounted seedling-vanilla-record-23510f80-ro-w-cover-104, 155 sampled ticks, stream 155, hits 0, 7.6 s
+w-cover-108: whole tape 158 t, mounted seedling-vanilla-record-23510f80-ro-w-cover-108, 159 sampled ticks, stream 159, hits 0, 7.7 s
+w-cover-112: whole tape 162 t, mounted seedling-vanilla-record-23510f80-ro-w-cover-112, 163 sampled ticks, stream 163, hits 0, 7.9 s
+w-cover-116: whole tape 166 t, mounted seedling-vanilla-record-23510f80-ro-w-cover-116, 167 sampled ticks, stream 167, hits 0, 8.0 s
+w-cover-120: whole tape 170 t, mounted seedling-vanilla-record-23510f80-ro-w-cover-120, 171 sampled ticks, stream 171, hits 0, 8.1 s
+w-cover-124: whole tape 174 t, mounted seedling-vanilla-record-23510f80-ro-w-cover-124, 175 sampled ticks, stream 175, hits 0, 8.3 s
+w-cover-128: whole tape 178 t, mounted seedling-vanilla-record-23510f80-ro-w-cover-128, 179 sampled ticks, stream 179, hits 0, 8.5 s
+w-spin-button: whole tape 300 t, mounted seedling-vanilla-record-23510f80-ro-w-spin-button, 301 sampled ticks, stream 301, hits 1, 12.6 s
+EXIT 0

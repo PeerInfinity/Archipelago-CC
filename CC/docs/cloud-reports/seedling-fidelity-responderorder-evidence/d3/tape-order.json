@@ -3,7 +3,6 @@
  "over": {},
  "movers": [
   "frontend/modules/seedlingDemo/fixtures/hammer-bw-bombstand-witness/hammer-bw-l42-381-bombstand.tape.json",
-  "frontend/modules/seedlingDemo/fixtures/refuted/r8-solve-5.tape.json",
   "frontend/modules/seedlingDemo/fixtures/tapes/l30keylock-pit224-before.json",
   "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json",
   "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json",
@@ -64,17 +63,11 @@
   },
   {
    "tape": "frontend/modules/seedlingDemo/fixtures/refuted/r8-solve-5.tape.json",
-   "moved": true,
+   "moved": false,
    "offThrows": "PhysicsV2Error: the player entered Water in level 5 at (47.00324793668, 56.39999999999999) on a tape that does not pin \"sound\". `Player.as:530` adds `0.25 * int(Music.soundPosition(\"Swim\") < 0.1)` to the swim speed, ",
    "hitsOff": null,
    "hitsOn": null,
-   "diff": [
-    {
-     "field": "THROW",
-     "off": "PhysicsV2Error: the player entered Water in level 5 at (47.00324793668, 56.39999999999999) on a tape that does not pin \"sound\". `Player.as:530` adds `0.25 * int(Music.soundPosition(\"Swim\") < 0.1)` to the swim speed, ",
-     "on": "PhysicsV2Error: the player entered Water in level 5 at (47.00324793668, 56.39999999999999) on a tape that does not pin \"sound\". `Player.as:530` adds `0.25 * int(Music.soundPosition(\"Swim\") < 0.1)` to the swim speed, "
-    }
-   ]
+   "diff": []
   },
   {
    "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l30keylock-pit224-before.json",
@@ -142,6 +135,24 @@
    "hitsOff": null,
    "hitsOn": null,
    "diff": [
+    {
+     "field": "earnedClears",
+     "i": 1,
+     "off": {
+      "level": 40,
+      "tag": 1,
+      "by": "buttonroom@160,128",
+      "t": 1370
+     },
+     "on": {
+      "level": 40,
+      "tag": 1,
+      "by": "buttonroom@160,128",
+      "t": 1336
+     },
+     "lenOff": 5,
+     "lenOn": 5
+    },
     {
      "field": "lockWrites",
      "i": 0,
@@ -515,42 +526,23 @@
    "hitsOn": null,
    "diff": [
     {
-     "field": "lockWrites",
+     "field": "earnedClears",
      "i": 0,
      "off": {
-      "id": "wandlock@480,560",
       "level": 40,
-      "flag": {
-       "level": 40,
-       "tag": 11,
-       "outOfBand": false
-      },
-      "t": 842,
-      "value": false
+      "tag": 12,
+      "by": "buttonroom@880,768",
+      "t": 742
      },
      "on": {
-      "id": "wandlock@480,560",
       "level": 40,
-      "flag": {
-       "level": 40,
-       "tag": 11,
-       "outOfBand": false
-      },
-      "t": 843,
-      "value": false
+      "tag": 12,
+      "by": "buttonroom@880,768",
+      "t": 114
      },
      "lenOff": 1,
      "lenOn": 1
-    }
-   ]
-  },
-  {
-   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json",
-   "moved": true,
-   "offThrows": null,
-   "hitsOff": null,
-   "hitsOn": null,
-   "diff": [
+    },
     {
      "field": "lockWrites",
      "i": 0,
@@ -573,7 +565,62 @@
        "tag": 11,
        "outOfBand": false
       },
-      "t": 843,
+      "t": 215,
+      "value": false
+     },
+     "lenOff": 1,
+     "lenOn": 1
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "earnedClears",
+     "i": 0,
+     "off": {
+      "level": 40,
+      "tag": 12,
+      "by": "buttonroom@880,768",
+      "t": 742
+     },
+     "on": {
+      "level": 40,
+      "tag": 12,
+      "by": "buttonroom@880,768",
+      "t": 114
+     },
+     "lenOff": 1,
+     "lenOn": 1
+    },
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "wandlock@480,560",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 11,
+       "outOfBand": false
+      },
+      "t": 842,
+      "value": false
+     },
+     "on": {
+      "id": "wandlock@480,560",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 11,
+       "outOfBand": false
+      },
+      "t": 215,
       "value": false
      },
      "lenOff": 3,
