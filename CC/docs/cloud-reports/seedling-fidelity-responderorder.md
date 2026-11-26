@@ -1,5 +1,3 @@
-> DRAFT — the ON test sweep and the after-gates are still running; the final report replaces this commit.
-
 # seedling-fidelity-responderorder: the responders step in the game's frame order (planning-25, wave 65)
 
 **Verdict: PASS.** One new key, `responderStepAfterReaders`, default OFF. OFF is byte-identical.
@@ -26,9 +24,9 @@ So 20 committed tapes move under ON, not 18. Every one is ledger-only: no tick, 
 | | |
 |---|---|
 | Start (base) | `aeb2437d5a7baccb14563a795cd9e2e1b5d524b6` (wave 63's tip, `claude/buttonroom-tag-clear-model-4074or`) |
-| Head | the report commit on top of the last code commit, `668b0e08` |
+| Head | the report commit on top of the last code commit, `3dc81668` |
 | Harness branch | `claude/seedling-responder-step-order-fazdoz` (local `seedling-fidelity-responderorder`) |
-| Commits | `30901b2f` (wave 64's evidence), `086b7041` (the key), `8742d14b` (D1 + the frame kinds + rows), `5520883a` (guard by name; surface re-derived), `663b45a9` (a torn-down world's step dropped), `668b0e08` (two pins, the census literal), then this report |
+| Commits | `30901b2f` (wave 64's evidence), `086b7041` (the key), `8742d14b` (D1 + the frame kinds + rows), `5520883a` (guard by name; surface re-derived), `663b45a9` (a torn-down world's step dropped), `668b0e08` (two pins, the census literal), `3dc81668` (the corpsebump2 hold-cut witness and row, the probe counters), then this report |
 | Page | `seedling_bot_ap_p4g`, `scripts/serve-nocache.py 9798` (stopped by PID at the end) |
 | Key count | 152 → 153 keys (126 ON unchanged); last key `responderStepAfterReaders`; `SOLVER_ENV_NAMES` 249 → 250 (sorted, unique) |
 
@@ -212,11 +210,100 @@ ON:
 
 ### The ON test sweep
 
-ON_SWEEP_PLACEHOLDER
+`SEEDLING_RESPONDER_STEP_AFTER_READERS=1` over every test file that names the families: 576 files.
+- 542 fast-tier files, in 19 batches of 30 (`--maxWorkers=2`).
+- 34 `.slow.`/`.train.`/`.calib.` files, one at a time, each under its own config.
+
+**95 rows fail ON, in 42 files, out of 15,725.** Every one falls in one of four classes. None is a model error.
+The counts come from the JSON reports: this vitest's `--reporter=json --outputFile` exits 0 on a red batch.
+
+**(1) Game-witnessed: ON is the game, and the row pins OFF's timing (19 rows).**
+- **Measured: these game replays now match ON.**
+  - `fidelityL39Shaft` D1 (`l39shaft-scripted`): ON at `lockLag` 0 has 0 disagreements. OFF needs `lockLag` 1, and ON
+    at 1 gives exactly OFF's four lock rows, one tick later. The ledger read offset that OFF needed is the deferral.
+  - The same shift explains the D2 lock row (t367/368), and the D2 MUTANT row's first disagreement is now a lock row,
+    not a spinner row (2 rows).
+  - `fidelityPublishedButtonRoom` `btn-lock`/`btn-cover`: the controls the row names as lagging the game "OFF and ON
+    alike" replay at **0 px ON** (2 rows).
+- `fidelityL40Button` `l40button-l42-part0`: ON clears (40,1) at 1336, and the game's hold-cut is 1337 (`d2/witness-l40button`).
+  OFF says 1370. The forced-order assertion (`at[1]` after every rock) does not hold in the game: rock (40,23) clears at 1360.
+- `fidelityCorpseBump2`: `openAt` 1301 → 1303. The game's (40,9) is at cut 1303, which is ON's stamp 1302.
+- The latch/hold +1 (`w-latch`: the game opens at on + 102):
+  - `levelRun` R2 ×3 (101 → 102 ticks of standing);
+  - `activators` ×3 (the fades, the release, the block latch);
+  - `r5Totem` link 4 ("the hold is 101 ticks");
+  - `botDriverV2` R2 (a 101-tick hold is now short).
+- `fidelityL30KeyLock` D1 ×3:
+  - `bosslock@64,32` opens one model row later: 304 → 305 and 325 → 326. That is OFF row t−1 = ON row t, the same game tick.
+  - The 212-tick `pit224-before` opens past its last frame: the horizon, which the game's hold-cuts witness.
+- `fidelityWandHold`: the game samples all still agree (`disagreements` = []). Only the model's own cover row moves:
+  open 40 → 42, shut 61 → 63. That is the deferral plus the responders reading the Button's previous publish.
+
+**(2) OFF-contract units and OFF-arm rows: they pin the call order or a key that ON ignores (25 rows).**
+- `fidelityDeterm` (c) ×6 and `r5Shaft` `lockclose`: these step `stepActivators` and read the events of the same call.
+  ON emits them a call later.
+- `levelRun` R3 and `botDriverV2` R3: the touch-lock window, 263/264 and 27/28.
+- `fidelityChestCover` ×5: the OFF-12 expectations, and the `chestCoverFencepost` arm, which ON gates off (no double
+  application). The Chest's tick 13 holds ON in `fidelityResponderOrder.test.js`.
+- `fidelityFirePush` (`pulserPublishLag` OFF) and `fidelityL40Res` (`spinnerLockLag` OFF): ON ignores both lags.
+  `fidelityResponderOrder.test.js` holds L40RES at 0 px either way.
+- `seedlingResponderFade` (`f6-l20-reentry`): its anchor reads the type against the open at OFF's row alignment.
+- The frame-choice goldens recorded OFF, each shifted by a frame:
+  - `seedlingMachineSkin`;
+  - `seedlingPuzzleSkin`;
+  - `seedlingSolidsSkin` ×4;
+  - `seedlingSoundCues` ×2.
+
+**(3) Solver re-plans: the solver plans with the ON model and comes out a tick or a few different (51 rows).** This is
+the HAMMER hand-over. A wait reads the pre-step set between ticks, so it sees an open one tick later.
+- Fast tier:
+  - `fidelityCorpseBump`, `fidelityCrossRoom` ×5, `fidelityL100Lattice`, `fidelityL12Doors` ×4,
+    `fidelityL30KeyLock` D2 ×9, `fidelityL39Hit` ×2, `fidelityL39Shaft` D2 (2741/2740), `fidelityL40Latch`,
+    `fidelityProximity` ×2, `fidelityRulesref` ×2, `fidelityTurretCircle` ×2;
+  - `hammerDashWindow`, `hammerErGaps`, `hammerKeylockTurretArrival`, `hammerLatchWeigh`, `hammerRockHolderWait` ×2,
+    `hammerSpinnerPress`;
+  - `r5Totem` L41 (77/76), `seedlingRobust` ×2, `solverBot` R9 12d″ ×2.
+- Train tier:
+  - `fidelityCorpseBump2.train` ×2, `hammerBk2Combat.train`, `hammerChooserPair.train` (656/655),
+    `hammerEscapeExact.train` ×2, `hammerTurretApproach.train` ×3.
+  - OFF, the same five train files: `fidelityCorpseBump2.train` passes; the other four are still running (filled in by the next commit).
+- **Hits, measured where a row pins them:**
+  - `fidelityL30KeyLock` D2: every re-plan is +1 tick at **0 hits** (347 → 348, 309 → 310, 318 → 319, 320 → 321, 341 → 342).
+  - Its two "both OFF" rows still refuse, under a different refusal message.
+- **CrossRoom (verified):** ON replays the OFF-solved tapes at 0 px. Its D4 rows fail because the solver's ON plan is a
+  different tape: 407 rows against 422. The `TypeError`s are the rows that index that plan.
+
+**(4) Not this slice.** `omsiUnlockPool` fails to load (an ENOENT on a file this slice does not touch); it is not counted in the 95.
+
+**The hit gate over the sweep:**
+- No row that replays a committed tape or a game witness takes a hit ON.
+- The re-plans that pin hits pin 0, and they still get 0.
+- I did not measure hits on every hammer re-plan. Those rows pin ticks, not hits; the train runs are named for CI below.
 
 ## Gates
 
-GATES_PLACEHOLDER
+All gates are at the head with the key OFF.
+- **Bounded vitest:**
+  - before, at the base worktree: 56 files, 1618 passed;
+  - after, at the head: 61 files, **1768 passed**, 0 failed. That is the same family set plus the new and touched files,
+    `fidelityResponderOrder.test.js` among them (64 tests).
+- **CI at `3dc81668`, the last code head** (`ci-vitest-summary.mjs`):
+  - suite: vitest (unfiltered), 1445 files, **30338 passed, 0 failed**;
+  - slow battery: 39 files, 460 passed.
+  - The run at `668b0e08` was cancelled when the next push superseded it. The commits after it are evidence and one
+    test file.
+- **The train tier is NOT run in CI at this head.** For the planner: `gh workflow run unittests_frontend.yml -R
+  PeerInfinity/Archipelago-CC --ref claude/seedling-responder-step-order-fazdoz -f train_only=true`. I can't dispatch.
+  Locally, OFF, the five train files that move ON pass (above).
+- **The six solve `--check`s exit 0:** r8-battery, r8-d2-chain, r8-l18, r8-tail, r9-l3 and r9-campaign.
+- **Checks that pass:**
+  - `check-procgen-docs`;
+  - `generate-procgen-reference --check`;
+  - the constants census;
+  - `seedling-solver-surface --check` (re-derived with `--write`, line numbers only).
+- **`ci-producer-checks`:** 99 run, 0 red, 1 skipped, 0 known-red.
+- **No fixture diff.** The acceptance md5 at head OFF is the base's: `391322d681b7aa0229d94b3f6906d024`.
+- Not run, by the brief: `pytest`, the unfiltered local vitest (⚖ 52) and `standing-values --write`.
 
 ## What the brief got wrong (measured)
 
@@ -247,7 +334,8 @@ GATES_PLACEHOLDER
 - A flip re-records:
   - the 20 movers' ledger pins (the rows that read `lockWrites`/`earnedClears`/`pulserHits` ticks);
   - the acceptance md5 (`d871cee754a7490a7003a7395028e531`; post-swim seed 3);
-  - `fidelityL30KeyLock.test.js`'s `open: 212`, a model-side landmark past the horizon (see the sweep list).
+  - the ON sweep's class (1) and (2) rows, 44 in all (§ The ON test sweep), `fidelityL30KeyLock`'s `open: 212` among them;
+  - the class (3) re-plans, which follow whatever HAMMER decides about the between-tick view.
 - CI: dispatch `unittests_frontend.yml -f train_only=true` at the head (I can't dispatch).
 - The press lag's latch half is now witnessed (`w-latch`), so `prox-l38-chest`'s pulser pushes move with it, as wave 64 asked.
 
