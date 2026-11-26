@@ -9,7 +9,8 @@
  * crossings between its door sides have a no-hit line with no item and which arms give one, and `--check` holds the
  * table's DIRECTIONS (and each witnessed arm) to that derivation. It is not a rule source because:
  *   - it sees flyers only: a Bob, a chaser or a pushable block sharing the room is not modelled, so its free and armed
- *     verdicts can be looser than the game (L25 east's Wand: derived YES, unwitnessed);
+ *     verdicts can be looser than the game (L25 east's Wand: derived YES from a row-3 line the game refuses to the
+ *     room's Bobs and block; the game witness `l25-26-22-wand` is a different, row-5 line the derivation does not see);
  *   - it is knife-edge: ±1 tick or ±1 pixel flips L22 and L25's verdicts, so it is only as good as the transcriptions.
  *
  * ⛓ ITS INPUTS ARE THE MODEL'S OWN, IMPORTED, NEVER COPIED: the level records (`atlases/seedling-map.json`), the room's

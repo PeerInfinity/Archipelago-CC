@@ -1,0 +1,7 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/flashPanel/seedlingMountKeyLevelSet.test.js > ⛔ level_set ABSENT → every committed Seedling preset's mount key (and JS save key) is byte-identical to the base > frontend/presets/seedling_er/AP_1/AP_1_rules.json
+ FAIL  frontend/modules/flashPanel/seedlingMountKeyLevelSet.test.js > ⛔ level_set ABSENT → every committed Seedling preset's mount key (and JS save key) is byte-identical to the base > frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json
+ FAIL  frontend/modules/flashPanel/seedlingMountKeyLevelSet.test.js > ⛔ level_set ABSENT → every committed Seedling preset's mount key (and JS save key) is byte-identical to the base > frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json
+ FAIL  frontend/modules/seedlingDemo/vanillaOverlay.test.js > ⛔ E5 — the committed fixture is the script's own output > ⛔⛔ the DERIVED names of the committed fixture EQUAL the playthrough atlas's, as a set
+ Test Files  2 failed | 197 passed (199)
+      Tests  4 failed | 3641 passed (3645)
