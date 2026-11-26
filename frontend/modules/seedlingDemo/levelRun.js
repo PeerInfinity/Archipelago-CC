@@ -4010,7 +4010,7 @@ export function createLevelRun({
         // before's deferred step runs now, on them; this frame's is deferred to the next span frame (or the release).
         if (CONTACT_FIDELITY.responderStepAfterReaders) {
             runDeferredResponderStepNow(solids.slice(movingSolidsNow().length));
-            deferResponderStep(activatorStateFor(level), worldFor(level), box);
+            deferResponderStep(activatorStateFor(level), worldFor(level));
         } else {
             applyLockEvents(stepActivators(activatorStateFor(level), worldFor(level), box,
                 { inventory, keys, movingSolids: solids }));
@@ -15149,7 +15149,7 @@ export function createLevelRun({
             // ⛓ RESPONDERORDER (ON only): the frame before's deferred step (the tick's, on frame 1), then this one deferred.
             if (CONTACT_FIDELITY.responderStepAfterReaders) {
                 runDeferredResponderStepNow();
-                deferResponderStep(activators, world, playerBoxAt(state.x, state.y));
+                deferResponderStep(activators, world);
             } else {
                 applyLockEvents(stepActivators(activators, world, playerBoxAt(state.x, state.y),
                     { inventory, keys, movingSolids: movingSolidsNow() }));
@@ -16115,34 +16115,32 @@ export function createLevelRun({
     /**
      * ⛓ fidelity RESPONDERORDER D2 (`CONTACT_FIDELITY.responderStepAfterReaders`, OFF never written): the step a tick
      * ends on is DEFERRED to the next tick's top, after the readers and the Chest (`runDeferredResponderStepNow`), which
-     * is where the game's frame runs its responders. `{level, state, world, box}` (the box for a stale flush only).
+     * is where the game's frame runs its responders. `{level, state, world}`.
      */
     let pendingResponderStep = null;
     /** The Lock family's "Enemy" boxes (ON only): the live spinners and wallflyers. */
     const responderEnemiesNow = () => (CONTACT_FIDELITY.responderStepAfterReaders && !noclip
         ? [...spinnerRects(spinnerStateFor(level)).map((r) => r.rect), ...wallFlyerBodiesNow().map((w) => wallFlyerRect(w))]
         : []);
-    const deferResponderStep = (activators, w, box) => {
+    const deferResponderStep = (activators, w) => {
         if (pendingResponderStep !== null) {
             throw new Error(`levelRun: tick ${ticksCompleted} defers a responder step over one still pending `
                 + `(level ${pendingResponderStep.level}) — two steps for one frame (responderStepAfterReaders).`);
         }
-        pendingResponderStep = { level, state: activators, world: w, box };
+        pendingResponderStep = { level, state: activators, world: w };
     };
     /**
      * Run the deferred step (ON only): the game's responder update of THIS frame, after its readers. The occupancy
      * reads the player where the last tick left it and the readers where this tick left them. A touch lock's snap is
      * the player's own position before it updates, so it lands at once. A press into a recursing group hangs the frame
-     * (`presserRecursionHang`): this tick does not complete.
+     * (`presserRecursionHang`): this tick does not complete. A step whose world was torn down since (a new `Game` in
+     * the level: a death reboot, `enterWorld`) is dropped — that world runs no later frame, as on a transition.
      */
     const runDeferredResponderStepNow = (extraSolids = []) => {
         const p = pendingResponderStep;
         if (p === null) return;
         pendingResponderStep = null;
-        if (p.level !== level || activatorStateFor(level) !== p.state) {
-            applyLockEvents(stepActivators(p.state, p.world, p.box, { inventory, keys, movingSolids: [] }));
-            return;
-        }
+        if (p.level !== level || activatorStateFor(level) !== p.state) return;
         applyLockEvents(stepActivators(p.state, p.world, playerBoxAt(state.x, state.y),
             { inventory, keys, movingSolids: [...movingSolidsNow(), ...extraSolids], enemies: responderEnemiesNow() }));
         if (pendingSnapY !== null) {
@@ -16875,7 +16873,7 @@ export function createLevelRun({
         // ⛓ fidelity BEAMTOWER D1: a tower's own update returns on the freeze, its graphic still updates.
         if (!noclip) {
             // ⛓ RESPONDERORDER (ON only): deferred to the next tick's top, after its readers.
-            if (CONTACT_FIDELITY.responderStepAfterReaders) deferResponderStep(activators, world, playerBoxAt(state.x, state.y));
+            if (CONTACT_FIDELITY.responderStepAfterReaders) deferResponderStep(activators, world);
             else {
                 applyLockEvents(stepActivators(activators, world,
                     playerBoxAt(state.x, state.y),
@@ -25286,7 +25284,7 @@ export function createLevelRun({
                 // is not run at all: the level being left runs no later frame (game-witnessed, `w-leave-*`: a Lock
                 // whose Button the player walks off into the teleporter never re-closes; OFF writes the close).
                 if (CONTACT_FIDELITY.responderStepAfterReaders) {
-                    if (!next.transition) deferResponderStep(activators, world, playerBoxAt(next.x, next.y));
+                    if (!next.transition) deferResponderStep(activators, world);
                 } else {
                     applyLockEvents(stepActivators(activators, world,
                         playerBoxAt(next.x, next.y),

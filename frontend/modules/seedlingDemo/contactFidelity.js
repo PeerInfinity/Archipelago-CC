@@ -2521,7 +2521,8 @@ export const CONTACT_FIDELITY = {
      * never runs (the game's hold-cut ledger agrees). The Pulser reads the responders' read
      * (`state.responderRead`). So the readers read the plain current set: `spinnerLockLag`'s open lag and
      * `chestCoverFencepost`'s snapshot are NOT applied a second time, nor `pulserPublishLag`'s `pressedLast`. A
-     * transition tick's step is not run (the level being left runs no later frame; game-witnessed, `w-leave-*`). OFF:
+     * transition tick's step is not run (the level being left runs no later frame; game-witnessed, `w-leave-*`), nor a
+     * step whose world a same-level rebuild tore down (a death reboot, `enterWorld`; derived, unwitnessed). OFF:
      * nothing read or written, byte-identical. Not modelled, named: the other enemies in a Lock's box or on a Button (only the spinner
      * and the wallflyer have model positions here); a spinner / wallflyer on a Button that drops a FallRock
      * (`armButtonFallRocks` keeps its own press); the arrow trap's own lag (game-adjudicated, unchanged); the dead
