@@ -385,16 +385,18 @@ describe('the corpus census — printed, then pinned', () => {
          *              (`same-doc` 45 → 46), and substrate-registry.md's new `regionBiomeOf` row → it (`doc` 337 → 338).
          *   450 → 452  document library B3 (2026-11-23): editing-core.md § The document library → seedling-editor.md
          *              § Saving to the library, and that section → editing-core.md § The document library (`doc` 338 → 340).
-         *   452 → 454  mystery substrate S1 (2026-11-25): the new mystery.md → architecture.md, and the generated README index's row for mystery.md (`doc` 340 → 342).
+         *   452 → 453  ActionNodes AN-OMSI-2 (2026-11-24): action-nodes.md's fill-retry measurement → its own new
+         *              § The omsi town (`same-doc` 46 → 47).
+         *   453 → 455  mystery substrate S1 (2026-11-25): the new mystery.md → architecture.md, and the generated README index's row for mystery.md (`doc` 340 → 342).
          */
         expect(by).toEqual({
-            'same-doc': 46,
+            'same-doc': 47,
             doc: 342,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(454);
+        expect(CORPUS.length).toBe(455);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {

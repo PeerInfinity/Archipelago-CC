@@ -335,8 +335,9 @@ describe('⛓ the links the render emits', () => {
         //   448 → 450: content sets GEN-1 — maze.md → its own § Region biomes, and substrate-registry.md's
         //   `regionBiomeOf` row → it (1 same-doc, 1 doc).
         //   450 → 452: document library B3 — editing-core.md ↔ seedling-editor.md § Saving to the library (2 doc).
-        //   452 → 454: mystery substrate S1 (2026-11-25): the new mystery.md → architecture.md, and the generated README index's row for mystery.md (2 doc).
-        expect(checked).toBe(454);
+        //   452 → 453: ActionNodes AN-OMSI-2 — action-nodes.md → its own § The omsi town (1 same-doc).
+        //   453 → 455: mystery substrate S1 (2026-11-25): the new mystery.md → architecture.md, and the generated README index's row for mystery.md (2 doc).
+        expect(checked).toBe(455);
     });
 
     it('tags each link with the kind that produced it', () => {
