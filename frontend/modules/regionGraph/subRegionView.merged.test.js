@@ -64,7 +64,9 @@ const ALTTP = 'alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json'
 const MAZE = 'procgen_maze/AP_3/AP_3_rules.json';
 
 function load(rel, stateName = 'mid') {
-    const rules = kit.loadRules(rel);
+    // ⛓ groups-c: `{ frozen: name }` reads the FROZEN copy (`kit.loadFrozenRules`) — for a pin that must not move
+    // with a legitimate change to the live preset.
+    const rules = rel?.frozen ? kit.loadFrozenRules(rel.frozen) : kit.loadRules(rel);
     const regions = kit.regionsOf(rules);
     sm.rules = rules;
     sm.staticData = { regions, exits: null };
@@ -98,11 +100,12 @@ beforeEach(() => { gs.current = null; });
 
 describe('⛓ merged: the setting', () => {
     it('appends `merged` with its label; the default stays `separate`', () => {
-        expect(G.SUB_REGION_VIEW_SCHEMA.enum).toEqual(['separate', 'nested', 'merged']);
+        expect(G.SUB_REGION_VIEW_SCHEMA.enum).toEqual(['separate', 'nested', 'merged', 'collapsible']);
         expect(G.SUB_REGION_VIEW_SCHEMA.default).toBe('separate');
         expect(G.SUB_REGION_VIEW_LABELS.merged).toBe('Merged into one node per region');
         expect(G.normaliseSubRegionView('merged')).toBe('merged');
-        expect(G.normaliseSubRegionView('collapsible')).toBe('separate');
+        expect(G.normaliseSubRegionView('collapsible')).toBe('collapsible'); // groups-c
+        expect(G.normaliseSubRegionView('no-such-view')).toBe('separate');
     });
 
     it('isRegionGroupNode is ONE predicate, extended with a kind', () => {
@@ -245,8 +248,8 @@ describe('⛓ merged: counts per preset, and worlds without sub-regions', () => 
         }
     });
 
-    it('the round trip separate → merged → separate on ONE graph = a fresh separate', () => {
-        const { regions } = load(SEEDLING);
+    it('the round trip separate → merged → separate on ONE graph = a fresh separate (frozen seedling_playthrough)', () => {
+        const { regions } = load({ frozen: 'seedling_playthrough' });
         const fresh = build(regions, 'separate').els;
         const ui = kit.makeUi(kit.loadCytoscape());
         build(regions, 'separate', ui);
@@ -258,7 +261,7 @@ describe('⛓ merged: counts per preset, and worlds without sub-regions', () => 
         // eslint-disable-next-line no-console
         console.log(`[merged-round-trip] fresh=${kit.digestOf(fresh)} back=${kit.digestOf(back)} merged=${kit.digestOf(mid.els)}`);
         expect(kit.digestOf(back)).toBe(kit.digestOf(fresh));
-        expect(kit.digestOf(back)).toBe('8760984c763bdf2e'); // groups-a's seedling_playthrough mid pin
+        expect(kit.digestOf(back)).toBe('8760984c763bdf2e'); // groups-a's seedling_playthrough mid pin (over the FROZEN copy)
     });
 
     it('the merged node: its label is the key plus summed counts, its state the members\' (groupState)', () => {

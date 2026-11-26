@@ -4,6 +4,7 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { isRegionGroupNode, SUB_REGION_VIEW_KEY, SUB_REGION_VIEW_SCHEMA, SUB_REGION_VIEW_LABELS } from './subRegionGroups.js';
+import { NODE_LOOK_KEY, NODE_LOOK_SCHEMA, NODE_LOOK_LABELS, NODE_LOOK_HINT, syncNodeLookControl } from './nodeLook.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -53,6 +54,13 @@ export class LayoutControlsManager {
               ${SUB_REGION_VIEW_SCHEMA.enum.map((v) => `<option value="${v}">${SUB_REGION_VIEW_LABELS[v] ?? v}</option>`).join('')}
             </select>
           </label>
+          <label style="display: block; margin: 3px 0;">
+            <span style="margin-right: 5px;">Node look:</span>
+            <select id="nodeLook" style="padding: 2px;">
+              ${NODE_LOOK_SCHEMA.enum.map((v) => `<option value="${v}">${NODE_LOOK_LABELS[v] ?? v}</option>`).join('')}
+            </select>
+          </label>
+          <div id="nodeLookHint" style="display: none; margin: 0 0 3px 0; font-size: 11px; color: #aaa;">${NODE_LOOK_HINT}</div>
         </details>
         <details open style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
           <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">Location Visibility:</summary>
@@ -210,6 +218,20 @@ export class LayoutControlsManager {
           await settingsManager.updateSetting(SUB_REGION_VIEW_KEY, e.target.value);
         } catch (error) {
           logger.warn(`Failed to save setting ${SUB_REGION_VIEW_KEY}:`, error);
+        }
+      });
+    }
+
+    // ⛓ Node look (region-graph-map-look): the select writes the setting; the panel's settings:changed handler reloads
+    // it and turns the map look on or off WITHOUT a rebuild. Disabled (with a hint) unless Draw as is merged.
+    const nodeLookSelect = this.ui.controlPanel.querySelector('#nodeLook');
+    if (nodeLookSelect) {
+      syncNodeLookControl(this.ui);
+      nodeLookSelect.addEventListener('change', async (e) => {
+        try {
+          await settingsManager.updateSetting(NODE_LOOK_KEY, e.target.value);
+        } catch (error) {
+          logger.warn(`Failed to save setting ${NODE_LOOK_KEY}:`, error);
         }
       });
     }
@@ -699,15 +721,30 @@ export class LayoutControlsManager {
   /**
    * The saved-position store for the view the graph draws: `separate` and `nested` share `ui.nodePositions` (region
    * positions); `merged` has its own, `ui.mergedNodePositions` (its group nodes and the regions drawn beside them), so
-   * a `merged` layout never writes over `separate`'s saved one. Neither is persisted.
+   * a `merged` layout never writes over `separate`'s saved one. ⛓ `collapsible` (region-graph-groups-c) has its own
+   * too, `ui.collapsibleNodePositions` (closed group nodes, open members and the regions beside them). None is
+   * persisted.
    */
   positionStore() {
+    if (this.ui.subRegionView === 'collapsible') {
+      if (!this.ui.collapsibleNodePositions) this.ui.collapsibleNodePositions = new Map();
+      return this.ui.collapsibleNodePositions;
+    }
     if (this.ui.subRegionView !== 'merged') return this.ui.nodePositions;
     if (!this.ui.mergedNodePositions) this.ui.mergedNodePositions = new Map();
     return this.ui.mergedNodePositions;
   }
 
   saveNodePositions() {
+    if (this.ui.subRegionView === 'collapsible') {
+      // ⛓ collapsible: every drawn node but an open group's box, location nodes and the player, into its own store.
+      // Not cleared first: a closed group keeps its members' last arrangement for the next open.
+      const store = this.positionStore();
+      this.ui.cy.nodes().not('.location-node').filter((n) => !n.hasClass('player') && !isRegionGroupNode(n, 'box')).forEach((node) => {
+        store.set(node.id(), { x: node.position('x'), y: node.position('y') });
+      });
+      return;
+    }
     if (this.ui.subRegionView === 'merged') {
       // ⛓ merged: every drawn node but location nodes and the player, into merged's own store.
       const store = this.positionStore();
