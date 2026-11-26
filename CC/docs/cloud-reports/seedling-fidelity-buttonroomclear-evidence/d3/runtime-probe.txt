@@ -1,0 +1,5 @@
+tapes (ON arm carries the probe): OVER {} tapes 294: identical 294, differ 0
+  tapes that DIFFER: []
+acceptance ON with the probe, md5: 391322d681b7aa0229d94b3f6906d024  - (standing 391322d681b7aa0229d94b3f6906d024)
+positive control (this slice's rows): 21 failed | 20 passed (41) | RUNTIME-PROBE messages: 9 | sites: ['a TRUE roomwrite', 'a reached ButtonRoom ran its setter', 'latchAtBuild answered false', 'pressedGroups answered false', 'pressedGroups answered false\\', 'the pull latch answered false']
+restored: clean
