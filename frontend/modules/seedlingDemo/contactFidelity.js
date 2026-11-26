@@ -2622,9 +2622,42 @@ export const CONTACT_FIDELITY = {
     /**
      * ⛓ fidelity WANDENEMYBODIES (wave 68) — A WAND SHOT STOPS ON A LIVE TURRET, LAVATRAP, WALLFLYER, ICETRAP, SANDTRAP
      * OR DRILL, AND THE HIT IS THE GAME'S (wave 67's residue; L59/L62/L65's turret and L78's lavatraps on the late walk).
-     * DOC-PENDING (filled with the witnesses below).
+     * The game. All six are `Enemy`s (`Enemy.as:58` `type = "Enemy"`) and none writes `collidable`, so each is a body to
+     * the shot (`WandShot.as:69` `solids.push("Enemy")`) from its ctor until the world removes it; the shot updates
+     * first (run-time added, `World.addUpdate` prepends), so it reads each as the previous tick left it. A blocker gets
+     * `hit(3, p, 0.5, "Wand")` (`WandShot.as:112-117`) — `Enemy.hit` (`Enemy.as:141-181`): behind `hitsTimer <= 0`,
+     * `!freezeObjects` and `canHit`, `hits += 0.5`, `hitsTimer = 30`, then `knockback` (or `startDeath` at `hitsMax` 3).
+     * Per class: Turret, SandTrap, LavaTrap and Drill have EMPTY `knockback`s; a WallFlyer's reverses `v`; an IceTrap's
+     * `canHit = false` (`IceTrap.as:32`) closes the gate. While `hitsTimer` runs a Turret starts no shot (`Turret.as:64`)
+     * and no body's `hitPlayer` fires; a Drill plays "hit" and holds its hop (`Drill.as:61-63`). MEASURED on the game
+     * (p4g, the delivered vanilla set, a fresh page per shape; `fixtures/wandenemybodies-witness/`, 16 recordings by
+     * `probe-seedling-wandenemybodies.mjs`, compared at every sampled tick: the player at 0 px, every shot, every body's
+     * point, `hits` and `hitsTimer`, a flyer's `v`, a drill's and a turret's anim, every TurretSpit): L59's turret stops
+     * the shot at (151, 72) on tick 15 and takes hits 0.5 / 29 on its own update, its spits held by the i-frames
+     * (`turret-live`); a second shot 20 ticks later lands in them (9 left, no damage) and a third lands (hits 1)
+     * (`turret-iframes`); L65's at (63, 120) on 15 (`turret-l65`); after C1's L62 sword kill it is a body in "die" and
+     * in `Mobile.death`'s fade (hits 3 >= hitsMax: no damage), and after its removal the shot flies on (`turret-die`,
+     * `-fade`, `-removed`); L78's lavatrap at (98, 88) on 18, hits 0.5 (`lavatrap-live`, `-iframes`); L53's icetrap
+     * stops it and takes nothing (`icetrap-live`); L16's and L36's sandtraps at (66, 40) / (72, 98) on 14, a dying one
+     * is a body and a removed one is not (`sandtrap-live`, `-l36`, `-die`, `-removed`); L27's wallflyer, launched at
+     * the player, is met in flight at (177, 56) on 16 and reversed (v -4 → +4) (`wallflyer-flight`); L88's sitting
+     * (invisible) drill stops it and plays "hit" for its i-frames, and a hopped one is met at its new cell
+     * (`drill-sit`, `drill-hop`). The model ON is the game at every sampled tick.
+     * ON (`levelRun.assertWandShotSolidsBound`, `wandShotBlockerAt`, `applyWandShotToBoss` →
+     * `applyWandShotToEnemyBody`): the bodies whose state the run holds (`wandEnemyBodyIdsFor`) count as placed — a
+     * Turret or SandTrap on F4's static row (`staticBodyStateFor`; a Turret only with `STATIC_SWORD_ARM` ON), a
+     * LavaTrap on its own wand row (`wandLavaTrapStateFor`, its i-frames stepped by `stepWandLavaTrapsNow`), an IceTrap
+     * at its census box, a WallFlyer (`wallFlyerStateFor`) and a Drill (`drillStateFor`, only the drills it steps) at
+     * their live boxes; read FIRST in the shot's "Enemy" arm; the hit is `enemyHit` / `hitWallFlyer` / `hitDrill` on
+     * that state, so the readers that already gate on it (the turret's fire gate, the static contact scan, the flyer's
+     * and the drill's steppers) see it. Refused by name: under `noclip || noDamage` (no body stepped: the chasers'
+     * gate); a hit that KILLS (`startDeath` → `dieEffects("Wand")`'s `Explosion`, or a LavaTrap's tongue ending —
+     * neither placed by this run); a shot box over two or more "Enemy" bodies on one step (the type-list order is not
+     * held). OFF: nothing read, byte-identical. Not modelled, named: the kill (six landed hits, 30 apart); the
+     * wave-67 overlap guard's unreachable totem/spinner arms (residue).
      * Needs `STATIC_SWORD_ARM` for the turrets (their damage row) and `drillLive` for the drills; composes with every
-     * key. `SEEDLING_WAND_SHOT_ENEMY_BODIES=0|1`.
+     * key (`wandShotTrapBodies` for the rooms that also hold a darktrap or a grenade: L59, L62, L65, L78).
+     * `SEEDLING_WAND_SHOT_ENEMY_BODIES=0|1`.
      * ⛔ OFF by default (no flip licence).
      */
     wandShotEnemyBodies: false,

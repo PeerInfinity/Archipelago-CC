@@ -692,7 +692,9 @@ describe('who takes the box', () => {
             // lab document library B3: the Seedling lab's save points, reload, Recent sets, two tabs (import door: `isEntryPoint` → main())
             'check-seedling-lab-library.mjs',
             // fidelity WANDTRAPBODIES: a wand shot at a darktrap or a placed grenade, on the game (import door: `isEntryPoint` → main())
-            'probe-seedling-wandtrapbodies.mjs'];
+            'probe-seedling-wandtrapbodies.mjs',
+            // fidelity WANDENEMYBODIES: a wand shot at the six Enemy classes, on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-wandenemybodies.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

@@ -183,10 +183,9 @@ describe('fidelity WANDENEMYBODIES — what each witness measures (the game\'s n
         expect(body(i, 38, 'LavaTrap', [104, 88])).toMatchObject({ hits: 0.5, hitsTimer: 9 });
     });
 
-    it('(a) ICETRAP, L53: `canHit = false` — the shot stops at (169, 200) and the trap takes nothing', () => {
+    it('(a) ICETRAP, L53: `canHit = false` — the shot stops at (178, 200) on tick 14 and the trap takes nothing', () => {
         const w = byName['icetrap-live'];
-        const s = gameStop(w);
-        expect(s.y).toBe(200);
+        expect(gameStop(w)).toEqual({ t: 14, x: 178, y: 200 });
         expect(w.samples.every((x) => x.bodies.filter((b) => b.cls === 'IceTrap').every((b) => b.hits === 0 && b.hitsTimer === 0))).toBe(true);
     });
 
