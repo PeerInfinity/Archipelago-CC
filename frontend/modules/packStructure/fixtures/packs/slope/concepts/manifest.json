@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "provenance": {
+    "sources": { "gen4": { "type": "authored", "by": "content sets GEN-4's proof pins" } },
+    "default": "gen4"
+  },
+  "concepts": {
+    "slope:terrain/ledge": { "kind": "terrain", "name": "Ledge", "base": "marker", "presents": "slope:terrain/ledge" }
+  }
+}
