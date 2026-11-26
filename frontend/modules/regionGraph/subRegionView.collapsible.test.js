@@ -126,6 +126,9 @@ function badgeUi(rel = ATLAS, { styled = false } = {}) {
 
 beforeEach(() => { gs.current = null; });
 
+/** The badge centre on the node's corner, to float rounding (left = c − HIT/2, read back + HIT/2). */
+const expectOnCorner = ({ dx, dy }) => { expect(Math.abs(dx)).toBeLessThan(1e-6); expect(Math.abs(dy)).toBeLessThan(1e-6); };
+
 describe('⛓ collapsible: the setting', () => {
     it('appends `collapsible` with its label; the default stays `separate`', () => {
         expect(G.SUB_REGION_VIEW_SCHEMA.enum).toEqual(['separate', 'nested', 'merged', 'collapsible']);
@@ -342,7 +345,7 @@ describe('⛓ collapsible: the badge', () => {
                 const at = layer.centreOf(key);
                 return { dx: at.x - c.x, dy: at.y - c.y };
             };
-            expect(corner()).toEqual({ dx: 0, dy: 0 });
+            expectOnCorner(corner());
             const before = { w: node.outerWidth(), h: node.outerHeight(), pos: { ...node.position() } };
             let moved = 0;
             const count = () => { moved += 1; };
@@ -358,12 +361,12 @@ describe('⛓ collapsible: the badge', () => {
             expect(frames.length).toBe(1);
             flush();
             expect(layer.syncCount).toBe(syncs0 + 1);
-            expect(corner()).toEqual({ dx: 0, dy: 0 });
+            expectOnCorner(corner());
             // The bypass leaving (map look off): re-placed again.
             node.removeStyle('width height');
             flush();
             expect(layer.syncCount).toBe(syncs0 + 2);
-            expect(corner()).toEqual({ dx: 0, dy: 0 });
+            expectOnCorner(corner());
             // A style change that keeps every size (a colour; a class with no size): a frame compares, NO sync.
             node.style('background-color', '#123456');
             other.addClass('rg-test-no-size');
@@ -401,13 +404,13 @@ describe('⛓ collapsible: the badge', () => {
                 const at = ui.groupBadges.centreOf(key);
                 return { dx: at.x - c.x, dy: at.y - c.y };
             };
-            expect(corner()).toEqual({ dx: 0, dy: 0 });
+            expectOnCorner(corner());
             const syncs0 = ui.groupBadges.syncCount;
             const member = box.children()[0];
             member.style({ width: member.outerWidth() + 200, height: member.outerHeight() + 200 });
             flush();
             expect(ui.groupBadges.syncCount).toBe(syncs0 + 1);
-            expect(corner()).toEqual({ dx: 0, dy: 0 });
+            expectOnCorner(corner());
         } finally {
             vi.unstubAllGlobals();
         }
