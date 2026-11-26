@@ -3,7 +3,7 @@
  * verb's stance audit no longer counts a bridge tile this visit already opened as a stray (a Spear hit on an open bridge
  * is a no-op: `bridges.bridgeHit`).
  * The rows:
- *   - the switch ships OFF, the env channel carries its name, and `withBridgeOpenStray` toggles it;
+ *   - the switch ships ON (the BOS/GSW/PM flip), the env channel carries its name, and `withBridgeOpenStray` toggles it;
  *   - the source: one guarded filter in `resolveBridgeStrategy`'s stray audit;
  *   - the predicate: an OPEN bridge tile is waived (and counted), a CLOSED one, a non-`Tile` responder and a tile with no
  *     bridge id are not;
@@ -29,9 +29,9 @@ const BRIDGE_WALL = /^solverBot: bridge bridge@11,13 in level 61 — no floor ce
 const asCaptured = (fn) => withGoalStartWait(true, () => withPreviewMeter(true, fn));
 
 describe('hammer-phase SKIPWALLS: BRIDGE_OPEN_STRAY', () => {
-    it('ships OFF, the env channel carries it, and the wrapper toggles it', () => {
-        expect(BRIDGE_OPEN_STRAY_DEFAULT).toBe(false);
-        expect(BRIDGE_OPEN_STRAY.enabled).toBe(globalThis.process?.env?.SEEDLING_BRIDGE_OPEN_STRAY === '1');
+    it('ships ON (the BOS/GSW/PM flip), the env channel carries it, and the wrapper toggles it', () => {
+        expect(BRIDGE_OPEN_STRAY_DEFAULT).toBe(true);
+        expect(BRIDGE_OPEN_STRAY.enabled).toBe(globalThis.process?.env?.SEEDLING_BRIDGE_OPEN_STRAY !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_BRIDGE_OPEN_STRAY');
         const was = BRIDGE_OPEN_STRAY.enabled;
         expect(withBridgeOpenStray(true, () => BRIDGE_OPEN_STRAY.enabled)).toBe(true);

@@ -80,8 +80,8 @@ async function solve({ meter, deadline = null, fine = true }) {
 const never = () => false;
 
 describe('PREVIEW_METER — previewed states are work (hammer-phase SPINNER880)', () => {
-    it('ships OFF', () => {
-        expect(PREVIEW_METER.enabled).toBe(globalThis.process?.env?.SEEDLING_PREVIEW_METER === '1');
+    it('ships ON (the BOS/GSW/PM flip)', () => {
+        expect(PREVIEW_METER.enabled).toBe(globalThis.process?.env?.SEEDLING_PREVIEW_METER !== '0');
     });
 
     it('OFF counts nothing; ON with statesPerUnit = ∞ is OFF byte for byte; ON asks exactly `asked` more', async () => {

@@ -1161,6 +1161,25 @@
     },
     {
       "surface": "run",
+      "name": "plainFreezeTakes",
+      "module": "frontend/modules/seedlingDemo/levelRun.js",
+      "line": 20358,
+      "class": "seedling",
+      "form": "event-ledger",
+      "files": {
+        "solverBot.js": 2
+      },
+      "sites": 2,
+      "seen": "static",
+      "via": [
+        "direct",
+        "param"
+      ],
+      "dynamic": null,
+      "why": "Returns a fresh copy of the apitems the run took itself on a freeze's frame ({id, level, tag, t, why, banked}; fidelity PLAINSPAN, `plainPickupInFreeze`, OFF always empty): Seedling's own pickup ledger. The segment view writes each new row into its take ledger on the tick it grew, so a run-taken apitem is not open (hammer W59-OPEN)."
+    },
+    {
+      "surface": "run",
       "name": "previewStepper",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
       "line": 22254,
