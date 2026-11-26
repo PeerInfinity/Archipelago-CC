@@ -99,6 +99,8 @@ The composite map is the grid-of-regions canvas in the Procgen Pipeline panel an
 | `loopSupport.actionGate` | `(action) → {ok, reason?, code?}` (optional) | The START GATE: Loops asks it before the generic executor starts a queue entry of this substrate's region. `ok: false` stops the queue at that entry, records it (`loopState.lastActionRefusal`, the loops public function `getLastActionRefusal`) and publishes `loops:actionRefused` `{label, region, reason, code, …}`; the Loops panel shows it. The entry is never skipped. Mana is no gate's business. A gate that throws refuses, naming the throw. ActionNodes answers for `act` and for a move out of a node not cleared this loop ([action-nodes.md](./action-nodes.md#the-runtime)). |
 | `loopSupport.authoredCosts` | boolean (optional) | The substrate AUTHORS its `loop_costs` entries: the cost class `authored` (`loopCostGenerator.classifyRegion`, tested first). A cost pass — the pipeline's `generateLoopCosts`, the Loops panel's Generate Costs — copies the region's entries from the block it is given, verbatim, and never re-prices them. ActionNodes declares it. |
 | `loopSupport.strictQueueActions` | boolean (optional) | ENFORCE `queueActions` (ActionNodes AN-1b). Without it the list only hides controls (the Loops block builder draws no explore button for a region whose entry lists no `explore`). With it, a custom action the list does not hold — an explore, however it was queued — is refused at QUEUE time (`gameState.setCustomActionGuard`, installed by the loops module: `addCustomAction` / `insertCustomActionAt` append nothing and record `gameState.lastQueueRefusal`) and by the entry's start gate, code `action-not-offered` (`loops/strictQueueActions.js`). Opt-in: ActionNodes alone declares it ([action-nodes.md](./action-nodes.md#no-explore)); `loops/strictQueueActions.test.js` holds every other entry's explore unrefused. |
+| `loopSupport.pool` | `() → {name, unit} \| null` (optional) | The loaded world's NAME for the shared pool (ActionNodes AN-TIME-2: a graph's `pool`, e.g. `{name: 'Time', unit: 'h'}`), or null when the substrate's world is not loaded. The Loops and Resources panels and their texts read it through `resourceChannels/poolName.js` in place of "Mana"; with none, every text is the old one. ActionNodes declares it (action-nodes.md § *Time windows, the clock and knowledge*). |
+| `loopSupport.clockLine` | `(mana) → {now, left, leftText, ends} \| null` (optional) | The Resources panel's Time line for a world with a clock: the time now, what is left of the pool, and when the day ends (*Time: 11:00 · 6 h left · the day ends 17:00*); null without a clock. ActionNodes declares it (AN-TIME-2). |
 | `loopBot` | `{planLoop(context) → {kind, path, reason, lines, key}}` (optional) | The substrate plans whole loops for the Playback Bot. When every region of the loaded world (but its start regions) belongs to this substrate, the bot's loop runner asks it instead of planning one sphere-log target per loop (`playbackBot/substrateLoopPlanner.js`); `path` is the Loops queue to write, `lines` the reasoning log; `done` ends the run. With `context.continueFrom = {region, mana}` it plans the REST of the running loop (the runner's mid-loop replan when an item arrived, AN-3b). ActionNodes declares it ([action-nodes.md](./action-nodes.md#the-bot-planner), AN-3a). |
 | `loopSupport.requiresLoopMode` | boolean | A loop game whose regions only work in loop mode; loops refuses a user loop-mode disable while one is loaded. See [loop-recording.md](./loop-recording.md#requiresloopmode--loop-game-substrates). |
 | `loopSupport.executeVia` | `'solver'` (optional) | A Bot-mode block drives the substrate's PlaybackController and waits for the resulting event: its `perform(target)` where the controller has one, else `walkTo`. An `explore` action engages only a `perform` controller, and loops completes it at once. If absent, actions run on the generic timer. |
@@ -316,7 +318,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**10 registered entries · 117 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**10 registered entries · 119 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -343,7 +345,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `panelComponentType` | actionNodesPanel | bounceDemoPanel | cloudberryDemoPanel | flashPanel | flashPanel | jtaSubstrateWrapperPanel | mazeRoomPanel | noiz2saSubstratePanel | omsiSubstrateWrapperPanel | textAdventureSubstrateWrapperPanel |
 | `serializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn | fn |
 | `sharing` | {items, mana, resources, stats} | — | — | — | — | {items, mana} | {mana} | — | {items, mana} | {mana} |
-| `sidecarFields` | 11 keys | 7 keys | 7 keys | 7 keys | 14 keys | 5 keys | 33 keys | 11 keys | 9 keys | 6 keys |
+| `sidecarFields` | 12 keys | 7 keys | 7 keys | 7 keys | 14 keys | 5 keys | 33 keys | 11 keys | 9 keys | 6 keys |
 | `supportedFeatures` | [] | arbitrary_ap_locations, bounce_abilities | arbitrary_ap_locations, cloudberry_items | arbitrary_ap_locations | arbitrary_ap_locations, seedling_items | 2 items | 7 items | arbitrary_ap_locations | 2 items | 6 items |
 
 **Playback**
@@ -377,17 +379,19 @@ Groups are this document's own § headings, matched to a field by the section th
 | Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
 | `loopBot` | {planLoop} | — | — | — | — | — | — | — | — | — |
-| `loopSupport` | 5 keys | 8 keys | 9 keys | 5 keys | 5 keys | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys |
+| `loopSupport` | 7 keys | 8 keys | 9 keys | 5 keys | 5 keys | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys |
 | `loopSupport.actionGate` | fn | — | — | — | — | — | — | — | — | — |
 | `loopSupport.authoredCosts` | yes | — | — | — | — | — | — | — | — | — |
 | `loopSupport.botActsAtOnce` | — | — | — | — | — | — | — | — | — | yes |
+| `loopSupport.clockLine` | fn | — | — | — | — | — | — | — | — | — |
 | `loopSupport.customQueues` | — | no | no | no | no | no | yes | no | no | no |
 | `loopSupport.executeVia` | — | solver | solver | solver | solver | solver | — | solver | solver | solver |
 | `loopSupport.instant` | — | yes | yes | — | — | yes | yes | yes | yes | yes |
 | `loopSupport.manual` | no | yes | yes | yes | yes | yes | yes | yes | yes | yes |
 | `loopSupport.playClock` | — | — | yes | yes | yes | — | — | yes | — | — |
 | `loopSupport.playback` | — | yes | yes | — | — | yes | yes | yes | yes | yes |
-| `loopSupport.queueActions` | regionMove, act | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore |
+| `loopSupport.pool` | fn | — | — | — | — | — | — | — | — | — |
+| `loopSupport.queueActions` | regionMove, act, wait | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore |
 | `loopSupport.record` | — | yes | yes | — | — | yes | yes | yes | yes | yes |
 | `loopSupport.requiresLoopMode` | — | — | — | — | — | yes | — | — | yes | — |
 | `loopSupport.strictQueueActions` | yes | — | — | — | — | — | — | — | — | — |
