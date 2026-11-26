@@ -7,7 +7,7 @@
 
 Counters (`__RP.c`): steps (ON steps run), seeded (a world's first step), enemyPress (a step whose publish differs
 because a spinner / wallflyer presses), enemyHold (a Lock-family reset held ONLY by an enemy box), deferred (steps
-deferred), ranDeferred, staleFlush (a deferred step whose level/state had changed), transitionDrop (a transition tick's
+deferred), ranDeferred, staleDrop (a deferred step dropped: its world was torn down since), transitionDrop (a transition tick's
 step not run), tapeEndPending (a step still pending when the probe reads at the end: past the last frame).
 """
 import shutil, subprocess, sys, os
@@ -29,13 +29,13 @@ EDITS = [
     ('activators.js', "            if (!occupied(a.rect, responder.guard === 'occupancy')) {",
      "            if (globalThis.__RP && !occupied(a.rect, false) && occupied(a.rect, responder.guard === 'occupancy')) " + c('enemyHold') + ";\n"
      "            if (!occupied(a.rect, responder.guard === 'occupancy')) {"),
-    ('levelRun.js', "        pendingResponderStep = { level, state: activators, world: w, box };",
-     "        pendingResponderStep = { level, state: activators, world: w, box };\n        " + c('deferred') + ";\n"
+    ('levelRun.js', "        pendingResponderStep = { level, state: activators, world: w };",
+     "        pendingResponderStep = { level, state: activators, world: w };\n        " + c('deferred') + ";\n"
      "        if (globalThis.__RP) globalThis.__RP.pending = () => pendingResponderStep !== null;"),
-    ('levelRun.js', "        pendingResponderStep = null;\n        if (p.level !== level || activatorStateFor(level) !== p.state) {",
-     "        pendingResponderStep = null;\n        " + c('ranDeferred') + ";\n        if (p.level !== level || activatorStateFor(level) !== p.state) {\n            " + c('staleFlush') + ";"),
-    ('levelRun.js', "                    if (!next.transition) deferResponderStep(activators, world, playerBoxAt(next.x, next.y));",
-     "                    if (!next.transition) deferResponderStep(activators, world, playerBoxAt(next.x, next.y));\n                    else " + c('transitionDrop') + ";"),
+    ('levelRun.js', "        pendingResponderStep = null;\n        if (p.level !== level || activatorStateFor(level) !== p.state) return;",
+     "        pendingResponderStep = null;\n        " + c('ranDeferred') + ";\n        if (p.level !== level || activatorStateFor(level) !== p.state) { " + c('staleDrop') + "; return; }"),
+    ('levelRun.js', "                    if (!next.transition) deferResponderStep(activators, world);",
+     "                    if (!next.transition) deferResponderStep(activators, world);\n                    else " + c('transitionDrop') + ";"),
 ]
 def apply():
     os.makedirs(SAVE, exist_ok=True)

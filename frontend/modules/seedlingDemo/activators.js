@@ -868,7 +868,7 @@ export function stepActivators(state, world, playerBox, opts = {}) {
     const { inventory = null, keys = null, movingSolids = [], enemies = [] } = opts;
     // ⛓ RESPONDERORDER (ON only; OFF `enemies` is empty, so this is `movingSolids`): a Button and a ButtonRoom press on
     // "Enemy" too (`Button.as:15`, `ButtonRoom.as:17`) — the presser half's solids carry the spinner / wallflyer boxes.
-    const pressers = enemies.length > 0 ? [...movingSolids, ...enemies.map((rect, i) => ({ id: `enemy#${i}`, rect }))] : movingSolids;
+    const pressers = enemies.length ? [...movingSolids, ...enemies.map((rect, i) => ({ id: `enemy#${i}`, rect }))] : movingSolids;
     // ⛓ fidelity CHESTCOVER (`chestCoverFencepost`, OFF never written): the open set BEFORE this step, for a body that
     // updates before the responders (the vanilla `Chest`) — see `openActivatorIdsBeforeStep`.
     if (CONTACT_FIDELITY.chestCoverFencepost) state.openBefore = openActivatorIds(state);

@@ -23,10 +23,10 @@ for (const p of files) {
     if (globalThis.__RP.pending?.()) globalThis.__RP.c.tapeEndPending = 1;
     const c = globalThis.__RP.c;
     for (const [k, v] of Object.entries(c)) total[k] = (total[k] ?? 0) + v;
-    if (c.enemyPress || c.enemyHold || c.staleFlush) rows.push({ tape: relative(ROOT, p), ...c });
+    if (c.enemyPress || c.enemyHold || c.staleDrop) rows.push({ tape: relative(ROOT, p), ...c });
 }
 delete globalThis.__RP;
 console.log(`tapes ${files.length}; totals ${JSON.stringify(total)}`);
-for (const r of rows) console.log(`  ${r.tape}: ${JSON.stringify({ enemyPress: r.enemyPress ?? 0, enemyHold: r.enemyHold ?? 0, staleFlush: r.staleFlush ?? 0 })}`);
+for (const r of rows) console.log(`  ${r.tape}: ${JSON.stringify({ enemyPress: r.enemyPress ?? 0, enemyHold: r.enemyHold ?? 0, staleDrop: r.staleDrop ?? 0 })}`);
 const jo = arg('json', null);
 if (jo) writeFileSync(jo, `${JSON.stringify({ total, rows }, null, 1)}\n`);
