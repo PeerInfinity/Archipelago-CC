@@ -1,0 +1,1 @@
+61/48 (+10 skipped), stop: entry 47 "Level 112 - Owl" in level_71__r0c6, cause: refusal "error: no path from level_71__r0c6 to level_112__r2c2, nor from the restart target Menu" (transport wasm; walk 4200 s, run 4222 s)
