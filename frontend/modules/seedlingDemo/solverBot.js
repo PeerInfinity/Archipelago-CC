@@ -15777,6 +15777,8 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
     // ⛓ hammer-phase CHASER-STAND (`PRESS_KILL_STRIKE_BOMBS`, OFF ⇒ `PRESS_KILL_BOMBS` alone): the stand half on its own
     const bombs = (PRESS_KILL_BOMBS.enabled || PRESS_KILL_STRIKE_BOMBS.enabled) && bombsInPlay(run);
     let bombed = 0;
+    // ⛓ hammer-phase F1-REFUSAL (`REFUSAL_STAND_BOMBS`, OFF ⇒ never armed): would the stand question read a lobber here?
+    if (STRIKE_STAND_LOBBER.watch && bombsInPlay(run)) STRIKE_STAND_LOBBER.seen += 1;
     const standBlastAt = (c, walk, i) => {
         const known = walks.get(c);
         if (known.stand === undefined) {
@@ -21948,6 +21950,30 @@ export const PRESS_KILL_STRIKE_BOMBS_DEFAULT = false;
 /** Run `fn` with `PRESS_KILL_STRIKE_BOMBS` set to `enabled`, restoring the previous value. */
 export function withPressKillStrikeBombs(enabled, fn) {
     return withSwitch(PRESS_KILL_STRIKE_BOMBS, enabled, fn);
+}
+
+/**
+ * ⛓ hammer-phase F1-REFUSAL — **DID A STRIKE'S STAND HAVE A LOBBER TO ASK?** The decision input of `jsRuntimeSolver`'s
+ * `REFUSAL_STAND_BOMBS` (OFF ⇒ never armed, never read). While `watch` is set, every `deriveStrike` that finds bombs in
+ * play (`bombsInPlay`: a lobber or a live bomb) adds one to `seen` — whether or not `PRESS_KILL_STRIKE_BOMBS` asks them.
+ * `seen > 0` after a ladder ⇒ a press kill of that attempt derived a strike the stand question would have priced; `0` ⇒
+ * a rerun under `PRESS_KILL_STRIKE_BOMBS` reads nothing new and repeats the pass. Reads nothing level-specific.
+ * `armStrikeStandLobber()` returns the previous state; `disarmStrikeStandLobber(prev)` restores it and answers `seen`.
+ */
+export const STRIKE_STAND_LOBBER = { watch: false, seen: 0 };
+
+export function armStrikeStandLobber() {
+    const prev = { ...STRIKE_STAND_LOBBER };
+    STRIKE_STAND_LOBBER.watch = true;
+    STRIKE_STAND_LOBBER.seen = 0;
+    return prev;
+}
+
+export function disarmStrikeStandLobber(prev) {
+    const seen = STRIKE_STAND_LOBBER.seen;
+    STRIKE_STAND_LOBBER.watch = prev?.watch === true;
+    STRIKE_STAND_LOBBER.seen = Number(prev?.seen ?? 0);
+    return seen;
 }
 
 /** Does `deriveRefuge` ask the lobber's forecast (BW's own switch, or this slice's refuge half alone)? */

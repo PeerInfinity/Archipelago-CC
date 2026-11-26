@@ -65,6 +65,7 @@ import {
     ROCKLOCK_KILL, clearTagTalkArmOf, solveSegment, withRockLockKill,
     GOAL_START_WAIT, withGoalStartWaitLaterPass,
     PRESS_KILL_STRIKE_BOMBS, withPressKillStrikeBombs,
+    armStrikeStandLobber, disarmStrikeStandLobber,
 } from './solverBot.js';
 import { pageSolverEnvSwitchOff, pageSolverEnvSwitchOn } from './solverEnvChannel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
@@ -600,6 +601,54 @@ export function standBombsPass({ tape, pass, budgetWork = null, work = createWor
     return { answer, row };
 }
 
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE F1-REFUSAL — **A LADDER THAT REFUSES IN A LOBBER ROOM ASKS ITS WIDEST PASS AGAIN, THE STRIKE'S
+ * STAND ASKING THE LOBBER, ONCE** (`REFUSAL_STAND_BOMBS`, OFF; `SEEDLING_REFUSAL_STAND_BOMBS=1`,
+ * `withRefusalStandBombs(enabled, fn)`). ⚖ The user, 2026-11-26: *"F1 refusal follow-up"*
+ * (`CC/docs/cloud-reports/seedling-hammer-f1-refusal.md`).
+ *
+ * MEASURED (re-measure-9's F1 32:10, under PKSW+PKRB+DSS+OAC+HSB): every pass refuses — the dashless pass on the
+ * latched hold after the kill (a bomb in flight lands on every walk out at its 16th tick; LATCHED_HOLD_MOVE is asked and
+ * finds no cell), the full pass on a death by a strike-stand bomb (the stand `PRESS_KILL_STRIKE_BOMBS` prices). HSB asks
+ * only a plan that bills a hit, so a refusal never reaches it. ON, when the ladder (and hit-avoid, and HSB) leaves a
+ * REFUSAL, no pass was cut by the budget (that is the held retry's), and a press kill of this attempt derived a strike
+ * with bombs in play (`STRIKE_STAND_LOBBER`, so the stand question reads something), the LAST pass — the ladder's widest
+ * search — runs once more under `PRESS_KILL_STRIKE_BOMBS` (`standBombsPass`, on the attempt's work clock to the attempt's
+ * budget, no window, a cut is the row's `cut`, never `limit`). Its plan is kept only when the model plays it hitless.
+ * ⚖ No-hit logic: it only ever replaces a refusal with a hitless plan; a solve never reaches it. OFF: never armed,
+ * never runs — byte-identical. ⛓ THE THREAD: inside `solveAnytime`, i.e. the page's SOLVE WORKER (and node).
+ */
+export const REFUSAL_STAND_BOMBS = { enabled: globalThis.process?.env?.SEEDLING_REFUSAL_STAND_BOMBS === '1' };
+export const REFUSAL_STAND_BOMBS_DEFAULT = false;
+/** ON only: attempts that ended in a refusal / of those, the lobber read nothing / tries made / tries that replaced it. */
+export const REFUSAL_STAND_BOMBS_COUNTS = { refusals: 0, noLobber: 0, tried: 0, replaced: 0 };
+
+/** Run `fn` with `REFUSAL_STAND_BOMBS` set to `enabled`, restoring the previous value. */
+export function withRefusalStandBombs(enabled, fn) {
+    const was = REFUSAL_STAND_BOMBS.enabled;
+    REFUSAL_STAND_BOMBS.enabled = enabled === true;
+    try { return fn(); } finally { REFUSAL_STAND_BOMBS.enabled = was; }
+}
+
+/**
+ * ⛓ `REFUSAL_STAND_BOMBS` — the decision: should a ladder that ended in `best`, with pass rows `rows`, ask the try?
+ * `lobberSeen` is `STRIKE_STAND_LOBBER`'s count over the ladder. Pure.
+ */
+export function refusalStandBombsAsks(best, rows, lobberSeen) {
+    if (best?.ok !== false || best.kind !== 'refusal') return false;
+    if ((rows ?? []).some((r) => r.limit === 'budget')) return false;
+    return lobberSeen > 0;
+}
+
+/**
+ * ⛓ `REFUSAL_STAND_BOMBS` — the try: `standBombsPass` of `pass`, its row and answer named `refusal-stand-bombs`.
+ */
+export function refusalStandBombsPass({ tape, pass, budgetWork = null, work = createWorkClock(), clock = () => Date.now() }) {
+    const { answer, row } = standBombsPass({ tape, pass, budgetWork, work, clock });
+    const named = answer ? { ...answer, pass: 'refusal-stand-bombs', plan: { ...answer.plan, pass: 'refusal-stand-bombs' } } : null;
+    return { answer: named, row: { ...row, pass: 'refusal-stand-bombs', from: pass?.pass ?? null } };
+}
+
 /** ⛓ HIT-AWARE ANSWER — the model's `playerHits` ledger length of `run` (0 when the run keeps none). */
 function modelHitCount(run) {
     if (typeof run?.ledger === 'function') return run.ledger('playerHits').length;
@@ -713,6 +762,8 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => 
     // ONE work clock from this attempt's start. `clock` only times the rows (`ms`); it decides nothing.
     const { budgetWork = null, upgradeWindowWork: windowWork = null, ...tape } = request;
     const work = createWorkClock();
+    // ⛓ hammer-phase F1-REFUSAL (`REFUSAL_STAND_BOMBS`, OFF ⇒ never armed): watch the ladder's strikes for a lobber
+    const lobberWatch = REFUSAL_STAND_BOMBS.enabled ? armStrikeStandLobber() : null;
     for (let i = 0; i < passes.length; i += 1) {
         const p = passes[i];
         const t0 = clock();
@@ -754,6 +805,22 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => 
         if (sb.answer && betterAnswer(best, sb.answer)) {
             best = sb.answer;
             HIT_AVOID_STAND_BOMBS_COUNTS.replaced += 1;
+        }
+    }
+    // ⛓ hammer-phase F1-REFUSAL (`REFUSAL_STAND_BOMBS`, OFF): the ladder refused where a strike's stand had a lobber to
+    // ask — the widest pass again, the stand asking it.
+    if (lobberWatch !== null) {
+        const lobberSeen = disarmStrikeStandLobber(lobberWatch);
+        if (best?.ok === false && best.kind === 'refusal') REFUSAL_STAND_BOMBS_COUNTS.refusals += 1;
+        if (best?.ok === false && best.kind === 'refusal' && lobberSeen === 0) REFUSAL_STAND_BOMBS_COUNTS.noLobber += 1;
+        if (refusalStandBombsAsks(best, rows, lobberSeen)) {
+            const rb = refusalStandBombsPass({ tape, pass: passes[passes.length - 1], budgetWork, work, clock });
+            rows.push(rb.row);
+            REFUSAL_STAND_BOMBS_COUNTS.tried += 1;
+            if (rb.answer && betterAnswer(best, rb.answer)) {
+                best = rb.answer;
+                REFUSAL_STAND_BOMBS_COUNTS.replaced += 1;
+            }
         }
     }
     // Every pass skipped (a held retry resumed at a pass the run cannot use): the skip itself is the
