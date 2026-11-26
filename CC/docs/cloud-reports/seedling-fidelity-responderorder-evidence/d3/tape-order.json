@@ -1,0 +1,782 @@
+{
+ "tapes": 322,
+ "over": {},
+ "movers": [
+  "frontend/modules/seedlingDemo/fixtures/hammer-bw-bombstand-witness/hammer-bw-l42-381-bombstand.tape.json",
+  "frontend/modules/seedlingDemo/fixtures/refuted/r8-solve-5.tape.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/l30keylock-pit224-before.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/l71-hold-101-shut.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-chest.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-reach-l39.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-5-darkshield.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-full.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-5-darkshield.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-full.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0-control.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5-control.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance-control.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-20.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-20.json"
+ ],
+ "rows": [
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-bw-bombstand-witness/hammer-bw-l42-381-bombstand.tape.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "wandlock@208,128",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 4,
+       "outOfBand": false
+      },
+      "t": 1096,
+      "value": false
+     },
+     "on": {
+      "id": "wandlock@208,128",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 4,
+       "outOfBand": false
+      },
+      "t": 1097,
+      "value": false
+     },
+     "lenOff": 5,
+     "lenOn": 5
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/refuted/r8-solve-5.tape.json",
+   "moved": true,
+   "offThrows": "PhysicsV2Error: the player entered Water in level 5 at (47.00324793668, 56.39999999999999) on a tape that does not pin \"sound\". `Player.as:530` adds `0.25 * int(Music.soundPosition(\"Swim\") < 0.1)` to the swim speed, ",
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "THROW",
+     "off": "PhysicsV2Error: the player entered Water in level 5 at (47.00324793668, 56.39999999999999) on a tape that does not pin \"sound\". `Player.as:530` adds `0.25 * int(Music.soundPosition(\"Swim\") < 0.1)` to the swim speed, ",
+     "on": "PhysicsV2Error: the player entered Water in level 5 at (47.00324793668, 56.39999999999999) on a tape that does not pin \"sound\". `Player.as:530` adds `0.25 * int(Music.soundPosition(\"Swim\") < 0.1)` to the swim speed, "
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l30keylock-pit224-before.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "earnedClears",
+     "i": 0,
+     "off": {
+      "level": 30,
+      "tag": 0,
+      "by": "bosslock@64,32",
+      "t": 212
+     },
+     "on": null,
+     "lenOff": 1,
+     "lenOn": 0
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "wandlock@208,128",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 4,
+       "outOfBand": false
+      },
+      "t": 1171,
+      "value": false
+     },
+     "on": {
+      "id": "wandlock@208,128",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 4,
+       "outOfBand": false
+      },
+      "t": 1172,
+      "value": false
+     },
+     "lenOff": 5,
+     "lenOn": 5
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "wandlock@208,128",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 4,
+       "outOfBand": false
+      },
+      "t": 1096,
+      "value": false
+     },
+     "on": {
+      "id": "wandlock@208,128",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 4,
+       "outOfBand": false
+      },
+      "t": 1097,
+      "value": false
+     },
+     "lenOff": 5,
+     "lenOn": 5
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l71-hold-101-shut.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "lock@112,160",
+      "level": 71,
+      "flag": {
+       "level": 71,
+       "tag": 3,
+       "outOfBand": false
+      },
+      "t": 101,
+      "value": false
+     },
+     "on": null,
+     "lenOff": 1,
+     "lenOn": 0
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-chest.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "pulserHits",
+     "i": 0,
+     "off": {
+      "t": 146,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "on": {
+      "t": 147,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "lenOff": 101,
+     "lenOn": 100
+    },
+    {
+     "field": "pulsePushes",
+     "i": 0,
+     "off": {
+      "t": 146,
+      "level": 38,
+      "pulser": "pulser@80,224",
+      "block": "pushableblockfire@80,208"
+     },
+     "on": {
+      "t": 147,
+      "level": 38,
+      "pulser": "pulser@80,224",
+      "block": "pushableblockfire@80,208"
+     },
+     "lenOff": 1,
+     "lenOn": 1
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-reach-l39.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "pulserHits",
+     "i": 0,
+     "off": {
+      "t": 147,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "on": {
+      "t": 148,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "lenOff": 101,
+     "lenOn": 100
+    },
+    {
+     "field": "pulsePushes",
+     "i": 0,
+     "off": {
+      "t": 147,
+      "level": 38,
+      "pulser": "pulser@80,224",
+      "block": "pushableblockfire@80,208"
+     },
+     "on": {
+      "t": 148,
+      "level": 38,
+      "pulser": "pulser@80,224",
+      "block": "pushableblockfire@80,208"
+     },
+     "lenOff": 1,
+     "lenOn": 1
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-5-darkshield.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "lock@112,160",
+      "level": 71,
+      "flag": {
+       "level": 71,
+       "tag": 3,
+       "outOfBand": false
+      },
+      "t": 1412,
+      "value": false
+     },
+     "on": {
+      "id": "lock@112,160",
+      "level": 71,
+      "flag": {
+       "level": 71,
+       "tag": 3,
+       "outOfBand": false
+      },
+      "t": 1413,
+      "value": false
+     },
+     "lenOff": 2,
+     "lenOn": 2
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-full.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "lock@112,160",
+      "level": 71,
+      "flag": {
+       "level": 71,
+       "tag": 3,
+       "outOfBand": false
+      },
+      "t": 7705,
+      "value": false
+     },
+     "on": {
+      "id": "lock@112,160",
+      "level": 71,
+      "flag": {
+       "level": 71,
+       "tag": 3,
+       "outOfBand": false
+      },
+      "t": 7706,
+      "value": false
+     },
+     "lenOff": 2,
+     "lenOn": 2
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-5-darkshield.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "lock@112,160",
+      "level": 71,
+      "flag": {
+       "level": 71,
+       "tag": 3,
+       "outOfBand": false
+      },
+      "t": 1412,
+      "value": false
+     },
+     "on": {
+      "id": "lock@112,160",
+      "level": 71,
+      "flag": {
+       "level": 71,
+       "tag": 3,
+       "outOfBand": false
+      },
+      "t": 1413,
+      "value": false
+     },
+     "lenOff": 2,
+     "lenOn": 2
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-full.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "lock@112,160",
+      "level": 71,
+      "flag": {
+       "level": 71,
+       "tag": 3,
+       "outOfBand": false
+      },
+      "t": 9180,
+      "value": false
+     },
+     "on": {
+      "id": "lock@112,160",
+      "level": 71,
+      "flag": {
+       "level": 71,
+       "tag": 3,
+       "outOfBand": false
+      },
+      "t": 9181,
+      "value": false
+     },
+     "lenOff": 2,
+     "lenOn": 2
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0-control.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "wandlock@208,128",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 4,
+       "outOfBand": false
+      },
+      "t": 110,
+      "value": false
+     },
+     "on": {
+      "id": "wandlock@208,128",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 4,
+       "outOfBand": false
+      },
+      "t": 111,
+      "value": false
+     },
+     "lenOff": 3,
+     "lenOn": 3
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "wandlock@208,128",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 4,
+       "outOfBand": false
+      },
+      "t": 110,
+      "value": false
+     },
+     "on": {
+      "id": "wandlock@208,128",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 4,
+       "outOfBand": false
+      },
+      "t": 111,
+      "value": false
+     },
+     "lenOff": 5,
+     "lenOn": 5
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5-control.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "wandlock@480,560",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 11,
+       "outOfBand": false
+      },
+      "t": 842,
+      "value": false
+     },
+     "on": {
+      "id": "wandlock@480,560",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 11,
+       "outOfBand": false
+      },
+      "t": 843,
+      "value": false
+     },
+     "lenOff": 1,
+     "lenOn": 1
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "wandlock@480,560",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 11,
+       "outOfBand": false
+      },
+      "t": 842,
+      "value": false
+     },
+     "on": {
+      "id": "wandlock@480,560",
+      "level": 40,
+      "flag": {
+       "level": 40,
+       "tag": 11,
+       "outOfBand": false
+      },
+      "t": 843,
+      "value": false
+     },
+     "lenOff": 3,
+     "lenOn": 3
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance-control.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "pulserHits",
+     "i": 0,
+     "off": {
+      "t": 283,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "on": {
+      "t": 284,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "lenOff": 150,
+     "lenOn": 149
+    },
+    {
+     "field": "pulsePushes",
+     "i": 0,
+     "off": {
+      "t": 283,
+      "level": 38,
+      "pulser": "pulser@80,224",
+      "block": "pushableblockfire@80,208"
+     },
+     "on": {
+      "t": 284,
+      "level": 38,
+      "pulser": "pulser@80,224",
+      "block": "pushableblockfire@80,208"
+     },
+     "lenOff": 1,
+     "lenOn": 1
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "pulserHits",
+     "i": 0,
+     "off": {
+      "t": 283,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "on": {
+      "t": 284,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "lenOff": 230,
+     "lenOn": 230
+    },
+    {
+     "field": "pulsePushes",
+     "i": 0,
+     "off": {
+      "t": 283,
+      "level": 38,
+      "pulser": "pulser@80,224",
+      "block": "pushableblockfire@80,208"
+     },
+     "on": {
+      "t": 284,
+      "level": 38,
+      "pulser": "pulser@80,224",
+      "block": "pushableblockfire@80,208"
+     },
+     "lenOff": 1,
+     "lenOn": 1
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-20.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "lock@32,80",
+      "level": 20,
+      "flag": {
+       "level": 20,
+       "tag": 1,
+       "outOfBand": false
+      },
+      "t": 409,
+      "value": false
+     },
+     "on": {
+      "id": "lock@32,80",
+      "level": 20,
+      "flag": {
+       "level": 20,
+       "tag": 1,
+       "outOfBand": false
+      },
+      "t": 410,
+      "value": false
+     },
+     "lenOff": 1,
+     "lenOn": 1
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "lock@32,80",
+      "level": 20,
+      "flag": {
+       "level": 20,
+       "tag": 1,
+       "outOfBand": false
+      },
+      "t": 1622,
+      "value": false
+     },
+     "on": {
+      "id": "lock@32,80",
+      "level": 20,
+      "flag": {
+       "level": 20,
+       "tag": 1,
+       "outOfBand": false
+      },
+      "t": 1623,
+      "value": false
+     },
+     "lenOff": 1,
+     "lenOn": 1
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-20.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "lockWrites",
+     "i": 0,
+     "off": {
+      "id": "lock@32,80",
+      "level": 20,
+      "flag": {
+       "level": 20,
+       "tag": 1,
+       "outOfBand": false
+      },
+      "t": 409,
+      "value": false
+     },
+     "on": {
+      "id": "lock@32,80",
+      "level": 20,
+      "flag": {
+       "level": 20,
+       "tag": 1,
+       "outOfBand": false
+      },
+      "t": 410,
+      "value": false
+     },
+     "lenOff": 1,
+     "lenOn": 1
+    }
+   ]
+  }
+ ]
+}
