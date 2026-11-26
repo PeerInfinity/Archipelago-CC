@@ -26,6 +26,7 @@ import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCod
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { replayTape, settleSolve, solveFromTape } from './jsRuntimeSolver.js';
 import { withL40Flip } from './l40FlipSet.js';
+import { GOAL_START_WAIT as __GOAL_START_WAIT_HOLD, withGoalStartWait } from './solverBot.js';
 import { PRESS_KILL_CHASERS as __PRESS_KILL_CHASERS_HOLD, withPressKillChasers } from './pressKillCost.js';
 
 // ⛓ `PRESS_KILL_CHASERS` held OFF for this whole file: it ships ON since the PKC + FH flip (⚖ the user, 2026-11-20). ON, leg
@@ -35,6 +36,13 @@ import { PRESS_KILL_CHASERS as __PRESS_KILL_CHASERS_HOLD, withPressKillChasers }
 let __heldWas;
 beforeAll(() => { __heldWas = __PRESS_KILL_CHASERS_HOLD.enabled; __PRESS_KILL_CHASERS_HOLD.enabled = false; });
 afterAll(() => { __PRESS_KILL_CHASERS_HOLD.enabled = __heldWas; });
+// ⛓ `GOAL_START_WAIT` held OFF for this whole file too: it ships ON since the BOS/GSW/PM flip (⚖ the user, 2026-11-25:
+// "Flip BOS+GSW+PM (Recommended)"). ON, leg 871's refusal at work 885 (the burn stance's EXHAUSTED ladder) is re-asked after an
+// idle and SOLVES: 1179 t, 0 hits, 0 deaths, flag 12 earned (sha 3b8fc46a6b97; pinned in `hammerBodyGate.train.test.js`).
+// These rows pin other switches against that refusal; held OFF they are their pre-flip selves.
+let __gswWas;
+beforeAll(() => { __gswWas = __GOAL_START_WAIT_HOLD.enabled; __GOAL_START_WAIT_HOLD.enabled = false; });
+afterAll(() => { __GOAL_START_WAIT_HOLD.enabled = __gswWas; });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIX = (name) => JSON.parse(gunzipSync(readFileSync(join(HERE, 'fixtures', 'hammer-cleartag-chain', name)))
@@ -95,11 +103,22 @@ describe('PRESS_KILL_CHASERS (ships ON since the PKC + FH flip) — leg 871, HAM
     }, 900_000);
 });
 
+describe('GOAL_START_WAIT (ships ON since the BOS/GSW/PM flip) — leg 871, HAMMER_BODY_GATE OFF, PRESS_KILL_CHASERS OFF', () => {
+    it('ON: the burn stance\'s EXHAUSTED refusal at work 885 is re-asked after an idle and SOLVES hitless — 1179 t, rows '
+        + 'exact on a fresh run, flag 12 earned', () => {
+        const on = withGoalStartWait(true, () => solveLeg('leg871-l39-l40-request.json.gz', false));
+        expect(on).toMatchObject({ ok: true, work: 5940, ticks: 1179, sha: '3b8fc46a6b97', mismatches: 0, hits: 0,
+            deaths: 0 });
+        expect(on.clears).toEqual(['40:0', '40:12']);
+    }, 900_000);
+});
+
 describe('HAMMER_BODY_GATE — control: leg 872 (… flag 12 <- L43) is unchanged', () => {
     it('OFF = ON: 2385 t, sha 0c51cdb94854, hitless', () => {
         const off = solveLeg('leg872-l43-l40-request.json.gz', false);
         const on = solveLeg('leg872-l43-l40-request.json.gz', true);
-        expect(off).toMatchObject({ ok: true, work: 3823, ticks: 2385, sha: '0c51cdb94854', hits: 0, deaths: 0 });
+        // ⛓ BOS/GSW/PM flip: PREVIEW_METER ON, work 3823 → 3852 (`SEEDLING_PREVIEW_METER=0` gives 3823); same plan, same sha.
+        expect(off).toMatchObject({ ok: true, work: 3852, ticks: 2385, sha: '0c51cdb94854', hits: 0, deaths: 0 });
         expect(on).toEqual(off);
     }, 900_000);
 });
