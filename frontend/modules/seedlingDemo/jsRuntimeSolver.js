@@ -64,6 +64,7 @@ import {
     AXE_DODGE_ASK_PER_PREVIEW, DEFAULT_DASH_MODE, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, WAND_TARGET_TAGS, WAND_VERB,
     ROCKLOCK_KILL, clearTagTalkArmOf, solveSegment, withRockLockKill,
     GOAL_START_WAIT, withGoalStartWaitLaterPass,
+    PRESS_KILL_STRIKE_BOMBS, withPressKillStrikeBombs,
 } from './solverBot.js';
 import { pageSolverEnvSwitchOff, pageSolverEnvSwitchOn } from './solverEnvChannel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
@@ -548,6 +549,57 @@ export function hitAvoidPass({ tape, pass, budgetWork = null, windowWork = null,
     return { answer, row };
 }
 
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE CHASER-STAND — **A PLAN THAT STILL BILLS A HIT ASKS THE STRIKE'S STAND OF THE LOBBER, ONCE**
+ * (`HIT_AVOID_STAND_BOMBS`, OFF; `SEEDLING_HIT_AVOID_STAND_BOMBS=1`, `withHitAvoidStandBombs(enabled, fn)`). ⚖ The user,
+ * 2026-11-26: *"Chaser-stand fix (Recommended)"* (`CC/docs/cloud-reports/seedling-hammer-chaser-stand.md`).
+ *
+ * MEASURED (re-measure-8's P1 32:10 swept over 16 arrival clocks, under all4): `PRESS_KILL_STRIKE_BOMBS` ON everywhere
+ * removes the strike-stand bomb (seam +7: 719 t 1 h → 582 t 0 h) but refuses three clocks all4 solves hitless — its
+ * stand question prices a stand the drive, re-deriving, never makes (seam −60: the refused cell is never reached and
+ * the bomb lands elsewhere). Asked only AFTER the ladder, and only of a plan that still bills a hit, it cannot cost a
+ * hitless plan: ON, when the passes and the hit-avoid pass are done and the plan in hand still takes a model hit
+ * (`planTakesHit`), the FIRST pass's search runs once more with `PRESS_KILL_STRIKE_BOMBS` ON, on the attempt's work
+ * clock to the attempt's budget (no window: the plan in hand is shipped if the try is cut); its plan replaces the one
+ * in hand only when the model plays it hitless and `betterAnswer` prefers it. ⚖ No-hit logic: it only ever ADDS a
+ * hitless candidate. Where the room holds no lobber the stand question reads nothing and the try repeats the first
+ * pass. Already ON (`PRESS_KILL_STRIKE_BOMBS`), it does not run. OFF: never runs — byte-identical.
+ * ⛓ THE THREAD: inside `solveAnytime`, i.e. the page's SOLVE WORKER (and node). It posts no `onPass`.
+ */
+export const HIT_AVOID_STAND_BOMBS = { enabled: globalThis.process?.env?.SEEDLING_HIT_AVOID_STAND_BOMBS === '1' };
+export const HIT_AVOID_STAND_BOMBS_DEFAULT = false;
+/** ON only: tries made / tries whose hitless plan replaced the one in hand (an instrument; nothing that decides reads it). */
+export const HIT_AVOID_STAND_BOMBS_COUNTS = { tried: 0, replaced: 0 };
+
+/** Run `fn` with `HIT_AVOID_STAND_BOMBS` set to `enabled`, restoring the previous value. */
+export function withHitAvoidStandBombs(enabled, fn) {
+    const was = HIT_AVOID_STAND_BOMBS.enabled;
+    HIT_AVOID_STAND_BOMBS.enabled = enabled === true;
+    try { return fn(); } finally { HIT_AVOID_STAND_BOMBS.enabled = was; }
+}
+
+/**
+ * ⛓ `HIT_AVOID_STAND_BOMBS` — the try itself: `pass`'s search under `PRESS_KILL_STRIKE_BOMBS`, on `work` to `budgetWork`.
+ * `{answer, row}`: `answer` a hitless plan (`pass: 'stand-bombs'`) or null; `row` the pass row (`cut` when the budget
+ * ended it — never `limit`/`deadline`, which name a cut of the shipped passes to a held retry). Already ON ⇒ no try.
+ */
+export function standBombsPass({ tape, pass, budgetWork = null, work = createWorkClock(), clock = () => Date.now() }) {
+    const t0 = clock();
+    const w0 = work.units;
+    const budgeted = Number.isFinite(budgetWork) && budgetWork > 0;
+    if (PRESS_KILL_STRIKE_BOMBS.enabled) return { answer: null, row: { pass: 'stand-bombs', ok: false, kind: 'skipped', ticks: null, ms: 0 } };
+    let cut = null;
+    const shouldStop = budgeted ? () => { if (work.tick() > budgetWork) { cut ??= 'budget'; return true; } return false; } : null;
+    const one = withPressKillStrikeBombs(true, () => settleSolve(() => solveFromTape({ ...tape, clock, dashMode: pass.dashMode,
+        adds: pass.adds ?? null, shouldStop, fineCheckpoints: shouldStop !== null && FINE_CHECKPOINTS })));
+    const hitless = one.ok && !one.plan.deadline && planTakesHit(one.plan) === false;
+    const answer = hitless ? { ...one, pass: 'stand-bombs', plan: { ...one.plan, pass: 'stand-bombs' } } : null;
+    const row = { pass: 'stand-bombs', ok: answer !== null, kind: one.ok ? null : (one.kind ?? null),
+        ticks: one.ok ? one.plan.solution.length : null, ms: Math.round(clock() - t0), ...(budgeted ? { work: work.units - w0 } : {}),
+        ...(one.ok && one.plan.modelHits ? { modelHits: { ...one.plan.modelHits } } : {}), ...(cut ? { cut } : {}) };
+    return { answer, row };
+}
+
 /** ⛓ HIT-AWARE ANSWER — the model's `playerHits` ledger length of `run` (0 when the run keeps none). */
 function modelHitCount(run) {
     if (typeof run?.ledger === 'function') return run.ledger('playerHits').length;
@@ -692,6 +744,17 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => 
         const avoid = hitAvoidPass({ tape, pass: passes[0], budgetWork, windowWork, work, clock });
         rows.push(avoid.row);
         if (avoid.answer && betterAnswer(best, avoid.answer)) best = avoid.answer;
+    }
+    // ⛓ hammer-phase CHASER-STAND (`HIT_AVOID_STAND_BOMBS`, OFF): the plan still bills a hit — the first pass again,
+    // the strike's stand asking the lobber.
+    if (HIT_AVOID_STAND_BOMBS.enabled && best?.ok === true && best.kind !== 'divergence' && planTakesHit(best.plan) === true) {
+        const sb = standBombsPass({ tape, pass: passes[0], budgetWork, work, clock });
+        rows.push(sb.row);
+        HIT_AVOID_STAND_BOMBS_COUNTS.tried += 1;
+        if (sb.answer && betterAnswer(best, sb.answer)) {
+            best = sb.answer;
+            HIT_AVOID_STAND_BOMBS_COUNTS.replaced += 1;
+        }
     }
     // Every pass skipped (a held retry resumed at a pass the run cannot use): the skip itself is the
     // answer — `betterAnswer` never lets it replace what an earlier attempt's passes said.

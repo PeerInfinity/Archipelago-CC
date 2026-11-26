@@ -3,6 +3,8 @@
  *   - `OPP_AIM_CHASERS`: the press kill's drive offers the OPP policy an in-reach body for an AIM only when the aim's
  *     own landing is clear of every chaser (PKC's `landsClearOfChasers`).
  *   - `PRESS_KILL_STRIKE_BOMBS`: `deriveStrike`'s stand asks the lobber (`PRESS_KILL_BOMBS`' stand half, on its own).
+ *   - `HIT_AVOID_STAND_BOMBS` (`jsRuntimeSolver`): after the ladder, a plan that still bills a hit asks the first pass
+ *     again with `PRESS_KILL_STRIKE_BOMBS` ON, once; only a hitless plan replaces it.
  * The request witnesses (re-measure-9's F1 32:10 and re-measure-8's P1 32:10 at seam +7) are
  * `hammerChaserStand.train.test.js`.
  */
@@ -16,8 +18,12 @@ import {
     withPressKillStrikeBombs,
 } from './solverBot.js';
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
+import {
+    HIT_AVOID_STAND_BOMBS, HIT_AVOID_STAND_BOMBS_DEFAULT, standBombsPass, withHitAvoidStandBombs,
+} from './jsRuntimeSolver.js';
 
 const SOURCE = readFileSync(new URL('./solverBot.js', import.meta.url), 'utf8');
+const JSRS = readFileSync(new URL('./jsRuntimeSolver.js', import.meta.url), 'utf8');
 
 /** A top-level function's text, from its declaration to its closing brace (the first `\n}\n`). */
 const bodyOf = (decl) => {
@@ -30,6 +36,7 @@ const SINGLE_GAME = /level\s*===\s*\d|@\d+,\d+|spinner@|bombpusher|bob@/;
 describe.each([
     ['OPP_AIM_CHASERS', OPP_AIM_CHASERS, OPP_AIM_CHASERS_DEFAULT, withOppAimChasers],
     ['PRESS_KILL_STRIKE_BOMBS', PRESS_KILL_STRIKE_BOMBS, PRESS_KILL_STRIKE_BOMBS_DEFAULT, withPressKillStrikeBombs],
+    ['HIT_AVOID_STAND_BOMBS', HIT_AVOID_STAND_BOMBS, HIT_AVOID_STAND_BOMBS_DEFAULT, withHitAvoidStandBombs],
 ])('%s (hammer-phase CHASER-STAND)', (name, sw, dflt, withIt) => {
     it('ships OFF, and its env name is in the worker\'s table', () => {
         expect(dflt).toBe(false);
@@ -77,5 +84,26 @@ describe('PRESS_KILL_STRIKE_BOMBS — deriveStrike\'s stand question', () => {
         expect(SOURCE).toContain('    const bombs = (PRESS_KILL_BOMBS.enabled || PRESS_KILL_STRIKE_BOMBS.enabled) && bombsInPlay(run);\n    let bombed = 0;');
         expect(bodyOf('function refugeAsksBombs(run) {')).not.toContain('PRESS_KILL_STRIKE_BOMBS');
         expect((SOURCE.match(/PRESS_KILL_STRIKE_BOMBS\.enabled/g) ?? [])).toHaveLength(1);
+    });
+});
+
+describe('HIT_AVOID_STAND_BOMBS — solveAnytime\'s one reader', () => {
+    it('source: asked after the hit-avoid pass, only of a plan that still bills a hit; only a hitless plan replaces it', () => {
+        const at = JSRS.indexOf('if (HIT_AVOID_STAND_BOMBS.enabled && best?.ok === true && best.kind !== \'divergence\' '
+            + '&& planTakesHit(best.plan) === true) {');
+        expect(at).toBeGreaterThan(JSRS.indexOf('const avoid = hitAvoidPass('));
+        expect((JSRS.match(/if \(HIT_AVOID_STAND_BOMBS\.enabled/g) ?? [])).toHaveLength(1);
+        const fn = JSRS.slice(JSRS.indexOf('export function standBombsPass('), JSRS.indexOf('\n}\n', JSRS.indexOf('export function standBombsPass(')));
+        expect(fn).toContain('withPressKillStrikeBombs(true, () => settleSolve(() => solveFromTape(');
+        expect(fn).toContain("const hitless = one.ok && !one.plan.deadline && planTakesHit(one.plan) === false;");
+        // a budget cut is the row's `cut`, never `limit` (which would send the shipped plan to a held retry)
+        expect(fn).not.toMatch(/limit\s*:/);
+        expect(fn).not.toMatch(SINGLE_GAME);
+    });
+
+    it('with PRESS_KILL_STRIKE_BOMBS already ON the try does not run (a skipped row, no answer)', () => {
+        const out = withPressKillStrikeBombs(true, () => standBombsPass({ tape: {}, pass: { dashMode: 'none' } }));
+        expect(out.answer).toBe(null);
+        expect(out.row).toMatchObject({ pass: 'stand-bombs', ok: false, kind: 'skipped' });
     });
 });
