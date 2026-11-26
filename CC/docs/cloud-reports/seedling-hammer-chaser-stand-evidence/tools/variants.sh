@@ -8,7 +8,7 @@ OAC="SEEDLING_OPP_AIM_CHASERS=1"; PSB="SEEDLING_PRESS_KILL_STRIKE_BOMBS=1"
 venv() { case $1 in
   off) echo "";;
   oac) echo "$OAC";; psb) echo "$PSB";; both) echo "$OAC $PSB";;
-  all4) echo "$A4";; all4oac) echo "$A4 $OAC";; all4psb) echo "$A4 $PSB";; all4both) echo "$A4 $OAC $PSB";;
+  all4) echo "$A4";; all4oac) echo "$A4 $OAC";; all4psb) echo "$A4 $PSB";; all4both) echo "$A4 $OAC $PSB$( [ "$PWD" = /home/user/Archipelago-CC ] && echo " NODE_OPTIONS=--import=/tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/tools/reach-preload.mjs COUNTS_FILE=/tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/survey/reach-all4both.jsonl")";;
   pp) echo "$PP";; ppoac) echo "$PP $OAC";; pppsb) echo "$PP $PSB";; ppboth) echo "$PP $OAC $PSB";;
   ps) echo "$PS";; psoac) echo "$PS $OAC";; pspsb) echo "$PS $PSB";; psboth) echo "$PS $OAC $PSB";;
   *) echo "BAD_VARIANT=1";; esac; }

@@ -49,6 +49,10 @@
       "frontend/modules/seedlingDemo/hammerLatchedHoldMove.train.test.js": {
         "by": "seedling-hammer-latched-hold, cloud box, 2026-11-26",
         "ms": 89450
+      },
+      "frontend/modules/seedlingDemo/hammerChaserStand.train.test.js": {
+        "by": "seedling-hammer-chaser-stand, cloud box (4 cores, under two concurrent surveys and a request matrix), 2026-11-26",
+        "ms": 185571
       }
     }
   },
@@ -82,6 +86,7 @@
     "frontend/modules/seedlingDemo/hammerNewLocks.train.test.js": 15,
     "scripts/procgen/extract-seedling-map.train.test.js": 1,
     "frontend/modules/seedlingDemo/hammerPkswHits.train.test.js": 176,
-    "frontend/modules/seedlingDemo/hammerLatchedHoldMove.train.test.js": 89.5
+    "frontend/modules/seedlingDemo/hammerLatchedHoldMove.train.test.js": 89.5,
+    "frontend/modules/seedlingDemo/hammerChaserStand.train.test.js": 186
   }
 }
