@@ -1,0 +1,5 @@
+SOLVE {"ok":true,"work":597,"ticks":814,"passes":[{"pass":"dashless","ok":false,"kind":"refusal","ticks":null,"work":158},{"pass":"full","ok":false,"kind":"refusal","ticks":null,"work":125},{"pass":"refusal-stand-bombs","ok":true,"kind":null,"ticks":814,"work":314,"modelHits":{"hits":0,"deaths":0},"from":"full"}],"message":null,"answer":"eb1337adcf98"}
+MODEL {"hits":[],"end":{"level":40,"x":71.56448443499367,"y":152.89606141060014}}
+# box lock: TAKEN by f1-refusal-f1-witness (browser, pid 4240) — head c0efd70ad, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"finished":true,"ticks":2263,"prefix":1449,"hitsAtPrefix":{"tick":1449,"hits":0},"end":{"level":40,"x":71.56448443499367,"y":152.89606141060014},"hits":0}

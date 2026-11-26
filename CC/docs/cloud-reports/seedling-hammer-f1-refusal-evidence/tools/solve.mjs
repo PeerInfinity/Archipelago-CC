@@ -25,7 +25,7 @@ if (mode === 'cap' || id !== undefined) {
 }
 const shift = Number(process.env.SEAM_SHIFT ?? 0);
 if (shift) cap.staging.seam.time += shift;
-const req = restoreRequest(cap);
+const req = restoreRequest(cap); if (process.env.BUDGET) req.budgetWork = Number(process.env.BUDGET);
 const { passes: passes0 = ANYTIME_PASSES, source, ...tape } = req; const passes = process.env.ONLY_PASS ? passes0.filter((p) => p.pass === process.env.ONLY_PASS) : passes0;
 const levelSource = source ? levelSourceFromAtlas(source.records) : atlasLevelSource();
 const t0 = Date.now();
