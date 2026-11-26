@@ -45,6 +45,10 @@
       "frontend/modules/seedlingDemo/hammerPkswHits.train.test.js": {
         "by": "seedling-hammer-pksw-hits, cloud box (4 cores, under a concurrent 4-way request matrix), 2026-11-26",
         "ms": 176480
+      },
+      "frontend/modules/seedlingDemo/hammerLatchedHoldMove.train.test.js": {
+        "by": "seedling-hammer-latched-hold, cloud box, 2026-11-26",
+        "ms": 89450
       }
     }
   },
@@ -77,6 +81,7 @@
     "frontend/modules/seedlingDemo/hammerKeylockTurret.train.test.js": 35,
     "frontend/modules/seedlingDemo/hammerNewLocks.train.test.js": 15,
     "scripts/procgen/extract-seedling-map.train.test.js": 1,
-    "frontend/modules/seedlingDemo/hammerPkswHits.train.test.js": 176
+    "frontend/modules/seedlingDemo/hammerPkswHits.train.test.js": 176,
+    "frontend/modules/seedlingDemo/hammerLatchedHoldMove.train.test.js": 89.5
   }
 }
