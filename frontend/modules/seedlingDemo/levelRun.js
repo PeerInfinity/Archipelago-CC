@@ -4122,7 +4122,12 @@ export function createLevelRun({
         let snapY = null;
         let unfroze = false;
         let landedAt = null;
+        // ⛓ fidelity DEADFRAME D2 (ON only): per span frame, the rocks a Lock sees Solid (landed by the frame before).
+        const deadSolids = [];
         for (let i = 1; i <= 2000 && !unfroze; i += 1) {
+            if (CONTACT_FIDELITY.deadFrameResponderStep) {
+                deadSolids.push(started.filter((e) => e.state.type === FALL_ROCK.landedType).map((e) => ({ id: e.id, rect: fallRockRect(e.state) })));
+            }
             // ⛓ fidelity FROZENTICK D2 (ON only): the blocks update before the rocks (`Game.as:2382` vs `:2353`).
             if (nested === false) stepPushablesDeadFrameNow();
             for (const e of started) {
@@ -4185,6 +4190,10 @@ export function createLevelRun({
             return { frames, dropped, snapY, landedAt };
         }
         spendFrozen(frames, 'fallrocks-together');
+        // ⛓ fidelity DEADFRAME D2 (ON only): the responders through every frame of the span (the release frame too).
+        // Past the frame-A tick's own step, so with `responderStepAfterReaders` OFF they run at once.
+        queueDeadResponderFramesNow(frames, 'a button\'s or the wand\'s rocks', (i) => deadSolids[i]);
+        flushDeadResponderFramesNow('end');
         // ⛓ THE RELEASE FRAME IS A LIVE PLAYER FRAME. The rock that expires
         // first clears `Game.freezeObjects` before the Player updates, and
         // `Bot.update` already counted that frame dead — so the player takes
@@ -16153,6 +16162,37 @@ export function createLevelRun({
         }
     };
     /**
+     * ⛓ fidelity DEADFRAME D2 (`CONTACT_FIDELITY.deadFrameResponderStep`, OFF never written): the dead frames a site
+     * collapses, queued for the responders — `{level, state, world, box, frames: [solids per frame], enemies, why}`.
+     * `responderStepAfterReaders` OFF: run before the tick's own step (`flushDeadResponderFramesNow('end')`, the main
+     * tick's end and `runFrozenTick`), or at once when the site is past it (a rock span). ON: run at the top of the next
+     * advance, before its readers (`'top'`). See the key's doc.
+     */
+    let pendingDeadResponderFrames = null;
+    const queueDeadResponderFramesNow = (n, why, solidsAt = null) => {
+        if (!CONTACT_FIDELITY.deadFrameResponderStep || noclip || n <= 0) return;
+        const w = worldFor(level);
+        if ((w.activators ?? []).length === 0 && (w.pressers ?? []).length === 0) return;
+        if (pendingDeadResponderFrames !== null) {
+            throw new Error(`levelRun: tick ${ticksCompleted} queues ${why}'s ${n} dead frames over ${pendingDeadResponderFrames.why}'s `
+                + `still pending (level ${pendingDeadResponderFrames.level}) — two dead spans in one tick (deadFrameResponderStep).`);
+        }
+        const solids = movingSolidsNow();
+        pendingDeadResponderFrames = { level, state: activatorStateFor(level), world: w, box: playerBoxAt(state.x, state.y),
+            frames: Array.from({ length: n }, (_, i) => (solidsAt ? [...solids, ...solidsAt(i)] : solids)),
+            enemies: responderEnemiesNow(), why };
+    };
+    const flushDeadResponderFramesNow = (at) => {
+        const p = pendingDeadResponderFrames;
+        if (p === null || (at === 'end' && CONTACT_FIDELITY.responderStepAfterReaders)) return;
+        pendingDeadResponderFrames = null;
+        // A queue whose world a level change or a rebuild tore down: that world runs no later frame.
+        if (p.level !== level || activatorStateFor(level) !== p.state) return;
+        for (const movingSolids of p.frames) {
+            applyLockEvents(stepActivators(p.state, p.world, p.box, { inventory, keys, movingSolids, enemies: p.enemies }));
+        }
+    };
+    /**
      * ── ⛓⛓⛓ SWIM T3: THE BUTTON THAT DROPS A ROCK ───────────────────────
      *
      * `Button.activateAll` publishes to every `Activators` sharing its `t`,
@@ -16191,14 +16231,27 @@ export function createLevelRun({
     let pendingButtonFalls = null;
     /** The rocks whose `fall()` frame A is being run — already published. */
     let buttonFallsInFlight = new Set();
-    const armButtonFallRocks = (box) => {
+    const armButtonFallRocks = (box, solids = movingSolidsNow()) => {
         if (pendingButtonFalls !== null) return;
         const rocks = fallRockStateFor(level);
         if (rocks.size === 0) return;
-        const armed = fallRocksArmedBy(world, box, movingSolidsNow())
+        const armed = fallRocksArmedBy(world, box, solids)
             .filter((r) => rocks.has(r.id) && !rocks.get(r.id).landed && !rocks.get(r.id).active
                 && !buttonFallsInFlight.has(r.id));
         if (armed.length > 0) pendingButtonFalls = armed.map((r) => r.id);
+    };
+    /**
+     * ⛓ fidelity DEADFRAME D2 (`CONTACT_FIDELITY.enemyPressesFallRockButton`, OFF never called): a Spinner or a WallFlyer
+     * on a FallRock's Button. They update before the Button, so the press is read where THIS tick moved them and frame
+     * A is this tick (the player's press is armed at a tick's end and read the next). Asked after the readers stepped.
+     */
+    const ENEMY_PRESS_NO_BOX = Object.freeze({ x: -1e9, y: -1e9, w: 0, h: 0, right: -1e9, bottom: -1e9 });
+    const armButtonFallRocksByEnemiesNow = () => {
+        if (pendingButtonFalls !== null || fallRockStateFor(level).size === 0) return;
+        const enemies = [...(spinnerRectsNow() ?? []).map((r) => ({ id: r.id, rect: r.rect })),
+            ...wallFlyerBodiesNow().map((b, i) => ({ id: `wallflyer#${i}`, rect: wallFlyerRect(b) }))];
+        if (enemies.length === 0) return;
+        armButtonFallRocks(ENEMY_PRESS_NO_BOX, enemies);
     };
     const resolveButtonFalls = (ids, { nested = false } = {}) => {
         const rocks = fallRockStateFor(level);
@@ -16875,6 +16928,8 @@ export function createLevelRun({
             // ⛓ RESPONDERORDER (ON only): deferred to the next tick's top, after its readers.
             if (CONTACT_FIDELITY.responderStepAfterReaders) deferResponderStep(activators, world);
             else {
+                // ⛓ fidelity DEADFRAME D2 (ON only): this tick's dead frames (a texted pickup's phase A), before its step.
+                if (pendingDeadResponderFrames !== null) flushDeadResponderFramesNow('end');
                 applyLockEvents(stepActivators(activators, world,
                     playerBoxAt(state.x, state.y),
                     { inventory, keys, movingSolids: movingSolidsNow() }));
@@ -23034,6 +23089,9 @@ export function createLevelRun({
             };
             // ⛓ CEREMONYSHOVE D2: a ceremony's dead frames, before this tick's own frame (`stepCeremonyLumpNow`).
             if (pendingCeremonyLump !== null) stepCeremonyLumpNow();
+            // ⛓ fidelity DEADFRAME D2 (`deadFrameResponderStep`, ON only): the dead frames the last tick queued, before this
+            // tick's readers (`responderStepAfterReaders` ON; OFF they ran before that tick's own step).
+            if (pendingDeadResponderFrames !== null) flushDeadResponderFramesNow('top');
             // ⛓ R7 slice 6d: the witnessed mid-run clears, BEFORE anything
             // reads geometry this tick — the flag is already false when the
             // tick numbered `at` begins, which is what "the game cleared it
@@ -23280,6 +23338,9 @@ export function createLevelRun({
             // Frame A of `pendingButtonFalls`' docblock: live to the tape,
             // frozen to the player. The dead span behind it is resolved after
             // the frozen tick so the clock spends it in the game's order.
+            // ⛓ fidelity DEADFRAME D2 (`enemyPressesFallRockButton`, ON only): an enemy on a FallRock's Button — read where
+            // this tick's readers left it, so frame A is this tick.
+            if (CONTACT_FIDELITY.enemyPressesFallRockButton && !noclip) armButtonFallRocksByEnemiesNow();
             // ⛓ fidelity NESTEDFREEZE D2 (ON only): …unless frame A is also a pickup's T — then the tick is its contact tick.
             if (pendingButtonFalls !== null && !noclip && !nestedRockCeremonyAtFrameANow(pendingButtonFalls)) {
                 // ⛔ U12-swim D1: this frozen tick returns above the pulls' slot,
@@ -23982,6 +24043,8 @@ export function createLevelRun({
                         armCeremonyLumpNow('darksword');
                         // ⛓ fidelity RELEASEPICKUP D2 (ON only): the beam towers' graphic through phase A.
                         stepBeamTowersThroughPhaseANow();
+                        // ⛓ fidelity DEADFRAME D2 (ON only): the responders through phase A's dead frames (texted: 149).
+                        queueDeadResponderFramesNow(CEREMONY_LUMP_SHOVE_FRAMES, 'the darksword\'s phase A');
                     }
                 }
             }
@@ -24006,6 +24069,8 @@ export function createLevelRun({
                     };
                     // ⛓ fidelity RELEASEPICKUP D2 (ON only): the beam towers' graphic through phase A.
                     stepBeamTowersThroughPhaseANow();
+                    // ⛓ fidelity DEADFRAME D2 (ON only): the responders through phase A's dead frames (texted: 149).
+                    queueDeadResponderFramesNow(CEREMONY_LUMP_SHOVE_FRAMES, 'the fire\'s phase A');
                 }
             }
             if (ceremony === null) {
@@ -24070,6 +24135,9 @@ export function createLevelRun({
                     if (CONTACT_FIDELITY.frozenTickUngated && !(CONTACT_FIDELITY.ceremonyShove && ceremony.dialogue !== null)) {
                         for (let k = 0; k < CEREMONY_DEAD_FRAMES.pickup; k += 1) stepPushablesDeadFrameNow();
                     }
+                    // ⛓ fidelity DEADFRAME D2 (ON only): and the responders, through phase A's dead frames (texted: 149).
+                    queueDeadResponderFramesNow(ceremony.dialogue === null ? CEREMONY_DEAD_FRAMES.pickup : CEREMONY_LUMP_SHOVE_FRAMES,
+                        `${hit.tag ?? 'pickup'}'s phase A`);
                 }
             }
             // ⛓ fidelity PLAINSPAN D2 (ON only): a ceremony's T — its apitems, all of them, under the box its start tested.
@@ -25286,6 +25354,8 @@ export function createLevelRun({
                 if (CONTACT_FIDELITY.responderStepAfterReaders) {
                     if (!next.transition) deferResponderStep(activators, world);
                 } else {
+                    // ⛓ fidelity DEADFRAME D2 (ON only): this tick's dead frames, before its own step (the next frame's).
+                    if (pendingDeadResponderFrames !== null) flushDeadResponderFramesNow('end');
                     applyLockEvents(stepActivators(activators, world,
                         playerBoxAt(next.x, next.y),
                         { inventory, keys, movingSolids: movingSolidsNow(), enemies: responderEnemiesNow() }));

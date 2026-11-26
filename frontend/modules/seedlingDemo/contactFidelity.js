@@ -2531,6 +2531,60 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no flip licence).
      */
     responderStepAfterReaders: false,
+    /**
+     * ⛓ fidelity DEADFRAME D2 (wave 66) — THE RESPONDERS STEP ON THE DEAD FRAMES (wave 65's named residue, the map row
+     * "dead frames (pickup lumps, the span) | no responder step"; `CC/docs/cloud-reports/seedling-fidelity-deadframe.md`).
+     * The game. A freeze gates only `Mobile` and the enemies: `Game.update` runs `super.update()` whenever
+     * `blackCover <= 0` (`Game.as:880-883`), and `Lock`/`Cover`/`Button`/`ButtonRoom` carry no `Game.freezeObjects` test
+     * (`Puzzlements/Lock.as`, `Cover.as`, `Button.as:24-35`, `ButtonRoom.as`), so every responder updates on every dead
+     * frame the bot does not count as a tape tick, in the main tick's order. The dead frames of a pickup's phase A lie
+     * right after its contact frame (a texted pickup's 149, the lump `ceremonyShove` measured; a text-less one's 150, all
+     * of `Pickup.specialTimer`), and a button-dropped rock's span (`dropRocksTogether`: every frame of it, release
+     * included, is dead) right after its frame A. MEASURED on the game (p4g; staged L38, `botLoadLevels`, a fresh page per
+     * shape; `-evidence/d2/witness-all.json`, `witness-edges.json`): L (`lock@112,48`, latched from the boot: open on
+     * frame 102) opens at tape tick 25 through a `bosskey keyType 1`'s lump (`d-key`, dead frames 20 → 170), 27 through a
+     * `health`'s (`d-health`, 20 → 169) and 25 through a button rock's span (`d-span`, 20 → 187); the model (OFF) opens it
+     * on 102 every time. The edges (`d-*-at100…103`: the contact / frame A at advance #100…#103) open L on 101 (the
+     * first dead frame is frame 102) and on 102 (the contact frame's own update opened it, or it is past it).
+     * ON (`levelRun.queueDeadResponderFramesNow`): the site queues `n` frames with the box and the solids the dead frames
+     * see (the player and the enemies are frozen; a span's rock is a Solid from the frame after its landing — `Lock`
+     * updates before `FallRock`, `Game.as:2353-2356`). With `responderStepAfterReaders` OFF they run before the contact
+     * tick's own step (`stepActivators`' labelling: that step is the next live frame's update), stamped with it; with it
+     * ON they run at the top of the next advance, BEFORE its readers (a reader of the next live frame sees the responders
+     * the dead frames left), and that frame's own deferred step runs after the readers as before. The sites: a placed
+     * pickup's ceremony (texted 149, text-less 150), the runtime Dark Sword's and Fire's (texted 149), and
+     * `dropRocksTogether`'s span (a nested one is the ceremony's frames). A queue whose world a level change or a
+     * rebuild tore down is dropped, as a deferred step is. OFF: nothing read or written, byte-identical. Not modelled,
+     * named (residue): the other dead frames — a seal piece's, a door ceremony's, the moonrock's, BobBoss's and
+     * LavaBoss's rocks, the wand's approach fade, a seed's cover fade, a Help's frame (the game runs the responders on
+     * all of them; unwitnessed, and the census finds no committed tape on which a responder would change); the Pulser's
+     * dead-frame update (its pulse and its hits); a block's per-frame glide interleaved with the dead steps (the dead
+     * steps read the blocks where they stand).
+     * Composes with `responderStepAfterReaders` (both arms witnessed) and every key. `SEEDLING_DEAD_FRAME_RESPONDER_STEP=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    deadFrameResponderStep: false,
+    /**
+     * ⛓ fidelity DEADFRAME D2 (wave 66) — A SPINNER OR A WALLFLYER ON A FALLROCK'S BUTTON DROPS THE ROCK (wave 65's
+     * named residue: `armButtonFallRocks` presses only on the player and the blocks).
+     * The game. `Button.hitables` holds "Enemy" (`Puzzlements/Button.as:15`) and `activateAll` reaches a `FallRock` of
+     * its `t`, whose setter `fall()`s it (`Scenery/FallRock.as:103-118`). The Spinner and the WallFlyer update before the
+     * Button (`Game.as:2415-2416` vs `:2341`, `World.addUpdate` prepends), so the Button sees an enemy where THIS frame
+     * moved it and `fall()` raises the freeze in that same frame — the frame is frame A, and the player (updating
+     * last) is frozen in it. (A player's press is read a frame later: the Player updates after the Button.) MEASURED on
+     * the game (p4g, staged L38, `-evidence/d2/witness-all.json`): a WallFlyer coming to rest on `button@144,208`
+     * (group 7) drops `fallrock@64,272` with frame A at tape tick 15, the tick the flyer reaches the button (`e-fly-rock`);
+     * a Spinner crossing `button@144,176` drops it at tick 72 (`e-spin-rock`); the model (OFF, and with
+     * `responderStepAfterReaders` ON) never drops it.
+     * ON (`levelRun.armButtonFallRocksByEnemiesNow`): at the top of every live tick, after the readers stepped and before
+     * the frame-A branch, the live spinner and wallflyer boxes press the FallRock Buttons (`fallRocksArmedBy`); an arm is
+     * resolved as frame A in THIS tick. OFF: nothing read, byte-identical. Not modelled, named: the other enemies (no
+     * model position); a block on a FallRock's Button is read at the end of the tick (it updates before the Button too:
+     * unwitnessed).
+     * Needs no other key; composes with every key. `SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    enemyPressesFallRockButton: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2988,6 +3042,11 @@ if (globalThis.process?.env?.SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER === '0') CONT
 // ⛓ fidelity RESPONDERORDER D2: `SEEDLING_RESPONDER_STEP_AFTER_READERS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_RESPONDER_STEP_AFTER_READERS === '1') CONTACT_FIDELITY.responderStepAfterReaders = true;
 if (globalThis.process?.env?.SEEDLING_RESPONDER_STEP_AFTER_READERS === '0') CONTACT_FIDELITY.responderStepAfterReaders = false;
+// ⛓ fidelity DEADFRAME D2: `SEEDLING_DEAD_FRAME_RESPONDER_STEP=0|1` and `SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DEAD_FRAME_RESPONDER_STEP === '1') CONTACT_FIDELITY.deadFrameResponderStep = true;
+if (globalThis.process?.env?.SEEDLING_DEAD_FRAME_RESPONDER_STEP === '0') CONTACT_FIDELITY.deadFrameResponderStep = false;
+if (globalThis.process?.env?.SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON === '1') CONTACT_FIDELITY.enemyPressesFallRockButton = true;
+if (globalThis.process?.env?.SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON === '0') CONTACT_FIDELITY.enemyPressesFallRockButton = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

@@ -1,0 +1,5 @@
+head OFF: 391322d681b7aa0229d94b3f6906d024
+head deadFrameResponderStep ON: 391322d681b7aa0229d94b3f6906d024
+head enemyPressesFallRockButton ON: 391322d681b7aa0229d94b3f6906d024
+head both ON + the last 5 ON: d871cee754a7490a7003a7395028e531
+head both ON: 391322d681b7aa0229d94b3f6906d024
