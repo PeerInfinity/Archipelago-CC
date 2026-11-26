@@ -2619,6 +2619,15 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no flip licence).
      */
     wandShotTrapBodies: false,
+    /**
+     * ⛓ fidelity WANDENEMYBODIES (wave 68) — A WAND SHOT STOPS ON A LIVE TURRET, LAVATRAP, WALLFLYER, ICETRAP, SANDTRAP
+     * OR DRILL, AND THE HIT IS THE GAME'S (wave 67's residue; L59/L62/L65's turret and L78's lavatraps on the late walk).
+     * DOC-PENDING (filled with the witnesses below).
+     * Needs `STATIC_SWORD_ARM` for the turrets (their damage row) and `drillLive` for the drills; composes with every
+     * key. `SEEDLING_WAND_SHOT_ENEMY_BODIES=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    wandShotEnemyBodies: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -3084,6 +3093,9 @@ if (globalThis.process?.env?.SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON === '0') CO
 // ⛓ fidelity WANDTRAPBODIES: `SEEDLING_WAND_SHOT_TRAP_BODIES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_WAND_SHOT_TRAP_BODIES === '1') CONTACT_FIDELITY.wandShotTrapBodies = true;
 if (globalThis.process?.env?.SEEDLING_WAND_SHOT_TRAP_BODIES === '0') CONTACT_FIDELITY.wandShotTrapBodies = false;
+// ⛓ fidelity WANDENEMYBODIES: `SEEDLING_WAND_SHOT_ENEMY_BODIES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WAND_SHOT_ENEMY_BODIES === '1') CONTACT_FIDELITY.wandShotEnemyBodies = true;
+if (globalThis.process?.env?.SEEDLING_WAND_SHOT_ENEMY_BODIES === '0') CONTACT_FIDELITY.wandShotEnemyBodies = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
