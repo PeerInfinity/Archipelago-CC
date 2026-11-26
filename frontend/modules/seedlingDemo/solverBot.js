@@ -8307,6 +8307,43 @@ export function withDashCertSight(enabled, fn) {
 let dashCertSightDepth = 0;
 
 /**
+ * ⛓ hammer-phase PKSW-HITS — **A STAND-TAILED DASH IS CERTIFIED WITH THE SWING'S LINE OF SIGHT TOO**
+ * (`DASH_STAND_SIGHT`, OFF; `SEEDLING_DASH_STAND_SIGHT=1` / `withDashStandSight(enabled, fn)`).
+ *
+ * `DASH_CERT_SIGHT` gives the run's own line test (`slash()`'s, masks included) to the previews `spinnerDashWhole`
+ * makes. A corridor with a `stand` tail (a hold, a keylock, the collect approach) does not reach `spinnerDashWhole`
+ * while `DASH_STAND_WHOLE` is OFF: `walkTo` plans it window by window with `planSwordDash`, whose previews ask NO line,
+ * so a planned swing lands on a chaser the run's swing cannot reach. MEASURED (seed 1, survey step 149 with
+ * `PRESS_KILL_START_WAIT`): the walk to the Totem's stance at t1883 is certified clean; its preview's swing at t1897
+ * knocks `chaser:bob@288,80` back one tick before the run's does (t1900 against t1901), the two bodies part, the run's
+ * swing at t1923 misses where the preview's lands, and the drive is hit at t1930 (2149 t, 1 h). The same preview asked
+ * with the line matches the run tick for tick, and its probe names that hit. ON, the stand-tailed `planSwordDash` asks
+ * the line as `spinnerDashWhole` does (the same depth counter, so `DASH_CERT_SIGHT.counts.refused` hears it); the
+ * chain planned is the chain that certifies against the run's swing: step 149 solves 2128 t, 0 h. Nothing else moves:
+ * a corridor without a tail, and every preview outside the dash certificate, read exactly as OFF. Worker thread.
+ */
+export const DASH_STAND_SIGHT = { enabled: globalThis.process?.env?.SEEDLING_DASH_STAND_SIGHT === '1',
+    counts: { asks: 0 } };
+export const DASH_STAND_SIGHT_DEFAULT = false;
+
+/** Run `fn` with `DASH_STAND_SIGHT` set to `enabled`, restoring the previous value (also on a throw). */
+export function withDashStandSight(enabled, fn) {
+    return withSwitch(DASH_STAND_SIGHT, enabled, fn);
+}
+
+/** `fn()` — under `DASH_STAND_SIGHT` with a `stand` tail, inside the dash certificate's line-of-sight depth. */
+function standDashSighted(stand, fn) {
+    if (!DASH_STAND_SIGHT.enabled || !stand) return fn();
+    DASH_STAND_SIGHT.counts.asks += 1;
+    dashCertSightDepth += 1;
+    try {
+        return fn();
+    } finally {
+        dashCertSightDepth -= 1;
+    }
+}
+
+/**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE L28-BOBSOLDIER — **THE CHASER ARM'S STANCE SCAN SEES THE SWING'S LINE OF SIGHT**
  * (`KILL_STANCE_SIGHT`, ON by default since the L28 flip; `SEEDLING_KILL_STANCE_SIGHT=0` opts out).
  *
@@ -14704,7 +14741,9 @@ export function deriveRefuge(run, contacts, untilIndex, { strikeFor = null } = {
     clear.sort((a, b) => a.d - b.d || b.clearance - a.clearance);
     let best = null;
     // ⛓ hammer-phase BW — the lobber's forecast, asked of each previewed refuge (`PRESS_KILL_BOMBS`, ON since PKB)
-    const bombs = PRESS_KILL_BOMBS.enabled && bombsInPlay(run);
+    // ⛓ hammer-phase PKSW-HITS — or its refuge half alone (`PRESS_KILL_REFUGE_BOMBS`, OFF)
+    const bombs = refugeAsksBombs(run);
+    const counts = PRESS_KILL_BOMBS.enabled ? null : PRESS_KILL_REFUGE_BOMBS_COUNTS;
     // ⛓ hammer-phase RE — the best-ETA cut (`REFUGE_ETA_CUT`, ON by default): a later candidate's preview stops once it cannot win
     const cut = REFUGE_ETA_CUT.enabled;
     for (const c of clear.slice(0, REFUGE_CANDIDATES)) {
@@ -14738,9 +14777,9 @@ export function deriveRefuge(run, contacts, untilIndex, { strikeFor = null } = {
         if (walk.truncated) continue;
         const eta = walk.samples.length;
         if (bombs) {
-            PRESS_KILL_BOMBS_COUNTS.refugeAsked += 1;
+            if (counts) counts.asked += 1; else PRESS_KILL_BOMBS_COUNTS.refugeAsked += 1;
             if (refugeBlast(run, walk, c, untilIndex) !== null) {
-                PRESS_KILL_BOMBS_COUNTS.refugeRefused += 1;
+                if (counts) counts.refused += 1; else PRESS_KILL_BOMBS_COUNTS.refugeRefused += 1;
                 continue;
             }
         }
@@ -21563,6 +21602,36 @@ export function resetPressKillStartWaitCounts() {
     PRESS_KILL_START_WAIT_COUNTS.rows = [];
 }
 
+/**
+ * ⛓ hammer-phase PKSW-HITS — **THE PRESS KILL'S REFUGE ASKS THE LOBBER, ON ITS OWN** (`PRESS_KILL_REFUGE_BOMBS`, OFF).
+ *
+ * `deriveRefuge` prices a refuge's walk and wait against the hammers, and against a forecast Bomb's Explosion only
+ * under `PRESS_KILL_BOMBS` (BW), whose two halves — the refuge and the strike's stand — were switched OFF together
+ * (PKB-OFF, measured over both). MEASURED (seed 1, L40 Totem 64,144, re-measure-8 A1 32:10 with `PRESS_KILL_START_WAIT`):
+ * after the press kill that PKSW redoes, a SECOND press kill's tick loop holds a refuge at the player's own cell (eta 0)
+ * for the seven ticks its dead body fades; the lobber's forecast names the blast on that cell from twelve ticks out,
+ * nothing asks it, and the plan ships `bomb:…#9`'s hit (797 t, 1 h). ON, that one question is asked — the refuge's half
+ * of `PRESS_KILL_BOMBS`, the same `refugeBlast` over the same window — and nothing else of BW is: A1 32:10 solves 651 t,
+ * 0 h. A refuge the forecast blasts is not a candidate, so every refuge refused ⇒ the kill's own "nowhere to be"
+ * (`HAMMER_SAFETY`): a refusal, never a hit. Reads nothing level-specific. OFF: never read (`PRESS_KILL_BOMBS` alone
+ * decides, as before). `SEEDLING_PRESS_KILL_REFUGE_BOMBS=1` / `withPressKillRefugeBombs(enabled, fn)`. Worker thread.
+ */
+export const PRESS_KILL_REFUGE_BOMBS = {
+    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_REFUGE_BOMBS === '1' };
+export const PRESS_KILL_REFUGE_BOMBS_DEFAULT = false;
+/** ON only, and only where `PRESS_KILL_BOMBS` is OFF: refuges asked / refused for a forecast blast (an instrument). */
+export const PRESS_KILL_REFUGE_BOMBS_COUNTS = { asked: 0, refused: 0 };
+
+/** Run `fn` with `PRESS_KILL_REFUGE_BOMBS` set to `enabled`, restoring the previous value. */
+export function withPressKillRefugeBombs(enabled, fn) {
+    return withSwitch(PRESS_KILL_REFUGE_BOMBS, enabled, fn);
+}
+
+/** Does `deriveRefuge` ask the lobber's forecast (BW's own switch, or this slice's refuge half alone)? */
+function refugeAsksBombs(run) {
+    return (PRESS_KILL_BOMBS.enabled || PRESS_KILL_REFUGE_BOMBS.enabled) && bombsInPlay(run);
+}
+
 /** `PRESS_KILL_START_WAIT`'s retry around the whole press kill (see the switch). */
 function execKillByPressStartWait(run, perTick, resolved, ctx) {
     const t0 = perTick.length;
@@ -22215,7 +22284,7 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                                 + `and no strike on ${plan.id} is derivable. The room has `
                                 + 'nowhere to be.'
                                 // ⛓ hammer-phase BW — and under `PRESS_KILL_BOMBS` a refuge a forecast blast lands on is none
-                                + (PRESS_KILL_BOMBS.enabled && bombsInPlay(run)
+                                + (refugeAsksBombs(run)
                                     ? ' (PRESS_KILL_BOMBS: a refuge whose walk or wait a forecast Bomb\'s Explosion '
                                         + 'lands on is not counted.)' : '')
                                 /**
@@ -35393,9 +35462,10 @@ function solveSegmentUnder({
                     : (!narrow && corridorDashCertified?.wps === wps) ? corridorDashCertified.d
                         : (wholeAsk && (!stand || DASH_STAND_WHOLE.enabled))
                             ? spinnerDashWhole(wps, except, stand)
-                            : planSwordDash(run, wps, { tolerance, dashMode,
+                            // ⛓ hammer-phase PKSW-HITS (`DASH_STAND_SIGHT`, OFF ⇒ `fn()`): a stand tail certifies with the line
+                            : standDashSighted(stand, () => planSwordDash(run, wps, { tolerance, dashMode,
                                 certify: (samples) => probeSamples(samples, except),
-                                ...(stand ? { stand } : {}), ...(narrow ? { iframeLapse: false } : {}) });
+                                ...(stand ? { stand } : {}), ...(narrow ? { iframeLapse: false } : {}) }));
             // ⛓ hammer DASH: a measurement's row per corridor whose `stand` tail decided which dash ask it got.
             if (DASH_STAND_WHOLE.audit && dash && stand && wholeAsk && !dashFirst && corridorDashCertified?.wps !== wps) {
                 DASH_STAND_WHOLE.audit.push({ tick: perTick.length, what, standTicks: stand.ticks,
