@@ -104,7 +104,7 @@ describe('RELEASEPICKUP — the key', () => {
             expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
             // ⛓ wave 57 (NESTEDFREEZE) appended `nestedRockCeremony` after it, wave 59 (PLAINSPAN) `plainPickupInFreeze`. Wave 61 (CHESTCOVER) `chestCoverFencepost`.
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(-5)).toEqual([KEY, 'nestedRockCeremony', 'plainPickupInFreeze', 'chestCoverFencepost', 'presserRecursionHang']);
+            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(-6)).toEqual([KEY, 'nestedRockCeremony', 'plainPickupInFreeze', 'chestCoverFencepost', 'presserRecursionHang', 'publishedButtonRoomSetter']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FREEZE_SPAN_UPDATES');
         });
 });

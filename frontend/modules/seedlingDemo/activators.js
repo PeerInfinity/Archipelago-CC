@@ -98,6 +98,56 @@ export function markPresserHang(state, world, t, value, by) {
 }
 
 /**
+ * ⛓ fidelity BUTTONROOMCLEAR D2 (`CONTACT_FIDELITY.publishedButtonRoomSetter`, ON only): the groups holding a
+ * `room == -1`, flip-1 ButtonRoom — the ones whose setter answers a published TRUE with a FALSE to every other
+ * `Activators` of `t` (`ButtonRoom.as:75-90`). Every responder class is added after every ButtonRoom
+ * (`Game.as:2341-2419`, by type) and `World.addUpdate` prepends, so in `getClass` order each responder takes the true
+ * and then the false: it ends the frame false, and reads false at its own update (it updates before the pressers). A
+ * `FallRock`'s setter acts on the true itself (`fall()`), so it still falls. Once per built world.
+ */
+const FLIP_ANSWER_GROUPS = new WeakMap();
+export function flipAnswerGroups(world) {
+    let s = FLIP_ANSWER_GROUPS.get(world);
+    if (s) return s;
+    s = new Set();
+    for (const p of world.pressers ?? []) if (p.tag === 'buttonroom' && !(p.room >= 0) && p.flip) s.add(p.t);
+    FLIP_ANSWER_GROUPS.set(world, s);
+    return s;
+}
+
+/** ⛓ BUTTONROOMCLEAR (ON only): does presser `p` publish TRUE into its group (a Button, a local flip-0 ButtonRoom)? */
+const publishesTrue = (p) => p.tag === 'button' || (p.tag === 'buttonroom' && !(p.room >= 0) && !p.flip);
+
+/**
+ * ⛓ BUTTONROOMCLEAR (ON only): a TRUE published into `group` by a caller the step does not see (a rope pull, the
+ * wand's sweep, a build's `check()`), queued for the level's next `stepActivators`, which runs the reached
+ * ButtonRooms' setters (`publishedButtonRoomWrites`). `by` names the publisher (its id, or the sweep).
+ */
+export function queuePublishedTrue(state, group, by) {
+    (state.publishedTrue ??= []).push({ group, by });
+}
+
+/**
+ * ⛓ BUTTONROOMCLEAR (ON only): the ButtonRooms of `group` a TRUE published by `by` reaches, run as their own press
+ * runs (`ButtonRoom.as:67-98`, the whole body inside `if (a)`): the cross-room write (`room >= 0`, `:91-94`) and the
+ * own-tag clear (`:96`), as one `roomwrite` each, ONCE PER VISIT (`state.roomWritten`, the press's own ledger). The
+ * order is `getClass`'s — the REVERSE of the XML order within the `buttonroom` loop — so two writes to one slot land
+ * as the game's (measured, `btn-brx0-then-brx1`). A local flip-0 one is not run: its true answer recurses (the
+ * `presserRecursionHang` family, refused there by name). A flip-1 one's false answer is the `flipAnswerGroups` half.
+ */
+export function publishedButtonRoomWrites(state, world, group, by, events) {
+    const brs = (world.pressers ?? []).filter((p) => p.tag === 'buttonroom' && p.t === group);
+    for (let i = brs.length - 1; i >= 0; i--) {
+        const p = brs[i];
+        const id = `${p.tag}@${p.x},${p.y}`;
+        if (id === by || state.roomWritten.has(id)) continue;
+        if (!(p.room >= 0) && !p.flip) continue;
+        state.roomWritten.add(id);
+        events.push({ kind: 'roomwrite', id, presser: p, writes: crossRoomWrites(p), publish: localPublish(p), publishedBy: by });
+    }
+}
+
+/**
  * How each responder class answers `activate`.
  *
  * `step` is the per-tick alpha decrement and `opensOn` is the tick of
@@ -692,6 +742,12 @@ function bootPress(state, p, world) {
  * @returns {boolean} true when this call latched the group
  */
 export function latchAtBuild(state, group, world) {
+    // ⛓ BUTTONROOMCLEAR (OFF never read): the build's true reaches the group's ButtonRooms (their setters run at the
+    // first step); a flip-1 one answers false, so nothing latches and no fade starts.
+    if (CONTACT_FIDELITY.publishedButtonRoomSetter) {
+        queuePublishedTrue(state, group, 'check()');
+        if (flipAnswerGroups(world).has(group)) return false;
+    }
     if (state.latched.get(group) === true) return false;
     state.latched.set(group, true);
     for (const a of world.activators) {
@@ -745,7 +801,14 @@ export function latchAtBuild(state, group, world) {
  */
 export function pressedGroups(world, playerBox, movingSolids = []) {
     const groups = new Set();
-    for (const p of world.pressers) if (presserDown(p, playerBox, movingSolids)) groups.add(p.t);
+    // ⛓ BUTTONROOMCLEAR (OFF never read): a Button's / flip-0 ButtonRoom's true into a group with a flip-1 ButtonRoom
+    // is answered false before any responder reads it (`flipAnswerGroups`).
+    const answered = CONTACT_FIDELITY.publishedButtonRoomSetter ? flipAnswerGroups(world) : null;
+    for (const p of world.pressers) {
+        if (!presserDown(p, playerBox, movingSolids)) continue;
+        if (answered && answered.has(p.t) && publishesTrue(p)) continue;
+        groups.add(p.t);
+    }
     return groups;
 }
 
@@ -870,10 +933,23 @@ export function stepActivators(state, world, playerBox, opts = {}) {
         if (!byPlayer && !byBlock) continue;
         state.roomWritten.add(id);
         const publish = localPublish(p);
-        if (publish && publish.value) state.latched.set(publish.group, true);
+        if (publish && publish.value && !(CONTACT_FIDELITY.publishedButtonRoomSetter
+            && flipAnswerGroups(world).has(publish.group))) state.latched.set(publish.group, true);
         events.push({
             kind: 'roomwrite', id, presser: p, writes: crossRoomWrites(p), publish,
         });
+    }
+    // ⛓ fidelity BUTTONROOMCLEAR D2 (`publishedButtonRoomSetter`, OFF never read): a TRUE published into a group runs
+    // every OTHER ButtonRoom of it through its whole setter (`ButtonRoom.as:67-98`) — this step's presses (a Button,
+    // a local flip-0 ButtonRoom) and the queued publishes (a rope pull, the wand's sweep, a build's `check()`).
+    if (CONTACT_FIDELITY.publishedButtonRoomSetter) {
+        for (const p of world.pressers ?? []) {
+            if (!publishesTrue(p) || !presserDown(p, playerBox, movingSolids)) continue;
+            publishedButtonRoomWrites(state, world, p.t, `${p.tag}@${p.x},${p.y}`, events);
+        }
+        const queued = state.publishedTrue ?? [];
+        state.publishedTrue = [];
+        for (const q of queued) publishedButtonRoomWrites(state, world, q.group, q.by, events);
     }
     for (const a of world.activators) {
         const s = state.byId.get(a.id);

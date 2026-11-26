@@ -58,7 +58,8 @@ const tapeResult = (name, over, src = VANILLA) => withContactFidelity({ [KEY]: f
 describe('PRESSERLOOP — the key', () => {
     it('ships OFF, appended last, with a worker env name', () => {
         expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
-        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe(KEY);
+        // ⛓ wave 63 (BUTTONROOMCLEAR) appended `publishedButtonRoomSetter` after it.
+        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf(KEY) + 1)).toEqual(['publishedButtonRoomSetter']);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_PRESSER_RECURSION_HANG');
     });
     it.skipIf(!!process.env.SEEDLING_PRESSER_RECURSION_HANG)('is OFF in this process', () => {

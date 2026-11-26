@@ -57,7 +57,7 @@ import {
 import {
     RESPONDERS, createActivatorState, fallRocksArmedBy, opensOnTick, openActivatorIds,
     openActivatorIdsBeforeLatestStep, openActivatorIdsBeforeStep, latchAtBuild, pressedGroups, presserDown, ropePublish, stepActivators,
-    PresserRecursionHang, markPresserHang,
+    PresserRecursionHang, markPresserHang, flipAnswerGroups, queuePublishedTrue,
 } from './activators.js';
 import {
     FALL_ROCK, createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
@@ -1840,6 +1840,12 @@ export function createLevelRun({
             && markPresserHang(act, worldFor(n), pub.group, pub.value, `${ropeSolid.ropeId} (pulled)`)) return;
         if (pub) {
             if (atBuild) latchAtBuild(act, pub.group, worldFor(n));
+            // ⛓ fidelity BUTTONROOMCLEAR D2 (OFF never read): the pull's true runs the group's ButtonRooms' setters (the
+            // next step banks them); a flip-1 one answers false, so the group does not latch. The rocks still fall.
+            else if (CONTACT_FIDELITY.publishedButtonRoomSetter) {
+                queuePublishedTrue(act, pub.group, ropeSolid.ropeId);
+                if (!flipAnswerGroups(worldFor(n)).has(pub.group)) act.latched.set(pub.group, pub.value);
+            }
             else act.latched.set(pub.group, pub.value);
             // …and the members whose own `set activate` DOES
             // something the latch alone cannot express.
@@ -16381,6 +16387,22 @@ export function createLevelRun({
                         value: w.value, which: w.which, t: ticksCompleted,
                         ...(unread ? { unread: true } : {}),
                     });
+                    // ⛓ fidelity BUTTONROOMCLEAR D2 (OFF never read): a TRUE write puts the slot back ON — the game's
+                    // readout drops it (measured, `btn-brx0-then-brx1`), so it leaves every cleared ledger.
+                    if (w.value === true && CONTACT_FIDELITY.publishedButtonRoomSetter) {
+                        for (const r of roomWrites) {
+                            if (r.value === false && r.level === at && r.tag === w.tag && !r.restoredBy) r.restoredBy = ev.id;
+                        }
+                        pendingEarnedClears.get(at)?.delete(w.tag);
+                        const list = clearedByLevel.get(at);
+                        if (list && list.includes(w.tag)) {
+                            list.splice(list.indexOf(w.tag), 1);
+                            if (at !== level) { worlds.delete(at); activatorStates.delete(at); }
+                        }
+                        const u = unreadRoomWrites.findIndex((x) => x.level === at && x.tag === w.tag);
+                        if (u >= 0) unreadRoomWrites.splice(u, 1);
+                        continue;
+                    }
                     if (w.value !== false) continue;
                     if (unread) {
                         if (!unreadRoomWrites.some((u) => u.level === at && u.tag === w.tag)) {
@@ -19900,6 +19922,8 @@ export function createLevelRun({
         for (const r of roomWrites) {
             if (r.value !== false || r.tag < 0) continue;
             if (out.some((o) => o.level === r.level && o.tag === r.tag)) continue;
+            // ⛓ fidelity BUTTONROOMCLEAR D2 (only ever written ON): a later TRUE write put the slot back on.
+            if (r.restoredBy) continue;
             out.push({
                 level: r.level, tag: r.tag,
                 by: r.which === 'room' ? `${r.id} (L${r.from} -> L${r.level})` : r.id,
@@ -24269,7 +24293,12 @@ export function createLevelRun({
                         if (CONTACT_FIDELITY.presserRecursionHang) {
                             markPresserHang(activatorStateFor(level), worldFor(level), group, true, 'the wand (Wand.removed)');
                         }
-                        activatorStateFor(level).latched.set(group, true);
+                        // ⛓ fidelity BUTTONROOMCLEAR D2 (OFF never read): the sweep runs the group's ButtonRooms'
+                        // setters (`Wand.as:63-68`, `n.activate = true`); a flip-1 one's false answer unlatches it.
+                        if (CONTACT_FIDELITY.publishedButtonRoomSetter) {
+                            queuePublishedTrue(activatorStateFor(level), group, 'the wand (Wand.removed)');
+                            if (!flipAnswerGroups(worldFor(level)).has(group)) activatorStateFor(level).latched.set(group, true);
+                        } else activatorStateFor(level).latched.set(group, true);
                         const rocks = fallRockStateFor(level);
                         const together = [...rocks].filter(
                             ([, r]) => r.t === group && !r.landed,
