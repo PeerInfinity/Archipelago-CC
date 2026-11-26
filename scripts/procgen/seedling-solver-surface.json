@@ -361,9 +361,9 @@
       "class": "seedling",
       "form": "forecast",
       "files": {
-        "solverBot.js": 9
+        "solverBot.js": 10
       },
-      "sites": 9,
+      "sites": 10,
       "seen": "both",
       "via": [
         "direct"
@@ -1464,9 +1464,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 780
+        "solverBot.js": 783
       },
-      "sites": 921,
+      "sites": 924,
       "seen": "both",
       "via": [
         "direct",
@@ -2957,9 +2957,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 295
+        "solverBot.js": 296
       },
-      "sites": 365,
+      "sites": 366,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2993,9 +2993,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 299
+        "solverBot.js": 300
       },
-      "sites": 372,
+      "sites": 373,
       "seen": "both",
       "via": [
         "const-alias",
@@ -6267,11 +6267,11 @@
         "botDriverV2.js": 1,
         "lavaBossPolicy.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 28,
+        "solverBot.js": 29,
         "strikePolicy.js": 2,
         "tentacleBeastPolicy.js": 1
       },
-      "sites": 34,
+      "sites": 35,
       "seen": "static",
       "via": [
         "import"
@@ -6456,10 +6456,10 @@
       "files": {
         "botDriverV2.js": 2,
         "ghostRopeCut.js": 1,
-        "solverBot.js": 13,
+        "solverBot.js": 14,
         "spearArm.js": 1
       },
-      "sites": 17,
+      "sites": 18,
       "seen": "static",
       "via": [
         "import"
