@@ -12179,7 +12179,7 @@ function pacedHoldPlan(run, resolved, what) {
 
 /**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE LATCHED-HOLD — **A HOLD WHOSE LATCH HAS FIRED WAITS WHERE NO BOMB LANDS**
- * (`LATCHED_HOLD_MOVE`, OFF — `SEEDLING_LATCHED_HOLD_MOVE=1` / `withLatchedHoldMove(enabled, fn)`; a behaviour switch).
+ * (`LATCHED_HOLD_MOVE`, ON since the LHM flip — `SEEDLING_LATCHED_HOLD_MOVE=0` opts out / `withLatchedHoldMove(enabled, fn)`; a behaviour switch).
  *
  * A `room = -1` ButtonRoom's setter only ever writes `true` (*"Can't be reset to false!!"*, `ButtonRoom.as:67-98`), and
  * it sets every responder of its group then; a `Lock`'s fade runs from `activate`, whoever stands where. So once the
@@ -12208,14 +12208,15 @@ function pacedHoldPlan(run, resolved, what) {
  * name. Nothing kept: OFF's refusal stands, unchanged. No level, coordinate or entity id is read.
  * `LATCHED_HOLD_MOVE_COUNTS` records each asking (measurement; no decision reads it).
  */
+// ⚖ ON in the LHM flip (⚖ the user 2026-11-26: "4 OFF + flip LHM ON (Recommended)"): `SEEDLING_LATCHED_HOLD_MOVE=0` opts out.
 export const LATCHED_HOLD_MOVE = {
-    enabled: globalThis.process?.env?.SEEDLING_LATCHED_HOLD_MOVE === '1',
+    enabled: globalThis.process?.env?.SEEDLING_LATCHED_HOLD_MOVE !== '0',
     /** The cells asked: within this many px of the player, centre to centre. */
     radius: 96,
     /** At most this many forks per asking (each replays the segment: the pass's budget pays for every one). */
     maxForks: 2,
 };
-export const LATCHED_HOLD_MOVE_DEFAULT = false;
+export const LATCHED_HOLD_MOVE_DEFAULT = true;
 export const LATCHED_HOLD_MOVE_COUNTS = { asked: 0, moves: [], declined: [] };
 
 /** Clear `LATCHED_HOLD_MOVE_COUNTS` (an instrument; nothing that decides reads it). */

@@ -10,9 +10,9 @@ import {
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 
 describe('LATCHED_HOLD_MOVE — the switch', () => {
-    it('is OFF by default and read from SEEDLING_LATCHED_HOLD_MOVE (the worker env channel lists it)', () => {
-        expect(LATCHED_HOLD_MOVE_DEFAULT).toBe(false);
-        expect(LATCHED_HOLD_MOVE.enabled).toBe(globalThis.process?.env?.SEEDLING_LATCHED_HOLD_MOVE === '1');
+    it('is ON by default since the LHM flip (SEEDLING_LATCHED_HOLD_MOVE=0 opts out; the worker env channel lists it)', () => {
+        expect(LATCHED_HOLD_MOVE_DEFAULT).toBe(true);
+        expect(LATCHED_HOLD_MOVE.enabled).toBe(globalThis.process?.env?.SEEDLING_LATCHED_HOLD_MOVE !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_LATCHED_HOLD_MOVE');
     });
 
