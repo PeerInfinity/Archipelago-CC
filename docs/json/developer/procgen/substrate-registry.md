@@ -291,6 +291,7 @@ A **region library** stores a generated region as an entry and re-instantiates i
 Optional hooks the sphere-growth driver and the Procgen Pipeline panel read, so the engine never names a substrate. Semantics are documented at the consumers, `procgenPipelineEngine.js` and `sphereConfigHooks.js`.
 
 - **Zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (`null` means every item). The zone path calls the generator as `(zoneSpecs, {ordinal, entrance, held?})` (`held`: see *What the player holds on arrival* above). `ordinal` is which of the substrate's zones the region is: sphere growth's `sphereZoneOrdinal`, top-down's running count, or the APWorld editor's own or first free zone. A source whose regions are content reads it (jta's zones, noiz2sa's spans). `entrance` is `{side, requirement, counts}` for the region's way back and entry gate, or `null`; cloudberry reads it because its way back is a door of its own. A `…Gen` generator may yield an event carrying `await` (a promise). The asynchronous drivers wait on it before resuming (`yieldedWait`), and a synchronous drain does not. This is how cloudberry waits for its game page's generator ([Cloudberry](./cloudberry.md#build-time-generation-sphere-growth)). A substrate whose runtime does not enforce exit rules expresses the tree's gates as logic-only locks (`procgenCore/logicExitLocks.js`: jta, noiz2sa).
+- **Own content only:** `ownContentOnly: true` on an entry whose zone generator realises only a region that IS the entry's installed content, and refuses any other spec by name. `regionRealiserKind` then answers `null`, so sphere growth, the APWorld editor's Initialise targets and a per-region override do not offer the entry, and `pipelineLayoutsOf` lists only top-down, where a caller names the region (`realisesOwnContent` in `procgenCore/substratePredicates.js`). `mystery` declares it ([Mystery Substrate](./mystery.md)).
 - **Gate vetoes and hints:** `canHostExitGates`, `canHostExitGatesBraid`, `exitGateVeto`, `backPortalGated`, `hostsSurplusExitsNatively`, `gateHostingHint`.
 - **Region contract:** `buildRegionContract`, used by the panel's Edit flow.
 - **Panel parameters:** `defaultProcgenParams`, `prepareSphereGrowth`, `buildRegionParams`, `renderProcgenParams`; for a selected region library, `buildLibraryRegionParams` and `renderLibraryProcgenParams`. `procgenParamsFromPayload(payload)` recovers the params an existing payload records.
@@ -316,7 +317,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**11 registered entries · 117 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**11 registered entries · 118 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -520,6 +521,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `generateZoneForSpecsGen` | — | fn | fn | — | — | — | — | — | — | — | — |
 | `hostsSurplusExitsNatively` | — | fn | fn | — | — | — | — | — | — | — | — |
 | `libraryItems` | — | 7 keys | 13 keys | — | 3 keys | 48 keys | — | — | {Noiz2sa Star, Victory} | {Victory} | — |
+| `ownContentOnly` | — | — | — | — | — | — | — | yes | — | — | — |
 | `prepareSphereGrowth` | — | fn | — | fn | — | — | — | — | — | — | — |
 | `procgenParamsFromPayload` | — | fn | fn | — | fn | — | — | — | — | — | — |
 | `renderLibraryProcgenParams` | — | — | — | — | — | — | fn | — | — | — | — |

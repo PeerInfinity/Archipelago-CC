@@ -66,7 +66,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
         },
         {
-            "fields": 17,
+            "fields": 18,
             "id": "mystery",
             "label": "Mystery case",
             "registeredBy": "frontend/modules/mysteryArchipelago/mysterySubstrateLibrary.js"
@@ -286,6 +286,7 @@ export const REGISTRY = frz({
                 "generateZoneForSpecsGen",
                 "hostsSurplusExitsNatively",
                 "libraryItems",
+                "ownContentOnly",
                 "prepareSphereGrowth",
                 "procgenParamsFromPayload",
                 "renderLibraryProcgenParams",
@@ -7675,6 +7676,93 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Build-time — content sources (zone-based substrates)",
             "name": "onContentEdit"
+        },
+        {
+            "carriedBy": [
+                "mystery"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "bullet",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
+            "name": "ownContentOnly"
         },
         {
             "carriedBy": [

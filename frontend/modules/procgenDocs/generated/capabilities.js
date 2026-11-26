@@ -730,16 +730,6 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "generate",
-                    "statement": "The pipeline can build regions of it",
-                    "text": "picked from its own levels to fit the plan"
-                },
-                {
-                    "group": "generate",
-                    "statement": "Generates quickly",
-                    "text": null
-                },
-                {
-                    "group": "generate",
                     "statement": "A world of it can start with an empty inventory",
                     "text": null
                 },
@@ -1111,9 +1101,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 117,
+        "fields": 118,
         "fieldsRead": 42,
-        "fieldsUnread": 72,
+        "fieldsUnread": 73,
         "statements": 32,
         "substrates": 11
     },
@@ -4504,8 +4494,8 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "mystery",
-                    "kind": "yes",
-                    "text": "picked from its own levels to fit the plan",
+                    "kind": "no",
+                    "text": "only as content from its own game",
                     "why": [
                         {
                             "field": "generateRegionCore",
@@ -4890,7 +4880,7 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "mystery",
-                    "kind": "yes",
+                    "kind": "na",
                     "text": null,
                     "why": [
                         {
@@ -6304,6 +6294,7 @@ export const CAPABILITIES = frz({
         "loopSupport.playClock",
         "loopSupport.strictQueueActions",
         "onContentEdit",
+        "ownContentOnly",
         "pipelineConfigFromParams",
         "pipelineConfigKeys",
         "placeFromItems",

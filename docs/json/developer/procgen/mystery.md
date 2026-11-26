@@ -35,6 +35,8 @@ The driver then hands `generateZoneForSpecs` the region's locations by their sou
 | `mystery-question-of-the-case-has-no-location` | The region lacks one of the case's questions. |
 | `mystery-payload-malformed` | At load: a sidecar payload with no story or no maps. That region is skipped. |
 
+The entry declares `ownContentOnly`, so no driver or editor offers it as a target for a planned region: only a caller that names the case's region reaches it.
+
 A source may hold other regions beside the case. Each keeps the substrate the caller gives it, and the exits between them are kept.
 
 ## The payload

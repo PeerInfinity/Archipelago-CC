@@ -336,8 +336,8 @@ describe('⛓ the links the render emits', () => {
         //   `regionBiomeOf` row → it (1 same-doc, 1 doc).
         //   450 → 452: document library B3 — editing-core.md ↔ seedling-editor.md § Saving to the library (2 doc).
         //   452 → 453: ActionNodes AN-OMSI-2 — action-nodes.md → its own § The omsi town (1 same-doc).
-        //   453 → 455: mystery substrate S1 (2026-11-25): the new mystery.md → architecture.md, and the generated README index's row for mystery.md (2 doc).
-        expect(checked).toBe(455);
+        //   453 → 456: mystery substrate (2026-11-25/26): the new mystery.md → architecture.md, the generated README index's row for mystery.md, and substrate-registry.md's `ownContentOnly` → mystery.md (3 doc).
+        expect(checked).toBe(456);
     });
 
     it('tags each link with the kind that produced it', () => {

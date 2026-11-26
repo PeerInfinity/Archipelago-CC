@@ -10,7 +10,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 <!-- GENERATED:substrate-capability-chart BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**32 statements · 11 substrates · 42 registry fields read (45 of the developer matrix's 117, counting the parents of the fields read) · 72 not yet read.**
+**32 statements · 11 substrates · 42 registry fields read (45 of the developer matrix's 118, counting the parents of the fields read) · 73 not yet read.**
 
 ## Play
 
@@ -49,9 +49,9 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 | | What you can do | Action Nodes | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Mystery case | Noiz2sa | Idle Loops | Text Adventure |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| G1 | The pipeline can build regions of it | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ picked from its own levels to fit the plan | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✓ picked from its own levels to fit the plan | ✗ only as content from its own game | ✓ grown to order |
+| G1 | The pipeline can build regions of it | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ picked from its own levels to fit the plan | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✗ only as content from its own game | ✓ grown to order |
 | G2 | How many ready-made rooms / levels it brings | ✗ | ✓ 5 | ✗ | ✓ 4 Atlas rooms | n/a | ✓ 30 | n/a | ✗ | ✓ 3 Noiz2sa segments | ✓ 1 | n/a |
-| G3 | Generates quickly | n/a | ✓ | ✗ its generation cost is declared `heavy` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | n/a | ✓ |
+| G3 | Generates quickly | n/a | ✓ | ✗ its generation cost is declared `heavy` | ✓ | ✓ | ✓ | ✓ | n/a | ✓ | n/a | ✓ |
 | G4 | Its rooms can be captured into a library and reused | ✗ | ✓ | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
 | G5 | Exits can be locked behind items | ✗ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ | ✗ | ✓ |
 | G6 | It has its own settings in the generation form | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ |
@@ -269,8 +269,6 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Play* — You can play its regions by hand
 - *Play* — What the generator may do with it: locations placed anywhere
 - *Loop mode* — You can play it outside loop mode
-- *Generate* — The pipeline can build regions of it: picked from its own levels to fit the plan
-- *Generate* — Generates quickly
 - *Generate* — A world of it can start with an empty inventory
 - *Edit* — An exit can be moved to another side (and a side can hold more than one): and a side can hold more than one
 - *Edit* — The editor's validity report checks its location and exit names
@@ -344,8 +342,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 ## Fields no statement reads yet
 
-72 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
+73 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
 
-`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `compositeMap.artwork`, `compositeMap.displayRegionOf`, `compositeMap.layoutGraph`, `compositeMap.locationTiles`, `compositeMap.regionExtent`, `compositeMap.remoteLocationTiles`, `defaultContentPack`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `entranceShuffle`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `fillRules`, `fillerItem`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `goalContainer`, `goalContainer.noteOf`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `itemIntroduction`, `itemIntroduction.exhaustedRefusal`, `itemIntroduction.introducibleItems`, `itemIntroduction.replayableItems`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopBot`, `loopSupport.actionGate`, `loopSupport.authoredCosts`, `loopSupport.customQueues`, `loopSupport.playClock`, `loopSupport.strictQueueActions`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `priceRegions`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `recordedRegionParams`, `regionBiomeOf`, `regionEditStatus`, `regionGeometry`, `regionSourceDefault`, `renderLibraryProcgenParams`, `restartWarp`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `spiralItemCapacity`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
+`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `compositeMap.artwork`, `compositeMap.displayRegionOf`, `compositeMap.layoutGraph`, `compositeMap.locationTiles`, `compositeMap.regionExtent`, `compositeMap.remoteLocationTiles`, `defaultContentPack`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `entranceShuffle`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `fillRules`, `fillerItem`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `goalContainer`, `goalContainer.noteOf`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `itemIntroduction`, `itemIntroduction.exhaustedRefusal`, `itemIntroduction.introducibleItems`, `itemIntroduction.replayableItems`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopBot`, `loopSupport.actionGate`, `loopSupport.authoredCosts`, `loopSupport.customQueues`, `loopSupport.playClock`, `loopSupport.strictQueueActions`, `onContentEdit`, `ownContentOnly`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `priceRegions`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `recordedRegionParams`, `regionBiomeOf`, `regionEditStatus`, `regionGeometry`, `regionSourceDefault`, `renderLibraryProcgenParams`, `restartWarp`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `spiralItemCapacity`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
 
 <!-- GENERATED:substrate-capability-chart END -->

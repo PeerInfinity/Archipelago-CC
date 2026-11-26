@@ -259,7 +259,10 @@ export const substrateRegistryEntry = Object.freeze({
     regionGeometry: REGION_GEOMETRY.SIDES,
     exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
 
-    // Top-down (and any driver that hands a region's locations by name): the installed case.
+    // Top-down, for the region a caller names: the installed case. `ownContentOnly`: no driver or
+    // editor offers this entry as a target for a planned region (`substratePredicates.js`), since
+    // any region that is not the case is refused.
+    ownContentOnly: true,
     generateZoneForSpecs: (zoneSpecs) => mysteryZoneForSpecs(installed, zoneSpecs),
     applyPipelineConfig,
     pipelineConfigKeys: MYSTERY_PIPELINE_CONFIG_KEYS,
