@@ -73,6 +73,9 @@ const RNG = Object.freeze({ seed: 1356861785, split: true, cosmetic: 0 });
  *   d-hit           crossing during "hit" (after the blast): it stops.
  *   d-removal-edge  crossing on the tick it is removed (the shot updates first): it stops.
  *   d-removed       crossing one tick later: through.
+ *   e-route         the shot the captured entry-37 request's search fires (re-measure-10 S1 37:8, key ON): from the
+ *                   request's boot (16,96) — the player at (24,104) — facing E at darktrap@64,96 (the search's shot
+ *                   stops at (63, 104); this tape taps E first, so it starts 1.7 px further E on the same row).
  */
 export const WAND_TRAP_TAPES = Object.freeze({
     'a-live': { boot: { level: 63, x: 24, y: 104 }, face: 'right', press: 4, ticks: 40 },
@@ -88,6 +91,7 @@ export const WAND_TRAP_TAPES = Object.freeze({
     'd-hit': { boot: { level: 63, x: 105, y: 128 }, face: 'right', press: 150, ticks: 185 },
     'd-removal-edge': { boot: { level: 63, x: 105, y: 128 }, face: 'right', press: 154, ticks: 185 },
     'd-removed': { boot: { level: 63, x: 105, y: 128 }, face: 'right', press: 155, ticks: 185 },
+    'e-route': { boot: { level: 63, x: 16, y: 96 }, face: 'right', press: 4, ticks: 40 },
 });
 
 /** The tape for one witness, as `parseTape` takes it. */
@@ -102,7 +106,7 @@ export function wandTrapTape(name) {
         equips: [{ t: 0, slot: 2 }], pins: ['sound', 'dead_frames'],
         save: { totem_parts: [], keys: [], seal_parts: [] }, rng: { ...RNG }, seam: structuredClone(SEAM),
         tick_count: w.ticks,
-        inputs: [{ key: w.face, from: 0, to: 1 }, { key: 'primary', from: w.press, to: w.press + 1 }],
+        inputs: [...(w.face ? [{ key: w.face, from: 0, to: 1 }] : []), { key: 'primary', from: w.press, to: w.press + 1 }],
     };
 }
 

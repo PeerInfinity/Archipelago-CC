@@ -156,6 +156,11 @@ describe('fidelity WANDTRAPBODIES — what each witness measures (the game\'s nu
         expect(lastFlare(gone).shots[0].x).toBeGreaterThan(139);
     });
 
+    it('(e) the entry-37 search\'s shot: from the request\'s boot, facing E, it stops on darktrap@64,96 at (63, 104) on tick 20', () => {
+        expect(byName['e-route'].tape.boot).toEqual({ level: 63, x: 16, y: 96 });
+        expect(gameStop(byName['e-route'])).toEqual({ t: 20, x: 63, y: 104 });
+    });
+
     it('no witness takes a hit but the L75 one (a lavarunner, not the grenade)', () => {
         for (const w of WITNESSES) expect(w.hits, w.name).toBe(w.name === 'c-dormant' ? 1 : 0);
     });

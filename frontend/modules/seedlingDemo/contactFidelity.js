@@ -2602,7 +2602,9 @@ export const CONTACT_FIDELITY = {
      * removal tick; on 74 it flies on to the wall at x 79 (`b-*`). L75's DORMANT `grenade@72,168` stops it at (76, 128)
      * on 16 (`c-dormant`); L63's `grenade@128,128` lets it through while falling (tick 30) and bouncing (71) — both die
      * on the wall at x 159 — and stops it at (132, 136) resting (99), in "explode" (139), in "hit" (159) and on its
-     * removal tick (163); on 164 it flies through (`d-*`). The model ON is the game at every sampled tick, 0 px.
+     * removal tick (163); on 164 it flies through (`d-*`). The shot the captured entry-37 search fires (from the
+     * request's boot (16,96), facing E) stops on `darktrap@64,96` at (63, 104) on tick 20 (`e-route`). The model ON is the
+     * game at every sampled tick, 0 px.
      * ON (`levelRun.assertWandShotSolidsBound`, `wandShotBlockerAt`, `applyWandShotToBoss`): the darktraps and placed
      * grenades the run STEPS (`wandTrapBodyIdsFor`) count as placed; their live boxes (`darkTrapStateFor`'s rect until
      * `removed`; a grenade's 6 x 6 at its live point while not removed and not `collidable === false`, the flag
