@@ -1,0 +1,9 @@
+COUNTS 32:10 env BOS=1 GSW=1 PM=1 PKH=1 SPL=- KTA=- enabled BOS=true GSW=true PM=true PKH=true SPL=true KTA=true
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[]
+  result kind=refusal ok=false work=222 answer=a8a824ee2146 ms=92156 | live answer=a8a824ee2146 work=230 kind=refusal solverEnv=SEEDLING_GOAL_START_WAIT=1;SEEDLING_KEYLOCK_TURRET_ARRIVAL=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PREVIEW_METER=1;SEEDLING_STRIKE_PREVIEW_LEAN=1
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":9806,"asked":0,"tripped":0}
+  PRESS_KILL_HOLD_COUNTS.rows=[{"t":1534,"stand":1649,"refusedAt":1654,"tries":[{"wait":45,"verdict":"idle","why":"the idle is hit at its tick 40"}],"verdict":"refused"},{"t":1534,"stand":1649,"refusedAt":1654,"tries":[{"wait":45,"verdict":"idle","why":"the idle is hit at its tick 40"}],"verdict":"refused"}]
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":0,"forecastReplays":104,"spinRowsSkipped":0}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]
+  KEYLOCK_TURRET_COUNTS={"stances":[],"kills":[]}

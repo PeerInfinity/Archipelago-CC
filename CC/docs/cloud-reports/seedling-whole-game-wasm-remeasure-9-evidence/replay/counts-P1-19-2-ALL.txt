@@ -1,0 +1,9 @@
+COUNTS 19:2 env BOS=1 GSW=1 PM=1 PKH=1 SPL=- KTA=- enabled BOS=true GSW=true PM=true PKH=true SPL=true KTA=true
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[]
+  result kind=null ok=true work=1715 answer=85c7dc2a524c ms=78294 | live answer=8ef0debe2bb9 work=896 kind=refusal solverEnv=SEEDLING_BRIDGE_OPEN_STRAY=1;SEEDLING_GOAL_START_WAIT=1;SEEDLING_PREVIEW_METER=1
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":978506,"asked":847,"tripped":0}
+  PRESS_KILL_HOLD_COUNTS.rows=[{"t":0,"stand":636,"refusedAt":654,"tries":[{"wait":45,"verdict":"solved","why":null}],"verdict":"solved"}]
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":385200,"forecastReplays":684,"spinRowsSkipped":372400}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]
+  KEYLOCK_TURRET_COUNTS={"stances":[],"kills":[]}

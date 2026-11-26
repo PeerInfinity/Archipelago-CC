@@ -1,0 +1,9 @@
+COUNTS 33:5 env BOS=1 GSW=1 PM=1 PKH=- SPL=- KTA=- enabled BOS=true GSW=true PM=true PKH=false SPL=true KTA=true
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[{"bridge":"bridge@11,13","stance":"(168,216) facing E","open":"10,13"},{"bridge":"bridge@11,13","stance":"(152,216) facing E","open":"10,13"},{"bridge":"bridge@11,13","stance":"(200,216) facing W","open":"10,13"},{"bridge":"bridge@11,13","stance":"(168,216) facing E","open":"10,13"},{"bridge":"bridge@11,13","stance":"(152,216) facing E","open":"10,13"},{"bridge":"bridge@11,13","stance":"(200,216) facing W","open":"10,13"}]
+  result kind=null ok=true work=160 answer=7ca39971ac20 ms=716 | live answer=7ca39971ac20 work=160 kind=null solverEnv=SEEDLING_BRIDGE_OPEN_STRAY=1;SEEDLING_GOAL_START_WAIT=1;SEEDLING_PREVIEW_METER=1
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":14720,"asked":0,"tripped":0}
+  PRESS_KILL_HOLD_COUNTS.rows=[]
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":0,"forecastReplays":0,"spinRowsSkipped":0}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]
+  KEYLOCK_TURRET_COUNTS={"stances":[],"kills":[]}

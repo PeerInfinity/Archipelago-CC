@@ -1,0 +1,9 @@
+COUNTS 29:11 env BOS=1 GSW=1 PM=1 PKH=- SPL=- KTA=- enabled BOS=true GSW=true PM=true PKH=false SPL=true KTA=true
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[]
+  result kind=null ok=true work=642 answer=5f46423586e1 ms=10102 | live answer=5f46423586e1 work=642 kind=null solverEnv=SEEDLING_BRIDGE_OPEN_STRAY=1;SEEDLING_GOAL_START_WAIT=1;SEEDLING_PREVIEW_METER=1
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":10697,"asked":0,"tripped":0}
+  PRESS_KILL_HOLD_COUNTS.rows=[]
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":0,"forecastReplays":0,"spinRowsSkipped":0}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[{"lock":"bosslock@480,352","t":100,"turrets":["iceturret@472,400"],"stance":{"x":488,"y":376}},{"lock":"bosslock@480,352","t":100,"turrets":["iceturret@472,400"],"stance":{"x":488,"y":376}}]
+  KEYLOCK_TURRET_COUNTS={"stances":[],"kills":[{"lock":"bosslock@480,352","turret":"iceturret@472,400","t":100,"dead":true,"ticks":516,"side":"right","wait":0,"forks":16},{"lock":"bosslock@480,352","turret":"iceturret@472,400","t":100,"dead":true,"ticks":516,"side":"right","wait":0,"forks":16}]}
