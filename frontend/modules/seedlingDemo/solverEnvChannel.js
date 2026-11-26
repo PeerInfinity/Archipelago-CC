@@ -131,6 +131,10 @@ export function parseSolverEnv(spec, what = SOLVER_ENV_PARAM) {
         if (!KNOWN.has(name)) throw new Error(`${what}: unknown switch "${name}" (not a SEEDLING_* name the solve worker reads; see SOLVER_ENV_NAMES)`);
         if (Object.hasOwn(env, name)) throw new Error(`${what}: switch "${name}" is named twice`);
         if (!value || /[\s;]/.test(value)) throw new Error(`${what}: switch "${name}" has no usable value (${JSON.stringify(value)})`);
+        // ⛓ The comma trap (STACK4-MEASURE, 2026-11-26): `A=1,B=1` is ONE entry, `A` = `"1,B=1"`, so B is never set
+        // and A reads OFF; every switch in the spec reads OFF with no error. No switch's value holds `=` (a comma alone
+        // stays legal: `SEEDLING_CONTACT_FIDELITY` takes a comma list of keys), so a value with `=` is refused by name.
+        if (value.includes('=')) throw new Error(`${what}: switch "${name}" has "=" in its value (${JSON.stringify(value)}): separate entries with ';', not ','`);
         env[name] = value;
     }
     return Object.keys(env).length ? Object.freeze(env) : null;
