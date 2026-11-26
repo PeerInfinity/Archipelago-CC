@@ -1,0 +1,11 @@
+# 250 steps; moved: [149]
+# off.json SOLVED 226 hits 5 TIMEOUT 0
+# all4.json SOLVED 227 hits 5 TIMEOUT 0
+# noPKRB.json SOLVED 227 hits 5 TIMEOUT 0
+# noLHM.json SOLVED 227 hits 5 TIMEOUT 0
+# noDSS.json SOLVED 227 hits 6 TIMEOUT 0
+# steps with hits/deaths in any variant:
+#  step 24 L16 off=SOLVED/1h/0d all4=SOLVED/1h/0d noPKRB=SOLVED/1h/0d noLHM=SOLVED/1h/0d noDSS=SOLVED/1h/0d
+#  step 149 L40 off=REFUSED/Noneh/Noned all4=SOLVED/0h/0d noPKRB=SOLVED/0h/0d noLHM=SOLVED/0h/0d noDSS=SOLVED/1h/0d
+#  step 202 L82 off=SOLVED/2h/0d all4=SOLVED/2h/0d noPKRB=SOLVED/2h/0d noLHM=SOLVED/2h/0d noDSS=SOLVED/2h/0d
+#  step 220 L82 off=SOLVED/2h/0d all4=SOLVED/2h/0d noPKRB=SOLVED/2h/0d noLHM=SOLVED/2h/0d noDSS=SOLVED/2h/0d

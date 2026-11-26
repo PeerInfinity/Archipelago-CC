@@ -1,0 +1,2 @@
+# F1(rm9) 32:10 under SEEDLING_PRESS_KILL_REFUGE_BOMBS=1 alone (latched-hold tools/solvecap.mjs): the passes
+{"goal":"wasm-continue-location-40","budgetWork":640,"ok":true,"kind":null,"work":361,"answer":"851256c5b984","ms":18287,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":926,"work":150,"modelHits":{"hits":1,"deaths":0}},{"pass":"full","ok":false,"kind":"refusal","ticks":null,"work":125},{"pass":"hit-avoid","ok":false,"kind":null,"ticks":null,"work":86,"tries":1,"cut":"window"}],"ticks":926,"hits":null}

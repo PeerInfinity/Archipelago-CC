@@ -2,12 +2,12 @@
 import json, sys
 KEYS = {'leg376-l40-request.json.gz': 'level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144 (seam 5271 capture)'}
 rows = [json.loads(l) for l in open(sys.argv[1])]
-order = ['off', 'all4', 'noPKRB', 'noLHM', 'noDSS']
+order = ['off', 'all4', 'noPKRB', 'noLHM', 'noDSS', 'lhm', 'dssLhm']
 def lab(d):
     s = d['src']
     if '#' in s:
         f, ij = s.split('#'); run = f.split('.')[0]
-        return f"{ {'r8-A1': 'A1', 'r8-P1': 'P1', 'r9-F1': 'F1(rm9)'}[run]} {ij} seam={d['seam']:+d}"
+        return f"{ {'r8-A1': 'A1', 'r8-P1': 'P1', 'r9-F1': 'F1(rm9)'}.get(run, run)} {ij} seam={d['seam']:+d}"
     return f"{s.replace('-request.json.gz','').replace('-request.jsonl.gz','')} | {d['key'] or KEYS.get(s, '?')}"
 groups = {}
 for d in rows: groups.setdefault(lab(d), {})[d['variant']] = d

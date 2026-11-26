@@ -1,0 +1,1 @@
+all4 survey step-149 walk view vs PKSW-HITS game/s149-walk-pksw_mine.tape.json.gz: every top-level field identical (inputs sha1 32a358bc7da9 over the JSON-sorted inputs).

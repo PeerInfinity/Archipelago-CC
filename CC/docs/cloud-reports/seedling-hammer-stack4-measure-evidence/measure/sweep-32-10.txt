@@ -1,0 +1,17 @@
+seam (P1 capture = 82082; F1 = P1-97; A1 = P1-2939) | off | all4 | noPKRB
+P1-97 (F1+0) | REFUSED (rung) | 926 t 1 h t1799 chaser:bob@272,112 [pksw 0] | 797 t 1 h t1690 bomb:bombpusher@112,128#9 [pksw 2]
+P1-90 (F1+7) | REFUSED (rung) | 722 t 0 h [pksw 2] | 722 t 0 h [pksw 2]
+P1-80 (F1+17) | REFUSED (rung) | REFUSED (deadline) | 731 t 1 h t1690 bomb:bombpusher@112,128#9 [pksw 2]
+P1-70 (F1+27) | REFUSED (rung) | 649 t 0 h [pksw 2] | 734 t 1 h t1690 bomb:bombpusher@112,128#9 [pksw 2]
+P1-60 (F1+37) | REFUSED (rung) | 651 t 0 h [pksw 2] | REFUSED (rung)
+P1-50 (F1+47) | 727 t 0 h [pksw 0] | 853 t 0 h [pksw 0] | 727 t 0 h [pksw 0]
+P1-40 (F1+57) | REFUSED (rung) | 613 t 0 h [pksw 2] | 613 t 0 h [pksw 2]
+P1-30 (F1+67) | REFUSED (rung) | 651 t 0 h [pksw 2] | 797 t 1 h t1690 bomb:bombpusher@112,128#9 [pksw 2]
+P1-20 (F1+77) | 618 t 2 h t1598 bomb:bombpusher@112,128#7 t1644 bomb:bombpusher@112,128#8 [pksw 0] | 793 t 0 h [pksw 2] | 618 t 2 h t1598 bomb:bombpusher@112,128#7 t1644 bomb:bombpusher@112,128#8 [pksw 0]
+P1-10 (F1+87) | REFUSED (rung) | REFUSED (rung) | 797 t 1 h t1690 bomb:bombpusher@112,128#9 [pksw 2]
+P1+0 (F1+97) | REFUSED (rung) | 722 t 0 h [pksw 2] | 722 t 0 h [pksw 2]
+P1+7 (F1+104) | 738 t 1 h t1644 bomb:bombpusher@112,128#8 [pksw 0] | 719 t 1 h t1644 bomb:bombpusher@112,128#8 [pksw 0] | 741 t 1 h t1644 bomb:bombpusher@112,128#8 [pksw 0]
+P1+10 (F1+107) | REFUSED (rung) | REFUSED (deadline) | 731 t 1 h t1690 bomb:bombpusher@112,128#9 [pksw 2]
+P1+20 (F1+117) | REFUSED (rung) | 649 t 0 h [pksw 2] | 734 t 1 h t1690 bomb:bombpusher@112,128#9 [pksw 2]
+P1+30 (F1+127) | REFUSED (rung) | 651 t 0 h [pksw 2] | REFUSED (rung)
+P1+40 (F1+137) | 727 t 0 h [pksw 0] | 853 t 0 h [pksw 0] | 727 t 0 h [pksw 0]

@@ -1,0 +1,10 @@
+p4g-all4-requests 9847:1 seam=+0 | off     | REFUSED apitem (64,144) contact -> hold: the hold stands still for up to 131 t | work 2561 | ans 599d2ef41b84 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+p4g-all4-requests 9847:1 seam=+0 | all4    | SOLVED 1889 t | work 1866 | ans a404ddf42e41 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 1 lhm 2/2m
+p4g-all4-requests 9847:1 seam=+0 | noLHM   | REFUSED apitem (64,144) contact -> hold: the hold stands still for up to 131 t | work 2561 | ans 599d2ef41b84 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+p4g-all4-requests 9847:1 seam=+0 | lhm     | SOLVED 1889 t | work 1866 | ans a404ddf42e41 | hits: none | deaths 0 | pksw 0 pkrb 0/0 dss 0 lhm 2/2m
+
+p4g-all4-requests 9847:0 seam=+0 | off     | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 642 | ans 4af59f364225 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+p4g-all4-requests 9847:0 seam=+0 | all4    | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 642 | ans 4af59f364225 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+p4g-all4-requests 9847:0 seam=+0 | noLHM   | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 642 | ans 4af59f364225 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+p4g-all4-requests 9847:0 seam=+0 | lhm     | REFUSED  the caller's anytime deadline (`shouldStop`) was reached at the `walk | work 642 | ans 4af59f364225 | hits: - | deaths None | pksw 0 pkrb 0/0 dss 0 lhm 0/0m
+
