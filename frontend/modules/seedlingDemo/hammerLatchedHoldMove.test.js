@@ -26,7 +26,7 @@ describe('LATCHED_HOLD_MOVE — the switch', () => {
 
     it('bounds its search generically (a radius and a fork cap, no level or coordinate)', () => {
         expect(LATCHED_HOLD_MOVE.radius).toBe(96);
-        expect(LATCHED_HOLD_MOVE.maxForks).toBe(12);
+        expect(LATCHED_HOLD_MOVE.maxForks).toBe(2);
         expect(Object.keys(LATCHED_HOLD_MOVE).sort()).toEqual(['enabled', 'maxForks', 'radius']);
     });
 

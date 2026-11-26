@@ -12154,24 +12154,29 @@ function pacedHoldPlan(run, resolved, what) {
  * wall, the blast or a spinner, and the group is already latched when the hold begins (the stance walk's arrival).
  *
  * ON, asked ONLY where OFF refuses one of those two refusals, for a presser hold with an observed `until` whose group the
- * live run reports latched: the free, plannable cells on a `TILE_SIZE` lattice round the player (within `radius`, nearest
- * first, none touching another presser) are played on the segment's FORK — the walk (`forkWalkTo`) then the empty-input
- * stand until the hold's own `until`, inside the hold's bound. A cell is refused on any player hit or death, a level
- * crossing, a group newly latched on the way (a side effect the plan never chose), or no open inside the bound. Of the
- * accepted cells (all `maxForks` are asked), the wait ENDS where the planned route on to the caller's aim (`ctx.aim`,
- * FADE_MOVE's) is shortest on the fork's own world, the group now open — the user's FADE-MOVE ruling: wait towards
- * where the walk goes next (MEASURED on A1 32:12: the nearest hitless cell, behind a spinner shaft from the route,
- * leaves the goal walk a bomb hit at t1690; the route-nearest cells solve hitless). Ties and no aim: fewer ticks. Its
- * keys are replayed on the live run, which must agree (no new hit, `until` true), or the executor refuses by name.
- * Nothing accepted: OFF's refusal stands, unchanged. No level, coordinate or entity id is read.
+ * live run reports latched:
+ *   1. the CELLS: free, plannable cells on a `TILE_SIZE` lattice round the player (within `radius`), none touching
+ *      another presser, whose previewed walk and stand (`latchedHoldPreview`, the run's own `previewStepper` and walk
+ *      forecasts, no fork) meet no bomb and arrive inside the hold's bound;
+ *   2. the ORDER: the shortest planned route on from the cell to the caller's aim (`ctx.aim`, FADE_MOVE's) with the
+ *      group's responders discharged — the user's FADE-MOVE ruling, wait towards where the walk goes next (MEASURED on
+ *      A1 32:12: the nearest hitless cell, behind a spinner shaft from the route, leaves the goal walk a bomb hit at
+ *      t1690; the route-nearest cells solve hitless); then nearest the player;
+ *   3. the CERT: in that order, at most `maxForks` cells are played on the segment's FORK — the walk (`forkWalkTo`) then
+ *      the empty-input stand until the hold's own `until`, inside the bound — and the first with no player hit or
+ *      death, no level crossing, no group newly latched on the way (a side effect the plan never chose) and an open
+ *      inside the bound is kept. Each fork replays the segment, so the pass's budget pays for it: MEASURED on the
+ *      committed leg376 / leg371 fixtures, 4–12 unscreened forks tripped the anytime deadline of solves OFF finishes.
+ * The kept keys are replayed on the live run, which must agree (no new hit, `until` true), or the executor refuses by
+ * name. Nothing kept: OFF's refusal stands, unchanged. No level, coordinate or entity id is read.
  * `LATCHED_HOLD_MOVE_COUNTS` records each asking (measurement; no decision reads it).
  */
 export const LATCHED_HOLD_MOVE = {
     enabled: globalThis.process?.env?.SEEDLING_LATCHED_HOLD_MOVE === '1',
     /** The cells asked: within this many px of the player, centre to centre. */
     radius: 96,
-    /** At most this many forks per asking. */
-    maxForks: 12,
+    /** At most this many forks per asking (each replays the segment: the pass's budget pays for every one). */
+    maxForks: 2,
 };
 export const LATCHED_HOLD_MOVE_DEFAULT = false;
 export const LATCHED_HOLD_MOVE_COUNTS = { asked: 0, moves: [], declined: [] };
@@ -12188,8 +12193,13 @@ export function withLatchedHoldMove(enabled, fn) {
     return withSwitch(LATCHED_HOLD_MOVE, enabled, fn);
 }
 
-/** The cells `latchedHoldMove` asks, nearest the player first: `{x, y, d}` (free, not on another presser). */
-function latchedHoldCells(run, presser, opts) {
+/**
+ * The cells `latchedHoldMove` asks, in its order: `{x, y, d, route}` — free, not on another presser, planned from the
+ * player in the live world. `route` is the planned length (px) on from the cell to `aim` with the group's own
+ * responders discharged (`bagWithDischarged`: the world the wait ends in); the shortest route first (no aim or no plan:
+ * last), then nearest the player, then `y`, then `x`.
+ */
+function latchedHoldCells(run, presser, opts, aim, contacts, standTo, bound) {
     const geo = run.liveGeometryOpts();
     const others = (run.world.pressers ?? []).filter((p) => p !== presser);
     const x0 = run.state.x;
@@ -12205,10 +12215,19 @@ function latchedHoldCells(run, presser, opts) {
             if (run.world.collidesSolid(box, geo)) continue;
             if (plannerObstacleAt(run.world, p.x, p.y, null, opts) !== null) continue;
             if (others.some((q) => q.rect && rectsOverlap(box, q.rect))) continue;
+            const wps = planWaypointsOrNull(run.world, run.state, p, null, opts);
+            if (wps === null) continue;
+            if (latchedHoldPreview(run, wps, p, standTo, bound, others) !== null) continue;
             out.push({ ...p, d });
         }
     }
-    return out.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    const opened = (run.world.activators ?? []).filter((a) => a.t === presser.t)
+        .map((a) => ({ kind: 'activator', id: a.id }));
+    const openOpts = aim ? solverPlanOpts(run, contacts, { liveBag: bagWithDischarged(run, run.liveGeometryOpts(), opened) })
+        : null;
+    for (const c of out) c.route = aim ? latchedHoldRoute(run.world, { x: c.x, y: c.y }, aim, openOpts) : Infinity;
+    const rank = (c) => (Number.isFinite(c.route) ? c.route : Infinity);
+    return out.sort((a, b) => rank(a) - rank(b) || a.d - b.d || a.y - b.y || a.x - b.x);
 }
 
 /**
@@ -12237,34 +12256,41 @@ function latchedHoldMove(run, perTick, resolved, ctx, refusal) {
     const hits0 = (run.ledger('playerHits') ?? []).length;
     const deaths0 = (run.ledger('playerDeaths') ?? []).length;
     const latched0 = latchedNow();
-    const opts = solverPlanOpts(run, new Set([...senseContacts(run)]));
+    const contacts = new Set([...senseContacts(run)]);
+    const opts = solverPlanOpts(run, contacts);
     const open = (r) => hold.until.test(r);
     const tried = [];
     let forks = 0;
-    const accepted = [];
-    for (const c of latchedHoldCells(run, presser, opts)) {
+    let best = null;
+    // the preview's stand: to the fade's own count (the bound less `HOLD_SLACK`; the latch has already fired)
+    const standTo = Math.max(1, bound - HOLD_SLACK);
+    for (const c of latchedHoldCells(run, presser, opts, ctx.aim ?? null, contacts, standTo, bound)) {
         if (forks >= LATCHED_HOLD_MOVE.maxForks) { tried.push(`the ${LATCHED_HOLD_MOVE.maxForks}-fork bound`); break; }
-        if (planWaypointsOrNull(run.world, run.state, c, null, opts) === null) continue;
         const f = ctx.fork();
         if (!f) { tried.push('the fork tripped the deadline'); break; }
         forks += 1;
         const keys = [];
-        const w = forkWalkTo(f, keys, c, opts, null, hits0, deaths0);
+        let w;
+        let st;
+        try {
+            w = forkWalkTo(f, keys, c, opts, null, hits0, deaths0);
+            st = w.why || keys.length > bound ? null : fadeForkStand(f, keys, open, bound - keys.length + 1, hits0, deaths0);
+        } catch (e) {
+            // ⛔ the run's own refusal of a bomb blast on an "Enemy" body (`drainBombBlastsNow`), as `runPace` names it
+            if (!/is not staged on a bomb's blast/.test(String(e?.message))) throw e;
+            tried.push(`(${c.x},${c.y}): ${String(e.message).slice(0, 160)}`);
+            continue;
+        }
         if (w.why) { tried.push(`(${c.x},${c.y}): ${w.why}`); continue; }
         if (keys.length > bound) { tried.push(`(${c.x},${c.y}): the walk (${keys.length} t) outlasts the bound`); continue; }
-        const st = fadeForkStand(f, keys, open, bound - keys.length + 1, hits0, deaths0);
         if (!st.opened) { tried.push(`(${c.x},${c.y}): ${st.why}`); continue; }
         if (f.level !== level) { tried.push(`(${c.x},${c.y}): left level ${level}`); continue; }
         const latchedF = [...(f.entities('latchedGroups') ?? [])].sort().join(',');
         if (latchedF !== latched0) { tried.push(`(${c.x},${c.y}): latched [${latchedF}], not [${latched0}]`); continue; }
-        accepted.push({ c, keys, stand: st.ticks, route: latchedHoldRoute(f, ctx.aim) });
+        best = { c, keys, stand: st.ticks, route: c.route };
+        break;
     }
-    if (accepted.length === 0) return decline(`no hitless wait (${forks} fork(s)): ${tried.slice(0, 16).join(' | ')}`);
-    // where the wait should END: the shortest planned route on to the caller's aim, the group open (the fork's own
-    // world); no aim or no route ranks last; then the fewer ticks, then the cells' own order
-    const rank = (x) => (Number.isFinite(x.route) ? x.route : Infinity);
-    const best = accepted.reduce((p, q) => (rank(q) < rank(p) || (rank(q) === rank(p) && q.keys.length < p.keys.length)
-        ? q : p));
+    if (best === null) return decline(`no hitless wait (${forks} fork(s)): ${tried.slice(0, 16).join(' | ')}`);
     const { c, keys } = best;
     // ── the live replay, key for key; `until` read only ──
     const from = perTick.length;
@@ -12281,7 +12307,7 @@ function latchedHoldMove(run, perTick, resolved, ctx, refusal) {
     const openNow = run.entities('openActivators');
     const openBefore = ctx.before?.open ?? null;
     const moved = { target: { x: c.x, y: c.y }, from, ticks: keys.length, walk: keys.length - best.stand, forks,
-        route: Number.isFinite(best.route) ? Math.round(best.route) : null, accepted: accepted.length,
+        route: Number.isFinite(best.route) ? Math.round(best.route) : null,
         refused: String(refusal.message).slice(0, 240) };
     LATCHED_HOLD_MOVE_COUNTS.moves.push({ ...row, ...moved });
     return {
@@ -12293,14 +12319,56 @@ function latchedHoldMove(run, perTick, resolved, ctx, refusal) {
     };
 }
 
-/** The planned route length (px) from fork `f`'s player to `aim` on `f`'s own world, or `Infinity` (no aim, no plan). */
-function latchedHoldRoute(f, aim) {
-    if (!aim) return Infinity;
-    const opts = solverPlanOpts(f, new Set([...senseContacts(f)]));
-    const wps = planWaypointsOrNull(f.world, f.state, aim, null, opts);
+/**
+ * The screen before a fork: the walk to `to` along `wps` and then the stand, on the run's own `previewStepper`, until
+ * `standTo` ticks in all, every sample priced as `planPacedWait` prices one (`dangerDuringTransit` against the walk
+ * forecasts stepped with the previewed player). `null` = clean; else why (a danger, another presser touched, a fall
+ * or crossing, a previewed death, or a walk that does not arrive inside `standTo`). The preview freezes the world (the
+ * fading lock is still a wall to it), which is the world the wait walks in.
+ */
+function latchedHoldPreview(run, wps, to, standTo, bound, others) {
+    const step = previewOrDeath(run.previewStepper());
+    const NONE = new Set();
+    const t0 = run.ticksCompleted;
+    const arrowsF = run.arrowForecast?.() ?? null;
+    const chasersF = run.chaserForecast?.() ?? null;
+    const spitsF = run.spitForecast?.() ?? null;
+    const grenF = run.grenadeForecast?.() ?? null;
+    const aims = [...wps.map((w) => ({ x: w.x, y: w.y })), { x: to.x, y: to.y }];
+    let st = { ...run.state };
+    let i = 0;
+    for (let k = 0; k < bound; k += 1) {
+        while (i < aims.length - 1 && hasArrived(st, aims[i], DEFAULT_TOLERANCE)) i += 1;
+        const arrived = i === aims.length - 1 && hasArrived(st, aims[i], DEFAULT_TOLERANCE);
+        if (arrived && k >= standTo) return null;
+        const held = arrived ? NONE : chooseHeld(st, aims[i], DEFAULT_TOLERANCE);
+        const arrows = arrowsF ? arrowsF.step(st) : null;
+        const bodies = chasersF ? chasersF.step(st, { slashing: false }) : null;
+        const spits = spitsF ? spitsF.step(st, { slashing: false }) : null;
+        const grenades = grenF ? grenF.step(st) : null;
+        const box = playerBoxAt(st.x, st.y);
+        // only the danger the still wait refused on (the lobber's bombs): a spinner or a chaser is the fork's to judge
+        // (measured on A1 32:12: the preview prices `spinner@192,128` on every walk out of the pocket, and the forks
+        // walk the same cells hitless)
+        const d = dangerDuringTransit(run, t0 + k + 1, box, arrows, bodies, spits, grenades);
+        const bomb = d.danger ? d.sources.find((src) => src.kind === 'bomb') : null;
+        if (bomb) return `${bomb.kind}:${bomb.id} at previewed tick ${k + 1}`;
+        if (others.some((p) => p.rect && rectsOverlap(box, p.rect))) return `touches another presser at tick ${k + 1}`;
+        const next = step(st, held);
+        if (next === null) return `dies at previewed tick ${k + 1}`;
+        st = next;
+        if (st.transition || st.fall) return `leaves the floor at previewed tick ${k + 1}`;
+    }
+    return i === aims.length - 1 && hasArrived(st, aims[i], DEFAULT_TOLERANCE) ? null
+        : `the walk does not arrive inside the bound (${bound} tick(s))`;
+}
+
+/** The planned route length (px) from `from` to `aim` in `world` under `opts`, or `Infinity` (no plan). */
+function latchedHoldRoute(world, from, aim, opts) {
+    const wps = planWaypointsOrNull(world, from, aim, null, opts);
     if (wps === null) return Infinity;
     let len = 0;
-    let at = { x: f.state.x, y: f.state.y };
+    let at = { x: from.x, y: from.y };
     for (const p of [...wps, aim]) {
         len += Math.hypot(p.x - at.x, p.y - at.y);
         at = p;

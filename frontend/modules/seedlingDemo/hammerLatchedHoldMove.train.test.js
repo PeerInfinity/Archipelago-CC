@@ -26,7 +26,7 @@ describe('LATCHED_HOLD_MOVE — A1 32:12 (L40 Totem Part 64,144, the latched bom
         resetLatchedHoldMoveCounts();
         const out = withLatchedHoldMove(true, () => solveCapturedA1());
         expect(out.ok).toBe(true);
-        expect(out.answer).toBe('0f6b8ee70c30');
+        expect(out.answer).toBe('a404ddf42e41');
         expect(out.ticks).toBe(1889);
         expect(out.modelHits).toEqual({ hits: 0, deaths: 0 });
         expect(out.hits).toEqual([]);
@@ -34,7 +34,7 @@ describe('LATCHED_HOLD_MOVE — A1 32:12 (L40 Totem Part 64,144, the latched bom
         expect(out.end.level).toBe(40);
         const moves = LATCHED_HOLD_MOVE_COUNTS.moves;
         expect(moves.length).toBeGreaterThan(0);
-        expect(moves[0]).toMatchObject({ presser: 'buttonroom@160,128', group: 1, t: 1553, target: { x: 232, y: 135 },
-            ticks: 97, accepted: 3 });
+        expect(moves[0]).toMatchObject({ presser: 'buttonroom@160,128', group: 1, t: 1553, target: { x: 248, y: 103 },
+            ticks: 130, forks: 1 });
     }, 240_000);
 });
