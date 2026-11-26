@@ -56,7 +56,7 @@ import {
 } from './endingChain.js';
 import {
     RESPONDERS, createActivatorState, fallRocksArmedBy, opensOnTick, openActivatorIds,
-    openActivatorIdsBeforeLatestStep, latchAtBuild, pressedGroups, presserDown, ropePublish, stepActivators,
+    openActivatorIdsBeforeLatestStep, openActivatorIdsBeforeStep, latchAtBuild, pressedGroups, presserDown, ropePublish, stepActivators,
 } from './activators.js';
 import {
     FALL_ROCK, createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
@@ -8412,9 +8412,14 @@ export function createLevelRun({
                     x: c.x, y: c.y, right: c.x + 16, bottom: c.y + 16,
                 };
                 const openChests = new Set([c.id, ...(openChestIdsNow() ?? [])]);
+                // ⛓ fidelity CHESTCOVER (`chestCoverFencepost`, OFF): a VANILLA chest updates before the
+                // responders, so it reads the open set one step older (`openActivatorIdsBeforeStep`); an AP chest
+                // (`c.apChest`, p4h — absent on this base) updates after them and keeps `openActivatorIds`.
+                const openActivators = CONTACT_FIDELITY.chestCoverFencepost && !c.apChest
+                    ? openActivatorIdsBeforeStep(activators) : openActivatorIds(activators);
                 return !!world.collidesSolid(box, normalizeLiveOpts(liveSolidOpts({
                     beforeTypeFlip: firstTickInWorld,
-                    openActivators: openActivatorIds(activators),
+                    openActivators,
                     openChests,
                 })));
             },
@@ -23244,6 +23249,18 @@ export function createLevelRun({
             //    which is what the game's chest sees, so this needs no
             //    special case; it needs the note, because "open the cover
             //    and the chest opens" is off by one.
+            //    ⛓ fidelity CHESTCOVER (wave 61) — THAT NOTE IS THE OFF
+            //    BRANCH, AND IT IS ONE STEP SHORT. `activators` here is the
+            //    state the END of the previous tick's `stepActivators` left,
+            //    and that step IS the game's responder update of THIS frame
+            //    (`activators.stepActivators`' labelling): the state "after
+            //    this frame's Cover update" — the Player's and the APChest's
+            //    read, not the chest's. The vanilla chest updates before the
+            //    cover, so it sees the state BEFORE that step. Measured on
+            //    the game (wave 60, staged L38 on the vanilla set): the cover
+            //    turns at the end of advance 11, the game's chest opens on
+            //    13, OFF opens it on 12. ON (`chestCoverFencepost`), the
+            //    chest's `solidOver` reads `openActivatorIdsBeforeStep`.
             if (!noclip) stepSealPieceNow();
             if (!noclip) stepChestsNow(activators);
             if (!noclip) stepPulsersNow(activators, pushState);
