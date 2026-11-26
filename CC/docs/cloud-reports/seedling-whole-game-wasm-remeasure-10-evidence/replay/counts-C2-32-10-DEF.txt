@@ -1,0 +1,14 @@
+COUNTS 32:10 env PKSW=- PKRB=- DSS=- LHM=- PKH=- enabled PKSW=false PKRB=false DSS=false LHM=false PKH=false BOS=true GSW=true PM=true SPL=true KTA=true KTEB=false HF=false
+  result ok=false kind=refusal work=220 answer=cd02c0916e6c ms=39042
+  live   ok=false kind=refusal work=220 answer=cd02c0916e6c solverEnv=null
+  message=solverBot(wasm-continue-location-40) apitem (64,144) contact -> hold stance (wandlock@176,208) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (224.89,151.84) in level 40. There is no step out. the HAMMER-PHASE rung first saw this corner at t1648, and from t1652 NO PHASE admits a step: no hold of 1..44 tick(s) at any walk-offset -1..0 (0 tried) walks the approach clear for one more hammer period (45 ticks) (HAMMER_PHASE_RUNG). The corner formed 5 tick(s) after the press on spinner@192,128 LANDED 
+  PRESS_KILL_START_WAIT_COUNTS.rows=[]
+  PRESS_KILL_REFUGE_BOMBS_COUNTS={"asked":0,"refused":0}
+  DASH_STAND_SIGHT.counts={"asks":0}
+  LATCHED_HOLD_MOVE_COUNTS={"asked":0,"moves":[],"declined":[]}
+  PRESS_KILL_HOLD_COUNTS.rows=[]
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[]
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":8598,"asked":0,"tripped":0}
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":0,"forecastReplays":98,"spinRowsSkipped":0}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]
