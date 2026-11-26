@@ -32,6 +32,8 @@ describe('--solver-env', () => {
         expect(parseSolverEnvArg(undefined)).toBeNull();
         expect(parseSolverEnvArg('SEEDLING_CHOOSER_PAIR_SIZE=3;SEEDLING_CHOOSER_PAIR=1')).toBe(CPAIR3);
         expect(() => parseSolverEnvArg('SEEDLING_NOPE=1')).toThrow(/^--solver-env: unknown switch "SEEDLING_NOPE"/);
+        expect(() => parseSolverEnvArg('SEEDLING_CHOOSER_PAIR=1,SEEDLING_CHOOSER_PAIR_SIZE=3'))
+            .toThrow(/^--solver-env: switch "SEEDLING_CHOOSER_PAIR" has "=" in its value/);
     });
 
     it('a row is stamped only when it is set', () => {

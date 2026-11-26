@@ -20,7 +20,7 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
-  customActionRowOf, customActionBaseCost, customActionLabel,
+  customActionRowOf, customActionBaseCost, customActionDefaultCost, customActionLabel, customActionXpDiscounts,
 } from '../shared/procgen/loopCustomActions.js';
 import {
   botHonorsInstant, captureShapeOf, offersPlayback, solverKindOf, SOLVER_KINDS,
@@ -4132,7 +4132,8 @@ export class LoopState {
       // this rung moves the location default only. Named, not changed.
       switch (action.type) {
         case 'customAction':
-          baseCost = DEFAULT_REGION_COST;
+          // A row that states its own cost (a wait) keeps it with no cost data.
+          baseCost = customActionDefaultCost(action);
           break;
         case 'locationCheck':
           baseCost = DEFAULT_LOCATION_COST;
@@ -4151,8 +4152,9 @@ export class LoopState {
     }
 
     // Apply region XP reduction if applicable, gated by the per-region
-    // xpEffect from the loop_costs sidecar (defaults to 'cost').
-    if (action.sourceRegion) {
+    // xpEffect from the loop_costs sidecar (defaults to 'cost'). A custom
+    // action whose row says `xpDiscount: false` (a wait) is never discounted.
+    if (action.sourceRegion && customActionXpDiscounts(action)) {
       const xpData = this.getRegionXP(action.sourceRegion);
       const effect = this.costDataManager?.getRegionXpEffect?.(action.sourceRegion);
       return applyRegionXpCostEffect(baseCost, xpData.level, effect);

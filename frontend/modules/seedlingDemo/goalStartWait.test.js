@@ -13,9 +13,9 @@ import {
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 
 describe('GOAL_START_WAIT (hammer-phase FACE 1)', () => {
-    it('ships OFF, and its env name is in the worker\'s table', () => {
-        expect(GOAL_START_WAIT_DEFAULT).toBe(false);
-        expect(GOAL_START_WAIT.enabled).toBe(globalThis.process?.env?.SEEDLING_GOAL_START_WAIT === '1');
+    it('ships ON (the BOS/GSW/PM flip), and its env name is in the worker\'s table', () => {
+        expect(GOAL_START_WAIT_DEFAULT).toBe(true);
+        expect(GOAL_START_WAIT.enabled).toBe(globalThis.process?.env?.SEEDLING_GOAL_START_WAIT !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_GOAL_START_WAIT');
         expect(GOAL_START_WAIT_COUNTS.tries).toEqual(expect.any(Array));
     });

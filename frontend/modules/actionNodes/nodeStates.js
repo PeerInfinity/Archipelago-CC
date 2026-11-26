@@ -23,7 +23,7 @@
  * Pure: no registry, no DOM, no I/O.
  */
 
-import { isReached, perform, priceOf, whyNot } from './actionModel.js';
+import { applyWait, formatClock, isReached, perform, poolWordOf, priceOf, waitOf, whyNot } from './actionModel.js';
 
 /** Every state, in precedence order. */
 export const NODE_STATES = Object.freeze({
@@ -37,6 +37,11 @@ export const NODE_STATES = Object.freeze({
 /** The `unmet.code` of a node short only of mana, and its text (design §4: "not enough mana"). */
 export const NOT_ENOUGH_MANA = Object.freeze({ code: 'mana', text: 'not enough mana' });
 
+/** The same, in the world's pool name (AN-TIME-2: "not enough time"); exactly `NOT_ENOUGH_MANA` with no `pool`. */
+export function notEnoughOf(model) {
+    return { code: NOT_ENOUGH_MANA.code, text: `not enough ${poolWordOf(model)}` };
+}
+
 const EPSILON = 1e-9;
 
 /**
@@ -47,11 +52,13 @@ const EPSILON = 1e-9;
  * @param {object} [opts]
  * @param {number[]} [opts.costs]               live prices by node index (default: each node's `time`)
  * @param {(nodeId: string) => boolean} [opts.isDiscovered]   default: every node is
- * @returns {{state: string, unmet: null | {code: string, text: string}, count: number, limit: number, price: number}}
+ * @returns {{state: string, unmet: null | {code: string, text: string}, count: number, limit: number, price: number,
+ *   wait?: number}} `wait` (AN-TIME-2, a windowed world only): how long a performance from `state` would wait first
  */
 export function nodeStateOf(model, state, i, { costs, isDiscovered = () => true } = {}) {
     const node = model.nodes[i];
     const base = { count: state.counts[i] ?? 0, limit: node.limit, price: priceOf(model, i, costs) };
+    if (model.windowed) base.wait = waitOf(model, state, i);
     const out = (s, unmet = null) => ({ ...base, state: s, unmet });
     if (!isDiscovered(node.id)) return out(NODE_STATES.UNDISCOVERED);
     if (i === model.startIndex) return out(NODE_STATES.DONE);
@@ -59,7 +66,7 @@ export function nodeStateOf(model, state, i, { costs, isDiscovered = () => true 
     if (base.count >= node.limit) return out(NODE_STATES.DONE);
     const why = whyNot(model, state, i, { costs, ignoreMana: true });
     if (why) return out(NODE_STATES.BLOCKED, { code: why.code, text: why.text });
-    if (state.mana <= EPSILON || state.mana + EPSILON < base.price) return out(NODE_STATES.BLOCKED, { ...NOT_ENOUGH_MANA });
+    if (state.mana <= EPSILON || state.mana + EPSILON < base.price + (base.wait ?? 0)) return out(NODE_STATES.BLOCKED, notEnoughOf(model));
     return out(NODE_STATES.READY);
 }
 
@@ -73,7 +80,8 @@ export function nodeStates(model, state, opts = {}) {
 
 /**
  * The loop state at the END of a queue: every not-yet-completed `act` entry applied, in order, from `start`. A move
- * changes nothing (free, A10). The walk stops where the queue would stop: at an act the start gate refuses (not
+ * changes nothing (free, A10). A `wait` entry (AN-TIME-2) moves the clock and pays the pool; an `act` that would
+ * still start before its window opens stops the walk as the start gate does (`too-early`). The walk stops where the queue would stop: at an act the start gate refuses (not
  * reached, limit, a requirement) — Loops stops the queue there — or at one the mana cannot finish (⚖ Q1: started
  * short, it does not complete and the loop ends).
  *
@@ -85,16 +93,25 @@ export function nodeStates(model, state, opts = {}) {
  * @param {string} [opts.actName='act']
  * @returns {{state: object, applied: number, stoppedAt: null | {nodeId: string, code: string, text: string}}}
  */
-export function queueEndState(model, start, entries, { costs, actName = 'act' } = {}) {
+export function queueEndState(model, start, entries, { costs, actName = 'act', waitName = 'wait' } = {}) {
     let state = start;
     let applied = 0;
     for (const e of entries ?? []) {
-        if (e?.completed || e?.type !== 'customAction' || e.actionName !== actName) continue;
+        if (e?.completed || e?.type !== 'customAction') continue;
+        if (e.actionName === waitName) {
+            state = applyWait(model, state, e.params?.units);
+            continue;
+        }
+        if (e.actionName !== actName) continue;
         const nodeId = e.params?.nodeId ?? e.sourceRegion;
         const i = model.nodeIx.get(nodeId);
         if (i === undefined) continue;
         const why = whyNot(model, state, i, { costs, ignoreMana: !Number.isFinite(state.mana) });
         if (why) return { state, applied, stoppedAt: { nodeId, code: why.code, text: why.text } };
+        if (waitOf(model, state, i) > 0) {
+            const text = `opens at ${formatClock(model, model.nodes[i].from)}: queue a wait first`;
+            return { state, applied, stoppedAt: { nodeId, code: 'too-early', text } };
+        }
         state = perform(model, state, i, { costs });
         applied += 1;
     }

@@ -86,7 +86,7 @@ export const SOLVER_ENV_NAMES = Object.freeze([
     'SEEDLING_PICKUP_TICK_FREEZE', 'SEEDLING_PIT_TELEPORTER_CROSSING', 'SEEDLING_PIXEL_MASK_SIGHT_LINES', 'SEEDLING_PLAIN_PICKUP_IN_FREEZE', 'SEEDLING_PRESS_ESCAPE_EXACT',
     'SEEDLING_PRESS_ESCAPE_SHIELD_CLAIM', 'SEEDLING_PRESS_KILL_BOMBS', 'SEEDLING_PRESS_KILL_CHASERS',
     'SEEDLING_PRESS_KILL_COST', 'SEEDLING_PRESS_KILL_DONE_ON_WALK', 'SEEDLING_PRESS_KILL_HOLD', 'SEEDLING_PRESS_KILL_REBOOT_GUARD',
-    'SEEDLING_PRESS_KILL_SHAKE_GUARD', 'SEEDLING_PRESS_NO_FACING', 'SEEDLING_PREVIEW_BEAM_TOWER_DRIFT', 'SEEDLING_PREVIEW_METER', 'SEEDLING_PULSER_FORECAST_PULSE',
+    'SEEDLING_PRESS_KILL_SHAKE_GUARD', 'SEEDLING_PRESS_KILL_START_WAIT', 'SEEDLING_PRESS_NO_FACING', 'SEEDLING_PREVIEW_BEAM_TOWER_DRIFT', 'SEEDLING_PREVIEW_METER', 'SEEDLING_PULSER_FORECAST_PULSE',
     'SEEDLING_PULSER_PUBLISH_LAG',
     'SEEDLING_PUNCH_GATE_TIMED', 'SEEDLING_PUSH_SPEAR_DIRECTION', 'SEEDLING_REFUGE_ETA_CUT',
     'SEEDLING_REMOVED_BODY_BLOCKS', 'SEEDLING_RESTING_HOLDER', 'SEEDLING_ROCKLOCK_KILL', 'SEEDLING_ROCK_GONE_FENCEPOST',
@@ -131,6 +131,10 @@ export function parseSolverEnv(spec, what = SOLVER_ENV_PARAM) {
         if (!KNOWN.has(name)) throw new Error(`${what}: unknown switch "${name}" (not a SEEDLING_* name the solve worker reads; see SOLVER_ENV_NAMES)`);
         if (Object.hasOwn(env, name)) throw new Error(`${what}: switch "${name}" is named twice`);
         if (!value || /[\s;]/.test(value)) throw new Error(`${what}: switch "${name}" has no usable value (${JSON.stringify(value)})`);
+        // ⛓ The comma trap (STACK4-MEASURE, 2026-11-26): `A=1,B=1` is ONE entry, `A` = `"1,B=1"`, so B is never set
+        // and A reads OFF; every switch in the spec reads OFF with no error. No switch's value holds `=` (a comma alone
+        // stays legal: `SEEDLING_CONTACT_FIDELITY` takes a comma list of keys), so a value with `=` is refused by name.
+        if (value.includes('=')) throw new Error(`${what}: switch "${name}" has "=" in its value (${JSON.stringify(value)}): separate entries with ';', not ','`);
         env[name] = value;
     }
     return Object.keys(env).length ? Object.freeze(env) : null;

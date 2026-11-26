@@ -364,13 +364,17 @@ describe('hammer-phase D1 — progressReason: the solver\'s own words', () => {
  */
 const RK_SOLVES = [
     { what: 'L18 hammer room (residue 21)', tape: 'r9-solve-18', residue: 21, deadline: true, floor: false,
-        goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], ticks: 445, shouldStop: 165,
-        asks: [{ 'walk': 13, 'hammer-escape': 37 }, { 'walk': 14, 'hammer-escape': 37 },
+        goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], ticks: 445, shouldStop: 182,
+        // ⛓ planning-15's BOS/GSW/PM flip (⚖ the user 2026-11-25; PREVIEW_METER ON, attributed by `SEEDLING_PREVIEW_METER=0`,
+        //   which restores every old value): the meter asks the first pass's `walk` site 17 more times (13 → 30; shouldStop
+        //   165 → 182, pass 1 50 → 67), so new v1 and TC2 pre bytes and 17 more snapshots. The answer (445 t), the other
+        //   passes, the previews and the kinds are unchanged. Was shouldStop 165, walk 13, v1 '485b2ac25ed8634af7606fe9bf91aaaa'.
+        asks: [{ 'walk': 30, 'hammer-escape': 37 }, { 'walk': 14, 'hammer-escape': 37 },
             { 'walk': 18, 'hammer-escape': 37, 'sword-dash': 9 }],
         // ⛓ planning-13's wave-31 dashSpinnerForecast flip (L40BK2 D2, ⛓ hammer hand-over 368; signed by hammer-2): the
         //   D2 cursor (previewWalk advances the spinner fight forecast per previewed tick) moves the v1 bytes; the answer,
         //   shouldStop, the asks and the kinds are unchanged. Was '84b55e41f71e00298238dbd053ba464e'.
-        v1: '485b2ac25ed8634af7606fe9bf91aaaa', kinds: { pending: 10, exhausted: 3 } },
+        v1: 'e47fe6b5882ca0c331c3ca226e667b83', kinds: { pending: 10, exhausted: 3 } },
     { what: 'L40 kill rung (the totem part at (160,640))', tape: 'r5-l40-part5', deadline: true,
         goals: [{ kind: 'collect-placement', placement: { x: 160, y: 640 } }], ticks: 679, shouldStop: 183,
         // ⛓ planning-14's wave-32 flip (RULESREF D1 `punchGateTimed`; signed by hammer-2 2026-10-26): the walk's gate steps the
@@ -872,8 +876,10 @@ describe('hammer-phase TC2 — the active frame (`frame`, additive within v: 2)'
         // ⛓ planning-13's wave-31 dashSpinnerForecast flip (signed by hammer-2): the D2 cursor adds ONE preview to the
         //   third pass (411 → 412 previews, 26,472 → 26,508 preview states), hence one more snapshot and new pre bytes.
         //   Was pre '815d03a141424a831b3318151c604107', 1593 snapshots.
-        'r9-solve-18': { pre: 'e6023c2339c849aea79f683109308c32', snapshots: 1594, work: [
-            { shouldStop: 50, ticks: 408, previews: 401, previewStates: 25884, searchStates: 18362, expansions: 10444,
+        // ⛓ planning-15's BOS/GSW/PM flip (PREVIEW_METER ON): 17 meter asks on pass 1 (50 → 67) ⇒ 17 more snapshots.
+        //   Was pre 'e6023c2339c849aea79f683109308c32', 1594 snapshots.
+        'r9-solve-18': { pre: '300ef4475152032434b8a6b0d6e42bfd', snapshots: 1611, work: [
+            { shouldStop: 67, ticks: 408, previews: 401, previewStates: 25884, searchStates: 18362, expansions: 10444,
                 waypointsPlanned: 0, replans: 0, dashesPressed: 0 },
             { shouldStop: 51, ticks: 441, previews: 401, previewStates: 25884, searchStates: 18362, expansions: 10444,
                 waypointsPlanned: 0, replans: 0, dashesPressed: 0 },
