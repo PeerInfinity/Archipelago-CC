@@ -1,0 +1,152 @@
+== full-gsw legs 915
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L13_64_144 -> exit:out_teleporter_0_144
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L13_64_144 -> exit:out_teleporter_160_272
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L2_48_16 -> exit:out_teleporter_0_128
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L2_48_16 -> exit:out_teleporter_160_272
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L86_48_64 -> exit:out_stairsdown_256_272
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L86_48_64 -> exit:out_stairsdown_32_192
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L86_48_64 -> exit:out_teleporter_160_272
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L94_304_160 -> exit:out_teleporter_0_128
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L94_304_160 -> exit:out_teleporter_160_272
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L94_304_176 -> exit:out_stairsdown_256_272
+   failed -> done hits 0 -> 0 level_0__r7c6 <- start -> exit:out_stairsdown_32_192
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- start -> exit:out_teleporter_0_128
+   failed -> done hits 0 -> 0 level_0__r7c6 <- start -> exit:out_teleporter_0_144
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_80
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_352
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_368
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_112_96
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_352
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_368
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_80
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_112_96
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_352
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_368
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_168_368
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_304_0
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_368
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_80
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_304_0
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_432_352
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_352
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_80
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_112_96
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_352
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_368
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_168_368
+   crossed -> done hits 0 -> 0 level_12__r0c37 <- in_L37_32_304 -> exit:out_teleporter_592_0
+   done -> crossed hits 0 -> 0 level_12__r43c21 <- in_L34_32_144 -> exit:out_teleporter_336_688
+   done -> crossed hits 0 -> 0 level_13 <- in_L0_32_192 -> exit:out_stairsdown_96_32
+   done -> crossed hits 0 -> 0 level_13 <- in_L14_176_64 -> exit:out_stairsdown_96_32
+   crossed -> done hits 0 -> 0 level_13 <- in_L20_16_48 -> exit:out_stairsdown_32_32
+   crossed -> done hits 0 -> 0 level_13 <- in_L20_16_48 -> exit:out_stairsdown_96_32
+   done -> crossed hits 0 -> 0 level_2 <- in_L0_256_272 -> exit:out_stairsup_48_16
+   done -> crossed hits 0 -> 0 level_2 <- in_L0_256_272 -> exit:out_teleporter_48_96
+   crossed -> done hits 0 -> 0 level_2 <- in_L3_64_0 -> exit:out_teleporter_48_96
+   done -> crossed hits 0 -> 0 level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_64_0
+   done -> timeout hits 0 -> 0 level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest
+   done -> timeout hits 0 -> 0 level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Chest
+   failed -> timeout hits 0 -> 0 level_40__r48c54 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+   crossed -> done hits 0 -> 0 level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_32_304
+   done -> failed hits 0 -> 0 level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared
+   crossed -> done hits 0 -> 0 level_89__r1c10 <- in_L91_16_144 -> exit:out_teleporter_208_0
+   crossed -> done hits 0 -> 0 level_94__r2c16 <- in_L0_0_128 -> exit:out_teleporter_304_160
+== full-pm legs 915
+   done -> crossed hits 0 -> 0 level_0__r6c5 <- in_L1_64_112 -> exit:out_teleporter_80_96
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L13_64_144 -> exit:out_stairsdown_32_192
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L13_64_144 -> exit:out_teleporter_0_128
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L2_48_16 -> exit:out_stairsdown_256_272
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L2_48_16 -> exit:out_teleporter_0_128
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L2_48_16 -> exit:out_teleporter_160_272
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L86_48_64 -> exit:out_teleporter_0_144
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L86_48_64 -> exit:out_teleporter_160_272
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L94_304_160 -> exit:out_teleporter_160_272
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L94_304_176 -> exit:out_stairsdown_256_272
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L94_304_176 -> exit:out_teleporter_0_144
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L94_304_176 -> exit:out_teleporter_160_272
+   failed -> crossed hits 0 -> 0 level_0__r7c6 <- start -> exit:out_teleporter_0_144
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- start -> exit:out_teleporter_160_272
+   done -> failed hits 0 -> 0 level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@144,64 cleared
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_80
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_432_352
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_352
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_80
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_112_96
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_368
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_80
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_112_96
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_112_96
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_304_0
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_432_352
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_304_0
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_352
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_368
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_168_368
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_368
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_80
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_304_0
+   done -> crossed hits 0 -> 0 level_12__r42c28 <- in_L83_32_64 -> exit:out_teleporter_32_848
+   crossed -> done hits 0 -> 0 level_13 <- in_L20_16_48 -> exit:out_stairsdown_96_32
+   done -> crossed hits 0 -> 0 level_14 <- in_L13_32_32 -> exit:out_stairsup_176_64
+   done -> crossed hits 0 -> 0 level_2 <- in_L0_256_272 -> exit:out_stairsup_48_16
+   done -> crossed hits 0 -> 0 level_2 <- in_L3_64_0 -> exit:out_stairsup_48_16
+   crossed -> done hits 0 -> 0 level_2 <- in_L3_64_0 -> exit:out_teleporter_48_96
+   done -> crossed hits 0 -> 0 level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_64_0
+   done -> timeout hits 0 -> 0 level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Chest
+   done -> timeout hits 0 -> 0 level_40__r48c54 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+   failed -> done hits 0 -> 0 level_40__r48c54 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+   crossed -> done hits 0 -> 0 level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_32_304
+   done -> crossed hits 0 -> 0 level_86 <- in_L0_160_272 -> exit:out_teleporter_48_64
+   crossed -> done hits 0 -> 0 level_89__r1c10 <- in_L91_16_144 -> exit:out_teleporter_208_0
+   done -> crossed hits 0 -> 0 level_94__r2c16 <- in_L0_0_128 -> exit:out_teleporter_304_176
+   crossed -> done hits 0 -> 0 level_94__r2c16 <- in_L0_0_144 -> exit:out_teleporter_304_176
+== full-pkh legs 915
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L13_64_144 -> exit:out_stairsdown_32_192
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L2_48_16 -> exit:out_stairsdown_32_192
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L2_48_16 -> exit:out_teleporter_0_128
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L2_48_16 -> exit:out_teleporter_0_144
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L2_48_16 -> exit:out_teleporter_160_272
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L86_48_64 -> exit:out_teleporter_0_128
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L86_48_64 -> exit:out_teleporter_0_144
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L94_304_160 -> exit:out_stairsdown_256_272
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L94_304_160 -> exit:out_stairsdown_32_192
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L94_304_160 -> exit:out_teleporter_0_128
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- in_L94_304_160 -> exit:out_teleporter_0_144
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L94_304_176 -> exit:out_stairsdown_256_272
+   crossed -> done hits 0 -> 0 level_0__r7c6 <- in_L94_304_176 -> exit:out_teleporter_0_144
+   done -> crossed hits 0 -> 0 level_0__r7c6 <- start -> exit:out_stairsdown_256_272
+   failed -> crossed hits 0 -> 0 level_0__r7c6 <- start -> exit:out_stairsdown_32_192
+   failed -> crossed hits 0 -> 0 level_0__r7c6 <- start -> exit:out_teleporter_0_144
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_368
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_352
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_368
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_80
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_112_96
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_304_0
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_352
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_352
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_80
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_304_0
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_80
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_304_0
+   crossed -> done hits 0 -> 0 level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_432_352
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_304_0
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_432_352
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_352
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_368
+   done -> crossed hits 0 -> 0 level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_304_0
+   done -> crossed hits 0 -> 0 level_13 <- in_L0_32_192 -> exit:out_stairsdown_32_32
+   crossed -> done hits 0 -> 0 level_13 <- in_L20_16_48 -> exit:out_stairsdown_32_32
+   done -> crossed hits 0 -> 0 level_14 <- in_L15_32_64 -> exit:out_stairsup_176_64
+   done -> crossed hits 0 -> 0 level_2 <- in_L0_256_272 -> exit:out_stairsup_48_16
+   done -> crossed hits 0 -> 0 level_2 <- in_L3_64_0 -> exit:out_stairsup_48_16
+   crossed -> done hits 0 -> 0 level_2 <- in_L3_64_0 -> exit:out_teleporter_48_96
+   done -> crossed hits 0 -> 0 level_20__r3c1 <- in_L13_96_32 -> exit:out_stairsup_16_48
+   done -> crossed hits 0 -> 0 level_3__r0c4 <- in_L2_48_96 -> exit:out_teleporter_64_0
+   done -> timeout hits 0 -> 0 level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Chest
+   done -> timeout hits 0 -> 0 level_40__r48c54 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+   failed -> timeout hits 0 -> 0 level_40__r48c54 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+   crossed -> done hits 0 -> 0 level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_32_304
+   done -> timeout hits 0 -> 0 level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights
+   done -> crossed hits 0 -> 0 level_86 <- in_L0_160_272 -> exit:out_teleporter_48_64
+   done -> crossed hits 0 -> 0 level_94__r2c16 <- in_L0_0_144 -> exit:out_teleporter_304_160

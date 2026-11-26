@@ -63,6 +63,7 @@ import { createRunForStaging } from './tapeRunner.js';
 import {
     AXE_DODGE_ASK_PER_PREVIEW, DEFAULT_DASH_MODE, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, WAND_TARGET_TAGS, WAND_VERB,
     ROCKLOCK_KILL, clearTagTalkArmOf, solveSegment, withRockLockKill,
+    GOAL_START_WAIT, withGoalStartWaitLaterPass,
 } from './solverBot.js';
 import { pageSolverEnvSwitchOff, pageSolverEnvSwitchOn } from './solverEnvChannel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
@@ -670,8 +671,10 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => 
         // ⛓ RECALIBRATE — a budgeted pass always asks the FINE checkpoints (`FINE_CHECKPOINTS`): the constants
         // above are counted in fine units, so every production path (JS page, wasm arrival, continuation,
         // held retry — all of them requests to this function) spends the unit they were calibrated in.
-        const answer = settleSolve(() => solveFromTape({ ...tape, clock, dashMode: p.dashMode, adds: p.adds ?? null, shouldStop,
-            fineCheckpoints: shouldStop !== null && FINE_CHECKPOINTS }));
+        const solvePass = () => settleSolve(() => solveFromTape({ ...tape, clock, dashMode: p.dashMode, adds: p.adds ?? null,
+            shouldStop, fineCheckpoints: shouldStop !== null && FINE_CHECKPOINTS }));
+        // ⛓ hammer-phase FLIPBLOCK (`GOAL_START_WAIT`, OFF ⇒ not reached): a pass a later pass follows asks no wait
+        const answer = GOAL_START_WAIT.enabled ? withGoalStartWaitLaterPass(i < passes.length - 1, solvePass) : solvePass();
         answer.pass = p.pass;
         if (answer.ok) answer.plan.pass = p.pass;
         const tripped = deadlineOf(answer);

@@ -93,8 +93,8 @@ async function recordedWalks({ opp }) {
 }
 
 describe('STRIKE_PREVIEW_LEAN — a strike walk read as truncated is not walked to its end (hammer-phase STRIKECACHE)', () => {
-    it('ships OFF', () => {
-        expect(STRIKE_PREVIEW_LEAN.enabled).toBe(globalThis.process?.env?.SEEDLING_STRIKE_PREVIEW_LEAN === '1');
+    it('ships ON (the LEAN/KTA flip)', () => {
+        expect(STRIKE_PREVIEW_LEAN.enabled).toBe(globalThis.process?.env?.SEEDLING_STRIKE_PREVIEW_LEAN !== '0');
     });
 
     // ⚠ L18's kill holds no strike policy (`strikePolicyFor` finds no strikeable body), so these rows are the UNARMED

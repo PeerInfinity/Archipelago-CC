@@ -1,0 +1,7 @@
+A1 29:11 env[SEEDLING_ICETURRET_STATIC_KILL=1 HOOK_ISK_APPROACH=first] ok=true work=641 ticks=1404 ms=34377
+  passes=[{"pass":"dashless","ok":true,"kind":null,"ticks":1404,"work":329,"modelHits":{"hits":0,"deaths":0}},{"pass":"full","ok":false,"kind":"refusal","ticks":null,"work":312,"deadline":"walk","limit":"budget"}]
+  FRESH hits=[] deaths=0 transition={"t":1404,"to":41}
+  ICETURRET_STATIC_KILL_COUNTS={"handed":[{"id":"iceturret@472,400","t":100,"via":"chooser"},{"id":"iceturret@472,400","t":100,"via":"chooser"}],"kills":[{"id":"iceturret@472,400","t":100,"dead":true,"ticks":516},{"id":"iceturret@472,400","t":100,"dead":true,"ticks":516}]}
+  KEYLOCK_TURRET_COUNTS={"stances":[],"kills":[]}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS={"asked":[]}
+  TURRET_APPROACH_COUNTS={"approaches":[{"turret":"iceturret@472,400","t":616,"side":"right","via":{"x":467,"y":446},"wait":0,"forks":16,"order":"volley","anchor":null,"rank":0},{"turret":"iceturret@472,400","t":616,"side":"right","via":{"x":467,"y":446},"wait":0,"forks":16,"order":"volley","anchor":null,"rank":0}]}

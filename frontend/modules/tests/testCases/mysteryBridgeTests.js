@@ -7,12 +7,16 @@
  * Mystery Game panel, and loads the committed mystery preset, which the panel then frames.
  * It runs with no server, so it covers the host's offline answers; the names it checks come from
  * the loaded world's own `slot_data.mystery`, never from this file.
+ *
+ * A second row frames the REAL page, from this app's own copy of the game (the submodule
+ * `modules/mystery-clue-game`, the module's default address), and reads only the host's side: the
+ * page asked with the version the world has, a state went back, and nothing was refused.
  */
 
 import { registerTest } from '../testRegistry.js';
 import stateManagerProxySingleton from '../../stateManager/stateManagerProxySingleton.js';
 import settingsManager from '../../../app/core/settingsManager.js';
-import { PAGE_URL_SETTING } from '../../mysteryArchipelago/mysteryPage.js';
+import { DEFAULT_PAGE_URL, PAGE_URL_SETTING } from '../../mysteryArchipelago/mysteryPage.js';
 
 const CATEGORY = 'Mystery Bridge';
 const MODULE_ID = 'mysteryArchipelago';
@@ -130,5 +134,71 @@ registerTest({
         + 'panel frames from a stand-in page: the host answers a request with the whole state, turns a solved question into a location check that '
         + 'comes back as solved, takes a repeat, and refuses another story or version by name.',
     testFunction: mysteryBridgeRoundTrip,
+    category: CATEGORY,
+});
+
+/** The frames of the Mystery Game panel whose page is this app's copy of the game. */
+const gameFrames = () => [...document.querySelectorAll('.mystery-panel-container iframe')].filter((frame) => {
+    try { return frame.contentWindow.location.pathname.includes('/modules/mystery-clue-game/'); } catch { return false; }
+});
+
+export async function mysteryRealPageHandshake(testController) {
+    const states = window.moduleManagerApi?.getAllModuleStates?.() ?? {};
+    const wasEnabled = states[MODULE_ID]?.enabled === true;
+    const pageBefore = await settingsManager.getSetting(PAGE_URL_SETTING);
+    const seen = { requests: [], states: [], refusals: [] };
+    const handlers = {
+        'mystery:requestState': (data) => seen.requests.push(data),
+        'mystery:state': (data) => seen.states.push(data),
+        'mystery:refused': (data) => seen.refusals.push(data),
+    };
+    for (const [event, handler] of Object.entries(handlers)) testController.eventBus.subscribe(event, handler);
+    try {
+        // The module's own default: this app's copy of the game. Set outright, so a stored address cannot stand in.
+        await settingsManager.updateSetting(PAGE_URL_SETTING, DEFAULT_PAGE_URL, { persist: false });
+        await window.moduleManagerApi.enableModule(MODULE_ID);
+        const panel = await testController.pollForValue(
+            () => document.querySelector('.mystery-panel-container')?.mysteryPanelUI ?? null,
+            'the Mystery Game panel', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('enabling the module opens the Mystery Game panel', !!panel);
+        if (!panel) return testController.getOverallResult();
+
+        await testController.loadRulesFromFile(PRESET_PATH);
+        await testController.stateManager.pingWorker('after-rules-load', TIMEOUT_MS);
+        const staticData = stateManagerProxySingleton.getStaticData();
+        const mystery = staticData?.world?.[String(staticData?.playerId ?? '1')]?.slot_data?.mystery;
+        testController.reportCondition('the loaded world carries slot_data.mystery', typeof mystery?.story === 'string');
+        if (!mystery) return testController.getOverallResult();
+
+        const framed = await testController.pollForCondition(
+            () => gameFrames().length > 0, 'the panel frames the game from this app\'s copy', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition(`the panel framed the game's own page (${panel.wantedUrl})`, framed);
+
+        const asked = await testController.pollForCondition(
+            () => seen.requests.length > 0 && (seen.states.length > 0 || seen.refusals.length > 0),
+            'the game\'s page asked and the host answered', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('the game\'s page asked for the state and was answered', asked);
+        if (!asked) return testController.getOverallResult();
+        const request = seen.requests[0];
+        testController.assertEqual('the page asked for the world\'s story', mystery.story, request.story);
+        // The page reads its version from its own export of the case: equal means the pin holds in the running app.
+        testController.assertEqual('the page\'s version of the case is the world\'s', mystery.version, request.version);
+        testController.assertEqual('nothing was refused', 0, seen.refusals.length);
+        testController.assertEqual('the state that went back names the world\'s version', mystery.version, seen.states[0]?.version);
+    } finally {
+        for (const [event, handler] of Object.entries(handlers)) testController.eventBus.unsubscribe?.(event, handler);
+        await settingsManager.updateSetting(PAGE_URL_SETTING, pageBefore, { persist: false });
+        if (!wasEnabled) await window.moduleManagerApi.disableModule?.(MODULE_ID);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'mystery-real-page-handshake',
+    name: 'Mystery bridge: the game\'s own page asks and is answered',
+    description: 'Enables the Mystery Game module at its default address (this app\'s copy of the game, the submodule '
+        + 'modules/mystery-clue-game) and loads the committed mystery preset: the game\'s page asks for the state with the '
+        + 'version the world has, a state goes back, and nothing is refused.',
+    testFunction: mysteryRealPageHandshake,
     category: CATEGORY,
 });

@@ -1,0 +1,2 @@
+OFF {"SOLVED":224,"REFUSED":26} | ON {"SOLVED":224,"REFUSED":26}
+0 step(s) moved; steps that GAINED a hit ON: none

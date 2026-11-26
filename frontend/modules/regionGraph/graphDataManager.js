@@ -11,9 +11,15 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
   normaliseSubRegionView, isRegionGroupNode, multiMemberGroups, groupNodeElements, groupState, groupClasses,
   GROUP_STATE_CLASSES, MERGED_CLASS, mergedGroupElements, mergeGroupEdges, mergedEdgeState, mergedGroupLabel,
+  collapsibleGroups, groupNodeId,
 } from './subRegionGroups.js';
 
 const logger = createUniversalLogger('regionGraph');
+
+/** ⛓ collapsible: the ring an opened group's members take when they have no saved arrangement (model px). */
+export const ringRadius = (n) => 50 + 12 * n;
+/** ⛓ collapsible: the farthest an opened group's member is placed from the closed node's spot (model px). */
+export const openRadius = (n) => 60 + 30 * Math.sqrt(n);
 
 /**
  * GraphDataManager - Handles graph data structure and visual updates.
@@ -239,25 +245,29 @@ export class GraphDataManager {
 
     // ⛓ subRegionView = nested (region-graph-groups-a): a compound parent per display group of 2+ members, its
     // members as children. `separate` adds nothing here, so its element set is the one the graph drew before.
+    // ⛓ collapsible (region-graph-groups-c): the CLOSED groups take the merged branch and the OPEN ones the nested
+    // branch, in this one pass (`collapsibleGroups`); all closed = `merged`, all open = `nested`.
     const regionNodeCount = elements.nodes.length;
-    if (this.subRegionView() === 'nested') {
-      const { nodes: groupNodes, parentOf } = groupNodeElements(this.multiMemberGroups(regions));
-      for (const node of elements.nodes) {
-        const parent = parentOf.get(node.data.id);
-        if (parent) node.data.parent = parent;
-      }
-      elements.nodes.unshift(...groupNodes);
+    const view = this.subRegionView();
+    const collapsible = view === 'collapsible';
+    let boxGroups = null;
+    let closedGroups = null;
+    if (view === 'nested') boxGroups = this.multiMemberGroups(regions);
+    if (view === 'merged') closedGroups = this.multiMemberGroups(regions);
+    if (collapsible) {
+      ({ open: boxGroups, closed: closedGroups } = collapsibleGroups(this.multiMemberGroups(regions), this.openGroupKeys()));
     }
     // ⛓ subRegionView = merged (region-graph-groups-b): ONE node per display group of 2+, in place of its members
     // (at the first member's place in the node order). `ui.mergedNodeOf` (member → node) is how every reader finds
-    // the node that draws a region (`graphNodeIdOf`); it is null in any other view.
-    const merged = this.subRegionView() === 'merged';
+    // the node that draws a region (`graphNodeIdOf`); it is null in any other view (and in collapsible with every
+    // group open).
+    const merged = view === 'merged' || collapsible;
     this.ui.mergedNodeOf = null;
     let mergedNodeOf = null;
     if (merged) {
-      const { nodes: groupNodes, nodeOf } = mergedGroupElements(this.multiMemberGroups(regions));
+      const { nodes: groupNodes, nodeOf } = mergedGroupElements(closedGroups);
       mergedNodeOf = nodeOf;
-      this.ui.mergedNodeOf = nodeOf;
+      this.ui.mergedNodeOf = (collapsible && nodeOf.size === 0) ? null : nodeOf;
       const groupById = new Map(groupNodes.map((n) => [n.data.id, n]));
       const placed = new Set();
       const out = [];
@@ -269,8 +279,17 @@ export class GraphDataManager {
         out.push(groupById.get(gid));
       }
       elements.nodes = out;
-      this.placeMergedNodes(elements.nodes);
     }
+    if (boxGroups) {
+      const { nodes: groupNodes, parentOf } = groupNodeElements(boxGroups);
+      for (const node of elements.nodes) {
+        const parent = parentOf.get(node.data.id);
+        if (parent) node.data.parent = parent;
+      }
+      elements.nodes.unshift(...groupNodes);
+    }
+    if (view === 'merged') this.placeMergedNodes(elements.nodes);
+    if (collapsible) this.placeCollapsibleNodes(elements.nodes);
 
     // Track all exits for directionality analysis
     const exitMap = new Map(); // key: "fromRegion->toRegion", value: exitData
@@ -582,7 +601,11 @@ export class GraphDataManager {
     // ⛓ merged keeps its OWN store (`ui.mergedNodePositions`), never `nodePositions` (`separate`'s layout stays as it
     // was): it fits when that store covers the graph, or when every node was placed from `separate`'s saved layout
     // (`placeMergedNodes`), and lays out otherwise.
-    if (merged) {
+    if (collapsible) {
+      // ⛓ collapsible keeps its own store too (`ui.collapsibleNodePositions`); an open / close re-uses the viewport.
+      if (!this._collapsiblePlaced) this.ui.runLayout(false);
+      else if (!this._keepViewport) this.ui.cy.fit(30);
+    } else if (merged) {
       const store = this.ui.mergedNodePositions;
       const covered = (store && store.size === elements.nodes.length) || this._mergedPlacedFromSeparate;
       if (covered) this.ui.cy.fit(30);
@@ -617,6 +640,8 @@ export class GraphDataManager {
     }
 
     this.redrawLocationNodesForMode();
+    // ⛓ collapsible: the + / − badges follow the rebuilt graph (none in any other view).
+    this.ui.groupBadges?.rebuild?.();
 
     this.ui.updateStatus(`Loaded ${regionNodeCount} regions, ${elements.edges.length} connections`);
   }
@@ -645,6 +670,140 @@ export class GraphDataManager {
       }
     }
     this._mergedPlacedFromSeparate = allSaved;
+  }
+
+  /**
+   * ⛓ collapsible: each drawn node's start position, from `ui.collapsibleNodePositions` (its own store; never
+   * `separate`'s or `merged`'s, which it only READS): a node it saved goes there; else a closed group node goes to the
+   * centroid of its members' saved positions (this store's, else `separate`'s) or to `merged`'s saved spot, and a
+   * region (or an open member) to `separate`'s saved spot, else `merged`'s. A box is placed by its members. When
+   * every node got a position (`_collapsiblePlaced`), the builder lays nothing out.
+   */
+  placeCollapsibleNodes(nodes) {
+    const store = this.collapsibleStore();
+    const sep = this.ui.nodePositions;
+    const mer = this.ui.mergedNodePositions;
+    const centroid = (pts) => ({ x: pts.reduce((a, p) => a + p.x, 0) / pts.length, y: pts.reduce((a, p) => a + p.y, 0) / pts.length });
+    let all = true;
+    for (const node of nodes) {
+      const d = node.data;
+      if (d.groupKey && !d.merged) continue; // an open group's box: its members place it
+      let pos = store.get(d.id) ?? null;
+      if (!pos && d.merged) {
+        const from = [store, sep].find((m) => d.members.every((r) => m?.has(r)));
+        pos = from ? centroid(d.members.map((r) => from.get(r))) : (mer?.get(d.id) ?? null);
+      } else if (!pos) {
+        pos = sep.get(d.id) ?? mer?.get(d.id) ?? null;
+      }
+      if (pos) node.position = { x: pos.x, y: pos.y };
+      else {
+        all = false;
+        node.position = { x: Math.random() * 500, y: Math.random() * 500 };
+      }
+    }
+    this._collapsiblePlaced = all;
+  }
+
+  /** ⛓ collapsible's saved positions (session-only, never persisted; created on first use). */
+  collapsibleStore() {
+    if (!this.ui.collapsibleNodePositions) this.ui.collapsibleNodePositions = new Map();
+    return this.ui.collapsibleNodePositions;
+  }
+
+  /**
+   * ⛓ collapsible: the OPEN display keys of the loaded world — `ui.openSubRegionGroups` (world key → Set), in
+   * memory only. A world starts with every group closed; the set lives for the session and outlives a switch to
+   * another view and back.
+   */
+  openGroupKeys() {
+    if (!this.ui.openSubRegionGroups) this.ui.openSubRegionGroups = new Map();
+    const key = this.worldKey();
+    if (!this.ui.openSubRegionGroups.has(key)) this.ui.openSubRegionGroups.set(key, new Set());
+    return this.ui.openSubRegionGroups.get(key);
+  }
+
+  /** The loaded world, for the open set: the rules' seed, game directory and the player. */
+  worldKey() {
+    const last = getLastRawJsonData?.();
+    const r = last?.rawJsonData;
+    const pid = String(last?.selectedPlayerInfo?.playerId ?? '1');
+    return `${r?.seed_name ?? ''}|${r?.game_directory ?? JSON.stringify(r?.game_name ?? null)}|${pid}`;
+  }
+
+  /**
+   * ⛓ collapsible: OPEN (or close) display group `key` — the + / − badge's action. It runs no click action and no
+   * layout: it records every drawn node where it stands now (`collapsibleStore`), places the group's members around
+   * the closed node's position (their last arrangement, else `separate`'s, shifted so its centre is the node's; else
+   * a ring), or, closing, the merged node at its members' centre, then rebuilds the elements keeping the viewport.
+   * → { changed, ms } (`changed` false when the view is not collapsible, the key is unknown, or already in that state).
+   */
+  setSubRegionGroupOpen(key, open) {
+    const cy = this.ui.cy;
+    const set = this.openGroupKeys();
+    if (!cy || this.subRegionView() !== 'collapsible' || set.has(key) === !!open) return { changed: false, ms: 0 };
+    const gid = groupNodeId(key);
+    const node = cy.getElementById(gid);
+    if (!node || node.length === 0) return { changed: false, ms: 0 };
+    const t0 = globalThis.performance?.now?.() ?? Date.now();
+    const store = this.collapsibleStore();
+    // Every drawn node where it stands now (a drag since the last layout is kept). Never a box, a location or the player.
+    cy.nodes().forEach((n) => {
+      if (n.hasClass('location-node') || n.hasClass('player') || isRegionGroupNode(n, 'box')) return;
+      store.set(n.id(), { x: n.position('x'), y: n.position('y') });
+    });
+    const members = node.data('members') ?? [];
+    if (open) {
+      const p = node.position();
+      const from = [store, this.ui.nodePositions].find((m) => members.length > 0 && members.every((r) => m?.has(r)));
+      if (from) {
+        const pts = members.map((r) => from.get(r));
+        const cx = pts.reduce((a, q) => a + q.x, 0) / pts.length;
+        const cyy = pts.reduce((a, q) => a + q.y, 0) / pts.length;
+        // Kept compact round the node: an arrangement wider than `openRadius` is scaled down to it (the separate
+        // layout spreads a level's rooms over the whole graph).
+        const far = Math.max(...pts.map((q) => Math.hypot(q.x - cx, q.y - cyy)));
+        const k = far > 0 ? Math.min(1, openRadius(members.length) / far) : 1;
+        members.forEach((r, i) => store.set(r, { x: p.x + k * (pts[i].x - cx), y: p.y + k * (pts[i].y - cyy) }));
+      } else {
+        const radius = ringRadius(members.length);
+        members.forEach((r, i) => {
+          const a = (2 * Math.PI * i) / members.length;
+          store.set(r, { x: p.x + radius * Math.cos(a), y: p.y + radius * Math.sin(a) });
+        });
+      }
+      store.delete(gid);
+      set.add(key);
+    } else {
+      const pts = members.map((r) => cy.getElementById(r).position());
+      store.set(gid, { x: pts.reduce((a, q) => a + q.x, 0) / pts.length, y: pts.reduce((a, q) => a + q.y, 0) / pts.length });
+      set.delete(key);
+    }
+    this.rebuildKeepingViewport();
+    const ms = (globalThis.performance?.now?.() ?? Date.now()) - t0;
+    this.lastToggleMs = ms;
+    return { changed: true, ms };
+  }
+
+  /** Rebuild the elements from the loaded static data with no fit and no layout (collapsible's open / close). */
+  rebuildKeepingViewport() {
+    const staticData = stateManager.getStaticData();
+    const cy = this.ui.cy;
+    if (!staticData?.regions || !cy) return;
+    const zoom = cy.zoom();
+    const pan = { ...cy.pan() };
+    this._keepViewport = true;
+    try {
+      this.buildGraphFromRegions(staticData.regions, staticData.exits);
+    } finally {
+      this._keepViewport = false;
+    }
+    cy.viewport({ zoom, pan });
+    this.ui.overlayManager?.onGraphRebuilt?.();
+    this.ui.refreshNodePicker?.();
+    // The rebuild removed the player marker: put it back on the node that now draws the player's region.
+    const where = this.ui.getCurrentPlayerLocation?.();
+    if (where) this.ui.updatePlayerLocation?.(where);
+    this.ui.groupBadges?.sync?.();
   }
 
   /** The panel's `subRegionView` (loaded from the settings by `RegionGraphUI.loadDisplaySettings`). */

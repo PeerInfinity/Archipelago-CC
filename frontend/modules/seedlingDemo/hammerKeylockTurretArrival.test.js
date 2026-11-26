@@ -27,9 +27,9 @@ import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 const STANCE_WALL = /reach-exit \(944,96\)->L41 -> keylock stance \(bosslock@480,352\): the combat ladder is EXHAUSTED\. The corridor passes through danger at \([\d.]+,[\d.]+\) — enemy:iceturret@472,400/;
 
 describe('hammer-phase KT-ARRIVAL: KEYLOCK_TURRET_ARRIVAL', () => {
-    it('ships OFF, the env channel carries it, and the wrapper toggles it', () => {
-        expect(KEYLOCK_TURRET_ARRIVAL_DEFAULT).toBe(false);
-        expect(KEYLOCK_TURRET_ARRIVAL.enabled).toBe(globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET_ARRIVAL === '1');
+    it('ships ON (the LEAN/KTA flip), the env channel carries it, and the wrapper toggles it', () => {
+        expect(KEYLOCK_TURRET_ARRIVAL_DEFAULT).toBe(true); // ON since the LEAN/KTA flip
+        expect(KEYLOCK_TURRET_ARRIVAL.enabled).toBe(globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET_ARRIVAL !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_KEYLOCK_TURRET_ARRIVAL');
         const was = KEYLOCK_TURRET_ARRIVAL.enabled;
         expect(withKeylockTurretArrival(true, () => KEYLOCK_TURRET_ARRIVAL.enabled)).toBe(true);
