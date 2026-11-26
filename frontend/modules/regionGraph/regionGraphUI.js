@@ -19,6 +19,7 @@ import { mountClickActionsStrip } from '../regionView/clickActionsUI.js';
 import { CLICK_ACTIONS_KEY, loadRegionGraphClickActions, saveRegionGraphClickActions } from './clickActionsSettings.js';
 import { applyPendingCentre } from './regionGraphCentreAction.js';
 import { SUB_REGION_VIEW_KEY, normaliseSubRegionView, GROUP_STYLES } from './subRegionGroups.js';
+import { GroupBadgeLayer } from './groupBadgeLayer.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -50,6 +51,8 @@ export class RegionGraphUI {
     this.regionPathCounts = new Map();
     this.layoutEditor = null;
     this.overlayManager = new NodeOverlayManager(this);
+    // ⛓ subRegionView = collapsible (region-graph-groups-c): the + / − badges over the group nodes (DOM, not cy).
+    this.groupBadges = new GroupBadgeLayer(this);
 
     // Zoom-based visibility configuration
     this.zoomLevels = {
@@ -1310,6 +1313,7 @@ export class RegionGraphUI {
     if (this.unsubscribeSettingsChanged) {
       this.unsubscribeSettingsChanged();
     }
+    this.groupBadges?.destroy();
     if (this.cy) {
       this.cy.destroy();
     }
