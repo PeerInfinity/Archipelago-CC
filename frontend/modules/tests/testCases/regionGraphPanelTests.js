@@ -734,6 +734,8 @@ export async function testRegionGraphSubRegionMerged(testController) {
     const presetSel = ui.controlPanel?.querySelector('#layoutPreset');
     const presetBefore = presetSel?.value ?? null;
     const layoutBefore = ui.currentLayoutPreset ?? null;
+    const viewBefore = { zoom: graphCy().zoom(), pan: { ...graphCy().pan() } };
+    const posBefore = new Map(graphCy().nodes().map((n) => [n.id(), { ...n.position() }]));
     const t5 = performance.now();
     const dir = lcm.runDirectionLayout({ animate: false });
     const dirMs = Math.round(performance.now() - t5);
@@ -749,6 +751,11 @@ export async function testRegionGraphSubRegionMerged(testController) {
     testController.reportCondition(`the Direction-aware layout ran once on ${dir?.nodes} nodes (${dir?.preferredEdges} edges with an exit direction) `
       + `and finished with ${dir?.overlaps} overlaps, ${drawnOverlaps} between the drawn boxes (${dirMs} ms)`,
       !!dir && dir.nodes === laid.length && dir.overlaps === 0 && drawnOverlaps === 0);
+    // The layout moved the nodes and fit the view: put both back, so the steps after this one see the graph as before.
+    graphCy().nodes().forEach((n) => { const p = posBefore.get(n.id()); if (p && !n.locked()) n.position(p); });
+    graphCy().viewport({ zoom: viewBefore.zoom, pan: viewBefore.pan });
+    const playerRegion = ui.getCurrentPlayerLocation?.();
+    if (playerRegion && graphCy().getElementById('player').length) ui.updatePlayerLocation(playerRegion);
     ui.currentLayoutPreset = layoutBefore;
     if (presetSel && presetBefore !== null) presetSel.value = presetBefore;
     ui.layoutGeneration += 1; // a pending layoutstop save of this run is dropped
@@ -756,8 +763,11 @@ export async function testRegionGraphSubRegionMerged(testController) {
     const store = lcm.positionStore();
     store.clear();
     for (const [id, p] of savedStore) store.set(id, p);
-    testController.reportCondition(`restored: the layout preset reads "${presetSel?.value}" again and merged's saved positions are back (${store.size})`,
-      (presetSel?.value ?? null) === presetBefore && store.size === savedStore.size);
+    const offPlace = graphCy().nodes().filter((n) => { const p = posBefore.get(n.id()); return p && (n.position('x') !== p.x || n.position('y') !== p.y); }).length;
+    testController.reportCondition(`restored: the layout preset reads "${presetSel?.value}" again, merged's saved positions are back (${store.size}), `
+      + `${offPlace} nodes off their place and the view at zoom ${graphCy().zoom().toFixed(2)} (was ${viewBefore.zoom.toFixed(2)})`,
+      (presetSel?.value ?? null) === presetBefore && store.size === savedStore.size && offPlace === 0
+      && Math.abs(graphCy().zoom() - viewBefore.zoom) < 1e-9);
     testController.log(`[directionLayout] seedling_atlas merged map: nodes=${dir?.nodes} preferred=${dir?.preferredEdges} overlaps=${dir?.overlaps} `
       + `meanErr=${dir?.meanAngleError?.toFixed?.(1)} layoutMs=${dir?.layoutMs?.toFixed?.(1)} totalMs=${dirMs}`);
 
