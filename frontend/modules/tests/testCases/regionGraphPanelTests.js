@@ -730,8 +730,33 @@ export async function testRegionGraphSubRegionMerged(testController) {
     testController.reportCondition(`nodeLook = map: ${mapCanvas()?.dataset.cells} cells painted = ${withCell} nodes with a Region Map cell `
       + `of ${drawn} (${cellLess} without: they keep the graph look), no rebuild (switch ${mapMs} ms)`,
       mapOk && Number(mapCanvas().dataset.cells) === withCell && withCell >= drawn - 1 && withCell > 0 && !sameNode.removed());
-    const sq = layer?.getDebugState().squares[0] ?? null;
-    testController.reportCondition(`the map cells drew ${mapCanvas()?.dataset.squares} location squares`, !!sq);
+    // ⛓ The spot to click: a point inside a square that Cytoscape's own hit-test gives to the square's node AND that
+    // the layer maps back to that square (`squareAtNode`). Map-look §12: a square under another element (the player
+    // marker, an edge, a location node) sends a tap to that element instead, so the row samples a 3×3 grid inside each
+    // square and takes the first point that is uncovered. The text names what covers a square when none is.
+    const dbg = layer?.getDebugState();
+    const nodeOfKey = new Map((dbg?.nodeKeys ?? []).map(([id, k]) => [k, id]));
+    const cyNow = graphCy();
+    const topmostAt = (x, y) => {
+      const z = cyNow.zoom(); const p = cyNow.pan();
+      return cyNow.renderer().findNearestElement((x - p.x) / z, (y - p.y) / z, true, false) ?? null;
+    };
+    const squares = dbg?.squares ?? [];
+    const covers = [];
+    let sq = null;
+    for (const q of squares) {
+      const node = cyNow.getElementById(nodeOfKey.get(q.key) ?? '');
+      const half = (q.side ?? 0) * 0.35;
+      for (const [ox, oy] of [[0, 0], [-1, -1], [1, -1], [-1, 1], [1, 1], [0, -1], [0, 1], [-1, 0], [1, 0]]) {
+        const x = q.sx + ox * half; const y = q.sy + oy * half;
+        const top = topmostAt(x, y);
+        if (top?.id?.() === node.id() && layer.squareAtNode(node, { x, y })?.location === q.location) { sq = { ...q, sx: x, sy: y }; break; }
+        if (ox === 0 && oy === 0) covers.push(top ? `${top.isNode?.() ? 'node' : 'edge'} ${top.id()}` : 'nothing');
+      }
+      if (sq) break;
+    }
+    testController.reportCondition(`an uncovered point lies on a location square (${squares.length} squares; `
+      + `${sq ? `clicking "${sq.location}"` : `centres covered by: ${covers.join(', ')}`})`, !!sq);
     if (sq) {
       rec = recordEvents(testController, ['regionView:locationClicked', 'regionView:regionClicked']);
       const top = [...document.querySelectorAll('.region-graph-panel-container div[id^="cy-"] canvas')]
@@ -827,6 +852,12 @@ export async function testRegionGraphSubRegionMerged(testController) {
     // its node's rendered top-right corner and (4) its centre is inside the graph's container. The zoom is in the text: below
     // `showRegionNames` the badge is hidden by design and this poll goes STUCK.
     const plusNode = graphCy().getElementById(groupNodeId(key));
+    // The row sets its own view for the hit-test: once the switch's layout has stopped, centre on the node at a zoom
+    // where badges show (`showRegionNames`; the fit alone can leave a spread-out graph below it, the badge then hidden
+    // by design).
+    await testController.pollForCondition(() => colLayouts.idle(), 'the collapsible layout stopped', MAX_WAIT_TIME, 20);
+    graphCy().zoom(Math.max(graphCy().zoom(), 1));
+    graphCy().center(plusNode);
     const badgeState = () => {
       const b = plus.getBoundingClientRect();
       const rbb = plusNode.renderedBoundingBox({ includeLabels: false });
