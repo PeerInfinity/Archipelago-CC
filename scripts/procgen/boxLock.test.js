@@ -690,7 +690,9 @@ describe('who takes the box', () => {
             // rules-landing-contact-census: every landing inside an enemy's contact reach, booted on the game (import door: `isEntryPoint` → main())
             'probe-seedling-landing-contact.mjs',
             // lab document library B3: the Seedling lab's save points, reload, Recent sets, two tabs (import door: `isEntryPoint` → main())
-            'check-seedling-lab-library.mjs'];
+            'check-seedling-lab-library.mjs',
+            // fidelity WANDTRAPBODIES: a wand shot at a darktrap or a placed grenade, on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-wandtrapbodies.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
