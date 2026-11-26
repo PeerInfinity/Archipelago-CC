@@ -22,12 +22,12 @@ const frz = (v) => {
 
 export const DOCS_INDEX = frz({
     "counts": {
-        "docs": 31,
-        "headings": 1354,
+        "docs": 32,
+        "headings": 1360,
         "indexHeadings": 2,
-        "lines": 37193,
+        "lines": 37266,
         "pages": 4,
-        "words": 574534
+        "words": 575313
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -520,6 +520,18 @@ export const DOCS_INDEX = frz({
             ],
             "path": "docs/json/developer/procgen/noiz2sa.md",
             "words": 8034
+        },
+        {
+            "description": "The mystery substrate (`frontend/modules/mysteryArchipelago/mysterySubstrateLibrary.js`, id `mystery`) makes one case of the mystery clue game a procgen region: the office. The game is the git submodule `frontend/modules/mystery-clue-game/`, framed as a page by the Mystery Game panel.",
+            "file": "mystery.md",
+            "h1": "Mystery Substrate",
+            "headings": 6,
+            "lines": 73,
+            "links": [
+                "architecture.md"
+            ],
+            "path": "docs/json/developer/procgen/mystery.md",
+            "words": 779
         }
     ],
     "indexIn": "docs/json/developer/procgen/README.md",
