@@ -1,0 +1,4 @@
+delivered (p4h): chests 16; with a responder over them: 1
+  L38 chest@144,112 (APChest) under cover@144,112
+vanilla atlas: chests 16; with a responder over them: 1
+  L38 chest@144,112 under cover@144,112

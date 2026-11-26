@@ -1,0 +1,7 @@
+     × button frame A, a second apitem under the same box: OFF after the span (late); ON on A 54ms
+     × a ceremony's T (a feather, no button), a second apitem: OFF after the ceremony; ON on T 73ms
+     × the union (`nestedRockCeremony` ON, the feather on the button): ON takes both on T = A 67ms
+     × the rope's pull (`rockbutton-l28-livefall`): the first on P either way; a second OFF after the span, ON on P 265ms
+     × composition (the seven neighbours ON): the same ON takes at frame A, T and the pull 26ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  5 failed | 40 passed (45)

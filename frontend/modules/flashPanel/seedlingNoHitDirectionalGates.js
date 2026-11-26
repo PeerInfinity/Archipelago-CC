@@ -25,8 +25,10 @@
  *     band and ends past it along `blocked`; a `free` one the reverse);
  *   - the blocked direction is across every flight of the band (perpendicular to each flyer's launch), and every arm
  *     of the gate has a witness;
- *   - an arm the table names `unwitnessed` for a gate (the derivation says it disarms, the game has not shown it: L25
- *     east's Wand) is one the gate does NOT offer and has no witness for, so it is recorded, not silently absent.
+ *   - an arm the table names `unwitnessed` for a gate (the derivation says it disarms, the game has not shown it) is
+ *     one the gate does NOT offer and has no witness for, so it is recorded, not silently absent. The list is empty
+ *     today: L25 east's Wand, its one entry, is an arm since its game witness `l25-26-22-wand` (slice
+ *     rules-l25-wand-witness; ⚖ Robert 2026-11-21 "Wire it", slice rules-l25-wand-arm).
  *
  * ⛓ THE CROSS-CHECK (slice rules-nohit-wand-crosscheck, ⚖ Robert 2026-11-15): `derive-seedling-wallflyer-nohit.mjs
  * --check` derives every wallflyer room's gated and free directions from the transcribed flyer and player physics and

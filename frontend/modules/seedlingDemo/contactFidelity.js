@@ -2335,6 +2335,96 @@ export const CONTACT_FIDELITY = {
      * asked). OFF: byte-identical. `SEEDLING_FREEZE_SPAN_UPDATES=0|1`. ⛔ OFF by default (no flip licence).
      */
     freezeSpanUpdates: false,
+    /**
+     * fidelity NESTEDFREEZE D2 (wave 57) — A PICKUP CEREMONY THAT STARTS INSIDE A BUTTON-DROPPED ROCK'S SPAN, ON ITS
+     * FRAME A: the union of the two freezes, modelled (wave 56's STOP; its interim refusal at frame A is REPLACED under
+     * this key only).
+     * The game. `Button.update` (`Puzzlements/Button.as:27-39`, no freeze gate) presses from the player's post-(A−1) box
+     * and `FallRock.fall()` raises the flag (`Scenery/FallRock.as:103-109`); every pickup tests the SAME box on frame A
+     * (`Pickups/Pickup.as:63-84`, outside `Mobile`'s gate), so a pickup under it is collected on A — before the button
+     * (`bosskey` … `seed`, `Game.as:2348-2351`) or after it (`apitem` … `fire`, `:2330-2340`), the same frame either way
+     * (`addUpdate` prepends; the rock, `:2353`, updates first and is not triggered yet on A). From A the two run
+     * together: the rock's wait, fall and camera hold (`:64-97`: 60 + 21 + 91 = 172 frames on L29, its release R at
+     * A+172) and the pickup's `specialTimer` (`:95-105`: the flag re-raised AFTER the rock on every frame, the NPC added
+     * at A+149). No frame of A+1..A+149 has a writer that lowers the flag, so they are phase A's 149 dead frames, with
+     * the rock landing inside them (A+81). A texted pickup's dialogue frames follow (`Game.update`'s
+     * `inventory.open = false`, `Game.as:1044-1051`, lowers the flag at each one's end); the rock's camera timer counts
+     * down through them, and its R (`cameraTimer == 0` → `freezeObjects = false; resetCamera()`) writes a flag that is
+     * already down there and that the pickup re-raises after it — R moves only the camera. A text-less pickup lowers the
+     * flag on A+150 (`:106-112`, nothing re-raises it), so it ends the union EARLY: the rock's last 22 frames are live,
+     * the camera still at the rock. Either way the union's dead frames are the ceremony's own 150, not 172 + 150, and the
+     * player takes no rock release step (the ceremony holds it, or the pickup's F+150 is its step).
+     * ON (`nestedRockCeremonyAtFrameANow` / `startNestedRockSpanNow`): at frame A, with a ceremony predicted
+     * (`predictPickupCeremonyStart`: a placed pickup, the Seed, the DarkSword, the Fire), the button's frozen tick does not
+     * return: the tick falls through as the pickup's contact tick T = A, the ceremony starts on its own path (its phase-A
+     * lumps step every family through A+1..A+149, the rock's span frames there), and the rock is resolved at the
+     * detection ALONE (`dropRocksTogether`'s `nested`: the rock's own steps, its landing and its write; no family step, no
+     * clock spend, no release step) — its row carries `deadFrames: 0` and `spanFrames`. Every family sees the union as
+     * the ceremony's: nothing composes twice. Not modelled, named: the rock's camera (the button path models none: wave
+     * 56's residue), now on dialogue or live frames; the rope (its pull is `genericHit`, which returns under the flag a
+     * pickup collected on P raised: `Player.as:1073-1078`, so the two never nest) and the wand's landing snap (mid-span,
+     * beside L43's boss totem: wave 56's refusal stands); the plain pickups (an `APItem`'s contact is not modelled, it is
+     * TOLD, `takeApItem`; coins are not modelled at all). Needs no other key to be exact in its own claim (T, the end
+     * frame, the dead frames, the rock); each family is as exact as the ceremony's keys make it. Composes with
+     * `freezeSpanUpdates` (whose frame-A refusal it replaces when it models), `freezeReleaseTick`, `freezeEdgeFrames`,
+     * `frozenTickUngated`, `pickupTickFreeze`, `dialogueFrameFreeze` and `turretSuitRetaliation`. OFF: byte-identical.
+     * `SEEDLING_NESTED_ROCK_CEREMONY=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    nestedRockCeremony: false,
+    /**
+     * ⛓⛓ fidelity PLAINSPAN D2 (wave 59) — A PLAIN PICKUP (`Pickups/APItem`) TAKEN ON A FRAME THE SOLVER'S CONTACT CALL
+     * DOES NOT SEE. `Pickup.update`'s `collide("Player", x, y)` (`Pickups/Pickup.as:63-84`) has no freeze gate, and an
+     * `APItem` never sets `special`, so `pick_up()` is `removeSelf()` (`:120-123`) and `APItem.removed()` writes
+     * `Game.setPersistence(tag, false)` — the check report, `pendingCheck` (`APItem.as:127-133`, `Game.as:1902-1910`) —
+     * on the FIRST frame the box it tests overlaps it, frozen or not. Every `APItem` entity updates on every frame, so
+     * EVERY apitem under that box is taken on that frame. The box is the post-(F−1) one (the apitems are added at
+     * `Game.as:2330`, before the player at `:2250` updates; `addUpdate` prepends). Measured against the solver's call
+     * (`solverBot.apItemTakenOnTick`: the pre-tick box, at most ONE apitem a tick, none on a tick that began in a
+     * ceremony): a SINGLE apitem under the box on a freeze's first frame — a button's frame A, a rope's pull P, a pickup
+     * ceremony's contact tick T — is already taken on the game's tick, because the player's box does not move from
+     * F−1 through the span or phase A. What the call misses: (1) the SECOND and later apitems under that box — the game
+     * takes them on F, the call takes one a tick and then meets the rock's release-step box (late, or never) or a
+     * ceremony's `inCeremony` ticks (late, until the ceremony ends); (2) the wand's fallrocks' landing snap
+     * (`FallRock.as:54-60`, applied mid-span by `dropRocksTogether`'s caller): the game takes an apitem under the
+     * snapped box on the landing frame, inside the drop tick; the call asks it a tick later; (3) a DEFERRED release step
+     * (`pendingFreeSteps`): the game's R+1 tests the post-R box, the call tests the pre-R one. ON
+     * (`takePlainPickupsInFreezeNow`): the run takes every open apitem under the game's box at those frames — frame A
+     * (above the frozen tick), the pull (`dropRock`), a ceremony's T (below the starts), the wand's snap, and the
+     * deferred step's box — and banks each exactly as `takeApItem` does (`apItemFlags`, `pendingEarnedClears`), with
+     * the tick a solver report of the same tick would carry; `plainFreezeTakes` lists them. A later report of the same
+     * take is the existing no-op. Not modelled, named: coins (`Coin`, `Enemy.dropCoins`/`Chest`: cosmetic, nothing reads a
+     * count); the one-a-tick rule on LIVE ticks (the solver's and the JS page's, not a freeze's); the wand's approach
+     * fade. Needs no other key; composes with `nestedRockCeremony` (its union's T is this key's T site),
+     * `freezeSpanUpdates`, `freezeReleaseTick`, `pickupTickFreeze` and `dialogueFrameFreeze`. OFF: byte-identical.
+     * `SEEDLING_PLAIN_PICKUP_IN_FREEZE=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    plainPickupInFreeze: false,
+    /**
+     * ⛓ fidelity CHESTCOVER D2 (wave 61) — THE VANILLA `Chest` READS A RESPONDER OVER IT ONE STEP OLDER THAN THE
+     * PLAYER DOES (the fencepost wave 60 measured, `CC/docs/cloud-reports/seedling-fidelity-chestcover.md`).
+     * The game. `World.addUpdate` prepends, so one frame runs the update list in reverse `Game.loadlevel` add order:
+     * `chest` (vendor `Game.as:2377`; p4h `:2384`) BEFORE `cover` (`:2360`; p4h `:2367`) and every other responder
+     * (`lock` … `magicallockfire`, `:2355-2367`), and those BEFORE `button` (`:2341`) and the Player (`:2250`).
+     * `Chest.update`'s gate (`Chest.as:59-67`) is `!collide("Solid", x, y)`, so it reads a `Cover`'s `type` as the
+     * PREVIOUS frame's `Cover.update` left it (`Puzzlements/Cover.as:37-68`: `alpha -= 0.1`, and `type = ""` on the
+     * update where `alpha <= 0`). The model steps the responders at the END of tick k (`stepActivators`) and that state
+     * is the game's responder update of frame k+1 (its own docblock's labelling), so `activators` at the chest step of
+     * tick k+1 is ALREADY "after this frame's Cover update": right for a body that updates AFTER the responders (the
+     * Player, the APChest — `Game.as:2335` on p4h, witnessed 12 = model 12), one step new for the vanilla chest.
+     * MEASURED on the game (wave 60, p4h page, `-evidence/w60/witness-vanilla.json`, a staged L38 room on the vanilla
+     * set: `buttonroom@144,128` swapped for a `button tset 0`): the vanilla chest under `cover@144,112` opens on 13
+     * (cuts 10/11/12 not cleared, 13 cleared); OFF opens it on 12 (the cover's `s.open` turns at the end of advance 11).
+     * ON (`stepActivators` keeps `state.openBefore` = the open set before its own mutation, every caller alike — the
+     * main tick's end, `runFrozenTick`, `inventoryHoldFrameNow`, a rope span's frames; `stepChestsNow`'s `solidOver`
+     * reads it for a chest that is NOT an AP chest, `openActivatorIdsBeforeStep`): the chest sees the open set the
+     * state held before its latest step — a cover's open AND its reset, one step older. A state no step has run on yet
+     * (a fresh visit) reads its current set (the constructed one, which is what the arrival frame's chest sees). OFF:
+     * no field written, byte-identical. Not modelled, named (hand-overs): a `PushableBlock*` (`:2382-2384`) also
+     * updates before every responder and the model reads the current set for it (`pushableCtx`); a Spinner's read is
+     * `spinnerLockLag`'s (opens only). Needs no other key; composes with every key (one read of one gate).
+     * `SEEDLING_CHEST_COVER_FENCEPOST=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    chestCoverFencepost: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2774,6 +2864,15 @@ if (globalThis.process?.env?.SEEDLING_FREEZE_RELEASE_TICK === '0') CONTACT_FIDEL
 // ⛓ fidelity RELEASEPICKUP D2: `SEEDLING_FREEZE_SPAN_UPDATES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FREEZE_SPAN_UPDATES === '1') CONTACT_FIDELITY.freezeSpanUpdates = true;
 if (globalThis.process?.env?.SEEDLING_FREEZE_SPAN_UPDATES === '0') CONTACT_FIDELITY.freezeSpanUpdates = false;
+// ⛓ fidelity NESTEDFREEZE D2: `SEEDLING_NESTED_ROCK_CEREMONY=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_NESTED_ROCK_CEREMONY === '1') CONTACT_FIDELITY.nestedRockCeremony = true;
+if (globalThis.process?.env?.SEEDLING_NESTED_ROCK_CEREMONY === '0') CONTACT_FIDELITY.nestedRockCeremony = false;
+// ⛓ fidelity PLAINSPAN D2: `SEEDLING_PLAIN_PICKUP_IN_FREEZE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PLAIN_PICKUP_IN_FREEZE === '1') CONTACT_FIDELITY.plainPickupInFreeze = true;
+if (globalThis.process?.env?.SEEDLING_PLAIN_PICKUP_IN_FREEZE === '0') CONTACT_FIDELITY.plainPickupInFreeze = false;
+// ⛓ fidelity CHESTCOVER D2: `SEEDLING_CHEST_COVER_FENCEPOST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CHEST_COVER_FENCEPOST === '1') CONTACT_FIDELITY.chestCoverFencepost = true;
+if (globalThis.process?.env?.SEEDLING_CHEST_COVER_FENCEPOST === '0') CONTACT_FIDELITY.chestCoverFencepost = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

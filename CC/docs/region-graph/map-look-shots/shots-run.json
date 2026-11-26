@@ -1,0 +1,105 @@
+{
+  "errors": {
+    "seedling": [],
+    "alttp": [],
+    "phone": [
+      "SecurityError: Failed to read a named property from 'Window': Blocked a frame with origin \"http://localhost:8144\" from accessing a cross-origin frame."
+    ]
+  },
+  "merged": {
+    "nodes": 116,
+    "mergedNodes": 60,
+    "edges": 139,
+    "zoom": 0.5660437507802545
+  },
+  "perf": {
+    "nodes": 116,
+    "mapNodes": 115,
+    "switchWallMs": 317,
+    "bakesLandedAfterSwitchMs": 3476,
+    "firstPaintMs": 109.5,
+    "applyMs": 20.799999952316284,
+    "modelMs": 37.5,
+    "firstPaintsMaxMs": 49.200000047683716,
+    "panPaintMedianMs": 2.8000000715255737,
+    "panPaintMaxMs": 6.299999952316284,
+    "recolourMedianMs": 8.200000047683716,
+    "recolourMaxMs": 9.199999928474426,
+    "recolourSamples": 20,
+    "recolour": [
+      9.099999904632568,
+      6.399999976158142,
+      9.199999928474426,
+      5.600000023841858,
+      6.700000047683716,
+      5.399999976158142,
+      6.100000023841858,
+      5.800000071525574,
+      8.5,
+      8.900000095367432,
+      8.5,
+      6.799999952316284,
+      8.199999928474426,
+      8,
+      8.200000047683716,
+      8.399999976158142,
+      6.100000023841858,
+      8.700000047683716,
+      8.200000047683716,
+      8.600000023841858
+    ],
+    "heapGraphMB": 128.138739,
+    "heapMapMB": 147.71832,
+    "heapDeltaMB": 19.579581,
+    "samePositions": true,
+    "squares": 89,
+    "art": 115,
+    "generic": 0
+  },
+  "zoom": {
+    "key": "level_12",
+    "tiles": 9,
+    "node": "region-group:level_12",
+    "zoom": 9,
+    "squaresDrawn": 9
+  },
+  "squareClick": {
+    "square": "Level 012 - Witch",
+    "published": [
+      [
+        "regionView:locationClicked",
+        "Level 012 - Witch"
+      ]
+    ],
+    "colourBefore": "inaccessible",
+    "colourAfter": "inaccessible",
+    "recomputes": 2,
+    "lastRecolourMs": 5.399999976158142,
+    "modelMs": true
+  },
+  "separate": {
+    "mapCanvas": false,
+    "mapNodes": 0,
+    "control": {
+      "value": "map",
+      "disabled": true,
+      "hint": "Region Map cells need Draw as: Merged into one node per region"
+    }
+  },
+  "alttp": {
+    "switchWallMs": 237,
+    "nodes": 239,
+    "mapNodes": 238,
+    "art": 0,
+    "generic": 238,
+    "cells": 238,
+    "squares": 268,
+    "firstPaintMs": 108.30000007152557
+  },
+  "phone": {
+    "mapNodes": 115,
+    "cells": 3,
+    "squares": 3,
+    "horizontalScroll": false
+  }
+}

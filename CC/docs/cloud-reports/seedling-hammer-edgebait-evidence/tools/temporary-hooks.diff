@@ -1,0 +1,82 @@
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index a92467fa..b3ee5303 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -13425,7 +13425,7 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
+     if (TURRET_APPROACH_VOLLEY_ORDER.enabled) {
+         // ⛓ hammer-phase BK2-APPROACH-ORDER (`TURRET_APPROACH_VOLLEY_ORDER`, OFF): the same tries, in the volley's order
+         const record = approachTriesByVolley(id, sides.map((side) => ({ side, routes: routesOf(side) })), attempt,
+-            TRY_ROUTE_DONE, { exempt, fork: () => {
++            TRY_ROUTE_DONE, { exempt, edge: globalThis.process?.env?.HOOK_ANCHOR_EDGE === '1' ? edge : null, fork: () => {
+                 const f = fineDeadlineReached('crusher-fork') ? null : ctx.fork();
+                 if (f === null) refuse(`deadline at the \`crusher-fork\` site after ${forks} approach tr(ies)`);
+                 forks += 1;
+@@ -13459,7 +13459,8 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
+  * the next volley is committed. null when the route has no corridor, the walk or the stand is hit or crosses a door,
+  * or no startshot begins inside `TURRET_APPROACH_WAIT_MAX` ticks (out of range, or held by an i-frame).
+  */
+-function approachVolleyAnchor(f, id, aim, exempt) {
++function approachVolleyAnchor(f, id, aim, exempt, edge = null) {
++    if (edge) { const h0 = f.ledger('playerHits').length; for (const sm of previewWalk(f, [edge], DEFAULT_TOLERANCE).samples) if (sm.held && (f.advance(sm.held).transition || f.ledger('playerHits').length !== h0)) return null; }
+     const wps = planWaypointsOrNull(f.world, f.state, aim, null, solverPlanOpts(f, exempt));
+     if (wps === null) return null;
+     const hits = f.ledger('playerHits').length;
+@@ -13517,7 +13518,7 @@ function approachTriesByVolley(id, sides, attempt, DONE, ctx) {
+         const next = [];
+         for (const rt of live) {
+             if (rt.order === null) {
+-                rt.anchor = approachVolleyAnchor(ctx.fork(), id, rt.via ?? { x: rt.side.x, y: rt.side.y }, ctx.exempt);
++                rt.anchor = approachVolleyAnchor(ctx.fork(), id, rt.via ?? { x: rt.side.x, y: rt.side.y }, ctx.exempt, ctx.edge);
+                 rt.order = approachWaitOrder(rt.anchor);
+             }
+             if (rank >= rt.order.length) continue;
+@@ -13656,6 +13657,15 @@ function killIceTurretOnWalk(run, perTick, id, contacts, ctx) {
+     if (sides.length === 0) return { why: `no side of ${id}'s live box is plannable floor` };
+     const from = perTick.length;
+     const hitsBefore = run.ledger('playerHits').length;
++    const HD = globalThis.process?.env?.HOOK_ISK_APPROACH;
++    const viaApproach = () => {
++        const dx0 = t.x - run.state.x; const dy0 = t.y - run.state.y;
++        const dir = Math.abs(dy0) >= Math.abs(dx0) ? { dx: 0, dy: Math.sign(dy0) || -1 } : { dx: Math.sign(dx0), dy: 0 };
++        const rec = approachKillForCorpse(run, perTick, { corpse: { turret: id, dir }, exempt: new Set(contacts ?? []),
++            ...(globalThis.process?.env?.HOOK_ISK_APPROACH_EDGE === '0' ? {} : { edgeBait: true }) }, ctx);
++        return { record: rec };
++    };
++    if (HD === 'first') return viaApproach();
+     const refuse = (msg) => {
+         throw new SolverRefusal(`${ctx.what}: ${msg}`, { goal: ctx.goal, obstacle: { kind: 'danger', id }, perTick: [...perTick] });
+     };
+@@ -13689,6 +13699,7 @@ function killIceTurretOnWalk(run, perTick, id, contacts, ctx) {
+         }
+         if (run.ledger('playerHits').length !== hitsBefore) refuse(`the player was HIT on the staging walk to ${id}'s ${side.key} side`);
+         if (run.progress('primary') !== slots.indexOf(blade)) ctx.equip(slots.indexOf(blade));
++        const edge = globalThis.process?.env?.HOOK_EB_ISK === '1' ? approachEdgePoint(run, t, stage, opts) : null;
+         // 2. the tries, each on a fork: delay, approach, kill, the stand until no blast is in flight
+         const kills = circling
+             ? [true, false].flatMap((cw) => [0, 1, 2, 3].map((start) => {
+@@ -13721,6 +13732,8 @@ function killIceTurretOnWalk(run, perTick, id, contacts, ctx) {
+                     return !f.advance(held).transition && f.ledger('playerHits').length === hits;
+                 };
+                 let ok = true;
++                if (edge !== null) { for (const sm of previewWalk(f, [edge], DEFAULT_TOLERANCE).samples) if (ok && sm.held) ok = step(sm.held); }
++                if (!ok) { count('edge-hit'); continue; }
+                 // ⛓ the delay: inside the range it re-times the kill against the volley; outside it the clock re-arms
+                 if (k.when !== 'post') for (let i = 0; i < d && ok; i += 1) ok = step(NONE_KEYS);
+                 if (!ok) { count('delay-hit'); continue; }
+@@ -13777,6 +13790,7 @@ function killIceTurretOnWalk(run, perTick, id, contacts, ctx) {
+         }
+         whys.push(`${side.key}: no try is hitless (${forks} fork(s); ${JSON.stringify(tally)}) — ${tryWhys.join(' | ')}`);
+     }
++    if (HD === 'after') return viaApproach();
+     // ⛔ a staging walk spent ticks: the refusal is the arm's, not a `{why}` (no tick spent is the `{why}` contract)
+     if (perTick.length !== from) refuse(`no side of ${id} gives a hitless kill — ${whys.join(' | ')}`);
+     return { why: `no side of ${id} gives a hitless kill — ${whys.join(' | ')}` };
+@@ -23533,7 +23547,7 @@ function keylockTurretFirst(run, perTick, resolved, ctx) {
+         let record;
+         try {
+             record = approachKillForCorpse(run, perTick, { corpse: { turret: id, dir }, exempt,
+-                ...(resolved.turretFirst.edgeBait ? { edgeBait: true } : {}) }, { walkTo: ctx.walkTo,
++                ...((resolved.turretFirst.edgeBait || globalThis.process?.env?.HOOK_EB_KT === '1') ? { edgeBait: true } : {}) }, { walkTo: ctx.walkTo,
+                 goal: ctx.goal, equip: ctx.equip, fork: ctx.fork, what: `${ctx.what} -> kill (${id})` });
+         } catch (e) {
+             KEYLOCK_TURRET_COUNTS.kills.push({ lock: resolved.lock, turret: id, t: from, dead: false,

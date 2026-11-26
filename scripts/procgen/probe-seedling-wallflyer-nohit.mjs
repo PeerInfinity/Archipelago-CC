@@ -20,7 +20,8 @@
  * plan `l22-25-21-wand` was authored by hand (its `hand` field says by what) and is played on the GAME only: its model
  * leg is skipped and says so. Its CONTROL (the plans file's `controls`: the same keys with `primary` dropped, held with
  * no item) is played too, and the game must NOT cross cleanly on it, so the Wand is what clears the line. L25 east's
- * Wand stays unwitnessed (the gate table's `unwitnessed`).
+ * Wand row `l25-26-22-wand` is a hand plan of the same kind, with its control (slice rules-l25-wand-witness; ⚖ Robert
+ * 2026-11-21 "Wire it", slice rules-l25-wand-arm): a row-5 line that stuns one Bob and parks the struck flyers on both.
  *
  * And the DERIVATION the rule would stand on (`BAND` rows): every wallflyer's flight band, from the class's own
  * transcription (`seedlingWallFlyerBands.wallFlyerBands`).

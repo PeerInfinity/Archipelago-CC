@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mystery bridge test page</title>
+</head>
+<body>
+<!--
+  A stand-in for the mystery clue game's page, for the in-app row `mystery-bridge-round-trip`.
+  It speaks the same four messages through AdapterClient and records what the host sends, so the
+  test can read it off `window.__mysteryStub`. It is not the game: the real page lives in the
+  repository mystery-clue-game. It is framed as the real page is, with `?case=cases/<story>` (the
+  Mystery Game panel adds `iframeId` and `hostOrigin`); `story` and `version` may be given outright.
+-->
+<pre id="log"></pre>
+<script type="module">
+import { AdapterClient } from '../../shared/adapterClient.js';
+
+const params = new URLSearchParams(location.search);
+const story = params.get('story') ?? (params.get('case') ?? '').split('/').pop();
+const version = params.get('version') ?? undefined;
+const stub = { ready: false, states: [], refusals: [] };
+window.__mysteryStub = stub;
+
+const client = new AdapterClient();
+const show = (line) => { document.getElementById('log').textContent += line + '\n'; };
+
+stub.request = (over = {}) => client.publishEventBus('mystery:requestState', { story, version, ...over });
+stub.solve = (questionId, over = {}) => client.publishEventBus('mystery:questionSolved', { story, questionId, ...over });
+
+await client.connect();
+client.subscribeEventBus('mystery:state', (state) => { stub.states.push(state); show('state ' + JSON.stringify(state)); });
+client.subscribeEventBus('mystery:refused', (refusal) => { stub.refusals.push(refusal); show('refused ' + JSON.stringify(refusal)); });
+client.notifyAppReady();
+stub.request();
+stub.ready = true;
+</script>
+</body>
+</html>

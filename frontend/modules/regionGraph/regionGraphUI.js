@@ -18,6 +18,10 @@ import { defaultClickActions } from '../regionView/clickActions.js';
 import { mountClickActionsStrip } from '../regionView/clickActionsUI.js';
 import { CLICK_ACTIONS_KEY, loadRegionGraphClickActions, saveRegionGraphClickActions } from './clickActionsSettings.js';
 import { applyPendingCentre } from './regionGraphCentreAction.js';
+import { SUB_REGION_VIEW_KEY, normaliseSubRegionView, GROUP_STYLES } from './subRegionGroups.js';
+import { GroupBadgeLayer } from './groupBadgeLayer.js';
+import { NODE_LOOK_KEY, normaliseNodeLook, syncNodeLookControl } from './nodeLook.js';
+import { MapLookLayer } from './mapLookLayer.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -49,6 +53,10 @@ export class RegionGraphUI {
     this.regionPathCounts = new Map();
     this.layoutEditor = null;
     this.overlayManager = new NodeOverlayManager(this);
+    // ⛓ subRegionView = collapsible (region-graph-groups-c): the + / − badges over the group nodes (DOM, not cy).
+    this.groupBadges = new GroupBadgeLayer(this);
+    // ⛓ nodeLook = map (region-graph-map-look): each node draws as its Region Map cell, under Cytoscape's canvas.
+    this.mapLook = new MapLookLayer(this);
 
     // Zoom-based visibility configuration
     this.zoomLevels = {
@@ -223,6 +231,23 @@ export class RegionGraphUI {
       logger.error('Failed to load display settings:', error);
       this.useSubstitutedNames = true;
     }
+    // ⛓ region-graph-groups-a: how sub-regions draw. No call-site default: the schema's is the only one.
+    try {
+      this.subRegionView = normaliseSubRegionView(await settingsManager.getSetting(SUB_REGION_VIEW_KEY));
+    } catch (error) {
+      logger.warn('Could not load subRegionView; using the schema default:', error);
+      this.subRegionView = normaliseSubRegionView(undefined);
+    }
+    const select = this.controlPanel?.querySelector?.('#subRegionView');
+    if (select) select.value = this.subRegionView;
+    // ⛓ region-graph-map-look: how a node draws. No call-site default: the schema's is the only one.
+    try {
+      this.nodeLook = normaliseNodeLook(await settingsManager.getSetting(NODE_LOOK_KEY));
+    } catch (error) {
+      logger.warn('Could not load nodeLook; using the schema default:', error);
+      this.nodeLook = normaliseNodeLook(undefined);
+    }
+    syncNodeLookControl(this);
   }
 
   getRegionDisplayText(regionData, regionName) {
@@ -772,7 +797,9 @@ export class RegionGraphUI {
             'visibility': 'hidden',
             'events': 'no'
           }
-        }
+        },
+        // ⛓ subRegionView = nested: the group boxes (compound parents; subRegionGroups.js)
+        ...GROUP_STYLES
       ],
       
       layout: {
@@ -948,6 +975,12 @@ export class RegionGraphUI {
         if (key === '*' || key === CLICK_ACTIONS_KEY) await this.loadClickActions();
         // The click configuration does not change what the graph draws: no rebuild for it.
         if (key === CLICK_ACTIONS_KEY) return;
+        // ⛓ region-graph-map-look: the node look changes how nodes DRAW, not the graph: no rebuild, no re-layout.
+        if (key === NODE_LOOK_KEY) {
+          await this.loadDisplaySettings();
+          this.mapLook?.sync();
+          return;
+        }
         if (key === '*' || key.startsWith('generalSettings.useSubstitutedNames') ||
             key.startsWith('moduleSettings.regionGraph')) {
           await this.loadDisplaySettings();
@@ -1298,6 +1331,8 @@ export class RegionGraphUI {
     if (this.unsubscribeSettingsChanged) {
       this.unsubscribeSettingsChanged();
     }
+    this.groupBadges?.destroy();
+    this.mapLook?.dispose();
     if (this.cy) {
       this.cy.destroy();
     }

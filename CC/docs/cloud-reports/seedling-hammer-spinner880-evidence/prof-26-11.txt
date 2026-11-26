@@ -1,0 +1,234 @@
+PROFILE: request 26:11 () budget 640
+ANSWER: ok=false kind=refusal work=642 wall=904505 ms passes=[{"pass":"dashless","kind":"refusal","work":641,"ms":904272,"deadline":"crusher-fork","limit":"budget"},{"pass":"full","kind":"refusal","work":1,"ms":233,"deadline":"walk","limit":"budget"}]
+MESSAGE: solverBot(wasm-continue-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-continue-location-40) apitem (656,528) contact's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this ref
+SAMPLES: 748718 at 1000 µs; first sample -0.636 ms after start
+POINTS: 66649 (646 at deadline sites)
+  per site: preview=46216 heartbeat=19773 block-route=279 crusher-fork=187 walk=178 rung=5 segment=2 goal=2 stance-hypothesis=2 verb=2 done=2 climb=1
+  segment wasm-continue-location-40 refused work={"shouldStop":641,"ticks":4256,"previews":46216,"previewStates":9953576,"searchStates":0,"expansions":0,"waypointsPlanned":10,"replans":0,"dashesPressed":0}
+  segment wasm-continue-location-40 refused work={"shouldStop":1,"ticks":0,"previews":0,"previewStates":0,"searchStates":0,"expansions":0,"waypointsPlanned":0,"replans":0,"dashesPressed":0}
+GAPS between deadline-site points (ms upper bound: count, total ms, share of wall):
+  <=1: 83 49 ms 0.0%
+  <=10: 253 987 ms 0.1%
+  <=100: 218 8158 ms 0.9%
+  <=1000: 45 14942 ms 1.7%
+  <=10000: 7 33319 ms 3.7%
+  <=60000: 41 847050 ms 93.6%
+  <=Infinity: 0 0 ms 0.0%
+LONG GAPS (> 1000 ms): 48, 880369 ms = 97.3% of the wall
+  walk -> walk: 48 gap(s), 880369 ms
+LONG-GAP FUNCTIONS (inclusive, of 728429 samples in long gaps):
+  78.7% 573031 ms walkToUnder solverBot.js:34053
+  78.7% 573031 ms (anonymous) solverBot.js:34850
+  78.7% 573031 ms progressRun solveProgress.js:419
+  78.7% 573031 ms (anonymous) solverBot.js:34849
+  78.7% 573031 ms withCrossingFrame solverBot.js:3174
+  78.7% 573031 ms walkToRun solverBot.js:34849
+  78.7% 573031 ms walkTo solverBot.js:34928
+  78.7% 573031 ms approachKillForCorpse solverBot.js:13177
+  78.7% 573031 ms solveSegmentUnder solverBot.js:29288
+  78.7% 573031 ms (anonymous) solverBot.js:29238
+  78.7% 573031 ms refusingByName solverBot.js:517
+  78.7% 573031 ms withSolveDeadline solverBot.js:29257
+  78.7% 573031 ms solveSegmentDeadlined solverBot.js:29226
+  78.7% 573031 ms (anonymous) solverBot.js:29156
+  78.7% 573031 ms progressSegment solveProgress.js:625
+  78.7% 573031 ms solveSegment solverBot.js:29145
+  78.7% 573031 ms solveFromTape jsRuntimeSolver.js:1145
+  78.7% 573031 ms (anonymous) jsRuntimeSolver.js:673
+  78.7% 573031 ms settleSolve jsRuntimeSolver.js:1274
+  78.7% 573031 ms solveAnytime jsRuntimeSolver.js:565
+  78.7% 573031 ms (anonymous) profile-seedling-solve-wall.mjs:174
+  78.7% 573031 ms withSolveProgress solveProgress.js:89
+  78.7% 573031 ms main profile-seedling-solve-wall.mjs:121
+  78.7% 573030 ms (anonymous) solverBot.js:33881
+  78.7% 573030 ms climbLadder solverBot.js:33880
+  78.7% 573026 ms climbLadderUnder solverBot.js:31093
+  78.5% 571750 ms execKillByPressFightFallback solverBot.js:21126
+  78.5% 571750 ms execKillByPressOppFallback solverBot.js:21047
+  78.5% 571750 ms execKillByPress solverBot.js:21028
+  78.5% 571750 ms execute solverBot.js:32860
+TOP 12 GAPS:
+  #381 23407 ms walk -> walk; count points inside: preview=1024 heartbeat=500
+      79% execKillByPressOnce solverBot.js:21180
+      79% execKillByPressFightFallback solverBot.js:21126
+      79% execKillByPressOppFallback solverBot.js:21047
+      79% execKillByPress solverBot.js:21028
+      79% execute solverBot.js:32860
+      79% climbLadderUnder solverBot.js:31093
+      79% (anonymous) solverBot.js:33881
+      79% progressRun solveProgress.js:419
+      79% climbLadder solverBot.js:33880
+      79% walkToUnder solverBot.js:34053
+  #369 22987 ms walk -> walk; count points inside: preview=992 heartbeat=475
+      77% execKillByPressFightFallback solverBot.js:21126
+      77% execKillByPressOppFallback solverBot.js:21047
+      77% execKillByPress solverBot.js:21028
+      77% execute solverBot.js:32860
+      77% climbLadderUnder solverBot.js:31093
+      77% (anonymous) solverBot.js:33881
+      77% progressRun solveProgress.js:419
+      77% climbLadder solverBot.js:33880
+      77% walkToUnder solverBot.js:34053
+      77% (anonymous) solverBot.js:34850
+  #382 22979 ms walk -> walk; count points inside: preview=1024 heartbeat=500
+      79% execKillByPressOnce solverBot.js:21180
+      79% execKillByPressFightFallback solverBot.js:21126
+      79% execKillByPressOppFallback solverBot.js:21047
+      79% execKillByPress solverBot.js:21028
+      79% execute solverBot.js:32860
+      79% climbLadderUnder solverBot.js:31093
+      79% (anonymous) solverBot.js:33881
+      79% progressRun solveProgress.js:419
+      79% climbLadder solverBot.js:33880
+      79% walkToUnder solverBot.js:34053
+  #360 22696 ms walk -> walk; count points inside: preview=1032 heartbeat=506
+      79% execKillByPressOnce solverBot.js:21180
+      79% execKillByPressFightFallback solverBot.js:21126
+      79% execKillByPressOppFallback solverBot.js:21047
+      79% execKillByPress solverBot.js:21028
+      79% execute solverBot.js:32860
+      79% climbLadderUnder solverBot.js:31093
+      79% (anonymous) solverBot.js:33881
+      79% progressRun solveProgress.js:419
+      79% climbLadder solverBot.js:33880
+      79% walkToUnder solverBot.js:34053
+  #362 22569 ms walk -> walk; count points inside: preview=1024 heartbeat=500
+      78% execKillByPressFightFallback solverBot.js:21126
+      78% execKillByPressOppFallback solverBot.js:21047
+      78% execKillByPress solverBot.js:21028
+      78% execute solverBot.js:32860
+      78% climbLadderUnder solverBot.js:31093
+      78% (anonymous) solverBot.js:33881
+      78% progressRun solveProgress.js:419
+      78% climbLadder solverBot.js:33880
+      78% walkToUnder solverBot.js:34053
+      78% (anonymous) solverBot.js:34850
+  #372 22518 ms walk -> walk; count points inside: preview=992 heartbeat=475
+      78% execKillByPressOnce solverBot.js:21180
+      78% execKillByPressFightFallback solverBot.js:21126
+      78% execKillByPressOppFallback solverBot.js:21047
+      78% execKillByPress solverBot.js:21028
+      78% execute solverBot.js:32860
+      78% climbLadderUnder solverBot.js:31093
+      78% (anonymous) solverBot.js:33881
+      78% progressRun solveProgress.js:419
+      78% climbLadder solverBot.js:33880
+      78% walkToUnder solverBot.js:34053
+  #383 22329 ms walk -> walk; count points inside: preview=1014 heartbeat=492
+      78% execKillByPressOnce solverBot.js:21180
+      78% execKillByPressFightFallback solverBot.js:21126
+      78% execKillByPressOppFallback solverBot.js:21047
+      78% execKillByPress solverBot.js:21028
+      78% execute solverBot.js:32860
+      78% climbLadderUnder solverBot.js:31093
+      78% (anonymous) solverBot.js:33881
+      78% progressRun solveProgress.js:419
+      78% climbLadder solverBot.js:33880
+      78% walkToUnder solverBot.js:34053
+  #378 22326 ms walk -> walk; count points inside: preview=992 heartbeat=475
+      79% execKillByPressFightFallback solverBot.js:21126
+      79% execKillByPressOppFallback solverBot.js:21047
+      79% execKillByPress solverBot.js:21028
+      79% execute solverBot.js:32860
+      79% climbLadderUnder solverBot.js:31093
+      79% (anonymous) solverBot.js:33881
+      79% progressRun solveProgress.js:419
+      79% climbLadder solverBot.js:33880
+      79% walkToUnder solverBot.js:34053
+      79% (anonymous) solverBot.js:34850
+  #392 22277 ms walk -> walk; count points inside: preview=992 heartbeat=475
+      79% execKillByPressFightFallback solverBot.js:21126
+      79% execKillByPressOppFallback solverBot.js:21047
+      79% execKillByPress solverBot.js:21028
+      79% execute solverBot.js:32860
+      79% climbLadderUnder solverBot.js:31093
+      79% (anonymous) solverBot.js:33881
+      79% progressRun solveProgress.js:419
+      79% climbLadder solverBot.js:33880
+      79% walkToUnder solverBot.js:34053
+      79% (anonymous) solverBot.js:34850
+  #374 22209 ms walk -> walk; count points inside: preview=992 heartbeat=475
+      78% execKillByPressFightFallback solverBot.js:21126
+      78% execKillByPressOppFallback solverBot.js:21047
+      78% execKillByPress solverBot.js:21028
+      78% execute solverBot.js:32860
+      78% climbLadderUnder solverBot.js:31093
+      78% (anonymous) solverBot.js:33881
+      78% progressRun solveProgress.js:419
+      78% climbLadder solverBot.js:33880
+      78% walkToUnder solverBot.js:34053
+      78% (anonymous) solverBot.js:34850
+  #391 22131 ms walk -> walk; count points inside: preview=992 heartbeat=475
+      80% execKillByPressFightFallback solverBot.js:21126
+      80% execKillByPressOppFallback solverBot.js:21047
+      80% execKillByPress solverBot.js:21028
+      80% execute solverBot.js:32860
+      80% climbLadderUnder solverBot.js:31093
+      80% (anonymous) solverBot.js:33881
+      80% progressRun solveProgress.js:419
+      80% climbLadder solverBot.js:33880
+      80% walkToUnder solverBot.js:34053
+      80% (anonymous) solverBot.js:34850
+  #380 22086 ms walk -> walk; count points inside: preview=997 heartbeat=479
+      79% execKillByPressOnce solverBot.js:21180
+      79% execKillByPressFightFallback solverBot.js:21126
+      79% execKillByPressOppFallback solverBot.js:21047
+      79% execKillByPress solverBot.js:21028
+      79% execute solverBot.js:32860
+      79% climbLadderUnder solverBot.js:31093
+      79% (anonymous) solverBot.js:33881
+      79% progressRun solveProgress.js:419
+      79% climbLadder solverBot.js:33880
+      79% walkToUnder solverBot.js:34053
+WHOLE SOLVE, inclusive (of 748718 samples):
+  78.9% 590722 ms main profile-seedling-solve-wall.mjs:121
+  78.9% 590720 ms solveAnytime jsRuntimeSolver.js:565
+  78.9% 590720 ms (anonymous) profile-seedling-solve-wall.mjs:174
+  78.9% 590720 ms withSolveProgress solveProgress.js:89
+  78.9% 590719 ms solveFromTape jsRuntimeSolver.js:1145
+  78.9% 590719 ms (anonymous) jsRuntimeSolver.js:673
+  78.9% 590719 ms settleSolve jsRuntimeSolver.js:1274
+  78.8% 590082 ms progressSegment solveProgress.js:625
+  78.8% 590082 ms solveSegment solverBot.js:29145
+  78.8% 590080 ms (anonymous) solverBot.js:29238
+  78.8% 590080 ms refusingByName solverBot.js:517
+  78.8% 590080 ms withSolveDeadline solverBot.js:29257
+  78.8% 590080 ms solveSegmentDeadlined solverBot.js:29226
+  78.8% 590080 ms (anonymous) solverBot.js:29156
+  78.8% 590070 ms solveSegmentUnder solverBot.js:29288
+  78.8% 590056 ms (anonymous) solverBot.js:34850
+  78.8% 590056 ms progressRun solveProgress.js:419
+  78.8% 590056 ms (anonymous) solverBot.js:34849
+  78.8% 590056 ms withCrossingFrame solverBot.js:3174
+  78.8% 590056 ms walkToRun solverBot.js:34849
+  78.8% 590056 ms walkTo solverBot.js:34928
+  78.8% 590054 ms walkToUnder solverBot.js:34053
+  77.6% 580721 ms approachKillForCorpse solverBot.js:13177
+  77.4% 579429 ms climbLadder solverBot.js:33880
+  77.4% 579428 ms (anonymous) solverBot.js:33881
+  77.4% 579424 ms climbLadderUnder solverBot.js:31093
+  77.2% 578148 ms execKillByPressFightFallback solverBot.js:21126
+  77.2% 578148 ms execKillByPressOppFallback solverBot.js:21047
+  77.2% 578148 ms execKillByPress solverBot.js:21028
+  77.2% 578148 ms execute solverBot.js:32860
+WHOLE SOLVE, self:
+  21.1% 157994 ms (garbage collector) 
+  13.1% 98010 ms solidCandidates levelWorld.js:4092
+  11.0% 82231 ms collidesSolid levelWorld.js:6436
+  8.3% 62154 ms liveRectOf levelWorld.js:4416
+  5.7% 42942 ms nearestTileScanIndexed levelWorld.js:3977
+  5.1% 38202 ms step levelRun.js:9367
+  4.6% 34487 ms assertNormalizedLiveOpts levelWorld.js:3891
+  2.3% 16855 ms previewWalk solverBot.js:7146
+  2.2% 16251 ms (anonymous) levelRun.js:9651
+  2.1% 15502 ms strikeCandidates strikePolicy.js:315
+  1.9% 14457 ms stepSpinner spinner.js:370
+  1.8% 13728 ms clearOfHammersAt solverBot.js:14386
+  1.8% 13159 ms (anonymous) levelWorld.js:4117
+  1.3% 10005 ms advance levelRun.js:20684
+  1.1% 8352 ms (anonymous) levelRun.js:9718
+  1.1% 7928 ms plannerObstacleAt botDriverV2.js:319
+  1.0% 7821 ms shieldBumpTouches bobBossFight.js:389
+  1.0% 7598 ms deriveRefuge solverBot.js:14465
+  1.0% 7164 ms chaserStep chasers.js:706
+  0.9% 6975 ms step playerPhysicsV2.js:870

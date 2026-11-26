@@ -149,7 +149,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 2,
+            "count": 3,
             "id": "profile"
         },
         {
@@ -259,13 +259,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 539,
+        "blockStyle": 540,
         "browser": 229,
         "cited": 297,
-        "files": 561,
+        "files": 562,
         "lineStyle": 22,
-        "withDocblock": 561,
-        "withFlags": 478
+        "withDocblock": 562,
+        "withFlags": 479
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -297,6 +297,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "line",
             "documentedFlags": [
                 "exists",
+                "fill-attempts",
                 "seed"
             ],
             "file": "action-nodes-compile.mjs",
@@ -312,6 +313,12 @@ export const INSTRUMENTS = frz({
                         "valueOf"
                     ],
                     "name": "exists"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "fill-attempts"
                 },
                 {
                     "how": [
@@ -6093,6 +6100,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "ci",
             "citedBy": [
+                "docs/json/developer/procgen/action-nodes.md",
                 "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
@@ -7996,9 +8004,7 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/make-seedling-sphere-order.mjs"
         },
         {
-            "argvHelpers": [
-                "imp"
-            ],
+            "argvHelpers": [],
             "browser": false,
             "category": "make",
             "citedBy": [
@@ -21306,6 +21312,98 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "profile-seedling-hammer-escape — ⛓ SEEDLING HAMMER-PHASE A4 W0: WHERE THE ESCAPE'S SEARCH TIME GOES.",
             "path": "scripts/procgen/profile-seedling-hammer-escape.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "profile",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "depth",
+                "focus",
+                "i",
+                "id",
+                "interval-us",
+                "json",
+                "long",
+                "requests",
+                "seam-time",
+                "top"
+            ],
+            "file": "profile-seedling-solve-wall.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "depth"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "focus"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "i"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "id"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "interval-us"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "long"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "requests"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "seam-time"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "top"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "profile-seedling-solve-wall — ⛓ SEEDLING HAMMER-PHASE SPINNER880 step 1: **WHERE A SOLVE'S WALL CLOCK GOES WHEN NO WORK UNIT IS SPENT.** Measure only: it replays one captured solve request (the divergence sweep's / the whole-game walk's `--capture-requests` file, as `replay-seedling-solve-request.mjs` reads it) in T…",
+            "path": "scripts/procgen/profile-seedling-solve-wall.mjs"
         },
         {
             "argvHelpers": [

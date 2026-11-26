@@ -31,16 +31,15 @@ import { PathFinder } from '../shared/pathfinder.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { GROUPING_RULES } from '../procgenCore/regionLayout.js';
 import { hookCtxFor } from '../procgenCore/atlasCache.js';
-import { COLORS, compositeMapPainterFor, drawGenericRegion } from '../procgenCore/compositeMapRenderer.js';
+import { COLORS } from '../procgenCore/compositeMapRenderer.js';
+import { BAKE_TILE_PX, drawCellArt, drawCellLabel, drawCellSquares, drawPlaceholderCell } from './regionMapCellDraw.js';
 import { buildRegionMapModel } from './regionMapModel.js';
 import { WORLD_TILE_PX, cellFrames, frameAt, framesBounds, visibleFrames } from './regionMapFrames.js';
 import { atLeast, linkShape } from './regionMapLinkGeometry.js';
 import {
     centreOn, easeCamera, fitCamera, panBy, screenToWorld, viewRect, worldToScreen, zoomAround,
 } from '../procgenCore/mapCamera.js';
-import {
-    DOOR_RING_WIDTH_PX, LABEL_MIN_CELL_PX, SQUARE_COLORS, doorRingRadius, frameSquares, labelFontPx, squareAt, squareColorKey,
-} from './regionMapOverlay.js';
+import { DOOR_RING_WIDTH_PX, doorRingRadius, squareAt } from './regionMapOverlay.js';
 import { REGION_MAP_SETTING_DEFAULTS, SETTINGS_PREFIX, moduleHandles, panelInstances } from './regionMapSettings.js';
 import {
     PANEL_ID, REGION_MAP_CLICK_ACTIONS_KEY, loadRegionMapClickActions, regionOfCell, runRegionMapClick,
@@ -51,8 +50,8 @@ import { mountClickActionsStrip } from '../regionView/clickActionsUI.js';
 import { buildRegionMapPicker, setupRegionMapPicker } from './regionMapPicker.js';
 import { createCanvasGesture } from './pinch.js';
 
-/** The tile size every level is baked at (the art's own); drawn scaled by the camera. */
-export const BAKE_TILE_PX = 16;
+/** The tile size every level is baked at (the art's own); drawn scaled by the camera (`regionMapCellDraw.js`). */
+export { BAKE_TILE_PX };
 const OWNER = 'regionMap';
 const FOLLOW_EASE_MS = 350;
 const LINK_COLORS = Object.freeze({ down: '#7fb3ff', up: '#ffb37f', join: '#e6c84a', warp: '#6fd08c' });
@@ -805,25 +804,9 @@ export class RegionMapUI {
             if (v === 'hidden') { stats.hidden += 1; continue; }
             stats.cells += 1;
             stats.keys.push(f.key);
-            const s = worldToScreen(cam, vp, f.cell.x, f.cell.y);
-            const cw = f.cell.w * cam.zoom;
-            const ch = f.cell.h * cam.zoom;
             if (v === 'placeholder') {
                 stats.fogged += 1;
-                ctx.fillStyle = '#2b2b33';
-                ctx.fillRect(s.x, s.y, cw, ch);
-                ctx.strokeStyle = '#44444f';
-                ctx.lineWidth = 1;
-                ctx.strokeRect(s.x + 0.5, s.y + 0.5, cw - 1, ch - 1);
-                if (cw > 24) {
-                    ctx.fillStyle = '#777';
-                    ctx.font = `${Math.min(28, Math.max(10, cw / 6))}px sans-serif`;
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText('?', s.x + cw / 2, s.y + ch / 2);
-                    ctx.textAlign = 'start';
-                    ctx.textBaseline = 'alphabetic';
-                }
+                drawPlaceholderCell(ctx, { frame: f, camera: cam, vp });
                 continue;
             }
             shown.push(f);
@@ -843,92 +826,24 @@ export class RegionMapUI {
         if (this._anim) this._requestPaint();
     }
 
+    /* ⛓ The cell drawing is `regionMapCellDraw.js`'s (shared with the Region Graph's map node look). */
+
     _drawArt(ctx, f, stats) {
-        const cell = this.model.cells.get(f.key);
-        const { dpr, camera: cam, vp } = this;
-        const s = worldToScreen(cam, vp, f.x, f.y);
-        if (cell?.region) {
-            const k = (f.tilePx * cam.zoom) / BAKE_TILE_PX;
-            ctx.save();
-            ctx.setTransform(dpr * k, 0, 0, dpr * k, dpr * s.x, dpr * s.y);
-            const geom = {
-                offX: 0, offY: 0, regionSize: { width: f.ext.w, height: f.ext.h }, tilePx: BAKE_TILE_PX, colors: COLORS,
-                source: this.source, requestRedraw: this._onArt,
-            };
-            const painter = compositeMapPainterFor(cell.region, substrateRegistry);
-            try {
-                if (painter) painter(ctx, cell.region, geom);
-                else drawGenericRegion(ctx, cell.region, geom);
-            } catch (e) {
-                console.warn('regionMap: a painter threw', f.key, e);
-            }
-            ctx.restore();
-            stats.art += painter ? 1 : 0;
-            stats.generic += painter ? 0 : 1;
-        } else {
-            const w = f.w * cam.zoom;
-            const h = f.h * cam.zoom;
-            ctx.fillStyle = COLORS.genericBg;
-            ctx.fillRect(s.x, s.y, w, h);
-            stats.generic += 1;
-        }
-        const c = worldToScreen(cam, vp, f.cell.x, f.cell.y);
-        ctx.strokeStyle = COLORS.cellBorder;
-        ctx.lineWidth = 1;
-        ctx.strokeRect(c.x + 0.5, c.y + 0.5, f.cell.w * cam.zoom - 1, f.cell.h * cam.zoom - 1);
+        drawCellArt(ctx, {
+            frame: f, cell: this.model.cells.get(f.key), camera: this.camera, vp: this.vp, dpr: this.dpr,
+            source: this.source, onArt: this._onArt, registry: substrateRegistry, stats,
+        });
     }
 
     _drawLabel(ctx, f) {
-        const cam = this.camera;
-        const cw = f.cell.w * cam.zoom;
-        if (cw < LABEL_MIN_CELL_PX) return;
-        const c = worldToScreen(cam, this.vp, f.cell.x, f.cell.y);
-        const cell = this.model.cells.get(f.key);
-        // ⛓ the geometry `genericLocationTiles` keeps its squares clear of (regionMapOverlay `labelBottomPx`)
-        const size = labelFontPx(cw);
-        ctx.font = `${size}px sans-serif`;
-        const text = f.key.length > 40 ? `${f.key.slice(0, 39)}…` : f.key;
-        const tw = Math.min(ctx.measureText(text).width, cw - 4);
-        ctx.fillStyle = cell?.region ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0)';
-        ctx.fillRect(c.x + 2, c.y + 2, tw + 6, size + 5);
-        ctx.fillStyle = '#e8e8f0';
-        ctx.fillText(text, c.x + 5, c.y + size + 3, cw - 8);
+        drawCellLabel(ctx, { frame: f, cell: this.model.cells.get(f.key), camera: this.camera, vp: this.vp });
     }
 
     _drawSquares(ctx, f, view) {
-        const cell = this.model.cells.get(f.key);
-        if (!cell?.tiles?.length) return;
-        const squares = frameSquares(f, cell.tiles, this.camera, this.vp, this.settings.minSquarePx);
-        for (const q of squares) {
-            const loc = view?.locations?.get(q.location);
-            if (loc?.visibility === 'hidden') continue;
-            const colorKey = loc?.visibility === 'placeholder' ? 'unknown' : squareColorKey(loc, view?.regions?.get(loc?.region));
-            q.color = colorKey;
-            const h = q.side / 2;
-            ctx.fillStyle = SQUARE_COLORS[colorKey];
-            ctx.globalAlpha = colorKey === 'checked' ? 0.6 : 1;
-            if (q.kind === 'event') {
-                // Events: a diamond, so they read apart from items at any size.
-                ctx.beginPath();
-                ctx.moveTo(q.sx, q.sy - h * 1.15);
-                ctx.lineTo(q.sx + h * 1.15, q.sy);
-                ctx.lineTo(q.sx, q.sy + h * 1.15);
-                ctx.lineTo(q.sx - h * 1.15, q.sy);
-                ctx.closePath();
-                ctx.fill();
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-            } else {
-                ctx.fillRect(q.sx - h, q.sy - h, q.side, q.side);
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 1;
-                ctx.strokeRect(q.sx - h + 0.5, q.sy - h + 0.5, q.side - 1, q.side - 1);
-            }
-            ctx.globalAlpha = 1;
-            q.key = f.key;
-            this._squares.push(q);
-        }
+        drawCellSquares(ctx, {
+            frame: f, cell: this.model.cells.get(f.key), camera: this.camera, vp: this.vp,
+            minSquarePx: this.settings.minSquarePx, view, out: this._squares,
+        });
     }
 
     _drawLinks(ctx, view, stats) {

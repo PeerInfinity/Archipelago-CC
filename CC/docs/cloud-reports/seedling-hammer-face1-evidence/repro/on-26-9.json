@@ -1,0 +1,1 @@
+{"req":"26:9","seam":52129,"wait":0,"d":0,"on":["GOAL_START_WAIT=1"],"ok":true,"ms":24289,"work":1469,"budget":2560,"answer":"ce73a52373d2","passes":["full:3290@1469"],"ticks":3290,"verbs":["bait","hold","kill"],"sha":"cd6b6f6c09f5","hits":[],"deaths":0,"end":[40,887.74,775.74],"clears":["40:0","40:12"]}

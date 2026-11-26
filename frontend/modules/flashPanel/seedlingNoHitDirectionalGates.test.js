@@ -123,26 +123,53 @@ describe('the table of directional no-hit gates', () => {
     });
 });
 
-describe('the Wand: an arm of L22 north, and named unwitnessed on L25 east (slice rules-nohit-wand-crosscheck)', () => {
+describe('the Wand: an arm of L22 north and of L25 east, each on its hand witness (slices rules-nohit-wand-crosscheck, rules-l25-wand-arm)', () => {
     const gateAt = (n) => TABLE.gates.find((g) => g.level === n);
-    it('L22 north offers the Wand on its hand witness; L25 east does not, and the table names it unwitnessed with why', () => {
-        expect(gateAt(22).arms).toContain('hasWand');
-        expect(gateAt(22).witness.arms.hasWand).toBe('l22-25-21-wand');
-        expect(PLANS.plans['l22-25-21-wand'].hand).toBeTruthy();
-        expect(PLANS.controls['l22-25-21-wand']).toMatchObject({ arm: 'none', drop: ['primary'] });
-        expect(gateAt(25).arms).not.toContain('hasWand');
-        const u = TABLE.unwitnessed.filter((x) => x.arm === 'hasWand');
-        expect(u.map((x) => [x.level, x.blocked])).toEqual([[25, gateAt(25).blocked]]);
-        expect(u[0].says).toMatch(/Bobs/);
-        expect(u[0].followUp).toMatch(/l25-26-22-wand/);
+    it('L22 north and L25 east offer the Wand on hand witnesses with a primary-dropped control; nothing is named unwitnessed', () => {
+        for (const [n, id] of [[22, 'l22-25-21-wand'], [25, 'l25-26-22-wand']]) {
+            expect(gateAt(n).arms, `L${n}`).toContain('hasWand');
+            expect(gateAt(n).witness.arms.hasWand, `L${n}`).toBe(id);
+            expect(PLANS.plans[id].hand, id).toBeTruthy();
+            expect(PLANS.controls[id], id).toMatchObject({ arm: 'none', drop: ['primary'] });
+            // The control is the plan's own keys with the Wand's presses dropped.
+            expect(PLANS.controls[id].inputs, id).toEqual(PLANS.plans[id].inputs.filter((k) => k.key !== 'primary'));
+            expect(PLANS.controls[id].ticks, id).toBe(PLANS.plans[id].ticks);
+        }
+        expect(TABLE.unwitnessed).toEqual([]);
+        expect(gatesOf(25).map((g) => g.gate.arms)).toEqual([gateAt(25).arms]);
+    });
+    // ⛓ rules-l25-wand-arm: the committed list is empty, so the refusals run on an IN-MEMORY entry (L25 east's Wand as it
+    //   stood before its witness: the gate does not offer it and has no witness for it). The fixture itself is accepted.
+    const UNWITNESSED = {
+        level: 25, blocked: 'E', arm: 'hasWand',
+        says: 'fixture: the derivation says the Wand disarms, no game witness crosses (the room\'s Bobs and block)',
+        followUp: 'fixture: a game witness of l25-26-22-wand',
+    };
+    const withUnwitnessed = () => {
+        const table = clone(TABLE);
+        const g = table.gates.find((x) => x.level === 25);
+        g.arms = g.arms.filter((f) => f !== 'hasWand');
+        delete g.witness.arms.hasWand;
+        table.unwitnessed = [clone(UNWITNESSED)];
+        return table;
+    };
+    const plansWithout = () => { const plans = clone(PLANS); delete plans.plans['l25-26-22-wand']; delete plans.controls['l25-26-22-wand']; return plans; };
+    it('the in-memory unwitnessed fixture is accepted (so each mutant below is red for its own edit)', () => {
+        const table = withUnwitnessed();
+        expect(() => gatesOf(25, { table, plans: plansWithout() })).not.toThrow();
+        expect(gatesOf(25, { table, plans: plansWithout() })[0].gate.arms).not.toContain('hasWand');
     });
     it('refuses an unwitnessed entry the gate offers, one with a witness, one with no gate, and one with no why', () => {
-        const edit = (fn) => { const table = clone(TABLE); fn(table); return () => gatesOf(25, { table }); };
+        const edit = (fn) => { const table = withUnwitnessed(); fn(table); return () => gatesOf(25, { table, plans: plansWithout() }); };
         expect(edit((t) => { t.gates.find((g) => g.level === 25).arms.push('hasWand'); })).toThrow(/has no witness plan|named unwitnessed but the gate offers it/);
         expect(edit((t) => { t.unwitnessed[0].arm = 'hasSword'; })).toThrow(/hasSword is named unwitnessed but the gate offers it/);
         expect(edit((t) => { t.unwitnessed[0].blocked = 'N'; })).toThrow(/unwitnessed hasWand names L25 N, which no gate holds/);
         expect(edit((t) => { delete t.unwitnessed[0].followUp; })).toThrow(/unwitnessed hasWand says no why or follow-up/);
         expect(edit((t) => { t.unwitnessed[0].arm = 'hasFire'; })).toThrow(/unwitnessed arm hasFire has no witness arm/);
+        // And the committed table with the entry added back: the gate offers the Wand, so the entry is refused.
+        const committed = clone(TABLE);
+        committed.unwitnessed = [clone(UNWITNESSED)];
+        expect(() => gatesOf(25, { table: committed })).toThrow(/hasWand is named unwitnessed but the gate offers it/);
     });
 });
 

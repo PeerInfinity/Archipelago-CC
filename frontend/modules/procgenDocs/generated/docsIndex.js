@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 31,
-        "headings": 1353,
+        "headings": 1356,
         "indexHeadings": 2,
-        "lines": 37186,
+        "lines": 37267,
         "pages": 4,
-        "words": 573679
+        "words": 577160
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -60,7 +60,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 26,
-            "lines": 359,
+            "lines": 361,
             "links": [
                 "action-nodes.md",
                 "architecture.md",
@@ -75,7 +75,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 9243
+            "words": 9375
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -222,7 +222,7 @@ export const DOCS_INDEX = frz({
             "file": "maze.md",
             "h1": "Maze Substrate",
             "headings": 33,
-            "lines": 578,
+            "lines": 581,
             "links": [
                 "architecture.md",
                 "concepts.md",
@@ -235,7 +235,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/maze.md",
-            "words": 26159
+            "words": 26638
         },
         {
             "description": "The maze lab page (`frontend/modules/mazeRoom/lab.html`) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and worlds. It is the maze's counterpart of Seedling's `seedlingDemo/watch.html`, and it also runs inside the frontend in a Golden Layout panel.",
@@ -324,15 +324,15 @@ export const DOCS_INDEX = frz({
             "description": "The Procgen Pipeline panel's **Preset** drop-down applies a shipped configuration (mode, seed, substrates, knobs and item pool) so that Generate builds a world demonstrating one feature. CI generates every preset that names no heavy substrate headless, twice, and requires the two runs to be byte-identical.",
             "file": "pipeline-presets.md",
             "h1": "Pipeline Presets",
-            "headings": 13,
-            "lines": 155,
+            "headings": 14,
+            "lines": 160,
             "links": [
                 "concepts.md",
                 "flash.md",
                 "seedling-derived-rules.md"
             ],
             "path": "docs/json/developer/procgen/pipeline-presets.md",
-            "words": 2488
+            "words": 2672
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules.",
@@ -355,8 +355,8 @@ export const DOCS_INDEX = frz({
             "description": "The ActionNodes substrate (id `action_nodes`) is a puzzle played in loops: one region is one node, and a node is one action with a mana cost, stat and resource minimums, results and a limit per loop.",
             "file": "action-nodes.md",
             "h1": "ActionNodes Substrate",
-            "headings": 13,
-            "lines": 142,
+            "headings": 15,
+            "lines": 213,
             "links": [
                 "architecture.md",
                 "gotchas.md",
@@ -365,7 +365,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/action-nodes.md",
-            "words": 4235
+            "words": 6921
         },
         {
             "description": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md).",

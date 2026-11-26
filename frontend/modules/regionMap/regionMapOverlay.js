@@ -43,12 +43,29 @@ export function squareSide(frame, zoom, minPx = MIN_SQUARE_PX) {
 }
 
 /**
+ * ⛓ A TILED SQUARE NEVER OUTGROWS ITS TILE (⚖ the user, session 84c8ab35, 2026-11-23: "Yes, I also want to prevent the
+ * location boxes from growing larger than their tile."), BUT NEVER VANISHES (⚖ the user, same session,
+ * 2026-11-24T00:36:20.300Z: "Keep a 1 px dot" — superseding their 00:35:39.877Z "Skip them"). On a substrate-tiled cell
+ * the side is `squareSide` capped at the tile's on-screen side, floored at `TILED_SQUARE_FLOOR_PX`:
+ *   `max(TILED_SQUARE_FLOOR_PX, min(tilePx · zoom, max(minPx, tilePx · zoom · SQUARE_TILE_FRACTION)))`.
+ * So `minPx` (the `minSquarePx` setting) holds only while the tile is at least that big; below it the square fills its
+ * tile; below a 1 px tile it stays a 1 px dot (the one case it is larger than its tile). Wherever today's side was
+ * already ≤ the tile (the tile ≥ `minPx` on screen) the value is unchanged. Nothing is skipped (the door ring, unlike
+ * this, IS skipped under 1 px). Untiled (generic) squares are not capped (squares-rings' rules stand).
+ */
+export const TILED_SQUARE_FLOOR_PX = 1;
+export function tiledSquareSide(frame, zoom, minPx = MIN_SQUARE_PX) {
+    return Math.max(TILED_SQUARE_FLOOR_PX, Math.min(frame.tilePx * zoom, squareSide(frame, zoom, minPx)));
+}
+
+/**
  * ⛓ The squares of one frame, on screen: `[{location, kind, sx, sy, side}]` (`sx, sy` the centre), centred on
  * each location's tile. A tile carrying `size` (a generic place: its side in tiles) is drawn that size, never under
- * `minPx`; a tile without one (a substrate's own tile) is `squareSide` — unchanged.
+ * `minPx`; a tile without one is `squareSide` — or, with `capToTile` (a substrate-tiled cell), `tiledSquareSide`.
+ * Centres never depend on the side.
  */
-export function frameSquares(frame, tiles, cam, vp, minPx = MIN_SQUARE_PX) {
-    const side = squareSide(frame, cam.zoom, minPx);
+export function frameSquares(frame, tiles, cam, vp, minPx = MIN_SQUARE_PX, { capToTile = false } = {}) {
+    const side = capToTile ? tiledSquareSide(frame, cam.zoom, minPx) : squareSide(frame, cam.zoom, minPx);
     return (tiles ?? []).map((t) => {
         const c = tileCentre(frame, t.x, t.y);
         const s = worldToScreen(cam, vp, c.x, c.y);

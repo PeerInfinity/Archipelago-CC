@@ -1,0 +1,2 @@
+_Spoiler.txt byte-identical
+_sphere_log.jsonl byte-identical

@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "provenance": {
+    "sources": { "gen3": { "type": "authored", "by": "content sets GEN-3's proof pins" } },
+    "default": "gen3"
+  },
+  "concepts": {
+    "wet:terrain/pool": { "kind": "terrain", "name": "Pool", "base": "marker", "presents": "wet:terrain/pool" }
+  }
+}

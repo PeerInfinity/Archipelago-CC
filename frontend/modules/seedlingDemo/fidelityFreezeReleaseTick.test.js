@@ -96,7 +96,7 @@ describe('RELEASETICK — the key', () => {
             expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['freezeSpanUpdates']);
+            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['freezeSpanUpdates', 'nestedRockCeremony', 'plainPickupInFreeze', 'chestCoverFencepost']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FREEZE_RELEASE_TICK');
         });
 });

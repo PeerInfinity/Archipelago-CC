@@ -1,0 +1,1 @@
+solution,expected,equipsAt,equipItems,verbs,replayMs,solveMs,prefixLength,dashMode,deadline,modelHits

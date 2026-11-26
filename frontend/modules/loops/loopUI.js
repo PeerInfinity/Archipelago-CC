@@ -20,7 +20,8 @@ import {
 import settingsManager from '../../app/core/settingsManager.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { DisplaySettingsManager } from './displaySettingsManager.js';
-import { customActionBaseCost, customActionLabel } from '../shared/procgen/loopCustomActions.js';
+import { customActionBaseCost, customActionDefaultCost, customActionLabel, customActionXpDiscounts } from '../shared/procgen/loopCustomActions.js';
+import { poolOfWorld, poolWord, poolAmount } from '../resourceChannels/poolName.js';
 import { ExpansionStateManager } from './expansionStateManager.js';
 import { LoopRenderer } from './loopRenderer.js';
 import { EventCoordinator } from './eventCoordinator.js';
@@ -286,11 +287,11 @@ export class LoopUI {
                 <button id="loop-ui-export-state" class="button" title="Download the current game state as a JSON file">Export</button>
                 <label for="loop-ui-state-import" class="button" title="Load a game state from a JSON file">Import</label>
                 <input type="file" id="loop-ui-state-import" class="hidden" accept=".json" />
-                <button id="loop-ui-hard-reset" class="button" title="Clear all progress: queue, mana, XP, and discovery (asks to confirm)">Hard Reset</button>
+                <button id="loop-ui-hard-reset" class="button" data-pool-title="Clear all progress: queue, {pool}, XP, and discovery (asks to confirm)" title="Clear all progress: queue, mana, XP, and discovery (asks to confirm)">Hard Reset</button>
                 <button id="loop-ui-toggle-loop-mode" class="button" title="Enter or exit Loop mode">Enter Loop Mode</button>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px;">
-                <button id="loop-ui-toggle-restart" class="button" disabled title="Restart the queue from the beginning, refill mana, and run">Restart</button>
+                <button id="loop-ui-toggle-restart" class="button" disabled data-pool-title="Restart the queue from the beginning, refill {pool}, and run" title="Restart the queue from the beginning, refill mana, and run">Restart</button>
                 <button id="loop-ui-clear-explore" class="button" title="Remove all explore actions from the queue">Clear Explore Actions</button>
               </div>
             </div>
@@ -503,7 +504,7 @@ export class LoopUI {
         showStateBanner(
           manualRegion
             ? `Manual region — play ${regionName} by hand; ${exitText} (any other exit pauses the queue until reset).`
-            : `Manual mode — finish in the ${regionName} panel (run out of mana or cross an exit).`,
+            : `Manual mode — finish in the ${regionName} panel (run out of ${poolWord()} or cross an exit).`,
           'info',
         );
       };
@@ -517,7 +518,7 @@ export class LoopUI {
             ? `the bot-driven player ended up in ${actualRegion ?? 'an unexpected region'}, but the queue expected ${expectedRegion ?? 'a different region'}`
             : 'an unexpected state was reached';
         showStateBanner(
-          `Loop queue paused — ${reasonText}. Reset the loop (or wait for it to reset on mana zero) to resume.`,
+          `Loop queue paused — ${reasonText}. Reset the loop (or wait for it to reset on ${poolWord()} zero) to resume.`,
           'warn',
         );
       };
@@ -1247,7 +1248,7 @@ export class LoopUI {
       </div>
       <div class="loop-resources">
         <div class="mana-container">
-          <div class="resource-label">Mana:</div>
+          <div class="resource-label" data-pool-label="1">Mana:</div>
           <div class="mana-bar-container">
             <div class="mana-bar-fill"></div>
             <span class="mana-text">0/0</span>
@@ -1662,7 +1663,7 @@ export class LoopUI {
       stepBtn.disabled = mode === 'disabled';
       if (mode === 'reset') {
         stepBtn.textContent = 'Reset';
-        stepBtn.title = 'Return to the start of the queue, refill mana, and stay paused';
+        stepBtn.title = `Return to the start of the queue, refill ${poolWord()}, and stay paused`;
       } else {
         stepBtn.textContent = 'Step';
         stepBtn.title = 'Run the next queued action, then pause';
@@ -2162,7 +2163,21 @@ export class LoopUI {
    * Render the loop panel
    * Delegates to LoopRenderer
    */
+  /**
+   * AN-TIME-2 (ActionNodes design §4): the static texts that name the pool read the loaded world's name for it
+   * (`resourceChannels/poolName.js`, "Mana" by default): the pool label and the `data-pool-title` tooltips.
+   */
+  _applyPoolName() {
+    if (!this.rootElement) return;
+    const pool = poolOfWorld();
+    for (const e of this.rootElement.querySelectorAll('[data-pool-label]')) e.textContent = `${pool.name}:`;
+    for (const e of this.rootElement.querySelectorAll('[data-pool-title]')) {
+      e.title = e.getAttribute('data-pool-title').replace('{pool}', poolWord(pool));
+    }
+  }
+
   renderLoopPanel() {
+    this._applyPoolName();
     if (!this.loopRenderer) {
       log('error', 'LoopRenderer not initialized');
       return;
@@ -2282,7 +2297,7 @@ export class LoopUI {
             actionIndex + 1 // Now always display the actual queue position
           } of ${actionQueue.length}, Progress: ${Math.floor(
       manaCostSoFar
-    )} of ${parseFloat(actionCost.toFixed(1))} mana</span>
+    )} of ${poolAmount(parseFloat(actionCost.toFixed(1)))}</span>
         </div>
         <button class="remove-action-btn">✖</button>
       </div>
@@ -2416,7 +2431,8 @@ export class LoopUI {
     } else {
       switch (action.type) {
         case 'customAction':
-          baseCost = DEFAULT_REGION_COST;
+          // A row that states its own cost (a wait) keeps it with no cost data.
+          baseCost = customActionDefaultCost(action);
           break;
         case 'locationCheck':
           baseCost = DEFAULT_LOCATION_COST;
@@ -2430,8 +2446,9 @@ export class LoopUI {
     }
 
     // Apply region XP reduction if applicable, gated by the per-region
-    // xpEffect from the loop_costs sidecar (defaults to 'cost').
-    if (action.sourceRegion) {
+    // xpEffect from the loop_costs sidecar (defaults to 'cost'). A custom
+    // action whose row says `xpDiscount: false` (a wait) is never discounted.
+    if (action.sourceRegion && customActionXpDiscounts(action)) {
       const xpData = loopState.getRegionXP(action.sourceRegion);
       const cdm = getCostDataManager();
       const effect = cdm?.getRegionXpEffect?.(action.sourceRegion);

@@ -69,7 +69,7 @@ describe('OWLSUIT — the key', () => {
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
             // ⛓ wave 50: TURRETSUIT `turretSuitRetaliation` was appended after this key.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['turretSuitRetaliation', 'pickupTickFreeze', 'dialogueFrameFreeze', 'frozenTickUngated', 'freezeEdgeFrames', 'freezeReleaseTick', 'freezeSpanUpdates']);
+            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['turretSuitRetaliation', 'pickupTickFreeze', 'dialogueFrameFreeze', 'frozenTickUngated', 'freezeEdgeFrames', 'freezeReleaseTick', 'freezeSpanUpdates', 'nestedRockCeremony', 'plainPickupInFreeze', 'chestCoverFencepost']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_OWL_CONTACT_IN_STEP');
         });
 });
