@@ -719,6 +719,7 @@ export async function testRegionGraphSubRegionMerged(testController) {
     testController.reportCondition(`the merged view's layout has settled (${mergedLayouts.state()}) before the map look`, settledOk);
     mergedLayouts.dispose();
     graphCy().fit(30);
+    const mapLayouts = layoutWatch(graphCy());
     const t4 = performance.now();
     await ctx.setSetting(NODE_LOOK_KEY, 'map');
     const mapOk = await testController.pollForCondition(() => Number(mapCanvas()?.dataset.cells ?? 0) > 0,
@@ -730,6 +731,37 @@ export async function testRegionGraphSubRegionMerged(testController) {
     testController.reportCondition(`nodeLook = map: ${mapCanvas()?.dataset.cells} cells painted = ${withCell} nodes with a Region Map cell `
       + `of ${drawn} (${cellLess} without: they keep the graph look), no rebuild (switch ${mapMs} ms)`,
       mapOk && Number(mapCanvas().dataset.cells) === withCell && withCell >= drawn - 1 && withCell > 0 && !sameNode.removed());
+    // ⛓ The squares' screen spots are the map look's LAST paint. Read them only once that paint is stable and agrees with
+    // the nodes as they are now: the same zoom, pan, node boxes and squares over 3 polls 50 ms apart (frames between
+    // them), no layout running, no paint pending, and every square inside its node's rendered box. A paint taken before
+    // the nodes or the view moved on leaves a square where its node no longer is: the hit test there finds nothing.
+    const paintNow = () => {
+      const c = graphCy(); const d = layer?.getDebugState(); const z = c.zoom(); const p = c.pan();
+      const idOf = new Map((d?.nodeKeys ?? []).map(([id, k]) => [k, id]));
+      const boxes = (d?.nodeKeys ?? []).map(([id]) => { const bb = c.getElementById(id).renderedBoundingBox({ includeLabels: false });
+        return [id, Math.round(bb.x1), Math.round(bb.y1), Math.round(bb.x2), Math.round(bb.y2)]; });
+      const off = (d?.squares ?? []).filter((q) => {
+        const bb = c.getElementById(idOf.get(q.key) ?? '').renderedBoundingBox({ includeLabels: false });
+        return !(q.sx >= bb.x1 && q.sx <= bb.x2 && q.sy >= bb.y1 && q.sy <= bb.y2);
+      }).map((q) => `${q.location} at (${Math.round(q.sx)}, ${Math.round(q.sy)})`);
+      const sig = JSON.stringify([+z.toFixed(4), Math.round(p.x), Math.round(p.y), boxes,
+        (d?.squares ?? []).map((q) => [q.key, q.location, Math.round(q.sx), Math.round(q.sy)])]);
+      return { sig, off, paints: d?.stats?.paints ?? 0, pending: layer?._paintHandle != null, zoom: z, pan: p, boxes };
+    };
+    let lastSig = null; let same = 0; let lastPaint = null; let firstPaint = null; let polls = 0;
+    const paintStable = await testController.pollForCondition(() => {
+      const s = paintNow(); lastPaint = s; firstPaint ??= s; polls += 1;
+      const ok = mapLayouts.idle() && !s.pending && s.off.length === 0;
+      same = ok && s.sig === lastSig ? same + 1 : 0;
+      lastSig = s.sig;
+      return same >= 2;
+    }, 'the map look paint is stable and on its nodes', MAX_WAIT_TIME, 50);
+    testController.reportCondition(`the map look's last paint is stable and every square lies on its node (layout ${mapLayouts.state()}, `
+      + `${lastPaint?.paints} paints, pending ${lastPaint?.pending}, off their node: ${lastPaint?.off.join('; ') || 'none'})`, paintStable);
+    // One line per run, so a repeat's log says whether the first read would have been stale (the race this wait closes).
+    console.log(`[rg-merged map-look] first read: layout ${mapLayouts.state()}, pending ${firstPaint?.pending}, off their node: `
+      + `${firstPaint?.off.join('; ') || 'none'}, first==settled ${firstPaint?.sig === lastPaint?.sig}; settled after ${polls} polls`);
+    mapLayouts.dispose();
     // ⛓ The spot to click: a point inside a square that Cytoscape's own hit-test gives to the square's node AND that
     // the layer maps back to that square (`squareAtNode`). Map-look §12: a square under another element (the player
     // marker, an edge, a location node) sends a tap to that element instead, so the row samples a 3×3 grid inside each
@@ -756,7 +788,10 @@ export async function testRegionGraphSubRegionMerged(testController) {
       if (sq) break;
     }
     testController.reportCondition(`an uncovered point lies on a location square (${squares.length} squares; `
-      + `${sq ? `clicking "${sq.location}"` : `centres covered by: ${covers.join(', ')}`})`, !!sq);
+      + `${sq ? `clicking "${sq.location}"` : `centres covered by: ${covers.join(', ')}; squares `
+        + `${squares.map((q) => `${q.location}@(${Math.round(q.sx)},${Math.round(q.sy)}) side ${Math.round(q.side ?? 0)}`).join(', ')}; `
+        + `zoom ${cyNow.zoom().toFixed(3)} pan (${Math.round(cyNow.pan().x)},${Math.round(cyNow.pan().y)}); `
+        + `boxes ${(lastPaint?.boxes ?? []).map((bx) => bx.join(' ')).join('; ')}`})`, !!sq);
     if (sq) {
       rec = recordEvents(testController, ['regionView:locationClicked', 'regionView:regionClicked']);
       const top = [...document.querySelectorAll('.region-graph-panel-container div[id^="cy-"] canvas')]
