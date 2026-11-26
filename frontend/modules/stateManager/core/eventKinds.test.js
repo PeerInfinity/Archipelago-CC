@@ -25,6 +25,7 @@ describe('autoCollectsEvent — the policy', () => {
         expect(autoCollectsEvent({ name: 'Victory' })).toBe(true);
         expect(autoCollectsEvent({ name: 'v', event_kind: null })).toBe(true);
         expect(autoCollectsEvent({ name: 'rock', event_kind: 'game_state' })).toBe(false);
+        expect(autoCollectsEvent({ name: 'learns', event_kind: 'substrate_state' })).toBe(false);
         expect(autoCollectsEvent({ name: 'x', event_kind: 'some_future_kind' })).toBe(false);
         expect(autoCollectsEvent({ name: 'x', event_kind: 'toString' })).toBe(false);
     });
@@ -32,6 +33,7 @@ describe('autoCollectsEvent — the policy', () => {
     it('playerChecksEvent: only a kind whose row says so (goal); none, game_state and unknown kinds are not', () => {
         expect(playerChecksEvent({ event_kind: 'goal' })).toBe(true);
         expect(playerChecksEvent({ event_kind: 'game_state' })).toBe(false);
+        expect(playerChecksEvent({ event_kind: 'substrate_state' })).toBe(false);
         expect(playerChecksEvent({ name: 'Victory' })).toBe(false);
         expect(playerChecksEvent({ event_kind: 'some_future_kind' })).toBe(false);
         expect(playerChecksEvent({ event_kind: 'toString' })).toBe(false);

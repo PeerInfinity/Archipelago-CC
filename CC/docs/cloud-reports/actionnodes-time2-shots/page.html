@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8"><title>AN-TIME-2 shots</title>
+<style>body{background:#111;color:#ddd;font:13px sans-serif;padding:12px} .row{display:flex;gap:14px;align-items:flex-start;margin:8px 0} .cap{font-size:11px;opacity:.7;max-width:130px} h3{margin:10px 0 4px;font-size:13px} #time{border:1px solid #444;padding:8px;display:inline-block;background:#1a1a1a}</style></head>
+<body><div id="out"></div>
+<script type="module">
+import { compileActionGraph } from '/frontend/modules/actionNodes/actionGraphCompiler.js';
+import { getActionNodesRuntime } from '/frontend/modules/actionNodes/actionNodesRuntime.js';
+import '/frontend/modules/actionNodes/actionNodesLibrary.js';
+import { nodeCardModel, renderNodeCard } from '/frontend/modules/actionNodes/nodeCard.js';
+import { ResourceLedger } from '/frontend/modules/resourceChannels/resourceLedger.js';
+import { GameState } from '/frontend/modules/gameState/state.js';
+import { resourcesPanelModel } from '/frontend/modules/resourceChannels/resourcesPanel.js';
+const graph = { ...(await (await fetch('/frontend/modules/actionNodes/fixtures/harbour-morning.json')).json()), pool: { name: 'Time', unit: 'h' } };
+const { rules } = compileActionGraph(graph);
+const bus = { publish() {}, subscribe: () => () => {} };
+const gs = new GameState(bus); const ledger = new ResourceLedger();
+const rt = getActionNodesRuntime(); rt.setEnv({ publish() {}, dispatch() {}, revealExits() {}, gameState: () => gs, ledger: () => ledger,
+  chargeMana: ({ amount }) => { gs.deductMana(amount); return { depleted: false }; }, gainMana: ({ amount }) => gs.gainMana(amount),
+  xpAdjustedCost: (b) => b, fireReset() {} });
+rt.loadWorld(rules, '1'); rt.onSnapshot({ inventory: { 'Harbour Pass': 1 }, checkedLocations: [] });
+const payloads = Object.fromEntries(Object.entries(rules.preset_sidecars['1']).map(([k, v]) => [k, v.playable_payload]));
+const out = document.getElementById('out');
+const act = (id) => { const p = gs.getCurrentMana(); gs.deductMana(rt.liveCosts()[rt.nodeIndex(id)]); rt.onActionCompleted({ actionName: 'act', regionName: id, params: { nodeId: id } }); };
+const row = (title, ids, caps) => {
+  out.insertAdjacentHTML('beforeend', `<h3>${title}</h3>`);
+  const r = document.createElement('div'); r.className = 'row'; out.appendChild(r);
+  const st = rt.nodeStates().states;
+  ids.forEach((id, k) => { const w = document.createElement('div'); w.appendChild(renderNodeCard(nodeCardModel({ payload: payloads[id], state: st[id], model: rt.model, completedBefore: rt.completedBeforeLoopOf(id) }), document));
+    w.insertAdjacentHTML('beforeend', `<div class="cap">${caps[k]}</div>`); r.appendChild(w); });
+};
+const timeLine = () => resourcesPanelModel({ ledger: null, mana: { current: gs.getCurrentMana(), max: gs.getMaxMana() }, substrates: ['action_nodes'] }).manaText;
+row('1. Windowed cards at 09:00 (loop 1, nothing done)', ['quay', 'ledger', 'landlady', 'walk'], ['early: a click queues the wait, then the act', 'not reached yet (after the landlady)', 'until 10:00', 'no window']);
+act('walk'); act('walk');
+row('2. After two walks (11:00)', ['quay', 'landlady'], ['early: waits 1 h', 'too late: the window line marked']);
+out.insertAdjacentHTML('beforeend', `<h3>3. The Resources panel's Time line (11:00)</h3><div id="time" data-testid="resources-mana"><b>${timeLine()}</b></div>`);
+rt.onLoopReset('loopState:loopReset');
+row('4. Loop 2: "completed before" (the walk was first performed in loop 1)', ['walk', 'quay'], ['tagged loop 1, not grey', 'never performed: no tag']);
+document.title = 'ready';
+</script></body></html>
