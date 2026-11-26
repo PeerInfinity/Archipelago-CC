@@ -1,0 +1,5 @@
+K 1631 pos 232.17 167.60 tc 1631 forecast yes bombs bombpusher@112,128#8@186.5,161.9 | s12:bombpusher@112,128#8:HIT@218,168
+K 1638 pos 231.87 167.60 tc 1638 forecast yes bombs bombpusher@112,128#8@205.1,165.5 | s5:bombpusher@112,128#8:HIT@218,168
+K 1640 pos 231.87 166.80 tc 1640 forecast yes bombs bombpusher@112,128#8@210.5,166.6 | s3:bombpusher@112,128#8:HIT@218,168
+K 1641 pos 231.87 166.25 tc 1641 forecast yes bombs bombpusher@112,128#8@213.1,167.1 | s2:bombpusher@112,128#8:HIT@218,168
+K 1642 pos 232.67 166.75 tc 1642 forecast yes bombs bombpusher@112,128#8@215.8,167.6 | s1:bombpusher@112,128#8:HIT@218,168
