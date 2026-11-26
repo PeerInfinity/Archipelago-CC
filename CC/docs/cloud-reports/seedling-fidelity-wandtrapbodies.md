@@ -6,7 +6,7 @@ Session `seedling-fidelity-wandtrapbodies` (planner `seedling-fidelity-planning-
 | | |
 |---|---|
 | start (base) | `6a8ceed9f4162704f9004ef07ebe68993034b20a` — wave 66's final tip (`claude/seedling-wave-66-deadframes-3j11d7`) |
-| head | see the last commit on the branch (this report is the last commit; the last CODE head is named under *Gates*) |
+| head | this report's commit (the last); the last CODE head is `dc69918c51af6b28908ddf22a9a593cf9421db72` |
 | harness branch | `claude/wandshot-trap-bodies-fidelity-k6ytz5` (local `seedling-fidelity-wandtrapbodies`) |
 | verdict | **PASS** — one key, default OFF, byte-identical OFF; every witness the game at 0 px ON; the entry-37 refusal is gone ON |
 
@@ -200,7 +200,7 @@ Last CODE head: **`dc69918c51af6b28908ddf22a9a593cf9421db72`** (it touches `scri
 | `census-seedling-constants.mjs --check` (after `--write`; `--profile-rows` rewrote its csv byte-identically) | — | PASS (0 new, 0 moved) |
 | `census-seedling-solver-surface.mjs --check` (after `--write`: line moves only) | — | GREEN, 374 rows |
 | `solve-seedling-{r8-battery,r8-d2-chain,r8-l18,r8-tail,r9-l3,r9-campaign}.mjs --check` | — | all six green |
-| CI `JavaScript Unit Tests` at `dc69918c` | — | CI_PLACEHOLDER |
+| CI `JavaScript Unit Tests` at `dc69918c` (run 45889709744) | — | **success**: suite `vitest (unfiltered)` 1447 files / **30418 passed, 0 skipped, 0 failed**; slow battery 41 files / **465 passed, 0 failed** |
 
 ⛔ No unfiltered vitest, no `pytest`, no `standing-values --write`. **For the planner:** dispatch
 `unittests_frontend.yml -f train_only=true` at the head (this session cannot dispatch).
