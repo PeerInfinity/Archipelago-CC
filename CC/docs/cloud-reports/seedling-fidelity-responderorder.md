@@ -266,7 +266,7 @@ the HAMMER hand-over. A wait reads the pre-step set between ticks, so it sees an
 - Train tier:
   - `fidelityCorpseBump2.train` ×2, `hammerBk2Combat.train`, `hammerChooserPair.train` (656/655),
     `hammerEscapeExact.train` ×2, `hammerTurretApproach.train` ×3.
-  - OFF, the same five train files: `fidelityCorpseBump2.train` passes; the other four are still running (filled in by the next commit).
+  - OFF, the same five train files, one at a time: **all pass**, 18 of 18 tests (3 + 4 + 6 + 2 + 3). The 9 ON rows are this key's.
 - **Hits, measured where a row pins them:**
   - `fidelityL30KeyLock` D2: every re-plan is +1 tick at **0 hits** (347 → 348, 309 → 310, 318 → 319, 320 → 321, 341 → 342).
   - Its two "both OFF" rows still refuse, under a different refusal message.
