@@ -12,6 +12,8 @@ import { centralRegistry } from '../../app/core/centralRegistry.js';
 import eventBus from '../../app/core/eventBus.js';
 import { MysteryPanelUI } from './mysteryPanelUI.js';
 import { DEFAULT_PAGE_URL } from './mysteryPage.js';
+import { MYSTERY_SUBSTRATE_ID, substrateRegistryEntry } from './mysterySubstrateLibrary.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 // --- Module Info ---
 export const moduleInfo = {
@@ -60,8 +62,29 @@ function connectionNow() {
   };
 }
 
+/**
+ * The loaded world's `mystery` regions, off the runtime player's warehouse: `[]` for a world that
+ * is not generated, or that holds no case as a region.
+ */
+export function caseRegionsNow() {
+  const warehouse = centralRegistry.getPublicFunction?.('procgenPlayer', 'getWarehouse')?.();
+  if (!warehouse || typeof warehouse.entries !== 'function') return [];
+  const out = [];
+  for (const [regionId, entry] of warehouse.entries()) {
+    if (entry?.substrate === MYSTERY_SUBSTRATE_ID && entry.world) out.push({ regionId, payload: entry.world });
+  }
+  return out;
+}
+
+/** The region the player is in, as the runtime player last announced it. */
+export function activeRegionIdNow() {
+  return centralRegistry.getPublicFunction?.('procgenPlayer', 'getActiveSubstrate')?.()?.regionId ?? null;
+}
+
 export async function register(registrationApi) {
   registrationApi.registerPanelComponent('mysteryPanel', MysteryPanelUI);
+  // The substrate entry (also registered when its library is imported; guarded both ways).
+  if (!substrateRegistry.has(substrateRegistryEntry.id)) substrateRegistry.register(substrateRegistryEntry);
 
   registrationApi.registerSettingsSchema({
     pageUrl: {
@@ -86,6 +109,7 @@ export async function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent(moduleId, 'stateManager:rulesLoaded');
   registrationApi.registerEventBusSubscriberIntent(moduleId, 'stateManager:snapshotUpdated');
   registrationApi.registerEventBusSubscriberIntent(moduleId, 'settings:changed');
+  registrationApi.registerEventBusSubscriberIntent(moduleId, 'procgen:activeSubstrateChanged');
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
@@ -96,6 +120,8 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     getStaticData: () => stateManagerProxySingleton.getStaticData(),
     getSnapshot: () => stateManagerProxySingleton.getSnapshot(),
     getConnection: connectionNow,
+    getCaseRegions: caseRegionsNow,
+    getActiveRegionId: activeRegionIdNow,
     log,
   });
   logicInstance.initialize();

@@ -12,8 +12,15 @@
 //
 //   page -> host  mystery:questionSolved { story, questionId }
 //   page -> host  mystery:requestState   { story, version? }
-//   host -> page  mystery:state          { story, version, game, connected, papers, solved }
+//   host -> page  mystery:state          { story, version, game, connected, papers, solved, lock?, inOffice? }
 //   host -> page  mystery:refused        { reason, story, version }
+//
+// A GENERATED world may hold the case as one region of several (the `mystery` substrate,
+// mysterySubstrateLibrary.js). The map is then that region's payload (`ap_locations`, `papers`),
+// and the state carries two more fields: `lock`, the world's rule for what is locked while the
+// player is not in the case's region (`answers`, `new-reading`, `everything`), and `inOffice`,
+// whether the player is in it now. Both are absent for a world whose case is its slot's (one
+// region, always "in the office"). A question solved away from the region is not checked.
 //
 // `mystery:state` always carries the WHOLE set of papers held and questions checked, so the page
 // replaces what it has and never adds; a reload or a reconnect is then safe. It is sent when the
@@ -61,11 +68,58 @@ export function mysteryBlockOf(staticData) {
     player,
     story: block.story,
     version: block.version ?? null,
+    case: typeof block.case === 'string' && block.case ? block.case : null,
     seedName: staticData.seed_name != null ? String(staticData.seed_name) : '',
     questionOfLocation: block.locations,
     paperOfItem: block.items,
     locationOfQuestion,
+    regionId: null,
+    lock: null,
   };
+}
+
+/**
+ * The same block, read off ONE region of a generated world: the `mystery` substrate's payload
+ * (`{story, version?, case, lock, ap_locations: {<question id>: <location name>}, papers: {<item
+ * name>: <paper id>}}`). Null when the payload is no case.
+ * @param {string} regionId
+ * @param {Object} payload - the region's deserialised world
+ * @param {Object|null} staticData - for the player and the seed name
+ */
+export function mysteryBlockOfRegion(regionId, payload, staticData) {
+  if (!isObject(payload) || typeof payload.story !== 'string' || !isObject(payload.ap_locations) || !isObject(payload.papers)) {
+    return null;
+  }
+  const questionOfLocation = {};
+  for (const [questionId, locationName] of Object.entries(payload.ap_locations)) questionOfLocation[locationName] = questionId;
+  return {
+    player: String(staticData?.playerId ?? Object.keys(staticData?.world ?? {})[0] ?? '1'),
+    story: payload.story,
+    version: payload.version ?? null,
+    case: typeof payload.case === 'string' && payload.case ? payload.case : null,
+    seedName: staticData?.seed_name != null ? String(staticData.seed_name) : '',
+    questionOfLocation,
+    paperOfItem: payload.papers,
+    locationOfQuestion: new Map(Object.entries(payload.ap_locations)),
+    regionId,
+    lock: typeof payload.lock === 'string' ? payload.lock : null,
+  };
+}
+
+/**
+ * The case the page is to be answered about. A generated world's case regions win over the
+ * slot's block; among several the one of the asked `story`, else the one the player is in, else
+ * the first. Null when the world holds no case.
+ * @param {{staticData: Object|null, caseRegions?: Array<{regionId: string, payload: Object}>, activeRegionId?: string|null, story?: string}} world
+ */
+export function currentMysteryBlock({ staticData, caseRegions = [], activeRegionId = null, story } = {}) {
+  const blocks = (caseRegions ?? [])
+    .map((r) => mysteryBlockOfRegion(r.regionId, r.payload, staticData))
+    .filter(Boolean);
+  if (blocks.length === 0) return mysteryBlockOf(staticData);
+  return blocks.find((b) => story !== undefined && b.story === story)
+    ?? blocks.find((b) => b.regionId === activeRegionId)
+    ?? blocks[0];
 }
 
 /** The `game` string: one slot of one generated multiworld. */
@@ -78,7 +132,7 @@ export function gameKeyOf(block, connection) {
  * The whole `mystery:state` payload for a block, a state snapshot and the connection.
  * Both lists are sorted, so two equal states are equal as JSON.
  */
-export function mysteryStateOf(block, snapshot, connection) {
+export function mysteryStateOf(block, snapshot, connection, activeRegionId = null) {
   const inventory = isObject(snapshot?.inventory) ? snapshot.inventory : {};
   const papers = [];
   for (const [itemName, paperId] of Object.entries(block.paperOfItem)) {
@@ -96,6 +150,9 @@ export function mysteryStateOf(block, snapshot, connection) {
     connected: !!connection?.connected,
     papers: papers.sort(),
     solved: solved.sort(),
+    // Only for a case that is a region of a generated world.
+    ...(block.lock ? { lock: block.lock } : {}),
+    ...(block.regionId ? { inOffice: activeRegionId === block.regionId } : {}),
   };
 }
 
@@ -109,15 +166,25 @@ export class MysteryArchipelagoLogic {
    * @param {() => {connected: boolean, slot: number|null, team: number|null}} deps.getConnection - asked
    *   every time, never remembered: this module may be enabled after the app has connected, and a
    *   connect event it was not there for must not leave it saying "offline".
+   * @param {() => Array<{regionId: string, payload: Object}>} [deps.getCaseRegions] - the loaded world's
+   *   `mystery` regions (none for a world that is not generated)
+   * @param {() => string|null} [deps.getActiveRegionId] - the region the player is in
    * @param {(level: string, message: string, ...data: any[]) => void} [deps.log]
    */
-  constructor({ eventBus, dispatcher, getStaticData, getSnapshot, getConnection, log = () => {} }) {
+  constructor({
+    eventBus, dispatcher, getStaticData, getSnapshot, getConnection,
+    getCaseRegions = () => [], getActiveRegionId = () => null, log = () => {},
+  }) {
     this._eventBus = eventBus;
     this._dispatcher = dispatcher;
     this._getStaticData = getStaticData;
     this._getSnapshot = getSnapshot;
     this._log = log;
     this._getConnection = getConnection;
+    this._getCaseRegions = getCaseRegions;
+    this._getActiveRegionId = getActiveRegionId;
+    // The story the page last asked about: with several cases in one world, the one it is answered about.
+    this._pageStory = undefined;
     // The page has asked at least once; until then nothing is sent (no page, nobody to tell).
     this._pageAsked = false;
     this._lastSent = null;
@@ -135,6 +202,22 @@ export class MysteryArchipelagoLogic {
     sub('game:itemsReceived', () => this.sendStateIfChanged());
     sub('stateManager:rulesLoaded', () => this.sendStateIfChanged());
     sub('stateManager:snapshotUpdated', () => this.sendStateIfChanged());
+    // The player moved: `inOffice` may have changed.
+    sub('procgen:activeSubstrateChanged', () => this.sendStateIfChanged());
+  }
+
+  /** The case to answer about, for the story the page asked (or last asked). */
+  _block(story = this._pageStory) {
+    return currentMysteryBlock({
+      staticData: this._getStaticData(),
+      caseRegions: this._getCaseRegions(),
+      activeRegionId: this._getActiveRegionId(),
+      story,
+    });
+  }
+
+  _state(block) {
+    return mysteryStateOf(block, this._getSnapshot(), this._getConnection(), this._getActiveRegionId());
   }
 
   /** Why the page's `{story, version}` is refused, or null. A missing `version` is not checked. */
@@ -159,18 +242,19 @@ export class MysteryArchipelagoLogic {
 
   handleRequestState(request) {
     this._pageAsked = true;
-    const block = mysteryBlockOf(this._getStaticData());
+    if (typeof request?.story === 'string') this._pageStory = request.story;
+    const block = this._block();
     const reason = this.refusalFor(block, request);
     if (reason) return this._refuse(reason, block);
-    this._send(mysteryStateOf(block, this._getSnapshot(), this._getConnection()));
+    this._send(this._state(block));
   }
 
   /** Send the state when the page has asked and the state differs from the last one sent. */
   sendStateIfChanged() {
     if (!this._pageAsked) return;
-    const block = mysteryBlockOf(this._getStaticData());
+    const block = this._block();
     if (!block) return;
-    const state = mysteryStateOf(block, this._getSnapshot(), this._getConnection());
+    const state = this._state(block);
     if (JSON.stringify(state) === this._lastSent) return;
     this._send(state);
   }
@@ -181,12 +265,18 @@ export class MysteryArchipelagoLogic {
   }
 
   handleQuestionSolved(data) {
-    const block = mysteryBlockOf(this._getStaticData());
+    const block = this._block(typeof data?.story === 'string' ? data.story : undefined);
     const reason = this.refusalFor(block, { story: data?.story });
     if (reason) return this._refuse(reason, block);
     const locationName = block.locationOfQuestion.get(data?.questionId);
     if (!locationName) {
       this._log('warn', `no location for question "${data?.questionId}"`);
+      return;
+    }
+    // A case that is a region is answered only in it, under every lock. The page sends the
+    // question again while the state lacks it, so it is checked once the player is back.
+    if (block.regionId && this._getActiveRegionId() !== block.regionId) {
+      this._log('warn', `question "${data?.questionId}" solved away from region "${block.regionId}": not checked`);
       return;
     }
     // Not remembered here on purpose: the page sends a solved question again when `mystery:state`
