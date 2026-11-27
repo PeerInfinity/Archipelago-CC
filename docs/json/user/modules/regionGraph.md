@@ -106,6 +106,22 @@ When discovery mode is active, a checkbox appears to show or hide undiscovered r
 
 The graph uses the COSE (Compound Spring Embedder) layout algorithm to automatically position nodes. You can manually drag nodes to adjust positions after the layout runs. Use **Re-layout** to recalculate positions, or **Export Positions** to save your arrangement.
 
+### Direction-aware layout
+
+The **Direction-aware** layout places each neighbouring region on the side of the exit that leads to it, the way a map would: if a level's door to another level is on its east edge, that neighbour goes to its right. Where the door sits along the edge matters too, so a level with two doors on its east edge, one near the top and one near the bottom, puts the first neighbour up-and-right and the second down-and-right. This is a preference, not a rule: when two neighbours want the same spot, or the exits disagree, each node is placed as close to where its exit points as the others allow, and no two nodes overlap.
+
+Run it from **Controls → Direction-aware layout → Run Direction-aware layout**, or choose **Direction-aware (exit sides)** in the Layout Editor's **Layout Preset** list. It works with every **Draw as** choice and both **Node look**s (with **Region Map cells**, the nodes are kept apart at their rectangle size). In **Merged**, a region's node points the way its sub-regions' exits point. The same graph and settings always give the same arrangement.
+
+Only worlds whose regions carry door positions (generated and Seedling worlds, maze levels) have exit directions. In a world without them (for example A Link to the Past) the layout is a plain spring layout.
+
+| Setting | Range | Default | What it does |
+|---|---|---|---|
+| **Strength** | 0 – 1 | 0.7 | How strongly each neighbour is pulled to its exit's side. 0 ignores the exit directions (a plain spring layout); 1 is as map-like as the graph allows. |
+| **Spacing (px)** | 0 – 300 | 40 | The gap aimed for between two neighbouring nodes' borders. Larger spreads the graph out. |
+| **Exits used** | Border doors only, All doors | Border doors only | Which exits give a direction. **Border doors only** uses the doors on a level's edge (the walk-off-the-edge kind). **All doors** adds the doors inside a level (staircases, teleporters), which often lead somewhere unrelated to where they sit. |
+
+Changing a setting while the Direction-aware layout is the one shown re-runs it straight away; otherwise the new value is used the next time you run it. The settings are `moduleSettings.regionGraph.directionStrength`, `directionSpacing` and `directionExits`. Like every layout, it moves the nodes of the view you are in only (each **Draw as** choice keeps its own positions), and opening or closing a group in **Collapsible** keeps the positions as they are.
+
 ## Where its state and actions live
 
 The Region Graph draws; it no longer decides. Whether a region is reachable, how many of its locations are checked or accessible, and whether discovery mode hides it or shows it as `???` all come from the shared region view model (`frontend/modules/regionView/regionViewModel.js`). What a click does is a list of registered click actions (`frontend/modules/regionView/clickActions.js`), shown and edited by the shared **On click** strip (`frontend/modules/regionView/clickActionsUI.js`); the actions themselves move the player, edit the path or check locations through the shared region actions (`frontend/modules/regionView/regionActions.js`). The Region Map panel uses the same files. See `frontend/modules/regionView/README.md`.

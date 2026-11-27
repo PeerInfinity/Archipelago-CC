@@ -11,7 +11,7 @@ import { RegionGraphLayoutEditor } from './regionGraphLayoutEditor.js';
 import { GraphDataManager } from './graphDataManager.js';
 import { GraphInteractionManager } from './graphInteractionManager.js';
 import { NavigationManager } from './navigationManager.js';
-import { LayoutControlsManager } from './layoutControlsManager.js';
+import { LayoutControlsManager, isDirectionSettingKey } from './layoutControlsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { defaultClickActions } from '../regionView/clickActions.js';
@@ -42,8 +42,8 @@ export class RegionGraphUI {
     // the cose / hierarchical fallback — so the Region Graph's
     // spatial layout matches the maze panel's grid.
     this.gridLayout = null;
+    // ⛓ true from a layout run's start to its settle (layoutRun.js); `whenLayoutSettled(ui)` waits for it.
     this.isLayoutRunning = false;
-    this.layoutGeneration = 0;
     this.pathFinder = new PathFinder(stateManager);
     this.dataManager = new GraphDataManager(this);
     this.interactionManager = new GraphInteractionManager(this);
@@ -976,6 +976,12 @@ export class RegionGraphUI {
         // The click configuration does not change what the graph draws: no rebuild for it.
         if (key === CLICK_ACTIONS_KEY) return;
         // ⛓ region-graph-map-look: the node look changes how nodes DRAW, not the graph: no rebuild, no re-layout.
+        // ⛓ region-graph-direction-layout: a Direction-aware setting moves nodes (if that layout is the one drawn), never
+        // rebuilds the graph.
+        if (isDirectionSettingKey(key)) {
+          await this.layoutControlsManager.onDirectionSettingChanged();
+          return;
+        }
         if (key === NODE_LOOK_KEY) {
           await this.loadDisplaySettings();
           this.mapLook?.sync();
@@ -1058,6 +1064,11 @@ export class RegionGraphUI {
 
   runLayout(force = false) {
     return this.layoutControlsManager.runLayout(force);
+  }
+
+  /** ⛓ layoutRun.js calls this once per settled layout run (after its last position change). */
+  onLayoutSettled(info) {
+    return this.interactionManager.onLayoutSettled(info);
   }
 
   saveNodePositions() {
