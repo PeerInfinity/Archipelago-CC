@@ -99,6 +99,8 @@ test.describe('Application End-to-End Tests', () => {
   }
   // MEASUREMENT-ONLY (seedling-js-l22-l25-divergence): TEST_MEASURE_CAPTURE_SERVICE=<regex|1> → `?measureCaptureService=`,
   // the solve-service probe (`jsRuntimeSolveService.js`) for BOTH runtimes' services. Needs the capture binding above.
+  // MEASUREMENT-ONLY (seedling-js-l22-l25-divergence, arm J0): TEST_MEASURE_SOLVER_NO_LIMIT=1 → `?measureSolverNoLimit=1`.
+  if (process.env.TEST_MEASURE_SOLVER_NO_LIMIT === '1') APP_URL += '&measureSolverNoLimit=1';
   if (measureCapturePath && process.env.TEST_MEASURE_CAPTURE_SERVICE) {
     APP_URL += `&measureCaptureService=${encodeURIComponent(process.env.TEST_MEASURE_CAPTURE_SERVICE)}`;
   }

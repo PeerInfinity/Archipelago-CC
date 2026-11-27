@@ -460,6 +460,13 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
         await settingsManager.updateSetting(RUNTIME_SETTING, runtime, { persist: false });
         tc.log?.(`${tutorial.id}: walked with ${RUNTIME_SETTING} = ${runtime} (session override; was ${runtimeBefore})`);
     }
+    // MEASUREMENT-ONLY (seedling-js-l22-l25-divergence, arm J0): ?measureSolverNoLimit=1 → the Flash panel's
+    // "no work limit" AND "backstop off" (session overrides, not persisted; a fresh page per arm). Absent = nothing.
+    if (MEASURE_PARAMS.get('measureSolverNoLimit') === '1') {
+        await settingsManager.updateSetting('moduleSettings.flashPanel.seedlingSolverNoWorkLimit', true, { persist: false });
+        await settingsManager.updateSetting('moduleSettings.flashPanel.seedlingSolverBackstopOff', true, { persist: false });
+        console.log('[MEASURE nolimit] flashPanel.seedlingSolverNoWorkLimit=true flashPanel.seedlingSolverBackstopOff=true (session override)');
+    }
     const settings = await savedSettings();
     const tabs = activeTabs();
     const ctx = buildContext({ eventBus });
