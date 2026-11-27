@@ -16,11 +16,12 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { parseTape } from './tapeFormat.js';
+import { createTapeStepper } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
 import { buildLevelWorld } from './levelWorld.js';
 import { slashEndTicksFor } from './ghostSword.js';
 import { WAND_WINDOW } from './wandVerb.js';
-import { CONTACT_FIDELITY_DEFAULTS, CONTACT_FIDELITY_KEYS } from './contactFidelity.js';
+import { CONTACT_FIDELITY_DEFAULTS, CONTACT_FIDELITY_KEYS, withContactFidelity } from './contactFidelity.js';
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 import {
     GAP_KEY, WAND_SWING_DRILL_TAPES, clockOk, disagreements, modelWandEnemySamples, wandSwingDrillSwitches,
@@ -158,6 +159,20 @@ describe('fidelity WANDSWINGDRILL — gap 2: the game\'s numbers and the rule', 
         for (const [name, [x, y]] of Object.entries(HOPS)) {
             expect(drillAt(byName[name], 1), name).toMatchObject({ x, y, anim: 'drill' });
         }
+    });
+
+    it('L88 SE goes hitless -> hit, as the game does: its contacts land on the game\'s ticks ON, and never OFF', () => {
+        const w = byName['drill-l88-se'];
+        const hitTicks = (over) => withContactFidelity(over, () => {
+            let run = null;
+            const st = createTapeStepper(tapeOf(w), { levelSource: atlasLevelSource(), onTick: (a, b, c, r) => { run = r; } });
+            for (let r = st.next(); !r.done; r = st.next());
+            return run.playerHits.map((h) => [h.t, h.source]);
+        });
+        // the game's `p.hits` changes on each contact (the third, at `hitsMax`, resets it)
+        expect(w.hitsByTick.map(([t]) => t)).toEqual([17, 37, 57]);
+        expect(hitTicks({ [DRILL]: true })).toEqual([[17, 'drill'], [37, 'drill'], [57, 'drill']]);
+        expect(hitTicks({})).toEqual([]);
     });
 
     it('L88 E: from the second frame the Cliff is a wall again — the hopped drill never moves, and sits', () => {

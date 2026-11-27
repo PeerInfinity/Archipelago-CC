@@ -296,7 +296,8 @@ async function main() {
             const DUMP = arg('dump', null);
             if (DUMP) {
                 mkdirSync(DUMP, { recursive: true });
-                writeFileSync(join(DUMP, `${name}.json`), `${JSON.stringify({ name, samples, tape: wandSwingDrillTape(name) })}\n`);
+                const hitsByTick = [...byTick.values()].sort((a, b) => a.t - b.t).map((f) => [f.t, f.hits]);
+                writeFileSync(join(DUMP, `${name}.json`), `${JSON.stringify({ name, samples, hitsByTick, tape: wandSwingDrillTape(name) })}\n`);
             }
             if (RECORD && on && !w.residue && clockOk(w, fits) && disOn.length === 0 && on.error === null) {
                 const dir = join(MODULE, 'fixtures', 'wandswingdrill-witness');
@@ -307,6 +308,9 @@ async function main() {
                     note: 'the GAME\'s rows (`botMobiles()`: the player, every WandShot and the six enemy classes\' bodies) '
                         + 'at each sampled tick',
                     hits: g.status?.hits ?? null,
+                    // the game's `p.hits` per sampled tick, where it CHANGES (botStatus; `hits` above is read after the end)
+                    hitsByTick: [...byTick.values()].sort((a, b) => a.t - b.t)
+                        .filter((f, i, a) => f.t > 0 && (i === 0 || f.hits !== a[i - 1].hits)).map((f) => [f.t, f.hits]),
                     samples,
                     tape: wandSwingDrillTape(name),
                 };
