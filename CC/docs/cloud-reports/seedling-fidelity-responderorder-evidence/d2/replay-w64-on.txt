@@ -1,0 +1,13 @@
+a1-open ARM on: 140 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+a1-ctl ARM on: 240 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+a2-reset ARM on: 190 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+a2-r149 ARM on: 189 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+a2-r151 ARM on: 191 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+a2-ctl ARM on: 180 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+b1-spinner ARM on: 165 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+b1-occ ARM on: 167 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+b1-ctl ARM on: 200 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+b2-flyer ARM on: 184 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+b2-occ ARM on: 185 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+b2-ctl ARM on: 60 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+b1-r124 ARM on: 164 ticks; 0 px over the stream; worst 0 px; L agrees every tick

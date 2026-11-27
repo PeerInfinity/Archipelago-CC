@@ -1,0 +1,8 @@
+DEADFRAME ON test sweep at 5087f08e/7cfef447 (code identical but the census CSV): SEEDLING_DEAD_FRAME_RESPONDER_STEP=1 SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON=1
+files: every seedlingDemo / scripts/procgen *.test.js naming stepActivators|DeadFrame|fallRock|armButtonFallRocks|wallflyer|wallFlyer|spinner|Spinner|lock|Lock|cover|Cover|pulser|Pulser|button|Button = 563
+fast tier: 527 files in 18 batches of 30 (--maxWorkers=2, --reporter=json): 12016 passed, 4 failed
+  dashOnlyWindow.test.js  "the default adds no field (today's request key list exactly)"            env channel: fails identically with SEEDLING_RESPONDER_STEP_AFTER_READERS=1 (control), passes with no env
+  dashOnlyWindow.test.js  "`stampHooks` is the service's one stamping door ... adds exactly what the service posts"   the same
+  dashShape.test.js       "the defaults add no field (today's request key list exactly)"            the same
+  standingValues.test.js  "a gate that sleeps past the deadline is KILLED — its group, by the captured pid — and refused"   fails identically with no env (this container's process-group kill); not this slice
+heavy: 36 .slow./.train. files, one at a time under their own configs: 127 passed, 0 failed

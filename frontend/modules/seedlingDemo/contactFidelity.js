@@ -2456,6 +2456,211 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_PRESSER_RECURSION_HANG=0|1`. ⛔ OFF by default (no flip licence).
      */
     presserRecursionHang: false,
+    /**
+     * ⛓ fidelity BUTTONROOMCLEAR D2 (wave 63) — A ButtonRoom REACHED BY ANOTHER PRESSER'S PUBLISH RUNS ITS WHOLE SETTER
+     * (wave 62's hand-over, `CC/docs/cloud-reports/seedling-fidelity-buttonroomclear.md`).
+     * The game. `ButtonRoom.set activate(a)` (`Puzzlements/ButtonRoom.as:67-98`) is all inside `if (a)`: `room == -1`
+     * publishes `persist` (flip 0 → true, flip 1 → false) to every other `Activators` of `t` (`:79-90`); `room >= 0`
+     * writes `Game.setPersistence(t, persist, room)` (`:91-94`); then it clears its OWN tag (`:96`). Any caller of
+     * `activate = true` runs it: `Button.activateAll` (`Button.as:42-61`, every frame a Button is held),
+     * `RopeStart.set activate` (`RopeStart.as:79-91`, a pull or a pulled rope's `check()`), a local flip-0 ButtonRoom's
+     * publish, the wand's tset-0 sweep (`Pickups/Wand.as:55-70`), `FinalBoss.as:218`. And every responder class is
+     * added after every ButtonRoom (`Game.as:2341-2419`, by type; `World.addUpdate` prepends), so in `getClass` order a
+     * responder takes the true, then a flip-1 ButtonRoom's false: it ends the frame false and reads false at its update.
+     * MEASURED on the game (p4g; staged L38 rooms, group 6, through `botLoadLevels`; `-evidence/d3/witness-p4g.json`):
+     * a Button, a pressed flip-0 ButtonRoom, a rope pull and a pulled rope's `check()` each clear a flip-1 ButtonRoom's
+     * tag off the walk (38,10); a cross-room one also writes its target (37,6 false; flip 0 writes it TRUE, and of two
+     * on one slot the one later in `getClass` order — earlier in the XML — lands last); a Lock and a Cover below the
+     * Button never open with a flip-1 ButtonRoom in the group (the walk stays blocked 260 ticks; without it they open),
+     * and a FallRock still falls; re-entering the level boots the published-to one pressed with the same ledger.
+     * ON. `stepActivators` runs every other ButtonRoom of a group a true is published into — the step's Button / local
+     * flip-0 presses, and the queued rope pulls, wand sweeps and build `check()`s (`queuePublishedTrue`) — as one
+     * `roomwrite` each, once per visit, in `getClass` order (`publishedButtonRoomWrites`); a local flip-0 one is not run
+     * (its answer recurses: `presserRecursionHang`). In a group holding a local flip-1 ButtonRoom (`flipAnswerGroups`)
+     * a Button / flip-0 press does not press the group (`pressedGroups`) and no publish latches it; the rocks still
+     * fall. A TRUE `roomwrite` puts its slot back on (it leaves the cleared ledgers). OFF: nothing read or written,
+     * byte-identical. Not modelled, named: a flip-1 or cross-room ButtonRoom pressed DIRECTLY still presses its group
+     * (the model's standing reading, unchanged); `FinalBoss`'s sweep (not a model publish); the rope set false by the
+     * answer (a second sword hit re-pulls it in the game); the Button's `Switch` sound on every held frame.
+     * Composes with `presserRecursionHang` (its early return stays first). `SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    publishedButtonRoomSetter: false,
+    /**
+     * ⛓ fidelity RESPONDERORDER D2 (wave 65) — THE RESPONDERS STEP IN THE GAME'S FRAME ORDER: after the readers, before
+     * the player, reading the Button's publish of the frame before (wave 64's three witnessed off-by-ones, one cause;
+     * `CC/docs/cloud-reports/seedling-fidelity-readerorder.md`, `…-responderorder.md`).
+     * The game. `World.addUpdate` prepends (`net/flashpunk/World.as:937-951`), so a frame runs `Game.loadlevel`'s adds
+     * in reverse: Spinner (`Game.as:2416`), WallFlyer (`:2415`), the PushableBlock family (`:2382-2384`), Chest
+     * (`:2377`), the responders (`MagicalLock`…`Cover` `:2360-2367`, `Pulser` `:2357`, `Lock` `:2356`, `RockLock`
+     * `:2355`), then ButtonRoom (`:2342`) and Button (`:2341`), whose `activateAll` is therefore read by the responders
+     * of the NEXT frame, then the enemies, and the Player last (`:2250`). OFF, the model steps the readers at a tick's
+     * top and `stepActivators` at its end (labelled the next frame's responder update), so (1) a reader reads the
+     * responder set one step new (`pushableCtx` both ways; `spinnerCtx` both ways but a fresh open, `spinnerLockLag`);
+     * (2) a responder's occupancy guard sees the readers one step stale, and the Lock family's counts no spinner or
+     * wallflyer although `Lock.hitables` holds "Enemy" (`Puzzlements/Lock.as:23`; `Cover.as:21` does not); (3) a
+     * Player press or release reaches a responder one frame early (`pulserPublishLag`'s rule, the Pulser's only).
+     * MEASURED on the game (p4g, wave 64: 13 staged L38 shapes, `-readerorder-evidence/d3/witness-p4g.json`): the
+     * block stops one frame after L opens (`a1-open`); a Pulser-driven fire block that read "open" moves in and holds
+     * a resetting L open (`a2-r149`); a spinner / wallflyer crossing holds L open (`b1-r124`, `b2-flyer`); a mid-tape
+     * press opens L at on + 102 and re-shuts it at off + 2 (`a2-ctl`; the model OFF: + 101, + 1). Wave 63's
+     * `btn-lock` / `btn-cover` (no ButtonRoom) first differ from the model at rows 124 / 34 for the same reason. Wave
+     * 65 (`-responderorder-evidence/d2/witness-order.json`): a ButtonRoom latch pressed MID-tape opens L at on + 102
+     * (`w-latch`; OFF + 101), a block's Button release re-shuts it a frame later than OFF (`w-block`), a spinner meets a
+     * resetting Cover as the read alone says (`w-cover-124`, `-128`), and a spinner crossing a Button PRESSES it (the
+     * Cover of its group opens, `w-spin-button`); an N-tick tape's hold-cut ledger holds no write from the model's
+     * step at the end of advance N (`d2/witness-horizon.json`: `l71-hold-101-shut`, `l30keylock-pit224-before`).
+     * ON. The main tick's and a frozen tick's step is DEFERRED (`levelRun.deferResponderStep`) and runs at the top of
+     * the next tick after the readers and the Chest, before the Pulser and the player; a span frame and an inventory
+     * hold frame step at once (their readers already stepped first). Inside the step the responders run FIRST, on the
+     * PREVIOUS step's publish (`state.published`: the Button's / ButtonRoom's press and the latch as they stood), and
+     * the presser half (cross-room writes, the latch, wave 63's setters, the new publish) runs after them, on this
+     * step's box; a world's first step seeds its publish first (the boot press, as OFF). The Lock family's guard counts
+     * the spinner and wallflyer boxes (`opts.enemies`); a Cover's does not; the presser half's press counts them too
+     * (`Button.hitables` / `ButtonRoom.hitables` hold "Enemy"). A tape's last deferred step is past its last frame and
+     * never runs (the game's hold-cut ledger agrees). The Pulser reads the responders' read
+     * (`state.responderRead`). So the readers read the plain current set: `spinnerLockLag`'s open lag and
+     * `chestCoverFencepost`'s snapshot are NOT applied a second time, nor `pulserPublishLag`'s `pressedLast`. A
+     * transition tick's step is not run (the level being left runs no later frame; game-witnessed, `w-leave-*`), nor a
+     * step whose world a same-level rebuild tore down (a death reboot, `enterWorld`; derived, unwitnessed). OFF:
+     * nothing read or written, byte-identical. Not modelled, named: the other enemies in a Lock's box or on a Button (only the spinner
+     * and the wallflyer have model positions here); a spinner / wallflyer on a Button that drops a FallRock
+     * (`armButtonFallRocks` keeps its own press); the arrow trap's own lag (game-adjudicated, unchanged); the dead
+     * frames' responder update (the model steps none, OFF or ON).
+     * Composes with every key; `presserRecursionHang`'s early return stays first. `SEEDLING_RESPONDER_STEP_AFTER_READERS=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    responderStepAfterReaders: false,
+    /**
+     * ⛓ fidelity DEADFRAME D2 (wave 66) — THE RESPONDERS STEP ON THE DEAD FRAMES (wave 65's named residue, the map row
+     * "dead frames (pickup lumps, the span) | no responder step"; `CC/docs/cloud-reports/seedling-fidelity-deadframe.md`).
+     * The game. A freeze gates only `Mobile` and the enemies: `Game.update` runs `super.update()` whenever
+     * `blackCover <= 0` (`Game.as:880-883`), and `Lock`/`Cover`/`Button`/`ButtonRoom` carry no `Game.freezeObjects` test
+     * (`Puzzlements/Lock.as`, `Cover.as`, `Button.as:24-35`, `ButtonRoom.as`), so every responder updates on every dead
+     * frame the bot does not count as a tape tick, in the main tick's order. The dead frames of a pickup's phase A lie
+     * right after its contact frame (a texted pickup's 149, the lump `ceremonyShove` measured; a text-less one's 150, all
+     * of `Pickup.specialTimer`), and a button-dropped rock's span (`dropRocksTogether`: every frame of it, release
+     * included, is dead) right after its frame A. MEASURED on the game (p4g; staged L38, `botLoadLevels`, a fresh page per
+     * shape; `-evidence/d2/witness-all.json`, `witness-edges.json`): L (`lock@112,48`, latched from the boot: open on
+     * frame 102) opens at tape tick 25 through a `bosskey keyType 1`'s lump (`d-key`, dead frames 20 → 170), 27 through a
+     * `health`'s (`d-health`, 20 → 169) and 25 through a button rock's span (`d-span`, 20 → 187); the model (OFF) opens it
+     * on 102 every time. The edges (`d-*-at100…103`: the contact / frame A at advance #100…#103) open L on 101 (the
+     * first dead frame is frame 102) and on 102 (the contact frame's own update opened it, or it is past it).
+     * ON (`levelRun.queueDeadResponderFramesNow`): the site queues `n` frames with the box and the solids the dead frames
+     * see (the player and the enemies are frozen; a span's rock is a Solid from the frame after its landing — `Lock`
+     * updates before `FallRock`, `Game.as:2353-2356`). With `responderStepAfterReaders` OFF they run before the contact
+     * tick's own step (`stepActivators`' labelling: that step is the next live frame's update), stamped with it; with it
+     * ON they run at the top of the next advance, BEFORE its readers (a reader of the next live frame sees the responders
+     * the dead frames left), and that frame's own deferred step runs after the readers as before. The sites: a placed
+     * pickup's ceremony (texted 149, text-less 150), the runtime Dark Sword's and Fire's (texted 149), and
+     * `dropRocksTogether`'s span (a nested one is the ceremony's frames). A queue whose world a level change or a
+     * rebuild tore down is dropped, as a deferred step is. OFF: nothing read or written, byte-identical. Not modelled,
+     * named (residue): the other dead frames — a seal piece's, a door ceremony's, the moonrock's, BobBoss's and
+     * LavaBoss's rocks, the wand's approach fade, a seed's cover fade, a Help's frame (the game runs the responders on
+     * all of them; unwitnessed, and the census finds no committed tape on which a responder would change); the Pulser's
+     * dead-frame update (its pulse and its hits); a block's per-frame glide interleaved with the dead steps (the dead
+     * steps read the blocks where they stand).
+     * Composes with `responderStepAfterReaders` (both arms witnessed) and every key. `SEEDLING_DEAD_FRAME_RESPONDER_STEP=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    deadFrameResponderStep: false,
+    /**
+     * ⛓ fidelity DEADFRAME D2 (wave 66) — A SPINNER OR A WALLFLYER ON A FALLROCK'S BUTTON DROPS THE ROCK (wave 65's
+     * named residue: `armButtonFallRocks` presses only on the player and the blocks).
+     * The game. `Button.hitables` holds "Enemy" (`Puzzlements/Button.as:15`) and `activateAll` reaches a `FallRock` of
+     * its `t`, whose setter `fall()`s it (`Scenery/FallRock.as:103-118`). The Spinner and the WallFlyer update before the
+     * Button (`Game.as:2415-2416` vs `:2341`, `World.addUpdate` prepends), so the Button sees an enemy where THIS frame
+     * moved it and `fall()` raises the freeze in that same frame — the frame is frame A, and the player (updating
+     * last) is frozen in it. (A player's press is read a frame later: the Player updates after the Button.) MEASURED on
+     * the game (p4g, staged L38, `-evidence/d2/witness-all.json`): a WallFlyer coming to rest on `button@144,208`
+     * (group 7) drops `fallrock@64,272` with frame A at tape tick 15, the tick the flyer reaches the button (`e-fly-rock`);
+     * a Spinner crossing `button@144,176` drops it at tick 72 (`e-spin-rock`); the model (OFF, and with
+     * `responderStepAfterReaders` ON) never drops it.
+     * ON (`levelRun.armButtonFallRocksByEnemiesNow`): at the top of every live tick, after the readers stepped and before
+     * the frame-A branch, the live spinner and wallflyer boxes press the FallRock Buttons (`fallRocksArmedBy`); an arm is
+     * resolved as frame A in THIS tick. OFF: nothing read, byte-identical. Not modelled, named: the other enemies (no
+     * model position); a block on a FallRock's Button is read at the end of the tick (it updates before the Button too:
+     * unwitnessed).
+     * Needs no other key; composes with every key. `SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    enemyPressesFallRockButton: false,
+    /**
+     * ⛓ fidelity WANDTRAPBODIES (wave 67) — A WAND SHOT STOPS ON A LIVE DARKTRAP OR A COLLIDABLE PLACED GRENADE, AND A
+     * ROOM HOLDING ONE MAY FIRE (re-measure-10's entry-37 wall: L63, `level_63__r6c9 -> level_65__r0c8`).
+     * The game. `WandShot.solids` holds "Enemy" (`WandShot.as:69`); a `DarkTrap` (`SandTrap.as:35` `setHitbox(16,16,8,8)`)
+     * and a `Grenade` (`Grenade.as:43-44` `setHitbox(6,6,3,3)`, `type = "Enemy"`) are both, and both `hit`s are EMPTY
+     * overrides (`DarkTrap.as:56-58`, `Grenade.as:70-71`): the shot stops, plays "die", and the body is untouched.
+     * `Entity.collide` skips a body whose `collidable` is false (`net/flashpunk/Entity.as:162`): a grenade writes `false`
+     * on every falling update and `true` on every resting one (`Grenade.as:78,109`) and is collidable from its ctor
+     * (the `Entity` default) while dormant; a darktrap never writes it and is a body until `DarkTrap.endAnim`'s removal
+     * (the counter and "die1" included). The shot updates first (run-time added, `World.addUpdate` prepends), so it reads
+     * both as the previous tick left them. `WandShot` adds no `Light` (no darktrap death of its own). MEASURED on the game
+     * (p4g, the delivered vanilla set, a fresh page per shape; `fixtures/wandtrapbodies-witness/`, recorded by
+     * `probe-seedling-wandtrapbodies.mjs`): L63, facing E at `darktrap@64,96`, the shot stops at (63, 112) on tick 17 and
+     * the trap lives on (`a-live`); with `{63,1}` lit it still stops on 17 (counter) and 47 ("die1"), and on 73, the
+     * removal tick; on 74 it flies on to the wall at x 79 (`b-*`). L75's DORMANT `grenade@72,168` stops it at (76, 128)
+     * on 16 (`c-dormant`); L63's `grenade@128,128` lets it through while falling (tick 30) and bouncing (71) — both die
+     * on the wall at x 159 — and stops it at (132, 136) resting (99), in "explode" (139), in "hit" (159) and on its
+     * removal tick (163); on 164 it flies through (`d-*`). The shot the captured entry-37 search fires (from the
+     * request's boot (16,96), facing E) stops on `darktrap@64,96` at (63, 104) on tick 20 (`e-route`). The model ON is the
+     * game at every sampled tick, 0 px.
+     * ON (`levelRun.assertWandShotSolidsBound`, `wandShotBlockerAt`, `applyWandShotToBoss`): the darktraps and placed
+     * grenades the run STEPS (`wandTrapBodyIdsFor`) count as placed; their live boxes (`darkTrapStateFor`'s rect until
+     * `removed`; a grenade's 6 x 6 at its live point while not removed and not `collidable === false`, the flag
+     * `stepPlacedGrenade`'s `onCollidable` writes) join the shot's "Enemy" arm, read FIRST so a box that also overlaps a
+     * totem, spinner or chaser refuses by name; a hit is a stop with no state change (`spentWithoutDamage`). Under
+     * `noclip || noDamage`, and for a darktrap with `darkTrapLight` OFF, no body is stepped: the room still refuses (the
+     * chasers' gate). A darktrap within a grenade's blast light (`Grenade.animEnd`'s `Light`, radiusMin 20) refuses by
+     * name (none on the extract). OFF: nothing read, byte-identical. Not modelled, named (residue — still refused): Drill
+     * (L28, L88, L91), IceTrap (L45, L46, L53, L54), LavaTrap (L77, L78, L80, L108), SandTrap (L6, L8, L16, L36), Turret
+     * (L29, L59, L62, L65), WallFlyer (L22, L25, L27).
+     * Needs `darkTrapLight` for the darktraps; composes with every key. `SEEDLING_WAND_SHOT_TRAP_BODIES=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    wandShotTrapBodies: false,
+    /**
+     * ⛓ fidelity WANDENEMYBODIES (wave 68) — A WAND SHOT STOPS ON A LIVE TURRET, LAVATRAP, WALLFLYER, ICETRAP, SANDTRAP
+     * OR DRILL, AND THE HIT IS THE GAME'S (wave 67's residue; L59/L62/L65's turret and L78's lavatraps on the late walk).
+     * The game. All six are `Enemy`s (`Enemy.as:58` `type = "Enemy"`) and none writes `collidable`, so each is a body to
+     * the shot (`WandShot.as:69` `solids.push("Enemy")`) from its ctor until the world removes it; the shot updates
+     * first (run-time added, `World.addUpdate` prepends), so it reads each as the previous tick left it. A blocker gets
+     * `hit(3, p, 0.5, "Wand")` (`WandShot.as:112-117`) — `Enemy.hit` (`Enemy.as:141-181`): behind `hitsTimer <= 0`,
+     * `!freezeObjects` and `canHit`, `hits += 0.5`, `hitsTimer = 30`, then `knockback` (or `startDeath` at `hitsMax` 3).
+     * Per class: Turret, SandTrap, LavaTrap and Drill have EMPTY `knockback`s; a WallFlyer's reverses `v`; an IceTrap's
+     * `canHit = false` (`IceTrap.as:32`) closes the gate. While `hitsTimer` runs a Turret starts no shot (`Turret.as:64`)
+     * and no body's `hitPlayer` fires; a Drill plays "hit" and holds its hop (`Drill.as:61-63`). MEASURED on the game
+     * (p4g, the delivered vanilla set, a fresh page per shape; `fixtures/wandenemybodies-witness/`, 16 recordings by
+     * `probe-seedling-wandenemybodies.mjs`, compared at every sampled tick: the player at 0 px, every shot, every body's
+     * point, `hits` and `hitsTimer`, a flyer's `v`, a drill's and a turret's anim, every TurretSpit): L59's turret stops
+     * the shot at (151, 72) on tick 15 and takes hits 0.5 / 29 on its own update, its spits held by the i-frames
+     * (`turret-live`); a second shot 20 ticks later lands in them (9 left, no damage) and a third lands (hits 1)
+     * (`turret-iframes`); L65's at (63, 120) on 15 (`turret-l65`); after C1's L62 sword kill it is a body in "die" and
+     * in `Mobile.death`'s fade (hits 3 >= hitsMax: no damage), and after its removal the shot flies on (`turret-die`,
+     * `-fade`, `-removed`); L78's lavatrap at (98, 88) on 18, hits 0.5 (`lavatrap-live`, `-iframes`); L53's icetrap
+     * stops it and takes nothing (`icetrap-live`); L16's and L36's sandtraps at (66, 40) / (72, 98) on 14, a dying one
+     * is a body and a removed one is not (`sandtrap-live`, `-l36`, `-die`, `-removed`); L27's wallflyer, launched at
+     * the player, is met in flight at (177, 56) on 16 and reversed (v -4 → +4) (`wallflyer-flight`); L88's sitting
+     * (invisible) drill stops it and plays "hit" for its i-frames, and a hopped one is met at its new cell
+     * (`drill-sit`, `drill-hop`). The model ON is the game at every sampled tick.
+     * ON (`levelRun.assertWandShotSolidsBound`, `wandShotBlockerAt`, `applyWandShotToBoss` →
+     * `applyWandShotToEnemyBody`): the bodies whose state the run holds (`wandEnemyBodyIdsFor`) count as placed — a
+     * Turret or SandTrap on F4's static row (`staticBodyStateFor`; a Turret only with `STATIC_SWORD_ARM` ON), a
+     * LavaTrap on its own wand row (`wandLavaTrapStateFor`, its i-frames stepped by `stepWandLavaTrapsNow`), an IceTrap
+     * at its census box, a WallFlyer (`wallFlyerStateFor`) and a Drill (`drillStateFor`, only the drills it steps) at
+     * their live boxes; read FIRST in the shot's "Enemy" arm; the hit is `enemyHit` / `hitWallFlyer` / `hitDrill` on
+     * that state, so the readers that already gate on it (the turret's fire gate, the static contact scan, the flyer's
+     * and the drill's steppers) see it. Refused by name: under `noclip || noDamage` (no body stepped: the chasers'
+     * gate); a hit that KILLS (`startDeath` → `dieEffects("Wand")`'s `Explosion`, or a LavaTrap's tongue ending —
+     * neither placed by this run); a shot box over two or more "Enemy" bodies on one step (the type-list order is not
+     * held). OFF: nothing read, byte-identical. Not modelled, named: the kill (six landed hits, 30 apart); the
+     * wave-67 overlap guard's unreachable totem/spinner arms (residue).
+     * Needs `STATIC_SWORD_ARM` for the turrets (their damage row) and `drillLive` for the drills; composes with every
+     * key (`wandShotTrapBodies` for the rooms that also hold a darktrap or a grenade: L59, L62, L65, L78).
+     * `SEEDLING_WAND_SHOT_ENEMY_BODIES=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    wandShotEnemyBodies: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2907,6 +3112,23 @@ if (globalThis.process?.env?.SEEDLING_CHEST_COVER_FENCEPOST === '0') CONTACT_FID
 // ⛓ fidelity PRESSERLOOP D2: `SEEDLING_PRESSER_RECURSION_HANG=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_PRESSER_RECURSION_HANG === '1') CONTACT_FIDELITY.presserRecursionHang = true;
 if (globalThis.process?.env?.SEEDLING_PRESSER_RECURSION_HANG === '0') CONTACT_FIDELITY.presserRecursionHang = false;
+// ⛓ fidelity BUTTONROOMCLEAR D2: `SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER === '1') CONTACT_FIDELITY.publishedButtonRoomSetter = true;
+if (globalThis.process?.env?.SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER === '0') CONTACT_FIDELITY.publishedButtonRoomSetter = false;
+// ⛓ fidelity RESPONDERORDER D2: `SEEDLING_RESPONDER_STEP_AFTER_READERS=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_RESPONDER_STEP_AFTER_READERS === '1') CONTACT_FIDELITY.responderStepAfterReaders = true;
+if (globalThis.process?.env?.SEEDLING_RESPONDER_STEP_AFTER_READERS === '0') CONTACT_FIDELITY.responderStepAfterReaders = false;
+// ⛓ fidelity DEADFRAME D2: `SEEDLING_DEAD_FRAME_RESPONDER_STEP=0|1` and `SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DEAD_FRAME_RESPONDER_STEP === '1') CONTACT_FIDELITY.deadFrameResponderStep = true;
+if (globalThis.process?.env?.SEEDLING_DEAD_FRAME_RESPONDER_STEP === '0') CONTACT_FIDELITY.deadFrameResponderStep = false;
+if (globalThis.process?.env?.SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON === '1') CONTACT_FIDELITY.enemyPressesFallRockButton = true;
+if (globalThis.process?.env?.SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON === '0') CONTACT_FIDELITY.enemyPressesFallRockButton = false;
+// ⛓ fidelity WANDTRAPBODIES: `SEEDLING_WAND_SHOT_TRAP_BODIES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WAND_SHOT_TRAP_BODIES === '1') CONTACT_FIDELITY.wandShotTrapBodies = true;
+if (globalThis.process?.env?.SEEDLING_WAND_SHOT_TRAP_BODIES === '0') CONTACT_FIDELITY.wandShotTrapBodies = false;
+// ⛓ fidelity WANDENEMYBODIES: `SEEDLING_WAND_SHOT_ENEMY_BODIES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WAND_SHOT_ENEMY_BODIES === '1') CONTACT_FIDELITY.wandShotEnemyBodies = true;
+if (globalThis.process?.env?.SEEDLING_WAND_SHOT_ENEMY_BODIES === '0') CONTACT_FIDELITY.wandShotEnemyBodies = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

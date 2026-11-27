@@ -1,0 +1,52 @@
+btn-br1: game rows 91 level 37 cleared [37,4 38,5 38,10]
+   OFF {"firstDiff":null,"px":0,"rows":91,"level":37,"cleared":"37,4 38,5","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":91,"level":37,"cleared":"37,4 38,5 38,10","clearedMatch":true,"err":null}  ON = GAME
+btn-brx1: game rows 91 level 37 cleared [37,4 37,6 38,5 38,10]
+   OFF {"firstDiff":null,"px":0,"rows":91,"level":37,"cleared":"37,4 38,5","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":91,"level":37,"cleared":"37,4 37,6 38,5 38,10","clearedMatch":true,"err":null}  ON = GAME
+btn-brx0-then-brx1: game rows 91 level 37 cleared [37,4 38,5 38,10 38,11]
+   OFF {"firstDiff":null,"px":0,"rows":91,"level":37,"cleared":"37,4 38,5","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":91,"level":37,"cleared":"37,4 38,5 38,10 38,11","clearedMatch":true,"err":null}  ON = GAME
+btn-brx1-then-brx0: game rows 91 level 37 cleared [37,4 37,6 38,5 38,10 38,11]
+   OFF {"firstDiff":null,"px":0,"rows":91,"level":37,"cleared":"37,4 38,5","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":91,"level":37,"cleared":"37,4 37,6 38,5 38,10 38,11","clearedMatch":true,"err":null}  ON = GAME
+br0-br1: game rows 91 level 37 cleared [37,4 38,5 38,10 38,11]
+   OFF {"firstDiff":null,"px":0,"rows":91,"level":37,"cleared":"37,4 38,5 38,11","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":91,"level":37,"cleared":"37,4 38,5 38,10 38,11","clearedMatch":true,"err":null}  ON = GAME
+br0-brx1: game rows 91 level 37 cleared [37,4 37,6 38,5 38,10 38,11]
+   OFF {"firstDiff":null,"px":0,"rows":91,"level":37,"cleared":"37,4 38,5 38,11","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":91,"level":37,"cleared":"37,4 37,6 38,5 38,10 38,11","clearedMatch":true,"err":null}  ON = GAME
+pull-br1: game rows 201 level 37 cleared [37,4 38,5 38,10 38,12]
+   OFF {"firstDiff":null,"px":0,"rows":201,"level":37,"cleared":"37,4 38,5 38,12","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":201,"level":37,"cleared":"37,4 38,5 38,10 38,12","clearedMatch":true,"err":null}  ON = GAME
+ropeboot-br1: game rows 91 level 37 cleared [37,4 38,5 38,10 38,12]
+   OFF {"firstDiff":null,"px":0,"rows":91,"level":37,"cleared":"37,4 38,5 38,12","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":91,"level":37,"cleared":"37,4 38,5 38,10 38,12","clearedMatch":true,"err":null}  ON = GAME
+btn-br1-revisit: game rows 141 level 38 cleared [37,4 38,5 38,10]
+   OFF {"firstDiff":null,"px":0,"rows":141,"level":38,"cleared":"37,4 38,5","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":141,"level":38,"cleared":"37,4 38,5 38,10","clearedMatch":true,"err":null}  ON = GAME
+btn-brx1-revisit: game rows 141 level 38 cleared [37,4 37,6 38,5 38,10]
+   OFF {"firstDiff":null,"px":0,"rows":141,"level":38,"cleared":"37,4 38,5","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":141,"level":38,"cleared":"37,4 37,6 38,5 38,10","clearedMatch":true,"err":null}  ON = GAME
+br0-br1-revisit: game rows 141 level 38 cleared [37,4 38,5 38,10 38,11]
+   OFF {"firstDiff":null,"px":0,"rows":141,"level":38,"cleared":"37,4 38,5 38,11","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":141,"level":38,"cleared":"37,4 38,5 38,10 38,11","clearedMatch":true,"err":null}  ON = GAME
+btn-lock: game rows 261 level 37 cleared [37,4 38,5]
+   OFF {"firstDiff":{"row":124,"game":{"level":38,"x":152,"y":236.55},"model":{"level":38,"x":152,"y":237.8}},"px":"level differs","rows":261,"level":37,"cleared":"37,4 38,5","clearedMatch":true,"err":null}
+   ON  {"firstDiff":{"row":124,"game":{"level":38,"x":152,"y":236.55},"model":{"level":38,"x":152,"y":237.8}},"px":"level differs","rows":261,"level":37,"cleared":"37,4 38,5","clearedMatch":true,"err":null}  ON ≠ GAME — ON rows = OFF rows
+btn-br1-lock: game rows 261 level 38 cleared [38,10]
+   OFF {"firstDiff":{"row":124,"game":{"level":38,"x":152,"y":236.55},"model":{"level":38,"x":152,"y":237.8}},"px":"level differs","rows":261,"level":37,"cleared":"37,4 38,5","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":261,"level":38,"cleared":"38,10","clearedMatch":true,"err":null}  ON = GAME
+btn-cover: game rows 261 level 37 cleared [37,4 38,5]
+   OFF {"firstDiff":{"row":34,"game":{"level":38,"x":152,"y":236.55},"model":{"level":38,"x":152,"y":237.9}},"px":"level differs","rows":261,"level":37,"cleared":"37,4 38,5","clearedMatch":true,"err":null}
+   ON  {"firstDiff":{"row":34,"game":{"level":38,"x":152,"y":236.55},"model":{"level":38,"x":152,"y":237.9}},"px":"level differs","rows":261,"level":37,"cleared":"37,4 38,5","clearedMatch":true,"err":null}  ON ≠ GAME — ON rows = OFF rows
+btn-br1-cover: game rows 261 level 38 cleared [38,10]
+   OFF {"firstDiff":{"row":34,"game":{"level":38,"x":152,"y":236.55},"model":{"level":38,"x":152,"y":237.9}},"px":"level differs","rows":261,"level":37,"cleared":"37,4 38,5","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":261,"level":38,"cleared":"38,10","clearedMatch":true,"err":null}  ON = GAME
+btn-br1-rock: game rows 261 level 37 cleared [37,4 38,5 38,10 38,14]
+   OFF {"firstDiff":null,"px":0,"rows":261,"level":37,"cleared":"37,4 38,5 38,14","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":261,"level":37,"cleared":"37,4 38,5 38,10 38,14","clearedMatch":true,"err":null}  ON = GAME
+br0-br1-lock: game rows 261 level 38 cleared [38,10 38,11]
+   OFF {"firstDiff":{"row":124,"game":{"level":38,"x":152,"y":236.55},"model":{"level":38,"x":152,"y":237.8}},"px":"level differs","rows":261,"level":37,"cleared":"37,4 38,5 38,11 38,13","clearedMatch":false,"err":null}
+   ON  {"firstDiff":null,"px":0,"rows":261,"level":38,"cleared":"38,10 38,11","clearedMatch":true,"err":null}  ON = GAME
+OVER {}: 15/17 shapes ON = GAME (0 px, rows, cleared set); not: btn-lock (ON rows = OFF rows: not this key), btn-cover (ON rows = OFF rows: not this key)

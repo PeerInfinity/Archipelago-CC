@@ -1,0 +1,220 @@
+{
+ "tapes": 322,
+ "over": {
+  "frozenTickUngated": true
+ },
+ "total": {
+  "spans": {
+   "ceremony:sealpiece": {
+    "spans": 13,
+    "frames": 4303,
+    "withResponders": 8,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0
+   },
+   "pickup-lump": {
+    "spans": 75,
+    "frames": 11250,
+    "withResponders": 28,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0
+   },
+   "span:fallrock": {
+    "spans": 3,
+    "frames": 591,
+    "withResponders": 3,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0
+   },
+   "freeze:bobboss-rock": {
+    "spans": 10,
+    "frames": 1740,
+    "withResponders": 0,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0
+   },
+   "help:sword": {
+    "spans": 7,
+    "frames": 6,
+    "withResponders": 0,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0
+   },
+   "freeze:wand-approach-fade": {
+    "spans": 3,
+    "frames": 297,
+    "withResponders": 0,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0
+   },
+   "span:fallrocks-together": {
+    "spans": 3,
+    "frames": 558,
+    "withResponders": 0,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0
+   },
+   "freeze:door-ceremony": {
+    "spans": 5,
+    "frames": 905,
+    "withResponders": 0,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0
+   },
+   "freeze:seed-cover-fade": {
+    "spans": 2,
+    "frames": 400,
+    "withResponders": 0,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0
+   },
+   "freeze:moonrock": {
+    "spans": 2,
+    "frames": 902,
+    "withResponders": 0,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0
+   }
+  },
+  "overlaps": {
+   "spinner-on-buttonroom": 101,
+   "spinner-on-button": 305
+  }
+ },
+ "rows": [
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/refuted/r8-solve-5.tape.json",
+   "threw": "the player entered Water in level 5 at (47.00324793668, 56.39999999999999) on a tape that does not p",
+   "spans": {},
+   "overlaps": {}
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "details": []
+    }
+   },
+   "overlaps": {
+    "spinner-on-buttonroom": 19
+   },
+   "where": {
+    "spinner-on-buttonroom L40 buttonroom@272,208": 19
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "details": []
+    }
+   },
+   "overlaps": {
+    "spinner-on-buttonroom": 4
+   },
+   "where": {
+    "spinner-on-buttonroom L40 buttonroom@160,128": 4
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5-control.json",
+   "threw": null,
+   "spans": {},
+   "overlaps": {
+    "spinner-on-buttonroom": 39
+   },
+   "where": {
+    "spinner-on-buttonroom L40 buttonroom@880,768": 39
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json",
+   "threw": null,
+   "spans": {},
+   "overlaps": {
+    "spinner-on-buttonroom": 39
+   },
+   "where": {
+    "spinner-on-buttonroom L40 buttonroom@880,768": 39
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft-control.json",
+   "threw": null,
+   "spans": {
+    "span:fallrock": {
+     "spans": 1,
+     "frames": 197,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "details": []
+    }
+   },
+   "overlaps": {
+    "spinner-on-button": 111
+   },
+   "where": {
+    "spinner-on-button L39 button@128,144": 45,
+    "spinner-on-button L39 button@160,144": 42,
+    "spinner-on-button L39 button@144,128": 24
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft.json",
+   "threw": null,
+   "spans": {
+    "span:fallrock": {
+     "spans": 1,
+     "frames": 197,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "details": []
+    },
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "details": []
+    }
+   },
+   "overlaps": {
+    "spinner-on-button": 194
+   },
+   "where": {
+    "spinner-on-button L39 button@128,144": 127,
+    "spinner-on-button L39 button@112,144": 67
+   }
+  }
+ ]
+}

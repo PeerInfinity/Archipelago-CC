@@ -1,0 +1,19 @@
+# box lock: TAKEN by br-witness.mjs (browser, pid 1044) — head 6ff6b09df, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+btn-br1: {"finished":true,"tick":90,"buffered":91,"dead_frames":40,"level":37,"x":296,"y":28.700000000000006,"cleared":"37,4 38,5 38,10","errors":5,"firstError":null,"drained":91}
+btn-brx1: {"finished":true,"tick":90,"buffered":91,"dead_frames":40,"level":37,"x":296,"y":28.700000000000006,"cleared":"37,4 37,6 38,5 38,10","errors":5,"firstError":null,"drained":91}
+btn-brx0-then-brx1: {"finished":true,"tick":90,"buffered":91,"dead_frames":40,"level":37,"x":296,"y":29.050000000000008,"cleared":"37,4 38,5 38,10 38,11","errors":5,"firstError":null,"drained":91}
+btn-brx1-then-brx0: {"finished":true,"tick":90,"buffered":91,"dead_frames":40,"level":37,"x":296,"y":29.050000000000008,"cleared":"37,4 37,6 38,5 38,10 38,11","errors":5,"firstError":null,"drained":91}
+br0-br1: {"finished":true,"tick":90,"buffered":91,"dead_frames":40,"level":37,"x":296,"y":28.700000000000006,"cleared":"37,4 38,5 38,10 38,11","errors":5,"firstError":null,"drained":91}
+br0-brx1: {"finished":true,"tick":90,"buffered":91,"dead_frames":40,"level":37,"x":296,"y":28.700000000000006,"cleared":"37,4 37,6 38,5 38,10 38,11","errors":5,"firstError":null,"drained":91}
+pull-br1: {"finished":true,"tick":200,"buffered":201,"dead_frames":40,"level":37,"x":296,"y":89.00000000000001,"cleared":"37,4 38,5 38,10 38,12","errors":5,"firstError":null,"drained":201}
+ropeboot-br1: {"finished":true,"tick":90,"buffered":91,"dead_frames":40,"level":37,"x":296,"y":29.050000000000008,"cleared":"37,4 38,5 38,10 38,12","errors":5,"firstError":null,"drained":91}
+btn-br1-revisit: {"finished":true,"tick":140,"buffered":141,"dead_frames":60,"level":38,"x":152,"y":296,"cleared":"37,4 38,5 38,10","errors":5,"firstError":null,"drained":141}
+btn-brx1-revisit: {"finished":true,"tick":140,"buffered":141,"dead_frames":60,"level":38,"x":152,"y":296,"cleared":"37,4 37,6 38,5 38,10","errors":5,"firstError":null,"drained":141}
+br0-br1-revisit: {"finished":true,"tick":140,"buffered":141,"dead_frames":60,"level":38,"x":152,"y":296,"cleared":"37,4 38,5 38,10 38,11","errors":5,"firstError":null,"drained":141}
+btn-lock: {"finished":true,"tick":260,"buffered":261,"dead_frames":40,"level":37,"x":296,"y":109,"cleared":"37,4 38,5","errors":4,"firstError":null,"drained":261}
+btn-br1-lock: {"finished":true,"tick":260,"buffered":261,"dead_frames":20,"level":38,"x":152,"y":237,"cleared":"38,10","errors":5,"firstError":null,"drained":261}
+btn-cover: {"finished":true,"tick":260,"buffered":261,"dead_frames":40,"level":37,"x":296,"y":109,"cleared":"37,4 38,5","errors":5,"firstError":null,"drained":261}
+btn-br1-cover: {"finished":true,"tick":260,"buffered":261,"dead_frames":20,"level":38,"x":152,"y":237,"cleared":"38,10","errors":5,"firstError":null,"drained":261}
+btn-br1-rock: {"finished":true,"tick":260,"buffered":261,"dead_frames":222,"level":37,"x":296,"y":109,"cleared":"37,4 38,5 38,10 38,14","errors":5,"firstError":null,"drained":261}
+br0-br1-lock: {"finished":true,"tick":260,"buffered":261,"dead_frames":20,"level":38,"x":152,"y":237,"cleared":"38,10 38,11","errors":5,"firstError":null,"drained":261}

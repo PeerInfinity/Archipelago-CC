@@ -1,0 +1,6 @@
+# box lock: TAKEN by witness-order.mjs (browser, pid 8415) — head 086b70412, 6 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+w-leave-110: whole tape 150 t, mounted seedling-vanilla-record-23510f80-ro-w-leave-110, 116 sampled ticks, stream 151, hits 0, 8.6 s
+w-leave-108: whole tape 148 t, mounted seedling-vanilla-record-23510f80-ro-w-leave-108, 114 sampled ticks, stream 149, hits 0, 8.7 s
+w-leave-112: whole tape 152 t, mounted seedling-vanilla-record-23510f80-ro-w-leave-112, 118 sampled ticks, stream 153, hits 0, 8.8 s
+EXIT 0

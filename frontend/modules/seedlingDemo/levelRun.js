@@ -57,7 +57,7 @@ import {
 import {
     RESPONDERS, createActivatorState, fallRocksArmedBy, opensOnTick, openActivatorIds,
     openActivatorIdsBeforeLatestStep, openActivatorIdsBeforeStep, latchAtBuild, pressedGroups, presserDown, ropePublish, stepActivators,
-    PresserRecursionHang, markPresserHang,
+    PresserRecursionHang, markPresserHang, flipAnswerGroups, queuePublishedTrue,
 } from './activators.js';
 import {
     FALL_ROCK, createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
@@ -1467,6 +1467,9 @@ export function createLevelRun({
         // ⛓ F4: and the static bodies' damage roster, for the same reason.
         staticBodyStates.delete(n);
         darkTrapStates.delete(n);
+        // ⛓ fidelity WANDENEMYBODIES: and the LavaTraps' wand damage rows and the covered ids (OFF: both empty).
+        wandLavaTrapStates.delete(n);
+        wandEnemyBodyIds.delete(n);
         // R5 slice 15: the crusher roster is built from the world too. No
         // item grants or removes one today; dropped anyway, for the reason
         // the spinner's is.
@@ -1840,6 +1843,12 @@ export function createLevelRun({
             && markPresserHang(act, worldFor(n), pub.group, pub.value, `${ropeSolid.ropeId} (pulled)`)) return;
         if (pub) {
             if (atBuild) latchAtBuild(act, pub.group, worldFor(n));
+            // ⛓ fidelity BUTTONROOMCLEAR D2 (OFF never read): the pull's true runs the group's ButtonRooms' setters (the
+            // next step banks them); a flip-1 one answers false, so the group does not latch. The rocks still fall.
+            else if (CONTACT_FIDELITY.publishedButtonRoomSetter) {
+                queuePublishedTrue(act, pub.group, ropeSolid.ropeId);
+                if (!flipAnswerGroups(worldFor(n)).has(pub.group)) act.latched.set(pub.group, pub.value);
+            }
             else act.latched.set(pub.group, pub.value);
             // …and the members whose own `set activate` DOES
             // something the latch alone cannot express.
@@ -2878,8 +2887,16 @@ export function createLevelRun({
         // (`chaserRectsNow`, read by `wandShotBlockerAt`); under `noclip || noDamage` it has none and still refuses.
         const chaserIds = CONTACT_FIDELITY.wandShotChaserBodies && !noclip && !noDamage
             ? new Set(chaserStateFor(n).keys()) : null;
+        // ⛓ fidelity WANDTRAPBODIES (`wandShotTrapBodies`, OFF): a darktrap or a placed grenade the run STEPS has a live
+        // box (`wandTrapBodiesNow`, read by `wandShotBlockerAt`); under `noclip || noDamage` it has none and still refuses.
+        const trapIds = CONTACT_FIDELITY.wandShotTrapBodies ? wandTrapBodyIdsFor(n) : null;
+        // ⛓ fidelity WANDENEMYBODIES (`wandShotEnemyBodies`, OFF): a Turret, LavaTrap, WallFlyer, IceTrap, SandTrap or
+        // Drill whose box and damage state the run holds (`wandEnemyBodyIdsFor`); none under `noclip || noDamage`.
+        const enemyIds = CONTACT_FIDELITY.wandShotEnemyBodies ? wandEnemyBodyIdsFor(n) : null;
         const unboxed = (w.pressEnemies ?? []).filter((e) => !boxed.has(`${e.x},${e.y}`)
-            && !(chaserIds && chaserIds.has(`${e.tag}@${e.x},${e.y}`)));
+            && !(chaserIds && chaserIds.has(`${e.tag}@${e.x},${e.y}`))
+            && !(trapIds && trapIds.has(`${e.tag}@${e.x},${e.y}`))
+            && !(enemyIds && enemyIds.has(`${e.tag}@${e.x},${e.y}`)));
         if (unboxed.length > 0) {
             const names = unboxed.map((e) => `${e.tag}@${e.x},${e.y}`).join(', ');
             throw new Error(`levelRun: a WandShot in level ${n} would collide with `
@@ -2952,6 +2969,31 @@ export function createLevelRun({
         // (2) the `"Enemy"` arm — the bodies (1) cannot see. A WOKEN totem
         // is `type = "Enemy"` and `liveRectOf` deliberately returns null for
         // it, which is right for the player and wrong for this mover.
+        // ⛓ fidelity WANDENEMYBODIES (`wandShotEnemyBodies`, OFF): the six classes' live boxes, read FIRST; a box that
+        // overlaps two or more "Enemy" bodies (any arm) refuses by name — `collideTypes` returns the first in the
+        // type list, an order this run does not hold, and the bodies' `hit`s differ.
+        if (CONTACT_FIDELITY.wandShotEnemyBodies) {
+            const mine = wandEnemyBodiesAt(box);
+            if (mine.length > 0) {
+                const all = mine.map((m) => m.id);
+                for (const b of (bossRectsNow() ?? new Map()).values()) {
+                    if (b.activated && b.bodyRect && rectsOverlap(box, b.bodyRect)) all.push(b.id);
+                }
+                for (const sp of spinnerRectsNow() ?? []) if (rectsOverlap(box, sp.rect)) all.push(sp.id);
+                if (CONTACT_FIDELITY.wandShotChaserBodies && !noclip && !noDamage) {
+                    for (const c of chaserRectsNow() ?? []) if (rectsOverlap(box, c.rect)) all.push(c.id);
+                }
+                const trapBody = CONTACT_FIDELITY.wandShotTrapBodies ? wandTrapBodyAt(box) : null;
+                if (trapBody) all.push(trapBody.id);
+                if (all.length > 1) {
+                    throw new Error(`levelRun: a wand shot at (${x}, ${y}) in level ${level} overlaps ${all.length} "Enemy" `
+                        + `bodies on the same step [${all.join(', ')}]. \`collideTypes\` returns the first "Enemy" in the `
+                        + 'type list, and this run does not hold that order; their `hit`s differ. Refused by name '
+                        + '(WANDENEMYBODIES).');
+                }
+                return { kind: 'enemy', id: mine[0].id, enemyBody: mine[0].as3 };
+            }
+        }
         for (const b of (bossRectsNow() ?? new Map()).values()) {
             if (b.activated && b.bodyRect && rectsOverlap(box, b.bodyRect)) {
                 return { kind: 'enemy', id: b.id, boss: true };
@@ -2960,14 +3002,261 @@ export function createLevelRun({
         for (const sp of spinnerRectsNow() ?? []) {
             if (rectsOverlap(box, sp.rect)) return { kind: 'enemy', id: sp.id, spinner: true };
         }
+        // ⛓ fidelity WANDTRAPBODIES (`wandShotTrapBodies`, OFF): the darktraps and placed grenades, read FIRST so a box
+        // that also overlaps one of the arms below (whose `hit` is not empty) refuses instead of choosing an order.
+        const trap = CONTACT_FIDELITY.wandShotTrapBodies ? wandTrapBodyAt(box) : null;
+        const only = (hit) => {
+            if (trap === null) return hit;
+            throw new Error(`levelRun: a wand shot at (${x}, ${y}) in level ${level} overlaps ${trap.id} AND `
+                + `${hit.id} on the same step. \`collideTypes\` returns the first "Enemy" in the type list, and this `
+                + 'run does not hold that order; the two `hit`s differ. Refused by name (WANDTRAPBODIES).');
+        };
+        for (const b of (bossRectsNow() ?? new Map()).values()) {
+            if (b.activated && b.bodyRect && rectsOverlap(box, b.bodyRect)) {
+                return only({ kind: 'enemy', id: b.id, boss: true });
+            }
+        }
+        for (const sp of spinnerRectsNow() ?? []) {
+            if (rectsOverlap(box, sp.rect)) return only({ kind: 'enemy', id: sp.id, spinner: true });
+        }
         // ⛓ fidelity L12DOORS D1 (`wandShotChaserBodies`, OFF): a live bridged chaser, behind the stepper's own gate.
         if (CONTACT_FIDELITY.wandShotChaserBodies && !noclip && !noDamage) {
             for (const c of chaserRectsNow() ?? []) {
-                if (rectsOverlap(box, c.rect)) return { kind: 'enemy', id: c.id, chaser: true };
+                if (rectsOverlap(box, c.rect)) return only({ kind: 'enemy', id: c.id, chaser: true });
             }
         }
+        if (trap !== null) return { kind: 'enemy', id: trap.id };
         return null;
     };
+    /**
+     * ⛓ fidelity WANDTRAPBODIES (`wandShotTrapBodies`) — THE DARKTRAPS AND PLACED GRENADES A SHOT CAN MEET.
+     *
+     * The ids the run STEPS in level `n` (`assertWandShotSolidsBound`'s exemption). A darktrap is stepped by
+     * `stepDarkTrapsNow` (behind `darkTrapLight` and `!noclip`), a placed grenade by `stepPlacedGrenadesNow`; under
+     * `noclip || noDamage` neither has a box here (the chasers' gate), so the room still refuses.
+     *
+     * ⛔ A darktrap within a placed grenade's blast light (`Grenade.animEnd` adds `new Light(x, endY, …, hitRadius,
+     * hitRadius)`, a non-dark `Light`: `radiusMin` 20) would start dying on a light this model does not place —
+     * refused by name. None stands that near on the extract (the census row).
+     */
+    const wandTrapBodyIds = new Map();
+    function wandTrapBodyIdsFor(n) {
+        if (wandTrapBodyIds.has(n)) return wandTrapBodyIds.get(n);
+        const out = new Set();
+        if (noclip || noDamage) {
+            wandTrapBodyIds.set(n, out);
+            return out;
+        }
+        const census = worldFor(n).combat?.enemies ?? [];
+        const grenades = census.filter((e) => e.tag === 'grenade');
+        for (const e of census) {
+            if (e.as3 !== 'DarkTrap' || !CONTACT_FIDELITY.darkTrapLight) continue;
+            const lit = grenades.find((g) => Math.hypot(g.cx - e.cx, g.cy - e.cy) <= PLACED_GRENADE.hitRadius);
+            if (lit) {
+                throw new Error(`levelRun: ${e.tag}@${e.x},${e.y} in level ${n} stands within ${PLACED_GRENADE.hitRadius} px `
+                    + `of ${lit.tag}@${lit.x},${lit.y}'s blast light (\`Grenade.animEnd\`'s \`Light\`, radiusMin `
+                    + `${PLACED_GRENADE.hitRadius}), which \`DarkTrap.update\` reads and this model does not place. `
+                    + 'Refused by name (WANDTRAPBODIES).');
+            }
+            out.add(`${e.tag}@${e.x},${e.y}`);
+        }
+        for (const g of grenades) out.add(`${g.tag}@${g.x},${g.y}`);
+        wandTrapBodyIds.set(n, out);
+        return out;
+    }
+    /**
+     * The first live trap body whose box overlaps `box`, as `{id, as3}`, or null.
+     *
+     *   DarkTrap  `SandTrap`'s `setHitbox(16, 16, 8, 8)` at the constructed point (the roster's `rect`), from the visit's
+     *             start until `stepDarkTrapsNow` removes it — through the 30-update `deathCounter` and the `"die1"`
+     *             anim: `DarkTrap.endAnim`'s `FP.world.remove` lands at the frame's end, and the shot updates first.
+     *   Grenade   `setHitbox(6, 6, 3, 3)` at its live point, while `collidable` (the `Entity` default before its first
+     *             fall update, then whatever its last update wrote: `false` falling, `true` resting) and not removed.
+     *             The shot updates before the grenade, so this reads the previous tick's grenade.
+     */
+    function wandTrapBodyAt(box) {
+        if (noclip || noDamage) return null;
+        const ids = wandTrapBodyIdsFor(level);
+        if (ids.size === 0) return null;
+        if (CONTACT_FIDELITY.darkTrapLight) {
+            for (const b of darkTrapStateFor(level).values()) {
+                if (!b.removed && ids.has(b.id) && rectsOverlap(box, b.rect)) return { id: b.id, as3: 'DarkTrap' };
+            }
+        }
+        const census = worldFor(level).combat?.enemies ?? [];
+        if (!census.some((e) => e.tag === 'grenade')) return null;
+        const list = placedGrenadeStates.get(level);
+        if (!list) {
+            throw new Error(`levelRun: a wand shot is in flight in level ${level} before \`stepPlacedGrenadesNow\` built `
+                + 'the room\'s grenades, so their live boxes are unknown. Refused by name (WANDTRAPBODIES).');
+        }
+        const { w, h, ox, oy } = PLACED_GRENADE.box;
+        for (const g of list) {
+            if (g.removed || g.collidable === false) continue;
+            const r = { x: g.x - ox, y: g.y - oy, right: g.x - ox + w, bottom: g.y - oy + h };
+            if (rectsOverlap(box, r)) return { id: g.id, as3: 'Grenade' };
+        }
+        return null;
+    }
+    /**
+     * ⛓ fidelity WANDENEMYBODIES (`wandShotEnemyBodies`) — THE SIX CLASSES WAVE 67 LEFT REFUSED, WHERE THE RUN HOLDS
+     * THEIR STATE.
+     *
+     * The ids in level `n` whose live box and damage state this run holds (`assertWandShotSolidsBound`'s exemption):
+     *   Turret    F4's static damage row (`staticBodyStateFor`), which exists only with `STATIC_SWORD_ARM` ON;
+     *   SandTrap  the same row (`STATIC_ARROW_DEATH.SandTrap`, always);
+     *   LavaTrap  static (`knockback` empty, never moves): the census box, and this file's own damage row
+     *             (`wandLavaTrapStateFor`, built on the first hit);
+     *   IceTrap   static, `canHit = false`: the census box, and no state a hit could change;
+     *   WallFlyer `wallFlyerStateFor` (stepped by `stepWallFlyersNow`);
+     *   Drill     `drillStateFor` (only the drills it steps: `drillLive`, and a mixed room's with `drillMixedRooms`).
+     * Under `noclip || noDamage` none is stepped for the shot (the chasers' gate): the room still refuses.
+     */
+    const wandEnemyBodyIds = new Map();
+    function wandEnemyBodyIdsFor(n) {
+        if (wandEnemyBodyIds.has(n)) return wandEnemyBodyIds.get(n);
+        const out = new Map();
+        if (!(noclip || noDamage)) {
+            for (const e of worldFor(n).combat?.enemies ?? []) {
+                const id = `${e.tag}@${e.x},${e.y}`;
+                if (e.as3 === 'Turret' ? STATIC_SWORD_ARM.enabled
+                    : e.as3 === 'Drill' ? drillStateFor(n).has(id)
+                        : ['SandTrap', 'LavaTrap', 'IceTrap', 'WallFlyer'].includes(e.as3)) out.set(id, e.as3);
+            }
+        }
+        wandEnemyBodyIds.set(n, out);
+        return out;
+    }
+    /**
+     * Every live covered body whose box overlaps `box`, as `[{id, as3}]` in census order. A body is a box until the
+     * family's own step removes it (none of the six classes writes `collidable`): a static row's `removed`, a
+     * wallflyer's or a drill's `removed` (its "die" anim and `Mobile.death`'s fade included). The shot updates first,
+     * so it reads each body as the previous tick left it, and on its removal tick it still meets it.
+     */
+    function wandEnemyBodiesAt(box) {
+        if (noclip || noDamage) return [];
+        const ids = wandEnemyBodyIdsFor(level);
+        if (ids.size === 0) return [];
+        const statics = staticBodyStates.get(level);
+        const out = [];
+        for (const e of worldFor(level).combat?.enemies ?? []) {
+            const id = `${e.tag}@${e.x},${e.y}`;
+            const as3 = ids.get(id);
+            if (as3 === undefined || e.removed) continue;
+            let r = null;
+            if (as3 === 'WallFlyer') {
+                const w = wallFlyerStateFor(level).get(id);
+                if (w && !w.removed) r = wallFlyerRect(w);
+            } else if (as3 === 'Drill') {
+                const d = drillStateFor(level).get(id);
+                if (d && !d.removed) r = drillRect(d);
+            } else if (as3 === 'LavaTrap') {
+                if (!wandLavaTrapStates.get(level)?.get(id)?.removed) r = contactRect(e);
+            } else if (!statics?.get(id)?.removed) {
+                r = contactRect(e);
+            }
+            if (r && rectsOverlap(box, r)) out.push({ id, as3 });
+        }
+        return out;
+    }
+    /**
+     * ⛓ fidelity WANDENEMYBODIES: the LavaTraps' `Enemy` damage state, per VISIT (a new `Game` builds every body unhit),
+     * built on the first wand hit in the room. `LavaTrap` takes `Enemy.hit` unchanged (`knockback` and `hitPlayer` are
+     * empty overrides, `LavaTrap.as:157-159`) and its tongue reads neither `hits` nor `hitsTimer`, so the row is read only
+     * by the next shot's `Enemy.hit` gate and the kill (refused by name).
+     */
+    const wandLavaTrapStates = new Map();
+    const wandLavaTrapStateFor = (n) => {
+        if (!wandLavaTrapStates.has(n)) {
+            const byId = new Map();
+            const { src, ...fields } = ENEMY_DAMAGE_DEFAULTS;
+            for (const e of worldFor(n).combat?.enemies ?? []) {
+                if (e.as3 !== 'LavaTrap') continue;
+                const id = `${e.tag}@${e.x},${e.y}`;
+                byId.set(id, { as3: 'LavaTrap', ...fields, id, rect: contactRect(e), dying: false, destroy: false,
+                    alpha: 1, removed: false });
+            }
+            wandLavaTrapStates.set(n, byId);
+        }
+        return wandLavaTrapStates.get(n);
+    };
+    /** `Enemy.update`'s `hitUpdate()` for the LavaTraps a shot has hit (behind `onScreen()`, `activeOffScreen` false). */
+    function stepWandLavaTrapsNow() {
+        const st = wandLavaTrapStates.get(level);
+        if (!st) return;
+        for (const b of st.values()) {
+            if (!b.removed && b.hitsTimer > 0) enemyHitUpdate(b, { onScreen: onScreenNow(b.rect, b.id) });
+        }
+    }
+    /** `{t, level, shot, id, as3, landed, refusedAt, hits, hitsTimer, ...}` per covered body a shot has met. */
+    const wandEnemyBodyHits = [];
+    /**
+     * ⛓ fidelity WANDENEMYBODIES — `(_e as Enemy).hit(3, new Point(x, y), damage, "Wand")` on a covered body, inside the
+     * SHOT's update (before the body's own update this tick: the shot is prepended). Each class's own `hit`:
+     *   Turret, SandTrap  `Enemy.hit` on F4's row (`enemyHit`); both `knockback`s are empty. While the row's `hitsTimer`
+     *                     runs, the turret starts no shot (`stepShootersNow` reads the row) and neither body's
+     *                     `hitPlayer` fires (the static scan / `turretHitPlayerNow` read it);
+     *   LavaTrap          `Enemy.hit` on `wandLavaTrapStateFor`'s row;
+     *   IceTrap           `canHit = false` (`IceTrap.as:32`) closes `Enemy.hit`'s gate: nothing changes;
+     *   WallFlyer         `hitWallFlyer` — a landed hit reverses `v` (`WallFlyer.knockback`);
+     *   Drill             `hitDrill` — `knockback` empty; the row's `hitsTimer` plays "hit" and holds the hop.
+     * ⛔ A hit that KILLS is refused by name (see the message): `startDeath` → `dieEffects("Wand")` adds an
+     * `Explosion` (Turret, SandTrap, WallFlyer, Drill), and a LavaTrap's death ends a tongue `levelWorld` prices as a
+     * static disc. It takes `hitsMax / damage` landed hits (six of the plain wand's, 30 i-frames apart).
+     */
+    function applyWandShotToEnemyBody(s, event, as3) {
+        const frozen = ceremony !== null;
+        const opts = { d: event.damage, f: event.force, t: 'Wand', frozen };
+        const id = event.id;
+        let v;
+        if (as3 === 'Turret' || as3 === 'SandTrap' || as3 === 'LavaTrap' || as3 === 'IceTrap') {
+            const row = as3 === 'LavaTrap' ? wandLavaTrapStateFor(level).get(id)
+                : as3 === 'IceTrap' ? { as3, ...ENEMY_DAMAGE_DEFAULTS, canHit: false }
+                    : staticBodyStateFor(level).get(id);
+            if (!row) {
+                throw new Error(`levelRun: a wand shot (${s.id}) met ${id} at tick ${ticksCompleted} in level ${level}, `
+                    + 'which has no damage row in this run. Refused by name (WANDENEMYBODIES).');
+            }
+            const r = enemyHit(row, opts);
+            v = { landed: r.landed, killed: r.killed, refusedAt: r.refusedAt, hits: row.hits, hitsTimer: row.hitsTimer };
+        } else if (as3 === 'WallFlyer') {
+            const st = wallFlyerStateFor(level);
+            const w = st.get(id);
+            if (!w.checked) {
+                throw new Error(`levelRun: a wand shot met ${id} at tick ${ticksCompleted} in level ${level} before its `
+                    + '`check()` set its settle velocity. Refused by name (WANDENEMYBODIES).');
+            }
+            const r = hitWallFlyer(w, { damage: opts.d, t: 'Wand', frozen });
+            st.set(id, r.w);
+            v = { landed: r.landed, killed: r.killed, refusedAt: r.landed ? null : 'hitWallFlyer refused',
+                hits: r.w.hits, hitsTimer: r.w.hitsTimer, vx: r.w.vx, vy: r.w.vy };
+        } else if (as3 === 'Drill') {
+            const st = drillStateFor(level);
+            const r = hitDrill(st.get(id), { damage: opts.d, t: 'Wand', frozen });
+            st.set(id, r.d);
+            v = { landed: r.landed, killed: r.killed, refusedAt: r.landed ? null : 'hitDrill refused',
+                hits: r.d.hits, hitsTimer: r.d.hitsTimer };
+        } else {
+            throw new Error(`levelRun: applyWandShotToEnemyBody: no arm for "${as3}" (${id}).`);
+        }
+        if (v.killed) {
+            const why = as3 === 'LavaTrap'
+                ? '`LavaTrap.startDeath` plays "die" and its `endAnim` removes the body, ending the tongue — which '
+                    + '`levelWorld` prices as a STATIC chomp disc and this run does not step'
+                : `\`${as3}.startDeath\` calls \`dieEffects("Wand")\`, which adds an \`Explosion(x, y, ["Player", `
+                    + '"Enemy"], max(width, height), 1)` (its radius ×0.65, a `Rng.cos()` draw for its angle) that hits '
+                    + 'the player and every Enemy inside it — not placed by this run for this class';
+            throw new Error(`levelRun: a wand shot (${s.id}) KILLS ${id} at tick ${ticksCompleted} in level ${level} `
+                + `(hits ${v.hits} reach hitsMax): ${why}. Refused by name (WANDENEMYBODIES).`);
+        }
+        event.enemyBody = as3;
+        event.landed = v.landed;
+        event.spentWithoutDamage = !v.landed;
+        event.refusedAt = v.refusedAt;
+        event.hits = v.hits;
+        event.hitsTimer = v.hitsTimer;
+        wandEnemyBodyHits.push({ t: ticksCompleted, level, shot: s.id, id, as3, ...v });
+    }
     /**
      * ── ⛔⛔ R5 SLICE 15: ONE OPTIONS BUILDER FOR EVERY LIVE-GEOMETRY QUERY
      *    IN THIS FILE ─────────────────────────────────────────────────────
@@ -4000,8 +4289,15 @@ export function createLevelRun({
             if (e.state.type === FALL_ROCK.landedType) solids.push({ id: e.id, rect: fallRockRect(e.state) });
         }
         const box = playerBoxAt(state.x, state.y);
-        applyLockEvents(stepActivators(activatorStateFor(level), worldFor(level), box,
-            { inventory, keys, movingSolids: solids }));
+        // ⛓ RESPONDERORDER (ON only): the span frame's readers (the blocks, the rock) have stepped, so the frame
+        // before's deferred step runs now, on them; this frame's is deferred to the next span frame (or the release).
+        if (CONTACT_FIDELITY.responderStepAfterReaders) {
+            runDeferredResponderStepNow(solids.slice(movingSolidsNow().length));
+            deferResponderStep(activatorStateFor(level), worldFor(level));
+        } else {
+            applyLockEvents(stepActivators(activatorStateFor(level), worldFor(level), box,
+                { inventory, keys, movingSolids: solids }));
+        }
         const rocks = fallRockStateFor(level);
         const spanIds = new Set(inSpan.map((e) => e.id));
         const armed = fallRocksArmedBy(worldFor(level), box, solids)
@@ -4043,6 +4339,10 @@ export function createLevelRun({
             // is the pull tick's own end-of-tick `stepActivators` (it runs after this collapsed span, with the rock
             // landed). Measured: stepping the release frame here too opens L28's lock one tick early (game t166).
             if (CONTACT_FIDELITY.fallRockHoldsButton && !r.unfroze) spanActivatorFrameNow([{ id, state: s }]);
+            // ⛓ RESPONDERORDER (ON only): the release frame's readers have stepped; the last span frame's step runs on them.
+            if (CONTACT_FIDELITY.fallRockHoldsButton && r.unfroze && CONTACT_FIDELITY.responderStepAfterReaders && !noclip) {
+                runDeferredResponderStepNow(s.type === FALL_ROCK.landedType ? [{ id, rect: fallRockRect(s) }] : []);
+            }
             // ⛔ THE SNAP. `FallRock.update`'s first arm writes the player's
             // `y` on every tick from the landing, and the player cannot move
             // out from under it — the whole span is frozen. So the LAST snap
@@ -4105,7 +4405,12 @@ export function createLevelRun({
         let snapY = null;
         let unfroze = false;
         let landedAt = null;
+        // ⛓ fidelity DEADFRAME D2 (ON only): per span frame, the rocks a Lock sees Solid (landed by the frame before).
+        const deadSolids = [];
         for (let i = 1; i <= 2000 && !unfroze; i += 1) {
+            if (CONTACT_FIDELITY.deadFrameResponderStep) {
+                deadSolids.push(started.filter((e) => e.state.type === FALL_ROCK.landedType).map((e) => ({ id: e.id, rect: fallRockRect(e.state) })));
+            }
             // ⛓ fidelity FROZENTICK D2 (ON only): the blocks update before the rocks (`Game.as:2382` vs `:2353`).
             if (nested === false) stepPushablesDeadFrameNow();
             for (const e of started) {
@@ -4168,6 +4473,10 @@ export function createLevelRun({
             return { frames, dropped, snapY, landedAt };
         }
         spendFrozen(frames, 'fallrocks-together');
+        // ⛓ fidelity DEADFRAME D2 (ON only): the responders through every frame of the span (the release frame too).
+        // Past the frame-A tick's own step, so with `responderStepAfterReaders` OFF they run at once.
+        queueDeadResponderFramesNow(frames, 'a button\'s or the wand\'s rocks', (i) => deadSolids[i]);
+        flushDeadResponderFramesNow('end');
         // ⛓ THE RELEASE FRAME IS A LIVE PLAYER FRAME. The rock that expires
         // first clears `Game.freezeObjects` before the Player updates, and
         // `Bot.update` already counted that frame dead — so the player takes
@@ -5202,6 +5511,8 @@ export function createLevelRun({
         // ⛓ F4: nor a static body's hits; its DEATH is durable through its tag.
         staticBodyStates.delete(n);
         darkTrapStates.delete(n);
+        // ⛓ fidelity WANDENEMYBODIES: nor a LavaTrap's wand hits (OFF: empty).
+        wandLavaTrapStates.delete(n);
         /**
          * ⛓⛓⛓ R5 SLICE 15: AND A RE-ENTERED ROOM REBUILDS EVERY CRUSHER AT
          * ITS CONSTRUCTOR CELL — WITH NOTHING TO CARRY AND NOTHING TO CHECK.
@@ -5446,7 +5757,10 @@ export function createLevelRun({
         if (live.size === 0) return null;
         const activators = activatorStateFor(level);
         const pressed = pressedGroups(world, playerBoxAt(state.x, state.y), movingSolidsNow());
-        const lag = CONTACT_FIDELITY.pulserPublishLag;
+        // ⛓ RESPONDERORDER (ON): the next step's Pulser reads the publish the latest step made (`state.published`),
+        // and each row after it the one before — `pulserPublishLag`'s carry, seeded from the publish.
+        const order = CONTACT_FIDELITY.responderStepAfterReaders;
+        const lag = CONTACT_FIDELITY.pulserPublishLag || order;
         const make = (rows) => ({
             step(st, frozen) {
                 if (frozen) return;
@@ -5472,7 +5786,8 @@ export function createLevelRun({
             },
             copy: () => make(rows),
         });
-        return make([...live].map(([id, p]) => ({ id, p, pressedNow: pressed.has(p.t),
+        return make([...live].map(([id, p]) => ({ id,
+            p: order ? { ...p, pressedLast: activators.published?.has(p.t) === true } : p, pressedNow: pressed.has(p.t),
             latched: activators.latched.get(p.t) === true })));
     };
     const shiftedSpinnerForecast = (live) => {
@@ -6652,7 +6967,8 @@ export function createLevelRun({
         // a spinner, which updates before it (`activators.openActivatorIdsBeforeLatestStep`). ⚠ `spinnerForecast`
         // reuses one ctx for its whole horizon, so ON it carries that responder Solid past its first row: the frozen-
         // world bound it already has (a responder that opens inside the horizon is not foreseen), one tick longer.
-        const openActivators = noclip ? null : (CONTACT_FIDELITY.spinnerLockLag
+        // ⛓ RESPONDERORDER (ON): the spinner steps before the deferred step, so the current set IS the frame before's.
+        const openActivators = noclip ? null : (CONTACT_FIDELITY.spinnerLockLag && !CONTACT_FIDELITY.responderStepAfterReaders
             ? openActivatorIdsBeforeLatestStep(activatorStateFor(level), world)
             : openActivatorIds(activatorStateFor(level)));
         // The blocks where the PREVIOUS tick left them: the spinner updates
@@ -8420,8 +8736,9 @@ export function createLevelRun({
                 // ⛓ fidelity CHESTCOVER (`chestCoverFencepost`, OFF): a VANILLA chest updates before the
                 // responders, so it reads the open set one step older (`openActivatorIdsBeforeStep`); an AP chest
                 // (`c.apChest`, p4h — absent on this base) updates after them and keeps `openActivatorIds`.
-                const openActivators = CONTACT_FIDELITY.chestCoverFencepost && !c.apChest
-                    ? openActivatorIdsBeforeStep(activators) : openActivatorIds(activators);
+                // ⛓ RESPONDERORDER (ON): the chest steps before the deferred step, so the current set is the one before it.
+                const openActivators = CONTACT_FIDELITY.chestCoverFencepost && !CONTACT_FIDELITY.responderStepAfterReaders
+                    && !c.apChest ? openActivatorIdsBeforeStep(activators) : openActivatorIds(activators);
                 return !!world.collidesSolid(box, normalizeLiveOpts(liveSolidOpts({
                     beforeTypeFlip: firstTickInWorld,
                     openActivators,
@@ -10119,11 +10436,17 @@ export function createLevelRun({
         // ⛓ fidelity FIREPUSH (`pulserPublishLag`): a Pulser updates BEFORE its Button (`Game.as:2341` < `:2357`), so
         // the momentary arm it reads is the one published LAST tick — carried on its own state as `pressedLast`.
         const lag = CONTACT_FIDELITY.pulserPublishLag;
+        // ⛓ fidelity RESPONDERORDER D2 (ON): a Pulser is a responder, so it reads what this frame's responders read —
+        // the previous step's publish and the latch before this step's presser half (`state.responderRead`; a
+        // world's first tick has none: no Button has published, the latch is the build's). `pressedLast` unused.
+        const order = CONTACT_FIDELITY.responderStepAfterReaders;
+        const read = order ? (activators.responderRead ?? { pressed: new Set(), latched: activators.latched }) : null;
         for (const [id, p] of st) {
             const pressedNow = pressed.has(p.t);
-            const armed = (lag ? p.pressedLast === true : pressedNow) || activators.latched.get(p.t) === true;
+            const armed = order ? (read.pressed.has(p.t) || read.latched.get(p.t) === true)
+                : ((lag ? p.pressedLast === true : pressedNow) || activators.latched.get(p.t) === true);
             const r = stepPulser(p, armed);
-            st.set(id, lag ? { ...r.state, pressedLast: pressedNow } : r.state);
+            st.set(id, lag && !order ? { ...r.state, pressedLast: pressedNow } : r.state);
             if (!r.hit) continue;
             pulserHits.push({ t: ticksCompleted + 1, level, id });
             // The candidates: every block, and the player.
@@ -10572,6 +10895,22 @@ export function createLevelRun({
         // are the BODY's and live on the body. The event is amended with
         // the verdict the body gave, so a reader of `wandShotHits` never
         // sees a `landed: true` the boss refused.
+        // ⛓ fidelity WANDTRAPBODIES (`wandShotTrapBodies`, OFF): `DarkTrap.hit` and `Grenade.hit` are EMPTY overrides
+        // (`DarkTrap.as:56-58`, `Grenade.as:70-71`): the shot stops and dies, and the body is untouched.
+        // ⛓ fidelity WANDENEMYBODIES (`wandShotEnemyBodies`, OFF): a covered body takes its own class's `hit`.
+        const enemyBody = CONTACT_FIDELITY.wandShotEnemyBodies ? wandEnemyBodyIdsFor(level).get(event.id) : undefined;
+        if (enemyBody !== undefined) {
+            applyWandShotToEnemyBody(s, event, enemyBody);
+            return;
+        }
+        const trapBody =CONTACT_FIDELITY.wandShotTrapBodies && wandTrapBodyIdsFor(level).has(event.id)
+            ? (event.id.startsWith('darktrap@') ? 'DarkTrap' : 'Grenade') : null;
+        if (trapBody !== null) {
+            event.trapBody = trapBody;
+            event.landed = false;
+            event.spentWithoutDamage = true;
+            return;
+        }
         const boss = bossStateFor(level).get(event.id);
         if (!boss) {
             throw new Error(`levelRun: a wand shot (${s.id}) reached the enemy `
@@ -12619,7 +12958,9 @@ export function createLevelRun({
         for (const g of list) {
             if (g.removed) continue;
             const armedBefore = g.armedAt;
-            const ev = stepPlacedGrenade(g, state.x, state.y, { solidAt });
+            // ⛓ fidelity WANDTRAPBODIES (ON only): the `collidable` its update writes, for a wand shot's next read.
+            const ev = stepPlacedGrenade(g, state.x, state.y, CONTACT_FIDELITY.wandShotTrapBodies
+                ? { solidAt, onCollidable: (c) => { g.collidable = c; } } : { solidAt });
             if (armedBefore === null && g.armedAt !== null) {
                 placedGrenadeEvents.push({ t: ticksCompleted, level, id: g.id, what: 'armed',
                     dist: null, hitPlayer: false });
@@ -15117,8 +15458,14 @@ export function createLevelRun({
         stepShootersNow();
         if (!noclip && beamTowersStepped()) stepBeamTowersNow({ frozen: true });
         if (!noclip) {
-            applyLockEvents(stepActivators(activators, world, playerBoxAt(state.x, state.y),
-                { inventory, keys, movingSolids: movingSolidsNow() }));
+            // ⛓ RESPONDERORDER (ON only): the frame before's deferred step (the tick's, on frame 1), then this one deferred.
+            if (CONTACT_FIDELITY.responderStepAfterReaders) {
+                runDeferredResponderStepNow();
+                deferResponderStep(activators, world);
+            } else {
+                applyLockEvents(stepActivators(activators, world, playerBoxAt(state.x, state.y),
+                    { inventory, keys, movingSolids: movingSolidsNow() }));
+            }
             if (pendingButtonFalls === null) {
                 armButtonFallRocks(playerBoxAt(state.x, state.y));
                 if (pendingButtonFalls !== null) {
@@ -16078,6 +16425,86 @@ export function createLevelRun({
      */
     let pendingSnapY = null;
     /**
+     * ⛓ fidelity RESPONDERORDER D2 (`CONTACT_FIDELITY.responderStepAfterReaders`, OFF never written): the step a tick
+     * ends on is DEFERRED to the next tick's top, after the readers and the Chest (`runDeferredResponderStepNow`), which
+     * is where the game's frame runs its responders. `{level, state, world}`.
+     */
+    let pendingResponderStep = null;
+    /** The Lock family's "Enemy" boxes (ON only): the live spinners and wallflyers. */
+    const responderEnemiesNow = () => (CONTACT_FIDELITY.responderStepAfterReaders && !noclip
+        ? [...spinnerRects(spinnerStateFor(level)).map((r) => r.rect), ...wallFlyerBodiesNow().map((w) => wallFlyerRect(w))]
+        : []);
+    const deferResponderStep = (activators, w) => {
+        if (pendingResponderStep !== null) {
+            throw new Error(`levelRun: tick ${ticksCompleted} defers a responder step over one still pending `
+                + `(level ${pendingResponderStep.level}) — two steps for one frame (responderStepAfterReaders).`);
+        }
+        pendingResponderStep = { level, state: activators, world: w };
+    };
+    /**
+     * Run the deferred step (ON only): the game's responder update of THIS frame, after its readers. The occupancy
+     * reads the player where the last tick left it and the readers where this tick left them. A touch lock's snap is
+     * the player's own position before it updates, so it lands at once. A press into a recursing group hangs the frame
+     * (`presserRecursionHang`): this tick does not complete. A step whose world was torn down since (a new `Game` in
+     * the level: a death reboot, `enterWorld`) is dropped — that world runs no later frame, as on a transition.
+     */
+    const runDeferredResponderStepNow = (extraSolids = []) => {
+        const p = pendingResponderStep;
+        if (p === null) return;
+        pendingResponderStep = null;
+        if (p.level !== level || activatorStateFor(level) !== p.state) return;
+        applyLockEvents(stepActivators(p.state, p.world, playerBoxAt(state.x, state.y),
+            { inventory, keys, movingSolids: [...movingSolidsNow(), ...extraSolids], enemies: responderEnemiesNow() }));
+        if (pendingSnapY !== null) {
+            state = { ...state, y: pendingSnapY };
+            pendingSnapY = null;
+        }
+        if (CONTACT_FIDELITY.presserRecursionHang && p.state.presserHang) {
+            throw new PresserRecursionHang(`levelRun: tick ${ticksCompleted} cannot run — ${p.state.presserHang.message}`,
+                p.state.presserHang);
+        }
+    };
+    /**
+     * ⛓ fidelity DEADFRAME D2 (`CONTACT_FIDELITY.deadFrameResponderStep`, OFF never written): the dead frames a site
+     * collapses, queued for the responders — `{level, state, world, box, frames: [solids per frame], enemies, why}`.
+     * `responderStepAfterReaders` OFF: run before the tick's own step (`flushDeadResponderFramesNow('end')`, the main
+     * tick's end and `runFrozenTick`), or at once when the site is past it (a rock span). ON: run at the top of the next
+     * advance, before its readers (`'top'`). See the key's doc.
+     */
+    let pendingDeadResponderFrames = null;
+    /** ⛓ fidelity DEADFRAME D2: every flushed queue, `{t, level, why, frames, changed}` (`changed`: the frames on which a responder's open or alpha moved). OFF: empty. */
+    const deadResponderFrames = [];
+    /** ⛓ fidelity DEADFRAME D2: every FallRock arm an enemy made, `{t, level, ids}`. OFF: empty. */
+    const enemyRockPresses = [];
+    const queueDeadResponderFramesNow = (n, why, solidsAt = null) => {
+        if (!CONTACT_FIDELITY.deadFrameResponderStep || noclip || n <= 0) return;
+        const w = worldFor(level);
+        if ((w.activators ?? []).length === 0 && (w.pressers ?? []).length === 0) return;
+        if (pendingDeadResponderFrames !== null) {
+            throw new Error(`levelRun: tick ${ticksCompleted} queues ${why}'s ${n} dead frames over ${pendingDeadResponderFrames.why}'s `
+                + `still pending (level ${pendingDeadResponderFrames.level}) — two dead spans in one tick (deadFrameResponderStep).`);
+        }
+        const solids = movingSolidsNow();
+        pendingDeadResponderFrames = { level, state: activatorStateFor(level), world: w, box: playerBoxAt(state.x, state.y),
+            frames: Array.from({ length: n }, (_, i) => (solidsAt ? [...solids, ...solidsAt(i)] : solids)),
+            enemies: responderEnemiesNow(), why };
+    };
+    const flushDeadResponderFramesNow = (at) => {
+        const p = pendingDeadResponderFrames;
+        if (p === null || (at === 'end' && CONTACT_FIDELITY.responderStepAfterReaders)) return;
+        pendingDeadResponderFrames = null;
+        // A queue whose world a level change or a rebuild tore down: that world runs no later frame.
+        if (p.level !== level || activatorStateFor(level) !== p.state) return;
+        const look = () => [...p.state.byId.values()].map((r) => `${r.open ? 1 : 0}:${r.alpha}`).join();
+        let changed = 0;
+        for (const movingSolids of p.frames) {
+            const before = look();
+            applyLockEvents(stepActivators(p.state, p.world, p.box, { inventory, keys, movingSolids, enemies: p.enemies }));
+            if (look() !== before) changed += 1;
+        }
+        deadResponderFrames.push({ t: ticksCompleted, level, why: p.why, frames: p.frames.length, changed });
+    };
+    /**
      * ── ⛓⛓⛓ SWIM T3: THE BUTTON THAT DROPS A ROCK ───────────────────────
      *
      * `Button.activateAll` publishes to every `Activators` sharing its `t`,
@@ -16116,14 +16543,28 @@ export function createLevelRun({
     let pendingButtonFalls = null;
     /** The rocks whose `fall()` frame A is being run — already published. */
     let buttonFallsInFlight = new Set();
-    const armButtonFallRocks = (box) => {
+    const armButtonFallRocks = (box, solids = movingSolidsNow()) => {
         if (pendingButtonFalls !== null) return;
         const rocks = fallRockStateFor(level);
         if (rocks.size === 0) return;
-        const armed = fallRocksArmedBy(world, box, movingSolidsNow())
+        const armed = fallRocksArmedBy(world, box, solids)
             .filter((r) => rocks.has(r.id) && !rocks.get(r.id).landed && !rocks.get(r.id).active
                 && !buttonFallsInFlight.has(r.id));
         if (armed.length > 0) pendingButtonFalls = armed.map((r) => r.id);
+    };
+    /**
+     * ⛓ fidelity DEADFRAME D2 (`CONTACT_FIDELITY.enemyPressesFallRockButton`, OFF never called): a Spinner or a WallFlyer
+     * on a FallRock's Button. They update before the Button, so the press is read where THIS tick moved them and frame
+     * A is this tick (the player's press is armed at a tick's end and read the next). Asked after the readers stepped.
+     */
+    const ENEMY_PRESS_NO_BOX = Object.freeze({ x: -1e9, y: -1e9, w: 0, h: 0, right: -1e9, bottom: -1e9 });
+    const armButtonFallRocksByEnemiesNow = () => {
+        if (pendingButtonFalls !== null || fallRockStateFor(level).size === 0) return;
+        const enemies = [...(spinnerRectsNow() ?? []).map((r) => ({ id: r.id, rect: r.rect })),
+            ...wallFlyerBodiesNow().map((b, i) => ({ id: `wallflyer#${i}`, rect: wallFlyerRect(b) }))];
+        if (enemies.length === 0) return;
+        armButtonFallRocks(ENEMY_PRESS_NO_BOX, enemies);
+        if (pendingButtonFalls !== null) enemyRockPresses.push({ t: ticksCompleted, level, ids: [...pendingButtonFalls] });
     };
     const resolveButtonFalls = (ids, { nested = false } = {}) => {
         const rocks = fallRockStateFor(level);
@@ -16381,6 +16822,22 @@ export function createLevelRun({
                         value: w.value, which: w.which, t: ticksCompleted,
                         ...(unread ? { unread: true } : {}),
                     });
+                    // ⛓ fidelity BUTTONROOMCLEAR D2 (OFF never read): a TRUE write puts the slot back ON — the game's
+                    // readout drops it (measured, `btn-brx0-then-brx1`), so it leaves every cleared ledger.
+                    if (w.value === true && CONTACT_FIDELITY.publishedButtonRoomSetter) {
+                        for (const r of roomWrites) {
+                            if (r.value === false && r.level === at && r.tag === w.tag && !r.restoredBy) r.restoredBy = ev.id;
+                        }
+                        pendingEarnedClears.get(at)?.delete(w.tag);
+                        const list = clearedByLevel.get(at);
+                        if (list && list.includes(w.tag)) {
+                            list.splice(list.indexOf(w.tag), 1);
+                            if (at !== level) { worlds.delete(at); activatorStates.delete(at); }
+                        }
+                        const u = unreadRoomWrites.findIndex((x) => x.level === at && x.tag === w.tag);
+                        if (u >= 0) unreadRoomWrites.splice(u, 1);
+                        continue;
+                    }
                     if (w.value !== false) continue;
                     if (unread) {
                         if (!unreadRoomWrites.some((u) => u.level === at && u.tag === w.tag)) {
@@ -16781,9 +17238,15 @@ export function createLevelRun({
         // slices.
         // ⛓ fidelity BEAMTOWER D1: a tower's own update returns on the freeze, its graphic still updates.
         if (!noclip) {
-            applyLockEvents(stepActivators(activators, world,
-                playerBoxAt(state.x, state.y),
-                { inventory, keys, movingSolids: movingSolidsNow() }));
+            // ⛓ RESPONDERORDER (ON only): deferred to the next tick's top, after its readers.
+            if (CONTACT_FIDELITY.responderStepAfterReaders) deferResponderStep(activators, world);
+            else {
+                // ⛓ fidelity DEADFRAME D2 (ON only): this tick's dead frames (a texted pickup's phase A), before its step.
+                if (pendingDeadResponderFrames !== null) flushDeadResponderFramesNow('end');
+                applyLockEvents(stepActivators(activators, world,
+                    playerBoxAt(state.x, state.y),
+                    { inventory, keys, movingSolids: movingSolidsNow() }));
+            }
             // ⛓ SWIM T3: a Button keeps updating through a freeze, so a press
             // here WOULD drop a rock — inside a span already frozen, which the
             // button arm does not nest. Refused by name.
@@ -19900,6 +20363,8 @@ export function createLevelRun({
         for (const r of roomWrites) {
             if (r.value !== false || r.tag < 0) continue;
             if (out.some((o) => o.level === r.level && o.tag === r.tag)) continue;
+            // ⛓ fidelity BUTTONROOMCLEAR D2 (only ever written ON): a later TRUE write put the slot back on.
+            if (r.restoredBy) continue;
             out.push({
                 level: r.level, tag: r.tag,
                 by: r.which === 'room' ? `${r.id} (L${r.from} -> L${r.level})` : r.id,
@@ -20364,6 +20829,10 @@ export function createLevelRun({
          */
         get treeBurns() { return treeBurnsNow(); },
         get rockFalls() { return rockFalls.map((r) => ({ ...r, flag: r.flag && { ...r.flag } })); },
+        /** ⛓ fidelity DEADFRAME D2: the dead-frame responder queues run (`deadFrameResponderStep` ON; OFF empty). */
+        get deadResponderFrames() { return deadResponderFrames.map((r) => ({ ...r })); },
+        /** ⛓ fidelity DEADFRAME D2: the FallRock arms an enemy made (`enemyPressesFallRockButton` ON; OFF empty). */
+        get enemyRockPresses() { return enemyRockPresses.map((r) => ({ ...r, ids: [...r.ids] })); },
         /** ⛓ fidelity PLAINSPAN D2 (`plainPickupInFreeze` ON; OFF always empty): the apitems the run took itself. */
         get plainFreezeTakes() { return plainFreezeTakes.map((r) => ({ ...r })); },
         /**
@@ -22503,6 +22972,14 @@ export function createLevelRun({
         get wandShots() { return wandShotsFired.map((s) => ({ ...s })); },
         /** One record per contact a shot made, including the ones that paid nothing. */
         get wandShotHits() { return wandShotHits.map((h) => ({ ...h })); },
+        /** ⛓ fidelity WANDENEMYBODIES: one record per covered body a shot met, with the body's verdict (empty OFF). */
+        get wandEnemyBodyHits() { return wandEnemyBodyHits.map((h) => ({ ...h })); },
+        /** ⛓ fidelity WANDENEMYBODIES: the current level's LavaTrap wand damage rows (empty until a shot hits one). */
+        get wandLavaTraps() {
+            return [...(wandLavaTrapStates.get(level)?.values() ?? [])].map((b) => ({
+                id: b.id, hits: b.hits, hitsTimer: b.hitsTimer, removed: b.removed,
+            }));
+        },
         /**
          * ⛓ SEEDLING FIDELITY WAND — the shots in flight (or dying) in the
          * CURRENT level, `{id, x, y, anim, life, destroy}`: what the game's
@@ -22937,6 +23414,9 @@ export function createLevelRun({
             };
             // ⛓ CEREMONYSHOVE D2: a ceremony's dead frames, before this tick's own frame (`stepCeremonyLumpNow`).
             if (pendingCeremonyLump !== null) stepCeremonyLumpNow();
+            // ⛓ fidelity DEADFRAME D2 (`deadFrameResponderStep`, ON only): the dead frames the last tick queued, before this
+            // tick's readers (`responderStepAfterReaders` ON; OFF they ran before that tick's own step).
+            if (pendingDeadResponderFrames !== null) flushDeadResponderFramesNow('top');
             // ⛓ R7 slice 6d: the witnessed mid-run clears, BEFORE anything
             // reads geometry this tick — the flag is already false when the
             // tick numbered `at` begins, which is what "the game cleared it
@@ -23183,6 +23663,9 @@ export function createLevelRun({
             // Frame A of `pendingButtonFalls`' docblock: live to the tape,
             // frozen to the player. The dead span behind it is resolved after
             // the frozen tick so the clock spends it in the game's order.
+            // ⛓ fidelity DEADFRAME D2 (`enemyPressesFallRockButton`, ON only): an enemy on a FallRock's Button — read where
+            // this tick's readers left it, so frame A is this tick.
+            if (CONTACT_FIDELITY.enemyPressesFallRockButton && !noclip) armButtonFallRocksByEnemiesNow();
             // ⛓ fidelity NESTEDFREEZE D2 (ON only): …unless frame A is also a pickup's T — then the tick is its contact tick.
             if (pendingButtonFalls !== null && !noclip && !nestedRockCeremonyAtFrameANow(pendingButtonFalls)) {
                 // ⛔ U12-swim D1: this frozen tick returns above the pulls' slot,
@@ -23202,6 +23685,8 @@ export function createLevelRun({
                 buttonFallsInFlight = new Set(ids);
                 // ⛓ fidelity CEREMONYTOWER D2 (ON only): frame A is frozen to the turrets too (`:2295` vs the Button's `:2341`).
                 stepRockSpanShootersNow(false);
+                // ⛓ RESPONDERORDER (ON only): this frame's responders, after its readers (the frozen tick defers its own).
+                runDeferredResponderStepNow();
                 const tick = runFrozenTick(activators, 'a button-dropped fallrock', { chasers: true });
                 buttonFallsInFlight = new Set();
                 resolveButtonFalls(ids);
@@ -23274,6 +23759,9 @@ export function createLevelRun({
             //    chest's `solidOver` reads `openActivatorIdsBeforeStep`.
             if (!noclip) stepSealPieceNow();
             if (!noclip) stepChestsNow(activators);
+            // ⛓ fidelity RESPONDERORDER D2 (ON only): the responders, after the readers and the Chest (`Game.as:2377`)
+            // and before the Pulser (`:2357`) and the player — the step the last tick deferred.
+            if (!noclip) runDeferredResponderStepNow();
             if (!noclip) stepPulsersNow(activators, pushState);
             // ⛓⛓⛓ U12-swim D1: THE PULLS, in their own slot. `loadlevel` adds
             // `pull` at `:2329` — BELOW `pulser` (`:2334`) and `lock` (`:2333`),
@@ -23292,6 +23780,8 @@ export function createLevelRun({
             if (!noclip) stepStaticBodiesNow();
             // ⛓ STATICLADDER D2: the darktraps' light death, in the same band of slots (above the player).
             if (!noclip) stepDarkTrapsNow();
+            // ⛓ fidelity WANDENEMYBODIES (`wandShotEnemyBodies`, OFF): the LavaTraps' i-frames, once a shot has hit one.
+            if (!noclip && CONTACT_FIDELITY.wandShotEnemyBodies) stepWandLavaTrapsNow();
             // ── ⛓⛓⛓ R5 SLICE 15: THE CRUSHER, IN ITS OWN SLOT ────────
             //
             // `Game.loadlevel` adds it at `:2142` and `World.addUpdate`
@@ -23880,6 +24370,8 @@ export function createLevelRun({
                         armCeremonyLumpNow('darksword');
                         // ⛓ fidelity RELEASEPICKUP D2 (ON only): the beam towers' graphic through phase A.
                         stepBeamTowersThroughPhaseANow();
+                        // ⛓ fidelity DEADFRAME D2 (ON only): the responders through phase A's dead frames (texted: 149).
+                        queueDeadResponderFramesNow(CEREMONY_LUMP_SHOVE_FRAMES, 'the darksword\'s phase A');
                     }
                 }
             }
@@ -23904,6 +24396,8 @@ export function createLevelRun({
                     };
                     // ⛓ fidelity RELEASEPICKUP D2 (ON only): the beam towers' graphic through phase A.
                     stepBeamTowersThroughPhaseANow();
+                    // ⛓ fidelity DEADFRAME D2 (ON only): the responders through phase A's dead frames (texted: 149).
+                    queueDeadResponderFramesNow(CEREMONY_LUMP_SHOVE_FRAMES, 'the fire\'s phase A');
                 }
             }
             if (ceremony === null) {
@@ -23968,6 +24462,9 @@ export function createLevelRun({
                     if (CONTACT_FIDELITY.frozenTickUngated && !(CONTACT_FIDELITY.ceremonyShove && ceremony.dialogue !== null)) {
                         for (let k = 0; k < CEREMONY_DEAD_FRAMES.pickup; k += 1) stepPushablesDeadFrameNow();
                     }
+                    // ⛓ fidelity DEADFRAME D2 (ON only): and the responders, through phase A's dead frames (texted: 149).
+                    queueDeadResponderFramesNow(ceremony.dialogue === null ? CEREMONY_DEAD_FRAMES.pickup : CEREMONY_LUMP_SHOVE_FRAMES,
+                        `${hit.tag ?? 'pickup'}'s phase A`);
                 }
             }
             // ⛓ fidelity PLAINSPAN D2 (ON only): a ceremony's T — its apitems, all of them, under the box its start tested.
@@ -24269,7 +24766,12 @@ export function createLevelRun({
                         if (CONTACT_FIDELITY.presserRecursionHang) {
                             markPresserHang(activatorStateFor(level), worldFor(level), group, true, 'the wand (Wand.removed)');
                         }
-                        activatorStateFor(level).latched.set(group, true);
+                        // ⛓ fidelity BUTTONROOMCLEAR D2 (OFF never read): the sweep runs the group's ButtonRooms'
+                        // setters (`Wand.as:63-68`, `n.activate = true`); a flip-1 one's false answer unlatches it.
+                        if (CONTACT_FIDELITY.publishedButtonRoomSetter) {
+                            queuePublishedTrue(activatorStateFor(level), group, 'the wand (Wand.removed)');
+                            if (!flipAnswerGroups(worldFor(level)).has(group)) activatorStateFor(level).latched.set(group, true);
+                        } else activatorStateFor(level).latched.set(group, true);
                         const rocks = fallRockStateFor(level);
                         const together = [...rocks].filter(
                             ([, r]) => r.t === group && !r.landed,
@@ -25173,9 +25675,18 @@ export function createLevelRun({
             // ...and THEN Button.update and Lock.update run, against where
             // the player ended up.
             if (!noclip) {
-                applyLockEvents(stepActivators(activators, world,
-                    playerBoxAt(next.x, next.y),
-                    { inventory, keys, movingSolids: movingSolidsNow() }));
+                // ⛓ RESPONDERORDER (ON only): deferred to the next tick's top, after its readers. A transition tick's
+                // is not run at all: the level being left runs no later frame (game-witnessed, `w-leave-*`: a Lock
+                // whose Button the player walks off into the teleporter never re-closes; OFF writes the close).
+                if (CONTACT_FIDELITY.responderStepAfterReaders) {
+                    if (!next.transition) deferResponderStep(activators, world);
+                } else {
+                    // ⛓ fidelity DEADFRAME D2 (ON only): this tick's dead frames, before its own step (the next frame's).
+                    if (pendingDeadResponderFrames !== null) flushDeadResponderFramesNow('end');
+                    applyLockEvents(stepActivators(activators, world,
+                        playerBoxAt(next.x, next.y),
+                        { inventory, keys, movingSolids: movingSolidsNow(), enemies: responderEnemiesNow() }));
+                }
                 // ⛓ SWIM T3: and a Button's publication reaches a rock of its
                 // group — set here, resolved at the top of the next tick.
                 if (!next.transition) armButtonFallRocks(playerBoxAt(next.x, next.y));

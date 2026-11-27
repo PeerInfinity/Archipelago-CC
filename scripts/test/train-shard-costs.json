@@ -69,6 +69,10 @@
       "frontend/modules/seedlingDemo/hammerL40ChestCorner.train.test.js": {
         "by": "seedling-hammer-l40-chest-corner, cloud box (4 cores, under a concurrent page sweep), 2026-11-27",
         "ms": 430636
+      },
+      "frontend/modules/seedlingDemo/hammerEntry37Wall.train.test.js": {
+        "by": "seedling-hammer-entry37-wall, cloud box (4 cores, under a concurrent 4-process replay batch), 2026-11-27",
+        "ms": 65500
       }
     }
   },
@@ -107,6 +111,7 @@
     "frontend/modules/seedlingDemo/hammerF1Refusal.train.test.js": 147,
     "frontend/modules/seedlingDemo/hammerHitPlanRetry.train.test.js": 26.7,
     "frontend/modules/seedlingDemo/hammerStep189.train.test.js": 27.6,
-    "frontend/modules/seedlingDemo/hammerL40ChestCorner.train.test.js": 431
+    "frontend/modules/seedlingDemo/hammerL40ChestCorner.train.test.js": 431,
+    "frontend/modules/seedlingDemo/hammerEntry37Wall.train.test.js": 66
   }
 }

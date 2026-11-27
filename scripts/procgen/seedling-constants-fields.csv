@@ -2009,6 +2009,7 @@ frontend/modules/seedlingDemo/levelWorld.js|presserRecursionGroups|h1aac7f78|0|0
 frontend/modules/seedlingDemo/levelWorld.js|presserRecursionGroups|h7b38d482|2|0,rule,count,,two re-publishers reach each other (Button.as:42-61 RopeStart.as:79-91 ButtonRoom.as:67-98)
 frontend/modules/seedlingDemo/levelWorld.js|presserRecursionGroups|h7e8b7427|2|0,rule,count,,two pass-throughs loop a false (Button.as:42-61 RopeStart.as:79-91)
 frontend/modules/seedlingDemo/levelWorld.js|presserRecursionGroups|h3a45b1a8|1|0,rule,count,,a Button publishes every frame (Button.as:27-40 update)
+frontend/modules/seedlingDemo/levelRun.js|applyLockEvents|h6d4dbb3a|0|0,structural,,,findIndex found-test (u >= 0)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

@@ -1,0 +1,11 @@
+# box lock: TAKEN by witness-order.mjs (browser, pid 4285) — head 086b70412, 1 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+l71-hold-101-shut: 101 t, mounted seedling-vanilla-record-23510f80, status tick 101, hits 0, cleared [{"tag":3,"level":71}], 5.7 s
+  cut 99: tick 99 held true cleared [] player {"cls":"Player","x":120,"y":178.5,"vx":0,"vy":-1.3500000000000014,"type":"Player","destroy":false,"alpha":1}
+  cut 100: tick 100 held true cleared [] player {"cls":"Player","x":120,"y":178.5,"vx":0,"vy":-1.1000000000000014,"type":"Player","destroy":false,"alpha":1}
+  cut 101: tick 101 held true cleared [] player {"cls":"Player","x":120,"y":178.5,"vx":0,"vy":-0.8500000000000014,"type":"Player","destroy":false,"alpha":1}
+l30keylock-pit224-before: 212 t, mounted seedling-vanilla-record-23510f80, status tick 212, hits 0, cleared [{"tag":1,"level":0},{"tag":0,"level":5},{"tag":0,"level":8},{"tag":1,"level":8},{"tag":0,"level":10},{"tag":1,"level":19},{"tag":0,"level":30},{"tag":2,"level":30},{"tag":0,"level":31}], 9.7 s
+  cut 210: tick 210 held true cleared [{"tag":1,"level":0},{"tag":0,"level":5},{"tag":0,"level":8},{"tag":1,"level":8},{"tag":0,"level":10},{"tag":1,"level":19},{"tag":2,"level":30},{"tag":0,"level":31}] player {"cls":"Player","x":71.77489816433159,"y":50.115857077274356,"vx":0,"vy":0,"type":"Player","destroy":false,"alpha":1}
+  cut 211: tick 211 held true cleared [{"tag":1,"level":0},{"tag":0,"level":5},{"tag":0,"level":8},{"tag":1,"level":8},{"tag":0,"level":10},{"tag":1,"level":19},{"tag":2,"level":30},{"tag":0,"level":31}] player {"cls":"Player","x":71.77489816433159,"y":50.115857077274356,"vx":0,"vy":0,"type":"Player","destroy":false,"alpha":1}
+  cut 212: tick 212 held true cleared [{"tag":1,"level":0},{"tag":0,"level":5},{"tag":0,"level":8},{"tag":1,"level":8},{"tag":0,"level":10},{"tag":1,"level":19},{"tag":2,"level":30},{"tag":0,"level":31}] player {"cls":"Player","x":71.77489816433159,"y":50.115857077274356,"vx":0,"vy":0,"type":"Player","destroy":false,"alpha":1}
+EXIT 0
