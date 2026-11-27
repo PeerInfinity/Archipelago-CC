@@ -1,0 +1,18 @@
+== seedling_playthrough/AP_1/AP_1_rules.json
+309 differences; 308 are atlas-id CHG Counter({('seedling-b856f0fc', 'seedling-4586de3a'): 308})
+CHG /regions/1/level_25__r3c2/exits[0]/access_rule/children [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield"}}]  ->  [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield"}}, {"rule": "Has", "args": {"item_name": "Wand"}}]
+== seedling_er/AP_1/AP_1_rules.json
+310 differences; 309 are atlas-id CHG Counter({('seedling-b856f0fc', 'seedling-4586de3a'): 308, ('seedling-cff09cce', 'seedling-f1b56424'): 1})
+CHG /regions/1/level_25__r3c2/exits[0]/access_rule/children [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield"}}]  ->  [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield"}}, {"rule": "Has", "args": {"item_name": "Wand"}}]
+== seedling_playthrough_maze/AP_1/AP_1_rules.json
+4 differences; 1 are atlas-id CHG Counter({('seedling-94cd96dd', 'seedling-5e6b4205'): 1})
+CHG /preset_sidecars/1/level_25__r2c7/playable_payload/obstacleLib/atlas_gate_0/clear_rule/children [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield"}}]  ->  [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield"}}, {"rule": "Has", "args": {"item_name": "Wand"}}]
+CHG /preset_sidecars/1/level_25__r2c7/playable_payload/obstacleLib/atlas_gate_0/name "(Progressive Sword OR Ghost Spear OR Progressive Shield)"  ->  "(Progressive Sword OR Ghost Spear OR Progressive Shield OR Wand)"
+CHG /regions/1/level_25__r3c2/exits[0]/access_rule/children [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield"}}]  ->  [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield"}}, {"rule": "Has", "args": {"item_name": "Wand"}}]
+== seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json
+308 differences; 307 are atlas-id CHG Counter({('seedling-b856f0fc', 'seedling-4586de3a'): 307})
+CHG /regions/1/level_25__r3c2/exits[0]/access_rule/args/item_names ["Ghost Spear", "Progressive Shield", "Progressive Sword"]  ->  ["Ghost Spear", "Progressive Shield", "Progressive Sword", "Wand"]
+== derived-rule table
+2 differences; 0 are atlas-id CHG Counter()
+CHG /inputs/payloadMd5 "e705ea936f2ccf407f1046a4e5d11439"  ->  "2cd0114b24fbbc77f6377a7311ae4202"
+CHG /measuredAt "6a41ae2e08"  ->  "6436c7827f"

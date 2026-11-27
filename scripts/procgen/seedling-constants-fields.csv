@@ -2005,6 +2005,10 @@ frontend/modules/seedlingDemo/tentacleBeast.js|tentacleSwipeRect|tentacleSwipeRe
 frontend/modules/seedlingDemo/tentacleBeast.js|whirlpoolRect|whirlpoolRect,rule,derivation,Puzzlements/Whirlpool.as:spinRate,the whirlpool box arithmetic (bosskills D3)
 frontend/modules/seedlingDemo/levelWorld.js|withRuntimeTeleporters|withRuntimeTeleporters,structural,,,an empty runtime-teleporter list is a no-op (bosskills D3)
 frontend/modules/seedlingDemo/levelRun.js|terrainAt|h424d5e72|0|0,rule,sentinel,,tile type default when no walkable tile
+frontend/modules/seedlingDemo/levelWorld.js|presserRecursionGroups|h1aac7f78|0|0,rule,sentinel,,ButtonRoom room >= 0 is cross-room (ButtonRoom.as:79 room == -1 publishes locally)
+frontend/modules/seedlingDemo/levelWorld.js|presserRecursionGroups|h7b38d482|2|0,rule,count,,two re-publishers reach each other (Button.as:42-61 RopeStart.as:79-91 ButtonRoom.as:67-98)
+frontend/modules/seedlingDemo/levelWorld.js|presserRecursionGroups|h7e8b7427|2|0,rule,count,,two pass-throughs loop a false (Button.as:42-61 RopeStart.as:79-91)
+frontend/modules/seedlingDemo/levelWorld.js|presserRecursionGroups|h3a45b1a8|1|0,rule,count,,a Button publishes every frame (Button.as:27-40 update)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

@@ -744,6 +744,8 @@ node scripts/procgen/walk-seedling-whole-game.mjs --budget-s=600 --port=8000
 | `--skip-refusals=K` | the skip probe: on a bot error, count the head as seen and play on, K times. A lower bound on what lies past a stop; it fixes nothing |
 | `--min=N` | exit 1 below N checks. Otherwise it **exits 0 always**: it is a measure, not a gate |
 | `--port=`, `--wait-for-box=` | passed to `npm test` |
+| `--capture-requests=<jsonl>` | **measurement only**: every solve request the wasm engine's worker got, with the page's answer, one row per walk entry, appended to that file in the input format of `replay-seedling-solve-request.mjs`. Off unless given |
+| `--solver-env=NAME=V[,NAME=V]` | **measurement only**: the page's `?seedlingSolverEnv=` (`solverEnvChannel.js`), so the solve worker installs those `SEEDLING_*` switches (the flag splits on commas, so a value that holds one, such as `SEEDLING_CONTACT_FIDELITY=a,b`, needs `TEST_MEASURE_SOLVER_ENV` set directly, entries joined with `;`); the workers' URLs are logged (`[MEASURE worker]`), and a captured answer keeps the worker's `solverEnv` stamp. Off unless given |
 
 The full walk takes about 50 minutes on wasm, so full re-measures run in the cloud or on CI, not on the box. The run's whole log is written to `test-results/whole-game-walk/`.
 
@@ -756,6 +758,17 @@ The full walk takes about 50 minutes on wasm, so full re-measures run in the clo
 | `TEST_MEASURE_PLAYTHROUGH_SEED` | `measurePlaythroughSeed` | the Seedling tutorials play that seed (`seedling.js`) |
 | `TEST_MEASURE_FLASH_RUNTIME` | `measureFlashRuntime` | plain walk rows play under that runtime |
 | `TEST_MEASURE_SKIP_REFUSALS` | `measureSkipRefusals` | the skip probe |
+| `TEST_MEASURE_CAPTURE_REQUESTS=<jsonl>` | `measureCaptureRequests=1` | the request capture: `app.spec.js` exposes `__measureCaptureAppend`, which appends each row to the file; the page logs `[MEASURE capture]` lines |
+| `TEST_MEASURE_SOLVER_ENV=NAME=V;NAME=V` | `seedlingSolverEnv=` (the app's own param, not a `measure*` one) | the solve worker installs those switches; `app.spec.js` logs each worker's URL |
+
+One example each (the walk script sets the env var from its flag; set the env var yourself to drive `npm test` directly):
+
+```bash
+node scripts/procgen/walk-seedling-whole-game.mjs --runtime=wasm --capture-requests=test-results/whole-game-walk/requests.jsonl
+node scripts/procgen/walk-seedling-whole-game.mjs --runtime=wasm --solver-env=SEEDLING_STRIKE_IFRAME_LAPSE=0
+```
+
+These two are off by default and change nothing when unset: no URL param, no binding, no worker listener, and the capture code (and its codec import) never runs. `scripts/procgen/walkSeedlingWholeGame.test.js` pins that.
 
 With any of them set, the page logs a `[MEASURE tick]` line every 15 s, `[MEASURE skip k]` per skip, and one `[MEASURE end]` line. The end line carries the checks, the bot's queue, cursor and head (`botHead=`), its region, the region changes, the wasm teleport pushes, the transport, the heap sizes, the bot's status, and the walk's end (`walkEnd=`, `walkStep=`, `why=`). With none set, the rows run exactly as before: no sampler, no timer, no extra import, and the same timeouts, seed and runtime.
 

@@ -13,6 +13,7 @@
  * a row that asserts a guard has a driven mutant recorded in the plan's §7.
  */
 
+import { realisesOwnContent } from '../procgenCore/substratePredicates.js';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -92,7 +93,10 @@ describe('which registered entries can rebuild a region (regionRealiserKind)', (
                     entrances: [], exits: [], locations: [], params: {}, useSourceLocationName: true,
                 });
             } catch (err) { msg = String(err?.message ?? err); }
-            const engineRefuses = /has neither generateRegionCore nor generateZoneForSpecs/.test(msg);
+            // ⛓ Mystery substrate: an entry that realises only its OWN content has a zone generator the
+            // engine dispatches to, and that generator refuses this made-up region itself, by its own name.
+            const engineRefuses = /has neither generateRegionCore nor generateZoneForSpecs/.test(msg)
+                || (realisesOwnContent(e) && msg !== '');
             expect(engineRefuses, `${e.id}: kind ${regionRealiserKind(e)}, engine said "${msg}"`)
                 .toBe(regionRealiserKind(e) === null);
         }

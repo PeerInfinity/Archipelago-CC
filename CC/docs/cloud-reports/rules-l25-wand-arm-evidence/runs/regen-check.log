@@ -1,0 +1,12 @@
+regen-seedling --check: 10 step(s); python = /home/user/Archipelago-CC/.venv/bin/python; logs in .cache/regen-seedling/
+rules          OK [10.3s]
+partition      OK [4.1s]
+world          OK [0.5s]
+template       OK: Players/Templates/Seedling Playthrough.yaml matches a fresh build [3.1s]
+host-settings  OK [0.1s]
+seed1          OK: 4 files + the seedling_playthrough row match a fresh build [2.8s]
+maze           OK [17.9s]
+er             OK [20.6s]
+sphere-order   OK [0.0s]
+census         OK: 2 SKIP row(s) in its output [1.9s]
+total 61.3s — every step OK

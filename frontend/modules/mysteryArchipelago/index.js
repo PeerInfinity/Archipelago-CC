@@ -3,15 +3,18 @@
 // question becomes a location check, and the papers held and questions checked go back to the
 // page. The protocol is described in mysteryArchipelagoLogic.js.
 //
-// The module is disabled by default. Opening its panel (Mystery Game, from Quick Launch) is the one
-// action that turns the bridge on and frames the page for the loaded world (mysteryPanelUI.js).
+// The module is on by default (the bridge and the `mystery` substrate entry are there at boot), and
+// its panel is not in the layout: opening Mystery Game from Quick Launch frames the page for the
+// loaded world (mysteryPanelUI.js).
 
-import { MysteryArchipelagoLogic, MYSTERY_EVENTS } from './mysteryArchipelagoLogic.js';
+import { MysteryArchipelagoLogic, MYSTERY_EVENTS, caseRegionsOfWarehouse } from './mysteryArchipelagoLogic.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import eventBus from '../../app/core/eventBus.js';
 import { MysteryPanelUI } from './mysteryPanelUI.js';
 import { DEFAULT_PAGE_URL } from './mysteryPage.js';
+import { MYSTERY_SUBSTRATE_ID, substrateRegistryEntry } from './mysterySubstrateLibrary.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 // --- Module Info ---
 export const moduleInfo = {
@@ -60,8 +63,23 @@ function connectionNow() {
   };
 }
 
+/**
+ * The loaded world's `mystery` regions, off the runtime player's warehouse: `[]` for a world that
+ * is not generated, or that holds no case as a region.
+ */
+export function caseRegionsNow() {
+  return caseRegionsOfWarehouse(centralRegistry.getPublicFunction?.('procgenPlayer', 'getWarehouse')?.(), MYSTERY_SUBSTRATE_ID);
+}
+
+/** The region the player is in, as the runtime player last announced it. */
+export function activeRegionIdNow() {
+  return centralRegistry.getPublicFunction?.('procgenPlayer', 'getActiveSubstrate')?.()?.regionId ?? null;
+}
+
 export async function register(registrationApi) {
   registrationApi.registerPanelComponent('mysteryPanel', MysteryPanelUI);
+  // The substrate entry (also registered when its library is imported; guarded both ways).
+  if (!substrateRegistry.has(substrateRegistryEntry.id)) substrateRegistry.register(substrateRegistryEntry);
 
   registrationApi.registerSettingsSchema({
     pageUrl: {
@@ -86,6 +104,7 @@ export async function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent(moduleId, 'stateManager:rulesLoaded');
   registrationApi.registerEventBusSubscriberIntent(moduleId, 'stateManager:snapshotUpdated');
   registrationApi.registerEventBusSubscriberIntent(moduleId, 'settings:changed');
+  registrationApi.registerEventBusSubscriberIntent(moduleId, 'procgen:activeSubstrateChanged');
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
@@ -96,6 +115,8 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     getStaticData: () => stateManagerProxySingleton.getStaticData(),
     getSnapshot: () => stateManagerProxySingleton.getSnapshot(),
     getConnection: connectionNow,
+    getCaseRegions: caseRegionsNow,
+    getActiveRegionId: activeRegionIdNow,
     log,
   });
   logicInstance.initialize();

@@ -22,12 +22,12 @@ const frz = (v) => {
 
 export const DOCS_INDEX = frz({
     "counts": {
-        "docs": 31,
-        "headings": 1356,
+        "docs": 32,
+        "headings": 1364,
         "indexHeadings": 2,
-        "lines": 37267,
+        "lines": 37370,
         "pages": 4,
-        "words": 577160
+        "words": 578520
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -60,7 +60,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 26,
-            "lines": 361,
+            "lines": 362,
             "links": [
                 "action-nodes.md",
                 "architecture.md",
@@ -71,11 +71,12 @@ export const DOCS_INDEX = frz({
                 "jta.md",
                 "loop-recording.md",
                 "maze.md",
+                "mystery.md",
                 "sphere-growth.md",
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 9375
+            "words": 9444
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -372,7 +373,7 @@ export const DOCS_INDEX = frz({
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot",
             "headings": 40,
-            "lines": 930,
+            "lines": 943,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -382,7 +383,7 @@ export const DOCS_INDEX = frz({
                 "seedling-solve-progress.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 57178
+            "words": 57388
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
@@ -520,6 +521,18 @@ export const DOCS_INDEX = frz({
             ],
             "path": "docs/json/developer/procgen/noiz2sa.md",
             "words": 8034
+        },
+        {
+            "description": "The mystery substrate (`frontend/modules/mysteryArchipelago/mysterySubstrateLibrary.js`, id `mystery`) makes one case of the mystery clue game a procgen region: the office. The game is the git submodule `frontend/modules/mystery-clue-game/`, framed as a page by the Mystery Game panel.",
+            "file": "mystery.md",
+            "h1": "Mystery Substrate",
+            "headings": 8,
+            "lines": 89,
+            "links": [
+                "architecture.md"
+            ],
+            "path": "docs/json/developer/procgen/mystery.md",
+            "words": 1081
         }
     ],
     "indexIn": "docs/json/developer/procgen/README.md",
