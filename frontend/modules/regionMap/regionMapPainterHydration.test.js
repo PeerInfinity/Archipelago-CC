@@ -34,6 +34,7 @@ import '../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import '../omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js';
 import '../noiz2saSubstrate/noiz2saSubstrateLibrary.js';
 import '../actionNodes/actionNodesLibrary.js';
+import '../mysteryArchipelago/mysterySubstrateLibrary.js';
 
 const here = (p) => fileURLToPath(new URL(p, import.meta.url));
 const read = (p) => JSON.parse(readFileSync(here(p), 'utf8'));
@@ -70,7 +71,7 @@ function paint(cell, rules, player) {
 
 const paintedCells = (model) => [...model.cells.values()].filter((c) => c.region && compositeMapPainterFor(c.region, substrateRegistry));
 
-const IMPORTED = ['mazeRoom/mazeRoomLibrary.js', 'bounceDemo/bounceDemoLibrary.js', 'cloudberryDemo/cloudberryLibrary.js', 'textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js', 'flashPanel/flashSeedlingLibrary.js', 'flashPanel/flashSeedlingGenBuild.js', 'jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js', 'omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js', 'noiz2saSubstrate/noiz2saSubstrateLibrary.js', 'actionNodes/actionNodesLibrary.js'];
+const IMPORTED = ['mazeRoom/mazeRoomLibrary.js', 'bounceDemo/bounceDemoLibrary.js', 'cloudberryDemo/cloudberryLibrary.js', 'textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js', 'flashPanel/flashSeedlingLibrary.js', 'flashPanel/flashSeedlingGenBuild.js', 'jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js', 'omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js', 'noiz2saSubstrate/noiz2saSubstrateLibrary.js', 'actionNodes/actionNodesLibrary.js', 'mysteryArchipelago/mysterySubstrateLibrary.js'];
 
 it('the sweep imports every substrate library', () => {
     expect([...IMPORTED].sort()).toEqual([...SUBSTRATE_LIBRARIES].sort());
