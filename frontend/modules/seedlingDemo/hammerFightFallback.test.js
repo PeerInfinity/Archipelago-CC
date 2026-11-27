@@ -41,7 +41,8 @@ import { SPINNER } from './spinner.js';
 import {
     FIGHT_FALLBACK_CODES, HAMMER_ESCAPE, HAMMER_FIGHT, HAMMER_FIGHT_BOUNDS, HAMMER_FIGHT_FALLBACK, HAMMER_FIGHT_FALLBACK_TRACE,
     HAMMER_SAFETY, REWIND_PROBE, STRIKE_BOUND_EXHAUSTED, SolverBotError, SolverRefusal, isFightFallbackRefusal,
-    planSwordDash, replayOntoFork, withHammerEscape, withHammerFight, withHammerFightFallback, withSolveDeadline,
+    planSwordDash, replayOntoFork, withHammerEscape, withHammerFight, withHammerFightFallback, withPressKillHold,
+    withPressKillHoldModelUndo, withSolveDeadline,
 } from './solverBot.js';
 import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
@@ -52,13 +53,17 @@ const seamAt = (residue) => {
     const was = ((R9.seam.time % P) + P) % P;
     return { ...R9.seam, time: R9.seam.time + ((((residue - was) % P) + P) % P) - P };
 };
-const solveR9At = (residue) => {
+// ⛓ PKH+MU flip (2026-11-27): `PRESS_KILL_HOLD` (+ `_MODEL_UNDO`), ON by default since the flip, SOLVES this fixture's
+// residue-4 refusal (how `press-kill-hold`, wait 45: 640 t, 0 hits, 0 deaths, to L19 — measured at the flip tip). It is
+// FF's REFUSING fixture, so its solves hold both OFF.
+const holdOff = (fn) => withPressKillHold(false, () => withPressKillHoldModelUndo(false, fn));
+const solveR9At = (residue) => holdOff(() => {
     const seam = seamAt(residue);
     const makeRun = (persistence) => createRunForStaging({ ...R9, seam, persistence, equips: [] }, SOURCE);
     return twoPassSolve({ makeRun, goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], name: 'r9-solve-18',
         boot: R9.boot, persistence: R9.persistence.filter((c) => c.at === undefined),
         gameTick: async () => { throw new Error('no game oracle here'); } });
-};
+});
 const keys = (perTick) => perTick.map((h) => [...h].sort().join('+')).join(',');
 const refusalOf = async (p) => p.then(() => null, (e) => e);
 
@@ -306,9 +311,9 @@ const R9_TAPE_AT_4 = (() => {
     const persistence = R9.persistence.map((c) => (c.at === undefined ? c : { ...c, at: 323 }));
     return { ...R9, seam, persistence, equips: [] };
 })();
-const solveTapeR9At4 = (shouldStop = null) => solveFromTape({ staging: R9_TAPE_AT_4, perTick: [],
+const solveTapeR9At4 = (shouldStop = null) => holdOff(() => solveFromTape({ staging: R9_TAPE_AT_4, perTick: [],
     live: liveOf(createRunForStaging(R9_TAPE_AT_4, SOURCE)), levelSource: SOURCE,
-    solverGoal: { kind: 'reach-exit', exit: { x: 176, y: 112 } }, shouldStop });
+    solverGoal: { kind: 'reach-exit', exit: { x: 176, y: 112 } }, shouldStop }));
 /** `jsRuntimeSolver`'s per-tick row, read off a run. */
 const rowAt = (run) => ({ level: run.level, x: run.state.x, y: run.state.y, deaths: run.playerDeaths.length });
 

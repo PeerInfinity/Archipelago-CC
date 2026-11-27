@@ -29,7 +29,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gunzipSync } from 'node:zlib';
 
-import { withKillStanceSight, withShovedBodyLookahead } from './solverBot.js';
+import { withKillStanceSight, withPressKillHold, withPressKillHoldModelUndo, withShovedBodyLookahead } from './solverBot.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { ANYTIME_PASSES, replayTape, solveAnytime } from './jsRuntimeSolver.js';
@@ -46,7 +46,11 @@ function solveAt(name, seam, on) {
     const levelSource = levelSourceFromAtlas(source.records);
     // KILL_STANCE_SIGHT held OFF: it is ON by default since the L28 flip (2026-11-19) and moves these plans (ticks only,
     // measured by the flip's sweeps); these rows predate it and keep pinning their own switch.
-    const answer = withKillStanceSight(false, () => withShovedBodyLookahead(on, () => solveAnytime({ ...tape, levelSource }, { passes })));
+    // ⛓ PKH+MU flip (2026-11-27): `PRESS_KILL_HOLD` (+ `_MODEL_UNDO`), ON by default since the flip, SOLVES clock 5225
+    // with this switch OFF (work 2561, 1722 t, 0 hits, 0 deaths on a fresh run — measured at the flip tip); held OFF so
+    // these rows keep pinning their own switch, as KSS is above.
+    const answer = withPressKillHold(false, () => withPressKillHoldModelUndo(false, () => withKillStanceSight(false,
+        () => withShovedBodyLookahead(on, () => solveAnytime({ ...tape, levelSource }, { passes })))));
     if (!answer.ok) return { ok: false, message: answer.message };
     const run = replayTape({ staging: tape.staging, perTick: tape.perTick, levelSource,
         scratchPersistence: tape.scratchPersistence === true, equips: tape.equips ?? null, holds: tape.holds ?? null });

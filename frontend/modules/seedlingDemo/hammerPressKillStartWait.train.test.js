@@ -19,8 +19,10 @@ describe('PRESS_KILL_START_WAIT — re-measure-8 P1 32:10 (L40 Totem 64,144)', (
         resetPressKillStartWaitCounts();
         const off = withPressKillStartWait(false, () => solveCapturedP1_32_10());
         expect(off.ok).toBe(false);
-        // main's answer (the page's was `dc09599d8d62` at re-measure-8's older base: the same work, the wording moved)
-        expect(off.answer).toBe('3b4bc4163c9b');
+        // main's answer before the PKH+MU flip was `3b4bc4163c9b`; since the flip (2026-11-27) the refusal carries one more
+        // sentence, the stand hold's (`PRESS_KILL_HOLD` rewinds to the last stand and idles; no redo kills hitless)
+        expect(off.answer).toBe('dc09599d8d62');
+        expect(off.message).toContain('The stand hold (`PRESS_KILL_HOLD`) rewound to the kill\'s last stand (t1548) and idled 45 (idle); no redo killed hitless.');
         expect(off.work).toBe(208);
         expect(off.message).toContain('kill (spinner@192,128) by press: every key set');
         expect(PRESS_KILL_START_WAIT_COUNTS.rows).toEqual([]);
