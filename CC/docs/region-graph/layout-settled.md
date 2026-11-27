@@ -211,3 +211,39 @@ Every Region Graph row in fast, tip vs main `6c9374b8da` (ES / bundled, s):
    `rg-layoutsettled` (or adding it alongside) is that layer's call.
 2. A layout run outside the panel (`ui.cy.layout(…).run()` directly, as unit tests do) does not settle: nothing in the
    app does this any more. Any new layout path must go through `startLayout`.
+
+## 9. Addendum: the L25 restamp and `directionLayout.test.js` (train 224 STOP, js-23)
+
+After L25 landed (main `104a147842`), main + this branch had `directionLayout.test.js` (direction-layout's file) at
+**2 failed / 30 passed**, deterministically: §4 "strength 0 ignores the exit directions" (`prefs.size` 0, expected
+> 50) and §6 "two exits on one side" (`twoOnOneSideLevels` 0, expected 13).
+
+- **The live feature is fine** (cc-23 asked for this to be measured first). Main `104a147842` + this branch
+  (merge `f23130df44`), live app on the ES boot, seedling_playthrough AP_1, Direction-aware applied: status
+  **"116 nodes in 161 ms, 0 overlaps, mean direction error 20°"** (merged) and **"307 nodes in 422 ms, 0 overlaps,
+  mean direction error 28°"** (separate). The text for no directions, "no exit directions in this world", does not
+  appear. The same panel code run headless over the LIVE preset: merged **99 preferences, 13 two-on-one-side levels**,
+  mean error 17.9°; separate **107 preferences, 13 levels**, 25.2°. Over the frozen fixture: 0 and 0 in both views.
+- **The cause: a frozen input paired with a live one.** The frozen `seedling_playthrough` rules (groups-c's fixture)
+  carry `atlas_ref` **`seedling-b856f0fc`** in their sidecars. `flashSeedlingLibrary.js` resolves an `atlas_ref`
+  against the atlases it ships (`KNOWN_ATLASES`, built from the live import of `atlases/seedling-playthrough.json`).
+  L25 restamped that atlas to **`seedling-4586de3a`** and rewrote the presets to reference the new id, so the frozen
+  refs resolved to nothing: no door tiles, so no preferences. The direction data itself did not change in a way that
+  matters (the live preset gives the same 13 levels).
+- **The fix (tests only):** `fixtures/sub-region-view/seedling-playthrough.atlas.json.gz` (`seedling-b856f0fc`, taken
+  from `1a9d906c16`, the atlas shipped up to L25) and `seedling.atlas.json.gz` (`seedling-9ff3df2a`, the starter atlas
+  that the frozen `seedling_atlas` rules reference). `regionGraphElements.testkit.js` gets `FROZEN_ATLASES` and
+  `loadFrozenAtlas`, which refuses a fixture whose `atlas_id` is not the pinned one. `directionLayout.test.js` and
+  `nodeLook.test.js` `vi.mock` both shipped-atlas imports with the frozen ones. directionLayout: **32/32**.
+  nodeLook reads the same pairing but was unaffected (its cells read 89 location tiles from the live atlas and from the
+  frozen one alike), so there the mock only pins the input.
+- **Re-gate at `6e162e188a8ed099087be20ee18feea99e10ba3d`** (main `104a147842` merged at `f23130df44`, then the fix):
+  JSUT 45914232973 success, **1456 / 30417 passed, 0 failed** (+0 F, +43 T vs main `104a147842`, 1454 / 30374);
+  unittests 45914232991, type check 45914232965, Analyze 45914232947 success; TT 45914238931 success 9 / 9 jobs (fast
+  143/143 on both boots); repeat ×8 bundled 45914232625 **Rate: 8/8 passed**, ×8 ES 45914235898 **Rate: 8/8 passed**.
+  Bounded vitest: regionGraph/ + regionView/ + tutorials/ + the library, 29 files / 422 tests. Closure ∩ diff = ∅
+  (0 of 42; 41-file diff vs main); engineMd5 `74ae60f575531492ed9eaec1839e1fe3` unchanged.
+- **Headroom** vs main `104a147842` (median of its 2 TT samples, 45913251489 and 45905805022): fast ES 324.2 s,
+  **Δ −20.4 s**; bundled 335.7 s, **Δ +0.6 s**. Region Graph rows total **−5.20 s** ES, **−1.05 s** bundled;
+  `test_control_buttons` −1.50 / −2.63 s; `test_region_graph_sub_region_merged` +0.72 / +1.00 s (the steps
+  direction-layout and badge-resize added, plus this slice's trace; see §7).
