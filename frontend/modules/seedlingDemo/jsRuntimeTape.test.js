@@ -115,7 +115,12 @@ export function noTapeChain(create, { between = () => {}, parts = NO_TAPE_RUN_PA
 // instead of the full `run.stateDigest()`. Method: the same — `noTapeChain` over `createJsRuntime` from `git show
 // 9c0f904549:…/jsRuntimeCore.js` copied beside this file, on today's tree and flags (116 keys, 105 ON); today's core
 // gives the same value. The old chain (globals in) re-measured 1f44092f… on both cores before the edit.
-const NO_TAPE_CHAIN = Object.freeze({ chain: '0852da9e5639860e8b2d4ccbeda5', rows: 224, walk: WALK_STATES.DONE });
+// ⛓ Re-measured at the fidelity PPF+CCF flip (2026-11-27, Robert's re-pin GO in fidelity-planning-26; js-23 co-signs):
+// 0852da9e5639860e8b2d4ccbeda5 → 0b1f579cd88d8b1f1a49681893be. Cause: `chestCoverFencepost` ON (default since the flip)
+// writes `state.openBefore` (the pre-step open set) on every activator step, and the `visit` part hashes it. Measured:
+// only `visit` moves (staging, place, clock, player and persist are identical per tick); plainPickupInFreeze ON alone
+// leaves the chain at 0852da9e…; rows 224 and walk DONE unchanged. Bookkeeping, not behaviour.
+const NO_TAPE_CHAIN = Object.freeze({ chain: '0b1f579cd88d8b1f1a49681893be', rows: 224, walk: WALK_STATES.DONE });
 
 /** A fidelity key no code reads — the table grows a key and nothing else moves. Added and removed around `fn`. */
 function withDummyFidelityKey(fn) {
