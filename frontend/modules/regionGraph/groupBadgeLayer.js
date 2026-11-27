@@ -12,6 +12,14 @@
  *     pointer / mouse / touch events also stop where they land;
  *   · it shows at every zoom where region labels show (`zoom >= ui.zoomLevels.showRegionNames`) and is hidden below
  *     that zoom, and on a node discovery hides.
+ * The badge follows its node one frame after it moves (`position`), the view changes (`viewport`, `resize`,
+ * `layoutstop`) or the node changes SIZE without moving (region-graph-badge-resize: ⚖ the user, session 84c8ab35,
+ * 2026-11-26T19:13:17Z, "Yes, please make the badge fix."). A size change is a style change (the map look's
+ * `width` / `height` bypass, a class, a data-mapped size; a box resizing round a resized member), and Cytoscape's
+ * only event for it is `style`, which also fires for changes that keep the size (selection, colour, hover). So a
+ * `style` on a badge node, or on a member of a badge box, only asks the next frame to COMPARE the node's size with
+ * the size the last sync placed it at: the badge re-syncs only when a size differs. A `style` on any other node
+ * costs nothing. (The size is read in the frame, not in the handler: Cytoscape marks the style dirty after it emits.)
  * The badges are NOT Cytoscape elements: the element set, every reader of it, saved positions and layouts never see
  * them. In any other view the layer is empty.
  */
@@ -45,6 +53,10 @@ export class GroupBadgeLayer {
         this._layer = null;
         this._frame = null;
         this._boundCy = null;
+        this._needSync = false;      // a move / view change is pending: the frame syncs
+        this._needSizeCheck = false; // only a style change is pending: the frame syncs if a size changed
+        this._sizes = new Map();     // group node id → its model size at the last sync ("w×h")
+        this.syncCount = 0;          // syncs run (read by the tests)
     }
 
     /** The layer element (created on first use, inside the panel's root, over the canvas). */
@@ -66,6 +78,31 @@ export class GroupBadgeLayer {
         const schedule = () => this.scheduleSync();
         cy.on('viewport resize layoutstop', schedule);
         cy.on('position', 'node', schedule);
+        cy.on('style', 'node', (e) => this.onNodeStyle(e.target));
+    }
+
+    /** A node's style changed: if it (or the box it sits in) has a badge, compare sizes on the next frame. */
+    onNodeStyle(node) {
+        if (this.badges.size === 0 || !node) return;
+        let hit = this.badges.has(node.id());
+        if (!hit) node.ancestors?.().forEach((a) => { if (this.badges.has(a.id())) hit = true; });
+        if (hit) this.scheduleSync({ sizeOnly: true });
+    }
+
+    /** A node's model size, as the size check compares it. */
+    static sizeKey(node) {
+        const bb = node.boundingBox({ includeLabels: false });
+        return `${bb.w}×${bb.h}`;
+    }
+
+    /** Has any shown badge's node changed size since the last sync? */
+    sizesChanged() {
+        const cy = this.ui.cy;
+        for (const id of this.badges.keys()) {
+            const node = cy.getElementById(id);
+            if (node.length > 0 && this._sizes.has(id) && this._sizes.get(id) !== GroupBadgeLayer.sizeKey(node)) return true;
+        }
+        return false;
     }
 
     /** One badge per group node in `collapsible`; none in any other view. Called after every rebuild. */
@@ -73,6 +110,7 @@ export class GroupBadgeLayer {
         this.bind();
         for (const btn of this.badges.values()) btn.remove?.();
         this.badges.clear();
+        this._sizes.clear();
         const cy = this.ui.cy;
         if (!cy || this.ui.subRegionView !== 'collapsible') return;
         const layer = this.layer();
@@ -117,10 +155,19 @@ export class GroupBadgeLayer {
         return res;
     }
 
-    scheduleSync() {
-        if (this._frame !== null || this.badges.size === 0) return;
+    /** One frame later, sync (or, for a style change only, sync if a node's size changed). One frame at a time. */
+    scheduleSync({ sizeOnly = false } = {}) {
+        if (this.badges.size === 0) return;
+        if (sizeOnly) this._needSizeCheck = true; else this._needSync = true;
+        if (this._frame !== null) return;
         const raf = globalThis.requestAnimationFrame ?? ((f) => setTimeout(f, 16));
-        this._frame = raf(() => { this._frame = null; this.sync(); });
+        this._frame = raf(() => {
+            this._frame = null;
+            const run = this._needSync || (this._needSizeCheck && this.sizesChanged());
+            this._needSync = false;
+            this._needSizeCheck = false;
+            if (run) this.sync();
+        });
     }
 
     /** Is the badge shown at this zoom? Where region labels show (`zoomLevels.showRegionNames`), and above. */
@@ -132,9 +179,11 @@ export class GroupBadgeLayer {
     sync() {
         const cy = this.ui.cy;
         if (!cy || this.badges.size === 0) return;
+        this.syncCount += 1;
         const showZoom = this.visibleAtZoom(cy.zoom());
         for (const [id, btn] of this.badges) {
             const node = cy.getElementById(id);
+            if (node.length > 0) this._sizes.set(id, GroupBadgeLayer.sizeKey(node));
             const shown = showZoom && node.length > 0 && !node.hasClass('discovery-hidden') && node.visible?.() !== false;
             if (!shown) { btn.style.display = 'none'; continue; }
             const c = badgeCentre(node.renderedBoundingBox({ includeLabels: false }));
@@ -162,6 +211,7 @@ export class GroupBadgeLayer {
     destroy() {
         for (const btn of this.badges.values()) btn.remove?.();
         this.badges.clear();
+        this._sizes.clear();
         this._layer?.remove?.();
         this._layer = null;
         this._boundCy = null;

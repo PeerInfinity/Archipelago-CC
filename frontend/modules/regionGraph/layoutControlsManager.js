@@ -1,10 +1,27 @@
 import { RegionGraphLayoutEditor } from './regionGraphLayoutEditor.js';
 import { pickerHTML, setupNodePicker } from './nodePicker.js';
+import { startLayout } from './layoutRun.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { isRegionGroupNode, SUB_REGION_VIEW_KEY, SUB_REGION_VIEW_SCHEMA, SUB_REGION_VIEW_LABELS } from './subRegionGroups.js';
 import { NODE_LOOK_KEY, NODE_LOOK_SCHEMA, NODE_LOOK_LABELS, NODE_LOOK_HINT, syncNodeLookControl } from './nodeLook.js';
+import { exitTileOf } from '../regionMap/regionMapModel.js';
+import {
+  DIRECTION_STRENGTH_KEY, DIRECTION_SPACING_KEY, DIRECTION_EXITS_KEY, DIRECTION_STRENGTH_SCHEMA, DIRECTION_SPACING_SCHEMA,
+  DIRECTION_EXITS_SCHEMA, DIRECTION_EXITS_LABELS, DIRECTION_LAYOUT_PRESET, normaliseDirectionSettings, exitDirections,
+  edgePreferences, directionLayout, overlapCount, angleErrors,
+} from './directionLayout.js';
+
+const nowMs = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
+
+/** The three Direction-aware settings' keys, by field. */
+export const DIRECTION_SETTING_KEYS = Object.freeze({
+  strength: DIRECTION_STRENGTH_KEY, spacing: DIRECTION_SPACING_KEY, exits: DIRECTION_EXITS_KEY,
+});
+const DIRECTION_KEY_SET = new Set(Object.values(DIRECTION_SETTING_KEYS));
+/** Is `key` one of the Direction-aware layout's settings (a write re-runs that layout, never rebuilds the graph)? */
+export const isDirectionSettingKey = (key) => DIRECTION_KEY_SET.has(key);
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -28,6 +45,27 @@ export class LayoutControlsManager {
         </div>
         ${pickerHTML()}
         <div id="layoutEditorContainer"></div>
+        <details class="rg-direction-layout" style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
+          <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">Direction-aware layout:</summary>
+          <div style="margin: 0 0 4px 0; font-size: 11px; color: #aaa;">Places each neighbour on the side of the exit that leads to it, as near as it can.</div>
+          <label style="display: block; margin: 3px 0;" title="${DIRECTION_STRENGTH_SCHEMA.description}">
+            <span style="margin-right: 5px;">Strength:</span>
+            <input type="range" id="directionStrength" min="${DIRECTION_STRENGTH_SCHEMA.minimum}" max="${DIRECTION_STRENGTH_SCHEMA.maximum}" step="0.05" value="${DIRECTION_STRENGTH_SCHEMA.default}" style="width: 90px; vertical-align: middle;">
+            <span id="directionStrengthValue" style="font-size: 11px;">${DIRECTION_STRENGTH_SCHEMA.default}</span>
+          </label>
+          <label style="display: block; margin: 3px 0;" title="${DIRECTION_SPACING_SCHEMA.description}">
+            <span style="margin-right: 5px;">Spacing (px):</span>
+            <input type="number" id="directionSpacing" min="${DIRECTION_SPACING_SCHEMA.minimum}" max="${DIRECTION_SPACING_SCHEMA.maximum}" step="5" value="${DIRECTION_SPACING_SCHEMA.default}" style="width: 60px; padding: 2px;">
+          </label>
+          <label style="display: block; margin: 3px 0;" title="${DIRECTION_EXITS_SCHEMA.description}">
+            <span style="margin-right: 5px;">Exits used:</span>
+            <select id="directionExits" style="padding: 2px;">
+              ${Object.entries(DIRECTION_EXITS_LABELS).map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
+            </select>
+          </label>
+          <button id="runDirectionLayout" style="margin: 2px; padding: 4px 8px;">Run Direction-aware layout</button>
+          <div id="directionLayoutStatus" style="margin: 2px 0; font-size: 11px; color: #aaa;"></div>
+        </details>
         <div id="discoveryControls" style="display: none; margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
           <div style="font-weight: bold; margin-bottom: 5px;">Discovery Mode:</div>
           <label style="display: block; margin: 3px 0; cursor: pointer;">
@@ -295,8 +333,174 @@ export class LayoutControlsManager {
       });
     }
 
+    // ⛓ region-graph-direction-layout: the three settings (schema defaults only) and the Run button.
+    await this.loadDirectionSettings();
+    this.setupDirectionControls();
+
     // Update discovery controls visibility based on current mode
     this.updateDiscoveryControlsVisibility();
+  }
+
+  /* ── ⛓ region-graph-direction-layout ─────────────────────────────────────────────────────────────────────────── */
+
+  /** Read the Direction-aware settings into `ui.directionSettings` (no call-site default: the schema's is the only one). */
+  async loadDirectionSettings() {
+    const raw = {};
+    for (const [field, key] of Object.entries(DIRECTION_SETTING_KEYS)) {
+      try {
+        raw[field] = await settingsManager.getSetting(key);
+      } catch (error) {
+        logger.warn(`Could not load ${key}; using the schema default:`, error);
+      }
+    }
+    this.ui.directionSettings = normaliseDirectionSettings(raw);
+    this.syncDirectionControls();
+    return this.ui.directionSettings;
+  }
+
+  /** Show `ui.directionSettings` in the controls. */
+  syncDirectionControls() {
+    const panel = this.ui.controlPanel;
+    const s = this.ui.directionSettings ?? normaliseDirectionSettings();
+    const strength = panel?.querySelector?.('#directionStrength');
+    if (strength) strength.value = String(s.strength);
+    const strengthValue = panel?.querySelector?.('#directionStrengthValue');
+    if (strengthValue) strengthValue.textContent = String(s.strength);
+    const spacing = panel?.querySelector?.('#directionSpacing');
+    if (spacing) spacing.value = String(s.spacing);
+    const exits = panel?.querySelector?.('#directionExits');
+    if (exits) exits.value = s.exits;
+  }
+
+  /** The controls write the settings; the panel's settings:changed handler re-runs the layout if it is the one drawn. */
+  setupDirectionControls() {
+    const panel = this.ui.controlPanel;
+    if (!panel?.querySelector || this._directionControlsBound) return;
+    this._directionControlsBound = true;
+    const save = async (key, value) => {
+      try {
+        await settingsManager.updateSetting(key, value);
+      } catch (error) {
+        logger.warn(`Failed to save setting ${key}:`, error);
+      }
+    };
+    const strength = panel.querySelector('#directionStrength');
+    strength?.addEventListener('input', (e) => {
+      const v = panel.querySelector('#directionStrengthValue');
+      if (v) v.textContent = String(e.target.value);
+    });
+    strength?.addEventListener('change', (e) => save(DIRECTION_STRENGTH_KEY, parseFloat(e.target.value)));
+    panel.querySelector('#directionSpacing')?.addEventListener('change', (e) => save(DIRECTION_SPACING_KEY, parseFloat(e.target.value)));
+    panel.querySelector('#directionExits')?.addEventListener('change', (e) => save(DIRECTION_EXITS_KEY, e.target.value));
+    panel.querySelector('#runDirectionLayout')?.addEventListener('click', () => this.runDirectionLayout());
+  }
+
+  /** A Direction-aware setting changed: reload it, and re-run the layout if it is the one the graph shows. */
+  async onDirectionSettingChanged() {
+    await this.loadDirectionSettings();
+    if (this.ui.currentLayoutPreset === DIRECTION_LAYOUT_PRESET && this.ui.cy && this.ui.graphInitialized) {
+      this.runDirectionLayout();
+    }
+  }
+
+  /**
+   * The layout's inputs from the graph AS DRAWN → `{ nodes, edges, prefs, counts }`. Laid-out nodes: every node but the
+   * player, location nodes and a `nested` box (a box is placed by its members; its members carry `group` = the box, so
+   * they stay together). A node's size is its drawn size (`outerWidth` × `outerHeight`: the map look's rectangle in
+   * merged + map, the ellipse's box elsewhere). A merged node stands for its `members`.
+   */
+  directionLayoutInputs(settings = this.ui.directionSettings ?? normaliseDirectionSettings()) {
+    const cy = this.ui.cy;
+    const laid = cy.nodes().filter((n) => !n.hasClass('player') && !n.hasClass('location-node') && !isRegionGroupNode(n, 'box'));
+    const ids = new Set();
+    const nodes = [];
+    laid.forEach((n) => {
+      const w = n.outerWidth?.();
+      const h = n.outerHeight?.();
+      const parent = n.data('parent');
+      const members = isRegionGroupNode(n, 'merged') ? (n.data('members') ?? []) : [n.data('regionName') ?? n.id()];
+      ids.add(n.id());
+      nodes.push({ id: n.id(), w: w > 0 ? w : 64, h: h > 0 ? h : 49, members, group: parent ?? null });
+    });
+    const edges = [];
+    cy.edges().forEach((e) => {
+      const s = e.data('source');
+      const t = e.data('target');
+      if (ids.has(s) && ids.has(t) && s !== t) edges.push({ id: e.id(), source: s, target: t });
+    });
+    const got = this.ui.mapLook?.regionMapModel?.() ?? null;
+    const sidecars = got?.rules?.preset_sidecars?.[got.playerId] ?? null;
+    let directions = [];
+    let counts = null;
+    if (got?.model && sidecars) {
+      ({ directions, counts } = exitDirections({ sidecars, model: got.model, tileOf: exitTileOf, exits: settings.exits }));
+    }
+    const prefs = edgePreferences(nodes, edges, directions);
+    return { nodes, edges, prefs, counts };
+  }
+
+  /**
+   * Compute the Direction-aware positions for the graph as drawn → `{ options, report }`: `options` a Cytoscape
+   * `preset` layout (animated, fit, as the other layouts), `report` the timing and the measures (in
+   * `ui.lastDirectionLayout` too). Nodes it does not lay out keep their position (location nodes are re-seated by
+   * the layoutstop handler, as after any layout).
+   */
+  buildDirectionLayout(settings = this.ui.directionSettings ?? normaliseDirectionSettings()) {
+    const t0 = nowMs();
+    const { nodes, edges, prefs, counts } = this.directionLayoutInputs(settings);
+    const t1 = nowMs();
+    const { positions, stats } = directionLayout(nodes, edges.map((e) => ({ ...e, pref: prefs.get(e.id) })), settings);
+    const t2 = nowMs();
+    const errors = angleErrors(edges, prefs, positions);
+    const report = {
+      settings: { ...settings }, view: this.ui.subRegionView ?? null, nodeLook: this.ui.nodeLook ?? null,
+      nodes: nodes.length, edges: edges.length, preferredEdges: prefs.size,
+      inputsMs: t1 - t0, layoutMs: t2 - t1, totalMs: t2 - t0,
+      overlaps: overlapCount(nodes, positions), meanAngleError: errors.mean, p90AngleError: errors.p90,
+      counts: counts ? { ...counts, twoOnOneSide: counts.twoOnOneSide.length, twoOnOneSideLevels: counts.twoOnOneSideLevels.length } : null,
+      stats,
+    };
+    this.ui.lastDirectionLayout = report;
+    return {
+      report,
+      positions,
+      options: {
+        name: 'preset',
+        positions: (node) => positions.get(node.id()) ?? node.position(),
+        animate: true,
+        animationDuration: 1000,
+        fit: true,
+        padding: 50,
+      },
+    };
+  }
+
+  /**
+   * Run the Direction-aware layout on the graph as drawn (positions saved when the run settles, as every layout's).
+   * `animate: false` (the in-app row) places the nodes at once instead of over the 1 s animation.
+   */
+  runDirectionLayout({ animate = true } = {}) {
+    if (!this.ui.cy) return null;
+    const built = this.buildDirectionLayout();
+    const { report } = built;
+    const options = animate ? built.options : { ...built.options, animate: false };
+    this.ui.currentLayoutPreset = DIRECTION_LAYOUT_PRESET;
+    const select = this.ui.controlPanel?.querySelector?.('#layoutPreset');
+    if (select) select.value = DIRECTION_LAYOUT_PRESET;
+    const status = this.ui.controlPanel?.querySelector?.('#directionLayoutStatus');
+    if (status) {
+      const err = report.meanAngleError == null ? 'no exit directions in this world' : `mean direction error ${report.meanAngleError.toFixed(0)}°`;
+      status.textContent = `${report.nodes} nodes in ${Math.round(report.totalMs)} ms, ${report.overlaps} overlaps, ${err}`;
+    }
+    this.ui.updateStatus?.('Running Direction-aware layout...');
+    // The player marker is a LOCKED node (no layout moves it): re-seat it on its region once the nodes have landed.
+    startLayout(this.ui, options, {
+      beforeSettle: () => {
+        const region = this.ui.getCurrentPlayerLocation?.();
+        if (region && this.ui.cy.getElementById('player').length) this.ui.updatePlayerLocation?.(region);
+      },
+    });
+    return report;
   }
 
   /**
@@ -439,7 +643,6 @@ export class LayoutControlsManager {
       return;
     }
 
-    this.ui.isLayoutRunning = true;
     this.ui.updateStatus('Running layout...');
 
     // Pre-size nodes for overlays so layout spaces them correctly
@@ -455,9 +658,9 @@ export class LayoutControlsManager {
       if (gridOptions) {
         const layoutPresetSelect = this.ui.controlPanel?.querySelector('#layoutPreset');
         if (layoutPresetSelect) layoutPresetSelect.value = 'procgen-grid';
+        this.ui.currentLayoutPreset = 'procgen-grid';
         logger.debug(`Applying procgen grid layout (${this.ui.gridLayout.size} regions)`);
-        this.ui.currentLayout = this.ui.cy.layout(gridOptions);
-        this.ui.currentLayout.run();
+        startLayout(this.ui, gridOptions);
         return;
       }
     }
@@ -501,9 +704,9 @@ export class LayoutControlsManager {
     if (layoutPresetSelect) {
       layoutPresetSelect.value = selectedPreset;
     }
+    this.ui.currentLayoutPreset = selectedPreset;
 
-    this.ui.currentLayout = this.ui.cy.layout(layoutOptions);
-    this.ui.currentLayout.run();
+    startLayout(this.ui, layoutOptions);
   }
 
   /**
