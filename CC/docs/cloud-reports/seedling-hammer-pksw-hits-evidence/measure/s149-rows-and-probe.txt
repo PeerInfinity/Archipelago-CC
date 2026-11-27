@@ -1,0 +1,15 @@
+== PKSW
+  1503 kill spinner@192,128 wps  dash None None None aim {"x": 200, "y": 136}
+  1626 kill spinner@192,144 wps  dash None None None aim {"x": 200, "y": 136}
+  1706 walk  wps 1 dash False None 7 aim {"x": 200, "y": 136}
+  1734 walk  wps 1 dash True 17 30 aim {"x": 168, "y": 136}
+  1883 walk  wps 5 dash True 172 302 aim {"x": 72, "y": 136}
+  2143 collect  wps  dash None None None aim null
+== PKSW+HAMMER_FIGHT
+  1503 kill spinner@192,128 wps  dash None None None aim {"x": 200, "y": 136}
+  1626 kill spinner@192,144 wps  dash None None None aim {"x": 200, "y": 136}
+  1731 walk  wps 1 dash True 53 68 aim {"x": 200, "y": 136}
+  1804 walk  wps 1 dash True 24 30 aim {"x": 168, "y": 136}
+  1936 walk  wps 5 dash True 174 307 aim {"x": 72, "y": 136}
+  2110 collect  wps  dash None None None aim null
+== sighted probe of the 1883 chain: {"x": 232.24466589358158, "y": 125.60788280242524, "tick": 1930, "sources": ["bob@288,80"]}

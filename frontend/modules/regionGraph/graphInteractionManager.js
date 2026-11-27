@@ -22,44 +22,34 @@ export class GraphInteractionManager {
     Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
   }
 
+  /**
+   * ⛓ A panel layout run has SETTLED (layoutRun.js: its own `layoutstop`, after its last position change): save the
+   * positions, re-seat the location nodes, show "Layout complete", and place the player marker on the first layout.
+   */
+  onLayoutSettled() {
+    this.ui.saveNodePositions();
+    this.ui.dataManager.reseatLocationNodes();
+    this.ui.updateStatus('Layout complete');
+
+    // Position the player once the first layout has landed (initial load)
+    if (this.ui.initialPlayerRegion && !this.ui.cy.getElementById('player').length) {
+      logger.debug(`Positioning player after layout at ${this.ui.initialPlayerRegion}`);
+      this.ui.updatePlayerLocation(this.ui.initialPlayerRegion);
+      this.ui.initialPlayerRegion = null; // Clear it so we don't reposition on subsequent layouts
+
+      // Refresh node colors now that layout and player positioning are complete
+      const snapshot = stateManager.getLatestStateSnapshot();
+      if (snapshot) {
+        this.ui.dataManager.onStateUpdate({ snapshot });
+      }
+    }
+  }
+
   setupEventHandlers() {
     this.ui.cy.on('tap', 'node', (evt) => this.onNodeTap(evt.target, evt));
 
-    this.ui.cy.on('layoutstop', () => {
-      // Keep isLayoutRunning true during animation to prevent premature player positioning
-
-      // Capture the current layout generation so we can detect if the graph
-      // was rebuilt before this timeout fires (stale layoutstop from a stopped layout)
-      const generation = this.ui.layoutGeneration;
-
-      // Wait for the animation to complete before saving positions and positioning player
-      // Animation duration is 1000ms as defined in runLayout
-      setTimeout(() => {
-        // Skip if the graph was rebuilt since this layout started
-        if (generation !== this.ui.layoutGeneration) {
-          logger.debug('Skipping stale layoutstop timeout (generation mismatch)');
-          return;
-        }
-
-        this.ui.isLayoutRunning = false;
-        this.ui.saveNodePositions();
-        this.ui.dataManager.reseatLocationNodes();
-        this.ui.updateStatus('Layout complete');
-
-        // Position the player after layout animation is complete (for initial load)
-        if (this.ui.initialPlayerRegion && !this.ui.cy.getElementById('player').length) {
-          logger.debug(`Positioning player after layout animation at ${this.ui.initialPlayerRegion}`);
-          this.ui.updatePlayerLocation(this.ui.initialPlayerRegion);
-          this.ui.initialPlayerRegion = null; // Clear it so we don't reposition on subsequent layouts
-
-          // Refresh node colors now that layout and player positioning are complete
-          const snapshot = stateManager.getLatestStateSnapshot();
-          if (snapshot) {
-            this.ui.dataManager.onStateUpdate({ snapshot });
-          }
-        }
-      }, 1050); // Wait for layout animation (1000ms) plus buffer
-    });
+    // ⛓ The settle work after a layout (positions saved, "Layout complete") is `onLayoutSettled`, run by layoutRun.js
+    // on the run's OWN layoutstop (no cy-wide layoutstop handler, no timer).
 
     // Hover-mode location visibility. Show this region's locations on
     // mouseover; the previous region's locations (if any) get hidden

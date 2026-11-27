@@ -57,6 +57,7 @@ import {
 import {
     RESPONDERS, createActivatorState, fallRocksArmedBy, opensOnTick, openActivatorIds,
     openActivatorIdsBeforeLatestStep, openActivatorIdsBeforeStep, latchAtBuild, pressedGroups, presserDown, ropePublish, stepActivators,
+    PresserRecursionHang, markPresserHang,
 } from './activators.js';
 import {
     FALL_ROCK, createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
@@ -1833,6 +1834,10 @@ export function createLevelRun({
      */
     const publishRopeGroup = (n, ropeSolid, act, { atBuild = false } = {}) => {
         const pub = ropePublish({ as3: 'RopeStart', t: ropeSolid?.ropeT ?? -1 });
+        // ⛓ fidelity PRESSERLOOP D2 (OFF never read): a pull into a recursing group hangs the game inside `hit()`
+        // (`activate = true` recurses before `setPersistence`), so nothing is latched. A pull AT BUILD is refused there.
+        if (pub && CONTACT_FIDELITY.presserRecursionHang && !atBuild
+            && markPresserHang(act, worldFor(n), pub.group, pub.value, `${ropeSolid.ropeId} (pulled)`)) return;
         if (pub) {
             if (atBuild) latchAtBuild(act, pub.group, worldFor(n));
             else act.latched.set(pub.group, pub.value);
@@ -22898,6 +22903,12 @@ export function createLevelRun({
             // ⛓ fidelity FENCEPOST D1: the tick's body, unchanged, as one arrow — `settleSpinnerRemovalsNow` is its `updateLists()` tail.
             spinnersSteppedThisTick = null; // a tick that threw below its spinner step leaves no survivor
             const advanced = (() => {
+            // ⛓ fidelity PRESSERLOOP D2 (`presserRecursionHang`, OFF never read): the game hung in the frame that
+            // recorded the previous observation (a publish into a recursing group), and it runs no later frame.
+            if (CONTACT_FIDELITY.presserRecursionHang && activatorStates.get(level)?.presserHang) {
+                const hang = activatorStates.get(level).presserHang;
+                throw new PresserRecursionHang(`levelRun: tick ${ticksCompleted} cannot run — ${hang.message}`, hang);
+            }
             // ⛓⛓ ARC 3 SLICE 2d: THE FORECAST MEMO DIES FIRST, above every
             // line that can move a body, a block or a world. Its key would
             // catch this tick anyway (`ticksCompleted` moves below); this is
@@ -24253,6 +24264,11 @@ export function createLevelRun({
                     if (ceremony.pickup.tag === 'wand' && !noclip) {
                         wandLeftTheWorld = true;
                         const group = WAND_PICKUP.tset;
+                        // ⛓ fidelity PRESSERLOOP D2 (OFF never read): the sweep's `n.activate = true` into a recursing
+                        // group hangs the game (`Pickups/Wand.as:55-70`); the run refuses its next tick.
+                        if (CONTACT_FIDELITY.presserRecursionHang) {
+                            markPresserHang(activatorStateFor(level), worldFor(level), group, true, 'the wand (Wand.removed)');
+                        }
                         activatorStateFor(level).latched.set(group, true);
                         const rocks = fallRockStateFor(level);
                         const together = [...rocks].filter(

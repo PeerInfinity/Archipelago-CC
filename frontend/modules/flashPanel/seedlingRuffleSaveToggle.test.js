@@ -25,7 +25,7 @@ import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import settingsManager from '../../app/core/settingsManager.js';
-import { FlashPanelUI } from './flashPanelUI.js';
+import { FlashPanelUI, SAVE_SWITCH_HINT } from './flashPanelUI.js';
 import {
     clearRuffleSave, endRuffleSaveRun, prepareRuffleSave, RUFFLE_SAVE_ASIDE_PREFIX, RUFFLE_SAVE_DEFAULT,
     RUFFLE_SAVE_SETTING_KEY, RUFFLE_SAVE_SETTING_PROP, ruffleSaveAsideKey, ruffleSaveKey, ruffleSaveSchemaProps,
@@ -81,7 +81,7 @@ describe('⛓ USE THE SAVE (Flash) — the setting and the key', () => {
         expect(index).toMatch(/\.\.\.ruffleSaveSchemaProps\(\)/);
         expect(index).toMatch(/prefix: 'seedlingRuffleSaveAside_'/);
         const ui = readFileSync(new URL('./flashPanelUI.js', import.meta.url), 'utf8');
-        expect(ui).toMatch(/\{ prop: 'seedlingRuffleSave', label: 'Use the save', when: 'flashSelected' \}/);
+        expect(ui).toMatch(/\{ prop: 'seedlingRuffleSave', label: 'Use the save', when: 'flashSelected', hint: SAVE_SWITCH_HINT \}/);
     });
 
     it('the key is Ruffle\'s, as measured: hostname (no port), the SWF path, the name; the query is not in it', () => {
@@ -268,5 +268,42 @@ describe('⛓ USE THE SAVE (Flash) — the panel (a bare panel, the prototype\'s
         const spy = vi.spyOn(settingsManager, 'getSetting').mockImplementation(async (_k, fallback) => fallback);
         expect(await panel._readRuffleSaveSetting()).toBe(false);
         expect(spy).toHaveBeenCalledWith(RUFFLE_SAVE_SETTING_KEY, false);
+    });
+});
+
+/* ── ⛓ SAVE HINT (slice `js-smalls-1`, ⚖ Robert 2026-11-26: "Leave it, note it in the UI") ── a switch changed during a
+ * run never rewinds a game that already read its save, so both "Use the save" rows carry a muted hint saying when the
+ * switch acts. Pinned on the RENDERED Settings section (a minimal fake document: no jsdom in this repo). */
+function fakeEl(tag) {
+    const el = {
+        tagName: tag.toUpperCase(), children: [], dataset: {}, style: {}, className: '', title: '', type: '', value: '',
+        textContent: '', classList: { add: (c) => { el.className = `${el.className} ${c}`.trim(); } },
+        append: (...kids) => { el.children.push(...kids); },
+        appendChild: (k) => { el.children.push(k); return k; },
+        addEventListener: () => {}, setAttribute: () => {},
+        set innerHTML(v) { el._html = v; },
+        querySelector: () => fakeEl('span'),
+    };
+    return el;
+}
+describe('⛓ SAVE HINT — both "Use the save" switches say when they act', () => {
+    it('the hint reads "takes effect on the next game load", in the Ruffle row and the JS row, and in no other row', () => {
+        expect(SAVE_SWITCH_HINT).toBe('takes effect on the next game load');
+        const host = fakeEl('div');
+        const panel = Object.create(FlashPanelUI.prototype);
+        panel.rootElement = { querySelector: (sel) => (sel === '.flash-panel-settings' ? host : fakeEl('div')) };
+        const saved = globalThis.document;
+        globalThis.document = { createElement: fakeEl };
+        try { panel._buildSettingsControls(); } finally { globalThis.document = saved; }
+        const hinted = host.children
+            .filter((row) => row.className === 'flash-panel-setting')
+            .filter((row) => row.children.some((c) => c.className === 'flash-panel-setting-hint'));
+        expect(hinted.map((row) => row.dataset.setting)).toEqual(['seedlingJsSave', 'seedlingRuffleSave']);
+        for (const row of hinted) {
+            const hint = row.children.find((c) => c.className === 'flash-panel-setting-hint');
+            expect(hint.textContent).toBe(SAVE_SWITCH_HINT);
+            expect(row.children.indexOf(hint)).toBe(row.children.length - 1);   // after the switch and its label
+            expect(hint.tagName).toBe('SPAN');
+        }
     });
 });

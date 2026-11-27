@@ -1,0 +1,52 @@
+ok true ticks 797 prefix 1449 planKeys solution,expected,equipsAt,equipItems,verbs,replayMs,solveMs,prefixLength,dashMode,deadline,modelHits,pass,passes,work
+K 1660 255.89 198.07 v 0.00 0.00  
+K 1661 255.89 198.07 v 0.00 0.00  
+K 1662 255.89 198.07 v 0.00 0.00  
+K 1663 256.69 198.87 v 0.80 0.80 right+down 
+K 1664 258.11 200.29 v 1.42 1.42 right+down 
+K 1665 259.36 200.74 v 1.25 0.45 up 
+K 1666 260.37 200.30 v 1.01 -0.44 up 
+K 1667 261.95 199.96 v 1.58 -0.34 right 
+K 1668 263.29 199.67 v 1.34 -0.29 right 
+K 1669 264.38 200.24 v 1.09 0.57 down 
+K 1670 264.45 199.89 v 0.07 -0.35 left+up 
+K 1671 263.65 199.79 v -0.80 -0.10 left 
+K 1672 263.90 199.72 v 0.25 -0.07 right 
+K 1673 263.90 199.72 v 0.00 0.00  
+K 1674 263.90 199.72 v 0.00 0.00  
+K 1675 263.10 199.72 v -0.80 0.00 left 
+K 1676 262.55 199.72 v -0.55 0.00 primary 
+K 1677 263.05 199.72 v 0.50 0.00 right 
+K 1678 264.10 199.72 v 1.05 0.00 right 
+K 1679 264.10 199.72 v 0.00 0.00 left 
+K 1680 264.10 199.72 v 0.00 0.00  
+K 1681 264.10 199.72 v 0.00 0.00  
+K 1682 264.10 199.72 v 0.00 0.00  
+K 1683 264.10 199.72 v 0.00 0.00  
+K 1684 264.10 199.72 v 0.00 0.00  
+K 1685 264.10 199.72 v 0.00 0.00  
+K 1686 264.10 199.72 v 0.00 0.00  
+K 1687 264.10 199.72 v 0.00 0.00  
+K 1688 264.10 199.72 v 3.96 0.00  HIT t1690 bomb:bombpusher@112,128#9
+K 1689 267.81 199.72 v 3.71 0.00 right 
+K 1690 271.27 199.72 v 3.46 0.00 left+up 
+K 1691 274.49 199.72 v 3.21 0.00 left+up 
+K 1692 277.45 199.72 v 2.96 0.00 left+up 
+SEG 0 ROW 1449 {"verb":"hold"} | {"kind":"collect-placement","aim":{"x":168,"y":136}} | [{"option":"presser","why":"group t=0 is already LATCHED in the live run, so no presser is needed — walking to one would ask for a corridor through wandlock@208,128 itself"},{"option":"route-around"," | keys 2
+SEG 0 ROW 1534 {"verb":"kill","rung":"kill","climb":1,"arm":"press","target":"spinner@192,128"} | {"kind":"collect-placement","aim":{"x":200,"y":136}} | [{"option":"avoid","why":"the danger-forbidden corridor STILL probes dangerous at (202.8,135.8) — spinner:spinner@192,128 (a live Spinner's HAMMER at (196.5,143.1) at horizon 27 — the exact 13 px `col | keys 1
+SEG 0 ROW 1663 {"verb":"kill","rung":"kill","climb":2,"arm":"press","target":"spinner@192,160"} | {"kind":"collect-placement","aim":{"x":200,"y":136}} | [{"option":"avoid","why":"the danger-forbidden corridor STILL probes dangerous at (245.5,187.6) — spinner:spinner@192,160 (a live Spinner BODY at (244.4,190.6) at horizon 10 — `Enemy.hitPlayer`'s 7x7  | keys 2
+SEG 0 ROW 1690 {"verb":"walk","waypoints":1} | {"kind":"collect-placement","aim":{"x":200,"y":136}} | [{"option":"keep-plan","why":"the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"}] | keys 2
+OWNER seg 0 key 1688 HIT t1690 bomb:bombpusher@112,128#9 <- 1663 {"verb":"kill","rung":"kill","climb":2,"arm":"press","target":"spinner@192,160"} collect-placement
+OWNER seg 1 key 1688 HIT t1690 bomb:bombpusher@112,128#9 <- 1663 {"verb":"kill","rung":"kill","climb":2,"arm":"press","target":"spinner@192,160"} collect-placement
+KT {"k":1678,"body":"spinner@192,160","fight":false,"following":false,"aimed":false,"strike":{"x":264,"y":200},"refuge":null,"stall":false,"escape":false,"held":"right","bodyIn":"spinner@192,144:0:1 spinner@192,160:30:3"}
+KT {"k":1679,"body":"spinner@192,160","fight":false,"following":false,"aimed":false,"strike":{"x":264,"y":200},"refuge":null,"stall":false,"escape":false,"held":"left","bodyIn":"spinner@192,144:0:1 spinner@192,160:30:3"}
+KT {"k":1680,"body":"spinner@192,160","fight":false,"following":false,"aimed":false,"strike":{"x":264,"y":200},"refuge":null,"stall":false,"escape":false,"held":"","bodyIn":"spinner@192,144:0:1 spinner@192,160:30:3"}
+KT {"k":1681,"body":"spinner@192,160","fight":false,"following":false,"aimed":false,"strike":{"x":264,"y":200},"refuge":null,"stall":false,"escape":false,"held":"","bodyIn":"spinner@192,144:0:1 spinner@192,160:30:3"}
+KT {"k":1682,"body":"spinner@192,160","fight":false,"following":false,"aimed":false,"strike":null,"refuge":{"x":264,"y":200,"clearance":0.4883062937700515,"eta":0},"stall":false,"escape":false,"held":"","bodyIn":"spinner@192,144:0:1 spinner@192,160:30:3"}
+KT {"k":1683,"body":"spinner@192,160","fight":false,"following":false,"aimed":false,"strike":null,"refuge":{"x":264,"y":200,"clearance":0.4883062937700515,"eta":0},"stall":false,"escape":false,"held":"","bodyIn":"spinner@192,144:0:1 spinner@192,160:30:3"}
+KT {"k":1684,"body":"spinner@192,160","fight":false,"following":false,"aimed":false,"strike":null,"refuge":{"x":264,"y":200,"clearance":0.4883062937700515,"eta":0},"stall":false,"escape":false,"held":"","bodyIn":"spinner@192,144:0:1 spinner@192,160:30:3"}
+KT {"k":1685,"body":"spinner@192,160","fight":false,"following":false,"aimed":false,"strike":null,"refuge":{"x":264,"y":200,"clearance":0.4883062937700515,"eta":0},"stall":false,"escape":false,"held":"","bodyIn":"spinner@192,144:0:1 spinner@192,160:30:3"}
+KT {"k":1686,"body":"spinner@192,160","fight":false,"following":false,"aimed":false,"strike":null,"refuge":{"x":264,"y":200,"clearance":0.4883062937700515,"eta":0},"stall":false,"escape":false,"held":"","bodyIn":"spinner@192,144:0:1 spinner@192,160:30:3"}
+KT {"k":1687,"body":"spinner@192,160","fight":false,"following":false,"aimed":false,"strike":null,"refuge":{"x":264,"y":200,"clearance":0.4883062937700515,"eta":0},"stall":false,"escape":false,"held":"","bodyIn":"spinner@192,144:0:1 spinner@192,160:30:3"}
+KT {"k":1688,"body":"spinner@192,160","fight":false,"following":false,"aimed":false,"strike":null,"refuge":{"x":264,"y":200,"clearance":0.4883062937700515,"eta":0},"stall":false,"escape":false,"held":"","bodyIn":"spinner@192,144:0:1 spinner@192,160:30:3"}
+KT {"k":1689,"body":"spinner@192,160","fight":false,"following":false,"aimed":false,"strike":null,"refuge":{"x":296,"y":200,"clearance":93.62082392195404,"eta":30},"stall":false,"escape":false,"held":"right","bodyIn":"spinner@192,144:0:1 spinner@192,160:30:3"}

@@ -2361,6 +2361,71 @@ export const ACTIVATOR_RESPONDERS = new Set([
 export const ACTIVATOR_PRESSERS = new Set(['button', 'buttonroom']);
 
 /**
+ * ⛓ fidelity PRESSERLOOP D1 (wave 62, `CONTACT_FIDELITY.presserRecursionHang`) — THE GROUPS WHOSE SETTERS RECURSE.
+ *
+ * Three `Activators` setters RE-PUBLISH to every other `Activators` of their `t` (the full census of the thirteen
+ * subclasses: the other ten store the flag and stop):
+ *   · `Button.set activate` → `activateAll(this, t, activate)` (`Puzzlements/Button.as:42-61`), every value;
+ *   · `RopeStart.set activate` (`Puzzlements/RopeStart.as:79-91`), every value;
+ *   · `ButtonRoom.set activate` with `room == -1` (`Puzzlements/ButtonRoom.as:67-98`), only `if (a)`, and what it
+ *     publishes is `persist = a` flipped by `flip`: a flip-0 one answers a true with a true, a flip-1 one with a FALSE.
+ * So a value goes round for ever when it can reach a second re-publisher that hands it on:
+ *   · a FALSE loops between two pass-throughs (Button or RopeStart): `falseLoops` = pass ≥ 2;
+ *   · a TRUE loops among the pass-throughs and the flip-0 ButtonRooms: `trueLoops` = pass + br0 ≥ 2 (a flip-1 one
+ *     turns it into a false, which loops only where `falseLoops` does — and that implies `trueLoops`).
+ * `Button.update` publishes its own overlap EVERY frame, so a group with a Button and `falseLoops` recurses on the first
+ * live frame (`firstFrame`). A `check()` that publishes — a pulled rope (`RopeStart.as:31-38` → `hit()`), a pressed
+ * ButtonRoom (`ButtonRoom.as:40-50`) — recurses on the build's first frame, before any `update()` (`bootBy`).
+ * Every other publish (a press, a pull, the wand) recurses on the frame it lands in `trueLoops` (a true) or
+ * `falseLoops` (a flip-1 press's false). A cross-room ButtonRoom (`room >= 0`) publishes nothing here.
+ * MEASURED on the game (p4g and p4d, `CC/docs/cloud-reports/seedling-fidelity-presserloop.md` § D1): every shape
+ * throws `Maximum call stack size exceeded` once, and NO later frame runs.
+ *
+ * @param {{pressers?: object[], solids?: object[]}} world  a built world (or the two lists `buildLevelWorld` builds)
+ * @returns {object[]} `[{t, members: [{id, kind, boot}], trueLoops, falseLoops, firstFrame, bootBy}]`, one per group
+ *   that can recurse at all (`trueLoops`), by `t`
+ */
+export function presserRecursionGroups({ pressers = [], solids = [] } = {}) {
+    const byT = new Map();
+    const add = (t, m) => {
+        if (!byT.has(t)) byT.set(t, []);
+        byT.get(t).push(m);
+    };
+    for (const p of pressers ?? []) {
+        if (p.tag === 'button') add(p.t, { id: `button@${p.x},${p.y}`, kind: 'button', boot: null });
+        else if (p.tag === 'buttonroom' && !(p.room >= 0)) {
+            add(p.t, { id: `buttonroom@${p.x},${p.y}`, kind: p.flip ? 'br1' : 'br0', boot: p.bootPressed === true ? !p.flip : null });
+        }
+    }
+    for (const s of solids ?? []) {
+        if (s.ropeId) add(s.ropeT, { id: s.ropeId, kind: 'rope', boot: s.bootPulled === true ? true : null });
+    }
+    const out = [];
+    for (const [t, members] of byT) {
+        const count = (k) => members.filter((m) => m.kind === k).length;
+        const pass = count('button') + count('rope');
+        const trueLoops = pass + count('br0') >= 2;
+        if (!trueLoops) continue;
+        const falseLoops = pass >= 2;
+        const firstFrame = count('button') >= 1 && falseLoops;
+        const bootBy = members.find((m) => m.boot === true || (m.boot === false && falseLoops)) ?? null;
+        out.push({ t, members, trueLoops, falseLoops, firstFrame, bootBy });
+    }
+    return out.sort((a, b) => a.t - b.t);
+}
+
+/** Does a `value` published into recursion group `g` go round for ever? (`presserRecursionGroups`.) */
+export const presserRecursionHangsOn = (g, value) => Boolean(g && (value ? g.trueLoops : g.falseLoops));
+
+/** The one message for a recursion the game hangs on: the group, its re-publishers, the cites and the witness. */
+export function presserRecursionMessage(where, g, what) {
+    return `${where}: activator group ${g.t} holds ${g.members.map((m) => `${m.id} [${m.kind}]`).join(', ')}, whose `
+        + `setters re-publish to each other without end (Button.as:42-61, RopeStart.as:79-91, ButtonRoom.as:67-98) — ${what}. `
+        + 'The game throws "Maximum call stack size exceeded" there and runs NO later frame (measured, p4g/p4d: '
+        + 'seedling-fidelity-presserloop). PRESSER RECURSION HANG (presserRecursionHang).';
+}
+
+/**
  * ── R4: THE CLASSES A PRESS ANSWERS, and why this list is short ───────
  *
  * `Player.genericHit` (`Player.as:1053-1112`) is one if/else chain of
@@ -6040,6 +6105,19 @@ export function buildLevelWorld(levelRecord, {
                 + 'one that matches nothing is a derivation error, not a harmless '
                 + 'extra. (Entities that read persistence here: '
                 + `${[...clearsUsed].sort((a, b) => a - b).join(', ') || 'none'}.)`);
+        }
+    }
+    // ⛓ fidelity PRESSERLOOP D2 (`presserRecursionHang`, OFF never read): a room the game cannot run one frame of.
+    if (CONTACT_FIDELITY.presserRecursionHang) {
+        for (const g of presserRecursionGroups({ pressers, solids })) {
+            if (g.bootBy) {
+                fail(presserRecursionMessage(where, g, `${g.bootBy.id}'s check() publishes ${g.bootBy.boot} on the `
+                    + "build's first frame, before any update() and before the first observation"));
+            }
+            if (g.firstFrame) {
+                fail(presserRecursionMessage(where, g, 'Button.update publishes its overlap every frame, so the '
+                    + 'first live frame recurses (after the arrival observation)'));
+            }
         }
     }
 

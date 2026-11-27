@@ -1,0 +1,5 @@
+s149-on.log:== step 149 — L40 ... SOLVED 2149 ticks, 11 decision(s), 0 re-plan(s), 1 hit(s), 1 pass(es) — 68632 ms
+s149-hf.log:== step 149 — L40 ... SOLVED 2116 ticks, 11 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 80974 ms
+s149-nodash-at-1883(prototype).log:== step 149 — L40 ... SOLVED 2191 ticks, 11 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 65738 ms
+s149-DASH_STAND_WHOLE=1.log:== step 149 — L40 ... SOLVED 2128 ticks, 11 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 81072 ms
+s149-STAND_SIGHT(prototype).log:== step 149 — L40 ... SOLVED 2128 ticks, 11 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 80562 ms

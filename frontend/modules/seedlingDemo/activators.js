@@ -48,7 +48,7 @@
  * see the `l71-button-lock` oracle fixture.
  */
 
-import { rectsOverlap } from './levelWorld.js';
+import { presserRecursionGroups, presserRecursionHangsOn, presserRecursionMessage, rectsOverlap } from './levelWorld.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 export class ActivatorError extends Error {
@@ -59,6 +59,43 @@ export class ActivatorError extends Error {
 }
 
 const fail = (message) => { throw new ActivatorError(message); };
+
+/**
+ * ⛓ fidelity PRESSERLOOP D2 (`CONTACT_FIDELITY.presserRecursionHang`): the run asked for a frame after the game hung —
+ * a publish landed in a group whose setters recurse (`levelWorld.presserRecursionGroups`), and the game runs no later
+ * frame. Thrown by `levelRun.advance`; `hang` is the activator state's `presserHang`.
+ */
+export class PresserRecursionHang extends ActivatorError {
+    constructor(message, hang) {
+        super(message);
+        this.name = 'PresserRecursionHang';
+        this.hang = hang;
+    }
+}
+
+/** The world's recursion groups by `t` (`presserRecursionGroups`), once per built world. */
+const RECURSION_GROUPS = new WeakMap();
+export function presserRecursionGroupOf(world, t) {
+    if (!RECURSION_GROUPS.has(world)) {
+        RECURSION_GROUPS.set(world, new Map(presserRecursionGroups(world).map((g) => [g.t, g])));
+    }
+    return RECURSION_GROUPS.get(world).get(t) ?? null;
+}
+
+/**
+ * ⛓ fidelity PRESSERLOOP D2: a publish of `value` into group `t` by `by` — does the game hang on it? If so the state
+ * is marked (`state.presserHang`, the first one kept) and the answer is true; the caller then does nothing the
+ * throwing setter's frame would not have reached. ON only (the callers test the key).
+ */
+export function markPresserHang(state, world, t, value, by) {
+    const g = presserRecursionGroupOf(world, t);
+    if (!presserRecursionHangsOn(g, value)) return false;
+    state.presserHang ??= {
+        level: world.level, group: t, by, value,
+        message: presserRecursionMessage(`level ${world.level}`, g, `${by} publishes ${value} into it`),
+    };
+    return true;
+}
 
 /**
  * How each responder class answers `activate`.
@@ -769,6 +806,19 @@ export function stepActivators(state, world, playerBox, opts = {}) {
     // ⛓ fidelity CHESTCOVER (`chestCoverFencepost`, OFF never written): the open set BEFORE this step, for a body that
     // updates before the responders (the vanilla `Chest`) — see `openActivatorIdsBeforeStep`.
     if (CONTACT_FIDELITY.chestCoverFencepost) state.openBefore = openActivatorIds(state);
+    // ⛓ fidelity PRESSERLOOP D2 (`presserRecursionHang`, OFF never read): a press that publishes into a group whose
+    // setters recurse throws in the game's frame and NO later frame runs — so this step does nothing (the run's next
+    // `advance` refuses, `PresserRecursionHang`). A Button publishes its overlap (true here: a false loop is refused
+    // at build); a `room == -1` ButtonRoom publishes `!flip`; a cross-room one publishes nothing in this level.
+    if (CONTACT_FIDELITY.presserRecursionHang) {
+        if (state.presserHang) return [];
+        for (const p of world.pressers ?? []) {
+            if (p.tag === 'buttonroom' && p.room >= 0) continue;
+            if (!presserDown(p, playerBox, movingSolids)) continue;
+            const value = p.tag === 'buttonroom' ? !p.flip : true;
+            if (markPresserHang(state, world, p.t, value, `${p.tag}@${p.x},${p.y} (pressed)`)) return [];
+        }
+    }
     const pressed = pressedGroups(world, playerBox, movingSolids);
     /**
      * ⛓ R5 SLICE 6: THE OCCUPANCY GUARD COUNTS BLOCKS TOO, and it is the
