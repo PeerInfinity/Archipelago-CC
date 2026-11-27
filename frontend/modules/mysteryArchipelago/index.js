@@ -134,6 +134,9 @@ export async function register(registrationApi) {
 
 export async function initialize(mId, priorityIndex, initializationApi) {
   moduleEventBus = initializationApi.getEventBus();
+  // Re-enabling the module (its panel closed, then opened again) runs initialize again: the old
+  // bridge's subscriptions go first, or every page request would be answered twice.
+  logicInstance?.dispose();
   logicInstance = new MysteryArchipelagoLogic({
     eventBus: moduleEventBus,
     dispatcher: initializationApi.getDispatcher(),

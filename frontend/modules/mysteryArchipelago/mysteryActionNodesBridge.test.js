@@ -94,3 +94,26 @@ describe('The Same Monday as a mystery world (its committed slot_data)', () => {
     expect(env.states().at(-1).solved).not.toContain(block.goal);
   });
 });
+
+describe('a re-initialized bridge answers once', () => {
+  it('initialize twice, or a second instance after dispose, leaves one subscriber per event', () => {
+    const subs = new Map();
+    const bus = {
+      subscribe: (event, handler) => {
+        subs.set(event, [...(subs.get(event) ?? []), handler]);
+        return () => subs.set(event, subs.get(event).filter((h) => h !== handler));
+      },
+      publish: () => {},
+    };
+    const deps = { eventBus: bus, dispatcher: { publish: () => {} }, getStaticData: () => staticData,
+      getSnapshot: () => ({}), getConnection: () => ({ connected: false }) };
+    const first = new MysteryArchipelagoLogic(deps);
+    first.initialize();
+    first.initialize();
+    expect(subs.get(MYSTERY_EVENTS.REQUEST_STATE)).toHaveLength(1);
+    first.dispose();
+    new MysteryArchipelagoLogic(deps).initialize();
+    expect(subs.get(MYSTERY_EVENTS.REQUEST_STATE)).toHaveLength(1);
+    expect(subs.get(MYSTERY_EVENTS.QUESTION_SOLVED)).toHaveLength(1);
+  });
+});

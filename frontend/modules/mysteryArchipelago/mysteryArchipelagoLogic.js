@@ -240,7 +240,12 @@ export class MysteryArchipelagoLogic {
   }
 
   initialize() {
-    const sub = (event, handler) => this._eventBus.subscribe(event, handler);
+    this.dispose(); // a second initialize replaces the subscriptions, never adds to them
+    this._unsubscribes = [];
+    const sub = (event, handler) => {
+      const off = this._eventBus.subscribe(event, handler);
+      if (typeof off === 'function') this._unsubscribes.push(off);
+    };
     sub(MYSTERY_EVENTS.QUESTION_SOLVED, (data) => this.handleQuestionSolved(data));
     sub(MYSTERY_EVENTS.REQUEST_STATE, (data) => this.handleRequestState(data));
     // The connection events only say WHEN to look; what is so is asked of the client each time.
@@ -257,6 +262,16 @@ export class MysteryArchipelagoLogic {
     for (const event of LIVE_PLAY_EVENTS) sub(event, () => this.sendStateIfChanged());
     // The loop runtime changed (a new loop): so may `loop`.
     for (const event of LOOP_NUMBER_EVENTS) sub(event, () => this.sendStateIfChanged());
+  }
+
+  /**
+   * Drop every subscription `initialize` made. The module calls it before building a new bridge:
+   * re-enabling a module runs its `initialize` again (app/initialization), and a bridge left
+   * subscribed would answer every page request a second time.
+   */
+  dispose() {
+    for (const off of this._unsubscribes ?? []) off();
+    this._unsubscribes = [];
   }
 
   /** The case to answer about, for the story the page asked (or last asked). */
