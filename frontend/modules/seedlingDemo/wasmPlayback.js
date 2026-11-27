@@ -77,6 +77,7 @@ import { TALK_RANGE } from './endingChain.js';
 import { mergeSaveArray } from './saveArrayRules.js';
 import { R7_GOAL_LEDGER } from './r7Acceptance.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
+import { hitPlanRetryAsks } from './jsRuntimeSolver.js';
 
 /** Thrown for a tape that must not ship — by name. */
 export class WasmPlaybackError extends Error {
@@ -1062,6 +1063,8 @@ export const MAX_SOLVE_RETRIES = 1;
  * @returns {'provisional'|'retry'|'give-up'}
  */
 export function expiryAction({ provisional = null, retries = 0, unanswered = true }) {
+    // ⛓ hammer-phase L39-ARRIVAL-HIT (`HIT_PLAN_RETRY`, OFF ⇒ false): a plan that bills a hit asks the held retry first
+    if (hitPlanRetryAsks(provisional) && unanswered && retries < MAX_SOLVE_RETRIES) return 'retry';
     if (provisional?.ok) return 'provisional';
     return unanswered && retries < MAX_SOLVE_RETRIES ? 'retry' : 'give-up';
 }

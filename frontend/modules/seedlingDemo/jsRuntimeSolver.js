@@ -551,6 +551,41 @@ export function hitAvoidPass({ tape, pass, budgetWork = null, windowWork = null,
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE L39-ARRIVAL-HIT — **A BUDGET-CUT ANSWER WHOSE PLAN BILLS A HIT ASKS THE HELD RETRY BEFORE IT
+ * IS PLAYED** (`HIT_PLAN_RETRY`, OFF; `SEEDLING_HIT_PLAN_RETRY=1`, `withHitPlanRetry(enabled, fn)`). ⚖ The user,
+ * 2026-11-26: *"L39 18:11 arrival hit"* (`CC/docs/cloud-reports/seedling-hammer-l39-arrival-hit.md`).
+ *
+ * MEASURED (re-measure-11's S1 18:11, the arrival at seam 29994): the dashless pass solves with one model hit (536 of
+ * the 640 units), the full pass is cut at the BUDGET (`limit: 'budget'`), and the hit-avoid pass has 1 unit left. The
+ * page's `wasmPlayback.expiryAction` plays any budget-cut answer that holds a plan ('provisional'), so the billed hit
+ * shipped, though the same request at the held retry's 4× budget solves hitless in its full pass.
+ *
+ * ON: `expiryAction` asks the held retry ('retry') for a budget-cut answer whose plan the model plays into a hit
+ * (`hitPlanRetryAsks`), while a retry is left and a pass is unanswered; the cut plan stays the retry's `best`, so the
+ * page ships whichever of the two `betterAnswer` prefers (a hitless retry plan wins by the verdict). ⚖ No-hit logic: a
+ * hitless plan is never retried (it plays as before). A retry that is cut again with no plan gives up as a refusal does
+ * today (the goal fails by name); that is the one place ON can turn a shipped hit into a refusal.
+ * OFF: `hitPlanRetryAsks` is false and `expiryAction` is unchanged — byte-identical.
+ * ⛓ THE THREAD: `expiryAction` runs on the page's MAIN thread (`seedlingWasmPlayback.pollSolve`), so the switch also
+ * reads the page URL's own `?seedlingSolverEnv=` (`pageSolverEnvSwitchOn`, YETI-TALK's pattern); node reads the env.
+ */
+export const HIT_PLAN_RETRY = { enabled: globalThis.process?.env?.SEEDLING_HIT_PLAN_RETRY === '1'
+    || pageSolverEnvSwitchOn('SEEDLING_HIT_PLAN_RETRY') };
+export const HIT_PLAN_RETRY_DEFAULT = false;
+
+/** Run `fn` with `HIT_PLAN_RETRY` set to `enabled`, restoring the previous value. */
+export function withHitPlanRetry(enabled, fn) {
+    const was = HIT_PLAN_RETRY.enabled;
+    HIT_PLAN_RETRY.enabled = enabled === true;
+    try { return fn(); } finally { HIT_PLAN_RETRY.enabled = was; }
+}
+
+/** ⛓ `HIT_PLAN_RETRY` — should a budget-cut `answer` that holds a plan be retried rather than played? Pure but the switch. */
+export function hitPlanRetryAsks(answer) {
+    return HIT_PLAN_RETRY.enabled && answer?.ok === true && answer.kind !== 'divergence' && planTakesHit(answer.plan) === true;
+}
+
+/**
  * ⛓⛓ SEEDLING HAMMER-PHASE CHASER-STAND — **A PLAN THAT STILL BILLS A HIT ASKS THE STRIKE'S STAND OF THE LOBBER, ONCE**
  * (`HIT_AVOID_STAND_BOMBS`, OFF; `SEEDLING_HIT_AVOID_STAND_BOMBS=1`, `withHitAvoidStandBombs(enabled, fn)`). ⚖ The user,
  * 2026-11-26: *"Chaser-stand fix (Recommended)"* (`CC/docs/cloud-reports/seedling-hammer-chaser-stand.md`).
