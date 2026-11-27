@@ -1,0 +1,16 @@
+COUNTS 18:10 env PKSW=- PKRB=- DSS=- LHM=- PKH=- OAC=- PSB=- HSB=- enabled PKSW=false PKRB=false DSS=false LHM=true PKH=false OAC=false PSB=false HSB=false BOS=true GSW=true PM=true SPL=true KTA=true KTEB=false HF=false
+  result ok=true kind=null work=641 answer=2e1603a6ae22 ms=3236 ticks=3818 hits=0 deaths=0 []
+  live   ok=true kind=null work=641 answer=2e1603a6ae22 solverEnv=null
+  PRESS_KILL_START_WAIT_COUNTS.rows=[]
+  PRESS_KILL_REFUGE_BOMBS_COUNTS={"asked":0,"refused":0}
+  DASH_STAND_SIGHT.counts={"asks":0}
+  LATCHED_HOLD_MOVE_COUNTS={"asked":0,"moves":[],"declined":[]}
+  OPP_AIM_CHASERS_COUNTS={"asked":0,"withheld":0}
+  HIT_AVOID_STAND_BOMBS_COUNTS={"tried":0,"replaced":0}
+  PRESS_KILL_STRIKE_BOMBS_COUNTS=undefined
+  PRESS_KILL_HOLD_COUNTS.rows=[]
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[]
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":38280,"asked":0,"tripped":0}
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":19200,"forecastReplays":253,"spinRowsSkipped":0}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]
