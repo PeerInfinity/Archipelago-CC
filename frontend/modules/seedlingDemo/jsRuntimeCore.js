@@ -459,6 +459,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     const collected = new Set();
     /** ⛓ RE2 — the restore's reboot in place is pending (the ONLY reboot in place since seedling-js-item-live-delivery). */
     let deferredReboot = false;
+    /** ⛓ seedling-js-held-retry (W7) — the solver's forced re-arrival, queued (its `why`), or null. Any boot clears it. */
+    let pendingReArrival = null;
     /**
      * ⛓ seedling-js-item-live-delivery — host deliveries the session's ledgers hold and the LIVE run has not been handed
      * yet (`applyDeliveries`): `{kind: 'flag'|'key'|'totem'|'seal', …}`, `levelRun.deliver`'s vocabulary. A boot drops
@@ -526,6 +528,14 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         getRecords: () => roomSource()?.records ?? null,
         placementOf: (goal) => locationEntityOf(roomRecord(goal.level), goal.tag, goal.entityType ?? null),
         onEvent: (e) => note({ type: 'solver', solver: e.type, message: e.message }),
+        // ⛓ seedling-js-held-retry (W7) — a refused CONTINUATION's forced re-arrival: QUEUED here, landed by `tickOnce` at
+        // the next tick's boundary (never inside the walker's `heldFor`, whose caller holds the old run). The JS frame's
+        // re-arrival is this page's own `boot(arrival)` — the wasm page's is a host teleport to the room's spawn.
+        reArrive: (why) => {
+            if (!session || !arrival || halted) return false;
+            pendingReArrival = why;
+            return true;
+        },
     });
     /** ⛓ S1 — `instant`: play the solver's planned keys in one burst (a page tick each). */
     let instant = false;
@@ -719,6 +729,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         if (declared) bootItems = { ...flags, ...pickItems(session.run.inventory ?? {}) };
         halted = null;
         deferredReboot = false;
+        pendingReArrival = null;
         pendingDeliveries = [];
         note({ type: 'boot', level, x, y, why, message: `[js runtime] boot level ${level} at (${x}, ${y}) — ${why}` });
         saveChanged('boot');
@@ -921,6 +932,13 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ RE2 — a restore's reboot in place WAITS while a tape is armed (it would replace the tape's run mid-stream),
         // and lands on the first tick after the tape finishes.
         if (deferredReboot && !tape.armed && !session.run.inCeremony && !encounterHoldsDelivery()) rebootInPlace(IN_PLACE_REBOOT_WHY);
+        // ⛓ seedling-js-held-retry (W7) — the solver's forced re-arrival lands here, at a tick boundary: the room is
+        // re-booted at its arrival (`arrival`, the respawn point) with what the run banked, and the next solve is fresh.
+        if (pendingReArrival !== null && !tape.armed && arrival) {
+            const why = pendingReArrival;
+            pendingReArrival = null;
+            boot(arrival, why);
+        }
         // ⛓ seedling-js-item-live-delivery — and so does a delivery's live write (a write into a tape's run would desync
         // it): it lands at the boundary of the first tick after the tape finishes.
         applyDeliveries();
