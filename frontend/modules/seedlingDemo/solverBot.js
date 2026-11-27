@@ -21810,7 +21810,10 @@ function execKillByPressHold(run, perTick, resolved, ctx, dispatch) {
             let idleWhy = null;
             for (let i = 0; i < wait && idleWhy === null; i += 1) {
                 perTick.push(NO_HELD_PREVIEW);
-                if (fresh.advance(NO_HELD_PREVIEW).transition) idleWhy = 'the idle crossed a door';
+                // ⛓ hammer-phase L40-CHEST-CORNER (`PRESS_KILL_HOLD_MODEL_UNDO`, OFF): an idle the model refuses ends the search
+                const idled = advanceHoldIdle(fresh);
+                if (idled.modelRefused) idleWhy = `the model refused the idle at its tick ${i + 1}`;
+                else if (idled.transition) idleWhy = 'the idle crossed a door';
                 else if ((fresh.ledger('playerHits') ?? []).length > h0
                     || (fresh.ledger('playerDeaths') ?? []).length > d0) idleWhy = `the idle is hit at its tick ${i + 1}`;
             }
@@ -21841,7 +21844,8 @@ function execKillByPressHold(run, perTick, resolved, ctx, dispatch) {
                     throw e2;
                 }
                 undo();
-                if (!(e2 instanceof SolverBotError) && !(e2 instanceof SolverRefusal)) throw e2;
+                // ⛓ hammer-phase L40-CHEST-CORNER (`PRESS_KILL_HOLD_MODEL_UNDO`, OFF): a redo the model refuses is a refused try
+                if (!(e2 instanceof SolverBotError) && !(e2 instanceof SolverRefusal) && !holdRedoModelRefusal(e2)) throw e2;
                 row.tries.push({ wait, verdict: 'refused', why: String(e2?.message ?? e2).split('\n')[0].slice(0, 200) });
             }
         }
@@ -21851,6 +21855,55 @@ function execKillByPressHold(run, perTick, resolved, ctx, dispatch) {
         for (const k of ['fightFallback', 'oppPressFallback']) if (e[k]) out[k] = e[k];
         out.pressKillHold = row;
         throw out;
+    }
+}
+
+/**
+ * ⛓ hammer-phase L40-CHEST-CORNER (`PRESS_KILL_HOLD_MODEL_UNDO`, OFF) — **A HOLD REDO THAT THE MODEL REFUSES TO PRICE IS A
+ * REFUSED TRY, NOT THE ANSWER.**
+ *
+ * `PRESS_KILL_HOLD`'s contract is that a redo which refuses is UNDONE and, when every redo refused, the ORIGINAL refusal
+ * is thrown plus one sentence. Its catch honours that for `SolverBotError` and `SolverRefusal` only; any other throw is
+ * re-raised after the undo. The run model's own refusals are plain `Error`s whose message starts `levelRun: ` (a
+ * contact the run cannot price, e.g. a walk inside a spinner's hammer reach on a tape whose `Game.time` it cannot
+ * count), and the solver's other retry sites already read those as refusals (`/^levelRun: /`). So a hold redo that
+ * idles or walks into one replaces the press kill's own refusal with the model's sentence. MEASURED
+ * (`procgenPostSword.test.js`, the clockless spinner kill-lock re-probe, under `PRESS_KILL_HOLD=1`): the verdict stays
+ * not-solved, but the hold's IDLE at the stand (inside the all-phases disc) throws `levelRun: at tick 266 … HAMMER
+ * REACH`, and that escapes in place of the kill's "13 px hammer's union over all 45 phases".
+ *
+ * ON: such a throw on a hold's idle tick ends the search the way a hit idle does (`verdict: 'idle'`: a longer idle
+ * contains it), and on a hold's redo it is that try's refusal (`verdict: 'refused'`, its first line as `why`); both are
+ * undone, and when nothing solved the ORIGINAL refusal is thrown plus PKH's sentence. Anything else (a `TypeError`, a
+ * bug) is still re-raised. OFF: as before. Asked only inside `PRESS_KILL_HOLD`, so it is inert unless PKH is ON. Nothing reads a level, a
+ * coordinate or an entity id. `SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1` / `withPressKillHoldModelUndo(enabled, fn)`.
+ * Worker thread (the solve).
+ */
+export const PRESS_KILL_HOLD_MODEL_UNDO = { enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO === '1' };
+export const PRESS_KILL_HOLD_MODEL_UNDO_DEFAULT = false;
+/** Per-run count (ON only): hold redos whose model throw was read as a refused try. */
+export const PRESS_KILL_HOLD_MODEL_UNDO_COUNTS = { undone: 0 };
+
+/** Run `fn` with `PRESS_KILL_HOLD_MODEL_UNDO` set to `enabled`, restoring the previous value. */
+export function withPressKillHoldModelUndo(enabled, fn) {
+    return withSwitch(PRESS_KILL_HOLD_MODEL_UNDO, enabled, fn);
+}
+
+/** True (ON only) when `e` is the run model's own refusal (`levelRun: …`); a hold redo then counts it as refused. */
+export function holdRedoModelRefusal(e) {
+    if (!PRESS_KILL_HOLD_MODEL_UNDO.enabled || !/^levelRun: /.test(e?.message ?? '')) return false;
+    PRESS_KILL_HOLD_MODEL_UNDO_COUNTS.undone += 1;
+    return true;
+}
+
+/** One idle tick of a hold (`PRESS_KILL_HOLD`): the run's own advance, or (ON only) `{ modelRefused: true }` when the
+ *  model refuses to price it. Any other throw, and every throw OFF, is re-raised unchanged. */
+function advanceHoldIdle(run) {
+    try {
+        return run.advance(NO_HELD_PREVIEW);
+    } catch (e) {
+        if (!holdRedoModelRefusal(e)) throw e;
+        return { modelRefused: true };
     }
 }
 

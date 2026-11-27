@@ -185,9 +185,9 @@
       "files": {
         "botDriverV2.js": 27,
         "lightsVerb.js": 1,
-        "solverBot.js": 84
+        "solverBot.js": 85
       },
-      "sites": 112,
+      "sites": 113,
       "seen": "both",
       "via": [
         "direct",
