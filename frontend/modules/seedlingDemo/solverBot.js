@@ -2400,7 +2400,7 @@ const WAND_OPEN_SLACK = 4;
  * executor reads the run's own `magicalLocksOpened` after the press, so a body the preview missed is a refusal there,
  * never a silent pass.
  */
-function previewWandShot(run, at, direction, fire = false) {
+export function previewWandShot(run, at, direction, fire = false) {
     const spawn = wandShotSpawn(direction, at.x, at.y);
     const shot = createWandShot('preview', spawn.x, spawn.y, wandShotVelocity(direction), { fire });
     const opts = run.liveGeometryOpts();
