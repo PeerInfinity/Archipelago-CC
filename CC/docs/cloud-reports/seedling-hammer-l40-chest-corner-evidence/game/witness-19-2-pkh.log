@@ -1,0 +1,5 @@
+SOLVE {"ok":true,"work":1715,"ticks":1642,"passes":[{"pass":"full","ok":true,"kind":null,"ticks":1642,"work":1715,"modelHits":{"hits":0,"deaths":0}}],"message":null}
+MODEL {"hits":[],"end":{"level":40,"x":887.5119968556137,"y":824.041101979122}}
+# box lock: TAKEN by l40-chest-corner-19-2-witness (browser, pid 27876) — head 98d43e201, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"finished":true,"ticks":1642,"prefix":0,"hitsAtPrefix":{"tick":0,"hits":0},"end":{"level":40,"x":887.5119968556137,"y":824.041101979122},"hits":0}

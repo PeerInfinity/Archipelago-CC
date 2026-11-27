@@ -1,0 +1,54 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [31m❯[39m frontend/modules/seedlingDemo/hammerShovedLookahead.train.test.js [2m([22m[2m3 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 406478[2mms[22m[39m
+[31m     [31m×[31m OFF: refused, no step out, at the approach corner[39m[33m 172757[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: solved hitless — 1636 t, no death on a fresh run [33m 162845[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF = ON, byte-identical (1317 t) [33m 70873[2mms[22m[39m
+ [31m❯[39m frontend/modules/seedlingDemo/hammerPressKillStartWait.train.test.js [2m([22m[2m2 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 27430[2mms[22m[39m
+[31m     [31m×[31m OFF: the page's refusal (main's wording), and the switch never asked[39m[33m 11090[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: solved; the plan replayed on a fresh run bills no hit and no death; the redo with no idle kept [33m 16338[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerPressKillStartWait.train.test.js[2m > [22mPRESS_KILL_START_WAIT — re-measure-8 P1 32:10 (L40 Totem 64,144)[2m > [22mOFF: the page's refusal (main's wording), and the switch never asked
+[31m[1mAssertionError[22m: expected 'dc09599d8d62' to be '3b4bc4163c9b' // Object.is equality[39m
+
+Expected: [32m"3b4bc4163c9b"[39m
+Received: [31m"dc09599d8d62"[39m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerPressKillStartWait.train.test.js:[2m23:28[22m[39m
+    [90m 21| [39m        [34mexpect[39m(off[33m.[39mok)[33m.[39m[34mtoBe[39m([35mfalse[39m)[33m;[39m
+    [90m 22| [39m        // main's answer (the page's was `dc09599d8d62` at re-measure-…
+    [90m 23| [39m        [34mexpect[39m(off[33m.[39manswer)[33m.[39m[34mtoBe[39m([32m'3b4bc4163c9b'[39m)[33m;[39m
+    [90m   | [39m                           [31m^[39m
+    [90m 24| [39m        [34mexpect[39m(off[33m.[39mwork)[33m.[39m[34mtoBe[39m([34m208[39m)[33m;[39m
+    [90m 25| [39m        expect(off.message).toContain('kill (spinner@192,128) by press…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerShovedLookahead.train.test.js[2m > [22mSHOVED_BODY_LOOKAHEAD — L40 Chest from L39, clock 5225 (the shield-bump rebound)[2m > [22mOFF: refused, no step out, at the approach corner
+[31m[1mAssertionError[22m: expected true to be false // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- false[39m
+[31m+ true[39m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerShovedLookahead.train.test.js:[2m67:24[22m[39m
+    [90m 65| [39m    [34mit[39m([32m'OFF: refused, no step out, at the approach corner'[39m[33m,[39m () [33m=>[39m {
+    [90m 66| [39m        [35mconst[39m off [33m=[39m [34msolveAt[39m([32m'chest-L39-request.json.gz'[39m[33m,[39m [34m5225[39m[33m,[39m [35mfalse[39m)[33m;[39m
+    [90m 67| [39m        [34mexpect[39m(off[33m.[39mok)[33m.[39m[34mtoBe[39m([35mfalse[39m)[33m;[39m
+    [90m   | [39m                       [31m^[39m
+    [90m 68| [39m        expect(off.message).toMatch(/kill \(spinner@880,848\) by press…
+    [90m 69| [39m    }[33m,[39m [34m900_000[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m3 passed[39m[22m[90m (5)[39m
+[2m   Start at [22m 03:27:30
+[2m   Duration [22m 438.35s[2m (transform 2.45s, setup 289ms, import 3.86s, tests 433.91s, environment 0ms)[22m
+
