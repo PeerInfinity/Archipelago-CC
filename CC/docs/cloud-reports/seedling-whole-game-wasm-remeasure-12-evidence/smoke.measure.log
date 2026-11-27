@@ -1,0 +1,536 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js --mode=test-substrates --batch=tutorials-seedling-whole-game
+
+# box lock: TAKEN by npm test test-substrates batch=tutorials-seedling-whole-game (browser, pid 1303) — head d1725843a, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - machine: load 0.17 across 4 cpus
+  - mode: test-substrates
+  - flavour: unbundled
+  - in-app budget: 450000 ms (TEST_AUTO_START_TIMEOUT_MS)
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-substrates&testBatch=tutorials-seedling-whole-game&autoStartTimeoutMs=450000&measureStepTimeoutMs=150000&measureBotStallMs=300000&seedlingSolverEnv=SEEDLING_PRESS_KILL_START_WAIT%3D1%3BSEEDLING_PRESS_KILL_REFUGE_BOMBS%3D1%3BSEEDLING_DASH_STAND_SIGHT%3D1%3BSEEDLING_OPP_AIM_CHASERS%3D1%3BSEEDLING_HIT_AVOID_STAND_BOMBS%3D1%3BSEEDLING_REFUSAL_STAND_BOMBS%3D1%3BSEEDLING_HIT_PLAN_RETRY%3D1%3BSEEDLING_KILLLOCK_PINNED_SPEAR%3D1%3BSEEDLING_PRESS_KILL_HOLD%3D1%3BSEEDLING_PRESS_KILL_HOLD_MODEL_UNDO%3D1%3BSEEDLING_WAND_SHOT_TRAP_BODIES%3D1%3BSEEDLING_WAND_SHOT_ENEMY_BODIES%3D1%3BSEEDLING_AXE_TIMING_SWORD_SWAP%3D1&measureCaptureRequests=1
+  - request capture: /tmp/claude-0/-home-user-Archipelago-CC/e15e4644-750e-5660-ba6d-061e24b68b90/scratchpad/cap/smoke.jsonl (TEST_MEASURE_CAPTURE_REQUESTS)
+BROWSER LOG (log): [Loader] Using unbundled mode (local development)
+PW DEBUG: Page navigation complete (load).
+PW DEBUG: Waiting for tests to start (__playwrightTestsStarted__ flag)...
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: fallback)
+BROWSER LOG (info): [16:02:52.721] [INFO] [INIT_STEP] Module import and registration phase started
+[MEASURE worker] http://localhost:8000/frontend/modules/stateManager/stateManagerWorker.js
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+BROWSER LOG (info): [16:02:53.765] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [16:02:53.844] [INFO] [INIT_STEP] Golden Layout initialization started
+BROWSER LOG (info): [16:02:54.077] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [16:02:54.079] [INFO] [INIT_STEP] Module initialization phase started (65 modules)
+BROWSER LOG (info): [16:02:54.149] [INFO] [INIT_STEP] Module initialization phase completed (65 modules)
+BROWSER LOG (info): [16:02:54.150] [INFO] [INIT_STEP] Module post-initialization phase started (5 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: fallback)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [16:02:54.183] [INFO] [INIT_STEP] Module post-initialization phase completed (5 modules)
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+BROWSER LOG (log): [flash-placeholder] page ready; __swfBridge contract exposed
+BROWSER LOG (log): Loading game from: idleLoops_substrate inChallenge: undefined
+BROWSER LOG (log): Challenge Mode: 0 In Challenge: false
+BROWSER LOG (log): JSHandle@node SVGRect
+BROWSER LOG (warning): Expected element missing or wrong type! rngModeInput [, , ] null
+BROWSER LOG (warning): Expected element missing or wrong type! plannerTargetsInput [, , ] null
+BROWSER LOG (log): Updating prestige values from load
+BROWSER LOG (info): [tasw-bridge] Connected to host
+BROWSER LOG (info): [tasw-bridge] initial rebuildWorld attempt at connect
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (info): [jta-bridge] JtA in managed mode (loop paused)
+BROWSER LOG (info): [tasw-bridge] world built: 10 rooms, current=Overworld
+BROWSER LOG (info): [jta-bridge] connected to host; appReady sent
+BROWSER LOG (info): [flash-bridge] connected to host; appReady sent; __swfBridge.sendLocation/sendExit wired; loadRegion event: cloudberry:loadRegion
+BROWSER LOG (info): [flash-bridge] connected to host; appReady sent; __swfBridge.sendLocation/sendExit wired; loadRegion event: flash:loadRegion
+BROWSER LOG (info): [omsi-bridge] omsi-loops in managed mode (host-driven clock)
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (info): [omsi-bridge] connected to host; appReady sent
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (info): [flash-bridge] connected to host; appReady sent; __swfBridge.sendLocation/sendExit wired; loadRegion event: noiz2sa:loadRegion
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (info): [mazeLabBridge] procgenLab: maze bridge connected as procgenLab-maze-1
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (info): [watchBridge] procgenLab: seedling bridge connected as procgenLab-seedling-2
+BROWSER LOG (info): [flash-bridge] connected to host; appReady sent; __swfBridge.sendLocation/sendExit wired; loadRegion event: bounce:loadRegion
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (warning): [16:02:58.320] [WARN] [testRegistry] Test 'seedling-js-runtime-custom-set-without-flash-panel-starts-no-game' registers a function named 'customSetStartsNoGame', which test 'seedling-js-runtime-custom-set-with-flash-panel-starts-no-game' also uses. Rename one — name-keyed consumers (getAllTestFunctions) cannot distinguish them.
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (error): Failed to load resource: the server responded with a status of 404 (File not found)
+PW DEBUG: Tests started (or already complete/errored).
+PW DEBUG: Waiting for tests to complete (__playwrightTestsComplete__ flag)...
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+BROWSER LOG (warning): [tasw-bridge] gameState:regionChanged for unknown room level_0__r7c6
+BROWSER LOG (info): [tasw-bridge] stateManager:rulesLoaded — rebuilding world
+BROWSER LOG (debug): [jta-bridge] stateManager:rulesLoaded — re-requesting static data; re-baselining world state
+BROWSER LOG (debug): [omsi-bridge] stateManager:rulesLoaded — re-baselining world state
+BROWSER LOG (debug): [omsi-bridge] cleared the fork reported-row ledger for the new world
+BROWSER LOG (info): [tasw-bridge] world built: 306 rooms, current=level_0__r7c6
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (log): [swfBridge] avm2 shim installed
+BROWSER LOG (log): WASM SWF Runtime Loaded!
+BROWSER LOG (log): This is a recompiled Flash SWF running in WebAssembly.
+BROWSER LOG (log): 
+BROWSER LOG (log): Call runSWF() from JavaScript to execute the SWF.
+BROWSER LOG (log): Starting SWF execution from JavaScript...
+BROWSER LOG (log): === SWF Execution Started (AVM2, NO_GRAPHICS mode) ===
+BROWSER LOG (log): [HEAP] Initialized: 0.5 GB reserved and committed (physical RAM allocated on access)
+BROWSER LOG (log): [render] init: start (480x480, 282 static bitmaps)
+BROWSER LOG (log): [render] init: adapter ok
+BROWSER LOG (log): [render] init: device ok
+BROWSER LOG (log): [render] device limits: maxTextureArrayLayers 256, maxTextureDimension2D 8192
+BROWSER LOG (log): [render] init: surface configured 480x480
+BROWSER LOG (log): [render] init: create_dummy_texture done
+BROWSER LOG (log): [render] buffer vertex_buffer: 4.84 MiB
+BROWSER LOG (log): [render] buffer xform_buffer: 0.27 MiB
+BROWSER LOG (log): [render] buffer color_buffer: 0.07 MiB
+BROWSER LOG (log): [render] buffer uninv_mat_buffer: 0.04 MiB
+BROWSER LOG (log): [render] buffer inv_mat_buffer: 0.04 MiB
+BROWSER LOG (log): [render] buffer bitmap_sizes_buffer: 0.02 MiB
+BROWSER LOG (log): [render] buffer cxform_buffer: 0.04 MiB
+BROWSER LOG (log): [render] buffer stage_to_ndc_uniform: 0.00 MiB
+BROWSER LOG (log): [render] buffer transform_id_uniform: 0.00 MiB
+BROWSER LOG (log): [render] buffer extra_transform_id_uniform: 0.00 MiB
+BROWSER LOG (log): [render] buffer extra_transform_uniform: 0.00 MiB
+BROWSER LOG (log): [render] buffer cxform_id_uniform: 0.00 MiB
+BROWSER LOG (log): [render] buffer cxform_uniform: 0.00 MiB
+BROWSER LOG (log): [render] init: create_buffers_and_upload done
+BROWSER LOG (log): [render] init: create_textures done
+BROWSER LOG (log): [render] init: create_pipelines done
+BROWSER LOG (log): [render] init: create_bind_groups done
+BROWSER LOG (log): [render] init: compute pass done
+BROWSER LOG (log): [swfBridge] callback registered: wireCheck
+BROWSER LOG (log): [swfBridge] callback registered: configure
+BROWSER LOG (log): [swfBridge] callback registered: readState
+BROWSER LOG (log): [BridgeGeneric] Ready for configuration
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    0, 0
+BROWSER LOG (log): Level:    -1
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): -1: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    80, 128
+BROWSER LOG (log): Level:    0
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 0: 111111111111111111111111111111
+BROWSER LOG (log): [render] bitmap pool 8 (bitmap_dynamic_pool): 257x257 x 16 layers = 4.0 MiB
+BROWSER LOG (warning): WebGPU canvas configured with a different format than is preferred by this device ("rgba8unorm"). This requires an extra copy, which may impact performance.
+BROWSER LOG (log): [swfBridge] callback registered: botLoadTape
+BROWSER LOG (log): [swfBridge] callback registered: botStart
+BROWSER LOG (log): [swfBridge] callback registered: botStatus
+BROWSER LOG (log): [swfBridge] callback registered: botDrain
+BROWSER LOG (log): [swfBridge] callback registered: botReset
+BROWSER LOG (log): [swfBridge] callback registered: botHold
+BROWSER LOG (log): [swfBridge] callback registered: botMobiles
+BROWSER LOG (log): [swfBridge] callback registered: botRngProbe
+BROWSER LOG (log): [swfBridge] callback registered: botSeam
+BROWSER LOG (log): [swfBridge] callback registered: botLoadLevels
+BROWSER LOG (log): [swfBridge] callback registered: botLevelSet
+BROWSER LOG (log): [swfBridge] callback registered: botForgeSaveStamp
+BROWSER LOG (log): [BridgeGeneric] Resolved: Main
+BROWSER LOG (log): [BridgeGeneric] Resolved: Game
+BROWSER LOG (log): [BridgeGeneric] Configured: 24 properties, 21 path reads, 2 classes (2 resolved)
+BROWSER LOG (warning): A valid external Instance reference no longer exists.
+BROWSER LOG (warning): WebGPU device lost (reason 1): A valid external Instance reference no longer exists. -- rendering stops, the movie keeps running
+BROWSER PAGE ERROR (uncaught): A valid external Instance reference no longer exists.
+BROWSER PAGE ERROR (uncaught): A valid external Instance reference no longer exists.
+BROWSER LOG (log): [BridgeGeneric] Applied: menu = false
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    80, 128
+BROWSER LOG (log): Level:    0
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 0: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(0,80,128)
+BROWSER LOG (log): LEVEL SET RESET: the save was written under "seedling-vanilla-02408e1d" and this is "seedling-ap-record-6d7e278d" — level, position, inventory and every persistence row are set-relative, so none of them carries over
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    80, 128
+BROWSER LOG (log): Level:    0
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 0: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(0,80,128)
+[MEASURE worker] http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js?seedlingSolverEnv=SEEDLING_AXE_TIMING_SWORD_SWAP%3D1%3BSEEDLING_DASH_STAND_SIGHT%3D1%3BSEEDLING_HIT_AVOID_STAND_BOMBS%3D1%3BSEEDLING_HIT_PLAN_RETRY%3D1%3BSEEDLING_KILLLOCK_PINNED_SPEAR%3D1%3BSEEDLING_OPP_AIM_CHASERS%3D1%3BSEEDLING_PRESS_KILL_HOLD%3D1%3BSEEDLING_PRESS_KILL_HOLD_MODEL_UNDO%3D1%3BSEEDLING_PRESS_KILL_REFUGE_BOMBS%3D1%3BSEEDLING_PRESS_KILL_START_WAIT%3D1%3BSEEDLING_REFUSAL_STAND_BOMBS%3D1%3BSEEDLING_WAND_SHOT_ENEMY_BODIES%3D1%3BSEEDLING_WAND_SHOT_TRAP_BODIES%3D1
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=15s step=bot-plays checked=0 botQueue=48 botCursor=0 botChecked=0 botHead="Level 010 - Sword" botRegion="level_0__r7c6" lastRegionEvent="level_0__r7c6" regionChanges=2 wasmPushes=2 transport=wasm wasmMemMB=656 jsHeapMB=190 status="Sphere 0.1 → routing via \"level_0__r7c6 -> level_2\" → level_10 (1/48) — waiting to adopt level 0 (fade: only 5 game frame(s) since the begin record (needs > 48): the fade may not be over)"
+BROWSER LOG (log): [MEASURE capture] first answer's worker solverEnv="SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WAND_SHOT_ENEMY_BODIES=1;SEEDLING_WAND_SHOT_TRAP_BODIES=1"
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    48, 32
+BROWSER LOG (log): Level:    2
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 2: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    48, 32
+BROWSER LOG (log): Level:    2
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 2: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(2,48,32)
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    64, 16
+BROWSER LOG (log): Level:    3
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 3: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    64, 16
+BROWSER LOG (log): Level:    3
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 3: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(3,64,16)
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=30s step=bot-plays checked=0 botQueue=48 botCursor=0 botChecked=0 botHead="Level 010 - Sword" botRegion="level_3__r0c4" lastRegionEvent="level_3__r0c4" regionChanges=4 wasmPushes=4 transport=wasm wasmMemMB=656 jsHeapMB=190 status="Sphere 0.1 → routing via \"level_3__r0c4 -> level_4\" → level_10 (1/48) — playing tick 114/245"
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    16, 16
+BROWSER LOG (log): Level:    4
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 4: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    16, 16
+BROWSER LOG (log): Level:    4
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 4: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(4,16,16)
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=45s step=bot-plays checked=0 botQueue=48 botCursor=0 botChecked=0 botHead="Level 010 - Sword" botRegion="level_4" lastRegionEvent="level_4" regionChanges=5 wasmPushes=5 transport=wasm wasmMemMB=656 jsHeapMB=190 status="Sphere 0.1 → routing via \"level_4 -> level_5__r1c5\" → level_10 (1/48) — playing tick 186/255"
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    80, 32
+BROWSER LOG (log): Level:    5
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 5: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    80, 32
+BROWSER LOG (log): Level:    5
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 5: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(5,80,32)
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=60s step=bot-plays checked=0 botQueue=48 botCursor=0 botChecked=0 botHead="Level 010 - Sword" botRegion="level_5__r1c5" lastRegionEvent="level_5__r1c5" regionChanges=6 wasmPushes=6 transport=wasm wasmMemMB=656 jsHeapMB=190 status="Sphere 0.1 → routing via \"level_5__r1c5 -> level_6\" → level_10 (1/48) — playing tick 353/403"
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    32, 16
+BROWSER LOG (log): Level:    6
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 6: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    32, 16
+BROWSER LOG (log): Level:    6
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 6: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(6,32,16)
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    32, 32
+BROWSER LOG (log): Level:    7
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 7: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    32, 32
+BROWSER LOG (log): Level:    7
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 7: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(7,32,32)
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=75s step=bot-plays checked=0 botQueue=48 botCursor=0 botChecked=0 botHead="Level 010 - Sword" botRegion="level_7" lastRegionEvent="level_7" regionChanges=8 wasmPushes=8 transport=wasm wasmMemMB=656 jsHeapMB=190 status="Sphere 0.1 → routing via \"level_7 -> level_8\" → level_10 (1/48) — playing tick 45/146"
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    144, 48
+BROWSER LOG (log): Level:    8
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 8: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    144, 48
+BROWSER LOG (log): Level:    8
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 8: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(8,144,48)
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=90s step=bot-plays checked=0 botQueue=48 botCursor=0 botChecked=0 botHead="Level 010 - Sword" botRegion="level_8" lastRegionEvent="level_8" regionChanges=9 wasmPushes=9 transport=wasm wasmMemMB=656 jsHeapMB=190 status="Sphere 0.1 → routing via \"level_8 -> level_9\" → level_10 (1/48) — playing tick 313/827"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=105s step=bot-plays checked=0 botQueue=48 botCursor=0 botChecked=0 botHead="Level 010 - Sword" botRegion="level_8" lastRegionEvent="level_8" regionChanges=9 wasmPushes=9 transport=wasm wasmMemMB=656 jsHeapMB=190 status="Sphere 0.1 → routing via \"level_8 -> level_9\" → level_10 (1/48) — playing tick 761/827"
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    144, 16
+BROWSER LOG (log): Level:    9
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 9: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    144, 16
+BROWSER LOG (log): Level:    9
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 9: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(9,144,16)
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    48, 80
+BROWSER LOG (log): Level:    10
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 10: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    48, 80
+BROWSER LOG (log): Level:    10
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 10: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(10,48,80)
+BROWSER LOG (log): [MEASURE capture] entry 1 "Level 010 - Sword": 10 request(s) written
+BROWSER LOG (log): [BridgeGeneric] Applied: hasSword = true
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    32, 64
+BROWSER LOG (log): Level:    11
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 11: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    32, 64
+BROWSER LOG (log): Level:    11
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 11: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(11,32,64)
+BROWSER LOG (log): [MEASURE capture] entry 2 "Level 011 - Chest": 2 request(s) written
+BROWSER LOG (log): [BridgeGeneric] MethodCall: hasSealPartSet(0,0)
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    96, 128
+BROWSER LOG (log): Level:    3
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 3: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    96, 128
+BROWSER LOG (log): Level:    3
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 3: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(3,96,128)
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=120s step=bot-plays checked=2 botQueue=48 botCursor=2 botChecked=2 botHead="Level 086 - Chest" botRegion="level_3__r0c4" lastRegionEvent="level_3__r0c4" regionChanges=14 wasmPushes=13 transport=wasm wasmMemMB=656 jsHeapMB=190 status="Sphere 0.3 → routing via \"level_3__r0c4 -> level_2\" → level_86 (3/48) — playing tick 40/152"
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    48, 80
+BROWSER LOG (log): Level:    2
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 2: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    48, 80
+BROWSER LOG (log): Level:    2
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 2: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(2,48,80)
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    256, 256
+BROWSER LOG (log): Level:    0
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 0: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    256, 256
+BROWSER LOG (log): Level:    0
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:0
+BROWSER LOG (log): 0: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(0,256,256)
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    48, 48
+BROWSER LOG (log): Level:    86
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:57
+BROWSER LOG (log): 86: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    48, 48
+BROWSER LOG (log): Level:    86
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:57
+BROWSER LOG (log): 86: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(86,48,48)
+BROWSER LOG (log): [MEASURE capture] entry 3 "Level 086 - Chest": 5 request(s) written
+BROWSER LOG (log): [BridgeGeneric] MethodCall: hasSealPartSet(1,1)
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    160, 288
+BROWSER LOG (log): Level:    0
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:57
+BROWSER LOG (log): 0: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    160, 288
+BROWSER LOG (log): Level:    0
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:57
+BROWSER LOG (log): 0: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(0,160,288)
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=135s step=bot-plays checked=3 botQueue=48 botCursor=3 botChecked=3 botHead="Level 036 - Chest" botRegion="level_0__r11c19" lastRegionEvent="level_0__r11c19" regionChanges=19 wasmPushes=17 transport=wasm wasmMemMB=656 jsHeapMB=190 status="Sphere 1.4 → routing via \"level_0__r11c19 -> level_12__r0c19\" → level_36 (4/48) — playing tick 6/199"
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    16, 80
+BROWSER LOG (log): Level:    12
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:162
+BROWSER LOG (log): 12: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    16, 80
+BROWSER LOG (log): Level:    12
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:162
+BROWSER LOG (log): 12: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(12,16,80)
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=150s step=bot-plays checked=4 botQueue=48 botCursor=3 botChecked=3 botHead="Level 036 - Chest" botRegion="level_12__r0c19" lastRegionEvent="level_12__r0c19" regionChanges=20 wasmPushes=18 transport=wasm wasmMemMB=656 jsHeapMB=190 status="Sphere 1.4 → routing via \"level_12__r0c19 -> level_36\" → level_36 (4/48) — playing tick 64/475"
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    32, 112
+BROWSER LOG (log): Level:    36
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:165
+BROWSER LOG (log): 36: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    32, 112
+BROWSER LOG (log): Level:    36
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:165
+BROWSER LOG (log): 36: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(36,32,112)
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=165s step=bot-plays checked=4 botQueue=48 botCursor=3 botChecked=3 botHead="Level 036 - Chest" botRegion="level_36" lastRegionEvent="level_36" regionChanges=21 wasmPushes=19 transport=wasm wasmMemMB=656 jsHeapMB=190 status="Sphere 1.4 → walking to \"Level 036 - Chest\" (4/48)"
+BROWSER LOG (log): [MEASURE capture] entry 4 "Level 036 - Chest": 4 request(s) written
+BROWSER LOG (log): [BridgeGeneric] MethodCall: hasSealPartSet(2,2)
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    168, 384
+BROWSER LOG (log): Level:    12
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:165
+BROWSER LOG (log): 12: 111111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    160, 384
+BROWSER LOG (log): Level:    12
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:165
+BROWSER LOG (log): 12: 111111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(12,160,384)
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=180s step=bot-plays checked=5 botQueue=48 botCursor=4 botChecked=4 botHead="Level 017 - Chest" botRegion="level_12__r0c19" lastRegionEvent="level_12__r0c19" regionChanges=22 wasmPushes=20 transport=wasm wasmMemMB=656 jsHeapMB=190 status="Sphere 2.2 → routing via \"level_12__r0c19 -> level_0__r11c19\" → level_17 (5/48) — playing tick 94/371"
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    288, 176
+BROWSER LOG (log): Level:    0
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:228
+BROWSER LOG (log): 0: 101111111111111111111111111111
+BROWSER LOG (log): -------------------------
+BROWSER LOG (log): P-Pos:    288, 176
+BROWSER LOG (log): Level:    0
+BROWSER LOG (log): Item <X>: 0
+BROWSER LOG (log): Item <C>: 0
+BROWSER LOG (log): Grass cut:228
+BROWSER LOG (log): 0: 101111111111111111111111111111
+BROWSER LOG (log): [BridgeGeneric] Invoked: new Game(0,288,176)
+BROWSER LOG (log): [tutorial-walk-timing] seedling-whole-game: load 5.0s, start-game-clear-save-panel 0.1s, start-game-clear-save 0.7s, start-game-page 5.8s, start-game 1.4s, bot-plays-open 0.3s, bot-plays 180.2s
+BROWSER LOG (log): [MEASURE end] seedling-whole-game t=194s step=bot-plays checked=5 botQueue=48 botCursor=4 botChecked=4 botHead="Level 017 - Chest" botRegion="level_0__r7c6" lastRegionEvent="level_0__r7c6" regionChanges=24 wasmPushes=21 transport=wasm wasmMemMB=656 jsHeapMB=190 status="Sphere 2.2 → routing via \"level_0__r7c6 -> level_13\" → level_17 (5/48) — playing tick 71/215" walkEnd=failed walkStep=bot-plays why="its done check never held"
+BROWSER LOG (log): [MEASURE capture] entry 5 "Level 017 - Chest": 3 request(s) written
+BROWSER LOG (log): [MEASURE capture] stopped: 24 request(s) captured
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 150, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 150, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 150, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 150, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 150, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+BROWSER LOG (warning): [tasw-bridge] gameState:regionChanged for unknown room Menu
+BROWSER LOG (warning): [tasw-bridge] gameState:regionChanged for unknown room Overworld
+BROWSER LOG (info): [tasw-bridge] stateManager:rulesLoaded — rebuilding world
+BROWSER LOG (debug): [jta-bridge] stateManager:rulesLoaded — re-requesting static data; re-baselining world state
+BROWSER LOG (debug): [omsi-bridge] stateManager:rulesLoaded — re-baselining world state
+BROWSER LOG (debug): [omsi-bridge] cleared the fork reported-row ledger for the new world
+[PROGRESS 1/1] tutorial-walk-seedling-whole-game PASSED 196.5s
+BROWSER LOG (info): [tasw-bridge] world built: 10 rooms, current=Overworld
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Test results saved to: /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2026-11-27T16-06-15.json
+PW DEBUG: ===== IN-APP RESULTS: 1 row(s) =====
+  PASSED tutorial-walk-seedling-whole-game 196.5s
+  totals: 1 run · 1 passed · 0 failed · 1 enabled · 0 not run
+  test files: 0 failed to import
+  page: 1 console error(s) (each printed as a BROWSER LOG line), 2 uncaught exception(s)
+    UNCAUGHT: A valid external Instance reference no longer exists.
+    UNCAUGHT: A valid external Instance reference no longer exists.
+  handler errors (subscribers that threw inside the event bus): 0 in the log, 0 counted by the page's event bus
+  full results (every row's conditions, logs, timestamps): /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2026-11-27T16-06-15.json
+PW DEBUG: =========================================
+PW DEBUG: No detailed spoiler test results found in window.__spoilerTestResults__.
+PW DEBUG: All Playwright assertions passed.
+  ✓  1 test_json/e2e/app.spec.js:101:3 › Application End-to-End Tests › run in-app tests and check results (3.4m)
+
+  1 passed (3.4m)
