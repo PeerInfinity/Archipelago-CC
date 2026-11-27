@@ -1,0 +1,4 @@
+gate.json: 250 steps, 221 SOLVED, 29 not; SOLVED with replay hits/deaths: 0 -> 
+gate-on.json: 250 steps, 221 SOLVED, 29 not; SOLVED with replay hits/deaths: 0 -> 
+movers 1
+  step 149: L40 REFUSED Nonet Noneh solverBot(survey-step-149) collect (64,144) stance (ladder-routed: no corridor from (280.3669873047385,216.60071614521746) to a stance that can collect totempar  ||  L40 REFUSED Nonet Noneh solverBot(survey-step-149): UNBILLED DAMAGE — the segment reached its 2 goal(s), but its drive took 1 hit(s) no plan billed [t1575 (run t1576, L40) bomb:bombpus

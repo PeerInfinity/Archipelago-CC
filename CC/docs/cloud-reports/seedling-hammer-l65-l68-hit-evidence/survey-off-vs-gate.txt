@@ -1,0 +1,6 @@
+off.json: 250 steps, 224 SOLVED, 26 not; SOLVED with replay hits/deaths: 3 -> 24(L16:1h0d), 202(L82:2h0d), 220(L82:2h0d)
+gate.json: 250 steps, 221 SOLVED, 29 not; SOLVED with replay hits/deaths: 0 -> 
+movers 3
+  step 24: L16 SOLVED 273t 1h   ||  L16 REFUSED Nonet Noneh solverBot(survey-step-24): UNBILLED DAMAGE — the segment reached its 2 goal(s), but its drive took 1 hit(s) no plan billed [t272 (run t273, L17) chaser:bob@96,3
+  step 202: L82 SOLVED 1363t 2h   ||  L82 REFUSED Nonet Noneh solverBot(survey-step-202): UNBILLED DAMAGE — the segment reached its 1 goal(s), but its drive took 2 hit(s) no plan billed [t149 (run t150, L82) lavaExplosion:
+  step 220: L82 SOLVED 1363t 2h   ||  L82 REFUSED Nonet Noneh solverBot(survey-step-220): UNBILLED DAMAGE — the segment reached its 2 goal(s), but its drive took 2 hit(s) no plan billed [t149 (run t150, L82) lavaExplosion:
