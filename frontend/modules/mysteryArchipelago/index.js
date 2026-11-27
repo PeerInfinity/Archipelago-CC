@@ -152,6 +152,15 @@ export async function register(registrationApi) {
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
+  // Enabling the module again after its panel was closed (closing disables it; Quick Launch and the bot's walk
+  // enable it to open the panel) calls initialize again, and nothing is ever uninitialized: the bridge and the
+  // controller made the first time are still subscribed. A second pair answered the page beside the first, and
+  // the bridge's `botRegion` read the new controller while the bot drove the old one (measured: the loop row's
+  // first request went out with `inOffice: false` and the page refused it as locked). Keep the first pair.
+  if (logicInstance) {
+    log('info', 'Bridge already initialized; keeping it.');
+    return;
+  }
   moduleEventBus = initializationApi.getEventBus();
   logicInstance = new MysteryArchipelagoLogic({
     eventBus: moduleEventBus,

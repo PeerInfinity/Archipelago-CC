@@ -24,6 +24,8 @@ export class MysteryPanelUI extends IframePanelUI {
     this.setCustomIframeName(MYSTERY_IFRAME_NAME);
     this.rootElement.classList.add('mystery-panel-container');
     this.rootElement.mysteryPanelUI = this;
+    // Closing the panel reaches it only as its container's `destroy` (as exitUI.js listens): see `onUnmount`.
+    container?.on?.('destroy', () => this.dispose());
     this.syncToWorld();
   }
 
@@ -79,7 +81,20 @@ export class MysteryPanelUI extends IframePanelUI {
     return super.unloadIframe(isReplacement);
   }
 
+  /**
+   * IframePanelUI has no close hook, so its `dispose` never ran when the panel was closed: the frame stayed
+   * registered with the iframe adapter and this panel's subscriptions stayed live, a panel opened after it
+   * delivered every status of the page twice (measured), and the bridge still counted the closed page as there.
+   * Measured too: the close arrives as the container's `destroy` (constructor), not as this `onUnmount`, which
+   * is kept for a layout that calls it. Either runs `dispose` once.
+   */
+  onUnmount() {
+    this.dispose();
+  }
+
   dispose() {
+    if (this._disposed) return;
+    this._disposed = true;
     mysteryPageGone();
     this.wantedUrl = null;
     super.dispose();
