@@ -97,8 +97,8 @@ const tapeOf = (name, patch = {}) => parseTape(JSON.stringify({ ...wandEnemyTape
 describe('fidelity WANDENEMYBODIES — the key', () => {
     it('ships OFF, followed only by wave 70\'s keys, and its env name is in the solver\'s table', () => {
         expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
-        // ⛓ wave 69 (DEADFRAME2): followed by its three keys; then wave 70 (WANDSWINGDRILL) by its two.
-        expect(CONTACT_FIDELITY_KEYS.slice(CONTACT_FIDELITY_KEYS.indexOf(KEY) + 1)).toEqual(['freezeFramesStepResponders', 'pulserDeadFrameUpdate', 'blockPressesFallRockButtonSameFrame', 'itemPressHeldBySlash', 'drillSightLineGame']);
+        // ⛓ wave 69 (DEADFRAME2): followed by its three keys; then wave 70 (WANDSWINGDRILL) by its two; then wave 71 (WANDKILL) by its one.
+        expect(CONTACT_FIDELITY_KEYS.slice(CONTACT_FIDELITY_KEYS.indexOf(KEY) + 1)).toEqual(['freezeFramesStepResponders', 'pulserDeadFrameUpdate', 'blockPressesFallRockButtonSameFrame', 'itemPressHeldBySlash', 'drillSightLineGame', 'wandShotKill']);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_WAND_SHOT_ENEMY_BODIES');
         expect([...SOLVER_ENV_NAMES].sort()).toEqual([...SOLVER_ENV_NAMES]);
         expect(new Set(SOLVER_ENV_NAMES).size).toBe(SOLVER_ENV_NAMES.length);

@@ -96,7 +96,7 @@ describe('NESTEDFREEZE — the key', () => {
             expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
             // ⛓ wave 59 (PLAINSPAN) appended `plainPickupInFreeze` after it; wave 61 (CHESTCOVER) `chestCoverFencepost`.
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(-15)).toEqual([KEY, 'plainPickupInFreeze', 'chestCoverFencepost', 'presserRecursionHang', 'publishedButtonRoomSetter', 'responderStepAfterReaders', 'deadFrameResponderStep', 'enemyPressesFallRockButton', 'wandShotTrapBodies', 'wandShotEnemyBodies', 'freezeFramesStepResponders', 'pulserDeadFrameUpdate', 'blockPressesFallRockButtonSameFrame', 'itemPressHeldBySlash', 'drillSightLineGame']);
+            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(-16)).toEqual([KEY, 'plainPickupInFreeze', 'chestCoverFencepost', 'presserRecursionHang', 'publishedButtonRoomSetter', 'responderStepAfterReaders', 'deadFrameResponderStep', 'enemyPressesFallRockButton', 'wandShotTrapBodies', 'wandShotEnemyBodies', 'freezeFramesStepResponders', 'pulserDeadFrameUpdate', 'blockPressesFallRockButtonSameFrame', 'itemPressHeldBySlash', 'drillSightLineGame', 'wandShotKill']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_NESTED_ROCK_CEREMONY');
         });
 });

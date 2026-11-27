@@ -2784,6 +2784,44 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no flip licence).
      */
     drillSightLineGame: false,
+    /**
+     * ⛓ fidelity WANDKILL (wave 71) — THE PLAIN WAND'S KILL: the SIXTH landed hit (`damage` 0.5 against `hitsMax` 3, each
+     * after the last one's 30 i-frames) on a Turret, SandTrap, LavaTrap, WallFlyer or Drill dies the class's own death,
+     * and `dieEffects("Wand")`'s Explosion is the game's (wave 68's residue).
+     * The game. At `hits >= hitsMax` `Enemy.hit` (`Enemy.as:141-181`) calls `startDeath("Wand")` INSIDE THE SHOT's update
+     * (the shot is run-time added and updates first, so the death runs from that tick, ahead of the body's own update —
+     * an arrow kill's timing, one tick ahead of a sword kill's). Turret, SandTrap, WallFlyer, Drill: `play("die")` +
+     * `dieEffects` (`Turret.as:91-95`, `SandTrap.as:88-92`, `WallFlyer.as:47-51`, `Drill.as:115-119`), which adds
+     * `Explosion(x, y, ["Player", "Enemy"], max(width, height), 1)` (`Enemy.as:204-205`): `int` origin, `int` radius
+     * ×0.65 (10 / 10 / 9 / 6), and in `added()` — the end-of-tick `updateLists()` — the prefilter square then the
+     * origin-to-origin disc, `Player.hit(null, 4, p, 1)` and `Enemy.hit(4, p, 1)` with `t` "" (a body it kills runs
+     * `dieEffects("")`: no chain blast) (`Explosion.as:26-68`). LavaTrap: `play("die")` only (`LavaTrap.as:119-122`): its
+     * `update` returns before the tongue, `endAnim` removes it, no Explosion. IceTrap: `canHit = false` — never.
+     * ⛔ The ctor's `Rng.cos()` draw sets `sprExplosion.angle` only (read by `render()`): not modelled (⚖ never model the
+     * cosmetic RNG). MEASURED on the game (p4g, the delivered vanilla set, a fresh page per shape;
+     * `fixtures/wandkill-witness/`, 9 recordings by `probe-seedling-wandkill.mjs`, six presses 32 ticks apart, compared at
+     * every sampled tick: the player and its `hits`/`hits_timer`, every shot, every body's `hits`/`hitsTimer`/anim/`destroy`
+     * and its removal, every TurretSpit, and the persistence cleared at the end): L59's and L65's turret die on tick 175
+     * ("die" to 192, `destroy` 193, removed by 204, no spit after the kill) (`turret-kill`, `-l65`); L16's and L36's
+     * sandtraps on 174 (removed 192, `removed()` clears {16,2} / {36,5}; L36's three neighbours' boxes meet the square,
+     * every origin 16 px off: none is hit) (`sandtrap-kill`, `-l36`); L108's lavatrap on 178 (removed 196, no tag)
+     * (`lavatrap-kill`); L27's and L22's wallflyers on 175 / 178 ("die" 12 updates, `destroy`, removed 11 later)
+     * (`wallflyer-kill`, `-l22`); L88's drill on 185 (`destroy` 203, removed by 214) (`drill-kill`); L46's icetrap takes
+     * nothing from six shots (`icetrap-six`). The player is outside every Explosion; it takes no hit in any of the nine.
+     * ON (`levelRun.applyWandShotToEnemyBody` → `stageWandKill`, `drainWandKillBlastsNow`, `stepWandKillLavaTrapsNow`): a
+     * Turret/SandTrap kill is staged on F4's row as the C1 sword arm stages it (the "die" anim, the kill-lock ledger, a
+     * SandTrap's tag through `fireStaticRemovals`); a LavaTrap's on its wand row ("die" 6 frames at 10, then removed —
+     * the run steps no tongue, so nothing else ends); a WallFlyer's by `stageWallFlyerKill`, a Drill's by `stageDrillKill`;
+     * the Explosion is queued at the body's point and drained in `updateLists()` against the player's end-of-tick origin
+     * (`applyPlayerHit`). Refused by name: a SECOND body inside the disc (or, where the run holds no point for it, whose box
+     * meets the square) — unwitnessed (no census body sits within a disc of a killable one; the nearest is 16 px); a kill
+     * that opens a `tset == -1` kill lock; a SandTrap with no tag; an Explosion drained in another room or a ceremony; and
+     * everything wave 68 refuses. OFF: wave 68's kill refusal, word for word; nothing read, byte-identical.
+     * REQUIRES `wandShotEnemyBodies` (alone it reaches nothing: the press refuses with the shipped text); `wallFlyerKill`
+     * for a WallFlyer; composes with `wandShotTrapBodies`. `SEEDLING_WAND_SHOT_KILL=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    wandShotKill: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -3263,6 +3301,9 @@ if (globalThis.process?.env?.SEEDLING_ITEM_PRESS_HELD_BY_SLASH === '1') CONTACT_
 if (globalThis.process?.env?.SEEDLING_ITEM_PRESS_HELD_BY_SLASH === '0') CONTACT_FIDELITY.itemPressHeldBySlash = false;
 if (globalThis.process?.env?.SEEDLING_DRILL_SIGHT_LINE_GAME === '1') CONTACT_FIDELITY.drillSightLineGame = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_SIGHT_LINE_GAME === '0') CONTACT_FIDELITY.drillSightLineGame = false;
+// ⛓ fidelity WANDKILL: `SEEDLING_WAND_SHOT_KILL=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WAND_SHOT_KILL === '1') CONTACT_FIDELITY.wandShotKill = true;
+if (globalThis.process?.env?.SEEDLING_WAND_SHOT_KILL === '0') CONTACT_FIDELITY.wandShotKill = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

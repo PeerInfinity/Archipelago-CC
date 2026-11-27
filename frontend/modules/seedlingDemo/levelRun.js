@@ -3239,7 +3239,9 @@ export function createLevelRun({
         } else {
             throw new Error(`levelRun: applyWandShotToEnemyBody: no arm for "${as3}" (${id}).`);
         }
-        if (v.killed) {
+        // ⛓ fidelity WANDKILL (`wandShotKill`, OFF): the kill is the class's own death, staged (`stageWandKill`).
+        if (v.killed && CONTACT_FIDELITY.wandShotKill) stageWandKill(s, as3, id);
+        else if (v.killed) {
             const why = as3 === 'LavaTrap'
                 ? '`LavaTrap.startDeath` plays "die" and its `endAnim` removes the body, ending the tongue — which '
                     + '`levelWorld` prices as a STATIC chomp disc and this run does not step'
@@ -3256,6 +3258,212 @@ export function createLevelRun({
         event.hits = v.hits;
         event.hitsTimer = v.hitsTimer;
         wandEnemyBodyHits.push({ t: ticksCompleted, level, shot: s.id, id, as3, ...v });
+    }
+    /**
+     * ⛓ fidelity WANDKILL (`wandShotKill`, OFF; needs `wandShotEnemyBodies`) — `dieEffects("Wand")`'s Explosion
+     * (`Enemy.as:204-205`): `new Explosion(x, y, ["Player", "Enemy"], max(width, height), 1)`. The ctor takes `_x:int`,
+     * `_y:int`, `_r:int` and `radius *= radiusCoeff` (0.65) lands in an `int` (`Explosion.as:22, 26-40`), so the disc's
+     * centre is the body's `int` point and its radius `int(max(w, h) * 0.65)` — 10 for a Turret or SandTrap (16 x 16),
+     * 9 for a WallFlyer (14), 6 for a Drill (10). `added()` (`:45-68`) is the whole damage pass: the prefilter square
+     * (`collideRectInto`), then the origin-to-origin disc; `Player.hit(null, force 4, p, 1)` and `Enemy.hit(4, p, 1)`
+     * (`t` "": its own kill would `dieEffects("")`, which adds nothing — no chain blast). ⛔ The ctor's
+     * `sprExplosion.angle = Rng.cos() * 360` is the sprite's angle only (read by `render()`), so it is not modelled
+     * (⚖ never model the cosmetic RNG).
+     */
+    const WAND_KILL_BLAST = Object.freeze({
+        force: 4, damage: 1, radiusCoeff: 0.65,
+        src: 'Enemies/Enemy.as:189-209 (dieEffects "Wand"); Projectiles/Explosion.as:19-68',
+    });
+    /** `Explosion.added()` calls a wand kill queued for this tick's `updateLists()` (`drainWandKillBlastsNow`). */
+    const pendingWandKillBlasts = [];
+    /** `{t, level, id, as3, shot, x, y, blast}` per wand kill (empty OFF). */
+    const wandKills = [];
+    /** `{t, level, id, x, y, radius, inSquare, hitPlayer, square}` per wand-kill Explosion drained (empty OFF). */
+    const wandKillBlasts = [];
+    /**
+     * ⛓ fidelity WANDKILL — the census bodies a static wand kill's removal takes out, as the sword arm computes it
+     * (`killLockLedger`): every body still dying (F4's rows and the LavaTraps' wand rows) leaves the count with it.
+     * A room whose `tset == -1` lock that removal opens is refused by name (its open tick is not staged here).
+     */
+    const assertWandKillLedger = (id) => {
+        const census = world.combat?.enemies ?? [];
+        const dying = (eid) => staticBodyStateFor(level).get(eid)?.dying || wandLavaTrapStates.get(level)?.get(eid)?.dying;
+        const before = census.filter((e) => !e.removed).map((e) => ({ as3: e.as3 }));
+        const after = census.filter((e) => !e.removed && `${e.tag}@${e.x},${e.y}` !== id && !dying(`${e.tag}@${e.x},${e.y}`))
+            .map((e) => ({ as3: e.as3 }));
+        const led = killLockLedger(levelSource(level), { bodiesBefore: before, bodiesAfter: after });
+        if (!led.nil) {
+            throw new Error(`levelRun: a wand shot KILLS ${id} at tick ${ticksCompleted + 1}, whose removal OPENS `
+                + `${led.opens.length} kill lock(s) in level ${level} (${led.why}) — not staged by the wand kill. `
+                + 'Refused by name (WANDKILL).');
+        }
+    };
+    /**
+     * ⛓ fidelity WANDKILL (`wandShotKill`) — THE SIXTH LANDED PLAIN-WAND HIT, STAGED AS THE CLASS'S OWN DEATH. The hit
+     * lands inside the SHOT's update (run-time added, prepended), so each class's death runs from THIS tick, ahead of
+     * the body's own update — as an arrow kill's does, and one tick ahead of a sword kill's (the Player updates last):
+     *   Turret, SandTrap  `startDeath` = `play("die")` + `dieEffects` (`Turret.as:91-95`, `SandTrap.as:88-92`): F4's
+     *                     row, staged as the C1 sword arm stages it (`destroy` back to false, the "die" anim, the
+     *                     kill-lock ledger; a SandTrap's tag is `removed()`'s write, `fireStaticRemovals`); the anim's
+     *                     first update is `stepStaticBodiesNow` this tick;
+     *   LavaTrap          `play("die")` only (`LavaTrap.as:119-122`): no Explosion; its `update` returns before the
+     *                     tongue from this tick (the run steps no tongue: nothing to end), and `endAnim` removes it
+     *                     (`stepWandKillLavaTrapsNow`);
+     *   WallFlyer         `hitWallFlyer` already put "die" on the body: `stageWallFlyerKill`;
+     *   Drill             `hitDrill` already played "die": `stageDrillKill`;
+     * and, for all but the LavaTrap, the Explosion is queued at the body's point as this tick's update left it (the
+     * shot runs first, so a flyer's or a drill's is the PREVIOUS tick's).
+     */
+    function stageWandKill(s, as3, id) {
+        const t = ticksCompleted + 1;
+        let at = null;
+        if (as3 === 'Turret' || as3 === 'SandTrap') {
+            const sb = staticBodyStateFor(level).get(id);
+            const spec = STATIC_SWORD_DEATH[sb.as3] ?? STATIC_ARROW_DEATH[sb.as3];
+            // ⛔ both classes override `startDeath` to `play("die")`: no `destroy` at the blow.
+            sb.destroy = false;
+            if (as3 === 'SandTrap' && !(sb.persistTag >= 0)) {
+                throw new Error(`levelRun: ${sb.id} dies to a wand shot at tick ${t} and carries no persistence tag, so `
+                    + 'its `removed()` would write OUT OF BAND. Refused by name (WANDKILL, F4\'s rule).');
+            }
+            assertWandKillLedger(id);
+            sb.killedAt = t;
+            sb.dieAnim = createSpriteAnim(spec.dieAnim.frames, spec.dieAnim.rate);
+            at = { x: (sb.rect.x + sb.rect.right) / 2, y: (sb.rect.y + sb.rect.bottom) / 2,
+                size: Math.max(sb.rect.right - sb.rect.x, sb.rect.bottom - sb.rect.y) };
+        } else if (as3 === 'LavaTrap') {
+            const row = wandLavaTrapStateFor(level).get(id);
+            row.destroy = false;
+            assertWandKillLedger(id);
+            row.killedAt = t;
+            row.dieAnim = createSpriteAnim(WAND_KILL_LAVATRAP_DIE.frames, WAND_KILL_LAVATRAP_DIE.rate);
+        } else if (as3 === 'WallFlyer') {
+            const w = wallFlyerStateFor(level).get(id);
+            stageWallFlyerKill(w, 'wand', t, `levelRun: a wand shot (${s.id}) KILLS ${id} at tick ${ticksCompleted} in `
+                + `level ${level}, and \`CONTACT_FIDELITY.wallFlyerKill\` is OFF: no wallflyer death is staged. `
+                + 'Refused by name (WANDKILL).');
+            const r = wallFlyerRect(w);
+            at = { x: w.x, y: w.y, size: Math.max(r.right - r.x, r.bottom - r.y) };
+        } else if (as3 === 'Drill') {
+            const d = drillStateFor(level).get(id);
+            stageDrillKill(d, 'wand');
+            const r = drillRect(d);
+            at = { x: d.x, y: d.y, size: Math.max(r.right - r.x, r.bottom - r.y) };
+        } else {
+            throw new Error(`levelRun: stageWandKill: no death for "${as3}" (${id}). Refused by name (WANDKILL).`);
+        }
+        const blast = at === null ? null : {
+            level, id, as3, t,
+            x: Math.trunc(at.x), y: Math.trunc(at.y), radius: Math.trunc(at.size * WAND_KILL_BLAST.radiusCoeff),
+        };
+        if (blast) pendingWandKillBlasts.push(blast);
+        wandKills.push({ t, level, id, as3, shot: s.id, x: at?.x ?? null, y: at?.y ?? null,
+            blast: blast ? { x: blast.x, y: blast.y, radius: blast.radius } : null });
+    }
+    /** `LavaTrap.as:35` `add("die", [3, 4, 5, 6, 7, 8], chompAnimSpeed)`, `chompAnimSpeed` 10 (`:19`). */
+    const WAND_KILL_LAVATRAP_DIE = Object.freeze({ frames: 6, rate: 10, src: 'Enemies/LavaTrap.as:19, :35, :161-169' });
+    /**
+     * ⛓ fidelity WANDKILL: a wand-killed LavaTrap's "die" anim, in its own slot after its `hitUpdate`
+     * (`stepWandLavaTrapsNow`) — the graphic updates after `Enemy.update`, and outside its `onScreen()` gate. `endAnim`
+     * calls `FP.world.remove(this)` on the anim's last update; the class has no `removed()` (no tag), and the body
+     * leaves the census at the top of the next tick (`fireStaticRemovals`, as a Turret's removal does).
+     */
+    function stepWandKillLavaTrapsNow() {
+        const st = wandLavaTrapStates.get(level);
+        if (!st) return;
+        for (const b of st.values()) {
+            if (b.removed || !b.dieAnim) continue;
+            if (stepSpriteAnim(b.dieAnim)) {
+                b.dieAnim = null;
+                b.removed = true;
+                b.removedAt = ticksCompleted + 1;
+                const e = (worldFor(level).combat?.enemies ?? []).find((c) => `${c.tag}@${c.x},${c.y}` === b.id);
+                pendingStaticRemovals.push({
+                    level, id: b.id, as3: 'LavaTrap', persistTag: e ? tagOf(e.tag, e.attrs) : -1,
+                    killedAt: b.killedAt, removedAt: b.removedAt, applied: false, writesTag: false,
+                });
+            }
+        }
+    }
+    /**
+     * ⛓ fidelity WANDKILL — EVERY "Enemy" BODY THE RUN CAN PLACE THIS TICK, for a wand-kill Explosion's `"Enemy"` arm:
+     * `{id, rect, x, y}` with the body's live entity point where the run holds it (`x`/`y` null where it does not).
+     */
+    function wandKillBlastBodiesNow() {
+        const out = [];
+        const six = ['Turret', 'LavaTrap', 'WallFlyer', 'IceTrap', 'SandTrap', 'Drill'];
+        const statics = staticBodyStates.get(level);
+        for (const e of worldFor(level).combat?.enemies ?? []) {
+            if (e.removed) continue;
+            const id = `${e.tag}@${e.x},${e.y}`;
+            if (isBridgedChaser(e.tag)) continue;
+            if (e.as3 === 'WallFlyer') {
+                const w = wallFlyerStateFor(level).get(id);
+                if (!w) out.push({ id, rect: contactRect(e), x: null, y: null });
+                else if (!w.removed) out.push({ id, rect: wallFlyerRect(w), x: w.x, y: w.y, spent: w.hits >= WALLFLYER.hitsMax });
+            } else if (e.as3 === 'Drill') {
+                const d = drillStateFor(level).get(id);
+                if (!d) out.push({ id, rect: contactRect(e), x: null, y: null });
+                else if (!d.removed) out.push({ id, rect: drillRect(d), x: d.x, y: d.y, spent: d.hits >= DRILL.hitsMax });
+            } else if (six.includes(e.as3)) {
+                const row = statics?.get(id) ?? wandLavaTrapStates.get(level)?.get(id) ?? null;
+                if (row?.removed) continue;
+                const r = contactRect(e);
+                out.push({ id, rect: r, x: (r.x + r.right) / 2, y: (r.y + r.bottom) / 2,
+                    spent: row ? row.hits >= row.hitsMax : false, canHit: e.as3 !== 'IceTrap' });
+            } else {
+                out.push({ id, rect: contactRect(e), x: null, y: null });
+            }
+        }
+        for (const c of (noclip || noDamage) ? [] : chaserStateFor(level).values()) {
+            if (!c.removed) out.push({ id: c.id, rect: chaserBoxAt(c.tag, c.x, c.y), x: c.x, y: c.y });
+        }
+        for (const e of spinnerRectsNow() ?? []) out.push({ id: e.id, rect: e.rect, x: e.spinner.x, y: e.spinner.y });
+        return out;
+    }
+    /**
+     * ⛓ fidelity WANDKILL — `Explosion.added()` for this tick's wand kills, in `updateLists()` (the shot's update added
+     * it; the ADD loop of the same frame's `updateLists()` calls `added()`), so the disc tests the player's END-of-tick
+     * origin (`state`, advanced by the caller) — `applyExplosion`'s shape, with the `"Enemy"` arm asked too:
+     *   · the killed body itself is in its own disc and takes nothing (`hits >= hitsMax`: `Enemy.hit`'s gate);
+     *   · a body already at `hitsMax` (dying) takes nothing, and an IceTrap (`canHit = false`) nothing;
+     *   · a body whose box meets the square but whose entity point is outside the disc takes nothing (the disc decides —
+     *     measured: `sandtrap-kill-l36`, three neighbours' boxes in the square, every origin 16 px off);
+     *   · ⛔ any other body in the disc — or, where the run holds no point for it, whose box meets the square — is
+     *     REFUSED by name: a second body's `Enemy.hit(4, p, 1)` from a wand kill is not witnessed (no room's census
+     *     puts two of the bodies a wand can kill within a disc of each other; a moving body would have to be there).
+     * The player: the square (the player's box), then the disc (the player's origin); `Player.hit(null, 4, p, 1)`
+     * (`applyPlayerHit`: its own i-frames, `noDamage` and freeze gates). A kill whose drain would land in another room
+     * or in a ceremony is refused by name.
+     */
+    function drainWandKillBlastsNow() {
+        if (pendingWandKillBlasts.length === 0) return;
+        for (const b of pendingWandKillBlasts.splice(0, pendingWandKillBlasts.length)) {
+            if (b.level !== level || ceremony !== null) {
+                throw new Error(`levelRun: the wand kill of ${b.id} (tick ${b.t}, level ${b.level}) queues its Explosion `
+                    + `for an \`updateLists()\` ${b.level !== level ? `in level ${level}` : 'inside a ceremony'} — not `
+                    + 'staged. Refused by name (WANDKILL).');
+            }
+            const r = b.radius;
+            const square = rect(b.x - r, b.y - r, r * 2, r * 2);
+            const inDisc = (px, py) => Math.sqrt((b.x - px) ** 2 + (b.y - py) ** 2) <= r;
+            for (const e of wandKillBlastBodiesNow()) {
+                if (e.id === b.id || !e.rect || !rectsOverlap(e.rect, square)) continue;
+                if (e.x !== null && !inDisc(e.x, e.y)) continue;
+                if (e.spent || e.canHit === false) continue;
+                throw new Error(`levelRun: the Explosion of the wand kill of ${b.id} at (${b.x}, ${b.y}) r ${r} on tick `
+                    + `${b.t} in level ${level} reaches ${e.id}${e.x === null ? ' (its box meets the prefilter square; the '
+                        + 'run holds no point for it)' : ''} — a second body's \`Enemy.hit(4, p, 1)\` (\`Explosion.as:62-65\`) `
+                    + 'from a wand kill is not witnessed. Refused by name (WANDKILL).');
+            }
+            const inSquare = rectsOverlap(playerBoxAt(state.x, state.y), square);
+            const hitPlayer = inSquare && inDisc(state.x, state.y);
+            wandKillBlasts.push({ t: b.t, level, id: b.id, as3: b.as3, x: b.x, y: b.y, radius: r, inSquare, hitPlayer });
+            if (!hitPlayer || noclip) continue;
+            // `Explosion.as:60` — `(c as Player).hit(null, force, new Point(x, y), damage)`: no attacker.
+            applyPlayerHit({ source: 'wandKillBlast', id: b.id, force: WAND_KILL_BLAST.force,
+                damage: WAND_KILL_BLAST.damage, from: { x: b.x, y: b.y }, retaliate: null });
+        }
     }
     /**
      * ── ⛔⛔ R5 SLICE 15: ONE OPTIONS BUILDER FOR EVERY LIVE-GEOMETRY QUERY
@@ -23127,6 +23335,15 @@ export function createLevelRun({
         get wandShotHits() { return wandShotHits.map((h) => ({ ...h })); },
         /** ⛓ fidelity WANDENEMYBODIES: one record per covered body a shot met, with the body's verdict (empty OFF). */
         get wandEnemyBodyHits() { return wandEnemyBodyHits.map((h) => ({ ...h })); },
+        /** ⛓ fidelity WANDKILL: one row per wand kill, and one per wand-kill Explosion drained (both empty OFF). */
+        get wandKills() { return wandKills.map((k) => ({ ...k, blast: k.blast ? { ...k.blast } : null })); },
+        get wandKillBlasts() { return wandKillBlasts.map((b) => ({ ...b })); },
+        /** ⛓ fidelity WANDKILL: the current level's LavaTrap wand rows with their death (`dying`, `removed`). */
+        get wandKillLavaTraps() {
+            return [...(wandLavaTrapStates.get(level)?.values() ?? [])].map((b) => ({
+                id: b.id, hits: b.hits, hitsTimer: b.hitsTimer, dying: b.dying === true, removed: b.removed,
+            }));
+        },
         /** ⛓ fidelity WANDENEMYBODIES: the current level's LavaTrap wand damage rows (empty until a shot hits one). */
         get wandLavaTraps() {
             return [...(wandLavaTrapStates.get(level)?.values() ?? [])].map((b) => ({
@@ -23941,6 +24158,8 @@ export function createLevelRun({
             if (!noclip) stepDarkTrapsNow();
             // ⛓ fidelity WANDENEMYBODIES (`wandShotEnemyBodies`, OFF): the LavaTraps' i-frames, once a shot has hit one.
             if (!noclip && CONTACT_FIDELITY.wandShotEnemyBodies) stepWandLavaTrapsNow();
+            // ⛓ fidelity WANDKILL (`wandShotKill`, OFF): and a wand-killed LavaTrap's "die" anim, after its i-frames.
+            if (!noclip && CONTACT_FIDELITY.wandShotKill) stepWandKillLavaTrapsNow();
             // ── ⛓⛓⛓ R5 SLICE 15: THE CRUSHER, IN ITS OWN SLOT ────────
             //
             // `Game.loadlevel` adds it at `:2142` and `World.addUpdate`
@@ -25885,6 +26104,11 @@ export function createLevelRun({
                     for (const b of pendingBlasts.splice(0, pendingBlasts.length)) {
                         applyExplosion(b);
                     }
+                    next = state;
+                }
+                // ⛓ fidelity WANDKILL (`wandShotKill`, OFF): and a wand kill's Explosion, in the same `updateLists()`.
+                if (pendingWandKillBlasts.length > 0) {
+                    drainWandKillBlastsNow();
                     next = state;
                 }
                 // ⛓ seedling-fidelity-bombpusher D2: and the bombs' Explosions, in the same `updateLists()`.

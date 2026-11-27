@@ -696,7 +696,9 @@ describe('who takes the box', () => {
             // fidelity WANDENEMYBODIES: a wand shot at the six Enemy classes, on the game (import door: `isEntryPoint` → main())
             'probe-seedling-wandenemybodies.mjs',
             // fidelity WANDSWINGDRILL: a wand/fire press during a swing and a drill's first-tick line, on the game (import door: `isEntryPoint` → main())
-            'probe-seedling-wandswingdrill.mjs'];
+            'probe-seedling-wandswingdrill.mjs',
+            // fidelity WANDKILL: the plain wand's kill of the six Enemy classes, on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-wandkill.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
