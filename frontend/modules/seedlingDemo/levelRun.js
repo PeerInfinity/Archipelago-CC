@@ -1467,6 +1467,9 @@ export function createLevelRun({
         // ⛓ F4: and the static bodies' damage roster, for the same reason.
         staticBodyStates.delete(n);
         darkTrapStates.delete(n);
+        // ⛓ fidelity WANDENEMYBODIES: and the LavaTraps' wand damage rows and the covered ids (OFF: both empty).
+        wandLavaTrapStates.delete(n);
+        wandEnemyBodyIds.delete(n);
         // R5 slice 15: the crusher roster is built from the world too. No
         // item grants or removes one today; dropped anyway, for the reason
         // the spinner's is.
@@ -2887,9 +2890,13 @@ export function createLevelRun({
         // ⛓ fidelity WANDTRAPBODIES (`wandShotTrapBodies`, OFF): a darktrap or a placed grenade the run STEPS has a live
         // box (`wandTrapBodiesNow`, read by `wandShotBlockerAt`); under `noclip || noDamage` it has none and still refuses.
         const trapIds = CONTACT_FIDELITY.wandShotTrapBodies ? wandTrapBodyIdsFor(n) : null;
+        // ⛓ fidelity WANDENEMYBODIES (`wandShotEnemyBodies`, OFF): a Turret, LavaTrap, WallFlyer, IceTrap, SandTrap or
+        // Drill whose box and damage state the run holds (`wandEnemyBodyIdsFor`); none under `noclip || noDamage`.
+        const enemyIds = CONTACT_FIDELITY.wandShotEnemyBodies ? wandEnemyBodyIdsFor(n) : null;
         const unboxed = (w.pressEnemies ?? []).filter((e) => !boxed.has(`${e.x},${e.y}`)
             && !(chaserIds && chaserIds.has(`${e.tag}@${e.x},${e.y}`))
-            && !(trapIds && trapIds.has(`${e.tag}@${e.x},${e.y}`)));
+            && !(trapIds && trapIds.has(`${e.tag}@${e.x},${e.y}`))
+            && !(enemyIds && enemyIds.has(`${e.tag}@${e.x},${e.y}`)));
         if (unboxed.length > 0) {
             const names = unboxed.map((e) => `${e.tag}@${e.x},${e.y}`).join(', ');
             throw new Error(`levelRun: a WandShot in level ${n} would collide with `
@@ -2962,6 +2969,31 @@ export function createLevelRun({
         // (2) the `"Enemy"` arm — the bodies (1) cannot see. A WOKEN totem
         // is `type = "Enemy"` and `liveRectOf` deliberately returns null for
         // it, which is right for the player and wrong for this mover.
+        // ⛓ fidelity WANDENEMYBODIES (`wandShotEnemyBodies`, OFF): the six classes' live boxes, read FIRST; a box that
+        // overlaps two or more "Enemy" bodies (any arm) refuses by name — `collideTypes` returns the first in the
+        // type list, an order this run does not hold, and the bodies' `hit`s differ.
+        if (CONTACT_FIDELITY.wandShotEnemyBodies) {
+            const mine = wandEnemyBodiesAt(box);
+            if (mine.length > 0) {
+                const all = mine.map((m) => m.id);
+                for (const b of (bossRectsNow() ?? new Map()).values()) {
+                    if (b.activated && b.bodyRect && rectsOverlap(box, b.bodyRect)) all.push(b.id);
+                }
+                for (const sp of spinnerRectsNow() ?? []) if (rectsOverlap(box, sp.rect)) all.push(sp.id);
+                if (CONTACT_FIDELITY.wandShotChaserBodies && !noclip && !noDamage) {
+                    for (const c of chaserRectsNow() ?? []) if (rectsOverlap(box, c.rect)) all.push(c.id);
+                }
+                const trapBody = CONTACT_FIDELITY.wandShotTrapBodies ? wandTrapBodyAt(box) : null;
+                if (trapBody) all.push(trapBody.id);
+                if (all.length > 1) {
+                    throw new Error(`levelRun: a wand shot at (${x}, ${y}) in level ${level} overlaps ${all.length} "Enemy" `
+                        + `bodies on the same step [${all.join(', ')}]. \`collideTypes\` returns the first "Enemy" in the `
+                        + 'type list, and this run does not hold that order; their `hit`s differ. Refused by name '
+                        + '(WANDENEMYBODIES).');
+                }
+                return { kind: 'enemy', id: mine[0].id, enemyBody: mine[0].as3 };
+            }
+        }
         for (const b of (bossRectsNow() ?? new Map()).values()) {
             if (b.activated && b.bodyRect && rectsOverlap(box, b.bodyRect)) {
                 return { kind: 'enemy', id: b.id, boss: true };
@@ -3065,6 +3097,165 @@ export function createLevelRun({
             if (rectsOverlap(box, r)) return { id: g.id, as3: 'Grenade' };
         }
         return null;
+    }
+    /**
+     * ⛓ fidelity WANDENEMYBODIES (`wandShotEnemyBodies`) — THE SIX CLASSES WAVE 67 LEFT REFUSED, WHERE THE RUN HOLDS
+     * THEIR STATE.
+     *
+     * The ids in level `n` whose live box and damage state this run holds (`assertWandShotSolidsBound`'s exemption):
+     *   Turret    F4's static damage row (`staticBodyStateFor`), which exists only with `STATIC_SWORD_ARM` ON;
+     *   SandTrap  the same row (`STATIC_ARROW_DEATH.SandTrap`, always);
+     *   LavaTrap  static (`knockback` empty, never moves): the census box, and this file's own damage row
+     *             (`wandLavaTrapStateFor`, built on the first hit);
+     *   IceTrap   static, `canHit = false`: the census box, and no state a hit could change;
+     *   WallFlyer `wallFlyerStateFor` (stepped by `stepWallFlyersNow`);
+     *   Drill     `drillStateFor` (only the drills it steps: `drillLive`, and a mixed room's with `drillMixedRooms`).
+     * Under `noclip || noDamage` none is stepped for the shot (the chasers' gate): the room still refuses.
+     */
+    const wandEnemyBodyIds = new Map();
+    function wandEnemyBodyIdsFor(n) {
+        if (wandEnemyBodyIds.has(n)) return wandEnemyBodyIds.get(n);
+        const out = new Map();
+        if (!(noclip || noDamage)) {
+            for (const e of worldFor(n).combat?.enemies ?? []) {
+                const id = `${e.tag}@${e.x},${e.y}`;
+                if (e.as3 === 'Turret' ? STATIC_SWORD_ARM.enabled
+                    : e.as3 === 'Drill' ? drillStateFor(n).has(id)
+                        : ['SandTrap', 'LavaTrap', 'IceTrap', 'WallFlyer'].includes(e.as3)) out.set(id, e.as3);
+            }
+        }
+        wandEnemyBodyIds.set(n, out);
+        return out;
+    }
+    /**
+     * Every live covered body whose box overlaps `box`, as `[{id, as3}]` in census order. A body is a box until the
+     * family's own step removes it (none of the six classes writes `collidable`): a static row's `removed`, a
+     * wallflyer's or a drill's `removed` (its "die" anim and `Mobile.death`'s fade included). The shot updates first,
+     * so it reads each body as the previous tick left it, and on its removal tick it still meets it.
+     */
+    function wandEnemyBodiesAt(box) {
+        if (noclip || noDamage) return [];
+        const ids = wandEnemyBodyIdsFor(level);
+        if (ids.size === 0) return [];
+        const statics = staticBodyStates.get(level);
+        const out = [];
+        for (const e of worldFor(level).combat?.enemies ?? []) {
+            const id = `${e.tag}@${e.x},${e.y}`;
+            const as3 = ids.get(id);
+            if (as3 === undefined || e.removed) continue;
+            let r = null;
+            if (as3 === 'WallFlyer') {
+                const w = wallFlyerStateFor(level).get(id);
+                if (w && !w.removed) r = wallFlyerRect(w);
+            } else if (as3 === 'Drill') {
+                const d = drillStateFor(level).get(id);
+                if (d && !d.removed) r = drillRect(d);
+            } else if (as3 === 'LavaTrap') {
+                if (!wandLavaTrapStates.get(level)?.get(id)?.removed) r = contactRect(e);
+            } else if (!statics?.get(id)?.removed) {
+                r = contactRect(e);
+            }
+            if (r && rectsOverlap(box, r)) out.push({ id, as3 });
+        }
+        return out;
+    }
+    /**
+     * ⛓ fidelity WANDENEMYBODIES: the LavaTraps' `Enemy` damage state, per VISIT (a new `Game` builds every body unhit),
+     * built on the first wand hit in the room. `LavaTrap` takes `Enemy.hit` unchanged (`knockback` and `hitPlayer` are
+     * empty overrides, `LavaTrap.as:157-159`) and its tongue reads neither `hits` nor `hitsTimer`, so the row is read only
+     * by the next shot's `Enemy.hit` gate and the kill (refused by name).
+     */
+    const wandLavaTrapStates = new Map();
+    const wandLavaTrapStateFor = (n) => {
+        if (!wandLavaTrapStates.has(n)) {
+            const byId = new Map();
+            const { src, ...fields } = ENEMY_DAMAGE_DEFAULTS;
+            for (const e of worldFor(n).combat?.enemies ?? []) {
+                if (e.as3 !== 'LavaTrap') continue;
+                const id = `${e.tag}@${e.x},${e.y}`;
+                byId.set(id, { as3: 'LavaTrap', ...fields, id, rect: contactRect(e), dying: false, destroy: false,
+                    alpha: 1, removed: false });
+            }
+            wandLavaTrapStates.set(n, byId);
+        }
+        return wandLavaTrapStates.get(n);
+    };
+    /** `Enemy.update`'s `hitUpdate()` for the LavaTraps a shot has hit (behind `onScreen()`, `activeOffScreen` false). */
+    function stepWandLavaTrapsNow() {
+        const st = wandLavaTrapStates.get(level);
+        if (!st) return;
+        for (const b of st.values()) {
+            if (!b.removed && b.hitsTimer > 0) enemyHitUpdate(b, { onScreen: onScreenNow(b.rect, b.id) });
+        }
+    }
+    /** `{t, level, shot, id, as3, landed, refusedAt, hits, hitsTimer, ...}` per covered body a shot has met. */
+    const wandEnemyBodyHits = [];
+    /**
+     * ⛓ fidelity WANDENEMYBODIES — `(_e as Enemy).hit(3, new Point(x, y), damage, "Wand")` on a covered body, inside the
+     * SHOT's update (before the body's own update this tick: the shot is prepended). Each class's own `hit`:
+     *   Turret, SandTrap  `Enemy.hit` on F4's row (`enemyHit`); both `knockback`s are empty. While the row's `hitsTimer`
+     *                     runs, the turret starts no shot (`stepShootersNow` reads the row) and neither body's
+     *                     `hitPlayer` fires (the static scan / `turretHitPlayerNow` read it);
+     *   LavaTrap          `Enemy.hit` on `wandLavaTrapStateFor`'s row;
+     *   IceTrap           `canHit = false` (`IceTrap.as:32`) closes `Enemy.hit`'s gate: nothing changes;
+     *   WallFlyer         `hitWallFlyer` — a landed hit reverses `v` (`WallFlyer.knockback`);
+     *   Drill             `hitDrill` — `knockback` empty; the row's `hitsTimer` plays "hit" and holds the hop.
+     * ⛔ A hit that KILLS is refused by name (see the message): `startDeath` → `dieEffects("Wand")` adds an
+     * `Explosion` (Turret, SandTrap, WallFlyer, Drill), and a LavaTrap's death ends a tongue `levelWorld` prices as a
+     * static disc. It takes `hitsMax / damage` landed hits (six of the plain wand's, 30 i-frames apart).
+     */
+    function applyWandShotToEnemyBody(s, event, as3) {
+        const frozen = ceremony !== null;
+        const opts = { d: event.damage, f: event.force, t: 'Wand', frozen };
+        const id = event.id;
+        let v;
+        if (as3 === 'Turret' || as3 === 'SandTrap' || as3 === 'LavaTrap' || as3 === 'IceTrap') {
+            const row = as3 === 'LavaTrap' ? wandLavaTrapStateFor(level).get(id)
+                : as3 === 'IceTrap' ? { as3, ...ENEMY_DAMAGE_DEFAULTS, canHit: false }
+                    : staticBodyStateFor(level).get(id);
+            if (!row) {
+                throw new Error(`levelRun: a wand shot (${s.id}) met ${id} at tick ${ticksCompleted} in level ${level}, `
+                    + 'which has no damage row in this run. Refused by name (WANDENEMYBODIES).');
+            }
+            const r = enemyHit(row, opts);
+            v = { landed: r.landed, killed: r.killed, refusedAt: r.refusedAt, hits: row.hits, hitsTimer: row.hitsTimer };
+        } else if (as3 === 'WallFlyer') {
+            const st = wallFlyerStateFor(level);
+            const w = st.get(id);
+            if (!w.checked) {
+                throw new Error(`levelRun: a wand shot met ${id} at tick ${ticksCompleted} in level ${level} before its `
+                    + '`check()` set its settle velocity. Refused by name (WANDENEMYBODIES).');
+            }
+            const r = hitWallFlyer(w, { damage: opts.d, t: 'Wand', frozen });
+            st.set(id, r.w);
+            v = { landed: r.landed, killed: r.killed, refusedAt: r.landed ? null : 'hitWallFlyer refused',
+                hits: r.w.hits, hitsTimer: r.w.hitsTimer, vx: r.w.vx, vy: r.w.vy };
+        } else if (as3 === 'Drill') {
+            const st = drillStateFor(level);
+            const r = hitDrill(st.get(id), { damage: opts.d, t: 'Wand', frozen });
+            st.set(id, r.d);
+            v = { landed: r.landed, killed: r.killed, refusedAt: r.landed ? null : 'hitDrill refused',
+                hits: r.d.hits, hitsTimer: r.d.hitsTimer };
+        } else {
+            throw new Error(`levelRun: applyWandShotToEnemyBody: no arm for "${as3}" (${id}).`);
+        }
+        if (v.killed) {
+            const why = as3 === 'LavaTrap'
+                ? '`LavaTrap.startDeath` plays "die" and its `endAnim` removes the body, ending the tongue — which '
+                    + '`levelWorld` prices as a STATIC chomp disc and this run does not step'
+                : `\`${as3}.startDeath\` calls \`dieEffects("Wand")\`, which adds an \`Explosion(x, y, ["Player", `
+                    + '"Enemy"], max(width, height), 1)` (its radius ×0.65, a `Rng.cos()` draw for its angle) that hits '
+                    + 'the player and every Enemy inside it — not placed by this run for this class';
+            throw new Error(`levelRun: a wand shot (${s.id}) KILLS ${id} at tick ${ticksCompleted} in level ${level} `
+                + `(hits ${v.hits} reach hitsMax): ${why}. Refused by name (WANDENEMYBODIES).`);
+        }
+        event.enemyBody = as3;
+        event.landed = v.landed;
+        event.spentWithoutDamage = !v.landed;
+        event.refusedAt = v.refusedAt;
+        event.hits = v.hits;
+        event.hitsTimer = v.hitsTimer;
+        wandEnemyBodyHits.push({ t: ticksCompleted, level, shot: s.id, id, as3, ...v });
     }
     /**
      * ── ⛔⛔ R5 SLICE 15: ONE OPTIONS BUILDER FOR EVERY LIVE-GEOMETRY QUERY
@@ -5320,6 +5511,8 @@ export function createLevelRun({
         // ⛓ F4: nor a static body's hits; its DEATH is durable through its tag.
         staticBodyStates.delete(n);
         darkTrapStates.delete(n);
+        // ⛓ fidelity WANDENEMYBODIES: nor a LavaTrap's wand hits (OFF: empty).
+        wandLavaTrapStates.delete(n);
         /**
          * ⛓⛓⛓ R5 SLICE 15: AND A RE-ENTERED ROOM REBUILDS EVERY CRUSHER AT
          * ITS CONSTRUCTOR CELL — WITH NOTHING TO CARRY AND NOTHING TO CHECK.
@@ -10704,7 +10897,13 @@ export function createLevelRun({
         // sees a `landed: true` the boss refused.
         // ⛓ fidelity WANDTRAPBODIES (`wandShotTrapBodies`, OFF): `DarkTrap.hit` and `Grenade.hit` are EMPTY overrides
         // (`DarkTrap.as:56-58`, `Grenade.as:70-71`): the shot stops and dies, and the body is untouched.
-        const trapBody = CONTACT_FIDELITY.wandShotTrapBodies && wandTrapBodyIdsFor(level).has(event.id)
+        // ⛓ fidelity WANDENEMYBODIES (`wandShotEnemyBodies`, OFF): a covered body takes its own class's `hit`.
+        const enemyBody = CONTACT_FIDELITY.wandShotEnemyBodies ? wandEnemyBodyIdsFor(level).get(event.id) : undefined;
+        if (enemyBody !== undefined) {
+            applyWandShotToEnemyBody(s, event, enemyBody);
+            return;
+        }
+        const trapBody =CONTACT_FIDELITY.wandShotTrapBodies && wandTrapBodyIdsFor(level).has(event.id)
             ? (event.id.startsWith('darktrap@') ? 'DarkTrap' : 'Grenade') : null;
         if (trapBody !== null) {
             event.trapBody = trapBody;
@@ -22773,6 +22972,14 @@ export function createLevelRun({
         get wandShots() { return wandShotsFired.map((s) => ({ ...s })); },
         /** One record per contact a shot made, including the ones that paid nothing. */
         get wandShotHits() { return wandShotHits.map((h) => ({ ...h })); },
+        /** ⛓ fidelity WANDENEMYBODIES: one record per covered body a shot met, with the body's verdict (empty OFF). */
+        get wandEnemyBodyHits() { return wandEnemyBodyHits.map((h) => ({ ...h })); },
+        /** ⛓ fidelity WANDENEMYBODIES: the current level's LavaTrap wand damage rows (empty until a shot hits one). */
+        get wandLavaTraps() {
+            return [...(wandLavaTrapStates.get(level)?.values() ?? [])].map((b) => ({
+                id: b.id, hits: b.hits, hitsTimer: b.hitsTimer, removed: b.removed,
+            }));
+        },
         /**
          * ⛓ SEEDLING FIDELITY WAND — the shots in flight (or dying) in the
          * CURRENT level, `{id, x, y, anim, life, destroy}`: what the game's
@@ -23573,6 +23780,8 @@ export function createLevelRun({
             if (!noclip) stepStaticBodiesNow();
             // ⛓ STATICLADDER D2: the darktraps' light death, in the same band of slots (above the player).
             if (!noclip) stepDarkTrapsNow();
+            // ⛓ fidelity WANDENEMYBODIES (`wandShotEnemyBodies`, OFF): the LavaTraps' i-frames, once a shot has hit one.
+            if (!noclip && CONTACT_FIDELITY.wandShotEnemyBodies) stepWandLavaTrapsNow();
             // ── ⛓⛓⛓ R5 SLICE 15: THE CRUSHER, IN ITS OWN SLOT ────────
             //
             // `Game.loadlevel` adds it at `:2142` and `World.addUpdate`

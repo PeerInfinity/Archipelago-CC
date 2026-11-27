@@ -265,6 +265,10 @@ export const DIGEST_EXEMPT = Object.freeze({
     sealPiece: 'UNREAD: read via advance, sealPiece',
     tileWritesByLevel: 'UNREAD: read via advance, tileWrites; a write reaches the escape only as the written `world` '
         + '(place: `withTileWrites` is hashed as its base plus its own tiles)',
+    // ⛓ fidelity WANDENEMYBODIES (`wandShotEnemyBodies`, OFF: never built): readers wandLavaTrapStateFor
+    // (applyWandShotToEnemyBody), wandEnemyBodiesAt (wandShotBlockerAt), stepWandLavaTrapsNow, freshVisitState — all in
+    // the shot step or the tick; members [advance, wandLavaTraps] — `wandShotStates`' reach.
+    wandLavaTrapStates: 'UNREAD: read via advance, wandLavaTraps',
 });
 
 /**

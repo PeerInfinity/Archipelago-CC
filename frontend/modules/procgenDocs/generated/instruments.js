@@ -143,8 +143,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 159,
-            "count": 211,
+            "browser": 160,
+            "count": 212,
             "id": "probe"
         },
         {
@@ -259,13 +259,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 541,
-        "browser": 230,
+        "blockStyle": 542,
+        "browser": 231,
         "cited": 297,
-        "files": 563,
+        "files": 564,
         "lineStyle": 22,
-        "withDocblock": 563,
-        "withFlags": 480
+        "withDocblock": 564,
+        "withFlags": 481
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -20241,6 +20241,49 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-wand-mobiles — ⛓⛓⛓ seedling-fidelity-wand D1: A WAND SHOT AND WHAT IT OPENS, ASKED OF THE GAME TICK BY SAMPLED TICK (`probe-seedling-darktrap-mobiles.mjs`'s shape, one class over).",
             "path": "scripts/procgen/probe-seedling-wand-mobiles.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-wandenemybodies.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-wandenemybodies — ⛓ SEEDLING FIDELITY WANDENEMYBODIES (wave 68): A WAND SHOT AT A TURRET, LAVATRAP, WALLFLYER, ICETRAP, SANDTRAP OR DRILL, ON THE GAME, TICK BY SAMPLED TICK, AGAINST THE MODEL WITH `wandShotEnemyBodies` ON.",
+            "path": "scripts/procgen/probe-seedling-wandenemybodies.mjs"
         },
         {
             "argvHelpers": [
