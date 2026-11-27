@@ -1197,10 +1197,10 @@
         "botDriverV2.js": 27,
         "director.js": 1,
         "lightsVerb.js": 5,
-        "solverBot.js": 173,
+        "solverBot.js": 178,
         "strikePolicy.js": 2
       },
-      "sites": 208,
+      "sites": 213,
       "seen": "both",
       "via": [
         "direct",
@@ -1234,10 +1234,10 @@
         "inventory": {
           "botDriverV2.js": 7,
           "lightsVerb.js": 3,
-          "solverBot.js": 61
+          "solverBot.js": 62
         },
         "inventorySlots": {
-          "solverBot.js": 26
+          "solverBot.js": 27
         },
         "keys": {
           "botDriverV2.js": 6,
@@ -1245,12 +1245,12 @@
         },
         "primary": {
           "botDriverV2.js": 1,
-          "solverBot.js": 29
+          "solverBot.js": 31
         },
         "primaryWeapon": {
           "botDriverV2.js": 3,
           "lightsVerb.js": 1,
-          "solverBot.js": 29
+          "solverBot.js": 30
         },
         "saveState": {
           "director.js": 1
@@ -1510,9 +1510,9 @@
         "botDriverV2.js": 3,
         "dangerMap.js": 13,
         "lightsVerb.js": 7,
-        "solverBot.js": 146
+        "solverBot.js": 150
       },
-      "sites": 169,
+      "sites": 173,
       "seen": "both",
       "via": [
         "direct",
@@ -7494,10 +7494,10 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 37,
+        "solverBot.js": 39,
         "spearArm.js": 1
       },
-      "sites": 38,
+      "sites": 40,
       "seen": "static",
       "via": [
         "import"
