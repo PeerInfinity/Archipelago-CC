@@ -7,13 +7,16 @@
 // its panel is not in the layout: opening Mystery Game from Quick Launch frames the page for the
 // loaded world (mysteryPanelUI.js).
 
-import { MysteryArchipelagoLogic, MYSTERY_EVENTS, caseRegionsOfWarehouse } from './mysteryArchipelagoLogic.js';
+import {
+  LIVE_PLAY_EVENTS, MysteryArchipelagoLogic, MYSTERY_EVENTS, SOURCE_MODULE, caseRegionsOfWarehouse,
+} from './mysteryArchipelagoLogic.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import eventBus from '../../app/core/eventBus.js';
+import { createMysteryPlaybackController } from './mysteryPlaybackController.js';
 import { MysteryPanelUI } from './mysteryPanelUI.js';
 import { DEFAULT_PAGE_URL } from './mysteryPage.js';
-import { MYSTERY_SUBSTRATE_ID, substrateRegistryEntry } from './mysterySubstrateLibrary.js';
+import { MYSTERY_SUBSTRATE_ID, setPlaybackController, substrateRegistryEntry } from './mysterySubstrateLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 // --- Module Info ---
@@ -76,6 +79,14 @@ export function activeRegionIdNow() {
   return centralRegistry.getPublicFunction?.('procgenPlayer', 'getActiveSubstrate')?.()?.regionId ?? null;
 }
 
+/** Loop mode, and the region the Loops queue is parked on for live play (null: none, or no Loops module). */
+export function livePlayNow() {
+  return {
+    loopMode: centralRegistry.getPublicFunction?.('loops', 'isLoopModeActive')?.() === true,
+    region: centralRegistry.getPublicFunction?.('loops', 'livePlayRegion')?.() ?? null,
+  };
+}
+
 export async function register(registrationApi) {
   registrationApi.registerPanelComponent('mysteryPanel', MysteryPanelUI);
   // The substrate entry (also registered when its library is imported; guarded both ways).
@@ -91,6 +102,8 @@ export async function register(registrationApi) {
 
   // Dispatcher: this module sends location checks upward
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
+  // …and, for the Playback Bot's controller, a move out of the office
+  registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
 
   registrationApi.registerEventBusPublisher(MYSTERY_EVENTS.STATE);
   registrationApi.registerEventBusPublisher(MYSTERY_EVENTS.REFUSED);
@@ -105,6 +118,7 @@ export async function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent(moduleId, 'stateManager:snapshotUpdated');
   registrationApi.registerEventBusSubscriberIntent(moduleId, 'settings:changed');
   registrationApi.registerEventBusSubscriberIntent(moduleId, 'procgen:activeSubstrateChanged');
+  for (const event of LIVE_PLAY_EVENTS) registrationApi.registerEventBusSubscriberIntent(moduleId, event);
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
@@ -117,8 +131,15 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     getConnection: connectionNow,
     getCaseRegions: caseRegionsNow,
     getActiveRegionId: activeRegionIdNow,
+    getLivePlay: livePlayNow,
     log,
   });
   logicInstance.initialize();
+  setPlaybackController(createMysteryPlaybackController({
+    dispatcher: initializationApi.getDispatcher(),
+    getCaseRegions: caseRegionsNow,
+    getActiveRegionId: activeRegionIdNow,
+    sourceModule: SOURCE_MODULE,
+  }));
   log('info', 'Bridge initialized.');
 }

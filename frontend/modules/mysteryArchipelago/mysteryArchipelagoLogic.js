@@ -19,7 +19,9 @@
 // mysterySubstrateLibrary.js). The map is then that region's payload (`ap_locations`, `papers`),
 // and the state carries two more fields: `lock`, the world's rule for what is locked while the
 // player is not in the case's region (`actions`, `new-reading`, `everything`), and `inOffice`,
-// whether the player is in it now. Both are absent for a world whose case is its slot's (one
+// whether the player is in it now AND may play it by hand: in loop mode that is only while the
+// Loops queue is parked for live play on the region (the strict action gate would refuse a check
+// at any other time, and the page must not offer what will not happen). Both are absent for a world whose case is its slot's (one
 // region, always "in the office"). A question solved away from the region is not checked.
 //
 // `mystery:state` always carries the WHOLE set of papers held and questions checked, so the page
@@ -47,6 +49,13 @@ export const MYSTERY_REFUSALS = Object.freeze({
 });
 
 export const SOURCE_MODULE = 'mysteryArchipelago';
+
+/** The events after which the answer of `getLivePlay` may have changed (index.js declares the intents). */
+export const LIVE_PLAY_EVENTS = Object.freeze([
+  'gameState:loopModeChanged', 'loopState:manualEntered', 'loopState:manualResumed', 'loopState:pauseStateChanged',
+  'loopState:queuePausedUntilReset', 'loopState:loopReset', 'loopState:queueCompleted', 'loopState:newActionStarted',
+  'loopState:processingStopped',
+]);
 
 const isObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 
@@ -144,10 +153,20 @@ export function gameKeyOf(block, connection) {
 }
 
 /**
+ * Is the player in the case's region and able to play it by hand? `livePlay` is the Loops module's
+ * word (`{loopMode, region}`: loop mode on, and the region the queue is parked on for live play, or
+ * null); with loop mode off, or no Loops module, being in the region is enough.
+ */
+export function inOfficeNow(block, activeRegionId, livePlay = null) {
+  if (!block.regionId || activeRegionId !== block.regionId) return false;
+  return !livePlay?.loopMode || livePlay.region === block.regionId;
+}
+
+/**
  * The whole `mystery:state` payload for a block, a state snapshot and the connection.
  * Both lists are sorted, so two equal states are equal as JSON.
  */
-export function mysteryStateOf(block, snapshot, connection, activeRegionId = null) {
+export function mysteryStateOf(block, snapshot, connection, activeRegionId = null, livePlay = null) {
   const inventory = isObject(snapshot?.inventory) ? snapshot.inventory : {};
   const papers = [];
   for (const [itemName, paperId] of Object.entries(block.paperOfItem)) {
@@ -167,7 +186,7 @@ export function mysteryStateOf(block, snapshot, connection, activeRegionId = nul
     solved: solved.sort(),
     // Only for a case that is a region of a generated world.
     ...(block.lock ? { lock: block.lock } : {}),
-    ...(block.regionId ? { inOffice: activeRegionId === block.regionId } : {}),
+    ...(block.regionId ? { inOffice: inOfficeNow(block, activeRegionId, livePlay) } : {}),
   };
 }
 
@@ -184,11 +203,13 @@ export class MysteryArchipelagoLogic {
    * @param {() => Array<{regionId: string, payload: Object}>} [deps.getCaseRegions] - the loaded world's
    *   `mystery` regions (none for a world that is not generated)
    * @param {() => string|null} [deps.getActiveRegionId] - the region the player is in
+   * @param {() => {loopMode: boolean, region: string|null}|null} [deps.getLivePlay] - loop mode, and the
+   *   region the Loops queue is parked on for live play (see `inOfficeNow`)
    * @param {(level: string, message: string, ...data: any[]) => void} [deps.log]
    */
   constructor({
     eventBus, dispatcher, getStaticData, getSnapshot, getConnection,
-    getCaseRegions = () => [], getActiveRegionId = () => null, log = () => {},
+    getCaseRegions = () => [], getActiveRegionId = () => null, getLivePlay = () => null, log = () => {},
   }) {
     this._eventBus = eventBus;
     this._dispatcher = dispatcher;
@@ -198,6 +219,7 @@ export class MysteryArchipelagoLogic {
     this._getConnection = getConnection;
     this._getCaseRegions = getCaseRegions;
     this._getActiveRegionId = getActiveRegionId;
+    this._getLivePlay = getLivePlay;
     // The story the page last asked about: with several cases in one world, the one it is answered about.
     this._pageStory = undefined;
     // The page has asked at least once; until then nothing is sent (no page, nobody to tell).
@@ -219,6 +241,8 @@ export class MysteryArchipelagoLogic {
     sub('stateManager:snapshotUpdated', () => this.sendStateIfChanged());
     // The player moved: `inOffice` may have changed.
     sub('procgen:activeSubstrateChanged', () => this.sendStateIfChanged());
+    // Loop mode, or the queue's park, changed: so may `inOffice`.
+    for (const event of LIVE_PLAY_EVENTS) sub(event, () => this.sendStateIfChanged());
   }
 
   /** The case to answer about, for the story the page asked (or last asked). */
@@ -232,7 +256,7 @@ export class MysteryArchipelagoLogic {
   }
 
   _state(block) {
-    return mysteryStateOf(block, this._getSnapshot(), this._getConnection(), this._getActiveRegionId());
+    return mysteryStateOf(block, this._getSnapshot(), this._getConnection(), this._getActiveRegionId(), this._getLivePlay());
   }
 
   /** Why the page's `{story, version}` is refused, or null. A missing `version` is not checked. */
@@ -290,8 +314,8 @@ export class MysteryArchipelagoLogic {
     }
     // A case that is a region is answered only in it, under every lock. The page sends the
     // question again while the state lacks it, so it is checked once the player is back.
-    if (block.regionId && this._getActiveRegionId() !== block.regionId) {
-      this._log('warn', `question "${data?.questionId}" solved away from region "${block.regionId}": not checked`);
+    if (block.regionId && !inOfficeNow(block, this._getActiveRegionId(), this._getLivePlay())) {
+      this._log('warn', `question "${data?.questionId}" solved while region "${block.regionId}" is not played by hand: not checked`);
       return;
     }
     // Not remembered here on purpose: the page sends a solved question again when `mystery:state`

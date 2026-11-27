@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  LIVE_PLAY_EVENTS,
   MYSTERY_EVENTS, MYSTERY_REFUSALS, MysteryArchipelagoLogic, SOURCE_MODULE, caseRegionsOfWarehouse, currentMysteryBlock, gameKeyOf,
   mysteryBlockOf,
   mysteryBlockOfRegion, mysteryStateOf,
@@ -28,7 +29,7 @@ const staticData = (over = {}) => ({
 function setup({ data = staticData(), snapshot = { inventory: {}, checkedLocations: [] } } = {}) {
   const env = {
     data, snapshot, connection: { connected: false, slot: null, team: null }, published: [], dispatched: [], handlers: new Map(),
-    caseRegions: [], activeRegionId: null,
+    caseRegions: [], activeRegionId: null, livePlay: null,
   };
   const eventBus = {
     subscribe: (event, handler) => env.handlers.set(event, handler),
@@ -37,7 +38,7 @@ function setup({ data = staticData(), snapshot = { inventory: {}, checkedLocatio
   const dispatcher = { publish: (event, payload, direction) => env.dispatched.push({ event, payload, direction }) };
   const logic = new MysteryArchipelagoLogic({
     eventBus, dispatcher, getStaticData: () => env.data, getSnapshot: () => env.snapshot, getConnection: () => env.connection,
-    getCaseRegions: () => env.caseRegions, getActiveRegionId: () => env.activeRegionId,
+    getCaseRegions: () => env.caseRegions, getActiveRegionId: () => env.activeRegionId, getLivePlay: () => env.livePlay,
   });
   logic.initialize();
   env.fire = (event, payload) => env.handlers.get(event)(payload);
@@ -290,6 +291,30 @@ describe('a case that is a region of a generated world', () => {
       env.fire(MYSTERY_EVENTS.QUESTION_SOLVED, solved);
       expect(env.dispatched.map((d) => d.payload.locationName), lock).toEqual(['Question 02']);
     }
+  });
+
+  it('in loop mode the office counts only while the queue is parked on it for live play', () => {
+    const env = inWorld();
+    env.activeRegionId = 'The case';
+    env.livePlay = { loopMode: true, region: null };
+    env.fire(MYSTERY_EVENTS.REQUEST_STATE, request);
+    const solved = { story: 'custom-house-fire', questionId: 'q.door' };
+    env.fire(MYSTERY_EVENTS.QUESTION_SOLVED, solved);
+    expect(env.dispatched).toEqual([]);
+    env.livePlay = { loopMode: true, region: 'The street' };
+    env.fire('loopState:manualEntered');
+    env.livePlay = { loopMode: true, region: 'The case' };
+    env.fire('loopState:manualEntered');
+    env.fire(MYSTERY_EVENTS.QUESTION_SOLVED, solved);
+    env.livePlay = { loopMode: false, region: null };
+    env.fire('gameState:loopModeChanged');
+    expect(env.states().map((s) => s.inOffice)).toEqual([false, true]);
+    expect(env.dispatched.map((d) => d.payload.locationName)).toEqual(['Question 02']);
+  });
+
+  it('every live-play event is listened to', () => {
+    const env = inWorld();
+    for (const event of LIVE_PLAY_EVENTS) expect(env.handlers.has(event), event).toBe(true);
   });
 
   it('papers and solved are read through the region\'s maps', () => {

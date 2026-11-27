@@ -24,7 +24,9 @@ A generated world can hold the case as one region, its office, beside other regi
 - The world says what else is locked while you are elsewhere: your actions on the case (linking, trust), or also reading that is new, or the whole game. Reading what you have is never locked by the first of these.
 - Papers can be anywhere in that world, and you may receive one while you are away from the office.
 
-The game's page does not yet lock anything itself; today only answering is held back, by this app.
+While you are away from the office the game's page greys what is locked and says so in a line at its top. Under the rule that also locks new reading, a paper you have not begun stays shut until you are back.
+
+In loop mode the office counts only while the Loops queue is parked on it for you to play by hand. The Playback Bot can play a case's region: it answers each question through this app once the papers the question needs are held, without working the page.
 
 ## Setting
 

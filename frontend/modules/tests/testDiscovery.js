@@ -79,6 +79,7 @@ export const TEST_CASE_FILES = [
   './testCases/storagePanelTests.js',
   './testCases/ruleConverterTests.js',
   './testCases/mysteryBridgeTests.js',
+  './testCases/mysteryPlaybackBotTests.js',
   './testCases/documentLibraryTests.js',
   // ⛓ lab-apworld-door-map: LAST on purpose. Its play rows leave a Flash game running (the held set), and a row
   // registered after them inherited that panel (CI 44950948937: seedling-js-runtime-generated-room). Last in the list
