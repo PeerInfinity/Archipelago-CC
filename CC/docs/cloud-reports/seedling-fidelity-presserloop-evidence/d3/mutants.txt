@@ -1,0 +1,51 @@
+== M1 trueLoops ignores flip-0 ButtonRooms: 17 failed | 44 passed (61)
+   red: PRESSERLOOP — the ON replay against the game stream (d3/witness-p4g.json) > br0-br0: ON is the game's stream at 0 px, and stops where the game stops
+   red: PRESSERLOOP — the ON replay against the game stream (d3/witness-p4g.json) > br0-btn: ON is the game's stream at 0 px, and stops where the game stops
+   red: PRESSERLOOP — the ON replay against the game stream (d3/witness-p4g.json) > br0-rope: ON is the game's stream at 0 px, and stops where the game stops
+   red: PRESSERLOOP — the ON replay against the game stream (d3/witness-p4g.json) > btn-br0-boot: ON is the game's stream at 0 px, and stops where the game stops
+   red: PRESSERLOOP — the ON replay against the game stream (d3/witness-p4g.json) > btn-br0: ON is the game's stream at 0 px, and stops where the game stops
+   red: PRESSERLOOP — the error class > PresserRecursionHang carries the hang
+   red: PRESSERLOOP — the model-only publishes (unwitnessed timing) > a rope pulled into a recursing group: OFF as vanilla, ON refuses the tick after the pull
+   red: PRESSERLOOP — the model-only publishes (unwitnessed timing) > the wand's tset-0 sweep into a recursing group: OFF as vanilla, ON refuses the next tick
+   red: PRESSERLOOP — the recursion census (presserRecursionGroups) > a ButtonRoom pressed at boot publishes at the build
+   red: PRESSERLOOP — the recursion census (presserRecursionGroups) > a flip-0 ButtonRoom loops a true with any pass-through or another flip-0
+   red: PRESSERLOOP — the recursion census (presserRecursionGroups) > a group that loops a true only: a flip-1 press (a false) does not hang it
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > br0-br0: OFF plays the walk out; ON gives the measured press
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > br0-btn: OFF plays the walk out; ON gives the measured press
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > br0-rope: OFF plays the walk out; ON gives the measured press
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > btn-br0-boot: OFF plays the walk out; ON gives the measured build
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > btn-br0: OFF plays the walk out; ON gives the measured press
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > the press hang is the frame the on-walk presser is first under the box
+== M2 no first-frame refusal: 7 failed | 54 passed (61)
+   red: PRESSERLOOP — the ON replay against the game stream (d3/witness-p4g.json) > btn-btn: ON is the game's stream at 0 px, and stops where the game stops
+   red: PRESSERLOOP — the ON replay against the game stream (d3/witness-p4g.json) > btn-rope: ON is the game's stream at 0 px, and stops where the game stops
+   red: PRESSERLOOP — the error class > PresserRecursionHang carries the hang
+   red: PRESSERLOOP — the hand editor (watchEdit.ENTITY_ROSTER, read only) > two roster buttons share group 0: OFF certifies the walk, ON refuses the room by name
+   red: PRESSERLOOP — the recursion census (presserRecursionGroups) > two pass-throughs with a Button recurse on the first frame
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > btn-btn: OFF plays the walk out; ON gives the measured firstFrame
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > btn-rope: OFF plays the walk out; ON gives the measured firstFrame
+== M3 the hang step keeps stepping (marks, no return): 4 failed | 57 passed (61)
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > br0-br0: OFF plays the walk out; ON gives the measured press
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > br0-btn: OFF plays the walk out; ON gives the measured press
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > br0-rope: OFF plays the walk out; ON gives the measured press
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > br1-rope-rope: OFF plays the walk out; ON gives the measured press
+== M4 advance never refuses: 14 failed | 47 passed (61)
+   red: PRESSERLOOP — the ON replay against the game stream (d3/witness-p4g.json) > br0-br0: ON is the game's stream at 0 px, and stops where the game stops
+   red: PRESSERLOOP — the ON replay against the game stream (d3/witness-p4g.json) > br0-btn: ON is the game's stream at 0 px, and stops where the game stops
+   red: PRESSERLOOP — the ON replay against the game stream (d3/witness-p4g.json) > br0-rope: ON is the game's stream at 0 px, and stops where the game stops
+   red: PRESSERLOOP — the ON replay against the game stream (d3/witness-p4g.json) > br1-rope-rope: ON is the game's stream at 0 px, and stops where the game stops
+   red: PRESSERLOOP — the ON replay against the game stream (d3/witness-p4g.json) > btn-br0: ON is the game's stream at 0 px, and stops where the game stops
+   red: PRESSERLOOP — the error class > PresserRecursionHang carries the hang
+   red: PRESSERLOOP — the model-only publishes (unwitnessed timing) > a rope pulled into a recursing group: OFF as vanilla, ON refuses the tick after the pull
+   red: PRESSERLOOP — the model-only publishes (unwitnessed timing) > the wand's tset-0 sweep into a recursing group: OFF as vanilla, ON refuses the next tick
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > br0-br0: OFF plays the walk out; ON gives the measured press
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > br0-btn: OFF plays the walk out; ON gives the measured press
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > br0-rope: OFF plays the walk out; ON gives the measured press
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > br1-rope-rope: OFF plays the walk out; ON gives the measured press
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > btn-br0: OFF plays the walk out; ON gives the measured press
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > the press hang is the frame the on-walk presser is first under the box
+== M5 a flip-1 press publishes true: 2 failed | 59 passed (61)
+   red: PRESSERLOOP — the ON replay against the game stream (d3/witness-p4g.json) > br1-btn-br0: ON is the game's stream at 0 px, and stops where the game stops
+   red: PRESSERLOOP — the staged shapes (the game witness rooms) > br1-btn-br0: OFF plays the walk out; ON gives the measured none
+restored; git diff --stat of the mutated files:
+(none vs index)

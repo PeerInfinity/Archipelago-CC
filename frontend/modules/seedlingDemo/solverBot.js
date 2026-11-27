@@ -8307,6 +8307,43 @@ export function withDashCertSight(enabled, fn) {
 let dashCertSightDepth = 0;
 
 /**
+ * ⛓ hammer-phase PKSW-HITS — **A STAND-TAILED DASH IS CERTIFIED WITH THE SWING'S LINE OF SIGHT TOO**
+ * (`DASH_STAND_SIGHT`, OFF; `SEEDLING_DASH_STAND_SIGHT=1` / `withDashStandSight(enabled, fn)`).
+ *
+ * `DASH_CERT_SIGHT` gives the run's own line test (`slash()`'s, masks included) to the previews `spinnerDashWhole`
+ * makes. A corridor with a `stand` tail (a hold, a keylock, the collect approach) does not reach `spinnerDashWhole`
+ * while `DASH_STAND_WHOLE` is OFF: `walkTo` plans it window by window with `planSwordDash`, whose previews ask NO line,
+ * so a planned swing lands on a chaser the run's swing cannot reach. MEASURED (seed 1, survey step 149 with
+ * `PRESS_KILL_START_WAIT`): the walk to the Totem's stance at t1883 is certified clean; its preview's swing at t1897
+ * knocks `chaser:bob@288,80` back one tick before the run's does (t1900 against t1901), the two bodies part, the run's
+ * swing at t1923 misses where the preview's lands, and the drive is hit at t1930 (2149 t, 1 h). The same preview asked
+ * with the line matches the run tick for tick, and its probe names that hit. ON, the stand-tailed `planSwordDash` asks
+ * the line as `spinnerDashWhole` does (the same depth counter, so `DASH_CERT_SIGHT.counts.refused` hears it); the
+ * chain planned is the chain that certifies against the run's swing: step 149 solves 2128 t, 0 h. Nothing else moves:
+ * a corridor without a tail, and every preview outside the dash certificate, read exactly as OFF. Worker thread.
+ */
+export const DASH_STAND_SIGHT = { enabled: globalThis.process?.env?.SEEDLING_DASH_STAND_SIGHT === '1',
+    counts: { asks: 0 } };
+export const DASH_STAND_SIGHT_DEFAULT = false;
+
+/** Run `fn` with `DASH_STAND_SIGHT` set to `enabled`, restoring the previous value (also on a throw). */
+export function withDashStandSight(enabled, fn) {
+    return withSwitch(DASH_STAND_SIGHT, enabled, fn);
+}
+
+/** `fn()` — under `DASH_STAND_SIGHT` with a `stand` tail, inside the dash certificate's line-of-sight depth. */
+function standDashSighted(stand, fn) {
+    if (!DASH_STAND_SIGHT.enabled || !stand) return fn();
+    DASH_STAND_SIGHT.counts.asks += 1;
+    dashCertSightDepth += 1;
+    try {
+        return fn();
+    } finally {
+        dashCertSightDepth -= 1;
+    }
+}
+
+/**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE L28-BOBSOLDIER — **THE CHASER ARM'S STANCE SCAN SEES THE SWING'S LINE OF SIGHT**
  * (`KILL_STANCE_SIGHT`, ON by default since the L28 flip; `SEEDLING_KILL_STANCE_SIGHT=0` opts out).
  *
@@ -11811,8 +11848,17 @@ function execHold(run, perTick, resolved, ctx) {
         }
     }
     // ⛓ seedling-fidelity-movingwait D2: `null` unless MOVING_WAIT is ON and the still wait prices a bomb.
-    const pace = pacedHoldPlan(run, resolved, ctx.what);
-    if (pace === null) lobberHoldRefusal(run, resolved.hold.ticks, ctx.what);
+    let pace;
+    try {
+        pace = pacedHoldPlan(run, resolved, ctx.what);
+        if (pace === null) lobberHoldRefusal(run, resolved.hold.ticks, ctx.what);
+    } catch (e) {
+        // ⛓ hammer-phase LATCHED-HOLD (`LATCHED_HOLD_MOVE`, OFF): only where the still and paced waits both refuse
+        const moved = LATCHED_HOLD_MOVE.enabled && e instanceof SolverRefusal
+            ? latchedHoldMove(run, perTick, resolved, ctx, e) : null;
+        if (moved === null) throw e;
+        return moved;
+    }
     if (resolved.latched === true && resolved.stance === null) {
         return runLatchedWait(run, perTick, resolved, ctx.what, pace);
     }
@@ -12129,6 +12175,243 @@ function pacedHoldPlan(run, resolved, what) {
         + `the wait may pace, and no pacing is clean (MOVING_WAIT, ${out.tried.length} tried): `
         + `${out.tried.slice(0, 4).join('; ')}${out.tried.length > 4 ? ' …' : ''}.`,
     { obstacle: { kind: 'danger', id: lobber } });
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE LATCHED-HOLD — **A HOLD WHOSE LATCH HAS FIRED WAITS WHERE NO BOMB LANDS**
+ * (`LATCHED_HOLD_MOVE`, ON since the LHM flip — `SEEDLING_LATCHED_HOLD_MOVE=0` opts out / `withLatchedHoldMove(enabled, fn)`; a behaviour switch).
+ *
+ * A `room = -1` ButtonRoom's setter only ever writes `true` (*"Can't be reset to false!!"*, `ButtonRoom.as:67-98`), and
+ * it sets every responder of its group then; a `Lock`'s fade runs from `activate`, whoever stands where. So once the
+ * live run reports the presser's group LATCHED (`latchedGroups`), standing on the presser keeps nothing open: the rest
+ * of the hold is a wait that may be spent anywhere in the room. OFF, a presser hold stands on its stance (or paces it,
+ * `MOVING_WAIT`, each cycle back on the stance bit-for-bit); where a lobber's bomb lands on that stance and no pacing is
+ * clean, the hold refuses (`lobberHoldRefusal` / `pacedHoldPlan`). MEASURED (the whole-game walk's captured request
+ * A1 32:12, L40's Totem Part from the south): the stance is a 16 px pocket 36 px from the lobber, every pacing meets a
+ * wall, the blast or a spinner, and the group is already latched when the hold begins (the stance walk's arrival).
+ *
+ * ON, asked ONLY where OFF refuses one of those two refusals, for a presser hold with an observed `until` whose group the
+ * live run reports latched:
+ *   1. the CELLS: free, plannable cells on a `TILE_SIZE` lattice round the player (within `radius`), none touching
+ *      another presser, whose previewed walk and stand (`latchedHoldPreview`, the run's own `previewStepper` and walk
+ *      forecasts, no fork) meet no bomb and arrive inside the hold's bound;
+ *   2. the ORDER: the shortest planned route on from the cell to the caller's aim (`ctx.aim`, FADE_MOVE's) with the
+ *      group's responders discharged — the user's FADE-MOVE ruling, wait towards where the walk goes next (MEASURED on
+ *      A1 32:12: the nearest hitless cell, behind a spinner shaft from the route, leaves the goal walk a bomb hit at
+ *      t1690; the route-nearest cells solve hitless); then nearest the player;
+ *   3. the CERT: in that order, at most `maxForks` cells are played on the segment's FORK — the walk (`forkWalkTo`) then
+ *      the empty-input stand until the hold's own `until`, inside the bound — and the first with no player hit or
+ *      death, no level crossing, no group newly latched on the way (a side effect the plan never chose) and an open
+ *      inside the bound is kept. Each fork replays the segment, so the pass's budget pays for it: MEASURED on the
+ *      committed leg376 / leg371 fixtures, 4–12 unscreened forks tripped the anytime deadline of solves OFF finishes.
+ * The kept keys are replayed on the live run, which must agree (no new hit, `until` true), or the executor refuses by
+ * name. Nothing kept: OFF's refusal stands, unchanged. No level, coordinate or entity id is read.
+ * `LATCHED_HOLD_MOVE_COUNTS` records each asking (measurement; no decision reads it).
+ */
+// ⚖ ON in the LHM flip (⚖ the user 2026-11-26: "4 OFF + flip LHM ON (Recommended)"): `SEEDLING_LATCHED_HOLD_MOVE=0` opts out.
+export const LATCHED_HOLD_MOVE = {
+    enabled: globalThis.process?.env?.SEEDLING_LATCHED_HOLD_MOVE !== '0',
+    /** The cells asked: within this many px of the player, centre to centre. */
+    radius: 96,
+    /** At most this many forks per asking (each replays the segment: the pass's budget pays for every one). */
+    maxForks: 2,
+};
+export const LATCHED_HOLD_MOVE_DEFAULT = true;
+export const LATCHED_HOLD_MOVE_COUNTS = { asked: 0, moves: [], declined: [] };
+
+/** Clear `LATCHED_HOLD_MOVE_COUNTS` (an instrument; nothing that decides reads it). */
+export function resetLatchedHoldMoveCounts() {
+    LATCHED_HOLD_MOVE_COUNTS.asked = 0;
+    LATCHED_HOLD_MOVE_COUNTS.moves = [];
+    LATCHED_HOLD_MOVE_COUNTS.declined = [];
+}
+
+/** Run `fn` with `LATCHED_HOLD_MOVE` set to `enabled`, restoring the previous value. */
+export function withLatchedHoldMove(enabled, fn) {
+    return withSwitch(LATCHED_HOLD_MOVE, enabled, fn);
+}
+
+/**
+ * The cells `latchedHoldMove` asks, in its order: `{x, y, d, route}` — free, not on another presser, planned from the
+ * player in the live world. `route` is the planned length (px) on from the cell to `aim` with the group's own
+ * responders discharged (`bagWithDischarged`: the world the wait ends in); the shortest route first (no aim or no plan:
+ * last), then nearest the player, then `y`, then `x`.
+ */
+function latchedHoldCells(run, presser, opts, aim, contacts, standTo, bound) {
+    const geo = run.liveGeometryOpts();
+    const others = (run.world.pressers ?? []).filter((p) => p !== presser);
+    const x0 = run.state.x;
+    const y0 = run.state.y;
+    const n = Math.floor(LATCHED_HOLD_MOVE.radius / TILE_SIZE);
+    const out = [];
+    for (let j = -n; j <= n; j += 1) {
+        for (let i = -n; i <= n; i += 1) {
+            const p = { x: Math.round(x0 + i * TILE_SIZE), y: Math.round(y0 + j * TILE_SIZE) };
+            const d = Math.hypot(p.x - x0, p.y - y0);
+            if (d < TILE_SIZE / 2 || d > LATCHED_HOLD_MOVE.radius) continue;
+            const box = playerBoxAt(p.x, p.y);
+            if (run.world.collidesSolid(box, geo)) continue;
+            if (plannerObstacleAt(run.world, p.x, p.y, null, opts) !== null) continue;
+            if (others.some((q) => q.rect && rectsOverlap(box, q.rect))) continue;
+            const wps = planWaypointsOrNull(run.world, run.state, p, null, opts);
+            if (wps === null) continue;
+            if (latchedHoldPreview(run, wps, p, standTo, bound, others) !== null) continue;
+            out.push({ ...p, d });
+        }
+    }
+    const opened = (run.world.activators ?? []).filter((a) => a.t === presser.t)
+        .map((a) => ({ kind: 'activator', id: a.id }));
+    const openOpts = aim ? solverPlanOpts(run, contacts, { liveBag: bagWithDischarged(run, run.liveGeometryOpts(), opened) })
+        : null;
+    for (const c of out) c.route = aim ? latchedHoldRoute(run.world, { x: c.x, y: c.y }, aim, openOpts) : Infinity;
+    const rank = (c) => (Number.isFinite(c.route) ? c.route : Infinity);
+    return out.sort((a, b) => rank(a) - rank(b) || a.d - b.d || a.y - b.y || a.x - b.x);
+}
+
+/**
+ * `LATCHED_HOLD_MOVE`'s decision and drive (see the switch). `refusal` is OFF's; `null` = it stands (no tick spent),
+ * else the hold's record, the player where the accepted cell's stand left it.
+ */
+function latchedHoldMove(run, perTick, resolved, ctx, refusal) {
+    const hold = resolved.hold;
+    if (refusal?.obstacle?.kind !== 'danger' || !resolved.stance || !resolved.target || !hold?.until) return null;
+    if (hold.latched !== true && resolved.latched !== true) return null;
+    const presser = (run.world.pressers ?? []).find((p) => p.x === resolved.target.x && p.y === resolved.target.y);
+    if (!presser) return null;
+    LATCHED_HOLD_MOVE_COUNTS.asked += 1;
+    const row = { level: run.level, t: perTick.length, presser: `${presser.tag}@${presser.x},${presser.y}`,
+        group: presser.t, what: String(ctx.what ?? '').slice(0, 160) };
+    const decline = (why) => {
+        LATCHED_HOLD_MOVE_COUNTS.declined.push({ ...row, why: String(why).slice(0, 1200) });
+        return null;
+    };
+    const latchedNow = () => [...(run.entities('latchedGroups') ?? [])].sort().join(',');
+    if (!(run.entities('latchedGroups') ?? new Set()).has(presser.t)) return decline('the group is not latched yet');
+    if (typeof ctx?.fork !== 'function') return decline('no fork (the segment has no `forkRun`)');
+    if (hold.until.test(run)) return decline('already open');
+    const level = run.level;
+    const bound = hold.ticks;
+    const hits0 = (run.ledger('playerHits') ?? []).length;
+    const deaths0 = (run.ledger('playerDeaths') ?? []).length;
+    const latched0 = latchedNow();
+    const contacts = new Set([...senseContacts(run)]);
+    const opts = solverPlanOpts(run, contacts);
+    const open = (r) => hold.until.test(r);
+    const tried = [];
+    let forks = 0;
+    let best = null;
+    // the preview's stand: to the fade's own count (the bound less `HOLD_SLACK`; the latch has already fired)
+    const standTo = Math.max(1, bound - HOLD_SLACK);
+    for (const c of latchedHoldCells(run, presser, opts, ctx.aim ?? null, contacts, standTo, bound)) {
+        if (forks >= LATCHED_HOLD_MOVE.maxForks) { tried.push(`the ${LATCHED_HOLD_MOVE.maxForks}-fork bound`); break; }
+        const f = ctx.fork();
+        if (!f) { tried.push('the fork tripped the deadline'); break; }
+        forks += 1;
+        const keys = [];
+        let w;
+        let st;
+        try {
+            w = forkWalkTo(f, keys, c, opts, null, hits0, deaths0);
+            st = w.why || keys.length > bound ? null : fadeForkStand(f, keys, open, bound - keys.length + 1, hits0, deaths0);
+        } catch (e) {
+            // ⛔ the run's own refusal of a bomb blast on an "Enemy" body (`drainBombBlastsNow`), as `runPace` names it
+            if (!/is not staged on a bomb's blast/.test(String(e?.message))) throw e;
+            tried.push(`(${c.x},${c.y}): ${String(e.message).slice(0, 160)}`);
+            continue;
+        }
+        if (w.why) { tried.push(`(${c.x},${c.y}): ${w.why}`); continue; }
+        if (keys.length > bound) { tried.push(`(${c.x},${c.y}): the walk (${keys.length} t) outlasts the bound`); continue; }
+        if (!st.opened) { tried.push(`(${c.x},${c.y}): ${st.why}`); continue; }
+        if (f.level !== level) { tried.push(`(${c.x},${c.y}): left level ${level}`); continue; }
+        const latchedF = [...(f.entities('latchedGroups') ?? [])].sort().join(',');
+        if (latchedF !== latched0) { tried.push(`(${c.x},${c.y}): latched [${latchedF}], not [${latched0}]`); continue; }
+        best = { c, keys, stand: st.ticks, route: c.route };
+        break;
+    }
+    if (best === null) return decline(`no hitless wait (${forks} fork(s)): ${tried.slice(0, 16).join(' | ')}`);
+    const { c, keys } = best;
+    // ── the live replay, key for key; `until` read only ──
+    const from = perTick.length;
+    for (const k of keys) {
+        perTick.push(k);
+        const { transition } = run.advance(k);
+        if (transition) fail(`${ctx.what}: LATCHED_HOLD_MOVE's replay crossed to level ${transition.to_level}`);
+    }
+    if ((run.ledger('playerHits') ?? []).length !== hits0 || !open(run)) {
+        throw new SolverRefusal(`${ctx.what}: LATCHED_HOLD_MOVE's wait at (${c.x},${c.y}) (${keys.length} t) did not `
+            + `replay on the live run — ${open(run) ? 'a player hit' : hold.until.why} (the fork is not this run).`,
+        { obstacle: { kind: 'solid', id: row.presser } });
+    }
+    const openNow = run.entities('openActivators');
+    const openBefore = ctx.before?.open ?? null;
+    const moved = { target: { x: c.x, y: c.y }, from, ticks: keys.length, walk: keys.length - best.stand, forks,
+        route: Number.isFinite(best.route) ? Math.round(best.route) : null,
+        refused: String(refusal.message).slice(0, 240) };
+    LATCHED_HOLD_MOVE_COUNTS.moves.push({ ...row, ...moved });
+    return {
+        presser: { tag: presser.tag, x: presser.x, y: presser.y, t: presser.t },
+        latched: true, ticks: bound, heldFor: keys.length, stoppedOn: hold.until.why, at: { ...run.state },
+        opened: (run.world.activators ?? []).filter((a) => a.t === presser.t && openNow.has(a.id)
+            && (openBefore === null || !openBefore.has(a.id))).map((a) => a.id),
+        armed: [], traps: [], volleys: 0, wrote: [], latchedMove: moved,
+    };
+}
+
+/**
+ * The screen before a fork: the walk to `to` along `wps` and then the stand, on the run's own `previewStepper`, until
+ * `standTo` ticks in all, every sample priced as `planPacedWait` prices one (`dangerDuringTransit` against the walk
+ * forecasts stepped with the previewed player). `null` = clean; else why (a danger, another presser touched, a fall
+ * or crossing, a previewed death, or a walk that does not arrive inside `standTo`). The preview freezes the world (the
+ * fading lock is still a wall to it), which is the world the wait walks in.
+ */
+function latchedHoldPreview(run, wps, to, standTo, bound, others) {
+    const step = previewOrDeath(run.previewStepper());
+    const NONE = new Set();
+    const t0 = run.ticksCompleted;
+    const arrowsF = run.arrowForecast?.() ?? null;
+    const chasersF = run.chaserForecast?.() ?? null;
+    const spitsF = run.spitForecast?.() ?? null;
+    const grenF = run.grenadeForecast?.() ?? null;
+    const aims = [...wps.map((w) => ({ x: w.x, y: w.y })), { x: to.x, y: to.y }];
+    let st = { ...run.state };
+    let i = 0;
+    for (let k = 0; k < bound; k += 1) {
+        while (i < aims.length - 1 && hasArrived(st, aims[i], DEFAULT_TOLERANCE)) i += 1;
+        const arrived = i === aims.length - 1 && hasArrived(st, aims[i], DEFAULT_TOLERANCE);
+        if (arrived && k >= standTo) return null;
+        const held = arrived ? NONE : chooseHeld(st, aims[i], DEFAULT_TOLERANCE);
+        const arrows = arrowsF ? arrowsF.step(st) : null;
+        const bodies = chasersF ? chasersF.step(st, { slashing: false }) : null;
+        const spits = spitsF ? spitsF.step(st, { slashing: false }) : null;
+        const grenades = grenF ? grenF.step(st) : null;
+        const box = playerBoxAt(st.x, st.y);
+        // only the danger the still wait refused on (the lobber's bombs): a spinner or a chaser is the fork's to judge
+        // (measured on A1 32:12: the preview prices `spinner@192,128` on every walk out of the pocket, and the forks
+        // walk the same cells hitless)
+        const d = dangerDuringTransit(run, t0 + k + 1, box, arrows, bodies, spits, grenades);
+        const bomb = d.danger ? d.sources.find((src) => src.kind === 'bomb') : null;
+        if (bomb) return `${bomb.kind}:${bomb.id} at previewed tick ${k + 1}`;
+        if (others.some((p) => p.rect && rectsOverlap(box, p.rect))) return `touches another presser at tick ${k + 1}`;
+        const next = step(st, held);
+        if (next === null) return `dies at previewed tick ${k + 1}`;
+        st = next;
+        if (st.transition || st.fall) return `leaves the floor at previewed tick ${k + 1}`;
+    }
+    return i === aims.length - 1 && hasArrived(st, aims[i], DEFAULT_TOLERANCE) ? null
+        : `the walk does not arrive inside the bound (${bound} tick(s))`;
+}
+
+/** The planned route length (px) from `from` to `aim` in `world` under `opts`, or `Infinity` (no plan). */
+function latchedHoldRoute(world, from, aim, opts) {
+    const wps = planWaypointsOrNull(world, from, aim, null, opts);
+    if (wps === null) return Infinity;
+    let len = 0;
+    let at = { x: from.x, y: from.y };
+    for (const p of [...wps, aim]) {
+        len += Math.hypot(p.x - at.x, p.y - at.y);
+        at = p;
+    }
+    return len;
 }
 
 /**
@@ -14704,7 +14987,9 @@ export function deriveRefuge(run, contacts, untilIndex, { strikeFor = null } = {
     clear.sort((a, b) => a.d - b.d || b.clearance - a.clearance);
     let best = null;
     // ⛓ hammer-phase BW — the lobber's forecast, asked of each previewed refuge (`PRESS_KILL_BOMBS`, ON since PKB)
-    const bombs = PRESS_KILL_BOMBS.enabled && bombsInPlay(run);
+    // ⛓ hammer-phase PKSW-HITS — or its refuge half alone (`PRESS_KILL_REFUGE_BOMBS`, OFF)
+    const bombs = refugeAsksBombs(run);
+    const counts = PRESS_KILL_BOMBS.enabled ? null : PRESS_KILL_REFUGE_BOMBS_COUNTS;
     // ⛓ hammer-phase RE — the best-ETA cut (`REFUGE_ETA_CUT`, ON by default): a later candidate's preview stops once it cannot win
     const cut = REFUGE_ETA_CUT.enabled;
     for (const c of clear.slice(0, REFUGE_CANDIDATES)) {
@@ -14738,9 +15023,9 @@ export function deriveRefuge(run, contacts, untilIndex, { strikeFor = null } = {
         if (walk.truncated) continue;
         const eta = walk.samples.length;
         if (bombs) {
-            PRESS_KILL_BOMBS_COUNTS.refugeAsked += 1;
+            if (counts) counts.asked += 1; else PRESS_KILL_BOMBS_COUNTS.refugeAsked += 1;
             if (refugeBlast(run, walk, c, untilIndex) !== null) {
-                PRESS_KILL_BOMBS_COUNTS.refugeRefused += 1;
+                if (counts) counts.refused += 1; else PRESS_KILL_BOMBS_COUNTS.refugeRefused += 1;
                 continue;
             }
         }
@@ -21563,6 +21848,36 @@ export function resetPressKillStartWaitCounts() {
     PRESS_KILL_START_WAIT_COUNTS.rows = [];
 }
 
+/**
+ * ⛓ hammer-phase PKSW-HITS — **THE PRESS KILL'S REFUGE ASKS THE LOBBER, ON ITS OWN** (`PRESS_KILL_REFUGE_BOMBS`, OFF).
+ *
+ * `deriveRefuge` prices a refuge's walk and wait against the hammers, and against a forecast Bomb's Explosion only
+ * under `PRESS_KILL_BOMBS` (BW), whose two halves — the refuge and the strike's stand — were switched OFF together
+ * (PKB-OFF, measured over both). MEASURED (seed 1, L40 Totem 64,144, re-measure-8 A1 32:10 with `PRESS_KILL_START_WAIT`):
+ * after the press kill that PKSW redoes, a SECOND press kill's tick loop holds a refuge at the player's own cell (eta 0)
+ * for the seven ticks its dead body fades; the lobber's forecast names the blast on that cell from twelve ticks out,
+ * nothing asks it, and the plan ships `bomb:…#9`'s hit (797 t, 1 h). ON, that one question is asked — the refuge's half
+ * of `PRESS_KILL_BOMBS`, the same `refugeBlast` over the same window — and nothing else of BW is: A1 32:10 solves 651 t,
+ * 0 h. A refuge the forecast blasts is not a candidate, so every refuge refused ⇒ the kill's own "nowhere to be"
+ * (`HAMMER_SAFETY`): a refusal, never a hit. Reads nothing level-specific. OFF: never read (`PRESS_KILL_BOMBS` alone
+ * decides, as before). `SEEDLING_PRESS_KILL_REFUGE_BOMBS=1` / `withPressKillRefugeBombs(enabled, fn)`. Worker thread.
+ */
+export const PRESS_KILL_REFUGE_BOMBS = {
+    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_REFUGE_BOMBS === '1' };
+export const PRESS_KILL_REFUGE_BOMBS_DEFAULT = false;
+/** ON only, and only where `PRESS_KILL_BOMBS` is OFF: refuges asked / refused for a forecast blast (an instrument). */
+export const PRESS_KILL_REFUGE_BOMBS_COUNTS = { asked: 0, refused: 0 };
+
+/** Run `fn` with `PRESS_KILL_REFUGE_BOMBS` set to `enabled`, restoring the previous value. */
+export function withPressKillRefugeBombs(enabled, fn) {
+    return withSwitch(PRESS_KILL_REFUGE_BOMBS, enabled, fn);
+}
+
+/** Does `deriveRefuge` ask the lobber's forecast (BW's own switch, or this slice's refuge half alone)? */
+function refugeAsksBombs(run) {
+    return (PRESS_KILL_BOMBS.enabled || PRESS_KILL_REFUGE_BOMBS.enabled) && bombsInPlay(run);
+}
+
 /** `PRESS_KILL_START_WAIT`'s retry around the whole press kill (see the switch). */
 function execKillByPressStartWait(run, perTick, resolved, ctx) {
     const t0 = perTick.length;
@@ -22215,7 +22530,7 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                                 + `and no strike on ${plan.id} is derivable. The room has `
                                 + 'nowhere to be.'
                                 // ⛓ hammer-phase BW — and under `PRESS_KILL_BOMBS` a refuge a forecast blast lands on is none
-                                + (PRESS_KILL_BOMBS.enabled && bombsInPlay(run)
+                                + (refugeAsksBombs(run)
                                     ? ' (PRESS_KILL_BOMBS: a refuge whose walk or wait a forecast Bomb\'s Explosion '
                                         + 'lands on is not counted.)' : '')
                                 /**
@@ -35393,9 +35708,10 @@ function solveSegmentUnder({
                     : (!narrow && corridorDashCertified?.wps === wps) ? corridorDashCertified.d
                         : (wholeAsk && (!stand || DASH_STAND_WHOLE.enabled))
                             ? spinnerDashWhole(wps, except, stand)
-                            : planSwordDash(run, wps, { tolerance, dashMode,
+                            // ⛓ hammer-phase PKSW-HITS (`DASH_STAND_SIGHT`, OFF ⇒ `fn()`): a stand tail certifies with the line
+                            : standDashSighted(stand, () => planSwordDash(run, wps, { tolerance, dashMode,
                                 certify: (samples) => probeSamples(samples, except),
-                                ...(stand ? { stand } : {}), ...(narrow ? { iframeLapse: false } : {}) });
+                                ...(stand ? { stand } : {}), ...(narrow ? { iframeLapse: false } : {}) }));
             // ⛓ hammer DASH: a measurement's row per corridor whose `stand` tail decided which dash ask it got.
             if (DASH_STAND_WHOLE.audit && dash && stand && wholeAsk && !dashFirst && corridorDashCertified?.wps !== wps) {
                 DASH_STAND_WHOLE.audit.push({ tick: perTick.length, what, standTicks: stand.ticks,

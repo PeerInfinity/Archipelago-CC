@@ -66,6 +66,12 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
         },
         {
+            "fields": 20,
+            "id": "mystery",
+            "label": "Mystery case",
+            "registeredBy": "frontend/modules/mysteryArchipelago/mysterySubstrateLibrary.js"
+        },
+        {
             "fields": 26,
             "id": "noiz2sa",
             "label": "Noiz2sa",
@@ -282,6 +288,7 @@ export const REGISTRY = frz({
                 "generateZoneForSpecsGen",
                 "hostsSurplusExitsNatively",
                 "libraryItems",
+                "ownContentOnly",
                 "prepareSphereGrowth",
                 "procgenParamsFromPayload",
                 "renderLibraryProcgenParams",
@@ -371,6 +378,14 @@ export const REGISTRY = frz({
             "registered": [
                 "action_nodes"
             ]
+        },
+        {
+            "error": null,
+            "file": "frontend/modules/mysteryArchipelago/mysterySubstrateLibrary.js",
+            "loadable": true,
+            "registered": [
+                "mystery"
+            ]
         }
     ],
     "rows": [
@@ -382,6 +397,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -431,6 +447,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -470,6 +493,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -519,6 +543,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -605,6 +636,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -634,6 +672,7 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "flash_seedling",
                 "jta",
+                "mystery",
                 "omsi"
             ],
             "cells": [
@@ -684,6 +723,13 @@ export const REGISTRY = frz({
                     "present": false,
                     "short": "—",
                     "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -770,6 +816,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -850,6 +903,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -924,6 +984,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -1014,6 +1081,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -1090,6 +1164,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -1179,6 +1260,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -1253,6 +1341,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -1338,6 +1433,13 @@ export const REGISTRY = frz({
                     "present": true,
                     "short": "fn",
                     "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
                     "value": null
                 },
                 {
@@ -1442,6 +1544,13 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -1525,6 +1634,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -1600,6 +1716,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -1689,6 +1812,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -1764,6 +1894,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -1851,6 +1988,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -1932,6 +2076,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -2007,6 +2158,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -2097,6 +2255,13 @@ export const REGISTRY = frz({
                         "sword",
                         "water"
                     ]
+                },
+                {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
                 },
                 {
                     "id": "noiz2sa",
@@ -2191,6 +2356,13 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -2277,6 +2449,13 @@ export const REGISTRY = frz({
                     "short": "maze",
                     "type": "string",
                     "value": "maze"
+                },
+                {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
                 },
                 {
                     "id": "noiz2sa",
@@ -2423,6 +2602,13 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": true,
                     "short": "{noiz2saFinalSpan, noiz2saVictorySkill}",
@@ -2508,6 +2694,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -2542,6 +2735,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -2591,6 +2785,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -2680,6 +2881,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -2754,6 +2962,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -2843,6 +3058,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -2926,6 +3148,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -2959,6 +3188,7 @@ export const REGISTRY = frz({
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -3030,6 +3260,16 @@ export const REGISTRY = frz({
                     "short": "—",
                     "type": "absent",
                     "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "{keys, relabel}",
+                    "type": "object",
+                    "value": [
+                        "keys",
+                        "relabel"
+                    ]
                 },
                 {
                     "id": "noiz2sa",
@@ -3123,6 +3363,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -3201,6 +3448,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -3298,6 +3552,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -3372,6 +3633,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -3453,6 +3721,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -3552,6 +3827,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -3634,6 +3916,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -3665,6 +3954,7 @@ export const REGISTRY = frz({
                 "cloudberry",
                 "flash_seedling",
                 "jta",
+                "mystery",
                 "noiz2sa"
             ],
             "cells": [
@@ -3715,6 +4005,13 @@ export const REGISTRY = frz({
                     "present": false,
                     "short": "—",
                     "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -3793,6 +4090,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -3880,6 +4184,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -3913,6 +4224,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -3962,6 +4274,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -4042,6 +4361,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -4130,6 +4456,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -4204,6 +4537,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -4291,6 +4631,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -4325,6 +4672,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -4380,6 +4728,13 @@ export const REGISTRY = frz({
                     "value": "maze"
                 },
                 {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "mystery",
+                    "type": "string",
+                    "value": "mystery"
+                },
+                {
                     "id": "noiz2sa",
                     "present": true,
                     "short": "noiz2sa",
@@ -4410,6 +4765,7 @@ export const REGISTRY = frz({
                 "bounce",
                 "cloudberry",
                 "jta",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -4463,6 +4819,13 @@ export const REGISTRY = frz({
                     "short": "—",
                     "type": "absent",
                     "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "mystery",
+                    "type": "string",
+                    "value": "mystery"
                 },
                 {
                     "id": "noiz2sa",
@@ -4542,6 +4905,13 @@ export const REGISTRY = frz({
                     "present": true,
                     "short": "fn",
                     "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
                     "value": null
                 },
                 {
@@ -4627,6 +4997,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -4706,6 +5083,13 @@ export const REGISTRY = frz({
                     "present": true,
                     "short": "fn",
                     "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
                     "value": null
                 },
                 {
@@ -4793,6 +5177,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -4867,6 +5258,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -4953,6 +5351,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -5033,6 +5438,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -5067,6 +5479,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -5120,6 +5533,13 @@ export const REGISTRY = frz({
                     "short": "Maze",
                     "type": "string",
                     "value": "Maze"
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "Mystery case",
+                    "type": "string",
+                    "value": "Mystery case"
                 },
                 {
                     "id": "noiz2sa",
@@ -5201,6 +5621,13 @@ export const REGISTRY = frz({
                     "present": true,
                     "short": "fn",
                     "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
                     "value": null
                 },
                 {
@@ -5364,6 +5791,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": true,
                     "short": "{Noiz2sa Star, Victory}",
@@ -5403,6 +5837,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -5456,6 +5891,13 @@ export const REGISTRY = frz({
                     "short": "maze:loadRegion",
                     "type": "string",
                     "value": "maze:loadRegion"
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "mystery:loadRegion",
+                    "type": "string",
+                    "value": "mystery:loadRegion"
                 },
                 {
                     "id": "noiz2sa",
@@ -5546,6 +5988,13 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -5630,6 +6079,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -5664,6 +6120,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -5766,6 +6223,22 @@ export const REGISTRY = frz({
                     "type": "object",
                     "value": [
                         "customQueues",
+                        "instant",
+                        "manual",
+                        "playback",
+                        "queueActions",
+                        "record"
+                    ]
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "8 keys",
+                    "type": "object",
+                    "value": [
+                        "botActsAtOnce",
+                        "customQueues",
+                        "executeVia",
                         "instant",
                         "manual",
                         "playback",
@@ -5882,6 +6355,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -5962,6 +6442,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -5989,6 +6476,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "mystery",
                 "text_adventure"
             ],
             "cells": [
@@ -6040,6 +6528,13 @@ export const REGISTRY = frz({
                     "short": "—",
                     "type": "absent",
                     "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
                 },
                 {
                     "id": "noiz2sa",
@@ -6122,6 +6617,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -6155,6 +6657,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -6208,6 +6711,13 @@ export const REGISTRY = frz({
                     "short": "yes",
                     "type": "boolean",
                     "value": true
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "no",
+                    "type": "boolean",
+                    "value": false
                 },
                 {
                     "id": "noiz2sa",
@@ -6242,6 +6752,7 @@ export const REGISTRY = frz({
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -6295,6 +6806,13 @@ export const REGISTRY = frz({
                     "short": "—",
                     "type": "absent",
                     "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "solver",
+                    "type": "string",
+                    "value": "solver"
                 },
                 {
                     "id": "noiz2sa",
@@ -6328,6 +6846,7 @@ export const REGISTRY = frz({
                 "cloudberry",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -6377,6 +6896,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "mystery",
                     "present": true,
                     "short": "yes",
                     "type": "boolean",
@@ -6417,6 +6943,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -6466,6 +6993,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "mystery",
                     "present": true,
                     "short": "yes",
                     "type": "boolean",
@@ -6555,6 +7089,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": true,
                     "short": "yes",
@@ -6586,6 +7127,7 @@ export const REGISTRY = frz({
                 "cloudberry",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -6635,6 +7177,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "mystery",
                     "present": true,
                     "short": "yes",
                     "type": "boolean",
@@ -6721,6 +7270,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -6755,6 +7311,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -6832,6 +7389,16 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "regionMove, locationCheck",
+                    "type": "array",
+                    "value": [
+                        "regionMove",
+                        "locationCheck"
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "present": true,
                     "short": "regionMove, locationCheck",
@@ -6872,6 +7439,7 @@ export const REGISTRY = frz({
                 "cloudberry",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -6921,6 +7489,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "mystery",
                     "present": true,
                     "short": "yes",
                     "type": "boolean",
@@ -7008,6 +7583,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -7082,6 +7664,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -7170,6 +7759,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": true,
                     "short": "yes",
@@ -7250,6 +7846,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -7277,6 +7880,93 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "mystery"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "bullet",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
+            "name": "ownContentOnly"
+        },
+        {
+            "carriedBy": [
                 "action_nodes",
                 "bounce",
                 "cloudberry",
@@ -7284,6 +7974,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -7337,6 +8028,13 @@ export const REGISTRY = frz({
                     "short": "mazeRoomPanel",
                     "type": "string",
                     "value": "mazeRoomPanel"
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "mysteryPanel",
+                    "type": "string",
+                    "value": "mysteryPanel"
                 },
                 {
                     "id": "noiz2sa",
@@ -7420,6 +8118,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -7449,6 +8154,7 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "flash_seedling",
                 "jta",
+                "mystery",
                 "omsi"
             ],
             "cells": [
@@ -7511,6 +8217,16 @@ export const REGISTRY = frz({
                     "short": "—",
                     "type": "absent",
                     "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "caseDoc, lock",
+                    "type": "array",
+                    "value": [
+                        "caseDoc",
+                        "lock"
+                    ]
                 },
                 {
                     "id": "noiz2sa",
@@ -7601,6 +8317,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -7683,6 +8406,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -7758,6 +8488,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -7845,6 +8582,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -7919,6 +8663,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -8007,6 +8758,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -8035,6 +8793,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "jta",
+                "mystery",
                 "omsi"
             ],
             "cells": [
@@ -8085,6 +8844,13 @@ export const REGISTRY = frz({
                     "present": false,
                     "short": "—",
                     "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -8172,6 +8938,13 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -8249,6 +9022,13 @@ export const REGISTRY = frz({
                     "present": true,
                     "short": "fn",
                     "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
                     "value": null
                 },
                 {
@@ -8332,6 +9112,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -8365,6 +9152,7 @@ export const REGISTRY = frz({
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -8418,6 +9206,13 @@ export const REGISTRY = frz({
                     "short": "—",
                     "type": "absent",
                     "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "sides",
+                    "type": "string",
+                    "value": "sides"
                 },
                 {
                     "id": "noiz2sa",
@@ -8515,6 +9310,13 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -8599,6 +9401,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -8676,6 +9485,13 @@ export const REGISTRY = frz({
                     "present": true,
                     "short": "fn",
                     "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
                     "value": null
                 },
                 {
@@ -8765,6 +9581,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": true,
                     "short": "fn",
@@ -8848,6 +9671,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -8953,6 +9783,13 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -9034,6 +9871,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -9068,6 +9912,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -9117,6 +9962,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -9217,6 +10069,13 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -9302,6 +10161,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -9396,6 +10262,13 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -9476,6 +10349,13 @@ export const REGISTRY = frz({
                     "value": true
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -9552,6 +10432,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -9640,6 +10527,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -9674,6 +10568,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -9821,6 +10716,23 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "9 keys",
+                    "type": "object",
+                    "value": [
+                        "answers",
+                        "ap_locations",
+                        "case",
+                        "exits",
+                        "goal",
+                        "lock",
+                        "papers",
+                        "story",
+                        "version"
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "present": true,
                     "short": "11 keys",
@@ -9930,6 +10842,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -10005,6 +10924,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -10093,6 +11019,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -10127,6 +11060,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "mystery",
                 "noiz2sa",
                 "omsi",
                 "text_adventure"
@@ -10201,6 +11135,15 @@ export const REGISTRY = frz({
                         "arbitrary_ap_locations",
                         "arbitrary_location_rules",
                         "arbitrary_exit_rules"
+                    ]
+                },
+                {
+                    "id": "mystery",
+                    "present": true,
+                    "short": "arbitrary_ap_locations",
+                    "type": "array",
+                    "value": [
+                        "arbitrary_ap_locations"
                     ]
                 },
                 {
@@ -10298,6 +11241,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -10377,6 +11327,13 @@ export const REGISTRY = frz({
                     "present": true,
                     "short": "fn",
                     "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
                     "value": null
                 },
                 {
@@ -10464,6 +11421,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": true,
                     "short": "Victory",
@@ -10539,6 +11503,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -10629,6 +11600,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": true,
                     "short": "3",
@@ -10710,6 +11688,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "mystery",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "noiz2sa",
                     "present": false,
                     "short": "—",
@@ -10785,6 +11770,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "mystery",
                     "present": false,
                     "short": "—",
                     "type": "absent",

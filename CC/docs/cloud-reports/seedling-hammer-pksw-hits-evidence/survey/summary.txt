@@ -1,0 +1,5 @@
+# 250 steps; moved: [149]
+# off.json SOLVED 226 hits 5 TIMEOUT 0
+# mine.json SOLVED 226 hits 5 TIMEOUT 0
+# pksw.json SOLVED 227 hits 6 TIMEOUT 0
+# pksw_mine.json SOLVED 227 hits 5 TIMEOUT 0
