@@ -16,4 +16,5 @@ scratch dir and not committed. The one request the rows use is committed as
 - `six/`: SIX and SIX + HPR at the 7 hit seams.
 - `game/`: the ON and OFF witnesses' logs.
 - `sweep/`: the single leg `level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Totem Part 72,40`, OFF and ON (page).
+- `survey/`: the OFF and ON surveys (`--through=end`, gzipped) and their per-step summary.
 - `acceptance-md5.txt`: the acceptance md5 at the base and after each commit.
