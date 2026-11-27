@@ -34,11 +34,22 @@ const panelIsOpen = () => !!document.querySelector('.mystery-panel-container');
  */
 async function withMysteryPage(testController, pageUrl, body) {
     const panelWasOpen = panelIsOpen();
+    // The page keeps a save of its own for each game (`bridgeStore` in the game's ui/world-case.js: a
+    // localStorage key holding `-world-ap-`), on this app's origin. Offline the game is `offline:<seed>:<player>`,
+    // the same for every row on the same world, so a row would start on the timeline the row before it solved,
+    // and the page sends those questions back as solved (its "start a fresh timeline?" confirm is dismissed
+    // under Playwright). Each row starts with none, and the saves that were there are put back after.
+    const savesBefore = takePageSaves();
     const pageBefore = await settingsManager.getSetting(PAGE_URL_SETTING);
     await settingsManager.updateSetting(PAGE_URL_SETTING, pageUrl, { persist: false });
     // What the host asked of the page and what the page said, read off the bus (the same for either page).
-    const seen = { asks: [], statuses: [] };
-    const handlers = { 'mystery:autoSolve': (d) => seen.asks.push(d), 'mystery:autoSolveStatus': (d) => seen.statuses.push(d) };
+    const seen = { asks: [], statuses: [], order: [] };
+    const handlers = {
+        'mystery:autoSolve': (d) => { seen.asks.push(d); seen.order.push(['ask', d.question ?? null, d.stop ? 'stop' : '']); },
+        'mystery:autoSolveStatus': (d) => { seen.statuses.push(d); seen.order.push(['status', d.question ?? null, d.state]); },
+        'mystery:state': (d) => seen.order.push(['state', d.inOffice ?? null, d.lock ?? null]),
+        'mystery:requestState': () => seen.order.push(['requestState']),
+    };
     for (const [event, handler] of Object.entries(handlers)) testController.eventBus.subscribe(event, handler);
     try {
         return await body(seen);
@@ -46,7 +57,21 @@ async function withMysteryPage(testController, pageUrl, body) {
         for (const [event, handler] of Object.entries(handlers)) testController.eventBus.unsubscribe?.(event, handler);
         await settingsManager.updateSetting(PAGE_URL_SETTING, pageBefore, { persist: false });
         if (!panelWasOpen && panelIsOpen()) await panelManager.destroyPanelByComponentType('mysteryPanel');
+        takePageSaves();
+        for (const [k, v] of savesBefore) localStorage.setItem(k, v);
     }
+}
+
+/** Remove the mystery page's per-game saves from localStorage, and return what they held. */
+function takePageSaves() {
+    const taken = [];
+    try {
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+            const k = localStorage.key(i);
+            if (k && k.includes('-world-ap-')) { taken.push([k, localStorage.getItem(k)]); localStorage.removeItem(k); }
+        }
+    } catch { /* no storage: nothing saved */ }
+    return taken;
 }
 
 /** What the page was asked: every question in the log, each once, all in one burst or none; and it said done to each. */
@@ -66,6 +91,7 @@ function reportAsked(testController, seen, sphereLocations, rulesJson, { instant
         // Only on a failure: what was asked and what the page said, in order, to attribute it without a rerun.
         testController.log(`asks ${JSON.stringify(seen.asks.map((x) => [x.question, x.instant ?? false, x.stop ?? false]))}`);
         testController.log(`statuses ${JSON.stringify(seen.statuses.map((x) => [x.question, x.state, x.failed ?? x.waiting ?? null]))}`);
+        testController.log(`order ${JSON.stringify(seen.order.slice(0, 40))}`);
     }
 }
 
@@ -138,8 +164,8 @@ registerTest({
     id: 'mystery-playback-bot-plays-the-case',
     name: 'Playback Bot: a mystery case as a region, played to the end',
     description: 'Loads the committed mystery_street_test world and lets the Playback Bot play it from its sphere log: the '
-        + 'street by the maze, the office by the mystery substrate\'s controller, which checks each question through '
-        + 'the host. Every sphere-log location ends checked.',
+        + 'street by the maze, the office by the mystery substrate\'s controller, which asks the page\'s careful '
+        + 'reader for each question in one burst. Every sphere-log location ends checked.',
     testFunction: mysteryPlaybackBotPlaysTheCase,
     category: CATEGORY,
 });
