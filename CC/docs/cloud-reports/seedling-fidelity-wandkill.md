@@ -6,9 +6,9 @@ Session `seedling-fidelity-wandkill` (planner `seedling-fidelity-planning-26`, w
 | | |
 |---|---|
 | start (base) | `48824c3310442d26097108134d4c05e2a4363eaa` — wave 68's final tip (`W68 wandShotEnemyBodies: the report (PASS)`) |
-| head | this report's commit (the last); the last CODE head is `@@CODEHEAD@@` |
+| head | this report's commit (the last); the last CODE head is `75671603e3c6b1a8cfc932bc305855aafda3ce4a` (`75671603`, the census and surface re-record — the last commit to touch a filtered path) |
 | harness branch | `claude/wand-shot-kill-model-jn9a5p` (local `seedling-fidelity-wandkill`) |
-| verdict | **@@VERDICT@@** — one key, default OFF, byte-identical OFF; all five killable classes covered (Turret, SandTrap, LavaTrap, WallFlyer, Drill), the IceTrap confirmed unkillable; nine game witnesses match at every sampled tick ON |
+| verdict | **PASS** — one key, default OFF, byte-identical OFF; all five killable classes covered (Turret, SandTrap, LavaTrap, WallFlyer, Drill), the IceTrap confirmed unkillable; nine game witnesses match at every sampled tick ON |
 
 ## The one thing to know first
 
@@ -169,7 +169,7 @@ beside a body (4 stances that kill, all `inSquare` false); five composition rows
 | `census-seedling-constants.mjs` `--write` → `--profile-rows` (138 rows) → `--write` → `--check` | PASS, 0 new, 0 moved (`75671603`) |
 | `census-seedling-solver-surface.mjs --write` / `--check` | GREEN, 374 rows (no new row: the three new getters have no solver reader; counts and lines moved) |
 | `solve-seedling-{r8-battery,r8-d2-chain,r8-l18,r8-tail,r9-l3,r9-campaign}.mjs --check` | all six rc 0 |
-| CI at the last code head `75671603` (`ci-vitest-summary.mjs`) | @@CI@@ |
+| CI at the last code head `75671603` (`ci-vitest-summary.mjs`) | run 45943547193: shards 1–3 and the slow Vitest job all **success**; suite (unfiltered) **30522 passed, 0 skipped, 0 failed** (1449 files); slow battery **472 passed, 0 failed** (43 files) |
 | train tier | **not dispatched** (this session can't): ⛳ planner, `unittests_frontend.yml -f train_only=true` at `75671603` |
 
 ## What the brief got wrong
