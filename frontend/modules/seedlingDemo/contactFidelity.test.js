@@ -107,6 +107,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER
         || !!process.env.SEEDLING_RESPONDER_STEP_AFTER_READERS
         || !!process.env.SEEDLING_DEAD_FRAME_RESPONDER_STEP || !!process.env.SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON
+        || !!process.env.SEEDLING_FREEZE_FRAMES_STEP_RESPONDERS || !!process.env.SEEDLING_PULSER_DEAD_FRAME_UPDATE
+        || !!process.env.SEEDLING_BLOCK_PRESSES_FALL_ROCK_BUTTON_SAME_FRAME
         || !!process.env.SEEDLING_ARROW_LANE_CROSSING
         || !!process.env.SEEDLING_AXE_TIMING_RUNG || !!process.env.SEEDLING_AXE_GATE_TRANSIT
         || !!process.env.SEEDLING_STATUE_TALK_RANGE
@@ -462,7 +464,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity DEADFRAME D2 (wave 66): a spinner or wallflyer on a FallRock's Button drops the rock, in the enemy's frame — OFF.
             enemyPressesFallRockButton: false,
             // ⛓ fidelity WANDTRAPBODIES (wave 67): a wand shot stops on a live darktrap or a collidable placed grenade — OFF.
-            wandShotTrapBodies: false, wandShotEnemyBodies: false });
+            wandShotTrapBodies: false, wandShotEnemyBodies: false,
+            // ⛓ fidelity DEADFRAME2 D2 (wave 69): a seal piece's dead frames step the responders; the Pulsers run through every dead span; a block's FallRock press is read in its own frame — OFF.
+            freezeFramesStepResponders: false, pulserDeadFrameUpdate: false, blockPressesFallRockButtonSameFrame: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

@@ -4151,6 +4151,7 @@ export function createLevelRun({
             (k) => held.has(k) && !prevHeld.has(k));
         clock.spend(pressed ? frames - 1 : frames, 'help',
             `${tag} Help${pressed ? ' (dismissed by the TAPE)' : ''}`, ticksCompleted);
+        queueDeadPulserFramesNow(pressed ? frames - 1 : frames, `${tag} Help`); // ⛓ fidelity DEADFRAME2 D2 (ON only)
     };
     /**
      * ⛓⛓⛓ R5 SLICE 23: HAS THE WAND LEFT THE WORLD?
@@ -4351,6 +4352,8 @@ export function createLevelRun({
             if (r.unfroze) break;
         }
         spendFrozen(frames, 'fallrock');
+        // ⛓ fidelity DEADFRAME2 D2 (ON only): and the Pulsers, through the span.
+        queueDeadPulserFramesNow(frames, 'a rope\'s rock');
         rockFalls.push({
             id,
             level,
@@ -4473,6 +4476,8 @@ export function createLevelRun({
             return { frames, dropped, snapY, landedAt };
         }
         spendFrozen(frames, 'fallrocks-together');
+        // ⛓ fidelity DEADFRAME2 D2 (ON only): and the Pulsers, through the span.
+        queueDeadPulserFramesNow(frames, 'a button\'s or the wand\'s rocks');
         // ⛓ fidelity DEADFRAME D2 (ON only): the responders through every frame of the span (the release frame too).
         // Past the frame-A tick's own step, so with `responderStepAfterReaders` OFF they run at once.
         queueDeadResponderFramesNow(frames, 'a button\'s or the wand\'s rocks', (i) => deadSolids[i]);
@@ -16049,6 +16054,10 @@ export function createLevelRun({
         // R5 slice 9 and nothing had a use for it.
         clock.spend(CEREMONY_DEAD_FRAMES.total, 'ceremony', `sealpiece ${sealPieceFrom}`,
             ticksCompleted);
+        // ⛓ fidelity DEADFRAME2 D2 (ON only): and the responders, through the ceremony.
+        queueFreezeResponderFramesNow(CEREMONY_DEAD_FRAMES.total, `sealpiece ${sealPieceFrom}`);
+        // ⛓ fidelity DEADFRAME2 D2 (ON only): and the Pulsers, through the ceremony (it runs before this frame's Pulser).
+        queueDeadPulserFramesNow(CEREMONY_DEAD_FRAMES.total, `sealpiece ${sealPieceFrom}`);
         sealCollections.push({
             t: ticksCompleted + 1,
             level,
@@ -16489,6 +16498,24 @@ export function createLevelRun({
             frames: Array.from({ length: n }, (_, i) => (solidsAt ? [...solids, ...solidsAt(i)] : solids)),
             enemies: responderEnemiesNow(), why };
     };
+    /**
+     * ⛓ fidelity DEADFRAME2 D2 (`CONTACT_FIDELITY.freezeFramesStepResponders`, OFF never written): a seal piece's
+     * ceremony (`stepSealPieceNow`: 150 of phase A and 181 of `SealController`, all dead) queued for the responders on
+     * `deadFrameResponderStep`'s queue and flushed by its flushes — the same record, built here so that key's own gate is
+     * not read. Needs neither key ON; see the key's doc.
+     */
+    const queueFreezeResponderFramesNow = (n, why) => {
+        if (!CONTACT_FIDELITY.freezeFramesStepResponders || noclip || n <= 0) return;
+        const w = worldFor(level);
+        if ((w.activators ?? []).length === 0 && (w.pressers ?? []).length === 0) return;
+        if (pendingDeadResponderFrames !== null) {
+            throw new Error(`levelRun: tick ${ticksCompleted} queues ${why}'s ${n} dead frames over ${pendingDeadResponderFrames.why}'s `
+                + `still pending (level ${pendingDeadResponderFrames.level}) — two dead spans in one tick (freezeFramesStepResponders).`);
+        }
+        const solids = movingSolidsNow();
+        pendingDeadResponderFrames = { level, state: activatorStateFor(level), world: w, box: playerBoxAt(state.x, state.y),
+            frames: Array.from({ length: n }, () => solids), enemies: responderEnemiesNow(), why };
+    };
     const flushDeadResponderFramesNow = (at) => {
         const p = pendingDeadResponderFrames;
         if (p === null || (at === 'end' && CONTACT_FIDELITY.responderStepAfterReaders)) return;
@@ -16503,6 +16530,83 @@ export function createLevelRun({
             if (look() !== before) changed += 1;
         }
         deadResponderFrames.push({ t: ticksCompleted, level, why: p.why, frames: p.frames.length, changed });
+    };
+    /**
+     * ⛓ fidelity DEADFRAME2 D2 (`CONTACT_FIDELITY.pulserDeadFrameUpdate`, OFF never written): the dead frames a site
+     * collapses, queued for the Pulsers — `{t, level, state, n, why}`, `t` the advance that queued them. They lie after
+     * that advance's own frame, so a queue made BEFORE this advance's live Pulser step (a seal piece) runs right after
+     * it (`'after'`), and one made after it (a pickup, a span) runs at the next advance, before its live step
+     * (`'before'`). A frozen tick (`runFrozenTick`) steps none (measured: a texted pickup's dialogue ticks run no Pulser
+     * update in the game, `p-health-x`). See the key's doc.
+     */
+    let pendingDeadPulserFrames = [];
+    /** ⛓ fidelity DEADFRAME2 D2: every flushed queue, `{t, level, why, frames, hits, changed}`. OFF: empty. */
+    const deadPulserFrames = [];
+    const queueDeadPulserFramesNow = (n, why) => {
+        if (!CONTACT_FIDELITY.pulserDeadFrameUpdate || noclip || n <= 0) return;
+        const st = pulserStateFor(level);
+        if (st.size === 0) return;
+        pendingDeadPulserFrames.push({ t: ticksCompleted, level, state: st, n, why });
+    };
+    /**
+     * `n` freeze frames of every Pulser of the level (`Pulser.update` carries no `Game.freezeObjects` test:
+     * `Puzzlements/Pulser.as:51-83`). Armed as the live step arms it (the player is frozen, so the press holds). A hit
+     * on the player or an enemy is inert (`Player.hit`'s and `Enemy.hit`'s `!Game.freezeObjects`, `Player.as:1382`,
+     * `Enemies/Enemy.as:147`); one that reaches a fire block is REFUSED by name (the block's glide through the dead
+     * frames is not interleaved per frame, `frozenTickUngated`).
+     */
+    const stepPulsersFrozenNow = (activators, n, why) => {
+        const st = pulserStateFor(level);
+        if (st.size === 0) return null;
+        const pressed = pressedGroups(world, playerBoxAt(state.x, state.y), movingSolidsNow());
+        const lag = CONTACT_FIDELITY.pulserPublishLag;
+        const order = CONTACT_FIDELITY.responderStepAfterReaders;
+        const read = order ? (activators.responderRead ?? { pressed: new Set(), latched: activators.latched }) : null;
+        const pushState = pushableStateFor(level);
+        let hits = 0;
+        let changed = 0;
+        for (let k = 0; k < n; k += 1) {
+            for (const [id, p] of st) {
+                const pressedNow = pressed.has(p.t);
+                const armed = order ? (read.pressed.has(p.t) || read.latched.get(p.t) === true)
+                    : ((lag ? p.pressedLast === true : pressedNow) || activators.latched.get(p.t) === true);
+                const r = stepPulser(p, armed);
+                const next = lag && !order ? { ...r.state, pressedLast: pressedNow } : r.state;
+                if (next.pulseTimer !== p.pulseTimer || next.radius !== p.radius || next.anim !== p.anim
+                    || next.animTick !== p.animTick) changed += 1;
+                st.set(id, next);
+                if (!r.hit) continue;
+                hits += 1;
+                const blocks = [];
+                for (const [bid, rect] of pushableRects(pushState)) {
+                    if (rect.removed) continue;
+                    const b = pushState.byId.get(bid);
+                    blocks.push({ id: bid, type: 'Solid', as3: b.as3 ?? 'PushableBlockFire', x: rect.rect.x + 8,
+                        y: rect.rect.y + 8, originX: 8, originY: 8, w: 16, h: 16 });
+                }
+                const reach = pulseReaches(r.state, blocks).filter((x) => x.arm === 'pushable');
+                if (reach.length > 0) {
+                    throw new Error(`levelRun: ${id}'s pulse reaches ${reach.map((x) => x.id).join(', ')} on a freeze frame `
+                        + `(${why}) at tick ${ticksCompleted} in level ${level}. The block's glide through the freeze is not `
+                        + 'interleaved per frame with the Pulser (`frozenTickUngated` steps it in its own loop). Refused by '
+                        + 'name (fidelity DEADFRAME2, `pulserDeadFrameUpdate`).');
+                }
+            }
+        }
+        return { hits, changed };
+    };
+    const flushDeadPulserFramesNow = (activators, which) => {
+        if (pendingDeadPulserFrames.length === 0) return;
+        const keep = [];
+        const due = [];
+        for (const q of pendingDeadPulserFrames) (which === 'before' && q.t >= ticksCompleted ? keep : due).push(q);
+        pendingDeadPulserFrames = keep;
+        for (const q of due) {
+            // A queue whose world a level change or a rebuild tore down: that world runs no later frame.
+            if (q.level !== level || pulserStateFor(level) !== q.state) continue;
+            const r = stepPulsersFrozenNow(activators, q.n, q.why);
+            deadPulserFrames.push({ t: ticksCompleted, level, why: q.why, frames: q.n, ...r });
+        }
     };
     /**
      * ── ⛓⛓⛓ SWIM T3: THE BUTTON THAT DROPS A ROCK ───────────────────────
@@ -16565,6 +16669,25 @@ export function createLevelRun({
         if (enemies.length === 0) return;
         armButtonFallRocks(ENEMY_PRESS_NO_BOX, enemies);
         if (pendingButtonFalls !== null) enemyRockPresses.push({ t: ticksCompleted, level, ids: [...pendingButtonFalls] });
+    };
+    /** ⛓ fidelity DEADFRAME2 D2: every FallRock arm a block made in its own frame, `{t, level, ids}`. OFF: empty. */
+    const blockRockPresses = [];
+    /**
+     * ⛓ fidelity DEADFRAME2 D2 (`CONTACT_FIDELITY.blockPressesFallRockButtonSameFrame`, OFF never called): a block on a
+     * FallRock's Button. A `PushableBlock*` updates before the Button (`stepPushables` runs with the readers, above the
+     * responders), so the Button sees the block where THIS frame moved it and `fall()` raises the freeze in that frame:
+     * frame A is this tick. Asked after the blocks stepped, beside the enemy arm. The player's press keeps its tick-end
+     * read (the Player updates after the Button).
+     */
+    const armButtonFallRocksByBlocksNow = () => {
+        if (pendingButtonFalls !== null || fallRockStateFor(level).size === 0) return;
+        const st = pushableStateFor(level);
+        if (st.byId.size === 0) return;
+        const blocks = [];
+        for (const [id, r] of pushableRects(st)) if (!r.removed) blocks.push({ id, rect: r.rect });
+        if (blocks.length === 0) return;
+        armButtonFallRocks(ENEMY_PRESS_NO_BOX, blocks);
+        if (pendingButtonFalls !== null) blockRockPresses.push({ t: ticksCompleted, level, ids: [...pendingButtonFalls] });
     };
     const resolveButtonFalls = (ids, { nested = false } = {}) => {
         const rocks = fallRockStateFor(level);
@@ -17923,6 +18046,7 @@ export function createLevelRun({
             if (r.event === 'ceremony') {
                 const frames = sealControllerTicks();
                 spendFrozen(frames, `door-ceremony ${d.id}`);
+                queueDeadPulserFramesNow(frames, `door-ceremony ${d.id}`); // ⛓ fidelity DEADFRAME2 D2 (ON only)
                 frozen = true;
                 doorCeremonies.push({
                     t: ticksCompleted, level, id: d.id, frames,
@@ -18097,6 +18221,7 @@ export function createLevelRun({
                     stepCameraNow(state, world.world, viewTimeInSpan(frames));
                 }
                 spendFrozen(frames, 'moonrock');
+                queueDeadPulserFramesNow(frames, 'moonrock'); // ⛓ fidelity DEADFRAME2 D2 (ON only)
                 // The swing's animation ran out inside the span: `slashEnd`.
                 if (slashEndsAt !== null) {
                     slashEndsAt = null;
@@ -18481,6 +18606,7 @@ export function createLevelRun({
                 why: 'the BobBoss rock\'s arm frame',
                 after: () => {
                     spendFrozen(BOB_BOSS_ROCK_DEAD_FRAMES, 'bobboss-rock');
+                    queueDeadPulserFramesNow(BOB_BOSS_ROCK_DEAD_FRAMES, 'bobboss-rock'); // ⛓ fidelity DEADFRAME2 D2 (ON only)
                     // ⛔ THE RELEASE FRAME IS THE LAST DEAD FRAME AND IT MOVES
                     // THE PLAYER. The rock clears the freeze before the Player
                     // updates, so the player takes one step BEFORE the next
@@ -18569,6 +18695,7 @@ export function createLevelRun({
             after: () => {
                 const n = r.schedule.deadFrames;
                 spendFrozen(n, 'lavaboss-rock');
+                queueDeadPulserFramesNow(n, 'lavaboss-rock'); // ⛓ fidelity DEADFRAME2 D2 (ON only)
                 for (let i = 0; i < n; i += 1) {
                     slashState = slashTimerTick(slashState);
                     damage = stepPlayerDamage(damage).state;
@@ -20833,6 +20960,10 @@ export function createLevelRun({
         get deadResponderFrames() { return deadResponderFrames.map((r) => ({ ...r })); },
         /** ⛓ fidelity DEADFRAME D2: the FallRock arms an enemy made (`enemyPressesFallRockButton` ON; OFF empty). */
         get enemyRockPresses() { return enemyRockPresses.map((r) => ({ ...r, ids: [...r.ids] })); },
+        /** ⛓ fidelity DEADFRAME2 D2: the Pulsers' freeze frames run (`pulserDeadFrameUpdate` ON; OFF empty). */
+        get deadPulserFrames() { return deadPulserFrames.map((r) => ({ ...r })); },
+        /** ⛓ fidelity DEADFRAME2 D2: the FallRock arms a block made in its own frame (`blockPressesFallRockButtonSameFrame` ON; OFF empty). */
+        get blockRockPresses() { return blockRockPresses.map((r) => ({ ...r, ids: [...r.ids] })); },
         /** ⛓ fidelity PLAINSPAN D2 (`plainPickupInFreeze` ON; OFF always empty): the apitems the run took itself. */
         get plainFreezeTakes() { return plainFreezeTakes.map((r) => ({ ...r })); },
         /**
@@ -23666,6 +23797,8 @@ export function createLevelRun({
             // ⛓ fidelity DEADFRAME D2 (`enemyPressesFallRockButton`, ON only): an enemy on a FallRock's Button — read where
             // this tick's readers left it, so frame A is this tick.
             if (CONTACT_FIDELITY.enemyPressesFallRockButton && !noclip) armButtonFallRocksByEnemiesNow();
+            // ⛓ fidelity DEADFRAME2 D2 (`blockPressesFallRockButtonSameFrame`, ON only): a block on one, read the same way.
+            if (CONTACT_FIDELITY.blockPressesFallRockButtonSameFrame && !noclip) armButtonFallRocksByBlocksNow();
             // ⛓ fidelity NESTEDFREEZE D2 (ON only): …unless frame A is also a pickup's T — then the tick is its contact tick.
             if (pendingButtonFalls !== null && !noclip && !nestedRockCeremonyAtFrameANow(pendingButtonFalls)) {
                 // ⛔ U12-swim D1: this frozen tick returns above the pulls' slot,
@@ -23762,7 +23895,11 @@ export function createLevelRun({
             // ⛓ fidelity RESPONDERORDER D2 (ON only): the responders, after the readers and the Chest (`Game.as:2377`)
             // and before the Pulser (`:2357`) and the player — the step the last tick deferred.
             if (!noclip) runDeferredResponderStepNow();
+            // ⛓ fidelity DEADFRAME2 D2 (ON only): the dead frames after an earlier advance, before this frame's Pulser.
+            if (pendingDeadPulserFrames.length > 0) flushDeadPulserFramesNow(activators, 'before');
             if (!noclip) stepPulsersNow(activators, pushState);
+            // ⛓ fidelity DEADFRAME2 D2 (ON only): …and the ones a site earlier in THIS advance queued (a seal piece), after it.
+            if (pendingDeadPulserFrames.length > 0) flushDeadPulserFramesNow(activators, 'after');
             // ⛓⛓⛓ U12-swim D1: THE PULLS, in their own slot. `loadlevel` adds
             // `pull` at `:2329` — BELOW `pulser` (`:2334`) and `lock` (`:2333`),
             // ABOVE `arrowtrap` (`:2323`), the crusher, the ice turret, every
@@ -24297,6 +24434,7 @@ export function createLevelRun({
                     wandFadeSpent = true;
                     const fade = wandFadeFreezeTicks();
                     spendFrozen(fade, 'wand-approach-fade');
+                    queueDeadPulserFramesNow(fade, 'wand-approach-fade'); // ⛓ fidelity DEADFRAME2 D2 (ON only)
                     wandFades.push({ t: ticksCompleted, level, deadFrames: fade });
                     // ⛓ fidelity FROZENTICK D2 (ON only): the blocks glide through the fade's dead frames.
                     for (let k = 0; CONTACT_FIDELITY.frozenTickUngated && k < fade; k += 1) stepPushablesDeadFrameNow();
@@ -24321,6 +24459,7 @@ export function createLevelRun({
                         t: ticksCompleted, level, tag: 'seed', runtime: true,
                     });
                     spendCeremonyPhaseA('seed');
+                    queueDeadPulserFramesNow(CEREMONY_DEAD_FRAMES.pickup, 'the seed\'s phase A'); // ⛓ fidelity DEADFRAME2 D2 (ON only)
                     ceremony = {
                         pickup: { tag: 'seed', x: seed.ex, y: seed.ey, runtime: true },
                         level,
@@ -24372,6 +24511,7 @@ export function createLevelRun({
                         stepBeamTowersThroughPhaseANow();
                         // ⛓ fidelity DEADFRAME D2 (ON only): the responders through phase A's dead frames (texted: 149).
                         queueDeadResponderFramesNow(CEREMONY_LUMP_SHOVE_FRAMES, 'the darksword\'s phase A');
+                        queueDeadPulserFramesNow(CEREMONY_DEAD_FRAMES.pickup, 'the darksword\'s phase A'); // ⛓ fidelity DEADFRAME2 D2 (ON only)
                     }
                 }
             }
@@ -24398,6 +24538,7 @@ export function createLevelRun({
                     stepBeamTowersThroughPhaseANow();
                     // ⛓ fidelity DEADFRAME D2 (ON only): the responders through phase A's dead frames (texted: 149).
                     queueDeadResponderFramesNow(CEREMONY_LUMP_SHOVE_FRAMES, 'the fire\'s phase A');
+                    queueDeadPulserFramesNow(CEREMONY_DEAD_FRAMES.pickup, 'the fire\'s phase A'); // ⛓ fidelity DEADFRAME2 D2 (ON only)
                 }
             }
             if (ceremony === null) {
@@ -24465,6 +24606,9 @@ export function createLevelRun({
                     // ⛓ fidelity DEADFRAME D2 (ON only): and the responders, through phase A's dead frames (texted: 149).
                     queueDeadResponderFramesNow(ceremony.dialogue === null ? CEREMONY_DEAD_FRAMES.pickup : CEREMONY_LUMP_SHOVE_FRAMES,
                         `${hit.tag ?? 'pickup'}'s phase A`);
+                    // ⛓ fidelity DEADFRAME2 D2 (ON only): and the Pulsers — 150 frames, texted or not (measured: `p-key`,
+                    // `p-health-x`; a texted lump's 149 is off by one tick, and the dialogue's frozen ticks run none).
+                    queueDeadPulserFramesNow(CEREMONY_DEAD_FRAMES.pickup, `${hit.tag ?? 'pickup'}'s phase A`);
                 }
             }
             // ⛓ fidelity PLAINSPAN D2 (ON only): a ceremony's T — its apitems, all of them, under the box its start tested.
@@ -24516,6 +24660,7 @@ export function createLevelRun({
                      */
                     const fade = coverFadeFrames();
                     spendFrozen(fade, `seed-cover-fade ${ceremony.seed.id}`);
+                    queueDeadPulserFramesNow(fade, `seed-cover-fade ${ceremony.seed.id}`); // ⛓ fidelity DEADFRAME2 D2 (ON only)
                     seedFades.push({
                         t: ticksCompleted, level, id: ceremony.seed.id,
                         arm: ceremony.seed.arm, fadeFrames: fade,

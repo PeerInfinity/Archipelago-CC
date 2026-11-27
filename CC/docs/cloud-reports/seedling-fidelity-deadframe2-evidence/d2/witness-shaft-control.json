@@ -1,0 +1,374 @@
+{
+ "source": "witness-deadframe2.mjs",
+ "build": "seedling_bot_ap_p4g",
+ "capabilities": [
+  "arm",
+  "apitem",
+  "hold",
+  "tag",
+  "freeze",
+  "sincebegin",
+  "bossreport"
+ ],
+ "shapes": [
+  {
+   "tape": "r5-shaft-control",
+   "set": "seedling-vanilla-record-23510f80",
+   "whole": {
+    "mounted": "seedling-vanilla-record-23510f80",
+    "tick": 2764,
+    "held": false,
+    "hits": 0,
+    "lockOpen": false,
+    "rockFell": false,
+    "dead": 20,
+    "cleared": [
+     {
+      "tag": 4,
+      "level": 39
+     },
+     {
+      "tag": 8,
+      "level": 39
+     },
+     {
+      "tag": 9,
+      "level": 39
+     }
+    ],
+    "rows": [
+     {
+      "cls": "Spinner",
+      "x": 243.31370849898485,
+      "y": 266.91168824543183,
+      "vx": -0.7071067811865476,
+      "vy": 0.7071067811865475,
+      "type": "Enemy",
+      "destroy": false,
+      "alpha": 1
+     },
+     {
+      "cls": "Spinner",
+      "x": 226.77312395916954,
+      "y": 177.31727983645362,
+      "vx": 0.7071067811865476,
+      "vy": -0.7071067811865475,
+      "type": "Enemy",
+      "destroy": false,
+      "alpha": 1
+     },
+     {
+      "cls": "PushableBlockFire",
+      "x": 48,
+      "y": 176,
+      "vx": 0,
+      "vy": 0,
+      "type": "Solid",
+      "destroy": false,
+      "alpha": 1
+     },
+     {
+      "cls": "PushableBlockFire",
+      "x": 208,
+      "y": 80,
+      "vx": 0,
+      "vy": 0,
+      "type": "Solid",
+      "destroy": false,
+      "alpha": 1
+     },
+     {
+      "cls": "PushableBlockFire",
+      "x": 144,
+      "y": 176,
+      "vx": 0,
+      "vy": 0,
+      "type": "Solid",
+      "destroy": false,
+      "alpha": 1
+     },
+     {
+      "cls": "Player",
+      "x": 161.223565776755,
+      "y": 210.13905680200762,
+      "vx": 0,
+      "vy": 0,
+      "type": "Player",
+      "destroy": false,
+      "alpha": 1
+     }
+    ],
+    "mobTick": 2764,
+    "samples": [
+     {
+      "tick": 2762,
+      "level": 39,
+      "lockOpen": false,
+      "rockFell": false,
+      "dead": 20,
+      "hits": 0,
+      "newCleared": [],
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 245.4350288425445,
+        "y": 264.7903679018722,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Spinner",
+        "x": 224.65180361560988,
+        "y": 179.43860018001328,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "PushableBlockFire",
+        "x": 48,
+        "y": 176,
+        "vx": 0,
+        "vy": 0,
+        "type": "Solid",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "PushableBlockFire",
+        "x": 208,
+        "y": 80,
+        "vx": 0,
+        "vy": 0,
+        "type": "Solid",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "PushableBlockFire",
+        "x": 144,
+        "y": 176,
+        "vx": 0,
+        "vy": 0,
+        "type": "Solid",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 161.223565776755,
+        "y": 210.13905680200762,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 2763,
+      "level": 39,
+      "lockOpen": false,
+      "rockFell": false,
+      "dead": 20,
+      "hits": 0,
+      "newCleared": [],
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 244.72792206135796,
+        "y": 265.4974746830587,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Spinner",
+        "x": 225.35891039679643,
+        "y": 178.73149339882673,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "PushableBlockFire",
+        "x": 48,
+        "y": 176,
+        "vx": 0,
+        "vy": 0,
+        "type": "Solid",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "PushableBlockFire",
+        "x": 208,
+        "y": 80,
+        "vx": 0,
+        "vy": 0,
+        "type": "Solid",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "PushableBlockFire",
+        "x": 144,
+        "y": 176,
+        "vx": 0,
+        "vy": 0,
+        "type": "Solid",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 161.223565776755,
+        "y": 210.13905680200762,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 2764,
+      "level": 39,
+      "lockOpen": false,
+      "rockFell": false,
+      "dead": 20,
+      "hits": 0,
+      "newCleared": [],
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 244.0208152801714,
+        "y": 266.2045814642453,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Spinner",
+        "x": 226.06601717798299,
+        "y": 178.02438661764018,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "PushableBlockFire",
+        "x": 48,
+        "y": 176,
+        "vx": 0,
+        "vy": 0,
+        "type": "Solid",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "PushableBlockFire",
+        "x": 208,
+        "y": 80,
+        "vx": 0,
+        "vy": 0,
+        "type": "Solid",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "PushableBlockFire",
+        "x": 144,
+        "y": 176,
+        "vx": 0,
+        "vy": 0,
+        "type": "Solid",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 161.223565776755,
+        "y": 210.13905680200762,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     }
+    ],
+    "log": [
+     "pageerror A valid external Instance reference no longer exists.",
+     "pageerror A valid external Instance reference no longer exists."
+    ],
+    "ledger": [
+     {
+      "tick": 0,
+      "level": 39,
+      "newCleared": [
+       "39:8"
+      ]
+     },
+     {
+      "tick": 190,
+      "level": 39,
+      "newCleared": [
+       "39:9"
+      ]
+     },
+     {
+      "tick": 1643,
+      "level": 39,
+      "newCleared": [
+       "39:4"
+      ]
+     }
+    ],
+    "hitTicks": [],
+    "sampled": 2765
+   },
+   "cuts": [
+    {
+     "n": 1,
+     "tick": 1,
+     "held": true,
+     "cleared": [
+      {
+       "tag": 8,
+       "level": 39
+      }
+     ],
+     "rows": [
+      {
+       "cls": "Player",
+       "x": 152,
+       "y": 615.2,
+       "vx": 0,
+       "vy": -0.8,
+       "type": "Player",
+       "destroy": false,
+       "alpha": 1
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

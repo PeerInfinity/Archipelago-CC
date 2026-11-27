@@ -1,0 +1,30 @@
+[31m     [31m×[31m ⛓⛓ the COMMITTED walk owes exactly what the GAME says it owes[39m[32m 84[2mms[22m[39m
+[31m     [31m×[31m ⛓⛓ adding ONE C press on the Help's tick removes the frame — and only then[39m[32m 44[2mms[22m[39m
+[31m     [31m×[31m ⛓ a key already HELD is not a PRESS — `Input.onKeyDown` records only an EDGE[39m[32m 27[2mms[22m[39m
+[31m     [31m×[31m ships OFF, appended last, with a worker env name[39m[32m 10[2mms[22m[39m
+[31m     [31m×[31m texted (a feather, after the button): OFF serialises 172 + 150; wave 56 refuses; ON the union is the ceremony's 150[39m[32m 83[2mms[22m[39m
+[31m     [31m×[31m ⛓⛓ C on the Help tick: the model swings there and the trajectory is the game's, row for row[39m[32m 91[2mms[22m[39m
+[31m     [31m×[31m ⛓⛓ X on the Help tick: the same, in both modes (X is the sword at the defaults already)[39m[32m 24[2mms[22m[39m
+[31m     [31m×[31m ⛔ KNOWN GAP: C on the tick `removed()` fires — the model swings, the game does not[39m[32m 8[2mms[22m[39m
+[31m     [31m×[31m ⛔ KNOWN GAP: the no-press arm — the model has no autoAdvance X, so it leaves the game at the dash[39m[32m 9[2mms[22m[39m
+[31m     [31m×[31m 'r8-d2-19' -> 'r8-d2-20': the model reaches the latched `save.time`[39m[32m 90[2mms[22m[39m
+[31m     [31m×[31m 'r8-solve-10' -> 'r9-solve-11': the model reaches the latched `save.time`[39m[32m 9[2mms[22m[39m
+[31m     [31m×[31m 'r9-solve-19' -> 'r9-solve-20': the model reaches the latched `save.time`[39m[32m 56[2mms[22m[39m
+[31m     [31m×[31m 'r9-solve-20' -> 'r9-solve-13-v2': the model reaches the latched `save.time`[39m[32m 32[2mms[22m[39m
+[31m     [31m×[31m ⛓ a chain booting the TRUE START: `null` at its first boundary, then declared + 21 (+ any pit walk-on) at every one[39m[33m 1688[2mms[22m[39m
+[31m     [31m×[31m 'r8-d2': every boundary's resumed clock is `declared + BOOT_COST_FRAMES`[39m[32m 192[2mms[22m[39m
+[31m     [31m×[31m ⛔ MUTATION: a resumed clock that HAD been bumped would miss by exactly 21[39m[32m 101[2mms[22m[39m
+[31m     [31m×[31m igneous-l74-phase-a: the interim refuses the span by name; igneousLava OFF walks on where the game dies[39m[32m 38[2mms[22m[39m
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 17 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityHelpDismissPress.test.js[2m > [22mthe MODEL against the witness, `secondaryUse` ON[2m > [22m⛓⛓ C on the Help tick: the model swings there and the trajectory is the game's, row for row
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityHelpDismissPress.test.js[2m > [22mthe MODEL against the witness, `secondaryUse` ON[2m > [22m⛓⛓ X on the Help tick: the same, in both modes (X is the sword at the defaults already)
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityHelpDismissPress.test.js[2m > [22mthe MODEL against the witness, `secondaryUse` ON[2m > [22m⛔ KNOWN GAP: C on the tick `removed()` fires — the model swings, the game does not
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityHelpDismissPress.test.js[2m > [22mthe MODEL against the witness, `secondaryUse` ON[2m > [22m⛔ KNOWN GAP: the no-press arm — the model has no autoAdvance X, so it leaves the game at the dash
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityIgfade.test.js[2m > [22mIGFADE D2 — a frozen span, witnessed on p4g (staged)[2m > [22migneous-l74-phase-a: the interim refuses the span by name; igneousLava OFF walks on where the game dies
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityNestedRockCeremony.test.js[2m > [22mNESTEDFREEZE — the key[2m > [22mships OFF, appended last, with a worker env name
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityNestedRockCeremony.test.js[2m > [22mNESTEDFREEZE — a pickup collected on a button's frame A (staged on L29)[2m > [22mtexted (a feather, after the button): OFF serialises 172 + 150; wave 56 refuses; ON the union is the ceremony's 150
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/gameClock.test.js[2m > [22m⛓⛓⛓ THE FREE ORACLE — the game latched every one of these[2m > [22m'r8-d2-19' -> 'r8-d2-20': the model reaches the latched `save.time`
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/gameClock.test.js[2m > [22m⛓⛓⛓ THE FREE ORACLE — the game latched every one of these[2m > [22m'r8-solve-10' -> 'r9-solve-11': the model reaches the latched `save.time`
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/gameClock.test.js[2m > [22m⛓⛓⛓ THE FREE ORACLE — the game latched every one of these[2m > [22m'r9-solve-19' -> 'r9-solve-20': the model reaches the latched `save.time`
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/gameClock.test.js[2m > [22m⛓⛓⛓ THE FREE ORACLE — the game latched every one of these[2m > [22m'r9-solve-20' -> 'r9-solve-13-v2': the model reaches the latched `save.time`
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/gameClock.test.js[2m > [22m⛓⛓⛓ THE RESUMED CLOCK — (d′) has no JS half, and this is the measurement[2m > [22m⛓ a chain booting the TRUE START: `null` at its first boundary, then declared + 21 (+ any pit walk-on) at every one

@@ -1,0 +1,51 @@
+frontend/modules/seedlingDemo/fixtures/hammer-dd-walkkill-witness/hammer-dd-l30-walkkill.tape.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l74-phase-a.tape.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/apb-l12-witch-server-sword.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/apb-l12-witch-slot-held.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/apb-l32-fresh-fire-held.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/apb-l32-fresh-no-fire.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/apb-l32-killed-drop-held.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/bobsoldier2-l30-torch.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/enc-l12-witch.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/enc-l32-fallen-door.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/enc-l32-live-arrival.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-darkshield.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-darksuit.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-feather.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-shield.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-spear.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-sword.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-torch.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-1-sword.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-2-feather.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-3-torch.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-4-spear.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-5-darkshield.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-6-darksuit.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-full.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-1-sword.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-2-feather.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-3-torch.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-5-spear.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-6-health.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-full.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r5-bobboss-fire.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r5-d5-conch.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r5-feather.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r5-l43-wand.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r6-seed-control.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r6-seed-credits.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r6-shield-kill.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r6-totem-control.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r6-totem-kill.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-full.json: deadFramesOwed, deadFrameSpans
+frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-19.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-20.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/r8-d2.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-10.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-20.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-19.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-20.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-32.json: deadFramesOwed, deadFrameSpans, gameTime
+frontend/modules/seedlingDemo/fixtures/tapes/swim-u5-bobboss-encounter.json: deadFramesOwed, deadFrameSpans, gameTime
+tapes 322; movers 50

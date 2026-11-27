@@ -1,0 +1,39 @@
+frontend/modules/seedlingDemo/fixtures/hammer-d-ghostwall-witness/hammer-d-l39-ghostwall.tape.json
+    span:fallrock: responders 0/1 spans (0 frames, 0 flips); pulser state 1, hit frames 92, reach frames 0 [] []
+frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json
+    overlaps {"spinner-on-buttonroom L40 buttonroom@272,208":19}
+frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json
+    overlaps {"spinner-on-buttonroom L40 buttonroom@160,128":4}
+frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-chest.json
+    ceremony:sealpiece: responders 0/1 spans (0 frames, 0 flips); pulser state 1, hit frames 150, reach frames 0 [] []
+frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-reach-l39.json
+    ceremony:sealpiece: responders 0/1 spans (0 frames, 0 flips); pulser state 1, hit frames 150, reach frames 0 [] []
+frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5-control.json
+    overlaps {"spinner-on-buttonroom L40 buttonroom@880,768":39}
+frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json
+    overlaps {"spinner-on-buttonroom L40 buttonroom@880,768":39}
+frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft-control.json
+    span:fallrock: responders 0/1 spans (0 frames, 0 flips); pulser state 1, hit frames 92, reach frames 0 [] []
+    overlaps {"spinner-on-button L39 button@128,144":45,"spinner-on-button L39 button@160,144":42,"spinner-on-button L39 button@144,128":24}
+frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft.json
+    span:fallrock: responders 0/1 spans (0 frames, 0 flips); pulser state 1, hit frames 92, reach frames 0 [] []
+    pickup-lump: responders 0/1 spans (0 frames, 0 flips); pulser state 1, hit frames 69, reach frames 0 [] []
+    overlaps {"spinner-on-button L39 button@128,144":127,"spinner-on-button L39 button@112,144":67}
+frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance-control.json
+    ceremony:sealpiece: responders 0/1 spans (0 frames, 0 flips); pulser state 1, hit frames 153, reach frames 0 [] []
+frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance.json
+    ceremony:sealpiece: responders 0/1 spans (0 frames, 0 flips); pulser state 1, hit frames 153, reach frames 0 [] []
+
+tapes 322
+  ceremony:sealpiece           spans 13, frames 4303, w/ responders 8, responder-changed 0 (0 fr, 0 flips); w/ pulsers 7, active pulser 4, pulser-changed 4, pulser hit frames 606, reach frames 0 in 0 spans []
+  freeze:bobboss-rock          spans 10, frames 1740, w/ responders 0, responder-changed 0 (0 fr, 0 flips); w/ pulsers 0, active pulser 0, pulser-changed 0, pulser hit frames 0, reach frames 0 in 0 spans []
+  freeze:door-ceremony         spans 5, frames 905, w/ responders 0, responder-changed 0 (0 fr, 0 flips); w/ pulsers 0, active pulser 0, pulser-changed 0, pulser hit frames 0, reach frames 0 in 0 spans []
+  freeze:moonrock              spans 2, frames 902, w/ responders 0, responder-changed 0 (0 fr, 0 flips); w/ pulsers 0, active pulser 0, pulser-changed 0, pulser hit frames 0, reach frames 0 in 0 spans []
+  freeze:seed-cover-fade       spans 2, frames 400, w/ responders 0, responder-changed 0 (0 fr, 0 flips); w/ pulsers 0, active pulser 0, pulser-changed 0, pulser hit frames 0, reach frames 0 in 0 spans []
+  freeze:wand-approach-fade    spans 3, frames 297, w/ responders 0, responder-changed 0 (0 fr, 0 flips); w/ pulsers 0, active pulser 0, pulser-changed 0, pulser hit frames 0, reach frames 0 in 0 spans []
+  help:sword                   spans 7, frames 6, w/ responders 0, responder-changed 0 (0 fr, 0 flips); w/ pulsers 0, active pulser 0, pulser-changed 0, pulser hit frames 0, reach frames 0 in 0 spans []
+  pickup-lump                  spans 75, frames 11250, w/ responders 28, responder-changed 0 (0 fr, 0 flips); w/ pulsers 6, active pulser 1, pulser-changed 1, pulser hit frames 69, reach frames 0 in 0 spans []
+  span:fallrock                spans 3, frames 591, w/ responders 3, responder-changed 0 (0 fr, 0 flips); w/ pulsers 3, active pulser 3, pulser-changed 3, pulser hit frames 276, reach frames 0 in 0 spans []
+  span:fallrocks-together      spans 3, frames 558, w/ responders 0, responder-changed 0 (0 fr, 0 flips); w/ pulsers 0, active pulser 0, pulser-changed 0, pulser hit frames 0, reach frames 0 in 0 spans []
+  overlaps (live ticks): {"spinner-on-buttonroom":101,"spinner-on-button":305}
+  lumps: {"textless":14,"texted":49} (placed pickups; a runtime darksword/fire is texted: see pickup-lump spans)
