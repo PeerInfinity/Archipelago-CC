@@ -61,7 +61,7 @@ describe('CHESTCOVER — the key', () => {
     it('ships OFF, appended last, with a worker env name', () => {
         expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
         // ⛓ wave 62 (PRESSERLOOP) appended `presserRecursionHang` after it.
-        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf(KEY) + 1)).toEqual(['presserRecursionHang']);
+        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf(KEY) + 1)).toEqual(['presserRecursionHang', 'publishedButtonRoomSetter']);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_CHEST_COVER_FENCEPOST');
     });
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_CHEST_COVER_FENCEPOST)(

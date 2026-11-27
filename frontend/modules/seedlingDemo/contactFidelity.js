@@ -2456,6 +2456,36 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_PRESSER_RECURSION_HANG=0|1`. ⛔ OFF by default (no flip licence).
      */
     presserRecursionHang: false,
+    /**
+     * ⛓ fidelity BUTTONROOMCLEAR D2 (wave 63) — A ButtonRoom REACHED BY ANOTHER PRESSER'S PUBLISH RUNS ITS WHOLE SETTER
+     * (wave 62's hand-over, `CC/docs/cloud-reports/seedling-fidelity-buttonroomclear.md`).
+     * The game. `ButtonRoom.set activate(a)` (`Puzzlements/ButtonRoom.as:67-98`) is all inside `if (a)`: `room == -1`
+     * publishes `persist` (flip 0 → true, flip 1 → false) to every other `Activators` of `t` (`:79-90`); `room >= 0`
+     * writes `Game.setPersistence(t, persist, room)` (`:91-94`); then it clears its OWN tag (`:96`). Any caller of
+     * `activate = true` runs it: `Button.activateAll` (`Button.as:42-61`, every frame a Button is held),
+     * `RopeStart.set activate` (`RopeStart.as:79-91`, a pull or a pulled rope's `check()`), a local flip-0 ButtonRoom's
+     * publish, the wand's tset-0 sweep (`Pickups/Wand.as:55-70`), `FinalBoss.as:218`. And every responder class is
+     * added after every ButtonRoom (`Game.as:2341-2419`, by type; `World.addUpdate` prepends), so in `getClass` order a
+     * responder takes the true, then a flip-1 ButtonRoom's false: it ends the frame false and reads false at its update.
+     * MEASURED on the game (p4g; staged L38 rooms, group 6, through `botLoadLevels`; `-evidence/d3/witness-p4g.json`):
+     * a Button, a pressed flip-0 ButtonRoom, a rope pull and a pulled rope's `check()` each clear a flip-1 ButtonRoom's
+     * tag off the walk (38,10); a cross-room one also writes its target (37,6 false; flip 0 writes it TRUE, and of two
+     * on one slot the one later in `getClass` order — earlier in the XML — lands last); a Lock and a Cover below the
+     * Button never open with a flip-1 ButtonRoom in the group (the walk stays blocked 260 ticks; without it they open),
+     * and a FallRock still falls; re-entering the level boots the published-to one pressed with the same ledger.
+     * ON. `stepActivators` runs every other ButtonRoom of a group a true is published into — the step's Button / local
+     * flip-0 presses, and the queued rope pulls, wand sweeps and build `check()`s (`queuePublishedTrue`) — as one
+     * `roomwrite` each, once per visit, in `getClass` order (`publishedButtonRoomWrites`); a local flip-0 one is not run
+     * (its answer recurses: `presserRecursionHang`). In a group holding a local flip-1 ButtonRoom (`flipAnswerGroups`)
+     * a Button / flip-0 press does not press the group (`pressedGroups`) and no publish latches it; the rocks still
+     * fall. A TRUE `roomwrite` puts its slot back on (it leaves the cleared ledgers). OFF: nothing read or written,
+     * byte-identical. Not modelled, named: a flip-1 or cross-room ButtonRoom pressed DIRECTLY still presses its group
+     * (the model's standing reading, unchanged); `FinalBoss`'s sweep (not a model publish); the rope set false by the
+     * answer (a second sword hit re-pulls it in the game); the Button's `Switch` sound on every held frame.
+     * Composes with `presserRecursionHang` (its early return stays first). `SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    publishedButtonRoomSetter: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2907,6 +2937,9 @@ if (globalThis.process?.env?.SEEDLING_CHEST_COVER_FENCEPOST === '0') CONTACT_FID
 // ⛓ fidelity PRESSERLOOP D2: `SEEDLING_PRESSER_RECURSION_HANG=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_PRESSER_RECURSION_HANG === '1') CONTACT_FIDELITY.presserRecursionHang = true;
 if (globalThis.process?.env?.SEEDLING_PRESSER_RECURSION_HANG === '0') CONTACT_FIDELITY.presserRecursionHang = false;
+// ⛓ fidelity BUTTONROOMCLEAR D2: `SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER === '1') CONTACT_FIDELITY.publishedButtonRoomSetter = true;
+if (globalThis.process?.env?.SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER === '0') CONTACT_FIDELITY.publishedButtonRoomSetter = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

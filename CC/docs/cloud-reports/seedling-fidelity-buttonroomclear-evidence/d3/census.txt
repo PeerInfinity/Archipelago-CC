@@ -1,0 +1,47 @@
+CONTROLS (wave 62 HANG_SHAPES): rooms 17; rooms holding a reachable ButtonRoom 12; reachable ButtonRooms 14
+  br0-btn: t 6: buttonroom@144,224[room -1, flip 0, tag 10] reached by button@176,240[button]; responders none
+  btn-br0: t 6: buttonroom@176,240[room -1, flip 0, tag 10] reached by button@144,224[button]; responders none
+  br0-br0: t 6: buttonroom@144,224[room -1, flip 0, tag 10] reached by buttonroom@176,240[br0]; responders none
+  br0-br0: t 6: buttonroom@176,240[room -1, flip 0, tag 11] reached by buttonroom@144,224[br0]; responders none
+  br0-rope: t 6: buttonroom@144,224[room -1, flip 0, tag 10] reached by rope@176,240[rope]; responders none
+  br1-rope-rope: t 6: buttonroom@144,224[room -1, flip 1, tag 10] reached by rope@176,240[rope], rope@112,240[rope]; responders none
+  btn-br0-boot: t 6: buttonroom@176,240[room -1, flip 0, tag 10] reached by button@144,224[button]; responders none
+  br1-btn: t 6: buttonroom@144,224[room -1, flip 1, tag 10] reached by button@176,240[button]; responders none
+  btn-br1: t 6: buttonroom@176,240[room -1, flip 1, tag 10] reached by button@144,224[button]; responders none
+  br0-br1: t 6: buttonroom@176,240[room -1, flip 1, tag 11] reached by buttonroom@144,224[br0]; responders none
+  br1-br0: t 6: buttonroom@144,224[room -1, flip 1, tag 10] reached by buttonroom@176,240[br0]; responders none
+  brx-btn: t 6: buttonroom@144,224[room 37, flip 0, tag 10] reached by button@176,240[button]; responders none
+  br1-btn-br0: t 6: buttonroom@144,224[room -1, flip 1, tag 10] reached by button@176,240[button], buttonroom@112,240[br0]; responders none
+  br1-btn-br0: t 6: buttonroom@112,240[room -1, flip 0, tag 11] reached by button@176,240[button]; responders none
+CONTROLS (wave 63 BR_SHAPES): rooms 17; rooms holding a reachable ButtonRoom 15; reachable ButtonRooms 17
+  btn-br1: t 6: buttonroom@176,240[room -1, flip 1, tag 10] reached by button@144,224[button]; responders none
+  btn-brx1: t 6: buttonroom@176,240[room 37, flip 1, tag 10] reached by button@144,224[button]; responders none
+  btn-brx0-then-brx1: t 6: buttonroom@176,240[room 37, flip 0, tag 10] reached by button@144,224[button]; responders none
+  btn-brx0-then-brx1: t 6: buttonroom@112,240[room 37, flip 1, tag 11] reached by button@144,224[button]; responders none
+  btn-brx1-then-brx0: t 6: buttonroom@176,240[room 37, flip 1, tag 10] reached by button@144,224[button]; responders none
+  btn-brx1-then-brx0: t 6: buttonroom@112,240[room 37, flip 0, tag 11] reached by button@144,224[button]; responders none
+  br0-br1: t 6: buttonroom@176,240[room -1, flip 1, tag 10] reached by buttonroom@144,224[br0]; responders none
+  br0-brx1: t 6: buttonroom@176,240[room 37, flip 1, tag 10] reached by buttonroom@144,224[br0]; responders none
+  pull-br1: t 6: buttonroom@176,240[room -1, flip 1, tag 10] reached by rope@128,240[rope]; responders none
+  ropeboot-br1: t 6: buttonroom@176,240[room -1, flip 1, tag 10] reached by rope@112,240[rope]; responders none
+  btn-br1-revisit: t 6: buttonroom@176,240[room -1, flip 1, tag 10] reached by button@144,224[button]; responders none
+  btn-brx1-revisit: t 6: buttonroom@176,240[room 37, flip 1, tag 10] reached by button@144,224[button]; responders none
+  br0-br1-revisit: t 6: buttonroom@176,240[room -1, flip 1, tag 10] reached by buttonroom@144,224[br0]; responders none
+  btn-br1-lock: t 6: buttonroom@176,240[room -1, flip 1, tag 10] reached by button@144,224[button]; responders lock@144,240
+  btn-br1-cover: t 6: buttonroom@176,240[room -1, flip 1, tag 10] reached by button@144,224[button]; responders cover@144,240
+  btn-br1-rock: t 6: buttonroom@176,240[room -1, flip 1, tag 10] reached by button@144,224[button]; responders fallrock@176,272
+  br0-br1-lock: t 6: buttonroom@176,240[room -1, flip 1, tag 10] reached by buttonroom@144,224[br0]; responders lock@144,240
+(vanilla ButtonRooms in all: 11)
+vanilla atlas: rooms 116; rooms holding a reachable ButtonRoom 0; reachable ButtonRooms 0
+(delivered ButtonRooms in all: 11)
+delivered (playthrough AP_1, p4g): rooms 116; rooms holding a reachable ButtonRoom 0; reachable ButtonRooms 0
+generated seedling_generated_chestdoor/AP_1: rooms 3; rooms holding a reachable ButtonRoom 0; reachable ButtonRooms 0
+generated seedling_generated_host/AP_1: rooms 2; rooms holding a reachable ButtonRoom 0; reachable ButtonRooms 0
+generated seedling_generated_leaf/AP_1: rooms 2; rooms holding a reachable ButtonRoom 0; reachable ButtonRooms 0
+generated seedling_generated_room/AP_1: rooms 3; rooms holding a reachable ButtonRoom 0; reachable ButtonRooms 0
+generated seedling_generated_swim/AP_1: rooms 2; rooms holding a reachable ButtonRoom 0; reachable ButtonRooms 0
+GENERATOR SWEEP (12 biomes × 5 element settings × seeds 1-20; 1200 rooms; 264 ButtonRooms, 407 buttons/ropes placed): rooms 1200; rooms holding a reachable ButtonRoom 0; reachable ButtonRooms 0
+generator calls that refused (no room): {}
+SPLIT (controls excluded) {}
+TOTAL (controls excluded) {"rooms":1444,"rooms_with":0,"reached":0}
+EXIT 0

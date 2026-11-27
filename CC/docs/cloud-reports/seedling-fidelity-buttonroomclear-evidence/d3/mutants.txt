@@ -1,0 +1,45 @@
+M1 the reached ones in XML order (not getClass order)
+  predicted: the two-on-one-slot shapes and the getClass-order unit row
+  observed: 4 failed | 37 passed (41)
+    red: btn-brx0-then-brx1: getClass: brx1 (XML last) runs first, brx0 last: 37,6 ends TRUE; 38,10 and 38,11 cleared
+    red: btn-brx1-then-brx0: getClass: brx0 runs first, brx1 last: 37,6 ends FALSE; 38,10 and 38,11 cleared
+    red: publishedButtonRoomWrites: the reached ones in getClass order (the reverse XML order), once per visit, not the
+    red: with the base's last four OFF keys ON: the witnessed shapes still match the game
+M2 no flip-1 answer to a press (pressedGroups keeps the group)
+  predicted: btn-br1-lock, btn-br1-cover, the composition row (it holds btn-br1-lock), the unit press row
+  observed: 5 failed | 36 passed (41)
+    red: ON: a Button press in a flip-answer group presses nothing, and the queued publish is drained by the step
+    red: br0-br1-lock: the flip-0 latch is answered false: the Lock never opens
+    red: btn-br1-cover: the Cover never opens
+    red: btn-br1-lock: the Lock ends every frame false: it never opens, the walk stays blocked
+    red: with the base's last four OFF keys ON: the witnessed shapes still match the game
+M3 a flip-0 press still latches a flip-answer group
+  predicted: br0-br1-lock only
+  observed: 1 failed | 40 passed (41)
+    red: br0-br1-lock: the flip-0 latch is answered false: the Lock never opens
+M4 the rope pull is not queued
+  predicted: pull-br1 (staged and composition)
+  observed: 2 failed | 39 passed (41)
+    red: pull-br1: the pull publishes true: 38,10 cleared; the flip-1 answer sets the rope false
+    red: with the base's last four OFF keys ON: the witnessed shapes still match the game
+M5 a TRUE roomwrite does not put the slot back
+  predicted: btn-brx0-then-brx1 (staged and composition)
+  observed: 2 failed | 39 passed (41)
+    red: btn-brx0-then-brx1: getClass: brx1 (XML last) runs first, brx0 last: 37,6 ends TRUE; 38,10 and 38,11 cleared
+    red: with the base's last four OFF keys ON: the witnessed shapes still match the game
+M6 only local flip-1 ButtonRooms are run (no cross-room)
+  predicted: every brx shape (btn-brx1, both two-on-one-slot, br0-brx1, btn-brx1-revisit), the revisit row, the unit getClass row, a composition row
+  observed: 8 failed | 33 passed (41)
+    red: br0-brx1: the cross-room one is published to: 37,6 ← false, 38,10 cleared
+    red: btn-brx0-then-brx1: getClass: brx1 (XML last) runs first, brx0 last: 37,6 ends TRUE; 38,10 and 38,11 cleared
+    red: btn-brx1-revisit: as btn-brx1; re-entry boots it pressed and re-writes 37,6 false
+    red: btn-brx1-then-brx0: getClass: brx0 runs first, brx1 last: 37,6 ends FALSE; 38,10 and 38,11 cleared
+    red: btn-brx1: the cross-room setter runs: 37,6 ← false, 38,10 cleared
+    red: publishedButtonRoomWrites: the reached ones in getClass order (the reverse XML order), once per visit, not the
+    red: the next-visit boot: the published-to ButtonRoom boots pressed on re-entry ON (OFF unpressed), the ledger unch
+    red: with the base's last four OFF keys ON: the witnessed shapes still match the game
+M7 a build check() publish is not queued
+  predicted: ropeboot-br1 only (no other shape boots a publisher into an unwritten ButtonRoom)
+  observed: 1 failed | 40 passed (41)
+    red: ropeboot-br1: check() → hit() → true at build: 38,10 cleared at build
+restored: clean
