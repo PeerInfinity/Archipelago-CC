@@ -1,0 +1,65 @@
+top keys A ['budgetWork', 'equips', 'live', 'name', 'passes', 'perTick', 'scratchPersistence', 'solverGoal', 'source', 'staging', 'upgradeWindowWork']
+top keys B ['budgetWork', 'equips', 'live', 'name', 'perTick', 'scratchPersistence', 'solverGoal', 'source', 'staging', 'upgradeWindowWork']
+**DIFF budgetWork 
+     A: 640
+     B: 0
+  same equips 
+**DIFF live 
+     A: {"digest": "{\"L\":40,\"s\":{\"x\":888.9943081541074,\"y\":823.9338390235838,\"vx\":0,\"vy\":0,\"hitX\":null,\"hitY\":null,\"terrain\":8,\"hazard\":{\"onIce\":false,\"onWaterfall\":false,\"inWater\":false,\"inLava\":false},\"drown\":{\"timer\":0,\"drowning\":false},\"swim\":null,\"latched\":{},\"transition\":null,\"fall\":null,\"direction\":1},\"t\":1106,\"d\":0,\"p\":0,\"tr\":0,\"c\":[{\"id\":\"b
+     B: {"digest": "{\"L\":40,\"s\":{\"x\":887.509425433672,\"y\":826.7755642426891,\"vx\":0,\"vy\":-2.6000000000000005,\"hitX\":null,\"hitY\":null,\"terrain\":8,\"hazard\":{\"onIce\":false,\"onWaterfall\":false,\"inWater\":false,\"inLava\":false},\"drown\":{\"timer\":0,\"drowning\":false},\"swim\":null,\"latched\":{},\"transition\":null,\"fall\":null,\"direction\":1},\"t\":1018,\"d\":0,\"p\":0,\"tr\":0,\
+**DIFF name 
+     A: "wasm-continue-location-40"
+     B: "js-runtime-L40-location"
+**DIFF passes 
+     A: [{"dashMode": "none", "pass": "dashless", "stop": "all"}, {"adds": "sword-dash", "dashMode": "all", "pass": "full", "stop": "window"}]
+     B: null
+  same scratchPersistence 
+  same solverGoal 
+  same upgradeWindowWork 
+staging keys A ['boot', 'despawn', 'equips', 'grants', 'inventory_slots', 'noDamage', 'noHazards', 'noclip', 'persistence', 'pins', 'rng', 'save', 'seam']
+staging keys B ['boot', 'despawn', 'equips', 'grants', 'inventory_slots', 'noDamage', 'noHazards', 'noclip', 'persistence', 'pins', 'rng', 'save', 'seam']
+  same staging.boot 
+  same staging.despawn 
+  same staging.equips 
+  same staging.grants 
+  same staging.inventory_slots 
+  same staging.noDamage 
+  same staging.noHazards 
+  same staging.noclip 
+  persistence: A 65 B 48 only-A ['{"level": 10, "tag": 0}', '{"level": 11, "tag": 0}', '{"level": 12, "tag": 9}', '{"level": 15, "tag": 1}', '{"level": 17, "tag": 0}', '{"level": 17, "tag": 29}', '{"level": 19, "tag": 3}', '{"level": 20, "tag": 2}', '{"level": 25, "tag": 0}', '{"level": 29, "tag": 1}', '{"level": 30, "tag": 4}', '{"level": 36, "tag": 0}', '{"level": 38, "tag": 1}', '{"level": 39, "tag": 5}', '{"level": 39, "tag": 6}', '{"level": 49, "tag": 0}', '{"level": 86, "tag": 0}'] only-B []
+**DIFF staging.pins 
+     A: ["sound", "dead_frames"]
+     B: ["dead_frames", "sound"]
+**DIFF staging.rng 
+     A: {"cosmetic": 0, "seed": 2132250561, "split": true}
+     B: {"cosmetic": 0, "fp": 987286273, "seed": 0, "split": false}
+**DIFF staging.save 
+     A: {"keys": [0, 1], "seal_parts": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "totem_parts": [0]}
+     B: {"keys": [0, 1], "seal_parts": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "totem_parts": [0]}
+**DIFF staging.seam.beam 
+     A: false
+     B: null
+**DIFF staging.seam.cutscene 
+     A: [false, false, false, false]
+     B: null
+**DIFF staging.seam.hits_max 
+     A: 3
+     B: null
+**DIFF staging.seam.items 
+     A: {"canSwim": true, "hasDarkShield": false, "hasDarkSuit": false, "hasDarkSword": false, "hasFeather": false, "hasFire": true, "hasFireWand": false, "hasGhostSword": false, "hasShield": true, "hasSpear": false, "hasSword": true, "hasTorch": true, "hasWand": false}
+     B: {"canSwim": true, "hasDarkShield": false, "hasDarkSuit": false, "hasDarkSword": false, "hasFeather": false, "hasFire": true, "hasFireWand": false, "hasGhostSword": false, "hasShield": true, "hasSpear": false, "hasSword": true, "hasTorch": true, "hasWand": false, "hitsMax": 3}
+**DIFF staging.seam.menu_state 
+     A: 0
+     B: null
+  same staging.seam.primary 
+**DIFF staging.seam.rock_set 
+     A: false
+     B: null
+**DIFF staging.seam.secondary 
+     A: 0
+     B: null
+**DIFF staging.seam.time 
+     A: 33953
+     B: 4800
+perTick len A 1106 B 1018
+source.records same: True
