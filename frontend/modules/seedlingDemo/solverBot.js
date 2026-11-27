@@ -21993,7 +21993,7 @@ function preLockStance(run, lock, contacts) {
  * can build a fresh run re-solves the whole segment instead (`twoPassSolve`, `procgenOracle.solve`).
  */
 /**
- * ⛓ hammer-phase KILL880 (`PRESS_KILL_HOLD`, OFF) — **A PRESS KILL CORNERED ON ITS WAY OUT OF A STAND IS REDONE AFTER A
+ * ⛓ hammer-phase KILL880 (`PRESS_KILL_HOLD`, ON since the PKH+MU flip) — **A PRESS KILL CORNERED ON ITS WAY OUT OF A STAND IS REDONE AFTER A
  * LONGER STAND.**
  *
  * The HAMMER-PHASE rung (F1c) holds the kill's approach walk only near the corner it previews (walk-offsets `c − 1 … 0`,
@@ -22014,12 +22014,13 @@ function preLockStance(run, lock, contacts) {
  * kills with no player hit since the rewind is kept. An idle tick that is hit, dies or crosses a door ends the search
  * (a longer idle contains it); a redo that refuses or is hit is UNDONE. All refused → the original refusal is thrown,
  * plus one sentence. Nothing reads a level, a coordinate or an entity id. OFF: never asked.
- * `SEEDLING_PRESS_KILL_HOLD=1` / `withPressKillHold(enabled, fn)`. Worker thread (the solve).
+ * `SEEDLING_PRESS_KILL_HOLD=0` opts out / `withPressKillHold(enabled, fn)`. Worker thread (the solve).
  */
-export const PRESS_KILL_HOLD = { enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_HOLD === '1',
+// ⚖ PKH+MU flip (user 2026-11-27, "PKH+MU flip prep"): ON by default; `SEEDLING_PRESS_KILL_HOLD=0` opts out.
+export const PRESS_KILL_HOLD = { enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_HOLD !== '0',
     /** The idles tried at the stand, in whole hammer periods: 1 … maxPeriods. */
     maxPeriods: 4 };
-export const PRESS_KILL_HOLD_DEFAULT = false;
+export const PRESS_KILL_HOLD_DEFAULT = true;
 /** Per-run rows (ON only): one per refusal answered, `{t, stand, refusedAt, tries: [{wait, verdict, why}], verdict}`. */
 export const PRESS_KILL_HOLD_COUNTS = { rows: [] };
 
@@ -22059,7 +22060,7 @@ function execKillByPressHold(run, perTick, resolved, ctx, dispatch) {
             let idleWhy = null;
             for (let i = 0; i < wait && idleWhy === null; i += 1) {
                 perTick.push(NO_HELD_PREVIEW);
-                // ⛓ hammer-phase L40-CHEST-CORNER (`PRESS_KILL_HOLD_MODEL_UNDO`, OFF): an idle the model refuses ends the search
+                // ⛓ hammer-phase L40-CHEST-CORNER (`PRESS_KILL_HOLD_MODEL_UNDO`, ON since the PKH+MU flip): an idle the model refuses ends the search
                 const idled = advanceHoldIdle(fresh);
                 if (idled.modelRefused) idleWhy = `the model refused the idle at its tick ${i + 1}`;
                 else if (idled.transition) idleWhy = 'the idle crossed a door';
@@ -22093,7 +22094,7 @@ function execKillByPressHold(run, perTick, resolved, ctx, dispatch) {
                     throw e2;
                 }
                 undo();
-                // ⛓ hammer-phase L40-CHEST-CORNER (`PRESS_KILL_HOLD_MODEL_UNDO`, OFF): a redo the model refuses is a refused try
+                // ⛓ hammer-phase L40-CHEST-CORNER (`PRESS_KILL_HOLD_MODEL_UNDO`, ON since the PKH+MU flip): a redo the model refuses is a refused try
                 if (!(e2 instanceof SolverBotError) && !(e2 instanceof SolverRefusal) && !holdRedoModelRefusal(e2)) throw e2;
                 row.tries.push({ wait, verdict: 'refused', why: String(e2?.message ?? e2).split('\n')[0].slice(0, 200) });
             }
@@ -22108,7 +22109,7 @@ function execKillByPressHold(run, perTick, resolved, ctx, dispatch) {
 }
 
 /**
- * ⛓ hammer-phase L40-CHEST-CORNER (`PRESS_KILL_HOLD_MODEL_UNDO`, OFF) — **A HOLD REDO THAT THE MODEL REFUSES TO PRICE IS A
+ * ⛓ hammer-phase L40-CHEST-CORNER (`PRESS_KILL_HOLD_MODEL_UNDO`, ON since the PKH+MU flip) — **A HOLD REDO THAT THE MODEL REFUSES TO PRICE IS A
  * REFUSED TRY, NOT THE ANSWER.**
  *
  * `PRESS_KILL_HOLD`'s contract is that a redo which refuses is UNDONE and, when every redo refused, the ORIGINAL refusal
@@ -22128,8 +22129,9 @@ function execKillByPressHold(run, perTick, resolved, ctx, dispatch) {
  * coordinate or an entity id. `SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1` / `withPressKillHoldModelUndo(enabled, fn)`.
  * Worker thread (the solve).
  */
-export const PRESS_KILL_HOLD_MODEL_UNDO = { enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO === '1' };
-export const PRESS_KILL_HOLD_MODEL_UNDO_DEFAULT = false;
+// ⚖ PKH+MU flip: ON by default with PKH; `SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=0` opts out.
+export const PRESS_KILL_HOLD_MODEL_UNDO = { enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO !== '0' };
+export const PRESS_KILL_HOLD_MODEL_UNDO_DEFAULT = true;
 /** Per-run count (ON only): hold redos whose model throw was read as a refused try. */
 export const PRESS_KILL_HOLD_MODEL_UNDO_COUNTS = { undone: 0 };
 
@@ -22372,7 +22374,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
         const t = perTick.length;
         REWIND_PROBE.sink({ t, kind: 'kill-start', live: run, rewound: () => ctx.rewind.replay(t) });
     }
-    // ⛓ hammer-phase KILL880 (`PRESS_KILL_HOLD`, OFF): the dispatch below, retried after a longer stand
+    // ⛓ hammer-phase KILL880 (`PRESS_KILL_HOLD`, ON since the PKH+MU flip): the dispatch below, retried after a longer stand
     if (PRESS_KILL_HOLD.enabled && ctx.rewind) {
         return execKillByPressHold(run, perTick, resolved, ctx, (r, res) => (OPP_PRESS_FALLBACK.enabled
             && OPPORTUNISTIC_STRIKE.enabled ? execKillByPressOppFallback : execKillByPressFightFallback)(r, perTick, res, ctx));

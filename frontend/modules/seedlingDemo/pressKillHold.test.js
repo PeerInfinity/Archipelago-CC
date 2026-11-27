@@ -12,9 +12,9 @@ import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 const keys = (spec) => spec.split(' ').map((k) => new Set(k === '-' ? [] : k.split('+')));
 
 describe('PRESS_KILL_HOLD (hammer-phase KILL880)', () => {
-    it('ships OFF, and its env name is in the worker\'s table', () => {
-        expect(PRESS_KILL_HOLD_DEFAULT).toBe(false);
-        expect(PRESS_KILL_HOLD.enabled).toBe(globalThis.process?.env?.SEEDLING_PRESS_KILL_HOLD === '1');
+    it('ships ON (the PKH+MU flip), and its env name is in the worker\'s table', () => {
+        expect(PRESS_KILL_HOLD_DEFAULT).toBe(true);
+        expect(PRESS_KILL_HOLD.enabled).toBe(globalThis.process?.env?.SEEDLING_PRESS_KILL_HOLD !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_PRESS_KILL_HOLD');
         expect(PRESS_KILL_HOLD_COUNTS.rows).toEqual(expect.any(Array));
     });

@@ -49,10 +49,10 @@ function clocklessSpinnerKillLock() {
 }
 
 describe('PRESS_KILL_HOLD_MODEL_UNDO (hammer-phase L40-CHEST-CORNER)', () => {
-    it('ships OFF, read from SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO, and is a name the solver-env channel carries', () => {
-        expect(PRESS_KILL_HOLD_MODEL_UNDO_DEFAULT).toBe(false);
+    it('ships ON (the PKH+MU flip), read from SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO, and is a name the solver-env channel carries', () => {
+        expect(PRESS_KILL_HOLD_MODEL_UNDO_DEFAULT).toBe(true);
         expect(PRESS_KILL_HOLD_MODEL_UNDO.enabled)
-            .toBe(globalThis.process?.env?.SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO === '1');
+            .toBe(globalThis.process?.env?.SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO');
     });
 
