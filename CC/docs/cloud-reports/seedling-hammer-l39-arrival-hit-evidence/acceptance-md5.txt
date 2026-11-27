@@ -1,0 +1,3 @@
+base de6e6e7fa8 (before any change): 391322d681b7aa0229d94b3f6906d024  -
+OFF after f0b8f3fb (variant A):     391322d681b7aa0229d94b3f6906d024  -
+OFF after 8cebc41b (variant B):     391322d681b7aa0229d94b3f6906d024  -

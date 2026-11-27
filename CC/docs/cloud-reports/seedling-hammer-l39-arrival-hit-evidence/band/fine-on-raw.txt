@@ -1,0 +1,143 @@
+== on.-1
+  attempt budget=640 ok=true work=643 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget
+  attempt budget=2560 ok=true work=1196 dashless:ok/2864t/w536/h1 full:ok/3940t/w660/window/h0
+PAGE 18:11 seam=29993 shift=-1 retries=1 ship full ticks=3940 hits=0 deaths=0 [] answer=
+== on.-10
+  attempt budget=640 ok=true work=641 dashless:ok/3903t/w582/h0 full:refusal/w59/budget
+PAGE 18:11 seam=29984 shift=-10 retries=0 provisional → ship dashless ticks=3903 hits=0 deaths=0 [] answer=
+== on.-11
+  attempt budget=640 ok=true work=642 dashless:ok/3979t/w585/h0 full:refusal/w57/budget
+PAGE 18:11 seam=29983 shift=-11 retries=0 provisional → ship dashless ticks=3979 hits=0 deaths=0 [] answer=
+== on.-12
+  attempt budget=640 ok=true work=641 dashless:ok/3939t/w581/h0 full:refusal/w60/budget
+PAGE 18:11 seam=29982 shift=-12 retries=0 provisional → ship dashless ticks=3939 hits=0 deaths=0 [] answer=
+== on.-13
+  attempt budget=640 ok=true work=642 dashless:ok/4045t/w585/h0 full:refusal/w57/budget
+PAGE 18:11 seam=29981 shift=-13 retries=0 provisional → ship dashless ticks=4045 hits=0 deaths=0 [] answer=
+== on.-14
+  attempt budget=640 ok=false work=642 dashless:refusal/w478 full:refusal/w164/budget
+  attempt budget=2560 ok=false work=927 full:refusal/w927
+PAGE 18:11 seam=29980 shift=-14 retries=1 FAIL (declined)
+== on.-15
+  attempt budget=640 ok=true work=641 dashless:ok/3856t/w577/h0 full:refusal/w64/budget
+PAGE 18:11 seam=29979 shift=-15 retries=0 provisional → ship dashless ticks=3856 hits=0 deaths=0 [] answer=
+== on.-16
+  attempt budget=640 ok=true work=641 dashless:ok/3935t/w581/h0 full:refusal/w60/budget
+PAGE 18:11 seam=29978 shift=-16 retries=0 provisional → ship dashless ticks=3935 hits=0 deaths=0 [] answer=
+== on.-17
+  attempt budget=640 ok=true work=641 dashless:ok/3935t/w581/h0 full:refusal/w60/budget
+PAGE 18:11 seam=29977 shift=-17 retries=0 provisional → ship dashless ticks=3935 hits=0 deaths=0 [] answer=
+== on.-18
+  attempt budget=640 ok=true work=641 dashless:ok/3834t/w577/h0 full:refusal/w64/budget
+PAGE 18:11 seam=29976 shift=-18 retries=0 provisional → ship dashless ticks=3834 hits=0 deaths=0 [] answer=
+== on.-19
+  attempt budget=640 ok=true work=641 dashless:ok/3835t/w577/h0 full:refusal/w64/budget
+PAGE 18:11 seam=29975 shift=-19 retries=0 provisional → ship dashless ticks=3835 hits=0 deaths=0 [] answer=
+== on.-2
+  attempt budget=640 ok=true work=643 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget
+  attempt budget=2560 ok=true work=1196 dashless:ok/2864t/w536/h1 full:ok/3940t/w660/window/h0
+PAGE 18:11 seam=29992 shift=-2 retries=1 ship full ticks=3940 hits=0 deaths=0 [] answer=
+== on.-20
+  attempt budget=640 ok=true work=641 dashless:ok/3943t/w583/h0 full:refusal/w58/budget
+PAGE 18:11 seam=29974 shift=-20 retries=0 provisional → ship dashless ticks=3943 hits=0 deaths=0 [] answer=
+== on.-21
+  attempt budget=640 ok=true work=642 dashless:ok/2831t/w536/h0 full:refusal/w106/budget
+PAGE 18:11 seam=29973 shift=-21 retries=0 provisional → ship dashless ticks=2831 hits=0 deaths=0 [] answer=
+== on.-22
+  attempt budget=640 ok=true work=642 dashless:ok/2831t/w536/h0 full:refusal/w106/budget
+PAGE 18:11 seam=29972 shift=-22 retries=0 provisional → ship dashless ticks=2831 hits=0 deaths=0 [] answer=
+== on.-23
+  attempt budget=640 ok=true work=642 dashless:ok/2831t/w536/h0 full:refusal/w106/budget
+PAGE 18:11 seam=29971 shift=-23 retries=0 provisional → ship dashless ticks=2831 hits=0 deaths=0 [] answer=
+== on.-24
+  attempt budget=640 ok=true work=642 dashless:ok/2743t/w530/h0 full:refusal/w112/budget
+PAGE 18:11 seam=29970 shift=-24 retries=0 provisional → ship dashless ticks=2743 hits=0 deaths=0 [] answer=
+== on.-3
+  attempt budget=640 ok=true work=643 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget
+  attempt budget=2560 ok=true work=1176 dashless:ok/2864t/w536/h1 full:ok/3317t/w640/window/h0
+PAGE 18:11 seam=29991 shift=-3 retries=1 ship full ticks=3317 hits=0 deaths=0 [] answer=
+== on.-4
+  attempt budget=640 ok=true work=643 dashless:ok/2853t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget
+  attempt budget=2560 ok=true work=1176 dashless:ok/2853t/w536/h1 full:ok/3317t/w640/window/h0
+PAGE 18:11 seam=29990 shift=-4 retries=1 ship full ticks=3317 hits=0 deaths=0 [] answer=
+== on.-5
+  attempt budget=640 ok=true work=643 dashless:ok/2853t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget
+  attempt budget=2560 ok=true work=1176 dashless:ok/2853t/w536/h1 full:ok/3317t/w640/window/h0
+PAGE 18:11 seam=29989 shift=-5 retries=1 ship full ticks=3317 hits=0 deaths=0 [] answer=
+== on.-6
+  attempt budget=640 ok=true work=641 dashless:ok/3882t/w580/h0 full:refusal/w61/budget
+PAGE 18:11 seam=29988 shift=-6 retries=0 provisional → ship dashless ticks=3882 hits=0 deaths=0 [] answer=
+== on.-7
+  attempt budget=640 ok=true work=641 dashless:ok/3841t/w580/h0 full:refusal/w61/budget
+PAGE 18:11 seam=29987 shift=-7 retries=0 provisional → ship dashless ticks=3841 hits=0 deaths=0 [] answer=
+== on.-8
+  attempt budget=640 ok=true work=641 dashless:ok/3958t/w582/h0 full:refusal/w59/budget
+PAGE 18:11 seam=29986 shift=-8 retries=0 provisional → ship dashless ticks=3958 hits=0 deaths=0 [] answer=
+== on.-9
+  attempt budget=640 ok=true work=641 dashless:ok/3879t/w579/h0 full:refusal/w62/budget
+PAGE 18:11 seam=29985 shift=-9 retries=0 provisional → ship dashless ticks=3879 hits=0 deaths=0 [] answer=
+== on.0
+  attempt budget=640 ok=true work=643 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget
+  attempt budget=2560 ok=true work=1195 dashless:ok/2864t/w536/h1 full:ok/3929t/w659/window/h0
+PAGE 18:11 seam=29994 shift=0 retries=1 ship full ticks=3929 hits=0 deaths=0 [] answer=128f09ae3413
+== on.1
+  attempt budget=640 ok=true work=642 dashless:ok/2839t/w536/h0 full:refusal/w106/budget
+PAGE 18:11 seam=29995 shift=1 retries=0 provisional → ship dashless ticks=2839 hits=0 deaths=0 [] answer=
+== on.10
+  attempt budget=640 ok=true work=641 dashless:ok/3923t/w583/h0 full:refusal/w58/budget
+PAGE 18:11 seam=30004 shift=10 retries=0 provisional → ship dashless ticks=3923 hits=0 deaths=0 [] answer=
+== on.11
+  attempt budget=640 ok=true work=641 dashless:ok/3846t/w579/h0 full:refusal/w62/budget
+PAGE 18:11 seam=30005 shift=11 retries=0 provisional → ship dashless ticks=3846 hits=0 deaths=0 [] answer=
+== on.12
+  attempt budget=640 ok=true work=642 dashless:ok/2842t/w534/h0 full:refusal/w108/budget
+PAGE 18:11 seam=30006 shift=12 retries=0 provisional → ship dashless ticks=2842 hits=0 deaths=0 [] answer=
+== on.13
+  attempt budget=640 ok=true work=641 dashless:ok/3818t/w576/h0 full:refusal/w65/budget
+PAGE 18:11 seam=30007 shift=13 retries=0 provisional → ship dashless ticks=3818 hits=0 deaths=0 [] answer=
+== on.14
+  attempt budget=640 ok=true work=642 dashless:ok/2743t/w533/h0 full:refusal/w109/budget
+PAGE 18:11 seam=30008 shift=14 retries=0 provisional → ship dashless ticks=2743 hits=0 deaths=0 [] answer=
+== on.15
+  attempt budget=640 ok=true work=642 dashless:ok/3345t/w547/h0 full:refusal/w95/budget
+PAGE 18:11 seam=30009 shift=15 retries=0 provisional → ship dashless ticks=3345 hits=0 deaths=0 [] answer=
+== on.16
+  attempt budget=640 ok=true work=642 dashless:ok/3345t/w547/h0 full:refusal/w95/budget
+PAGE 18:11 seam=30010 shift=16 retries=0 provisional → ship dashless ticks=3345 hits=0 deaths=0 [] answer=
+== on.17
+  attempt budget=640 ok=true work=642 dashless:ok/2744t/w529/h0 full:refusal/w113/budget
+PAGE 18:11 seam=30011 shift=17 retries=0 provisional → ship dashless ticks=2744 hits=0 deaths=0 [] answer=
+== on.18
+  attempt budget=640 ok=true work=642 dashless:ok/2743t/w530/h0 full:refusal/w112/budget
+PAGE 18:11 seam=30012 shift=18 retries=0 provisional → ship dashless ticks=2743 hits=0 deaths=0 [] answer=
+== on.19
+  attempt budget=640 ok=true work=642 dashless:ok/2743t/w530/h0 full:refusal/w112/budget
+PAGE 18:11 seam=30013 shift=19 retries=0 provisional → ship dashless ticks=2743 hits=0 deaths=0 [] answer=
+== on.2
+  attempt budget=640 ok=true work=642 dashless:ok/2839t/w536/h0 full:refusal/w106/budget
+PAGE 18:11 seam=29996 shift=2 retries=0 provisional → ship dashless ticks=2839 hits=0 deaths=0 [] answer=
+== on.20
+  attempt budget=640 ok=true work=642 dashless:ok/2743t/w530/h0 full:refusal/w112/budget
+PAGE 18:11 seam=30014 shift=20 retries=0 provisional → ship dashless ticks=2743 hits=0 deaths=0 [] answer=
+== on.3
+  attempt budget=640 ok=true work=642 dashless:ok/2839t/w536/h0 full:refusal/w106/budget
+PAGE 18:11 seam=29997 shift=3 retries=0 provisional → ship dashless ticks=2839 hits=0 deaths=0 [] answer=
+== on.4
+  attempt budget=640 ok=true work=642 dashless:ok/2838t/w537/h0 full:refusal/w105/budget
+PAGE 18:11 seam=29998 shift=4 retries=0 provisional → ship dashless ticks=2838 hits=0 deaths=0 [] answer=
+== on.5
+  attempt budget=640 ok=true work=642 dashless:ok/3974t/w586/h0 full:refusal/w56/budget
+PAGE 18:11 seam=29999 shift=5 retries=0 provisional → ship dashless ticks=3974 hits=0 deaths=0 [] answer=
+== on.6
+  attempt budget=640 ok=true work=643 dashless:ok/2867t/w538/h1 full:refusal/w104/budget hit-avoid:-/w1/cut=budget
+  attempt budget=2560 ok=true work=2449 dashless:ok/2867t/w538/h1 full:ok/3926t/w1911/window/h0
+PAGE 18:11 seam=30000 shift=6 retries=1 ship full ticks=3926 hits=0 deaths=0 [] answer=
+== on.7
+  attempt budget=640 ok=true work=642 dashless:ok/3990t/w585/h0 full:refusal/w57/budget
+PAGE 18:11 seam=30001 shift=7 retries=0 provisional → ship dashless ticks=3990 hits=0 deaths=0 [] answer=
+== on.8
+  attempt budget=640 ok=true work=641 dashless:ok/3860t/w579/h0 full:refusal/w62/budget
+PAGE 18:11 seam=30002 shift=8 retries=0 provisional → ship dashless ticks=3860 hits=0 deaths=0 [] answer=
+== on.9
+  attempt budget=640 ok=true work=641 dashless:ok/3860t/w579/h0 full:refusal/w62/budget
+PAGE 18:11 seam=30003 shift=9 retries=0 provisional → ship dashless ticks=3860 hits=0 deaths=0 [] answer=
