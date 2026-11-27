@@ -35,7 +35,8 @@
     "strategySwitch.js",
     "strikePolicy.js",
     "strikeSlot.js",
-    "tentacleBeastPolicy.js"
+    "tentacleBeastPolicy.js",
+    "walkBladeArm.js"
   ],
   "simulation": {
     "entry": "frontend/modules/seedlingDemo/levelRun.js",
@@ -584,9 +585,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 28,
         "lightsVerb.js": 1,
-        "solverBot.js": 264
+        "solverBot.js": 265
       },
-      "sites": 406,
+      "sites": 407,
       "seen": "both",
       "via": [
         "direct",
@@ -724,7 +725,7 @@
         },
         "strikeBodies": {
           "botDriverV2.js": 3,
-          "solverBot.js": 29
+          "solverBot.js": 30
         },
         "talkCircles": {
           "solverBot.js": 5
@@ -1034,9 +1035,9 @@
         "dangerMap.js": 14,
         "director.js": 1,
         "solveProgress.js": 2,
-        "solverBot.js": 137
+        "solverBot.js": 138
       },
-      "sites": 188,
+      "sites": 189,
       "seen": "both",
       "via": [
         "direct",
@@ -1216,10 +1217,10 @@
         "botDriverV2.js": 27,
         "director.js": 1,
         "lightsVerb.js": 5,
-        "solverBot.js": 182,
+        "solverBot.js": 186,
         "strikePolicy.js": 2
       },
-      "sites": 217,
+      "sites": 221,
       "seen": "both",
       "via": [
         "direct",
@@ -1253,10 +1254,10 @@
         "inventory": {
           "botDriverV2.js": 7,
           "lightsVerb.js": 3,
-          "solverBot.js": 63
+          "solverBot.js": 64
         },
         "inventorySlots": {
-          "solverBot.js": 28
+          "solverBot.js": 29
         },
         "keys": {
           "botDriverV2.js": 6,
@@ -1264,12 +1265,12 @@
         },
         "primary": {
           "botDriverV2.js": 1,
-          "solverBot.js": 33
+          "solverBot.js": 34
         },
         "primaryWeapon": {
           "botDriverV2.js": 3,
           "lightsVerb.js": 1,
-          "solverBot.js": 30
+          "solverBot.js": 31
         },
         "saveState": {
           "director.js": 1
@@ -1529,9 +1530,9 @@
         "botDriverV2.js": 3,
         "dangerMap.js": 13,
         "lightsVerb.js": 7,
-        "solverBot.js": 152
+        "solverBot.js": 153
       },
-      "sites": 175,
+      "sites": 176,
       "seen": "both",
       "via": [
         "direct",
@@ -7514,9 +7515,10 @@
       "form": "constant",
       "files": {
         "solverBot.js": 40,
-        "spearArm.js": 1
+        "spearArm.js": 1,
+        "walkBladeArm.js": 2
       },
-      "sites": 41,
+      "sites": 43,
       "seen": "static",
       "via": [
         "import"

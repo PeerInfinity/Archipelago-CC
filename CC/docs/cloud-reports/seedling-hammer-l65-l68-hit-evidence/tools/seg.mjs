@@ -1,0 +1,11 @@
+import { ctx, solve, chainNext } from './chain.mjs';
+const { J, levelSource, tape0 } = ctx;
+const SB = await import('/home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js');
+const a1 = solve(tape0);
+const { tape: t2 } = chainNext(tape0, a1.plan, { kind: 'reach-exit', exit: { x: 184, y: 64 } });
+const dashMode = process.env.DM ?? 'none';
+const run = J.replayTape({ staging: t2.staging, perTick: t2.perTick, levelSource, equips: t2.equips, scratchPersistence: true });
+const forkRun = J.forkRunFor({ staging: t2.staging, levelSource, scratchPersistence: true, equips: t2.equips, prefixLength: t2.perTick.length });
+const out = SB.solveSegment({ run, goals: J.solverGoalsOf(t2.solverGoal), name: 'probe', boot: t2.staging.boot, prefix: t2.perTick, dashMode, forkRun });
+console.log('ticks', out.perTick.length - t2.perTick.length, 'hits', JSON.stringify(run.ledger('playerHits')));
+for (const r of out.trace.rows ?? []) console.log(JSON.stringify(r).slice(0, 900));

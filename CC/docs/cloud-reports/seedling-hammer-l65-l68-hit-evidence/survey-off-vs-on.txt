@@ -1,0 +1,4 @@
+off.json: 250 steps, 224 SOLVED, 26 not; SOLVED with replay hits/deaths: 3 -> 24(L16:1h0d), 202(L82:2h0d), 220(L82:2h0d)
+on.json: 250 steps, 225 SOLVED, 25 not; SOLVED with replay hits/deaths: 4 -> 24(L16:1h0d), 149(L40:1h0d), 202(L82:2h0d), 220(L82:2h0d)
+movers 1
+  step 149: L40 REFUSED Nonet Noneh solverBot(survey-step-149) collect (64,144) stance (ladder-routed: no corridor from (280.3669873047385,216.60071614521746) to a stance that can collect totempar  ||  L40 SOLVED 2043t 1h 

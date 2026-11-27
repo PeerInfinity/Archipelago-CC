@@ -1,0 +1,22 @@
+plan keys ['ok', 'kind', 'producer', 'verbs', 'ticks', 'prefix', 'passes', 'split', 'contactFidelity', 'solverEnv']
+SAME level_65__r0c2 <- in_L63_32_304 -> exit:out_teleporter_0_128
+   OFF {"end": "done", "failed": null, "roomHits": [0, []], "lastPlan": {"ticks": 63, "solverEnv": "SEEDLING_AXE_TIMING_SWORD_SWAP=1"}}
+SAME level_65__r0c2 <- in_L66_144_144 -> exit:out_teleporter_0_128
+   OFF {"end": "done", "failed": null, "roomHits": [0, []], "lastPlan": {"ticks": 5, "solverEnv": "SEEDLING_AXE_TIMING_SWORD_SWAP=1"}}
+SAME level_65__r4c11 <- in_L68_16_80 -> exit:out_teleporter_184_64
+   OFF {"end": "done", "failed": null, "roomHits": [0, []], "lastPlan": {"ticks": 5, "solverEnv": "SEEDLING_AXE_TIMING_SWORD_SWAP=1"}}
+SAME level_68__r3c1 <- in_L65_184_64 -> exit:out_teleporter_16_80
+   OFF {"end": "done", "failed": null, "roomHits": [0, []], "lastPlan": {"ticks": 4, "solverEnv": "SEEDLING_AXE_TIMING_SWORD_SWAP=1"}}
+SAME level_65__r0c8 <- in_L63_128_304 -> location:L65 flag 0: lightpole@128,168 cleared
+   OFF {"end": "failed", "failed": "the solver has no goal for L65 flag 0: lightpole@128,168 cleared: \"L65 flag 0: l", "roomHits": [0, []], "lastPlan": null}
+SAME level_68__r3c1 <- in_L65_184_64 -> location:L68 flag 0: bosslock@16,32 cleared
+   OFF {"end": "done", "failed": null, "roomHits": [0, []], "lastPlan": {"ticks": 98, "solverEnv": "SEEDLING_AXE_TIMING_SWORD_SWAP=1"}}
+SAME level_68__r1c1 <- in_L65_184_64 ~> level_68__r3c1 -> location:Level 068 - Health
+   OFF {"end": "done", "failed": null, "roomHits": [0, []], "lastPlan": {"ticks": 163, "solverEnv": "SEEDLING_AXE_TIMING_SWORD_SWAP=1"}}
+SAME level_65__r0c2 <- in_L63_32_304 -> exit:out_teleporter_32_0
+   OFF {"end": "done", "failed": null, "roomHits": [0, []], "lastPlan": {"ticks": 5, "solverEnv": "SEEDLING_AXE_TIMING_SWORD_SWAP=1"}}
+SAME level_65__r0c2 <- in_L66_144_144 -> exit:out_teleporter_32_0
+   OFF {"end": "done", "failed": null, "roomHits": [0, []], "lastPlan": {"ticks": 56, "solverEnv": "SEEDLING_AXE_TIMING_SWORD_SWAP=1"}}
+SAME level_65__r0c8 <- in_L63_128_304 -> exit:out_teleporter_128_0
+   OFF {"end": "done", "failed": null, "roomHits": [0, []], "lastPlan": {"ticks": 5, "solverEnv": "SEEDLING_AXE_TIMING_SWORD_SWAP=1"}}
+identical 10 of 10

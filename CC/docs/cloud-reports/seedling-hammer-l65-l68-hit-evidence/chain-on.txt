@@ -1,0 +1,4 @@
+{"name":"37:8 L63->L65","ok":true,"ticks":497,"work":2337,"answer":"948269aa1764","from":"t0","passes":"dashless:refused/w2049 full:497t/0h/w288","verbs":["bridge","kill","walk"],"budgetCut":false,"msg":null}
+{"name":"L65->L68 (184,64)","ok":true,"ticks":593,"work":200,"answer":"00ff039aabc7","from":"L65 (136.0,24.0) t497","passes":"dashless:667t/0h/w57 full:593t/0h/w143/window","verbs":["kill","walk"],"budgetCut":false,"msg":null}
+{"name":"L68 Health (16,16)","ok":true,"ticks":163,"work":166,"answer":"7aecb8d43c92","from":"L68 (24.0,72.0) t1090","passes":"dashless:184t/0h/w52 full:163t/0h/w114","verbs":["keylock","walk","wand"],"budgetCut":false,"msg":null}
+FULL {"ticks":1253,"hits":[],"deaths":0,"end":{"level":68,"x":24,"y":23.650000000000038,"deaths":0},"equips":[[0,0],[35,2],[94,0],[122,2],[125,0],[157,2],[203,0],[460,2],[463,0],[545,2],[548,0],[684,2],[724,0],[770,2],[810,0],[907,2],[958,0],[1211,3],[1234,0]]}

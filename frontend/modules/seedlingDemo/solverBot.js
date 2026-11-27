@@ -201,6 +201,8 @@ import {
 import { STRIKE_SLOT, STRIKE_SLOT_COUNTS, pressIsBlade } from './strikeSlot.js';
 // ⛓ hammer-phase SPEAR-ARM: a spear-only slot's strike policy (`spearStrikePolicyFor`; a family file).
 import { SPEAR_ARM_COUNTS, spearArmSlot, spearStrikeGeometry } from './spearArm.js';
+// ⛓ hammer-phase L65→L68 HIT: a walk through strike bodies selects the held blade (`WALK_BLADE_ARM`, a family file, OFF).
+import { WALK_BLADE_ARM, WALK_BLADE_ARM_COUNTS, walkBladeArmSlot } from './walkBladeArm.js';
 import { STAGED_HUNT_SCAN_MEMO_COUNTS, newStagedHuntScanMemo, stagedScanEntry } from './stagedHuntScanMemo.js';
 import { OPP_PRESS_FALLBACK, OPP_PRESS_FALLBACK_COUNTS, oppPressFallbackSentence } from './oppPressFallback.js';
 import { auditOppFallbackRedo, oppFallbackHitsAudits, oppFallbackHitsSentence, playerHitsSince } from './oppFallbackHits.js';
@@ -36553,8 +36555,24 @@ function solveSegmentUnder({
         SPEAR_ARM_COUNTS.equips += 1;
         equip(slot);
     };
+    /**
+     * ⛓ hammer-phase L65→L68 HIT (`WALK_BLADE_ARM` ON only) — a run holding a blade with another item selected selects
+     * the blade before a walk through strike bodies, so the policy's `primary` presses are the swings the corridor probe
+     * priced (see `walkBladeArm.js`). An equip, no tick; a later verb that needs another slot selects it itself.
+     */
+    const walkBladeArmEquip = () => {
+        if (!WALK_BLADE_ARM.enabled || (run.entities('strikeBodies') ?? []).length === 0) return;
+        const from = run.progress('primaryWeapon');
+        const slot = walkBladeArmSlot(run.progress('inventory'), run.progress('inventorySlots'), from);
+        if (slot < 0 || run.progress('primary') === slot) return;
+        equip(slot);
+        WALK_BLADE_ARM_COUNTS.equips += 1;
+        WALK_BLADE_ARM_COUNTS.rows.push({ t: run.ticksCompleted, level: run.level, from: from ?? null, slot });
+        if (WALK_BLADE_ARM_COUNTS.rows.length > 64) WALK_BLADE_ARM_COUNTS.rows.shift();
+    };
     const walkTo = (goal, aim, opts) => {
         spearArmEquip();
+        walkBladeArmEquip();
         if (AWAKE_BOSS_FIRST.enabled && !bossFirstActive) fightAwakeBossFirst(goal, aim, opts);
         if (!CONTACT_FIDELITY.whirlpoolDrown && !WALK_DEATH_REFUSED.enabled) return walkToRun(goal, aim, opts);
         const d0 = deathsNow();

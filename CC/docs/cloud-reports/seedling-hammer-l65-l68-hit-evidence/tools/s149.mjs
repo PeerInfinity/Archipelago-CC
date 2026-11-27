@@ -1,0 +1,11 @@
+import { readFileSync } from 'node:fs';
+const R = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo/';
+const { parseTape } = await import(R + 'tapeFormat.js');
+const TR = await import(R + 'tapeRunner.js');
+const tape = parseTape(JSON.parse(readFileSync(process.argv[2], 'utf8')));
+console.log('ticks', tape.tick_count, 'equips', JSON.stringify(tape.equips), 'primary0', tape.seam?.primary, 'slots?', JSON.stringify(tape.seam?.items));
+let lastRun = null; const weap = new Map();
+const { atlasLevelSource } = await import(R + 'levelSource.js'); TR.runTape(tape, { levelSource: atlasLevelSource(), onTick: (t, st, held, run) => { lastRun = run; weap.set(t, [run.progress('primaryWeapon'), [...held].join('+'), +st.x.toFixed(1), +st.y.toFixed(1)]); } });
+const hits = lastRun.ledger('playerHits');
+console.log('hits', JSON.stringify(hits.map(h => ({ t: h.t, src: h.source, id: h.id }))));
+for (const h of hits) for (let t = h.t - 12; t <= h.t + 1; t++) console.log('  ', t, JSON.stringify(weap.get(t)));
