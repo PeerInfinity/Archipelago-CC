@@ -2732,6 +2732,58 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no flip licence).
      */
     blockPressesFallRockButtonSameFrame: false,
+    /**
+     * ⛓ fidelity WANDSWINGDRILL (wave 70) — A LONE WAND OR FIRE PRESS WHILE THE SWORD SWINGS IS DROPPED (wave 68's
+     * finding: the model admitted it and fired). Renamed from the brief's `wandPressHeldBySlash`: `set firing` carries
+     * the same `!slashing` term, and the game drops a fire press the same way (`swing-fire-2`).
+     * The game. `useItem` (`Player.as:1575-1615`) runs from `input()` on `Input.pressed(keys[4|5])` — an EDGE: a press
+     * the setter refuses is lost, not buffered, and a key held across the swing's end fires nothing. Its wand arm is
+     * `if (!wanding) wanding = true` through `set wanding` (`:832-849`: `(hasWand || hasFireWand) && !slashing &&
+     * (!firing || hasFireWand) && !deathRaying && !spearing`) and its fire arm `set firing` (`:856-873`: `!slashing &&
+     * (!wanding || hasFireWand) && …`). `_slashing` rises in `set slashing` and falls in `slashEnd`, the sword sprite's
+     * complete-callback (`:41-45`, `:1046-1049`), which `sprites()` fires BELOW `input()` — so the swing holds every press
+     * from its own press tick through its `slashEnd` tick (the plain sword's 5, `slashEndTicksFor`). MEASURED on the game
+     * (p4g, the delivered vanilla set, a fresh page per shape; `fixtures/wandswingdrill-witness/`, recorded by
+     * `probe-seedling-wandswingdrill.mjs`; L10, C = the sword, X = the wand): the sword at 4, the wand at 5, 6, 7, 8 or 9
+     * fires NOTHING (`swing-wand-1..5`) and at 10 fires (`-6`); held from 6 to 14, nothing (`swing-wand-held`); on the
+     * sword's own tick (X+C, `-0`) the wand fires and the sword is refused (the second-call gate, already modelled); the
+     * fire at 6 is dropped and the sword at 12 DASHES (`swing-fire-2`); C1's L62 sword kill (its press at 84), the wand
+     * at 87, 88 or 89: nothing (`c1-wand-87..89`; 90 is wave 68's `turret-die`). The converse — the sword during a wand
+     * window — is refused in both (`wand-swing-2`: NO GAP, `set slashing`'s `!wanding`).
+     * ON (`levelRun` `pressCalls`, `itemPressHeldBySlashNow`): a lone (first) wand or fire call is admitted only when
+     * `slashState.slashing` is down (the value `input()` reads: the release is below the press). A dropped call opens no
+     * window, fires no shot and calls no `assertWandShotSolidsBound`. OFF: the lone call is admitted, byte-identical.
+     * Not modelled, named: the lone press's OTHER setter terms (a wand press inside a fire window, a fire press inside a
+     * wand window or the spear's animation; unwitnessed); the FireWand (`useItem` case 5 is refused by name upstream);
+     * the death ray (no writer).
+     * Composes with every key (`spearingWindow` already gates the spear on `slashing`). `SEEDLING_ITEM_PRESS_HELD_BY_SLASH=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    itemPressHeldBySlash: false,
+    /**
+     * ⛓ fidelity WANDSWINGDRILL (wave 70) — A DRILL'S SIGHT LINE ON A WORLD'S FIRST TICK SEES NO TILE (wave 68's
+     * finding: L88's `drill@128,160` never hopped at a player 40 px E across `tile:Cliff`; the game's hops on tick 1).
+     * The game. `Drill.update` hops only on `!FP.world.collideLine("Solid", x, y, p.x, p.y)` (`Drill.as:84`). A `Tile`
+     * is typed "Tile" by its ctor (`Scenery/Tile.as:110`) and writes `type = types[t]` — "Solid" for a Cliff (9), a Stone
+     * and the rest — in its FIRST `update()` (`:117-121`). `loadlevel` adds the tiles before the drills and
+     * `World.addUpdate` prepends, so on a world's first frame every drill updates while no tile is "Solid" yet: its line
+     * meets only the object solids (the pixelmasks, the bridges and every object class type in their ctors). From the
+     * second frame the tiles are walls again. The model already holds this fact for the player's sweep
+     * (`collidesSolid`'s `beforeTypeFlip`); the drill's line read the full list. MEASURED on the game (p4g, the delivered
+     * vanilla set, a fresh page per shape; `fixtures/wandswingdrill-witness/`): L88, the player at (176, 168) across the
+     * Cliff at (160..176, 160..176) — the drill hops to (152, 168) on tick 1 (`drill-l88-e`), and then sits (its line
+     * from 152 crosses the Cliff on every later tick); at (174, 178) to (152, 184) (`-se`); at (97, 141) to (120, 152)
+     * (`-nw`); L91's `drill@64,80` beside three Bobs, at (117, 72) to (88, 72) (`drill-l91-e`) and at (29, 80) to (56, 88)
+     * (`-w`). The model ON is the game at every sampled tick, 0 px.
+     * ON (`levelRun.stepDrillsNow` → `collideLineSolid({beforeTypeFlip})` → `levelWorld.solidBoxesForMover(…, {objectOnly})`):
+     * on `firstTickInWorld` the drill's line reads `objectSolids` (+ the masks, as before). OFF: the full list,
+     * byte-identical. Not modelled, named (residue): every other `collideLine("Solid", …)` reader on a world's first
+     * tick (the sword's line of sight, the wallflyer's trigger ray, the shield boss's line, the hammer's spinner lines)
+     * and the corridor forecast's drill line (a forecast, not the run's step).
+     * Needs `drillLive`; composes with every key. `SEEDLING_DRILL_SIGHT_LINE_GAME=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    drillSightLineGame: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -3206,6 +3258,11 @@ if (globalThis.process?.env?.SEEDLING_PULSER_DEAD_FRAME_UPDATE === '1') CONTACT_
 if (globalThis.process?.env?.SEEDLING_PULSER_DEAD_FRAME_UPDATE === '0') CONTACT_FIDELITY.pulserDeadFrameUpdate = false;
 if (globalThis.process?.env?.SEEDLING_BLOCK_PRESSES_FALL_ROCK_BUTTON_SAME_FRAME === '1') CONTACT_FIDELITY.blockPressesFallRockButtonSameFrame = true;
 if (globalThis.process?.env?.SEEDLING_BLOCK_PRESSES_FALL_ROCK_BUTTON_SAME_FRAME === '0') CONTACT_FIDELITY.blockPressesFallRockButtonSameFrame = false;
+// ⛓ fidelity WANDSWINGDRILL: `SEEDLING_ITEM_PRESS_HELD_BY_SLASH=0|1` and `SEEDLING_DRILL_SIGHT_LINE_GAME=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ITEM_PRESS_HELD_BY_SLASH === '1') CONTACT_FIDELITY.itemPressHeldBySlash = true;
+if (globalThis.process?.env?.SEEDLING_ITEM_PRESS_HELD_BY_SLASH === '0') CONTACT_FIDELITY.itemPressHeldBySlash = false;
+if (globalThis.process?.env?.SEEDLING_DRILL_SIGHT_LINE_GAME === '1') CONTACT_FIDELITY.drillSightLineGame = true;
+if (globalThis.process?.env?.SEEDLING_DRILL_SIGHT_LINE_GAME === '0') CONTACT_FIDELITY.drillSightLineGame = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

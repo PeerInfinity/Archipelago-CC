@@ -61,7 +61,7 @@ const OFF_ROWS = {
 describe('DEADFRAME — the keys', () => {
     it('both ship OFF, appended last in this order, each with a worker env name', () => {
         expect([CONTACT_FIDELITY_DEFAULTS[DEAD], CONTACT_FIDELITY_DEFAULTS[ENEMY]]).toEqual([false, false]);
-        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf(RSAR) + 1)).toEqual([DEAD, ENEMY, 'wandShotTrapBodies', 'wandShotEnemyBodies', 'freezeFramesStepResponders', 'pulserDeadFrameUpdate', 'blockPressesFallRockButtonSameFrame']);
+        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf(RSAR) + 1)).toEqual([DEAD, ENEMY, 'wandShotTrapBodies', 'wandShotEnemyBodies', 'freezeFramesStepResponders', 'pulserDeadFrameUpdate', 'blockPressesFallRockButtonSameFrame', 'itemPressHeldBySlash', 'drillSightLineGame']);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_DEAD_FRAME_RESPONDER_STEP');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON');
     });

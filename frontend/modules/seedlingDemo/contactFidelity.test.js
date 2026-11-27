@@ -466,7 +466,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity WANDTRAPBODIES (wave 67): a wand shot stops on a live darktrap or a collidable placed grenade — OFF.
             wandShotTrapBodies: false, wandShotEnemyBodies: false,
             // ⛓ fidelity DEADFRAME2 D2 (wave 69): a seal piece's dead frames step the responders; the Pulsers run through every dead span; a block's FallRock press is read in its own frame — OFF.
-            freezeFramesStepResponders: false, pulserDeadFrameUpdate: false, blockPressesFallRockButtonSameFrame: false });
+            freezeFramesStepResponders: false, pulserDeadFrameUpdate: false, blockPressesFallRockButtonSameFrame: false,
+            // ⛓ fidelity WANDSWINGDRILL (wave 70): a lone wand/fire press during a swing is dropped; a drill's first-tick line sees no tile — OFF.
+            itemPressHeldBySlash: false, drillSightLineGame: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
