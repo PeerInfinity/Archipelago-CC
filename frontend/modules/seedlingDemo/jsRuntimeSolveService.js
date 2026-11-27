@@ -66,6 +66,7 @@ import { dashOnlyWindowStamp } from './dashOnlyWindowHook.js';
 import { dashShapeStamp } from './dashShapeHook.js';
 import { progressIntervalMs, SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
 import { solveWorkerUrl } from './solverEnvChannel.js';
+import { hitPlanHeldOpen } from './hitPlanRetry.js';
 
 /**
  * The hook stamps THIS module instance adds to a request before it is posted (in place, on `tape`; returned). Each is
@@ -205,7 +206,9 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
                 // raised after its deadline tripped (the dashless pass bounded at the budget) was cut, not
                 // answered, so a held retry (`passesAfter`) runs that pass again with its larger budget.
                 const cutByDeadline = msg.answer?.ok === false && msg.answer?.deadline;
-                if (current.answered === msg.index && !cutByDeadline) current.answered = msg.index + 1;
+                // ⛓ hammer-phase L39-ARRIVAL-HIT (`HIT_PLAN_RETRY`, OFF ⇒ false): a plan that bills a hit is not a final word
+                const heldOpen = hitPlanHeldOpen(msg.answer);
+                if (current.answered === msg.index && !cutByDeadline && !heldOpen) current.answered = msg.index + 1;
                 current.provisional = msg.best ?? null;
                 const tripped = (msg.answer?.ok ? msg.answer?.plan?.deadline : msg.answer?.deadline)?.first ?? null;
                 current.passes.push({ pass: msg.pass, ok: msg.answer?.ok === true, kind: msg.answer?.kind ?? null,

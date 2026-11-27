@@ -550,6 +550,9 @@ export function hitAvoidPass({ tape, pass, budgetWork = null, windowWork = null,
     return { answer, row };
 }
 
+/** ⛓⛓ hammer-phase L39-ARRIVAL-HIT (`HIT_PLAN_RETRY`, OFF): the switch lives in `hitPlanRetry.js` (read on the page's main thread). */
+export { HIT_PLAN_RETRY, HIT_PLAN_RETRY_DEFAULT, hitPlanHeldOpen, hitPlanRetryAsks, withHitPlanRetry } from './hitPlanRetry.js';
+
 /**
  * ⛓⛓ SEEDLING HAMMER-PHASE CHASER-STAND — **A PLAN THAT STILL BILLS A HIT ASKS THE STRIKE'S STAND OF THE LOBBER, ONCE**
  * (`HIT_AVOID_STAND_BOMBS`, OFF; `SEEDLING_HIT_AVOID_STAND_BOMBS=1`, `withHitAvoidStandBombs(enabled, fn)`). ⚖ The user,
