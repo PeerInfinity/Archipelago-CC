@@ -12558,9 +12558,8 @@ export function createLevelRun({
         const toY = Math.trunc(toYf);
         // ⛓ fidelity WANDSWINGDRILL D2: `beforeTypeFlip` (only `stepDrillsNow`, `drillSightLineGame` ON, a world's first
         // tick) reads the object solids alone — no Tile is "Solid" before its own first update. OFF: never passed.
-        const boxes = beforeTypeFlip
-            ? world.solidBoxesForMover(normalizeLiveOpts(liveSolidOpts()), null, { objectOnly: true })
-            : world.solidBoxesForMover(normalizeLiveOpts(liveSolidOpts()));
+        const boxes = world.solidBoxesForMover(normalizeLiveOpts(liveSolidOpts()), null,
+            beforeTypeFlip ? { objectOnly: true } : undefined);
         // a sample's 1x1 box spans [p, p + 1) for p in [min, max]; a mask's integer origin meets it iff origin <= max
         const lx0 = Math.min(fromX, toX);
         const lx1 = Math.max(fromX, toX);
