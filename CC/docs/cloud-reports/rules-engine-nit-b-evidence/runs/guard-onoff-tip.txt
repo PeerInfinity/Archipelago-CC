@@ -1,0 +1,8 @@
+seedling_playthrough_maze level_77: pairs 6, moved 0; searched 57->57, states 4235->4235, engine.searches 57->60, engine.states 4235->5042, skipped 0->0, upSet refusals 0; ms 29->82
+  entry targets 2, moved 0; engine.searches 5->7
+seedling_playthrough_maze level_78: pairs 132, moved 0; searched 228->228, states 12044->12044, engine.searches 228->240, engine.states 12044->14324, skipped 0->0, upSet refusals 0; ms 88->270
+  entry targets 2, moved 0; engine.searches 14->16
+seedling_playthrough_maze level_80: pairs 72, moved 0; searched 279->279, states 6581->6581, engine.searches 279->279, engine.states 6581->6581, skipped 0->0, upSet refusals 0; ms 38->95
+  entry targets 4, moved 0; engine.searches 12->15
+seedling_playthrough_maze level_108: pairs 12, moved 0; searched 10->10, states 112->112, engine.searches 10->7, engine.states 112->68, skipped 0->0, upSet refusals 0; ms 0->0
+  entry targets 2, moved 0; engine.searches 6->6
