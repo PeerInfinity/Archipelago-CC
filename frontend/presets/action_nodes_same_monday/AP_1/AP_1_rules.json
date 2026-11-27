@@ -1,0 +1,1196 @@
+{
+  "schema_version": 3,
+  "game_name": "Action Nodes",
+  "game_directory": "action_nodes",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "",
+  "player_names": {
+    "1": "Player1"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "Menu -> monday",
+            "connected_region": "monday",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "monday": {
+        "name": "monday",
+        "exits": [
+          {
+            "name": "monday -> office",
+            "connected_region": "office",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "monday -> inn",
+            "connected_region": "inn",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "monday -> pilot",
+            "connected_region": "pilot",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "monday -> chandler",
+            "connected_region": "chandler",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "monday -> question",
+            "connected_region": "question",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "office": {
+        "name": "office",
+        "exits": [
+          {
+            "name": "office -> monday",
+            "connected_region": "monday",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Look over the harbour office",
+            "id": 40000003,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "At the Ship inn",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "inn": {
+        "name": "inn",
+        "exits": [
+          {
+            "name": "inn -> watch",
+            "connected_region": "watch",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "inn -> monday",
+            "connected_region": "monday",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Ask at the Ship inn",
+            "id": 40000000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "At the chandler's",
+              "player": 1,
+              "advancement": false,
+              "type": "useful"
+            }
+          }
+        ]
+      },
+      "watch": {
+        "name": "watch",
+        "exits": [
+          {
+            "name": "watch -> inn",
+            "connected_region": "inn",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Wake the night watchman at the ropewalk",
+            "id": 40000004,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "At the Ship inn"
+              }
+            },
+            "item": {
+              "name": "The harbour office",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "pilot": {
+        "name": "pilot",
+        "exits": [
+          {
+            "name": "pilot -> monday",
+            "connected_region": "monday",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Ask the pilot about his key",
+            "id": 40000001,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "The harbour office"
+              }
+            },
+            "item": {
+              "name": "The pilot",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "chandler": {
+        "name": "chandler",
+        "exits": [
+          {
+            "name": "chandler -> monday",
+            "connected_region": "monday",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Call on Silas Finch at the chandler's",
+            "id": 40000002,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "The pilot"
+              }
+            },
+            "item": {
+              "name": "The night watchman",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "question": {
+        "name": "question",
+        "exits": [
+          {
+            "name": "question -> monday",
+            "connected_region": "monday",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Who took the chart from the harbour office?",
+            "id": 40000005,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "The harbour office"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "At the Ship inn"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "The night watchman"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            },
+            "locked": true
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "The harbour office": {
+        "name": "The harbour office",
+        "id": 40000002,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "At the Ship inn": {
+        "name": "At the Ship inn",
+        "id": 40000000,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "The night watchman": {
+        "name": "The night watchman",
+        "id": 40000003,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "The pilot": {
+        "name": "The pilot",
+        "id": 40000004,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "At the chandler's": {
+        "name": "At the chandler's",
+        "id": 40000001,
+        "groups": [],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": 40000005,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      }
+    }
+  },
+  "item_groups": {
+    "1": []
+  },
+  "itempool_counts": {
+    "1": {
+      "The harbour office": 1,
+      "At the Ship inn": 1,
+      "The night watchman": 1,
+      "The pilot": 1,
+      "At the chandler's": 1,
+      "Victory": 1
+    }
+  },
+  "world": {
+    "1": {
+      "game": "Action Nodes",
+      "world_class_name": "ActionNodesWorld",
+      "options": {},
+      "world_directory": "action_nodes"
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
+  },
+  "helpers": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": false
+    }
+  },
+  "canonical_placements": {
+    "1": {}
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "preset_sidecars": {
+    "1": {
+      "monday": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "monday",
+          "name": "Monday Morning",
+          "kind": "start",
+          "time": 0,
+          "limit": 1,
+          "requires": {
+            "stats": {},
+            "resources": {}
+          },
+          "results": {
+            "stats": {},
+            "resources": {},
+            "mana": 0
+          },
+          "after": [],
+          "exits": [
+            {
+              "exit_id": "office",
+              "exitName": "monday -> office",
+              "targetRegion": "office"
+            },
+            {
+              "exit_id": "inn",
+              "exitName": "monday -> inn",
+              "targetRegion": "inn"
+            },
+            {
+              "exit_id": "pilot",
+              "exitName": "monday -> pilot",
+              "targetRegion": "pilot"
+            },
+            {
+              "exit_id": "chandler",
+              "exitName": "monday -> chandler",
+              "targetRegion": "chandler"
+            },
+            {
+              "exit_id": "question",
+              "exitName": "monday -> question",
+              "targetRegion": "question"
+            }
+          ]
+        }
+      },
+      "office": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "office",
+          "name": "Look over the harbour office",
+          "kind": "check",
+          "time": 1,
+          "limit": 1,
+          "requires": {
+            "stats": {},
+            "resources": {}
+          },
+          "results": {
+            "stats": {},
+            "resources": {},
+            "mana": 0
+          },
+          "after": [
+            [
+              "monday"
+            ]
+          ],
+          "exits": [
+            {
+              "exit_id": "monday",
+              "exitName": "office -> monday",
+              "targetRegion": "monday",
+              "reverse": true
+            }
+          ],
+          "location": "Look over the harbour office"
+        }
+      },
+      "inn": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "inn",
+          "name": "Ask at the Ship inn",
+          "kind": "check",
+          "time": 1,
+          "limit": 1,
+          "requires": {
+            "stats": {},
+            "resources": {}
+          },
+          "results": {
+            "stats": {},
+            "resources": {},
+            "mana": 0
+          },
+          "after": [
+            [
+              "monday"
+            ]
+          ],
+          "exits": [
+            {
+              "exit_id": "watch",
+              "exitName": "inn -> watch",
+              "targetRegion": "watch"
+            },
+            {
+              "exit_id": "monday",
+              "exitName": "inn -> monday",
+              "targetRegion": "monday",
+              "reverse": true
+            }
+          ],
+          "location": "Ask at the Ship inn"
+        }
+      },
+      "watch": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "watch",
+          "name": "Wake the night watchman at the ropewalk",
+          "kind": "check",
+          "time": 2,
+          "limit": 1,
+          "requires": {
+            "stats": {
+              "inn": {
+                "name": "Read: At the Ship inn",
+                "amount": 1
+              }
+            },
+            "resources": {}
+          },
+          "results": {
+            "stats": {},
+            "resources": {},
+            "mana": 0
+          },
+          "after": [
+            [
+              "inn"
+            ]
+          ],
+          "exits": [
+            {
+              "exit_id": "inn",
+              "exitName": "watch -> inn",
+              "targetRegion": "inn",
+              "reverse": true
+            }
+          ],
+          "location": "Wake the night watchman at the ropewalk"
+        }
+      },
+      "pilot": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "pilot",
+          "name": "Ask the pilot about his key",
+          "kind": "check",
+          "time": 1,
+          "limit": 1,
+          "requires": {
+            "stats": {
+              "office": {
+                "name": "Read: The harbour office",
+                "amount": 1
+              }
+            },
+            "resources": {}
+          },
+          "results": {
+            "stats": {},
+            "resources": {},
+            "mana": 0
+          },
+          "after": [
+            [
+              "monday"
+            ]
+          ],
+          "exits": [
+            {
+              "exit_id": "monday",
+              "exitName": "pilot -> monday",
+              "targetRegion": "monday",
+              "reverse": true
+            }
+          ],
+          "location": "Ask the pilot about his key"
+        }
+      },
+      "chandler": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "chandler",
+          "name": "Call on Silas Finch at the chandler's",
+          "kind": "check",
+          "time": 1,
+          "limit": 1,
+          "requires": {
+            "stats": {
+              "pilot": {
+                "name": "Read: The pilot",
+                "amount": 1
+              }
+            },
+            "resources": {}
+          },
+          "results": {
+            "stats": {},
+            "resources": {},
+            "mana": 0
+          },
+          "after": [
+            [
+              "monday"
+            ]
+          ],
+          "exits": [
+            {
+              "exit_id": "monday",
+              "exitName": "chandler -> monday",
+              "targetRegion": "monday",
+              "reverse": true
+            }
+          ],
+          "location": "Call on Silas Finch at the chandler's"
+        }
+      },
+      "question": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "question",
+          "name": "Who took the chart from the harbour office?",
+          "kind": "goal",
+          "time": 0,
+          "limit": 1,
+          "requires": {
+            "stats": {
+              "office": {
+                "name": "Read: The harbour office",
+                "amount": 1
+              },
+              "inn": {
+                "name": "Read: At the Ship inn",
+                "amount": 1
+              },
+              "watch": {
+                "name": "Read: The night watchman",
+                "amount": 1
+              }
+            },
+            "resources": {}
+          },
+          "results": {
+            "stats": {},
+            "resources": {},
+            "mana": 0
+          },
+          "after": [
+            [
+              "monday"
+            ]
+          ],
+          "exits": [
+            {
+              "exit_id": "monday",
+              "exitName": "question -> monday",
+              "targetRegion": "monday",
+              "reverse": true
+            }
+          ],
+          "location": "Who took the chart from the harbour office?"
+        }
+      }
+    }
+  },
+  "action_nodes": {
+    "1": {
+      "schema_version": 1,
+      "graph_id": "same-monday",
+      "name": "The Same Monday",
+      "loop": {
+        "mana": 3
+      },
+      "stats": {
+        "office": {
+          "name": "Read: The harbour office"
+        },
+        "inn": {
+          "name": "Read: At the Ship inn"
+        },
+        "watch": {
+          "name": "Read: The night watchman"
+        },
+        "pilot": {
+          "name": "Read: The pilot"
+        },
+        "chandler": {
+          "name": "Read: At the chandler's"
+        }
+      },
+      "resources": {},
+      "boosts": {
+        "The harbour office": {
+          "boon_id": "paper-office",
+          "stats": {
+            "office": 1
+          },
+          "resources": {},
+          "mana": 0
+        },
+        "At the Ship inn": {
+          "boon_id": "paper-inn",
+          "stats": {
+            "inn": 1
+          },
+          "resources": {},
+          "mana": 0
+        },
+        "The night watchman": {
+          "boon_id": "paper-watch",
+          "stats": {
+            "watch": 1
+          },
+          "resources": {},
+          "mana": 0
+        },
+        "The pilot": {
+          "boon_id": "paper-pilot",
+          "stats": {
+            "pilot": 1
+          },
+          "resources": {},
+          "mana": 0
+        },
+        "At the chandler's": {
+          "boon_id": "paper-chandler",
+          "stats": {
+            "chandler": 1
+          },
+          "resources": {},
+          "mana": 0
+        }
+      },
+      "mana_per_item_default": 10,
+      "start": "monday",
+      "goal": "question",
+      "action": "act",
+      "settings": {
+        "xpGainScale": 1,
+        "xpEffect": "none"
+      },
+      "clock": {
+        "start": "09:00",
+        "minutesPerUnit": 60
+      },
+      "pool": {
+        "name": "Time",
+        "unit": "h"
+      }
+    }
+  },
+  "sphere_log": [
+    {
+      "type": "metadata",
+      "seed": 1,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {}
+          },
+          "new_accessible_locations": [
+            "Ask at the Ship inn",
+            "Look over the harbour office"
+          ],
+          "new_accessible_regions": [
+            "chandler",
+            "inn",
+            "Menu",
+            "monday",
+            "office",
+            "pilot",
+            "question",
+            "watch"
+          ],
+          "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "At the Ship inn": 1
+            },
+            "resolved_items": {
+              "At the Ship inn": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Wake the night watchman at the ropewalk"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Look over the harbour office"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "The harbour office": 1
+            },
+            "resolved_items": {
+              "The harbour office": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Ask the pilot about his key"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Wake the night watchman at the ropewalk"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "The pilot": 1
+            },
+            "resolved_items": {
+              "The pilot": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Call on Silas Finch at the chandler's"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Ask the pilot about his key"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "3.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "The night watchman": 1
+            },
+            "resolved_items": {
+              "The night watchman": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Who took the chart from the harbour office?"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Call on Silas Finch at the chandler's"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "4.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Victory": 1
+            },
+            "resolved_items": {
+              "Victory": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Who took the chart from the harbour office?"
+          ]
+        }
+      }
+    }
+  ],
+  "procgen_metadata": {
+    "1": {
+      "driver": "action-graph-compiler",
+      "graph_id": "same-monday",
+      "graph_path": "frontend/modules/actionNodes/graphs/same-monday.json",
+      "region_count": 8,
+      "action_logic": {
+        "search": {
+          "item_combinations": 32,
+          "max_states_per_combination": 32,
+          "state_budget": 200000
+        },
+        "targets": {
+          "Look over the harbour office": {
+            "node": "office",
+            "kind": "check",
+            "rule": "True",
+            "witnesses": [
+              {
+                "items": {},
+                "plan": "Look over the harbour office",
+                "steps": [
+                  "office"
+                ],
+                "mana_left": 2
+              }
+            ]
+          },
+          "Ask at the Ship inn": {
+            "node": "inn",
+            "kind": "check",
+            "rule": "True",
+            "witnesses": [
+              {
+                "items": {},
+                "plan": "Ask at the Ship inn",
+                "steps": [
+                  "inn"
+                ],
+                "mana_left": 2
+              }
+            ]
+          },
+          "Wake the night watchman at the ropewalk": {
+            "node": "watch",
+            "kind": "check",
+            "rule": "Has(At the Ship inn)",
+            "witnesses": [
+              {
+                "items": {
+                  "At the Ship inn": 1
+                },
+                "plan": "Ask at the Ship inn → Wake the night watchman at the ropewalk",
+                "steps": [
+                  "inn",
+                  "watch"
+                ],
+                "mana_left": 0
+              }
+            ]
+          },
+          "Ask the pilot about his key": {
+            "node": "pilot",
+            "kind": "check",
+            "rule": "Has(The harbour office)",
+            "witnesses": [
+              {
+                "items": {
+                  "The harbour office": 1
+                },
+                "plan": "Ask the pilot about his key",
+                "steps": [
+                  "pilot"
+                ],
+                "mana_left": 2
+              }
+            ]
+          },
+          "Call on Silas Finch at the chandler's": {
+            "node": "chandler",
+            "kind": "check",
+            "rule": "Has(The pilot)",
+            "witnesses": [
+              {
+                "items": {
+                  "The pilot": 1
+                },
+                "plan": "Call on Silas Finch at the chandler's",
+                "steps": [
+                  "chandler"
+                ],
+                "mana_left": 2
+              }
+            ]
+          },
+          "Who took the chart from the harbour office?": {
+            "node": "question",
+            "kind": "goal",
+            "rule": "Has(The harbour office) & Has(At the Ship inn) & Has(The night watchman)",
+            "witnesses": [
+              {
+                "items": {
+                  "The harbour office": 1,
+                  "At the Ship inn": 1,
+                  "The night watchman": 1
+                },
+                "plan": "Who took the chart from the harbour office?",
+                "steps": [
+                  "question"
+                ],
+                "mana_left": 3
+              }
+            ]
+          }
+        },
+        "exits": {
+          "monday -> office": "True",
+          "monday -> inn": "True",
+          "inn -> watch": "True",
+          "monday -> pilot": "True",
+          "monday -> chandler": "True",
+          "monday -> question": "True"
+        },
+        "placements": {
+          "Call on Silas Finch at the chandler's": "The night watchman",
+          "Wake the night watchman at the ropewalk": "The harbour office",
+          "Look over the harbour office": "At the Ship inn",
+          "Ask the pilot about his key": "The pilot",
+          "Ask at the Ship inn": "At the chandler's"
+        },
+        "progression_items": [
+          "At the Ship inn",
+          "The harbour office",
+          "The night watchman",
+          "The pilot"
+        ],
+        "a6": {
+          "every_check_earnable": true,
+          "sphere_log_reaches_goal": true,
+          "sphere_log_advancement_picks": [
+            "Look over the harbour office",
+            "Wake the night watchman at the ropewalk",
+            "Ask the pilot about his key",
+            "Call on Silas Finch at the chandler's",
+            "Who took the chart from the harbour office?"
+          ],
+          "spheres": [
+            {
+              "sphere": 0,
+              "open_at_once": 2,
+              "checks": [
+                "Look over the harbour office",
+                "Ask at the Ship inn"
+              ]
+            },
+            {
+              "sphere": 1,
+              "open_at_once": 1,
+              "checks": [
+                "Wake the night watchman at the ropewalk"
+              ]
+            },
+            {
+              "sphere": 2,
+              "open_at_once": 1,
+              "checks": [
+                "Ask the pilot about his key"
+              ]
+            },
+            {
+              "sphere": 3,
+              "open_at_once": 1,
+              "checks": [
+                "Call on Silas Finch at the chandler's"
+              ]
+            },
+            {
+              "sphere": 4,
+              "open_at_once": 1,
+              "checks": [
+                "Who took the chart from the harbour office?"
+              ]
+            }
+          ],
+          "statement": "A check is in logic exactly when a one-loop plan earns it with the items held; the fill places an unchecked in-logic check whenever the game is not waiting on another world, so every loop not waiting can earn one."
+        }
+      }
+    }
+  },
+  "provenance": {
+    "1": {
+      "generator": "frontend/modules/actionNodes/actionGraphCompiler.js",
+      "graph_id": "same-monday",
+      "graph_provenance": {
+        "sources": {
+          "case": {
+            "type": "game",
+            "name": "The Same Monday (mystery-clue-game miniature)",
+            "repo": "PeerInfinity/mystery-clue-game",
+            "commit": "7a9ae373c5",
+            "files": [
+              "cases/miniatures/same-monday/world/case.json"
+            ],
+            "note": "the five visits (labels, costs in hours, the same-day `after`, the `needs.read` gates), the five paper titles, the day of 3 hours from nine o'clock, and the one question, whose answer needs the papers office, inn and watch. Structure, labels and titles only: no story text"
+          },
+          "an-time4": {
+            "type": "model",
+            "model": "claude-opus-5-5",
+            "date": "2026-11-25",
+            "session": "actionnodes-time4",
+            "note": "The case as a timed ActionNodes world (slice AN-TIME-4). A visit made is a check; the five papers are the items, shuffled across the five visits (the long case's shape: the paper is the unit that travels). `needs.read: [X]` becomes holding paper X (a boon giving that paper's stat); `after` stays a same-day link; the goal is the question. No filler and no extra-hour item: five visits, five papers. Region XP off (a timed world).",
+            "approved": {
+              "by": "Robert",
+              "date": "2026-11-25",
+              "ruling": "The Same Monday as the first timed world; case names in the preset; papers shuffled now, a 'each visit keeps its paper' setting later"
+            }
+          }
+        },
+        "default": "an-time4"
+      }
+    }
+  },
+  "loop_costs": {
+    "1": {
+      "version": "1.0",
+      "generatedFrom": "action-graph:same-monday",
+      "regions": {
+        "Menu": {
+          "moveCost": 0,
+          "xpEffect": "none"
+        },
+        "monday": {
+          "moveCost": 0,
+          "xpEffect": "none",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 0
+          }
+        },
+        "office": {
+          "moveCost": 0,
+          "xpEffect": "none",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 1
+          }
+        },
+        "inn": {
+          "moveCost": 0,
+          "xpEffect": "none",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 1
+          }
+        },
+        "watch": {
+          "moveCost": 0,
+          "xpEffect": "none",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 2
+          }
+        },
+        "pilot": {
+          "moveCost": 0,
+          "xpEffect": "none",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 1
+          }
+        },
+        "chandler": {
+          "moveCost": 0,
+          "xpEffect": "none",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 1
+          }
+        },
+        "question": {
+          "moveCost": 0,
+          "xpEffect": "none",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 0
+          }
+        }
+      },
+      "locations": {},
+      "defaultRegionCost": 0,
+      "defaultLocationCost": 10,
+      "defaultRegionXpEffect": "none"
+    }
+  },
+  "discovery_mode": {
+    "1": {
+      "enabled": true,
+      "bundle": "actionNodes"
+    }
+  }
+}

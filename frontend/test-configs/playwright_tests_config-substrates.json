@@ -100,6 +100,12 @@
             "_comment": "AN-OMSI-3: the omsi town preset (action_nodes_omsi_town) loads; a card per node; the start's neighbours show price, used/limit and needs as the preset states them; the goal's supplier (Buy Supplies) is blocked with its unmet line; one performance at a free check node pays its price and sends its check."
         },
         {
+            "id": "an-same-monday-clock",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-TIME-4: the committed timed preset The Same Monday: the pool is loop.mana (3 h, not 100), the Time line at 09:00 and after one visit, the start gate refuses a visit whose paper is not held."
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
