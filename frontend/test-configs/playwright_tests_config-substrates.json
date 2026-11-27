@@ -2127,6 +2127,12 @@
             "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft apcalc-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
         },
         {
+            "id": "tutorial-walk-mystery-multiworld",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "The walk row of the terminal tutorial mystery-multiworld (a mystery case on a local server, opened in Mystery Game): like the other multiworld tutorials its walk stops at the first terminal step. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
             "id": "region-map-classic-world",
             "enabled": true,
             "category": "Region Map",

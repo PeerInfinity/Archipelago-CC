@@ -1122,6 +1122,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "MetaMath is an Archipelago game like any other: its .apworld is released with this project, and its proofs can be shuffled with other games."
     },
     {
+        "path": "docs/json/user/tutorials/mystery-multiworld.md",
+        "title": "Mystery: a case in a multiworld",
+        "section": "user/tutorials",
+        "summary": "A mystery case is an Archipelago world in this project's repository (worlds/mystery_custom_house_fire): each question of the case is a location, and each paper is an item. The game itself is a page…"
+    },
+    {
         "path": "docs/json/user/tutorials/procgen-bounce-region-editor.md",
         "title": "Procgen: editing a bounce region",
         "section": "user/tutorials",
@@ -1328,6 +1334,7 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/user/tutorials/depgraph-extras.md",
                     "docs/json/user/tutorials/depgraph-multiworld.md",
                     "docs/json/user/tutorials/metamath-multiworld.md",
+                    "docs/json/user/tutorials/mystery-multiworld.md",
                     "docs/json/user/tutorials/procgen-bounce-region-editor.md",
                     "docs/json/user/tutorials/procgen-cloudberry.md",
                     "docs/json/user/tutorials/procgen-grid-growth.md",
