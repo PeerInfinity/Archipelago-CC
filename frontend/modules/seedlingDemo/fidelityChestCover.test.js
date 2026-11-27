@@ -58,14 +58,14 @@ const effects = (r) => ({
 const tapeResult = (name, over) => withContactFidelity(over, () => JSON.stringify(runTape(loadTape(name), { levelSource: VANILLA })));
 
 describe('CHESTCOVER — the key', () => {
-    it('ships OFF, appended last, with a worker env name', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
+    it('ships ON (flipped 2026-11-27), appended last, with a worker env name', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(true);
         expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe(KEY);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_CHEST_COVER_FENCEPOST');
     });
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_CHEST_COVER_FENCEPOST)(
-        'is OFF in this process', () => {
-            expect(CONTACT_FIDELITY[KEY]).toBe(false);
+        'is ON in this process', () => {
+            expect(CONTACT_FIDELITY[KEY]).toBe(true);
         });
 });
 

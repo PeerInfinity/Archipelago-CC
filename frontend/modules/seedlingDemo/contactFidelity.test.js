@@ -443,10 +443,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             freezeSpanUpdates: false,
             // ⛓ fidelity NESTEDFREEZE D2 (wave 57): a pickup ceremony that starts on a button's frame A runs as the union with the rock's span — OFF.
             nestedRockCeremony: false,
-            // ⛓ fidelity PLAINSPAN D2 (wave 59): every plain pickup (APItem) under the box a freeze's frame tests is taken on that frame — OFF.
-            plainPickupInFreeze: false,
-            // ⛓ fidelity CHESTCOVER D2 (wave 61): the vanilla chest reads a responder over it one step older (the game's update order) — OFF.
-            chestCoverFencepost: false });
+            // ⛓ fidelity PLAINSPAN D2 (wave 59): every plain pickup (APItem) under the box a freeze's frame tests is taken on that frame — ON (flipped 2026-11-27).
+            plainPickupInFreeze: true,
+            // ⛓ fidelity CHESTCOVER D2 (wave 61): the vanilla chest reads a responder over it one step older (the game's update order) — ON (flipped 2026-11-27).
+            chestCoverFencepost: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

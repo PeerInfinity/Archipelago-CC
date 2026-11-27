@@ -2396,9 +2396,9 @@ export const CONTACT_FIDELITY = {
      * count); the one-a-tick rule on LIVE ticks (the solver's and the JS page's, not a freeze's); the wand's approach
      * fade. Needs no other key; composes with `nestedRockCeremony` (its union's T is this key's T site),
      * `freezeSpanUpdates`, `freezeReleaseTick`, `pickupTickFreeze` and `dialogueFrameFreeze`. OFF: byte-identical.
-     * `SEEDLING_PLAIN_PICKUP_IN_FREEZE=0|1`. ⛔ OFF by default (no flip licence).
+     * `SEEDLING_PLAIN_PICKUP_IN_FREEZE=0|1`. ON by default since the 2026-11-27 flip (Robert's GO in fidelity-planning-26: "GO, build both flips"; 0 legs, acceptance md5 391322d6 unchanged).
      */
-    plainPickupInFreeze: false,
+    plainPickupInFreeze: true,
     /**
      * ⛓ fidelity CHESTCOVER D2 (wave 61) — THE VANILLA `Chest` READS A RESPONDER OVER IT ONE STEP OLDER THAN THE
      * PLAYER DOES (the fencepost wave 60 measured, `CC/docs/cloud-reports/seedling-fidelity-chestcover.md`).
@@ -2422,9 +2422,9 @@ export const CONTACT_FIDELITY = {
      * no field written, byte-identical. Not modelled, named (hand-overs): a `PushableBlock*` (`:2382-2384`) also
      * updates before every responder and the model reads the current set for it (`pushableCtx`); a Spinner's read is
      * `spinnerLockLag`'s (opens only). Needs no other key; composes with every key (one read of one gate).
-     * `SEEDLING_CHEST_COVER_FENCEPOST=0|1`. ⛔ OFF by default (no flip licence).
+     * `SEEDLING_CHEST_COVER_FENCEPOST=0|1`. ON by default since the 2026-11-27 flip (Robert's GO in fidelity-planning-26: "GO, build both flips"; 0 legs, acceptance md5 391322d6 unchanged).
      */
-    chestCoverFencepost: false,
+    chestCoverFencepost: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
