@@ -112,7 +112,7 @@ describe('⛓ 2. contradictions: the drop rule', () => {
         // S's range is one floor, so it reads as that floor, and shares "Ground floor" with P (· k by discovery order).
         expect(obj(labels)).toEqual({ A: 'Floor −1 to +1', P: 'Ground floor · 2', Q: 'Floor −2 to +2', S: 'Ground floor · 1' });
     });
-    it('two independent loops need two drops: 4 alternatives, both cycles listed', () => {
+    it('independent loops each lose a connection: every combination is an alternative, every cycle listed', () => {
         const m2 = model({
             start: 's1',
             groups: { S: ['s1', 's2', 's3', 's4'], A: ['a'], B: ['b'] },
