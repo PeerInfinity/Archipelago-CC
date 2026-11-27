@@ -8,7 +8,7 @@
 // loaded world (mysteryPanelUI.js).
 
 import {
-  LIVE_PLAY_EVENTS, MysteryArchipelagoLogic, MYSTERY_EVENTS, SOURCE_MODULE, caseRegionsOfWarehouse,
+  LIVE_PLAY_EVENTS, LOOP_NUMBER_EVENTS, MysteryArchipelagoLogic, MYSTERY_EVENTS, SOURCE_MODULE, caseRegionsOfWarehouse,
 } from './mysteryArchipelagoLogic.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
@@ -87,6 +87,16 @@ export function livePlayNow() {
   };
 }
 
+/**
+ * The loop the loaded world is played on: the ActionNodes runtime's `loopNumber` while it holds a world (asked of
+ * its module, which may be absent), else null (a world not played in numbered loops sends no `loop`).
+ */
+export function loopNumberNow() {
+  const runtime = centralRegistry.getPublicFunction?.('actionNodes', 'getRuntime')?.();
+  if (!runtime?.isLoaded?.()) return null;
+  return Number.isInteger(runtime.loopNumber) ? runtime.loopNumber : null;
+}
+
 export async function register(registrationApi) {
   registrationApi.registerPanelComponent('mysteryPanel', MysteryPanelUI);
   // The substrate entry (also registered when its library is imported; guarded both ways).
@@ -119,6 +129,7 @@ export async function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent(moduleId, 'settings:changed');
   registrationApi.registerEventBusSubscriberIntent(moduleId, 'procgen:activeSubstrateChanged');
   for (const event of LIVE_PLAY_EVENTS) registrationApi.registerEventBusSubscriberIntent(moduleId, event);
+  for (const event of LOOP_NUMBER_EVENTS) registrationApi.registerEventBusSubscriberIntent(moduleId, event);
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
@@ -132,6 +143,7 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     getCaseRegions: caseRegionsNow,
     getActiveRegionId: activeRegionIdNow,
     getLivePlay: livePlayNow,
+    getLoopNumber: loopNumberNow,
     log,
   });
   logicInstance.initialize();

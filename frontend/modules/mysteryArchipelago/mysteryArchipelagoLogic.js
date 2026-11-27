@@ -12,7 +12,7 @@
 //
 //   page -> host  mystery:questionSolved { story, questionId }
 //   page -> host  mystery:requestState   { story, version? }
-//   host -> page  mystery:state          { story, version, game, connected, papers, solved, lock?, inOffice? }
+//   host -> page  mystery:state          { story, version, game, connected, papers, solved, lock?, inOffice?, loop? }
 //   host -> page  mystery:refused        { reason, story, version }
 //
 // A GENERATED world may hold the case as one region of several (the `mystery` substrate,
@@ -23,6 +23,10 @@
 // Loops queue is parked for live play on the region (the strict action gate would refuse a check
 // at any other time, and the page must not offer what will not happen). Both are absent for a world whose case is its slot's (one
 // region, always "in the office"). A question solved away from the region is not checked.
+//
+// `loop` is the day the page is played on (an int, 1 on the first): present in EVERY state of a world
+// whose slot is played in numbered loops (an ActionNodes world: its runtime's `loopNumber`), and absent
+// for any other. The page marks what it first met on an earlier day.
 //
 // `mystery:state` always carries the WHOLE set of papers held and questions checked, so the page
 // replaces what it has and never adds; a reload or a reconnect is then safe. It is sent when the
@@ -56,6 +60,9 @@ export const LIVE_PLAY_EVENTS = Object.freeze([
   'loopState:queuePausedUntilReset', 'loopState:loopReset', 'loopState:queueCompleted', 'loopState:newActionStarted',
   'loopState:processingStopped',
 ]);
+
+/** The events after which the answer of `getLoopNumber` may have changed (index.js declares the intents). */
+export const LOOP_NUMBER_EVENTS = Object.freeze(['actionNodes:stateChanged']);
 
 const isObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 
@@ -166,7 +173,7 @@ export function inOfficeNow(block, activeRegionId, livePlay = null) {
  * The whole `mystery:state` payload for a block, a state snapshot and the connection.
  * Both lists are sorted, so two equal states are equal as JSON.
  */
-export function mysteryStateOf(block, snapshot, connection, activeRegionId = null, livePlay = null) {
+export function mysteryStateOf(block, snapshot, connection, activeRegionId = null, livePlay = null, loop = null) {
   const inventory = isObject(snapshot?.inventory) ? snapshot.inventory : {};
   const papers = [];
   for (const [itemName, paperId] of Object.entries(block.paperOfItem)) {
@@ -187,6 +194,8 @@ export function mysteryStateOf(block, snapshot, connection, activeRegionId = nul
     // Only for a case that is a region of a generated world.
     ...(block.lock ? { lock: block.lock } : {}),
     ...(block.regionId ? { inOffice: inOfficeNow(block, activeRegionId, livePlay) } : {}),
+    // Only for a world played in numbered loops (`getLoopNumber`): the day, an int of at least 1.
+    ...(Number.isInteger(loop) && loop >= 1 ? { loop } : {}),
   };
 }
 
@@ -205,11 +214,13 @@ export class MysteryArchipelagoLogic {
    * @param {() => string|null} [deps.getActiveRegionId] - the region the player is in
    * @param {() => {loopMode: boolean, region: string|null}|null} [deps.getLivePlay] - loop mode, and the
    *   region the Loops queue is parked on for live play (see `inOfficeNow`)
+   * @param {() => number|null} [deps.getLoopNumber] - the loop the loaded world is on (1 the first),
+   *   or null for a world not played in numbered loops; sent as `loop`
    * @param {(level: string, message: string, ...data: any[]) => void} [deps.log]
    */
   constructor({
     eventBus, dispatcher, getStaticData, getSnapshot, getConnection,
-    getCaseRegions = () => [], getActiveRegionId = () => null, getLivePlay = () => null, log = () => {},
+    getCaseRegions = () => [], getActiveRegionId = () => null, getLivePlay = () => null, getLoopNumber = () => null, log = () => {},
   }) {
     this._eventBus = eventBus;
     this._dispatcher = dispatcher;
@@ -220,6 +231,7 @@ export class MysteryArchipelagoLogic {
     this._getCaseRegions = getCaseRegions;
     this._getActiveRegionId = getActiveRegionId;
     this._getLivePlay = getLivePlay;
+    this._getLoopNumber = getLoopNumber;
     // The story the page last asked about: with several cases in one world, the one it is answered about.
     this._pageStory = undefined;
     // The page has asked at least once; until then nothing is sent (no page, nobody to tell).
@@ -243,6 +255,8 @@ export class MysteryArchipelagoLogic {
     sub('procgen:activeSubstrateChanged', () => this.sendStateIfChanged());
     // Loop mode, or the queue's park, changed: so may `inOffice`.
     for (const event of LIVE_PLAY_EVENTS) sub(event, () => this.sendStateIfChanged());
+    // The loop runtime changed (a new loop): so may `loop`.
+    for (const event of LOOP_NUMBER_EVENTS) sub(event, () => this.sendStateIfChanged());
   }
 
   /** The case to answer about, for the story the page asked (or last asked). */
@@ -256,7 +270,8 @@ export class MysteryArchipelagoLogic {
   }
 
   _state(block) {
-    return mysteryStateOf(block, this._getSnapshot(), this._getConnection(), this._getActiveRegionId(), this._getLivePlay());
+    return mysteryStateOf(block, this._getSnapshot(), this._getConnection(), this._getActiveRegionId(), this._getLivePlay(),
+      this._getLoopNumber());
   }
 
   /** Why the page's `{story, version}` is refused, or null. A missing `version` is not checked. */
@@ -308,6 +323,10 @@ export class MysteryArchipelagoLogic {
     const reason = this.refusalFor(block, { story: data?.story });
     if (reason) return this._refuse(reason, block);
     const locationName = block.locationOfQuestion.get(data?.questionId);
+    // SILENT on purpose: no check and no state in reply (the page re-sends a solved question on each
+    // state that lacks it, so a reply here would make the two answer each other without end). This is
+    // also how an ActionNodes world's questions are dropped while its `locations` map is empty
+    // (⚑ PENDING, actionGraphCompiler.js `MYSTERY_QUESTION_LOCATIONS_PENDING`): the data decides, not the game.
     if (!locationName) {
       this._log('warn', `no location for question "${data?.questionId}"`);
       return;
