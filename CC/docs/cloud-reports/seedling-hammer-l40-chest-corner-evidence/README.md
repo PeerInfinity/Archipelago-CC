@@ -15,5 +15,6 @@ scratch dir and are NOT committed: re-measure-9 `F1`/`P1.stop-requests.jsonl.gz`
 - `measure/fixtures-raw.jsonl`: the 18 L40 fixtures by key, D/DP/SIX/SP.
 - `measure/seam-sweep-raw.jsonl` (16 seams, step 5, D/DP/SP) and `seam-sweep-1tick-raw.jsonl` (±1..4, D/DP) of re-measure-9 P1 19:2.
 - `measure/p1-19-2-pkh-plan*.txt|json`: the PKH plan's per-tick player and spinner-body positions t626–740, and its verb rows.
-- `measure/legs-*.jsonl` / `legs-summary.md`: the 52 L40/L92 keyed legs on the p4g page, PKH off vs on.
-- `measure/survey-*`: `survey-seedling-route.mjs --through=end`, PKH off vs on, per step.
+- `measure/legs-*.jsonl.gz` / `legs-summary.txt`: the 52 L40/L92 keyed legs on the p4g page, PKH off vs on.
+- `survey/`: `survey-seedling-route.mjs --through=end`, PKH off vs on, per step.
+- `game/`: the p4g fresh-page witness of re-measure-9 P1 19:2's PKH plan (`tools/reqwitness.mjs`, chaser-stand's).

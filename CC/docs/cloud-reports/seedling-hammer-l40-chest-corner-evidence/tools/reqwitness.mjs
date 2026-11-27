@@ -48,7 +48,7 @@ const { planLevelSetChunks } = await M('levelSetValidator.js');
 const { l25Sets } = await M('fidelityL25ApItem.js');
 const PAGE = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4g';
 const HOST = `http://localhost:${process.env.SEEDLING_PORT || '8000'}`;
-takeBoxLockOrExit({ name: 'chaser-stand-f1-witness', kind: 'browser' });
+takeBoxLockOrExit({ name: 'l40-chest-corner-19-2-witness', kind: 'browser' });
 const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
 const call = (page, n, x) => page.evaluate(([name, v]) => String(v === undefined ? window.__swfBridge.game[name]() : window.__swfBridge.game[name](v)), [n, x]);
 const until = async (page, fn, ms) => { for (const t0 = Date.now(); ;) { const v = await fn(); if (v) return v; if (Date.now() - t0 > ms) throw new Error('timeout'); await page.waitForTimeout(100); } };
