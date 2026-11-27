@@ -1,0 +1,2 @@
+tapes 322 (threw 1); over {"freezeFramesStepResponders":true,"pulserDeadFrameUpdate":true,"blockPressesFallRockButtonSameFrame":true,"responderStepAfterReaders":true,"deadFrameResponderStep":true}
+{"squeued":8,"pq:sealpiece":7,"pflush":11,"pframes":3058,"phits":951,"pchanged":2065,"schanged":0,"pq:totempart's":6,"pq:a":3}
