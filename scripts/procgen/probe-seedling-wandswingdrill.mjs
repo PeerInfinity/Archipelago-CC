@@ -32,6 +32,11 @@
  *     drill-l88-e    L88, the player at (176, 168), 40 px E of `drill@128,160` across `tile:Cliff` (160..176)
  *     drill-l88-se   L88, (174, 178)          drill-l88-nw  L88, (97, 141)
  *     drill-l91-e    L91, (117, 72)           drill-l91-w   L91, (29, 80)    (`drill@64,80`, beside three Bobs)
+ *     drill-l91-walkin  L91, booted out of range at (78, 34) and walking down: in range from t 6 behind the tiles —
+ *                    the FIRST frame only: the game's drill never hops
+ *     drill-l91-walkin-free / drill-l88-walkin-free  the same shape from (86, 34) and L88's (120, 102), with the hop
+ *                    cell FREE: a flip read on every tick would hop (at t 9 to (88, 88); at t 19 to (120, 152)); the
+ *                    game's drill never does
  *
  * Each tape is played on a FRESH page of the game (p4g, headless logic-only) on the DELIVERED vanilla set (mounted with
  * `botLoadLevels`); each sample is compared at the same tick with the model's replay (the player at 0 px, every
@@ -105,6 +110,9 @@ export const WAND_SWING_DRILL_TAPES = Object.freeze({
     'drill-l88-nw': { gap: 2, boot: { level: 88, x: 89, y: 133 }, ticks: 60 },
     'drill-l91-e': { gap: 2, boot: { level: 91, x: 109, y: 64 }, ticks: 60 },
     'drill-l91-w': { gap: 2, boot: { level: 91, x: 21, y: 72 }, ticks: 60 },
+    'drill-l91-walkin': { gap: 2, boot: { level: 91, x: 70, y: 26 }, ticks: 40, inputs: [{ key: 'down', from: 0, to: 30 }] },
+    'drill-l91-walkin-free': { gap: 2, boot: { level: 91, x: 78, y: 26 }, ticks: 40, inputs: [{ key: 'down', from: 0, to: 30 }] },
+    'drill-l88-walkin-free': { gap: 2, boot: { level: 88, x: 112, y: 94 }, ticks: 40, inputs: [{ key: 'down', from: 0, to: 30 }] },
 });
 
 /** The slice's key for a witness's gap. */
@@ -279,8 +287,8 @@ async function main() {
                 // ⚠ A drill tape's player stands still, so its x/y fit every shift near 0: there the drill's tick-1 hop
                 // pins the clock (a shift of -1 compares the hop with the model's unhopped drill), so 0 must fit and the
                 // body join below must be exact.
-                check(`${name}: the sample clock is the model's (shifts fitting every player x/y: [${fits}], must be `
-                    + `${w.gap === 2 ? 'contain 0 — the hop pins it' : '[0]'})`,
+                check(`${name}: the sample clock is the model's (shifts fitting every player x/y: [${fits}], must `
+                    + `${w.gap === 2 ? 'hold 0 — the hop pins it' : 'be [0]'})`,
                     clockOk(w, fits) && on.error === null, on.error ?? '');
                 check(`${name}: every shot and body is the model's (${GAP_KEY[w.gap]} ON) at every sampled tick`,
                     disOn.length === 0, disOn.slice(0, 8).join(' | '));

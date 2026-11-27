@@ -178,6 +178,18 @@ describe('fidelity WANDSWINGDRILL — gap 2: the game\'s numbers and the rule', 
         expect(clockOk({ gap: 1 }, [-1, 0])).toBe(false);
     });
 
+    it('the flip is the FIRST frame\'s only: a player walking into range behind the tiles later is never hopped at', async () => {
+        const w = byName['drill-l91-walkin'];
+        const world = buildLevelWorld(atlasLevelSource()(91), {});
+        const d = drillAt(w, 1);
+        const at = w.samples.find((s) => s.t === 6).player;
+        // in range on t 6, behind a tile the object-only list does not hold
+        expect(Math.hypot(at.x - d.x, at.y - d.y)).toBeLessThanOrEqual(48);
+        expect(w.samples.every((s) => s.bodies.find((b) => b.cls === 'Drill').x === d.x
+            && s.bodies.find((b) => b.cls === 'Drill').y === d.y)).toBe(true);
+        expect(world.solidBoxesForMover({}).length).toBeGreaterThan(world.solidBoxesForMover({}, null, { objectOnly: true }).length);
+    });
+
     it('L88\'s object-only list holds no tile solid; the full list holds the Cliff the shipped line stopped on', () => {
         const w = buildLevelWorld(atlasLevelSource()(88), {});
         const full = w.solidBoxesForMover({});
