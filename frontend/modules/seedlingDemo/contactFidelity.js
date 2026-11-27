@@ -2661,6 +2661,12 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no flip licence).
      */
     wandShotEnemyBodies: false,
+    /**
+     * ⛓ fidelity WANDKILL (wave 71) — DRAFT: the doc block is written with the witnesses.
+     * `SEEDLING_WAND_SHOT_KILL=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    wandShotKill: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -3129,6 +3135,9 @@ if (globalThis.process?.env?.SEEDLING_WAND_SHOT_TRAP_BODIES === '0') CONTACT_FID
 // ⛓ fidelity WANDENEMYBODIES: `SEEDLING_WAND_SHOT_ENEMY_BODIES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_WAND_SHOT_ENEMY_BODIES === '1') CONTACT_FIDELITY.wandShotEnemyBodies = true;
 if (globalThis.process?.env?.SEEDLING_WAND_SHOT_ENEMY_BODIES === '0') CONTACT_FIDELITY.wandShotEnemyBodies = false;
+// ⛓ fidelity WANDKILL: `SEEDLING_WAND_SHOT_KILL=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WAND_SHOT_KILL === '1') CONTACT_FIDELITY.wandShotKill = true;
+if (globalThis.process?.env?.SEEDLING_WAND_SHOT_KILL === '0') CONTACT_FIDELITY.wandShotKill = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
