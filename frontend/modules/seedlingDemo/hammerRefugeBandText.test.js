@@ -23,6 +23,7 @@ import { ANYTIME_PASSES, solveAnytime } from './jsRuntimeSolver.js';
 import { withPressKillBombs } from './pressKillCost.js';
 import { withContactFidelity } from './contactFidelity.js';
 import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
+import { withLatchedHoldMove } from './solverBot.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -54,7 +55,10 @@ describe('the press kill\'s "nowhere to be" names the refuges the shake band hid
 
     it('371 at 5266, `PRESS_KILL_BOMBS` OFF, shakeExactSplit ON (the default since wave 31): no refuge is banded — the '
         + 'press kill is passed and the dashless pass refuses later, at the paced bomb-pusher hold', () => {
-        const r = solve371(5266, { bombs: false });
+        // ⛓ LHM FLIP (⚖ the user 2026-11-26): LATCHED_HOLD_MOVE held OFF — this row's subject is the refusal text at the hold.
+        // MEASURED with LHM ON here (PRESS_KILL_BOMBS OFF, a non-default): the dashless pass solves 1662 t, work 250, and the
+        // model replay takes bomb:bombpusher@112,128#9 at t1248 AFTER the moved hold (a billed bomb; BW, ON by default, prices it).
+        const r = withLatchedHoldMove(false, () => solve371(5266, { bombs: false }));
         expect([r.ok, r.work]).toEqual([false, 106]);
         expect(r.message).not.toContain('PRESS_KILL_SHAKE_GUARD');
         expect(r.message).not.toContain(NOWHERE);

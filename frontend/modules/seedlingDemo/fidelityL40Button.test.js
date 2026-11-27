@@ -21,7 +21,7 @@ import { fileURLToPath } from 'node:url';
 
 import { withContactFidelity } from './contactFidelity.js';
 import { atlasLevelSource } from './levelSource.js';
-import { STANCE_ROCKS, SolverRefusal, stanceHypothesisProbe, withStanceRocks } from './solverBot.js';
+import { STANCE_ROCKS, SolverRefusal, stanceHypothesisProbe, withLatchedHoldMove, withStanceRocks } from './solverBot.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, runTape } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
@@ -86,7 +86,8 @@ describe('L40BUTTON D2 — the switch and the hypothesis', () => {
         let refusal = null;
         // ⛓ `holdWaitPriced` named OFF (planning-14's wave-32 flip: ON the still hold is priced at its stance walk and
         // the ladder is EXHAUSTED on the tail's bomb — the same obstacle, new text); this row pins the executor's refusal.
-        try { await withContactFidelity({ movingWait: false, bombBlastBody: false, holdWaitPriced: false }, () => solveFrom(CLUSTER_BOOT, true)); } catch (e) { refusal = e; }
+        // ⛓ LHM FLIP (⚖ the user 2026-11-26): LATCHED_HOLD_MOVE held OFF — this row witnesses the hold's refusal in a non-default model config; LHM ON moves past it.
+        try { await withLatchedHoldMove(false, () => withContactFidelity({ movingWait: false, bombBlastBody: false, holdWaitPriced: false }, () => solveFrom(CLUSTER_BOOT, true))); } catch (e) { refusal = e; }
         expect(refusal).toBeInstanceOf(SolverRefusal);
         expect(refusal.message).toMatch(/inside bombpusher@112,128's 256 px reach/);
     }, 360_000);
