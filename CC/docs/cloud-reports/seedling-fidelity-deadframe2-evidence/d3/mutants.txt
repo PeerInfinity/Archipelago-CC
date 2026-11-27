@@ -1,0 +1,46 @@
+M1 the Pulser queue is never flushed 13
+    DEADFRAME2 — composition > all three keys with deadFrameResponderStep ON: every witness agrees
+    DEADFRAME2 — composition > all three keys with deadFrameResponderStep and responderStepAfterReaders ON: every witness agrees
+    DEADFRAME2 — composition > all three keys with the base's last OFF keys ON: every witness agrees
+    DEADFRAME2 — the committed tapes the Pulser moves > move only the Pulser's ledger (and r5-shaft-control's spinner write), never a stream or a hit
+    DEADFRAME2 — the committed tapes the Pulser moves > r5-shaft-control: the spinner's pulse kill — the game writes (39,4) at 1643; OFF 1397, ON 1207 (both off: the spinner'
+    DEADFRAME2 — the dead frames, counted > the Pulser runs the game's frames: a lump 150 (texted too), a button rock's span 165, none on the dialogue
+    DEADFRAME2 — the witnesses (p4g, staged L38) > each key answers its own gap: with one key alone, the agreeing shapes are its own and the controls
+    DEADFRAME2 — the witnesses (p4g, staged L38) > p-health-x: its key ON (responderStepAfterReaders OFF) — 0 px, L and the rock every tick
+    DEADFRAME2 — the witnesses (p4g, staged L38) > p-health-x: its key ON (responderStepAfterReaders ON) — 0 px, L and the rock every tick
+    DEADFRAME2 — the witnesses (p4g, staged L38) > p-key: its key ON (responderStepAfterReaders OFF) — 0 px, L and the rock every tick
+    DEADFRAME2 — the witnesses (p4g, staged L38) > p-key: its key ON (responderStepAfterReaders ON) — 0 px, L and the rock every tick
+    DEADFRAME2 — the witnesses (p4g, staged L38) > p-span: its key ON (responderStepAfterReaders OFF) — 0 px, L and the rock every tick
+    DEADFRAME2 — the witnesses (p4g, staged L38) > p-span: its key ON (responderStepAfterReaders ON) — 0 px, L and the rock every tick
+M2 a texted lump runs the Pulser 149 frames 7
+    DEADFRAME2 — composition > all three keys with deadFrameResponderStep ON: every witness agrees
+    DEADFRAME2 — composition > all three keys with deadFrameResponderStep and responderStepAfterReaders ON: every witness agrees
+    DEADFRAME2 — composition > all three keys with the base's last OFF keys ON: every witness agrees
+    DEADFRAME2 — the dead frames, counted > the Pulser runs the game's frames: a lump 150 (texted too), a button rock's span 165, none on the dialogue
+    DEADFRAME2 — the witnesses (p4g, staged L38) > each key answers its own gap: with one key alone, the agreeing shapes are its own and the controls
+    DEADFRAME2 — the witnesses (p4g, staged L38) > p-health-x: its key ON (responderStepAfterReaders OFF) — 0 px, L and the rock every tick
+    DEADFRAME2 — the witnesses (p4g, staged L38) > p-health-x: its key ON (responderStepAfterReaders ON) — 0 px, L and the rock every tick
+M3 a site before the live step waits for the next advance (no after-flush) 0
+M4 the block arm is never asked 6
+    DEADFRAME2 — composition > all three keys with deadFrameResponderStep ON: every witness agrees
+    DEADFRAME2 — composition > all three keys with deadFrameResponderStep and responderStepAfterReaders ON: every witness agrees
+    DEADFRAME2 — composition > all three keys with the base's last OFF keys ON: every witness agrees
+    DEADFRAME2 — the witnesses (p4g, staged L38) > b-rock: its key ON (responderStepAfterReaders OFF) — the rock falls on the game's frame
+    DEADFRAME2 — the witnesses (p4g, staged L38) > b-rock: its key ON (responderStepAfterReaders ON) — the rock falls on the game's frame
+    DEADFRAME2 — the witnesses (p4g, staged L38) > each key answers its own gap: with one key alone, the agreeing shapes are its own and the controls
+M5 the seal piece queues nothing 7
+    DEADFRAME2 — composition > all three keys with deadFrameResponderStep ON: every witness agrees
+    DEADFRAME2 — composition > all three keys with deadFrameResponderStep and responderStepAfterReaders ON: every witness agrees
+    DEADFRAME2 — composition > all three keys with the base's last OFF keys ON: every witness agrees
+    DEADFRAME2 — the dead frames, counted > the seal piece queues its 331 frames on the responders' queue
+    DEADFRAME2 — the witnesses (p4g, staged L38) > each key answers its own gap: with one key alone, the agreeing shapes are its own and the controls
+    DEADFRAME2 — the witnesses (p4g, staged L38) > s-seal: its key ON (responderStepAfterReaders OFF) — 0 px, L and the rock every tick
+    DEADFRAME2 — the witnesses (p4g, staged L38) > s-seal: its key ON (responderStepAfterReaders ON) — 0 px, L and the rock every tick
+M6 a frozen tick steps the Pulsers once 6
+    DEADFRAME2 — composition > all three keys with deadFrameResponderStep ON: every witness agrees
+    DEADFRAME2 — composition > all three keys with deadFrameResponderStep and responderStepAfterReaders ON: every witness agrees
+    DEADFRAME2 — composition > all three keys with the base's last OFF keys ON: every witness agrees
+    DEADFRAME2 — the witnesses (p4g, staged L38) > each key answers its own gap: with one key alone, the agreeing shapes are its own and the controls
+    DEADFRAME2 — the witnesses (p4g, staged L38) > p-health-x: its key ON (responderStepAfterReaders OFF) — 0 px, L and the rock every tick
+    DEADFRAME2 — the witnesses (p4g, staged L38) > p-health-x: its key ON (responderStepAfterReaders ON) — 0 px, L and the rock every tick
+NOT CLEAN

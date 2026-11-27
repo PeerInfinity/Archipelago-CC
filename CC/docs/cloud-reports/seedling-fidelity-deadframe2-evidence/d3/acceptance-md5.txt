@@ -1,0 +1,9 @@
+base 48824c33 (measured before any edit): 391322d681b7aa0229d94b3f6906d024
+head OFF: 391322d681b7aa0229d94b3f6906d024
+head freezeFramesStepResponders ON: 391322d681b7aa0229d94b3f6906d024
+head pulserDeadFrameUpdate ON: 391322d681b7aa0229d94b3f6906d024
+head blockPressesFallRockButtonSameFrame ON: 391322d681b7aa0229d94b3f6906d024
+head all three ON: 391322d681b7aa0229d94b3f6906d024
+head the last OFF keys ON (control): d871cee754a7490a7003a7395028e531
+head all three + the last OFF keys ON: d871cee754a7490a7003a7395028e531
+DONE
