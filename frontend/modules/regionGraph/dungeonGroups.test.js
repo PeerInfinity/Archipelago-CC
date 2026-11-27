@@ -242,17 +242,27 @@ describe('⛓ 5. determinism, per value', () => {
     it('two panel builds give the same digest; the inputs in other insertion orders too', () => {
         const a = build('seedling_playthrough', 'merged');
         const b = build('seedling_playthrough', 'merged');
-        const { nodes, edges, prefs } = a.lcm.directionLayoutInputs();
-        const withPrefs = edges.map((e) => ({ ...e, pref: prefs.get(e.id) }));
+        const { nodes, edges, prefs, model, sidecars } = a.lcm.directionLayoutInputs();
+        // ⛓ region-graph-floors: the two-step values' edges carry their vertical links (`floorsOf`), as the panel's.
+        const floors = a.lcm.floorsOf(model, sidecars, nodes, edges);
+        expect(floors.vertical.size).toBeGreaterThan(0);
+        const flip = (p) => p && { ...p, dx: -p.dx, dy: -p.dy };
         const rotate = (xs, k) => [...xs.slice(k), ...xs.slice(0, k)];
         const settings = D.normaliseDirectionSettings();
         for (const v of VALUES) {
+            const withPrefs = edges.map((e) => {
+                const vert = (v === 'twoStep' || v === 'twoStepBoxes') ? floors.vertical.get(e.id) : undefined;
+                return vert ? { ...e, pref: prefs.get(e.id), vertical: vert } : { ...e, pref: prefs.get(e.id) };
+            });
             const da = digest(run(a.lcm, v).positions);
             expect(digest(run(b.lcm, v).positions), v).toBe(da);
             const orders = [
                 [[...nodes].reverse(), [...withPrefs].reverse()],
                 [rotate(nodes, 37), rotate(withPrefs, 11)],
-                [nodes, withPrefs.map((e) => ({ ...e, source: e.target, target: e.source, pref: e.pref && { ...e.pref, dx: -e.pref.dx, dy: -e.pref.dy } }))],
+                [nodes, withPrefs.map((e) => ({
+                    ...e, source: e.target, target: e.source, pref: flip(e.pref),
+                    ...(e.vertical ? { vertical: { ...e.vertical, pref: flip(e.vertical.pref) } } : {}),
+                }))],
             ];
             for (const [ns, es] of orders) {
                 const out = G.groupedDirectionLayout(ns, es, { ...settings, grouping: v, groupStrength: 0.5 });
@@ -288,11 +298,13 @@ describe('⛓ 6. the boxes: an overlay every reader skips', () => {
         const layer = ui.graphContainer.children.find((c) => c.classList.contains('rg-dungeon-boxes'));
         expect(layer.children.filter((c) => c.className === DUNGEON_BOX_CLASS).length).toBe(11);
         expect(layer.children.every((c) => c.style.display === 'block')).toBe(true);
-        // Each box holds its members' boxes; no two boxes overlap; the label is the group id.
+        // Each box holds its members' boxes; no two boxes overlap; the label is the FLOOR's (region-graph-floors), and
+        // the group id stays as the box's root.
         const model = ui.mapLook.regionMapModel().model;
         const ids = new Set(model.layout.groups.map((g) => g.id));
         for (const b of report) {
-            expect(ids.has(b.label)).toBe(true);
+            expect(ids.has(b.root)).toBe(true);
+            expect(b.label).toMatch(/^(Ground floor|Floor [+\u2212]\d+|Floor \?)( \u00b7 \d+)?$/);
             for (const id of b.members) {
                 const bb = ui.cy.getElementById(id).boundingBox({ includeLabels: false });
                 expect(bb.x1 >= b.box.x1 && bb.x2 <= b.box.x2 && bb.y1 >= b.box.y1 && bb.y2 <= b.box.y2).toBe(true);
@@ -390,8 +402,9 @@ describe('⛓ 7. the settings', () => {
     });
     it('the panel reads them with no call-site default (the mocked getSetting answers its default: undefined)', async () => {
         const { ui, lcm } = build('alttp', 'separate');
-        expect(await lcm.loadGroupingSettings()).toEqual({ grouping: 'none', groupStrength: 0.5 });
+        // ⛓ region-graph-floors: the floor gap rides with them (its schema default).
+        expect(await lcm.loadGroupingSettings()).toEqual({ grouping: 'none', groupStrength: 0.5, floorGap: 160 });
         await lcm.loadDirectionSettings();
-        expect(ui.groupingSettings).toEqual({ grouping: 'none', groupStrength: 0.5 });
+        expect(ui.groupingSettings).toEqual({ grouping: 'none', groupStrength: 0.5, floorGap: 160 });
     });
 });

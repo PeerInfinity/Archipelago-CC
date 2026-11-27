@@ -236,7 +236,8 @@ export const DIRECTION_LAYOUT_TUNING = Object.freeze({ iterations: 300, repulsio
 
 /**
  * Lay out `nodes` (`[{id, w, h, group?}]`, sizes in graph px) joined by `edges` (`[{id, source, target, pref?}]`,
- * `pref` = `{dx, dy, weight}` from `edgePreferences`). → `{positions: Map<id, {x, y}>, stats}`.
+ * `pref` = `{dx, dy, weight}` from `edgePreferences`; `gap` optional, px: that edge's rest gap in place of the
+ * spacing — region-graph-floors' floor links). → `{positions: Map<id, {x, y}>, stats}`.
  * `group` (optional): nodes sharing one are pulled a little towards their common centre (a `nested` box's members).
  * `dungeon` (optional) and `opts.dungeonPull` (region-graph-dungeon-groups, `dungeonGroups.js`'s `soft` value):
  * `{strength, pull, push, reach}` — each node with a dungeon is pulled towards its dungeon's centre (weight
@@ -262,8 +263,11 @@ export function directionLayout(nodes, edges, { strength = DIRECTION_STRENGTH_SC
         const [i, j] = flip ? [b, a] : [a, b];
         const k = i * ns.length + j;
         const pref = e.pref && s > 0 ? { dx: flip ? -e.pref.dx : e.pref.dx, dy: flip ? -e.pref.dy : e.pref.dy, w: e.pref.weight ?? 1 } : null;
+        // ⛓ region-graph-floors: an edge may carry its own `gap` (the block step's floor links); absent = the spacing.
+        const eg = Number.isFinite(e.gap) ? Math.max(0, e.gap) : null;
         const prev = pairs.get(k);
-        if (!prev) { pairs.set(k, { i, j, pref }); continue; }
+        if (!prev) { pairs.set(k, { i, j, pref, gap: eg }); continue; }
+        if (eg !== null) prev.gap = Math.max(prev.gap ?? eg, eg);
         if (pref) {
             // Two drawn edges on one pair (cannot happen in the panel, which draws one per pair): add their vectors.
             const p = prev.pref ?? { dx: 0, dy: 0, w: 0 };
@@ -277,7 +281,7 @@ export function directionLayout(nodes, edges, { strength = DIRECTION_STRENGTH_SC
 
     const sizeRef = ns.length ? ns.reduce((acc, n) => acc + Math.max(n.w, n.h), 0) / ns.length : 1;
     const Lref = sizeRef + gap;
-    const restOf = (e, dx, dy) => clearance(ns[e.i], ns[e.j], dx, dy) + gap;
+    const restOf = (e, dx, dy) => clearance(ns[e.i], ns[e.j], dx, dy) + (e.gap ?? gap);
 
     // Components, in order of their smallest member.
     const comp = new Array(ns.length).fill(-1);

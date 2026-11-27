@@ -29,6 +29,10 @@
  *     no node lies inside another dungeon's block.
  *   · `twoStepBoxes`: `twoStep`, plus a faint labelled box around each dungeon of 2+ drawn nodes
  *     (`dungeonBoxLayer.js`, a DOM overlay: not a Cytoscape element).
+ * ⛓ region-graph-floors: the dungeons are FLOORS (`floors.js`). In both two-step values, a block edge that carries a
+ * VERTICAL link (an edge with `vertical`: a stair or a pit between the two groups) is a FLOOR link: it prefers the sum
+ * of its vertical links' directions (where the stairs are in their level) and rests at `floorGap` px instead of the
+ * spacing. Every other block edge, and every edge inside a dungeon, is as before. The box label is the floor's.
  * ⛔ A grouping only acts when some drawn edge joins two DIFFERENT dungeons (an edge to a node with no dungeon does
  * not count). When none does (every component of the graph is inside one dungeon, give or take the Menu node: alttp,
  * whose generic layout graph makes every exit a `join`, so its groups ARE its components; a single-group maze) every
@@ -38,6 +42,7 @@
  * ⛔ PURE: no DOM, no Cytoscape, no substrate named. The panel's glue is `layoutControlsManager.js`.
  */
 import { directionLayout, DIRECTION_STRENGTH_SCHEMA, DIRECTION_SPACING_SCHEMA } from './directionLayout.js';
+import { FLOOR_GAP_SCHEMA, normaliseFloorGap } from './floors.js';
 
 /* ── settings ─────────────────────────────────────────────────────────────────────────────────────────────────── */
 
@@ -141,6 +146,7 @@ export const SOFT_GROUPING_TUNING = Object.freeze({ pull: 0.12, push: 0.6, reach
 export function groupedDirectionLayout(nodes, edges, {
     grouping = DUNGEON_GROUPING_SCHEMA.default, groupStrength = DUNGEON_GROUP_STRENGTH_SCHEMA.default,
     strength = DIRECTION_STRENGTH_SCHEMA.default, spacing = DIRECTION_SPACING_SCHEMA.default, tuning = {},
+    floorGap = FLOOR_GAP_SCHEMA.default,
 } = {}) {
     const opts = { strength, spacing, tuning };
     const mode = DUNGEON_GROUPING_SCHEMA.enum.includes(grouping) ? grouping : 'none';
@@ -153,10 +159,10 @@ export function groupedDirectionLayout(nodes, edges, {
         const out = directionLayout(nodes, edges, { ...opts, dungeonPull: { strength: groupStrength, ...SOFT_GROUPING_TUNING } });
         return { ...out, stats: { ...out.stats, grouping: { mode, inert: false, crossEdges: cross } }, blocks: null };
     }
-    return twoStepLayout(nodes, edges, opts, mode, cross);
+    return twoStepLayout(nodes, edges, opts, mode, cross, normaliseFloorGap(floorGap));
 }
 
-function twoStepLayout(nodes, edges, opts, mode, cross) {
+function twoStepLayout(nodes, edges, opts, mode, cross, floorGap) {
     const pad = blockPad(opts.spacing);
     const dungeons = dungeonsOf(nodes);
     const keyOf = new Map(nodes.map((n) => [String(n.id), keyOfNode(n)]));
@@ -185,19 +191,32 @@ function twoStepLayout(nodes, edges, opts, mode, cross) {
         local.set(d.key, { positions: out.positions, cx: (x1 + x2) / 2, cy: (y1 + y2) / 2, w: x2 - x1 + 2 * pad, h: y2 - y1 + 2 * pad });
     }
     // (2) the blocks: one node per dungeon, one edge per linked pair, its preference the links' directions summed.
+    // ⛓ region-graph-floors: a pair with a VERTICAL edge is a floor link: only its vertical directions, and `floorGap`.
     const pairs = new Map();
     for (const e of between) {
         let a = keyOf.get(String(e.source)); let b = keyOf.get(String(e.target));
         let sign = 1;
         if (a > b) { [a, b] = [b, a]; sign = -1; }
         const k = `${a}\u0002${b}`;
-        if (!pairs.has(k)) pairs.set(k, { a, b, sx: 0, sy: 0, n: 0, preferred: 0 });
+        if (!pairs.has(k)) pairs.set(k, { a, b, sx: 0, sy: 0, n: 0, preferred: 0, vx: 0, vy: 0, vn: 0, vpreferred: 0 });
         const p = pairs.get(k);
         p.n += 1;
         if (e.pref) { p.sx += sign * (e.pref.weight ?? 1) * e.pref.dx; p.sy += sign * (e.pref.weight ?? 1) * e.pref.dy; p.preferred += 1; }
+        if (e.vertical) {
+            p.vn += 1;
+            const v = e.vertical.pref;
+            if (v) { p.vx += sign * (v.weight ?? 1) * v.dx; p.vy += sign * (v.weight ?? 1) * v.dy; p.vpreferred += 1; }
+        }
     }
     const blockNodes = dungeons.map((d) => ({ id: d.key, w: local.get(d.key).w, h: local.get(d.key).h }));
+    let floorLinks = 0;
     const blockEdges = [...pairs.entries()].sort((x, y) => cmp(x[0], y[0])).map(([k, p]) => {
+        if (p.vn > 0) {
+            floorLinks += 1;
+            const r = Math.hypot(p.vx, p.vy);
+            const pref = p.vpreferred > 0 && r > 1e-9 ? { dx: p.vx / r, dy: p.vy / r, weight: Math.min(1, r / p.vn) } : undefined;
+            return { id: k, source: p.a, target: p.b, pref, gap: floorGap };
+        }
         const r = Math.hypot(p.sx, p.sy);
         const pref = p.preferred > 0 && r > 1e-9 ? { dx: p.sx / r, dy: p.sy / r, weight: Math.min(1, r / p.n) } : undefined;
         return { id: k, source: p.a, target: p.b, pref };
@@ -222,7 +241,7 @@ function twoStepLayout(nodes, edges, opts, mode, cross) {
             nodes: nodes.length, edges: edges.length, preferred: edges.filter((e) => e.pref).length,
             components: placed.stats.components, iterations: iterations + placed.stats.iterations,
             separationPasses: placed.stats.separationPasses, separationScales: placed.stats.separationScales,
-            grouping: { mode, inert: false, crossEdges: cross, blocks: blocks.length, blockEdges: blockEdges.length, pad },
+            grouping: { mode, inert: false, crossEdges: cross, blocks: blocks.length, blockEdges: blockEdges.length, pad, floorLinks, floorGap },
         },
     };
 }

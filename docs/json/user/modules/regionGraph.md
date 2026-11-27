@@ -130,10 +130,21 @@ Changing a setting while the Direction-aware layout is the one shown re-runs it 
 |---|---|
 | **Off (as before)** (the default) | The Direction-aware layout exactly as above. Nodes from different dungeons can sit side by side. |
 | **Soft pull together** | One layout, with each node also pulled towards its own dungeon and pushed away from nearby nodes of other dungeons. Dungeons mostly read as clusters, but some exit directions bend to make room. **Dungeon pull** (0 – 1, default 0.5) sets how strongly; 0 is the same as Off. |
-| **Two-step layout** | Each dungeon is laid out on its own first, then the dungeons are placed as solid blocks, with a gap, each pulled towards the dungeons it links to and to the side its doors point to. Blocks never overlap, so no node lands inside another dungeon's area. |
-| **Two-step + boxes** | The same arrangement, plus a faint dashed box round each dungeon of two or more nodes, labelled with the dungeon's name (its first level, the one you enter it by). The box is only a drawing: it cannot be clicked, picked or pathed to, and it is not saved with the positions. It stays until another layout runs or the graph is redrawn. |
+| **Two-step layout** | Each dungeon is laid out on its own first, then the dungeons are placed as solid blocks, with a gap, each pulled towards the dungeons it links to and to the side its doors point to. Blocks never overlap, so no node lands inside another dungeon's area. Two dungeons joined by stairs or a pit are **floors**: see below. |
+| **Two-step + boxes** | The same arrangement, plus a faint dashed box round each dungeon of two or more nodes, labelled with its **floor** (below). The box is only a drawing: it cannot be clicked, picked or pathed to, and it is not saved with the positions. It stays until another layout runs or the graph is redrawn. |
 
-In a world with no dungeons that link to each other (for example A Link to the Past, or a single maze), every value gives the same arrangement as **Off**. The settings are `moduleSettings.regionGraph.dungeonGrouping` (`none`, `soft`, `twoStep`, `twoStepBoxes`) and `moduleSettings.regionGraph.dungeonGroupStrength`; a change re-runs the layout when it is the one shown, like the other Direction-aware settings.
+In a world with no dungeons that link to each other (for example A Link to the Past, or a single maze), every value gives the same arrangement as **Off**. The settings are `moduleSettings.regionGraph.dungeonGrouping` (`none`, `soft`, `twoStep`, `twoStepBoxes`), `moduleSettings.regionGraph.dungeonGroupStrength` and `moduleSettings.regionGraph.floorGap` (below); a change re-runs the layout when it is the one shown, like the other Direction-aware settings.
+
+#### Floors
+
+Because a staircase or a pit never joins two levels into one dungeon, every dungeon is really a **floor**, and the two two-step values lay them out as floors:
+
+- **Walking links stay as they were.** Inside a floor, levels you walk between by their edges are laid out exactly as before: side by side, in the direction of the door.
+- **Stairs and pits are longer, but keep a direction.** Two floors joined by stairs or a pit are placed further apart, by the **Floor gap** (in Controls, under Dungeon pull; 0 – 600 px, default 160), in the direction where the stairs are in their level: stairs in the east of a level put the floor they lead to further east. Stairs in the middle tenth of their level (both ways) give no direction, only the distance. Several staircases between the same two floors are added together. A bigger gap moves the floors further apart in the same directions; 0 puts them as close as two linked dungeons with no stairs.
+- **Each box is labelled by its floor.** The floor holding the start region is the **Ground floor**. Every staircase or pit down from it is **Floor −1**, up is **Floor +1**, and so on, counted from the ground floor along the stairs. When several dungeons are on the same floor they are numbered in the order they are reached from the start: **Floor −1 · 1**, **Floor −1 · 2**, …. A dungeon you can only reach by a doorway or teleporter, never by stairs from the start, is **Floor ?**. The dungeon's first level (its old label) is kept on the box for tools that read it.
+- **Worlds disagree with themselves sometimes.** If two different staircase routes from the ground floor reach a dungeon on two different floors, the first route found decides its number (the game's levels are not always stacked consistently).
+
+Floors come from the world's own exits, never from hand-made labels, so they follow entrance randomization or any other change to how the levels connect. Off and Soft pull together are unchanged by floors. The Region Map does not use floors.
 
 ## Where its state and actions live
 

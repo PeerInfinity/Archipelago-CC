@@ -12,8 +12,9 @@
  *     screen pixels, so it follows its nodes when they move (a drag, the layout's animation), pan and zoom; it is
  *     recomputed one frame after `position` / `viewport` / `resize` / `layoutstop`.
  *   · A member that discovery hides (`discovery-hidden`) is left out; a box with no member shown is hidden. The label
- *     is the dungeon's name (the group id), drawn just above the box's top edge, or `???` while any member shown is an
- *     undiscovered placeholder.
+ *     is the dungeon's FLOOR (region-graph-floors, `floors.js`: "Ground floor", "Floor −1 · 2", "Floor ?"), drawn just
+ *     above the box's top edge, or `???` while any member shown is an undiscovered placeholder. The group's root
+ *     level id stays on the box (`data-root`, and its `title`).
  *   · The boxes belong to ONE Direction-aware run: `show(boxes)` after its start; any later layout's `layoutstart`, a
  *     graph rebuild (`clear()`), or a run with another grouping value removes them.
  */
@@ -85,6 +86,9 @@ export class DungeonBoxLayer {
                 el.className = DUNGEON_BOX_CLASS;
                 el.setAttribute('style', BOX_STYLE);
                 el.dataset.dungeon = String(b.dungeon);
+                // ⛓ region-graph-floors: the label is the FLOOR's; the group's root level id stays on the box.
+                el.dataset.root = String(b.root ?? b.dungeon);
+                el.title = `${b.label} (${b.root ?? b.dungeon})`;
                 const label = this.doc.createElement('span');
                 label.setAttribute('style', LABEL_STYLE);
                 el.appendChild(label);
@@ -151,7 +155,7 @@ export class DungeonBoxLayer {
 
     /** The boxes now, in model coordinates (for the tests, the in-app row and the shots). */
     report() {
-        return this.boxes.map((b) => ({ dungeon: b.dungeon, label: b.label, members: [...b.members], box: this.modelBoxOf(b) }));
+        return this.boxes.map((b) => ({ dungeon: b.dungeon, label: b.label, root: b.root ?? String(b.dungeon), members: [...b.members], box: this.modelBoxOf(b) }));
     }
 
     destroy() {
