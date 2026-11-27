@@ -2661,11 +2661,76 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no flip licence).
      */
     wandShotEnemyBodies: false,
-    /** PLACEHOLDER-DOC-1 */
+    /**
+     * ⛓ fidelity DEADFRAME2 D2 (wave 69) — THE RESPONDERS STEP THROUGH A SEAL PIECE'S CEREMONY (wave 66's residue: "the
+     * other dead frames"; `CC/docs/cloud-reports/seedling-fidelity-deadframe2.md`).
+     * The game. A seal piece's ceremony (`SealPiece` → `SealController`, 150 of phase A and 181 more) is all dead frames,
+     * and a freeze gates only `Mobile` and the enemies (`Game.update` runs `super.update()` whenever `blackCover <= 0`,
+     * `Game.as:880-883`), so every responder updates on every one of them, as on a pickup's lump. MEASURED on the game (p4g;
+     * staged L38, `botLoadLevels`, a fresh page; `-evidence/d2/witness-seal.json`): the player boots on a latch
+     * (`buttonroom@64,48`, group 5; `lock@112,48` open on frame 102) and walks up into `chest@64,32`; the seal piece meets
+     * it on tick 11 (`dead_frames` 20 → 351) and the game's L is open at tick 12 (`s-seal`); the model (OFF, and with
+     * `deadFrameResponderStep` ON) opens it on 102.
+     * ON (`levelRun.queueFreezeResponderFramesNow`): the ceremony's 331 frames go on `deadFrameResponderStep`'s queue
+     * (the same record and flushes: `responderStepAfterReaders` OFF before the tick's own step, ON at the next advance's
+     * top), built without reading that key's gate. Two spans in one tick are refused by name. OFF: nothing read or
+     * written, byte-identical. Not modelled, named (residue: unwitnessed, and the census finds no committed tape on which
+     * a responder would change): a door ceremony's, the moonrock's, BobBoss's and LavaBoss's rocks', the wand's approach
+     * fade's, a seed's cover fade's (its reboot tears the world down anyway) and a Help's frames.
+     * Needs no other key (both `responderStepAfterReaders` arms witnessed; with `deadFrameResponderStep` ON a pickup's
+     * lump is that key's). `SEEDLING_FREEZE_FRAMES_STEP_RESPONDERS=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
     freezeFramesStepResponders: false,
-    /** PLACEHOLDER-DOC-2 */
+    /**
+     * ⛓ fidelity DEADFRAME2 D2 (wave 69) — THE PULSERS RUN THROUGH THE DEAD FRAMES (wave 66's residue: "the Pulser's
+     * dead-frame update, its pulse timer and its hits").
+     * The game. `Pulser.update` carries no `Game.freezeObjects` test (`Puzzlements/Pulser.as:51-83`): its `pulseTimer`,
+     * its anim and its `radius` run on every frame `super.update()` runs, dead ones included. Its `hit()` still fires, but
+     * a hit on the player or an enemy is inert under the freeze (`Player.hit`'s and `Enemy.hit`'s `!Game.freezeObjects`,
+     * `Player.as:1382`, `Enemies/Enemy.as:147`). MEASURED on the game (p4g; staged L38, `-evidence/d2/witness-pulser.json`):
+     * `pulser@112,48` latched from the boot (group 5); the player walks right through a dead span and on into its ring, and
+     * the tick of its first pulse hit is the Pulser's phase (cycle 51 frames). Through a text-less pickup's lump
+     * (`p-key`, 150 dead frames) and a button rock's span (`p-span`, 165) the game's hits land where the model's do only
+     * with the dead frames stepped (OFF: 17.4 px / 26.5 px off from the first hit); through a TEXTED pickup whose dialogue
+     * the tape dismisses (`p-health-x`) the Pulser runs 150 frames — not the counter's 149 (52 px off) — and none on the
+     * dialogue's frozen ticks (157 is 36 px off). The control (`p-ctl`, no dead frames) agrees OFF.
+     * ON (`levelRun.queueDeadPulserFramesNow` / `flushDeadPulserFramesNow` / `stepPulsersFrozenNow`): every dead span queues
+     * its frames (a pickup's phase A 150, the runtime Dark Sword's / Fire's / seed's 150, a rope's rock and a button's or
+     * the wand's rocks' span, a seal piece's 331, a door ceremony, the moonrock, BobBoss's / LavaBoss's rock, the wand's
+     * approach fade, a seed's cover fade, a Help), run after the advance's own live Pulser step — at once after it for a
+     * site before it (a seal piece), at the next advance before its live step for one after it. Armed as the live step
+     * arms it (`pulserPublishLag`'s `pressedLast`; `responderStepAfterReaders`' read). A frozen tick runs none. A queue
+     * whose world was torn down is dropped. A dead-frame hit that reaches a fire block is REFUSED by name (the block's glide
+     * through the freeze is `frozenTickUngated`'s own loop, not interleaved per frame); none on the corpus. The ledger
+     * `run.deadPulserFrames` is written ON only. OFF: nothing read or written, byte-identical. Not modelled, named: a
+     * button rock's frame A (a frozen tick: `p-span` agrees with and without a step there; the source says the Pulser
+     * runs on it); an inventory hold (refused in a room with a Pulser already).
+     * MOVES 7 committed tapes, ledgers only (`pulserHits`; `r5-shaft-control`'s `spinnerWrites[0]` t1397 → 1207, the
+     * game's is t1643: the spinner's pulse kill is already 246 ticks off OFF). Needs `pulserPublishLag` (ON by default);
+     * composes with `deadFrameResponderStep` and both `responderStepAfterReaders` arms. `SEEDLING_PULSER_DEAD_FRAME_UPDATE=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
     pulserDeadFrameUpdate: false,
-    /** PLACEHOLDER-DOC-3 */
+    /**
+     * ⛓ fidelity DEADFRAME2 D2 (wave 69) — A BLOCK ON A FALLROCK'S BUTTON DROPS THE ROCK IN ITS OWN FRAME (wave 66's
+     * residue: "a block on a FallRock's Button … the model reads it at the tick's end").
+     * The game. A `PushableBlock*` updates before the `Button` (the readers before the responders, wave 64), so the
+     * Button sees the block where THIS frame moved it, and `fall()` raises the freeze in that frame: it is frame A, as for
+     * an enemy (`enemyPressesFallRockButton`). MEASURED on the game (p4g; staged L38, `-evidence/d2/witness-block.json`):
+     * the player pushes `pushableblock@64,48` right onto `button@96,48` (group 7) of `fallrock@192,32`; the game's rock
+     * falls at tick 60 (`dead_frames` 20 → 185 at 61) with the block at x 84.5 (`b-rock`); the model (OFF) arms it at the
+     * end of tick 60 and drops it on 61.
+     * ON (`levelRun.armButtonFallRocksByBlocksNow`): at the top of every live tick, after the blocks stepped and beside the
+     * enemy arm, the live pushables press the FallRock Buttons (`fallRocksArmedBy`, no player box); an arm is resolved as
+     * frame A in THIS tick. The ledger `run.blockRockPresses` is written ON only. OFF: nothing read, byte-identical. Not
+     * modelled, named: the block's glide through the span (`frozenTickUngated`'s; with it ON the model agrees with the game
+     * on every row but frame A's, where the model's span is already resolved — the span's existing placement, shared with
+     * the player's press); a crusher or an ice turret on one (they are in `movingSolidsNow`; unwitnessed, still read at
+     * the tick's end).
+     * Needs no other key; composes with every key. `SEEDLING_BLOCK_PRESSES_FALL_ROCK_BUTTON_SAME_FRAME=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
     blockPressesFallRockButtonSameFrame: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */

@@ -59,7 +59,7 @@ describe('PRESSERLOOP — the key', () => {
     it('ships OFF, appended last, with a worker env name', () => {
         expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
         // ⛓ wave 63 (BUTTONROOMCLEAR) appended `publishedButtonRoomSetter` after it.
-        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf(KEY) + 1)).toEqual(['publishedButtonRoomSetter', 'responderStepAfterReaders', 'deadFrameResponderStep', 'enemyPressesFallRockButton', 'wandShotTrapBodies', 'wandShotEnemyBodies']);
+        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf(KEY) + 1)).toEqual(['publishedButtonRoomSetter', 'responderStepAfterReaders', 'deadFrameResponderStep', 'enemyPressesFallRockButton', 'wandShotTrapBodies', 'wandShotEnemyBodies', 'freezeFramesStepResponders', 'pulserDeadFrameUpdate', 'blockPressesFallRockButtonSameFrame']);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_PRESSER_RECURSION_HANG');
     });
     it.skipIf(!!process.env.SEEDLING_PRESSER_RECURSION_HANG)('is OFF in this process', () => {
