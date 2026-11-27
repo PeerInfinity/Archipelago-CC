@@ -41,6 +41,10 @@
       "frontend/modules/seedlingDemo/hammerEntry37Wall.train.test.js": {
         "by": "seedling-hammer-entry37-wall, cloud box (4 cores, under a concurrent 4-process replay batch), 2026-11-27",
         "ms": 65500
+      },
+      "frontend/modules/seedlingDemo/walkBladeArm.train.test.js": {
+        "by": "seedling-hammer-l65-l68-hit, cloud box (4 cores, under four concurrent route surveys), 2026-11-27",
+        "ms": 32000
       }
     }
   },
@@ -71,6 +75,7 @@
     "frontend/modules/seedlingDemo/hammerEntry37Wall.train.test.js": 66,
     "frontend/modules/mazeRoom/tileSpike/learnLattice.train.test.js": 55,
     "frontend/modules/seedlingDemo/hammerKeylockTurret.train.test.js": 35,
+    "frontend/modules/seedlingDemo/walkBladeArm.train.test.js": 32,
     "frontend/modules/seedlingDemo/hammerNewLocks.train.test.js": 15,
     "scripts/procgen/extract-seedling-map.train.test.js": 1
   }
