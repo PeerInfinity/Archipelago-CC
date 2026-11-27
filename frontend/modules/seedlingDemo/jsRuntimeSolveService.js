@@ -106,9 +106,16 @@ export function explicitAttempt(attempt) {
 
 // MEASUREMENT-ONLY (seedling-js-l22-l25-divergence) — the service capture probe. Gate: the TOP window's
 // `?measureCaptureService=<regex>` (a request-name filter; `1` = all) and the walk's `__measureCaptureAppend` binding.
+function measureServiceAppend() {
+    try {
+        if (typeof globalThis.__measureCaptureAppend === 'function') return globalThis.__measureCaptureAppend;
+        const top = globalThis.top ?? null;
+        return typeof top?.__measureCaptureAppend === 'function' ? top.__measureCaptureAppend : null;
+    } catch { return null; }
+}
 function measureServiceCaptureFilter() {
     try {
-        if (typeof globalThis.__measureCaptureAppend !== 'function') return null;
+        if (!measureServiceAppend()) return null;
         const top = globalThis.top ?? globalThis;
         const v = new URLSearchParams(top.location?.search ?? '').get('measureCaptureService');
         return v ? new RegExp(v === '1' ? '.' : v) : null;
@@ -140,7 +147,7 @@ function measureServiceCapture(handle, request, attempt) {
                     keys: r.ok ? (r.plan?.solution?.length ?? null) : null, solverEnv: r.solverEnv ?? r.plan?.solverEnv ?? null } : null;
                 const row = { probe: 'svc', seq, frame, name, attempt, ms: Date.now() - t0,
                     requests: [{ i: 0, goal: name, retry: attempt?.retry ?? null, request: kept, passes: handle.passes ?? null, result }] };
-                try { globalThis.__measureCaptureAppend(JSON.stringify(row)); } catch (e) { console.log(`[MEASURE svc] append threw: ${e?.message ?? e}`); }
+                try { measureServiceAppend()(JSON.stringify(row)); } catch (e) { console.log(`[MEASURE svc] append threw: ${e?.message ?? e}`); }
                 console.log(`[MEASURE svc] done #${seq} ${name} ok=${result?.ok} kind=${result?.kind} work=${result?.work} answer=${answer}`);
             });
         }, 50);
