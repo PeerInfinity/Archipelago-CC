@@ -23,7 +23,7 @@ import { fileURLToPath } from 'node:url';
 
 import { CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { atlasLevelSource } from './levelSource.js';
-import { SolverRefusal, withStrikeEtaFloor } from './solverBot.js';
+import { SolverRefusal, withLatchedHoldMove, withStrikeEtaFloor } from './solverBot.js';
 import { heldKeysAt, parseTape } from './tapeFormat.js';
 import { createRunForStaging, createTapeStepper } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
@@ -159,8 +159,9 @@ describe.each(L40_LEGS)('WANDHOLD L40 — leg $leg', (row) => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('OFF (movingWait, bombBlastBody OFF): the sweep\'s refusal — a still hold inside the lobber\'s reach', async () => {
         // ⛓ `holdWaitPriced` named OFF (planning-14's wave-32 flip: ON the still hold is priced at its stance walk and
         // the ladder is EXHAUSTED on the tail's bomb — the same obstacle, new text); this row pins the executor's refusal.
-        const e = await withContactFidelity({ movingWait: false, bombBlastBody: false, holdWaitPriced: false },
-            () => caught(solveL40(row.boot)));
+        // ⛓ LHM FLIP (⚖ the user 2026-11-26): LATCHED_HOLD_MOVE held OFF — this row witnesses the hold's refusal in a non-default model config; LHM ON moves past it.
+        const e = await withLatchedHoldMove(false, () => withContactFidelity({ movingWait: false, bombBlastBody: false, holdWaitPriced: false },
+            () => caught(solveL40(row.boot))));
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.message).toContain(`hold stance (wandlock@176,80) -> hold: the hold stands still for up to 131 tick(s) at ${row.still}, `
             + 'inside bombpusher@112,128\'s 256 px reach');

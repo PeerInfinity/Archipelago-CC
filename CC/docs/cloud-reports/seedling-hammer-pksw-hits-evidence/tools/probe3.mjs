@@ -1,0 +1,24 @@
+// MEASUREMENT-ONLY: at key K of a dumped plan, call deriveRefuge as the kill does, with the counts.
+import { readFileSync } from 'node:fs';
+import { gunzipSync } from 'node:zlib';
+const ROOT = '/home/user/Archipelago-CC';
+const [file, id, i, planFile] = process.argv.slice(2);
+const raw = gunzipSync(readFileSync(file)).toString();
+const row = raw.split('\n').filter(Boolean).map((l) => JSON.parse(l)).find((r) => String(r.id) === id);
+const cap = row.requests[Number(i)].request;
+const { restoreRequest } = await import(`${ROOT}/scripts/procgen/seedlingSolveRequestCodec.js`);
+const { levelSourceFromAtlas } = await import(`${ROOT}/frontend/modules/seedlingDemo/atlasSource.js`);
+const { createRunForStaging } = await import(`${ROOT}/frontend/modules/seedlingDemo/tapeRunner.js`);
+const sb = await import(`${ROOT}/frontend/modules/seedlingDemo/solverBot.js`);
+const req = restoreRequest(cap);
+const { source, ...tape } = req;
+const levelSource = levelSourceFromAtlas(source.records);
+const plan = JSON.parse(readFileSync(planFile, 'utf8'));
+const keys = [...tape.perTick, ...plan.solution.map((k) => new Set(k))];
+const K = Number(process.env.K);
+const r = createRunForStaging(tape.staging, levelSource);
+for (let k = 0; k < K; k += 1) r.advance(keys[k]);
+console.log('PKB', sb.PRESS_KILL_BOMBS.enabled, 'pos', r.state.x, r.state.y);
+const c0 = JSON.stringify(sb.PRESS_KILL_BOMBS_COUNTS);
+const ref = sb.deriveRefuge(r, new Set(), Number(process.env.UNTIL ?? 30));
+console.log('refuge', JSON.stringify(ref), 'counts', c0, '->', JSON.stringify(sb.PRESS_KILL_BOMBS_COUNTS));

@@ -1,0 +1,17 @@
+A1 32:10 seam=0 PKSW=0 MINE=1 | ok false ticks undefined prefi | hits: none
+A1 32:10 seam=0 PKSW=1 MINE=1 | ok true ticks 651 prefix 1449  | hits: none
+A1 32:10 seam=0 PKSW=0 MINE=0 | ok false ticks undefined prefi | hits: none
+A1 32:10 seam=0 PKSW=1 MINE=0 | ok true ticks 797 prefix 1449  | hits: t1690 bomb:bombpusher@112,128#9 [kill@1663];
+P1 32:10 seam=0 PKSW=0 MINE=0 | ok false ticks undefined prefi | hits: none
+P1 32:10 seam=0 PKSW=0 MINE=1 | ok false ticks undefined prefi | hits: none
+P1 32:10 seam=0 PKSW=1 MINE=0 | ok true ticks 722 prefix 1449  | hits: none
+P1 32:10 seam=0 PKSW=1 MINE=1 | ok true ticks 722 prefix 1449  | hits: none
+P1 32:10 seam=-20 PKSW=0 MINE=1 | ok false ticks undefined prefi | hits: none
+P1 32:10 seam=-20 PKSW=0 MINE=0 | ok true ticks 618 prefix 1449  | hits: t1598 bomb:bombpusher@112,128#7 [kill@1534];t1644 bomb:bombpusher@112,128#8 [kill@1534];
+P1 32:10 seam=-20 PKSW=1 MINE=0 | ok true ticks 618 prefix 1449  | hits: t1598 bomb:bombpusher@112,128#7 [kill@1534];t1644 bomb:bombpusher@112,128#8 [kill@1534];
+P1 32:10 seam=-20 PKSW=1 MINE=1 | ok true ticks 793 prefix 1449  | hits: none
+P1 32:10 seam=7 PKSW=1 MINE=0 | ok true ticks 738 prefix 1449  | hits: t1644 bomb:bombpusher@112,128#8 [kill@1534];
+P1 32:10 seam=7 PKSW=0 MINE=0 | ok true ticks 738 prefix 1449  | hits: t1644 bomb:bombpusher@112,128#8 [kill@1534];
+P1 32:10 seam=7 PKSW=0 MINE=1 | ok true ticks 719 prefix 1449  | hits: t1644 bomb:bombpusher@112,128#8 [kill@1534];
+P1 32:10 seam=7 PKSW=1 MINE=1 | ok true ticks 719 prefix 1449  | hits: t1644 bomb:bombpusher@112,128#8 [kill@1534];
+DONE
