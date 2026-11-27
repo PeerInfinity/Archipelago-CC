@@ -47,6 +47,23 @@ export function loadFrozenRules(name) {
     return JSON.parse(gunzipSync(readFileSync(join(HERE, 'fixtures', 'sub-region-view', `${name}.rules.json.gz`))).toString('utf8'));
 }
 
+/**
+ * ⛓ The Seedling ATLASES the frozen rules point at (region-graph-layout-settled; the L25 restamp, 2026-11-26). The
+ * frozen rules' sidecars carry an `atlas_ref` (a content-hashed `atlas_id`), and `flashSeedlingLibrary.js` resolves it
+ * against the atlases it SHIPS (live files). A restamp of a live atlas leaves the frozen refs pointing at nothing:
+ * no door tiles, no location tiles, and a test over them passes or fails on an empty input. A test whose input goes
+ * through the library mocks the shipped atlas with the frozen one it was cut against (see `directionLayout.test.js`):
+ *   · `seedling-playthrough` = `seedling-b856f0fc` (frozen `seedling_playthrough`'s refs; shipped up to L25),
+ *   · `seedling` = `seedling-9ff3df2a` (frozen `seedling_atlas`'s refs).
+ */
+export const FROZEN_ATLASES = Object.freeze({ 'seedling-playthrough': 'seedling-b856f0fc', seedling: 'seedling-9ff3df2a' });
+export function loadFrozenAtlas(name) {
+    if (!(name in FROZEN_ATLASES)) throw new Error(`no frozen atlas fixture "${name}"`);
+    const doc = JSON.parse(gunzipSync(readFileSync(join(HERE, 'fixtures', 'sub-region-view', `${name}.atlas.json.gz`))).toString('utf8'));
+    if (doc.atlas_id !== FROZEN_ATLASES[name]) throw new Error(`frozen atlas "${name}" is ${doc.atlas_id}, not ${FROZEN_ATLASES[name]}`);
+    return doc;
+}
+
 /** `staticData.regions` as the worker hands it to the panel: a Map name → region (with `name`). */
 export function regionsOf(rules, playerId = '1') {
     return new Map(Object.entries(rules.regions[playerId]).map(([name, r]) => [name, { ...r, name }]));

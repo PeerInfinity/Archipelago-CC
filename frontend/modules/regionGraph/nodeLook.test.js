@@ -55,6 +55,10 @@ vi.mock('../regionMap/regionMapCellDraw.js', async (orig) => {
     };
 });
 
+// ⛓ The shipped Seedling atlases → the FROZEN ones the frozen rules were cut against (regionGraphElements.testkit.js
+// `FROZEN_ATLASES`): a live restamp (L25) would otherwise leave every frozen `atlas_ref` resolving to nothing.
+vi.mock('../flashPanel/atlases/seedling-playthrough.json', async () => ({ default: (await import('./regionGraphElements.testkit.js')).loadFrozenAtlas('seedling-playthrough') }));
+vi.mock('../flashPanel/atlases/seedling.json', async () => ({ default: (await import('./regionGraphElements.testkit.js')).loadFrozenAtlas('seedling') }));
 await import('../flashPanel/flashSeedlingLibrary.js');
 const { GraphDataManager } = await import('./graphDataManager.js');
 const { GraphInteractionManager } = await import('./graphInteractionManager.js');
