@@ -5,6 +5,7 @@ import { clickActionsSchemaEntry } from './clickActionsSettings.js';
 import { SUB_REGION_VIEW_SCHEMA } from './subRegionGroups.js';
 import { NODE_LOOK_SCHEMA } from './nodeLook.js';
 import { DIRECTION_STRENGTH_SCHEMA, DIRECTION_SPACING_SCHEMA, DIRECTION_EXITS_SCHEMA } from './directionLayout.js';
+import { DUNGEON_GROUPING_SCHEMA, DUNGEON_GROUP_STRENGTH_SCHEMA } from './dungeonGroups.js';
 import { makeRegionGraphCentreAction } from './regionGraphCentreAction.js';
 import {
   registerClickAction, unregisterClickAction, REGION_CLICKED, LOCATION_CLICKED, PANEL_ACTION_IDS,
@@ -166,6 +167,9 @@ export function register(registrationApi) {
       directionStrength: { ...DIRECTION_STRENGTH_SCHEMA },
       directionSpacing: { ...DIRECTION_SPACING_SCHEMA },
       directionExits: { ...DIRECTION_EXITS_SCHEMA, enum: [...DIRECTION_EXITS_SCHEMA.enum] },
+      // ⛓ region-graph-dungeon-groups: how the Direction-aware layout keeps each dungeon together, and the soft pull.
+      dungeonGrouping: { ...DUNGEON_GROUPING_SCHEMA, enum: [...DUNGEON_GROUPING_SCHEMA.enum] },
+      dungeonGroupStrength: { ...DUNGEON_GROUP_STRENGTH_SCHEMA },
     },
   });
 }

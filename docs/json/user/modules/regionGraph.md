@@ -122,6 +122,19 @@ Only worlds whose regions carry door positions (generated and Seedling worlds, m
 
 Changing a setting while the Direction-aware layout is the one shown re-runs it straight away; otherwise the new value is used the next time you run it. The settings are `moduleSettings.regionGraph.directionStrength`, `directionSpacing` and `directionExits`. Like every layout, it moves the nodes of the view you are in only (each **Draw as** choice keeps its own positions), and opening or closing a group in **Collapsible** keeps the positions as they are.
 
+#### Dungeon grouping
+
+**Dungeon grouping** (in the same section) keeps each dungeon's levels together, apart from the other dungeons. A dungeon is one of the Region Map's groups: levels you walk between by their edges belong together, and a doorway, staircase or teleporter into another group does not join the two. In **Separate** and **Nested**, a level's sub-regions belong to that level's dungeon. Nodes the Region Map does not place (the Menu) belong to no dungeon.
+
+| Value | What you see |
+|---|---|
+| **Off (as before)** (the default) | The Direction-aware layout exactly as above. Nodes from different dungeons can sit side by side. |
+| **Soft pull together** | One layout, with each node also pulled towards its own dungeon and pushed away from nearby nodes of other dungeons. Dungeons mostly read as clusters, but some exit directions bend to make room. **Dungeon pull** (0 – 1, default 0.5) sets how strongly; 0 is the same as Off. |
+| **Two-step layout** | Each dungeon is laid out on its own first, then the dungeons are placed as solid blocks, with a gap, each pulled towards the dungeons it links to and to the side its doors point to. Blocks never overlap, so no node lands inside another dungeon's area. |
+| **Two-step + boxes** | The same arrangement, plus a faint dashed box round each dungeon of two or more nodes, labelled with the dungeon's name (its first level, the one you enter it by). The box is only a drawing: it cannot be clicked, picked or pathed to, and it is not saved with the positions. It stays until another layout runs or the graph is redrawn. |
+
+In a world with no dungeons that link to each other (for example A Link to the Past, or a single maze), every value gives the same arrangement as **Off**. The settings are `moduleSettings.regionGraph.dungeonGrouping` (`none`, `soft`, `twoStep`, `twoStepBoxes`) and `moduleSettings.regionGraph.dungeonGroupStrength`; a change re-runs the layout when it is the one shown, like the other Direction-aware settings.
+
 ## Where its state and actions live
 
 The Region Graph draws; it no longer decides. Whether a region is reachable, how many of its locations are checked or accessible, and whether discovery mode hides it or shows it as `???` all come from the shared region view model (`frontend/modules/regionView/regionViewModel.js`). What a click does is a list of registered click actions (`frontend/modules/regionView/clickActions.js`), shown and edited by the shared **On click** strip (`frontend/modules/regionView/clickActionsUI.js`); the actions themselves move the player, edit the path or check locations through the shared region actions (`frontend/modules/regionView/regionActions.js`). The Region Map panel uses the same files. See `frontend/modules/regionView/README.md`.

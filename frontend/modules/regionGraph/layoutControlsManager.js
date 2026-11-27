@@ -12,6 +12,11 @@ import {
   DIRECTION_EXITS_SCHEMA, DIRECTION_EXITS_LABELS, DIRECTION_LAYOUT_PRESET, normaliseDirectionSettings, exitDirections,
   edgePreferences, directionLayout, overlapCount, angleErrors,
 } from './directionLayout.js';
+import {
+  DUNGEON_GROUPING_KEY, DUNGEON_GROUP_STRENGTH_KEY, DUNGEON_GROUPING_SCHEMA, DUNGEON_GROUPING_LABELS,
+  DUNGEON_GROUP_STRENGTH_SCHEMA, normaliseGroupingSettings, groupedDirectionLayout, dungeonReader, dungeonsOf,
+  mixingCount, blockCheck, blockPad, groupingDrawsBoxes,
+} from './dungeonGroups.js';
 
 const nowMs = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
 
@@ -19,8 +24,13 @@ const nowMs = () => (typeof performance !== 'undefined' ? performance.now() : Da
 export const DIRECTION_SETTING_KEYS = Object.freeze({
   strength: DIRECTION_STRENGTH_KEY, spacing: DIRECTION_SPACING_KEY, exits: DIRECTION_EXITS_KEY,
 });
-const DIRECTION_KEY_SET = new Set(Object.values(DIRECTION_SETTING_KEYS));
-/** Is `key` one of the Direction-aware layout's settings (a write re-runs that layout, never rebuilds the graph)? */
+/** ⛓ region-graph-dungeon-groups: the dungeon grouping's two settings' keys, by field. */
+export const GROUPING_SETTING_KEYS = Object.freeze({ grouping: DUNGEON_GROUPING_KEY, groupStrength: DUNGEON_GROUP_STRENGTH_KEY });
+const DIRECTION_KEY_SET = new Set([...Object.values(DIRECTION_SETTING_KEYS), ...Object.values(GROUPING_SETTING_KEYS)]);
+/**
+ * Is `key` one of the Direction-aware layout's settings, its dungeon grouping's included (a write re-runs that layout
+ * if it is the one drawn, never rebuilds the graph)?
+ */
 export const isDirectionSettingKey = (key) => DIRECTION_KEY_SET.has(key);
 
 const logger = createUniversalLogger('regionGraph');
@@ -62,6 +72,17 @@ export class LayoutControlsManager {
             <select id="directionExits" style="padding: 2px;">
               ${Object.entries(DIRECTION_EXITS_LABELS).map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
             </select>
+          </label>
+          <label style="display: block; margin: 3px 0;" title="${DUNGEON_GROUPING_SCHEMA.description}">
+            <span style="margin-right: 5px;">Dungeon grouping:</span>
+            <select id="dungeonGrouping" style="padding: 2px;">
+              ${Object.entries(DUNGEON_GROUPING_LABELS).map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
+            </select>
+          </label>
+          <label style="display: block; margin: 3px 0;" title="${DUNGEON_GROUP_STRENGTH_SCHEMA.description}">
+            <span style="margin-right: 5px;">Dungeon pull:</span>
+            <input type="range" id="dungeonGroupStrength" min="${DUNGEON_GROUP_STRENGTH_SCHEMA.minimum}" max="${DUNGEON_GROUP_STRENGTH_SCHEMA.maximum}" step="0.05" value="${DUNGEON_GROUP_STRENGTH_SCHEMA.default}" style="width: 90px; vertical-align: middle;">
+            <span id="dungeonGroupStrengthValue" style="font-size: 11px;">${DUNGEON_GROUP_STRENGTH_SCHEMA.default}</span>
           </label>
           <button id="runDirectionLayout" style="margin: 2px; padding: 4px 8px;">Run Direction-aware layout</button>
           <div id="directionLayoutStatus" style="margin: 2px 0; font-size: 11px; color: #aaa;"></div>
@@ -354,8 +375,23 @@ export class LayoutControlsManager {
       }
     }
     this.ui.directionSettings = normaliseDirectionSettings(raw);
+    await this.loadGroupingSettings();
     this.syncDirectionControls();
     return this.ui.directionSettings;
+  }
+
+  /** ⛓ region-graph-dungeon-groups: read the grouping settings into `ui.groupingSettings` (schema defaults only). */
+  async loadGroupingSettings() {
+    const raw = {};
+    for (const [field, key] of Object.entries(GROUPING_SETTING_KEYS)) {
+      try {
+        raw[field] = await settingsManager.getSetting(key);
+      } catch (error) {
+        logger.warn(`Could not load ${key}; using the schema default:`, error);
+      }
+    }
+    this.ui.groupingSettings = normaliseGroupingSettings(raw);
+    return this.ui.groupingSettings;
   }
 
   /** Show `ui.directionSettings` in the controls. */
@@ -370,6 +406,13 @@ export class LayoutControlsManager {
     if (spacing) spacing.value = String(s.spacing);
     const exits = panel?.querySelector?.('#directionExits');
     if (exits) exits.value = s.exits;
+    const g = this.ui.groupingSettings ?? normaliseGroupingSettings();
+    const grouping = panel?.querySelector?.('#dungeonGrouping');
+    if (grouping) grouping.value = g.grouping;
+    const gs = panel?.querySelector?.('#dungeonGroupStrength');
+    if (gs) gs.value = String(g.groupStrength);
+    const gsValue = panel?.querySelector?.('#dungeonGroupStrengthValue');
+    if (gsValue) gsValue.textContent = String(g.groupStrength);
   }
 
   /** The controls write the settings; the panel's settings:changed handler re-runs the layout if it is the one drawn. */
@@ -392,6 +435,13 @@ export class LayoutControlsManager {
     strength?.addEventListener('change', (e) => save(DIRECTION_STRENGTH_KEY, parseFloat(e.target.value)));
     panel.querySelector('#directionSpacing')?.addEventListener('change', (e) => save(DIRECTION_SPACING_KEY, parseFloat(e.target.value)));
     panel.querySelector('#directionExits')?.addEventListener('change', (e) => save(DIRECTION_EXITS_KEY, e.target.value));
+    panel.querySelector('#dungeonGrouping')?.addEventListener('change', (e) => save(DUNGEON_GROUPING_KEY, e.target.value));
+    const gs = panel.querySelector('#dungeonGroupStrength');
+    gs?.addEventListener('input', (e) => {
+      const v = panel.querySelector('#dungeonGroupStrengthValue');
+      if (v) v.textContent = String(e.target.value);
+    });
+    gs?.addEventListener('change', (e) => save(DUNGEON_GROUP_STRENGTH_KEY, parseFloat(e.target.value)));
     panel.querySelector('#runDirectionLayout')?.addEventListener('click', () => this.runDirectionLayout());
   }
 
@@ -412,6 +462,9 @@ export class LayoutControlsManager {
   directionLayoutInputs(settings = this.ui.directionSettings ?? normaliseDirectionSettings()) {
     const cy = this.ui.cy;
     const laid = cy.nodes().filter((n) => !n.hasClass('player') && !n.hasClass('location-node') && !isRegionGroupNode(n, 'box'));
+    const got = this.ui.mapLook?.regionMapModel?.() ?? null;
+    // ⛓ region-graph-dungeon-groups: each node's dungeon = its DISPLAY region's Region Map group (`model.groupOf`).
+    const dungeonOf = this.dungeonOfNode(got?.model ?? null);
     const ids = new Set();
     const nodes = [];
     laid.forEach((n) => {
@@ -420,7 +473,7 @@ export class LayoutControlsManager {
       const parent = n.data('parent');
       const members = isRegionGroupNode(n, 'merged') ? (n.data('members') ?? []) : [n.data('regionName') ?? n.id()];
       ids.add(n.id());
-      nodes.push({ id: n.id(), w: w > 0 ? w : 64, h: h > 0 ? h : 49, members, group: parent ?? null });
+      nodes.push({ id: n.id(), w: w > 0 ? w : 64, h: h > 0 ? h : 49, members, group: parent ?? null, dungeon: dungeonOf(n) });
     });
     const edges = [];
     cy.edges().forEach((e) => {
@@ -428,7 +481,6 @@ export class LayoutControlsManager {
       const t = e.data('target');
       if (ids.has(s) && ids.has(t) && s !== t) edges.push({ id: e.id(), source: s, target: t });
     });
-    const got = this.ui.mapLook?.regionMapModel?.() ?? null;
     const sidecars = got?.rules?.preset_sidecars?.[got.playerId] ?? null;
     let directions = [];
     let counts = null;
@@ -440,23 +492,48 @@ export class LayoutControlsManager {
   }
 
   /**
+   * ⛓ region-graph-dungeon-groups: the dungeon reader for drawn nodes over a Region Map `model` → `(node) → group id |
+   * null`. A merged / collapsed node by its `groupKey` (a display key); a region node (a sub-region in separate, a
+   * nested / open box's member) by its rules region's display region. No model, or a node the model does not place
+   * (the Menu node): null.
+   */
+  dungeonOfNode(model) {
+    if (!model) return () => null;
+    const r = dungeonReader(model);
+    return (n) => {
+      if (isRegionGroupNode(n, 'merged')) return r.ofKey(n.data('groupKey'));
+      return r.ofRegion(n.data('regionName') ?? n.id());
+    };
+  }
+
+  /**
    * Compute the Direction-aware positions for the graph as drawn → `{ options, report }`: `options` a Cytoscape
    * `preset` layout (animated, fit, as the other layouts), `report` the timing and the measures (in
    * `ui.lastDirectionLayout` too). Nodes it does not lay out keep their position (location nodes are re-seated by
    * the layoutstop handler, as after any layout).
    */
-  buildDirectionLayout(settings = this.ui.directionSettings ?? normaliseDirectionSettings()) {
+  buildDirectionLayout(settings = this.ui.directionSettings ?? normaliseDirectionSettings(),
+    grouping = this.ui.groupingSettings ?? normaliseGroupingSettings()) {
     const t0 = nowMs();
     const { nodes, edges, prefs, counts } = this.directionLayoutInputs(settings);
     const t1 = nowMs();
-    const { positions, stats } = directionLayout(nodes, edges.map((e) => ({ ...e, pref: prefs.get(e.id) })), settings);
+    const withPrefs = edges.map((e) => ({ ...e, pref: prefs.get(e.id) }));
+    // ⛓ region-graph-dungeon-groups: `none` is the very same `directionLayout` call as before (groupedDirectionLayout).
+    const { positions, stats, blocks } = groupedDirectionLayout(nodes, withPrefs, { ...settings, ...grouping });
     const t2 = nowMs();
     const errors = angleErrors(edges, prefs, positions);
+    const dungeons = dungeonsOf(nodes);
+    const check = blocks ? blockCheck(nodes, positions, blockPad(settings.spacing)) : null;
     const report = {
-      settings: { ...settings }, view: this.ui.subRegionView ?? null, nodeLook: this.ui.nodeLook ?? null,
+      settings: { ...settings }, grouping: { ...grouping }, view: this.ui.subRegionView ?? null, nodeLook: this.ui.nodeLook ?? null,
       nodes: nodes.length, edges: edges.length, preferredEdges: prefs.size,
       inputsMs: t1 - t0, layoutMs: t2 - t1, totalMs: t2 - t0,
       overlaps: overlapCount(nodes, positions), meanAngleError: errors.mean, p90AngleError: errors.p90,
+      dungeons: dungeons.filter((d) => d.dungeon != null).length,
+      dungeonSizes: dungeons.filter((d) => d.dungeon != null).map((d) => d.members.length).sort((a, b) => b - a),
+      ungrouped: dungeons.filter((d) => d.dungeon == null).length,
+      mixing: mixingCount(nodes, positions),
+      blockOverlaps: check ? check.blockOverlaps : null, intruders: check ? check.intruders : null,
       counts: counts ? { ...counts, twoOnOneSide: counts.twoOnOneSide.length, twoOnOneSideLevels: counts.twoOnOneSideLevels.length } : null,
       stats,
     };
@@ -464,6 +541,10 @@ export class LayoutControlsManager {
     return {
       report,
       positions,
+      // ⛓ the boxes to draw (twoStepBoxes): each dungeon of 2+ drawn nodes, its label the group's id.
+      boxes: groupingDrawsBoxes(grouping.grouping) && blocks
+        ? dungeons.filter((d) => d.dungeon != null && d.members.length >= 2).map((d) => ({ dungeon: d.dungeon, label: String(d.dungeon), members: d.members }))
+        : [],
       options: {
         name: 'preset',
         positions: (node) => positions.get(node.id()) ?? node.position(),
@@ -490,7 +571,8 @@ export class LayoutControlsManager {
     const status = this.ui.controlPanel?.querySelector?.('#directionLayoutStatus');
     if (status) {
       const err = report.meanAngleError == null ? 'no exit directions in this world' : `mean direction error ${report.meanAngleError.toFixed(0)}°`;
-      status.textContent = `${report.nodes} nodes in ${Math.round(report.totalMs)} ms, ${report.overlaps} overlaps, ${err}`;
+      const mix = report.grouping.grouping === 'none' ? '' : `, ${report.mixing.mixed}/${report.mixing.eligible} nodes mixed`;
+      status.textContent = `${report.nodes} nodes in ${Math.round(report.totalMs)} ms, ${report.overlaps} overlaps, ${err}${mix}`;
     }
     this.ui.updateStatus?.('Running Direction-aware layout...');
     // The player marker is a LOCKED node (no layout moves it): re-seat it on its region once the nodes have landed.
@@ -500,6 +582,10 @@ export class LayoutControlsManager {
         if (region && this.ui.cy.getElementById('player').length) this.ui.updatePlayerLocation?.(region);
       },
     });
+    // ⛓ region-graph-dungeon-groups: the boxes belong to THIS run (set after its `layoutstart`, which clears the old
+    // ones); any later layout's start, or a rebuild, clears them. Empty unless grouping = twoStepBoxes.
+    this.ui.dungeonBoxes?.show?.(built.boxes);
+    report.boxes = built.boxes.length;
     return report;
   }
 

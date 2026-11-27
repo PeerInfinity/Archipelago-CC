@@ -238,14 +238,19 @@ export const DIRECTION_LAYOUT_TUNING = Object.freeze({ iterations: 300, repulsio
  * Lay out `nodes` (`[{id, w, h, group?}]`, sizes in graph px) joined by `edges` (`[{id, source, target, pref?}]`,
  * `pref` = `{dx, dy, weight}` from `edgePreferences`). → `{positions: Map<id, {x, y}>, stats}`.
  * `group` (optional): nodes sharing one are pulled a little towards their common centre (a `nested` box's members).
- * @param {object} opts - { strength, spacing } (see the schema entries), plus `tuning` overrides
+ * `dungeon` (optional) and `opts.dungeonPull` (region-graph-dungeon-groups, `dungeonGroups.js`'s `soft` value):
+ * `{strength, pull, push, reach}` — each node with a dungeon is pulled towards its dungeon's centre (weight
+ * strength·pull) and pushed from every node of ANOTHER dungeon nearer than reach·L (weight strength·push). Absent or
+ * strength 0: no term runs, so the positions are exactly those without it.
+ * @param {object} opts - { strength, spacing, dungeonPull? } (see the schema entries), plus `tuning` overrides
  */
-export function directionLayout(nodes, edges, { strength = DIRECTION_STRENGTH_SCHEMA.default, spacing = DIRECTION_SPACING_SCHEMA.default, tuning = {} } = {}) {
+export function directionLayout(nodes, edges, { strength = DIRECTION_STRENGTH_SCHEMA.default, spacing = DIRECTION_SPACING_SCHEMA.default, tuning = {}, dungeonPull = null } = {}) {
     const T = { ...DIRECTION_LAYOUT_TUNING, ...tuning };
     const s = Math.min(1, Math.max(0, Number(strength) || 0));
     const gap = Math.max(0, Number(spacing) || 0);
-    const ns = [...nodes].map((n) => ({ id: String(n.id), w: Math.max(1, +n.w || 1), h: Math.max(1, +n.h || 1), group: n.group ?? null }))
+    const ns = [...nodes].map((n) => ({ id: String(n.id), w: Math.max(1, +n.w || 1), h: Math.max(1, +n.h || 1), group: n.group ?? null, dungeon: n.dungeon ?? null }))
         .sort((a, b) => cmp(a.id, b.id));
+    const dp = dungeonPull && dungeonPull.strength > 0 ? dungeonPull : null;
     const idx = new Map(ns.map((n, i) => [n.id, i]));
     // Edges: one per unordered pair, oriented smaller → larger id (a preference flips with it), sorted.
     const pairs = new Map();
@@ -369,6 +374,18 @@ export function directionLayout(nodes, edges, { strength = DIRECTION_STRENGTH_SC
             if (!groups.has(ns[v].group)) groups.set(ns[v].group, []);
             groups.get(ns[v].group).push(v);
         }
+        // ⛓ soft dungeon grouping (only when `dungeonPull` is on): the dungeons of this component, by key order.
+        const dungeons = new Map();
+        if (dp) {
+            for (const v of members) if (ns[v].dungeon != null) {
+                const k = String(ns[v].dungeon);
+                if (!dungeons.has(k)) dungeons.set(k, []);
+                dungeons.get(k).push(v);
+            }
+        }
+        const dPull = dp ? dp.strength * dp.pull : 0;
+        const dPush = dp ? dp.strength * dp.push : 0;
+        const dReach = dp ? dp.reach * Lref : 0;
         for (let it = 0; it < N; it += 1) {
             const temp = Lref * 0.5 * (1 - it / N) + 0.5;
             for (const v of members) { fx[v] = 0; fy[v] = 0; }
@@ -416,6 +433,15 @@ export function directionLayout(nodes, edges, { strength = DIRECTION_STRENGTH_SC
                             fy[a] -= push; fy[b] += push;
                         }
                     }
+                    // ⛓ soft dungeon grouping: two nodes of DIFFERENT dungeons nearer than the reach push apart.
+                    if (dp && ns[a].dungeon != null && ns[b].dungeon != null && ns[a].dungeon !== ns[b].dungeon) {
+                        const r = Math.sqrt(r2);
+                        if (r < dReach) {
+                            const f2 = (0.5 * dPush * (dReach - r)) / r;
+                            fx[a] -= f2 * ddx; fy[a] -= f2 * ddy;
+                            fx[b] += f2 * ddx; fy[b] += f2 * ddy;
+                        }
+                    }
                 }
             }
             // Gravity towards the component's centre; a nested box's members towards their own centre.
@@ -429,6 +455,13 @@ export function directionLayout(nodes, edges, { strength = DIRECTION_STRENGTH_SC
                 for (const v of g) { hx += pos[v].x; hy += pos[v].y; }
                 hx /= g.length; hy /= g.length;
                 for (const v of g) { fx[v] += 0.1 * (hx - pos[v].x); fy[v] += 0.1 * (hy - pos[v].y); }
+            }
+            for (const g of dungeons.values()) {
+                if (g.length < 2) continue;
+                let hx = 0; let hy = 0;
+                for (const v of g) { hx += pos[v].x; hy += pos[v].y; }
+                hx /= g.length; hy /= g.length;
+                for (const v of g) { fx[v] += dPull * (hx - pos[v].x); fy[v] += dPull * (hy - pos[v].y); }
             }
             for (const v of members) {
                 const m = Math.hypot(fx[v], fy[v]);
