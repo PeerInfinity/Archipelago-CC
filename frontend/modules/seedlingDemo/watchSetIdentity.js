@@ -38,7 +38,7 @@
  *     writes both from `atlas.atlas_id`). Rewriting them after the compile would mean
  *     editing ~115 payloads by hand.
  *     ⛔ **THE BASE IS NOT `seedling`.** The served ids have the same shape
- *     (`seedling-9ff3df2a`, `seedling-4586de3a` in `flashPanel/atlases/atlas_files.json`),
+ *     (`seedling-9ff3df2a`, `seedling-176214bd` in `flashPanel/atlases/atlas_files.json`),
  *     and the player's guard (slice G) keys "a custom set" on "an atlas id the page
  *     does not serve". With base `seedling`, a lab set whose content equalled a served
  *     atlas would get the served id. That is harmless for an unedited set (its rooms

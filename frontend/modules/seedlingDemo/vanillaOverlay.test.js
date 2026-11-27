@@ -475,7 +475,9 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
             // ⛓ rules-l25-wand-arm: L25 west->east's no-hit gate gains the witnessed Wand arm (one internal row widens, no
             //   region, exit or location moves); re-recorded from the producers (5c3dd651 -> d4bd2a66; atlas id b856f0fc ->
             //   4586de3a). The overlay fixture `--check`s byte-identical.
-            .toBe('d4bd2a66df797ec6f902b59321e6032d');
+            // ⛓ rules-k-exempt-fix (re-merged onto 07787a892c, after rules-l25-wand-arm): rule K charges the step off an exempt cell into a leash (L72-L75, L77 split
+            //   their doorways off); re-recorded from the producers (d4bd2a66 -> e7cba2f8; atlas id 4586de3a -> 176214bd).
+            .toBe('e7cba2f88244e5752bf459bbb9e26d9b');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
