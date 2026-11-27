@@ -8,7 +8,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 
 <!-- GENERATED:procgen-docs-index BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**32 documents · 4 pages · 579,080 words.**
+**32 documents · 4 pages · 579,486 words.**
 
 Order: `README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — the reading order. A document missing from that list fails the generator, so every document is indexed.
 
@@ -36,7 +36,7 @@ Descriptions: the document's own first paragraph, collapsed onto one line; past 
 | [Pipeline Presets](./pipeline-presets.md) | The Procgen Pipeline panel's **Preset** drop-down applies a shipped configuration (mode, seed, substrates, knobs and item pool) so that Generate builds a world demonstrating one feature. CI generates every preset that names no heavy substrate headless, twice, and requires the two runs to be byte-identical. | 2672 |
 | [Text Adventure Substrate](./text-adventure.md) | The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules. | 2542 |
 | [ActionNodes Substrate](./action-nodes.md) | The ActionNodes substrate (id `action_nodes`) is a puzzle played in loops: one region is one node, and a node is one action with a mana cost, stat and resource minimums, results and a limit per loop. | 7145 |
-| [The Seedling Real-Game Bot](./seedling-bot.md) | How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md). | 57388 |
+| [The Seedling Real-Game Bot](./seedling-bot.md) | How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md). | 57794 |
 | [The Seedling Solver's Surface](./seedling-solver-surface.md) | The Seedling solver reaches the simulation through a single run object and a set of imported helpers. | 4617 |
 | [The Seedling Solver's Progress Stream](./seedling-solve-progress.md) | What the Seedling solver reports while it solves: one hook, called at fixed points in the search, and a snapshot that holds a tree of the solver's goals and rungs, a tile map of the states it previewed, and its work counts. | 13621 |
 | [Seedling Bot and Procgen Arcs: the Build Log](./seedling-bot-log.md) | This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts. | 318466 |
