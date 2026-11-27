@@ -247,14 +247,15 @@ describe('⛓ G0 — the `regionGeometry` slot', () => {
         const REALISER_HOOKS = ['extractZoneRules', 'generateRegionCore', 'instantiateLibraryEntry', 'generateZoneForSpecs'];
         const compiled = ENTRIES.filter((e) => REALISER_HOOKS.every((k) => typeof e[k] !== 'function')).map((e) => e.id);
         expect(compiled.length).toBeGreaterThan(0);
-        // ⛓ Mystery substrate S1: a fifth population, the SPEC-ONLY zone sources — `generateZoneForSpecs` and
-        // neither a zone table nor a tile core nor a library. Their regions are content handed over by name (a
-        // mystery case realised by top-down), built on the zone path's side exits.
+        // ⛓ Mystery substrate: it was a fifth population of its own (spec-only: `generateZoneForSpecs` and no zone
+        // table) until it gained `extractZoneRules` (the office placed whole by the shuffled spiral); it is a zone
+        // game now, and no entry is spec-only.
         const specOnly = ENTRIES.filter((e) => typeof e.generateZoneForSpecs === 'function'
             && ['extractZoneRules', 'generateRegionCore', 'instantiateLibraryEntry'].every((k) => typeof e[k] !== 'function'))
             .map((e) => e.id);
-        expect(specOnly.length).toBeGreaterThan(0);
-        expect(sides.sort()).toEqual([...new Set([...zoneGames, ...tileFreeCores, ...contentLibraries, ...compiled, ...specOnly])].sort());
+        expect(specOnly).toEqual([]);
+        expect(zoneGames).toContain('mystery');
+        expect(sides.sort()).toEqual([...new Set([...zoneGames, ...tileFreeCores, ...contentLibraries, ...compiled])].sort());
         expect(geometryOf(substrateRegistry.get('maze'))).toBe(REGION_GEOMETRY.TILES);
     });
 });

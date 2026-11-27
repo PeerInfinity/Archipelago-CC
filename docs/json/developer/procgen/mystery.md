@@ -12,6 +12,10 @@ This page covers what is built: the registry entry, its build-time half, the bri
 
 The case is content, so the substrate generates nothing. It is given a region that already is the case and answers with the region's payload.
 
+## Two ways a world gets a mystery region
+
+Top-down realises a source world that already holds the case, with its papers wherever that world's fill put them (below). The shuffled spiral places the office whole, as one self-contained content cell (*The office placed whole*, further down). Sphere growth cannot place a case yet.
+
 ## How a world gets a mystery region: top-down
 
 The top-down driver realises the regions of a source world and keeps their rules ([architecture](./architecture.md)). For a mystery region the source is a generated, filled world of the case: its locations carry their items. The committed preset `frontend/presets/mystery_custom_house_fire/` is one. Top-down keeps placements; it does not make them, so the case's bare export (no placements) is not a usable source.
@@ -75,7 +79,11 @@ The module `mysteryArchipelago` is on by default, so the entry and the bridge ar
 - **Answering.** A `mystery:questionSolved` that arrives while `inOffice` is false is not turned into a check, under every lock. The page sends a solved question again while the state lacks it, so it is checked once the player is back.
 - **The panel** frames the region's case and follows the player. Under `everything` it frames the case only in its region and says where the office is otherwise.
 
-Under `actions` and `new-reading` the page itself holds the player's actions and new reading back; the host only tells it. The page does this from the game repository's commit `35bb7fe` on (the submodule's pin): away from the office it takes no move, sends no solved question and says so in a line above the page (`body.ap-locked`, `#ap-lock`). Under `new-reading` it shuts every paper not yet begun, since the page keeps no record of when a paper came. The game's own check is `scripts/bridge-lock-check.mjs` in that repository, against its stand-in host. No in-app row reads the real page's lock: the page waits for a connected state before it starts, and the in-app rows run with no server.
+Under `actions` and `new-reading` the page itself holds the player's actions and new reading back; the host only tells it. The page does this from the game repository's commit `35bb7fe` on (the submodule's pin): away from the office it takes no move, sends no solved question and says so in a line above the page (`body.ap-locked`, `#ap-lock`). Under `new-reading` it shuts every paper not yet begun, since the page keeps no record of when a paper came. The game's own check is `scripts/bridge-lock-check.mjs` in that repository, against its stand-in host. In this app the row `mystery-real-page-lock` reads the real page's mark on the street world: locked in the street, not in the office, locked again after leaving.
+
+## With no server
+
+A mystery world loaded as a preset plays with no Archipelago server. The host answers offline as it does connected (`connected: false`, `game: "offline:<seed>:<player>"`), a solved question is a check in the app's own state, and the item on its location is granted locally. The page starts on a state whose `game` begins `offline:` (from the game repository's commit `7d34080`, the submodule's pin) and keeps a save of its own for it. The feature check `mystery-local-play` (Tutorial panel; walk row `feature-check-mystery-local-play`) loads the committed mystery world, opens Mystery Game and asks the page for its careful reader (`mystery:autoSolve`), which plays the whole case.
 
 ## The Playback Bot
 
@@ -89,7 +97,22 @@ The entry is a coarse substrate, like the text adventure: `loopSupport` offers `
 
 `frontend/presets/mystery_street_test/` is the long case's office beside one maze region, "The street", which holds one of the case's papers. `scripts/test/generate-mystery-street-test-preset.mjs` writes it from the committed mystery world, and `generate-mystery-street-test-preset.test.js` holds the committed file equal to what the generator writes. The in-app row `mystery-region-office-and-street` plays it with a stand-in page. `mystery-playback-bot-plays-the-case` has the Playback Bot play it to the end, and `mystery-playback-bot-loop-mode` does the same in loop mode (the row adds `manaEnabled` and the `loop_costs` block a loop-mode build would write).
 
+## The office placed whole: the shuffled spiral
+
+⚖ Robert, 2026-11-27: the papers stay inside the office. The entry is a spiral content source with one zone, the installed case (`zoneCount`, `extractZoneRules` → `mysteryZoneRules`).
+
+- **What is installed.** `mysteryPlacedConfigFromSource(rulesJson)` reads `{caseDoc, caseWorld}` off a FILLED source world (the committed `mystery_custom_house_fire` preset is one). `caseWorld` is each question's location with the source's own access rule and the item the source's fill put on it, and the class of each item. A bare export, with nothing placed, gives none. `applyPipelineConfig` checks it against the case document (`mystery-case-world-malformed`), and it is recorded in `substrate_configs` like the rest.
+- **The region.** Every question keeps its rule and its item, so the case's papers stand on its own questions in an order its rules allow. Nothing outside the office matters to the case, and the case gates nothing outside.
+- **The world's items.** The office can hold as many dealt items as it has spare questions, the ones that give its filler (`spiralItemCapacity`). They take those questions in the case's order. More than that is refused (`mystery-more-items-than-spare-questions`).
+- **The goal.** Dealt to the office, the world's `Victory` stands where the case's own goal stood. When the engine places the goal elsewhere, the case's own becomes its filler.
+- **Starting papers.** The papers a case starts with (the source's `starting_items`) are not items of a spiral world: the spiral has no starting-item channel. No rule names one, and the page holds them itself, so the case plays the same.
+- **With nothing installed** the entry reads as having no zone (`zoneCount` 0), no item and no goal, so a quota that names it is refused.
+
+`mysterySubstrateLibrary.test.js` builds a spiral world of three maze rooms and the office and holds its sphere log to every location; the in-app row `mystery-spiral-office-played` builds the same world in the page and has the Playback Bot play it to the end.
+
 ## Not built yet
 
-- The shuffled spiral and sphere growth cannot place a case: the entry declares no zone table.
+- **Sphere growth** cannot place a case. The office's own chain of papers (a question opens on a paper another question gives) adds spheres the sphere plan did not schedule, and the plan is sphere growth's oracle. It needs the planner's support first, as `itemIntroduction` has for one key. `goalCapability.test.js` lists the entry among the sphere gaps, marked as not built and not as a ruling.
+- **Papers out in a spiral or sphere world** (in other regions' locations) are not built: the pipeline's deal does not know which papers a question needs.
+- The Procgen Pipeline panel has no control for choosing a case; a caller installs the config (`growthParams.substrateConfig.mystery`, which the stepped spiral's first step applies).
 - Top-down does not install a substrate's config by itself, and the Procgen Pipeline panel cannot assign a region to this substrate from a source's case, so a caller makes the three calls above (the generator script does).
