@@ -58,12 +58,15 @@ function reportAsked(testController, seen, sphereLocations, rulesJson, { instant
     testController.assertEqual('the page was asked for each question in the log, once', JSON.stringify(wanted), JSON.stringify(asked.map((a) => a.question).sort()));
     testController.reportCondition(`every request ${instant ? 'asked for one burst' : 'left the pace to the page'}`,
         asked.length > 0 && asked.every((a) => (a.instant === true) === instant));
-    testController.log(`ASKS ${JSON.stringify(seen.asks.map((x) => [x.question, x.instant ?? false, x.stop ?? false]))}`);
-    testController.log(`STATUSES ${JSON.stringify(seen.statuses.map((x) => [x.question, x.state, x.failed ?? x.waiting ?? null]))}`);
     const done = seen.statuses.filter((st) => st.state === 'done').map((st) => st.question).sort();
     testController.assertEqual('the page said done to each', JSON.stringify(wanted), JSON.stringify(done));
     const bad = seen.statuses.filter((st) => ['failed', 'stopped', 'waiting'].includes(st.state));
     testController.reportCondition(`the page never failed, stopped or waited (${JSON.stringify(bad.slice(0, 2))})`, bad.length === 0);
+    if (bad.length > 0 || JSON.stringify(wanted) !== JSON.stringify(done)) {
+        // Only on a failure: what was asked and what the page said, in order, to attribute it without a rerun.
+        testController.log(`asks ${JSON.stringify(seen.asks.map((x) => [x.question, x.instant ?? false, x.stop ?? false]))}`);
+        testController.log(`statuses ${JSON.stringify(seen.statuses.map((x) => [x.question, x.state, x.failed ?? x.waiting ?? null]))}`);
+    }
 }
 
 async function botOf(testController) {

@@ -66,7 +66,7 @@ function steps() {
                     checkedBefore = checkedCount(ctx);
                     unsubscribe?.();
                     unsubscribe = ctx.eventBus.subscribe(STATUS_EVENT, (status) => { lastStatus = status; }, 'tutorials');
-                    ctx.eventBus.publish('mystery:autoSolve', { ...(story ? { story } : {}), fast: true }, 'tutorials');
+                    ctx.eventBus.publish('mystery:autoSolve', { ...(story ? { story } : {}), instant: true }, 'tutorials');
                 },
                 done: (ctx) => {
                     if (lastStatus?.state === 'failed') throw new Error(`the careful reader failed: ${JSON.stringify(lastStatus)}`);

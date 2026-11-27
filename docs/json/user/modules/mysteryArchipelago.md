@@ -30,7 +30,7 @@ A generated world can hold the case as one region, its office, beside other regi
 
 While you are away from the office the game's page greys what is locked and says so in a line at its top. Under the rule that also locks new reading, a paper you have not begun stays shut until you are back.
 
-In loop mode the office counts only while the Loops queue is parked on it for you to play by hand. The Playback Bot can play a case's region: it answers each question through this app once the papers the question needs are held, without working the page.
+In loop mode the office counts only while the Loops queue is parked on it for you to play by hand. The Playback Bot can play a case's region: for each question it asks the page's own careful reader to solve it, so the timeline, links and answers are made on the page as you would make them. With Play the reader works at a pace you can watch; with Instant it solves each question in one burst.
 
 ## Setting
 

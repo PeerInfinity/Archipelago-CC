@@ -2623,13 +2623,13 @@
             "id": "mystery-playback-bot-plays-the-case",
             "enabled": true,
             "category": "Playback Bot",
-            "_comment": "The mystery substrate's PlaybackController (mysteryArchipelago/mysteryPlaybackController.js): the committed mystery_street_test world played to the end by the Playback Bot from its own sphere log, loop mode off. The street is the maze's; in the office the controller checks each question through the host (under the client's logic gate) and takes the exit. Every sphere-log location ends checked."
+            "_comment": "The mystery substrate's PlaybackController (mysteryArchipelago/mysteryPlaybackController.js): the committed mystery_street_test world played to the end by the Playback Bot from its own sphere log, loop mode off. The street is the maze's; in the office the controller asks the page's own careful reader for each question (mystery:autoSolve with that question, instant: one burst), waits for its done, and takes the exit, so the timeline, links and answers are really made on the page. Every sphere-log location ends checked and the page said done to each."
         },
         {
             "id": "mystery-playback-bot-loop-mode",
             "enabled": true,
             "category": "Playback Bot",
-            "_comment": "The mystery substrate's loopSupport: the same mystery_street_test world with the loop_costs block generateLoopCosts writes for it. Loop mode comes on, the office reads as a coarse region whose Bot is the walkTo solver, and the Playback Bot plays the world to the end through the Loops queue."
+            "_comment": "The mystery substrate's loopSupport: the same mystery_street_test world with the loop_costs block generateLoopCosts writes for it. Loop mode comes on, the office reads as a coarse region whose Bot is the walkTo solver, and the Playback Bot plays the world to the end through the Loops queue; in the office each question is played by the page's careful reader in one burst, as in the row above."
         },
         {
             "id": "mystery-spiral-office-played",
