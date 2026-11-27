@@ -1,0 +1,99 @@
+keys [
+  'staging',
+  'perTick',
+  'live',
+  'solverGoal',
+  'name',
+  'scratchPersistence',
+  'equips',
+  'budgetWork',
+  'upgradeWindowWork'
+] goal null
+t 0 player 24.0 296.0 level 71
+size 20 20
+body lavarunner@64,224 lavarunner 72.0 232.0
+body lavarunner@64,192 lavarunner 72.0 200.0
+body lavarunner@72,208 lavarunner 80.0 216.0
+body lavarunner@48,200 lavarunner 56.0 208.0
+body lavarunner@80,224 lavarunner 88.0 232.0
+chaser lavarunner@64,224 72.0 232.0  0
+chaser lavarunner@64,192 72.0 200.0  0
+chaser lavarunner@72,208 80.0 216.0  0
+chaser lavarunner@48,200 56.0 208.0  0
+chaser lavarunner@80,224 88.0 232.0  0
+[
+  'level',              'width',
+  'height',             'world',
+  'roles',              'tiles',
+  'walkableTiles',      'addedTimeRemoved',
+  'addedTimeKey',       'outOfBandClears',
+  'fallthrough',        'pitTiles',
+  'lethalTerrainTiles', 'waterfallTiles',
+  'solids',             'objectSolids',
+  'pixelmasks',         'teleporters',
+  'pickups',            'apItems',
+  'proximityHazards',   'entryHazards',
+  'silentHazards',      'watchers',
+  'talkers',            'oracles',
+  'finalBosses',        'pods',
+  'activators',         'pressers',
+  'pushables',          'chests',
+  'burnableTrees',      'magicalLocks',
+  'crushers',           'iceTurrets',
+  'bossTotems',         'shieldBosses',
+  'lightsControllers',  'finalDoors'
+]
+tiles type true object 400 {"tx":0,"ty":0,"t":17,"entityType":"Tile","x":8,"y":8,"column":19,"name":"Lava","rect":{"x":0,"y":0,"w":16,"h":16,"right":16,"bottom":16}}
+solids sample [{"rect":{"x":80,"y":144,"w":16,"h":16,"right":96,"bottom":160},"cls":null,"tag":"tile:Dark Stone","x":88,"y":152},{"rect":{"x":80,"y":160,"w":16,"h":16,"right":96,"bottom":176},"cls":null,"tag":"tile:Dark Stone","x":88,"y":168},{"rect":{"x":64,"y":160,"w":16,"h":16,"right":80,"bottom":176},"cls":null,"tag":"tile:Dark Stone","x":72,"y":168}]
+locks null
+  roles 5
+  tiles 400
+  walkableTiles 293
+  pitTiles 1
+  lethalTerrainTiles 148
+  solids 112
+  objectSolids 5
+  teleporters 5
+  apItems 1
+  proximityHazards 2
+  activators 3
+  pressers 1
+  pressEnemies 5
+solid tags [
+  'tile:Dark Stone',
+  'dungeonspire',
+  'lock',
+  'spinningaxe',
+  'shieldlock'
+]
+legend [["Igneous Stone","a"],["Dungeon Tile","b"],["Pit","c"],["Igneous-to-Lava","d"]]
+    01234567890123456789
+  0 ~~~~~~a~~~~~~#~~~~~~
+ 16 ~~~~~~aa~~~~~##~~~~~
+ 32 ~~~~~aaaa~~~##~~~~~~
+ 48 ~~~~~aa~~~~~~#~~~~~~
+ 64 ~~~~aaa~~~~~~~~~~~~#
+ 80 ~~~aa#aa~~~~~~#~~~##
+ 96 ~~#a##aaaa~~aa##aaaa
+112 ~~aaaaaaaaaaaaa#aaa#
+128 ##a#aaaa##aaaaa##aa~
+144 #aaaa##aaaaa##a##a~~
+160 ##a######a~~##a#aa~~
+176 ~######a#~~~##aaaaa~
+192 ~##aaa####~###~aaaa~
+208 ~##baa#ba#~#c#~~#a~~
+224 ###aaa#ba#~#aa~~aa~~
+240 #a#####bb#~~~~~~ad##
+256 #aa###aa##a~~~~~aa#a
+272 #aaaaaaa#abddd~ada##
+288 #a####a##aaddaaaaa~~
+304 #a##~~####~~~#a##~~~
+roles ["blocking","trigger","pickup","proximity-hazard","combat"]
+objectSolids [{"rect":{"x":48,"y":128,"w":16,"h":16,"right":64,"bottom":144},"cls":{"as3":"DungeonSpire","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Solid","dx":0,"dy":0,"w":16,"h":16,"originX":0,"originY":0,"src":"Game.as:2160 + Scenery/DungeonSpire.as:16-23"},"tag":"dungeonspire","x":48,"y":128},{"rect":{"x":112,"y":192,"w":16,"h":16,"right":128,"bottom":208},"cls":{"as3":"Lock","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Solid","dx":8,"dy":8,"w":16,"h":16,"originX":8,"originY":8,"src":"Game.as:2138 (new Lock(x, y, tset, tag)) + Puzzlements/Lock.as:25-33"},"tag":"lock","x":112,"y":192,"activatorId":"lock
+teleporters [{"tag":-1,"invert":false,"deactivated":false,"isStairs":false,"x":16,"y":304,"rect":{"x":16,"y":304,"w":16,"h":16,"right":32,"bottom":320},"to":85,"playerx":80,"playery":16,"arrival":{"x":88,"y":24}},{"tag":-1,"invert":false,"deactivated":false,"isStairs":false,"x":304,"y":96,"rect":{"x":304,"y":96,"w":16,"h":16,"right":320,"bottom":112},"to":72,"playerx":16,"playery":256,"arrival":{"x":24,"y":264}},{"tag":-1,"invert":false,"deactivated":false,"isStairs":false,"x":96,"y":0,"rect":{"x":96,"y":0,"w":16,"h":16,"right":112,"bottom":16},"to":75,"playerx":64,"playery":208,"arrival":{"x":72,"y":216}},{"tag":-1,"invert":false,"deactivated":false,"isStairs":false,"x":304,"y":256,"rect":{"x":304,"y":
+apItems [{"id":"apitem@160,256","tag":1,"x":160,"y":256,"look":"chest","rect":{"x":164,"y":260,"w":8,"h":8,"right":172,"bottom":268}}]
+activators [{"id":"lock@112,192","tag":"lock","t":-1,"rect":{"x":112,"y":192,"w":16,"h":16,"right":128,"bottom":208},"x":112,"y":192,"persistTag":0},{"id":"shieldlock@288,256","tag":"shieldlock","t":-2,"rect":{"x":288,"y":256,"w":16,"h":16,"right":304,"bottom":272},"x":288,"y":256,"persistTag":2,"touchRect":{"x":287,"y":256,"w":16,"h":16,"right":303,"bottom":272},"shield":"hasDarkShield","snapY":263},{"id":"lock@112,160","tag":"lock","t":0,"rect":{"x":112,"y":160,"w":16,"h":16,"right":128,"bottom":176},"x":112,"y":160,"persistTag":3}]
+pressers [{"tag":"button","t":0,"rect":{"x":116,"y":181,"w":8,"h":6,"right":124,"bottom":187},"x":112,"y":176}]
+pressEnemies [{"tag":"lavarunner","as3":"LavaRunner","x":64,"y":224,"unkillable":null},{"tag":"lavarunner","as3":"LavaRunner","x":64,"y":192,"unkillable":null},{"tag":"lavarunner","as3":"LavaRunner","x":72,"y":208,"unkillable":null},{"tag":"lavarunner","as3":"LavaRunner","x":48,"y":200,"unkillable":null},{"tag":"lavarunner","as3":"LavaRunner","x":80,"y":224,"unkillable":null}]
+proximityHazards [{"cls":{"as3":"ShieldLock","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Solid","dx":8,"dy":8,"w":16,"h":16,"originX":8,"originY":8,"src":"Game.as:2145 + Puzzlements/ShieldLock.as:35-49 (new ShieldLock(x,y,tag,1))","why":"snaps `p.y` and sets `p.receiveInput = false` on approach","lockSnap":{"shield":"hasDarkShield","snapDY":7,"src":"Puzzlements/ShieldLock.as:32-39"},"hazard":{"dx":-1,"dy":0,"w":16,"h":16,"originX":0,"originY":0,"kind":"lock-snap","effect":"snaps p.y and sets p.receiveInput = false"}},"tag":"shieldlock","x":288,"y":256,"kind":"lock-snap","effect":"snaps p.y and sets p.receiveInput = false","rect":{"x":287,"y":256,"w":16,"h":16
+pitTiles [{"tx":12,"ty":13,"t":6,"entityType":"Tile","x":200,"y":216,"column":7,"name":"Pit","rect":{"x":192,"y":208,"w":16,"h":16,"right":208,"bottom":224}}]

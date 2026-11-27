@@ -1,0 +1,17 @@
+COUNTS 39:1 env PKSW=1 PKRB=1 DSS=1 LHM=- PKH=- OAC=1 PSB=- HSB=1 enabled PKSW=true PKRB=true DSS=true LHM=true PKH=false OAC=true PSB=false HSB=true BOS=true GSW=true PM=true SPL=true KTA=true KTEB=false HF=false
+  result ok=false kind=refusal work=1876 answer=6bd9d381b7df ms=8804
+  live   ok=false kind=refusal work=1876 answer=6bd9d381b7df solverEnv=SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1
+  message=solverBot(wasm-exit-71) reach-exit (96,0)->L75 -> kill: the count is still waiting on [lavarunner@64,224] and no stance kills one of them in 1 attempt(s), each rewound (KILLLOCK_CHASER_REWIND) — lavarunner@64,224 at (24,296): hole 144-tick bound (0 guard step(s)); it stands at (54.8,233.5), 69.7 px from the player, and its straight chase line to the player is blocked by tile:Dark Stone — the body is PINNED on the solid between them (a chaser does not path-find).
+  PRESS_KILL_START_WAIT_COUNTS.rows=[]
+  PRESS_KILL_REFUGE_BOMBS_COUNTS={"asked":0,"refused":0}
+  DASH_STAND_SIGHT.counts={"asks":0}
+  LATCHED_HOLD_MOVE_COUNTS={"asked":0,"moves":[],"declined":[]}
+  OPP_AIM_CHASERS_COUNTS={"asked":0,"withheld":0}
+  HIT_AVOID_STAND_BOMBS_COUNTS={"tried":0,"replaced":0}
+  PRESS_KILL_STRIKE_BOMBS_COUNTS=undefined
+  PRESS_KILL_HOLD_COUNTS.rows=[]
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[]
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":85376,"asked":0,"tripped":0}
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":0,"forecastReplays":0,"spinRowsSkipped":0}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]
