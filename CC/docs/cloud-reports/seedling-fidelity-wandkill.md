@@ -148,7 +148,9 @@ beside a body (4 stances that kill, all `inSquare` false); five composition rows
   | `standingValues.test.js` "a gate that sleeps past the deadline is KILLED" | not this slice — red at the base in this container |
 
 - **The slow/train ON sweep** (the 47 subject `.slow.`/`.train.` files, one at a time, same three keys ON):
-  @@SLOWSWEEP@@
+  **47/47 files green, 227 rows** (33 `.train.`, 14 `.slow.`; the hammer train pins, `fidelityWandEnemyBodies` /
+  `fidelityWandTrapBodies` / `fidelityWandKill` slow, the strategySwitch slow rows,
+  `derive-seedling-wallflyer-nohit.train`). **0 movers.**
 - **The hit gate (hitless → hit)**: no committed tape moves in any arm, and no witness takes a player hit. **Nothing
   turns a hitless leg into a hit-taking one.**
 - **The named keyed ON-arm sweep**: the levels are listed in the map above. The legs can't be counted in this
@@ -157,7 +159,18 @@ beside a body (4 stances that kill, all `inSquare` false); five composition rows
 
 ### Gates
 
-@@GATES@@
+| gate | result |
+|---|---|
+| bounded vitest BEFORE (base, `--maxWorkers=3`, the 51 battery files that exist there) | 51 files, 1435 passed, 1 skipped |
+| bounded vitest AFTER (head, 52 files: `contactFidelity*`, `levelRun*`, `levelWorld*`, `oneSpelling`, `fidelityWand*`, the 31 key-order pin files, `r8Acceptance`, `tapeEnvelope`, `solverDeadline`, `decisionTrace`, `lintGateLabels`, `seedlingConstantsCensus`, `seedlingSolverSurface`, `boxLock`) | **52 files, 1474 passed** = the base + 37 new rows + 1 (the AS3-anchor row of `seedlingConstantsCensus`, skipped by name at the base because its worktree has no `vendor/seedling`) |
+| `ci-producer-checks.mjs --jobs=3` | 99 run, **0 red**, 1 skipped, 0 known-red |
+| `check-procgen-docs.mjs` | ALL CHECKS PASSED |
+| `generate-procgen-reference.mjs --check` | ALL 7 MODULES AND 5 REGIONS MATCH |
+| `census-seedling-constants.mjs` `--write` → `--profile-rows` (138 rows) → `--write` → `--check` | PASS, 0 new, 0 moved (`75671603`) |
+| `census-seedling-solver-surface.mjs --write` / `--check` | GREEN, 374 rows (no new row: the three new getters have no solver reader; counts and lines moved) |
+| `solve-seedling-{r8-battery,r8-d2-chain,r8-l18,r8-tail,r9-l3,r9-campaign}.mjs --check` | all six rc 0 |
+| CI at the last code head `75671603` (`ci-vitest-summary.mjs`) | @@CI@@ |
+| train tier | **not dispatched** (this session can't): ⛳ planner, `unittests_frontend.yml -f train_only=true` at `75671603` |
 
 ## What the brief got wrong
 
