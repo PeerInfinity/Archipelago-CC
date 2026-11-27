@@ -7,6 +7,7 @@ import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { getNodeLabelProvider, getEdgeVisibilityFilter, getAccessibilityVisibilityFilter } from './index.js';
 import { dropStalePendingCentre } from './regionGraphCentreAction.js';
+import { supersedeLayout } from './layoutRun.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
   normaliseSubRegionView, isRegionGroupNode, multiMemberGroups, groupNodeElements, groupState, groupClasses,
@@ -573,18 +574,9 @@ export class GraphDataManager {
       logger.debug(`Stored hierarchyDepth on ${depthCount}/${elements.nodes.length} nodes, max depth=${maxDepth}`);
     }
 
-    // Increment layout generation to invalidate any pending layoutstop timeouts
-    // from a previous layout. This prevents stale timeouts from saving wrong
-    // positions or positioning the player before the new layout settles.
-    this.ui.layoutGeneration++;
-
-    // Stop any running layout before rebuilding the graph
-    // This prevents a race condition where isLayoutRunning stays true
-    // after elements are removed, blocking subsequent layout attempts
-    if (this.ui.currentLayout && this.ui.isLayoutRunning) {
-      this.ui.currentLayout.stop();
-      this.ui.isLayoutRunning = false;
-    }
+    // ⛓ Stop any running layout before rebuilding the graph, WITHOUT settling it (layoutRun.js): its layoutstop
+    // saves nothing and shows no "Layout complete", and isLayoutRunning is clear for the layout this rebuild starts.
+    supersedeLayout(this.ui);
 
     this.ui.interactionManager?.hideHover?.();
     this.ui.cy.elements().remove();

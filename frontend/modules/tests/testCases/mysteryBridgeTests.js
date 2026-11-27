@@ -3,8 +3,9 @@
  *
  * The row SETS the state it expects and puts it back: it points the module's page address at the
  * stand-in page `modules/mysteryArchipelago/testPage/` (not the real game, which lives in another
- * repository; a session-only setting), enables the module (disabled by default), which opens the
- * Mystery Game panel, and loads the committed mystery preset, which the panel then frames.
+ * repository; a session-only setting), opens the Mystery Game panel the way Quick Launch does
+ * (`enableModule`; the module is on by default, its panel is not in the layout), and loads the
+ * committed mystery preset, which the panel then frames. It closes the panel it opened.
  * It runs with no server, so it covers the host's offline answers; the names it checks come from
  * the loaded world's own `slot_data.mystery`, never from this file.
  *
@@ -17,6 +18,9 @@ import { registerTest } from '../testRegistry.js';
 import stateManagerProxySingleton from '../../stateManager/stateManagerProxySingleton.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import { DEFAULT_PAGE_URL, PAGE_URL_SETTING } from '../../mysteryArchipelago/mysteryPage.js';
+import panelManager from '../../../app/core/panelManager.js';
+import loopStateSingleton from '../../loops/loopStateSingleton.js';
+import { centralRegistry } from '../../../app/core/centralRegistry.js';
 
 const CATEGORY = 'Mystery Bridge';
 const MODULE_ID = 'mysteryArchipelago';
@@ -34,10 +38,12 @@ const stubOf = () => {
     return null;
 };
 const last = (list) => list[list.length - 1];
+const PANEL_COMPONENT = 'mysteryPanel';
+const panelIsOpen = () => !!document.querySelector('.mystery-panel-container');
+const closePanel = () => panelManager.destroyPanelByComponentType(PANEL_COMPONENT);
 
 export async function mysteryBridgeRoundTrip(testController) {
-    const states = window.moduleManagerApi?.getAllModuleStates?.() ?? {};
-    const wasEnabled = states[MODULE_ID]?.enabled === true;
+    const panelWasOpen = panelIsOpen();
     const pageBefore = await settingsManager.getSetting(PAGE_URL_SETTING);
     try {
         // Before the module is on: the panel reads the address when it frames a world.
@@ -122,7 +128,7 @@ export async function mysteryBridgeRoundTrip(testController) {
         testController.assertEqual('a refused request brings no state', statesBefore, stub.states.length);
     } finally {
         await settingsManager.updateSetting(PAGE_URL_SETTING, pageBefore, { persist: false });
-        if (!wasEnabled) await window.moduleManagerApi.disableModule?.(MODULE_ID);
+        if (!panelWasOpen) await closePanel();
     }
     return testController.getOverallResult();
 }
@@ -143,8 +149,7 @@ const gameFrames = () => [...document.querySelectorAll('.mystery-panel-container
 });
 
 export async function mysteryRealPageHandshake(testController) {
-    const states = window.moduleManagerApi?.getAllModuleStates?.() ?? {};
-    const wasEnabled = states[MODULE_ID]?.enabled === true;
+    const panelWasOpen = panelIsOpen();
     const pageBefore = await settingsManager.getSetting(PAGE_URL_SETTING);
     const seen = { requests: [], states: [], refusals: [] };
     const handlers = {
@@ -188,7 +193,7 @@ export async function mysteryRealPageHandshake(testController) {
     } finally {
         for (const [event, handler] of Object.entries(handlers)) testController.eventBus.unsubscribe?.(event, handler);
         await settingsManager.updateSetting(PAGE_URL_SETTING, pageBefore, { persist: false });
-        if (!wasEnabled) await window.moduleManagerApi.disableModule?.(MODULE_ID);
+        if (!panelWasOpen) await closePanel();
     }
     return testController.getOverallResult();
 }
@@ -200,5 +205,120 @@ registerTest({
         + 'modules/mystery-clue-game) and loads the committed mystery preset: the game\'s page asks for the state with the '
         + 'version the world has, a state goes back, and nothing is refused.',
     testFunction: mysteryRealPageHandshake,
+    category: CATEGORY,
+});
+
+const STREET_PRESET_PATH = './presets/mystery_street_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+const procgen = (name) => centralRegistry.getPublicFunction('procgenPlayer', name)?.();
+const activeRegionId = () => procgen('getActiveSubstrate')?.regionId ?? null;
+const moveTo = (sourceRegion, targetRegion, exitName) => loopStateSingleton.dispatcher.publish('user:regionMove', {
+    sourceRegion, targetRegion, exitName,
+}, { initialTarget: 'bottom' });
+
+/**
+ * A case that is ONE REGION of a generated world (the `mystery` substrate): the committed
+ * `mystery_street_test` preset, the long case's office beside a maze street. The names come
+ * from the loaded world: the case's region is the warehouse's `mystery` entry, the other is where
+ * the player starts.
+ */
+export async function mysteryRegionOfficeAndStreet(testController) {
+    const panelWasOpen = panelIsOpen();
+    const pageBefore = await settingsManager.getSetting(PAGE_URL_SETTING);
+    try {
+        await settingsManager.updateSetting(PAGE_URL_SETTING, STAND_IN_PAGE, { persist: false });
+        await window.moduleManagerApi.enableModule(MODULE_ID);
+        const panel = await testController.pollForValue(
+            () => document.querySelector('.mystery-panel-container')?.mysteryPanelUI ?? null,
+            'the Mystery Game panel', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('the Mystery Game panel is open', !!panel);
+        if (!panel) return testController.getOverallResult();
+
+        await testController.loadRulesFromFile(STREET_PRESET_PATH);
+        await testController.stateManager.pingWorker('after-rules-load', TIMEOUT_MS);
+
+        // The world: one `mystery` region, and the region the player starts in, which is not it.
+        const started = await testController.pollForCondition(
+            () => !!activeRegionId(), 'the player is placed in a region', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('the generated world placed the player', started);
+        const warehouse = procgen('getWarehouse');
+        const offices = (warehouse?.keys?.() ?? []).map((id) => [id, warehouse.get(id)]).filter(([, entry]) => entry.substrate === 'mystery');
+        testController.assertEqual('the world holds one mystery region', 1, offices.length);
+        if (offices.length !== 1) return testController.getOverallResult();
+        const [office, officeEntry] = offices[0];
+        const street = activeRegionId();
+        testController.reportCondition(`the player starts away from the office (in "${street}", the office is "${office}")`,
+            !!street && street !== office);
+        const payload = officeEntry.world;
+        // An exit's name, off the region's own world (the warehouse's exits, keyed by name).
+        const exitOf = (from, to) => [...(warehouse.get(from)?.world?.exits?.entries?.() ?? [])]
+            .find(([, exit]) => exit?.targetRegion === to)?.[0];
+        const wayUp = exitOf(street, office);
+        const wayDown = exitOf(office, street);
+        testController.reportCondition(`the two regions are joined both ways (${wayUp} / ${wayDown})`, !!wayUp && !!wayDown);
+        if (!wayUp || !wayDown) return testController.getOverallResult();
+
+        // 1. The panel frames the region's case, and the state says the lock and that the player is away.
+        const framed = await testController.pollForCondition(
+            () => String(panel.wantedUrl ?? '').includes(`case=${payload.case}`), 'the panel frames the region\'s case', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition(`the panel framed ${panel.wantedUrl}`, framed);
+        const stub = await testController.pollForValue(
+            () => (stubOf()?.states.length > 0 ? stubOf() : null), 'the page received a mystery:state', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('the page asked and the host answered with a state', !!stub);
+        if (!stub) return testController.getOverallResult();
+        testController.assertEqual('the state names the region\'s story', payload.story, last(stub.states).story);
+        testController.assertEqual('the state names the region\'s version', payload.version, last(stub.states).version);
+        testController.assertEqual('the state carries the world\'s lock', payload.lock, last(stub.states).lock);
+        testController.assertEqual('away from the office the state says so', false, last(stub.states).inOffice);
+
+        // 2. A question solved in the street is not checked.
+        const snapshot = stateManagerProxySingleton.getSnapshot();
+        const open = Object.entries(payload.ap_locations)
+            .find(([, name]) => snapshot?.locationReachability?.[name] === 'reachable');
+        testController.reportCondition(`a question of the case is open (${open?.[1]})`, !!open);
+        if (!open) return testController.getOverallResult();
+        const [questionId, locationName] = open;
+        stub.solve(questionId);
+        stub.request();
+        const answeredAway = stub.states.length;
+        await testController.pollForCondition(() => stub.states.length > answeredAway, 'the request after the solve was answered', TIMEOUT_MS, POLL_MS);
+        await testController.stateManager.pingWorker('after-solve-away', TIMEOUT_MS);
+        testController.reportCondition('a question solved away from the office is not checked',
+            !(stateManagerProxySingleton.getSnapshot()?.checkedLocations ?? []).includes(locationName)
+            && !last(stub.states).solved.includes(questionId));
+
+        // 3. In the office: the state says so, and the same question is checked.
+        moveTo(street, office, wayUp);
+        const arrived = await testController.pollForCondition(
+            () => activeRegionId() === office && last(stub.states).inOffice === true, 'the state says the player is in the office', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('moving into the office sends a state that says so', arrived);
+        if (!arrived) return testController.getOverallResult();
+        stub.solve(questionId);
+        const landed = await testController.pollForCondition(
+            () => last(stub.states).solved.includes(questionId), `the state lists ${questionId} as solved`, TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('in the office the question is checked and comes back solved', landed);
+        testController.reportCondition('the check is in the app\'s checked locations',
+            (stateManagerProxySingleton.getSnapshot()?.checkedLocations ?? []).includes(locationName));
+
+        // 4. Back in the street: the state says so again, and the panel still shows the case (lock `actions`).
+        moveTo(office, street, wayDown);
+        const left = await testController.pollForCondition(
+            () => activeRegionId() === street && last(stub.states).inOffice === false, 'the state says the player left the office', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('leaving the office sends a state that says so', left);
+        testController.reportCondition('under this lock the case stays framed away from the office',
+            String(panel.wantedUrl ?? '').includes(`case=${payload.case}`) && !!stubOf());
+    } finally {
+        await settingsManager.updateSetting(PAGE_URL_SETTING, pageBefore, { persist: false });
+        if (!panelWasOpen) await closePanel();
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'mystery-region-office-and-street',
+    name: 'Mystery substrate: a case as one region of a generated world',
+    description: 'Loads the committed mystery_street_test preset (the long case\'s office beside a maze street): the panel frames '
+        + 'the region\'s case, the state carries the world\'s lock and whether the player is in the office, a question solved in '
+        + 'the street is not checked, and the same question is checked once the player is in the office.',
+    testFunction: mysteryRegionOfficeAndStreet,
     category: CATEGORY,
 });

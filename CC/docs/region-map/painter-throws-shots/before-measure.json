@@ -1,0 +1,12 @@
+{
+  "rules": "./presets/procgen_topdown/AP_1/AP_1_rules.json",
+  "warnings": {
+    "boot": 0,
+    "region-map-fit": 95,
+    "region-map-BlackCastle": 49,
+    "region-map-CreditsRoom": 5,
+    "region-graph-map-look": 54
+  },
+  "errors": [],
+  "mapLookCells": 9
+}

@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  MYSTERY_EVENTS, MYSTERY_REFUSALS, MysteryArchipelagoLogic, SOURCE_MODULE, gameKeyOf, mysteryBlockOf, mysteryStateOf,
+  LIVE_PLAY_EVENTS,
+  MYSTERY_EVENTS, MYSTERY_REFUSALS, MysteryArchipelagoLogic, SOURCE_MODULE, caseRegionsOfWarehouse, currentMysteryBlock, gameKeyOf,
+  mysteryBlockOf,
+  mysteryBlockOfRegion, mysteryStateOf,
 } from './mysteryArchipelagoLogic.js';
 
 const staticData = (over = {}) => ({
@@ -24,7 +27,10 @@ const staticData = (over = {}) => ({
 
 /** A logic instance over a fake bus, with the world and snapshot held in `env`. */
 function setup({ data = staticData(), snapshot = { inventory: {}, checkedLocations: [] } } = {}) {
-  const env = { data, snapshot, connection: { connected: false, slot: null, team: null }, published: [], dispatched: [], handlers: new Map() };
+  const env = {
+    data, snapshot, connection: { connected: false, slot: null, team: null }, published: [], dispatched: [], handlers: new Map(),
+    caseRegions: [], activeRegionId: null, livePlay: null,
+  };
   const eventBus = {
     subscribe: (event, handler) => env.handlers.set(event, handler),
     publish: (event, payload) => env.published.push({ event, payload }),
@@ -32,6 +38,7 @@ function setup({ data = staticData(), snapshot = { inventory: {}, checkedLocatio
   const dispatcher = { publish: (event, payload, direction) => env.dispatched.push({ event, payload, direction }) };
   const logic = new MysteryArchipelagoLogic({
     eventBus, dispatcher, getStaticData: () => env.data, getSnapshot: () => env.snapshot, getConnection: () => env.connection,
+    getCaseRegions: () => env.caseRegions, getActiveRegionId: () => env.activeRegionId, getLivePlay: () => env.livePlay,
   });
   logic.initialize();
   env.fire = (event, payload) => env.handlers.get(event)(payload);
@@ -195,6 +202,131 @@ describe('MysteryArchipelagoLogic', () => {
     env.fire(MYSTERY_EVENTS.QUESTION_SOLVED, { story: 'garden-room', questionId: 'q.door' });
     env.fire(MYSTERY_EVENTS.QUESTION_SOLVED, { story: 'custom-house-fire', questionId: 'q.nope' });
     expect(env.dispatched).toEqual([]);
+    expect(env.refusals()).toEqual([MYSTERY_REFUSALS.OTHER_STORY]);
+  });
+});
+
+/** A `mystery` region's payload, as mysterySubstrateLibrary.js writes it. */
+const officePayload = (over = {}) => ({
+  story: 'custom-house-fire', version: 'abc123', case: 'cases/custom-house-fire', lock: 'actions',
+  ap_locations: { 'q.set': 'Question 01', 'q.door': 'Question 02', 'q.who': 'Question 03' },
+  papers: { 'The night watch book': 'watch_book', "Dr. Hume's note": 'doctor' },
+  ...over,
+});
+
+describe('a case that is a region of a generated world', () => {
+  const request = { story: 'custom-house-fire', version: 'abc123' };
+  const inWorld = (over = {}) => {
+    const env = setup({ data: { playerId: '1', seed_name: '777', world: { 1: { slot_data: {} } } } });
+    env.caseRegions = [{ regionId: 'The case', payload: officePayload(over) }];
+    return env;
+  };
+
+  it('reads the map off the region\'s payload, both ways', () => {
+    const block = mysteryBlockOfRegion('The case', officePayload(), { playerId: '2', seed_name: 9 });
+    expect(block.locationOfQuestion.get('q.door')).toBe('Question 02');
+    expect(block.questionOfLocation['Question 03']).toBe('q.who');
+    expect([block.player, block.seedName, block.regionId, block.lock, block.case]).toEqual(['2', '9', 'The case', 'actions', 'cases/custom-house-fire']);
+    expect(mysteryBlockOfRegion('x', { story: 'x' }, {})).toBeNull();
+  });
+
+  it('finds the mystery regions of the runtime player\'s warehouse (the real class), and none without one', async () => {
+    const { WorldWarehouse } = await import('../procgenPlayer/procgenPlayerEngine.js');
+    const warehouse = new WorldWarehouse();
+    warehouse.regions.set('The street', { substrate: 'maze', world: {} });
+    warehouse.regions.set('The case', { substrate: 'mystery', world: officePayload() });
+    expect(caseRegionsOfWarehouse(warehouse, 'mystery')).toEqual([{ regionId: 'The case', payload: officePayload() }]);
+    expect(caseRegionsOfWarehouse(null, 'mystery')).toEqual([]);
+  });
+
+  it('the region wins over the slot\'s block, and a world with neither has no case', () => {
+    const regions = [{ regionId: 'The case', payload: officePayload({ version: 'region' }) }];
+    expect(currentMysteryBlock({ staticData: staticData(), caseRegions: regions }).version).toBe('region');
+    expect(currentMysteryBlock({ staticData: staticData(), caseRegions: [] }).version).toBe('abc123');
+    expect(currentMysteryBlock({ staticData: { world: { 1: {} } } })).toBeNull();
+  });
+
+  it('among several cases: the asked story, else the one the player is in, else the first', () => {
+    const caseRegions = [
+      { regionId: 'A', payload: officePayload({ story: 'a' }) },
+      { regionId: 'B', payload: officePayload({ story: 'b' }) },
+    ];
+    const pick = (over) => currentMysteryBlock({ staticData: {}, caseRegions, ...over }).regionId;
+    expect(pick({ story: 'b', activeRegionId: 'A' })).toBe('B');
+    expect(pick({ activeRegionId: 'B' })).toBe('B');
+    expect(pick({ story: 'zzz' })).toBe('A');
+  });
+
+  it('the state says the lock and whether the player is in the office', () => {
+    const env = inWorld({ lock: 'new-reading' });
+    env.fire(MYSTERY_EVENTS.REQUEST_STATE, request);
+    expect(env.states()[0]).toMatchObject({ story: 'custom-house-fire', version: 'abc123', lock: 'new-reading', inOffice: false });
+  });
+
+  it('a slot\'s case carries neither field', () => {
+    const env = setup();
+    env.fire(MYSTERY_EVENTS.REQUEST_STATE, request);
+    expect(env.states()[0]).not.toHaveProperty('lock');
+    expect(env.states()[0]).not.toHaveProperty('inOffice');
+  });
+
+  it('moving in and out of the office sends a new state each time, and only then', () => {
+    const env = inWorld();
+    env.fire(MYSTERY_EVENTS.REQUEST_STATE, request);
+    env.activeRegionId = 'The case';
+    env.fire('procgen:activeSubstrateChanged');
+    env.fire('procgen:activeSubstrateChanged');
+    env.activeRegionId = 'The street';
+    env.fire('procgen:activeSubstrateChanged');
+    expect(env.states().map((s) => s.inOffice)).toEqual([false, true, false]);
+  });
+
+  it('a question is checked in the office and not away from it, under every lock', () => {
+    for (const lock of ['actions', 'new-reading', 'everything']) {
+      const env = inWorld({ lock });
+      const solved = { story: 'custom-house-fire', questionId: 'q.door' };
+      env.fire(MYSTERY_EVENTS.QUESTION_SOLVED, solved);
+      expect(env.dispatched, lock).toEqual([]);
+      env.activeRegionId = 'The case';
+      env.fire(MYSTERY_EVENTS.QUESTION_SOLVED, solved);
+      expect(env.dispatched.map((d) => d.payload.locationName), lock).toEqual(['Question 02']);
+    }
+  });
+
+  it('in loop mode the office counts only while the queue is parked on it for live play', () => {
+    const env = inWorld();
+    env.activeRegionId = 'The case';
+    env.livePlay = { loopMode: true, region: null };
+    env.fire(MYSTERY_EVENTS.REQUEST_STATE, request);
+    const solved = { story: 'custom-house-fire', questionId: 'q.door' };
+    env.fire(MYSTERY_EVENTS.QUESTION_SOLVED, solved);
+    expect(env.dispatched).toEqual([]);
+    env.livePlay = { loopMode: true, region: 'The street' };
+    env.fire('loopState:manualEntered');
+    env.livePlay = { loopMode: true, region: 'The case' };
+    env.fire('loopState:manualEntered');
+    env.fire(MYSTERY_EVENTS.QUESTION_SOLVED, solved);
+    env.livePlay = { loopMode: false, region: null };
+    env.fire('gameState:loopModeChanged');
+    expect(env.states().map((s) => s.inOffice)).toEqual([false, true]);
+    expect(env.dispatched.map((d) => d.payload.locationName)).toEqual(['Question 02']);
+  });
+
+  it('every live-play event is listened to', () => {
+    const env = inWorld();
+    for (const event of LIVE_PLAY_EVENTS) expect(env.handlers.has(event), event).toBe(true);
+  });
+
+  it('papers and solved are read through the region\'s maps', () => {
+    const env = inWorld();
+    env.snapshot = { inventory: { "Dr. Hume's note": 1, 'A maze key': 1 }, checkedLocations: ['Question 03', 'A maze chest'] };
+    env.fire(MYSTERY_EVENTS.REQUEST_STATE, request);
+    expect(env.states()[0]).toMatchObject({ papers: ['doctor'], solved: ['q.who'] });
+  });
+
+  it('another story than any case of the world is refused by name', () => {
+    const env = inWorld();
+    env.fire(MYSTERY_EVENTS.REQUEST_STATE, { story: 'garden-room' });
     expect(env.refusals()).toEqual([MYSTERY_REFUSALS.OTHER_STORY]);
   });
 });

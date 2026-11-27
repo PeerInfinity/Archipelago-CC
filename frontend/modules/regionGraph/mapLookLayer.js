@@ -165,6 +165,15 @@ export class MapLookLayer {
         return true;
     }
 
+    /**
+     * ⛓ region-graph-direction-layout: the Region Map model for the loaded rules, built (and cached) whether or not the
+     * look is on → `{ model, rules, playerId }`, or null (no rules, or the model could not be built).
+     */
+    regionMapModel() {
+        if (!this._ensureModel()) return null;
+        return { model: this.model, rules: this.source.rules, playerId: this.source.playerId, frames: this.frames };
+    }
+
     _turnOn(t0) {
         this.on = true;
         this._onAt = t0;
