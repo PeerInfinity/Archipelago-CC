@@ -7,8 +7,8 @@
  *     Re-measure-11's L1 18:10 differs from it in that one field and no other (30052).
  *   - The request goes through the PAGE's expiry branch as `seedlingWasmPlayback.pollSolve` takes it (`pageLadder`): the
  *     attempt at the request's budget; a budget-cut answer asks `wasmPlayback.expiryAction`; a 'retry' resumes the
- *     passes the cut left unanswered (`passesAfter`, the service's `answered` rule: the leading passes not cut by a
- *     deadline) at `SOLVE_RETRY_BUDGET_FACTOR`×; the retry's answer against the cut plan by `betterAnswer`.
+ *     passes the cut left unanswered (`passesAfter`, the service's `answered` rule, `answeredOf`) at
+ *     `SOLVE_RETRY_BUDGET_FACTOR`×; the retry's answer against the cut plan by `betterAnswer`.
  *     For a shipped plan, its keys replayed on a FRESH run (`{hits, deaths, end}`).
  */
 import { readFileSync } from 'node:fs';
@@ -17,6 +17,7 @@ import { createHash } from 'node:crypto';
 
 import { ANYTIME_PASSES, betterAnswer, budgetCut, passesAfter, replayTape, solveAnytime } from './jsRuntimeSolver.js';
 import { expiryAction, SOLVE_RETRY_BUDGET_FACTOR } from './wasmPlayback.js';
+import { hitPlanHeldOpen } from './hitPlanRetry.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 
@@ -25,11 +26,15 @@ export const L39_SEAM = Object.freeze({ S1: 29994, L1: 30052 });
 
 const sha = (s) => createHash('sha1').update(s).digest('hex').slice(0, 12);
 
-/** The service's `answered`: the leading request passes that gave a final word (a refusal cut by its deadline did not). */
+/**
+ * The service's `answered` (`jsRuntimeSolveService`): the leading request passes that gave a final word — a refusal cut
+ * by its deadline did not, nor (`HIT_PLAN_RETRY` ON, `hitPlanHeldOpen`) a plan that bills a hit.
+ */
 export function answeredOf(res, passes) {
     let n = 0;
     for (const r of (res.passes ?? []).slice(0, passes.length)) {
         if (!r.ok && r.deadline) break;
+        if (hitPlanHeldOpen({ ok: r.ok, plan: { modelHits: r.modelHits } })) break;
         n += 1;
     }
     return n;

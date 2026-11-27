@@ -77,7 +77,7 @@ import { TALK_RANGE } from './endingChain.js';
 import { mergeSaveArray } from './saveArrayRules.js';
 import { R7_GOAL_LEDGER } from './r7Acceptance.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
-import { hitPlanRetryAsks } from './jsRuntimeSolver.js';
+import { hitPlanRetryAsks } from './hitPlanRetry.js';
 
 /** Thrown for a tape that must not ship — by name. */
 export class WasmPlaybackError extends Error {

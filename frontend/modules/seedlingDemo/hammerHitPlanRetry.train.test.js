@@ -5,9 +5,10 @@
  * `hammerHitPlanRetryRows.js`'s fixture) through the page's expiry branch (`wasmPlayback.expiryAction`, a held retry at
  * 4× the budget), at defaults (LHM ON):
  *  - seam 29994 (S1's own arrival): the dashless pass solves with one model hit, the full pass is cut at the budget.
- *    OFF plays the hit plan (the page's `719a637caca4`); ON asks the held retry, whose full pass solves hitless.
+ *    OFF plays the hit plan (the page's `719a637caca4`); ON asks the held retry of the WHOLE ladder (the hit plan is not
+ *    a final word), whose full pass — the dashless plan in hand, its window tripped at `sword-dash` — solves hitless.
  *  - seam 30052 (L1 18:10's arrival, the one other field): the dashless plan is hitless — ON asks nothing.
- * Every shipped plan's keys are replayed on a FRESH run. Train tier: four whole-request solves (one of them at 2560 units).
+ * Every shipped plan's keys are replayed on a FRESH run. Train tier: four whole-request solves (one of them retried at 2560 units), about 25 s.
  */
 import { describe, expect, it } from 'vitest';
 
@@ -24,12 +25,13 @@ describe('HIT_PLAN_RETRY — re-measure-11 S1 18:11 (L39 Totem 72,40, seam 29994
 
     it('ON: the held retry\'s full pass ships a hitless plan — no hit and no death on a fresh replay, the goal reached in L39', () => {
         const r = withHitPlanRetry(true, () => solveCapturedL39());
-        expect(r).toMatchObject({ outcome: 'retried', retries: 1, ok: true, pass: 'full', ticks: 2735, answer: '0d12fc018cab' });
+        expect(r).toMatchObject({ outcome: 'retried', retries: 1, ok: true, pass: 'full', ticks: 3929, answer: '128f09ae3413' });
         expect(r.hits).toEqual([]);
         expect(r.deaths).toBe(0);
         expect(r.modelHits).toEqual({ hits: 0, deaths: 0 });
         expect(r.end.level).toBe(39);
-        expect(r.attempts.map((a) => [a.budget, a.passes.map((p) => p.pass)])).toEqual([[640, ['dashless', 'full', 'hit-avoid']], [2560, ['full']]]);
+        expect(r.attempts.map((a) => [a.budget, a.passes.map((p) => p.pass)])).toEqual([[640, ['dashless', 'full', 'hit-avoid']], [2560, ['dashless', 'full']]]);
+        expect(r.attempts[1].passes[1]).toMatchObject({ ok: true, deadline: 'sword-dash', limit: 'window', modelHits: { hits: 0, deaths: 0 } });
     }, 480000);
 });
 
