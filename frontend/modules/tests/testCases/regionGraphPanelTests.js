@@ -858,15 +858,20 @@ export async function testRegionGraphSubRegionMerged(testController) {
       + `the element set ${graphCy().elements().length} (was ${elementsBefore}) (${groupMs} ms)`,
       groupingOn && !!dir2 && wantBoxes >= 1 && boxEls.length === wantBoxes && dir2.boxes === wantBoxes
       && dir2.overlaps === 0 && dir2.blockOverlaps === 0 && dir2.intruders === 0 && graphCy().elements().length === elementsBefore);
-    // ⛓ region-graph-floors: the box is labelled by its FLOOR ("Ground floor", "Floor −1 · 2", "Floor ?"), the group's
-    // root level id kept on the box (`data-root`); the floors were numbered from the start's group (the ground floor).
-    const floorRe = /^(Ground floor|Floor [+\u2212]\d+|Floor \?)( \u00b7 \d+)?$/;
+    // ⛓ region-graph-floors: the box is labelled by its FLOOR ("Ground floor", "Floor −1 · 2"), the group's root level
+    // id kept on the box (`data-root`). ⛓ region-graph-floor-solver: the numbers come from the constraint solve over
+    // EVERY link, doorways included, so the doorway-entered box (the BFS numbering's "Floor ?") now reads a floor the
+    // solve picked: no box reads "Floor ?", every group is picked, none ranged or unreached, no contradiction.
+    const floorRe = /^(Ground floor|Floor [+\u2212]\d+|Floor [0+\u2212]\d* to [0+\u2212]\d*|Floor \?)( \u00b7 \d+)?$/;
     const floorLabels = boxEls.map((b) => [b.textContent, b.dataset.root]);
     testController.reportCondition(`the boxes are labelled by floor: ${JSON.stringify(floorLabels)}; `
-      + `${dir2?.floors?.numbered} floor(s) numbered from the start, ${dir2?.floors?.unreached} unreached, `
-      + `${dir2?.floors?.counts?.vertical} vertical link(s), ${dir2?.floors?.conflicts} conflict(s)`,
-      boxEls.length >= 1 && boxEls.every((b) => floorRe.test(b.textContent) && !!b.dataset.root && b.dataset.root !== b.textContent)
-      && dir2?.floors?.numbered >= 1 && dir2?.floors?.conflicts === 0);
+      + `${dir2?.floors?.numbered} floor(s) picked, ${dir2?.floors?.ranged} ranged, ${dir2?.floors?.unreached} unreached, `
+      + `${dir2?.floors?.counts?.vertical} vertical link(s), ${dir2?.floors?.contradictions} contradiction(s), `
+      + `solve ${dir2?.floors?.solveMs?.toFixed?.(2)} ms`,
+      boxEls.length >= 1 && boxEls.every((b) => floorRe.test(b.textContent) && !/^Floor \?/.test(b.textContent)
+        && !!b.dataset.root && b.dataset.root !== b.textContent)
+      && dir2?.floors?.numbered >= 1 && dir2?.floors?.ranged === 0 && dir2?.floors?.unreached === 0
+      && dir2?.floors?.contradictions === 0);
     ui.currentLayoutPreset = layoutBefore;
     await ctx.setSetting(DUNGEON_GROUPING_KEY, DUNGEON_GROUPING_SCHEMA.default);
     const groupingOff = await testController.pollForCondition(() => ui.groupingSettings?.grouping === DUNGEON_GROUPING_SCHEMA.default,

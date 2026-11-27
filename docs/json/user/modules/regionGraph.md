@@ -141,8 +141,13 @@ Because a staircase or a pit never joins two levels into one dungeon, every dung
 
 - **Walking links stay as they were.** Inside a floor, levels you walk between by their edges are laid out exactly as before: side by side, in the direction of the door.
 - **Stairs and pits are longer, but keep a direction.** Two floors joined by stairs or a pit are placed further apart, by the **Floor gap** (in Controls, under Dungeon pull; 0 – 600 px, default 160), in the direction where the stairs are in their level: stairs in the east of a level put the floor they lead to further east. Stairs in the middle tenth of their level (both ways) give no direction, only the distance. Several staircases between the same two floors are added together. A bigger gap moves the floors further apart in the same directions; 0 puts them as close as two linked dungeons with no stairs.
-- **Each box is labelled by its floor.** The floor holding the start region is the **Ground floor**. Every staircase or pit down from it is **Floor −1**, up is **Floor +1**, and so on, counted from the ground floor along the stairs. When several dungeons are on the same floor they are numbered in the order they are reached from the start: **Floor −1 · 1**, **Floor −1 · 2**, …. A dungeon you can only reach by a doorway or teleporter, never by stairs from the start, is **Floor ?**. The dungeon's first level (its old label) is kept on the box for tools that read it.
-- **Worlds disagree with themselves sometimes.** If two different staircase routes from the ground floor reach a dungeon on two different floors, the first route found decides its number (the game's levels are not always stacked consistently).
+- **Each box is labelled by its floor.** The floor holding the start region is the **Ground floor**. Stairs up and down change the floor by one, and so does a pit (down). A doorway or teleporter **may** change the floor by one, or not: the floor numbers are worked out so that every link between dungeons agrees, choosing, when there is a choice:
+  1. as few extra floors on staircases as possible (a staircase spans more than one floor only when the links between dungeons cannot agree otherwise);
+  2. then as few doorways that change floor as possible;
+  3. then as few floors in all as possible.
+  When several dungeons are on the same floor they are numbered in the order they are reached from the start: **Floor −1 · 1**, **Floor −1 · 2**, …. The dungeon's first level (its old label) is kept on the box for tools that read it.
+- **When the links cannot agree**, for example pits leading round in a loop back to the start with no way up, as few links as possible are set aside. A dungeon whose floor then depends on which ones are set aside shows the **range** of floors it could be: **Floor −3 to −1**.
+- **Floor ?** marks a dungeon that no link from the start reaches at all.
 
 Floors come from the world's own exits, never from hand-made labels, so they follow entrance randomization or any other change to how the levels connect. Off and Soft pull together are unchanged by floors. The Region Map does not use floors.
 

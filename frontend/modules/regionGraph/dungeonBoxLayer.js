@@ -12,7 +12,7 @@
  *     screen pixels, so it follows its nodes when they move (a drag, the layout's animation), pan and zoom; it is
  *     recomputed one frame after `position` / `viewport` / `resize` / `layoutstop`.
  *   · A member that discovery hides (`discovery-hidden`) is left out; a box with no member shown is hidden. The label
- *     is the dungeon's FLOOR (region-graph-floors, `floors.js`: "Ground floor", "Floor −1 · 2", "Floor ?"), drawn just
+ *     is the dungeon's FLOOR (region-graph-floors; the numbers from `floorSolver.js`: "Ground floor", "Floor −1 · 2", "Floor −3 to −1", "Floor ?"), drawn just
  *     above the box's top edge, or `???` while any member shown is an undiscovered placeholder. The group's root
  *     level id stays on the box (`data-root`, and its `title`).
  *   · The boxes belong to ONE Direction-aware run: `show(boxes)` after its start; any later layout's `layoutstart`, a

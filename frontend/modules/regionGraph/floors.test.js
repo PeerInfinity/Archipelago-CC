@@ -4,7 +4,7 @@
  * Seedling atlases they were cut against, as `directionLayout.test.js` / `dungeonGroups.test.js`) and small synthetic
  * models:
  *   · 1. the vertical-direction rule: an interior stair east of centre points east; one at the centre gives none;
- *   · 2. the floor numbering: up, down, a pit, a conflict and an unreached group; the labels; the frozen presets' counts;
+ *   · 2. the floor labels on the frozen seedling_playthrough (the numbering itself: floorSolver.test.js);
  *   · 3. the floor gap: a bigger gap → a longer floor link, its direction kept;
  *   · 4. `none` / `soft` keep their base digests; `twoStep` with the floor links off IS dungeon-groups' twoStep;
  *        worlds with no vertical link (alttp, the maze, seedling_atlas) are unchanged;
@@ -109,6 +109,7 @@ function build(preset, view, { nodeLook = 'graph', open = [], doc = null } = {})
 
 
 const F = await import('./floors.js');
+const FS = await import('./floorSolver.js');
 const S = () => D.normaliseDirectionSettings();
 const layout = (lcm, grouping, extra = {}, opts = {}) => lcm.buildDirectionLayout(S(), { grouping, groupStrength: 0.5, ...extra }, opts);
 
@@ -176,45 +177,19 @@ describe('⛓ 1. the direction of a vertical link (option (a): where the stair s
     });
 });
 
-describe('⛓ 2. floor numbers and labels', () => {
-    // G0 (start) —down→ G1 —pit (down)→ G2;  G0 —up→ U;  X —up→ G0 (so X = −1) and G1 —up→ X (X = 0: a CONFLICT);
-    // W only by a warp (unreached).
-    const m = model({
-        start: 'g0',
-        groups: { G0: ['g0'], G1: ['g1'], G2: ['g2'], U: ['u'], X: ['x'], W: ['w'] },
-        links: [['g0', 'g1', 'down'], ['g1', 'g2', 'down'], ['g0', 'u', 'up'], ['g1', 'x', 'up'], ['x', 'g0', 'up'], ['g0', 'w', 'warp']],
-    });
-    it('BFS from the start\'s group: down −1, up +1, first assignment wins; a conflict reported with both paths', () => {
-        const n = F.floorNumbers(m);
-        expect(n.start).toBe('G0');
-        expect(Object.fromEntries(n.floorOf)).toEqual({ G0: 0, G1: -1, G2: -2, U: 1, X: -1 });
-        expect(n.unreached).toEqual(['W']);
-        expect(n.conflicts.length).toBe(1);
-        const c = n.conflicts[0];
-        expect([c.group, c.floor, c.other]).toEqual(['X', -1, 0]);
-        expect(c.path.map((p) => p.group)).toEqual(['G0', 'X']);
-        expect(c.otherPath.map((p) => p.group)).toEqual(['G0', 'G1', 'X']);
-        expect(c.via).toEqual({ from: 'g1', to: 'x', kind: 'up' });
-        expect(n.conflictGroups).toBe(1);
-    });
-    it('the labels: Ground floor, Floor +n, Floor −n, " · k" on a shared floor (BFS order), Floor ? for the unreached', () => {
-        expect([0, 1, -1, -12, null].map(F.floorName)).toEqual(['Ground floor', 'Floor +1', 'Floor −1', 'Floor −12', 'Floor ?']);
-        const labels = F.floorLabels(F.floorNumbers(m));
-        expect(Object.fromEntries(labels)).toEqual({
-            G0: 'Ground floor', G1: 'Floor −1 · 1', X: 'Floor −1 · 2', G2: 'Floor −2', U: 'Floor +1', W: 'Floor ?',
-        });
-    });
-    it('seedling_playthrough: 23 groups numbered (−5 … +1), 20 unreached, 4 conflicting links on 2 groups; the box labels', () => {
+describe('⛓ 2. floor numbers and labels (the numbering itself: floorSolver.test.js)', () => {
+    // ⛓ region-graph-floor-solver replaced the BFS numbering (first assignment wins) with the constraint solve; the
+    // synthetic numbering cases moved to floorSolver.test.js. Here: the panel's glue on the frozen seedling_playthrough.
+    it('seedling_playthrough: all 43 groups picked (−5 … +1), 0 ranged, 0 unreached, 0 contradictions; the box labels', () => {
         const doc = fakeDoc();
         const { ui, lcm } = build('seedling_playthrough', 'merged', { doc });
         const { report, boxes } = layout(lcm, 'twoStepBoxes');
-        expect(report.floors).toMatchObject({ numbered: 23, unreached: 20, conflicts: 4, conflictGroups: 2, floorRange: [-5, 1] });
-        const n = F.floorNumbers(ui.mapLook.regionMapModel().model);
-        expect(n.conflicts.map((c) => c.group)).toEqual(['level_5', 'level_5', 'level_7', 'level_7']);
+        expect(report.floors).toMatchObject({ numbered: 43, ranged: 0, unreached: 0, contradictions: 0, floorRange: [-5, 1], exact: true });
+        expect(report.floors.spans).toEqual({ pick: 7, min: 7, max: 8 });
         const byRoot = Object.fromEntries(boxes.map((b) => [b.root, b.label]));
         expect(byRoot.level_0).toBe('Ground floor · 1');
         expect(byRoot.level_2).toBe('Floor −1 · 2');
-        expect(byRoot.level_48).toBe('Floor ?');
+        expect(byRoot.level_48).toBe('Ground floor · 8'); // the BFS numbering's "Floor ?": entered by a doorway
         expect(boxes.length).toBe(11);
         // The DOM box keeps the root id.
         ui.dungeonBoxes = new DungeonBoxLayer(ui, { doc });
@@ -289,7 +264,8 @@ describe('⛓ 4. what does not change', () => {
         const { lcm, ui } = build('seedling_atlas', 'merged', { nodeLook: 'map' });
         for (const floorGap of [0, 160, 600]) expect(digest(layout(lcm, 'twoStep', { floorGap }).positions)).toBe('8761ce1d6ebe287a');
         const { boxes } = layout(lcm, 'twoStepBoxes');
-        expect(boxes.map((b) => [b.root, b.label])).toEqual([['dungeon1_room1', 'Floor ?']]);
+        // ⛓ region-graph-floor-solver: the doorway-entered box is now numbered by the solve (it read "Floor ?" under BFS).
+        expect(boxes.map((b) => [b.root, b.label])).toEqual([['dungeon1_room1', 'Ground floor · 2']]);
         ui.mapLook.dispose();
         for (const [preset, want] of [['alttp', '64fd43393961d213'], ['procgen_maze', 'f6866e94f5279b9e']]) {
             const b = build(preset, 'separate');
@@ -313,9 +289,9 @@ describe('⛓ 5. determinism', () => {
             // Other insertion orders of the model's links → the same numbering.
             const m = a.ui.mapLook.regionMapModel().model;
             const rev = { ...m, layout: { ...m.layout, graph: { ...m.layout.graph, links: [...m.layout.graph.links].reverse() } } };
-            const x = F.floorNumbers(m); const y = F.floorNumbers(rev);
+            const x = FS.solveFloors(m); const y = FS.solveFloors(rev);
             expect([...y.floorOf].sort()).toEqual([...x.floorOf].sort());
-            expect(y.conflicts.length).toBe(x.conflicts.length);
+            expect(y.contradictions.length).toBe(x.contradictions.length);
         }
         const src = readFileSync(join(HERE, 'floors.js'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
         expect(src).not.toMatch(/Math\.random|Date\.now|performance\.now|new Date/);

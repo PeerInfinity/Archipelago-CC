@@ -18,8 +18,9 @@ import {
   mixingCount, blockCheck, blockPad, groupingDrawsBoxes,
 } from './dungeonGroups.js';
 import {
-  FLOOR_GAP_KEY, FLOOR_GAP_SCHEMA, normaliseFloorGap, verticalExits, verticalEdges, floorNumbers, floorLabels,
+  FLOOR_GAP_KEY, FLOOR_GAP_SCHEMA, normaliseFloorGap, verticalExits, verticalEdges,
 } from './floors.js';
+import { solveFloors, floorLabels } from './floorSolver.js';
 
 const nowMs = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
 
@@ -515,8 +516,11 @@ export class LayoutControlsManager {
     const { exits, counts } = model && sidecars
       ? verticalExits({ sidecars, model, tileOf: exitTileOf })
       : { exits: [], counts: { vertical: 0, withDirection: 0, centre: 0, without: 0, inGroup: 0 } };
-    const numbering = model ? floorNumbers(model) : { start: null, floorOf: new Map(), order: new Map(), unreached: [], conflicts: [], conflictGroups: 0 };
-    return { exits, counts, vertical: verticalEdges(nodes, edges, exits), numbering, labels: floorLabels(numbering) };
+    // ⛓ region-graph-floor-solver: the numbering is the constraint solve over every link between groups.
+    const t0 = nowMs();
+    const numbering = model ? solveFloors(model) : solveFloors(null);
+    const solveMs = nowMs() - t0;
+    return { exits, counts, vertical: verticalEdges(nodes, edges, exits), numbering, labels: floorLabels(numbering), solveMs };
   }
 
   /**
@@ -1121,8 +1125,8 @@ export class LayoutControlsManager {
   }
 }
 /**
- * ⛓ region-graph-floors: the floors' measures for a report: the counts, the numbering (numbered / unreached /
- * conflicts), and, at `positions`, the angle error of the FLAT edges (with a preference, no vertical link; split into
+ * ⛓ region-graph-floors: the floors' measures for a report: the counts, the numbering (numbered / ranged / unreached /
+ * contradictions, the spans: region-graph-floor-solver), and, at `positions`, the angle error of the FLAT edges (with a preference, no vertical link; split into
  * those inside one dungeon and those between two — a warp) and of the VERTICAL ones (their vertical direction), with
  * the flat and vertical mean centre-to-centre lengths.
  */
@@ -1148,8 +1152,10 @@ function floorReport(floors, nodes, edges, prefs, positions, floorLinks) {
   const n = floors.numbering;
   return {
     floorLinks, counts: { ...floors.counts }, verticalEdges: vert.length, verticalEdgesWithDirection: vprefs.size,
-    numbered: n.floorOf.size, unreached: n.unreached.length, conflicts: n.conflicts.length, conflictGroups: n.conflictGroups,
+    // ⛓ region-graph-floor-solver: picked / ranged (a contradiction's groups) / unreached, the spans, the solve's cost.
+    numbered: n.floorOf.size, ranged: n.ranged.size, unreached: n.unreached.length, contradictions: n.contradictions.length,
     floorRange: n.floorOf.size ? [Math.min(...n.floorOf.values()), Math.max(...n.floorOf.values())] : null,
+    spans: { ...n.spans }, stretch: n.stretch, exact: n.exact, solveOps: n.ops, solveMs: floors.solveMs,
     flatError: { mean: fe.mean, p90: fe.p90, n: fe.n }, verticalError: { mean: ve.mean, p90: ve.p90, n: ve.n },
     flatInsideError: { mean: fin.mean, p90: fin.p90, n: fin.n }, flatBetweenError: { mean: fx.mean, p90: fx.p90, n: fx.n },
     meanFlatLength: len(flat), meanVerticalLength: len(vert),
