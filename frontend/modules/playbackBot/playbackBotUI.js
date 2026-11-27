@@ -1891,6 +1891,10 @@ export class PlaybackBotUI {
         // a console.warn and returned, the visualizer got no target, and the
         // bot waited for a transition that could never come: a SILENT STALL,
         // indistinguishable from slow progress. Make it terminal and named.
+        // The pace, BEFORE the target, to the controller that takes it (each region has its own): a controller
+        // whose walk is a request to its game (the mystery page's careful reader) must know it when the request
+        // goes out, and the clock commands (`instant`, `step`) only follow. Optional; no other controller has it.
+        this._dispatch('setInstant', [this._instantMode === true]);
         if (this._dispatch('walkTo', [target]) === false) {
             // ⛓ DIRECT PLAY — a plain region's controller (the Maze Room panel, mounted for another preset) has no
             // tile for it: the bot plays the region itself.

@@ -5,8 +5,8 @@
  * Both rows load the committed `mystery_street_test` world (the long case's office beside a maze
  * street) and let the bot play it to the end from the world's own sphere log; the second adds a
  * `loop_costs` block to the same document, so it is the same world in loop mode. The rows set
- * what they need and put it back. No Mystery Game panel is opened: the bot answers through the
- * host, not through the page.
+ * what they need and put it back. The bot drives the page: its walk opens the Mystery Game panel,
+ * and each question in the log is asked of the page's careful reader.
  */
 
 import { registerTest } from '../testRegistry.js';
@@ -15,6 +15,9 @@ import { getActivePanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
 import { generateLoopCosts } from '../../shared/procgen/loopCostGenerator.js';
+import settingsManager from '../../../app/core/settingsManager.js';
+import panelManager from '../../../app/core/panelManager.js';
+import { DEFAULT_PAGE_URL, PAGE_URL_SETTING } from '../../mysteryArchipelago/mysteryPage.js';
 import { arrangeShuffledSpiral, buildRulesJson } from '../../procgenPipeline/procgenPipelineEngine.js';
 import { mysteryPlacedConfigFromSource, substrateRegistryEntry as mysteryEntry } from '../../mysteryArchipelago/mysterySubstrateLibrary.js';
 
@@ -22,6 +25,46 @@ const CATEGORY = 'Playback Bot';
 const STREET_PRESET_PATH = './presets/mystery_street_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 const SUBSTRATE = 'mystery';
 const api = (mod, fn) => centralRegistry.getPublicFunction(mod, fn);
+const STAND_IN_PAGE = './modules/mysteryArchipelago/testPage/index.html';
+const panelIsOpen = () => !!document.querySelector('.mystery-panel-container');
+
+/**
+ * Run `body` with the module's page address set to `pageUrl` for the session, and put back what was there: the
+ * address, and the Mystery Game panel closed again if the run (the bot's own walk) opened it.
+ */
+async function withMysteryPage(testController, pageUrl, body) {
+    const panelWasOpen = panelIsOpen();
+    const pageBefore = await settingsManager.getSetting(PAGE_URL_SETTING);
+    await settingsManager.updateSetting(PAGE_URL_SETTING, pageUrl, { persist: false });
+    // What the host asked of the page and what the page said, read off the bus (the same for either page).
+    const seen = { asks: [], statuses: [] };
+    const handlers = { 'mystery:autoSolve': (d) => seen.asks.push(d), 'mystery:autoSolveStatus': (d) => seen.statuses.push(d) };
+    for (const [event, handler] of Object.entries(handlers)) testController.eventBus.subscribe(event, handler);
+    try {
+        return await body(seen);
+    } finally {
+        for (const [event, handler] of Object.entries(handlers)) testController.eventBus.unsubscribe?.(event, handler);
+        await settingsManager.updateSetting(PAGE_URL_SETTING, pageBefore, { persist: false });
+        if (!panelWasOpen && panelIsOpen()) await panelManager.destroyPanelByComponentType('mysteryPanel');
+    }
+}
+
+/** What the page was asked: every question in the log, each once, all in one burst or none; and it said done to each. */
+function reportAsked(testController, seen, sphereLocations, rulesJson, { instant }) {
+    testController.reportCondition('the bot\'s walk opened the Mystery Game panel', panelIsOpen());
+    const sidecar = Object.values(rulesJson.preset_sidecars['1']).find((sc) => sc?.substrate === SUBSTRATE);
+    const wanted = Object.entries(sidecar.playable_payload.ap_locations).filter(([, name]) => sphereLocations.includes(name)).map(([q]) => q).sort();
+    const asked = seen.asks.filter((a) => !a.stop);
+    testController.assertEqual('the page was asked for each question in the log, once', JSON.stringify(wanted), JSON.stringify(asked.map((a) => a.question).sort()));
+    testController.reportCondition(`every request ${instant ? 'asked for one burst' : 'left the pace to the page'}`,
+        asked.length > 0 && asked.every((a) => (a.instant === true) === instant));
+    testController.log(`ASKS ${JSON.stringify(seen.asks.map((x) => [x.question, x.instant ?? false, x.stop ?? false]))}`);
+    testController.log(`STATUSES ${JSON.stringify(seen.statuses.map((x) => [x.question, x.state, x.failed ?? x.waiting ?? null]))}`);
+    const done = seen.statuses.filter((st) => st.state === 'done').map((st) => st.question).sort();
+    testController.assertEqual('the page said done to each', JSON.stringify(wanted), JSON.stringify(done));
+    const bad = seen.statuses.filter((st) => ['failed', 'stopped', 'waiting'].includes(st.state));
+    testController.reportCondition(`the page never failed, stopped or waited (${JSON.stringify(bad.slice(0, 2))})`, bad.length === 0);
+}
 
 async function botOf(testController) {
     testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
@@ -66,7 +109,8 @@ function questionsOf(rulesJson) {
     return sidecars.flatMap((s) => Object.values(s.playable_payload?.ap_locations ?? {}));
 }
 
-export async function mysteryPlaybackBotPlaysTheCase(testController) {
+export const mysteryPlaybackBotPlaysTheCase = (testController) => withMysteryPage(testController, DEFAULT_PAGE_URL, (seen) => playsTheCase(testController, seen));
+async function playsTheCase(testController, seen) {
     const bot = await botOf(testController);
     if (!bot) return testController.getOverallResult();
     const rulesJson = await (await fetch(STREET_PRESET_PATH)).json();
@@ -78,8 +122,9 @@ export async function mysteryPlaybackBotPlaysTheCase(testController) {
     try {
         await bot.instant();
         const finished = await testController.pollForCondition(
-            () => (bot.getStatus() || '').startsWith('finished'), 'bot reaches finished status', 60000, 250);
+            () => (bot.getStatus() || '').startsWith('finished'), 'bot reaches finished status', 180000, 250);
         reportEnd(testController, bot, finished, sphereLocations, questions);
+        reportAsked(testController, seen, sphereLocations, rulesJson, { instant: true });
     } finally {
         bot.stop();
     }
@@ -96,7 +141,8 @@ registerTest({
     category: CATEGORY,
 });
 
-export async function mysteryPlaybackBotLoopMode(testController) {
+export const mysteryPlaybackBotLoopMode = (testController) => withMysteryPage(testController, DEFAULT_PAGE_URL, (seen) => loopMode(testController, seen));
+async function loopMode(testController, seen) {
     const loopModeOn = () => api('loops', 'isLoopModeActive')?.() === true;
     const bot = await botOf(testController);
     if (!bot) return testController.getOverallResult();
@@ -124,8 +170,10 @@ export async function mysteryPlaybackBotLoopMode(testController) {
     try {
         await bot.play();
         const finished = await testController.pollForCondition(
-            () => (bot.getStatus() || '').startsWith('finished'), 'bot finishes the world in loop mode', 120000, 500);
+            () => (bot.getStatus() || '').startsWith('finished'), 'bot finishes the world in loop mode', 240000, 500);
         reportEnd(testController, bot, finished, sphereLocations, questions);
+        // A Bot block's act is the controller's `perform`: one burst.
+        reportAsked(testController, seen, sphereLocations, rulesJson, { instant: true });
         testController.log(`loops run: ${bot.getLoopRunner?.()?.getLoopCount?.() ?? '?'}`);
     } finally {
         bot.stop();
@@ -152,7 +200,8 @@ const CASE_PRESET_PATH = './presets/mystery_custom_house_fire/AP_140891549382088
  * rooms and one office, built here from the committed case world, then played to the end by the bot.
  * The case's papers stand on its own questions, so the office needs nothing from the maze rooms.
  */
-export async function mysterySpiralOfficePlayed(testController) {
+export const mysterySpiralOfficePlayed = (testController) => withMysteryPage(testController, STAND_IN_PAGE, (seen) => spiralOfficePlayed(testController, seen));
+async function spiralOfficePlayed(testController, seen) {
     const bot = await botOf(testController);
     if (!bot) return testController.getOverallResult();
     const source = await (await fetch(CASE_PRESET_PATH)).json();
@@ -187,6 +236,7 @@ export async function mysterySpiralOfficePlayed(testController) {
         const finished = await testController.pollForCondition(
             () => (bot.getStatus() || '').startsWith('finished'), 'bot reaches finished status', 90000, 250);
         reportEnd(testController, bot, finished, sphereLocations, questions);
+        reportAsked(testController, seen, sphereLocations, rulesJson, { instant: true });
     } finally {
         bot.stop();
         mysteryEntry.applyPipelineConfig({});

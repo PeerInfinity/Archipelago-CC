@@ -87,11 +87,20 @@ A mystery world loaded as a preset plays with no Archipelago server. The host an
 
 ## The Playback Bot
 
-The entry's `getPlaybackController` returns the controller `mysteryPlaybackController.js` makes (installed by the module's `index.js`; null headless). It answers through the host and does not work the page: `walkTo({kind: 'location', name})` publishes `user:locationCheck` for a question's location, and `walkTo({kind: 'exit', name})` publishes `user:regionMove` to the exit's target. The check is not marked `reportedByGame`, so the client's logic gate applies: a question whose papers are not held is not checked. Each target lands in one step. What it cannot take it refuses by name in `lastRefusal` (`MYSTERY_WALK_REFUSALS`). The page learns a question is solved from the next `mystery:state`.
+⚖ Robert, 2026-11-27: the bot drives the page. The entry's `getPlaybackController` returns the controller `mysteryPlaybackController.js` makes (installed by the module's `index.js`; null headless).
+
+- **A question.** `walkTo({kind: 'location', name})` asks the page for its careful reader on that one question: `mystery:autoSolve {story, question, instant?}`. The page reads, links and answers on its own timeline and sends the solved question as it always does, and the bridge turns that into the check the bot waits for. The page's word comes back as `mystery:autoSolveStatus {story, question, state}` (`running`, `done`, `waiting`, `failed`, `stopped`).
+- **The pace.** The Playback Bot calls the controller's optional `setInstant(on)` before each `walkTo` (`playbackBotUI.js`). Instant asks for the question in one burst (`instant: true`); Play leaves the pace to the page. The bot's clock commands (`play`, `step`, `instant`) say nothing of the pace here.
+- **The page must be open.** A walk opens the Mystery Game panel when the page has not asked for a state, as Quick Launch would, and waits for it.
+- **`inOffice` while it drives.** While a request is open the controller's `walking()` names the region, and the bridge sends `inOffice: true` (`livePlay.botRegion`), so a lock or loop mode's park rule does not stop the reader the bot asked for.
+- **One request at a time.** The page sends a solved question before it says `done`, so the bot names its next target while the last request is closing. That target waits its turn and is asked at `done`.
+- **Never a silent wait.** A walk the page cannot do ends as `playback:walkFailed` with a named reason (`MYSTERY_WALK_FAILURES`): no page, no answer (asked twice), the page's `failed` or `stopped`, or a `waiting` that lasts `waitingMs`. A target it cannot take at all is refused in `lastRefusal` (`MYSTERY_WALK_REFUSALS`).
+- **An exit.** `walkTo({kind: 'exit', name})` publishes `user:regionMove` through the host; the page knows nothing of the world around the case.
+- **A loops Bot block** calls `perform`, which always asks for one burst.
 
 ## Loop mode
 
-The entry is a coarse substrate, like the text adventure: `loopSupport` offers `regionMove` and `locationCheck` as queue actions, each priced by `loop_costs` and run by the generic executor, with Manual, Record, Playback and Instant. `record` and `playback` arm the strict action gate, so a question is answered by hand only while the queue is parked on the office. A Bot block hands each move and check to the controller (`executeVia: 'solver'`; `botActsAtOnce`). The mystery page has no time rules of its own.
+The entry is a coarse substrate, like the text adventure: `loopSupport` offers `regionMove` and `locationCheck` as queue actions, each priced by `loop_costs` and run by the generic executor, with Manual, Record, Playback and Instant. `record` and `playback` arm the strict action gate, so a question is answered by hand only while the queue is parked on the office. A Bot block hands each move and check to the controller's `perform` (`executeVia: 'solver'`), which asks the page for the question in one burst. The mystery page has no time rules of its own.
 
 ## The test world
 

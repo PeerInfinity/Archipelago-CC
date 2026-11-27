@@ -41,6 +41,7 @@ function setup({ data = staticData(), snapshot = { inventory: {}, checkedLocatio
     getCaseRegions: () => env.caseRegions, getActiveRegionId: () => env.activeRegionId, getLivePlay: () => env.livePlay,
   });
   logic.initialize();
+  env.logic = logic;
   env.fire = (event, payload) => env.handlers.get(event)(payload);
   env.states = () => env.published.filter((p) => p.event === MYSTERY_EVENTS.STATE).map((p) => p.payload);
   env.refusals = () => env.published.filter((p) => p.event === MYSTERY_EVENTS.REFUSED).map((p) => p.payload.reason);
@@ -310,6 +311,26 @@ describe('a case that is a region of a generated world', () => {
     env.fire('gameState:loopModeChanged');
     expect(env.states().map((s) => s.inOffice)).toEqual([false, true]);
     expect(env.dispatched.map((d) => d.payload.locationName)).toEqual(['Question 02']);
+  });
+
+  it('while the bot has the page solve a question of the office, the page is in the office whatever the park', () => {
+    const env = inWorld();
+    env.activeRegionId = 'The case';
+    env.livePlay = { loopMode: true, region: null, botRegion: null };
+    env.fire(MYSTERY_EVENTS.REQUEST_STATE, request);
+    env.livePlay = { loopMode: true, region: null, botRegion: 'The case' };
+    env.logic.sendStateIfChanged();
+    env.fire(MYSTERY_EVENTS.QUESTION_SOLVED, { story: 'custom-house-fire', questionId: 'q.door' });
+    env.livePlay = { loopMode: true, region: null, botRegion: null };
+    env.logic.sendStateIfChanged();
+    expect(env.states().map((s) => s.inOffice)).toEqual([false, true, false]);
+    expect(env.dispatched.map((d) => d.payload.locationName)).toEqual(['Question 02']);
+    // Not in the region at all: the bot's walk elsewhere changes nothing.
+    env.activeRegionId = 'The street';
+    env.livePlay = { loopMode: false, region: null, botRegion: 'The case' };
+    env.logic.sendStateIfChanged();
+    expect(env.states().map((s) => s.inOffice)).toEqual([false, true, false]);
+    expect(env.logic.pageHasAsked()).toBe(true);
   });
 
   it('every live-play event is listened to', () => {

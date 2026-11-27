@@ -7,7 +7,7 @@
 <body>
 <!--
   A stand-in for the mystery clue game's page, for the in-app row `mystery-bridge-round-trip`.
-  It speaks the same four messages through AdapterClient and records what the host sends, so the
+  It speaks the same messages (the four of the bridge, and the careful reader's two) through AdapterClient and records what the host sends, so the
   test can read it off `window.__mysteryStub`. It is not the game: the real page lives in the
   repository mystery-clue-game. It is framed as the real page is, with `?case=cases/<story>` (the
   Mystery Game panel adds `iframeId` and `hostOrigin`); `story` and `version` may be given outright.
@@ -31,6 +31,27 @@ stub.solve = (questionId, over = {}) => client.publishEventBus('mystery:question
 await client.connect();
 client.subscribeEventBus('mystery:state', (state) => { stub.states.push(state); show('state ' + JSON.stringify(state)); });
 client.subscribeEventBus('mystery:refused', (refusal) => { stub.refusals.push(refusal); show('refused ' + JSON.stringify(refusal)); });
+// The careful reader, asked for one question (`mystery:autoSolve {story, question, instant?}`): this stand-in
+// answers `running`, sends the question solved and says `done`; under a lock away from the office it says
+// `stopped`, as the real page does. `stub.reader = 'silent' | 'failed' | 'waiting'` makes it misbehave by name.
+stub.autoSolves = [];
+stub.reader = 'solves';
+const status = (data) => client.publishEventBus('mystery:autoSolveStatus', { story, ...data });
+client.subscribeEventBus('mystery:autoSolve', (request) => {
+    if (request?.story != null && request.story !== story) return;
+    stub.autoSolves.push(request);
+    show('autoSolve ' + JSON.stringify(request));
+    if (request.stop || stub.reader === 'silent') return;
+    const question = request.question;
+    const last = stub.states[stub.states.length - 1];
+    const solved = last?.solved ?? [];
+    if (last?.lock && last.inOffice === false) { status({ question, state: 'stopped', locked: true, solved }); return; }
+    if (stub.reader === 'failed') { status({ question, state: 'failed', failed: 'the stand-in was told to fail', solved }); return; }
+    if (stub.reader === 'waiting') { status({ question, state: 'waiting', waiting: ['a paper'], solved }); return; }
+    status({ question, state: 'running', solved });
+    stub.solve(question);
+    status({ question, state: 'done', solved: [...new Set([...solved, question])] });
+});
 client.notifyAppReady();
 stub.request();
 stub.ready = true;

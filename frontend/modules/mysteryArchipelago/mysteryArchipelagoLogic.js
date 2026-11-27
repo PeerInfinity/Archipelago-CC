@@ -155,10 +155,13 @@ export function gameKeyOf(block, connection) {
 /**
  * Is the player in the case's region and able to play it by hand? `livePlay` is the Loops module's
  * word (`{loopMode, region}`: loop mode on, and the region the queue is parked on for live play, or
- * null); with loop mode off, or no Loops module, being in the region is enough.
+ * null) and the Playback Bot's (`botRegion`: the region whose question it is having the page solve);
+ * with loop mode off, or no Loops module, being in the region is enough.
  */
 export function inOfficeNow(block, activeRegionId, livePlay = null) {
   if (!block.regionId || activeRegionId !== block.regionId) return false;
+  // The bot is having the page solve a question of this region: the page plays it, whatever the park.
+  if (livePlay?.botRegion === block.regionId) return true;
   return !livePlay?.loopMode || livePlay.region === block.regionId;
 }
 
@@ -243,6 +246,11 @@ export class MysteryArchipelagoLogic {
     sub('procgen:activeSubstrateChanged', () => this.sendStateIfChanged());
     // Loop mode, or the queue's park, changed: so may `inOffice`.
     for (const event of LIVE_PLAY_EVENTS) sub(event, () => this.sendStateIfChanged());
+  }
+
+  /** Has the page asked for a state since this bridge started? Then a page is there to be driven. */
+  pageHasAsked() {
+    return this._pageAsked;
   }
 
   /** The case to answer about, for the story the page asked (or last asked). */

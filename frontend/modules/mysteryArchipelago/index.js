@@ -13,10 +13,13 @@ import {
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import eventBus from '../../app/core/eventBus.js';
-import { createMysteryPlaybackController } from './mysteryPlaybackController.js';
+import {
+  MYSTERY_AUTO_SOLVE_EVENT, MYSTERY_AUTO_SOLVE_STATUS_EVENT, createMysteryPlaybackController,
+} from './mysteryPlaybackController.js';
+import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
 import { MysteryPanelUI } from './mysteryPanelUI.js';
 import { DEFAULT_PAGE_URL } from './mysteryPage.js';
-import { MYSTERY_SUBSTRATE_ID, setPlaybackController, substrateRegistryEntry } from './mysterySubstrateLibrary.js';
+import { MYSTERY_PANEL_COMPONENT_TYPE, MYSTERY_SUBSTRATE_ID, setPlaybackController, substrateRegistryEntry } from './mysterySubstrateLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 // --- Module Info ---
@@ -44,6 +47,7 @@ function log(level, message, ...data) {
 }
 
 let logicInstance = null;
+let playbackController = null;
 let moduleEventBus = null;
 
 /** The module's event bus, for its panel. Before initialize, the core bus under this module's name. */
@@ -84,7 +88,22 @@ export function livePlayNow() {
   return {
     loopMode: centralRegistry.getPublicFunction?.('loops', 'isLoopModeActive')?.() === true,
     region: centralRegistry.getPublicFunction?.('loops', 'livePlayRegion')?.() ?? null,
+    // The region whose question the Playback Bot is having the page solve (mysteryPlaybackController.js).
+    botRegion: playbackController?.walking() ?? null,
   };
+}
+
+/**
+ * Bring the Mystery Game panel up, as Quick Launch does (`quickLaunchUI.js`): on the desktop layout
+ * `enableModule` adds the tab of a module that is already on; the mobile layout shows a panel on
+ * `ui:activatePanel`.
+ */
+function openMysteryPanel() {
+  if (typeof window !== 'undefined' && window.goldenLayoutInstance && window.moduleManagerApi?.enableModule) {
+    window.moduleManagerApi.enableModule(moduleId);
+    return;
+  }
+  moduleEventBus?.publish('ui:activatePanel', { panelId: MYSTERY_PANEL_COMPONENT_TYPE });
 }
 
 export async function register(registrationApi) {
@@ -107,6 +126,12 @@ export async function register(registrationApi) {
 
   registrationApi.registerEventBusPublisher(MYSTERY_EVENTS.STATE);
   registrationApi.registerEventBusPublisher(MYSTERY_EVENTS.REFUSED);
+  // The Playback Bot's controller: it asks the page for its careful reader, hears the page's word on it, opens the
+  // panel when no page is there, and names a walk the page could not do.
+  registrationApi.registerEventBusPublisher(MYSTERY_AUTO_SOLVE_EVENT);
+  registrationApi.registerEventBusPublisher('ui:activatePanel');
+  registrationApi.registerEventBusPublisher(PLAYBACK_WALK_FAILED_EVENT);
+  registrationApi.registerEventBusSubscriberIntent(moduleId, MYSTERY_AUTO_SOLVE_STATUS_EVENT);
 
   registrationApi.registerEventBusSubscriberIntent(moduleId, MYSTERY_EVENTS.QUESTION_SOLVED);
   registrationApi.registerEventBusSubscriberIntent(moduleId, MYSTERY_EVENTS.REQUEST_STATE);
@@ -135,11 +160,18 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     log,
   });
   logicInstance.initialize();
-  setPlaybackController(createMysteryPlaybackController({
+  playbackController = createMysteryPlaybackController({
     dispatcher: initializationApi.getDispatcher(),
+    eventBus: moduleEventBus,
     getCaseRegions: caseRegionsNow,
     getActiveRegionId: activeRegionIdNow,
+    pageHasAsked: () => logicInstance.pageHasAsked(),
+    openPanel: openMysteryPanel,
+    // `inOffice` follows a walk in flight: the page hears it before the request, and again when it ends.
+    onWalkingChanged: () => logicInstance.sendStateIfChanged(),
+    substrateId: MYSTERY_SUBSTRATE_ID,
     sourceModule: SOURCE_MODULE,
-  }));
+  });
+  setPlaybackController(playbackController);
   log('info', 'Bridge initialized.');
 }

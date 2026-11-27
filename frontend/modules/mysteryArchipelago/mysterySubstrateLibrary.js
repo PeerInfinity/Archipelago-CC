@@ -396,8 +396,8 @@ export const substrateRegistryEntry = Object.freeze({
     regionGeometry: REGION_GEOMETRY.SIDES,
     exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
 
-    // The Bot answers through the host (`mysteryPlaybackController.js`): a question's location is checked under
-    // the client's logic gate, an exit is taken; it does not work the page.
+    // The Bot drives the page (`mysteryPlaybackController.js`, ⚖ Robert 2026-11-27): a question's location asks
+    // the page's careful reader for that question, in one burst under Instant; an exit is taken through the host.
     getPlaybackController: () => _playbackController,
 
     // Loop mode: a COARSE substrate (no recorder, no summary). Its queue entries are the recording: a move, and a
@@ -410,7 +410,8 @@ export const substrateRegistryEntry = Object.freeze({
         record: true,
         playback: true,
         instant: true,
-        // A Bot block hands each queued move and check to the controller, which lands it in one step.
+        // A Bot block hands each queued move and check to the controller's `perform`, which asks the page for the
+        // question in one burst (a block is paid for in mana, not time), so the Bot has nothing for Instant to skip.
         executeVia: 'solver',
         botActsAtOnce: true,
     }),
