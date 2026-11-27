@@ -30,7 +30,7 @@ The evidence is in `CC/docs/cloud-reports/seedling-fidelity-deadframe2-evidence/
   - `tape-deadframe2.mjs` (wave 66's, re-keyed) and `tape-dump.mjs` (per-field hashes across two source states): every tape;
   - `probe2-scratch.py` and `probe2.mjs`: the ON branch's runtime counters (copy + restore);
   - `mutants.py`, `gateset.sh`: the mutants and the bounded vitest set.
-- `d1/`: `census2-off.{json,txt}`, `clock149-{tapes,vitest}.txt`, `acceptance-md5-clock149.txt`.
+- `d1/`: `census2-off.{json,txt}`, `census2-acceptance.txt`, `clock149-{tapes,vitest}.txt`, `acceptance-md5-clock149.txt`.
 - `d2/`: `witness-all.json` (the seven shapes), `witness-shaft-control.json` (`r5-shaft-control` on the vanilla set, every
   ledger write timed), and `witness-shaft{,-control}.txt`.
 - `d3/`: `tape-*.json`, `acceptance-md5.txt`, `probe-*.txt`, `mutants.{json,txt}`, `gate-{before,after}.txt`, `sweep.txt`.
@@ -64,6 +64,10 @@ At every live tick's end it counts the enemy-on-presser and **block-on-FallRock-
 - **Overlaps (live ticks):** spinner on a Button 305 and on a ButtonRoom 101 (wave 65's presses, unchanged). **A block on a
   FallRock's Button: 0.** An enemy on one: 0.
 - **Lumps (placed pickups):** 49 texted and 14 text-less.
+- **The acceptance batch, in-process (`d1/census2-acceptance.txt`, measured in a scratch worktree at the head with the
+  keys OFF):** 300 pickup lumps (45,000 frames; 289 texted, 11 text-less), 14 in a room with responders, **0 that a
+  responder would change**, no room with a Pulser and 0 overlaps. Its md5 with the hooks live is the standing
+  `391322d681b7aa0229d94b3f6906d024`.
 - **What this says:**
   - The responder gaps (other dead frames, block press) are **0 on the corpus**, so they needed staged witnesses.
   - **The Pulser gap is not 0:** 8 spans on 7 tapes run an active Pulser through dead frames. They are L38's
@@ -322,8 +326,8 @@ keys. The movers are exactly the 7, and only in those two ledgers.
 All three keys ON (`SEEDLING_FREEZE_FRAMES_STEP_RESPONDERS=1 SEEDLING_PULSER_DEAD_FRAME_UPDATE=1
 SEEDLING_BLOCK_PRESSES_FALL_ROCK_BUTTON_SAME_FRAME=1`) over every seedlingDemo and `scripts/procgen` test file that names
 the brief's families: **590 files** (`d3/sweep.txt`).
-- **556 fast-tier files**, in 19 batches of 30 (`--maxWorkers=3`): HEAVY-FAST.
-- **34 `.slow.`/`.train.` files**, one at a time under their own configs: HEAVY-RESULT.
+- **556 fast-tier files**, in 19 batches of 30 (`--maxWorkers=3`): **12,694 passed, 10 failed**, 2 skipped. The 10 are the rows classified below; 2 are this slice's own, fixed at `c9938215` and green in both env states.
+- **34 `.slow.`/`.train.` files**, under their own configs (one per process; the last 18 as two claiming streams): **127 passed, 0 failed**. These include every `hammer*.train` file that names the families, `fidelityDeadFrame{,2}.slow`, `fidelityL40Latch.train`, `fidelityCorpseBump2.train` and `fidelityWandEnemyBodies.slow`.
 
 **The ON movers, by file:row and class:**
 - **OFF-contract, `pulserDeadFrameUpdate` (model goldens and a staging window that a flip would re-record), 4 rows:**
@@ -366,7 +370,11 @@ All at the head with the three keys OFF.
     re-run after symlinking the worktree's `vendor/seedling`; its first failure was the missing submodule;
   - after, at the head: 63 files, **1932 passed, 0 failed** (the base's 62 plus `fidelityDeadFrame2.test.js`).
 - **The slow row** `fidelityDeadFrame2.slow.test.js`: 2 passed (76 s).
-- CI-PLACEHOLDER
+- **CI at the last code head:** `c9938215` (`ci-vitest-summary.mjs`, run 45923612266, success): suite: vitest
+  (unfiltered), 1449 files, **30518 passed, 0 failed**; slow battery 43 files, **471 passed**. The commits after it are
+  evidence and this report only.
+- **The train tier is NOT run in CI at this head.** For the planner: `gh workflow run unittests_frontend.yml -R
+  PeerInfinity/Archipelago-CC --ref claude/seedling-deadframes-wave-66-pbki40 -f train_only=true`. I can't dispatch.
 - **The six solve `--check`s exit 0:** r8-battery, r8-d2-chain, r8-l18, r8-tail, r9-l3 and r9-campaign.
 - **Checks that pass:**
   - `check-procgen-docs`: ALL CHECKS PASSED;
@@ -376,7 +384,8 @@ All at the head with the three keys OFF.
     row; the rest are line moves;
   - **`census-seedling-solver-surface --check`:** re-derived with `--write`, 374 rows. The run's `properties` go 259 → 261
     and `getter` 225 → 227: the two new read-only ledgers, `deadPulserFrames` and `blockRockPresses`.
-- PRODUCER-PLACEHOLDER
+- **`ci-producer-checks --jobs=3`** (`d3/producer-checks.txt`): 99 run, **0 red**, 1 skipped (`plan-seedling-r7-ends-meet`,
+  a browser arm of CI's `browser-gates`), 0 known-red. The tree was clean after it.
 - **Not run, by the brief:** `pytest`, the unfiltered local vitest (⚖ 52) and `standing-values --write`.
 
 ## What the brief got wrong (measured)

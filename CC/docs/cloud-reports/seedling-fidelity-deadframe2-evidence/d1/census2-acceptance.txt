@@ -1,0 +1,2 @@
+DEADFRAME2-CENSUS {"spans":{"pickup-lump":{"spans":300,"frames":45000,"withResponders":14,"changedFrames":0,"flips":0,"spansChanged":0,"withPulsers":0,"withActivePulser":0,"spansPulserChanged":0,"pulserHitFrames":0,"pulserReachFrames":0,"spansPulserReach":0,"reached":[]}},"overlaps":{},"lumps":{"texted":289,"textless":11}}
+stdout md5 with the hooks live: 391322d681b7aa0229d94b3f6906d024
