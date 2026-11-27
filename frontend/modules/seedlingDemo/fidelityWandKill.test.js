@@ -78,7 +78,8 @@ describe('fidelity WANDKILL — the key', () => {
     it('ships OFF, is the last key, and its env name is in the solver\'s table (sorted, unique)', () => {
         expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
         expect(CONTACT_FIDELITY_KEYS.at(-1)).toBe(KEY);
-        expect(CONTACT_FIDELITY_KEYS.at(-2)).toBe(BODIES);
+        // ⛓ stacked after wave 69 (DEADFRAME2) and wave 70 (WANDSWINGDRILL), which follow BODIES.
+        expect(CONTACT_FIDELITY_KEYS.slice(CONTACT_FIDELITY_KEYS.indexOf(BODIES) + 1)).toEqual(['freezeFramesStepResponders', 'pulserDeadFrameUpdate', 'blockPressesFallRockButtonSameFrame', 'itemPressHeldBySlash', 'drillSightLineGame', KEY]);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_WAND_SHOT_KILL');
         expect([...SOLVER_ENV_NAMES].sort()).toEqual([...SOLVER_ENV_NAMES]);
         expect(new Set(SOLVER_ENV_NAMES).size).toBe(SOLVER_ENV_NAMES.length);
