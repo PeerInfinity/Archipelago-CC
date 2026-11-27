@@ -75,11 +75,13 @@ function mobileUpdate(g, solidAt) {
  * grenade reads it. Returns `'blast'` on the update whose `"explode"` callback
  * fires (the caller tests `blastReaches`), `'removed'` on the last, else null.
  */
-export function stepPlacedGrenade(g, px, py, { solidAt = null } = {}) {
+export function stepPlacedGrenade(g, px, py, { solidAt = null, onCollidable = null } = {}) {
     if (g.removed) return null;
     g.updates += 1;
     const near = pointDistance(g.x, g.endY, px, py) <= PLACED_GRENADE.fallTriggerDistance;
     if (g.y >= g.endY) {
+        // `collidable = true` (`Grenade.as:78`); reported only to a caller that asks (fidelity WANDTRAPBODIES).
+        if (onCollidable) onCollidable(true);
         if (g.vy > 0) {
             g.vy = -g.vy + 1;
         } else {
@@ -102,6 +104,7 @@ export function stepPlacedGrenade(g, px, py, { solidAt = null } = {}) {
         // `collidable = false` first — and `Entity.collide` returns null for a
         // non-collidable entity (`net/flashpunk/Entity.as:149`), so the FALL
         // passes through walls (L59's and L63's grenades spawn inside one).
+        if (onCollidable) onCollidable(false);
         g.vy += PLACED_GRENADE.g;
         mobileUpdate(g, null);
     }

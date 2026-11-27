@@ -2585,6 +2585,40 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no flip licence).
      */
     enemyPressesFallRockButton: false,
+    /**
+     * ⛓ fidelity WANDTRAPBODIES (wave 67) — A WAND SHOT STOPS ON A LIVE DARKTRAP OR A COLLIDABLE PLACED GRENADE, AND A
+     * ROOM HOLDING ONE MAY FIRE (re-measure-10's entry-37 wall: L63, `level_63__r6c9 -> level_65__r0c8`).
+     * The game. `WandShot.solids` holds "Enemy" (`WandShot.as:69`); a `DarkTrap` (`SandTrap.as:35` `setHitbox(16,16,8,8)`)
+     * and a `Grenade` (`Grenade.as:43-44` `setHitbox(6,6,3,3)`, `type = "Enemy"`) are both, and both `hit`s are EMPTY
+     * overrides (`DarkTrap.as:56-58`, `Grenade.as:70-71`): the shot stops, plays "die", and the body is untouched.
+     * `Entity.collide` skips a body whose `collidable` is false (`net/flashpunk/Entity.as:162`): a grenade writes `false`
+     * on every falling update and `true` on every resting one (`Grenade.as:78,109`) and is collidable from its ctor
+     * (the `Entity` default) while dormant; a darktrap never writes it and is a body until `DarkTrap.endAnim`'s removal
+     * (the counter and "die1" included). The shot updates first (run-time added, `World.addUpdate` prepends), so it reads
+     * both as the previous tick left them. `WandShot` adds no `Light` (no darktrap death of its own). MEASURED on the game
+     * (p4g, the delivered vanilla set, a fresh page per shape; `fixtures/wandtrapbodies-witness/`, recorded by
+     * `probe-seedling-wandtrapbodies.mjs`): L63, facing E at `darktrap@64,96`, the shot stops at (63, 112) on tick 17 and
+     * the trap lives on (`a-live`); with `{63,1}` lit it still stops on 17 (counter) and 47 ("die1"), and on 73, the
+     * removal tick; on 74 it flies on to the wall at x 79 (`b-*`). L75's DORMANT `grenade@72,168` stops it at (76, 128)
+     * on 16 (`c-dormant`); L63's `grenade@128,128` lets it through while falling (tick 30) and bouncing (71) — both die
+     * on the wall at x 159 — and stops it at (132, 136) resting (99), in "explode" (139), in "hit" (159) and on its
+     * removal tick (163); on 164 it flies through (`d-*`). The shot the captured entry-37 search fires (from the
+     * request's boot (16,96), facing E) stops on `darktrap@64,96` at (63, 104) on tick 20 (`e-route`). The model ON is the
+     * game at every sampled tick, 0 px.
+     * ON (`levelRun.assertWandShotSolidsBound`, `wandShotBlockerAt`, `applyWandShotToBoss`): the darktraps and placed
+     * grenades the run STEPS (`wandTrapBodyIdsFor`) count as placed; their live boxes (`darkTrapStateFor`'s rect until
+     * `removed`; a grenade's 6 x 6 at its live point while not removed and not `collidable === false`, the flag
+     * `stepPlacedGrenade`'s `onCollidable` writes) join the shot's "Enemy" arm, read FIRST so a box that also overlaps a
+     * totem, spinner or chaser refuses by name; a hit is a stop with no state change (`spentWithoutDamage`). Under
+     * `noclip || noDamage`, and for a darktrap with `darkTrapLight` OFF, no body is stepped: the room still refuses (the
+     * chasers' gate). A darktrap within a grenade's blast light (`Grenade.animEnd`'s `Light`, radiusMin 20) refuses by
+     * name (none on the extract). OFF: nothing read, byte-identical. Not modelled, named (residue — still refused): Drill
+     * (L28, L88, L91), IceTrap (L45, L46, L53, L54), LavaTrap (L77, L78, L80, L108), SandTrap (L6, L8, L16, L36), Turret
+     * (L29, L59, L62, L65), WallFlyer (L22, L25, L27).
+     * Needs `darkTrapLight` for the darktraps; composes with every key. `SEEDLING_WAND_SHOT_TRAP_BODIES=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    wandShotTrapBodies: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -3047,6 +3081,9 @@ if (globalThis.process?.env?.SEEDLING_DEAD_FRAME_RESPONDER_STEP === '1') CONTACT
 if (globalThis.process?.env?.SEEDLING_DEAD_FRAME_RESPONDER_STEP === '0') CONTACT_FIDELITY.deadFrameResponderStep = false;
 if (globalThis.process?.env?.SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON === '1') CONTACT_FIDELITY.enemyPressesFallRockButton = true;
 if (globalThis.process?.env?.SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON === '0') CONTACT_FIDELITY.enemyPressesFallRockButton = false;
+// ⛓ fidelity WANDTRAPBODIES: `SEEDLING_WAND_SHOT_TRAP_BODIES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WAND_SHOT_TRAP_BODIES === '1') CONTACT_FIDELITY.wandShotTrapBodies = true;
+if (globalThis.process?.env?.SEEDLING_WAND_SHOT_TRAP_BODIES === '0') CONTACT_FIDELITY.wandShotTrapBodies = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
