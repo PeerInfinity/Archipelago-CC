@@ -27754,6 +27754,48 @@ export const PRESS_KILL_DONE_ON_WALK = {
 };
 export const PRESS_KILL_DONE_ON_WALK_DEFAULT = true;
 
+/**
+ * ⛓ seedling-hammer-entry37-wall (⚖ the user, 2026-11-26: *"Entry-37 wall (Recommended)"*) — **THE AXE TIMING RUNG
+ * TAKES THE SWORD OUT OF THE BAG.** AXETIMING's dash-chain crossing (`axeTimingCrossing`) is gated on the sword being
+ * in the `primary` slot. A run that HOLDS the sword (or the ghost sword) with another weapon selected — the wand, at
+ * whole-game entry 37's L63 → L65 exit — was refused with "the `primary` slot fires `wand`", although the game lets the
+ * player select the sword at any observation (`Main.primary`, the tape's `equips`, `run.equipNow`) and a stall alone
+ * cannot clear the blade (MEASURED on request 37:8: 1247 previews, none clean, at any budget).
+ *
+ * ON: the rung forks the segment (`solveSegment`'s `fork`), selects the sword's slot on the fork, and asks its whole
+ * search there (the same stalls, chain phases, bounds and certificate). A certified crossing is driven on the live run
+ * with the same selection made first (`equip`, so the tape carries it) and the prior slot selected again after the
+ * crossing's last tick; the drive's own `playerHits` check is unchanged (a hit refuses by name). No certificate → the
+ * rung's refusal is the same "fires `wand`" one plus the fork's count. No sword slot, no fork, an equip already on
+ * this tick → not asked. OFF (the default): never asked, byte-identical. `SEEDLING_AXE_TIMING_SWORD_SWAP=1` for a node
+ * measurement or the page (`?seedlingSolverEnv=`, the worker thread); `withAxeTimingSwordSwap` for a test.
+ */
+export const AXE_TIMING_SWORD_SWAP = {
+    enabled: globalThis.process?.env?.SEEDLING_AXE_TIMING_SWORD_SWAP === '1',
+};
+/** The rung's swap asks, for a measurement: `{asked, certified, refused, landings}` (nothing reads them). `landings`:
+ * the last 64 crossings a fork drove, `{t, n, whole, at, hit, gate}` (the landing; the gate's first source, or null). */
+export const AXE_TIMING_SWORD_SWAP_COUNTS = { asked: 0, certified: 0, refused: 0, landings: [] };
+
+/** Run `fn` with `AXE_TIMING_SWORD_SWAP` set to `enabled`, restoring the previous value (also on a throw). */
+export function withAxeTimingSwordSwap(enabled, fn) {
+    return withSwitch(AXE_TIMING_SWORD_SWAP, enabled, fn);
+}
+
+/**
+ * The slot the AXETIMING rung would select for its dash chain, or null: the run holds a sword (or the ghost sword) in
+ * `inventorySlots` and `primary` fires something else. Pure (reads `progress` only).
+ */
+export function axeTimingSwordSlot(run) {
+    const inv = run.progress('inventory');
+    if (!(inv?.hasSword || inv?.hasGhostSword)) return null;
+    if (['sword', 'ghostsword'].includes(run.progress('primaryWeapon'))) return null;
+    const slots = run.progress('inventorySlots') ?? [];
+    const want = inv.hasGhostSword ? INVENTORY_ITEM_IDS.ghostsword : INVENTORY_ITEM_IDS.sword;
+    const slot = slots.indexOf(want);
+    return slot >= 0 ? slot : null;
+}
+
 /** Run `fn` with `PRESS_KILL_DONE_ON_WALK` set to `enabled`, restoring the previous value (also on a throw). */
 export function withPressKillDoneOnWalk(enabled, fn) {
     return withSwitch(PRESS_KILL_DONE_ON_WALK, enabled, fn);
@@ -32073,16 +32115,34 @@ function solveSegmentUnder({
                 if (dashMode === 'none') return out('this pass may not dash (`dashMode: none`), and the gap is a dash\'s');
                 const inv = run.progress('inventory');
                 const weapon = run.progress('primaryWeapon');
+                // ⛓ AXE_TIMING_SWORD_SWAP (OFF: `pr` is `run`, `swap` null — the rung exactly as before): the search
+                // runs on a fork with the held sword selected, and a certified crossing selects it live first.
+                let pr = run;
+                let swap = null;
                 if (!(inv?.hasSword || inv?.hasGhostSword) || !['sword', 'ghostsword'].includes(weapon)) {
-                    return out(`the \`primary\` slot ${weapon === null ? 'holds nothing' : `fires \`${weapon}\``}, and the `
-                        + 'crossing is a sword dash chain');
+                    const wrong = `the \`primary\` slot ${weapon === null ? 'holds nothing' : `fires \`${weapon}\``}, and the `
+                        + 'crossing is a sword dash chain';
+                    const slot = AXE_TIMING_SWORD_SWAP.enabled && fork !== null ? axeTimingSwordSlot(run) : null;
+                    if (slot === null) return out(wrong);
+                    const f = fork();
+                    if (!f || f.ticksCompleted !== run.ticksCompleted) return out(`${wrong} (the sword swap's fork did not reach t${run.ticksCompleted})`);
+                    try {
+                        f.equipNow(slot);
+                    } catch (err) {
+                        return out(`${wrong} (the sword swap cannot select slot ${slot} here: ${String(err?.message ?? err).slice(0, 120)})`);
+                    }
+                    AXE_TIMING_SWORD_SWAP_COUNTS.asked += 1;
+                    pr = f;
+                    swap = { slot, prior: run.progress('primary'), wrong };
                 }
+                const swapBase = swap === null ? null : previewWalkOrDeath(pr, corridor, tolerance, axisAligned
+                    ? { strike: axisStrikeFor(pr, dashMode), axisAligned } : { strike: strikePolicyFor(pr, { dashMode }) });
                 const pattern = inv?.hasGhostSword ? GHOST_DASH_CHAIN_PATTERN : DASH_CHAIN_PATTERN;
                 const period = Math.max(...hitAxes.map((a) => a.period));
                 const t0 = run.ticksCompleted;
                 const inReach = (sm) => hitAxes.some((a) => axeCanReach(a, playerBoxAt(sm.x, sm.y)));
                 const hitAt = Math.max(0, hit.tick - t0 - 1);
-                const base = timingBase();
+                const base = swapBase ?? timingBase();
                 // ⛓ PDS: the corridor's own walk DIED in its preview, so there is no doorstep to cross from
                 if (base.truncated?.kind === 'death') return out(base.truncated.why);
                 let door = Math.min(hitAt, base.samples.length - 1);
@@ -32121,7 +32181,7 @@ function solveSegmentUnder({
                     };
                 };
                 const optsFor = (stall, o, clean) => ({
-                    strike: strikePolicyFor(run, { dashPlan: scheduleAt(t0 + door + (stall?.ticks ?? 0), o), dashMode }),
+                    strike: strikePolicyFor(pr, { dashPlan: scheduleAt(t0 + door + (stall?.ticks ?? 0), o), dashMode }),
                     ...(stall ? { stall } : {}), stopWhen: stopFor(clean),
                 });
                 let previews = 0;
@@ -32132,16 +32192,83 @@ function solveSegmentUnder({
                     previews += 1;
                     return true;
                 };
+                /**
+                 * ⛓ AXE_TIMING_SWORD_SWAP — the swap's crossing is DRIVEN on a fresh fork exactly as the live drive will
+                 * drive it (the sword selected, the samples, the prior slot back), and admitted only when the fork takes
+                 * no hit and its landing passes the next walk's own gate (`dangerNow`, timed as the walk's gate is): a
+                 * crossing that parks the player in a chaser's volume is no crossing (MEASURED, 37:8: stall 0, phase 16
+                 * lands at (169.9,104.2) beside `jellyfish@160,64`, and the re-plan's gate refuses it).
+                 */
+                const swapLanding = (walk, from = null) => {
+                    if (!ask()) return null;
+                    const f2 = fork();
+                    if (!f2 || f2.ticksCompleted !== run.ticksCompleted) return null;
+                    const h0 = f2.ledger('playerHits').length;
+                    const upto = walk.truncated && walk.truncated.kind !== 'crossed' ? walk.samples.length - 1 : walk.samples.length;
+                    // the landings asked: the walk's own end, or (`from`) every tick from there to the walk's end
+                    const first = from === null ? upto : Math.max(1, Math.min(from, upto));
+                    const row = (n, gate, hit = 0) => {
+                        if (AXE_TIMING_SWORD_SWAP_COUNTS.landings.length >= 64) AXE_TIMING_SWORD_SWAP_COUNTS.landings.shift();
+                        AXE_TIMING_SWORD_SWAP_COUNTS.landings.push({ t: f2.ticksCompleted, n, whole: from !== null,
+                            at: [Math.round(f2.state.x * 10) / 10, Math.round(f2.state.y * 10) / 10], hit, gate });
+                    };
+                    try {
+                        f2.equipNow(swap.slot);
+                        const t0f = f2.ticksCompleted;
+                        let gate = null;
+                        for (let n = 1; n <= upto; n += 1) {
+                            const crossed = f2.advance(new Set(walk.samples[n - 1].held)).transition;
+                            const hits = f2.ledger('playerHits').length - h0;
+                            if (hits > 0) { row(n, null, hits); return null; }
+                            if (crossed) { row(n, null); return n; }
+                            if (n < first) continue;
+                            // the gate the next walk opens with, on the slot the walk had (selected back after the tick)
+                            const back = f2.ticksCompleted > t0f && f2.progress('primary') !== swap.prior;
+                            const g = dangerNow(f2, f2.state.x, f2.state.y, dangerExcept, { timedSword: true, timedAxe: true });
+                            if (!g.danger) {
+                                row(n, null);
+                                if (back) f2.equipNow(swap.prior);
+                                return n;
+                            }
+                            gate = g.sources[0]?.id ?? '?';
+                        }
+                        row(upto, gate);
+                    } catch {
+                        return null;
+                    }
+                    return null;
+                };
                 const certified = (s, o) => {
                     if (!ask()) return null;
                     const stall = s > 0 ? { at: door, ticks: s } : null;
-                    const walk = previewWalkOrDeath(run, corridor, tolerance, optsFor(stall, o, true));
+                    const walk = previewWalkOrDeath(pr, corridor, tolerance, optsFor(stall, o, true));
                     if (walk.samples.length < door + s + 1) return null;
                     const last = walk.samples.at(-1);
                     const crossed = walk.truncated?.kind === 'stopped' ? leftFor(last) && walk.samples.some(inReach)
                         : !walk.truncated;
                     if (!crossed) return null;
                     if (probeSamples(walk.samples, dangerExcept)) return null;
+                    let land = null;
+                    if (swap && (land = swapLanding(walk)) === null) {
+                        /**
+                         * ⛓ AXE_TIMING_SWORD_SWAP — a landing the next gate refuses: the SAME candidate (stall, chain
+                         * phase) walked on along the corridor, stopped only at a danger and certified by the same probe,
+                         * and landed at the FIRST later tick whose gate is clean on a fork driven the same way. The
+                         * corridor is the walk's own; nothing new is planned, and the walk re-plans from there.
+                         */
+                        const whole = previewWalkOrDeath(pr, corridor, tolerance, { ...optsFor(stall, o, true),
+                            stopWhen: (sm) => probeSamples([sm], dangerExcept) !== null });
+                        if (!ask()) return null;
+                        if (whole.truncated?.kind === 'death') return null;
+                        const lastClean = whole.truncated?.kind === 'stopped' ? whole.samples.length - 1 : whole.samples.length;
+                        const clean = { ...whole, samples: whole.samples.slice(0, lastClean), truncated: whole.truncated?.kind === 'crossed' ? whole.truncated : null };
+                        if (probeSamples(clean.samples, dangerExcept)) return null;
+                        const n = swapLanding(clean, walk.samples.length);
+                        if (n === null) return null;
+                        return { stall: s, offset: o, walk: clean, door, upto: n, whole: true,
+                            swap: { slot: swap.slot, prior: swap.prior } };
+                    }
+                    if (swap) return { stall: s, offset: o, walk, door, upto: land, swap: { slot: swap.slot, prior: swap.prior } };
                     return { stall: s, offset: o, walk, door };
                 };
                 const offsets = [];
@@ -32163,7 +32290,7 @@ function solveSegmentUnder({
                 for (const o of offsets) {
                     if (stalls <= rest + 1) break;
                     if (!ask()) break;
-                    const sm = previewWalkOrDeath(run, corridor, tolerance, optsFor({ at: door, ticks: rest }, o, false)).samples;
+                    const sm = previewWalkOrDeath(pr, corridor, tolerance, optsFor({ at: door, ticks: rest }, o, false)).samples;
                     const still = sm.length > door + rest && sm[door + rest - 1].x === sm[door + rest - 2]?.x
                         && sm[door + rest - 1].y === sm[door + rest - 2]?.y;
                     screens.set(o, still ? sm : false);
@@ -32190,7 +32317,9 @@ function solveSegmentUnder({
                         }
                     }
                 }
-                return out(`no stall of 0..${stalls - 1} at the doorstep (sample ${door}) × ${offsets.length} phase(s) `
+                if (swap) AXE_TIMING_SWORD_SWAP_COUNTS.refused += 1;
+                return out(`${swap ? `${swap.wrong}; with the sword's slot ${swap.slot} selected on a fork (AXE_TIMING_SWORD_SWAP), ` : ''}`
+                    + `no stall of 0..${stalls - 1} at the doorstep (sample ${door}) × ${offsets.length} phase(s) `
                     + `of the dash chain [${pattern.join(',')}] every ${ORDINARY_SWING_PERIOD} t crosses `
                     + `${hit.sources.map((s) => s.id).join(', ')}'s reach clean`, { previews });
             };
@@ -32203,7 +32332,11 @@ function solveSegmentUnder({
                     + 'a walk that keeps meeting one is not converging';
             } else {
                 // ⛓ fidelity AXETIMING D2 (`axeTimingRung` ON only): a corridor no stall can clear asks the rung first
-                const timingFirst = CONTACT_FIDELITY.axeTimingRung && axeTimingFirst();
+                // ⛓ AXE_TIMING_SWORD_SWAP (OFF: false): a run whose sword is in the bag asks the swap's crossing first —
+                // MEASURED on 37:8 the stall search and the bent corridors spend 1,754 units before it, all empty
+                const swapFirst = AXE_TIMING_SWORD_SWAP.enabled && fork !== null && dashMode !== 'none'
+                    && axeTimingSwordSlot(run) !== null;
+                const timingFirst = CONTACT_FIDELITY.axeTimingRung && (swapFirst || axeTimingFirst());
                 if (timingFirst) {
                     timing = axeTimingCrossing();
                     if (timing.tripped) tripped = true;
@@ -32279,17 +32412,25 @@ function solveSegmentUnder({
             if (timing?.crossing) {
                 const c = timing.crossing;
                 dodgesSpent += 1;
-                const upto = c.walk.truncated ? c.walk.samples.length - 1 : c.walk.samples.length;
-                rowFor('dodge', refused, { axeTiming: { stall: c.stall, offset: c.offset, door: c.door, ticks: upto },
+                const upto = c.upto ?? (c.walk.truncated ? c.walk.samples.length - 1 : c.walk.samples.length);
+                rowFor('dodge', refused, { axeTiming: { stall: c.stall, offset: c.offset, door: c.door, ticks: upto,
+                    ...(c.swap ? { swap: { ...c.swap } } : {}) },
                     axe: hit.sources[0].id, previews: previews + timing.previews });
                 const hitsBefore = run.ledger('playerHits').length;
                 const from = run.ticksCompleted;
+                // ⛓ AXE_TIMING_SWORD_SWAP: the slot the fork searched with, selected on the tape before the first tick
+                if (c.swap) {
+                    AXE_TIMING_SWORD_SWAP_COUNTS.certified += 1;
+                    equip(c.swap.slot);
+                }
                 for (const s of c.walk.samples.slice(0, upto)) {
                     const held = new Set(s.held);
                     perTick.push(held);
                     const { transition } = run.advance(held);
                     if (transition) break;
                 }
+                // …and the slot the walk had, selected again once the crossing has run (after a level change too)
+                if (c.swap && run.ticksCompleted > from && run.progress('primary') !== c.swap.prior) equip(c.swap.prior);
                 const took = run.ledger('playerHits').slice(hitsBefore);
                 if (took.length > 0) {
                     refuse(`${what}: AXETIMING — the crossing of ${axes} certified clean (stall ${c.stall} at sample `
