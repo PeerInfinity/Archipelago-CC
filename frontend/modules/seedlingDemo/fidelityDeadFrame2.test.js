@@ -64,7 +64,8 @@ const OFF_ROWS = {
 describe('DEADFRAME2 — the keys', () => {
     it('the keys ship OFF, appended last in this order, each with a worker env name', () => {
         for (const k of KEYS) expect([k, CONTACT_FIDELITY_DEFAULTS[k]]).toEqual([k, false]);
-        expect(CONTACT_FIDELITY_KEYS.slice(CONTACT_FIDELITY_KEYS.indexOf('wandShotEnemyBodies') + 1)).toEqual(KEYS);
+        // ⛓ wave 70 (WANDSWINGDRILL) appended its two keys after these.
+        expect(CONTACT_FIDELITY_KEYS.slice(CONTACT_FIDELITY_KEYS.indexOf('wandShotEnemyBodies') + 1)).toEqual([...KEYS, 'itemPressHeldBySlash', 'drillSightLineGame']);
         for (const n of ['SEEDLING_FREEZE_FRAMES_STEP_RESPONDERS', 'SEEDLING_PULSER_DEAD_FRAME_UPDATE',
             'SEEDLING_BLOCK_PRESSES_FALL_ROCK_BUTTON_SAME_FRAME']) expect(SOLVER_ENV_NAMES).toContain(n);
         expect([...SOLVER_ENV_NAMES].sort()).toEqual([...SOLVER_ENV_NAMES]);

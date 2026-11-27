@@ -53,7 +53,8 @@ describe('fidelity WANDSWINGDRILL — the keys', () => {
     it('both ship OFF, appended last in this order, each with a worker env name', () => {
         expect(CONTACT_FIDELITY_DEFAULTS[ITEM]).toBe(false);
         expect(CONTACT_FIDELITY_DEFAULTS[DRILL]).toBe(false);
-        expect(CONTACT_FIDELITY_KEYS.slice(CONTACT_FIDELITY_KEYS.indexOf('wandShotEnemyBodies') + 1)).toEqual([ITEM, DRILL]);
+        // ⛓ wave 69 (DEADFRAME2) landed its three keys first.
+        expect(CONTACT_FIDELITY_KEYS.slice(CONTACT_FIDELITY_KEYS.indexOf('wandShotEnemyBodies') + 1)).toEqual(['freezeFramesStepResponders', 'pulserDeadFrameUpdate', 'blockPressesFallRockButtonSameFrame', ITEM, DRILL]);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_ITEM_PRESS_HELD_BY_SLASH');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_DRILL_SIGHT_LINE_GAME');
         expect([...SOLVER_ENV_NAMES].sort()).toEqual([...SOLVER_ENV_NAMES]);
