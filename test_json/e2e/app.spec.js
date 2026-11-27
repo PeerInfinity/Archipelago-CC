@@ -97,6 +97,11 @@ test.describe('Application End-to-End Tests', () => {
   if (measureCapturePath) {
     APP_URL += '&measureCaptureRequests=1';
   }
+  // MEASUREMENT-ONLY (seedling-js-l22-l25-divergence): TEST_MEASURE_CAPTURE_SERVICE=<regex|1> → `?measureCaptureService=`,
+  // the solve-service probe (`jsRuntimeSolveService.js`) for BOTH runtimes' services. Needs the capture binding above.
+  if (measureCapturePath && process.env.TEST_MEASURE_CAPTURE_SERVICE) {
+    APP_URL += `&measureCaptureService=${encodeURIComponent(process.env.TEST_MEASURE_CAPTURE_SERVICE)}`;
+  }
 
   test('run in-app tests and check results', async ({ page }) => {
     // Counted for the summary: a green run can hide a thrown handler, and the

@@ -104,6 +104,49 @@ export function explicitAttempt(attempt) {
     return { retry, budgets: Array.isArray(budgets) ? budgets.filter((b) => Number.isFinite(b) && b > 0) : [] };
 }
 
+// MEASUREMENT-ONLY (seedling-js-l22-l25-divergence) — the service capture probe. Gate: the TOP window's
+// `?measureCaptureService=<regex>` (a request-name filter; `1` = all) and the walk's `__measureCaptureAppend` binding.
+function measureServiceCaptureFilter() {
+    try {
+        if (typeof globalThis.__measureCaptureAppend !== 'function') return null;
+        const top = globalThis.top ?? globalThis;
+        const v = new URLSearchParams(top.location?.search ?? '').get('measureCaptureService');
+        return v ? new RegExp(v === '1' ? '.' : v) : null;
+    } catch { return null; }
+}
+function measureServiceCaptureOn() { return measureServiceCaptureFilter() !== null; }
+let measureServiceSeq = 0;
+function measureServiceCapture(handle, request, attempt) {
+    const re = measureServiceCaptureFilter();
+    const name = request?.name ?? request?.solverGoal?.name ?? null;
+    const seq = ++measureServiceSeq;
+    const frame = (() => { try { return globalThis.location?.pathname ?? null; } catch { return null; } })();
+    if (!re || !re.test(String(name))) { console.log(`[MEASURE svc] skip #${seq} ${frame} ${name}`); return; }
+    const t0 = Date.now();
+    console.log(`[MEASURE svc] start #${seq} ${frame} ${name} budgetWork=${request?.budgetWork} attempt=${JSON.stringify(attempt)}`);
+    import('../../../scripts/procgen/seedlingSolveRequestCodec.js').then(({ captureRequest }) => {
+        let kept;
+        try { kept = captureRequest(request); } catch (e) { console.log(`[MEASURE svc] capture threw: ${e?.message ?? e}`); return; }
+        const poll = setInterval(() => {
+            if (!handle.settled) return;
+            clearInterval(poll);
+            const r = handle.result ?? null;
+            const text = r?.ok ? JSON.stringify((r.plan?.solution ?? []).map((k) => [...k])) : String(r?.message ?? '');
+            const d = globalThis.crypto?.subtle?.digest ? globalThis.crypto.subtle.digest('SHA-1', new TextEncoder().encode(text)) : Promise.resolve(null);
+            d.then((buf) => {
+                const answer = buf ? [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 12) : null;
+                const result = r ? { ok: r.ok ?? null, kind: r.kind ?? null, work: r.work ?? r.plan?.work ?? null,
+                    passes: r.passes ?? r.plan?.passes ?? null, answer, message: r.ok ? null : text.slice(0, 4000),
+                    keys: r.ok ? (r.plan?.solution?.length ?? null) : null, solverEnv: r.solverEnv ?? r.plan?.solverEnv ?? null } : null;
+                const row = { probe: 'svc', seq, frame, name, attempt, ms: Date.now() - t0,
+                    requests: [{ i: 0, goal: name, retry: attempt?.retry ?? null, request: kept, passes: handle.passes ?? null, result }] };
+                try { globalThis.__measureCaptureAppend(JSON.stringify(row)); } catch (e) { console.log(`[MEASURE svc] append threw: ${e?.message ?? e}`); }
+                console.log(`[MEASURE svc] done #${seq} ${name} ok=${result?.ok} kind=${result?.kind} work=${result?.work} answer=${answer}`);
+            });
+        }, 50);
+    });
+}
+
 export const SOLVE_WORKER_URL = new URL('./jsRuntimeSolveWorker.js', import.meta.url);
 
 // ⛓ CPWIT — the page's `?seedlingSolverEnv=` (measurement only) rides the worker's URL (`solverEnvChannel.js`); with no
@@ -287,6 +330,10 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
                 drop();
                 settle(handle, { ok: false, kind: 'refusal', message: `the solve could not be posted to its worker — ${err.message}` });
             }
+            // MEASUREMENT-ONLY (seedling-js-l22-l25-divergence): OFF unless the TOP page has `measureCaptureService=`
+            // AND the walk's `__measureCaptureAppend` binding exists; then every request THIS service posts (either
+            // runtime's) is appended with its answer, in the replay's request format. Not for landing.
+            if (measureServiceCaptureOn()) measureServiceCapture(handle, { ...tape, source: { records: source?.records ?? null } }, attempt);
             return handle;
         },
         /**
