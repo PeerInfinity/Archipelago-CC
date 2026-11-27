@@ -21436,8 +21436,8 @@ function killLockPinnedSpearTurn(run, perTick, resolved, ctx, { whys }) {
     KILLLOCK_PINNED_SPEAR_COUNTS.asked += 1;
     const slot = (run.progress('inventorySlots') ?? []).indexOf(INVENTORY_ITEM_IDS.spear);
     if (!run.progress('inventory')?.hasSpear || slot < 0 || typeof ctx.equip !== 'function' || !ctx.rewind) {
+        // no why: a run that holds no spear refuses in the arm's own words, as OFF does
         KILLLOCK_PINNED_SPEAR_COUNTS.noSpear += 1;
-        whys.push('no spear slot this caller can select (KILLLOCK_PINNED_SPEAR)');
         return { run, phase: null, tries: 0 };
     }
     const contacts = resolved.contacts ?? new Set();
