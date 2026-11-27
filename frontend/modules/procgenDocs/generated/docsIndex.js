@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 32,
-        "headings": 1364,
+        "headings": 1367,
         "indexHeadings": 2,
-        "lines": 37370,
+        "lines": 37381,
         "pages": 4,
-        "words": 578520
+        "words": 579080
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -356,8 +356,8 @@ export const DOCS_INDEX = frz({
             "description": "The ActionNodes substrate (id `action_nodes`) is a puzzle played in loops: one region is one node, and a node is one action with a mana cost, stat and resource minimums, results and a limit per loop.",
             "file": "action-nodes.md",
             "h1": "ActionNodes Substrate",
-            "headings": 15,
-            "lines": 213,
+            "headings": 16,
+            "lines": 217,
             "links": [
                 "architecture.md",
                 "gotchas.md",
@@ -366,7 +366,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/action-nodes.md",
-            "words": 6921
+            "words": 7145
         },
         {
             "description": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md).",
@@ -526,13 +526,13 @@ export const DOCS_INDEX = frz({
             "description": "The mystery substrate (`frontend/modules/mysteryArchipelago/mysterySubstrateLibrary.js`, id `mystery`) makes one case of the mystery clue game a procgen region: the office. The game is the git submodule `frontend/modules/mystery-clue-game/`, framed as a page by the Mystery Game panel.",
             "file": "mystery.md",
             "h1": "Mystery Substrate",
-            "headings": 8,
-            "lines": 89,
+            "headings": 10,
+            "lines": 96,
             "links": [
                 "architecture.md"
             ],
             "path": "docs/json/developer/procgen/mystery.md",
-            "words": 1081
+            "words": 1417
         }
     ],
     "indexIn": "docs/json/developer/procgen/README.md",

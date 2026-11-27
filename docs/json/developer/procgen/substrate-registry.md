@@ -353,7 +353,7 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `mystery` | `noiz2sa` | `omsi` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| `getPlaybackController` | — | fn | fn | fn | fn | fn | fn | — | fn | fn | fn |
+| `getPlaybackController` | — | fn | fn | fn | fn | fn | fn | fn | fn | fn | fn |
 | `playbackScope` | — | — | — | 54 chars | 54 chars | — | — | — | — | — | — |
 
 **Action labelling**
@@ -380,20 +380,20 @@ Groups are this document's own § headings, matched to a field by the section th
 | Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `mystery` | `noiz2sa` | `omsi` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | `loopBot` | {planLoop} | — | — | — | — | — | — | — | — | — | — |
-| `loopSupport` | 7 keys | 8 keys | 9 keys | 5 keys | 5 keys | 8 keys | 6 keys | — | 9 keys | 8 keys | 8 keys |
+| `loopSupport` | 7 keys | 8 keys | 9 keys | 5 keys | 5 keys | 8 keys | 6 keys | 8 keys | 9 keys | 8 keys | 8 keys |
 | `loopSupport.actionGate` | fn | — | — | — | — | — | — | — | — | — | — |
 | `loopSupport.authoredCosts` | yes | — | — | — | — | — | — | — | — | — | — |
-| `loopSupport.botActsAtOnce` | — | — | — | — | — | — | — | — | — | — | yes |
+| `loopSupport.botActsAtOnce` | — | — | — | — | — | — | — | yes | — | — | yes |
 | `loopSupport.clockLine` | fn | — | — | — | — | — | — | — | — | — | — |
-| `loopSupport.customQueues` | — | no | no | no | no | no | yes | — | no | no | no |
-| `loopSupport.executeVia` | — | solver | solver | solver | solver | solver | — | — | solver | solver | solver |
-| `loopSupport.instant` | — | yes | yes | — | — | yes | yes | — | yes | yes | yes |
-| `loopSupport.manual` | no | yes | yes | yes | yes | yes | yes | — | yes | yes | yes |
+| `loopSupport.customQueues` | — | no | no | no | no | no | yes | no | no | no | no |
+| `loopSupport.executeVia` | — | solver | solver | solver | solver | solver | — | solver | solver | solver | solver |
+| `loopSupport.instant` | — | yes | yes | — | — | yes | yes | yes | yes | yes | yes |
+| `loopSupport.manual` | no | yes | yes | yes | yes | yes | yes | yes | yes | yes | yes |
 | `loopSupport.playClock` | — | — | yes | yes | yes | — | — | — | yes | — | — |
-| `loopSupport.playback` | — | yes | yes | — | — | yes | yes | — | yes | yes | yes |
+| `loopSupport.playback` | — | yes | yes | — | — | yes | yes | yes | yes | yes | yes |
 | `loopSupport.pool` | fn | — | — | — | — | — | — | — | — | — | — |
-| `loopSupport.queueActions` | regionMove, act, wait | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore | — | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore |
-| `loopSupport.record` | — | yes | yes | — | — | yes | yes | — | yes | yes | yes |
+| `loopSupport.queueActions` | regionMove, act, wait | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore | regionMove, locationCheck | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore |
+| `loopSupport.record` | — | yes | yes | — | — | yes | yes | yes | yes | yes | yes |
 | `loopSupport.requiresLoopMode` | — | — | — | — | — | yes | — | — | — | yes | — |
 | `loopSupport.strictQueueActions` | yes | — | — | — | — | — | — | — | — | — | — |
 | `loopSupport.summaryRecording` | — | yes | yes | — | — | — | — | — | yes | — | — |
