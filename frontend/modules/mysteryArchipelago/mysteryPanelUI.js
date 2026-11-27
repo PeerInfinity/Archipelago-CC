@@ -9,8 +9,9 @@
 import { IframePanelUI } from '../iframePanel/iframePanelUI.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
-import { getModuleEventBus } from './index.js';
-import { mysteryBlockOf } from './mysteryArchipelagoLogic.js';
+import { activeRegionIdNow, caseRegionsNow, getModuleEventBus } from './index.js';
+import { currentMysteryBlock } from './mysteryArchipelagoLogic.js';
+import { MYSTERY_LOCKS } from './mysterySubstrateLibrary.js';
 import { DEFAULT_PAGE_URL, PAGE_URL_SETTING, mysteryPageUrl } from './mysteryPage.js';
 
 /** The id the page is framed under. One mystery page at a time. */
@@ -29,7 +30,8 @@ export class MysteryPanelUI extends IframePanelUI {
   /** The iframe panel's own subscriptions are the generic load commands; this panel takes none. */
   setupEventSubscriptions() {
     const bus = getModuleEventBus();
-    for (const event of ['stateManager:rulesLoaded', 'settings:changed']) {
+    // `procgen:activeSubstrateChanged`: the player moved, or a generated world's regions are now known.
+    for (const event of ['stateManager:rulesLoaded', 'settings:changed', 'procgen:activeSubstrateChanged']) {
       this.unsubscribeHandles.push(bus.subscribe(event, () => this.syncToWorld()));
     }
   }
@@ -39,11 +41,16 @@ export class MysteryPanelUI extends IframePanelUI {
     const turn = (this._syncTurn = (this._syncTurn ?? 0) + 1);
     const pageUrl = await settingsManager.getSetting(PAGE_URL_SETTING, DEFAULT_PAGE_URL);
     if (turn !== this._syncTurn || !this.rootElement) return; // a later call, or disposed, while waiting
-    const block = mysteryBlockOf(stateManagerProxySingleton.getStaticData());
-    if (!block) {
+    const activeRegionId = activeRegionIdNow();
+    const block = currentMysteryBlock({
+      staticData: stateManagerProxySingleton.getStaticData(), caseRegions: caseRegionsNow(), activeRegionId,
+    });
+    // Under the lock `everything` the case is shown only while the player is in its region.
+    const shut = !!block && block.lock === MYSTERY_LOCKS.EVERYTHING && block.regionId !== activeRegionId;
+    if (!block || shut) {
       if (this.currentUrl) this.unloadIframe();
       this.wantedUrl = null;
-      this.showEmptyState();
+      this.showEmptyState(shut ? `This case is read in its office: ${block.regionId}.` : undefined);
       return;
     }
     const url = mysteryPageUrl(block, pageUrl || DEFAULT_PAGE_URL);
@@ -52,14 +59,18 @@ export class MysteryPanelUI extends IframePanelUI {
     this.loadIframe(url);
   }
 
-  showEmptyState() {
+  /** @param {string} [message] - why nothing is framed; absent: the loaded world holds no case. */
+  showEmptyState(message) {
     const contentArea = this.rootElement?.querySelector('.iframe-content');
     if (!contentArea) return;
-    contentArea.innerHTML = `
-      <div class="empty-state" style="text-align: center; color: #888; font-style: italic;">
-        The loaded world is not a mystery case.<br>
-        Load or connect to a mystery world and its case opens here.
-      </div>`;
+    contentArea.innerHTML = '<div class="empty-state" style="text-align: center; color: #888; font-style: italic;"></div>';
+    const box = contentArea.firstElementChild;
+    if (message) {
+      box.textContent = message;
+    } else {
+      box.append('The loaded world is not a mystery case.', document.createElement('br'),
+        'Load or connect to a mystery world and its case opens here.');
+    }
   }
 
   dispose() {

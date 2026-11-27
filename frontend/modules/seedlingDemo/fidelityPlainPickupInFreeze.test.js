@@ -134,7 +134,8 @@ function wand(inject, over = {}) {
 describe('fidelity PLAINSPAN — a plain pickup (APItem) taken on a freeze\'s frame', () => {
     it('the key ships OFF, last; its env name is in `SOLVER_ENV_NAMES`', () => {
         expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
-        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe(KEY);
+        // ⛓ wave 61 (CHESTCOVER) appended `chestCoverFencepost` after it.
+        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf(KEY) + 1)).toEqual(['chestCoverFencepost', 'presserRecursionHang']);
         if (process.env.SEEDLING_PLAIN_PICKUP_IN_FREEZE === undefined) expect(CONTACT_FIDELITY[KEY]).toBe(false);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_PLAIN_PICKUP_IN_FREEZE');
     });

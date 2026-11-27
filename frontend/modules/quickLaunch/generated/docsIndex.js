@@ -450,6 +450,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The maze substrate (frontend/modules/mazeRoom/, substrate id maze) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and…"
     },
     {
+        "path": "docs/json/developer/procgen/mystery.md",
+        "title": "Mystery Substrate",
+        "section": "developer/procgen",
+        "summary": "The mystery substrate (frontend/modules/mysteryArchipelago/mysterySubstrateLibrary.js, id mystery) makes one case of the mystery clue game a procgen region: the office. The game is the git submodule…"
+    },
+    {
         "path": "docs/json/developer/procgen/noiz2sa.md",
         "title": "Noiz2sa Substrate",
         "section": "developer/procgen",
@@ -1696,6 +1702,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/developer/procgen/loop-recording.md",
             "docs/json/developer/procgen/maze-lab.md",
             "docs/json/developer/procgen/maze.md",
+            "docs/json/developer/procgen/mystery.md",
             "docs/json/developer/procgen/noiz2sa.md",
             "docs/json/developer/procgen/omsi.md",
             "docs/json/developer/procgen/paths-and-obstacles.md",
