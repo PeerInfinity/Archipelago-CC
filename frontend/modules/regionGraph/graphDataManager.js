@@ -636,6 +636,8 @@ export class GraphDataManager {
     this.redrawLocationNodesForMode();
     // ⛓ collapsible: the + / − badges follow the rebuilt graph (none in any other view).
     this.ui.groupBadges?.rebuild?.();
+    // ⛓ region-graph-dungeon-groups: the dungeon boxes belong to the run that drew them, not to a rebuilt graph.
+    this.ui.dungeonBoxes?.clear?.();
 
     this.ui.updateStatus(`Loaded ${regionNodeCount} regions, ${elements.edges.length} connections`);
   }
