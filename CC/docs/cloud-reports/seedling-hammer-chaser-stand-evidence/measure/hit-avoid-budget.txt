@@ -1,0 +1,13 @@
+# F1(rm9) 32:10 under all4, switches OFF: what one hit-avoid try needs (tools/ha-hook.mjs; HA_LOG=1 logs each try).
+# HA_WIDE=0 = main: the pass stops 85 units after its own start (SOLVER_UPGRADE_WINDOW_WORK).
+WIDE=0  passes dashless 926 t (150 work, modelHits 1) | full refusal (125) | hit-avoid tries 1, 86 work, cut window
+        HA delay=1 ok=false work=361 (cut at the crusher-fork site, deadline tripped)
+        shipped: 926 t, 1 h t1799 chaser:bob@272,112 (851256c5b984), work 361
+# HA_WIDE=1 = the hit-avoid pass given the attempt's whole remaining budget (to 640):
+WIDE=1  HA delay=1 ok=true work=484 ticks=786 modelHits {hits:1, deaths:0}   (one try = 123 units; still a hit)
+        HA delay=2 ok=false work=642 (cut at the walk site: the 640 budget)
+        shipped: the same 926 t, 1 h plan, work 642, hit-avoid tries 2, cut budget
+# => (d) is real (a try needs ~123 units against an 85-unit window) but not the fix: with the budget it still plans a hit.
+# PSB passes alone (all4 + PRESS_KILL_STRIKE_BOMBS, ONLY_PASS=…), the fallback's cost:
+P1-97 (F1) dashless refusal 175 work | full 814 t 0 h 314 work
+P1+7       dashless 779 t 0 h 157 work | full 580 t 0 h 382 work

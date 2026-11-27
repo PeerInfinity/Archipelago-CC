@@ -1,0 +1,56 @@
+# seed-1 divergence-sweep leg list at this head (seedling-divergence-legs.mjs --presets=seedling_playthrough): 915 legs.
+# Spinner rooms (press kill) and their chasers / lobbers, from the committed atlas: {"18": {"spinner": 2}, "39": {"spinner": 3}, "40": {"spinner": 5, "bombpusher": 1, "bob": 12, "puncher": 2, "bobsoldier": 1}, "92": {"spinner": 1, "bob": 1}}
+# OPP_AIM_CHASERS can be asked on: a press kill (spinner room) whose room has a chaser forecast -> the legs below on L18/L39/L40/L92 with a chaser.
+# HIT_AVOID_STAND_BOMBS can change an answer only where the stand question reads something: a lobber room -> L40 (BombPusher).
+359	L40	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0
+360	L40	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96
+361	L40	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 7: wandlock@208,128 cleared
+362	L40	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0
+363	L40	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96
+364	L40	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 7: wandlock@208,128 cleared
+365	L40	level_40__r26c13 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+366	L40	level_40__r26c13 <- in_L39_144_0 -> exit:out_teleporter_480_912
+367	L40	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_20
+368	L40	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_20
+369	L40	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_13_20
+370	L40	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_14_20
+371	L40	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_21
+372	L40	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_21
+373	L40	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_13_21
+374	L40	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_14_21
+375	L40	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_22
+376	L40	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_22
+377	L40	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_23
+378	L40	level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_23
+379	L40	level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+380	L40	level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest
+381	L40	level_40__r26c13 <- in_L43_176_464 -> exit:out_stairsdown_320_576
+382	L40	level_40__r26c13 <- in_L43_176_464 -> exit:out_teleporter_480_912
+383	L40	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_20
+384	L40	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_20
+385	L40	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_13_20
+386	L40	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_14_20
+387	L40	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_21
+388	L40	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_21
+389	L40	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_13_21
+390	L40	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_14_21
+391	L40	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_22
+392	L40	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_22
+393	L40	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_23
+394	L40	level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_23
+395	L40	level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+396	L40	level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Chest
+698	L92	level_92__r4c2 <- in_L91_240_48 -> exit:out_teleporter_32_144
+699	L92	level_92__r7c17 <- in_L87_16_32 -> exit:out_teleporter_272_144
+847	L40	level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144
+848	L40	level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:L40 flag 1: wandlock@176,80 cleared
+849	L40	level_40__r4c4 <- in_L42_240_336 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144
+850	L40	level_40__r4c4 <- in_L42_240_336 ~> level_40__r0c53 -> location:L40 flag 1: wandlock@176,80 cleared
+851	L40	level_40__r23c29 <- in_L41_0_160 ~> level_40__r0c53 -> location:L40 flag 8: bosslock@480,352 cleared
+852	L40	level_40__r23c29 <- in_L42_240_336 ~> level_40__r0c53 -> location:L40 flag 8: bosslock@480,352 cleared
+853	L40	level_40__r23c29 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 8: bosslock@480,352 cleared
+854	L40	level_40__r23c29 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 8: bosslock@480,352 cleared
+855	L40	level_40__r32c36 <- in_L39_144_0 ~> level_40__r26c13 -> location:Level 040 - Boss Key 2
+856	L40	level_40__r32c36 <- in_L43_176_464 ~> level_40__r26c13 -> location:Level 040 - Boss Key 2
+857	L40	level_40__r48c54 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+858	L40	level_40__r48c54 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared

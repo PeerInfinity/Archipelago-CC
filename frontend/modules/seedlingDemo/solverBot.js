@@ -15774,8 +15774,11 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
      * player who walks there and stands, to the horizon's train end. A window whose train ends at or after it is the
      * hit 381 took.
      */
-    const bombs = PRESS_KILL_BOMBS.enabled && bombsInPlay(run);
+    // ⛓ hammer-phase CHASER-STAND (`PRESS_KILL_STRIKE_BOMBS`, OFF ⇒ `PRESS_KILL_BOMBS` alone): the stand half on its own
+    const bombs = (PRESS_KILL_BOMBS.enabled || PRESS_KILL_STRIKE_BOMBS.enabled) && bombsInPlay(run);
     let bombed = 0;
+    // ⛓ hammer-phase F1-REFUSAL (`REFUSAL_STAND_BOMBS`, OFF ⇒ never armed): would the stand question read a lobber here?
+    if (STRIKE_STAND_LOBBER.watch && bombsInPlay(run)) STRIKE_STAND_LOBBER.seen += 1;
     const standBlastAt = (c, walk, i) => {
         const known = walks.get(c);
         if (known.stand === undefined) {
@@ -16847,6 +16850,58 @@ function landsClearOfChasers(run, keys) {
         return true;
     }
     return chaserDanger(run, playerBoxAt(next.x, next.y), 0, rows, { perTick: true }).length === 0;
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE CHASER-STAND — **THE PRESS KILL'S OPPORTUNISTIC AIM LANDS CLEAR OF THE CHASERS**
+ * (`OPP_AIM_CHASERS`, OFF; `SEEDLING_OPP_AIM_CHASERS=1`, `withOppAimChasers(enabled, fn)`). ⚖ The user, 2026-11-26:
+ * *"Chaser-stand fix (Recommended)"* (`CC/docs/cloud-reports/seedling-hammer-chaser-stand.md`).
+ *
+ * MEASURED (re-measure-9's F1 32:10, `PRESS_KILL_REFUGE_BOMBS` ON): in the second press kill's walk to its strike cell,
+ * PKC (`safeStep` → `landsClearOfChasers`) refuses the walk key five ticks running (a chaser `HIT` each time) and stands
+ * the player clear of `bob@272,112`. On the next tick the OPP policy AIMS at that same bob (it is within the sword's
+ * reach); an opportunistic aim skips `safeStep` (the drive's *"offered only where it lands clear"*), and
+ * `oppStrikeLandsClear` asks the hammers only, so nothing asks the chaser. The aim's one step (`up`, 0.8 px) walks the
+ * player into the bob's contact and the plan ships the billed hit (t1799; `modelHits` 1).
+ *
+ * ⇒ ON, the drive offers the policy an in-reach body for an AIM only when that aim's own landing is clear of every
+ * chaser one tick on, by PKC's own predicate (`landsClearOfChasers`, the same key `oppStrikeLandsClear` prices). A
+ * withheld body is not struck this tick; the walk's key then goes through `safeStep` (PKC) as any walk tick does. A
+ * press already owed (`policy.aimed`) is never withheld, and bodies out of reach are offered as before. Drive only: the
+ * strike and refuge previews already price their walked samples against the chaser forecast (`dangerDuringTransit`).
+ * Asked only where the room has a chaser forecast. Reads nothing level-specific. OFF: never read — byte-identical.
+ * ⛓ THE THREAD: the press kill runs inside `solveSegment`, i.e. the page's SOLVE WORKER (and node).
+ */
+export const OPP_AIM_CHASERS = { enabled: globalThis.process?.env?.SEEDLING_OPP_AIM_CHASERS === '1' };
+export const OPP_AIM_CHASERS_DEFAULT = false;
+/** ON only: in-reach aims asked / withheld for a chaser contact (an instrument; nothing that decides reads it). */
+export const OPP_AIM_CHASERS_COUNTS = { asked: 0, withheld: 0 };
+
+/** Run `fn` with `OPP_AIM_CHASERS` set to `enabled`, restoring the previous value. */
+export function withOppAimChasers(enabled, fn) {
+    return withSwitch(OPP_AIM_CHASERS, enabled, fn);
+}
+
+/** Clear `OPP_AIM_CHASERS_COUNTS`. */
+export function resetOppAimChasersCounts() {
+    OPP_AIM_CHASERS_COUNTS.asked = 0;
+    OPP_AIM_CHASERS_COUNTS.withheld = 0;
+}
+
+/**
+ * ⛓ `OPP_AIM_CHASERS` — the drive's offer `bodies` with every in-reach body whose AIM would land the player on a chaser
+ * removed (`landsClearOfChasers` of the aim's facing key, `oppStrikeLandsClear`'s key). OFF, a press owed, or no chaser
+ * forecast ⇒ `bodies` unchanged.
+ */
+export function oppAimClearOfChasers(run, policy, bodies) {
+    if (!OPP_AIM_CHASERS.enabled || policy?.aimed !== null || !run.chaserForecast?.()) return bodies;
+    return bodies.filter((b) => {
+        if (distanceRectPoint(run.state.x, run.state.y, b.rect) > SLASH_REACH) return true;
+        OPP_AIM_CHASERS_COUNTS.asked += 1;
+        if (landsClearOfChasers(run, new Set([FACING_KEYS[facingToward(run.state, b.rect)]]))) return true;
+        OPP_AIM_CHASERS_COUNTS.withheld += 1;
+        return false;
+    });
 }
 
 /**
@@ -21873,6 +21928,54 @@ export function withPressKillRefugeBombs(enabled, fn) {
     return withSwitch(PRESS_KILL_REFUGE_BOMBS, enabled, fn);
 }
 
+/**
+ * ⛓ hammer-phase CHASER-STAND — **THE STRIKE'S STAND ASKS THE LOBBER, ON ITS OWN** (`PRESS_KILL_STRIKE_BOMBS`, OFF):
+ * `PRESS_KILL_BOMBS`' other half, as `PRESS_KILL_REFUGE_BOMBS` is its refuge half. ⚖ The user, 2026-11-26:
+ * *"Chaser-stand fix (Recommended)"* (`CC/docs/cloud-reports/seedling-hammer-chaser-stand.md`).
+ *
+ * MEASURED (PKSW-HITS §9 item 1; re-measure-8's P1 32:10 at seam +7, under every switch set): a press kill's strike
+ * cell is priced against the hammers and its walk against the lobber's bombs (`dangerDuringTransit`), but the STAND that
+ * follows the walk — the dwell to the press and its train — is asked of the bombs only under `PRESS_KILL_BOMBS`
+ * (`strikeStandBlast`), which PKB-OFF switched off with its refuge half. The plan ships `bomb:bombpusher@112,128#8`
+ * (t1644), aimed at the arriving player. ON, that one question is asked again, exactly as `PRESS_KILL_BOMBS` asks it
+ * (`standBlastAt`, the same horizon); nothing else of BW is. A strike whose stand a forecast blast lands on is not a
+ * candidate, so every strike refused ⇒ the kill's refuge or its own refusal, never a hit. Reads nothing
+ * level-specific. OFF: never read. `SEEDLING_PRESS_KILL_STRIKE_BOMBS=1` / `withPressKillStrikeBombs(enabled, fn)`.
+ * Worker thread.
+ */
+export const PRESS_KILL_STRIKE_BOMBS = {
+    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_STRIKE_BOMBS === '1' };
+export const PRESS_KILL_STRIKE_BOMBS_DEFAULT = false;
+
+/** Run `fn` with `PRESS_KILL_STRIKE_BOMBS` set to `enabled`, restoring the previous value. */
+export function withPressKillStrikeBombs(enabled, fn) {
+    return withSwitch(PRESS_KILL_STRIKE_BOMBS, enabled, fn);
+}
+
+/**
+ * ⛓ hammer-phase F1-REFUSAL — **DID A STRIKE'S STAND HAVE A LOBBER TO ASK?** The decision input of `jsRuntimeSolver`'s
+ * `REFUSAL_STAND_BOMBS` (OFF ⇒ never armed, never read). While `watch` is set, every `deriveStrike` that finds bombs in
+ * play (`bombsInPlay`: a lobber or a live bomb) adds one to `seen` — whether or not `PRESS_KILL_STRIKE_BOMBS` asks them.
+ * `seen > 0` after a ladder ⇒ a press kill of that attempt derived a strike the stand question would have priced; `0` ⇒
+ * a rerun under `PRESS_KILL_STRIKE_BOMBS` reads nothing new and repeats the pass. Reads nothing level-specific.
+ * `armStrikeStandLobber()` returns the previous state; `disarmStrikeStandLobber(prev)` restores it and answers `seen`.
+ */
+export const STRIKE_STAND_LOBBER = { watch: false, seen: 0 };
+
+export function armStrikeStandLobber() {
+    const prev = { ...STRIKE_STAND_LOBBER };
+    STRIKE_STAND_LOBBER.watch = true;
+    STRIKE_STAND_LOBBER.seen = 0;
+    return prev;
+}
+
+export function disarmStrikeStandLobber(prev) {
+    const seen = STRIKE_STAND_LOBBER.seen;
+    STRIKE_STAND_LOBBER.watch = prev?.watch === true;
+    STRIKE_STAND_LOBBER.seen = Number(prev?.seen ?? 0);
+    return seen;
+}
+
 /** Does `deriveRefuge` ask the lobber's forecast (BW's own switch, or this slice's refuge half alone)? */
 function refugeAsksBombs(run) {
     return (PRESS_KILL_BOMBS.enabled || PRESS_KILL_REFUGE_BOMBS.enabled) && bombsInPlay(run);
@@ -22648,7 +22751,9 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
             if (opp !== null && !run.state.fall && (oppPending
                 || (fightKeys === null && following === null && !aimed && !held.has('primary')))) {
                 OPPORTUNISTIC_STRIKE_COUNTS.asked += 1;
-                const offered = oppOffer(opp, run.state, run.entities('strikeBodies') ?? [], run.ticksCompleted);
+                const offered0 = oppOffer(opp, run.state, run.entities('strikeBodies') ?? [], run.ticksCompleted);
+                // ⛓ hammer-phase CHASER-STAND (`OPP_AIM_CHASERS`, OFF ⇒ `offered0` unchanged): an aim lands chaser-clear
+                const offered = OPP_AIM_CHASERS.enabled ? oppAimClearOfChasers(run, opp, offered0) : offered0;
                 const d = opp.decide(run.state, offered, run.ticksCompleted, held, { slash: run.progress('slashInfo') });
                 if (d.decision !== STRIKE_NONE) {
                     held = d.held;
