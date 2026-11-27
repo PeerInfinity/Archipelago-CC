@@ -12,7 +12,8 @@
  *     screen pixels, so it follows its nodes when they move (a drag, the layout's animation), pan and zoom; it is
  *     recomputed one frame after `position` / `viewport` / `resize` / `layoutstop`.
  *   · A member that discovery hides (`discovery-hidden`) is left out; a box with no member shown is hidden. The label
- *     is the dungeon's name (the group id), or `???` while any member shown is an undiscovered placeholder.
+ *     is the dungeon's name (the group id), drawn just above the box's top edge, or `???` while any member shown is an
+ *     undiscovered placeholder.
  *   · The boxes belong to ONE Direction-aware run: `show(boxes)` after its start; any later layout's `layoutstart`, a
  *     graph rebuild (`clear()`), or a run with another grouping value removes them.
  */
@@ -24,8 +25,9 @@ export const DUNGEON_BOX_CLASS = 'rg-dungeon-box';
 const LAYER_STYLE = 'position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:-1';
 const BOX_STYLE = 'position:absolute;box-sizing:border-box;border:1px dashed rgba(170,190,220,0.45);'
     + 'background:rgba(120,150,200,0.07);border-radius:6px;pointer-events:none;display:none';
-const LABEL_STYLE = 'position:absolute;left:4px;top:2px;font:11px sans-serif;color:rgba(200,215,235,0.75);'
-    + 'white-space:nowrap;pointer-events:none';
+/** The label sits just ABOVE the box's top edge, so at any zoom it never covers a node inside the box. */
+const LABEL_STYLE = 'position:absolute;left:2px;bottom:100%;margin-bottom:1px;font:11px sans-serif;line-height:12px;'
+    + 'color:rgba(200,215,235,0.8);white-space:nowrap;pointer-events:none';
 
 export class DungeonBoxLayer {
     /** @param {object} ui - the RegionGraphUI (cy, graphContainer, directionSettings) */
