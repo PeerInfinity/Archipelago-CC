@@ -76,6 +76,24 @@
             "_comment": "AN-3b limit (a): the Region Graph panel closed and reopened shows a card per node again with no world reload (regionGraph:panelMounted → ActionNodes re-registers)."
         },
         {
+            "id": "an-time-window-and-wait",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-TIME-2: the harbour fixture compiled in the page (pool Time): window lines and the early card's click text, the Resources Time line, too late refused by the card, the click and the start gate, one wait queued by a click and performed (clock pure == live, the pool pays it)."
+        },
+        {
+            "id": "an-time-knowledge-gate",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-TIME-2: the visits fixture: the app does NOT hold a Knows: flag before its node is performed (event_kind substrate_state), the gate refuses by name, then passes after the teaching node; the flag kept into the next loop."
+        },
+        {
+            "id": "an-time-completed-before",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-TIME-2 (Robert's Q6, minimal form): a node performed in loop 1 is marked 'completed before · loop 1' in loop 2 (not in loop 1), the panel lists the set, saved per world."
+        },
+        {
             "id": "an-omsi-town-load-and-act",
             "enabled": true,
             "category": "ActionNodes",

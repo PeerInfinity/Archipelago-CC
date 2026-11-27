@@ -8,11 +8,17 @@
  *   - `gameState:loopReset` and `loopState:loopReset` (the two reset flows) → a new loop;
  *   - `loop:actionCompleted` (Loops ran an `act`) → perform the node;
  *   - `crossSubstrate:itemGranted` to `action_nodes` → a resource lands in the ledger;
+ *   - (AN-TIME-2) a node's knowledge event location is collected when the node is performed (a forced local check:
+ *     `event_kind: 'substrate_state'` keeps the state manager from collecting it on reach), and the per-world
+ *     "completed before" history is saved in localStorage (`historyStore.js`, the declared prefix below);
  *   - (AN-3b) the click action `actionNodes.act` (perform once), registered with the click-actions registry while an
  *     ActionNodes world is loaded, and the card's "perform all remaining" button (`nodeClickAction.js`).
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
+import { stateManagerProxySingleton } from '../stateManager/index.js';
+import { createHistoryStore } from './historyStore.js';
 import { ACTION_COMPLETED_EVENT } from '../shared/procgen/loopCustomActions.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import {
@@ -37,6 +43,9 @@ export const moduleInfo = {
     category: 'Loop Mode Modules',
     description: 'The ActionNodes substrate: one region is one action. Shows the node you are at, performs or queues its action, and opens its exits.',
     requires: ['gameState', 'resourceChannels'],
+    storage: [
+        { prefix: 'actionNodesHistory_v1_', kind: STORAGE_KINDS.state, label: 'Action Nodes "completed before" history, one per world (graph, seed, slot)' },
+    ],
 };
 
 const MODULE = moduleInfo.name;
@@ -73,6 +82,9 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         chargeMana,
         gainMana,
         xpAdjustedCost,
+        // AN-TIME-2: a knowledge flag's event, collected on the action (never on reach), as a local event check.
+        collectEvent: (locationName) => stateManagerProxySingleton.checkLocation(locationName, true, true),
+        historyStore: createHistoryStore(),
         revealExits: (regionName, exitNames) => initializationApi.getModuleFunction?.('discovery', 'revealExits')?.(regionName, exitNames),
         fireReset: () => fireLoopResetTeleport({
             sourceRegion: gs()?.getCurrentRegion?.() ?? null,

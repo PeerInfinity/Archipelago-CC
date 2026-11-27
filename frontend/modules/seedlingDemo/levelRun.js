@@ -56,7 +56,8 @@ import {
 } from './endingChain.js';
 import {
     RESPONDERS, createActivatorState, fallRocksArmedBy, opensOnTick, openActivatorIds,
-    openActivatorIdsBeforeLatestStep, latchAtBuild, pressedGroups, presserDown, ropePublish, stepActivators,
+    openActivatorIdsBeforeLatestStep, openActivatorIdsBeforeStep, latchAtBuild, pressedGroups, presserDown, ropePublish, stepActivators,
+    PresserRecursionHang, markPresserHang,
 } from './activators.js';
 import {
     FALL_ROCK, createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
@@ -1833,6 +1834,10 @@ export function createLevelRun({
      */
     const publishRopeGroup = (n, ropeSolid, act, { atBuild = false } = {}) => {
         const pub = ropePublish({ as3: 'RopeStart', t: ropeSolid?.ropeT ?? -1 });
+        // ⛓ fidelity PRESSERLOOP D2 (OFF never read): a pull into a recursing group hangs the game inside `hit()`
+        // (`activate = true` recurses before `setPersistence`), so nothing is latched. A pull AT BUILD is refused there.
+        if (pub && CONTACT_FIDELITY.presserRecursionHang && !atBuild
+            && markPresserHang(act, worldFor(n), pub.group, pub.value, `${ropeSolid.ropeId} (pulled)`)) return;
         if (pub) {
             if (atBuild) latchAtBuild(act, pub.group, worldFor(n));
             else act.latched.set(pub.group, pub.value);
@@ -8412,9 +8417,14 @@ export function createLevelRun({
                     x: c.x, y: c.y, right: c.x + 16, bottom: c.y + 16,
                 };
                 const openChests = new Set([c.id, ...(openChestIdsNow() ?? [])]);
+                // ⛓ fidelity CHESTCOVER (`chestCoverFencepost`, OFF): a VANILLA chest updates before the
+                // responders, so it reads the open set one step older (`openActivatorIdsBeforeStep`); an AP chest
+                // (`c.apChest`, p4h — absent on this base) updates after them and keeps `openActivatorIds`.
+                const openActivators = CONTACT_FIDELITY.chestCoverFencepost && !c.apChest
+                    ? openActivatorIdsBeforeStep(activators) : openActivatorIds(activators);
                 return !!world.collidesSolid(box, normalizeLiveOpts(liveSolidOpts({
                     beforeTypeFlip: firstTickInWorld,
-                    openActivators: openActivatorIds(activators),
+                    openActivators,
                     openChests,
                 })));
             },
@@ -22893,6 +22903,12 @@ export function createLevelRun({
             // ⛓ fidelity FENCEPOST D1: the tick's body, unchanged, as one arrow — `settleSpinnerRemovalsNow` is its `updateLists()` tail.
             spinnersSteppedThisTick = null; // a tick that threw below its spinner step leaves no survivor
             const advanced = (() => {
+            // ⛓ fidelity PRESSERLOOP D2 (`presserRecursionHang`, OFF never read): the game hung in the frame that
+            // recorded the previous observation (a publish into a recursing group), and it runs no later frame.
+            if (CONTACT_FIDELITY.presserRecursionHang && activatorStates.get(level)?.presserHang) {
+                const hang = activatorStates.get(level).presserHang;
+                throw new PresserRecursionHang(`levelRun: tick ${ticksCompleted} cannot run — ${hang.message}`, hang);
+            }
             // ⛓⛓ ARC 3 SLICE 2d: THE FORECAST MEMO DIES FIRST, above every
             // line that can move a body, a block or a world. Its key would
             // catch this tick anyway (`ticksCompleted` moves below); this is
@@ -23244,6 +23260,18 @@ export function createLevelRun({
             //    which is what the game's chest sees, so this needs no
             //    special case; it needs the note, because "open the cover
             //    and the chest opens" is off by one.
+            //    ⛓ fidelity CHESTCOVER (wave 61) — THAT NOTE IS THE OFF
+            //    BRANCH, AND IT IS ONE STEP SHORT. `activators` here is the
+            //    state the END of the previous tick's `stepActivators` left,
+            //    and that step IS the game's responder update of THIS frame
+            //    (`activators.stepActivators`' labelling): the state "after
+            //    this frame's Cover update" — the Player's and the APChest's
+            //    read, not the chest's. The vanilla chest updates before the
+            //    cover, so it sees the state BEFORE that step. Measured on
+            //    the game (wave 60, staged L38 on the vanilla set): the cover
+            //    turns at the end of advance 11, the game's chest opens on
+            //    13, OFF opens it on 12. ON (`chestCoverFencepost`), the
+            //    chest's `solidOver` reads `openActivatorIdsBeforeStep`.
             if (!noclip) stepSealPieceNow();
             if (!noclip) stepChestsNow(activators);
             if (!noclip) stepPulsersNow(activators, pushState);
@@ -24236,6 +24264,11 @@ export function createLevelRun({
                     if (ceremony.pickup.tag === 'wand' && !noclip) {
                         wandLeftTheWorld = true;
                         const group = WAND_PICKUP.tset;
+                        // ⛓ fidelity PRESSERLOOP D2 (OFF never read): the sweep's `n.activate = true` into a recursing
+                        // group hangs the game (`Pickups/Wand.as:55-70`); the run refuses its next tick.
+                        if (CONTACT_FIDELITY.presserRecursionHang) {
+                            markPresserHang(activatorStateFor(level), worldFor(level), group, true, 'the wand (Wand.removed)');
+                        }
                         activatorStateFor(level).latched.set(group, true);
                         const rocks = fallRockStateFor(level);
                         const together = [...rocks].filter(

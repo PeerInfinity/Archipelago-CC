@@ -4,6 +4,8 @@
  * the skip probe), with the walkEnd/why/botHead fields the instrument on main
  * adds, so the summary is pinned against the shapes a real walk printed.
  */
+import { readFileSync } from 'node:fs';
+
 import { describe, expect, it } from 'vitest';
 
 import { measureEnv, parseArgs, parseMeasureFields, summarize, summaryLine } from './walk-seedling-whole-game.mjs';
@@ -72,5 +74,61 @@ describe('walk-seedling-whole-game summary', () => {
         });
         expect(() => parseArgs(['--runtime=flash'])).toThrow(/wasm or js/);
         expect(() => parseArgs(['--bogus'])).toThrow(/unknown argument/);
+    });
+});
+
+/* ── ⛓ THE TWO WALK INSTRUMENTS, OFF BY DEFAULT (slice `js-smalls-1`, ⚖ Robert 2026-11-26: "Land them as
+ * instruments") — TEST_MEASURE_CAPTURE_REQUESTS (--capture-requests=) and TEST_MEASURE_SOLVER_ENV (--solver-env=).
+ * With neither set: the walk passes no new knob, app.spec.js adds no URL param, no binding and no worker listener,
+ * and tutorialTests.js never starts the capture. The env side is measured (measureEnv); the page and spec sides are
+ * pinned on the source: every effect sits under its own knob's guard. */
+const SPEC = readFileSync(new URL('../../test_json/e2e/app.spec.js', import.meta.url), 'utf8');
+const TT = readFileSync(new URL('../../frontend/modules/tests/testCases/tutorialTests.js', import.meta.url), 'utf8');
+/** The `if (...)` line that opens the block holding `needle` (the nearest less-indented `if` above it). */
+function guardOf(src, needle) {
+    const lines = src.split('\n');
+    const at = lines.findIndex((l) => l.includes(needle));
+    expect(at, `${needle} is in the source`).toBeGreaterThan(-1);
+    expect(lines.filter((l) => l.includes(needle)).length, `${needle} occurs once`).toBe(1);
+    const indent = (l) => l.match(/^\s*/)[0].length;
+    for (let i = at - 1; i >= 0; i -= 1) {
+        if (lines[i].trim() && indent(lines[i]) < indent(lines[at])) return lines[i].trim();
+    }
+    return null;
+}
+
+describe('⛓ the walk instruments are OFF by default', () => {
+    it('the walk: no flag passes neither knob; each flag passes exactly its own', () => {
+        const off = measureEnv(parseArgs([]));
+        expect(off).not.toHaveProperty('TEST_MEASURE_CAPTURE_REQUESTS');
+        expect(off).not.toHaveProperty('TEST_MEASURE_SOLVER_ENV');
+        const cap = measureEnv(parseArgs(['--capture-requests=out/req.jsonl']));
+        expect(cap.TEST_MEASURE_CAPTURE_REQUESTS).toMatch(/[\\/]out[\\/]req\.jsonl$/);
+        expect(cap).not.toHaveProperty('TEST_MEASURE_SOLVER_ENV');
+        const env = measureEnv(parseArgs(['--solver-env=SEEDLING_A=1, SEEDLING_B=x']));
+        expect(env.TEST_MEASURE_SOLVER_ENV).toBe('SEEDLING_A=1;SEEDLING_B=x');
+        expect(env).not.toHaveProperty('TEST_MEASURE_CAPTURE_REQUESTS');
+        expect(() => parseArgs(['--capture-requests='])).toThrow(/takes a path/);
+        expect(() => parseArgs(['--solver-env=FOO=1'])).toThrow(/SEEDLING_NAME=VALUE/);
+    });
+
+    it('app.spec.js: the URL params, the capture binding and the worker log each sit under their knob', () => {
+        expect(guardOf(SPEC, '&seedlingSolverEnv=')).toBe('if (process.env.TEST_MEASURE_SOLVER_ENV) {');
+        expect(guardOf(SPEC, "page.on('worker'")).toBe('if (process.env.TEST_MEASURE_SOLVER_ENV) {');
+        expect(SPEC).toMatch(/const measureCapturePath = process\.env\.TEST_MEASURE_CAPTURE_REQUESTS \|\| '';/);
+        expect(guardOf(SPEC, "&measureCaptureRequests=1")).toBe('if (measureCapturePath) {');
+        expect(guardOf(SPEC, "exposeFunction('__measureCaptureAppend'")).toBe('if (measureCapturePath) {');
+    });
+
+    it('tutorialTests.js: the capture starts only on ?measureCaptureRequests=1; off, stop returns nothing to await', () => {
+        expect(TT).toMatch(/const MEASURE_CAPTURE = MEASURE_PARAMS\.get\('measureCaptureRequests'\) === '1';/);
+        const calls = TT.split('\n').filter((l) => /startRequestCapture\(/.test(l) && !/^\s*async function/.test(l));
+        expect(calls).toHaveLength(1);
+        expect(calls[0]).toMatch(/const capture = MEASURE_CAPTURE \? await startRequestCapture\(/);
+        expect(TT).toMatch(/return capture\?\.stop\(\);/);
+        expect(TT).toMatch(/const measureStopped = measure\?\.stop\(walkOutcome\);\n\s*if \(measureStopped\) await measureStopped;/);
+        // the codec and the solve-service hooks are imported inside the capture only (never at module load)
+        expect(TT).not.toMatch(/^import .*seedlingSolveRequestCodec/m);
+        expect(guardOf(TT, "import('../../../../scripts/procgen/seedlingSolveRequestCodec.js')")).toMatch(/Promise\.all\(\[/);
     });
 });
