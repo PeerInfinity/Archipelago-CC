@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
     MYSTERY_AUTO_SOLVE_EVENT as ASK, MYSTERY_AUTO_SOLVE_STATUS_EVENT as STATUS, MYSTERY_WALK_FAILURES as FAILURES,
-    MYSTERY_WALK_REFUSALS as REFUSALS, MYSTERY_WALK_TIMINGS as TIMINGS, createMysteryPlaybackController,
+    MYSTERY_WALK_REFUSALS as REFUSALS, MYSTERY_WALK_TIMINGS as TIMINGS, createMysteryPlaybackController, describeWaiting,
 } from './mysteryPlaybackController.js';
 import { PLAYBACK_WALK_FAILED_EVENT as FAILED } from '../procgenCore/playbackEvents.js';
 
@@ -133,6 +133,14 @@ describe('the mystery playback controller: a question', () => {
         expect(waiting.failures()).toEqual([]);
         waiting.tick(1);
         expect(waiting.failures()[0].reason).toBe(`${FAILURES.PAGE_WAITING}: note`);
+    });
+
+    it('a waiting is named in words, as the page sends it (question, then what each way lacks)', () => {
+        expect(describeWaiting([{ question: 'q.bell', ways: [{ papers: ['rowe'], requires: [] }] }])).toBe('q.bell (papers rowe)');
+        expect(describeWaiting([{ question: 'q.x', ways: [{ papers: ['a', 'b'], requires: ['q.y'] }, { papers: ['c'] }] }, 'q.z']))
+            .toBe('q.x (papers a, b; questions q.y | papers c), q.z');
+        expect(describeWaiting([])).toBeUndefined();
+        expect(describeWaiting(undefined)).toBeUndefined();
     });
 
     it('a waiting that clears goes on: running, then done', () => {

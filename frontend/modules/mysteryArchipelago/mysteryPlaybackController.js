@@ -56,6 +56,22 @@ function exitTarget(exit) {
 }
 
 /**
+ * The page's `waiting` list in words: each question with the papers (and questions) each of its ways still lacks,
+ * e.g. `q.bell (papers rowe)`. Entries may be bare question ids (an older page).
+ */
+export function describeWaiting(waiting) {
+    if (!Array.isArray(waiting) || waiting.length === 0) return undefined;
+    return waiting.map((w) => {
+        if (typeof w === 'string') return w;
+        const ways = (Array.isArray(w?.ways) ? w.ways : []).map((way) => [
+            ...(way?.papers?.length ? [`papers ${way.papers.join(', ')}`] : []),
+            ...(way?.requires?.length ? [`questions ${way.requires.join(', ')}`] : []),
+        ].join('; ')).filter(Boolean);
+        return `${w?.question ?? '?'}${ways.length ? ` (${ways.join(' | ')})` : ''}`;
+    }).join(', ');
+}
+
+/**
  * @param {Object} deps
  * @param {{publish: Function}} deps.dispatcher - the module's dispatcher (the exit move)
  * @param {{publish: Function, subscribe: Function}} deps.eventBus - the module's event bus
@@ -137,7 +153,7 @@ export function createMysteryPlaybackController({
         } else if (state === 'running') {
             clearTimer();
         } else if (state === 'waiting') {
-            setTimer(T.waitingMs, () => fail(MYSTERY_WALK_FAILURES.PAGE_WAITING, Array.isArray(status.waiting) ? status.waiting.join(', ') : undefined));
+            setTimer(T.waitingMs, () => fail(MYSTERY_WALK_FAILURES.PAGE_WAITING, describeWaiting(status.waiting)));
         } else if (state === 'failed') {
             fail(MYSTERY_WALK_FAILURES.PAGE_FAILED, typeof status.failed === 'string' ? status.failed : undefined);
         } else if (state === 'stopped') {
