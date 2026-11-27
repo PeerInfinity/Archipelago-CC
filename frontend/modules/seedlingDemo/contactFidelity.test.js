@@ -462,7 +462,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity DEADFRAME D2 (wave 66): a spinner or wallflyer on a FallRock's Button drops the rock, in the enemy's frame — OFF.
             enemyPressesFallRockButton: false,
             // ⛓ fidelity WANDTRAPBODIES (wave 67): a wand shot stops on a live darktrap or a collidable placed grenade — OFF.
-            wandShotTrapBodies: false, wandShotEnemyBodies: false });
+            wandShotTrapBodies: false, wandShotEnemyBodies: false,
+            // ⛓ fidelity WANDKILL (wave 71): the plain wand's sixth landed hit kills with the class's own death — OFF.
+            wandShotKill: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

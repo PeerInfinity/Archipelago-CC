@@ -115,7 +115,7 @@ describe('CEREMONYTOWER — the key', () => {
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
             // ⛓ wave 55: RELEASETICK `freezeReleaseTick` was appended after this key.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['freezeReleaseTick', 'freezeSpanUpdates', 'nestedRockCeremony', 'plainPickupInFreeze', 'chestCoverFencepost', 'presserRecursionHang', 'publishedButtonRoomSetter', 'responderStepAfterReaders', 'deadFrameResponderStep', 'enemyPressesFallRockButton', 'wandShotTrapBodies', 'wandShotEnemyBodies']);
+            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['freezeReleaseTick', 'freezeSpanUpdates', 'nestedRockCeremony', 'plainPickupInFreeze', 'chestCoverFencepost', 'presserRecursionHang', 'publishedButtonRoomSetter', 'responderStepAfterReaders', 'deadFrameResponderStep', 'enemyPressesFallRockButton', 'wandShotTrapBodies', 'wandShotEnemyBodies', 'wandShotKill']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FREEZE_EDGE_FRAMES');
         });
 });
