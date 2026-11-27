@@ -1,0 +1,12 @@
+L77: 3 regions, axis [Dark Suit, Ghost Spear, Progressive Shield, Progressive Sword, Wand] = 48 points; pulls 1 (gate pull_6_12)
+  pairs 6, targets 2: (a) 0, (b) 0
+L78: 12 regions, axis [Dark Suit, Ghost Spear, Progressive Shield, Progressive Sword, Wand] = 48 points; pulls 3 (gate pull_6_5 | pull_9_3 | pull_9_6)
+  pairs 132, targets 2: (a) 0, (b) 0
+L80: 9 regions, axis [Dark Suit, Ghost Spear, Progressive Shield, Progressive Sword, Wand] = 48 points; pulls 2 (gate pull_2_14 | pull_5_6)
+  pairs 72, targets 4: (a) 0, (b) 0
+L108: 4 regions, axis [Dark Suit] = 2 points; pulls 3 (gate pull_8_5 | pull_8_8 | pull_8_11)
+  pairs 12, targets 2: (a) 0, (b) 0
+
+real	0m1.453s
+user	0m1.405s
+sys	0m0.112s

@@ -1,0 +1,2 @@
+fixture l78-k-sketch (uncut disc): pairs 132, moved 0; searched 228->228, states 11952->11952, engine.searches 228->240, engine.states 11952->14209, skipped 0->0, upSet refusals 0; ms 78->315
+  entry targets 2, moved 0; engine.searches 14->16

@@ -1,18 +1,23 @@
 /**
- * ⚠ KNOWN ENGINE NIT (B), RECORDED, NOT FIXED (rules-lavatrap-pull-line; it rides with the next engineMd5 mover).
+ * ENGINE NIT (B): the pull-disc fixture (rules-lavatrap-pull-line recorded it; rules-engine-nit-b FIXED the half that was loose).
  *
- * `deriveLevelWorldLogic` searches the FULL lattice point first and marks a pair `unreachable` when that reach misses the
- * target, and never revisits it (`deriveLevelWorldLogic.js`, the `unreachable: owned(full.cells, to) === null` line). That is
- * sound only when reach is MONOTONE in the inventory. A pull breaks monotonicity: holding its gate (the Dark Suit) a step into
- * its disc is REELED onto the trap (`mazeRoomEngine.pullAfterMove`), so a cell reachable WITHOUT the suit can be unreachable
- * WITH it. The rules are monotone-safe exactly when the pull disc equals rule T's tongue disc (a disc cell the tongue kills
- * on is gated, so the reel only removes cells the suit-less walk could not stand on either).
+ * A pull breaks monotonicity: holding its gate (the Dark Suit) a step into its disc from outside is REELED onto the trap
+ * (`mazeRoomEngine.pullAfterMove`), so a cell reachable WITHOUT the suit can be unreachable WITH it. The rules are monotone-safe
+ * exactly when the pull disc equals rule T's tongue disc (a disc cell the tongue kills on is gated, so the reel only removes
+ * cells the suit-less walk could not stand on either).
  *
  * Rule K's pass-1 sketch (origin/claude/rules-k-pursuit-speed-0s83t8 @b66f327267, its STOP) hit it: K isolates L78 (11,6) as
  * sub-region r6c11, main's disc reels from (11,6) though the wall (10,6) blocks the tongue's line (`LavaTrap.as:86-88`), and
  * every pair into r6c11 came back unreachable. This file pins that, on K's own payload (a TEST-ONLY fixture, outside the
- * engine closure): the uncut disc reproduces the false `unreachable`; the line-cut disc (what `lavaTrapPulls` now emits)
- * derives the pair. Delete the first row's expectation when the engine learns to revisit a pruned pair.
+ * engine closure).
+ *
+ * ⛓ WHY THE FIRST ROW STAYS (rules-engine-nit-b): the Dark Suit is never shed in play (`learnLattice.pullUpSet` cites the AS3),
+ * and an AP rule is UPWARD-CLOSED — a set granted is granted with every superset. A grant at S therefore needs EVERY lattice
+ * point ⊇ S to reach, the full point among them; when the full point misses r6c11, no S qualifies, so `unreachable` is the
+ * SOUND answer, not a false prune (over-strict only against a model that let the player drop the suit). The half that was
+ * really loose is the `covered` skip, which granted supersets it never searched: the up-set guard closes it, and
+ * `deriveLevelWorldLogic.pullUpSet.test.js` pins it on a synthetic world (red with the guard off). The uncut disc is still
+ * the WRONG disc for the game (the tongue's line is blocked); the line-cut disc is what `lavaTrapPulls` emits.
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -29,7 +34,7 @@ const pullAt = (p, x, y) => p.pulls.find((q) => q.x === x && q.y === y);
 const derive = (payload) => deriveLevelWorldLogic(deserializeMazeWorld(payload), HELPERS, { native: true });
 const pair = (out) => out.pairs.find((p) => p.from === FROM && p.to === TARGET);
 
-describe('known engine nit (B): the visited-pair pruning is not monotone under a pull disc wider than its tongue disc', () => {
+describe('engine nit (B): reach is not monotone under a pull disc wider than its tongue disc', () => {
     it('the fixture is K\'s L78: r6c11 is the one cell (11,6), and trap (9,6)\'s disc holds the two wall-blocked cells', () => {
         const rows = K_L78.shared_world.rows;
         const owner = K_L78.shared_world.regions.indexOf(TARGET);
@@ -41,7 +46,7 @@ describe('known engine nit (B): the visited-pair pruning is not monotone under a
         for (const c of CUT) expect(from).toContainEqual(c);
     });
 
-    it('UNCUT disc (main before the line test): every pair into r6c11 is pruned unreachable — the nit, pinned', () => {
+    it('UNCUT disc (main before the line test): every pair into r6c11 is unreachable — sound under upward closure, pinned', () => {
         const out = derive(K_L78);
         expect(pair(out).unreachable).toBe(true);
         expect(out.pairs.filter((p) => p.to === TARGET).every((p) => p.unreachable)).toBe(true);

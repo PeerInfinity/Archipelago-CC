@@ -1,0 +1,284 @@
+CHANNEL: headless logic-only (P3 timing probe: the calib file, one test per level; no browser)
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.calib.test.js [2m([22m[2m117 tests[22m[2m)[22m[33m 962564[2mms[22m[39m
+     [33m[2m✓[22m[39m level_0: both engines, only the named OPEN rows, the same lines [33m 19800[2mms[22m[39m
+     [33m[2m✓[22m[39m level_3: both engines, only the named OPEN rows, the same lines [33m 943[2mms[22m[39m
+     [33m[2m✓[22m[39m level_8: both engines, only the named OPEN rows, the same lines [33m 1939[2mms[22m[39m
+     [33m[2m✓[22m[39m level_12: both engines, only the named OPEN rows, the same lines [33m 70015[2mms[22m[39m
+     [33m[2m✓[22m[39m level_15: both engines, only the named OPEN rows, the same lines [33m 5024[2mms[22m[39m
+     [33m[2m✓[22m[39m level_16: both engines, only the named OPEN rows, the same lines [33m 263534[2mms[22m[39m
+     [33m[2m✓[22m[39m level_22: both engines, only the named OPEN rows, the same lines [33m 1976[2mms[22m[39m
+     [33m[2m✓[22m[39m level_28: both engines, only the named OPEN rows, the same lines [33m 375[2mms[22m[39m
+     [33m[2m✓[22m[39m level_30: both engines, only the named OPEN rows, the same lines [33m 8344[2mms[22m[39m
+     [33m[2m✓[22m[39m level_37: both engines, only the named OPEN rows, the same lines [33m 529[2mms[22m[39m
+     [33m[2m✓[22m[39m level_39: both engines, only the named OPEN rows, the same lines [33m 676[2mms[22m[39m
+     [33m[2m✓[22m[39m level_40: both engines, only the named OPEN rows, the same lines [33m 463647[2mms[22m[39m
+     [33m[2m✓[22m[39m level_41: both engines, only the named OPEN rows, the same lines [33m 1371[2mms[22m[39m
+     [33m[2m✓[22m[39m level_43: both engines, only the named OPEN rows, the same lines [33m 498[2mms[22m[39m
+     [33m[2m✓[22m[39m level_46: both engines, only the named OPEN rows, the same lines [33m 786[2mms[22m[39m
+     [33m[2m✓[22m[39m level_47: both engines, only the named OPEN rows, the same lines [33m 3660[2mms[22m[39m
+     [33m[2m✓[22m[39m level_48: both engines, only the named OPEN rows, the same lines [33m 416[2mms[22m[39m
+     [33m[2m✓[22m[39m level_53: both engines, only the named OPEN rows, the same lines [33m 2159[2mms[22m[39m
+     [33m[2m✓[22m[39m level_54: both engines, only the named OPEN rows, the same lines [33m 689[2mms[22m[39m
+     [33m[2m✓[22m[39m level_63: both engines, only the named OPEN rows, the same lines [33m 94566[2mms[22m[39m
+     [33m[2m✓[22m[39m level_65: both engines, only the named OPEN rows, the same lines [33m 1355[2mms[22m[39m
+     [33m[2m✓[22m[39m level_71: both engines, only the named OPEN rows, the same lines [33m 2702[2mms[22m[39m
+     [33m[2m✓[22m[39m level_72: both engines, only the named OPEN rows, the same lines [33m 757[2mms[22m[39m
+     [33m[2m✓[22m[39m level_73: both engines, only the named OPEN rows, the same lines [33m 352[2mms[22m[39m
+     [33m[2m✓[22m[39m level_75: both engines, only the named OPEN rows, the same lines [33m 390[2mms[22m[39m
+     [33m[2m✓[22m[39m level_77: both engines, only the named OPEN rows, the same lines [33m 412[2mms[22m[39m
+     [33m[2m✓[22m[39m level_78: both engines, only the named OPEN rows, the same lines [33m 3409[2mms[22m[39m
+     [33m[2m✓[22m[39m level_80: both engines, only the named OPEN rows, the same lines [33m 1350[2mms[22m[39m
+     [33m[2m✓[22m[39m level_89: both engines, only the named OPEN rows, the same lines [33m 325[2mms[22m[39m
+     [33m[2m✓[22m[39m level_92: both engines, only the named OPEN rows, the same lines [33m 672[2mms[22m[39m
+     [33m[2m✓[22m[39m level_99: both engines, only the named OPEN rows, the same lines [33m 543[2mms[22m[39m
+     [33m[2m✓[22m[39m level_101: both engines, only the named OPEN rows, the same lines [33m 2225[2mms[22m[39m
+     [33m[2m✓[22m[39m level_113: both engines, only the named OPEN rows, the same lines [33m 1506[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m117 passed[39m[22m[90m (117)[39m
+[2m   Start at [22m 03:31:52
+[2m   Duration [22m 979.83s[2m (transform 3.23s, setup 222ms, import 16.86s, tests 962.56s, environment 0ms)[22m
+
+JSON report written to /home/user/Archipelago-CC/test-results/seedling-probe/calib-vitest.json
+PASS: every one of the preset's 115 levels has exactly one test (none off)
+PASS: level_0 passed 19800 ms
+PASS: level_1 passed 36 ms
+PASS: level_2 passed 29 ms
+PASS: level_3 passed 943 ms
+PASS: level_4 passed 42 ms
+PASS: level_5 passed 55 ms
+PASS: level_6 passed 32 ms
+PASS: level_7 passed 28 ms
+PASS: level_8 passed 1939 ms
+PASS: level_9 passed 33 ms
+PASS: level_10 passed 21 ms
+PASS: level_11 passed 21 ms
+PASS: level_12 passed 70015 ms
+PASS: level_13 passed 32 ms
+PASS: level_14 passed 32 ms
+PASS: level_15 passed 5024 ms
+PASS: level_16 passed 263534 ms
+PASS: level_17 passed 32 ms
+PASS: level_18 passed 120 ms
+PASS: level_19 passed 98 ms
+PASS: level_20 passed 233 ms
+PASS: level_21 passed 34 ms
+PASS: level_22 passed 1976 ms
+PASS: level_23 passed 38 ms
+PASS: level_24 passed 50 ms
+PASS: level_25 passed 117 ms
+PASS: level_26 passed 168 ms
+PASS: level_27 passed 26 ms
+PASS: level_28 passed 375 ms
+PASS: level_29 passed 89 ms
+PASS: level_30 passed 8344 ms
+PASS: level_31 passed 84 ms
+PASS: level_32 passed 33 ms
+PASS: level_33 passed 24 ms
+PASS: level_34 passed 30 ms
+PASS: level_35 passed 26 ms
+PASS: level_36 passed 30 ms
+PASS: level_37 passed 529 ms
+PASS: level_38 passed 68 ms
+PASS: level_39 passed 676 ms
+PASS: level_40 passed 463647 ms
+PASS: level_41 passed 1371 ms
+PASS: level_42 passed 34 ms
+PASS: level_43 passed 498 ms
+PASS: level_44 passed 85 ms
+PASS: level_45 passed 270 ms
+PASS: level_46 passed 786 ms
+PASS: level_47 passed 3660 ms
+PASS: level_48 passed 416 ms
+PASS: level_49 passed 30 ms
+PASS: level_50 passed 37 ms
+PASS: level_51 passed 206 ms
+PASS: level_52 passed 87 ms
+PASS: level_53 passed 2159 ms
+PASS: level_54 passed 689 ms
+PASS: level_55 passed 26 ms
+PASS: level_56 passed 36 ms
+PASS: level_57 passed 97 ms
+PASS: level_58 passed 205 ms
+PASS: level_59 passed 40 ms
+PASS: level_60 passed 145 ms
+PASS: level_61 passed 119 ms
+PASS: level_62 passed 115 ms
+PASS: level_63 passed 94566 ms
+PASS: level_64 passed 26 ms
+PASS: level_65 passed 1355 ms
+PASS: level_66 passed 41 ms
+PASS: level_67 passed 76 ms
+PASS: level_68 passed 48 ms
+PASS: level_69 passed 33 ms
+PASS: level_70 passed 26 ms
+PASS: level_71 passed 2702 ms
+PASS: level_72 passed 757 ms
+PASS: level_73 passed 352 ms
+PASS: level_74 passed 188 ms
+PASS: level_75 passed 390 ms
+PASS: level_76 passed 31 ms
+PASS: level_77 passed 412 ms
+PASS: level_78 passed 3409 ms
+PASS: level_79 passed 78 ms
+PASS: level_80 passed 1350 ms
+PASS: level_82 passed 98 ms
+PASS: level_83 passed 49 ms
+PASS: level_84 passed 31 ms
+PASS: level_85 passed 33 ms
+PASS: level_86 passed 26 ms
+PASS: level_87 passed 294 ms
+PASS: level_88 passed 79 ms
+PASS: level_89 passed 325 ms
+PASS: level_90 passed 31 ms
+PASS: level_91 passed 45 ms
+PASS: level_92 passed 672 ms
+PASS: level_93 passed 78 ms
+PASS: level_94 passed 50 ms
+PASS: level_95 passed 31 ms
+PASS: level_96 passed 28 ms
+PASS: level_97 passed 26 ms
+PASS: level_98 passed 95 ms
+PASS: level_99 passed 543 ms
+PASS: level_100 passed 125 ms
+PASS: level_101 passed 2225 ms
+PASS: level_102 passed 57 ms
+PASS: level_103 passed 31 ms
+PASS: level_104 passed 30 ms
+PASS: level_105 passed 28 ms
+PASS: level_106 passed 30 ms
+PASS: level_107 passed 33 ms
+PASS: level_108 passed 55 ms
+PASS: level_109 passed 32 ms
+PASS: level_110 passed 30 ms
+PASS: level_111 passed 43 ms
+PASS: level_112 passed 154 ms
+PASS: level_113 passed 1506 ms
+PASS: level_114 passed 34 ms
+PASS: level_115 passed 185 ms
+PASS: the levels partition the preset's regions: each region in exactly one level passed 3 ms
+PASS: whole verdict: every level ran, and the problems over all levels are exactly the named OPEN rows passed 1 ms
+PASS: the heaviest test is inside the config's testTimeout (level_40 463647 ms < 900000 ms)
+MEASURED: level level_40 ms=463647
+MEASURED: level level_16 ms=263534
+MEASURED: level level_63 ms=94566
+MEASURED: level level_12 ms=70015
+MEASURED: level level_0 ms=19800
+MEASURED: level level_30 ms=8344
+MEASURED: level level_15 ms=5024
+MEASURED: level level_47 ms=3660
+MEASURED: level level_78 ms=3409
+MEASURED: level level_71 ms=2702
+MEASURED: level level_101 ms=2225
+MEASURED: level level_53 ms=2159
+MEASURED: level level_22 ms=1976
+MEASURED: level level_8 ms=1939
+MEASURED: level level_113 ms=1506
+MEASURED: level level_41 ms=1371
+MEASURED: level level_65 ms=1355
+MEASURED: level level_80 ms=1350
+MEASURED: level level_3 ms=943
+MEASURED: level level_46 ms=786
+MEASURED: level level_72 ms=757
+MEASURED: level level_54 ms=689
+MEASURED: level level_39 ms=676
+MEASURED: level level_92 ms=672
+MEASURED: level level_99 ms=543
+MEASURED: level level_37 ms=529
+MEASURED: level level_43 ms=498
+MEASURED: level level_48 ms=416
+MEASURED: level level_77 ms=412
+MEASURED: level level_75 ms=390
+MEASURED: level level_28 ms=375
+MEASURED: level level_73 ms=352
+MEASURED: level level_89 ms=325
+MEASURED: level level_87 ms=294
+MEASURED: level level_45 ms=270
+MEASURED: level level_20 ms=233
+MEASURED: level level_51 ms=206
+MEASURED: level level_58 ms=205
+MEASURED: level level_74 ms=188
+MEASURED: level level_115 ms=185
+MEASURED: level level_26 ms=168
+MEASURED: level level_112 ms=154
+MEASURED: level level_60 ms=145
+MEASURED: level level_100 ms=125
+MEASURED: level level_18 ms=120
+MEASURED: level level_61 ms=119
+MEASURED: level level_25 ms=117
+MEASURED: level level_62 ms=115
+MEASURED: level level_19 ms=98
+MEASURED: level level_82 ms=98
+MEASURED: level level_57 ms=97
+MEASURED: level level_98 ms=95
+MEASURED: level level_29 ms=89
+MEASURED: level level_52 ms=87
+MEASURED: level level_44 ms=85
+MEASURED: level level_31 ms=84
+MEASURED: level level_88 ms=79
+MEASURED: level level_79 ms=78
+MEASURED: level level_93 ms=78
+MEASURED: level level_67 ms=76
+MEASURED: level level_38 ms=68
+MEASURED: level level_102 ms=57
+MEASURED: level level_5 ms=55
+MEASURED: level level_108 ms=55
+MEASURED: level level_24 ms=50
+MEASURED: level level_94 ms=50
+MEASURED: level level_83 ms=49
+MEASURED: level level_68 ms=48
+MEASURED: level level_91 ms=45
+MEASURED: level level_111 ms=43
+MEASURED: level level_4 ms=42
+MEASURED: level level_66 ms=41
+MEASURED: level level_59 ms=40
+MEASURED: level level_23 ms=38
+MEASURED: level level_50 ms=37
+MEASURED: level level_1 ms=36
+MEASURED: level level_56 ms=36
+MEASURED: level level_21 ms=34
+MEASURED: level level_42 ms=34
+MEASURED: level level_114 ms=34
+MEASURED: level level_9 ms=33
+MEASURED: level level_32 ms=33
+MEASURED: level level_69 ms=33
+MEASURED: level level_85 ms=33
+MEASURED: level level_107 ms=33
+MEASURED: level level_6 ms=32
+MEASURED: level level_13 ms=32
+MEASURED: level level_14 ms=32
+MEASURED: level level_17 ms=32
+MEASURED: level level_109 ms=32
+MEASURED: level level_76 ms=31
+MEASURED: level level_84 ms=31
+MEASURED: level level_90 ms=31
+MEASURED: level level_95 ms=31
+MEASURED: level level_103 ms=31
+MEASURED: level level_34 ms=30
+MEASURED: level level_36 ms=30
+MEASURED: level level_49 ms=30
+MEASURED: level level_104 ms=30
+MEASURED: level level_106 ms=30
+MEASURED: level level_110 ms=30
+MEASURED: level level_2 ms=29
+MEASURED: level level_7 ms=28
+MEASURED: level level_96 ms=28
+MEASURED: level level_105 ms=28
+MEASURED: level level_27 ms=26
+MEASURED: level level_35 ms=26
+MEASURED: level level_55 ms=26
+MEASURED: level level_64 ms=26
+MEASURED: level level_70 ms=26
+MEASURED: level level_86 ms=26
+MEASURED: level level_97 ms=26
+MEASURED: level level_33 ms=24
+MEASURED: level level_10 ms=21
+MEASURED: level level_11 ms=21
+MEASURED: calib file rc=0 wall 980.4 s, level tests sum 962.5 s, 115 levels + 2 other tests, nproc 4
+MEASURED: heaviest test level_40 463.6 s of the 900 s testTimeout (48.5% headroom)
+MEASURED: wrote calib-levels.json (115 levels) at ef3cad0bba5810bdc80072e3ca09050e99b3a98b
+PASS: the calib file is green (rc=0)
+ALL CHECKS PASSED
