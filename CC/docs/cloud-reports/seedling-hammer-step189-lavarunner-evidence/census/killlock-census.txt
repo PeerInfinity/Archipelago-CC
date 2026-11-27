@@ -1,0 +1,9 @@
+# kill-locks (Lock tset -1: opens on totalEnemies()==0) in the committed atlas, the enemy types in the room, and the seed-1 divergence-sweep legs that start there
+L5	1 kill-lock(s)	{'stairsup': 2, 'arrowtrap': 4, 'bob': 3}	legs=5
+L18	1 kill-lock(s)	{'stairsdown': 1, 'spinner': 2}	legs=3
+L53	1 kill-lock(s)	{'jellyfish': 3, 'icetrap': 1, 'stairsdown': 1, 'shadow': 16, 'breakablerock': 2, 'puncher': 1}	legs=8
+L60	1 kill-lock(s)	{'droplet': 1, 'jellyfish': 2}	legs=3
+L71	1 kill-lock(s)	{'lavarunner': 5, 'spinningaxe': 1, 'shieldlock': 1, 'control': 1}	legs=29
+L78	1 kill-lock(s)	{'lavatrap': 3, 'lavarunner': 5, 'lavachain': 1, 'grenade': 1}	legs=2
+L98	1 kill-lock(s)	{'spinningaxe': 2, 'jellyfish': 3, 'iceturret': 1, 'stairsup': 1, 'shadow': 7}	legs=6
+L99	1 kill-lock(s)	{'stairsdown': 1, 'stairsup': 1, 'lavachain': 1, 'lavarunner': 3, 'blur': 1, 'daynight': 1, 'shadow': 8}	legs=3
