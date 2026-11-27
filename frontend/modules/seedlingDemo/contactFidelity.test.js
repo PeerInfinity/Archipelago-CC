@@ -102,6 +102,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_FREEZE_SPAN_UPDATES
         || !!process.env.SEEDLING_NESTED_ROCK_CEREMONY
         || !!process.env.SEEDLING_PLAIN_PICKUP_IN_FREEZE
+        || !!process.env.SEEDLING_CHEST_COVER_FENCEPOST
+        || !!process.env.SEEDLING_PRESSER_RECURSION_HANG
         || !!process.env.SEEDLING_ARROW_LANE_CROSSING
         || !!process.env.SEEDLING_AXE_TIMING_RUNG || !!process.env.SEEDLING_AXE_GATE_TRANSIT
         || !!process.env.SEEDLING_STATUE_TALK_RANGE
@@ -443,7 +445,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity NESTEDFREEZE D2 (wave 57): a pickup ceremony that starts on a button's frame A runs as the union with the rock's span — OFF.
             nestedRockCeremony: false,
             // ⛓ fidelity PLAINSPAN D2 (wave 59): every plain pickup (APItem) under the box a freeze's frame tests is taken on that frame — OFF.
-            plainPickupInFreeze: false });
+            plainPickupInFreeze: false,
+            // ⛓ fidelity CHESTCOVER D2 (wave 61): the vanilla chest reads a responder over it one step older (the game's update order) — OFF.
+            chestCoverFencepost: false,
+            // ⛓ fidelity PRESSERLOOP D2 (wave 62): a group whose re-publishing setters reach each other hangs the game — OFF.
+            presserRecursionHang: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

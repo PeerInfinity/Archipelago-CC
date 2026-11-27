@@ -2399,6 +2399,63 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_PLAIN_PICKUP_IN_FREEZE=0|1`. ⛔ OFF by default (no flip licence).
      */
     plainPickupInFreeze: false,
+    /**
+     * ⛓ fidelity CHESTCOVER D2 (wave 61) — THE VANILLA `Chest` READS A RESPONDER OVER IT ONE STEP OLDER THAN THE
+     * PLAYER DOES (the fencepost wave 60 measured, `CC/docs/cloud-reports/seedling-fidelity-chestcover.md`).
+     * The game. `World.addUpdate` prepends, so one frame runs the update list in reverse `Game.loadlevel` add order:
+     * `chest` (vendor `Game.as:2377`; p4h `:2384`) BEFORE `cover` (`:2360`; p4h `:2367`) and every other responder
+     * (`lock` … `magicallockfire`, `:2355-2367`), and those BEFORE `button` (`:2341`) and the Player (`:2250`).
+     * `Chest.update`'s gate (`Chest.as:59-67`) is `!collide("Solid", x, y)`, so it reads a `Cover`'s `type` as the
+     * PREVIOUS frame's `Cover.update` left it (`Puzzlements/Cover.as:37-68`: `alpha -= 0.1`, and `type = ""` on the
+     * update where `alpha <= 0`). The model steps the responders at the END of tick k (`stepActivators`) and that state
+     * is the game's responder update of frame k+1 (its own docblock's labelling), so `activators` at the chest step of
+     * tick k+1 is ALREADY "after this frame's Cover update": right for a body that updates AFTER the responders (the
+     * Player, the APChest — `Game.as:2335` on p4h, witnessed 12 = model 12), one step new for the vanilla chest.
+     * MEASURED on the game (wave 60, p4h page, `-evidence/w60/witness-vanilla.json`, a staged L38 room on the vanilla
+     * set: `buttonroom@144,128` swapped for a `button tset 0`): the vanilla chest under `cover@144,112` opens on 13
+     * (cuts 10/11/12 not cleared, 13 cleared); OFF opens it on 12 (the cover's `s.open` turns at the end of advance 11).
+     * ON (`stepActivators` keeps `state.openBefore` = the open set before its own mutation, every caller alike — the
+     * main tick's end, `runFrozenTick`, `inventoryHoldFrameNow`, a rope span's frames; `stepChestsNow`'s `solidOver`
+     * reads it for a chest that is NOT an AP chest, `openActivatorIdsBeforeStep`): the chest sees the open set the
+     * state held before its latest step — a cover's open AND its reset, one step older. A state no step has run on yet
+     * (a fresh visit) reads its current set (the constructed one, which is what the arrival frame's chest sees). OFF:
+     * no field written, byte-identical. Not modelled, named (hand-overs): a `PushableBlock*` (`:2382-2384`) also
+     * updates before every responder and the model reads the current set for it (`pushableCtx`); a Spinner's read is
+     * `spinnerLockLag`'s (opens only). Needs no other key; composes with every key (one read of one gate).
+     * `SEEDLING_CHEST_COVER_FENCEPOST=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    chestCoverFencepost: false,
+    /**
+     * ⛓ fidelity PRESSERLOOP D2 (wave 62) — A GROUP WHOSE RE-PUBLISHING SETTERS REACH EACH OTHER HANGS THE GAME (wave
+     * 61's named STOP, `CC/docs/cloud-reports/seedling-fidelity-presserloop.md`).
+     * The game. Three `Activators` setters re-publish to every other `Activators` of their `t`: `Button.set activate`
+     * (`Puzzlements/Button.as:42-61`, `activateAll`), `RopeStart.set activate` (`RopeStart.as:79-91`), both for every
+     * value, and `ButtonRoom.set activate` with `room == -1` (`ButtonRoom.as:67-98`), only for a true, publishing
+     * `true` with `flip = 0` and `false` with `flip = 1`. The other ten subclasses store the flag. So a false loops
+     * between two pass-throughs (Button/RopeStart) and a true among the pass-throughs and the flip-0 ButtonRooms
+     * (`levelWorld.presserRecursionGroups`). `Button.update` publishes every frame; `check()` publishes for a pulled
+     * rope and a pressed ButtonRoom.
+     * MEASURED on the game (p4g, and p4d for five shapes; staged L38 rooms, group 6, through `botLoadLevels`;
+     * `-evidence/d3/witness-p4g.json`): each recursing shape throws "Maximum call stack size exceeded" ONCE and then
+     * NO later frame runs — the tick, `dead_frames`, the position and the persistence readout are frozen for the rest of
+     * the sample, no door is reached and nothing is written. Button+Button and Button+Rope: after observation 0 (tick
+     * 1). Two pulled ropes, and a Button with a pressed-at-boot flip-0 ButtonRoom: inside the first frame's `check()`,
+     * before observation 0. A flip-0 ButtonRoom with a Button / a second flip-0 / a rope, and a flip-1 ButtonRoom with
+     * two ropes: in the frame of the press (24 observations drained). The near misses play out to L37: two unpulled
+     * ropes, a flip-1 ButtonRoom with a Button (either one pressed), flip 0 + flip 1, a cross-room ButtonRoom, one
+     * presser.
+     * ON. A world whose recursion fires on the build's first frame (`firstFrame`, `bootBy`) is refused at build by name
+     * (`LevelWorldError`): the game cannot run one frame of it. A publish during a run — a Button or ButtonRoom pressed
+     * (`stepActivators`, every caller), a rope pulled (`publishRopeGroup`), the wand's tset-0 sweep — into a group it
+     * loops in marks the activator state hung (`presserHang`) and the step does nothing else; the tick it ends is the
+     * game's last observation, and the run's NEXT `advance` throws `PresserRecursionHang` by name: the game runs no
+     * later frame, so the solver cannot certify past it. OFF: nothing read or written, byte-identical. Not modelled,
+     * named: `FinalBoss`'s `Button.activateAll(null, 0, true)` (the model does not publish that sweep); the order of the
+     * entities that update before the throwing setter in the hang frame (no later frame observes them).
+     * Needs no other key; composes with every key (one more refusal, before or instead of a step).
+     * `SEEDLING_PRESSER_RECURSION_HANG=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    presserRecursionHang: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2844,6 +2901,12 @@ if (globalThis.process?.env?.SEEDLING_NESTED_ROCK_CEREMONY === '0') CONTACT_FIDE
 // ⛓ fidelity PLAINSPAN D2: `SEEDLING_PLAIN_PICKUP_IN_FREEZE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_PLAIN_PICKUP_IN_FREEZE === '1') CONTACT_FIDELITY.plainPickupInFreeze = true;
 if (globalThis.process?.env?.SEEDLING_PLAIN_PICKUP_IN_FREEZE === '0') CONTACT_FIDELITY.plainPickupInFreeze = false;
+// ⛓ fidelity CHESTCOVER D2: `SEEDLING_CHEST_COVER_FENCEPOST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CHEST_COVER_FENCEPOST === '1') CONTACT_FIDELITY.chestCoverFencepost = true;
+if (globalThis.process?.env?.SEEDLING_CHEST_COVER_FENCEPOST === '0') CONTACT_FIDELITY.chestCoverFencepost = false;
+// ⛓ fidelity PRESSERLOOP D2: `SEEDLING_PRESSER_RECURSION_HANG=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PRESSER_RECURSION_HANG === '1') CONTACT_FIDELITY.presserRecursionHang = true;
+if (globalThis.process?.env?.SEEDLING_PRESSER_RECURSION_HANG === '0') CONTACT_FIDELITY.presserRecursionHang = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

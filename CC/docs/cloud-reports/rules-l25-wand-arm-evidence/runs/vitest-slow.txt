@@ -1,0 +1,7 @@
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.slow.test.js (2 tests) 152439ms
+     ✓ native engine, every region  151567ms
+     ✓ the closure comparison still catches an in-world row the world disagrees with, both ways  869ms
+ ✓ frontend/modules/stateManager/core/sphereZeroCredit.slow.test.js (1 test) 2622ms
+     ✓ sphere 0 credits the computed Reachable Orbs (332), and the orb trades open at 3.15  2621ms
+ Test Files  2 passed (2)
+      Tests  3 passed (3)

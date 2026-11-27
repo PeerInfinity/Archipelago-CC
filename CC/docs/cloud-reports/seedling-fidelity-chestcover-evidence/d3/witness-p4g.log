@@ -1,0 +1,17 @@
+L38 at 144,128 + every button (staged): [{"type":"button","x":80,"y":192,"attrs":{"tset":"5"}},{"type":"button","x":144,"y":128,"attrs":{"tset":"0"}}]
+PAGE: seedling_bot_ap_p4g · capabilities ["arm","apitem","hold","tag","freeze","sincebegin","bossreport"] · set seedling-vanilla-record-23510f80-l38btn1
+# box lock: TAKEN by chestcover-witness.mjs (browser, pid 2141) — head 86de9a58f, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+PASS: l38-cover-button OFF: the record-set source and the atlas source replay the same
+PASS: l38-cover-button ON: the record-set source and the atlas source replay the same
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: l38-cover-button: the staged set is mounted — "seedling-vanilla-record-23510f80-l38btn1"
+PASS: l38-cover-button: the whole tape clears slot 38,1
+VERDICT l38-cover-button: the game opens on 13; model OFF 12, model ON 13 — cuts {"10":false,"11":false,"12":false,"13":true,"14":true}
+(OFF replay vs game: {"compared":31,"worst":1.25,"first":{"t":12,"game":{"level":38,"x":152,"y":130.5},"model":{"level":38,"x":152,"y":129.25}}}; ON replay vs game: {"compared":31,"worst":0,"first":null})
+PASS: l38-cover-late OFF: the record-set source and the atlas source replay the same
+PASS: l38-cover-late ON: the record-set source and the atlas source replay the same
+PASS: l38-cover-late: the staged set is mounted — "seedling-vanilla-record-23510f80-l38btn1"
+PASS: l38-cover-late: the whole tape clears slot 38,1
+VERDICT l38-cover-late: the game opens on 26; model OFF 26, model ON 26 — cuts {"24":false,"25":false,"26":true,"27":true}
+(OFF replay vs game: {"compared":51,"worst":0,"first":null}; ON replay vs game: {"compared":51,"worst":0,"first":null})
+ALL CHECKS PASSED

@@ -141,12 +141,14 @@ export const REGISTRY = frz({
                 "loopSupport.actionGate",
                 "loopSupport.authoredCosts",
                 "loopSupport.botActsAtOnce",
+                "loopSupport.clockLine",
                 "loopSupport.customQueues",
                 "loopSupport.executeVia",
                 "loopSupport.instant",
                 "loopSupport.manual",
                 "loopSupport.playClock",
                 "loopSupport.playback",
+                "loopSupport.pool",
                 "loopSupport.queueActions",
                 "loopSupport.record",
                 "loopSupport.requiresLoopMode",
@@ -5670,12 +5672,14 @@ export const REGISTRY = frz({
                 {
                     "id": "action_nodes",
                     "present": true,
-                    "short": "5 keys",
+                    "short": "7 keys",
                     "type": "object",
                     "value": [
                         "actionGate",
                         "authoredCosts",
+                        "clockLine",
                         "manual",
+                        "pool",
                         "queueActions",
                         "strictQueueActions"
                     ]
@@ -6062,6 +6066,86 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Loop mode",
             "name": "loopSupport.botActsAtOnce"
+        },
+        {
+            "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Loop mode",
+            "name": "loopSupport.clockLine"
         },
         {
             "carriedBy": [
@@ -6584,6 +6668,86 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Loop mode",
+            "name": "loopSupport.pool"
+        },
+        {
+            "carriedBy": [
                 "action_nodes",
                 "bounce",
                 "cloudberry",
@@ -6599,11 +6763,12 @@ export const REGISTRY = frz({
                 {
                     "id": "action_nodes",
                     "present": true,
-                    "short": "regionMove, act",
+                    "short": "regionMove, act, wait",
                     "type": "array",
                     "value": [
                         "regionMove",
-                        "act"
+                        "act",
+                        "wait"
                     ]
                 },
                 {
@@ -9517,7 +9682,7 @@ export const REGISTRY = frz({
                 {
                     "id": "action_nodes",
                     "present": true,
-                    "short": "11 keys",
+                    "short": "12 keys",
                     "type": "object",
                     "value": [
                         "after",
@@ -9530,7 +9695,8 @@ export const REGISTRY = frz({
                         "position",
                         "requires",
                         "results",
-                        "time"
+                        "time",
+                        "window"
                     ]
                 },
                 {

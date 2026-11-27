@@ -700,6 +700,36 @@
                 "xpEffect": { "type": "string", "description": "As a `loop_costs` region's `xpEffect`." }
               },
               "additionalProperties": false
+            },
+            "clock": {
+              "type": "object",
+              "description": "AN-TIME-1, only on a TIMED graph: the clock a node's `window` is shown on. `start` is the clock time of a loop's time 0 (HH:MM), `minutesPerUnit` how many minutes one unit of time is. Display only: a window is read against time spent this loop.",
+              "properties": {
+                "start": { "type": "string", "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$" },
+                "minutesPerUnit": { "type": "integer", "minimum": 1 }
+              },
+              "required": ["start", "minutesPerUnit"],
+              "additionalProperties": false
+            },
+            "pool": {
+              "type": "object",
+              "description": "AN-TIME-2, only when the graph names it: the display name of the loop's resource (the shared pool), e.g. {\"name\": \"Time\", \"unit\": \"h\"}. Absent, the pool is called \"Mana\". Display only: the Loops, Resources and ActionNodes panels and the refusal texts read it.",
+              "properties": {
+                "name": { "type": "string", "minLength": 1 },
+                "unit": { "type": "string", "minLength": 1 }
+              },
+              "required": ["name"],
+              "additionalProperties": false
+            },
+            "knowledge": {
+              "type": "object",
+              "description": "AN-TIME-1, only when the graph has knowledge: flag id -> {name, item}. A flag is learned by performing a node that teaches it and kept across loops; `item` is the EVENT item that stands for it in the logic (`Knows: <name>`).",
+              "additionalProperties": {
+                "type": "object",
+                "properties": { "name": { "type": "string" }, "item": { "type": "string" } },
+                "required": ["name", "item"],
+                "additionalProperties": false
+              }
             }
           },
           "required": ["schema_version", "graph_id", "loop", "stats", "resources", "boosts", "mana_per_item_default", "start", "goal", "action"],
@@ -1118,8 +1148,8 @@
         },
         "event_kind": {
           "type": "string",
-          "enum": ["game_state", "goal"],
-          "description": "RULES obstacle-events: what an EVENT location (id null, event true) stands for. Absent = a logic event, which the frontend state manager auto-collects on reach (Archipelago's own sweep does the same). 'game_state' = state the GAME saves (a saved obstacle's persistence flag): the state manager NEVER auto-collects it (stateManager/core/eventKinds.js, fail-closed: an unknown kind is not auto-collected either); the runtime collects it on the game's own flag. Producer: scripts/procgen/make-seedling-playthrough-rules.mjs (flashPanel/seedlingObstacleEvents.js). 'goal' = the slot's goal event, set by the CLIENT (never in a file) on rules the host's Upstream Rules Add-on sent (client/core/upstreamGoal.js): never auto-collected; it is checked like any location (a click, the Timer, a bot, the Loop queue), and that check reports the goal."
+          "enum": ["game_state", "goal", "substrate_state"],
+          "description": "RULES obstacle-events: what an EVENT location (id null, event true) stands for. Absent = a logic event, which the frontend state manager auto-collects on reach (Archipelago's own sweep does the same). 'game_state' = state the GAME saves (a saved obstacle's persistence flag): the state manager NEVER auto-collects it (stateManager/core/eventKinds.js, fail-closed: an unknown kind is not auto-collected either); the runtime collects it on the game's own flag. Producer: scripts/procgen/make-seedling-playthrough-rules.mjs (flashPanel/seedlingObstacleEvents.js). 'goal' = the slot's goal event, set by the CLIENT (never in a file) on rules the host's Upstream Rules Add-on sent (client/core/upstreamGoal.js): never auto-collected; it is checked like any location (a click, the Timer, a bot, the Loop queue), and that check reports the goal. 'substrate_state' = state a SUBSTRATE's runtime keeps: an ActionNodes knowledge event (`Knows: <flag>`, actionNodes/actionGraphCompiler.js) is learned by performing its node, so the state manager never auto-collects it; the ActionNodes runtime collects it (a forced local check) when the node is performed."
         },
         "event_id": {
           "type": "string",

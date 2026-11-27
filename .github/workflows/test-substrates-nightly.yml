@@ -28,8 +28,10 @@ name: Substrate tests — nightly manual batches (+ Seedling train checks)
 on:
   schedule:
     # 10:37 UTC = 02:37 PST (winter, UTC−8). During PDT (UTC−7, mid-March to
-    # early November) the same cron fires at 03:37 Pacific — still inside the
-    # 22:00–07:00 after-hours window, so the cron is NOT shifted twice a year.
+    # early November) the same cron fires at 03:37 Pacific. Either hour is deep
+    # in the night: hours after the 20:00–21:30 Pacific B1 dispatch window
+    # (⚖ Robert 2026-11-21) and hours before the day's push gates, so the hour
+    # of drift costs nothing and the cron is NOT shifted twice a year.
     # Odd minute: GitHub delays crons most at :00.
     - cron: '37 10 * * *'
   # The same run on demand. A dispatch runs at the ref it is dispatched on
