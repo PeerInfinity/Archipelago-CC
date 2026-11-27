@@ -1537,10 +1537,14 @@ export const REGISTRY = frz({
                 {
                     "id": "maze",
                     "present": true,
-                    "short": "{drawRegion}",
+                    "short": "5 keys",
                     "type": "object",
                     "value": [
-                        "drawRegion"
+                        "displayRegionOf",
+                        "drawRegion",
+                        "layoutGraph",
+                        "locationTiles",
+                        "regionExtent"
                     ]
                 },
                 {
@@ -1669,7 +1673,8 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "flash_seedling",
-                "flash_seedling_gen"
+                "flash_seedling_gen",
+                "maze"
             ],
             "cells": [
                 {
@@ -1716,9 +1721,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -1847,7 +1852,8 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "flash_seedling",
-                "flash_seedling_gen"
+                "flash_seedling_gen",
+                "maze"
             ],
             "cells": [
                 {
@@ -1894,9 +1900,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -1935,7 +1941,8 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "flash_seedling",
-                "flash_seedling_gen"
+                "flash_seedling_gen",
+                "maze"
             ],
             "cells": [
                 {
@@ -1982,9 +1989,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -2023,7 +2030,8 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "flash_seedling",
-                "flash_seedling_gen"
+                "flash_seedling_gen",
+                "maze"
             ],
             "cells": [
                 {
@@ -2070,9 +2078,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
