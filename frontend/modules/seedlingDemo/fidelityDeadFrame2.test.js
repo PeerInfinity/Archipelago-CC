@@ -40,6 +40,7 @@ const LAST_OFF = { chestCoverFencepost: true, presserRecursionHang: true, publis
     [DEAD]: true, enemyPressesFallRockButton: true, wandShotTrapBodies: true, wandShotEnemyBodies: true, plainPickupInFreeze: true };
 const ALL_OFF = { [SEAL]: false, [PULSE]: false, [BLOCK]: false, [DEAD]: false, [RSAR]: false };
 const ALL_ON = { [SEAL]: true, [PULSE]: true, [BLOCK]: true };
+const OFF3 = { [SEAL]: false, [PULSE]: false, [BLOCK]: false };
 
 const replay = (name, over = {}) => withContactFidelity({ ...ALL_OFF, ...over }, () => {
     const shape = df2Shape(name);
@@ -171,7 +172,7 @@ describe('DEADFRAME2 — the committed tapes the Pulser moves', () => {
     const go = (p, over) => withContactFidelity(over, () => runTape(JSON.parse(readFileSync(join(HERE, p), 'utf8')), { levelSource: VANILLA }));
     it('move only the Pulser\'s ledger (and r5-shaft-control\'s spinner write), never a stream or a hit', () => {
         for (const p of TAPES) {
-            const off = go(p, {});
+            const off = go(p, OFF3);
             const on = go(p, ALL_ON);
             const moved = Object.keys(off).filter((k) => JSON.stringify(off[k]) !== JSON.stringify(on[k]));
             expect([p, moved]).toEqual([p, p.endsWith('r5-shaft-control.json') ? ['pulserHits', 'spinnerWrites'] : ['pulserHits']]);
@@ -180,6 +181,6 @@ describe('DEADFRAME2 — the committed tapes the Pulser moves', () => {
     it('r5-shaft-control: the spinner\'s pulse kill — the game writes (39,4) at 1643; OFF 1397, ON 1207 (both off: the spinner\'s pulse-kill path)', () => {
         const g = readJson(`${W69}/d2/witness-shaft-control.json`).shapes[0].whole.ledger.find((l) => l.newCleared.includes('39:4'));
         const t = (over) => go('fixtures/tapes/r5-shaft-control.json', over).spinnerWrites.map((w) => [w.t, w.flag.tag]);
-        expect([g.tick, t({}), t({ [PULSE]: true })]).toEqual([1643, [[1397, 4]], [[1207, 4]]]);
+        expect([g.tick, t(OFF3), t({ ...OFF3, [PULSE]: true })]).toEqual([1643, [[1397, 4]], [[1207, 4]]]);
     });
 });
