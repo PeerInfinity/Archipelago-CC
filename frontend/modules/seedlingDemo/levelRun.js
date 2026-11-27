@@ -6819,6 +6819,16 @@ export function createLevelRun({
         }
         return f;
     };
+    /**
+     * ⛓ fidelity WANDSWINGDRILL D2 (`CONTACT_FIDELITY.itemPressHeldBySlash`, OFF) — a LONE wand or fire press while
+     * `_slashing` holds is dropped. `set wanding` (`Player.as:834`) and `set firing` (`:858`) both open on `!slashing`;
+     * `_slashing` is up from `set slashing` until `slashEnd`, the sword sprite's complete-callback, which `sprites()`
+     * fires BELOW `input()` — so `slashState.slashing` here (the release is under the press block) is what `useItem`
+     * sees, the swing's own release tick included. `Input.pressed` is an edge: nothing is buffered. A second call of an
+     * X+C tick already meets this gate (`xcSecondAdmitted`). OFF: false (the lone press is admitted, as shipped).
+     */
+    const itemPressHeldBySlashNow = (weapon) => CONTACT_FIDELITY.itemPressHeldBySlash
+        && (weapon === 'wand' || weapon === 'fire') && slashState.slashing;
     /** ⛓⛓⛓ seedling-js-xc-model — `xcSecondCallAdmitted` against this run's live flags at tick `t`. */
     const xcSecondAdmitted = (weapon, earlier, t) => xcSecondCallAdmitted(weapon, {
         earlier,
@@ -12541,12 +12551,16 @@ export function createLevelRun({
      *
      * @returns {?{tag: ?string, at: {x, y}}} the first blocker, or null
      */
-    function collideLineSolid(fromXf, fromYf, toXf, toYf, { masks: withMasks = false } = {}) {
+    function collideLineSolid(fromXf, fromYf, toXf, toYf, { masks: withMasks = false, beforeTypeFlip = false } = {}) {
         const fromX = Math.trunc(fromXf);
         const fromY = Math.trunc(fromYf);
         const toX = Math.trunc(toXf);
         const toY = Math.trunc(toYf);
-        const boxes = world.solidBoxesForMover(normalizeLiveOpts(liveSolidOpts()));
+        // ⛓ fidelity WANDSWINGDRILL D2: `beforeTypeFlip` (only `stepDrillsNow`, `drillSightLineGame` ON, a world's first
+        // tick) reads the object solids alone — no Tile is "Solid" before its own first update. OFF: never passed.
+        const boxes = beforeTypeFlip
+            ? world.solidBoxesForMover(normalizeLiveOpts(liveSolidOpts()), null, { objectOnly: true })
+            : world.solidBoxesForMover(normalizeLiveOpts(liveSolidOpts()));
         // a sample's 1x1 box spans [p, p + 1) for p in [min, max]; a mask's integer origin meets it iff origin <= max
         const lx0 = Math.min(fromX, toX);
         const lx1 = Math.max(fromX, toX);
@@ -13899,8 +13913,17 @@ export function createLevelRun({
                 player: { x: state.x, y: state.y },
                 // ⛓ fidelity DRILL D2: `collideLine("Solid", …)` meets the pixelmasks too (OFF: the boxes alone).
                 // ⛓ fidelity MASKS D2: and every drill's, a lone one's too, with `pixelMaskSightLines` ON.
+                /**
+                 * ⛓ fidelity WANDSWINGDRILL D2 (`drillSightLineGame`, OFF): on a world's FIRST tick the line reads the
+                 * object solids alone. A Tile is typed "Tile" by its ctor and writes `type = types[t]` in its first
+                 * `update()` (`Scenery/Tile.as:110`, `:117-121`); `loadlevel` adds the tiles before the drills and
+                 * `World.addUpdate` prepends, so the drill's first `collideLine("Solid", …)` (`Drill.as:84`) runs
+                 * while no tile is "Solid" (the pixelmasks and every object class type in their ctors: unchanged).
+                 * MEASURED on p4g: L88's drill hops at a player 40 px E across `tile:Cliff` on tick 1. OFF: the tiles.
+                 */
                 lineBlocked: (x0, y0, x1, y1) => !!collideLineSolid(x0, y0, x1, y1,
-                    { masks: mixed || CONTACT_FIDELITY.pixelMaskSightLines }),
+                    { masks: mixed || CONTACT_FIDELITY.pixelMaskSightLines,
+                        beforeTypeFlip: CONTACT_FIDELITY.drillSightLineGame && firstTickInWorld }),
                 collides: (rect) => base.collides(rect) || (enemyAt !== null && enemyAt(rect)),
                 // ⛓ fidelity DRILLWATER D1: `Enemy.update`'s `getState()` (read only with `drillTerrainSwitch` ON)
                 tileTypeAt: base.tileTypeAt,
@@ -25253,7 +25276,9 @@ export function createLevelRun({
                 const earlier = xcFlagsRaisedBy(pressCalls, ticksCompleted);
                 if (!(weapon === 'sword' || weapon === 'ghostsword')) {
                     pressCalls.push({ slot: callSlot, weapon, slashPress: null,
-                        admitted: pressCalls.length === 0 || xcSecondAdmitted(weapon, earlier, ticksCompleted) });
+                        admitted: pressCalls.length === 0
+                            ? !itemPressHeldBySlashNow(weapon)
+                            : xcSecondAdmitted(weapon, earlier, ticksCompleted) });
                     continue;
                 }
                 const slashPress = slashSet(slashState, {

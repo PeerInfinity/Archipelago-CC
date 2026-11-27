@@ -6602,8 +6602,12 @@ export function buildLevelWorld(levelRecord, {
          *                        scanning crusher itself, and `moveX`'s
          *                        `collideTypes` excludes `this` too
          */
-        solidBoxesForMover(opts = {}, exclude = null) {
+        solidBoxesForMover(opts = {}, exclude = null, { objectOnly = false } = {}) {
             const live = assertNormalizedLiveOpts(normalizeLive(opts), 'levelWorld.solidBoxesForMover');
+            // ⛓ fidelity WANDSWINGDRILL D2: `objectOnly` walks `objectSolids` — the world on its FIRST frame, before
+            // any Tile's first `update()` wrote `type = types[t]` (`collidesSolid`'s `beforeTypeFlip` list). Only
+            // `levelRun.collideLineSolid` passes it, and only with `drillSightLineGame` ON; the default walks `solids`.
+            const list = objectOnly ? objectSolids : solids;
             const out = [];
             // ⛔⛔ R5 slice 10's family is in no `solids` entry at all — a
             // parked `FallRock` has `type = ""` at `y = -16` and a landed one
@@ -6615,7 +6619,7 @@ export function buildLevelWorld(levelRecord, {
                     out.push({ ...r.rect, id: r.id, tag: 'fallrock' });
                 }
             }
-            for (const s of solids) {
+            for (const s of list) {
                 if (s.cls && s.cls.type !== 'Solid') continue;
                 if (exclude !== null && s.crusherId === exclude) continue;
                 const at = liveRectOf(s, live);
