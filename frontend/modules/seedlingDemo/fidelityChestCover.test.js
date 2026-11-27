@@ -25,7 +25,8 @@ import {
 } from './activators.js';
 import { buildLevelWorld, rectsOverlap } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
-import { runTape } from './tapeRunner.js';
+import { createRunForStaging, runTape, stagingFromTape } from './tapeRunner.js';
+import { heldKeysAt } from './tapeFormat.js';
 import { loadTape } from './fixtures/index.js';
 import { cutTape } from './fidelityL25ApItem.js';
 import {
@@ -67,6 +68,32 @@ describe('CHESTCOVER — the key', () => {
         'is ON in this process', () => {
             expect(CONTACT_FIDELITY[KEY]).toBe(true);
         });
+});
+
+describe('CHESTCOVER — `state.openBefore` is bookkeeping: it never reaches a save or the `persist` part', () => {
+    // ⛓ the PPF+CCF flip (2026-11-27): ON, `stepActivators` writes `state.openBefore` every step, and the run-state
+    // `visit` part hashes it (jsRuntimeTape's NO_TAPE_CHAIN re-pin). js-23's co-sign condition: show it never reaches a
+    // persisted save or the `persist` part. Over a committed chest tape that ON does not move, every tick's `persist`
+    // part and `saveState` are equal ON and OFF, while `visit` differs (so the row has teeth).
+    const perTick = (over) => withContactFidelity(over, () => {
+        const tape = loadTape('prox-l38-chest');
+        const run = createRunForStaging(stagingFromTape(tape), VANILLA, { scratchPersistence: true });
+        const ticks = [];
+        for (let t = 0; t < tape.tick_count; t++) {
+            run.advance(heldKeysAt(tape, t));
+            const { parts } = run.stateDigest({ parts: true });
+            ticks.push({ persist: parts.persist, visit: parts.visit, save: JSON.stringify(run.saveState) });
+        }
+        return ticks;
+    });
+    it('ON and OFF agree on `persist` and `saveState` at every tick; `visit` is where they differ', () => {
+        const off = perTick({ [KEY]: false });
+        const on = perTick({ [KEY]: true });
+        expect(on.length).toBe(off.length);
+        expect(on.map((r) => r.persist)).toEqual(off.map((r) => r.persist));
+        expect(on.map((r) => r.save)).toEqual(off.map((r) => r.save));
+        expect(on.some((r, i) => r.visit !== off[i].visit)).toBe(true);
+    });
 });
 
 describe('CHESTCOVER — the snapshot (`stepActivators` → `openActivatorIdsBeforeStep`)', () => {
