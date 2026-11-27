@@ -21245,6 +21245,248 @@ function killLockLineStanceTurn(run, perTick, resolved, ctx, { live, whys }) {
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE STEP-189 — **A PINNED CHASER IS SPEARED THROUGH THE SOLID THAT PINS IT**
+ * (`KILLLOCK_PINNED_SPEAR`, OFF). ⚖ The user, 2026-11-26: *"Step-189 lavarunner"* (approved, measure first, OFF).
+ *
+ * `Player.spear()` (`Player.as:954-990`) collides its 32x5 rect with every hitable and calls `genericHit` with NO
+ * `collideLine("Solid")` gate, where `slash()` has one (`Player.as:917`, waived only for the Ghost Sword). A chaser's
+ * impulse is the straight line to the player (Bob's chase, no path-finding), swept one axis at a time, so a counted
+ * body whose line to the player crosses one of its Solids stops ON that Solid and slides along it toward the player's
+ * other coordinate. MEASURED (survey step 189, re-measure-11 P1 38:6 / 39:1): L71's kill-lock waits on five
+ * lavarunners in a pocket every side of which is Dark Stone (`Tile.as` type 15, "Solid"); the arm's fallback dwell
+ * stands where the walk arrived and the body stays pinned 69.7 px off. Hand-driven on the model from the request's own
+ * prefix (evidence `l71-hand-spear-38-6.txt`): the player in the pocket across one tile of Dark Stone, spear selected,
+ * facing the wall, kills four of the five with 0 hits; the fifth sits 7 px off the thrust's 5 px band.
+ *
+ * ⇒ ON (inside `killLockChaserRewindTurn`, after its own stances — and the line stances when that switch is on — are
+ * spent; a spear held in a slot and a caller that can select one): each live counted body, nearest first, is asked
+ * for SPEAR STANCES (`pinnedSpearStances`): the lattice cells
+ *   · inside the body's own leash of where it stands (`ENEMY_CLASSES[tag].aggro.range`: it chases),
+ *   · that are plannable floor for the player under the walk's own bag,
+ *   · to which the body's own box, swept along the straight line from where it stands, MEETS one of its own Solids
+ *     (`chaserPinPoint`: the last clear point is where it stops — a body that reaches the cell is not this arm's),
+ *   · and from which the thrust (`spearHitRect`, one of the four facings) touches the body's box at that stop, or at
+ *     the stop slid along the free axis to the cell's own coordinate when that slide is clear of its Solids;
+ * nearest the player first. Each is one attempt (`killLockPinnedSpearAttempt`): the ladder's walk to the cell, the
+ * spear selected (`ctx.equip`), then per tick a facing tap and a press at `KILL_PRESS_CADENCE` while a counted body
+ * touches the thrust, else one step along the free axis toward the target (never more than half a tile off the
+ * cell), else no keys — until the target is dying, bounded; the prior slot restored. A hit, a death or a crossing
+ * refuses by name, and a refused attempt is rewound and the next one tried, up to `KILLLOCK_PINNED_SPEAR_PER_BODY` a
+ * body and `KILLLOCK_PINNED_SPEAR_TRIES` in all. ⚖ No-hit logic: a kill that tanks a hit is a refusal. ⚖ 30(c): the
+ * attempt kept is the one the run drove. Nothing reads a level, a coordinate or a body name. OFF: nothing here is read.
+ * `SEEDLING_KILLLOCK_PINNED_SPEAR=1` / `withKillLockPinnedSpear(enabled, fn)`. Decided in the solver (worker thread).
+ */
+export const KILLLOCK_PINNED_SPEAR = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_PINNED_SPEAR === '1' };
+export const KILLLOCK_PINNED_SPEAR_DEFAULT = false;
+/** The spear attempts one turn may drive, and the cells one body may offer. */
+export const KILLLOCK_PINNED_SPEAR_TRIES = 6;
+export const KILLLOCK_PINNED_SPEAR_PER_BODY = 3;
+/** Thrusts one attempt may press before it refuses. */
+export const KILLLOCK_PINNED_SPEAR_PRESSES = 12;
+
+/** Run `fn` with `KILLLOCK_PINNED_SPEAR` set to `enabled`, restoring the previous value. */
+export function withKillLockPinnedSpear(enabled, fn) {
+    return withSwitch(KILLLOCK_PINNED_SPEAR, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: `asked` turns that reached the
+ * arm; one row per attempt (`{id, t, stance, dir, cells, verdict, presses?, why?}`; verdict `killed` | `refused` |
+ * `deadline`); `noSpear` turns that found no spear slot or no equip.
+ */
+export const KILLLOCK_PINNED_SPEAR_COUNTS = { asked: 0, noSpear: 0, rows: [] };
+export function resetKillLockPinnedSpearCounts() {
+    KILLLOCK_PINNED_SPEAR_COUNTS.asked = 0;
+    KILLLOCK_PINNED_SPEAR_COUNTS.noSpear = 0;
+    KILLLOCK_PINNED_SPEAR_COUNTS.rows = [];
+}
+
+/** ⛓ STEP-189: the last point at which `body`'s box, swept straight from where it stands to `to`, is clear of `solids`; null when the whole line is clear (it reaches `to`). */
+function chaserPinPoint(body, solids, to) {
+    const n = Math.max(1, Math.ceil(Math.hypot(to.x - body.x, to.y - body.y) / KILLLOCK_LINE_STANCE_SWEEP));
+    let prev = { x: body.x, y: body.y };
+    for (let i = 1; i <= n; i += 1) {
+        const p = { x: body.x + (to.x - body.x) * (i / n), y: body.y + (to.y - body.y) * (i / n) };
+        const box = chaserBoxAt(body.tag, p.x, p.y);
+        if (solids.some((b) => rectsOverlap(box, b.rect ?? b))) return prev;
+        prev = p;
+    }
+    return null;
+}
+
+/** The facing keys by `Player.direction` (`SPEAR_THRUSTS`' numbering): 0/2 thrust along x, 1/3 along y. */
+const PINNED_SPEAR_ALONG_X = (dir) => dir === 0 || dir === 2;
+
+/**
+ * ⛓ STEP-189: the lattice cells from which a thrust reaches live chaser `body` where its straight chase line to that
+ * cell pins it (see `KILLLOCK_PINNED_SPEAR`), nearest the player first (then y, x, facing). Reads the live run only;
+ * spends no tick.
+ */
+export function pinnedSpearStances(run, body, contacts) {
+    const leash = ENEMY_CLASSES[body.tag]?.aggro?.range ?? null;
+    if (leash === null || !ENEMY_CLASSES[body.tag]?.hitbox) return [];
+    const opts = solverPlanOpts(run, contacts);
+    const solids = run.world.solidBoxesForMover(run.liveGeometryOpts(), body.id);
+    const cells = [];
+    const half = DEFAULT_LATTICE / 2;
+    for (let y = half; y < run.world.height * TILE_SIZE; y += DEFAULT_LATTICE) {
+        for (let x = half; x < run.world.width * TILE_SIZE; x += DEFAULT_LATTICE) {
+            if (Math.hypot(x - body.x, y - body.y) > leash) continue;
+            if (plannerObstacleAt(run.world, x, y, null, opts) !== null) continue;
+            const pin = chaserPinPoint(body, solids, { x, y });
+            if (pin === null) continue;
+            for (const th of SPEAR_THRUSTS) {
+                const sr = spearHitRect(x, y, th.dir);
+                const slid = PINNED_SPEAR_ALONG_X(th.dir) ? { x: pin.x, y } : { x, y: pin.y };
+                const at = [pin];
+                if (chaserPinPoint({ tag: body.tag, x: pin.x, y: pin.y }, solids, slid) === null) at.push(slid);
+                if (!at.some((p) => pressRectTouches(sr, chaserBoxAt(body.tag, p.x, p.y)))) continue;
+                cells.push({ x, y, dir: th.dir, key: th.key, back: th.back,
+                    d: Math.hypot(x - run.state.x, y - run.state.y) });
+                break;
+            }
+        }
+    }
+    cells.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x || a.dir - b.dir);
+    return cells.map(({ d, ...c }) => c);
+}
+
+/**
+ * ⛓ STEP-189 (`KILLLOCK_PINNED_SPEAR` ON): one attempt — walk to `stance`, select the spear, thrust at the pinned
+ * `body` until it is dying. Returns the phase; throws a `SolverRefusal` naming why (the caller rewinds).
+ */
+function killLockPinnedSpearAttempt(run, perTick, resolved, ctx, body, stance, slot) {
+    const from = perTick.length;
+    const what = `${ctx.what} -> pinned spear kill (${body.id})`;
+    const refuse = (why) => {
+        throw new SolverRefusal(`${what}: ${why} (KILLLOCK_PINNED_SPEAR)`,
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+    };
+    const hits0 = run.ledger('playerHits').length;
+    const deaths0 = (run.ledger('playerDeaths') ?? []).length;
+    if (!hasArrived(run.state, stance, DEFAULT_TOLERANCE)) {
+        ctx.walkTo(ctx.goal, { x: stance.x, y: stance.y }, { what: `${what} stance (${stance.key} at ${stance.x},${stance.y})` });
+    }
+    if (run.ledger('playerHits').length !== hits0) refuse('the stance walk was HIT');
+    const counted = () => {
+        const ids = new Set(countedBodiesLeft(run).map((b) => `${b.tag}@${b.x},${b.y}`));
+        const dying = new Set((run.entities('chasers') ?? []).filter((c) => c.dying || c.destroy).map((c) => c.id));
+        return (run.entities('strikeBodies') ?? []).filter((b) => ids.has(b.id) && !dying.has(b.id));
+    };
+    const target = () => counted().find((b) => b.id === body.id) ?? null;
+    if (!target()) {
+        return { phase: 'chaser-kill', target: body.id, stance: { x: stance.x, y: stance.y }, ticks: perTick.length - from,
+            killedOnApproach: true, weapon: 'spear', pinned: true };
+    }
+    const step = (keys) => {
+        perTick.push(keys);
+        const { transition } = run.advance(keys);
+        if (transition) refuse('the spear dwell crossed a door');
+        const h = run.ledger('playerHits')[hits0];
+        if (h) {
+            refuse(`the player was HIT at run tick ${run.ticksCompleted} (source ${h.source ?? '?'}${h.id ? ` ${h.id}` : ''}) `
+                + `from (${run.state.x.toFixed(1)},${run.state.y.toFixed(1)})`);
+        }
+        if ((run.ledger('playerDeaths') ?? []).length !== deaths0) refuse('the player died');
+    };
+    const prior = run.progress('primary');
+    if (prior !== slot) ctx.equip(slot);
+    const FACE = new Set([stance.key]);
+    const PRESS = new Set(['primary']);
+    const NO_KEYS = new Set();
+    const alongX = PINNED_SPEAR_ALONG_X(stance.dir);
+    const drift = () => (stance.dir === 0 ? run.state.x - stance.x : stance.dir === 2 ? stance.x - run.state.x
+        : stance.dir === 1 ? stance.y - run.state.y : run.state.y - stance.y);
+    const bound = chaserKillCeiling(run, body) + KILLLOCK_PINNED_SPEAR_PRESSES * KILL_PRESS_CADENCE;
+    let presses = 0;
+    let lastPress = -Infinity;
+    for (let n = 0; n < bound && target(); n += 1) {
+        const tb = target();
+        const touching = counted().some((b) => b.rect && pressRectTouches(spearHitRect(run.state.x, run.state.y, stance.dir), b.rect));
+        if (touching && perTick.length - lastPress >= KILL_PRESS_CADENCE) {
+            if (presses >= KILLLOCK_PINNED_SPEAR_PRESSES) break;
+            for (let b = 0; b < 4 && drift() > 0.5; b += 1) step(new Set([stance.back]));
+            step(FACE);
+            lastPress = perTick.length;
+            step(PRESS);
+            presses += 1;
+            continue;
+        }
+        // the free axis: one step toward the target's coordinate, never more than half a tile off the cell
+        const off = alongX ? tb.y - run.state.y : tb.x - run.state.x;
+        const fromCell = alongX ? run.state.y - stance.y : run.state.x - stance.x;
+        if (!touching && Math.abs(off) > 1 && Math.abs(fromCell + Math.sign(off)) <= TILE_SIZE / 2) {
+            step(new Set([alongX ? (off < 0 ? 'up' : 'down') : (off < 0 ? 'left' : 'right')]));
+            continue;
+        }
+        step(NO_KEYS);
+    }
+    if (target()) refuse(`${presses} thrust(s) from (${stance.x},${stance.y}) facing ${stance.key} and ${body.id} is not dying`);
+    if (run.progress('primary') !== prior) ctx.equip(prior);
+    return { phase: 'chaser-kill', target: body.id, stance: { x: stance.x, y: stance.y }, ticks: perTick.length - from,
+        presses, weapon: 'spear', pinned: true };
+}
+
+/**
+ * ⛓ STEP-189 (`KILLLOCK_PINNED_SPEAR` ON, inside `killLockChaserRewindTurn`): the spear attempts of one turn, each
+ * rewound to the turn's first tick when refused. Returns `{run, phase, tries}` — `phase` null when none kills (its
+ * whys appended to `whys`); a refusal raised after the deadline tripped is passed on unrewound, as the turn's.
+ */
+function killLockPinnedSpearTurn(run, perTick, resolved, ctx, { whys }) {
+    KILLLOCK_PINNED_SPEAR_COUNTS.asked += 1;
+    const slot = (run.progress('inventorySlots') ?? []).indexOf(INVENTORY_ITEM_IDS.spear);
+    if (!run.progress('inventory')?.hasSpear || slot < 0 || typeof ctx.equip !== 'function' || !ctx.rewind) {
+        KILLLOCK_PINNED_SPEAR_COUNTS.noSpear += 1;
+        whys.push('no spear slot this caller can select (KILLLOCK_PINNED_SPEAR)');
+        return { run, phase: null, tries: 0 };
+    }
+    const contacts = resolved.contacts ?? new Set();
+    const t0 = perTick.length;
+    const ids = new Set(countedBodiesLeft(run).map((b) => `${b.tag}@${b.x},${b.y}`));
+    const dying = new Set((run.entities('chasers') ?? []).filter((c) => c.dying || c.destroy).map((c) => c.id));
+    const live = (run.entities('strikeBodies') ?? []).filter((b) => ids.has(b.id) && !dying.has(b.id))
+        .sort((a, b) => Math.hypot(a.x - run.state.x, a.y - run.state.y) - Math.hypot(b.x - run.state.x, b.y - run.state.y)
+            || (a.id < b.id ? -1 : 1));
+    const queue = [];
+    for (const b of live) {
+        const cells = pinnedSpearStances(run, b, contacts);
+        if (cells.length === 0) whys.push(`${b.id}: no cell a thrust reaches it pinned from (KILLLOCK_PINNED_SPEAR)`);
+        for (const s of cells.slice(0, KILLLOCK_PINNED_SPEAR_PER_BODY)) queue.push({ body: b, stance: s, cells: cells.length });
+    }
+    let tries = 0;
+    for (const { body, stance, cells } of queue) {
+        if (tries >= KILLLOCK_PINNED_SPEAR_TRIES) break;
+        const row = { id: body.id, t: t0, stance: { x: stance.x, y: stance.y }, dir: stance.dir, cells, verdict: null };
+        KILLLOCK_PINNED_SPEAR_COUNTS.rows.push(row);
+        if (deadlineReached('kill-chaser')) {
+            row.verdict = 'deadline';
+            whys.push('the caller\'s anytime deadline was reached');
+            break;
+        }
+        tries += 1;
+        try {
+            const phase = killLockPinnedSpearAttempt(run, perTick, resolved, ctx, body, stance, slot);
+            const standOut = killLockStandOutRefusal(run, perTick, resolved, ctx);
+            if (standOut !== null) throw new SolverRefusal(standOut, { goal: ctx.goal, perTick: [...perTick] });
+            row.verdict = 'killed';
+            row.presses = phase.presses ?? 0;
+            return { run, phase: { ...phase, tries }, tries };
+        } catch (e) {
+            if (!(e instanceof SolverRefusal) || e instanceof PendingDeclaration || e?.undeclaredKillLock) throw e;
+            if (activeDeadline !== null && activeDeadline.tripped.size > 0) {
+                row.verdict = 'deadline';
+                throw e;
+            }
+            row.verdict = 'refused';
+            row.why = String(e.message).split('\n')[0].slice(-240);
+            whys.push(`${body.id} at spear stance (${stance.x},${stance.y}) ${stance.key}: ${row.why}`);
+            run = ctx.rewind.to(t0).run;
+        }
+    }
+    return { run, phase: null, tries };
+}
+
+/**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE L98-L99 — **THE LAST KILL'S STAND-OUT IS PART OF THE ATTEMPT** (`KILLLOCK_STANDOUT_GUARD`,
  * ON by default since the L28 flip's guard (⚖ the user, 2026-11-20: *"Add the guard flip (Recommended)"*) —
  * `SEEDLING_KILLLOCK_STANDOUT_GUARD=0` / `withKillLockStandOutGuard(enabled, fn)`). MEASURED (step 227, the survey's own
@@ -21389,6 +21631,13 @@ function killLockChaserRewindTurn(run, perTick, resolved, ctx, { live, hunted, h
     // ⛓ NEW-LOCKS (`KILLLOCK_LINE_STANCE`, OFF): the arm's stances are spent — a cell each body has a clear line to
     if (KILLLOCK_LINE_STANCE.enabled) {
         const out = killLockLineStanceTurn(run, perTick, resolved, ctx, { live, whys });
+        run = out.run;
+        if (out.phase) return { run, phase: { ...out.phase, tries: tries + out.phase.tries } };
+        tries += out.tries;
+    }
+    // ⛓ STEP-189 (`KILLLOCK_PINNED_SPEAR`, OFF): a pinned counted body is speared through the solid that pins it
+    if (KILLLOCK_PINNED_SPEAR.enabled) {
+        const out = killLockPinnedSpearTurn(run, perTick, resolved, ctx, { whys });
         run = out.run;
         if (out.phase) return { run, phase: { ...out.phase, tries: tries + out.phase.tries } };
         tries += out.tries;
