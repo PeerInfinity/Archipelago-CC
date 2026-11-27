@@ -333,6 +333,21 @@ describe('a case that is a region of a generated world', () => {
     expect(env.logic.pageHasAsked()).toBe(true);
   });
 
+  it('a page gone: nothing is sent and the bot is told no page is there, until a page asks again (then whole)', () => {
+    const env = inWorld();
+    env.fire(MYSTERY_EVENTS.REQUEST_STATE, request);
+    expect(env.states()).toHaveLength(1);
+    env.logic.pageGone();
+    expect(env.logic.pageHasAsked()).toBe(false);
+    env.logic.sendStateIfChanged();
+    expect(env.states()).toHaveLength(1);
+    // The new page asks: the same state as before goes out again, since this page has not had it.
+    env.fire(MYSTERY_EVENTS.REQUEST_STATE, request);
+    expect(env.logic.pageHasAsked()).toBe(true);
+    expect(env.states()).toHaveLength(2);
+    expect(env.states()[1]).toEqual(env.states()[0]);
+  });
+
   it('every live-play event is listened to', () => {
     const env = inWorld();
     for (const event of LIVE_PLAY_EVENTS) expect(env.handlers.has(event), event).toBe(true);

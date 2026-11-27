@@ -9,7 +9,7 @@
 import { IframePanelUI } from '../iframePanel/iframePanelUI.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
-import { activeRegionIdNow, caseRegionsNow, getModuleEventBus } from './index.js';
+import { activeRegionIdNow, caseRegionsNow, getModuleEventBus, mysteryPageGone } from './index.js';
 import { currentMysteryBlock } from './mysteryArchipelagoLogic.js';
 import { MYSTERY_LOCKS } from './mysterySubstrateLibrary.js';
 import { DEFAULT_PAGE_URL, PAGE_URL_SETTING, mysteryPageUrl } from './mysteryPage.js';
@@ -73,7 +73,14 @@ export class MysteryPanelUI extends IframePanelUI {
     }
   }
 
+  /** Every page it drops (replaced, unframed, or with the panel): the bridge must not drive a page not there. */
+  unloadIframe(isReplacement = false) {
+    mysteryPageGone();
+    return super.unloadIframe(isReplacement);
+  }
+
   dispose() {
+    mysteryPageGone();
     this.wantedUrl = null;
     super.dispose();
     this.rootElement = null;

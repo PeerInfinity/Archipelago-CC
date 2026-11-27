@@ -248,9 +248,19 @@ export class MysteryArchipelagoLogic {
     for (const event of LIVE_PLAY_EVENTS) sub(event, () => this.sendStateIfChanged());
   }
 
-  /** Has the page asked for a state since this bridge started? Then a page is there to be driven. */
+  /** Has the page asked for a state since it was framed? Then a page is there to be driven. */
   pageHasAsked() {
     return this._pageAsked;
+  }
+
+  /**
+   * The panel dropped its page (a new address, nothing framed, or the panel closed): nobody is there until a
+   * page asks again, and the next state goes out whole. Without it a request could reach a page still loading,
+   * before its first state, and the page answers it from the lock it starts with.
+   */
+  pageGone() {
+    this._pageAsked = false;
+    this._lastSent = null;
   }
 
   /** The case to answer about, for the story the page asked (or last asked). */

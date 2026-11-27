@@ -50,6 +50,11 @@ let logicInstance = null;
 let playbackController = null;
 let moduleEventBus = null;
 
+/** The panel dropped its page: the bridge waits for the next page to ask before it drives one. */
+export function mysteryPageGone() {
+  logicInstance?.pageGone();
+}
+
 /** The module's event bus, for its panel. Before initialize, the core bus under this module's name. */
 export function getModuleEventBus() {
   if (moduleEventBus) return moduleEventBus;
