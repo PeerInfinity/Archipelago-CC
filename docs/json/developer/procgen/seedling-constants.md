@@ -295,16 +295,16 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**84 files, 7215 literals.** Class × position:
+**84 files, 7236 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 7 | 1720 | 610 | 2337 |
 | rule | 15 | 1200 | 597 | 1812 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 15 | 404 | 2571 | 2990 |
+| structural | 15 | 404 | 2592 | 3011 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 37 | 3386 | 3792 | 7215 |
+| total | 37 | 3386 | 3813 | 7236 |
 
 Class × kind (physics and rule rows only):
 
