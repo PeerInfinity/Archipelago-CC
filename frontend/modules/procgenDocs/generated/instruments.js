@@ -143,8 +143,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 160,
-            "count": 212,
+            "browser": 161,
+            "count": 213,
             "id": "probe"
         },
         {
@@ -259,13 +259,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 542,
-        "browser": 231,
+        "blockStyle": 543,
+        "browser": 232,
         "cited": 297,
-        "files": 564,
+        "files": 565,
         "lineStyle": 22,
-        "withDocblock": 564,
-        "withFlags": 481
+        "withDocblock": 565,
+        "withFlags": 482
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -20283,6 +20283,55 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-wandenemybodies — ⛓ SEEDLING FIDELITY WANDENEMYBODIES (wave 68): A WAND SHOT AT A TURRET, LAVATRAP, WALLFLYER, ICETRAP, SANDTRAP OR DRILL, ON THE GAME, TICK BY SAMPLED TICK, AGAINST THE MODEL WITH `wandShotEnemyBodies` ON.",
             "path": "scripts/procgen/probe-seedling-wandenemybodies.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-wandkill.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-wandkill — ⛓ SEEDLING FIDELITY WANDKILL (wave 71): THE PLAIN WAND'S KILL, ON THE GAME, TICK BY SAMPLED TICK, AGAINST THE MODEL WITH `wandShotKill` ON (and `wandShotEnemyBodies` beside it, which it requires).",
+            "path": "scripts/procgen/probe-seedling-wandkill.mjs"
         },
         {
             "argvHelpers": [
