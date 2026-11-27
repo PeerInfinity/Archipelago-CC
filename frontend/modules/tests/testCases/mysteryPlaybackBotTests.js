@@ -33,7 +33,11 @@ const panelIsOpen = () => !!document.querySelector('.mystery-panel-container');
  * address, and the Mystery Game panel closed again if the run (the bot's own walk) opened it.
  */
 async function withMysteryPage(testController, pageUrl, body) {
+    // A page already framed (a row or walk before left the panel open) holds its timeline in memory, and a world
+    // loaded again with the same game is the same game to it: the row starts with the panel closed, and it is
+    // opened again at the end if it was open.
     const panelWasOpen = panelIsOpen();
+    if (panelWasOpen) await panelManager.destroyPanelByComponentType('mysteryPanel');
     // The page keeps a save of its own for each game (`bridgeStore` in the game's ui/world-case.js: a
     // localStorage key holding `-world-ap-`), on this app's origin. Offline the game is `offline:<seed>:<player>`,
     // the same for every row on the same world, so a row would start on the timeline the row before it solved,
@@ -56,9 +60,14 @@ async function withMysteryPage(testController, pageUrl, body) {
     } finally {
         for (const [event, handler] of Object.entries(handlers)) testController.eventBus.unsubscribe?.(event, handler);
         await settingsManager.updateSetting(PAGE_URL_SETTING, pageBefore, { persist: false });
-        if (!panelWasOpen && panelIsOpen()) await panelManager.destroyPanelByComponentType('mysteryPanel');
+        if (panelIsOpen()) await panelManager.destroyPanelByComponentType('mysteryPanel');
         takePageSaves();
         for (const [k, v] of savesBefore) localStorage.setItem(k, v);
+        if (panelWasOpen) {
+            // As the module opens it (index.js openMysteryPanel): the desktop layout adds an enabled module's tab.
+            if (window.goldenLayoutInstance && window.moduleManagerApi?.enableModule) window.moduleManagerApi.enableModule('mysteryArchipelago');
+            else testController.eventBus.publish('ui:activatePanel', { panelId: 'mysteryPanel' }, 'tests');
+        }
     }
 }
 
@@ -83,11 +92,15 @@ function reportAsked(testController, seen, sphereLocations, rulesJson, { instant
     testController.assertEqual('the page was asked for each question in the log, once', JSON.stringify(wanted), JSON.stringify(asked.map((a) => a.question).sort()));
     testController.reportCondition(`every request ${instant ? 'asked for one burst' : 'left the pace to the page'}`,
         asked.length > 0 && asked.every((a) => (a.instant === true) === instant));
-    const done = seen.statuses.filter((st) => st.state === 'done').map((st) => st.question).sort();
-    testController.assertEqual('the page said done to each', JSON.stringify(wanted), JSON.stringify(done));
+    // The page sends a question solved BEFORE it says done, and the bot goes on at the check: a request it then
+    // stops (its last, when the world is finished) gets no done. Every other one does.
+    const stoppedByBot = new Set(seen.asks.filter((a) => a.stop).map((a) => a.question));
+    const done = new Set(seen.statuses.filter((st) => st.state === 'done').map((st) => st.question));
+    const owed = wanted.filter((q) => !done.has(q) && !stoppedByBot.has(q));
+    testController.reportCondition(`the page said done to each it was not stopped on (${JSON.stringify(owed)})`, owed.length === 0);
     const bad = seen.statuses.filter((st) => ['failed', 'stopped', 'waiting'].includes(st.state));
     testController.reportCondition(`the page never failed, stopped or waited (${JSON.stringify(bad.slice(0, 2))})`, bad.length === 0);
-    if (bad.length > 0 || JSON.stringify(wanted) !== JSON.stringify(done)) {
+    if (bad.length > 0 || owed.length > 0) {
         // Only on a failure: what was asked and what the page said, in order, to attribute it without a rerun.
         testController.log(`asks ${JSON.stringify(seen.asks.map((x) => [x.question, x.instant ?? false, x.stop ?? false]))}`);
         testController.log(`statuses ${JSON.stringify(seen.statuses.map((x) => [x.question, x.state, x.failed ?? x.waiting ?? null]))}`);
