@@ -65,3 +65,4 @@ seedling_spiral_room
 concept_trial
 meta_trial
 tile_kinds_demo
+mystery_street_test

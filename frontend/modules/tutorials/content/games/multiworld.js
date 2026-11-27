@@ -14,7 +14,8 @@ import { PROOF_MODULES, queueSteps } from './proofGames.js';
 const RELEASES = 'https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds';
 const SITE = 'https://peerinfinity.github.io/Archipelago-CC/';
 
-function multiworldTutorial({ id, title, game, gameName, modules, modeUrl, modeName, install, apworldFile, play, summary, intro }) {
+/** `modules`: the game's modules to switch on (and off again); null for a game whose module is always on (`open` then says how its panel is opened). */
+function multiworldTutorial({ id, title, game, gameName, modules = null, modeUrl, modeName, install, apworldFile, play, summary, intro, open = [] }) {
     return Object.freeze({
         id,
         title,
@@ -30,7 +31,7 @@ function multiworldTutorial({ id, title, game, gameName, modules, modeUrl, modeN
             {
                 id: 'panels',
                 title: 'Open the game\'s panels',
-                blocks: [...enableModules('enable-modules', modules, { modeName, modeUrl })],
+                blocks: modules ? [...enableModules('enable-modules', modules, { modeName, modeUrl })] : open,
             },
             {
                 id: 'multiworld',
@@ -38,7 +39,7 @@ function multiworldTutorial({ id, title, game, gameName, modules, modeUrl, modeN
                 blocks: localMultiworld({ gameName, apworldFile, slot: 'Tutorial', install }),
             },
             { id: 'play', title: 'Play', blocks: play },
-            { id: 'tidy-up', title: 'Tidy up', blocks: [...disableModules('disable-modules', modules)] },
+            ...(modules ? [{ id: 'tidy-up', title: 'Tidy up', blocks: [...disableModules('disable-modules', modules)] }] : []),
         ],
         outro: {
             title: 'Next',
@@ -117,3 +118,60 @@ export const APCALC_MULTIWORLD = multiworldTutorial({
     ],
 });
 
+
+const MYSTERY_PANEL = Object.freeze({ panel: 'mysteryPanel' });
+/** Checked locations and items held, as plain counts off the app's state. */
+const checkedCount = (ctx) => (ctx.snapshot()?.checkedLocations ?? []).length;
+const heldCount = (ctx) => Object.values(ctx.snapshot()?.inventory ?? {}).reduce((sum, n) => sum + (Number(n) > 0 ? Number(n) : 0), 0);
+
+export const MYSTERY_MULTIWORLD = multiworldTutorial({
+    id: 'mystery-multiworld',
+    title: 'Mystery: a case in a multiworld',
+    summary: 'Host a mystery case on a local Archipelago server, open it in Mystery Game, solve a question and receive a paper.',
+    intro: 'A mystery case is an Archipelago world in this project\'s repository (`worlds/mystery_custom_house_fire`): each question of the case is a location, and each paper is an item. The game itself is a page of its own, shown in the **Mystery Game** panel.',
+    game: 'The mystery case',
+    gameName: 'Mystery - The Fire at the Custom House',
+    // The module is on in every mode; its panel is not in the layout until it is opened.
+    open: [
+        {
+            step: {
+                id: 'open-panel',
+                text: 'Open the **Mystery Game** tab (Quick Launch lists it, under *Non-procgen Games*). With no mystery world loaded it says so and shows nothing yet.',
+                actions: [{ activate: MYSTERY_PANEL }],
+                done: (ctx) => ctx.isPanelShowing(MYSTERY_PANEL),
+            },
+        },
+    ],
+    install: {
+        text: 'Work in a checkout of this project\'s repository: its `worlds/mystery_custom_house_fire` is the case\'s world, so there is nothing to install.',
+        command: 'git clone --recurse-submodules https://github.com/PeerInfinity/Archipelago-CC.git && cd Archipelago-CC',
+    },
+    play: [
+        { prose: 'The game waits for the connection before it starts, and keeps one save for each multiworld slot. Connected, it shows the papers you hold; the rest are out in the multiworld.' },
+        {
+            step: {
+                id: 'open-case',
+                text: 'Go back to the **Mystery Game** tab. The case of the connected world opens in it.',
+                actions: [{ activate: MYSTERY_PANEL }],
+                done: (ctx) => ctx.exists({ ...MYSTERY_PANEL, selector: 'iframe' }),
+                doneTimeoutMs: 30000,
+            },
+        },
+        {
+            step: {
+                id: 'solve-question',
+                text: 'Read the first paper and work on the timeline until a question is solved. Its check is sent to the server, and the **Console** reports it.',
+                done: (ctx) => checkedCount(ctx) >= 1,
+                doneTimeoutMs: 600000,
+            },
+        },
+        {
+            step: {
+                id: 'receive-paper',
+                text: 'A solved question sends an item to somebody: here, with one slot, to you. When it is a paper of the case, the game announces it and lists it with your papers.',
+                done: (ctx) => heldCount(ctx) >= 1,
+                doneTimeoutMs: 600000,
+            },
+        },
+    ],
+});

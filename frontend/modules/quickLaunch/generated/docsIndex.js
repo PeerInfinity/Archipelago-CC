@@ -450,6 +450,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The maze substrate (frontend/modules/mazeRoom/, substrate id maze) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and…"
     },
     {
+        "path": "docs/json/developer/procgen/mystery.md",
+        "title": "Mystery Substrate",
+        "section": "developer/procgen",
+        "summary": "The mystery substrate (frontend/modules/mysteryArchipelago/mysterySubstrateLibrary.js, id mystery) makes one case of the mystery clue game a procgen region: the office. The game is the git submodule…"
+    },
+    {
         "path": "docs/json/developer/procgen/noiz2sa.md",
         "title": "Noiz2sa Substrate",
         "section": "developer/procgen",
@@ -1116,6 +1122,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "MetaMath is an Archipelago game like any other: its .apworld is released with this project, and its proofs can be shuffled with other games."
     },
     {
+        "path": "docs/json/user/tutorials/mystery-multiworld.md",
+        "title": "Mystery: a case in a multiworld",
+        "section": "user/tutorials",
+        "summary": "A mystery case is an Archipelago world in this project's repository (worlds/mystery_custom_house_fire): each question of the case is a location, and each paper is an item. The game itself is a page…"
+    },
+    {
         "path": "docs/json/user/tutorials/procgen-bounce-region-editor.md",
         "title": "Procgen: editing a bounce region",
         "section": "user/tutorials",
@@ -1322,6 +1334,7 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/user/tutorials/depgraph-extras.md",
                     "docs/json/user/tutorials/depgraph-multiworld.md",
                     "docs/json/user/tutorials/metamath-multiworld.md",
+                    "docs/json/user/tutorials/mystery-multiworld.md",
                     "docs/json/user/tutorials/procgen-bounce-region-editor.md",
                     "docs/json/user/tutorials/procgen-cloudberry.md",
                     "docs/json/user/tutorials/procgen-grid-growth.md",
@@ -1696,6 +1709,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/developer/procgen/loop-recording.md",
             "docs/json/developer/procgen/maze-lab.md",
             "docs/json/developer/procgen/maze.md",
+            "docs/json/developer/procgen/mystery.md",
             "docs/json/developer/procgen/noiz2sa.md",
             "docs/json/developer/procgen/omsi.md",
             "docs/json/developer/procgen/paths-and-obstacles.md",
