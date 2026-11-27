@@ -1,0 +1,3290 @@
+{
+ "tapes": 322,
+ "shippedEqualsBase": 322,
+ "movers": {
+  "ii": [],
+  "iv": [
+   "frontend/modules/seedlingDemo/fixtures/hammer-bw-bombstand-witness/hammer-bw-l42-381-bombstand.tape.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-chest.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-reach-l39.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-5-darkshield.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-full.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-5-darkshield.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-full.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0-control.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5-control.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance-control.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-20.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-20.json"
+  ],
+  "ii+iv": [
+   "frontend/modules/seedlingDemo/fixtures/hammer-bw-bombstand-witness/hammer-bw-l42-381-bombstand.tape.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-chest.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-reach-l39.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-5-darkshield.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-full.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-5-darkshield.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-full.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0-control.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5-control.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance-control.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-20.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-20.json"
+  ],
+  "occ": [],
+  "v": [
+   "frontend/modules/seedlingDemo/fixtures/hammer-bw-bombstand-witness/hammer-bw-l42-381-bombstand.tape.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-chest.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-reach-l39.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-5-darkshield.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-full.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-5-darkshield.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-full.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0-control.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5-control.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance-control.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-20.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2.json",
+   "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-20.json"
+  ]
+ },
+ "rows": [
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/bobiframe-witness/l40-chest-l39-s5222-default.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/bobiframe-witness/l40-chest-l39-s5222-walls.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-bw-bombstand-witness/hammer-bw-l42-381-bombstand.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-d-ghostwall-witness/hammer-d-l39-ghostwall.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-dd-walkkill-witness/hammer-dd-l30-walkkill.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-g1-ghostkill-witness/hammer-g1-l40-ghostkill.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-sf-strikefloor-witness/hammer-sf-l40-strikefloor.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l74-phase-a.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-fade-stand-86.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-fade-stand.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-fresh-stand.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-k4-stand.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-k8.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-k9-rebuild.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-leg649.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-survey195-on.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l1516-witness/l16-corner-pit-solve.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l25apitem-witness/step34-on.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40contact-spinnerwall-witness/l40contact-378-ghost-puncher.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40contact-spinnerwall-witness/l40contact-a-sword-floorplan.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40contact-spinnerwall-witness/l40contact-a-sword-spinnerwall.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40guard-witness/l40guard-band-moot.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40guard-witness/l40guard-diag-strike.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40guard-witness/l40guard-spinner-los.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40guard-witness/l40guard-walk-east.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/refuted/dash-l16-sword-refuted.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/refuted/r8-solve-5.tape.json",
+   "baseIsShipped": true,
+   "throws": "THROW the player entered Water in level 5 at (47.00324793668, 56.39999999999999) on a tape that does not pin \"sound\". `Player.as:530` adds `0.25 * int(Music.soundPosition(\"Swim\") < 0.1)` to the swim speed, ",
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/static-sword-witness/c1-l36-sandtraps.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/static-sword-witness/c1-l62-turret.tape.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l12-witch-reported.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l12-witch-server-sword.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l12-witch-slot-held.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l32-both-reported.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l32-fresh-fire-held.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l32-fresh-no-fire.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l32-killed-drop-held.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l43-totem-no-parts.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/axe-l48-reach-l49.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/axe-l61-reach-l62.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/axe-l61-reach-l63.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/axe-l71-reach-l76.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/bobsoldier-corpse.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/bobsoldier-kill.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/bobsoldier-sword.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/bobsoldier2-l30-dash-stance.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/bobsoldier2-l30-torch.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/burn-l24-reach-exit.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/burn-l44-reach-exit.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/cancross-l16-sword-none.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/collide-up-rock.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/cross-level-leg.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/crusher-l42-round-trip.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/dash-l16-sword-all.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/diagonal-run.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/direction-flip.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/enc-l12-witch.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/enc-l32-fallen-door.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/enc-l32-live-arrival.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f1-l5-lock-removal.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f1-l5-open-lock-bait.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f1c-l18-lock-removal.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f1c-l18-phase42.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f4-l8-sandtraps.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f6-l17-reentry.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f6-l2-reentry.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f6-l20-reentry.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f7-l16-reentry.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/f7-l16-walkin.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/friction-stop.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/frontier3-l62-door-niche.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/frontier3-l87-pocket.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/ghostmotion-l102-axis.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/ghostmotion-l102-diag.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/ghostsword-l3-rock.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/ghostsword-l3-rockghost.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/ghostsword-l30-bobsoldier.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/grant-sword-room.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/hammer-a-l18-escape15.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/hammer-a-l18-escape21.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/hammer-b1-l18-approach40.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/hammer-b2-l18-fight40.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/hammer-c2-l18-ghostspinner.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/hazard-boot-pit.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/hazard-walk-water.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l100-sliver-rock.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l12keyline-134-round.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l14-swordless-detour.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l30keylock-pit224-before.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l30keylock-pit224.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l30keylock-pit240.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l71-button-lock.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l71-hold-101-shut.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l71-hold-102-open.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l71-lock-shut.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l71-shieldlock-open.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l71-shieldlock-shut.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/ladder2-l104-beam.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/ladder2-l59-grenade.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/lightpole-l101-ghost.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/lightpole-l101-spear.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-83.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l29-key-return.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-chest.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-reach-l39.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l40-turret-contact.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l40-turret-volley.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/pushblock-l65-reach-l63.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/pushblock-l65-reach-l68.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/pushblock-l65-sword-press.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r1-dark-shield-bobboss.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r1-dark-shield-kill.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r1-dark-shield-spinner.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r1-dark-suit-bob.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r1-dark-suit-kill.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r1-dark-suit-spinner.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-terrain-killlock.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-two-teleporters.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-1-sword-shield.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-2-feather.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-3-darksword-torch.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-4-spear.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-5-darkshield.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-6-darksuit.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-full.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-wallflyer-contact.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-wallflyer-suit.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-bobboss-death.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-darkshield.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-darksuit.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-feather.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-shield.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-spear.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-sword.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-torch.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-drown.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-lava.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-pit-death.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-1-sword.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-2-feather.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-3-torch.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-4-spear.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-5-darkshield.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-6-darksuit.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-full.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-iceturret-bobs.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-1-sword.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-2-feather.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-3-torch.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-4-approach.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-5-spear.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-6-health.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-full.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-bobboss-arm.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-bobboss-fire-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-bobboss-fire.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-bosskey-leg.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-bosskey-lock-shut.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-contact-control-off.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-contact-control-on.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-d5-conch.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-feather.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-karlore-fire.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-karlore-plug.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l37-burn-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l37-burn.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l38-fade-boot.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l38-fade-door.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-join-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-join.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part1.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l41-part3-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l41-part3.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l42-part4-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l42-part4.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l43-wand-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l43-wand.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l60-kill-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l60-kill.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-press-delay-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-press-delay.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-press-glide.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-press-repeat.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-swim-cross.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-swim-drown.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-swim-latch.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-waterfall-climb.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-waterfall-shut.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-contact-pair-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-contact-pair-heart.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-contact-pair-live.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-contact-pair-standing.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-final-door-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-final-door.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-owl-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-owl-kill.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-seed-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-seed-credits.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-shield-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-shield-kill.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-totem-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-totem-kill.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-watcher-blood-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-watcher-blood.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-watcher-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-watcher-talk.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-5.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-6.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-full.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r7-ends-meet-1.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r7-ends-meet-2.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r7-ends-meet-full.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-19.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-20.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-hammer-arm.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-hammer-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-l18-spinner-press.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-l6-bob-contact.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-1.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-10.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-11.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-18.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-2.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-20.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-3.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-4.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-5.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-6.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-7.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-8.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-9.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-l0-sword-dash-rest.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-l0-sword-dash.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-l6-bob-press.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-l6-harmless-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-l6-harmless-press.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-l6-sword-dash-hit.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-0-v3.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-0.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-11.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-12.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-13-v2.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-13.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-14.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-15.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-16.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-18.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-19.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-2.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-20.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "DIFFERS",
+   "ii+iv": "DIFFERS",
+   "occ": "same",
+   "v": "DIFFERS"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-21.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-22.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-29.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-3.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-30.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-31.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-32.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/return-l15-conch.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/return-l15-reentry-unclear.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/return-l15-reentry.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/return-l15-walkin.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/robust-l16-l18-sword-conch.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/robust-l16-sword-idle1.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/rulesref-l66-door.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/sealdoor-l113-clear.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/sealdoor-l113-exit.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/sealdoor-l113-noseal-control.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/shuffle-stop.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/slots-l24-burn-cut-110.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/slots-l24-burn-cut-80.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/slots-l24-burn-fencepost.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/slots-l24-burn-fire-first.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/slots-l24-fire-first.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/stance-l46-chest.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/stance-l48-chest.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/stance-l48-keylock-north.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/stance-l48-keylock-open.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/stance-l48-keylock-south.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/statue-press.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/straight-run.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/swim-u5-bobboss-encounter.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/thread-the-gap.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/transition-west-return.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u10-puncher-dwell-refused.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u10-puncher-dwell.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u11-dark-shield-bob.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u11-dark-shield-puncher.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u11-facing-knockback.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u11-facing-puncher.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u12-pull-carry.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u12-pull-cross.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u14-moonrock-beam.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u14-moonrock-set.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u15-turret-shield.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u15-turret-spit.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u7-puncher-kill.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u7-puncher-punch.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u9-shield-bob-shove.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u9-shield-bob-standing.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/u9-shield-puncher.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/wall-slide.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/wallflyer-kill-flight.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/wallflyer-kill.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/wallflyer-shield-bump.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/watcher-l114-silent.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/watcher-l114-talk.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/watcher-l37-reach-l38.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/watcher-l37-reach-l44.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/watcher-l37-silent-lean.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/watchertalk-l114-clear-16.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/watchertalk-l114-clear-32.json",
+   "baseIsShipped": true,
+   "throws": null,
+   "ii": "same",
+   "iv": "same",
+   "ii+iv": "same",
+   "occ": "same",
+   "v": "same"
+  }
+ ]
+}

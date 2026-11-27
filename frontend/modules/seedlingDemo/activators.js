@@ -865,7 +865,10 @@ export function presserDown(p, playerBox, movingSolids = []) {
  * that yet" is how the statue got its offset wrong for two slices.
  */
 export function stepActivators(state, world, playerBox, opts = {}) {
-    const { inventory = null, keys = null, movingSolids = [] } = opts;
+    const { inventory = null, keys = null, movingSolids = [], enemies = [] } = opts;
+    // ⛓ RESPONDERORDER (ON only; OFF `enemies` is empty, so this is `movingSolids`): a Button and a ButtonRoom press on
+    // "Enemy" too (`Button.as:15`, `ButtonRoom.as:17`) — the presser half's solids carry the spinner / wallflyer boxes.
+    const pressers = enemies.length ? [...movingSolids, ...enemies.map((rect, i) => ({ id: `enemy#${i}`, rect }))] : movingSolids;
     // ⛓ fidelity CHESTCOVER (`chestCoverFencepost`, OFF never written): the open set BEFORE this step, for a body that
     // updates before the responders (the vanilla `Chest`) — see `openActivatorIdsBeforeStep`.
     if (CONTACT_FIDELITY.chestCoverFencepost) state.openBefore = openActivatorIds(state);
@@ -877,12 +880,30 @@ export function stepActivators(state, world, playerBox, opts = {}) {
         if (state.presserHang) return [];
         for (const p of world.pressers ?? []) {
             if (p.tag === 'buttonroom' && p.room >= 0) continue;
-            if (!presserDown(p, playerBox, movingSolids)) continue;
+            if (!presserDown(p, playerBox, pressers)) continue;
             const value = p.tag === 'buttonroom' ? !p.flip : true;
             if (markPresserHang(state, world, p.t, value, `${p.tag}@${p.x},${p.y} (pressed)`)) return [];
         }
     }
-    const pressed = pressedGroups(world, playerBox, movingSolids);
+    // ⛓ fidelity RESPONDERORDER D2 (`responderStepAfterReaders`, OFF never read): the game's frame runs the responders
+    // BEFORE its ButtonRoom and Button (`Game.as:2341-2342` < `:2355-2367`, `World.addUpdate` prepends), so they read
+    // the publish the PREVIOUS step made (`state.published`) and the presser half below runs after them. A world's
+    // first step seeds the publish first, from this step's box (the boot press, OFF's reading).
+    const afterReaders = CONTACT_FIDELITY.responderStepAfterReaders;
+    let presserHalfDone = false;
+    const events = [];
+    let pressed;
+    if (!afterReaders) pressed = pressedGroups(world, playerBox, movingSolids);
+    else {
+        if (state.published === undefined) {
+            presserHalf(state, world, playerBox, pressers, events);
+            presserHalfDone = true;
+            state.published = pressedGroups(world, playerBox, pressers);
+        }
+        pressed = state.published;
+        // What the responders read this step, for the one that is stepped outside this pass (`levelRun`'s Pulser).
+        state.responderRead = { pressed, latched: new Map(state.latched) };
+    }
     /**
      * ⛓ R5 SLICE 6: THE OCCUPANCY GUARD COUNTS BLOCKS TOO, and it is the
      * half that makes L39 solvable at all.
@@ -894,9 +915,12 @@ export function stepActivators(state, world, playerBox, opts = {}) {
      * three-simultaneous-holds §18.5 read it as: a block latches its own
      * cover by standing on it.
      */
-    const occupied = (r) => {
+    const occupied = (r, lockFamily = false) => {
         if (rectsOverlap(playerBox, r)) return true;
         for (const s of movingSolids) if (rectsOverlap(s.rect, r)) return true;
+        // ⛓ RESPONDERORDER (ON only; OFF `enemies` is empty): `Lock.hitables` holds "Enemy" (`Lock.as:23`), so a
+        // spinner or wallflyer in the box holds a Lock-family responder open; `Cover.hitables` does not (`Cover.as:21`).
+        if (lockFamily) for (const e of enemies) if (rectsOverlap(e, r)) return true;
         return false;
     };
     /**
@@ -907,50 +931,7 @@ export function stepActivators(state, world, playerBox, opts = {}) {
      * player's position and a module that reached across to write it would
      * be the second copy of the world swap all over again.
      */
-    const events = [];
-    // ── R5 slice 5 step 2: the CROSS-ROOM arm of `ButtonRoom.set activate`
-    // ⚠ IT IS NOT AN `activators` MEMBER, so it cannot live in the loop
-    // below: a `ButtonRoom` is a PRESSER, its `room >= 0` arm publishes to
-    // nothing in this level, and the thing it changes is what ANOTHER level
-    // builds. Emitted once per visit — `set activate` re-writes on every
-    // held tick and both writes are idempotent, so a second entry would be
-    // a ledger the game does not have.
-    if (!state.roomWritten || !state.latched) {
-        fail('stepActivators: this activator state predates the cross-room writes '
-            + '(no `roomWritten`). Rebuild it with `createActivatorState` — a state '
-            + 'object that silently skipped the writes would drop a ledger entry and '
-            + 'leave the next level built with a plug the game has removed.');
-    }
-    for (const p of world.pressers ?? []) {
-        if (p.tag !== 'buttonroom') continue;
-        const id = `${p.tag}@${p.x},${p.y}`;
-        if (state.roomWritten.has(id)) continue;
-        // ⚠ A `ButtonRoom` presses on the same `hitables` a `Button` does,
-        // so a BLOCK standing on one presses it too. Not a hypothetical:
-        // L40's `buttonroom@272,208` sits in a room with two fire blocks.
-        const byPlayer = rectsOverlap(playerBox, p.rect);
-        const byBlock = movingSolids.some((s) => rectsOverlap(s.rect, p.rect));
-        if (!byPlayer && !byBlock) continue;
-        state.roomWritten.add(id);
-        const publish = localPublish(p);
-        if (publish && publish.value && !(CONTACT_FIDELITY.publishedButtonRoomSetter
-            && flipAnswerGroups(world).has(publish.group))) state.latched.set(publish.group, true);
-        events.push({
-            kind: 'roomwrite', id, presser: p, writes: crossRoomWrites(p), publish,
-        });
-    }
-    // ⛓ fidelity BUTTONROOMCLEAR D2 (`publishedButtonRoomSetter`, OFF never read): a TRUE published into a group runs
-    // every OTHER ButtonRoom of it through its whole setter (`ButtonRoom.as:67-98`) — this step's presses (a Button,
-    // a local flip-0 ButtonRoom) and the queued publishes (a rope pull, the wand's sweep, a build's `check()`).
-    if (CONTACT_FIDELITY.publishedButtonRoomSetter) {
-        for (const p of world.pressers ?? []) {
-            if (!publishesTrue(p) || !presserDown(p, playerBox, movingSolids)) continue;
-            publishedButtonRoomWrites(state, world, p.t, `${p.tag}@${p.x},${p.y}`, events);
-        }
-        const queued = state.publishedTrue ?? [];
-        state.publishedTrue = [];
-        for (const q of queued) publishedButtonRoomWrites(state, world, q.group, q.by, events);
-    }
+    if (!afterReaders) presserHalf(state, world, playerBox, movingSolids, events);
     for (const a of world.activators) {
         const s = state.byId.get(a.id);
         if (!s) fail(`activator ${a.id} has no state — was createActivatorState called `
@@ -1100,7 +1081,7 @@ export function stepActivators(state, world, playerBox, opts = {}) {
             if (!s.open && !coverHeld) s.alpha = 1;   // `if (type == normType) alpha = 1`
             // returnToNormal / reset — BOTH are guarded by occupancy, and
             // the guard is why a crossing is possible at all.
-            if (!occupied(a.rect)) {
+            if (!occupied(a.rect, responder.guard === 'occupancy')) {
                 // `returnToNormal`'s `if (type == "")` — the write happens
                 // only for a lock that really was open, which is why this
                 // reads `s.open` BEFORE clearing it.
@@ -1115,7 +1096,64 @@ export function stepActivators(state, world, playerBox, opts = {}) {
             }
         }
     }
+    // ⛓ RESPONDERORDER (ON only): the ButtonRoom's and the Button's update, after every responder's — the presser
+    // half on this step's box, then the publish the NEXT step's responders read.
+    if (afterReaders && !presserHalfDone) {
+        presserHalf(state, world, playerBox, pressers, events);
+        state.published = pressedGroups(world, playerBox, pressers);
+    }
     return events;
+}
+
+/**
+ * The PRESSER half of `stepActivators`: the cross-room writes and the latch of a pressed `ButtonRoom`, and (wave 63's
+ * `publishedButtonRoomSetter`) the setters a published true runs. OFF it runs before the responders, as it always did;
+ * with `responderStepAfterReaders` ON it runs after them (the game's update order). Appends to `events`.
+ */
+function presserHalf(state, world, playerBox, movingSolids, events) {
+    // ── R5 slice 5 step 2: the CROSS-ROOM arm of `ButtonRoom.set activate`
+    // ⚠ IT IS NOT AN `activators` MEMBER, so it cannot live in the loop
+    // below: a `ButtonRoom` is a PRESSER, its `room >= 0` arm publishes to
+    // nothing in this level, and the thing it changes is what ANOTHER level
+    // builds. Emitted once per visit — `set activate` re-writes on every
+    // held tick and both writes are idempotent, so a second entry would be
+    // a ledger the game does not have.
+    if (!state.roomWritten || !state.latched) {
+        fail('stepActivators: this activator state predates the cross-room writes '
+            + '(no `roomWritten`). Rebuild it with `createActivatorState` — a state '
+            + 'object that silently skipped the writes would drop a ledger entry and '
+            + 'leave the next level built with a plug the game has removed.');
+    }
+    for (const p of world.pressers ?? []) {
+        if (p.tag !== 'buttonroom') continue;
+        const id = `${p.tag}@${p.x},${p.y}`;
+        if (state.roomWritten.has(id)) continue;
+        // ⚠ A `ButtonRoom` presses on the same `hitables` a `Button` does,
+        // so a BLOCK standing on one presses it too. Not a hypothetical:
+        // L40's `buttonroom@272,208` sits in a room with two fire blocks.
+        const byPlayer = rectsOverlap(playerBox, p.rect);
+        const byBlock = movingSolids.some((s) => rectsOverlap(s.rect, p.rect));
+        if (!byPlayer && !byBlock) continue;
+        state.roomWritten.add(id);
+        const publish = localPublish(p);
+        if (publish && publish.value && !(CONTACT_FIDELITY.publishedButtonRoomSetter
+            && flipAnswerGroups(world).has(publish.group))) state.latched.set(publish.group, true);
+        events.push({
+            kind: 'roomwrite', id, presser: p, writes: crossRoomWrites(p), publish,
+        });
+    }
+    // ⛓ fidelity BUTTONROOMCLEAR D2 (`publishedButtonRoomSetter`, OFF never read): a TRUE published into a group runs
+    // every OTHER ButtonRoom of it through its whole setter (`ButtonRoom.as:67-98`) — this step's presses (a Button,
+    // a local flip-0 ButtonRoom) and the queued publishes (a rope pull, the wand's sweep, a build's `check()`).
+    if (CONTACT_FIDELITY.publishedButtonRoomSetter) {
+        for (const p of world.pressers ?? []) {
+            if (!publishesTrue(p) || !presserDown(p, playerBox, movingSolids)) continue;
+            publishedButtonRoomWrites(state, world, p.t, `${p.tag}@${p.x},${p.y}`, events);
+        }
+        const queued = state.publishedTrue ?? [];
+        state.publishedTrue = [];
+        for (const q of queued) publishedButtonRoomWrites(state, world, q.group, q.by, events);
+    }
 }
 
 /** The ids that are currently NOT solid. */

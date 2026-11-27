@@ -4006,8 +4006,15 @@ export function createLevelRun({
             if (e.state.type === FALL_ROCK.landedType) solids.push({ id: e.id, rect: fallRockRect(e.state) });
         }
         const box = playerBoxAt(state.x, state.y);
-        applyLockEvents(stepActivators(activatorStateFor(level), worldFor(level), box,
-            { inventory, keys, movingSolids: solids }));
+        // ⛓ RESPONDERORDER (ON only): the span frame's readers (the blocks, the rock) have stepped, so the frame
+        // before's deferred step runs now, on them; this frame's is deferred to the next span frame (or the release).
+        if (CONTACT_FIDELITY.responderStepAfterReaders) {
+            runDeferredResponderStepNow(solids.slice(movingSolidsNow().length));
+            deferResponderStep(activatorStateFor(level), worldFor(level));
+        } else {
+            applyLockEvents(stepActivators(activatorStateFor(level), worldFor(level), box,
+                { inventory, keys, movingSolids: solids }));
+        }
         const rocks = fallRockStateFor(level);
         const spanIds = new Set(inSpan.map((e) => e.id));
         const armed = fallRocksArmedBy(worldFor(level), box, solids)
@@ -4049,6 +4056,10 @@ export function createLevelRun({
             // is the pull tick's own end-of-tick `stepActivators` (it runs after this collapsed span, with the rock
             // landed). Measured: stepping the release frame here too opens L28's lock one tick early (game t166).
             if (CONTACT_FIDELITY.fallRockHoldsButton && !r.unfroze) spanActivatorFrameNow([{ id, state: s }]);
+            // ⛓ RESPONDERORDER (ON only): the release frame's readers have stepped; the last span frame's step runs on them.
+            if (CONTACT_FIDELITY.fallRockHoldsButton && r.unfroze && CONTACT_FIDELITY.responderStepAfterReaders && !noclip) {
+                runDeferredResponderStepNow(s.type === FALL_ROCK.landedType ? [{ id, rect: fallRockRect(s) }] : []);
+            }
             // ⛔ THE SNAP. `FallRock.update`'s first arm writes the player's
             // `y` on every tick from the landing, and the player cannot move
             // out from under it — the whole span is frozen. So the LAST snap
@@ -5452,7 +5463,10 @@ export function createLevelRun({
         if (live.size === 0) return null;
         const activators = activatorStateFor(level);
         const pressed = pressedGroups(world, playerBoxAt(state.x, state.y), movingSolidsNow());
-        const lag = CONTACT_FIDELITY.pulserPublishLag;
+        // ⛓ RESPONDERORDER (ON): the next step's Pulser reads the publish the latest step made (`state.published`),
+        // and each row after it the one before — `pulserPublishLag`'s carry, seeded from the publish.
+        const order = CONTACT_FIDELITY.responderStepAfterReaders;
+        const lag = CONTACT_FIDELITY.pulserPublishLag || order;
         const make = (rows) => ({
             step(st, frozen) {
                 if (frozen) return;
@@ -5478,7 +5492,8 @@ export function createLevelRun({
             },
             copy: () => make(rows),
         });
-        return make([...live].map(([id, p]) => ({ id, p, pressedNow: pressed.has(p.t),
+        return make([...live].map(([id, p]) => ({ id,
+            p: order ? { ...p, pressedLast: activators.published?.has(p.t) === true } : p, pressedNow: pressed.has(p.t),
             latched: activators.latched.get(p.t) === true })));
     };
     const shiftedSpinnerForecast = (live) => {
@@ -6658,7 +6673,8 @@ export function createLevelRun({
         // a spinner, which updates before it (`activators.openActivatorIdsBeforeLatestStep`). ⚠ `spinnerForecast`
         // reuses one ctx for its whole horizon, so ON it carries that responder Solid past its first row: the frozen-
         // world bound it already has (a responder that opens inside the horizon is not foreseen), one tick longer.
-        const openActivators = noclip ? null : (CONTACT_FIDELITY.spinnerLockLag
+        // ⛓ RESPONDERORDER (ON): the spinner steps before the deferred step, so the current set IS the frame before's.
+        const openActivators = noclip ? null : (CONTACT_FIDELITY.spinnerLockLag && !CONTACT_FIDELITY.responderStepAfterReaders
             ? openActivatorIdsBeforeLatestStep(activatorStateFor(level), world)
             : openActivatorIds(activatorStateFor(level)));
         // The blocks where the PREVIOUS tick left them: the spinner updates
@@ -8426,8 +8442,9 @@ export function createLevelRun({
                 // ⛓ fidelity CHESTCOVER (`chestCoverFencepost`, OFF): a VANILLA chest updates before the
                 // responders, so it reads the open set one step older (`openActivatorIdsBeforeStep`); an AP chest
                 // (`c.apChest`, p4h — absent on this base) updates after them and keeps `openActivatorIds`.
-                const openActivators = CONTACT_FIDELITY.chestCoverFencepost && !c.apChest
-                    ? openActivatorIdsBeforeStep(activators) : openActivatorIds(activators);
+                // ⛓ RESPONDERORDER (ON): the chest steps before the deferred step, so the current set is the one before it.
+                const openActivators = CONTACT_FIDELITY.chestCoverFencepost && !CONTACT_FIDELITY.responderStepAfterReaders
+                    && !c.apChest ? openActivatorIdsBeforeStep(activators) : openActivatorIds(activators);
                 return !!world.collidesSolid(box, normalizeLiveOpts(liveSolidOpts({
                     beforeTypeFlip: firstTickInWorld,
                     openActivators,
@@ -10125,11 +10142,17 @@ export function createLevelRun({
         // ⛓ fidelity FIREPUSH (`pulserPublishLag`): a Pulser updates BEFORE its Button (`Game.as:2341` < `:2357`), so
         // the momentary arm it reads is the one published LAST tick — carried on its own state as `pressedLast`.
         const lag = CONTACT_FIDELITY.pulserPublishLag;
+        // ⛓ fidelity RESPONDERORDER D2 (ON): a Pulser is a responder, so it reads what this frame's responders read —
+        // the previous step's publish and the latch before this step's presser half (`state.responderRead`; a
+        // world's first tick has none: no Button has published, the latch is the build's). `pressedLast` unused.
+        const order = CONTACT_FIDELITY.responderStepAfterReaders;
+        const read = order ? (activators.responderRead ?? { pressed: new Set(), latched: activators.latched }) : null;
         for (const [id, p] of st) {
             const pressedNow = pressed.has(p.t);
-            const armed = (lag ? p.pressedLast === true : pressedNow) || activators.latched.get(p.t) === true;
+            const armed = order ? (read.pressed.has(p.t) || read.latched.get(p.t) === true)
+                : ((lag ? p.pressedLast === true : pressedNow) || activators.latched.get(p.t) === true);
             const r = stepPulser(p, armed);
-            st.set(id, lag ? { ...r.state, pressedLast: pressedNow } : r.state);
+            st.set(id, lag && !order ? { ...r.state, pressedLast: pressedNow } : r.state);
             if (!r.hit) continue;
             pulserHits.push({ t: ticksCompleted + 1, level, id });
             // The candidates: every block, and the player.
@@ -15123,8 +15146,14 @@ export function createLevelRun({
         stepShootersNow();
         if (!noclip && beamTowersStepped()) stepBeamTowersNow({ frozen: true });
         if (!noclip) {
-            applyLockEvents(stepActivators(activators, world, playerBoxAt(state.x, state.y),
-                { inventory, keys, movingSolids: movingSolidsNow() }));
+            // ⛓ RESPONDERORDER (ON only): the frame before's deferred step (the tick's, on frame 1), then this one deferred.
+            if (CONTACT_FIDELITY.responderStepAfterReaders) {
+                runDeferredResponderStepNow();
+                deferResponderStep(activators, world);
+            } else {
+                applyLockEvents(stepActivators(activators, world, playerBoxAt(state.x, state.y),
+                    { inventory, keys, movingSolids: movingSolidsNow() }));
+            }
             if (pendingButtonFalls === null) {
                 armButtonFallRocks(playerBoxAt(state.x, state.y));
                 if (pendingButtonFalls !== null) {
@@ -16084,6 +16113,46 @@ export function createLevelRun({
      */
     let pendingSnapY = null;
     /**
+     * ⛓ fidelity RESPONDERORDER D2 (`CONTACT_FIDELITY.responderStepAfterReaders`, OFF never written): the step a tick
+     * ends on is DEFERRED to the next tick's top, after the readers and the Chest (`runDeferredResponderStepNow`), which
+     * is where the game's frame runs its responders. `{level, state, world}`.
+     */
+    let pendingResponderStep = null;
+    /** The Lock family's "Enemy" boxes (ON only): the live spinners and wallflyers. */
+    const responderEnemiesNow = () => (CONTACT_FIDELITY.responderStepAfterReaders && !noclip
+        ? [...spinnerRects(spinnerStateFor(level)).map((r) => r.rect), ...wallFlyerBodiesNow().map((w) => wallFlyerRect(w))]
+        : []);
+    const deferResponderStep = (activators, w) => {
+        if (pendingResponderStep !== null) {
+            throw new Error(`levelRun: tick ${ticksCompleted} defers a responder step over one still pending `
+                + `(level ${pendingResponderStep.level}) — two steps for one frame (responderStepAfterReaders).`);
+        }
+        pendingResponderStep = { level, state: activators, world: w };
+    };
+    /**
+     * Run the deferred step (ON only): the game's responder update of THIS frame, after its readers. The occupancy
+     * reads the player where the last tick left it and the readers where this tick left them. A touch lock's snap is
+     * the player's own position before it updates, so it lands at once. A press into a recursing group hangs the frame
+     * (`presserRecursionHang`): this tick does not complete. A step whose world was torn down since (a new `Game` in
+     * the level: a death reboot, `enterWorld`) is dropped — that world runs no later frame, as on a transition.
+     */
+    const runDeferredResponderStepNow = (extraSolids = []) => {
+        const p = pendingResponderStep;
+        if (p === null) return;
+        pendingResponderStep = null;
+        if (p.level !== level || activatorStateFor(level) !== p.state) return;
+        applyLockEvents(stepActivators(p.state, p.world, playerBoxAt(state.x, state.y),
+            { inventory, keys, movingSolids: [...movingSolidsNow(), ...extraSolids], enemies: responderEnemiesNow() }));
+        if (pendingSnapY !== null) {
+            state = { ...state, y: pendingSnapY };
+            pendingSnapY = null;
+        }
+        if (CONTACT_FIDELITY.presserRecursionHang && p.state.presserHang) {
+            throw new PresserRecursionHang(`levelRun: tick ${ticksCompleted} cannot run — ${p.state.presserHang.message}`,
+                p.state.presserHang);
+        }
+    };
+    /**
      * ── ⛓⛓⛓ SWIM T3: THE BUTTON THAT DROPS A ROCK ───────────────────────
      *
      * `Button.activateAll` publishes to every `Activators` sharing its `t`,
@@ -16803,9 +16872,13 @@ export function createLevelRun({
         // slices.
         // ⛓ fidelity BEAMTOWER D1: a tower's own update returns on the freeze, its graphic still updates.
         if (!noclip) {
-            applyLockEvents(stepActivators(activators, world,
-                playerBoxAt(state.x, state.y),
-                { inventory, keys, movingSolids: movingSolidsNow() }));
+            // ⛓ RESPONDERORDER (ON only): deferred to the next tick's top, after its readers.
+            if (CONTACT_FIDELITY.responderStepAfterReaders) deferResponderStep(activators, world);
+            else {
+                applyLockEvents(stepActivators(activators, world,
+                    playerBoxAt(state.x, state.y),
+                    { inventory, keys, movingSolids: movingSolidsNow() }));
+            }
             // ⛓ SWIM T3: a Button keeps updating through a freeze, so a press
             // here WOULD drop a rock — inside a span already frozen, which the
             // button arm does not nest. Refused by name.
@@ -23226,6 +23299,8 @@ export function createLevelRun({
                 buttonFallsInFlight = new Set(ids);
                 // ⛓ fidelity CEREMONYTOWER D2 (ON only): frame A is frozen to the turrets too (`:2295` vs the Button's `:2341`).
                 stepRockSpanShootersNow(false);
+                // ⛓ RESPONDERORDER (ON only): this frame's responders, after its readers (the frozen tick defers its own).
+                runDeferredResponderStepNow();
                 const tick = runFrozenTick(activators, 'a button-dropped fallrock', { chasers: true });
                 buttonFallsInFlight = new Set();
                 resolveButtonFalls(ids);
@@ -23298,6 +23373,9 @@ export function createLevelRun({
             //    chest's `solidOver` reads `openActivatorIdsBeforeStep`.
             if (!noclip) stepSealPieceNow();
             if (!noclip) stepChestsNow(activators);
+            // ⛓ fidelity RESPONDERORDER D2 (ON only): the responders, after the readers and the Chest (`Game.as:2377`)
+            // and before the Pulser (`:2357`) and the player — the step the last tick deferred.
+            if (!noclip) runDeferredResponderStepNow();
             if (!noclip) stepPulsersNow(activators, pushState);
             // ⛓⛓⛓ U12-swim D1: THE PULLS, in their own slot. `loadlevel` adds
             // `pull` at `:2329` — BELOW `pulser` (`:2334`) and `lock` (`:2333`),
@@ -25202,9 +25280,16 @@ export function createLevelRun({
             // ...and THEN Button.update and Lock.update run, against where
             // the player ended up.
             if (!noclip) {
-                applyLockEvents(stepActivators(activators, world,
-                    playerBoxAt(next.x, next.y),
-                    { inventory, keys, movingSolids: movingSolidsNow() }));
+                // ⛓ RESPONDERORDER (ON only): deferred to the next tick's top, after its readers. A transition tick's
+                // is not run at all: the level being left runs no later frame (game-witnessed, `w-leave-*`: a Lock
+                // whose Button the player walks off into the teleporter never re-closes; OFF writes the close).
+                if (CONTACT_FIDELITY.responderStepAfterReaders) {
+                    if (!next.transition) deferResponderStep(activators, world);
+                } else {
+                    applyLockEvents(stepActivators(activators, world,
+                        playerBoxAt(next.x, next.y),
+                        { inventory, keys, movingSolids: movingSolidsNow(), enemies: responderEnemiesNow() }));
+                }
                 // ⛓ SWIM T3: and a Button's publication reaches a rock of its
                 // group — set here, resolved at the top of the next tick.
                 if (!next.transition) armButtonFallRocks(playerBoxAt(next.x, next.y));

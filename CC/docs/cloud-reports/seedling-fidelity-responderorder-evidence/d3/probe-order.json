@@ -1,0 +1,267 @@
+{
+ "total": {
+  "deferred": 192800,
+  "ranDeferred": 192596,
+  "seeded": 669,
+  "steps": 192571,
+  "tapeEndPending": 204,
+  "transitionDrop": 441,
+  "staleDrop": 25,
+  "threw": 1,
+  "enemyPress": 397
+ },
+ "rows": [
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-g1-ghostkill-witness/hammer-g1-l40-ghostkill.tape.json",
+   "deferred": 2195,
+   "ranDeferred": 2194,
+   "seeded": 2,
+   "steps": 2193,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-sf-strikefloor-witness/hammer-sf-l40-strikefloor.tape.json",
+   "deferred": 1629,
+   "ranDeferred": 1628,
+   "seeded": 2,
+   "steps": 1627,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l74-phase-a.tape.json",
+   "deferred": 150,
+   "ranDeferred": 149,
+   "seeded": 2,
+   "steps": 148,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-fade-stand-86.tape.json",
+   "deferred": 100,
+   "ranDeferred": 99,
+   "seeded": 3,
+   "steps": 97,
+   "staleDrop": 2,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-fade-stand.tape.json",
+   "deferred": 100,
+   "ranDeferred": 99,
+   "seeded": 3,
+   "steps": 97,
+   "staleDrop": 2,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-fresh-stand.tape.json",
+   "deferred": 125,
+   "ranDeferred": 124,
+   "seeded": 2,
+   "steps": 123,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-k4-stand.tape.json",
+   "deferred": 110,
+   "ranDeferred": 109,
+   "seeded": 1,
+   "steps": 108,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-k8.tape.json",
+   "deferred": 130,
+   "ranDeferred": 129,
+   "seeded": 2,
+   "steps": 128,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-k9-rebuild.tape.json",
+   "deferred": 170,
+   "ranDeferred": 169,
+   "seeded": 2,
+   "steps": 168,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l76-leg649.tape.json",
+   "deferred": 90,
+   "ranDeferred": 89,
+   "seeded": 2,
+   "steps": 88,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40contact-spinnerwall-witness/l40contact-a-sword-floorplan.tape.json",
+   "deferred": 1695,
+   "ranDeferred": 1694,
+   "seeded": 2,
+   "steps": 1693,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40contact-spinnerwall-witness/l40contact-a-sword-spinnerwall.tape.json",
+   "deferred": 3113,
+   "ranDeferred": 3112,
+   "seeded": 3,
+   "steps": 3110,
+   "staleDrop": 2,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40guard-witness/l40guard-spinner-los.tape.json",
+   "deferred": 2200,
+   "ranDeferred": 2199,
+   "seeded": 2,
+   "steps": 2198,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/l40guard-witness/l40guard-walk-east.tape.json",
+   "deferred": 160,
+   "ranDeferred": 159,
+   "seeded": 2,
+   "steps": 158,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json",
+   "deferred": 1600,
+   "ranDeferred": 1599,
+   "seeded": 1,
+   "steps": 1599,
+   "enemyPress": 19,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json",
+   "deferred": 1665,
+   "ranDeferred": 1664,
+   "seeded": 1,
+   "steps": 1664,
+   "enemyPress": 4,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-bobboss-death.json",
+   "deferred": 210,
+   "ranDeferred": 209,
+   "seeded": 2,
+   "steps": 208,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-drown.json",
+   "deferred": 140,
+   "ranDeferred": 139,
+   "seeded": 2,
+   "steps": 138,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-lava.json",
+   "deferred": 70,
+   "ranDeferred": 69,
+   "seeded": 2,
+   "steps": 68,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-pit-death.json",
+   "deferred": 100,
+   "ranDeferred": 99,
+   "seeded": 2,
+   "steps": 98,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5-control.json",
+   "deferred": 1937,
+   "ranDeferred": 1936,
+   "seeded": 1,
+   "steps": 1936,
+   "enemyPress": 39,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json",
+   "deferred": 2018,
+   "ranDeferred": 2017,
+   "seeded": 1,
+   "steps": 2017,
+   "enemyPress": 39,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft-control.json",
+   "deferred": 2960,
+   "ranDeferred": 2959,
+   "seeded": 1,
+   "steps": 2959,
+   "enemyPress": 111,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft.json",
+   "deferred": 2960,
+   "ranDeferred": 2959,
+   "seeded": 1,
+   "steps": 2959,
+   "enemyPress": 185,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-contact-pair-heart.json",
+   "deferred": 130,
+   "ranDeferred": 129,
+   "seeded": 2,
+   "steps": 128,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-contact-pair-live.json",
+   "deferred": 130,
+   "ranDeferred": 129,
+   "seeded": 2,
+   "steps": 128,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-seed-credits.json",
+   "deferred": 520,
+   "ranDeferred": 519,
+   "seeded": 2,
+   "steps": 518,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-watcher-blood.json",
+   "deferred": 204,
+   "ranDeferred": 203,
+   "seeded": 2,
+   "steps": 202,
+   "staleDrop": 1,
+   "tapeEndPending": 1
+  }
+ ]
+}

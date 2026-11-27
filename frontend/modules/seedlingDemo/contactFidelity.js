@@ -2486,6 +2486,51 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no flip licence).
      */
     publishedButtonRoomSetter: false,
+    /**
+     * ⛓ fidelity RESPONDERORDER D2 (wave 65) — THE RESPONDERS STEP IN THE GAME'S FRAME ORDER: after the readers, before
+     * the player, reading the Button's publish of the frame before (wave 64's three witnessed off-by-ones, one cause;
+     * `CC/docs/cloud-reports/seedling-fidelity-readerorder.md`, `…-responderorder.md`).
+     * The game. `World.addUpdate` prepends (`net/flashpunk/World.as:937-951`), so a frame runs `Game.loadlevel`'s adds
+     * in reverse: Spinner (`Game.as:2416`), WallFlyer (`:2415`), the PushableBlock family (`:2382-2384`), Chest
+     * (`:2377`), the responders (`MagicalLock`…`Cover` `:2360-2367`, `Pulser` `:2357`, `Lock` `:2356`, `RockLock`
+     * `:2355`), then ButtonRoom (`:2342`) and Button (`:2341`), whose `activateAll` is therefore read by the responders
+     * of the NEXT frame, then the enemies, and the Player last (`:2250`). OFF, the model steps the readers at a tick's
+     * top and `stepActivators` at its end (labelled the next frame's responder update), so (1) a reader reads the
+     * responder set one step new (`pushableCtx` both ways; `spinnerCtx` both ways but a fresh open, `spinnerLockLag`);
+     * (2) a responder's occupancy guard sees the readers one step stale, and the Lock family's counts no spinner or
+     * wallflyer although `Lock.hitables` holds "Enemy" (`Puzzlements/Lock.as:23`; `Cover.as:21` does not); (3) a
+     * Player press or release reaches a responder one frame early (`pulserPublishLag`'s rule, the Pulser's only).
+     * MEASURED on the game (p4g, wave 64: 13 staged L38 shapes, `-readerorder-evidence/d3/witness-p4g.json`): the
+     * block stops one frame after L opens (`a1-open`); a Pulser-driven fire block that read "open" moves in and holds
+     * a resetting L open (`a2-r149`); a spinner / wallflyer crossing holds L open (`b1-r124`, `b2-flyer`); a mid-tape
+     * press opens L at on + 102 and re-shuts it at off + 2 (`a2-ctl`; the model OFF: + 101, + 1). Wave 63's
+     * `btn-lock` / `btn-cover` (no ButtonRoom) first differ from the model at rows 124 / 34 for the same reason. Wave
+     * 65 (`-responderorder-evidence/d2/witness-order.json`): a ButtonRoom latch pressed MID-tape opens L at on + 102
+     * (`w-latch`; OFF + 101), a block's Button release re-shuts it a frame later than OFF (`w-block`), a spinner meets a
+     * resetting Cover as the read alone says (`w-cover-124`, `-128`), and a spinner crossing a Button PRESSES it (the
+     * Cover of its group opens, `w-spin-button`); an N-tick tape's hold-cut ledger holds no write from the model's
+     * step at the end of advance N (`d2/witness-horizon.json`: `l71-hold-101-shut`, `l30keylock-pit224-before`).
+     * ON. The main tick's and a frozen tick's step is DEFERRED (`levelRun.deferResponderStep`) and runs at the top of
+     * the next tick after the readers and the Chest, before the Pulser and the player; a span frame and an inventory
+     * hold frame step at once (their readers already stepped first). Inside the step the responders run FIRST, on the
+     * PREVIOUS step's publish (`state.published`: the Button's / ButtonRoom's press and the latch as they stood), and
+     * the presser half (cross-room writes, the latch, wave 63's setters, the new publish) runs after them, on this
+     * step's box; a world's first step seeds its publish first (the boot press, as OFF). The Lock family's guard counts
+     * the spinner and wallflyer boxes (`opts.enemies`); a Cover's does not; the presser half's press counts them too
+     * (`Button.hitables` / `ButtonRoom.hitables` hold "Enemy"). A tape's last deferred step is past its last frame and
+     * never runs (the game's hold-cut ledger agrees). The Pulser reads the responders' read
+     * (`state.responderRead`). So the readers read the plain current set: `spinnerLockLag`'s open lag and
+     * `chestCoverFencepost`'s snapshot are NOT applied a second time, nor `pulserPublishLag`'s `pressedLast`. A
+     * transition tick's step is not run (the level being left runs no later frame; game-witnessed, `w-leave-*`), nor a
+     * step whose world a same-level rebuild tore down (a death reboot, `enterWorld`; derived, unwitnessed). OFF:
+     * nothing read or written, byte-identical. Not modelled, named: the other enemies in a Lock's box or on a Button (only the spinner
+     * and the wallflyer have model positions here); a spinner / wallflyer on a Button that drops a FallRock
+     * (`armButtonFallRocks` keeps its own press); the arrow trap's own lag (game-adjudicated, unchanged); the dead
+     * frames' responder update (the model steps none, OFF or ON).
+     * Composes with every key; `presserRecursionHang`'s early return stays first. `SEEDLING_RESPONDER_STEP_AFTER_READERS=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    responderStepAfterReaders: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2940,6 +2985,9 @@ if (globalThis.process?.env?.SEEDLING_PRESSER_RECURSION_HANG === '0') CONTACT_FI
 // ⛓ fidelity BUTTONROOMCLEAR D2: `SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER === '1') CONTACT_FIDELITY.publishedButtonRoomSetter = true;
 if (globalThis.process?.env?.SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER === '0') CONTACT_FIDELITY.publishedButtonRoomSetter = false;
+// ⛓ fidelity RESPONDERORDER D2: `SEEDLING_RESPONDER_STEP_AFTER_READERS=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_RESPONDER_STEP_AFTER_READERS === '1') CONTACT_FIDELITY.responderStepAfterReaders = true;
+if (globalThis.process?.env?.SEEDLING_RESPONDER_STEP_AFTER_READERS === '0') CONTACT_FIDELITY.responderStepAfterReaders = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

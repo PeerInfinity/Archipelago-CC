@@ -1,0 +1,560 @@
+[
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/hammer-bw-bombstand-witness/hammer-bw-l42-381-bombstand.tape.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-chest.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "pulserHits",
+     "pulsePushes"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "pulserHits",
+     "pulsePushes"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "pulserHits",
+     "pulsePushes"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-reach-l39.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "pulserHits",
+     "pulsePushes"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "pulserHits",
+     "pulsePushes"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "pulserHits",
+     "pulsePushes"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-5-darkshield.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "lockWrites"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r2-walk-full.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "lockWrites"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-5-darkshield.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "lockWrites"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-full.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "lockWrites"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0-control.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5-control.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance-control.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "pulserHits",
+     "pulsePushes"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "pulserHits",
+     "pulsePushes"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "pulserHits",
+     "pulsePushes"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "pulserHits",
+     "pulsePushes"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "pulserHits",
+     "pulsePushes"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "pulserHits",
+     "pulsePushes"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-20.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   }
+  }
+ },
+ {
+  "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-20.json",
+  "arms": {
+   "ii": "same",
+   "iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "ii+iv": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   },
+   "occ": "same",
+   "v": {
+    "stream": "same",
+    "keys": [
+     "earnedClears",
+     "lockWrites"
+    ],
+    "first": null
+   }
+  }
+ }
+]

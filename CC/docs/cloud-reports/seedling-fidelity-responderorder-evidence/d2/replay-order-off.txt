@@ -1,0 +1,12 @@
+w-latch ARM off: 190 ticks; 0 px over the stream; worst 0 px; L first differs t124 (game shut, model open)
+w-latch-boot ARM off: 150 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-block ARM off: 240 ticks; 0 px over the stream; worst 0 px; L first differs t228 (game open, model shut)
+w-cover-100 ARM off: 150 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-cover-104 ARM off: 154 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-cover-108 ARM off: 158 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-cover-112 ARM off: 162 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-cover-116 ARM off: 166 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-cover-120 ARM off: 170 ticks; 0 px over the stream; worst 0 px; L agrees every tick
+w-cover-124 ARM off: 174 ticks; FIRST DIVERGENCE t132 (0.7071 px): game {"player":[63,280],"readers":[["Spinner",153.4142135623731,221.0330085889915]]} model {"player":[63,280],"readers":[[153.4142135623731,220.32590180780494]]}; worst 1.4142 px; L agrees every tick
+w-cover-128 ARM off: 178 ticks; FIRST DIVERGENCE t135 (0.7071 px): game {"player":[64.45,280],"readers":[["Spinner",155.53553390593277,223.15432893255115]]} model {"player":[64.45,280],"readers":[[154.8284271247462,222.4472221513646]]}; worst 1.4142 px; L agrees every tick
+w-spin-button ARM off: 300 ticks; FIRST DIVERGENCE t83 (1.1 px): game {"player":[152,241.4],"readers":[["Spinner",155.53553390593277,186.38477631085038]]} model {"player":[152,242.5],"readers":[[155.53553390593277,186.38477631085038]]}; worst 96.3103 px; L agrees every tick

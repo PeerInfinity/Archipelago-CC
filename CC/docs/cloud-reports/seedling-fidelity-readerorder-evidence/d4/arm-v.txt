@@ -1,0 +1,13 @@
+a1-open ARM v: 140 ticks; 0 px over the stream; worst 0 px; L agrees every tick; end t140 game {"readers":[[115,48]],"lock":true} model {"readers":[[115,48]],"lock":true}
+a1-ctl ARM v: 240 ticks; 0 px over the stream; worst 0 px; L agrees every tick; end t240 game {"readers":[[119,48]],"lock":true} model {"readers":[[119,48]],"lock":true}
+a2-reset ARM v: 190 ticks; 0 px over the stream; worst 0 px; L agrees every tick; end t190 game {"readers":[[192,48]],"lock":true} model {"readers":[[192,48]],"lock":true}
+a2-r149 ARM v: 189 ticks; 0 px over the stream; worst 0 px; L first differs t156 (game open, model shut); end t189 game {"readers":[[192,48]],"lock":true} model {"readers":[[192,48]],"lock":true}
+a2-r151 ARM v: 191 ticks; 0 px over the stream; worst 0 px; L agrees every tick; end t191 game {"readers":[[192,48]],"lock":true} model {"readers":[[192,48]],"lock":true}
+a2-ctl ARM v: 180 ticks; 0 px over the stream; worst 0 px; L agrees every tick; end t180 game {"readers":[[176,48]],"lock":false} model {"readers":[[176,48]],"lock":false}
+b1-spinner ARM v: 165 ticks; 0 px over the stream; worst 0 px; L first differs t161 (game shut, model open); end t165 game {"readers":[[137.85786437626894,244.36753236814775]],"lock":false} model {"readers":[[137.858,244.368]],"lock":false}
+b1-occ ARM v: 167 ticks; 0 px over the stream; worst 0 px; L first differs t161 (game shut, model open); end t167 game {"readers":[[136.44365081389583,245.78174593052086]],"lock":false} model {"readers":[[136.444,245.782]],"lock":false}
+b1-ctl ARM v: 200 ticks; 0 px over the stream; worst 0 px; L agrees every tick; end t200 game {"readers":[[149.87867965644034,172.24264068711932]],"lock":false} model {"readers":[[149.879,172.243]],"lock":false}
+b2-flyer ARM v: 184 ticks; 0 px over the stream; worst 0 px; L first differs t160 (game open, model shut); end t184 game {"readers":[[152,315]],"lock":false} model {"readers":[[152,315]],"lock":false}
+b2-occ ARM v: 185 ticks; 0 px over the stream; worst 0 px; L first differs t167 (game shut, model open); end t185 game {"readers":[[152,319]],"lock":false} model {"readers":[[152,319]],"lock":false}
+b2-ctl ARM v: 60 ticks; 0 px over the stream; worst 0 px; L agrees every tick; end t60 game {"readers":[[152,217]],"lock":false} model {"readers":[[152,217]],"lock":false}
+b1-r124 ARM v: 164 ticks; 0 px over the stream; worst 0 px; L first differs t132 (game open, model shut); end t164 game {"readers":[[138.5649711574555,243.6604255869612]],"lock":false} model {"readers":[[138.565,243.66]],"lock":false}

@@ -1,0 +1,5642 @@
+{
+ "source": "readerorder-witness.mjs",
+ "build": "seedling_bot_ap_p4g",
+ "capabilities": [
+  "arm",
+  "apitem",
+  "hold",
+  "tag",
+  "freeze",
+  "sincebegin",
+  "bossreport"
+ ],
+ "shapes": [
+  {
+   "shape": "b1-r124",
+   "params": {
+    "release": 124,
+    "after": 40
+   },
+   "set": "seedling-vanilla-record-23510f80-ro-b1-r124",
+   "tape": {
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+     "level": 38,
+     "x": 64,
+     "y": 272
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+     {
+      "level": 0,
+      "tag": 1,
+      "note": ""
+     },
+     {
+      "level": 5,
+      "tag": 0,
+      "note": ""
+     },
+     {
+      "level": 8,
+      "tag": 0,
+      "note": ""
+     },
+     {
+      "level": 8,
+      "tag": 1,
+      "note": ""
+     },
+     {
+      "level": 10,
+      "tag": 0,
+      "note": ""
+     },
+     {
+      "level": 16,
+      "tag": 0,
+      "note": ""
+     },
+     {
+      "level": 19,
+      "tag": 1,
+      "note": ""
+     }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+     "sound",
+     "dead_frames"
+    ],
+    "save": {
+     "totem_parts": [],
+     "keys": [
+      0
+     ],
+     "seal_parts": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ]
+    },
+    "rng": {
+     "seed": 418414780,
+     "split": true,
+     "cosmetic": 0,
+     "fp": 1763053598
+    },
+    "seam": {
+     "items": {
+      "hasSword": true,
+      "hasGhostSword": false,
+      "hasShield": true,
+      "hasFire": false,
+      "hasWand": false,
+      "hasFireWand": false,
+      "canSwim": false,
+      "hasSpear": false,
+      "hasDarkShield": false,
+      "hasDarkSuit": false,
+      "hasDarkSword": false,
+      "hasFeather": false,
+      "hasTorch": false
+     },
+     "beam": false,
+     "rock_set": false,
+     "hits_max": 3,
+     "first_use": false,
+     "extended": false,
+     "time": 8586,
+     "primary": 0,
+     "secondary": 0,
+     "grass_cut": 0,
+     "cutscene": [
+      false,
+      false,
+      false,
+      false
+     ],
+     "menu_state": 0,
+     "music": {
+      "set": "Room",
+      "index": 1
+     }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 164,
+    "inputs": [
+     {
+      "key": "left",
+      "from": 124,
+      "to": 164
+     }
+    ],
+    "name": "readerorder-b1-r124"
+   },
+   "whole": {
+    "mounted": "seedling-vanilla-record-23510f80-ro-b1-r124",
+    "tick": 164,
+    "held": false,
+    "hits": 0,
+    "lockOpen": false,
+    "rows": [
+     {
+      "cls": "Spinner",
+      "x": 137.85786437626894,
+      "y": 244.36753236814775,
+      "vx": -0.7071067811865476,
+      "vy": 0.7071067811865475,
+      "type": "Enemy",
+      "destroy": false,
+      "alpha": 1
+     },
+     {
+      "cls": "Player",
+      "x": 50.050000000000004,
+      "y": 280,
+      "vx": -1.2000000000000006,
+      "vy": 0,
+      "type": "Player",
+      "destroy": false,
+      "alpha": 1
+     }
+    ],
+    "mobTick": 164,
+    "stream": [
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 72,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 71.2,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 69.85000000000001,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 68.75000000000001,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 67.90000000000002,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 66.50000000000001,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 65.35000000000001,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 64.45,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 63,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 61.8,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 60.849999999999994,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 59.349999999999994,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 58.099999999999994,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 57.099999999999994,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 55.55,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 54.25,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 53.2,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 52.400000000000006,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 51.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     },
+     {
+      "level": 38,
+      "x": 50.050000000000004,
+      "y": 280
+     }
+    ],
+    "samples": [
+     {
+      "tick": 0,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Player",
+        "x": 88,
+        "y": 136,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 1,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152.70710678118655,
+        "y": 167.29289321881345,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 2,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 153.4142135623731,
+        "y": 166.5857864376269,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 3,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.12132034355966,
+        "y": 165.87867965644034,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 4,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.8284271247462,
+        "y": 165.1715728752538,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 5,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 155.53553390593277,
+        "y": 164.46446609406723,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 6,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.24264068711932,
+        "y": 163.75735931288068,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 7,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.94974746830587,
+        "y": 163.05025253169413,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 8,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.94974746830587,
+        "y": 162.34314575050757,
+        "vx": -0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 9,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.24264068711932,
+        "y": 161.63603896932102,
+        "vx": -0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 10,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 155.53553390593277,
+        "y": 160.92893218813447,
+        "vx": -0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 11,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.8284271247462,
+        "y": 160.22182540694791,
+        "vx": -0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 12,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.12132034355966,
+        "y": 159.51471862576136,
+        "vx": -0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 13,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 153.4142135623731,
+        "y": 158.8076118445748,
+        "vx": -0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 14,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152.70710678118655,
+        "y": 158.10050506338825,
+        "vx": -0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 15,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152,
+        "y": 157.3933982822017,
+        "vx": -0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 16,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 151.29289321881345,
+        "y": 156.68629150101515,
+        "vx": -0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 17,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 150.5857864376269,
+        "y": 155.9791847198286,
+        "vx": -0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 18,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.87867965644034,
+        "y": 155.27207793864204,
+        "vx": -0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 19,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.1715728752538,
+        "y": 154.5649711574555,
+        "vx": -0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 20,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 148.46446609406723,
+        "y": 153.85786437626894,
+        "vx": -0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 21,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 148.46446609406723,
+        "y": 153.15075759508238,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 22,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.1715728752538,
+        "y": 152.44365081389583,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 23,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.87867965644034,
+        "y": 151.73654403270928,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 24,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 150.5857864376269,
+        "y": 151.02943725152272,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 25,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 151.29289321881345,
+        "y": 150.32233047033617,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 26,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152,
+        "y": 149.61522368914962,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 27,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152.70710678118655,
+        "y": 148.90811690796306,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 28,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 153.4142135623731,
+        "y": 148.2010101267765,
+        "vx": 0.7071067811865476,
+        "vy": -0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 29,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.12132034355966,
+        "y": 148.2010101267765,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 30,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.8284271247462,
+        "y": 148.90811690796306,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 31,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 155.53553390593277,
+        "y": 149.61522368914962,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 32,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.24264068711932,
+        "y": 150.32233047033617,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 33,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.94974746830587,
+        "y": 151.02943725152272,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 34,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.94974746830587,
+        "y": 151.73654403270928,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 35,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.24264068711932,
+        "y": 152.44365081389583,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 36,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 155.53553390593277,
+        "y": 153.15075759508238,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 37,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.8284271247462,
+        "y": 153.85786437626894,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 38,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.12132034355966,
+        "y": 154.5649711574555,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 39,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 153.4142135623731,
+        "y": 155.27207793864204,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 40,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152.70710678118655,
+        "y": 155.9791847198286,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 41,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152,
+        "y": 156.68629150101515,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 42,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 151.29289321881345,
+        "y": 157.3933982822017,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 43,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 150.5857864376269,
+        "y": 158.10050506338825,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 44,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.87867965644034,
+        "y": 158.8076118445748,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 45,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.1715728752538,
+        "y": 159.51471862576136,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 46,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 148.46446609406723,
+        "y": 160.22182540694791,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 47,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 148.46446609406723,
+        "y": 160.92893218813447,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 48,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.1715728752538,
+        "y": 161.63603896932102,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 49,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.87867965644034,
+        "y": 162.34314575050757,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 50,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 150.5857864376269,
+        "y": 163.05025253169413,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 51,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 151.29289321881345,
+        "y": 163.75735931288068,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 52,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152,
+        "y": 164.46446609406723,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 53,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152.70710678118655,
+        "y": 165.1715728752538,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 54,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 153.4142135623731,
+        "y": 165.87867965644034,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 55,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.12132034355966,
+        "y": 166.5857864376269,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 56,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.8284271247462,
+        "y": 167.29289321881345,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 57,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 155.53553390593277,
+        "y": 168,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 58,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.24264068711932,
+        "y": 168.70710678118655,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 59,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.94974746830587,
+        "y": 169.4142135623731,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 60,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.94974746830587,
+        "y": 170.12132034355966,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 61,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.24264068711932,
+        "y": 170.8284271247462,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 62,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 155.53553390593277,
+        "y": 171.53553390593277,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 63,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.8284271247462,
+        "y": 172.24264068711932,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 64,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.12132034355966,
+        "y": 172.94974746830587,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 65,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 153.4142135623731,
+        "y": 173.65685424949243,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 66,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152.70710678118655,
+        "y": 174.36396103067898,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 67,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152,
+        "y": 175.07106781186553,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 68,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 151.29289321881345,
+        "y": 175.77817459305209,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 69,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 150.5857864376269,
+        "y": 176.48528137423864,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 70,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.87867965644034,
+        "y": 177.1923881554252,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 71,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.1715728752538,
+        "y": 177.89949493661175,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 72,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 148.46446609406723,
+        "y": 178.6066017177983,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 73,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 148.46446609406723,
+        "y": 179.31370849898485,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 74,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.1715728752538,
+        "y": 180.0208152801714,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 75,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.87867965644034,
+        "y": 180.72792206135796,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 76,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 150.5857864376269,
+        "y": 181.4350288425445,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 77,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 151.29289321881345,
+        "y": 182.14213562373106,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 78,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152,
+        "y": 182.84924240491762,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 79,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152.70710678118655,
+        "y": 183.55634918610417,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 80,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 153.4142135623731,
+        "y": 184.26345596729072,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 81,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.12132034355966,
+        "y": 184.97056274847728,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 82,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.8284271247462,
+        "y": 185.67766952966383,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 83,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 155.53553390593277,
+        "y": 186.38477631085038,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 84,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.24264068711932,
+        "y": 187.09188309203694,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 85,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.94974746830587,
+        "y": 187.7989898732235,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 86,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.94974746830587,
+        "y": 188.50609665441004,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 87,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.24264068711932,
+        "y": 189.2132034355966,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 88,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 155.53553390593277,
+        "y": 189.92031021678315,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 89,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.8284271247462,
+        "y": 190.6274169979697,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 90,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.12132034355966,
+        "y": 191.33452377915626,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 91,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 153.4142135623731,
+        "y": 192.0416305603428,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 92,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152.70710678118655,
+        "y": 192.74873734152936,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 93,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152,
+        "y": 193.45584412271592,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 94,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 151.29289321881345,
+        "y": 194.16295090390247,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 95,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 150.5857864376269,
+        "y": 194.87005768508902,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 96,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.87867965644034,
+        "y": 195.57716446627558,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 97,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.1715728752538,
+        "y": 196.28427124746213,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 98,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 148.46446609406723,
+        "y": 196.99137802864868,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 99,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 148.46446609406723,
+        "y": 197.69848480983524,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 100,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.1715728752538,
+        "y": 198.4055915910218,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 101,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.87867965644034,
+        "y": 199.11269837220834,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 102,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 150.5857864376269,
+        "y": 199.8198051533949,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 103,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 151.29289321881345,
+        "y": 200.52691193458145,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 104,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152,
+        "y": 201.234018715768,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 105,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152.70710678118655,
+        "y": 201.94112549695456,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 106,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 153.4142135623731,
+        "y": 202.6482322781411,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 107,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.12132034355966,
+        "y": 203.35533905932766,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 108,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.8284271247462,
+        "y": 204.06244584051421,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 109,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 155.53553390593277,
+        "y": 204.76955262170077,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 110,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.24264068711932,
+        "y": 205.47665940288732,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 111,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.94974746830587,
+        "y": 206.18376618407387,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 112,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.94974746830587,
+        "y": 206.89087296526043,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 113,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.24264068711932,
+        "y": 207.59797974644698,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 114,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 155.53553390593277,
+        "y": 208.30508652763353,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 115,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.8284271247462,
+        "y": 209.0121933088201,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 116,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.12132034355966,
+        "y": 209.71930009000664,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 117,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 153.4142135623731,
+        "y": 210.4264068711932,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 118,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152.70710678118655,
+        "y": 211.13351365237975,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 119,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152,
+        "y": 211.8406204335663,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 120,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 151.29289321881345,
+        "y": 212.54772721475285,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 121,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 150.5857864376269,
+        "y": 213.2548339959394,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 122,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.87867965644034,
+        "y": 213.96194077712596,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 123,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.1715728752538,
+        "y": 214.6690475583125,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 124,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 148.46446609406723,
+        "y": 215.37615433949907,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 72,
+        "y": 280,
+        "vx": 0,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 125,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 148.46446609406723,
+        "y": 216.08326112068562,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 71.2,
+        "y": 280,
+        "vx": -0.8,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 126,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.1715728752538,
+        "y": 216.79036790187217,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 69.85000000000001,
+        "y": 280,
+        "vx": -1.35,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 127,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.87867965644034,
+        "y": 217.49747468305873,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 68.75000000000001,
+        "y": 280,
+        "vx": -1.1,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 128,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 150.5857864376269,
+        "y": 218.20458146424528,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 67.90000000000002,
+        "y": 280,
+        "vx": -0.8500000000000001,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 129,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 151.29289321881345,
+        "y": 218.91168824543183,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 66.50000000000001,
+        "y": 280,
+        "vx": -1.4000000000000001,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 130,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152,
+        "y": 219.6187950266184,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 65.35000000000001,
+        "y": 280,
+        "vx": -1.1500000000000001,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 131,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152.70710678118655,
+        "y": 220.32590180780494,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 64.45,
+        "y": 280,
+        "vx": -0.9000000000000001,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 132,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 153.4142135623731,
+        "y": 221.0330085889915,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 63,
+        "y": 280,
+        "vx": -1.4500000000000002,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 133,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.12132034355966,
+        "y": 221.74011537017805,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 61.8,
+        "y": 280,
+        "vx": -1.2000000000000002,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 134,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.8284271247462,
+        "y": 222.4472221513646,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 60.849999999999994,
+        "y": 280,
+        "vx": -0.9500000000000002,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 135,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 155.53553390593277,
+        "y": 223.15432893255115,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 59.349999999999994,
+        "y": 280,
+        "vx": -1.5000000000000002,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 136,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.24264068711932,
+        "y": 223.8614357137377,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 58.099999999999994,
+        "y": 280,
+        "vx": -1.2500000000000002,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 137,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.94974746830587,
+        "y": 224.56854249492426,
+        "vx": 0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 57.099999999999994,
+        "y": 280,
+        "vx": -1.0000000000000002,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 138,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.94974746830587,
+        "y": 225.2756492761108,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 55.55,
+        "y": 280,
+        "vx": -1.5500000000000003,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 139,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 156.24264068711932,
+        "y": 225.98275605729737,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 54.25,
+        "y": 280,
+        "vx": -1.3000000000000003,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 140,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 155.53553390593277,
+        "y": 226.68986283848392,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 53.2,
+        "y": 280,
+        "vx": -1.0500000000000003,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 141,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.8284271247462,
+        "y": 227.39696961967047,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 52.400000000000006,
+        "y": 280,
+        "vx": -0.8000000000000003,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 142,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 154.12132034355966,
+        "y": 228.10407640085702,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 51.050000000000004,
+        "y": 280,
+        "vx": -1.3500000000000003,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 143,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 153.4142135623731,
+        "y": 228.81118318204358,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.1000000000000003,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 144,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152.70710678118655,
+        "y": 229.51828996323013,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -0.8500000000000003,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 145,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 152,
+        "y": 230.22539674441668,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.4000000000000004,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 146,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 151.29289321881345,
+        "y": 230.93250352560324,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.1500000000000004,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 147,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 150.5857864376269,
+        "y": 231.6396103067898,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -0.9000000000000004,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 148,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.87867965644034,
+        "y": 232.34671708797634,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.4500000000000004,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 149,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 149.1715728752538,
+        "y": 233.0538238691629,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.2000000000000004,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 150,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 148.46446609406723,
+        "y": 233.76093065034945,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -0.9500000000000004,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 151,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 147.75735931288068,
+        "y": 234.468037431536,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.5000000000000004,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 152,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 147.05025253169413,
+        "y": 235.17514421272256,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.2500000000000004,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 153,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 146.34314575050757,
+        "y": 235.8822509939091,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.0000000000000004,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 154,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 145.63603896932102,
+        "y": 236.58935777509566,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.5500000000000005,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 155,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 144.92893218813447,
+        "y": 237.29646455628222,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.3000000000000005,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 156,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 144.22182540694791,
+        "y": 238.00357133746877,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.0500000000000005,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 157,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 143.51471862576136,
+        "y": 238.71067811865532,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -0.8000000000000005,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 158,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 142.8076118445748,
+        "y": 239.41778489984188,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.3500000000000005,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 159,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 142.10050506338825,
+        "y": 240.12489168102843,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.1000000000000005,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 160,
+      "lockOpen": true,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 141.3933982822017,
+        "y": 240.83199846221498,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -0.8500000000000005,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 161,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 140.68629150101515,
+        "y": 241.53910524340154,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.4000000000000006,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 162,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 139.9791847198286,
+        "y": 242.2462120245881,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.1500000000000006,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 163,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 139.27207793864204,
+        "y": 242.95331880577464,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -0.9000000000000006,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     },
+     {
+      "tick": 164,
+      "lockOpen": false,
+      "hits": 0,
+      "rows": [
+       {
+        "cls": "Spinner",
+        "x": 138.5649711574555,
+        "y": 243.6604255869612,
+        "vx": -0.7071067811865476,
+        "vy": 0.7071067811865475,
+        "type": "Enemy",
+        "destroy": false,
+        "alpha": 1
+       },
+       {
+        "cls": "Player",
+        "x": 50.050000000000004,
+        "y": 280,
+        "vx": -1.4500000000000006,
+        "vy": 0,
+        "type": "Player",
+        "destroy": false,
+        "alpha": 1
+       }
+      ]
+     }
+    ],
+    "log": [
+     "pageerror A valid external Instance reference no longer exists.",
+     "pageerror A valid external Instance reference no longer exists."
+    ]
+   },
+   "cuts": [
+    {
+     "n": 129,
+     "tick": 129,
+     "mobTick": 129,
+     "held": true,
+     "lockOpen": true,
+     "hits": 0,
+     "rows": [
+      {
+       "cls": "Spinner",
+       "x": 151.29289321881345,
+       "y": 218.91168824543183,
+       "vx": 0.7071067811865476,
+       "vy": 0.7071067811865475,
+       "type": "Enemy",
+       "destroy": false,
+       "alpha": 1
+      },
+      {
+       "cls": "Player",
+       "x": 66.50000000000001,
+       "y": 280,
+       "vx": -1.4000000000000001,
+       "vy": 0,
+       "type": "Player",
+       "destroy": false,
+       "alpha": 1
+      }
+     ],
+     "streamLen": 130
+    },
+    {
+     "n": 130,
+     "tick": 130,
+     "mobTick": 130,
+     "held": true,
+     "lockOpen": true,
+     "hits": 0,
+     "rows": [
+      {
+       "cls": "Spinner",
+       "x": 152,
+       "y": 219.6187950266184,
+       "vx": 0.7071067811865476,
+       "vy": 0.7071067811865475,
+       "type": "Enemy",
+       "destroy": false,
+       "alpha": 1
+      },
+      {
+       "cls": "Player",
+       "x": 65.35000000000001,
+       "y": 280,
+       "vx": -1.1500000000000001,
+       "vy": 0,
+       "type": "Player",
+       "destroy": false,
+       "alpha": 1
+      }
+     ],
+     "streamLen": 131
+    },
+    {
+     "n": 131,
+     "tick": 131,
+     "mobTick": 131,
+     "held": true,
+     "lockOpen": true,
+     "hits": 0,
+     "rows": [
+      {
+       "cls": "Spinner",
+       "x": 152.70710678118655,
+       "y": 220.32590180780494,
+       "vx": 0.7071067811865476,
+       "vy": 0.7071067811865475,
+       "type": "Enemy",
+       "destroy": false,
+       "alpha": 1
+      },
+      {
+       "cls": "Player",
+       "x": 64.45,
+       "y": 280,
+       "vx": -0.9000000000000001,
+       "vy": 0,
+       "type": "Player",
+       "destroy": false,
+       "alpha": 1
+      }
+     ],
+     "streamLen": 132
+    },
+    {
+     "n": 132,
+     "tick": 132,
+     "mobTick": 132,
+     "held": true,
+     "lockOpen": true,
+     "hits": 0,
+     "rows": [
+      {
+       "cls": "Spinner",
+       "x": 153.4142135623731,
+       "y": 221.0330085889915,
+       "vx": 0.7071067811865476,
+       "vy": 0.7071067811865475,
+       "type": "Enemy",
+       "destroy": false,
+       "alpha": 1
+      },
+      {
+       "cls": "Player",
+       "x": 63,
+       "y": 280,
+       "vx": -1.4500000000000002,
+       "vy": 0,
+       "type": "Player",
+       "destroy": false,
+       "alpha": 1
+      }
+     ],
+     "streamLen": 133
+    },
+    {
+     "n": 133,
+     "tick": 133,
+     "mobTick": 133,
+     "held": true,
+     "lockOpen": true,
+     "hits": 0,
+     "rows": [
+      {
+       "cls": "Spinner",
+       "x": 154.12132034355966,
+       "y": 221.74011537017805,
+       "vx": 0.7071067811865476,
+       "vy": 0.7071067811865475,
+       "type": "Enemy",
+       "destroy": false,
+       "alpha": 1
+      },
+      {
+       "cls": "Player",
+       "x": 61.8,
+       "y": 280,
+       "vx": -1.2000000000000002,
+       "vy": 0,
+       "type": "Player",
+       "destroy": false,
+       "alpha": 1
+      }
+     ],
+     "streamLen": 134
+    },
+    {
+     "n": 134,
+     "tick": 134,
+     "mobTick": 134,
+     "held": true,
+     "lockOpen": true,
+     "hits": 0,
+     "rows": [
+      {
+       "cls": "Spinner",
+       "x": 154.8284271247462,
+       "y": 222.4472221513646,
+       "vx": 0.7071067811865476,
+       "vy": 0.7071067811865475,
+       "type": "Enemy",
+       "destroy": false,
+       "alpha": 1
+      },
+      {
+       "cls": "Player",
+       "x": 60.849999999999994,
+       "y": 280,
+       "vx": -0.9500000000000002,
+       "vy": 0,
+       "type": "Player",
+       "destroy": false,
+       "alpha": 1
+      }
+     ],
+     "streamLen": 135
+    }
+   ]
+  }
+ ]
+}
