@@ -19,7 +19,16 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gunzipSync } from 'node:zlib';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll, afterAll } from 'vitest';
+import { FADE_MOVE as __FADE_MOVE_HOLD } from './solverBot.js';
+
+// ⛓ `FADE_MOVE` held OFF for this whole file: it ships ON since the ROCKLOCK + FADE flip (⚖ the user, 2026-11-22).
+// ON, L40 flag 8's two rows spend 19 more units (OFF 2533 → 2552, ON 679 → 698: the fade-move tries) for the SAME plan
+// (digest equal), still hitless, `40:8` cleared (measured on a scratch copy). These rows pin the approach order; held
+// OFF they are byte for byte their pre-flip selves.
+let __fadeWas;
+beforeAll(() => { __fadeWas = __FADE_MOVE_HOLD.enabled; __FADE_MOVE_HOLD.enabled = false; });
+afterAll(() => { __FADE_MOVE_HOLD.enabled = __fadeWas; });
 
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { levelSourceFromAtlas } from './atlasSource.js';

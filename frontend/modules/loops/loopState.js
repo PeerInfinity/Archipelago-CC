@@ -20,7 +20,7 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
-  customActionRowOf, customActionBaseCost, customActionLabel,
+  customActionRowOf, customActionBaseCost, customActionDefaultCost, customActionLabel, customActionXpDiscounts,
 } from '../shared/procgen/loopCustomActions.js';
 import {
   botHonorsInstant, captureShapeOf, offersPlayback, solverKindOf, SOLVER_KINDS,
@@ -145,6 +145,10 @@ export class LoopState {
 
     // Action queue manager (will be initialized after gameState is set)
     this.actionQueueManager = null;
+    // ⚖ LOOPS-I2: the price each in-flight action was given when it started
+    // (pathIndex → mana), read while its progress is above 0. See
+    // _startedActionPrice.
+    this._startedActionPrices = new Map();
 
     // Resources (mana, manaPerItem) and region XP live in gameState now —
     // accessed below via delegating getters/setters for backward compat.
@@ -3458,12 +3462,13 @@ export class LoopState {
    * Instant toggle (M3) all complete an AFFORDABLE action in a single frame.
    * No path spends more than the pool holds (LOOPS-I1): an unaffordable
    * action drains it and stays incomplete, so Instant ends where normal
-   * speed does, only sooner.
+   * speed does, only sooner. Every speed charges the price the action had
+   * when it started (_startedActionPrice, LOOPS-I2).
    */
   _advanceActionProgress(deltaTime) {
-    const actionCost = this._calculateActionCost(this.currentAction);
     const currentProgress =
       this.actionQueueManager.getProgress(this.currentAction.pathIndex) || 0;
+    const actionCost = this._startedActionPrice(this.currentAction, currentProgress);
 
     let progressIncrement;
     if (actionCost === 0 || this.instantMode || this._currentBlockIsInstant()) {
@@ -3521,6 +3526,31 @@ export class LoopState {
         xpData,
       });
     }
+  }
+
+  /**
+   * The price of `action` for this frame: the price it had when it STARTED.
+   *
+   * ⚖ Ruling A (Robert, 2026-11-21, LOOPS-I2): an action is priced ONCE, at
+   * the region level it has when it starts, at every speed. Normal speed
+   * used to re-price every frame, so the XP an action banked could level the
+   * region up and make the rest of it cheaper. Live play, Record, Instant and
+   * the Loop Stats predictions all charge an action once at its start price
+   * (blockModes.test.js "ONE ECONOMY"), so normal speed was the odd one out.
+   *
+   * The price is taken whenever the action's progress is 0 (a new action, or
+   * one a reset or a cancel sent back to 0), so a fresh start re-prices and
+   * nothing has to remember to clear it. An action found mid-way with no
+   * price stored (progress restored from a save) is priced now.
+   */
+  _startedActionPrice(action, progress) {
+    const key = action.pathIndex;
+    if (progress > 0 && this._startedActionPrices.has(key)) {
+      return this._startedActionPrices.get(key);
+    }
+    const price = this._calculateActionCost(action);
+    this._startedActionPrices.set(key, price);
+    return price;
   }
 
   /**
@@ -4102,7 +4132,8 @@ export class LoopState {
       // this rung moves the location default only. Named, not changed.
       switch (action.type) {
         case 'customAction':
-          baseCost = DEFAULT_REGION_COST;
+          // A row that states its own cost (a wait) keeps it with no cost data.
+          baseCost = customActionDefaultCost(action);
           break;
         case 'locationCheck':
           baseCost = DEFAULT_LOCATION_COST;
@@ -4121,8 +4152,9 @@ export class LoopState {
     }
 
     // Apply region XP reduction if applicable, gated by the per-region
-    // xpEffect from the loop_costs sidecar (defaults to 'cost').
-    if (action.sourceRegion) {
+    // xpEffect from the loop_costs sidecar (defaults to 'cost'). A custom
+    // action whose row says `xpDiscount: false` (a wait) is never discounted.
+    if (action.sourceRegion && customActionXpDiscounts(action)) {
       const xpData = this.getRegionXP(action.sourceRegion);
       const effect = this.costDataManager?.getRegionXpEffect?.(action.sourceRegion);
       return applyRegionXpCostEffect(baseCost, xpData.level, effect);
@@ -4139,6 +4171,7 @@ export class LoopState {
     if (!this.actionQueueManager) return;
     // Clear all progress tracking
     this.actionQueueManager.resetProgress();
+    this._startedActionPrices.clear();
     // Reset current action index so startProcessing() starts from the beginning
     this.currentActionIndex = 0;
     this.currentAction = null;

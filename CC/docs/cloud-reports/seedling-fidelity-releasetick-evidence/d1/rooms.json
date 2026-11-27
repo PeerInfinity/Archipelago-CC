@@ -1,0 +1,62 @@
+{
+ "textedCeremonyRooms": [
+  {
+   "level": 29,
+   "families": [
+    "turret@80,176",
+    "turret@128,192",
+    "turret@112,240"
+   ],
+   "sources": [
+    "bosskey@112,64 (text-less)"
+   ],
+   "textedBeside": []
+  },
+  {
+   "level": 40,
+   "families": [
+    "iceturret@472,400"
+   ],
+   "sources": [
+    "totempart@64,144 (text-less)",
+    "totempart@160,640 (text-less)",
+    "bosskey@656,528 (text-less)"
+   ],
+   "textedBeside": []
+  },
+  {
+   "level": 103,
+   "families": [
+    "beamtower@208,248",
+    "beamtower@144,200"
+   ],
+   "sources": [
+    "seed (Watcher; a Seed keeps the flag up) @120,24 (runtime, texted)"
+   ],
+   "textedBeside": [
+    "seed (Watcher; a Seed keeps the flag up) @120,24 (runtime, texted)"
+   ]
+  }
+ ],
+ "ropes": [
+  {
+   "level": 16,
+   "rope": "rope@32,16",
+   "rocks": []
+  },
+  {
+   "level": 28,
+   "rope": "rope@160,64",
+   "rocks": [
+    "fallrock@112,240"
+   ]
+  },
+  {
+   "level": 39,
+   "rope": "rope@96,384",
+   "rocks": [
+    "fallrock@144,624"
+   ]
+  }
+ ]
+}

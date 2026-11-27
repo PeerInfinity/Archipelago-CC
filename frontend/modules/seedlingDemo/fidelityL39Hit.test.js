@@ -17,7 +17,7 @@
  */
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll, afterAll } from 'vitest';
 import { CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { spinnerDanger } from './dangerMap.js';
 import { l39LevelSource } from './fidelityL39Shaft.js';
@@ -27,6 +27,14 @@ import { playerBoxAt } from './playerPhysicsV2.js';
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 import { heldKeysAt, parseTape } from './tapeFormat.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
+import { HIT_AVOID_PASS as __HIT_AVOID_PASS_HOLD } from './jsRuntimeSolver.js';
+
+// ⛓ `HIT_AVOID_PASS` held OFF for this whole file: it ships ON since the PKC + FH flip (⚖ the user, 2026-11-20). ON, the rebuilt request's passes gain a `hit-avoid` row (it finds nothing hitless; the plan is unchanged).
+// These rows predate the flip and pin other switches; held OFF they are byte-for-byte their pre-flip selves. The
+// flip's own effect is measured by its sweeps and survey.
+let __heldWas;
+beforeAll(() => { __heldWas = __HIT_AVOID_PASS_HOLD.enabled; __HIT_AVOID_PASS_HOLD.enabled = false; });
+afterAll(() => { __HIT_AVOID_PASS_HOLD.enabled = __heldWas; });
 
 const FIX = JSON.parse(readFileSync(join(import.meta.dirname, 'fixtures', 'l39hit', 'l39hit-walk-seam30036.json'), 'utf8'));
 const TAPE = parseTape(JSON.stringify(FIX.tape));
@@ -116,7 +124,7 @@ describe('fidelity L39HIT D2 — `pulserForecastPulse`: the spinner forecast ste
         expect(CONTACT_FIDELITY_DEFAULTS.pulserForecastPulse).toBe(false);
         // ⛓ wave 48: DARKSUITBOSSES `darkSuitBossRetaliation` was appended after this key.
         const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-        expect(keys.slice(keys.indexOf('pulserForecastPulse') + 1)).toEqual(['darkSuitBossRetaliation', 'owlContactInStep', 'turretSuitRetaliation', 'pickupTickFreeze', 'dialogueFrameFreeze', 'frozenTickUngated', 'freezeEdgeFrames']);
+        expect(keys.slice(keys.indexOf('pulserForecastPulse') + 1)).toEqual(['darkSuitBossRetaliation', 'owlContactInStep', 'turretSuitRetaliation', 'pickupTickFreeze', 'dialogueFrameFreeze', 'frozenTickUngated', 'freezeEdgeFrames', 'freezeReleaseTick', 'freezeSpanUpdates', 'nestedRockCeremony', 'plainPickupInFreeze', 'chestCoverFencepost', 'presserRecursionHang']);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_PULSER_FORECAST_PULSE');
     });
 

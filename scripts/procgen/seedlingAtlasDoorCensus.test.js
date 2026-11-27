@@ -137,8 +137,9 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // ⛓ rules-lavatrap-neck: rule T gates L77's and L78's lavatrap discs.
         // ⛓ rules-remerge-lavatrap: rule T re-merged onto main (train 146); re-recorded from the producers (5ca88dfe -> ea1ef5ba).
         // ⛓ rules-k-pursuit-resume: rule K + (b) on the line-cut pull disc; re-recorded from the producers (ea1ef5ba -> b856f0fc).
-        // ⛓ rules-k-exempt-fix: rule K charges the step off an exempt cell into a leash; re-recorded from the producers (b856f0fc -> bc3ac9f3).
-        expect(c.atlasId).toBe('seedling-bc3ac9f3');
+        // ⛓ rules-l25-wand-arm: L25 west->east's no-hit gate gains the witnessed Wand arm; one internal row's rule widens, no
+        //   exit or door moves; re-recorded from the producers (b856f0fc -> 4586de3a).
+        expect(c.atlasId).toBe('seedling-4586de3a');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
@@ -157,16 +158,13 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   internal exits (rule T's gated discs split both rooms). Swim rows unmoved.
         // ⛓ rules-k-pursuit-resume: 57 -> 60 regions with a subgraph (L72, L74, L75), 216 -> 251 sub-regions, 355 -> 489
         //   internal exits (rule K + (b): the lavarunners' leash cuts; sub-regions/rows L72 +9/+36, L73 +3/+6, L74 +4/+6, L75 +9/+36, L78 +4/+36, L80 +3/+8, L99 +3/+6). Swim rows unmoved.
-        // ⛓ rules-k-exempt-fix: the step off an exempt cell into a leash splits the doorways off: 251 -> 259 sub-regions
-        // (L72 9->11, L73 5->8, L74 4->5, L75 9->10, L77 3->4), 489 -> 532 internal exits (L72 +19, L73 +8, L74 +4, L75 +9, L77 +3).
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 60, 259, 532, 207]);
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 60, 251, 489, 207]);
         expect(c.swimLevels).toHaveLength(23);
         // ⛓ rules-k-pursuit-resume: the second most common internal rule is now K's lava crossing, the Dark Suit AND the
         //   kill-lock arm (75 rows: a leash cut over lava, mostly L72's and L75's), above Has(Swim, 2) (32, unmoved).
-        // ⛓ rules-k-exempt-fix: 75 -> 106 (the new doorway members' rows on L72-L75, L77: the step off an exempt cell into the leash).
         expect(c.byRule.slice(0, 2)).toEqual([
             { rule: 'Has(Progressive Swim)', count: 166 },
-            { rule: 'And(Has(Dark Suit), Or(Has(Progressive Sword), Has(Ghost Spear), Has(Wand), Has(Progressive Shield, 2)))', count: 106 },
+            { rule: 'And(Has(Dark Suit), Or(Has(Progressive Sword), Has(Ghost Spear), Has(Wand), Has(Progressive Shield, 2)))', count: 75 },
         ]);
         expect(c.byRule.find((r) => r.rule === 'Has(Progressive Swim, 2)').count).toBe(32);
     });

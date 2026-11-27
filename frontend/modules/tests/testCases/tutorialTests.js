@@ -32,6 +32,10 @@ import {
 } from '../../tutorials/tutorialExecutor.js';
 import { buildContext } from '../../tutorials/tutorialContext.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
+import { REGION_MAP_WALK } from '../../tutorials/content/tracker/regionMap.js';
+import { REGION_MAP_CLICK_ACTIONS_KEY } from '../../regionMap/regionMapClickActions.js';
+import { panelInstances as regionMapPanels } from '../../regionMap/regionMapSettings.js';
+import { LOCATION_CLICKED, REGION_CLICKED, defaultClickActions, withInitialValues } from '../../regionView/clickActions.js';
 
 const CATEGORY = 'Tutorials';
 const WALK_CATEGORY = 'Tutorial walks';
@@ -401,6 +405,53 @@ async function tutorialUrlRequestStartsTheTutorial(tc) {
  * outside step: its stand-in), each `done` waited for, and the result graded
  * by the ratchet against the tutorial's record (tutorialWalk.js).
  */
+/**
+ * ⛓ PER-TUTORIAL ROW HOOKS — what one walk ROW does around its walk: `before(tc, ctx)` pins the start state (session
+ * overrides through the row's own `ctx.setSetting`, put back by `ctx.restoreSettings()` however the walk ends) and
+ * may subscribe to the bus; `after(tc, state)` asserts what only a row can hear, once the walk completed;
+ * `state.dispose()` always runs. ⚖ In-app tests set their own initial state (the user, 2026-09-26).
+ */
+/** JSON with every object's keys sorted: two settings objects compare by content, not by key order. */
+const canonical = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x)
+    ? Object.fromEntries(Object.keys(x).sort().map((key) => [key, x[key]])) : x));
+
+const WALK_HOOKS = Object.freeze({
+    'tracker-region-map': {
+        async before(tc, ctx) {
+            // The Map's click actions at their defaults (with the panel actions' first values, all off), and Follow on.
+            const want = withInitialValues('regionMap', defaultClickActions()).settings;
+            await ctx.setSetting(REGION_MAP_CLICK_ACTIONS_KEY, want);
+            await ctx.setSetting('moduleSettings.regionMap.followPlayer', true);
+            for (const p of regionMapPanels) {
+                p.follow = true;
+                if (p.controls?.follow) p.controls.follow.checked = true;
+            }
+            const heard = [];
+            const unsubs = [REGION_CLICKED, LOCATION_CLICKED].map((name) => tc.eventBus.subscribe(name, (d) => {
+                if (d?.panelId === 'regionMap') heard.push({ name, regionName: d.regionName, locationName: d.locationName });
+            }, 'tests'));
+            return { want: canonical(want), heard, dispose: () => unsubs.forEach((u) => u?.()) };
+        },
+        async after(tc, { want, heard }) {
+            const { pathRegion, location, centreRegion } = REGION_MAP_WALK;
+            const saw = (name, pred) => heard.some((h) => h.name === name && pred(h));
+            tc.reportCondition(`the Map published ${REGION_CLICKED} {panelId: 'regionMap'} for ${pathRegion} and ${centreRegion} `
+                + `(${JSON.stringify(heard)})`, saw(REGION_CLICKED, (h) => h.regionName === pathRegion)
+                && saw(REGION_CLICKED, (h) => h.regionName === centreRegion));
+            tc.reportCondition(`the Map published ${LOCATION_CLICKED} {panelId: 'regionMap'} for ${location}`,
+                saw(LOCATION_CLICKED, (h) => h.locationName === location));
+            // ⛓ The last step put every option back: the Map's click actions as the row set them, Follow on.
+            // (The defaults with every panel action's first value, read now that every panel has registered its actions.)
+            const held = canonical(await settingsManager.getSetting(REGION_MAP_CLICK_ACTIONS_KEY, null));
+            const wantNow = canonical(withInitialValues('regionMap', defaultClickActions()).settings);
+            tc.reportCondition(`the Map's click actions are back at the defaults (held ${held}; want ${wantNow}; the row set ${want})`,
+                held === wantNow);
+            const p = [...regionMapPanels][0];
+            tc.reportCondition('the Map follows the player again', p?.follow === true && p?.controls?.follow?.checked === true);
+        },
+    },
+});
+
 async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
     // ⛓ A RUNTIME VARIANT (`runtime`: the Flash runtime the walk plays in) is a SESSION override, put back in `finally`:
     // the tutorial itself uses whichever runtime is set and never changes it (⚖ the user, 2026-10-26: "Work in both").
@@ -418,6 +469,8 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
     const loopModeBefore = loopModeActive();
     const ui = await freshPanel(tc, { autoAdvance: false, animateCursor: false, showOutline: false });
     if (!ui) return tc.getOverallResult();
+    const hook = WALK_HOOKS[tutorial.id] ?? null;
+    const hookState = hook ? await hook.before(tc, ctx) : null;
     // A bot step plays at test speed (botTestSpeed.js); the person's saved settings are untouched.
     const restoreSpeed = await startAppBotTestSpeed();
     let measure = null;
@@ -464,8 +517,15 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
         const verdict = ratchetVerdict(tutorial, outcome);
         tc.log?.(`${tutorial.id}: ${verdict.message}`);
         tc.reportCondition(`${tutorial.id} — ${verdict.message}`, verdict.ok);
+        if (hook && outcome.end === 'complete') await hook.after(tc, hookState);
     } finally {
-        measure?.stop(walkOutcome);
+        hookState?.dispose?.();
+        if (hook) {
+            try { await ctx.restoreSettings(); } catch (e) { tc.log?.(`could not restore the row's settings: ${e.message}`); }
+        }
+        // MEASUREMENT-ONLY (remeasure-6): the request capture's stop drains its last rows (a promise only when capture is on).
+        const measureStopped = measure?.stop(walkOutcome);
+        if (measureStopped) await measureStopped;
         await restoreSpeed();
         // A walk that ended early never reached its own restore step (a feature check's ctx.setSetting).
         try { await ui.ctx.restoreSettings(); } catch (e) { tc.log?.(`could not restore the step settings: ${e.message}`); }
@@ -506,7 +566,10 @@ const MEASURE_STEP_MS = Number(MEASURE_PARAMS.get('measureStepTimeoutMs')) || 0;
 const MEASURE_STALL_MS = Number(MEASURE_PARAMS.get('measureBotStallMs')) || 0;
 const MEASURE_RUNTIME = MEASURE_PARAMS.get('measureFlashRuntime') || null;
 const MEASURE_SKIPS = Number(MEASURE_PARAMS.get('measureSkipRefusals')) || 0;
-const MEASURE_ACTIVE = MEASURE_STEP_MS > 0 || MEASURE_STALL_MS > 0 || MEASURE_SKIPS > 0 || MEASURE_RUNTIME !== null;
+// MEASUREMENT-ONLY (remeasure-6): ?measureCaptureRequests=1 records every solve request the wasm engine's WORKER got,
+// with the page's answer, through the `__measureCaptureAppend` binding app.spec.js exposes (TEST_MEASURE_CAPTURE_REQUESTS).
+const MEASURE_CAPTURE = MEASURE_PARAMS.get('measureCaptureRequests') === '1';
+const MEASURE_ACTIVE = MEASURE_STEP_MS > 0 || MEASURE_STALL_MS > 0 || MEASURE_SKIPS > 0 || MEASURE_RUNTIME !== null || MEASURE_CAPTURE;
 const measureStepTimeout = (ms) => (MEASURE_STEP_MS > 0 ? Math.max(ms, MEASURE_STEP_MS) : ms);
 
 function wasmMemoryBytes() {
@@ -584,6 +647,7 @@ async function startMeasureSampler(tutorial, stepStarts, ui) {
             skipping = false;
         }
     }, 1000) : null;
+    const capture = MEASURE_CAPTURE ? await startRequestCapture(() => getActiveBotPanel()?.getBot?.() ?? getActiveBotPanel()?.bot ?? null) : null;
     return {
         skipsLeft: () => MEASURE_SKIPS - skips,
         // `outcome` is walkTutorial's: { end: 'complete' } | { end, stepId, why }; null when the walk threw.
@@ -592,6 +656,105 @@ async function startMeasureSampler(tutorial, stepStarts, ui) {
             if (skipTimer) clearInterval(skipTimer);
             sample('end', measureEndExtra(outcome));
             try { unsub?.(); } catch { /* */ }
+            return capture?.stop();
+        },
+    };
+}
+
+// MEASUREMENT-ONLY (remeasure-6) — REQUEST CAPTURE for the walk. Every 25 ms it finds the wasm engines' solve services
+// (`getSeedlingWasmSolveServices`) and wraps each one's `start` ONCE: the request is kept as the lab keeps it
+// (`stampHooks({...request})`, serialized later by `captureRequest`, the divergence sweep's codec), and when its handle
+// settles the request and the page's answer are queued under the walk entry that was the bot's head at the start.
+// An entry's row `{id, key, requests: [{i, goal, retry, request, passes, result}]}` (the replay's input) is sent to
+// the binding once the cursor has left it and its solves have settled, and every open row is sent at the stop.
+// `result.answer` is the sha1[0:12] of the text `replay-seedling-solve-request.mjs` hashes, so the two compare.
+// A service that had already started solves before it was wrapped says so (`[MEASURE capture] MISSED`).
+async function startRequestCapture(getBot) {
+    const append = globalThis.__measureCaptureAppend;
+    if (typeof append !== 'function') { console.log('[MEASURE capture] no __measureCaptureAppend binding: nothing is captured'); return null; }
+    const [{ getSeedlingWasmSolveServices }, { stampHooks }, { captureRequest }] = await Promise.all([
+        import('../../flashPanel/index.js'),
+        import('../../seedlingDemo/jsRuntimeSolveService.js'),
+        import('../../../../scripts/procgen/seedlingSolveRequestCodec.js'),
+    ]);
+    const sha12 = async (text) => {
+        const d = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(text));
+        return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 12);
+    };
+    const wrapped = new WeakSet();
+    const pending = []; // {id, key, goal, retry, posted, handle}
+    const rows = new Map(); // id -> {key, requests: []}
+    let total = 0;
+    let busy = false;
+    const entryOf = () => {
+        const bot = getBot();
+        const head = bot?._queue?.[bot?._cursor] ?? null;
+        return { id: Number.isFinite(bot?._cursor) ? bot._cursor + 1 : 0, key: head?.locationName ?? null, cursor: bot?._cursor ?? null };
+    };
+    const wrap = () => {
+        for (const svc of getSeedlingWasmSolveServices()) {
+            if (wrapped.has(svc)) continue;
+            wrapped.add(svc);
+            const before = svc.stats?.solves ?? 0;
+            if (before > 0) console.log(`[MEASURE capture] MISSED ${before} solve(s) started before this service was wrapped`);
+            const start = svc.start.bind(svc);
+            svc.start = (request, opts) => {
+                const posted = stampHooks({ ...request });
+                const handle = start(request, opts);
+                const e = entryOf();
+                pending.push({ id: e.id, key: e.key, goal: request?.name ?? request?.solverGoal?.name ?? null, retry: opts?.attempt?.retry ?? null, posted, handle });
+                return handle;
+            };
+        }
+    };
+    const flush = (id) => {
+        const row = rows.get(id);
+        if (!row) return;
+        rows.delete(id);
+        try { append(JSON.stringify({ id, key: row.key, requests: row.requests })); } catch (e) { console.log(`[MEASURE capture] append threw: ${e?.message ?? e}`); }
+        console.log(`[MEASURE capture] entry ${id} ${JSON.stringify(row.key)}: ${row.requests.length} request(s) written`);
+    };
+    const drain = async (all) => {
+        if (busy) return;
+        busy = true;
+        try {
+            while (pending.length && (all || pending[0].handle.settled)) {
+                const p = pending.shift();
+                const r = p.handle.result;
+                let result = null;
+                if (r) {
+                    const text = r.ok ? JSON.stringify((r.plan?.solution ?? []).map((k) => [...k])) : String(r.message ?? '');
+                    // eslint-disable-next-line no-await-in-loop
+                    result = { ok: r.ok ?? null, kind: r.kind ?? null, work: r.work ?? r.plan?.work ?? null, passes: r.passes ?? r.plan?.passes ?? null,
+                        answer: await sha12(text), message: r.ok ? null : text.slice(0, 300),
+                        // remeasure-7: the switches the WORKER installed (its own stamp, `stampSolverEnv`; null at defaults)
+                        solverEnv: r.solverEnv ?? r.plan?.solverEnv ?? null };
+                    if (total === 0) console.log(`[MEASURE capture] first answer's worker solverEnv=${JSON.stringify(result.solverEnv)}`);
+                }
+                const row = rows.get(p.id) ?? { key: p.key, requests: [] };
+                rows.set(p.id, row);
+                row.requests.push({ i: row.requests.length, goal: p.goal, retry: p.retry, request: captureRequest(p.posted), passes: p.handle.passes ?? null, result });
+                total += 1;
+            }
+            const cur = entryOf().id;
+            for (const id of [...rows.keys()]) if (all || (id !== cur && !pending.some((p) => p.id === id))) flush(id);
+        } catch (e) {
+            console.log(`[MEASURE capture] drain threw: ${e?.message ?? e}`);
+        } finally {
+            busy = false;
+        }
+    };
+    const timer = setInterval(() => { wrap(); drain(false); }, 25);
+    wrap();
+    return {
+        stop: () => {
+            clearInterval(timer);
+            const finish = async () => {
+                while (busy) await new Promise((r) => { setTimeout(r, 10); }); // eslint-disable-line no-await-in-loop
+                await drain(true);
+                console.log(`[MEASURE capture] stopped: ${total} request(s) captured`);
+            };
+            return finish();
         },
     };
 }

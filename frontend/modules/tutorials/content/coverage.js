@@ -39,9 +39,6 @@ export const PLANNED_PANELS = Object.freeze({
 
 /** Panels a tutorial is planned for, not written yet: componentType → the planned tutorial. */
 export const NOT_COVERED_YET = Object.freeze({
-    // region-map step 3b (2026-11-15): the panel landed without a tutorial; one belongs after step 4 (clicks), when
-    // the panel does what a tutorial would walk. Whether and when is the user's call.
-    regionMapPanel: 'a Region Map tutorial (planned, after region-map step 4)',
 });
 
 /**

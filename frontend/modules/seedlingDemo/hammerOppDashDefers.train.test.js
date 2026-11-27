@@ -5,7 +5,7 @@
  * `HAMMER_BODY_GATE`; leg 872 (`… <- in_L43_176_464 ~> …`, same room and goal) is the control. Each plan is re-driven on
  * a fresh run of the staging, row by row (⚖ 30(c)). The fast rows are `hammerOppDashDefers.test.js`.
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll, afterAll } from 'vitest';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -21,6 +21,23 @@ import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCod
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { replayTape, settleSolve, solveFromTape } from './jsRuntimeSolver.js';
 import { withL40Flip } from './l40FlipSet.js';
+import { GOAL_START_WAIT as __GOAL_START_WAIT_HOLD } from './solverBot.js';
+import { PRESS_KILL_CHASERS as __PRESS_KILL_CHASERS_HOLD } from './pressKillCost.js';
+
+// ⛓ `PRESS_KILL_CHASERS` held OFF for this whole file: it ships ON since the PKC + FH flip (⚖ the user, 2026-11-20). ON, leg
+// 871 (L39 -> L40 flag 12) SOLVES: 1287 t, 0 hits, 0 deaths, rows exact on a fresh run, flag 12 earned (sha edaf487e71ac;
+// pinned in `hammerBodyGate.train.test.js`). These rows predate the flip and pin other switches; held OFF they are
+// byte-for-byte their pre-flip selves. The flip's own effect is measured by its sweeps and survey.
+let __heldWas;
+beforeAll(() => { __heldWas = __PRESS_KILL_CHASERS_HOLD.enabled; __PRESS_KILL_CHASERS_HOLD.enabled = false; });
+afterAll(() => { __PRESS_KILL_CHASERS_HOLD.enabled = __heldWas; });
+// ⛓ `GOAL_START_WAIT` held OFF for this whole file too: it ships ON since the BOS/GSW/PM flip (⚖ the user, 2026-11-25:
+// "Flip BOS+GSW+PM (Recommended)"). ON, leg 871's refusal at work 885 (the burn stance's EXHAUSTED ladder) is re-asked after an
+// idle and SOLVES: 1179 t, 0 hits, 0 deaths, flag 12 earned (sha 3b8fc46a6b97; pinned in `hammerBodyGate.train.test.js`).
+// These rows pin other switches against that refusal; held OFF they are their pre-flip selves.
+let __gswWas;
+beforeAll(() => { __gswWas = __GOAL_START_WAIT_HOLD.enabled; __GOAL_START_WAIT_HOLD.enabled = false; });
+afterAll(() => { __GOAL_START_WAIT_HOLD.enabled = __gswWas; });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIX = (name) => JSON.parse(gunzipSync(readFileSync(join(HERE, 'fixtures', 'hammer-cleartag-chain', name)))

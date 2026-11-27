@@ -11,12 +11,17 @@ import { RegionGraphLayoutEditor } from './regionGraphLayoutEditor.js';
 import { GraphDataManager } from './graphDataManager.js';
 import { GraphInteractionManager } from './graphInteractionManager.js';
 import { NavigationManager } from './navigationManager.js';
-import { LayoutControlsManager } from './layoutControlsManager.js';
+import { LayoutControlsManager, isDirectionSettingKey } from './layoutControlsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { defaultClickActions } from '../regionView/clickActions.js';
 import { mountClickActionsStrip } from '../regionView/clickActionsUI.js';
 import { CLICK_ACTIONS_KEY, loadRegionGraphClickActions, saveRegionGraphClickActions } from './clickActionsSettings.js';
+import { applyPendingCentre } from './regionGraphCentreAction.js';
+import { SUB_REGION_VIEW_KEY, normaliseSubRegionView, GROUP_STYLES } from './subRegionGroups.js';
+import { GroupBadgeLayer } from './groupBadgeLayer.js';
+import { NODE_LOOK_KEY, normaliseNodeLook, syncNodeLookControl } from './nodeLook.js';
+import { MapLookLayer } from './mapLookLayer.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -37,8 +42,8 @@ export class RegionGraphUI {
     // the cose / hierarchical fallback — so the Region Graph's
     // spatial layout matches the maze panel's grid.
     this.gridLayout = null;
+    // ⛓ true from a layout run's start to its settle (layoutRun.js); `whenLayoutSettled(ui)` waits for it.
     this.isLayoutRunning = false;
-    this.layoutGeneration = 0;
     this.pathFinder = new PathFinder(stateManager);
     this.dataManager = new GraphDataManager(this);
     this.interactionManager = new GraphInteractionManager(this);
@@ -48,6 +53,10 @@ export class RegionGraphUI {
     this.regionPathCounts = new Map();
     this.layoutEditor = null;
     this.overlayManager = new NodeOverlayManager(this);
+    // ⛓ subRegionView = collapsible (region-graph-groups-c): the + / − badges over the group nodes (DOM, not cy).
+    this.groupBadges = new GroupBadgeLayer(this);
+    // ⛓ nodeLook = map (region-graph-map-look): each node draws as its Region Map cell, under Cytoscape's canvas.
+    this.mapLook = new MapLookLayer(this);
 
     // Zoom-based visibility configuration
     this.zoomLevels = {
@@ -222,6 +231,23 @@ export class RegionGraphUI {
       logger.error('Failed to load display settings:', error);
       this.useSubstitutedNames = true;
     }
+    // ⛓ region-graph-groups-a: how sub-regions draw. No call-site default: the schema's is the only one.
+    try {
+      this.subRegionView = normaliseSubRegionView(await settingsManager.getSetting(SUB_REGION_VIEW_KEY));
+    } catch (error) {
+      logger.warn('Could not load subRegionView; using the schema default:', error);
+      this.subRegionView = normaliseSubRegionView(undefined);
+    }
+    const select = this.controlPanel?.querySelector?.('#subRegionView');
+    if (select) select.value = this.subRegionView;
+    // ⛓ region-graph-map-look: how a node draws. No call-site default: the schema's is the only one.
+    try {
+      this.nodeLook = normaliseNodeLook(await settingsManager.getSetting(NODE_LOOK_KEY));
+    } catch (error) {
+      logger.warn('Could not load nodeLook; using the schema default:', error);
+      this.nodeLook = normaliseNodeLook(undefined);
+    }
+    syncNodeLookControl(this);
   }
 
   getRegionDisplayText(regionData, regionName) {
@@ -771,7 +797,9 @@ export class RegionGraphUI {
             'visibility': 'hidden',
             'events': 'no'
           }
-        }
+        },
+        // ⛓ subRegionView = nested: the group boxes (compound parents; subRegionGroups.js)
+        ...GROUP_STYLES
       ],
       
       layout: {
@@ -947,6 +975,18 @@ export class RegionGraphUI {
         if (key === '*' || key === CLICK_ACTIONS_KEY) await this.loadClickActions();
         // The click configuration does not change what the graph draws: no rebuild for it.
         if (key === CLICK_ACTIONS_KEY) return;
+        // ⛓ region-graph-map-look: the node look changes how nodes DRAW, not the graph: no rebuild, no re-layout.
+        // ⛓ region-graph-direction-layout: a Direction-aware setting moves nodes (if that layout is the one drawn), never
+        // rebuilds the graph.
+        if (isDirectionSettingKey(key)) {
+          await this.layoutControlsManager.onDirectionSettingChanged();
+          return;
+        }
+        if (key === NODE_LOOK_KEY) {
+          await this.loadDisplaySettings();
+          this.mapLook?.sync();
+          return;
+        }
         if (key === '*' || key.startsWith('generalSettings.useSubstitutedNames') ||
             key.startsWith('moduleSettings.regionGraph')) {
           await this.loadDisplaySettings();
@@ -1026,6 +1066,11 @@ export class RegionGraphUI {
     return this.layoutControlsManager.runLayout(force);
   }
 
+  /** ⛓ layoutRun.js calls this once per settled layout run (after its last position change). */
+  onLayoutSettled(info) {
+    return this.interactionManager.onLayoutSettled(info);
+  }
+
   saveNodePositions() {
     return this.layoutControlsManager.saveNodePositions();
   }
@@ -1101,7 +1146,8 @@ export class RegionGraphUI {
     logger.debug('Panel shown', { hasCytoscape: !!this.cy });
     if (this.cy) {
       this.cy.resize();
-      this.cy.fit(30);
+      // ⛓ G4: a "Centre the Region Graph on it" that landed while the tab was hidden is applied now, in place of the fit.
+      if (!applyPendingCentre(this)) this.cy.fit(30);
     } else {
       logger.debug('Panel shown but no Cytoscape instance, checking if libraries are loaded...');
       logger.verbose('Library check', { cytoscape: !!window.cytoscape, coseBase: !!window.coseBase, cytoscapeFcose: !!window.cytoscapeFcose });
@@ -1296,6 +1342,8 @@ export class RegionGraphUI {
     if (this.unsubscribeSettingsChanged) {
       this.unsubscribeSettingsChanged();
     }
+    this.groupBadges?.destroy();
+    this.mapLook?.dispose();
     if (this.cy) {
       this.cy.destroy();
     }

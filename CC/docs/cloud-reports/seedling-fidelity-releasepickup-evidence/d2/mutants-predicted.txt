@@ -1,0 +1,7 @@
+Mutants (each applied to a copy of levelRun.js, run over 7 files / 79 rows: fidelityFreezeSpanUpdates, fidelityFreezeReleaseTick,
+fidelityFreezeEdgeFrames, fidelityPickupFreeze, fidelityFrozenTick, fidelityDialogueFreeze, fidelityBeamTower; restored, grep -c MUTANT = 0)
+M1 continuity never claimed (lastClock untouched)   predicted: the exact tower row + composition (both refuse ON)    measured: exactly those 2
+M2 lump of 0 frames, continuity claimed             predicted: the exact tower row + the boot-tick row (stale anim)  measured: exactly those 2
+M3 no relabel of C's lastClock before R             predicted: exact row, composition, boot-tick row (R jumps)        measured: exactly those 3
+M4 no frame-A refusal                               predicted: the frame-A row                                       measured: exactly that 1
+M5 not-exact lump leaves animKnown alone            predicted: the boot-tick row (ON-without-R no longer refuses)    measured: exactly that 1

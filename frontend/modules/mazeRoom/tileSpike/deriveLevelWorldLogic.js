@@ -18,7 +18,7 @@ import {
     regionLevels, latticeAxis, latticePoints, fullPoint, pointCovers, inventoryOf, formatPoint, endsWalk, latchEvents,
 } from './deriveTileLogic.js';
 import { MAZE_TILE_LIB } from './tileStep.js';
-import { LEARN_MAX_POINTS, learnMinimal, assertMonotoneWorld } from './learnLattice.js';
+import { LEARN_MAX_POINTS, learnMinimal, assertMonotoneWorld, pullUpSet } from './learnLattice.js';
 import {
     createState, step, getExitAt, worldInputs, sharedWorldOwnerAt, standsInArmedLane, strikeTargets, USE_PREFIX, TURN_PREFIX,
     actionUsable, blockWithinReach, latchCells,
@@ -110,6 +110,23 @@ function cachedReach(cache, entered, reach, { memo = false, count = null } = {})
 }
 
 /**
+ * ⛓⛓ THE UP-SET GUARD (rules-engine-nit-b, ⚖ Robert 2026-11-21 "Engine nit (B) fix"): `pred(reach, point)` judged as AP's
+ * upward-closed rule needs it — at `point` AND at every lattice point above it (`learnLattice.pullUpSet`: with a pull gated on
+ * the axis, reach is monotone only inside one PULL CLASS, so the class-minimal raises of `point` decide every superset). With
+ * no axis-gated pull (`guard` null) it is `pred` itself, and the walks are byte-identical. `engine.upSet` counts the points
+ * that `pred` took but the guard refused (a superset that loses the target: the `covered` skip would have granted it).
+ */
+function upSetJudge(guard, reachOf, engine) {
+    if (!guard) return null;
+    engine.upSet ??= 0;
+    return (point, pred, exclude = null) => {
+        const ok = guard.probes(point, exclude).slice(1).every((q) => pred(reachOf(q), q));
+        if (!ok) engine.upSet += 1;
+        return ok;
+    };
+}
+
+/**
  * The compact cache's counters (`misses`: real searches stored; `replans`: lazy re-searches for a plan) and its TEST-ONLY hooks:
  * `on: false` stores the full values (the on ≡ off pin), `mutant(set)` makes the lazy re-search use ANOTHER inventory (the
  * lazy-plan pin's mutant, shown red). Every caller leaves both alone.
@@ -168,7 +185,8 @@ export function compactReach(full, again) {
  * ⛓ LATCH SANDWICH (session tile-latch-prune; ⚖ Robert 2026-11-03 "B: Prune, then lay"; measured by session
  * tile-l40-latch-slowness): a lattice point is skipped when a HIGHER point already proves it takes nothing new.
  * The walk already rests on MONOTONICITY — reach only grows with the inventory — when it drops, for good, a target the
- * TOP point does not reach. The sandwich makes the same inference from a lower top: point Q's upper probe is
+ * TOP point does not reach. (⛓ rules-engine-nit-b: in a world with a pull gated on the axis the premise is
+ * held for the GUARDED predicate — `takenAt` is the up-set judge's — which is monotone by construction.) The sandwich makes the same inference from a lower top: point Q's upper probe is
  * U = Q ∪ E (E = the world's latch events). A target U does not take, Q cannot take either; so if no target still
  * uncovered is taken at U, Q is skipped. A latch's OWN event target is never taken holding its event (`reachedTarget`),
  * so its probe is U \ {its event}. The probes are lattice points, memoised in the same reach cache. Witnesses are
@@ -223,6 +241,9 @@ export function distinctArrivals(entered, arrivals) {
     if (arrivals.length < 2) return arrivals;
     const axis = new Set(regionItems(entered));
     if (Object.values(entered.trapLib ?? {}).some((t) => t?.fires === 'while_active' && axis.has(t.active))) return arrivals;
+    // ⛓ rules-engine-nit-b: a pull gated on the axis breaks it the same way (holding its gate reels a step that held nothing
+    // did not): two arrivals that meet holding nothing may part holding the gate, so such a world is never deduped either.
+    if (pullUpSet(entered, latticeAxis([...axis], regionLevels(entered))) !== null) return arrivals;
     const at = (a) => (a ? { ...entered, entrance: { x: a.x, y: a.y } } : entered);
     const reach = new Map();
     const reachOf = (a) => {
@@ -301,6 +322,8 @@ function refuseLattice(what, items, axis, maxPoints) {
  *
  * `latchSandwich: false` turns the LATCH SANDWICH off — a TEST-ONLY switch (the on ≡ off pins); every caller keeps it on.
  * `walk: 'rank' | 'learn'` forces one walk of the HYBRID (`walkFor`) — TEST-ONLY too (the learner ≡ rank pins).
+ * `upSetGuard: false` drops the UP-SET GUARD (`upSetJudge`; rules-engine-nit-b) — TEST-ONLY (the mutant: the loose grant
+ * comes back, `deriveLevelWorldLogic.pullUpSet.test.js`). With an axis-gated pull, `engine.upSet` counts its refusals.
  * `engine` = the work this call really did: `searches`/`states` of the engine searches it ran (cache misses, the
  * sandwich's probes included) and the lattice points the sandwich `skipped`.
  *
@@ -310,6 +333,7 @@ function refuseLattice(what, items, axis, maxPoints) {
  */
 export function deriveLevelWorldLogic(world, helpers, {
     tileLib = MAZE_TILE_LIB, maxPoints = LEVEL_WORLD_MAX_POINTS, native = false, cache = null, latchSandwich: sandwiching = true, walk: forcedWalk = null,
+    upSetGuard = true,
 } = {}) {
     const sw = world.sharedWorld;
     if (!sw) throw new Error('level-world logic: the world is not a shared level world');
@@ -326,6 +350,8 @@ export function deriveLevelWorldLogic(world, helpers, {
     refuseLattice('level-world logic', items, axis, maxPoints);
     const learning = (forcedWalk ?? walkFor(axis)) === 'learn';
     if (learning) assertMonotoneWorld(world, items);
+    // ⛓ rules-engine-nit-b: a pull gated on the axis is ROUTED through the up-set guard (every walk), never assumed monotone.
+    const guard = upSetGuard === false ? null : pullUpSet(world, axis);
     const pairs = [];
     let searched = 0;
     let states = 0;
@@ -335,7 +361,9 @@ export function deriveLevelWorldLogic(world, helpers, {
     for (const from of sw.regions) {
         const entered = enteredAt(world, from);
         const reachOf = cachedReach(cache, entered, (set) => (native ? nativeReachUnder(entered, set)
-            : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })), { memo: latched || learning, count });
+            : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })), { memo: latched || learning || Boolean(guard), count });
+        const upHolds = upSetJudge(guard, reachOf, engine);
+        const takes = (r, p, set) => owned(r.cells, p.to) !== null && (!upHolds || upHolds(set, (q) => owned(q.cells, p.to) !== null));
         const full = reachOf(fullPoint(axis));
         searched += 1;
         states += full.states;
@@ -348,7 +376,7 @@ export function deriveLevelWorldLogic(world, helpers, {
         if (learning) {
             // ⛓ THE LEARNING WALK above `RANK_WALK_MAX_POINTS` (`learnLattice.js`): the same minimal sets and witnesses as the rank
             // walk, by membership queries through the same memoised reach. The monotone census ran above, before any search.
-            const { learned, queries } = learnMinimal(axis, open, { query: reachOf, taken: (r, p) => owned(r.cells, p.to) !== null });
+            const { learned, queries } = learnMinimal(axis, open, { query: reachOf, taken: takes });
             for (const p of open) {
                 for (const { point, reach } of learned.get(p)) {
                     const cell = owned(reach.cells, p.to);
@@ -362,7 +390,7 @@ export function deriveLevelWorldLogic(world, helpers, {
         const sandwich = latched ? latchSandwich(entered, reachOf) : null;
         for (const set of latticePoints(axis)) {
             if (open.every((p) => covered(p, set))) continue;
-            if (sandwich && open.every((p) => covered(p, set) || sandwich(set, null, (r) => owned(r.cells, p.to) !== null))) {
+            if (sandwich && open.every((p) => covered(p, set) || sandwich(set, null, (r, u) => takes(r, p, u)))) {
                 engine.skipped += 1;
                 continue;
             }
@@ -372,7 +400,7 @@ export function deriveLevelWorldLogic(world, helpers, {
             for (const p of open) {
                 if (covered(p, set)) continue;
                 const cell = owned(reach.cells, p.to);
-                if (cell === null) continue;
+                if (cell === null || (upHolds && !upHolds(set, (q) => owned(q.cells, p.to) !== null))) continue;
                 p.minimal.push(set);
                 p.witnesses.push({ inventory: set, plan: reach.planTo(cell), cell });
             }
@@ -407,7 +435,7 @@ export function deriveLevelWorldLogic(world, helpers, {
  */
 export function deriveEntryLogic(world, region, helpers, {
     tileLib = MAZE_TILE_LIB, maxPoints = LEVEL_WORLD_MAX_POINTS, native = false, arrivalBlocked = null, cache = null, arriveFrom = null, arriveAt = null,
-    latchSandwich: sandwiching = true, walk: forcedWalk = null,
+    latchSandwich: sandwiching = true, walk: forcedWalk = null, upSetGuard = true,
 } = {}) {
     const shared = Boolean(world.sharedWorld);
     if (arriveFrom !== null && !shared) throw new Error(`entry logic: arriveFrom "${arriveFrom}" needs a shared level world`);
@@ -426,7 +454,8 @@ export function deriveEntryLogic(world, region, helpers, {
     const learning = (forcedWalk ?? walkFor(axis)) === 'learn';
     if (learning) assertMonotoneWorld(entered, items);
     const top = fullPoint(axis);
-    const taken = (reach, t, set) => reachedTarget(reach, t, set, entered) && !(t.exit && arrivalBlocked?.(t.exit, set));
+    const guard = upSetGuard === false ? null : pullUpSet(entered, axis);
+    const takenAt = (reach, t, set) => reachedTarget(reach, t, set, entered) && !(t.exit && arrivalBlocked?.(t.exit, set));
     const owns = (x, y) => !shared || sharedWorldOwnerAt(world, x, y) === region;
     // ⛓ An event bound by the projection names the AP region whose location it is (`side`); a rope's goes by its cell.
     const ownsTarget = (t) => (t.side ? t.side === region : owns(t.x, t.y));
@@ -442,8 +471,12 @@ export function deriveEntryLogic(world, region, helpers, {
     const latched = sandwiching && latchEvents(entered).length > 0;
     const reachOf = cachedReach(cache, entered, (set) => (native ? nativeReachUnder(entered, set)
         : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })), {
-        memo: latched || learning, count: (r) => { engine.searches += 1; engine.states += r.states; },
+        memo: latched || learning || Boolean(guard), count: (r) => { engine.searches += 1; engine.states += r.states; },
     });
+    // ⛓ rules-engine-nit-b: taken at `set` AND (an axis-gated pull's world) at every point above it, the own event never added.
+    const upHolds = upSetJudge(guard, reachOf, engine);
+    const taken = (reach, t, set) => takenAt(reach, t, set)
+        && (!upHolds || upHolds(set, (q, u) => takenAt(q, t, u), t.event && items.includes(t.event) ? t.event : null));
     const full = reachOf(top);
     let searched = 1;
     let states = full.states;

@@ -69,6 +69,10 @@ Tutorials are grouped by what they teach; procgen is the project's core use. Eac
 
 - **APCalc: generate a world** ([guide](../tutorials/apcalc-generator.md)) — Generate a new APCalc map with the APCalc Generator, play it, and package it as a .apworld. `?tutorial=apcalc-generator`
 
+### Tracking a game
+
+- **Tracking: the Region Map** ([guide](../tutorials/tracker-region-map.md)) — See a Seedling world as its real map: levels in groups, locations as squares on their tiles, and clicks that move and check. `?tutorial=tracker-region-map`
+
 ### Needs a terminal
 
 Each of these runs a command in a terminal partway through. The panel can do every step before that one, and its test checks those steps. At the terminal step, copy the command and run it yourself. The test cannot run a terminal, so it does not check the steps after that one. The panel lists these in a collapsed section.
@@ -79,6 +83,7 @@ Each of these runs a command in a terminal partway through. The panel can do eve
 - **DepGraph: more graphs, and your own** ([guide](../tutorials/depgraph-extras.md)) — Load DepGraph's other bundled graphs, see one in the Region Graph, and turn a task list of your own into a game. `?tutorial=depgraph-extras`
 - **DepGraph: in a multiworld** ([guide](../tutorials/depgraph-multiworld.md)) — Host a DepGraph graph on a local Archipelago server and solve it from the app. `?tutorial=depgraph-multiworld`
 - **APCalc: in a multiworld** ([guide](../tutorials/apcalc-multiworld.md)) — Host APCalc on a local Archipelago server and play it from the app. `?tutorial=apcalc-multiworld`
+- **Mystery: a case in a multiworld** ([guide](../tutorials/mystery-multiworld.md)) — Host a mystery case on a local Archipelago server, open it in Mystery Game, solve a question and receive a paper. `?tutorial=mystery-multiworld`
 - **Track a game** ([guide](../tutorials/tracker-track-a-game.md)) — Load a game's logic, track items and checks by hand, see what is reachable, and connect to your multiworld's server. `?tutorial=tracker-track-a-game`
 
 ### In progress

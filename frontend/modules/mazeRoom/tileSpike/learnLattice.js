@@ -25,7 +25,9 @@
  * Output: per target, its minimal points sorted into `latticePoints` order with the reach that took each — the rank walk's
  * `minimal` order, so `minimal` and the witnesses are byte-identical when the premise holds.
  */
-import { latticePoints } from './deriveTileLogic.js';
+import { latticePoints, inventoryOf } from './deriveTileLogic.js';
+import { ruleToClearSet } from './tileStep.js';
+import { isObstacleCleared } from '../../shared/procgen/library.js';
 
 /**
  * ⛔ The learner's MEMORY bound, in lattice points (also the derives' and the maze compile's refusal, `LEVEL_WORLD_MAX_POINTS`).
@@ -69,6 +71,98 @@ export function assertMonotoneWorld(world, items) {
             throw new Error(`learning walk: trap ${id} is ${t.fires ?? 'armed'} on axis item '${t.active}' — reach may shrink with the inventory; refused`);
         }
     }
+}
+
+/**
+ * ⛓⛓ PULLS ON THE AXIS (rules-engine-nit-b, ⚖ Robert 2026-11-21 "Engine nit (B) fix"): the census half the static census above
+ * does not cover. A pull (`mazeRoomEngine.checkPulls`) whose GATE clears on an axis item breaks monotonicity: holding the gate,
+ * a step into its disc from outside is REELED onto the trap (`pullAfterMove`), so a cell reached without the gate can be lost
+ * with it (`deriveLevelWorldLogic.pullDiscNit.test.js`). Not refused: ROUTED, by name, through `probes` below.
+ *
+ * THE SEMANTICS (read off the game, `vendor/seedling/src`): Seedling's pull gate is the Dark Suit, a passive global flag
+ * (`Player.as:246-253` → `Main.hasDarkSuit`, the save file), set on pickup (`Pickups/DarkSuit.as:44`) and read by the tongue
+ * (`Enemies/LavaTrap.as:64`); nothing in play clears it (the resets at `Player.as:1814-1919` sit in `extraInputs`, called only
+ * `if (Preloader.sponsorVersion)`, a `const false` at `Preloader.as:15`; `Bot.as:777` is the bot's injection seam). So the
+ * player cannot shed it, and an AP rule — UPWARD-CLOSED, a set granted is granted with every superset — may grant S only when
+ * EVERY lattice point T ⊇ S reaches. That predicate (`good`) is monotone by construction, so every walk (the rank walk's
+ * superset skip, the latch sandwich, the learner's marks) stays sound on it. The full-point prune is unchanged: good(top) =
+ * taken(top).
+ *
+ * THE PROOF that a few probes decide `good`: split the lattice by the PULL CLASS of a point (which axis-gated pulls its
+ * inventory arms). Inside one class every pull acts identically, so — under the static census above (monotone rule kinds, no
+ * axis-armed trap) — a step sequence legal at T is legal, with the same result, at every T' ⊇ T of the same class: reach is
+ * monotone WITHIN a class. Hence ∀T ⊇ S taken(T) ⇔ taken at the MINIMAL points of each class above S. The class depends only
+ * on the gates' items (the SUB-AXIS), so those minimal points are S with its sub-axis digits raised: `probes(S)` lists them,
+ * S itself first. With no axis-gated pull there is one class and `pullUpSet` returns null: every walk is byte-identical.
+ * `exclude`: an event target's own event is never raised (the target is judged on the axis without it, as everywhere).
+ *
+ * ⛔ REFUSED BY NAME: the static census's refusals (`assertMonotoneWorld`, run here on every walk once a pull is routed), and
+ * a gate that clears on an item OFF the axis (a token the world holds: the class would move with the
+ * world's state, not the inventory).
+ */
+export function pullUpSet(world, axis) {
+    const pulls = world.pulls ?? [];
+    if (pulls.length === 0) return null;
+    const index = new Map(axis.map((a, i) => [a.item, i]));
+    const gated = [];
+    for (const p of pulls) {
+        const entry = world.obstacleLib?.[p.gate];
+        const sets = (entry?.clear_set_type ?? 'combo_list') === 'rule' ? ruleToClearSet(entry.clear_rule, p.gate) : (entry?.clear_set ?? []);
+        const items = new Set();
+        for (const combo of sets) for (const pair of combo) items.add(Array.isArray(pair) ? pair[0] : pair);
+        const off = [...items].filter((i) => !index.has(i));
+        if (off.length) {
+            throw new Error(`pull census: the pull at (${p.x},${p.y}) clears its gate ${p.gate} on ${off.join(', ')}, off the item axis — `
+                + 'its class would move with the world\'s state; refused');
+        }
+        if (items.size) gated.push({ x: p.x, y: p.y, gate: p.gate, items: [...items].sort() });
+    }
+    if (gated.length === 0) return null;
+    // The proof's premise (monotone WITHIN a class) is the static census above: asserted here, by name, on every walk.
+    assertMonotoneWorld(world, axis.map((a) => a.item));
+    const sub = [...new Set(gated.flatMap((g) => g.items))].map((i) => index.get(i)).sort((a, b) => a - b);
+    const pointOf = (d) => axis.flatMap(({ item, levels }, i) => (d[i] === 0 ? [] : Array(levels[d[i] - 1]).fill(item)));
+    const classOf = (d) => {
+        const inv = inventoryOf(pointOf(d));
+        return gated.map((g) => (isObstacleCleared(g.gate, inv, world.obstacleLib) ? '1' : '0')).join('');
+    };
+    const memo = new Map();
+    const probes = (point, exclude = null) => {
+        const d = axis.map(() => 0);
+        const counts = new Map();
+        for (const it of point) counts.set(it, (counts.get(it) ?? 0) + 1);
+        for (const [it, c] of counts) { const i = index.get(it); if (i !== undefined) d[i] = axis[i].levels.indexOf(c) + 1; }
+        const key = `${d.join(',')}|${exclude ?? ''}`;
+        if (memo.has(key)) return memo.get(key);
+        // every raise of the sub-axis digits (an excluded item stays where it is), grouped by class, minimal per class
+        const raises = [];
+        const rec = (j, cur) => {
+            if (j === sub.length) { raises.push(cur.slice()); return; }
+            const i = sub[j];
+            const top = axis[i].item === exclude ? d[i] : axis[i].levels.length;
+            for (let v = d[i]; v <= top; v++) { cur[i] = v; rec(j + 1, cur); }
+            cur[i] = d[i];
+        };
+        rec(0, d.slice());
+        const byClass = new Map();
+        for (const r of raises) {
+            const c = classOf(r);
+            if (!byClass.has(c)) byClass.set(c, []);
+            byClass.get(c).push(r);
+        }
+        const leq = (a, b) => sub.every((i) => a[i] <= b[i]);
+        const out = [point];
+        for (const rs of byClass.values()) {
+            for (const r of rs) {
+                if (r.every((v, i) => v === d[i])) continue; // the point itself, already first
+                if (rs.some((q) => q !== r && leq(q, r) && !leq(r, q))) continue; // not minimal in its class
+                out.push(pointOf(r));
+            }
+        }
+        memo.set(key, out);
+        return out;
+    };
+    return { pulls: gated, probes };
 }
 
 /**

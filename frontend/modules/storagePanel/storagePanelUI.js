@@ -3,11 +3,24 @@
  * it is, how big; a Clear per row, per section (none for your own data) and per
  * declared family ("Clear all saved modes"). Nothing about other modules is
  * listed here: owners come from their `moduleInfo.storage` (declarationSource.js).
+ *
+ * The DOCUMENT LIBRARY (an `idb` declaration, lab arc B2) is drawn in its
+ * owner's group under its kind: the database, its body bytes, the site's
+ * `navigator.storage.estimate()`, `persisted()`, and one row per lineage with
+ * a Clear (refused, by name, while anything holds it), plus "Clear leftover
+ * drafts". Each draw runs the library's `cleanup` first (⚖ Q2: drafts older
+ * than DRAFT_MAX_AGE_MS go), but only when the database already exists: the
+ * panel never creates it.
+ *
+ * ⛓ BOOT WEIGHT. The library is reached by a computed, document-relative
+ * `import()` (B1's pattern), which the bundler leaves alone: it is fetched only
+ * when the panel draws, and stays out of `dist/bundle.js`.
  */
 import settingsManager from '../../app/core/settingsManager.js';
 import { LOCAL_STORAGE_QUOTA_CHARS } from '../../app/core/storageKinds.js';
 import {
-    buildView, confirmText, familyKeys, formatChars, headerText, sectionKeys,
+    buildView, confirmText, familyKeys, formatChars, headerText, idbDeclarations, libraryConfirmText, libraryRows,
+    refusalText, sectionKeys,
 } from './storageModel.js';
 import { collectDeclarations, resetDeclarationCache } from './declarationSource.js';
 import { getModuleManager } from './moduleManagerRef.js';
@@ -23,6 +36,27 @@ export const dialogs = {
     confirm: (message) => window.confirm(message),
 };
 
+/**
+ * Which database the library row reads. `null` = the library's own
+ * (`DEFAULT_LIBRARY_DB_NAME`). ⚖ An in-app row sets its OWN database name here
+ * for its length and restores `null` (the `dialogs` seam's pattern), so it never
+ * reads or clears the person's library.
+ */
+export const librarySource = {
+    dbName: null,
+};
+
+const appUrl = (rel) => new URL(rel, document.baseURI).href;
+
+/** The library's modules, fetched raw on either boot (see the header). */
+export async function loadLibraryModules() {
+    const [core, idb] = await Promise.all([
+        import(/* @vite-ignore */ appUrl('./modules/procgenCore/documentLibrary.js')),
+        import(/* @vite-ignore */ appUrl('./modules/procgenCore/documentLibraryIdb.js')),
+    ]);
+    return { core, idb };
+}
+
 /** Class names the in-app rows drive. */
 export const CONTROLS = Object.freeze({
     header: 'sp-header',
@@ -34,6 +68,12 @@ export const CONTROLS = Object.freeze({
     row: 'sp-row',
     rowClear: 'sp-row-clear',
     rowDownload: 'sp-row-download',
+    library: 'sp-library',
+    libraryStatus: 'sp-library-status',
+    libraryRow: 'sp-library-row',
+    libraryClear: 'sp-library-clear',
+    libraryDrafts: 'sp-library-drafts',
+    libraryNote: 'sp-library-note',
 });
 
 /** `[{ key, chars }]` for every key in `storage` (chars = key + value, the quota's unit). */
@@ -116,7 +156,157 @@ export class StoragePanelUI {
         this.noteEl.textContent = problems.length
             ? `Some modules' declarations could not be read, so their keys show as Unknown: ${problems.join('; ')}`
             : '';
-        this.bodyEl.replaceChildren(...this.view.sections.map((s) => this._drawSection(s)));
+        const sections = this.view.sections.map((s) => this._drawSection(s));
+        this.bodyEl.replaceChildren(...sections);
+        await this._drawDatabases(gen, sections);
+    }
+
+    /* ── IndexedDB declarations: the document library ─────────────────── */
+
+    /** Open the library on `dbName`, run `fn(lib)`, close the connection (it never stays open). */
+    async _withLibrary(mods, dbName, fn) {
+        const backend = mods.idb.createIdbBackend({ dbName });
+        try {
+            return await fn(mods.core.createDocumentLibrary({ backend }));
+        } finally {
+            await backend.close();
+        }
+    }
+
+    /** Draw each `idb` declaration in its kind's section, inside its owner's group. */
+    async _drawDatabases(gen, sectionNodes) {
+        this.library = null;
+        const decls = idbDeclarations(this.declarations);
+        if (!decls.length) return;
+        let mods = null;
+        let loadError = null;
+        try { mods = await loadLibraryModules(); } catch (e) { loadError = e; }
+        if (gen !== this._renderGen) return;
+        for (const decl of decls) {
+            const sectionNode = sectionNodes.find((n) => n.dataset.section === decl.kind);
+            if (!sectionNode) continue;
+            sectionNode.querySelector(':scope > .sp-empty')?.remove();
+            const node = el('div', `${CONTROLS.group} ${CONTROLS.library}`);
+            node.dataset.owner = decl.moduleId;
+            node.dataset.idb = decl.value;
+            const head = el('div', 'sp-group-head');
+            head.appendChild(el('span', 'sp-owner', decl.owner));
+            node.appendChild(head);
+            node.appendChild(el('div', 'sp-label', decl.label));
+            sectionNode.appendChild(node);
+            if (!mods || decl.value !== mods.core.DEFAULT_LIBRARY_DB_NAME) {
+                node.appendChild(el('div', CONTROLS.libraryStatus, loadError
+                    ? `Database ${decl.value}: the library code did not load (${loadError.message}).`
+                    : `Database ${decl.value}: this panel has no reader for it.`));
+                continue;
+            }
+            await this._drawLibrary(gen, mods, decl, node);
+        }
+    }
+
+    async _drawLibrary(gen, mods, decl, node) {
+        const dbName = librarySource.dbName ?? decl.value;
+        const status = el('div', CONTROLS.libraryStatus, 'Reading…');
+        const note = el('div', CONTROLS.libraryNote);
+        node.append(status, note);
+        if (this._libraryNote) note.textContent = this._libraryNote;
+        this._libraryNote = '';
+        const exists = await mods.idb.libraryDatabaseExists(dbName);
+        if (gen !== this._renderGen) return;
+        if (exists === false) {
+            // ⛓ The panel never CREATES the database: nothing saved yet means nothing to open.
+            status.textContent = `Database ${dbName}: nothing saved yet.`;
+            this.library = { dbName, exists: false, rows: [], cleaned: null };
+            return;
+        }
+        const read = await this._withLibrary(mods, dbName, async (lib) => {
+            // ⚖ Q2: the panel runs the cleanup rule when it draws (the writers run it on save).
+            const cleaned = await lib.cleanup({ now: Date.now() });
+            const inv = await lib.inventory();
+            const est = await lib.estimate();
+            return { cleaned, inv, est };
+        });
+        let persisted = null;
+        try { persisted = await globalThis.navigator?.storage?.persisted?.() ?? null; } catch { persisted = null; }
+        if (gen !== this._renderGen) return;
+        const { cleaned, inv, est } = read;
+        if (inv.status !== 'ok') {
+            status.textContent = `Database ${dbName}: ${inv.status}${inv.why ? ` (${inv.why})` : ''}.`;
+            this.library = { dbName, exists, rows: [], cleaned, status: inv.status };
+            return;
+        }
+        const rows = libraryRows(inv.lineages);
+        this.library = { dbName, exists, rows, cleaned, estimate: est, persisted };
+        const site = est.browser
+            ? ` · this site's whole browser storage (estimate): ${formatChars(est.browser.usage)} of ${formatChars(est.browser.quota)} bytes`
+            : '';
+        status.textContent = `Database ${dbName} — ${rows.length} set${rows.length === 1 ? '' : 's'}, `
+            + `${formatChars(est.bodyBytes)} bytes of saved documents${site} · persistence: `
+            + `${persisted === true ? 'granted' : persisted === false ? 'best-effort (the browser may evict it when space runs low)' : 'unknown'}`;
+        status.title = "Saved documents = the library's own stored bodies (UTF-8 bytes). The site estimate is "
+            + "navigator.storage.estimate() for the whole origin: every database, cache and the browser's overhead.";
+        if (cleaned?.status === 'cleaned' && cleaned.deletedEntries.length) {
+            note.textContent = `Auto-cleared ${cleaned.deletedEntries.length} leftover draft`
+                + `${cleaned.deletedEntries.length === 1 ? '' : 's'} older than `
+                + `${Math.round(mods.core.DRAFT_MAX_AGE_MS / 86_400_000)} days.`;
+        }
+        const drafts = rows.reduce((sum, r) => sum + r.drafts, 0);
+        if (drafts > 0) {
+            const b = button(CONTROLS.libraryDrafts, `Clear leftover drafts (${drafts})`,
+                "Drafts are the rolling copies an open lab tab keeps; a closed tab's stay behind.",
+                () => this.clearLibraryDrafts(drafts));
+            node.querySelector('.sp-group-head').appendChild(b);
+        }
+        const table = el('table', 'sp-rows');
+        for (const row of rows) {
+            const tr = el('tr', CONTROLS.libraryRow);
+            tr.dataset.lineage = row.lineageId;
+            const cell = el('td', 'sp-key-cell');
+            cell.appendChild(el('div', 'sp-key', row.label));
+            cell.appendChild(el('div', 'sp-label', row.counts));
+            if (row.heldText) cell.appendChild(el('div', 'sp-held', row.heldText));
+            tr.appendChild(cell);
+            tr.appendChild(el('td', 'sp-chars', `${formatChars(row.bytes)} B`));
+            const actions = el('td', 'sp-actions');
+            actions.appendChild(button(CONTROLS.libraryClear, 'Clear', row.held ? row.heldText : null,
+                () => this.clearLineage(row)));
+            tr.appendChild(actions);
+            table.appendChild(tr);
+        }
+        node.appendChild(table);
+    }
+
+    /**
+     * Confirm (K1: the `clearKeys` confirm, through the same `dialogs` seam),
+     * then delete one lineage. Returns the library's answer, or null when
+     * declined. A lineage something holds is REFUSED by the library and the note
+     * says why, by name.
+     */
+    async clearLineage(row) {
+        if (!this.library) return null;
+        if (!dialogs.confirm(libraryConfirmText(`Clear "${row.label}"`,
+            { versions: row.versions, drafts: row.drafts, bytes: row.bytes }))) return null;
+        const mods = await loadLibraryModules();
+        const answer = await this._withLibrary(mods, this.library.dbName, (lib) => lib.deleteLineage(row.lineageId));
+        this._libraryNote = answer.status === 'refused' ? refusalText(row.label, answer)
+            : answer.status === 'deleted' ? `Cleared "${row.label}".`
+                : `Not cleared: "${row.label}": ${answer.status}${answer.why ? ` (${answer.why})` : ''}.`;
+        await this.render();
+        return answer;
+    }
+
+    /** Confirm, then delete every draft nothing holds ("Clear leftover drafts", ⚖ Q2 by hand). */
+    async clearLibraryDrafts(drafts) {
+        if (!this.library) return null;
+        if (!dialogs.confirm(libraryConfirmText('Clear leftover drafts', { drafts, draftsOnly: true }))) return null;
+        const mods = await loadLibraryModules();
+        const answer = await this._withLibrary(mods, this.library.dbName, (lib) => lib.deleteDrafts());
+        this._libraryNote = answer.status === 'deleted'
+            ? `Cleared ${answer.deletedEntries.length} draft${answer.deletedEntries.length === 1 ? '' : 's'}`
+                + (answer.kept.length ? `; kept ${answer.kept.length} in use (${answer.kept.map((h) => `${h.kind} in tab ${h.tab_id}`).join('; ')}).` : '.')
+            : `Drafts not cleared: ${answer.status}${answer.why ? ` (${answer.why})` : ''}.`;
+        await this.render();
+        return answer;
     }
 
     _sizeOf(key) {

@@ -14,7 +14,7 @@
  * `spinner@192,144`'s hammer at t1222. ON the walk's own spinner rows price the struck spinner where the dash left it:
  * that plan is refused, and a seam where OFF's plan is hitless answers the same plan ON.
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll, afterAll } from 'vitest';
 import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set (fidelity-18's request)
 import { readFileSync } from 'node:fs';
 import { gunzipSync } from 'node:zlib';
@@ -29,13 +29,22 @@ import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, runTape, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { buildStagedTape } from './botDriverV1.js';
-import { stanceHypothesisProbe, withApproachDoor, withBombPhaseWait, withLatchWeighFirst } from './solverBot.js';
+import { stanceHypothesisProbe, withApproachDoor, withBombPhaseWait, withLatchWeighFirst, withLatchedHoldMove } from './solverBot.js';
 import { compareCorpseBumpWitness, corpseBumpModelSamples } from './fidelityCorpseBump.js';
 import { L40BK2_D1_SWITCHES, L40BK2_D2_SWITCHES, L40BK2_WITNESS_DIR, l40Bk2PocketChecks, l40Bk2PocketShippedChecks, l40Bk2Solve,
     l40Bk2Step67Boot, unpackL40Bk2Sample } from './fidelityL40Bk2.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { afterWitness, afterWitnessReplay, sortedInputs } from './fidelityAfterRows.js';
 import { l40LatchModelSamples } from './fidelityL40Latch.js';
+import { PRESS_KILL_CHASERS as __PRESS_KILL_CHASERS_HOLD } from './pressKillCost.js';
+
+// ⛓ `PRESS_KILL_CHASERS` held OFF for this whole file: it ships ON since the PKC + FH flip (⚖ the user, 2026-11-20). ON (the default since the PKC + FH flip), the chain
+// ends at kill(spinner@880,848) by press 'no step out' at (743.68,762.93) (HAMMER_PHASE_RUNG); still refused.
+// These rows predate the flip and pin other switches; held OFF they are byte-for-byte their pre-flip selves. The
+// flip's own effect is measured by its sweeps and survey.
+let __heldWas;
+beforeAll(() => { __heldWas = __PRESS_KILL_CHASERS_HOLD.enabled; __PRESS_KILL_CHASERS_HOLD.enabled = false; });
+afterAll(() => { __PRESS_KILL_CHASERS_HOLD.enabled = __heldWas; });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -181,40 +190,48 @@ describe('L40BK2 D2 — leg 368: a struck spinner priced where the walk\'s own s
         expect(line.requests[0].request.staging.seam.time).toBe(5280);
     });
 
-    it('OFF, seam 5290: the 1600 t plan, and the model takes spinner@192,144\'s hammer at t1222 (L40RES\'s hit)', () => withL40Flip(false, () => {
+    it('OFF, seam 5290: the 1600 t plan, and the model takes spinner@192,144\'s hammer at t1222 (L40RES\'s hit)', () => withLatchedHoldMove(false, () => withL40Flip(false, () => {
         const a = solveAt(5290, { dashSpinnerForecast: false });
         // ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip, ⚖ user 2026-11-11): spinner@816,848 walls bob@736,752's first step (t544), so the plan is 1567 t (1600 t, `1da60bcb4c0d`, before).
         expect([a.ok, a.ticks, a.plan]).toEqual([true, 1567, 'abf1e13c3bf7']);
         expect(a.hits).toEqual([[1222, 'spinner-hammer', 'spinner@192,144']]);
-    }), 120_000);
+    })), 120_000);
 
-    it('ON, seam 5290: that plan is not certified — the answer is the bomb-pusher hold\'s refusal, no hit plan', () => withL40Flip(false, () => {
+    it('ON, seam 5290: that plan is not certified — the answer is the bomb-pusher hold\'s refusal, no hit plan', () => withLatchedHoldMove(false, () => withL40Flip(false, () => {
         const a = solveAt(5290, L40BK2_D2_SWITCHES);
         expect(a.ok).toBe(false);
         expect(a.message).toMatch(/-> hold: the hold stands still .* inside bombpusher@112,128's 256 px reach/);
-    }), 120_000);
+    })), 120_000);
 
-    it('ON, seam 5280: OFF\'s hitless 1558 t plan, the same plan byte for byte', () => withL40Flip(false, () => {
+    it('ON, seam 5280: OFF\'s hitless 1558 t plan, the same plan byte for byte', () => withLatchedHoldMove(false, () => withL40Flip(false, () => {
         const off = solveAt(5280, { dashSpinnerForecast: false });
         const on = solveAt(5280, L40BK2_D2_SWITCHES);
         // ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip, ⚖ user 2026-11-11): spinner@816,848 walls bob@736,752's first step (t544), so the plan is 1555 t (1558 t, `32f29414cd8e`, before), still hitless.
         expect([off.ok, off.ticks, off.plan, off.hits]).toEqual([true, 1555, '2c4b20d9853c', []]);
         expect(on).toEqual(off);
-    }), 240_000);
+    })), 240_000);
 
     // ⛓⛓ seedling-fidelity-afterrows (wave 41): the three rows above are BEFORE pins (`withL40Flip(false)`). At the
     // SHIPPED defaults leg 368 plans ONE hitless 1714 t plan at both seams and in both arms: the t1222 hammer hit is
     // gone (so D2's refusal has nothing to refuse — that property is not exercised at the defaults), and the plan is a
     // game witness (`afterrows-l40-368-s5290`, p4g, 0 px, 0 hits). A GAIN: the 1567 t BEFORE plan took a hit.
-    it('AFTER (the shipped defaults) of the three: seams 5290 and 5280, OFF and ON — one hitless 1714 t plan, `b142543aace2`', () => {
+    // ⛓ LHM FLIP (⚖ the user 2026-11-26: "4 OFF + flip LHM ON"): at seam 5280 LATCHED_HOLD_MOVE moves the latched presser hold
+    // off the lobber's bomb, and the plan is 1599 t (`fdbc9fe9932a`), still hitless, in both arms; seam 5290 never asks it (1714 t).
+    it('AFTER (the shipped defaults) of the three: seam 5290 one hitless 1714 t plan `b142543aace2`; seam 5280 (LHM) one hitless 1599 t plan `fdbc9fe9932a`, OFF and ON', () => {
         const want = { ok: true, ticks: 1714, plan: 'b142543aace2', hits: [] };
         expect(solveAt(5290, { dashSpinnerForecast: false })).toEqual(want);
         expect(solveAt(5290, L40BK2_D2_SWITCHES)).toEqual(want);
-        expect(solveAt(5280, { dashSpinnerForecast: false })).toEqual(want);
-        expect(solveAt(5280, L40BK2_D2_SWITCHES)).toEqual(want);
-    }, 300_000);
+        const want80 = { ok: true, ticks: 1599, plan: 'fdbc9fe9932a', hits: [] };
+        expect(solveAt(5280, { dashSpinnerForecast: false })).toEqual(want80);
+        expect(solveAt(5280, L40BK2_D2_SWITCHES)).toEqual(want80);
+        // LHM OFF: the pre-LHM shipped plan at 5280 (the 1714 t one)
+        expect(withLatchedHoldMove(false, () => solveAt(5280, L40BK2_D2_SWITCHES))).toEqual(want);
+    }, 400_000);
 
-    it('AFTER control: the shipped defaults MINUS `BOMB_PHASE_WAIT` alone keep all three BEFORE pins (measured: each of the twelve flip switches OFF alone; only it moves leg 368)', () => withBombPhaseWait(false, () => {
+    // ⛓ LHM FLIP (⚖ the user 2026-11-26): LATCHED_HOLD_MOVE (now shipped ON) also moves leg 368, so the control holds it OFF too.
+    // MEASURED with LHM ON here (BPW OFF, a non-default): seam 5290 solves 1604 t `9291ddbd83a0` and the model takes
+    // bomb:bombpusher@112,128#8 at t1278 after the moved hold, in both D2 arms (BW prices that bomb; ON by default).
+    it('AFTER control: the shipped defaults MINUS `BOMB_PHASE_WAIT` (and `LATCHED_HOLD_MOVE`) keep all three BEFORE pins (measured: each of the twelve flip switches OFF alone; only BPW moves leg 368)', () => withLatchedHoldMove(false, () => withBombPhaseWait(false, () => {
         expect(solveAt(5290, { dashSpinnerForecast: false })).toEqual({ ok: true, ticks: 1567, plan: 'abf1e13c3bf7',
             hits: [[1222, 'spinner-hammer', 'spinner@192,144']] });
         const on = solveAt(5290, L40BK2_D2_SWITCHES);
@@ -223,7 +240,7 @@ describe('L40BK2 D2 — leg 368: a struck spinner priced where the walk\'s own s
         const off80 = solveAt(5280, { dashSpinnerForecast: false });
         expect([off80.ok, off80.ticks, off80.plan, off80.hits]).toEqual([true, 1555, '2c4b20d9853c', []]);
         expect(solveAt(5280, L40BK2_D2_SWITCHES)).toEqual(off80);
-    }), 300_000);
+    })), 300_000);
 
     it('AFTER: the 1714 t plan at seam 5290 is the game witness `afterrows-l40-368-s5290` (through t1702) — never hit, the model at 0 px', () => {
         const w = afterWitness('afterrows-l40-368-s5290');

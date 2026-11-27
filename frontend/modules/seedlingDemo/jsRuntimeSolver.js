@@ -63,10 +63,12 @@ import { createRunForStaging } from './tapeRunner.js';
 import {
     AXE_DODGE_ASK_PER_PREVIEW, DEFAULT_DASH_MODE, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, WAND_TARGET_TAGS, WAND_VERB,
     ROCKLOCK_KILL, clearTagTalkArmOf, solveSegment, withRockLockKill,
+    GOAL_START_WAIT, withGoalStartWaitLaterPass,
 } from './solverBot.js';
 import { pageSolverEnvSwitchOff, pageSolverEnvSwitchOn } from './solverEnvChannel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
-import { TILE_SIZE } from './levelWorld.js';
+import { TILE_SIZE, combatPlacementOf } from './levelWorld.js';
+import { killLocksIn } from './combat.js';
 // ⛓ PANEL-ROUTE — read once per recorder: is a progress hook installed (the worker's tap)? Never written here.
 import { activeProgress } from './solveProgress.js';
 // ⛓ LIGHTS WIRING — the fight's exit, as the model's world build makes it (a leaf module: no imports).
@@ -426,7 +428,8 @@ export function hitVerdictOrder(bestPlan, nextPlan) {
 }
 
 /**
- * ⛓⛓ SEEDLING HAMMER-PHASE FEWER-HITS — **A THIRD, HIT-AVOIDING PASS** (`HIT_AVOID_PASS`, OFF; `SEEDLING_HIT_AVOID_PASS=1`)
+ * ⛓⛓ SEEDLING HAMMER-PHASE FEWER-HITS — **A THIRD, HIT-AVOIDING PASS** (`HIT_AVOID_PASS`, ON by default since the FH flip,
+ * 2026-11-20: *"Flip it after landing (Recommended)"*; `SEEDLING_HIT_AVOID_PASS=0` opts out)
  * and **FEWER HITS FIRST BETWEEN TWO HIT PLANS** (`FEWER_HITS_RANK`, OFF; `SEEDLING_FEWER_HITS_RANK=1`). ⚖ The user,
  * 2026-11-19: *"Fewer-hits ranking (Recommended)"* (`CC/docs/cloud-reports/seedling-hammer-fewer-hits.md`).
  *
@@ -452,8 +455,8 @@ export function hitVerdictOrder(bestPlan, nextPlan) {
  * ⛓ THE THREAD: both run inside `solveAnytime`, i.e. the page's SOLVE WORKER (and node); the worker's env channel
  * (`?seedlingSolverEnv=SEEDLING_HIT_AVOID_PASS=1`) is the whole page wiring. The pass does not post an `onPass`.
  */
-export const HIT_AVOID_PASS = { enabled: globalThis.process?.env?.SEEDLING_HIT_AVOID_PASS === '1' };
-export const HIT_AVOID_PASS_DEFAULT = false;
+export const HIT_AVOID_PASS = { enabled: globalThis.process?.env?.SEEDLING_HIT_AVOID_PASS !== '0' };
+export const HIT_AVOID_PASS_DEFAULT = true;
 export const FEWER_HITS_RANK = { enabled: globalThis.process?.env?.SEEDLING_FEWER_HITS_RANK === '1' };
 export const FEWER_HITS_RANK_DEFAULT = false;
 /** ⛓ HIT-AVOID PASS — the latest start (idle ticks before the search) the pass tries. A search bound, not a game value. */
@@ -668,8 +671,10 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => 
         // ⛓ RECALIBRATE — a budgeted pass always asks the FINE checkpoints (`FINE_CHECKPOINTS`): the constants
         // above are counted in fine units, so every production path (JS page, wasm arrival, continuation,
         // held retry — all of them requests to this function) spends the unit they were calibrated in.
-        const answer = settleSolve(() => solveFromTape({ ...tape, clock, dashMode: p.dashMode, adds: p.adds ?? null, shouldStop,
-            fineCheckpoints: shouldStop !== null && FINE_CHECKPOINTS }));
+        const solvePass = () => settleSolve(() => solveFromTape({ ...tape, clock, dashMode: p.dashMode, adds: p.adds ?? null,
+            shouldStop, fineCheckpoints: shouldStop !== null && FINE_CHECKPOINTS }));
+        // ⛓ hammer-phase FLIPBLOCK (`GOAL_START_WAIT`, OFF ⇒ not reached): a pass a later pass follows asks no wait
+        const answer = GOAL_START_WAIT.enabled ? withGoalStartWaitLaterPass(i < passes.length - 1, solvePass) : solvePass();
         answer.pass = p.pass;
         if (answer.ok) answer.plan.pass = p.pass;
         const tripped = deadlineOf(answer);
@@ -774,7 +779,7 @@ export function solverGoalFor(goal, { run, resolved, placement = null, levelSour
         return { goal: { kind: 'encounter', at: { x: at.x, y: at.y }, drop: { item: drop.item },
             then: arena && CONTACT_FIDELITY.apReportBosses !== true ? 'reach-pit' : null } };
     }
-    if (goal?.kind === 'location' && goal.event) return eventSolverGoal(goal, run);
+    if (goal?.kind === 'location' && goal.event) return eventSolverGoal(goal, run, levelSource);
     if (goal?.kind === 'location') {
         if (!placement) return { walker: 'the location names no entity of the room' };
         return { goal: { kind: 'collect-placement', placement: { x: placement.x, y: placement.y } } };
@@ -965,7 +970,7 @@ export const EVENT_CLEAR_TAG_REFUSAL = (goal, reason, why) => `"${goal.name ?? g
  *
  * @returns {{goal: object}|{walker: string, refusal: {kind: 'clear-tag', reason: string, flag: object, id: string}}}
  */
-function eventSolverGoal(goal, run) {
+function eventSolverGoal(goal, run, levelSource = null) {
     const ev = goal.event;
     const flag = { level: ev.tag.level, tag: ev.tag.tag };
     const out = { kind: 'clear-tag', tag: flag, at: { x: ev.at.x, y: ev.at.y },
@@ -986,7 +991,23 @@ function eventSolverGoal(goal, run) {
         return refused('no-verb', verb ? `${key} selects '${verb}', which no clear-tag executor is registered for`
             : `no strategy row exists for ${key} — the catalogue names no verb that clears it`);
     }
+    // ⛓ ROCKLOCK + FADE flip: `solid:rocklock`'s row is `hold`, which the solver refines PER INSTANCE
+    // (`refineStrategy`: a `tset == -1` kill-lock is `kill`; any other rocklock has no verb). The pre-check asks the
+    // same question of the level record when the caller has one, so it never maps a goal the worker refuses `no-verb`.
+    if (key === 'solid:rocklock' && !crossRoom && !rockLockIsKillLock(ev.obstacle, flag.level, levelSource)) {
+        return refused('no-verb', `no strategy row exists for ${key} — the catalogue names no verb that clears it`
+            + ' (this rocklock is not a kill-lock: its opener is its activation group)');
+    }
     return { goal: out };
+}
+
+/** Is `id` (`rocklock@x,y`) one of level `level`'s kill-locks? Unknown (no level source / record) answers true: the
+ *  worker's own refinement then decides, as before. */
+function rockLockIsKillLock(id, level, levelSource) {
+    if (typeof levelSource !== 'function' || typeof id !== 'string') return true;
+    const record = levelSource(level);
+    if (!record) return true;
+    return killLocksIn(record, { placementOf: combatPlacementOf }).some((l) => `${l.tag}@${l.x},${l.y}` === id);
 }
 
 /** The session's tape replayed into a fresh run — a shadow, NOT yet checked against anything. */

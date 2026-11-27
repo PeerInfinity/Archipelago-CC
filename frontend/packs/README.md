@@ -76,7 +76,10 @@ Details are in `docs/json/developer/procgen/concepts.md` § Provenance.
   the stack; the payload field `tileKinds`), and both views draw it. (PASS-1) A kind's passability is declared in the
   pack's `structure` layer (a `terrain` entry, `pass` walkable, blocked, needs or one-way, that the concept presents);
   the editor bakes it per placed kind and lowers `blocked` to a wall, (PASS-2) `needs: <mechanic concept>` to a rule
-  obstacle on the cell and (PASS-3) `one-way` with `dirs` to the engine's `entry_gates`. The art is
+  obstacle on the cell and (PASS-3) `one-way` with `dirs` to the engine's `entry_gates`. (GEN-1) A `terrain` entry
+  with `generate: true` lets the generator place the kind in a room of the "Randomly placed tiles" maze biome, when
+  the world names the pack under "what exists" (never from a theme), and only where the room's logic stays exactly
+  as it was. The art is
   play-time only, so an edit to it owes no preset rebuild. It presents the guardian as **the Gate** (a `look`,
   `#a0a8b8` / `#`, for the maze's gate role; the `blocked` and `passedWith` lines for the text adventure's), gives
   the sword's and the swim's checks a line that knows it is a check (their names stay the AP item names, and the
@@ -88,6 +91,17 @@ Details are in `docs/json/developer/procgen/concepts.md` § Provenance.
   for this repository, MIT (see `pack.json`). `procgenPipeline/metaTrialWorld.test.js` and the committed
   `frontend/presets/meta_trial/` hold its words; an edit here owes `make-seedling-spiral-room-preset.mjs
   --state=meta-trial`.
+
+- `furniture/` (content sets GEN-2) is the first committed **"what exists"** pack whose tile kinds the generator
+  places: a rug (`walkable`) and a pillar (`blocked`), each a `structure` terrain entry with `generate: true`, a
+  `concepts` row that presents it (its maze `base`: `marker` and `wall`) and an `art` shape recipe (the meta theme's
+  format, drawn over the cell by the tile-kind overlay). A world names it under `params.exists` (never as a theme:
+  `packs.json`'s `content` table does not list it), and the "Randomly placed tiles" maze biome then places the two
+  kinds where the room's logic stays exactly as it was. The demo world is the shipped pipeline preset
+  `tile-kinds-demo` (committed as `frontend/presets/tile_kinds_demo/`). HAND-MADE for this repository, MIT (see
+  `pack.json`). `mazeRoom/mazeFurniturePack.test.js` pins the pack; an edit to its `structure` or `concepts` layer
+  owes `make-seedling-spiral-room-preset.mjs --state=tile-kinds-demo` (the placed kinds are baked into the world),
+  an edit to its art none.
 
 ⛔ **The seedling and archipelago packs are GENERATED. Do not edit them.** Regenerate with
 `node scripts/procgen/extract-seedling-art-packs.mjs`, and check with the same command plus `--check`. The sheets

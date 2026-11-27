@@ -15,16 +15,16 @@
  * regions, whether or not a location node is drawn right now (they are only
  * drawn on hover / zoom, up to a limit): an undrawn one is handed to the tap
  * handler as a stand-in that answers the same `data()` keys.
+ *
+ * The wiring (lists, refresh, boxes) is `regionView/goToPicker.js`, shared with the Region Map's twin
+ * (`regionMap/regionMapPicker.js`); the markup, the lists' contents, the taps and the wording stay here.
  */
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
+import { pickerSelectors, setupGoToPicker } from '../regionView/goToPicker.js';
+import { isRegionGroupNode } from './subRegionGroups.js';
 
-export const PICKER = Object.freeze({
-    section: 'details.rg-pick',
-    region: 'input.rg-pick-region',
-    location: 'input.rg-pick-location',
-    status: '.rg-pick-status',
-});
+export const PICKER = pickerSelectors('rg-pick');
 
 export function pickerHTML() {
     return `
@@ -44,11 +44,18 @@ export function pickerHTML() {
         </details>`;
 }
 
-/** The region nodes the graph shows: name → node. */
+/**
+ * The region nodes the graph shows: name → node. ⛓ subRegionView = merged (region-graph-groups-b): each member of a
+ * merged group node is listed by its own name, and resolves to the group node.
+ */
 function regionNodes(ui) {
     const out = new Map();
     ui.cy?.nodes().forEach((n) => {
         if (n.hasClass('player') || n.hasClass('location-node') || n.hasClass('discovery-hidden')) return;
+        if (isRegionGroupNode(n, 'merged')) {
+            for (const m of n.data('members') ?? []) out.set(m, n);
+            return;
+        }
         const name = n.data('regionName');
         if (name) out.set(name, n);
     });
@@ -68,14 +75,6 @@ function locationsOf(ui, regions) {
     return out;
 }
 
-function fillList(list, names) {
-    list.replaceChildren(...[...names].sort((a, b) => a.localeCompare(b)).map((name) => {
-        const o = document.createElement('option');
-        o.value = name;
-        return o;
-    }));
-}
-
 function centreOn(ui, node) {
     ui.cy.animate({ center: { eles: node }, zoom: Math.max(ui.cy.zoom(), 1) }, { duration: 300 });
 }
@@ -83,46 +82,34 @@ function centreOn(ui, node) {
 export function setupNodePicker(ui) {
     const root = ui.controlPanel.querySelector(PICKER.section);
     if (!root) return;
-    const regionBox = root.querySelector(PICKER.region);
-    const locationBox = root.querySelector(PICKER.location);
-    const status = root.querySelector(PICKER.status);
-    const say = (text) => { status.textContent = text; };
-
-    // The lists are read when they can be used, not kept in step with the graph.
-    const refresh = () => {
-        const regions = regionNodes(ui);
-        fillList(root.querySelector('#rg-pick-region-list'), regions.keys());
-        fillList(root.querySelector('#rg-pick-location-list'), locationsOf(ui, regions).keys());
-    };
-    root.addEventListener('toggle', () => { if (root.open) refresh(); });
+    const { refresh, say } = setupGoToPicker({
+        root,
+        selectors: PICKER,
+        lists: () => [root.querySelector('#rg-pick-region-list'), root.querySelector('#rg-pick-location-list')],
+        regions: () => regionNodes(ui),
+        locations: (regions) => locationsOf(ui, regions),
+        goRegion: (name) => {
+            const node = regionNodes(ui).get(name);
+            if (!node) return say(`No region "${name}" in the graph.`);
+            // The region chosen (a merged node's member is handed over by name: the click runs on IT).
+            ui.interactionManager.handleRegionNodeClick(node, name);
+            centreOn(ui, node);
+            say(`Went to region ${name}.`);
+        },
+        goLocation: (name) => {
+            const regions = regionNodes(ui);
+            const parent = locationsOf(ui, regions).get(name);
+            if (!parent) return say(`No location "${name}" in the graph's regions.`);
+            const drawn = ui.cy.nodes('.location-node').filter((n) => (n.data('locationName') || n.data('label')) === name)[0];
+            const data = { locationName: name, label: name, parentRegion: parent };
+            ui.interactionManager.handleLocationNodeClick(drawn ?? { data: (key) => data[key] });
+            centreOn(ui, drawn ?? regions.get(parent));
+            say(`Went to location ${name} (in ${parent}).`);
+        },
+    });
     // An open section opened before the graph's first build (or across a
     // rules reload) would keep the lists it read then — empty on a cold
     // boot — until a box is focused. graphDataManager calls this after
     // every build.
     ui.refreshNodePicker = () => { if (root.open) refresh(); };
-    regionBox.addEventListener('focus', refresh);
-    locationBox.addEventListener('focus', refresh);
-
-    regionBox.addEventListener('change', () => {
-        const name = regionBox.value.trim();
-        if (!name) return;
-        const node = regionNodes(ui).get(name);
-        if (!node) return say(`No region "${name}" in the graph.`);
-        ui.interactionManager.handleRegionNodeClick(node);
-        centreOn(ui, node);
-        say(`Went to region ${name}.`);
-    });
-
-    locationBox.addEventListener('change', () => {
-        const name = locationBox.value.trim();
-        if (!name) return;
-        const regions = regionNodes(ui);
-        const parent = locationsOf(ui, regions).get(name);
-        if (!parent) return say(`No location "${name}" in the graph's regions.`);
-        const drawn = ui.cy.nodes('.location-node').filter((n) => (n.data('locationName') || n.data('label')) === name)[0];
-        const data = { locationName: name, label: name, parentRegion: parent };
-        ui.interactionManager.handleLocationNodeClick(drawn ?? { data: (key) => data[key] });
-        centreOn(ui, drawn ?? regions.get(parent));
-        say(`Went to location ${name} (in ${parent}).`);
-    });
 }

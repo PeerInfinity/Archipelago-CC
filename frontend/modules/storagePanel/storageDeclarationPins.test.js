@@ -58,7 +58,8 @@ describe('moduleInfo.storage declarations', () => {
         const dupes = [];
         for (const m of declaring) {
             for (const d of m.storage ?? []) {
-                const id = `${d.key !== undefined ? 'key' : d.prefix !== undefined ? 'prefix' : 'pattern'}:${d.key ?? d.prefix ?? d.pattern}`;
+                const matcher = ['key', 'prefix', 'pattern', 'idb'].find((k) => d[k] !== undefined);
+                const id = `${matcher}:${d[matcher]}`;
                 if (seen.has(id)) dupes.push(`${id} (${seen.get(id)} and ${m.dir})`);
                 else seen.set(id, m.dir);
             }

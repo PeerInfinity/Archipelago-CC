@@ -1,0 +1,20 @@
+SEEDLING_FREEZE_RELEASE_TICK=1 SEEDLING_FREEZE_EDGE_FRAMES=1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityFrozenTick.test.js > FROZENTICK — a button-dropped rock (L29, `button@112,128` → `fallrock@112,112`; `bob@112,150` on the suited player) > OFF the bob leaves the frozen tick and the rock's span with its i-frames; ON they drained through every frozen frame
+AssertionError: expected [ 25, +0 ] to deeply equal [ 26, +0 ]
+ ❯ frontend/modules/seedlingDemo/fidelityFrozenTick.test.js:174:35
+ FAIL  frontend/modules/seedlingDemo/seedlingSoundCues.test.js > 2. THE CUE PINS — on real tapes the per-tick cue list is the committed golden > stand:29:112,144:60:up: the cue list per tick; it contains Scenery/FallRock.as:82
+AssertionError: expected [ …(5) ] to deeply equal [ …(4) ]
+ ❯ frontend/modules/seedlingDemo/seedlingSoundCues.test.js:215:27
+ Test Files  2 failed (2)
+      Tests  2 failed | 73 passed (75)
+--- freezeEdgeFrames alone (W54's own ON)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityFrozenTick.test.js > FROZENTICK — a button-dropped rock (L29, `button@112,128` → `fallrock@112,112`; `bob@112,150` on the suited player) > OFF the bob leaves the frozen tick and the rock's span with its i-frames; ON they drained through every frozen frame
+AssertionError: expected [ 25, +0 ] to deeply equal [ 26, +0 ]
+ ❯ frontend/modules/seedlingDemo/fidelityFrozenTick.test.js:174:35
+ FAIL  frontend/modules/seedlingDemo/seedlingSoundCues.test.js > 2. THE CUE PINS — on real tapes the per-tick cue list is the committed golden > stand:29:112,144:60:up: the cue list per tick; it contains Scenery/FallRock.as:82
+AssertionError: expected [ …(5) ] to deeply equal [ …(4) ]
+ ❯ frontend/modules/seedlingDemo/seedlingSoundCues.test.js:215:27
+ Test Files  2 failed (2)
+      Tests  2 failed | 73 passed (75)

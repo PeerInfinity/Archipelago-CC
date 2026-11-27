@@ -1,0 +1,80 @@
+{
+  "source": "apchestcover-witness.mjs",
+  "build": "seedling_bot_ap_p4h",
+  "capabilities": [
+    "arm",
+    "apitem",
+    "hold",
+    "tag",
+    "freeze",
+    "sincebegin",
+    "bossreport",
+    "secondaries",
+    "apchest",
+    "activators",
+    "checkpoint",
+    "bossdraws",
+    "sosave"
+  ],
+  "delivered_set": "seedling-vanilla-record-23510f80-l38btn",
+  "rows": [
+    {
+      "plan": "l38-cover-button",
+      "slot": "38,1",
+      "model": {
+        "off": 12,
+        "on": 12
+      },
+      "game": {
+        "mounted": "seedling-vanilla-record-23510f80-l38btn",
+        "observations": 31,
+        "cleared": true,
+        "hits": 0
+      },
+      "positions": {
+        "off": {
+          "compared": 31,
+          "worst": 1.25,
+          "first": {
+            "t": 12,
+            "game": {
+              "level": 38,
+              "x": 152,
+              "y": 130.5
+            },
+            "model": {
+              "level": 38,
+              "x": 152,
+              "y": 129.25
+            }
+          }
+        },
+        "on": {
+          "compared": 31,
+          "worst": 1.25,
+          "first": {
+            "t": 12,
+            "game": {
+              "level": 38,
+              "x": 152,
+              "y": 130.5
+            },
+            "model": {
+              "level": 38,
+              "x": 152,
+              "y": 129.25
+            }
+          }
+        }
+      },
+      "cuts": {
+        "10": false,
+        "11": false,
+        "12": false,
+        "13": true
+      },
+      "gameOpenTick": 13,
+      "set": "vanilla (a vanilla Chest)"
+    }
+  ]
+}

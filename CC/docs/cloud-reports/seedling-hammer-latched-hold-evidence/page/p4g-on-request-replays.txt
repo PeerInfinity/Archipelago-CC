@@ -1,0 +1,12 @@
+# The fresh page's own captured ON request (page/p4g-on-requests.jsonl.gz, request i=1, budget 2560), replayed in node
+# with SEEDLING_LATCHED_HOLD_MOVE=1 (tools/fixsolve.mjs; LHM_FORKS / LHM_DELAYS are measurement overrides).
+# Shipped design (maxForks 2): refusal 87e2cf38fe85, work 2561
+no hitless wait (2 fork(s)): (248,103): HIT at fork tick 22 (spinner-hammer spinner@192,128) on the walk to (248,103) | (232,199): HIT at fork tick 22 (spinner-hammer spinner@192,128)
+# maxForks 12: refusal 87e2cf38fe85 — every one of the 12 route-ordered cells is hit at fork tick 22 by the same hammer
+(248,103) (232,199) (232,119) (248,119) (232,183) (232,135) (248,183) (248,135) (232,167) (232,151) (248,167) (216,135): HIT at fork tick 22 (spinner-hammer spinner@192,128)
+# EXPERIMENT, not shipped: a still delay on the stance before the walk, (248,103) x delays 0..32
++0 +4 +8: HIT at fork tick 22 (spinner-hammer) | +12: tick 24 | +16: tick 25 | +20: tick 26 | +24: tick 28 (spinner-hammer)
++28: the walk (158 t) outlasts the bound | +32: HIT at fork tick 49 (spinner spinner@192,128)
+# request i=0 (budget 640): OFF and ON both run out of budget before the hold (shouldStop at the `walk` site), asked 0.
+# The tape route for the node-solved A1 plan (prefix 0 + 1889 t, tools/mktape.mjs adapted): runTapeToStream refuses
+level 40: the tape clears tag(s) 14, 25, which no entity in this level reads. (Entities that read persistence here: 0, 7, 8, 9, 10, 11, 12, 13, 15, 16, 21.)

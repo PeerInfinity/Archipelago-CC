@@ -74,6 +74,7 @@ A large source costs what it costs; the 30 s preset budget applies to the shippe
 |---|---|---|
 | `topdown-maze-ta-demo` | maze + text_adventure | An existing game's region graph realised as procgen regions, keeping its access rules. |
 | `topdown-zones-demo` | maze + bounce | Physics zones realising source regions, with bounce abilities granted as starting items. |
+| `tile-kinds-demo` | maze | The "Randomly placed tiles" maze biome: every source region a 16×12 maze room, the pack `furniture` named under what exists, and the per-room mix `scattered` 2 : `classic` 1, so furnished and bare rooms side by side with the all-classic world's logic. |
 
 ### Committed Seedling presets
 
@@ -112,6 +113,10 @@ The derived-rule table (`atlases/seedling-playthrough-derived-rules.json`) is **
 `CONCEPT_TRIAL_STATE` is committed the same way, as `frontend/presets/concept_trial/`, through the same producer (`make-seedling-spiral-room-preset.mjs --state=concept-trial`: the recipe writes no Seedling block of its own, so any state goes through it). It is played by `scripts/procgen/check-concept-trial-play.mjs` and the in-app row `concept-trial-plays`. See [Concepts](./concepts.md#the-trial-world).
 
 `META_TRIAL_STATE` is committed as `frontend/presets/meta_trial/` by the same producer (`--state=meta-trial`) and played by the in-app row `meta-trial-plays`. A preset that names a theme (`params.content`) cannot be built synchronously: build it with `prepareRunFromState`, which loads its content set first, as the panel's Generate does. See [Concepts § Selecting a content set](./concepts.md#selecting-a-content-set).
+
+### The committed tile-kinds preset
+
+`TILE_KINDS_DEMO_STATE` (content sets GEN-2) is committed as `frontend/presets/tile_kinds_demo/` by the same producer (`--state=tile-kinds-demo`). It is the one top-down state the producer builds: its row names its source, the committed Adventure seed-1 preset with the sphere log beside it (what a plain page load has loaded), so the committed world is the one the panel builds over Adventure. On it, seed 3: 9 maze rooms, 6 `scattered` (4 rugs and 4 pillars each) and 3 `classic`. `procgenPipeline/tileKindsDemoWorld.test.js` holds its bytes and its law (the logic equals the same state built all-`classic`, and each furnished room keeps its reach less the pillars, its walk length and its compiled rules), and the in-app row `playback-bot-tile-kinds-demo` (batch `playback-bot`) plays it to the end. An edit to the `furniture` pack's `structure` or `concepts` layer moves it.
 
 **Note on timings:** to time a preset, run it through `buildRunFromState` then `runPresetHeadless`, the headless test's own path. Most presets generate in well under a second.
 

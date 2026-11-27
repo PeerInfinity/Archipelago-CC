@@ -58,8 +58,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 65,
-            "count": 105,
+            "browser": 66,
+            "count": 106,
             "id": "check"
         },
         {
@@ -149,7 +149,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 2,
+            "count": 3,
             "id": "profile"
         },
         {
@@ -259,13 +259,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 538,
-        "browser": 228,
-        "cited": 296,
-        "files": 560,
+        "blockStyle": 540,
+        "browser": 229,
+        "cited": 297,
+        "files": 562,
         "lineStyle": 22,
-        "withDocblock": 560,
-        "withFlags": 477
+        "withDocblock": 562,
+        "withFlags": 479
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -297,6 +297,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "line",
             "documentedFlags": [
                 "exists",
+                "fill-attempts",
                 "seed"
             ],
             "file": "action-nodes-compile.mjs",
@@ -312,6 +313,12 @@ export const INSTRUMENTS = frz({
                         "valueOf"
                     ],
                     "name": "exists"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "fill-attempts"
                 },
                 {
                     "how": [
@@ -4850,6 +4857,41 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-editor.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-seedling-lab-library.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "check-seedling-lab-library — DOCUMENT LIBRARY B3: the Seedling lab saves into the document library by itself. \"Save points make versions; reload opens clean.\" (⚖ Robert Q1 \"Save points\", Q2 \"Draft, marked won't play\".)",
+            "path": "scripts/procgen/check-seedling-lab-library.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -6058,6 +6100,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "ci",
             "citedBy": [
+                "docs/json/developer/procgen/action-nodes.md",
                 "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
@@ -7961,9 +8004,7 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/make-seedling-sphere-order.mjs"
         },
         {
-            "argvHelpers": [
-                "imp"
-            ],
+            "argvHelpers": [],
             "browser": false,
             "category": "make",
             "citedBy": [
@@ -12315,7 +12356,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "compare",
                 "expect-flag",
+                "expect-median",
                 "moved",
+                "paired",
+                "paired-first",
+                "paired-order",
+                "paired-tip",
                 "ref",
                 "tip"
             ],
@@ -12337,7 +12383,37 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "expect-median"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "moved"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "paired"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "paired-first"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "paired-order"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "paired-tip"
                 },
                 {
                     "how": [
@@ -21239,6 +21315,98 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "profile",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "depth",
+                "focus",
+                "i",
+                "id",
+                "interval-us",
+                "json",
+                "long",
+                "requests",
+                "seam-time",
+                "top"
+            ],
+            "file": "profile-seedling-solve-wall.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "depth"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "focus"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "i"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "id"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "interval-us"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "long"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "requests"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "seam-time"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "top"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "profile-seedling-solve-wall — ⛓ SEEDLING HAMMER-PHASE SPINNER880 step 1: **WHERE A SOLVE'S WALL CLOCK GOES WHEN NO WORK UNIT IS SPENT.** Measure only: it replays one captured solve request (the divergence sweep's / the whole-game walk's `--capture-requests` file, as `replay-seedling-solve-request.mjs` reads it) in T…",
+            "path": "scripts/procgen/profile-seedling-solve-wall.mjs"
+        },
+        {
+            "argvHelpers": [
                 "arg",
                 "has"
             ],
@@ -22326,7 +22494,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "replay",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -24378,6 +24547,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "budget-s",
+                "capture-requests",
                 "log",
                 "min",
                 "port",
@@ -24385,6 +24555,7 @@ export const INSTRUMENTS = frz({
                 "runtime",
                 "seed",
                 "skip-refusals",
+                "solver-env",
                 "stall-s",
                 "wait-for-box"
             ],
@@ -24395,6 +24566,12 @@ export const INSTRUMENTS = frz({
                         "case"
                     ],
                     "name": "budget-s"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "capture-requests"
                 },
                 {
                     "how": [
@@ -24437,6 +24614,12 @@ export const INSTRUMENTS = frz({
                         "case"
                     ],
                     "name": "skip-refusals"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "solver-env"
                 },
                 {
                     "how": [

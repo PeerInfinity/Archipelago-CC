@@ -1,0 +1,6 @@
+K 1676 pos 263.10 199.72 tc 1676 forecast yes bombs bombpusher@112,128#9@207.9,179.6 | s13:bombpusher@112,128#9:HIT@259,199
+K 1680 pos 264.10 199.72 tc 1680 forecast yes bombs bombpusher@112,128#9@223.9,185.8 | s9:bombpusher@112,128#9:HIT@259,199
+K 1682 pos 264.10 199.72 tc 1682 forecast yes bombs bombpusher@112,128#9@231.9,188.9 | s7:bombpusher@112,128#9:HIT@259,199
+K 1685 pos 264.10 199.72 tc 1685 forecast yes bombs bombpusher@112,128#9@243.9,193.5 | s4:bombpusher@112,128#9:HIT@259,199
+K 1687 pos 264.10 199.72 tc 1687 forecast yes bombs bombpusher@112,128#9@251.9,196.5 | s2:bombpusher@112,128#9:HIT@259,199
+K 1688 pos 264.10 199.72 tc 1688 forecast yes bombs bombpusher@112,128#9@255.9,198.1 | s1:bombpusher@112,128#9:HIT@259,199

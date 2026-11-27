@@ -19,6 +19,7 @@ import {
     TRACKER_DUNGEONS, TRACKER_EDITOR, TRACKER_HELPERS, TRACKER_PATH_ANALYZER, TRACKER_REGION_GRAPH,
     TRACKER_SPOILER_CHECKLIST, TRACKER_TIMER,
 } from './tracker/panels.js';
+import { TRACKER_REGION_MAP } from './tracker/regionMap.js';
 import { PROCGEN_SPHERE_GROWTH } from './procgen/sphereGrowth.js';
 import { PROCGEN_SHUFFLED_SPIRAL } from './procgen/shuffledSpiral.js';
 import { PROCGEN_GRID_GROWTH } from './procgen/gridGrowth.js';
@@ -34,7 +35,7 @@ import { METAMATH_DEMO } from './games/metamath.js';
 import { DEPGRAPH_DEMO } from './games/depgraph.js';
 import { DEPGRAPH_EXTRAS } from './games/depgraphExtras.js';
 import { APCALC_DEMO, APCALC_GENERATOR } from './games/apcalc.js';
-import { APCALC_MULTIWORLD, DEPGRAPH_MULTIWORLD, METAMATH_MULTIWORLD } from './games/multiworld.js';
+import { APCALC_MULTIWORLD, DEPGRAPH_MULTIWORLD, METAMATH_MULTIWORLD, MYSTERY_MULTIWORLD } from './games/multiworld.js';
 
 const entry = (source, tutorial) => Object.freeze({ source: `frontend/modules/tutorials/content/${source}`, tutorial });
 
@@ -67,9 +68,11 @@ export const TUTORIALS = Object.freeze([
     entry('games/apcalc.js', APCALC_DEMO),
     entry('games/apcalc.js', APCALC_GENERATOR),
     entry('games/multiworld.js', APCALC_MULTIWORLD),
+    entry('games/multiworld.js', MYSTERY_MULTIWORLD),
     entry('tracker/trackAGame.js', TRACKER_TRACK_A_GAME),
     entry('tracker/panels.js', TRACKER_PATH_ANALYZER),
     entry('tracker/panels.js', TRACKER_REGION_GRAPH),
+    entry('tracker/regionMap.js', TRACKER_REGION_MAP),
     entry('tracker/panels.js', TRACKER_DUNGEONS),
     entry('tracker/panels.js', TRACKER_HELPERS),
     entry('tracker/panels.js', TRACKER_SPOILER_CHECKLIST),

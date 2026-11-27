@@ -21,6 +21,10 @@
  *      performance must pass `whyNot` WITH mana (the pool after the ones before it, the XP-discounted price) and every
  *      requirement. The cap is reported (`capped: {by, text}`), never silent.
  *
+ * ⛓ The wait (AN-TIME-2, E2). A performance that would start before its window opens waits first: the plan says how
+ * long (`waits[k]` per performance, `wait` their sum — in practice only the first can wait) and the click queues a
+ * `wait` entry before that `act` (outside Loop mode `actNow` pays it). The mana check counts the wait.
+ *
  * ⛔ Mana. A node short ONLY of mana is `blocked` ("not enough mana") and is refused: a click never starts a
  * performance it cannot finish (⚖ Q1 lets the panel's own "Queue act" do that deliberately: it drains the pool into
  * region XP and ends the loop).
@@ -28,7 +32,7 @@
  * Pure: no registry, no DOM, no I/O.
  */
 
-import { perform, whyNot } from './actionModel.js';
+import { formatClock, formatMana, perform, waitOf, whyNot } from './actionModel.js';
 import { hopsBetween } from './actionLoopBot.js';
 import { NODE_STATES, nodeStateOf, queueEndState } from './nodeStates.js';
 
@@ -75,6 +79,7 @@ export function queueEndRegion(path, fallback = null) {
  * @param {(id: string) => boolean} [input.isDiscovered]
  * @param {string|null} input.at         where the queue ends (Loop mode) or the player stands
  * @param {string[]} [input.startRegions] the loop start regions (`Menu`): a hop from one goes to the start node
+ * @param {string} [input.unit]          the pool's unit for the texts ("h"; default none)
  * @param {string} nodeId
  * @param {{times?: 1 | 'remaining'}} [opts]
  * @returns {{ok: false, code: string, text: string, state?: string}
@@ -86,7 +91,8 @@ export function planPerform(model, input, nodeId, { times = 1 } = {}) {
     const i = model.nodeIx.get(nodeId);
     if (i === undefined) return { ok: false, code: PERFORM_REFUSALS.unknownNode, text: `'${nodeId}' is not a node of this world` };
     const node = model.nodes[i];
-    const { live, queue = [], costs, isDiscovered = () => true, at = null, startRegions = [] } = input ?? {};
+    const { live, queue = [], costs, isDiscovered = () => true, at = null, startRegions = [], unit = '' } = input ?? {};
+    const amount = (n) => (unit ? `${formatMana(n)} ${unit}` : formatMana(n));
     const end = queueEndState(model, live, queue, { costs });
     if (end.stoppedAt) {
         const stop = model.nodes[model.nodeIx.get(end.stoppedAt.nodeId)]?.name ?? end.stoppedAt.nodeId;
@@ -126,18 +132,22 @@ export function planPerform(model, input, nodeId, { times = 1 } = {}) {
     let s = state;
     let acts = 0;
     let capped = null;
+    const waits = [];
     while (acts < wanted) {
         const why = whyNot(model, s, i, { costs, ignoreMana: !Number.isFinite(s.mana) });
         if (why) {
             capped = { by: why.code, text: why.text };
             break;
         }
+        waits.push(waitOf(model, s, i));
         s = perform(model, s, i, { costs });
         acts += 1;
     }
+    const wait = waits.reduce((a, b) => a + b, 0);
     const route = hops.length ? `${hops.length} hop(s), then ` : '';
+    const waitText = wait > 0 ? `waits ${amount(wait)} (opens ${formatClock(model, node.from)}), then ` : '';
     const text = capped
-        ? `${route}${node.name} ×${acts} of the ${wanted} left (stopped: ${capped.text})`
-        : `${route}${node.name} ×${acts}`;
-    return { ok: true, nodeId, name: node.name, hops, acts, wanted, capped, text };
+        ? `${route}${waitText}${node.name} ×${acts} of the ${wanted} left (stopped: ${capped.text})`
+        : `${route}${waitText}${node.name} ×${acts}`;
+    return { ok: true, nodeId, name: node.name, hops, acts, wanted, capped, text, waits, wait };
 }

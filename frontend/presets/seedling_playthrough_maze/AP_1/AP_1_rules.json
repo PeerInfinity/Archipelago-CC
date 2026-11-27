@@ -3012,6 +3012,12 @@
                   "args": {
                     "item_name": "Progressive Shield"
                   }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
                 }
               ]
             }
@@ -34972,7 +34978,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-1f5a6638",
+      "atlas_id": "seedling-21329d00",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -44040,7 +44046,7 @@
           "obstacleLib": {
             "atlas_gate_0": {
               "id": "atlas_gate_0",
-              "name": "(Progressive Sword OR Ghost Spear OR Progressive Shield)",
+              "name": "(Progressive Sword OR Ghost Spear OR Progressive Shield OR Wand)",
               "clear_set_type": "rule",
               "clear_rule": {
                 "rule": "Or",
@@ -44061,6 +44067,12 @@
                     "rule": "Has",
                     "args": {
                       "item_name": "Progressive Shield"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Wand"
                     }
                   }
                 ]

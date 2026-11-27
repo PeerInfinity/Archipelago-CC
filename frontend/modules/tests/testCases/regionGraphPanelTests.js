@@ -4,6 +4,12 @@ import { buildContext } from '../../tutorials/tutorialContext.js';
 import { PICKER } from '../../regionGraph/nodePicker.js';
 import { locationState, isRegionReachable } from '../../regionView/regionViewModel.js';
 import settingsManager from '../../../app/core/settingsManager.js';
+import { getLastRawJsonData } from '../../stateManager/index.js';
+import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
+import { SUB_REGION_VIEW_KEY, multiMemberGroups, isRegionGroupNode, groupNodeId } from '../../regionGraph/subRegionGroups.js';
+import { regionOfCell } from '../../regionView/regionViewModel.js';
+import { NODE_LOOK_KEY } from '../../regionGraph/nodeLook.js';
+import { layoutRunOf } from '../../regionGraph/layoutRun.js';
 
 const PANEL_ID = 'regionGraphPanel';
 const MAX_WAIT_TIME = 10000;
@@ -24,14 +30,26 @@ function graphShowsWorld() {
   const ids = regionNodes(cy).map((n) => n.id());
   return ids.length === regions.size && ids.every((id) => regions.has(id)) && cy.edges().length > 0;
 }
-/** Poll until no region node moved for one interval: no layout is running. */
-function layoutSettled(testController, cy) {
-  let last = null;
-  return testController.pollForCondition(() => {
-    const now = JSON.stringify(regionNodes(cy).map((n) => n.position()));
-    const still = now === last; last = now; return still;
-  }, 'the layout settled', MAX_WAIT_TIME, 300);
+/**
+ * ⛓ The panel's own "settled" signal (region-graph-layout-settled, `layoutRun.js`): `idle()` is true when no panel
+ * layout run is going, i.e. none started or the last one SETTLED (its own layoutstop, after its last position change;
+ * a superseded run never settles, so a switch that replaces a running layout reads "running" until the replacement
+ * settles). Nothing moves after it. `dispose()` is kept for the call sites (it has nothing to remove).
+ */
+function layoutWatch(cy) {
+  const run = () => layoutRunOf(cy);
+  return {
+    idle: () => !run()?.running,
+    state: () => (!run() ? 'none started' : run().running ? 'running' : `settled (${run().settled} runs)`),
+    dispose: () => {},
+  };
 }
+/** Wait until no panel layout is running (the settle signal); fails the poll, as before, if one never settles. */
+function layoutSettled(testController, cy) {
+  return testController.pollForCondition(() => !layoutRunOf(cy)?.running, 'the layout settled', MAX_WAIT_TIME, 50);
+}
+/** Resolve after `n` animation frames (Cytoscape renders on one, the map look paints on the next). */
+const frames = (n) => new Promise((resolve) => { const step = (k) => (k === 0 ? resolve() : requestAnimationFrame(() => step(k - 1))); step(n); });
 /**
  * Reload the world loaded before a row that changed it (a `./presets/` path
  * only). `always`: also when it is still the loaded one, for a row that
@@ -534,6 +552,448 @@ export async function testRegionGraphLocationNodesSurviveRebuild(testController)
   return testController.getOverallResult();
 }
 
+/* ── region-graph-groups-a: subRegionView = nested (option A) ───────────── */
+
+/**
+ * ⛓ subRegionView = nested on seedling_atlas (the smallest preset with sub-regions; seedling_playthrough's counts are
+ * pinned by subRegionView.nested.test.js — loading its 307 regions cost the fast batch ~20 s). The row SETS the setting itself (session-only, `ctx.setSetting`) and
+ * RESTORES it at the end (`ctx.restoreSettings`: the override is cleared, the stored value / schema default applies), and
+ * checks the graph is back to no boxes: a leaked `nested` would change every later Region Graph row.
+ * The box count is DERIVED at run time (the same fold, `multiMemberGroups`, over the loaded rules and the live substrate
+ * registry), never a preset pin. Then a tap on a box runs nothing, and a tap on a member runs its click action (the
+ * default actions: the path extends to it), once.
+ */
+/** The row's world: seedling_atlas (11 regions, 2 levels split into sub-regions) — the smallest preset with boxes. */
+const NESTED_RULES = './presets/seedling_atlas/AP_1/AP_1_rules.json';
+export async function testRegionGraphSubRegionNested(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  let rec = null;
+  let moved = false;
+  const boxes = () => graphCy()?.nodes().filter((n) => isRegionGroupNode(n)) ?? null;
+  try {
+    if (ctx.rulesSource() !== NESTED_RULES) { await ctx.loadRulesPath(NESTED_RULES); moved = true; }
+    testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    const built = await testController.pollForCondition(graphShowsWorld, 'the graph shows seedling_atlas', MAX_WAIT_TIME, 100);
+    if (!built) throw new Error('the graph did not build');
+    const startView = await settingsManager.getSetting(SUB_REGION_VIEW_KEY);
+    testController.reportCondition(`subRegionView starts at the schema default "separate" (it is "${startView}")`, startView === 'separate');
+    testController.reportCondition(`separate draws no box (${boxes()?.length})`, boxes()?.length === 0);
+
+    const regions = stateManagerProxySingleton.getStaticData().regions;
+    const last = getLastRawJsonData();
+    const expected = multiMemberGroups(regions.keys(), { rules: last?.rawJsonData,
+      playerId: String(last?.selectedPlayerInfo?.playerId ?? '1'), registry: substrateRegistry });
+    if (expected.size === 0) throw new Error('the fold found no group of 2+ (is the Seedling substrate registered?)');
+
+    // Switch: a moduleSettings.regionGraph.* write rebuilds the graph.
+    const probe = regionNodes(graphCy())[0];
+    const t0 = performance.now();
+    await ctx.setSetting(SUB_REGION_VIEW_KEY, 'nested');
+    const nested = await testController.pollForCondition(() => !!probe?.removed() && graphShowsWorld() && boxes()?.length === expected.size,
+      `the graph rebuilt with ${expected.size} boxes`, MAX_WAIT_TIME, 50);
+    const switchMs = Math.round(performance.now() - t0);
+    testController.reportCondition(`nested draws one box per display group of 2+: ${boxes()?.length} = ${expected.size} (switch ${switchMs} ms)`, nested);
+    const cy = graphCy();
+    const inside = regionNodes(cy).filter((n) => n.isChild()).length;
+    const membersExpected = [...expected.values()].reduce((a, m) => a + m.length, 0);
+    testController.reportCondition(`every member is inside its box: ${inside} = ${membersExpected}`, inside === membersExpected
+      && [...expected].every(([key, members]) => members.every((m) => cy.getElementById(m).parent().id() === groupNodeId(key))));
+    testController.log(`[subRegionView] seedling_atlas nested: boxes=${boxes().length} inside=${inside} groupsOfOne=${regionNodes(cy).length - inside} switchMs=${switchMs}`);
+
+    // Clicks: the default actions (session-only).
+    const { defaultClickActions } = await import('../../regionView/clickActions.js');
+    await ctx.setSetting(CLICK_ACTIONS, defaultClickActions());
+    await testController.pollForCondition(() => stripSummary().startsWith('On click:'), 'the strip shows the click actions', 5000, 50);
+    rec = recordEvents(testController, ['regionView:regionClicked']);
+    const box = boxes()[0];
+    box.emit('tap');
+    await new Promise((r) => setTimeout(r, 300));
+    testController.reportCondition(`a tap on box "${box.data('groupKey')}" runs no click (${rec.seen.length} regionClicked)`, rec.seen.length === 0);
+
+    const member = await nearestReachableMember(testController, cy);
+    if (!member) throw new Error(`no reachable member region within reach of the path end (${await pathEnd()})`);
+    const region = member.id();
+    member.emit('tap');
+    const extended = await testController.pollForCondition(async () => (await pathEnd()) === region,
+      `the path ends at ${region}`, 5000, 50);
+    testController.reportCondition(`a tap on member "${region}" (in box "${member.parent().data('groupKey')}") runs its click action: the path extends to it`, extended);
+    testController.reportCondition(`… and the click is published once, for the member (${rec.seen.map(([, d]) => d?.regionName).join(', ')})`,
+      rec.seen.length === 1 && rec.seen[0][1]?.regionName === region);
+    moved = true;
+  } catch (error) {
+    testController.reportCondition(`subRegionView nested test error-free: ${error.message}`, false);
+  } finally {
+    rec?.stop();
+    await ctx.restoreSettings();
+    const restored = await settingsManager.getSetting(SUB_REGION_VIEW_KEY);
+    const back = await testController.pollForCondition(() => graphShowsWorld() && boxes()?.length === 0,
+      'the graph rebuilt with no box', MAX_WAIT_TIME, 50);
+    testController.reportCondition(`restored: subRegionView reads "${restored}" again and the graph draws no box`, restored === 'separate' && back);
+    await restoreWorld(testController, ctx, before, { always: moved });
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
+/* ── region-graph-groups-b: subRegionView = merged (option B) ───────────── */
+
+/**
+ * ⛓ subRegionView = merged on seedling_atlas (beside the nested row, for the same reason: 11 regions, 2 groups). The
+ * row SETS the setting (session-only) and RESTORES it at the end, then checks the graph is back to `separate` (every
+ * region its own node, no group node). The node count is DERIVED at run time from the same fold: one merged node per
+ * group of 2+, the rest as regions. A tap on a group node runs the REGION click on `regionOfCell(key, members)` — the
+ * region the Region Map's cell click picks — published once.
+ */
+export async function testRegionGraphSubRegionMerged(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  let rec = null;
+  let moved = false;
+  const merged = () => graphCy()?.nodes().filter((n) => isRegionGroupNode(n, 'merged')) ?? null;
+  try {
+    if (ctx.rulesSource() !== NESTED_RULES) { await ctx.loadRulesPath(NESTED_RULES); moved = true; }
+    testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    const built = await testController.pollForCondition(graphShowsWorld, 'the graph shows seedling_atlas', MAX_WAIT_TIME, 100);
+    if (!built) throw new Error('the graph did not build');
+    const startView = await settingsManager.getSetting(SUB_REGION_VIEW_KEY);
+    testController.reportCondition(`subRegionView starts at the schema default "separate" (it is "${startView}")`, startView === 'separate');
+
+    const regions = stateManagerProxySingleton.getStaticData().regions;
+    const last = getLastRawJsonData();
+    const expected = multiMemberGroups(regions.keys(), { rules: last?.rawJsonData,
+      playerId: String(last?.selectedPlayerInfo?.playerId ?? '1'), registry: substrateRegistry });
+    if (expected.size === 0) throw new Error('the fold found no group of 2+ (is the Seedling substrate registered?)');
+    const members = [...expected.values()].reduce((a, m) => a + m.length, 0);
+    const nodesExpected = regions.size - members + expected.size;
+
+    const probe = regionNodes(graphCy())[0];
+    // ⛓ The merged switch may start an ANIMATED layout (no saved merged positions, e.g. when the row runs alone):
+    // the map step below waits for it to SETTLE before it reads a square's screen spot.
+    const mergedLayouts = layoutWatch(graphCy());
+    const t0 = performance.now();
+    await ctx.setSetting(SUB_REGION_VIEW_KEY, 'merged');
+    const ok = await testController.pollForCondition(() => !!probe?.removed() && merged()?.length === expected.size
+      && regionNodes(graphCy()).length === regions.size - members, `the graph rebuilt with ${expected.size} merged nodes`, MAX_WAIT_TIME, 50);
+    const switchMs = Math.round(performance.now() - t0);
+    const cy = graphCy();
+    const drawn = regionNodes(cy).length + merged().length;
+    testController.reportCondition(`merged draws one node per display group of 2+: ${merged().length} = ${expected.size}, `
+      + `${drawn} nodes = ${nodesExpected} (switch ${switchMs} ms)`, ok && drawn === nodesExpected);
+    testController.reportCondition('every group node stands for exactly its fold\'s members, and no member is drawn',
+      [...expected].every(([key, m]) => JSON.stringify(cy.getElementById(groupNodeId(key)).data('members')) === JSON.stringify(m)
+        && m.every((r) => cy.getElementById(r).empty())));
+    testController.reportCondition('no edge is a self-loop', cy.edges().every((e) => e.source().id() !== e.target().id()));
+    testController.log(`[subRegionView] seedling_atlas merged: groupNodes=${merged().length} nodes=${drawn} edges=${cy.edges().length} `
+      + `mixedExits=${cy.edges('.mixed-exits').length} switchMs=${switchMs}`);
+
+    // A click on a group node: the default actions (session-only); the click runs on regionOfCell(key, members).
+    const { defaultClickActions } = await import('../../regionView/clickActions.js');
+    await ctx.setSetting(CLICK_ACTIONS, defaultClickActions());
+    await testController.pollForCondition(() => stripSummary().startsWith('On click:'), 'the strip shows the click actions', 5000, 50);
+    rec = recordEvents(testController, ['regionView:regionClicked']);
+    const node = merged()[0];
+    const region = regionOfCell(node.data('groupKey'), node.data('members'));
+    node.emit('tap');
+    const published = await testController.pollForCondition(() => rec.seen.length >= 1, 'the click is published', 5000, 50);
+    await new Promise((r) => setTimeout(r, 200));
+    testController.reportCondition(`a tap on group node "${node.data('groupKey')}" runs the region click on regionOfCell = "${region}" `
+      + `once (${rec.seen.map(([, d]) => d?.regionName).join(', ')})`,
+      published && rec.seen.length === 1 && rec.seen[0][1]?.regionName === region);
+    rec.stop();
+    rec = null;
+
+    // ⛓ region-graph-map-look: nodeLook = map (session-only) draws each merged node as its Region Map cell on the
+    // canvas under Cytoscape's; a REAL pointer click (mouse events at its screen spot) on a location square runs the
+    // LOCATION click on that location. No rebuild: the same nodes stay.
+    const mapCanvas = () => document.querySelector('.region-graph-panel-container .rg-map-look-canvas');
+    const sameNode = merged()[0];
+    // A square's screen spot is read from the map look's last paint: wait for any layout the switch started to settle
+    // (else the nodes, and the squares, move on after the read), then fit; the map look's first paint follows the fit.
+    const settledOk = await testController.pollForCondition(() => mergedLayouts.idle(), 'the merged layout settled', MAX_WAIT_TIME, 20);
+    testController.reportCondition(`the merged view's layout has settled (${mergedLayouts.state()}) before the map look`, settledOk);
+    // ⛓ region-graph-layout-settled: "settled" means the nodes have stopped. Every node box (rendered, so the view is in
+    // it) is traced over 10 animation frames from the settle: none may change.
+    const boxSig = () => JSON.stringify(graphCy().nodes().filter((n) => !n.hasClass('player') && !n.hasClass('location-node'))
+      .map((n) => { const b = n.renderedBoundingBox({ includeLabels: false }); return [n.id(), +b.x1.toFixed(1), +b.y1.toFixed(1), +b.x2.toFixed(1), +b.y2.toFixed(1)]; }));
+    const atSettle = boxSig();
+    const movedFrames = [];
+    for (let f = 1; f <= 10; f += 1) { await frames(1); if (boxSig() !== atSettle) movedFrames.push(f); }
+    testController.reportCondition(`no node moves after the settle: 10 frames traced, changed at frames [${movedFrames.join(', ')}]`,
+      settledOk && movedFrames.length === 0);
+    mergedLayouts.dispose();
+    graphCy().fit(30);
+    const mapLayouts = layoutWatch(graphCy());
+    const t4 = performance.now();
+    await ctx.setSetting(NODE_LOOK_KEY, 'map');
+    const mapOk = await testController.pollForCondition(() => Number(mapCanvas()?.dataset.cells ?? 0) > 0,
+      'the map look painted its cells', MAX_WAIT_TIME, 20);
+    const mapMs = Math.round(performance.now() - t4);
+    const layer = mapCanvas()?.mapLook;
+    const withCell = layer?.getDebugState().nodes ?? 0;
+    const cellLess = drawn - withCell;
+    testController.reportCondition(`nodeLook = map: ${mapCanvas()?.dataset.cells} cells painted = ${withCell} nodes with a Region Map cell `
+      + `of ${drawn} (${cellLess} without: they keep the graph look), no rebuild (switch ${mapMs} ms)`,
+      mapOk && Number(mapCanvas().dataset.cells) === withCell && withCell >= drawn - 1 && withCell > 0 && !sameNode.removed());
+    // ⛓ The squares' screen spots are the map look's LAST paint. Read them once no layout is running (the panel's settle
+    // signal: nothing moves after it), the paint that follows the last move has run (three frames: Cytoscape renders,
+    // the map look paints on the next), no paint is pending, and every square lies inside its node's rendered box.
+    const paintNow = () => {
+      const c = graphCy(); const d = layer?.getDebugState(); const z = c.zoom(); const p = c.pan();
+      const idOf = new Map((d?.nodeKeys ?? []).map(([id, k]) => [k, id]));
+      const boxes = (d?.nodeKeys ?? []).map(([id]) => { const bb = c.getElementById(id).renderedBoundingBox({ includeLabels: false });
+        return [id, Math.round(bb.x1), Math.round(bb.y1), Math.round(bb.x2), Math.round(bb.y2)]; });
+      const off = (d?.squares ?? []).filter((q) => {
+        const bb = c.getElementById(idOf.get(q.key) ?? '').renderedBoundingBox({ includeLabels: false });
+        return !(q.sx >= bb.x1 && q.sx <= bb.x2 && q.sy >= bb.y1 && q.sy <= bb.y2);
+      }).map((q) => `${q.location} at (${Math.round(q.sx)}, ${Math.round(q.sy)})`);
+      return { off, paints: d?.stats?.paints ?? 0, pending: layer?._paintHandle != null, zoom: z, pan: p, boxes };
+    };
+    const mapSettled = await testController.pollForCondition(() => mapLayouts.idle(), 'the layout settled before the map look read', MAX_WAIT_TIME, 20);
+    await frames(3);
+    let lastPaint = null;
+    const paintStable = mapSettled && await testController.pollForCondition(() => {
+      const s = paintNow(); lastPaint = s;
+      return mapLayouts.idle() && !s.pending && s.off.length === 0;
+    }, 'the map look paint is on its nodes', MAX_WAIT_TIME, 50);
+    testController.reportCondition(`the map look's last paint follows the settle and every square lies on its node (layout ${mapLayouts.state()}, `
+      + `${lastPaint?.paints} paints, pending ${lastPaint?.pending}, off their node: ${lastPaint?.off.join('; ') || 'none'})`, !!paintStable);
+    mapLayouts.dispose();
+    // ⛓ The spot to click: a point inside a square that Cytoscape's own hit-test gives to the square's node AND that
+    // the layer maps back to that square (`squareAtNode`). Map-look §12: a square under another element (the player
+    // marker, an edge, a location node) sends a tap to that element instead, so the row samples a 3×3 grid inside each
+    // square and takes the first point that is uncovered. The text names what covers a square when none is.
+    const dbg = layer?.getDebugState();
+    const nodeOfKey = new Map((dbg?.nodeKeys ?? []).map(([id, k]) => [k, id]));
+    const cyNow = graphCy();
+    const topmostAt = (x, y) => {
+      const z = cyNow.zoom(); const p = cyNow.pan();
+      return cyNow.renderer().findNearestElement((x - p.x) / z, (y - p.y) / z, true, false) ?? null;
+    };
+    const squares = dbg?.squares ?? [];
+    const covers = [];
+    let sq = null;
+    for (const q of squares) {
+      const node = cyNow.getElementById(nodeOfKey.get(q.key) ?? '');
+      const half = (q.side ?? 0) * 0.35;
+      for (const [ox, oy] of [[0, 0], [-1, -1], [1, -1], [-1, 1], [1, 1], [0, -1], [0, 1], [-1, 0], [1, 0]]) {
+        const x = q.sx + ox * half; const y = q.sy + oy * half;
+        const top = topmostAt(x, y);
+        if (top?.id?.() === node.id() && layer.squareAtNode(node, { x, y })?.location === q.location) { sq = { ...q, sx: x, sy: y }; break; }
+        if (ox === 0 && oy === 0) covers.push(top ? `${top.isNode?.() ? 'node' : 'edge'} ${top.id()}` : 'nothing');
+      }
+      if (sq) break;
+    }
+    testController.reportCondition(`an uncovered point lies on a location square (${squares.length} squares; `
+      + `${sq ? `clicking "${sq.location}"` : `centres covered by: ${covers.join(', ')}; squares `
+        + `${squares.map((q) => `${q.location}@(${Math.round(q.sx)},${Math.round(q.sy)}) side ${Math.round(q.side ?? 0)}`).join(', ')}; `
+        + `zoom ${cyNow.zoom().toFixed(3)} pan (${Math.round(cyNow.pan().x)},${Math.round(cyNow.pan().y)}); `
+        + `boxes ${(lastPaint?.boxes ?? []).map((bx) => bx.join(' ')).join('; ')}`})`, !!sq);
+    if (sq) {
+      rec = recordEvents(testController, ['regionView:locationClicked', 'regionView:regionClicked']);
+      const top = [...document.querySelectorAll('.region-graph-panel-container div[id^="cy-"] canvas')]
+        .filter((c) => !c.classList.contains('rg-map-look-canvas')).pop();
+      const r = top.getBoundingClientRect();
+      const at = { clientX: r.left + sq.sx, clientY: r.top + sq.sy, bubbles: true, cancelable: true, button: 0, buttons: 1 };
+      top.dispatchEvent(new MouseEvent('mousedown', at));
+      top.dispatchEvent(new MouseEvent('mouseup', { ...at, buttons: 0 }));
+      const clicked = await testController.pollForCondition(() => rec.seen.length >= 1, 'the square click is published', 5000, 20);
+      await new Promise((res) => setTimeout(res, 200));
+      testController.reportCondition(`a pointer click on the square of "${sq.location}" runs the LOCATION click on it, once `
+        + `(${rec.seen.map(([n, d]) => `${n.split(':')[1]}=${d?.locationName ?? d?.regionName}`).join(', ')})`,
+        clicked && rec.seen.length === 1 && rec.seen[0][0] === 'regionView:locationClicked' && rec.seen[0][1]?.locationName === sq.location);
+      rec.stop();
+      rec = null;
+    }
+    testController.log(`[nodeLook] seedling_atlas merged map: cells=${withCell}/${drawn} squares=${mapCanvas()?.dataset.squares} switchMs=${mapMs}`);
+
+    // ⛓ region-graph-direction-layout: the Direction-aware layout, once, on the same merged + map graph (the map look's
+    // rectangles are the drawn sizes), placed at once (no 1 s animation); it ends with 0 overlaps between the drawn
+    // boxes on the canvas. Then the layout state is RESTORED: merged's saved positions and the preset select.
+    const ui = layer?.ui;
+    const lcm = ui?.layoutControlsManager;
+    if (!lcm?.runDirectionLayout) throw new Error('the panel has no Direction-aware layout');
+    const savedStore = new Map(lcm.positionStore());
+    const presetSel = ui.controlPanel?.querySelector('#layoutPreset');
+    const presetBefore = presetSel?.value ?? null;
+    const layoutBefore = ui.currentLayoutPreset ?? null;
+    const viewBefore = { zoom: graphCy().zoom(), pan: { ...graphCy().pan() } };
+    const posBefore = new Map(graphCy().nodes().map((n) => [n.id(), { ...n.position() }]));
+    const t5 = performance.now();
+    const dir = lcm.runDirectionLayout({ animate: false });
+    const dirMs = Math.round(performance.now() - t5);
+    const laid = graphCy().nodes().filter((n) => !n.hasClass('player') && !n.hasClass('location-node') && !isRegionGroupNode(n, 'box'));
+    let drawnOverlaps = 0;
+    for (let i = 0; i < laid.length; i += 1) {
+      for (let j = i + 1; j < laid.length; j += 1) {
+        const a = laid[i]; const b = laid[j];
+        if (Math.abs(a.position('x') - b.position('x')) < (a.outerWidth() + b.outerWidth()) / 2 - 1e-6
+          && Math.abs(a.position('y') - b.position('y')) < (a.outerHeight() + b.outerHeight()) / 2 - 1e-6) drawnOverlaps += 1;
+      }
+    }
+    testController.reportCondition(`the Direction-aware layout ran once on ${dir?.nodes} nodes (${dir?.preferredEdges} edges with an exit direction) `
+      + `and finished with ${dir?.overlaps} overlaps, ${drawnOverlaps} between the drawn boxes (${dirMs} ms)`,
+      !!dir && dir.nodes === laid.length && dir.overlaps === 0 && drawnOverlaps === 0);
+    // The layout moved the nodes and fit the view: put both back, so the steps after this one see the graph as before.
+    graphCy().nodes().forEach((n) => { const p = posBefore.get(n.id()); if (p && !n.locked()) n.position(p); });
+    graphCy().viewport({ zoom: viewBefore.zoom, pan: viewBefore.pan });
+    const playerRegion = ui.getCurrentPlayerLocation?.();
+    if (playerRegion && graphCy().getElementById('player').length) ui.updatePlayerLocation(playerRegion);
+    ui.currentLayoutPreset = layoutBefore;
+    if (presetSel && presetBefore !== null) presetSel.value = presetBefore;
+    // (`animate: false`: the run settled inside runDirectionLayout, its save already written; the store is put back next)
+    const store = lcm.positionStore();
+    store.clear();
+    for (const [id, p] of savedStore) store.set(id, p);
+    const offPlace = graphCy().nodes().filter((n) => { const p = posBefore.get(n.id()); return p && !n.hasClass('player') && (n.position('x') !== p.x || n.position('y') !== p.y); }).length;
+    testController.reportCondition(`restored: the layout preset reads "${presetSel?.value}" again, merged's saved positions are back (${store.size}), `
+      + `${offPlace} nodes off their place and the view at zoom ${graphCy().zoom().toFixed(2)} (was ${viewBefore.zoom.toFixed(2)})`,
+      (presetSel?.value ?? null) === presetBefore && store.size === savedStore.size && offPlace === 0
+      && Math.abs(graphCy().zoom() - viewBefore.zoom) < 1e-9);
+    testController.log(`[directionLayout] seedling_atlas merged map: nodes=${dir?.nodes} preferred=${dir?.preferredEdges} overlaps=${dir?.overlaps} `
+      + `meanErr=${dir?.meanAngleError?.toFixed?.(1)} layoutMs=${dir?.layoutMs?.toFixed?.(1)} totalMs=${dirMs}`);
+
+    // ⛓ region-graph-groups-c: collapsible (C) on the same graph and setup — every group closed draws as merged, with
+    // a + badge each; a + press opens ONE group into its box, a − press closes it, and neither runs a click action;
+    // a body tap still does.
+    const badges = () => [...document.querySelectorAll('.region-graph-panel-container .rg-group-badge')];
+    const boxes = () => graphCy()?.nodes().filter((n) => isRegionGroupNode(n, 'box')) ?? null;
+    const probe2 = merged()[0];
+    const t1 = performance.now();
+    // A layout the switch starts (no saved collapsible positions → `runLayout`) SETTLES after its last move (the
+    // panel's signal, layoutRun.js): the badge check below waits for that.
+    const colLayouts = layoutWatch(graphCy());
+    await ctx.setSetting(SUB_REGION_VIEW_KEY, 'collapsible');
+    const closedOk = await testController.pollForCondition(() => !!probe2?.removed() && merged()?.length === expected.size
+      && boxes()?.length === 0 && badges().length === expected.size, `collapsible drew ${expected.size} closed groups with a badge each`, MAX_WAIT_TIME, 50);
+    const colMs = Math.round(performance.now() - t1);
+    testController.reportCondition(`collapsible: every group closed (${merged()?.length} merged nodes = ${expected.size}, 0 boxes), `
+      + `${badges().length} + badges (switch ${colMs} ms)`, closedOk && badges().every((b) => b.dataset.open === 'false'));
+    testController.reportCondition('nodeLook = map takes no effect in collapsible: no map canvas, no map node',
+      !mapCanvas() && !graphCy().nodes().some((n) => n.scratch('_rgMapKey') != null));
+    rec = recordEvents(testController, ['regionView:regionClicked']);
+    const plus = badges()[0];
+    const key = plus.dataset.groupKey;
+    // ⛓ A STABLE badge before the hit-test, never a sleep. The badge is shown (non-zero box) as soon as the rebuild
+    // places it, but when the rebuild had no saved positions `runLayout` starts an ANIMATED layout: the node (and the
+    // fit) keep moving for its duration, and the badge layer re-places the badge one frame after each move. A hit-test
+    // in that window can land outside the panel or under another element (the race seen on the bundled boot). So wait
+    // until (1) no layout is running (none started, or it settled), (2) the badge layer has no re-placement pending (`_frame`), (3) the badge covers
+    // its node's rendered top-right corner and (4) its centre is inside the graph's container. The zoom is in the text: below
+    // `showRegionNames` the badge is hidden by design and this poll goes STUCK.
+    const plusNode = graphCy().getElementById(groupNodeId(key));
+    // The row sets its own view for the hit-test: once the switch's layout has settled, centre on the node at a zoom
+    // where badges show (`showRegionNames`; the fit alone can leave a spread-out graph below it, the badge then hidden
+    // by design).
+    await testController.pollForCondition(() => colLayouts.idle(), 'the collapsible layout settled', MAX_WAIT_TIME, 20);
+    graphCy().zoom(Math.max(graphCy().zoom(), 1));
+    graphCy().center(plusNode);
+    const badgeState = () => {
+      const b = plus.getBoundingClientRect();
+      const rbb = plusNode.renderedBoundingBox({ includeLabels: false });
+      const at = { x: parseFloat(plus.style.left) + b.width / 2, y: parseFloat(plus.style.top) + b.height / 2 };
+      const box = graphCy().container().getBoundingClientRect();
+      const cx = b.left + b.width / 2; const cy2 = b.top + b.height / 2;
+      return { b, dx: at.x - rbb.x2, dy: at.y - rbb.y1, rbb, pending: ui.groupBadges?._frame != null,
+        shown: plus.style.display === 'block' && b.width > 0 && b.height > 0, layout: !colLayouts.idle(),
+        // covers the corner: within half its hit square (the wait's condition; the exact corner is asserted below)
+        onCorner: Math.abs(at.x - rbb.x2) <= b.width / 2 && Math.abs(at.y - rbb.y1) <= b.height / 2,
+        inside: cx >= box.left && cx <= box.right && cy2 >= box.top && cy2 <= box.bottom };
+    };
+    const stable = () => { const st = badgeState(); return st.shown && !st.layout && !st.pending && st.onCorner && st.inside; };
+    const shownOk = await testController.pollForCondition(stable,
+      `the + badge on "${key}" is shown, settled on its node's corner, inside the graph, with no layout running`, 5000, 20);
+    colLayouts.dispose();
+    const st = badgeState();
+    const r = st.b;
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    const zoomNow = graphCy()?.zoom();
+    const hitName = hit ? `${hit.tagName.toLowerCase()}${hit.className ? `.${String(hit.className).split(' ')[0]}` : ''}` : 'nothing';
+    testController.reportCondition(`the + badge on "${key}" is shown (${Math.round(r.width)}×${Math.round(r.height)} px hit square, `
+      + `zoom ${zoomNow?.toFixed?.(2)}) and a tap at its centre hits the badge, not the canvas `
+      + `(hit ${plus.contains(hit) ? 'the badge' : hitName}; layout ${colLayouts.state()}, on corner ${st.onCorner} `
+      + `[dx ${st.dx.toFixed(1)}, dy ${st.dy.toFixed(1)}, node ${st.rbb.w.toFixed(1)}×${st.rbb.h.toFixed(1)}], sync pending ${st.pending}, inside ${st.inside})`,
+      shownOk && !!hit && plus.contains(hit));
+    // ⛓ region-graph-badge-resize: a style change that resizes the node (the map look's size bypass leaving, a class)
+    // moves no position and fires no viewport event; the layer re-places the badge on the node's `style` event, so
+    // once nothing is pending the badge sits EXACTLY on the corner (it sat dx −4.8, dy 3.8 off before).
+    testController.reportCondition(`the + badge on "${key}" sits exactly on its node's corner after the map look `
+      + `(|dx| ${Math.abs(st.dx).toFixed(2)}, |dy| ${Math.abs(st.dy).toFixed(2)} ≤ 0.5 px)`,
+      shownOk && Math.abs(st.dx) <= 0.5 && Math.abs(st.dy) <= 0.5);
+    const groupSize = expected.get(key)?.length ?? 0;
+    const t2 = performance.now();
+    plus.click();
+    const opened = await testController.pollForCondition(() => boxes()?.length === 1 && boxes()[0].data('groupKey') === key
+      && boxes()[0].children().length === groupSize, `"${key}" opened into its box`, 5000, 20);
+    const openMs = Math.round(performance.now() - t2);
+    testController.reportCondition(`a + press opens "${key}": 1 box with ${boxes()?.[0]?.children().length} members = ${groupSize}, `
+      + `${merged()?.length} groups still closed (open ${openMs} ms)`, opened && merged()?.length === expected.size - 1);
+    const minus = badges().find((b) => b.dataset.groupKey === key);
+    testController.reportCondition('the open box carries a − badge', minus?.dataset.open === 'true');
+    const t3 = performance.now();
+    minus?.click();
+    const closed = await testController.pollForCondition(() => boxes()?.length === 0 && merged()?.length === expected.size,
+      `"${key}" closed again`, 5000, 20);
+    const closeMs = Math.round(performance.now() - t3);
+    await new Promise((res) => setTimeout(res, 150));
+    testController.reportCondition(`a − press closes it (${boxes()?.length} boxes, close ${closeMs} ms), and no badge press ran a click action `
+      + `(${rec.seen.length} regionClicked)`, closed && rec.seen.length === 0);
+    const body = merged()[0];
+    const bodyRegion = regionOfCell(body.data('groupKey'), body.data('members'));
+    body.emit('tap');
+    const ran = await testController.pollForCondition(() => rec.seen.length >= 1, 'the body tap is published', 5000, 50);
+    testController.reportCondition(`a body tap on closed "${body.data('groupKey')}" runs its click action, once, on "${bodyRegion}"`,
+      ran && rec.seen.length === 1 && rec.seen[0][1]?.regionName === bodyRegion);
+    testController.log(`[subRegionView] seedling_atlas collapsible: switch=${colMs}ms open=${openMs}ms close=${closeMs}ms badge=${Math.round(r.width)}px`);
+    moved = true;
+  } catch (error) {
+    testController.reportCondition(`subRegionView merged test error-free: ${error.message}`, false);
+  } finally {
+    rec?.stop();
+    await ctx.restoreSettings();
+    const restored = await settingsManager.getSetting(SUB_REGION_VIEW_KEY);
+    const back = await testController.pollForCondition(() => graphShowsWorld() && merged()?.length === 0,
+      'the graph rebuilt as separate', MAX_WAIT_TIME, 50);
+    testController.reportCondition(`restored: subRegionView reads "${restored}" again and every region is its own node`, restored === 'separate' && back);
+    const lookBack = await settingsManager.getSetting(NODE_LOOK_KEY);
+    testController.reportCondition(`restored: nodeLook reads "${lookBack}" (the default) and no map canvas is left`,
+      lookBack === 'graph' && !document.querySelector('.region-graph-panel-container .rg-map-look-canvas'));
+    await restoreWorld(testController, ctx, before, { always: moved });
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
+/**
+ * The nearest REACHABLE region inside a box (a compound child), not the path end, walking out from the path end along
+ * the graph's ACCESSIBLE edges (a two-way edge both ways, a one-way edge forward), sorted per ring for a stable pick.
+ * Reachability is read from the snapshot. Polled: the first snapshot can arrive after the build.
+ */
+async function nearestReachableMember(testController, cy) {
+  let found = null;
+  await testController.pollForCondition(async () => {
+    const end = await pathEnd();
+    const snapshot = stateManagerProxySingleton.getLatestStateSnapshot?.();
+    if (!cy.getElementById(end)?.length || !snapshot) return false;
+    const seen = new Set([end]);
+    let ring = [end];
+    while (ring.length && !found) {
+      const next = new Set();
+      for (const id of ring) {
+        cy.getElementById(id).connectedEdges('.accessible').forEach((e) => {
+          const s = e.source().id(); const t = e.target().id();
+          const to = s === id ? t : (e.data('isBidirectional') ? s : null);
+          if (to && !seen.has(to) && isRegionReachable(snapshot, to)) { seen.add(to); next.add(to); }
+        });
+      }
+      ring = [...next].sort();
+      found = ring.map((id) => cy.getElementById(id)).find((n) => n.isChild() && !n.hasClass('discovery-hidden')) ?? null;
+    }
+    return !!found;
+  }, 'a reachable member region near the path end', MAX_WAIT_TIME, 100);
+  return found;
+}
+
 /* ── CA-S2: the "On click" strip and the click actions ─────────────────── */
 
 const CLICK_ACTIONS = 'moduleSettings.regionGraph.clickActions';
@@ -921,6 +1381,24 @@ registerTest({
   testFunction: testRegionGraphLocationNodesSurviveRebuild,
   enabled: false, // runs where a roster enrols it (the substrates config)
   description: 'force-show written through the settings draws the location nodes, and a later moduleSettings.regionGraph.* write (which rebuilds the graph) leaves them drawn'
+});
+
+registerTest({
+  id: 'test_region_graph_sub_region_nested',
+  name: 'Region Graph: sub-regions nested in region boxes (subRegionView = nested)',
+  category: 'Region Graph',
+  testFunction: testRegionGraphSubRegionNested,
+  enabled: false, // runs where a roster enrols it (the substrates config)
+  description: 'region-graph-groups-a: on seedling_atlas (2 boxes), subRegionView = nested (session-only) draws one box per display group of 2+ with its members inside; a box tap runs nothing, a member tap runs its click action; the setting is restored and the boxes go'
+});
+
+registerTest({
+  id: 'test_region_graph_sub_region_merged',
+  name: 'Region Graph: sub-regions merged into one node per region (subRegionView = merged, then collapsible)',
+  category: 'Region Graph',
+  testFunction: testRegionGraphSubRegionMerged,
+  enabled: false, // runs where a roster enrols it (the substrates config)
+  description: 'region-graph-groups-b: on seedling_atlas (2 groups), subRegionView = merged (session-only) draws one node per display group of 2+ in place of its members, no self-loop; a tap on a group node runs the region click on regionOfCell(key, members), once; then (region-graph-map-look) nodeLook = map (session-only) paints every node with a Region Map cell as that cell with no rebuild, and a pointer click on a location square runs the location click on it, once; then (region-graph-groups-c) subRegionView = collapsible draws every group closed with a + badge, a + press opens one group into its box and a − press closes it, neither running a click action, and a body tap runs it, and the stored nodeLook = map takes no effect there; (region-graph-direction-layout) in merged + map the Direction-aware layout runs once and ends with 0 overlaps between the drawn boxes, and the layout preset and the merged view\'s saved positions are restored; the settings are restored (nodeLook graph) and every region is its own node again'
 });
 
 registerTest({

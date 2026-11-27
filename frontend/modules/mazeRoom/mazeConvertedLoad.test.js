@@ -8,7 +8,7 @@
  * groups / 76 members / 13 dangling (a presser no maze responder names).
  */
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -192,5 +192,73 @@ describe('maze converted load: a payload without engine fields takes no new path
         // entry_gates 39 at fe98f37f22 → 41: train 102's no-hit (rules-7) gave L22/L25 their new entry gates.
         expect(Object.fromEntries(ENGINE_ENTITY_FIELDS.map((f) => [f, count(f)])))
             .toEqual({ block_lib: 3, traps: 5, entry_gates: 41, block_sinks: 8, pulls: 4, pulsers: 0 });
+    });
+});
+
+/**
+ * ⛓⛓ LAB BIOME — a pipeline sidecar's `biome` is the REGION biome (`{id: 'classic'}`), not a lab PALETTE name, and
+ * `loadPayload` used to hand it to `paletteFor`, refusing every such room (*"biome {"id":"classic"} is not one of
+ * [maze-v1]"*, first seen on `meta_trial` `region_2_3`). The census is over EVERY committed preset's maze sidecars
+ * that carry a room and a biome, read off the disk (no count pinned: a new preset widens it, it must not break it).
+ */
+describe('lab biome: a sidecar\'s region biome is not the palette', () => {
+    const presets = join(ROOT, 'frontend/presets');
+    const dirs = (d) => readdirSync(d, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name);
+    const BIOMED = [];
+    for (const g of dirs(presets)) {
+        for (const f of dirs(join(presets, g))) {
+            for (const r of readdirSync(join(presets, g, f)).filter((n) => n.endsWith('_rules.json'))) {
+                const rules = JSON.parse(readFileSync(join(presets, g, f, r), 'utf8'));
+                for (const [player, regions] of Object.entries(rules.preset_sidecars ?? {})) {
+                    for (const [region, s] of Object.entries(regions)) {
+                        if (s?.substrate === 'maze' && s.playable_payload !== undefined && s.biome !== undefined) {
+                            BIOMED.push([`${g}/${f}/${r}#${player}/${region}`, s]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    it('meta_trial region_2_3 (the reported room) records a region biome object and LOADS at the default palette', () => {
+        const [, s] = BIOMED.find(([k]) => k.startsWith('meta_trial/') && k.endsWith('/region_2_3'));
+        expect(s.biome).toEqual({ id: 'classic' });
+        const state = loadPayload(s);
+        expect(state.biome).toBe('maze-v1');
+        expect(state.regionBiome).toEqual({ id: 'classic' });
+        expect(state.palette).toBeTruthy();
+        expect(state.record.width).toBe(s.playable_payload.width);
+    });
+
+    it('EVERY committed maze sidecar that records a biome loads (none refused, palette maze-v1)', () => {
+        expect(BIOMED.length).toBeGreaterThan(1);
+        const refused = [];
+        for (const [k, s] of BIOMED) {
+            try {
+                if (loadPayload(s).biome !== 'maze-v1') refused.push(`${k}: palette`);
+            } catch (e) {
+                refused.push(`${k}: ${e.message.slice(0, 80)}`);
+            }
+        }
+        expect(refused).toEqual([]);
+    });
+
+    it('a sidecar-loaded room saves as a lab payload whose biome IS the palette, and that save loads back', () => {
+        const [, s] = BIOMED[0];
+        const saved = labPayload(loadPayload(s));
+        expect(saved.biome).toBe('maze-v1');
+        expect(saveOf(loadPayload(JSON.parse(JSON.stringify(saved))))).toBe(JSON.stringify(saved));
+    });
+
+    it('⛔ a LAB payload (no envelope) still refuses an unknown palette name BY NAME — nothing is coerced', () => {
+        const [, s] = BIOMED[0];
+        expect(() => loadPayload({ level: s.playable_payload, biome: 'pre-sword' })).toThrow(/is not one of \[maze-v1\]/);
+        expect(() => loadPayload({ level: s.playable_payload, biome: { id: 'classic' } })).toThrow(/is not one of/);
+    });
+
+    it('a sidecar WITHOUT a biome carries no regionBiome key (other states unchanged)', () => {
+        const [, s] = ROOMS[0];
+        expect(s.biome).toBeUndefined();
+        expect('regionBiome' in loadPayload(s)).toBe(false);
     });
 });

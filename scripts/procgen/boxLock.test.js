@@ -688,7 +688,9 @@ describe('who takes the box', () => {
             // tile-rules-automation-r-a5: L40's flag-12 wand lock shut / open on the game and the model (import door: `isEntryPoint` → main())
             'probe-seedling-l40-flag12-lock.mjs',
             // rules-landing-contact-census: every landing inside an enemy's contact reach, booted on the game (import door: `isEntryPoint` → main())
-            'probe-seedling-landing-contact.mjs'];
+            'probe-seedling-landing-contact.mjs',
+            // lab document library B3: the Seedling lab's save points, reload, Recent sets, two tabs (import door: `isEntryPoint` → main())
+            'check-seedling-lab-library.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

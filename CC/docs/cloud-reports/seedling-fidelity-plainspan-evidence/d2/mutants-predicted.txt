@@ -1,0 +1,5 @@
+Predicted movers (fidelityPlainPickupInFreeze rows), per mutant; the other three files (NestedRockCeremony, RockButton, F7) predicted green:
+M1 the helper takes only the FIRST overlapping apitem (break after one take): second-apitem rows — frame A, ceremony T, union, rope, composition (5)
+M2 the bank's t is ticksCompleted (no +1): every ON-take row — one-apitem frame A, frame A second, T, union, rope, deferred step, snap, composition (8)
+M3 the T site is dropped: ceremony T, union, composition (3)
+M4 the deferred-step site tests the box BEFORE the step: the deferred-step row only (1)

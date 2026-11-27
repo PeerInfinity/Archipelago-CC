@@ -41,6 +41,7 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 - **APCalc** (`apcalc`) *(disabled)* — calculator-themed puzzle game for Archipelago (enabled in the apcalc launch mode).
 - **APCalc Generator** (`apcalcGenerator`) *(disabled)* — generates APCalc puzzle data with configurable parameters.
 - **JtA panel cluster** *(all disabled except `jtaQueueEngine`; superseded for substrate use by `jtaSubstrateWrapper`)*: `jtaQueueEngine` (headless queue execution strategy and predictions), `jtaArchipelago` (bridges JtA game events to AP checks/items). Its three panels are under [Deprecated Panels](#deprecated-panels).
+- [Mystery Game](../user/modules/mysteryArchipelago.md) (`mysteryArchipelago`) *(disabled)*: frames the mystery clue game's page (repository `mystery-clue-game`) for a world whose `slot_data.mystery` names its case, and bridges it to Archipelago. A solved question becomes a location check; the papers held and the questions checked go back to the page as whole sets (`mystery:state`). The four `mystery:*` messages are described in `frontend/modules/mysteryArchipelago/mysteryArchipelagoLogic.js`.
 - [Proof Queue](./proofQueue.md) *(disabled)*
 - [Proof Graph](./proofGraph.md) *(disabled)*
 - [Vibe Coding Simulator](./vibeCodingSim.md) *(disabled)*
