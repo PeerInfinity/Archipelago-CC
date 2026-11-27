@@ -1,0 +1,4 @@
+# box lock: TAKEN by witness-deadframe2.mjs (browser, pid 2697) — head 48824c331, 2 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+r5-shaft-control: 2764 t, mounted seedling-vanilla-record-23510f80, status tick 2764, hits 0, cleared [{"tag":4,"level":39},{"tag":8,"level":39},{"tag":9,"level":39}], 98.6 s
+  cut 1: tick 1 held true cleared [{"tag":8,"level":39}] player {"cls":"Player","x":152,"y":615.2,"vx":0,"vy":-0.8,"type":"Player","destroy":false,"alpha":1}

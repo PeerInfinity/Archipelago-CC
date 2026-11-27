@@ -1,0 +1,2040 @@
+{
+ "tapes": 322,
+ "over": {},
+ "total": {
+  "spans": {
+   "ceremony:sealpiece": {
+    "spans": 13,
+    "frames": 4303,
+    "withResponders": 8,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0,
+    "withPulsers": 7,
+    "withActivePulser": 4,
+    "spansPulserChanged": 4,
+    "pulserHitFrames": 606,
+    "pulserReachFrames": 0,
+    "spansPulserReach": 0,
+    "reached": []
+   },
+   "pickup-lump": {
+    "spans": 75,
+    "frames": 11250,
+    "withResponders": 28,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0,
+    "withPulsers": 6,
+    "withActivePulser": 1,
+    "spansPulserChanged": 1,
+    "pulserHitFrames": 69,
+    "pulserReachFrames": 0,
+    "spansPulserReach": 0,
+    "reached": []
+   },
+   "span:fallrock": {
+    "spans": 3,
+    "frames": 591,
+    "withResponders": 3,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0,
+    "withPulsers": 3,
+    "withActivePulser": 3,
+    "spansPulserChanged": 3,
+    "pulserHitFrames": 276,
+    "pulserReachFrames": 0,
+    "spansPulserReach": 0,
+    "reached": []
+   },
+   "freeze:bobboss-rock": {
+    "spans": 10,
+    "frames": 1740,
+    "withResponders": 0,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0,
+    "withPulsers": 0,
+    "withActivePulser": 0,
+    "spansPulserChanged": 0,
+    "pulserHitFrames": 0,
+    "pulserReachFrames": 0,
+    "spansPulserReach": 0,
+    "reached": []
+   },
+   "help:sword": {
+    "spans": 7,
+    "frames": 6,
+    "withResponders": 0,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0,
+    "withPulsers": 0,
+    "withActivePulser": 0,
+    "spansPulserChanged": 0,
+    "pulserHitFrames": 0,
+    "pulserReachFrames": 0,
+    "spansPulserReach": 0,
+    "reached": []
+   },
+   "freeze:wand-approach-fade": {
+    "spans": 3,
+    "frames": 297,
+    "withResponders": 0,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0,
+    "withPulsers": 0,
+    "withActivePulser": 0,
+    "spansPulserChanged": 0,
+    "pulserHitFrames": 0,
+    "pulserReachFrames": 0,
+    "spansPulserReach": 0,
+    "reached": []
+   },
+   "span:fallrocks-together": {
+    "spans": 3,
+    "frames": 558,
+    "withResponders": 0,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0,
+    "withPulsers": 0,
+    "withActivePulser": 0,
+    "spansPulserChanged": 0,
+    "pulserHitFrames": 0,
+    "pulserReachFrames": 0,
+    "spansPulserReach": 0,
+    "reached": []
+   },
+   "freeze:door-ceremony": {
+    "spans": 5,
+    "frames": 905,
+    "withResponders": 0,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0,
+    "withPulsers": 0,
+    "withActivePulser": 0,
+    "spansPulserChanged": 0,
+    "pulserHitFrames": 0,
+    "pulserReachFrames": 0,
+    "spansPulserReach": 0,
+    "reached": []
+   },
+   "freeze:seed-cover-fade": {
+    "spans": 2,
+    "frames": 400,
+    "withResponders": 0,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0,
+    "withPulsers": 0,
+    "withActivePulser": 0,
+    "spansPulserChanged": 0,
+    "pulserHitFrames": 0,
+    "pulserReachFrames": 0,
+    "spansPulserReach": 0,
+    "reached": []
+   },
+   "freeze:moonrock": {
+    "spans": 2,
+    "frames": 902,
+    "withResponders": 0,
+    "changedFrames": 0,
+    "flips": 0,
+    "spansChanged": 0,
+    "withPulsers": 0,
+    "withActivePulser": 0,
+    "spansPulserChanged": 0,
+    "pulserHitFrames": 0,
+    "pulserReachFrames": 0,
+    "spansPulserReach": 0,
+    "reached": []
+   }
+  },
+  "overlaps": {
+   "spinner-on-buttonroom": 101,
+   "spinner-on-button": 305
+  },
+  "lumps": {
+   "textless": 14,
+   "texted": 49
+  }
+ },
+ "rows": [
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/bobiframe-witness/l40-chest-l39-s5222-walls.tape.json",
+   "threw": null,
+   "spans": {
+    "ceremony:sealpiece": {
+     "spans": 1,
+     "frames": 331,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {}
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-bw-bombstand-witness/hammer-bw-l42-381-bombstand.tape.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "textless": 1
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-d-ghostwall-witness/hammer-d-l39-ghostwall.tape.json",
+   "threw": null,
+   "spans": {
+    "span:fallrock": {
+     "spans": 1,
+     "frames": 197,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 1,
+     "spansPulserChanged": 1,
+     "pulserHitFrames": 92,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {}
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-dd-walkkill-witness/hammer-dd-l30-walkkill.tape.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L30 torchpickup"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/igneous-witness/igneous-l74-phase-a.tape.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L74 darkshield"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/refuted/r8-solve-5.tape.json",
+   "threw": "the player entered Water in level 5 at (47.00324793668, 56.39999999999999) on a tape that does not p",
+   "spans": {},
+   "overlaps": {},
+   "lumps": {}
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l12-witch-server-sword.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {}
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l12-witch-slot-held.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {}
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/bobsoldier2-l30-torch.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L30 torchpickup"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/enc-l12-witch.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {}
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {
+    "spinner-on-buttonroom": 19
+   },
+   "lumps": {
+    "textless": 1
+   },
+   "where": {
+    "spinner-on-buttonroom L40 buttonroom@272,208": 19
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {
+    "spinner-on-buttonroom": 4
+   },
+   "lumps": {
+    "textless": 1
+   },
+   "where": {
+    "spinner-on-buttonroom L40 buttonroom@160,128": 4
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-chest.json",
+   "threw": null,
+   "spans": {
+    "ceremony:sealpiece": {
+     "spans": 1,
+     "frames": 331,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 1,
+     "spansPulserChanged": 1,
+     "pulserHitFrames": 150,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {}
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-reach-l39.json",
+   "threw": null,
+   "spans": {
+    "ceremony:sealpiece": {
+     "spans": 1,
+     "frames": 331,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 1,
+     "spansPulserChanged": 1,
+     "pulserHitFrames": 150,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {}
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-darkshield.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L74 darkshield"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-darksuit.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L79 darksuit"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-feather.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L89 feather"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-shield.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L20 shield"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-spear.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L64 ghostspear"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-sword.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "help:sword": {
+     "spans": 1,
+     "frames": 1,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L10 sword"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-collect-torch.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L30 torchpickup"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-1-sword.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "help:sword": {
+     "spans": 1,
+     "frames": 1,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L10 sword"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-2-feather.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L89 feather"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-3-torch.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L30 torchpickup"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-4-spear.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L64 ghostspear"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-5-darkshield.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L74 darkshield"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-6-darksuit.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L79 darksuit"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r3-walk-full.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 6,
+     "frames": 900,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "help:sword": {
+     "spans": 1,
+     "frames": 1,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 6
+   },
+   "textedAt": [
+    "L10 sword",
+    "L89 feather",
+    "L30 torchpickup",
+    "L64 ghostspear",
+    "L74 darkshield",
+    "L79 darksuit"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-1-sword.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "help:sword": {
+     "spans": 1,
+     "frames": 1,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L10 sword"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-2-feather.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L89 feather"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-3-torch.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L30 torchpickup"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-5-spear.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L64 ghostspear"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-6-health.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 2,
+     "frames": 300,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "textless": 1,
+    "texted": 1
+   },
+   "textedAt": [
+    "L68 health"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r4-walk-full.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 6,
+     "frames": 900,
+     "withResponders": 2,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "help:sword": {
+     "spans": 1,
+     "frames": 1,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 5,
+    "textless": 1
+   },
+   "textedAt": [
+    "L10 sword",
+    "L89 feather",
+    "L30 torchpickup",
+    "L64 ghostspear",
+    "L68 health"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-d5-conch.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L49 conch"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-feather.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L89 feather"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-join-control.json",
+   "threw": null,
+   "spans": {
+    "ceremony:sealpiece": {
+     "spans": 1,
+     "frames": 331,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {}
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-join.json",
+   "threw": null,
+   "spans": {
+    "ceremony:sealpiece": {
+     "spans": 1,
+     "frames": 331,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {}
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part0.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "textless": 1
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part1.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "textless": 1
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5-control.json",
+   "threw": null,
+   "spans": {},
+   "overlaps": {
+    "spinner-on-buttonroom": 39
+   },
+   "lumps": {},
+   "where": {
+    "spinner-on-buttonroom L40 buttonroom@880,768": 39
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json",
+   "threw": null,
+   "spans": {},
+   "overlaps": {
+    "spinner-on-buttonroom": 39
+   },
+   "lumps": {},
+   "where": {
+    "spinner-on-buttonroom L40 buttonroom@880,768": 39
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l41-part3.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "textless": 1
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-l43-wand.json",
+   "threw": null,
+   "spans": {
+    "freeze:wand-approach-fade": {
+     "spans": 1,
+     "frames": 99,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "span:fallrocks-together": {
+     "spans": 1,
+     "frames": 186,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L43 wand"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft-control.json",
+   "threw": null,
+   "spans": {
+    "span:fallrock": {
+     "spans": 1,
+     "frames": 197,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 1,
+     "spansPulserChanged": 1,
+     "pulserHitFrames": 92,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {
+    "spinner-on-button": 111
+   },
+   "lumps": {},
+   "where": {
+    "spinner-on-button L39 button@128,144": 45,
+    "spinner-on-button L39 button@160,144": 42,
+    "spinner-on-button L39 button@144,128": 24
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft.json",
+   "threw": null,
+   "spans": {
+    "span:fallrock": {
+     "spans": 1,
+     "frames": 197,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 1,
+     "spansPulserChanged": 1,
+     "pulserHitFrames": 92,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 1,
+     "spansPulserChanged": 1,
+     "pulserHitFrames": 69,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {
+    "spinner-on-button": 194
+   },
+   "lumps": {
+    "textless": 1
+   },
+   "where": {
+    "spinner-on-button L39 button@128,144": 127,
+    "spinner-on-button L39 button@112,144": 67
+   }
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance-control.json",
+   "threw": null,
+   "spans": {
+    "ceremony:sealpiece": {
+     "spans": 1,
+     "frames": 331,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 1,
+     "spansPulserChanged": 1,
+     "pulserHitFrames": 153,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {}
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance.json",
+   "threw": null,
+   "spans": {
+    "ceremony:sealpiece": {
+     "spans": 1,
+     "frames": 331,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 1,
+     "withActivePulser": 1,
+     "spansPulserChanged": 1,
+     "pulserHitFrames": 153,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {}
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-seed-control.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L115 seed"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-seed-credits.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "freeze:seed-cover-fade": {
+     "spans": 1,
+     "frames": 200,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L115 seed"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-shield-kill.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L19 bosskey"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-totem-control.json",
+   "threw": null,
+   "spans": {
+    "freeze:wand-approach-fade": {
+     "spans": 1,
+     "frames": 99,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "span:fallrocks-together": {
+     "spans": 1,
+     "frames": 186,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L43 wand"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r6-totem-kill.json",
+   "threw": null,
+   "spans": {
+    "freeze:wand-approach-fade": {
+     "spans": 1,
+     "frames": 99,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "span:fallrocks-together": {
+     "spans": 1,
+     "frames": 186,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L43 wand"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-full.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "help:sword": {
+     "spans": 1,
+     "frames": 1,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "ceremony:sealpiece": {
+     "spans": 1,
+     "frames": 331,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L10 sword"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-19.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L19 bosskey"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-20.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L20 shield"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-d2.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 2,
+     "frames": 300,
+     "withResponders": 2,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 2
+   },
+   "textedAt": [
+    "L19 bosskey",
+    "L20 shield"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-10.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    },
+    "help:sword": {
+     "spans": 1,
+     "frames": 0,
+     "withResponders": 0,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L10 sword"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-20.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L20 shield"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-19.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L19 bosskey"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-20.json",
+   "threw": null,
+   "spans": {
+    "pickup-lump": {
+     "spans": 1,
+     "frames": 150,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {
+    "texted": 1
+   },
+   "textedAt": [
+    "L20 shield"
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/stance-l48-chest.json",
+   "threw": null,
+   "spans": {
+    "ceremony:sealpiece": {
+     "spans": 1,
+     "frames": 331,
+     "withResponders": 1,
+     "changedFrames": 0,
+     "flips": 0,
+     "spansChanged": 0,
+     "withPulsers": 0,
+     "withActivePulser": 0,
+     "spansPulserChanged": 0,
+     "pulserHitFrames": 0,
+     "pulserReachFrames": 0,
+     "spansPulserReach": 0,
+     "reached": []
+    }
+   },
+   "overlaps": {},
+   "lumps": {}
+  }
+ ]
+}

@@ -1,0 +1,234 @@
+{
+ "tapes": 322,
+ "keys": [
+  "freezeFramesStepResponders",
+  "pulserDeadFrameUpdate",
+  "blockPressesFallRockButtonSameFrame"
+ ],
+ "base": {},
+ "over": {},
+ "movers": [
+  "frontend/modules/seedlingDemo/fixtures/hammer-d-ghostwall-witness/hammer-d-l39-ghostwall.tape.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-chest.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-reach-l39.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft-control.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance-control.json",
+  "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance.json"
+ ],
+ "rows": [
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/hammer-d-ghostwall-witness/hammer-d-l39-ghostwall.tape.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "pulserHits",
+     "i": 0,
+     "off": {
+      "t": 192,
+      "level": 39,
+      "id": "pulser@64,96"
+     },
+     "on": {
+      "t": 199,
+      "level": 39,
+      "id": "pulser@64,96"
+     },
+     "lenOff": 184,
+     "lenOn": 184
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/refuted/r8-solve-5.tape.json",
+   "moved": false,
+   "offThrows": "PhysicsV2Error: the player entered Water in level 5 at (47.00324793668, 56.39999999999999) on a tape that does not pin \"sound\". `Player.as:530` adds `0.25 * int(Music.soundPosition(\"Swim\") < 0.1)` to the swim speed, ",
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": []
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-chest.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "pulserHits",
+     "i": 58,
+     "off": {
+      "t": 260,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "on": {
+      "t": 274,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "lenOff": 101,
+     "lenOn": 104
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/prox-l38-reach-l39.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "pulserHits",
+     "i": 58,
+     "off": {
+      "t": 261,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "on": {
+      "t": 275,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "lenOff": 101,
+     "lenOn": 104
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft-control.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "pulserHits",
+     "i": 0,
+     "off": {
+      "t": 198,
+      "level": 39,
+      "id": "pulser@64,96"
+     },
+     "on": {
+      "t": 205,
+      "level": 39,
+      "id": "pulser@64,96"
+     },
+     "lenOff": 1167,
+     "lenOn": 1160
+    },
+    {
+     "field": "spinnerWrites",
+     "i": 0,
+     "off": {
+      "t": 1397,
+      "level": 39,
+      "id": "spinner@224,112",
+      "flag": {
+       "level": 39,
+       "tag": 4,
+       "value": false
+      },
+      "outOfBand": false,
+      "cause": "pulse"
+     },
+     "on": {
+      "t": 1207,
+      "level": 39,
+      "id": "spinner@224,112",
+      "flag": {
+       "level": 39,
+       "tag": 4,
+       "value": false
+      },
+      "outOfBand": false,
+      "cause": "pulse"
+     },
+     "lenOff": 1,
+     "lenOn": 1
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "pulserHits",
+     "i": 0,
+     "off": {
+      "t": 198,
+      "level": 39,
+      "id": "pulser@64,96"
+     },
+     "on": {
+      "t": 205,
+      "level": 39,
+      "id": "pulser@64,96"
+     },
+     "lenOff": 1167,
+     "lenOn": 1157
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance-control.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "pulserHits",
+     "i": 78,
+     "off": {
+      "t": 445,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "on": {
+      "t": 462,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "lenOff": 150,
+     "lenOn": 147
+    }
+   ]
+  },
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/tapes/r5-totem-entrance.json",
+   "moved": true,
+   "offThrows": null,
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": [
+    {
+     "field": "pulserHits",
+     "i": 78,
+     "off": {
+      "t": 445,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "on": {
+      "t": 462,
+      "level": 38,
+      "id": "pulser@80,224"
+     },
+     "lenOff": 230,
+     "lenOn": 216
+    }
+   ]
+  }
+ ]
+}

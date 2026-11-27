@@ -1,0 +1,19 @@
+{
+ "tapes": 322,
+ "keys": [
+  "blockPressesFallRockButtonSameFrame"
+ ],
+ "base": {},
+ "over": {},
+ "movers": [],
+ "rows": [
+  {
+   "tape": "frontend/modules/seedlingDemo/fixtures/refuted/r8-solve-5.tape.json",
+   "moved": false,
+   "offThrows": "PhysicsV2Error: the player entered Water in level 5 at (47.00324793668, 56.39999999999999) on a tape that does not pin \"sound\". `Player.as:530` adds `0.25 * int(Music.soundPosition(\"Swim\") < 0.1)` to the swim speed, ",
+   "hitsOff": null,
+   "hitsOn": null,
+   "diff": []
+  }
+ ]
+}

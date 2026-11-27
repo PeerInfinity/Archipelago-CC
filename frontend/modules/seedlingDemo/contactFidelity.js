@@ -2661,6 +2661,12 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no flip licence).
      */
     wandShotEnemyBodies: false,
+    /** PLACEHOLDER-DOC-1 */
+    freezeFramesStepResponders: false,
+    /** PLACEHOLDER-DOC-2 */
+    pulserDeadFrameUpdate: false,
+    /** PLACEHOLDER-DOC-3 */
+    blockPressesFallRockButtonSameFrame: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -3129,6 +3135,12 @@ if (globalThis.process?.env?.SEEDLING_WAND_SHOT_TRAP_BODIES === '0') CONTACT_FID
 // ⛓ fidelity WANDENEMYBODIES: `SEEDLING_WAND_SHOT_ENEMY_BODIES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_WAND_SHOT_ENEMY_BODIES === '1') CONTACT_FIDELITY.wandShotEnemyBodies = true;
 if (globalThis.process?.env?.SEEDLING_WAND_SHOT_ENEMY_BODIES === '0') CONTACT_FIDELITY.wandShotEnemyBodies = false;
+if (globalThis.process?.env?.SEEDLING_FREEZE_FRAMES_STEP_RESPONDERS === '1') CONTACT_FIDELITY.freezeFramesStepResponders = true;
+if (globalThis.process?.env?.SEEDLING_FREEZE_FRAMES_STEP_RESPONDERS === '0') CONTACT_FIDELITY.freezeFramesStepResponders = false;
+if (globalThis.process?.env?.SEEDLING_PULSER_DEAD_FRAME_UPDATE === '1') CONTACT_FIDELITY.pulserDeadFrameUpdate = true;
+if (globalThis.process?.env?.SEEDLING_PULSER_DEAD_FRAME_UPDATE === '0') CONTACT_FIDELITY.pulserDeadFrameUpdate = false;
+if (globalThis.process?.env?.SEEDLING_BLOCK_PRESSES_FALL_ROCK_BUTTON_SAME_FRAME === '1') CONTACT_FIDELITY.blockPressesFallRockButtonSameFrame = true;
+if (globalThis.process?.env?.SEEDLING_BLOCK_PRESSES_FALL_ROCK_BUTTON_SAME_FRAME === '0') CONTACT_FIDELITY.blockPressesFallRockButtonSameFrame = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
