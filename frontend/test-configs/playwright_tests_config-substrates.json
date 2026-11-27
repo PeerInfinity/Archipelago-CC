@@ -100,6 +100,12 @@
             "_comment": "AN-OMSI-3: the omsi town preset (action_nodes_omsi_town) loads; a card per node; the start's neighbours show price, used/limit and needs as the preset states them; the goal's supplier (Buy Supplies) is blocked with its unmet line; one performance at a free check node pays its price and sends its check."
         },
         {
+            "id": "an-same-monday-clock",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-TIME-4: the committed timed preset The Same Monday: the pool is loop.mana (3 h, not 100), the Time line at 09:00 and after one visit, the start gate refuses a visit whose paper is not held."
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
@@ -2127,6 +2133,12 @@
             "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft apcalc-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
         },
         {
+            "id": "tutorial-walk-mystery-multiworld",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "The walk row of the terminal tutorial mystery-multiworld (a mystery case on a local server, opened in Mystery Game): like the other multiworld tutorials its walk stops at the first terminal step. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
             "id": "region-map-classic-world",
             "enabled": true,
             "category": "Region Map",
@@ -2600,6 +2612,18 @@
             "enabled": true,
             "category": "Mystery Bridge",
             "_comment": "The mystery SUBSTRATE: a case as one region of a generated world. Loads the committed mystery_street_test preset (scripts/test/generate-mystery-street-test-preset.mjs: the long case's office beside a maze street, by the top-down driver) with the stand-in page: the panel frames the region's case, mystery:state carries the world's lock and inOffice, a question solved in the street is not checked, the same question is checked in the office, and leaving says so again. Names are read off the loaded world. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
+            "id": "mystery-playback-bot-plays-the-case",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "The mystery substrate's PlaybackController (mysteryArchipelago/mysteryPlaybackController.js): the committed mystery_street_test world played to the end by the Playback Bot from its own sphere log, loop mode off. The street is the maze's; in the office the controller checks each question through the host (under the client's logic gate) and takes the exit. Every sphere-log location ends checked."
+        },
+        {
+            "id": "mystery-playback-bot-loop-mode",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "The mystery substrate's loopSupport: the same mystery_street_test world with the loop_costs block generateLoopCosts writes for it. Loop mode comes on, the office reads as a coarse region whose Bot is the walkTo solver, and the Playback Bot plays the world to the end through the Loops queue."
         },
         {
             "id": "document-library-idb",

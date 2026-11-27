@@ -720,8 +720,43 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
+                    "statement": "The Playback Bot can walk it (replaying a world's solution)",
+                    "text": null
+                },
+                {
+                    "group": "play",
                     "statement": "What the generator may do with it",
                     "text": "locations placed anywhere"
+                },
+                {
+                    "group": "loop",
+                    "statement": "You can play it in loop mode",
+                    "text": null
+                },
+                {
+                    "group": "loop",
+                    "statement": "What you can queue for it",
+                    "text": "moves between regions, location checks"
+                },
+                {
+                    "group": "loop",
+                    "statement": "You can record a visit and replay it",
+                    "text": null
+                },
+                {
+                    "group": "loop",
+                    "statement": "How a replay works",
+                    "text": "re-runs the queued actions"
+                },
+                {
+                    "group": "loop",
+                    "statement": "Instant fast-forward",
+                    "text": "a per-block toggle"
+                },
+                {
+                    "group": "loop",
+                    "statement": "A Bot block can play it for you",
+                    "text": "the game's own automation walks it"
                 },
                 {
                     "group": "loop",
@@ -1495,12 +1530,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "mystery",
-                    "kind": "no",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
                             "field": "getPlaybackController",
-                            "value": "—"
+                            "value": "fn"
                         },
                         {
                             "field": "playbackScope",
@@ -2355,12 +2390,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "mystery",
-                    "kind": "no",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
                             "field": "loopSupport.manual",
-                            "value": "—"
+                            "value": "yes"
                         }
                     ]
                 },
@@ -2486,12 +2521,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "mystery",
-                    "kind": "no",
-                    "text": null,
+                    "kind": "yes",
+                    "text": "moves between regions, location checks",
                     "why": [
                         {
                             "field": "loopSupport.queueActions",
-                            "value": "—"
+                            "value": "regionMove, locationCheck"
                         }
                     ]
                 },
@@ -2645,16 +2680,16 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "mystery",
-                    "kind": "no",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
                             "field": "loopSupport.record",
-                            "value": "—"
+                            "value": "yes"
                         },
                         {
                             "field": "loopSupport.playback",
-                            "value": "—"
+                            "value": "yes"
                         }
                     ]
                 },
@@ -2821,8 +2856,8 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "mystery",
-                    "kind": "na",
-                    "text": null,
+                    "kind": "yes",
+                    "text": "re-runs the queued actions",
                     "why": [
                         {
                             "field": "takeLastRecording",
@@ -2997,12 +3032,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "mystery",
-                    "kind": "no",
-                    "text": null,
+                    "kind": "yes",
+                    "text": "a per-block toggle",
                     "why": [
                         {
                             "field": "loopSupport.instant",
-                            "value": "—"
+                            "value": "yes"
                         },
                         {
                             "field": "loopSupport.summaryRecording",
@@ -3173,12 +3208,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "mystery",
-                    "kind": "no",
-                    "text": null,
+                    "kind": "yes",
+                    "text": "the game's own automation walks it",
                     "why": [
                         {
                             "field": "loopSupport.executeVia",
-                            "value": "—"
+                            "value": "solver"
                         },
                         {
                             "field": "sharing.mana.loopActionDelegation",
@@ -3438,11 +3473,11 @@ export const CAPABILITIES = frz({
                     "why": [
                         {
                             "field": "loopSupport.instant",
-                            "value": "—"
+                            "value": "yes"
                         },
                         {
                             "field": "loopSupport.executeVia",
-                            "value": "—"
+                            "value": "solver"
                         },
                         {
                             "field": "takeLastRecording",
@@ -3454,7 +3489,7 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "loopSupport.botActsAtOnce",
-                            "value": "—"
+                            "value": "yes"
                         }
                     ]
                 },

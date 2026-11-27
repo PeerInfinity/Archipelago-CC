@@ -1,0 +1,7 @@
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.latchSandwich.slow.test.js (3 tests) 52294ms
+     ✓ the prune holds L40 laid to ≤ 700 engine searches (measured 571 at R-A5; prune removed: 2,931)  19945ms
+     ✓ L40 with every latch unlaid: the prune is a no-op — 0 skipped, the same searches as prune off  27941ms
+     ✓ L40's three presses are live and priced [[]] in their sub-regions (engine.ownEvent 0: True_ covers every point)  4406ms
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Duration  72.06s (transform 3.44s, setup 219ms, import 19.43s, tests 52.29s, environment 0ms)

@@ -242,6 +242,11 @@ export const MYSTERY_SIDECAR_FIELDS = Object.freeze({
     }),
 });
 
+// The Playback Bot's controller, installed by the panel module (index.js); null headless.
+let _playbackController = null;
+/** @param {Object|null} controller - see `mysteryPlaybackController.js` */
+export function setPlaybackController(controller) { _playbackController = controller ?? null; }
+
 export const substrateRegistryEntry = Object.freeze({
     id: MYSTERY_SUBSTRATE_ID,
     label: 'Mystery case',
@@ -258,6 +263,25 @@ export const substrateRegistryEntry = Object.freeze({
     // An exit is a way out of the office and nothing more; nothing in the payload is keyed by a side.
     regionGeometry: REGION_GEOMETRY.SIDES,
     exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
+
+    // The Bot answers through the host (`mysteryPlaybackController.js`): a question's location is checked under
+    // the client's logic gate, an exit is taken; it does not work the page.
+    getPlaybackController: () => _playbackController,
+
+    // Loop mode: a COARSE substrate (no recorder, no summary). Its queue entries are the recording: a move, and a
+    // check per question, each priced by `loop_costs` and run by the generic executor. `record` + `playback` arm the
+    // strict action gate, so in loop mode a question is answered only while the queue is parked on the office.
+    loopSupport: Object.freeze({
+        queueActions: Object.freeze(['regionMove', 'locationCheck']),
+        manual: true,
+        customQueues: false,
+        record: true,
+        playback: true,
+        instant: true,
+        // A Bot block hands each queued move and check to the controller, which lands it in one step.
+        executeVia: 'solver',
+        botActsAtOnce: true,
+    }),
 
     // Top-down, for the region a caller names: the installed case. `ownContentOnly`: no driver or
     // editor offers this entry as a target for a planned region (`substratePredicates.js`), since
