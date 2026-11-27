@@ -73,7 +73,7 @@ describe('BUTTONROOMCLEAR — the key', () => {
     it('ships OFF, appended last, with a worker env name', () => {
         expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
         // ⛓ wave 65 (RESPONDERORDER) appended `responderStepAfterReaders` after it.
-        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf(KEY) + 1)).toEqual(['responderStepAfterReaders']);
+        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf(KEY) + 1)).toEqual(['responderStepAfterReaders', 'deadFrameResponderStep', 'enemyPressesFallRockButton']);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER');
     });
     it.skipIf(!!process.env.SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER)('is OFF in this process', () => {

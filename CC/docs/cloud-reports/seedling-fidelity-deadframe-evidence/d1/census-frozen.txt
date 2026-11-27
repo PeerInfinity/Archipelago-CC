@@ -1,0 +1,25 @@
+frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json
+    overlaps {"spinner-on-buttonroom L40 buttonroom@272,208":19}
+frontend/modules/seedlingDemo/fixtures/tapes/l40button-l42-part0.json
+    overlaps {"spinner-on-buttonroom L40 buttonroom@160,128":4}
+frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5-control.json
+    overlaps {"spinner-on-buttonroom L40 buttonroom@880,768":39}
+frontend/modules/seedlingDemo/fixtures/tapes/r5-l40-part5.json
+    overlaps {"spinner-on-buttonroom L40 buttonroom@880,768":39}
+frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft-control.json
+    overlaps {"spinner-on-button L39 button@128,144":45,"spinner-on-button L39 button@160,144":42,"spinner-on-button L39 button@144,128":24}
+frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft.json
+    overlaps {"spinner-on-button L39 button@128,144":127,"spinner-on-button L39 button@112,144":67}
+
+tapes 322
+  ceremony:sealpiece                 spans 13, frames 4303, in a level with responders 8, spans a responder would change 0 (0 frames, 0 open flips)
+  freeze:bobboss-rock                spans 10, frames 1740, in a level with responders 0, spans a responder would change 0 (0 frames, 0 open flips)
+  freeze:door-ceremony               spans 5, frames 905, in a level with responders 0, spans a responder would change 0 (0 frames, 0 open flips)
+  freeze:moonrock                    spans 2, frames 902, in a level with responders 0, spans a responder would change 0 (0 frames, 0 open flips)
+  freeze:seed-cover-fade             spans 2, frames 400, in a level with responders 0, spans a responder would change 0 (0 frames, 0 open flips)
+  freeze:wand-approach-fade          spans 3, frames 297, in a level with responders 0, spans a responder would change 0 (0 frames, 0 open flips)
+  help:sword                         spans 7, frames 6, in a level with responders 0, spans a responder would change 0 (0 frames, 0 open flips)
+  pickup-lump                        spans 75, frames 11250, in a level with responders 28, spans a responder would change 0 (0 frames, 0 open flips)
+  span:fallrock                      spans 3, frames 591, in a level with responders 3, spans a responder would change 0 (0 frames, 0 open flips)
+  span:fallrocks-together            spans 3, frames 558, in a level with responders 0, spans a responder would change 0 (0 frames, 0 open flips)
+  overlaps (live ticks): {"spinner-on-buttonroom":101,"spinner-on-button":305}

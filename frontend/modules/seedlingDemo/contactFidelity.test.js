@@ -106,6 +106,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_PRESSER_RECURSION_HANG
         || !!process.env.SEEDLING_PUBLISHED_BUTTON_ROOM_SETTER
         || !!process.env.SEEDLING_RESPONDER_STEP_AFTER_READERS
+        || !!process.env.SEEDLING_DEAD_FRAME_RESPONDER_STEP || !!process.env.SEEDLING_ENEMY_PRESSES_FALL_ROCK_BUTTON
         || !!process.env.SEEDLING_ARROW_LANE_CROSSING
         || !!process.env.SEEDLING_AXE_TIMING_RUNG || !!process.env.SEEDLING_AXE_GATE_TRANSIT
         || !!process.env.SEEDLING_STATUE_TALK_RANGE
@@ -455,7 +456,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity BUTTONROOMCLEAR D2 (wave 63): a ButtonRoom reached by another presser's publish runs its whole setter — OFF.
             publishedButtonRoomSetter: false,
             // ⛓ fidelity RESPONDERORDER D2 (wave 65): the responders step after the readers, on the previous frame's publish (the game's frame order) — OFF.
-            responderStepAfterReaders: false });
+            responderStepAfterReaders: false,
+            // ⛓ fidelity DEADFRAME D2 (wave 66): the responders step on the dead frames (pickup lumps, a button rock's span) — OFF.
+            deadFrameResponderStep: false,
+            // ⛓ fidelity DEADFRAME D2 (wave 66): a spinner or wallflyer on a FallRock's Button drops the rock, in the enemy's frame — OFF.
+            enemyPressesFallRockButton: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
