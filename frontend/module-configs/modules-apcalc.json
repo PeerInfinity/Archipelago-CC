@@ -222,7 +222,7 @@
     },
     "mysteryArchipelago": {
       "path": "./modules/mysteryArchipelago/index.js",
-      "enabled": false
+      "enabled": true
     },
     "vibeCodingSim": {
       "path": "./modules/vibeCodingSim/index.js",

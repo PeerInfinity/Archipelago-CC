@@ -81,6 +81,7 @@ export const README_ORDER = Object.freeze([
     'jta.md',
     'omsi.md',
     'noiz2sa.md',
+    'mystery.md',
 ]);
 
 /** ⛓ The published home of a `procgenDocs` page — the ONE spelling of the

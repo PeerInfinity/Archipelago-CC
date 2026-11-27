@@ -2587,13 +2587,19 @@
             "id": "mystery-bridge-round-trip",
             "enabled": true,
             "category": "Mystery Bridge",
-            "_comment": "The Mystery Game module (modules/mysteryArchipelago, disabled by default; the row enables it and puts it back, and points its page address at a stand-in page for the session, modules/mysteryArchipelago/testPage/, not the real game). Enabling opens the panel; loading the committed mystery_custom_house_fire preset makes the panel frame the case: state on request, a solved question as a check that comes back solved, a repeat, and refusals by name. No server, so it is the host's offline path. Category unclaimed by testBatches.js, so batch fast (on push)."
+            "_comment": "The Mystery Game module (modules/mysteryArchipelago; the row opens its panel as Quick Launch does and closes it again, and points its page address at a stand-in page for the session, modules/mysteryArchipelago/testPage/, not the real game). Enabling opens the panel; loading the committed mystery_custom_house_fire preset makes the panel frame the case: state on request, a solved question as a check that comes back solved, a repeat, and refusals by name. No server, so it is the host's offline path. Category unclaimed by testBatches.js, so batch fast (on push)."
         },
         {
             "id": "mystery-real-page-handshake",
             "enabled": true,
             "category": "Mystery Bridge",
             "_comment": "The Mystery Game module at its DEFAULT page address: this app's own copy of the game (the git submodule modules/mystery-clue-game), not the stand-in. The row enables the module, loads the committed mystery_custom_house_fire preset and reads the host's side only: the game's page asked with the story and version the world has, a state went back, nothing was refused. With mysteryArchipelago/mysteryPin.test.js it is the live half of the pin between the submodule and the world. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
+            "id": "mystery-region-office-and-street",
+            "enabled": true,
+            "category": "Mystery Bridge",
+            "_comment": "The mystery SUBSTRATE: a case as one region of a generated world. Loads the committed mystery_street_test preset (scripts/test/generate-mystery-street-test-preset.mjs: the long case's office beside a maze street, by the top-down driver) with the stand-in page: the panel frames the region's case, mystery:state carries the world's lock and inOffice, a question solved in the street is not checked, the same question is checked in the office, and leaving says so again. Names are read off the loaded world. Category unclaimed by testBatches.js, so batch fast (on push)."
         },
         {
             "id": "document-library-idb",
