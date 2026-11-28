@@ -1,0 +1,104 @@
+=== m0 base ac1d02e6fb (both files)
+     ✓ the goals are the presets' own: L57 → L58 at tile (6,4), L69 → L36 at tile (4,4) 3ms
+     × now: walkTo accepts L57's mouth (the Tentacled Beast's `createMouthEntrance`), and the walk does not fail on it 58ms
+     × now: walkTo accepts L69's Lights exit (`LightBossController.endState`) 5ms
+     ✓ a cell that is no exit is still refused by name, in the fight's room too 7ms
+     × now: with the solver mode off the mouth is refused by name — the walk alone fights nothing 5ms
+     ✓ the run standing in another level binds no fight: the old refusal, by its old text 8ms
+     ✓ pits and placed teleporters are unchanged: L56's pit, L58's door back to L57 6ms
+     × now: the walker resolves a fight exit to the exit's cell and asks the solver with it 1ms
+     ✓ no fight on the cells: the old refusal, by its old text 1ms
+     × now: with the solver mode off the walker refuses a fight exit by name 5ms
+     × now: a declined fight exit FAILS by the solver's reason (a walk to the cell fights nothing) 2ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+     76|         // is the SOLVER's — never FAILED on the missing teleporter.
+    151|         expect(w.state).toBe(WALK_STATES.FAILED);
+    161|         expect(w.state).toBe(WALK_STATES.FAILED);
+      Tests  6 failed | 5 passed (11)
+=== m1 validateGoal fight arm dropped
+     ✓ the goals are the presets' own: L57 → L58 at tile (6,4), L69 → L36 at tile (4,4) 2ms
+     × now: walkTo accepts L57's mouth (the Tentacled Beast's `createMouthEntrance`), and the walk does not fail on it 61ms
+     × now: walkTo accepts L69's Lights exit (`LightBossController.endState`) 8ms
+     ✓ a cell that is no exit is still refused by name, in the fight's room too 10ms
+     ✓ now: with the solver mode off the mouth is refused by name — the walk alone fights nothing 11ms
+     ✓ the run standing in another level binds no fight: the old refusal, by its old text 4ms
+     ✓ pits and placed teleporters are unchanged: L56's pit, L58's door back to L57 8ms
+     ✓ now: the walker resolves a fight exit to the exit's cell and asks the solver with it 1ms
+     ✓ no fight on the cells: the old refusal, by its old text 1ms
+     ✓ now: with the solver mode off the walker refuses a fight exit by name 0ms
+     ✓ now: a declined fight exit FAILS by the solver's reason (a walk to the cell fights nothing) 0ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+     76|         // is the SOLVER's — never FAILED on the missing teleporter.
+      Tests  2 failed | 9 passed (11)
+=== m2 walker resolve fight arm dropped
+     ✓ the goals are the presets' own: L57 → L58 at tile (6,4), L69 → L36 at tile (4,4) 2ms
+     ✓ now: walkTo accepts L57's mouth (the Tentacled Beast's `createMouthEntrance`), and the walk does not fail on it 37ms
+     ✓ now: walkTo accepts L69's Lights exit (`LightBossController.endState`) 4ms
+     ✓ a cell that is no exit is still refused by name, in the fight's room too 7ms
+     ✓ now: with the solver mode off the mouth is refused by name — the walk alone fights nothing 4ms
+     ✓ the run standing in another level binds no fight: the old refusal, by its old text 3ms
+     ✓ pits and placed teleporters are unchanged: L56's pit, L58's door back to L57 10ms
+     × now: the walker resolves a fight exit to the exit's cell and asks the solver with it 7ms
+     ✓ no fight on the cells: the old refusal, by its old text 1ms
+     × now: with the solver mode off the walker refuses a fight exit by name 4ms
+     × now: a declined fight exit FAILS by the solver's reason (a walk to the cell fights nothing) 2ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+    151|         expect(w.state).toBe(WALK_STATES.FAILED);
+    161|         expect(w.state).toBe(WALK_STATES.FAILED);
+      Tests  3 failed | 8 passed (11)
+=== m3 fight arm accepts any cell of the level
+     ✓ the goals are the presets' own: L57 → L58 at tile (6,4), L69 → L36 at tile (4,4) 2ms
+     ✓ now: walkTo accepts L57's mouth (the Tentacled Beast's `createMouthEntrance`), and the walk does not fail on it 53ms
+     ✓ now: walkTo accepts L69's Lights exit (`LightBossController.endState`) 6ms
+     × a cell that is no exit is still refused by name, in the fight's room too 17ms
+     ✓ now: with the solver mode off the mouth is refused by name — the walk alone fights nothing 6ms
+     ✓ the run standing in another level binds no fight: the old refusal, by its old text 5ms
+     ✓ pits and placed teleporters are unchanged: L56's pit, L58's door back to L57 13ms
+     ✓ now: the walker resolves a fight exit to the exit's cell and asks the solver with it 1ms
+     ✓ no fight on the cells: the old refusal, by its old text 1ms
+     ✓ now: with the solver mode off the walker refuses a fight exit by name 0ms
+     ✓ now: a declined fight exit FAILS by the solver's reason (a walk to the cell fights nothing) 0ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 10 passed (11)
+=== m4a core solver-off refusal dropped
+     ✓ the goals are the presets' own: L57 → L58 at tile (6,4), L69 → L36 at tile (4,4) 1ms
+     ✓ now: walkTo accepts L57's mouth (the Tentacled Beast's `createMouthEntrance`), and the walk does not fail on it 36ms
+     ✓ now: walkTo accepts L69's Lights exit (`LightBossController.endState`) 4ms
+     ✓ a cell that is no exit is still refused by name, in the fight's room too 7ms
+     × now: with the solver mode off the mouth is refused by name — the walk alone fights nothing 17ms
+     ✓ the run standing in another level binds no fight: the old refusal, by its old text 3ms
+     ✓ pits and placed teleporters are unchanged: L56's pit, L58's door back to L57 5ms
+     ✓ now: the walker resolves a fight exit to the exit's cell and asks the solver with it 1ms
+     ✓ no fight on the cells: the old refusal, by its old text 0ms
+     ✓ now: with the solver mode off the walker refuses a fight exit by name 0ms
+     ✓ now: a declined fight exit FAILS by the solver's reason (a walk to the cell fights nothing) 0ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 10 passed (11)
+=== m4b walker solver-off refusal dropped
+     ✓ the goals are the presets' own: L57 → L58 at tile (6,4), L69 → L36 at tile (4,4) 2ms
+     ✓ now: walkTo accepts L57's mouth (the Tentacled Beast's `createMouthEntrance`), and the walk does not fail on it 38ms
+     ✓ now: walkTo accepts L69's Lights exit (`LightBossController.endState`) 4ms
+     ✓ a cell that is no exit is still refused by name, in the fight's room too 7ms
+     ✓ now: with the solver mode off the mouth is refused by name — the walk alone fights nothing 4ms
+     ✓ the run standing in another level binds no fight: the old refusal, by its old text 8ms
+     ✓ pits and placed teleporters are unchanged: L56's pit, L58's door back to L57 6ms
+     ✓ now: the walker resolves a fight exit to the exit's cell and asks the solver with it 1ms
+     ✓ no fight on the cells: the old refusal, by its old text 0ms
+     × now: with the solver mode off the walker refuses a fight exit by name 41ms
+     ✓ now: a declined fight exit FAILS by the solver's reason (a walk to the cell fights nothing) 1ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 10 passed (11)
+=== m5 declined fight exit walks
+     ✓ the goals are the presets' own: L57 → L58 at tile (6,4), L69 → L36 at tile (4,4) 2ms
+     ✓ now: walkTo accepts L57's mouth (the Tentacled Beast's `createMouthEntrance`), and the walk does not fail on it 38ms
+     ✓ now: walkTo accepts L69's Lights exit (`LightBossController.endState`) 4ms
+     ✓ a cell that is no exit is still refused by name, in the fight's room too 7ms
+     ✓ now: with the solver mode off the mouth is refused by name — the walk alone fights nothing 4ms
+     ✓ the run standing in another level binds no fight: the old refusal, by its old text 3ms
+     ✓ pits and placed teleporters are unchanged: L56's pit, L58's door back to L57 11ms
+     ✓ now: the walker resolves a fight exit to the exit's cell and asks the solver with it 1ms
+     ✓ no fight on the cells: the old refusal, by its old text 1ms
+     ✓ now: with the solver mode off the walker refuses a fight exit by name 0ms
+     × now: a declined fight exit FAILS by the solver's reason (a walk to the cell fights nothing) 39ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 10 passed (11)
