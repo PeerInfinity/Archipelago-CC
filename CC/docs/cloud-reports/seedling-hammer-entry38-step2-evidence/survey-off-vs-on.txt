@@ -1,0 +1,4 @@
+survey --through=end under ALL+WBA; per-step rows with the ms column stripped
+off: 250 steps, 229 SOLVED; with replay hits: 24 (L16 1h), 202 (L82 2h), 220 (L82 2h)
+on:  250 steps, 229 SOLVED; with replay hits: 24 (L16 1h), 202 (L82 2h), 220 (L82 2h)
+movers 0 (diff of the two step files is empty)
