@@ -186,7 +186,7 @@ the fix's re-record is listed in D3.
     `generate-procgen-reference.mjs --check` matches. `census-seedling-constants.mjs --check` passes.
     `census-seedling-solver-surface.mjs --check` is green (375 rows). The six `solve-seedling-*.mjs --check` are all green
     (`d3/solve-checks.txt`).
-  - **CI** at `eacc8f87d5`: § CI below. For the planner: `unittests_frontend.yml -f train_only=true` at the head (I can't
+  - **CI** at `eacc8f87d5`: success (§ CI). For the planner: `unittests_frontend.yml -f train_only=true` at the head (I can't
     dispatch).
 
 ## What the brief got wrong (measured)
@@ -251,4 +251,7 @@ None.
 
 ## CI
 
-`JavaScript Unit Tests` at `eacc8f87d544da4414c7ea61df1b1a60cd705f7e`: see the line below, written when the run finished.
+`JavaScript Unit Tests` at `eacc8f87d544da4414c7ea61df1b1a60cd705f7e` (run 46087669223): **success**. Shards 1–3 are green. The
+suite is `vitest (unfiltered)` 30837 passed, 0 skipped, 0 failed, and the slow battery is 488 passed, 0 failed
+(`ci-vitest-summary.mjs`). The train tier is not run on a slice push; dispatch `unittests_frontend.yml -f train_only=true` at
+the head (I can't, 403).
