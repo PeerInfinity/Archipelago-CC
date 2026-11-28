@@ -1,0 +1,3 @@
+off.json: 250 steps, 226 SOLVED, 24 not; SOLVED with replay hits/deaths: 3 -> 24(L16:1h0d), 202(L82:2h0d), 220(L82:2h0d)
+on.json: 250 steps, 226 SOLVED, 24 not; SOLVED with replay hits/deaths: 3 -> 24(L16:1h0d), 202(L82:2h0d), 220(L82:2h0d)
+movers 0

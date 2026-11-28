@@ -1,0 +1,11 @@
+import { readFileSync } from 'node:fs';
+const R = '/home/user/Archipelago-CC/';
+const { restoreRequest } = await import(R + 'scripts/procgen/seedlingSolveRequestCodec.js');
+const { levelSourceFromAtlas } = await import(R + 'frontend/modules/seedlingDemo/atlasSource.js');
+const J = await import(R + 'frontend/modules/seedlingDemo/jsRuntimeSolver.js');
+const [,, file, id, i, keysFile] = process.argv;
+const leg = readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).find((r) => String(r.id) === id);
+const { passes, source, ...tape0 } = restoreRequest(leg.requests.find((r) => String(r.i) === i).request);
+const K = JSON.parse(readFileSync(keysFile, 'utf8'));
+const run = J.replayTape({ staging: tape0.staging, perTick: K.keys.map((k) => new Set(k)), levelSource: levelSourceFromAtlas(source.records), equips: new Map(K.equips), scratchPersistence: true });
+console.log('model hits', JSON.stringify(run.ledger('playerHits').map((h) => [h.t, h.source, h.id])), 'presses', JSON.stringify(run.ledger('presses').filter((p) => p.t > 280).map((p) => [p.t, p.weapon, p.hits.map((h) => h.id)])));
