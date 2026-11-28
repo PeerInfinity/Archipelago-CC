@@ -203,6 +203,8 @@ import { STRIKE_SLOT, STRIKE_SLOT_COUNTS, pressIsBlade } from './strikeSlot.js';
 import { SPEAR_ARM_COUNTS, spearArmSlot, spearStrikeGeometry } from './spearArm.js';
 // ⛓ hammer-phase L65→L68 HIT: a walk through strike bodies selects the held blade (`WALK_BLADE_ARM`, a family file, OFF).
 import { WALK_BLADE_ARM, WALK_BLADE_ARM_COUNTS, walkBladeArmSlot } from './walkBladeArm.js';
+// ⛓ hammer-phase ENTRY-38 SHOVE: a spear thrust waits out the gate that would swallow it (`SPEAR_PRESS_GATE_WAIT`, a family file, OFF).
+import { SPEAR_PRESS_GATE_WAIT, waitSpearPressGate } from './spearPressGateWait.js';
 import { STAGED_HUNT_SCAN_MEMO_COUNTS, newStagedHuntScanMemo, stagedScanEntry } from './stagedHuntScanMemo.js';
 import { OPP_PRESS_FALLBACK, OPP_PRESS_FALLBACK_COUNTS, oppPressFallbackSentence } from './oppPressFallback.js';
 import { auditOppFallbackRedo, oppFallbackHitsAudits, oppFallbackHitsSentence, playerHitsSince } from './oppFallbackHits.js';
@@ -12702,6 +12704,12 @@ function execSpearPress(run, perTick, p, ctx, what) {
     for (let i = 0; (run.progress('frozenTimer') ?? 0) > 1; i += 1) {
         if (i > 105) refuse(`still frozen after ${i} ticks.`);
         step(IDLE, 'the freeze wait');
+    }
+    // ⛓ hammer-phase ENTRY-38 SHOVE (`SPEAR_PRESS_GATE_WAIT` ON only): a wand/fire/spear window or a swing still up
+    // would swallow the press (`set spearing`'s gate), so wait it out (see `spearPressGateWait.js`).
+    if (SPEAR_PRESS_GATE_WAIT.enabled) {
+        waitSpearPressGate({ readInfo: () => run.progress('slashInfo'), idle: () => step(IDLE, 'the gate wait'),
+            refuse, tick: () => perTick.length });
     }
     if (run.state.direction !== facing) {
         refuse(`the face tap left the player facing ${run.state.direction}, not ${facing} — the stance is `
