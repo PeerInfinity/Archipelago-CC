@@ -1,0 +1,91 @@
+SAME level_61__r0c10 <- in_L62_96_304 -> exit:out_teleporter_160_0
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 5}
+SAME level_61__r0c10 <- in_L62_96_304 -> exit:out_teleporter_224_48
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 49}
+SAME level_61__r0c10 <- in_L62_96_304 -> location:L63 flag 1: lightpole@64,88 cleared
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 21}
+SAME level_61__r0c10 <- in_L63_0_48 -> exit:out_teleporter_160_0
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 37}
+SAME level_61__r0c10 <- in_L63_0_48 -> exit:out_teleporter_224_48
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 5}
+SAME level_61__r0c10 <- in_L63_0_48 -> location:L63 flag 1: lightpole@64,88 cleared
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 24}
+SAME level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_0_160
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 5}
+SAME level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_112_0
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 448}
+SAME level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_224_96
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 423}
+SAME level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_0_160
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 303}
+SAME level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_112_0
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 5}
+SAME level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_224_96
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 99}
+SAME level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_0_160
+   OFF {"end": "failed", "failed": "the solver declined level_61__r0c7 -> level_60__r5c9 in level 61 (pass dashless): solverBot(wasm-exit-61) reach-exit (0,160)->L60: the comba", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+SAME level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_112_0
+   OFF {"end": "failed", "failed": "the solver declined level_61__r0c7 -> level_62 in level 61 (pass dashless): solverBot(wasm-exit-61) reach-exit (112,0)->L62: the combat ladd", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+SAME level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_224_96
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 5}
+SAME level_61__r13c12 <- in_L63_0_208 -> exit:out_teleporter_224_208
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 5}
+SAME level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_0_48
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 5}
+SAME level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_0_96
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 84}
+SAME level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_16_0
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 59}
+SAME level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_64_0
+   OFF {"end": "failed", "failed": "the solver declined level_63__r0c1 -> level_62 #2 in level 63 (refusal): solverBot(wasm-exit-63) reach-exit (64,0)->L62: the combat ladder i", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+SAME level_63__r0c1 <- in_L61_224_48 -> location:L62 flag 0: lightpole@120,200 cleared
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 35}
+SAME level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_0_48
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 79}
+SAME level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_0_96
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 5}
+SAME level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_16_0
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 98}
+SAME level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_64_0
+   OFF {"end": "failed", "failed": "the solver declined level_63__r0c1 -> level_62 #2 in level 63 (refusal): solverBot(wasm-exit-63) reach-exit (64,0)->L62: the combat ladder i", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+SAME level_63__r0c1 <- in_L61_224_96 -> location:L62 flag 0: lightpole@120,200 cleared
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 37}
+SAME level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_0_48
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 50}
+SAME level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_0_96
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 89}
+SAME level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_16_0
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 5}
+SAME level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_64_0
+   OFF {"end": "failed", "failed": "the solver declined level_63__r0c1 -> level_62 #2 in level 63 (refusal): solverBot(wasm-exit-63) reach-exit (64,0)->L62: the combat ladder i", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+SAME level_63__r0c1 <- in_L62_192_304 -> location:L62 flag 0: lightpole@120,200 cleared
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 41}
+SAME level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_48
+   OFF {"end": "failed", "failed": "the solver declined level_63__r0c1 -> level_61__r0c10 in level 63 (refusal): solverBot(wasm-exit-63) reach-exit (0,48)->L61 -> hold stance (", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+SAME level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_96
+   OFF {"end": "failed", "failed": "the solver declined level_63__r0c1 -> level_61__r0c7 in level 63 (refusal): solverBot(wasm-exit-63) reach-exit (0,96)->L61: the combat ladde", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+SAME level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_16_0
+   OFF {"end": "failed", "failed": "the solver declined level_63__r0c1 -> level_62 in level 63 (refusal): solverBot(wasm-exit-63) reach-exit (16,0)->L62 -> hold stance (buttonr", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+SAME level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_64_0
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 5}
+SAME level_63__r0c1 <- in_L62_240_304 -> location:L62 flag 0: lightpole@120,200 cleared
+   OFF {"end": "failed", "failed": "the solver declined L62 flag 0: lightpole@120,200 cleared in level 63 (refusal): solverBot(wasm-location-63) clear-tag {62,0} lightpole@120,", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+SAME level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_0_208
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 5}
+SAME level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_32_304
+   OFF {"end": "failed", "failed": "the solver declined level_63__r10c2 -> level_65__r0c2 in level 63 (refusal): solverBot(wasm-exit-63) reach-exit (32,304)->L65: the combat la", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+SAME level_63__r10c2 <- in_L61_224_208 -> location:L63 flag 6: lightpole@48,272 cleared
+   OFF {"end": "failed", "failed": "the solver has no goal for L63 flag 6: lightpole@48,272 cleared: \"L63 flag 6: lightpole@48,272 cleared\" is a saved-obstacle EVENT (clear-tag", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+SAME level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_0_208
+   OFF {"end": "failed", "failed": "the solver declined level_63__r10c2 -> level_61__r13c12 in level 63 (refusal): solverBot(wasm-exit-63) reach-exit (0,208)->L61: the combat l", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+SAME level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_32_304
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 4}
+SAME level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared
+   OFF {"end": "failed", "failed": "the solver has no goal for L63 flag 6: lightpole@48,272 cleared: \"L63 flag 6: lightpole@48,272 cleared\" is a saved-obstacle EVENT (clear-tag", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+SAME level_63__r5c14 <- in_L65_128_0 ~> level_63__r6c9 -> location:Level 063 - Chest
+   OFF {"end": "failed", "failed": "the solver declined Level 063 - Chest in level 63 (refusal): solverBot(wasm-location-63) apitem (224,80) contact: the combat ladder is EXHAU", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+SAME level_63__r6c9 <- in_L65_128_0 -> exit:out_teleporter_128_304
+   OFF {"end": "done", "failed": null, "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": 4}
+SAME level_63__r6c9 <- in_L65_128_0 -> location:L63 flag 7: lightpole@112,272 cleared
+   OFF {"end": "failed", "failed": "the solver has no goal for L63 flag 7: lightpole@112,272 cleared: \"L63 flag 7: lightpole@112,272 cleared\" is a saved-obstacle EVENT (clear-t", "roomHits": {"atArrival": 0, "max": 0, "hits": []}, "ticks": null}
+TOTAL 45 legs (by key); identical 45 (end, failure, room hits sans the wall-clock sample count, last plan ticks/end/verbs/passes sans ms); done OFF 30 ON 30

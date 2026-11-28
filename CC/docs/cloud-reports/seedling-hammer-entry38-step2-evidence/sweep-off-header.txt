@@ -1,0 +1,5 @@
+INFO: mode inv: 45 legs in 45 page(s) (of 915 legs)
+CONTACT: page 1: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+SOLVER_ENV: page 1: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;
+INFO: page 1 booted in 24 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refuse
+INFO: page 1: 2 page error(s), ~2 swaps
