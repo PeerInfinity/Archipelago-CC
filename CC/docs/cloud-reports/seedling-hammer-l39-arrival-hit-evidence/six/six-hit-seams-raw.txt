@@ -1,0 +1,64 @@
+== jobs
+-5 off
+-5 on
+-4 off
+-4 on
+-3 off
+-3 on
+-2 off
+-2 on
+-1 off
+-1 on
+0 off
+0 on
+6 off
+6 on
+== off.-1
+  attempt budget=640 ok=true work=644 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget stand-bombs:refusal/w1/cut=budget
+PAGE 18:11 seam=29993 shift=-1 retries=0 provisional → ship dashless ticks=2864 hits=1 deaths=0 ["t1522 spinner-hammer:spinner@112,88"] answer=
+== off.-2
+  attempt budget=640 ok=true work=644 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget stand-bombs:refusal/w1/cut=budget
+PAGE 18:11 seam=29992 shift=-2 retries=0 provisional → ship dashless ticks=2864 hits=1 deaths=0 ["t1522 spinner-hammer:spinner@112,88"] answer=
+== off.-3
+  attempt budget=640 ok=true work=644 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget stand-bombs:refusal/w1/cut=budget
+PAGE 18:11 seam=29991 shift=-3 retries=0 provisional → ship dashless ticks=2864 hits=1 deaths=0 ["t1522 spinner-hammer:spinner@112,88"] answer=
+== off.-4
+  attempt budget=640 ok=true work=644 dashless:ok/2853t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget stand-bombs:refusal/w1/cut=budget
+PAGE 18:11 seam=29990 shift=-4 retries=0 provisional → ship dashless ticks=2853 hits=1 deaths=0 ["t1523 spinner-hammer:spinner@112,88"] answer=
+== off.-5
+  attempt budget=640 ok=true work=644 dashless:ok/2853t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget stand-bombs:refusal/w1/cut=budget
+PAGE 18:11 seam=29989 shift=-5 retries=0 provisional → ship dashless ticks=2853 hits=1 deaths=0 ["t1523 spinner-hammer:spinner@112,88"] answer=
+== off.0
+  attempt budget=640 ok=true work=644 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget stand-bombs:refusal/w1/cut=budget
+PAGE 18:11 seam=29994 shift=0 retries=0 provisional → ship dashless ticks=2864 hits=1 deaths=0 ["t1521 spinner-hammer:spinner@112,88"] answer=719a637caca4
+== off.6
+  attempt budget=640 ok=true work=644 dashless:ok/2867t/w538/h1 full:refusal/w104/budget hit-avoid:-/w1/cut=budget stand-bombs:refusal/w1/cut=budget
+PAGE 18:11 seam=30000 shift=6 retries=0 provisional → ship dashless ticks=2867 hits=1 deaths=0 ["t1519 spinner-hammer:spinner@112,88"] answer=
+== on.-1
+  attempt budget=640 ok=true work=644 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget stand-bombs:refusal/w1/cut=budget
+  attempt budget=2560 ok=true work=1196 dashless:ok/2864t/w536/h1 full:ok/3940t/w660/window/h0
+PAGE 18:11 seam=29993 shift=-1 retries=1 ship full ticks=3940 hits=0 deaths=0 [] answer=
+== on.-2
+  attempt budget=640 ok=true work=644 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget stand-bombs:refusal/w1/cut=budget
+  attempt budget=2560 ok=true work=1196 dashless:ok/2864t/w536/h1 full:ok/3940t/w660/window/h0
+PAGE 18:11 seam=29992 shift=-2 retries=1 ship full ticks=3940 hits=0 deaths=0 [] answer=
+== on.-3
+  attempt budget=640 ok=true work=644 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget stand-bombs:refusal/w1/cut=budget
+  attempt budget=2560 ok=true work=1176 dashless:ok/2864t/w536/h1 full:ok/3317t/w640/window/h0
+PAGE 18:11 seam=29991 shift=-3 retries=1 ship full ticks=3317 hits=0 deaths=0 [] answer=
+== on.-4
+  attempt budget=640 ok=true work=644 dashless:ok/2853t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget stand-bombs:refusal/w1/cut=budget
+  attempt budget=2560 ok=true work=1176 dashless:ok/2853t/w536/h1 full:ok/3317t/w640/window/h0
+PAGE 18:11 seam=29990 shift=-4 retries=1 ship full ticks=3317 hits=0 deaths=0 [] answer=
+== on.-5
+  attempt budget=640 ok=true work=644 dashless:ok/2853t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget stand-bombs:refusal/w1/cut=budget
+  attempt budget=2560 ok=true work=1176 dashless:ok/2853t/w536/h1 full:ok/3317t/w640/window/h0
+PAGE 18:11 seam=29989 shift=-5 retries=1 ship full ticks=3317 hits=0 deaths=0 [] answer=
+== on.0
+  attempt budget=640 ok=true work=644 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget stand-bombs:refusal/w1/cut=budget
+  attempt budget=2560 ok=true work=1195 dashless:ok/2864t/w536/h1 full:ok/3929t/w659/window/h0
+PAGE 18:11 seam=29994 shift=0 retries=1 ship full ticks=3929 hits=0 deaths=0 [] answer=128f09ae3413
+== on.6
+  attempt budget=640 ok=true work=644 dashless:ok/2867t/w538/h1 full:refusal/w104/budget hit-avoid:-/w1/cut=budget stand-bombs:refusal/w1/cut=budget
+  attempt budget=2560 ok=true work=2449 dashless:ok/2867t/w538/h1 full:ok/3926t/w1911/window/h0
+PAGE 18:11 seam=30000 shift=6 retries=1 ship full ticks=3926 hits=0 deaths=0 [] answer=

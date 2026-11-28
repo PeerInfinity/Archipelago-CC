@@ -1,0 +1,7 @@
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r9-F1.jsonl 32 10 0
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-A1.jsonl 32 10 0
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-A1.jsonl 32 12 0
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r9-F1.jsonl 32 12 0
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 -20
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 0
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 7

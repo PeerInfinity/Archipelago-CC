@@ -1,0 +1,4 @@
+# acceptance md5 (node scripts/procgen/batch-seedling-acceptance.mjs 2>/dev/null | md5sum)
+base e06722c153: 391322d681b7aa0229d94b3f6906d024
+ecd64826 (OAC + PSB, OFF): 391322d681b7aa0229d94b3f6906d024
+eac45148 (+ HSB, OFF): 391322d681b7aa0229d94b3f6906d024

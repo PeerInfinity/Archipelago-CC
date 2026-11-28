@@ -1,0 +1,5 @@
+steps 250 250 differing (verdict, ticks, hits, deaths, refusal): []
+verdicts off {'SOLVED': 226, 'REFUSED': 24}
+off steps with hits: [(24, 'L16', 1), (202, 'L82', 2), (220, 'L82', 2)] deaths: 0
+verdicts on {'SOLVED': 226, 'REFUSED': 24}
+on steps with hits: [(24, 'L16', 1), (202, 'L82', 2), (220, 'L82', 2)] deaths: 0

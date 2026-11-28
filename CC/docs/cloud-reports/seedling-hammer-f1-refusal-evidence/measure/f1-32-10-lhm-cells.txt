@@ -1,0 +1,110 @@
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":119,"y":56},"d":93.7,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":135,"y":56},"d":86.6,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":151,"y":56},"d":82,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":167,"y":56},"d":80.4,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":183,"y":56},"d":82,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":199,"y":56},"d":86.5,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":215,"y":56},"d":93.6,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":103,"y":72},"d":90.9,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":119,"y":72},"d":80.4,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":135,"y":72},"d":72,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":151,"y":72},"d":66.4,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":167,"y":72},"d":64.4,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":183,"y":72},"d":66.4,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":199,"y":72},"d":71.9,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":215,"y":72},"d":80.3,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":231,"y":72},"d":90.7,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":87,"y":88},"d":93.6,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":103,"y":88},"d":80.4,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":119,"y":88},"d":68.3,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":135,"y":88},"d":58.1,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":151,"y":88},"d":51.1,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":167,"y":88},"d":48.4,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":183,"y":88},"d":51,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":199,"y":88},"d":58,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":215,"y":88},"d":68.1,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":231,"y":88},"d":80.2,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":247,"y":88},"d":93.4,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":87,"y":104},"d":86.4,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":103,"y":104},"d":71.9,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":119,"y":104},"d":58,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":135,"y":104},"d":45.7,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":151,"y":104},"d":36.2,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":167,"y":104},"d":32.4,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":183,"y":104},"d":36.1,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":199,"y":104},"d":45.5,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":215,"y":104},"d":57.8,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":231,"y":104},"d":71.6,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":247,"y":104},"d":86.2,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":87,"y":120},"d":81.8,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":103,"y":120},"d":66.2,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":119,"y":120},"d":50.9,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":135,"y":120},"d":36.1,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":151,"y":120},"d":23,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":167,"y":120},"d":16.4,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":183,"y":120},"d":22.8,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":199,"y":120},"d":35.9,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":215,"y":120},"d":50.6,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":231,"y":120},"d":65.9,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":247,"y":120},"d":81.5,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":87,"y":136},"d":80.1,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":103,"y":136},"d":64.1,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":119,"y":136},"d":48.1,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":135,"y":136},"d":32.1,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":151,"y":136},"d":16.1,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":183,"y":136},"d":15.9,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":199,"y":136},"d":31.9,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":215,"y":136},"d":47.9,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":231,"y":136},"d":63.9,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":247,"y":136},"d":79.9,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":263,"y":136},"d":95.9,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":87,"y":152},"d":81.6,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":103,"y":152},"d":66,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":119,"y":152},"d":50.6,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":135,"y":152},"d":35.7,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":151,"y":152},"d":22.4,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":167,"y":152},"d":15.6,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":183,"y":152},"d":22.2,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":199,"y":152},"d":35.5,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":215,"y":152},"d":50.3,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":231,"y":152},"d":65.7,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":247,"y":152},"d":81.4,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":87,"y":168},"d":86.1,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":103,"y":168},"d":71.5,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":119,"y":168},"d":57.6,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":135,"y":168},"d":45,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":151,"y":168},"d":35.4,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":167,"y":168},"d":31.6,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":183,"y":168},"d":35.3,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":199,"y":168},"d":44.9,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":215,"y":168},"d":57.3,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":231,"y":168},"d":71.2,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":247,"y":168},"d":85.9,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":87,"y":184},"d":93.2,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":103,"y":184},"d":79.8,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":119,"y":184},"d":67.7,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":135,"y":184},"d":57.4,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":151,"y":184},"d":50.2,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":167,"y":184},"d":47.6,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":183,"y":184},"d":50.1,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":199,"y":184},"d":57.3,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":215,"y":184},"d":67.5,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":231,"y":184},"d":79.6,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":247,"y":184},"d":93,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":103,"y":200},"d":90.3,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":119,"y":200},"d":79.7,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":135,"y":200},"d":71.2,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":151,"y":200},"d":65.6,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":167,"y":200},"d":63.6,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":183,"y":200},"d":65.5,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":199,"y":200},"d":71.1,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":215,"y":200},"d":79.6,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":231,"y":200},"d":90.1,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":119,"y":216},"d":93,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":135,"y":216},"d":85.8,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":151,"y":216},"d":81.2,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":167,"y":216},"d":79.6,"why":"noplan"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":183,"y":216},"d":81.1,"why":"solid"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":199,"y":216},"d":85.7,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":215,"y":216},"d":92.9,"why":"preview: bomb:bombpusher@112,128#16 at previewed tick 16 bound=131 standTo=101"}
+LHC {"t":1996,"at":[167.1,136.4],"p":{"x":167,"y":232},"d":95.6,"why":"noplan"}

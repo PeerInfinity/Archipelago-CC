@@ -1,0 +1,16 @@
+COUNTS 19:2 env PKSW=- PKRB=- DSS=- LHM=- PKH=1 OAC=- PSB=- HSB=- enabled PKSW=false PKRB=false DSS=false LHM=true PKH=true OAC=false PSB=false HSB=false BOS=true GSW=true PM=true SPL=true KTA=true KTEB=false HF=false
+  result ok=true kind=null work=1715 answer=85c7dc2a524c ms=71973 ticks=1642 hits=0 deaths=0 []
+  live   ok=false kind=refusal work=896 answer=8ef0debe2bb9 solverEnv=SEEDLING_BRIDGE_OPEN_STRAY=1;SEEDLING_GOAL_START_WAIT=1;SEEDLING_PREVIEW_METER=1
+  PRESS_KILL_START_WAIT_COUNTS.rows=[]
+  PRESS_KILL_REFUGE_BOMBS_COUNTS={"asked":0,"refused":0}
+  DASH_STAND_SIGHT.counts={"asks":0}
+  LATCHED_HOLD_MOVE_COUNTS={"asked":0,"moves":[],"declined":[]}
+  OPP_AIM_CHASERS_COUNTS={"asked":0,"withheld":0}
+  HIT_AVOID_STAND_BOMBS_COUNTS={"tried":0,"replaced":0}
+  PRESS_KILL_STRIKE_BOMBS_COUNTS=undefined
+  PRESS_KILL_HOLD_COUNTS.rows=[{"t":0,"stand":636,"refusedAt":654,"tries":[{"wait":45,"verdict":"solved","why":null}],"verdict":"solved"}]
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[]
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":978506,"asked":847,"tripped":0}
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":385200,"forecastReplays":684,"spinRowsSkipped":372400}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]

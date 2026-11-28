@@ -1,0 +1,108 @@
+== L1.-10.off
+  attempt budget=640 ok=true work=642 dashless:ok/2839t/w536/h0 full:refusal/w106/budget
+PAGE 18:10 seam=30042 shift=-10 retries=0 provisional → ship dashless ticks=2839 hits=0 deaths=0 [] answer=
+== L1.-15.off
+  attempt budget=640 ok=true work=643 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget
+PAGE 18:10 seam=30037 shift=-15 retries=0 provisional → ship dashless ticks=2864 hits=1 deaths=0 ["t1522 spinner-hammer:spinner@112,88"] answer=
+== L1.-20.off
+  attempt budget=640 ok=true work=641 dashless:ok/3841t/w580/h0 full:refusal/w61/budget
+PAGE 18:10 seam=30032 shift=-20 retries=0 provisional → ship dashless ticks=3841 hits=0 deaths=0 [] answer=
+== L1.-25.off
+  attempt budget=640 ok=true work=641 dashless:ok/3939t/w581/h0 full:refusal/w60/budget
+PAGE 18:10 seam=30027 shift=-25 retries=0 provisional → ship dashless ticks=3939 hits=0 deaths=0 [] answer=
+== L1.-30.off
+  attempt budget=640 ok=true work=641 dashless:ok/3935t/w581/h0 full:refusal/w60/budget
+PAGE 18:10 seam=30022 shift=-30 retries=0 provisional → ship dashless ticks=3935 hits=0 deaths=0 [] answer=
+== L1.-35.off
+  attempt budget=640 ok=true work=642 dashless:ok/2831t/w536/h0 full:refusal/w106/budget
+PAGE 18:10 seam=30017 shift=-35 retries=0 provisional → ship dashless ticks=2831 hits=0 deaths=0 [] answer=
+== L1.-40.off
+  attempt budget=640 ok=true work=642 dashless:ok/2743t/w530/h0 full:refusal/w112/budget
+PAGE 18:10 seam=30012 shift=-40 retries=0 provisional → ship dashless ticks=2743 hits=0 deaths=0 [] answer=
+== L1.-5.off
+  attempt budget=640 ok=true work=641 dashless:ok/3860t/w579/h0 full:refusal/w62/budget
+PAGE 18:10 seam=30047 shift=-5 retries=0 provisional → ship dashless ticks=3860 hits=0 deaths=0 [] answer=
+== L1.-58.off
+  attempt budget=640 ok=true work=643 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget
+PAGE 18:10 seam=29994 shift=-58 retries=0 provisional → ship dashless ticks=2864 hits=1 deaths=0 ["t1521 spinner-hammer:spinner@112,88"] answer=
+== L1.0.off
+  attempt budget=640 ok=true work=641 dashless:ok/3818t/w576/h0 full:refusal/w65/budget
+PAGE 18:10 seam=30052 shift=0 retries=0 provisional → ship dashless ticks=3818 hits=0 deaths=0 [] answer=2e1603a6ae22
+== L1.10.off
+  attempt budget=640 ok=true work=642 dashless:ok/2831t/w536/h0 full:refusal/w106/budget
+PAGE 18:10 seam=30062 shift=10 retries=0 provisional → ship dashless ticks=2831 hits=0 deaths=0 [] answer=
+== L1.15.off
+  attempt budget=640 ok=true work=641 dashless:ok/3935t/w581/h0 full:refusal/w60/budget
+PAGE 18:10 seam=30067 shift=15 retries=0 provisional → ship dashless ticks=3935 hits=0 deaths=0 [] answer=
+== L1.20.off
+  attempt budget=640 ok=true work=641 dashless:ok/3939t/w581/h0 full:refusal/w60/budget
+PAGE 18:10 seam=30072 shift=20 retries=0 provisional → ship dashless ticks=3939 hits=0 deaths=0 [] answer=
+== L1.25.off
+  attempt budget=640 ok=true work=641 dashless:ok/3841t/w580/h0 full:refusal/w61/budget
+PAGE 18:10 seam=30077 shift=25 retries=0 provisional → ship dashless ticks=3841 hits=0 deaths=0 [] answer=
+== L1.30.off
+  attempt budget=640 ok=true work=643 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget
+PAGE 18:10 seam=30082 shift=30 retries=0 provisional → ship dashless ticks=2864 hits=1 deaths=0 ["t1522 spinner-hammer:spinner@112,88"] answer=
+== L1.35.off
+  attempt budget=640 ok=true work=642 dashless:ok/2839t/w536/h0 full:refusal/w106/budget
+PAGE 18:10 seam=30087 shift=35 retries=0 provisional → ship dashless ticks=2839 hits=0 deaths=0 [] answer=
+== L1.40.off
+  attempt budget=640 ok=true work=641 dashless:ok/3860t/w579/h0 full:refusal/w62/budget
+PAGE 18:10 seam=30092 shift=40 retries=0 provisional → ship dashless ticks=3860 hits=0 deaths=0 [] answer=
+== L1.5.off
+  attempt budget=640 ok=true work=642 dashless:ok/2743t/w530/h0 full:refusal/w112/budget
+PAGE 18:10 seam=30057 shift=5 retries=0 provisional → ship dashless ticks=2743 hits=0 deaths=0 [] answer=
+== S1.-10.off
+  attempt budget=640 ok=true work=641 dashless:ok/3903t/w582/h0 full:refusal/w59/budget
+PAGE 18:11 seam=29984 shift=-10 retries=0 provisional → ship dashless ticks=3903 hits=0 deaths=0 [] answer=
+== S1.-15.off
+  attempt budget=640 ok=true work=641 dashless:ok/3856t/w577/h0 full:refusal/w64/budget
+PAGE 18:11 seam=29979 shift=-15 retries=0 provisional → ship dashless ticks=3856 hits=0 deaths=0 [] answer=
+== S1.-20.off
+  attempt budget=640 ok=true work=641 dashless:ok/3943t/w583/h0 full:refusal/w58/budget
+PAGE 18:11 seam=29974 shift=-20 retries=0 provisional → ship dashless ticks=3943 hits=0 deaths=0 [] answer=
+== S1.-25.off
+  attempt budget=640 ok=true work=642 dashless:ok/2743t/w530/h0 full:refusal/w112/budget
+PAGE 18:11 seam=29969 shift=-25 retries=0 provisional → ship dashless ticks=2743 hits=0 deaths=0 [] answer=
+== S1.-30.off
+  attempt budget=640 ok=true work=642 dashless:ok/3345t/w547/h0 full:refusal/w95/budget
+PAGE 18:11 seam=29964 shift=-30 retries=0 provisional → ship dashless ticks=3345 hits=0 deaths=0 [] answer=
+== S1.-35.off
+  attempt budget=640 ok=true work=641 dashless:ok/3923t/w583/h0 full:refusal/w58/budget
+PAGE 18:11 seam=29959 shift=-35 retries=0 provisional → ship dashless ticks=3923 hits=0 deaths=0 [] answer=
+== S1.-40.off
+  attempt budget=640 ok=true work=642 dashless:ok/3974t/w586/h0 full:refusal/w56/budget
+PAGE 18:11 seam=29954 shift=-40 retries=0 provisional → ship dashless ticks=3974 hits=0 deaths=0 [] answer=
+== S1.-5.off
+  attempt budget=640 ok=true work=643 dashless:ok/2853t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget
+PAGE 18:11 seam=29989 shift=-5 retries=0 provisional → ship dashless ticks=2853 hits=1 deaths=0 ["t1523 spinner-hammer:spinner@112,88"] answer=
+== S1.0.off
+  attempt budget=640 ok=true work=643 dashless:ok/2864t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget
+PAGE 18:11 seam=29994 shift=0 retries=0 provisional → ship dashless ticks=2864 hits=1 deaths=0 ["t1521 spinner-hammer:spinner@112,88"] answer=719a637caca4
+== S1.10.off
+  attempt budget=640 ok=true work=641 dashless:ok/3923t/w583/h0 full:refusal/w58/budget
+PAGE 18:11 seam=30004 shift=10 retries=0 provisional → ship dashless ticks=3923 hits=0 deaths=0 [] answer=
+== S1.15.off
+  attempt budget=640 ok=true work=642 dashless:ok/3345t/w547/h0 full:refusal/w95/budget
+PAGE 18:11 seam=30009 shift=15 retries=0 provisional → ship dashless ticks=3345 hits=0 deaths=0 [] answer=
+== S1.20.off
+  attempt budget=640 ok=true work=642 dashless:ok/2743t/w530/h0 full:refusal/w112/budget
+PAGE 18:11 seam=30014 shift=20 retries=0 provisional → ship dashless ticks=2743 hits=0 deaths=0 [] answer=
+== S1.25.off
+  attempt budget=640 ok=true work=641 dashless:ok/3943t/w583/h0 full:refusal/w58/budget
+PAGE 18:11 seam=30019 shift=25 retries=0 provisional → ship dashless ticks=3943 hits=0 deaths=0 [] answer=
+== S1.30.off
+  attempt budget=640 ok=true work=641 dashless:ok/3856t/w577/h0 full:refusal/w64/budget
+PAGE 18:11 seam=30024 shift=30 retries=0 provisional → ship dashless ticks=3856 hits=0 deaths=0 [] answer=
+== S1.35.off
+  attempt budget=640 ok=true work=641 dashless:ok/3903t/w582/h0 full:refusal/w59/budget
+PAGE 18:11 seam=30029 shift=35 retries=0 provisional → ship dashless ticks=3903 hits=0 deaths=0 [] answer=
+== S1.40.off
+  attempt budget=640 ok=true work=643 dashless:ok/2853t/w536/h1 full:refusal/w106/budget hit-avoid:-/w1/cut=budget
+PAGE 18:11 seam=30034 shift=40 retries=0 provisional → ship dashless ticks=2853 hits=1 deaths=0 ["t1523 spinner-hammer:spinner@112,88"] answer=
+== S1.5.off
+  attempt budget=640 ok=true work=642 dashless:ok/3974t/w586/h0 full:refusal/w56/budget
+PAGE 18:11 seam=29999 shift=5 retries=0 provisional → ship dashless ticks=3974 hits=0 deaths=0 [] answer=
+== S1.58.off
+  attempt budget=640 ok=true work=641 dashless:ok/3818t/w576/h0 full:refusal/w65/budget
+PAGE 18:11 seam=30052 shift=58 retries=0 provisional → ship dashless ticks=3818 hits=0 deaths=0 [] answer=

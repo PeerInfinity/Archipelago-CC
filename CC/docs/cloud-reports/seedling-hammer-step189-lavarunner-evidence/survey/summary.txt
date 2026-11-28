@@ -1,0 +1,14 @@
+base: 250 steps {'SOLVED': 226, 'REFUSED': 24}
+kps: 250 steps {'SOLVED': 228, 'REFUSED': 22}
+base vs kps: 2 step(s) differ
+   (189, 71, 'REFUSED', None, 'SOLVED', 1407, '')
+   (217, 71, 'REFUSED', None, 'SOLVED', 777, '')
+six: 250 steps {'SOLVED': 227, 'REFUSED': 23}
+sixkps: 250 steps {'SOLVED': 229, 'REFUSED': 21}
+six vs sixkps: 2 step(s) differ
+   (189, 71, 'REFUSED', None, 'SOLVED', 1407, '')
+   (217, 71, 'REFUSED', None, 'SOLVED', 777, '')
+base steps with hits [(24, 'L16', 1), (202, 'L82', 2), (220, 'L82', 2)] deaths 0
+six steps with hits [(24, 'L16', 1), (202, 'L82', 2), (220, 'L82', 2)] deaths 0
+kps steps with hits [(24, 'L16', 1), (202, 'L82', 2), (220, 'L82', 2)] deaths 0
+sixkps steps with hits [(24, 'L16', 1), (202, 'L82', 2), (220, 'L82', 2)] deaths 0

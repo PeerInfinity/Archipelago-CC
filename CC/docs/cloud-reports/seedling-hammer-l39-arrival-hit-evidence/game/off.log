@@ -1,0 +1,5 @@
+SOLVE {"outcome":"provisional","retries":0,"attempts":[{"budget":640,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":2864,"work":536,"modelHits":{"hits":1,"deaths":0}},{"pass":"full","ok":false,"kind":"refusal","ticks":null,"work":106,"deadline":"block-route","limit":"budget"},{"pass":"hit-avoid","ok":false,"kind":null,"ticks":null,"work":1,"tries":1,"cut":"budget"}]}],"pass":"dashless","ok":true,"work":643,"ticks":2864,"message":null}
+MODEL {"hits":["t1521 spinner-hammer:spinner@112,88"],"end":{"level":39,"x":80.7508221821831,"y":48.88776269510896}}
+# box lock: TAKEN by l39-arrival-hit-witness (browser, pid 7169) — head 8cebc41b3, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"finished":true,"ticks":2864,"prefix":0,"hitsAtPrefix":{"tick":0,"hits":0},"end":{"level":39,"x":80.7508221821831,"y":48.88776269510896},"hits":1}

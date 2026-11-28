@@ -1,0 +1,17 @@
+COUNTS 19:1 env PKSW=1 PKRB=1 DSS=1 LHM=- PKH=- OAC=1 PSB=- HSB=1 enabled PKSW=true PKRB=true DSS=true LHM=true PKH=false OAC=true PSB=false HSB=true BOS=true GSW=true PM=true SPL=true KTA=true KTEB=false HF=false
+  result ok=false kind=refusal work=642 answer=8007b96643fd ms=57043
+  live   ok=false kind=refusal work=642 answer=8007b96643fd solverEnv=SEEDLING_BRIDGE_OPEN_STRAY=1;SEEDLING_GOAL_START_WAIT=1;SEEDLING_PREVIEW_METER=1
+  message=solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (741.44,685.29) in level 40. There is no step out. the HAMMER-PHASE rung first saw this corner at t652, and from t654 NO PHASE admits a step: no hold of 1..44 tick(s) at any walk-offset -1..0 (0 tried) walks the approach clear for one more hammer period (45 ticks) (HAMMER_PHASE_RUNG). The plain fallback (`OPP_PRESS_FALLBACK`) rewound to the kill's first tick (t0) and redid the kill with `OPPORTUNISTIC_STRIKE` off; it did not kill (Solve
+  PRESS_KILL_START_WAIT_COUNTS.rows=[]
+  PRESS_KILL_REFUGE_BOMBS_COUNTS={"asked":121,"refused":0}
+  DASH_STAND_SIGHT.counts={"asks":0}
+  LATCHED_HOLD_MOVE_COUNTS={"asked":0,"moves":[],"declined":[]}
+  OPP_AIM_CHASERS_COUNTS={"asked":0,"withheld":0}
+  HIT_AVOID_STAND_BOMBS_COUNTS={"tried":0,"replaced":0}
+  PRESS_KILL_STRIKE_BOMBS_COUNTS=undefined
+  PRESS_KILL_HOLD_COUNTS.rows=[]
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[]
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":660596,"asked":587,"tripped":1}
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":169600,"forecastReplays":323,"spinRowsSkipped":368000}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]

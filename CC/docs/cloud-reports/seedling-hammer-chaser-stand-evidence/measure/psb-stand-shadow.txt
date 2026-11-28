@@ -1,0 +1,17 @@
+# PRESS_KILL_STRIKE_BOMBS' stand question as a SHADOW (tools/psb-hook.mjs): every strike the press kill TAKES under all4 (PSB OFF),
+# stamped with what standBlastAt would say. Seam -60 (all4 ships 651 t 0 h) and seam +7 (all4 ships bomb #8).
+## P1 32:10 seam -60: {"src":"r8-P1.jsonl#32:10","key":"Level 040 - Totem Part 64,144","seam":-60,"variant":null,"ok":true,"work":453,"ticks":651,"answer":"48df428d9405","hits":[],"deaths":0,"ms":17017,"reach":{"pksw":2,"p
+PSB {"t":1579,"body":"spinner@192,128","cell":{"x":248,"y":152},"pressAt":1595,"eta":15,"shadow":{"step":18,"id":"bombpusher@112,128#7","x":235,"y":152,"onWalk":false}}
+## P1 32:10 seam 7: {"src":"r8-P1.jsonl#32:10","key":"Level 040 - Totem Part 64,144","seam":7,"variant":null,"ok":true,"work":474,"ticks":719,"answer":"19aa9b7416fa","hits":["t1644 bomb:bombpusher@112,128#8 <- row1534 ki
+PSB {"t":1615,"body":"spinner@192,128","cell":{"x":232,"y":168},"pressAt":1639,"eta":22,"shadow":{"step":28,"id":"bombpusher@112,128#8","x":218,"y":168,"onWalk":false}}
+## the live player around each blast (DUMP_KEYS; K <key> x y <held> bombs=…):
+-60 K 1592 240.5 143.1 right bombs=bombpusher@112,128#7(225,133)
+-60 K 1593 240.3 144.0 left bombs=bombpusher@112,128#7(229,132)
+-60 K 1594 240.2 145.5 down bombs=bombpusher@112,128#7(232,131)
+-60 K 1595 239.3 146.7 left bombs=bombpusher@112,128#7(235,130)
+-60 K 1596 239.4 147.7 right bombs=
+7 K 1636 231.9 167.6  bombs=bombpusher@112,128#8(202,165)
+7 K 1638 231.9 167.6  bombs=bombpusher@112,128#8(208,166)
+7 K 1640 231.9 166.3 primary bombs=bombpusher@112,128#8(213,167)
+7 K 1641 232.7 166.8 right+down bombs=bombpusher@112,128#8(216,168)
+7 K 1642 232.5 167.9 left+down bombs=
