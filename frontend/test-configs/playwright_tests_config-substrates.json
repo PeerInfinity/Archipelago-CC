@@ -2202,7 +2202,7 @@
             "id": "region-map-zoom-pinch-links",
             "enabled": true,
             "category": "Region Map",
-            "_comment": "region-map zoom-links (2026-11-22): the toolbar's + / − (ZOOM_BUTTON_FACTOR around the centre, Follow unticks), a two-pointer synthetic pinch (distinct pointerIds: zoom x the distance ratio, no click) and the neighbour lines (lastPaint.neighbourLinks = the model's, apart from the cross-group links; off under Links), on procgen_topdown AP_1. Fast batch. Reloads the world loaded before."
+            "_comment": "region-map zoom-links (2026-11-22): the toolbar's + / − (ZOOM_BUTTON_FACTOR around the centre, Follow unticks), a two-pointer synthetic pinch (distinct pointerIds: zoom x the distance ratio, no click) and the neighbour lines (lastPaint.neighbourLinks = the model's, apart from the cross-group links; off under Links), on procgen_topdown AP_1. Fast batch. Reloads the world loaded before. region-map-maze-hooks (2026-11-27): + every maze cell has its level's extent and frame (sized by level), a substrate square per rules location, and every maze exit a direction off the panel's model."
         },
         {
             "id": "region-map-mobile-tab",
