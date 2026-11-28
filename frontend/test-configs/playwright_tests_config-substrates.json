@@ -106,6 +106,12 @@
             "_comment": "AN-TIME-4: the committed timed preset The Same Monday: the pool is loop.mana (3 h, not 100), the Time line at 09:00 and after one visit, the start gate refuses a visit whose paper is not held."
         },
         {
+            "id": "an-mystery-bridge-papers-loop",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-MYST-1: The Same Monday framed in the Mystery Game panel (the real page): the page asks with the world's version, every state carries loop, a visit's paper arrives by slot_data.mystery.items, a loop reset sends loop 2."
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
@@ -2546,6 +2552,12 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "AN-OMSI-3: the Playback Bot plays the omsi town to Start Journey in Loop mode in EXACTLY 7 loops (XP scale 1), equal to the pure planner and the headless live path (pinned headless in actionNodesTownScale.slow.test.js)."
+        },
+        {
+            "id": "an-mystery-goal-pending",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "AN-MYST-1, PENDING (superseded by Robert's 2026-11-26 ruling; the world-side goal is AN-MYST-2): on The Same Monday a questionSolved for the goal question checks nothing and brings no mystery:state back; the Playback Bot plays the world, the goal node checks the goal, solved still lacks it."
         },
         {
             "id": "playback-bot-loop-mode-maze",

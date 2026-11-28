@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 32,
-        "headings": 1370,
+        "headings": 1371,
         "indexHeadings": 2,
-        "lines": 37407,
+        "lines": 37418,
         "pages": 4,
-        "words": 580137
+        "words": 580494
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -356,17 +356,18 @@ export const DOCS_INDEX = frz({
             "description": "The ActionNodes substrate (id `action_nodes`) is a puzzle played in loops: one region is one node, and a node is one action with a mana cost, stat and resource minimums, results and a limit per loop.",
             "file": "action-nodes.md",
             "h1": "ActionNodes Substrate",
-            "headings": 16,
-            "lines": 217,
+            "headings": 17,
+            "lines": 227,
             "links": [
                 "architecture.md",
                 "gotchas.md",
                 "loop-recording.md",
+                "mystery.md",
                 "playback-and-debugging.md",
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/action-nodes.md",
-            "words": 7145
+            "words": 7459
         },
         {
             "description": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md).",
@@ -527,12 +528,13 @@ export const DOCS_INDEX = frz({
             "file": "mystery.md",
             "h1": "Mystery Substrate",
             "headings": 13,
-            "lines": 119,
+            "lines": 120,
             "links": [
+                "action-nodes.md",
                 "architecture.md"
             ],
             "path": "docs/json/developer/procgen/mystery.md",
-            "words": 2000
+            "words": 2043
         }
     ],
     "indexIn": "docs/json/developer/procgen/README.md",
