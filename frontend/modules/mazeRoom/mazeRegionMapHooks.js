@@ -25,14 +25,16 @@
  *                 atlas obstacle's `obstacleLib[id].events[].name` fires when it is cleared, on that obstacle's tile,
  *                 and each event a button latches (`buttons[]`, `buttonLib[id].latch.event`), on the button. An
  *                 event's square is where the player FIRES it (the rope, the lock, the button).
- *   · exits     — `exits[] {x, y, side?, targetRegion, isTeleporter?}`: the door tile, and its `side` when the
+ *   · exits     — `exits[] {x, y, side?, targetRegion, isTeleporter?, atlas_exit_id?, arrivalTile?}`: the door tile, and its `side` when the
  *                 generator wrote one; else the side of the level border the door tile sits on (`mazeExitLayout`).
  *   · levels    — the payload's `atlas_region` (a maze laid on a Seedling atlas), else the sidecar's `shared_world`
  *                 key (a SHARED LEVEL WORLD member with no payload of its own), else the region itself.
  *
  * ⛔ PURE: no DOM, no engine import (this file is not in the engine closure, and needs nothing from it), never a
- * preset or region name.
+ * preset or region name. Its one import is Seedling's imports-free exit classifier (`flashPanel/seedlingExitKind.js`).
  */
+
+import { seedlingExitLayoutKind, seedlingEdgeTransitionOf } from '../flashPanel/seedlingExitKind.js';
 
 const SIDES = Object.freeze(['N', 'E', 'S', 'W']);
 
@@ -134,29 +136,47 @@ export function mazeExitSide(exit, extent) {
  * ⛓ The layout KIND of a maze exit (`regionLayout.LINK_KINDS`), by who wrote it:
  *   · a GENERATED exit (it carries `side`): the pipeline sets `isTeleporter` when the target's grid cell is not
  *     adjacent (`procgenPipelineEngine.js`), so a teleporter is a `warp`, every other exit a `join` with `dir: side`;
- *   · an ATLAS exit (no `side`; projected from a Seedling level): ⛔ its `isTeleporter` is NOT a signal — every one is
- *     Seedling's Teleporter object, walk-off edges included (`seedlingCompositeMap.seedlingExitLayoutKind` says the
- *     same of Seedling's own sidecars) — so the door decides: on the level's border, a `join` with the border's side
- *     (a walk-off-the-edge exit); inside the level (a doorway, a staircase), a `warp`, as Seedling's non-edge exits are
- *     (⚖ user 2026-11-16/17: only an edge transition is a `join`). When the exit names its door back (`back`: the
- *     target payload's exit `targetExitId`, with the target's `backExtent`), a border door joins only if that door is on
- *     the OPPOSITE border of the target (`seedlingEdgeTransitionOf`'s test, with the back door for the arrival);
+ *   · an ATLAS exit (no `side`; projected from a Seedling level) is judged by **SEEDLING'S OWN RULE**
+ *     (`flashPanel/seedlingExitKind.js`, the same functions `seedlingCompositeMap.seedlingLayoutGraph` calls — never a
+ *     copy; maze-arrival-spawns, ⚖ user 2026-11-28T03:38:16.825Z "Copy Seedling's real ones", "Maps only for now"):
+ *       – `seedlingExitLayoutKind(atlas_exit_id)`: a staircase / pit is `down` / `up`, with no `dir`;
+ *       – else the ARRIVAL decides whether a border door is a walk-off edge (`seedlingEdgeTransitionOf`, in tiles,
+ *         `ts = 1`): the exit's own `arrivalTile` (the projection carries Seedling's `target_spawn` there), else — the
+ *         PAIR RULE, for a maze that carries none — the tile of the door back (`back`: the target payload's exit
+ *         `targetExitId`). An edge is a `join` with the border's side; not an edge (an interior door, or an arrival away
+ *         from the opposite border) is a `warp`; one the data cannot judge (no target extent) stays a `join`.
+ *       – with neither arrival (⛔ `isTeleporter` is NOT a signal: every atlas exit is Seedling's Teleporter object),
+ *         as before: a border door is a `join` with the border's side, an interior door a `warp`;
  *   · an exit the data cannot judge (no tile, no extent) stays a `join` with no `dir`.
+ * `targetExtent` is the target level's `{w, h}` (`backExtent` is its older name, still read).
  */
-const OPPOSITE = Object.freeze({ N: 'S', S: 'N', E: 'W', W: 'E' });
-export function mazeExitLayout(exit, extent, { back = null, backExtent = null } = {}) {
+export function mazeExitLayout(exit, extent, { back = null, targetExtent = null, backExtent = null } = {}) {
     if (SIDES.includes(exit?.side)) return exit.isTeleporter === true ? { kind: 'warp', dir: null } : { kind: 'join', dir: exit.side };
+    const stair = typeof exit?.atlas_exit_id === 'string' ? seedlingExitLayoutKind(exit.atlas_exit_id) : 'join';
+    if (stair !== 'join') return { kind: stair, dir: null };
     const dir = mazeExitSide(exit, extent);
-    if (dir) {
-        if (back && backExtent && Number.isInteger(back.x) && Number.isInteger(back.y)) {
-            const { w, h } = backExtent;
-            const onOpposite = { N: back.y >= h - 1, S: back.y <= 0, E: back.x <= 0, W: back.x >= w - 1 }[dir];
-            if (!onOpposite) return { kind: 'warp', dir: null };
-        }
+    const tgt = targetExtent ?? backExtent;
+    const arrival = mazeExitArrival(exit, back);
+    if (arrival && Number.isInteger(exit?.x) && Number.isInteger(exit?.y)) {
+        const edge = seedlingEdgeTransitionOf({ exit_tiles: [[exit.x, exit.y]], target_spawn: arrival }, extent, tgt, 1);
+        if (edge === false) return { kind: 'warp', dir: null };
         return { kind: 'join', dir };
     }
+    if (dir) return { kind: 'join', dir };
     const judged = Number.isInteger(exit?.x) && Number.isInteger(exit?.y) && extent;
     return { kind: judged ? 'warp' : 'join', dir: null };
+}
+
+/**
+ * ⛓ Where a maze exit lands the player, `{x, y}` in the target level's tiles, or null: its `arrivalTile` (the atlas
+ * projection's copy of Seedling's `target_spawn`), else the door back's tile (`back`, the pair rule), else null.
+ * `source` says which. ⛔ Display only: play resolves arrivals in `mazeArrival.js`, which this never touches.
+ */
+export function mazeExitArrival(exit, back = null) {
+    const a = exit?.arrivalTile;
+    if (a && Number.isInteger(a.x) && Number.isInteger(a.y)) return { x: a.x, y: a.y, source: 'arrivalTile' };
+    if (back && Number.isInteger(back.x) && Number.isInteger(back.y)) return { x: back.x, y: back.y, source: 'pair' };
+    return null;
 }
 
 /**
@@ -165,7 +185,8 @@ export function mazeExitLayout(exit, extent, { back = null, backExtent = null } 
  * `ctx = {sidecars, displayRegionOf}` → `{nodes, links}`:
  *   · nodes = the DISPLAY regions, in sidecar order (a shared level's members fold onto it);
  *   · links = every payload exit whose `targetRegion` has a sidecar, display-folded (a link inside one level is
- *     dropped), `kind` / `dir` by `mazeExitLayout` against the holder's extent (and the door back, when named).
+ *     dropped), `kind` / `dir` by `mazeExitLayout` against the holder's and the target's extents (the exit's
+ *     `arrivalTile`, else the door back, when named).
  * ⚠ ONE hook per world: the resolver uses it only when EVERY sidecar's substrate declares this same function, so a
  * world mixing the maze with another substrate is laid out generically (every committed mixed world has `grid_cell`).
  */
@@ -180,6 +201,16 @@ export function mazeLayoutGraph({ sidecars = {}, displayRegionOf = mazeDisplayRe
             nodes.push(d);
         }
     }
+    // ⛓ A SHARED LEVEL WORLD member carries no payload of its own (its level's payload sits on one member): the
+    //   target's extent and door back are read from the payload of its LEVEL (the first sidecar of the same display
+    //   region that has one). MEASURED on seedling_playthrough_maze: without this, 21 of its 320 links had no target
+    //   extent, and Seedling's rule could not judge them.
+    const levelPayload = new Map();
+    for (const [name, sc] of Object.entries(sidecars)) {
+        const d = displayOf(name);
+        if (sc?.playable_payload && !levelPayload.has(d)) levelPayload.set(d, sc.playable_payload);
+    }
+    const payloadFor = (name) => sidecars[name]?.playable_payload ?? levelPayload.get(displayOf(name)) ?? null;
     const links = [];
     for (const [name, sc] of Object.entries(sidecars)) {
         const payload = sc?.playable_payload;
@@ -190,10 +221,10 @@ export function mazeLayoutGraph({ sidecars = {}, displayRegionOf = mazeDisplayRe
             const from = displayOf(name);
             const target = displayOf(to);
             if (from === target) continue;
-            const tp = sidecars[to]?.playable_payload;
+            const tp = payloadFor(to);
             const back = e.targetExitId == null ? null
                 : (Array.isArray(tp?.exits) ? tp.exits : []).find((x) => x?.exit_id === e.targetExitId) ?? null;
-            links.push({ from, to: target, ...mazeExitLayout(e, extent, { back, backExtent: mazeRegionExtent({ playable_payload: tp }) }) });
+            links.push({ from, to: target, ...mazeExitLayout(e, extent, { back, targetExtent: mazeRegionExtent({ playable_payload: tp }) }) });
         }
     }
     return { nodes, links };
