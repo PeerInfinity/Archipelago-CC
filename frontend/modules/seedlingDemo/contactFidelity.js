@@ -2822,6 +2822,41 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no flip licence).
      */
     wandShotKill: false,
+    /**
+     * ⛓ fidelity WANDKILLBLAST (wave 73) — THE WAND KILL'S EXPLOSION ON A SECOND BODY: `Explosion.added()`'s `"Enemy"`
+     * arm (`Projectiles/Explosion.as:45-68`), `(c as Enemy).hit(4, new Point(x, y), 1)` with `t` "" on every Enemy whose
+     * box meets the prefilter square and whose origin is in the disc (`FP.distance <= radius`) — wave 71's refusal by
+     * name, replaced with the game's hit where it is witnessed.
+     * The game. `added()` runs in the end-of-tick `updateLists()`, AFTER each body's own update, so a hit body reads
+     * `hitsTimer` 30 at the tick's end and 29 the next. Each class's own `hit` (`Enemies/Enemy.as:141-181`): `hits += 1`,
+     * `hitsTimer = 30`, `knockback(4, p)` — empty for a Turret, SandTrap, LavaTrap and Drill, `v = -v` for a WallFlyer.
+     * A body the blast KILLS runs `startDeath("")` → `dieEffects("")`, which adds nothing: no chain blast.
+     * MEASURED on the game (p4g, a fresh page per shape, the neighbour STAGED — one entity added to the vanilla room, or
+     * the stripped L38 — through `botLoadLevels` with its own `set_id`; `fixtures/wandkillblast-witness/`, recorded by
+     * `probe-seedling-wandkillblast.mjs`, compared at every sampled tick: the player and its `hits`/`hits_timer`, every
+     * shot, every wand-class body's `hits`/`hitsTimer`/anim and its removal, every spit, the persistence cleared): L29's
+     * `turret@80,176` killed from above with a Turret, a SandTrap, a LavaTrap or a sitting Drill staged at OEL (74,182)
+     * (8.5 px from the blast centre): each takes hits 0 → 1 and `hitsTimer` 30 on the kill tick (t173), moves nothing, and
+     * the Drill plays "hit" from t174 (`second-turret`, `-sandtrap`, `-lavatrap`, `-drill`); an IceTrap there takes nothing
+     * (`second-icetrap`: `canHit = false`, already skipped); in the stripped L38 a resting WallFlyer 1 px from a
+     * sandtrap's blast takes hits 1, `hitsTimer` 30, v stays 0 (`wallflyer-rest`); and a sandtrap pre-hit to 2 by four
+     * shots, 9.9 px from a second sandtrap's wand kill, DIES to the blast (t401: "die", hits 3, `hitsTimer` 30; removed a
+     * tick after the shot-killed one; tags 25 and 26 cleared) while a third sandtrap 9.9 px from IT and 14 px from the
+     * first blast takes nothing — no chain (`chain-sandtrap`).
+     * ON (`levelRun.drainWandKillBlastsNow` → `hitByWandKillBlast`): Turret, SandTrap → `enemyHit` on F4's row; LavaTrap →
+     * on its wand row; WallFlyer → `hitWallFlyer`; Drill → `hitDrill` (`d` 1, `t` ""); a SandTrap the hit kills →
+     * `stageWandKillBlastDeath` ("die" on F4's row, its first update the next tick, the kill-lock ledger, its tag through
+     * `fireStaticRemovals`), and no Explosion. Refused by name (WANDKILLBLAST), unwitnessed: a Turret's, LavaTrap's,
+     * WallFlyer's or Drill's death by the blast, a moving wallflyer, a drill that is not sitting; and, with wave 71's
+     * refusal text unchanged, a chaser, a spinner, any other Enemy, and a body the run holds no point for.
+     * (The PLAYER half, `Player.hit(null, 4, p, 1)`, is `wandShotKill`'s own and now witnessed — L29's `blast-above` /
+     * `blast-below`, the player walking into the disc on the kill tick — with no change.)
+     * OFF: wave 71's refusal, word for word; nothing read, byte-identical.
+     * REQUIRES `wandShotKill` (alone it reaches nothing: there is no Explosion to drain, and the kill refuses with wave
+     * 68's text); composes with every key. `SEEDLING_WAND_KILL_BLAST_BODIES=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    wandKillBlastBodies: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -3304,6 +3339,9 @@ if (globalThis.process?.env?.SEEDLING_DRILL_SIGHT_LINE_GAME === '0') CONTACT_FID
 // ⛓ fidelity WANDKILL: `SEEDLING_WAND_SHOT_KILL=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_WAND_SHOT_KILL === '1') CONTACT_FIDELITY.wandShotKill = true;
 if (globalThis.process?.env?.SEEDLING_WAND_SHOT_KILL === '0') CONTACT_FIDELITY.wandShotKill = false;
+// ⛓ fidelity WANDKILLBLAST: `SEEDLING_WAND_KILL_BLAST_BODIES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WAND_KILL_BLAST_BODIES === '1') CONTACT_FIDELITY.wandKillBlastBodies = true;
+if (globalThis.process?.env?.SEEDLING_WAND_KILL_BLAST_BODIES === '0') CONTACT_FIDELITY.wandKillBlastBodies = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

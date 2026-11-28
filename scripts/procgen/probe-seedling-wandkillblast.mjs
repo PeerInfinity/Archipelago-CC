@@ -70,12 +70,36 @@ export const WAND_KILL_BLAST_SHAPES = Object.freeze({
         inputs: [{ key: 'down', from: 0, to: 1 }, ...FIVE.map(press), { key: 'down', from: 170, to: 220 }] },
     'blast-below': { boot: { level: 29, x: 112, y: 260 }, ticks: 250, stage: null,
         inputs: [{ key: 'up', from: 0, to: 1 }, ...FIVE.map(press), press(169), { key: 'up', from: 170, to: 220 }] },
+    ...Object.fromEntries([
+        ['turret', { type: 'turret', x: 74, y: 182 }],
+        ['sandtrap', { type: 'sandtrap', x: 74, y: 182, attrs: { tag: '30' } }],
+        ['icetrap', { type: 'icetrap', x: 74, y: 182 }],
+        ['lavatrap', { type: 'lavatrap', x: 74, y: 182 }],
+        ['drill', { type: 'drill', x: 74, y: 182 }],
+        ['wallflyer', { type: 'wallflyer', x: 74, y: 182 }],
+    ].map(([k, e]) => [`second-${k}`, { boot: { level: 29, x: 80, y: 156 }, ticks: 250, stage: [e],
+        inputs: [{ key: 'down', from: 0, to: 1 }, ...FIVE.map(press), press(164)] }])),
+    // The stripped L38 (its teleporters and `lightalpha` only — waves 64-69's staging room): the open upper room.
+    'chain-sandtrap': { boot: { level: 38, x: 96, y: 16 }, ticks: 440, strip: true,
+        stage: [{ type: 'sandtrap', x: 96, y: 40, attrs: { tag: '25' } }, { type: 'sandtrap', x: 89, y: 47, attrs: { tag: '26' } },
+            { type: 'sandtrap', x: 103, y: 47, attrs: { tag: '27' } }],
+        inputs: [{ key: 'down', from: 0, to: 1 }, ...[4, 36, 68, 100].map(press),
+            { key: 'left', from: 130, to: 170 }, { key: 'down', from: 170, to: 197 },
+            { key: 'right', from: 222, to: 223 }, ...[226, 258, 290, 322, 354, 386].map(press)] },
+    'wallflyer-rest': { boot: { level: 38, x: 23, y: 70 }, ticks: 240, strip: true,
+        stage: [{ type: 'wallflyer', x: 24, y: 40 }, { type: 'sandtrap', x: 23, y: 40, attrs: { tag: '25' } }],
+        inputs: [{ key: 'up', from: 0, to: 1 }, ...[4, 36, 68, 100, 132, 164].map(press)] },
 });
 
-/** The switches every shape's model runs under (both wand keys, and the trap bodies' key: L29 has no trap body). */
+/**
+ * The switches a shape's model runs under: both wand keys and the trap bodies' key (L29 has no trap body), and for a
+ * STAGED shape (a second body) `wandKillBlastBodies` — the key this wave adds (OFF: wave 71's refusal by name).
+ */
 export function wandKillBlastSwitches(name, extra = {}) {
-    if (!WAND_KILL_BLAST_SHAPES[name]) throw new Error(`wandKillBlastSwitches: no shape "${name}"`);
-    return { wandShotEnemyBodies: true, wandShotKill: true, wandShotTrapBodies: true, ...extra };
+    const w = WAND_KILL_BLAST_SHAPES[name];
+    if (!w) throw new Error(`wandKillBlastSwitches: no shape "${name}"`);
+    return { wandShotEnemyBodies: true, wandShotKill: true, wandShotTrapBodies: true,
+        ...(w.stage ? { wandKillBlastBodies: true } : {}), ...extra };
 }
 
 /** The tape for one shape, as `parseTape` takes it (wave 71's seam, RNG and pins). */
@@ -90,6 +114,12 @@ export function wandKillBlastTape(name) {
     };
 }
 
+/** The room's entities as a shape stages them: `strip` keeps only the teleporters and `lightalpha`; then `stage`. */
+export function stagedEntities(entities, w) {
+    const keep = w.strip ? entities.filter((e) => e.type === 'teleporter' || e.type === 'lightalpha') : entities;
+    return [...keep, ...structuredClone(w.stage)];
+}
+
 /** The shape's level source: the atlas, with the shape's entities added to its room. */
 export async function wandKillBlastLevelSource(name) {
     const w = WAND_KILL_BLAST_SHAPES[name];
@@ -98,7 +128,7 @@ export async function wandKillBlastLevelSource(name) {
     if (!w.stage) return atlas;
     return (n) => {
         const rec = atlas(n);
-        return n !== w.boot.level ? rec : { ...rec, entities: [...rec.entities, ...structuredClone(w.stage)] };
+        return n !== w.boot.level ? rec : { ...rec, entities: stagedEntities(rec.entities, w) };
     };
 }
 
@@ -129,8 +159,7 @@ async function main() {
         const w = WAND_KILL_BLAST_SHAPES[name];
         if (!w.stage) return vanilla;
         return { ...vanilla, set_id: `${vanilla.set_id}-wkb-${name}`, rooms: vanilla.rooms.map((r) => (r.id !== w.boot.level ? r
-            : { ...r, source: { record: { ...r.source.record,
-                entities: [...r.source.record.entities, ...structuredClone(w.stage)] } } })) };
+            : { ...r, source: { record: { ...r.source.record, entities: stagedEntities(r.source.record.entities, w) } } })) };
     };
     console.log(`PAGE: ${PAGE} · delivered ${vanilla.set_id}`);
 
