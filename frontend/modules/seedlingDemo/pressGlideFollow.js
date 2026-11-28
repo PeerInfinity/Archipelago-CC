@@ -103,13 +103,13 @@ export function shortOfStance(dir, { x, y }, stance) {
 }
 
 /**
- * Is `blockId` at rest on tile `to` in run `r` (pure over the run's reads)? The press verb's own settle test: the
- * run's `pushesSettled` and the block's tile (`tileSize` is the caller's, so no game constant is read here).
+ * Is the block at rest on tile `to` (pure)? The press verb's own settle test over the caller's two reads of a run:
+ * `block` its live pushables row and `settled` its `pushesSettled` (`tileSize` is the caller's too, so this file reads
+ * no run getter and no game constant).
  */
-export function blockSettledOn(r, blockId, to, tileSize) {
-    const l = r.entities('pushables').get(blockId);
-    if (!l || l.removed || !r.entities('pushesSettled')) return false;
-    return Math.floor(l.rect.x / tileSize) === to.tx && Math.floor(l.rect.y / tileSize) === to.ty;
+export function blockSettledOn(block, settled, to, tileSize) {
+    if (!block || block.removed || !settled) return false;
+    return Math.floor(block.rect.x / tileSize) === to.tx && Math.floor(block.rect.y / tileSize) === to.ty;
 }
 
 /**

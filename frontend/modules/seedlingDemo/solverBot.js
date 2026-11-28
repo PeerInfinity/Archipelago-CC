@@ -12739,7 +12739,7 @@ function execSpearPress(run, perTick, p, ctx, what) {
         // ⛓ hammer-phase ENTRY-38 STEP 2 (`PRESS_GLIDE_FOLLOW` ON only; OFF `glideFollow` is absent): lean, or idle.
         const lean = p.glideFollow?.keys({ live: l, slashInfo: run.progress('slashInfo'), t: perTick.length,
             fork: ctx.fork, key: FACING_KEYS[facing], left: SPEAR_PRESS_BOUND - i,
-            settled: (r) => blockSettledOn(r, p.blockId, p.to, TILE_SIZE) });
+            settled: (r) => blockSettledOn(r.entities('pushables').get(p.blockId), r.entities('pushesSettled'), p.to, TILE_SIZE) });
         step(lean ? new Set(lean) : IDLE, 'the glide wait');
     }
     if (settledAt === null) {

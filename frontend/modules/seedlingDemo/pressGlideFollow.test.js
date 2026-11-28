@@ -98,17 +98,15 @@ describe('shortOfStance — the push axis only (pure)', () => {
     });
 });
 
-describe('blockSettledOn — the press verb\'s settle test', () => {
-    const run = (rect, settled = true, removed = false) => ({
-        entities: (k) => (k === 'pushables' ? new Map([['b', { rect, removed }]]) : settled),
-    });
+describe('blockSettledOn — the press verb\'s settle test (pure)', () => {
     it('on the tile and settled; off the tile, moving, gone or missing is not', () => {
-        expect(blockSettledOn(run({ x: 80, y: 96 }), 'b', { tx: 5, ty: 6 }, 16)).toBe(true);
-        expect(blockSettledOn(run({ x: 81, y: 96 }), 'b', { tx: 5, ty: 6 }, 16)).toBe(true);
-        expect(blockSettledOn(run({ x: 96, y: 96 }), 'b', { tx: 5, ty: 6 }, 16)).toBe(false);
-        expect(blockSettledOn(run({ x: 80, y: 96 }, false), 'b', { tx: 5, ty: 6 }, 16)).toBe(false);
-        expect(blockSettledOn(run({ x: 80, y: 96 }, true, true), 'b', { tx: 5, ty: 6 }, 16)).toBe(false);
-        expect(blockSettledOn(run({ x: 80, y: 96 }), 'other', { tx: 5, ty: 6 }, 16)).toBe(false);
+        const to = { tx: 5, ty: 6 };
+        expect(blockSettledOn({ rect: { x: 80, y: 96 } }, true, to, 16)).toBe(true);
+        expect(blockSettledOn({ rect: { x: 81, y: 96 } }, true, to, 16)).toBe(true);
+        expect(blockSettledOn({ rect: { x: 96, y: 96 } }, true, to, 16)).toBe(false);
+        expect(blockSettledOn({ rect: { x: 80, y: 96 } }, false, to, 16)).toBe(false);
+        expect(blockSettledOn({ rect: { x: 80, y: 96 }, removed: true }, true, to, 16)).toBe(false);
+        expect(blockSettledOn(undefined, true, to, 16)).toBe(false);
     });
 });
 
@@ -205,11 +203,10 @@ describe('PRESS_GLIDE_FOLLOW — the two guarded readers', () => {
         expect(body.match(/p\.glideFollow/g) ?? []).toHaveLength(1);
     });
 
-    it('the family file carries no single-game constant and reads no run getter but the fork\'s and the settle test\'s', () => {
+    it('the family file carries no single-game constant and reads no run getter (the fork\'s ledgers only)', () => {
         const code = FAMILY.split('\n').filter((l) => !/^\s*(\*|\/\/|\/\*\*)/.test(l)).join('\n');
         expect(code).not.toMatch(/level\s*===\s*\d|@\d+,\d+|\b(?:jellyfish|pushableblockspear|spinningaxe)\b|\b16\b/);
-        expect(code).not.toMatch(/\.progress\(/);
-        expect(code.match(/\.entities\(/g) ?? []).toHaveLength(2); // blockSettledOn's two reads
+        expect(code).not.toMatch(/\.progress\(|\.entities\(/);
     });
 });
 
