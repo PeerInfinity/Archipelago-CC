@@ -1,0 +1,543 @@
+# box lock: TAKEN by probe-seedling-divergence-sweep.mjs (browser, pid 13509) — head 2c1062a48, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+INFO: mode inv: 45 legs in 45 page(s) (of 915 legs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 1: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 1: setting default (model default on)
+UPGRADE-WINDOW: page 1: setting 85
+DASH_ONLY_WINDOW: page 1: setting default
+DASH_SHAPE: page 1: setting default
+SOLVER_ENV: page 1: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 1 booted in 35 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 497 start (page 1, pageLeg 0)
+ROW {"id":497,"key":"level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_0_160","mode":"inv","producer":"solver","page":1,"pageLeg":0,"level":60,"arrive":[16,160],"goal":"level_61__r0c7 -> level_60__r5c9","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 c…
+INFO: page 1: 2 page error(s), ~2 swaps
+RECYCLE: page 1: launch 163 ms, newPage 128 ms, pageClose 18 ms, browserClose 277 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 2: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 2: setting default (model default on)
+UPGRADE-WINDOW: page 2: setting 85
+DASH_ONLY_WINDOW: page 2: setting default
+DASH_SHAPE: page 2: setting default
+SOLVER_ENV: page 2: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 2 booted in 30 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 498 start (page 2, pageLeg 0)
+ROW {"id":498,"key":"level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_112_0","mode":"inv","producer":"solver","page":2,"pageLeg":0,"level":62,"arrive":[16,160],"goal":"level_61__r0c7 -> level_62","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 cleared…
+INFO: page 2: 2 page error(s), ~2 swaps
+RECYCLE: page 2: launch 74 ms, newPage 138 ms, pageClose 27 ms, browserClose 193 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 3: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 3: setting default (model default on)
+UPGRADE-WINDOW: page 3: setting 85
+DASH_ONLY_WINDOW: page 3: setting default
+DASH_SHAPE: page 3: setting default
+SOLVER_ENV: page 3: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 3 booted in 30 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 499 start (page 3, pageLeg 0)
+ROW {"id":499,"key":"level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_224_96","mode":"inv","producer":"solver","page":3,"pageLeg":0,"level":63,"arrive":[16,160],"goal":"level_61__r0c7 -> level_63__r0c1","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 …
+INFO: page 3: 2 page error(s), ~2 swaps
+RECYCLE: page 3: launch 132 ms, newPage 47 ms, pageClose 20 ms, browserClose 227 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 4: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 4: setting default (model default on)
+UPGRADE-WINDOW: page 4: setting 85
+DASH_ONLY_WINDOW: page 4: setting default
+DASH_SHAPE: page 4: setting default
+SOLVER_ENV: page 4: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 4 booted in 27 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 500 start (page 4, pageLeg 0)
+ROW {"id":500,"key":"level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_0_160","mode":"inv","producer":"solver","page":4,"pageLeg":0,"level":60,"arrive":[112,16],"goal":"level_61__r0c7 -> level_60__r5c9","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 c…
+INFO: page 4: 2 page error(s), ~2 swaps
+RECYCLE: page 4: launch 63 ms, newPage 125 ms, pageClose 27 ms, browserClose 240 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 5: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 5: setting default (model default on)
+UPGRADE-WINDOW: page 5: setting 85
+DASH_ONLY_WINDOW: page 5: setting default
+DASH_SHAPE: page 5: setting default
+SOLVER_ENV: page 5: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 5 booted in 26 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 501 start (page 5, pageLeg 0)
+ROW {"id":501,"key":"level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_112_0","mode":"inv","producer":"solver","page":5,"pageLeg":0,"level":62,"arrive":[112,16],"goal":"level_61__r0c7 -> level_62","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 cleared…
+INFO: page 5: 2 page error(s), ~2 swaps
+RECYCLE: page 5: launch 60 ms, newPage 48 ms, pageClose 26 ms, browserClose 179 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 6: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 6: setting default (model default on)
+UPGRADE-WINDOW: page 6: setting 85
+DASH_ONLY_WINDOW: page 6: setting default
+DASH_SHAPE: page 6: setting default
+SOLVER_ENV: page 6: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 6 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 502 start (page 6, pageLeg 0)
+ROW {"id":502,"key":"level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_224_96","mode":"inv","producer":"solver","page":6,"pageLeg":0,"level":63,"arrive":[112,16],"goal":"level_61__r0c7 -> level_63__r0c1","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 …
+INFO: page 6: 2 page error(s), ~2 swaps
+RECYCLE: page 6: launch 45 ms, newPage 38 ms, pageClose 16 ms, browserClose 158 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 7: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 7: setting default (model default on)
+UPGRADE-WINDOW: page 7: setting 85
+DASH_ONLY_WINDOW: page 7: setting default
+DASH_SHAPE: page 7: setting default
+SOLVER_ENV: page 7: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 7 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 503 start (page 7, pageLeg 0)
+ROW {"id":503,"key":"level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_0_160","mode":"inv","producer":"solver","page":7,"pageLeg":0,"level":61,"arrive":[208,96],"goal":"level_61__r0c7 -> level_60__r5c9","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 cle…
+INFO: page 7: 2 page error(s), ~2 swaps
+RECYCLE: page 7: launch 54 ms, newPage 44 ms, pageClose 20 ms, browserClose 189 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 8: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 8: setting default (model default on)
+UPGRADE-WINDOW: page 8: setting 85
+DASH_ONLY_WINDOW: page 8: setting default
+DASH_SHAPE: page 8: setting default
+SOLVER_ENV: page 8: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 8 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 504 start (page 8, pageLeg 0)
+ROW {"id":504,"key":"level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_112_0","mode":"inv","producer":"solver","page":8,"pageLeg":0,"level":61,"arrive":[208,96],"goal":"level_61__r0c7 -> level_62","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 cleared",…
+INFO: page 8: 2 page error(s), ~2 swaps
+RECYCLE: page 8: launch 42 ms, newPage 39 ms, pageClose 15 ms, browserClose 202 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 9: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 9: setting default (model default on)
+UPGRADE-WINDOW: page 9: setting 85
+DASH_ONLY_WINDOW: page 9: setting default
+DASH_SHAPE: page 9: setting default
+SOLVER_ENV: page 9: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 9 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 505 start (page 9, pageLeg 0)
+ROW {"id":505,"key":"level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_224_96","mode":"inv","producer":"solver","page":9,"pageLeg":0,"level":63,"arrive":[208,96],"goal":"level_61__r0c7 -> level_63__r0c1","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 cl…
+INFO: page 9: 2 page error(s), ~2 swaps
+RECYCLE: page 9: launch 54 ms, newPage 35 ms, pageClose 21 ms, browserClose 153 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 10: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 10: setting default (model default on)
+UPGRADE-WINDOW: page 10: setting 85
+DASH_ONLY_WINDOW: page 10: setting default
+DASH_SHAPE: page 10: setting default
+SOLVER_ENV: page 10: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 10 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 506 start (page 10, pageLeg 0)
+ROW {"id":506,"key":"level_61__r0c10 <- in_L62_96_304 -> exit:out_teleporter_160_0","mode":"inv","producer":"solver","page":10,"pageLeg":0,"level":62,"arrive":[160,16],"goal":"level_61__r0c10 -> level_62","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 clea…
+INFO: page 10: 2 page error(s), ~2 swaps
+RECYCLE: page 10: launch 42 ms, newPage 47 ms, pageClose 14 ms, browserClose 162 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 11: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 11: setting default (model default on)
+UPGRADE-WINDOW: page 11: setting 85
+DASH_ONLY_WINDOW: page 11: setting default
+DASH_SHAPE: page 11: setting default
+SOLVER_ENV: page 11: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 11 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 507 start (page 11, pageLeg 0)
+ROW {"id":507,"key":"level_61__r0c10 <- in_L62_96_304 -> exit:out_teleporter_224_48","mode":"inv","producer":"solver","page":11,"pageLeg":0,"level":63,"arrive":[160,16],"goal":"level_61__r0c10 -> level_63__r0c1","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,…
+INFO: page 11: 2 page error(s), ~2 swaps
+RECYCLE: page 11: launch 40 ms, newPage 41 ms, pageClose 16 ms, browserClose 175 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 12: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 12: setting default (model default on)
+UPGRADE-WINDOW: page 12: setting 85
+DASH_ONLY_WINDOW: page 12: setting default
+DASH_SHAPE: page 12: setting default
+SOLVER_ENV: page 12: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 12 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 509 start (page 12, pageLeg 0)
+ROW {"id":509,"key":"level_61__r0c10 <- in_L63_0_48 -> exit:out_teleporter_160_0","mode":"inv","producer":"solver","page":12,"pageLeg":0,"level":62,"arrive":[208,48],"goal":"level_61__r0c10 -> level_62","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 cleare…
+INFO: page 12: 2 page error(s), ~2 swaps
+RECYCLE: page 12: launch 54 ms, newPage 38 ms, pageClose 16 ms, browserClose 141 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 13: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 13: setting default (model default on)
+UPGRADE-WINDOW: page 13: setting 85
+DASH_ONLY_WINDOW: page 13: setting default
+DASH_SHAPE: page 13: setting default
+SOLVER_ENV: page 13: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 13 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 510 start (page 13, pageLeg 0)
+ROW {"id":510,"key":"level_61__r0c10 <- in_L63_0_48 -> exit:out_teleporter_224_48","mode":"inv","producer":"solver","page":13,"pageLeg":0,"level":63,"arrive":[208,48],"goal":"level_61__r0c10 -> level_63__r0c1","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32…
+INFO: page 13: 2 page error(s), ~2 swaps
+RECYCLE: page 13: launch 45 ms, newPage 39 ms, pageClose 19 ms, browserClose 149 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 14: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 14: setting default (model default on)
+UPGRADE-WINDOW: page 14: setting 85
+DASH_ONLY_WINDOW: page 14: setting default
+DASH_SHAPE: page 14: setting default
+SOLVER_ENV: page 14: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 14 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 538 start (page 14, pageLeg 0)
+ROW {"id":538,"key":"level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_0_48","mode":"inv","producer":"solver","page":14,"pageLeg":0,"level":61,"arrive":[16,96],"goal":"level_63__r0c1 -> level_61__r0c10","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 c…
+INFO: page 14: 2 page error(s), ~2 swaps
+RECYCLE: page 14: launch 49 ms, newPage 32 ms, pageClose 14 ms, browserClose 185 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 15: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 15: setting default (model default on)
+UPGRADE-WINDOW: page 15: setting 85
+DASH_ONLY_WINDOW: page 15: setting default
+DASH_SHAPE: page 15: setting default
+SOLVER_ENV: page 15: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 15 booted in 20 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 539 start (page 15, pageLeg 0)
+ROW {"id":539,"key":"level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_0_96","mode":"inv","producer":"solver","page":15,"pageLeg":0,"level":61,"arrive":[16,96],"goal":"level_63__r0c1 -> level_61__r0c7","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 cl…
+INFO: page 15: 2 page error(s), ~2 swaps
+RECYCLE: page 15: launch 45 ms, newPage 29 ms, pageClose 21 ms, browserClose 164 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 16: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 16: setting default (model default on)
+UPGRADE-WINDOW: page 16: setting 85
+DASH_ONLY_WINDOW: page 16: setting default
+DASH_SHAPE: page 16: setting default
+SOLVER_ENV: page 16: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 16 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 540 start (page 16, pageLeg 0)
+ROW {"id":540,"key":"level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_16_0","mode":"inv","producer":"solver","page":16,"pageLeg":0,"level":62,"arrive":[16,96],"goal":"level_63__r0c1 -> level_62","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 cleared"…
+INFO: page 16: 2 page error(s), ~2 swaps
+RECYCLE: page 16: launch 46 ms, newPage 38 ms, pageClose 14 ms, browserClose 174 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 17: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 17: setting default (model default on)
+UPGRADE-WINDOW: page 17: setting 85
+DASH_ONLY_WINDOW: page 17: setting default
+DASH_SHAPE: page 17: setting default
+SOLVER_ENV: page 17: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 17 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 543 start (page 17, pageLeg 0)
+ROW {"id":543,"key":"level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_0_48","mode":"inv","producer":"solver","page":17,"pageLeg":0,"level":61,"arrive":[16,48],"goal":"level_63__r0c1 -> level_61__r0c10","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 c…
+INFO: page 17: 2 page error(s), ~2 swaps
+RECYCLE: page 17: launch 45 ms, newPage 32 ms, pageClose 14 ms, browserClose 165 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 18: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 18: setting default (model default on)
+UPGRADE-WINDOW: page 18: setting 85
+DASH_ONLY_WINDOW: page 18: setting default
+DASH_SHAPE: page 18: setting default
+SOLVER_ENV: page 18: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 18 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 544 start (page 18, pageLeg 0)
+ROW {"id":544,"key":"level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_0_96","mode":"inv","producer":"solver","page":18,"pageLeg":0,"level":61,"arrive":[16,48],"goal":"level_63__r0c1 -> level_61__r0c7","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 cl…
+INFO: page 18: 2 page error(s), ~2 swaps
+RECYCLE: page 18: launch 41 ms, newPage 40 ms, pageClose 12 ms, browserClose 142 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 19: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 19: setting default (model default on)
+UPGRADE-WINDOW: page 19: setting 85
+DASH_ONLY_WINDOW: page 19: setting default
+DASH_SHAPE: page 19: setting default
+SOLVER_ENV: page 19: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 19 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 545 start (page 19, pageLeg 0)
+ROW {"id":545,"key":"level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_16_0","mode":"inv","producer":"solver","page":19,"pageLeg":0,"level":62,"arrive":[16,48],"goal":"level_63__r0c1 -> level_62","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 cleared"…
+INFO: page 19: 2 page error(s), ~2 swaps
+RECYCLE: page 19: launch 41 ms, newPage 38 ms, pageClose 14 ms, browserClose 167 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 20: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 20: setting default (model default on)
+UPGRADE-WINDOW: page 20: setting 85
+DASH_ONLY_WINDOW: page 20: setting default
+DASH_SHAPE: page 20: setting default
+SOLVER_ENV: page 20: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 20 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 548 start (page 20, pageLeg 0)
+ROW {"id":548,"key":"level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_0_48","mode":"inv","producer":"solver","page":20,"pageLeg":0,"level":61,"arrive":[16,16],"goal":"level_63__r0c1 -> level_61__r0c10","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 …
+INFO: page 20: 2 page error(s), ~2 swaps
+RECYCLE: page 20: launch 44 ms, newPage 45 ms, pageClose 17 ms, browserClose 133 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 21: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 21: setting default (model default on)
+UPGRADE-WINDOW: page 21: setting 85
+DASH_ONLY_WINDOW: page 21: setting default
+DASH_SHAPE: page 21: setting default
+SOLVER_ENV: page 21: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 21 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 549 start (page 21, pageLeg 0)
+ROW {"id":549,"key":"level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_0_96","mode":"inv","producer":"solver","page":21,"pageLeg":0,"level":61,"arrive":[16,16],"goal":"level_63__r0c1 -> level_61__r0c7","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 c…
+INFO: page 21: 2 page error(s), ~2 swaps
+RECYCLE: page 21: launch 54 ms, newPage 43 ms, pageClose 14 ms, browserClose 139 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 22: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 22: setting default (model default on)
+UPGRADE-WINDOW: page 22: setting 85
+DASH_ONLY_WINDOW: page 22: setting default
+DASH_SHAPE: page 22: setting default
+SOLVER_ENV: page 22: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 22 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 550 start (page 22, pageLeg 0)
+ROW {"id":550,"key":"level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_16_0","mode":"inv","producer":"solver","page":22,"pageLeg":0,"level":62,"arrive":[16,16],"goal":"level_63__r0c1 -> level_62","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 cleared…
+INFO: page 22: 2 page error(s), ~2 swaps
+RECYCLE: page 22: launch 50 ms, newPage 38 ms, pageClose 16 ms, browserClose 136 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 23: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 23: setting default (model default on)
+UPGRADE-WINDOW: page 23: setting 85
+DASH_ONLY_WINDOW: page 23: setting default
+DASH_SHAPE: page 23: setting default
+SOLVER_ENV: page 23: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 23 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 553 start (page 23, pageLeg 0)
+ROW {"id":553,"key":"level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_48","mode":"inv","producer":"solver","page":23,"pageLeg":0,"level":63,"arrive":[64,16],"goal":"level_63__r0c1 -> level_61__r0c10","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 …
+INFO: page 23: 2 page error(s), ~2 swaps
+RECYCLE: page 23: launch 43 ms, newPage 37 ms, pageClose 15 ms, browserClose 167 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 24: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 24: setting default (model default on)
+UPGRADE-WINDOW: page 24: setting 85
+DASH_ONLY_WINDOW: page 24: setting default
+DASH_SHAPE: page 24: setting default
+SOLVER_ENV: page 24: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 24 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 554 start (page 24, pageLeg 0)
+ROW {"id":554,"key":"level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_96","mode":"inv","producer":"solver","page":24,"pageLeg":0,"level":63,"arrive":[64,16],"goal":"level_63__r0c1 -> level_61__r0c7","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 c…
+INFO: page 24: 2 page error(s), ~2 swaps
+RECYCLE: page 24: launch 47 ms, newPage 37 ms, pageClose 17 ms, browserClose 133 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 25: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 25: setting default (model default on)
+UPGRADE-WINDOW: page 25: setting 85
+DASH_ONLY_WINDOW: page 25: setting default
+DASH_SHAPE: page 25: setting default
+SOLVER_ENV: page 25: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 25 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 555 start (page 25, pageLeg 0)
+ROW {"id":555,"key":"level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_16_0","mode":"inv","producer":"solver","page":25,"pageLeg":0,"level":63,"arrive":[64,16],"goal":"level_63__r0c1 -> level_62","kind":"exit","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 cleared…
+INFO: page 25: 2 page error(s), ~2 swaps
+RECYCLE: page 25: launch 49 ms, newPage 38 ms, pageClose 13 ms, browserClose 165 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 26: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 26: setting default (model default on)
+UPGRADE-WINDOW: page 26: setting 85
+DASH_ONLY_WINDOW: page 26: setting default
+DASH_SHAPE: page 26: setting default
+SOLVER_ENV: page 26: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 26 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 512 start (page 26, pageLeg 0)
+ROW {"id":512,"key":"level_61__r13c12 <- in_L63_0_208 -> exit:out_teleporter_224_208","mode":"inv","producer":"solver","page":26,"pageLeg":0,"level":63,"arrive":[208,208],"goal":"level_61__r13c12 -> level_63__r10c2","kind":"exit","sphere":"7.5","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock…
+INFO: page 26: 2 page error(s), ~2 swaps
+RECYCLE: page 26: launch 52 ms, newPage 38 ms, pageClose 18 ms, browserClose 167 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 27: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 27: setting default (model default on)
+UPGRADE-WINDOW: page 27: setting 85
+DASH_ONLY_WINDOW: page 27: setting default
+DASH_SHAPE: page 27: setting default
+SOLVER_ENV: page 27: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 27 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 558 start (page 27, pageLeg 0)
+ROW {"id":558,"key":"level_63__r6c9 <- in_L65_128_0 -> exit:out_teleporter_128_304","mode":"inv","producer":"solver","page":27,"pageLeg":0,"level":65,"arrive":[128,288],"goal":"level_63__r6c9 -> level_65__r0c8","kind":"exit","sphere":"7.5","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,3…
+INFO: page 27: 2 page error(s), ~2 swaps
+RECYCLE: page 27: launch 53 ms, newPage 36 ms, pageClose 16 ms, browserClose 190 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 28: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 28: setting default (model default on)
+UPGRADE-WINDOW: page 28: setting 85
+DASH_ONLY_WINDOW: page 28: setting default
+DASH_SHAPE: page 28: setting default
+SOLVER_ENV: page 28: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 28 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 560 start (page 28, pageLeg 0)
+ROW {"id":560,"key":"level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_0_208","mode":"inv","producer":"solver","page":28,"pageLeg":0,"level":61,"arrive":[16,208],"goal":"level_63__r10c2 -> level_61__r13c12","kind":"exit","sphere":"7.5","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@4…
+INFO: page 28: 2 page error(s), ~2 swaps
+RECYCLE: page 28: launch 45 ms, newPage 47 ms, pageClose 17 ms, browserClose 211 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 29: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 29: setting default (model default on)
+UPGRADE-WINDOW: page 29: setting 85
+DASH_ONLY_WINDOW: page 29: setting default
+DASH_SHAPE: page 29: setting default
+SOLVER_ENV: page 29: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 29 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 561 start (page 29, pageLeg 0)
+ROW {"id":561,"key":"level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_32_304","mode":"inv","producer":"solver","page":29,"pageLeg":0,"level":63,"arrive":[16,208],"goal":"level_63__r10c2 -> level_65__r0c2","kind":"exit","sphere":"7.5","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48…
+INFO: page 29: 2 page error(s), ~2 swaps
+RECYCLE: page 29: launch 57 ms, newPage 36 ms, pageClose 17 ms, browserClose 157 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 30: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 30: setting default (model default on)
+UPGRADE-WINDOW: page 30: setting 85
+DASH_ONLY_WINDOW: page 30: setting default
+DASH_SHAPE: page 30: setting default
+SOLVER_ENV: page 30: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 30 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 563 start (page 30, pageLeg 0)
+ROW {"id":563,"key":"level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_0_208","mode":"inv","producer":"solver","page":30,"pageLeg":0,"level":63,"arrive":[32,288],"goal":"level_63__r10c2 -> level_61__r13c12","kind":"exit","sphere":"7.5","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,3…
+INFO: page 30: 2 page error(s), ~2 swaps
+RECYCLE: page 30: launch 45 ms, newPage 34 ms, pageClose 15 ms, browserClose 154 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 31: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 31: setting default (model default on)
+UPGRADE-WINDOW: page 31: setting 85
+DASH_ONLY_WINDOW: page 31: setting default
+DASH_SHAPE: page 31: setting default
+SOLVER_ENV: page 31: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 31 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 564 start (page 31, pageLeg 0)
+ROW {"id":564,"key":"level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_32_304","mode":"inv","producer":"solver","page":31,"pageLeg":0,"level":65,"arrive":[32,288],"goal":"level_63__r10c2 -> level_65__r0c2","kind":"exit","sphere":"7.5","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32…
+INFO: page 31: 2 page error(s), ~2 swaps
+RECYCLE: page 31: launch 48 ms, newPage 32 ms, pageClose 14 ms, browserClose 161 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 32: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 32: setting default (model default on)
+UPGRADE-WINDOW: page 32: setting 85
+DASH_ONLY_WINDOW: page 32: setting default
+DASH_SHAPE: page 32: setting default
+SOLVER_ENV: page 32: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 32 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 508 start (page 32, pageLeg 0)
+ROW {"id":508,"key":"level_61__r0c10 <- in_L62_96_304 -> location:L63 flag 1: lightpole@64,88 cleared","mode":"inv","producer":"solver","page":32,"pageLeg":0,"level":61,"arrive":[160,16],"goal":"L63 flag 1: lightpole@64,88 cleared","kind":"location","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","…
+INFO: page 32: 2 page error(s), ~2 swaps
+RECYCLE: page 32: launch 45 ms, newPage 50 ms, pageClose 18 ms, browserClose 174 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 33: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 33: setting default (model default on)
+UPGRADE-WINDOW: page 33: setting 85
+DASH_ONLY_WINDOW: page 33: setting default
+DASH_SHAPE: page 33: setting default
+SOLVER_ENV: page 33: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 33 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 542 start (page 33, pageLeg 0)
+ROW {"id":542,"key":"level_63__r0c1 <- in_L61_224_96 -> location:L62 flag 0: lightpole@120,200 cleared","mode":"inv","producer":"solver","page":33,"pageLeg":0,"level":63,"arrive":[16,96],"goal":"L62 flag 0: lightpole@120,200 cleared","kind":"location","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared"…
+INFO: page 33: 2 page error(s), ~2 swaps
+RECYCLE: page 33: launch 52 ms, newPage 40 ms, pageClose 14 ms, browserClose 155 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 34: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 34: setting default (model default on)
+UPGRADE-WINDOW: page 34: setting 85
+DASH_ONLY_WINDOW: page 34: setting default
+DASH_SHAPE: page 34: setting default
+SOLVER_ENV: page 34: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 34 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 559 start (page 34, pageLeg 0)
+ROW {"id":559,"key":"level_63__r6c9 <- in_L65_128_0 -> location:L63 flag 7: lightpole@112,272 cleared","mode":"inv","producer":"solver","page":34,"pageLeg":0,"level":63,"arrive":[128,288],"goal":"L63 flag 7: lightpole@112,272 cleared","kind":"location","sphere":"7.5","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared…
+INFO: page 34: 2 page error(s), ~2 swaps
+RECYCLE: page 34: launch 50 ms, newPage 35 ms, pageClose 16 ms, browserClose 151 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 35: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 35: setting default (model default on)
+UPGRADE-WINDOW: page 35: setting 85
+DASH_ONLY_WINDOW: page 35: setting default
+DASH_SHAPE: page 35: setting default
+SOLVER_ENV: page 35: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 35 booted in 23 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 562 start (page 35, pageLeg 0)
+ROW {"id":562,"key":"level_63__r10c2 <- in_L61_224_208 -> location:L63 flag 6: lightpole@48,272 cleared","mode":"inv","producer":"solver","page":35,"pageLeg":0,"level":63,"arrive":[16,208],"goal":"L63 flag 6: lightpole@48,272 cleared","kind":"location","sphere":"7.5","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared…
+INFO: page 35: 2 page error(s), ~2 swaps
+RECYCLE: page 35: launch 47 ms, newPage 43 ms, pageClose 16 ms, browserClose 237 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 36: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 36: setting default (model default on)
+UPGRADE-WINDOW: page 36: setting 85
+DASH_ONLY_WINDOW: page 36: setting default
+DASH_SHAPE: page 36: setting default
+SOLVER_ENV: page 36: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 36 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 898 start (page 36, pageLeg 0)
+ROW {"id":898,"key":"level_63__r5c14 <- in_L65_128_0 ~> level_63__r6c9 -> location:Level 063 - Chest","mode":"inv","producer":"solver","page":36,"pageLeg":0,"level":63,"arrive":[128,288],"goal":"Level 063 - Chest","kind":"location","sphere":"12.2","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bossl…
+INFO: page 36: 2 page error(s), ~2 swaps
+RECYCLE: page 36: launch 51 ms, newPage 40 ms, pageClose 15 ms, browserClose 197 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 37: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 37: setting default (model default on)
+UPGRADE-WINDOW: page 37: setting 85
+DASH_ONLY_WINDOW: page 37: setting default
+DASH_SHAPE: page 37: setting default
+SOLVER_ENV: page 37: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 37 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 511 start (page 37, pageLeg 0)
+ROW {"id":511,"key":"level_61__r0c10 <- in_L63_0_48 -> location:L63 flag 1: lightpole@64,88 cleared","mode":"inv","producer":"solver","page":37,"pageLeg":0,"level":61,"arrive":[208,48],"goal":"L63 flag 1: lightpole@64,88 cleared","kind":"location","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L1…
+INFO: page 37: 2 page error(s), ~2 swaps
+RECYCLE: page 37: launch 51 ms, newPage 35 ms, pageClose 15 ms, browserClose 152 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 38: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 38: setting default (model default on)
+UPGRADE-WINDOW: page 38: setting 85
+DASH_ONLY_WINDOW: page 38: setting default
+DASH_SHAPE: page 38: setting default
+SOLVER_ENV: page 38: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 38 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 547 start (page 38, pageLeg 0)
+ROW {"id":547,"key":"level_63__r0c1 <- in_L61_224_48 -> location:L62 flag 0: lightpole@120,200 cleared","mode":"inv","producer":"solver","page":38,"pageLeg":0,"level":63,"arrive":[16,48],"goal":"L62 flag 0: lightpole@120,200 cleared","kind":"location","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared"…
+INFO: page 38: 2 page error(s), ~2 swaps
+RECYCLE: page 38: launch 43 ms, newPage 37 ms, pageClose 25 ms, browserClose 149 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 39: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 39: setting default (model default on)
+UPGRADE-WINDOW: page 39: setting 85
+DASH_ONLY_WINDOW: page 39: setting default
+DASH_SHAPE: page 39: setting default
+SOLVER_ENV: page 39: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 39 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 565 start (page 39, pageLeg 0)
+ROW {"id":565,"key":"level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared","mode":"inv","producer":"solver","page":39,"pageLeg":0,"level":63,"arrive":[32,288],"goal":"L63 flag 6: lightpole@48,272 cleared","kind":"location","sphere":"7.5","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","…
+INFO: page 39: 2 page error(s), ~2 swaps
+RECYCLE: page 39: launch 44 ms, newPage 43 ms, pageClose 19 ms, browserClose 199 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 40: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 40: setting default (model default on)
+UPGRADE-WINDOW: page 40: setting 85
+DASH_ONLY_WINDOW: page 40: setting default
+DASH_SHAPE: page 40: setting default
+SOLVER_ENV: page 40: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 40 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 552 start (page 40, pageLeg 0)
+ROW {"id":552,"key":"level_63__r0c1 <- in_L62_192_304 -> location:L62 flag 0: lightpole@120,200 cleared","mode":"inv","producer":"solver","page":40,"pageLeg":0,"level":63,"arrive":[16,16],"goal":"L62 flag 0: lightpole@120,200 cleared","kind":"location","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared…
+INFO: page 40: 2 page error(s), ~2 swaps
+RECYCLE: page 40: launch 51 ms, newPage 34 ms, pageClose 21 ms, browserClose 154 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 41: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 41: setting default (model default on)
+UPGRADE-WINDOW: page 41: setting 85
+DASH_ONLY_WINDOW: page 41: setting default
+DASH_SHAPE: page 41: setting default
+SOLVER_ENV: page 41: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 41 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 557 start (page 41, pageLeg 0)
+ROW {"id":557,"key":"level_63__r0c1 <- in_L62_240_304 -> location:L62 flag 0: lightpole@120,200 cleared","mode":"inv","producer":"solver","page":41,"pageLeg":0,"level":63,"arrive":[64,16],"goal":"L62 flag 0: lightpole@120,200 cleared","kind":"location","sphere":"5.6","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared…
+INFO: page 41: 2 page error(s), ~2 swaps
+RECYCLE: page 41: launch 55 ms, newPage 38 ms, pageClose 34 ms, browserClose 140 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 42: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 42: setting default (model default on)
+UPGRADE-WINDOW: page 42: setting 85
+DASH_ONLY_WINDOW: page 42: setting default
+DASH_SHAPE: page 42: setting default
+SOLVER_ENV: page 42: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 42 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 541 start (page 42, pageLeg 0)
+ROW {"id":541,"key":"level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_64_0","mode":"inv","producer":"solver","page":42,"pageLeg":0,"level":63,"arrive":[16,96],"goal":"level_63__r0c1 -> level_62 #2","kind":"exit","sphere":"6.5","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 clear…
+INFO: page 42: 2 page error(s), ~2 swaps
+RECYCLE: page 42: launch 39 ms, newPage 36 ms, pageClose 14 ms, browserClose 142 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 43: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 43: setting default (model default on)
+UPGRADE-WINDOW: page 43: setting 85
+DASH_ONLY_WINDOW: page 43: setting default
+DASH_SHAPE: page 43: setting default
+SOLVER_ENV: page 43: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 43 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 546 start (page 43, pageLeg 0)
+ROW {"id":546,"key":"level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_64_0","mode":"inv","producer":"solver","page":43,"pageLeg":0,"level":63,"arrive":[16,48],"goal":"level_63__r0c1 -> level_62 #2","kind":"exit","sphere":"6.5","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 clear…
+INFO: page 43: 2 page error(s), ~2 swaps
+RECYCLE: page 43: launch 40 ms, newPage 30 ms, pageClose 15 ms, browserClose 148 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 44: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 44: setting default (model default on)
+UPGRADE-WINDOW: page 44: setting 85
+DASH_ONLY_WINDOW: page 44: setting default
+DASH_SHAPE: page 44: setting default
+SOLVER_ENV: page 44: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 44 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 551 start (page 44, pageLeg 0)
+ROW {"id":551,"key":"level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_64_0","mode":"inv","producer":"solver","page":44,"pageLeg":0,"level":63,"arrive":[16,16],"goal":"level_63__r0c1 -> level_62 #2","kind":"exit","sphere":"6.5","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 clea…
+INFO: page 44: 2 page error(s), ~2 swaps
+RECYCLE: page 44: launch 40 ms, newPage 39 ms, pageClose 16 ms, browserClose 178 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 45: wandShotTrapBodies,wandShotEnemyBodies (--contact-fidelity)
+AXE_DODGE: page 45: setting default (model default on)
+UPGRADE-WINDOW: page 45: setting 85
+DASH_ONLY_WINDOW: page 45: setting default
+DASH_SHAPE: page 45: setting default
+SOLVER_ENV: page 45: SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_PRESS_KILL_STRIKE_BOMBS=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WALK_BLADE_ARM=1 (--solver-env)
+INFO: page 45 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 556 start (page 45, pageLeg 0)
+ROW {"id":556,"key":"level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_64_0","mode":"inv","producer":"solver","page":45,"pageLeg":0,"level":62,"arrive":[64,16],"goal":"level_63__r0c1 -> level_62 #2","kind":"exit","sphere":"6.5","before":{"slots":[],"has":[]},"granted":["Progressive Sword","Seal","Seal","L0 flag 1: breakablerock@288,176 cleared","L0 flag 4: breakablerock@80,112 cleared","L16 flag 0: rope@32,16 cleared","Seal","L18 flag 0: lock@144,112 cleared","Seal","Red Key","Seal","L12 flag 4: bosslock@416,240 cleared","L12 flag 5: bosslock@432,240 cleared","L19 flag 1: bosslock@48,32 clea…
+INFO: page 45: 2 page error(s), ~2 swaps
+RECYCLE: page 45: launch 38 ms, newPage 36 ms, pageClose 16 ms, browserClose 164 ms
+INFO: sweep done
