@@ -1,0 +1,70 @@
+== m0 BASE jsRuntimeCore.js @8199cdb59f
+     × JS_BOOT_RNG is the shipped game's split and cosmetic declaration (wasmArrival.SHIPPED_RNG) 5ms
+     × a JS room boot declares the live seed and split: true — never seed 0 ("inherit"), no fp 47ms
+     × the seed is the page's own gameplay stream: BOOT_SEED at the first frame, then one SeedlingRng step per boot 3ms
+     × L57: a JS boot in the Tentacled Beast's room opens the fight's draw stream (base: "has no declared seed for this room") 5ms
+     × the clock carries across two room boots: each boot stages the run's gameTime as it was replaced 141ms
+     × a restore keeps the SAVED day clock (not the run it replaces), a v1 save a fresh start's; the next boot carries on from there 473ms
+     × a fresh page keeps its default: the first frame and the host's start (a run replaced before its first tick) declare PAGE_BOOT_TIME 3ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  7 failed (7)
+== m1
+     ✓ JS_BOOT_RNG is the shipped game's split and cosmetic declaration (wasmArrival.SHIPPED_RNG) 1ms
+     × a JS room boot declares the live seed and split: true — never seed 0 ("inherit"), no fp 49ms
+     × the seed is the page's own gameplay stream: BOOT_SEED at the first frame, then one SeedlingRng step per boot 3ms
+     × L57: a JS boot in the Tentacled Beast's room opens the fight's draw stream (base: "has no declared seed for this room") 5ms
+     ✓ the clock carries across two room boots: each boot stages the run's gameTime as it was replaced 197ms
+     ✓ a restore keeps the SAVED day clock (not the run it replaces), a v1 save a fresh start's; the next boot carries on from there  625ms
+     × a fresh page keeps its default: the first frame and the host's start (a run replaced before its first tick) declare PAGE_BOOT_TIME 3ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  4 failed | 3 passed (7)
+== m2
+     ✓ JS_BOOT_RNG is the shipped game's split and cosmetic declaration (wasmArrival.SHIPPED_RNG) 1ms
+     × a JS room boot declares the live seed and split: true — never seed 0 ("inherit"), no fp 68ms
+     ✓ the seed is the page's own gameplay stream: BOOT_SEED at the first frame, then one SeedlingRng step per boot 29ms
+     × L57: a JS boot in the Tentacled Beast's room opens the fight's draw stream (base: "has no declared seed for this room") 5ms
+     ✓ the clock carries across two room boots: each boot stages the run's gameTime as it was replaced 172ms
+     ✓ a restore keeps the SAVED day clock (not the run it replaces), a v1 save a fresh start's; the next boot carries on from there  454ms
+     × a fresh page keeps its default: the first frame and the host's start (a run replaced before its first tick) declare PAGE_BOOT_TIME 3ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  3 failed | 4 passed (7)
+== m3
+     ✓ JS_BOOT_RNG is the shipped game's split and cosmetic declaration (wasmArrival.SHIPPED_RNG) 1ms
+     ✓ a JS room boot declares the live seed and split: true — never seed 0 ("inherit"), no fp 52ms
+     × the seed is the page's own gameplay stream: BOOT_SEED at the first frame, then one SeedlingRng step per boot 13ms
+     ✓ L57: a JS boot in the Tentacled Beast's room opens the fight's draw stream (base: "has no declared seed for this room") 9ms
+     ✓ the clock carries across two room boots: each boot stages the run's gameTime as it was replaced 203ms
+     ✓ a restore keeps the SAVED day clock (not the run it replaces), a v1 save a fresh start's; the next boot carries on from there  460ms
+     ✓ a fresh page keeps its default: the first frame and the host's start (a run replaced before its first tick) declare PAGE_BOOT_TIME 48ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 6 passed (7)
+== m4
+     ✓ JS_BOOT_RNG is the shipped game's split and cosmetic declaration (wasmArrival.SHIPPED_RNG) 1ms
+     ✓ a JS room boot declares the live seed and split: true — never seed 0 ("inherit"), no fp 69ms
+     ✓ the seed is the page's own gameplay stream: BOOT_SEED at the first frame, then one SeedlingRng step per boot 36ms
+     ✓ L57: a JS boot in the Tentacled Beast's room opens the fight's draw stream (base: "has no declared seed for this room") 6ms
+     × the clock carries across two room boots: each boot stages the run's gameTime as it was replaced 136ms
+     × a restore keeps the SAVED day clock (not the run it replaces), a v1 save a fresh start's; the next boot carries on from there 416ms
+     × a fresh page keeps its default: the first frame and the host's start (a run replaced before its first tick) declare PAGE_BOOT_TIME 49ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  3 failed | 4 passed (7)
+== m5
+     ✓ JS_BOOT_RNG is the shipped game's split and cosmetic declaration (wasmArrival.SHIPPED_RNG) 1ms
+     ✓ a JS room boot declares the live seed and split: true — never seed 0 ("inherit"), no fp 60ms
+     ✓ the seed is the page's own gameplay stream: BOOT_SEED at the first frame, then one SeedlingRng step per boot 24ms
+     ✓ L57: a JS boot in the Tentacled Beast's room opens the fight's draw stream (base: "has no declared seed for this room") 4ms
+     ✓ the clock carries across two room boots: each boot stages the run's gameTime as it was replaced 161ms
+     × a restore keeps the SAVED day clock (not the run it replaces), a v1 save a fresh start's; the next boot carries on from there 360ms
+     ✓ a fresh page keeps its default: the first frame and the host's start (a run replaced before its first tick) declare PAGE_BOOT_TIME 46ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 6 passed (7)
+== m6
+     ✓ JS_BOOT_RNG is the shipped game's split and cosmetic declaration (wasmArrival.SHIPPED_RNG) 1ms
+     ✓ a JS room boot declares the live seed and split: true — never seed 0 ("inherit"), no fp 50ms
+     ✓ the seed is the page's own gameplay stream: BOOT_SEED at the first frame, then one SeedlingRng step per boot 24ms
+     ✓ L57: a JS boot in the Tentacled Beast's room opens the fight's draw stream (base: "has no declared seed for this room") 4ms
+     ✓ the clock carries across two room boots: each boot stages the run's gameTime as it was replaced 176ms
+     ✓ a restore keeps the SAVED day clock (not the run it replaces), a v1 save a fresh start's; the next boot carries on from there  504ms
+     × a fresh page keeps its default: the first frame and the host's start (a run replaced before its first tick) declare PAGE_BOOT_TIME 14ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 6 passed (7)

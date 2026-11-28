@@ -1,0 +1,20 @@
+== tip (both halves)
+      Tests  5 failed | 55 passed (60)
+ FAIL  frontend/modules/seedlingDemo/fidelityArrowLane.test.js > ARROWLANE D2 — a walk that starts in an armed lane (sweep legs at L16 from L17) > ON: leg 211 (to pit 12,3) is refused BY NAME — the billed hit leaves a Bob inside the camera band
+ FAIL  frontend/modules/seedlingDemo/jsRuntimeArrivalOnDoor.test.js > S5 — the committed arrivals that land ON a door (derived) > the only level no committed arrival can boot is the model's HALT row L112 (the Owl; the swim arc's)
+ FAIL  frontend/modules/seedlingDemo/jsRuntimeAtlas.test.js > jsRuntimeCore J3 — a real level the model cannot run HALTS BY NAME > L112 refuses on its first tick (the Owl needs `rng.split`): the page halts by name, never silently
+ FAIL  frontend/modules/seedlingDemo/jsRuntimeSave.test.js > ⛓ sdc-js-save-day-clock — the JS save brings back the time of day (⚖ Robert 2026-11-22: "Keep it, and make JS match") > the restored clock is staged ONCE: the boot after the restore's reboot is a default one again
+ FAIL  frontend/modules/seedlingDemo/jsRuntimeSave.test.js > ⛓ sdc-js-save-day-clock — the JS save brings back the time of day (⚖ Robert 2026-11-22: "Keep it, and make JS match") > with no restore the clock is untouched: every boot is a fresh page's (the save OFF is today's run)
+== m1: rng half OFF (clock carried)
+      Tests  2 failed | 58 passed (60)
+ FAIL  frontend/modules/seedlingDemo/jsRuntimeSave.test.js > ⛓ sdc-js-save-day-clock — the JS save brings back the time of day (⚖ Robert 2026-11-22: "Keep it, and make JS match") > the restored clock is staged ONCE: the boot after the restore's reboot is a default one again
+ FAIL  frontend/modules/seedlingDemo/jsRuntimeSave.test.js > ⛓ sdc-js-save-day-clock — the JS save brings back the time of day (⚖ Robert 2026-11-22: "Keep it, and make JS match") > with no restore the clock is untouched: every boot is a fresh page's (the save OFF is today's run)
+== m4: clock half OFF (rng declared)
+      Tests  3 failed | 57 passed (60)
+ FAIL  frontend/modules/seedlingDemo/fidelityArrowLane.test.js > ARROWLANE D2 — a walk that starts in an armed lane (sweep legs at L16 from L17) > ON: leg 211 (to pit 12,3) is refused BY NAME — the billed hit leaves a Bob inside the camera band
+ FAIL  frontend/modules/seedlingDemo/jsRuntimeArrivalOnDoor.test.js > S5 — the committed arrivals that land ON a door (derived) > the only level no committed arrival can boot is the model's HALT row L112 (the Owl; the swim arc's)
+ FAIL  frontend/modules/seedlingDemo/jsRuntimeAtlas.test.js > jsRuntimeCore J3 — a real level the model cannot run HALTS BY NAME > L112 refuses on its first tick (the Owl needs `rng.split`): the page halts by name, never silently
+== base 8199cdb59f
+      Tests  60 passed (60)
+== m2: split false, seed declared (clock carried)
+      Tests  42 passed (42)

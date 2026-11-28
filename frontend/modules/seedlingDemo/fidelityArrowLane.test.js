@@ -171,6 +171,11 @@ describe('ARROWLANE D2 — a walk that starts in an armed lane (sweep legs at L1
         const res = withArrowLaneCrossing(true, () => solveL16FromL17([12, 3], 'level_16__r1c1 -> level_17 #2'));
         expect(res.ok).toBe(false);
         expect(String(res.message)).toMatch(/ARROWLANE — the corridor crosses an ARMED lane \(start: arrowtrap@112,32/);
-        expect(String(res.message)).toMatch(/is on screen at tick \d+ depends on where inside `Game.shake`'s jiggle/);
+        // ⛓ seedling-js-boot-rng-clock — RE-RECORDED: the reason was "is on screen at tick N depends on where inside
+        // `Game.shake`'s jiggle" (the camera BAND, `camera.SHAKE_BAND_KEPT.unsplit`). The staging is the JS runtime's own
+        // boot (`solveL16FromL17`), which now declares `split: true` (`JS_BOOT_RNG`), so `view()`'s jiggle is a POINT
+        // (`shakeExactSplit`) and no band opens; the crossing is still refused by name, one step on, at the fork's drive.
+        // Measured: with the boot's split forced back to false this row's old reason returns (`moved-rows-attribution.txt`).
+        expect(String(res.message)).toMatch(/the fork's drive is refuted — .*the run crossed from level 16 to 17 at tick \d+ without being asked to/);
     });
 });

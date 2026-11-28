@@ -1,0 +1,1 @@
+27/48, stop: entry 28 "Level 064 - Ghostspear" in level_63__r0c1, cause: budget: the step's wait ran out (status "Sphere 7.5 → routing via \"level_63__r0c1 -> level_62\" → level_64 (28/48) — playing tick 37/37") (transport wasm; walk 2400 s, run 2425 s)

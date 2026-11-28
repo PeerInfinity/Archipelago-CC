@@ -1,0 +1,1 @@
+36/48, stop: entry 37 "Level 068 - Health" in level_63__r6c9, cause: budget: the step's wait ran out (status "Sphere 11.5 → routing via \"level_63__r6c9 -> level_65__r0c8\" → level_68__r1c1 (37/48)") (transport js; walk 3601 s, run 3622 s)

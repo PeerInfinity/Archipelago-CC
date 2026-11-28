@@ -1,0 +1,101 @@
+L0   exit     JS 9815665bf4e4,70014a700f91,3e7df4d9c1ff,6f3fd7ec5b81,131f351c6749,424cb13e4235,25992e1d32b6,235f7d32072f,235f7d32072f,235f7d32072f,235f7d32072f  wasm 131f351c6749,235f7d32072f,25992e1d32b6,3e7df4d9c1ff,424cb13e4235,6f3fd7ec5b81,70014a700f91  SAME
+L2   exit     JS c9381c8180c1,c9381c8180c1,0a6fbdcdb210  wasm 0a6fbdcdb210,c9381c8180c1  SAME
+L3   exit     JS 4c6b0fc89605,4c6b0fc89605,36fbfb8fcac4  wasm 36fbfb8fcac4,4c6b0fc89605  SAME
+L4   exit     JS a7a2cc65c56e  wasm a7a2cc65c56e  SAME
+L5   exit     JS 40fa2d7115c4  wasm 40fa2d7115c4  SAME
+L6   exit     JS 208138dc2030  wasm 208138dc2030  SAME
+L7   exit     JS e4f553544b9e  wasm e4f553544b9e  SAME
+L8   exit     JS bae370a99c9b  wasm bae370a99c9b  SAME
+L9   exit     JS a372b1d3f447  wasm a372b1d3f447  SAME
+L10  exit     JS d0b7da078e21  wasm -  no wasm solve
+L10  location JS b3d74b00cc90  wasm b3d74b00cc90  SAME
+L11  exit     JS 9cd2d770fe2e  wasm -  no wasm solve
+L11  location JS 68d4d40cbf2f  wasm 68d4d40cbf2f  SAME
+L12  exit     JS 4a5f224d5169,715d72684614,29090a254529,db2063ed6d4e,92fa949ace5f,92fa949ace5f,6f4f93dd7472,4a4b9424c260,6f4f93dd7472,4a4b9424c260,6f4f93dd7472,6726d113060f,8e607d36726f  wasm 29090a254529,4a5f224d5169,6f4f93dd7472,715d72684614,92fa949ace5f  SAME
+L12  location JS 00202603014b,480398ec77e2  wasm 00202603014b  SAME
+L13  exit     JS a26860acd708,2c94de465db7,2c94de465db7,a26860acd708,a26860acd708,1177bb0b62b1  wasm 1177bb0b62b1,2c94de465db7,a26860acd708  SAME
+L14  exit     JS db5fd4b94d13,da966c0a50fa,2f98dfe2a76b  wasm 2f98dfe2a76b,da966c0a50fa,db5fd4b94d13  SAME
+L15  exit     JS 4881e0596b75,dbb0593cdfc5  wasm 4881e0596b75  SAME
+L15  location JS de282fc5960d  wasm de282fc5960d  SAME
+L16  exit     JS f941f200e231,c0a7d7c74485  wasm c0a7d7c74485  SAME
+L16  location JS ec752efab65b  wasm ec752efab65b  SAME
+L17  exit     JS d6cf7fdc86ef  wasm -  no wasm solve
+L17  location JS 0338f93054da  wasm 0338f93054da  SAME
+L18  exit     JS 3fd310e7f093  wasm 5bbc5c518ade  DIFF
+L19  exit     JS 4e5168e8c38f  wasm -  no wasm solve
+L19  location JS b0255c571df8  wasm b0255c571df8  SAME
+L20  exit     JS c630ffc9a519  wasm c630ffc9a519  SAME
+L20  location JS 71280758af23,80eaba4942a6  wasm 71280758af23  SAME
+L21  exit     JS 8dd3cdbb7bea,8eca48f7e0fe  wasm 8dd3cdbb7bea,8eca48f7e0fe  SAME
+L22  exit     JS 78614fcbef7f,6485ba65c223,88f5621dc344  wasm 6485ba65c223,78614fcbef7f,88f5621dc344  SAME
+L23  exit     JS 719cdf53e4df,719cdf53e4df  wasm 719cdf53e4df  SAME
+L24  exit     JS 48d5cb7275ac  wasm 48d5cb7275ac  SAME
+L25  exit     JS b6373c36d1be  wasm -  no wasm solve
+L25  location JS 63b5d2caa12b  wasm 63b5d2caa12b  SAME
+L29  exit     JS 3b1d629c699c  wasm -  no wasm solve
+L29  location JS ba462f2839f7  wasm ba462f2839f7  SAME
+L30  exit     JS 0ba6f27cad6e,6822fc6a1a3b  wasm 6822fc6a1a3b  SAME
+L30  location JS fd190112594c  wasm fd190112594c  SAME
+L31  exit     JS d33cf470a285  wasm d33cf470a285  SAME
+L32  exit     JS 1f12a2d1e729  wasm -  no wasm solve
+L32  location JS 3ba3fa4a3fa5  wasm 3ba3fa4a3fa5  SAME
+L36  exit     JS d55bec36b0e8,61cc180145d7  wasm -  no wasm solve
+L36  location JS 68412fba1551  wasm 68412fba1551  SAME
+L37  exit     JS a872e08d116c,8f4963b9423b,5a305d6f3fde,0543691bee23,371c0acc9ff2,5a305d6f3fde,5a305d6f3fde,5a305d6f3fde,598e2710c216  wasm 0543691bee23,371c0acc9ff2,5a305d6f3fde,8f4963b9423b,a872e08d116c  SAME
+L38  exit     JS 497c1673b306,792077533154,1b729ff66a18,1b729ff66a18,1b729ff66a18,1b729ff66a18  wasm 1b729ff66a18,497c1673b306  SAME
+L38  location JS 845b0dd2d230,b16263c22cc3  wasm 845b0dd2d230,b16263c22cc3  SAME
+L39  exit     JS a2464fd5725a,0255f5e5fdfa,0255f5e5fdfa,0255f5e5fdfa,0255f5e5fdfa  wasm 0255f5e5fdfa  SAME
+L39  location JS 857e6c0485a8  wasm 2e1603a6ae22  DIFF
+L40  exit     JS d3b155d8e2af,0dbae91cd01f,aa56d3fa3e0a  wasm -  no wasm solve
+L40  location JS f3e5f8fcb4a2,acb3a63487eb,72d42b90e488,9d9646b9f1a8,7839897c470f,a404ddf42e41  wasm 535a61951b01,8e2c3dcc23fd,acb3a63487eb,ce73a52373d2  SAME
+L41  exit     JS 6424ce31f418  wasm -  no wasm solve
+L41  location JS 5b74f789f125  wasm -  no wasm solve
+L42  location JS 4b8cf02ac01b  wasm -  no wasm solve
+L43  exit     JS 822a1ca5659f  wasm -  no wasm solve
+L43  location JS e82712b554f8  wasm -  no wasm solve
+L44  exit     JS 727325c1ec6f,0f12b97f54f5,4ba416d94cf8,3c470457fd49  wasm 0f12b97f54f5,3c470457fd49,4ba416d94cf8,727325c1ec6f  SAME
+L45  exit     JS cc48385600bb,7ed221f406be,b15bedaf2d74  wasm 7ed221f406be,b15bedaf2d74,cc48385600bb  SAME
+L46  exit     JS fe3c255eb650,9f12b7c8e978,0b32bd9e5468  wasm 0b32bd9e5468,fe3c255eb650  SAME
+L46  location JS 17716172a963  wasm 17716172a963  SAME
+L47  exit     JS d001f6562397,6818d77999b0  wasm 6818d77999b0,d001f6562397  SAME
+L48  exit     JS 465a41f144c4,1fb5445a10b6  wasm 465a41f144c4  SAME
+L48  location JS 18ef889799ef  wasm 18ef889799ef  SAME
+L49  exit     JS 75e4bdfb9bca  wasm 75e4bdfb9bca  SAME
+L49  location JS 1c4063bd7ae1  wasm 1c4063bd7ae1  SAME
+L50  exit     JS efdb2b974e45  wasm efdb2b974e45  SAME
+L51  exit     JS b56851ac3fd3  wasm b56851ac3fd3  SAME
+L52  exit     JS 8a220e9480b5,59051355e86c  wasm 59051355e86c,8a220e9480b5  SAME
+L53  exit     JS c4360b3cadd1  wasm c4360b3cadd1  SAME
+L54  exit     JS 20a2da3889b8  wasm df7c7d430064  DIFF
+L55  exit     JS 85445ebf78b1  wasm -  no wasm solve
+L55  location JS 1b71e6c10fca  wasm 1b71e6c10fca  SAME
+L56  exit     JS f51292dd0c6d  wasm f51292dd0c6d  SAME
+L57  exit     JS efcd223ed82a  wasm 9a2dd6e53352  DIFF
+L58  exit     JS d638696bfa03  wasm d638696bfa03  SAME
+L58  location JS 8df1f566fc8e  wasm 8df1f566fc8e  SAME
+L59  exit     JS 45b410673603,fbd6e6432a37,f5abf233a97d,6be20773e47b,45b410673603,78410686b21d  wasm 45b410673603  SAME
+L60  exit     JS d57644cd7e8d,211c48a04339,7f02f76e8304,3bed738b3580  wasm d57644cd7e8d  SAME
+L61  exit     JS 730e078f79e2,d398ee706d01,7ca39971ac20,198ee08212fc  wasm 730e078f79e2  SAME
+L62  exit     JS affb4bfd0e33,1f0685cfa7da  wasm 1f0685cfa7da,affb4bfd0e33  SAME
+L63  exit     JS 0c7d004ba8b3,ec7ef93d7b5f  wasm -  no wasm solve
+L63  location JS 44f5d79c9c7d  wasm 44f5d79c9c7d  SAME
+L64  exit     JS 5463fc2b145b  wasm -  no wasm solve
+L64  location JS 6ba27ec9ff1e  wasm 6ba27ec9ff1e  SAME
+L65  exit     JS 78f27b05a1ac  wasm -  no wasm solve
+L66  exit     JS 4b1cda7f0f33  wasm -  no wasm solve
+L67  exit     JS 051c67b3fed9  wasm -  no wasm solve
+L67  location JS a7d490a67ee4  wasm -  no wasm solve
+L69  exit     JS adac593acad2  wasm -  no wasm solve
+L69  location JS a93ef0a9c91b  wasm -  no wasm solve
+L70  exit     JS 5636a4d3e781  wasm -  no wasm solve
+L86  exit     JS a55d07454af7  wasm -  no wasm solve
+L86  location JS a3d43ee38b1a  wasm a3d43ee38b1a  SAME
+L87  exit     JS b0946c81a8b9,05cf8632df10  wasm 05cf8632df10,b0946c81a8b9  SAME
+L89  exit     JS 518788ce2dc7,76718a4f3092  wasm 76718a4f3092  SAME
+L89  location JS 3292f58f68f9  wasm 3292f58f68f9  SAME
+L90  exit     JS bdd2d2bfac9e  wasm -  no wasm solve
+L90  location JS 97d0b07f4359  wasm 97d0b07f4359  SAME
+L91  exit     JS 54915ffd6edf  wasm 54915ffd6edf  SAME
+L92  exit     JS a3d529484d98  wasm 3b013414edcc  DIFF
+L95  exit     JS 75a451c119fb,8b43874a3516,75a451c119fb,8b43874a3516,75a451c119fb,75a451c119fb  wasm 75a451c119fb  SAME
+goals with a JS solve also played by wasm: 69; differing: 5

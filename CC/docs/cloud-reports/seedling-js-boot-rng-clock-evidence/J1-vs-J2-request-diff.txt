@@ -1,0 +1,15 @@
+J1 vs J2, same goals (persistence compared as a set; `name` ignored)
+## L22 exit a0: J1#67 vs J2#67: 1 diffs
+   ('.staging.seam.time', '16315', '16316')
+## L40 item1 a0: J1#133 vs J2#129: 2 diffs
+   ('.staging.rng.seed', '933028330', '1866056660')
+   ('.staging.seam.time', '33784', '34726')
+## L40 item1 retry: J1#134 vs J2#130: 2 diffs
+   ('.staging.rng.seed', '933028330', '1866056660')
+   ('.staging.seam.time', '33784', '34726')
+## L57 exit: J1#167 vs J2#163: 2 diffs
+   ('.staging.rng.seed', '1205695219', '1064684494')
+   ('.staging.seam.time', '43741', '44362')
+## L40 Totem Part 64,144 retry (J1 SOLVED a404ddf42e41 / J2 cut at 2560): J1#266 vs J2#262: 2 diffs
+   ('.staging.rng.seed', '404545865', '809091730')
+   ('.staging.seam.time', '82985', '85277')
