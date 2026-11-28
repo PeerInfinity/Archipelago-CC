@@ -57,3 +57,20 @@ after idle:4 304  151.6,104.9 blk=110,96 jellyfish@160,64(174.2,87.4) jellyfish@
 after key:left:30 334  133.8,296.0 blk=112,96 jellyfish@160,64(168.0,72.0) jellyfish@192,56(200.0,64.0)
 after idle:30 364  130.9,296.0 blk=112,96 jellyfish@160,64(168.0,72.0) jellyfish@192,56(200.0,64.0)
 HITS [] DEATHS 332 END 364 end 130.9,296.0 blk=112,96 jellyfish@160,64(168.0,72.0) jellyfish@192,56(200.0,64.0)
+
+## (b) kill jellyfish@192,56 before the route: tools/killprobe.mjs from plan tick T with the sword selected, chasing it and swinging every P ticks (60 scripted variants: stand x period x gap); killed = removed or dying
+### from plan t282
+{"stand":4,"period":6,"gap":10,"killed":8,"hits":[],"deaths":0,"at":[170.4,96.7]}
+{"stand":4,"period":6,"gap":14,"killed":8,"hits":[],"deaths":0,"at":[170.4,96.7]}
+{"stand":4,"period":6,"gap":6,"killed":8,"hits":[],"deaths":0,"at":[170.4,96.7]}
+KILLED 40 of 60 HITLESS KILLS 40 fastest 8 t
+### from plan t298
+{"stand":0,"period":6,"gap":10,"killed":8,"hits":[],"deaths":0,"at":[164.5,97.6]}
+{"stand":0,"period":6,"gap":14,"killed":8,"hits":[],"deaths":0,"at":[164.6,101.5]}
+{"stand":0,"period":6,"gap":6,"killed":8,"hits":[],"deaths":0,"at":[163.9,95.9]}
+KILLED 56 of 60 HITLESS KILLS 56 fastest 8 t
+### from plan t333
+{"stand":0,"period":6,"gap":10,"killed":8,"hits":[],"deaths":0,"at":[163.8,104.9]}
+{"stand":0,"period":6,"gap":14,"killed":8,"hits":[],"deaths":0,"at":[163.8,104.9]}
+{"stand":0,"period":6,"gap":6,"killed":8,"hits":[],"deaths":0,"at":[164.5,97.6]}
+KILLED 57 of 60 HITLESS KILLS 43 fastest 8 t
