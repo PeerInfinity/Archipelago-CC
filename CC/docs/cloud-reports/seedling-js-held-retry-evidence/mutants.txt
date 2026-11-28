@@ -1,0 +1,51 @@
+== base
+ ✓ ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > the policy is the wasm page's, imported: factor 4, one retry
+ × ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a cut + a refusal + a pass left → ONE re-ask at 4×, the same request (the room held), the passes after; its plan plays
+ × ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a second cut → the named failure (`expiryFailure`), no third ask
+ × ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > no cut → no re-ask (a named refusal is the existing decline)
+ × ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a cut with a PLAN in hand plays it (provisional), no re-ask; no work limit never re-asks
+ × ⛓ (b) CONTINUATION → FRESH SOLVE (W7) — one forced re-arrival, then a fresh solve > a refused continuation → ONE forced re-arrival (the room re-booted at its arrival) + a fresh solve, named and counted
+ × ⛓ (b) CONTINUATION → FRESH SOLVE (W7) — one forced re-arrival, then a fresh solve > a continuation cut twice falls back too (`continuation-budget`), after its held retry
+ × ⛓ (b) CONTINUATION → FRESH SOLVE (W7) — one forced re-arrival, then a fresh solve > a refused FRESH solve → the existing path (a decline), never a second re-arrival
+ × ⛓ (b) CONTINUATION → FRESH SOLVE (W7) — one forced re-arrival, then a fresh solve > a goal's FIRST solve in a room no plan played in is not a continuation: its refusal is the existing decline
+== r2
+ ✓ ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > the policy is the wasm page's, imported: factor 4, one retry
+ × ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a cut + a refusal + a pass left → ONE re-ask at 4×, the same request (the room held), the passes after; its plan plays
+ × ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a second cut → the named failure (`expiryFailure`), no third ask
+ ✓ ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > no cut → no re-ask (a named refusal is the existing decline)
+ ✓ ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a cut with a PLAN in hand plays it (provisional), no re-ask; no work limit never re-asks
+ × ⛓ (b) CONTINUATION → FRESH SOLVE (W7) — one forced re-arrival, then a fresh solve > a continuation cut twice falls back too (`continuation-budget`), after its held retry
+== r3
+ ✓ ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > the policy is the wasm page's, imported: factor 4, one retry
+ × ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a cut + a refusal + a pass left → ONE re-ask at 4×, the same request (the room held), the passes after; its plan plays
+ ✓ ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a second cut → the named failure (`expiryFailure`), no third ask
+ ✓ ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > no cut → no re-ask (a named refusal is the existing decline)
+ ✓ ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a cut with a PLAN in hand plays it (provisional), no re-ask; no work limit never re-asks
+== f2
+ ✓ ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > the policy is the wasm page's, imported: factor 4, one retry
+ ✓ ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a cut + a refusal + a pass left → ONE re-ask at 4×, the same request (the room held), the passes after; its plan plays
+ ✓ ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a second cut → the named failure (`expiryFailure`), no third ask
+ ✓ ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > no cut → no re-ask (a named refusal is the existing decline)
+ ✓ ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a cut with a PLAN in hand plays it (provisional), no re-ask; no work limit never re-asks
+ × ⛓ (b) CONTINUATION → FRESH SOLVE (W7) — one forced re-arrival, then a fresh solve > a refused continuation → ONE forced re-arrival (the room re-booted at its arrival) + a fresh solve, named and counted
+ × ⛓ (b) CONTINUATION → FRESH SOLVE (W7) — one forced re-arrival, then a fresh solve > a refused FRESH solve → the existing path (a decline), never a second re-arrival
+== f3
+ ✓ ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > the policy is the wasm page's, imported: factor 4, one retry
+ × ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a cut + a refusal + a pass left → ONE re-ask at 4×, the same request (the room held), the passes after; its plan plays
+ × ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a second cut → the named failure (`expiryFailure`), no third ask
+ × ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > no cut → no re-ask (a named refusal is the existing decline)
+ × ⛓ (a) THE HELD RETRY — a cut refusal is asked once more, held, at 4× > a cut with a PLAN in hand plays it (provisional), no re-ask; no work limit never re-asks
+ × ⛓ (b) CONTINUATION → FRESH SOLVE (W7) — one forced re-arrival, then a fresh solve > a refused continuation → ONE forced re-arrival (the room re-booted at its arrival) + a fresh solve, named and counted
+ × ⛓ (b) CONTINUATION → FRESH SOLVE (W7) — one forced re-arrival, then a fresh solve > a continuation cut twice falls back too (`continuation-budget`), after its held retry
+ × ⛓ (b) CONTINUATION → FRESH SOLVE (W7) — one forced re-arrival, then a fresh solve > a refused FRESH solve → the existing path (a decline), never a second re-arrival
+ × ⛓ (b) CONTINUATION → FRESH SOLVE (W7) — one forced re-arrival, then a fresh solve > a goal's FIRST solve in a room no plan played in is not a continuation: its refusal is the existing decline
+== jsRuntimeSolveService.test.js re-recorded row on base
+     × a solve that runs out of its WORK budget twice (the held retry at 4×) FAILS BY NAME (the ⏱ clause) — the worker answered, nothing was terminated, the walker does not walk it 10024ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/jsRuntimeSolveService.test.js > jsRuntimeSolveService — the budget, the retry, and no stale plan > a solve that runs out of its WORK budget twice (the held retry at 4×) FAILS BY NAME (the ⏱ clause) — the worker answered, nothing was terminated, the walker does not walk it
+AssertionError: expected { solves: +0, refutations: +0, …(15) } to match object { solves: +0, declines: +0, …(5) }
+      Tests  1 failed | 21 skipped (22)
+== new base 960ff0a8 (its jsRuntimeSolver.js + jsRuntimeCore.js, equal to 102dcbeb's), HeldRetry + SolveService files
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  2 failed (2)
+      Tests  9 failed | 22 passed (31)

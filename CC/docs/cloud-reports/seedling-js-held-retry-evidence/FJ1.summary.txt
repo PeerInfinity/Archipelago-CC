@@ -1,0 +1,1 @@
+23/48, stop: entry 24 "Level 089 - Feather" in level_57, cause: refusal "error: level_57: the bot cannot walk to exit \"level_57 -> level_58__r4c1\" — the JS runtime refused {\"kind\":\"exit\",\"level\":57,\"tiles\":[[6,4]],\"name\":\"level_57 -> level_58__r4c1\"}: level 57 has no teleporter or pit on tile (6, 4)" (transport js; walk 1279 s, run 1297 s)
