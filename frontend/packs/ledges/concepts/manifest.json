@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "_comment": "The ledges pack's tile kind as a pack concept (content sets GEN-5): it presents its own terrain entry (structure layer), declares the maze base it falls back to with no art (TILE-1's chain: marker, since the cell stays floor), and names its shape recipe in this pack's art layer.",
+  "provenance": {
+    "sources": {
+      "gen5": {
+        "type": "model",
+        "model": "claude-opus-5-5",
+        "date": "2026-11-26",
+        "note": "the ledges pack, content sets GEN-5 (Co-Authored-By: Claude Opus 5.5). No approval of its names or shapes is recorded"
+      }
+    },
+    "default": "gen5"
+  },
+  "concepts": {
+    "ledges:terrain/ledge": { "kind": "terrain", "name": "Ledge", "description": "A low ledge. You can jump down onto it from the north, but not climb onto it from any other side.", "base": "marker", "art": "ledges:terrain/ledge", "presents": "ledges:terrain/ledge" }
+  }
+}
