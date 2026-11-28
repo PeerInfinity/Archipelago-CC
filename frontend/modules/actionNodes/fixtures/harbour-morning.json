@@ -1,0 +1,43 @@
+{
+  "kind": "action-graph",
+  "schema_version": 1,
+  "graph_id": "harbour-morning",
+  "name": "The Harbour Morning",
+  "provenance": {
+    "sources": {
+      "an-time": {
+        "type": "model",
+        "model": "claude-opus-5-5",
+        "date": "2026-11-25",
+        "session": "actionnodes-time-design",
+        "note": "Original test content for time windows (slice AN-TIME-1). A test fixture, not a preset."
+      }
+    },
+    "default": "an-time"
+  },
+  "clock": { "start": "09:00", "minutesPerUnit": 60 },
+  "loop": { "mana": 8 },
+  "stats": { "evidence": { "name": "Evidence" }, "pass": { "name": "Harbour Pass" } },
+  "resources": {},
+  "boons": {
+    "harbour-pass": { "name": "Harbour Pass", "count": 1, "gives": { "stats": { "pass": 1 }, "mana": 0 } },
+    "extra-hour": { "name": "An Extra Hour", "count": 1, "gives": { "mana": 1 } },
+    "cup-of-tea": { "name": "A Cup of Tea", "count": 1, "gives": { "mana": 0 } }
+  },
+  "filler": "cup-of-tea",
+  "start": "inn",
+  "nodes": {
+    "inn": { "name": "Wake at the Inn", "kind": "start", "time": 0, "limit": 1 },
+    "landlady": { "name": "Ask the Landlady", "kind": "check", "time": 1, "limit": 1, "after": [["inn"]],
+      "window": { "until": 1 }, "results": { "stats": { "evidence": 1 } } },
+    "walk": { "name": "Walk the Harbour", "kind": "action", "time": 1, "limit": 2, "after": [["inn"]] },
+    "ledger": { "name": "Read the Harbour Ledger", "kind": "check", "time": 1, "limit": 1, "after": [["landlady"]],
+      "requires": { "stats": { "pass": 1 } }, "window": { "from": 1, "until": 6 }, "results": { "stats": { "evidence": 1 } } },
+    "quay": { "name": "Watch the Ferry Come In", "kind": "check", "time": 1, "limit": 1, "after": [["inn"]],
+      "window": { "from": 3, "until": 4 }, "results": { "stats": { "evidence": 1 } } },
+    "room": { "name": "Search the Empty Room", "kind": "check", "time": 2, "limit": 1, "after": [["quay"]],
+      "window": { "until": 6 }, "results": { "stats": { "evidence": 1 } } },
+    "accuse": { "name": "Name the Culprit", "kind": "goal", "time": 1, "limit": 1, "after": [["ledger"], ["room"]],
+      "requires": { "stats": { "evidence": 3 } }, "window": { "until": 7 } }
+  }
+}

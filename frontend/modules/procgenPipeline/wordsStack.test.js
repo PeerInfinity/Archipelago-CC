@@ -71,6 +71,23 @@ describe('⛔ every world on main resolves its words exactly as before', () => {
         for (const id of ['maze', 'text_adventure']) expect(substrateRegistry.get(id)?.[DEFAULT_CONTENT_PACK_FIELD]).toBeTruthy();
     });
 
+    /**
+     * ⛓ GEN-2 — THE COMMITTED WORLDS THAT RECORD `exists`, by path, each with its packs and why. Every other world must
+     * record none: a new recorder is a red here until it is named.
+     */
+    const RECORDS_EXISTS = Object.freeze({
+        'frontend/presets/tile_kinds_demo/AP_1/AP_1_rules.json': Object.freeze({
+            exists: Object.freeze(['furniture', 'ledges']),
+            why: 'content sets GEN-2: the "Randomly placed tiles" demo names the furniture pack under what exists (⚖ Q2); '
+                + 'GEN-5 adds the ledges pack (a one-way kind)',
+        }),
+    });
+
+    it('every world RECORDS_EXISTS names is committed (no stale row)', () => {
+        const paths = new Set(committedPresets().map(({ path }) => path));
+        for (const path of Object.keys(RECORDS_EXISTS)) expect(paths.has(path), path).toBe(true);
+    });
+
     const presets = committedPresets()
         .map(({ path, doc }) => ({ path, doc, players: playerSubstrates(doc) }))
         .filter(({ players }) => Object.values(players).some((ids) => ids.some((id) => PINNED.includes(id))));
@@ -79,14 +96,16 @@ describe('⛔ every world on main resolves its words exactly as before', () => {
         for (const id of PINNED) expect(presets.some(({ players }) => Object.values(players).some((ids) => ids.includes(id))), id).toBe(true);
     });
 
-    it.each(presets.map((p) => [p.path, p]))('%s', (_path, { doc, players }) => {
+    it.each(presets.map((p) => [p.path, p]))('%s', (path, { doc, players }) => {
         for (const [p, substrateIds] of Object.entries(players)) {
             const meta = doc.procgen_metadata?.[p] ?? {};
             const content = meta[RECORDED_CONTENT_KEY] ?? [];
             const exists = meta[RECORDED_EXISTS_KEY] ?? [];
-            // No world on main records `exists` (it is recorded only when not the default), so the new part is inert.
-            expect(exists).toEqual([]);
-            expect(effectiveContentStack({ substrateIds, exists, content })).toEqual(c3Stack(substrateIds, content));
+            // `exists` is recorded only when not the default. A world that records none resolves exactly as C3 did, so
+            // the new part is inert there; ⛓ GEN-2 — a world that records one (named in RECORDS_EXISTS, with why) gets
+            // its own packs over the substrates' and under its themes, and nothing else moves.
+            expect(exists, `${path} records exists: name it in RECORDS_EXISTS`).toEqual(RECORDS_EXISTS[path]?.exists ?? []);
+            expect(effectiveContentStack({ substrateIds, exists, content })).toEqual(c3Stack(substrateIds, [...exists, ...content]));
             // Naming the defaults explicitly changes nothing either.
             expect(effectiveContentStack({ substrateIds, exists: defaultExistsOf({ substrateIds }), content })).toEqual(c3Stack(substrateIds, content));
         }

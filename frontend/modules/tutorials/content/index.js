@@ -35,7 +35,7 @@ import { METAMATH_DEMO } from './games/metamath.js';
 import { DEPGRAPH_DEMO } from './games/depgraph.js';
 import { DEPGRAPH_EXTRAS } from './games/depgraphExtras.js';
 import { APCALC_DEMO, APCALC_GENERATOR } from './games/apcalc.js';
-import { APCALC_MULTIWORLD, DEPGRAPH_MULTIWORLD, METAMATH_MULTIWORLD } from './games/multiworld.js';
+import { APCALC_MULTIWORLD, DEPGRAPH_MULTIWORLD, METAMATH_MULTIWORLD, MYSTERY_MULTIWORLD } from './games/multiworld.js';
 
 const entry = (source, tutorial) => Object.freeze({ source: `frontend/modules/tutorials/content/${source}`, tutorial });
 
@@ -68,6 +68,7 @@ export const TUTORIALS = Object.freeze([
     entry('games/apcalc.js', APCALC_DEMO),
     entry('games/apcalc.js', APCALC_GENERATOR),
     entry('games/multiworld.js', APCALC_MULTIWORLD),
+    entry('games/multiworld.js', MYSTERY_MULTIWORLD),
     entry('tracker/trackAGame.js', TRACKER_TRACK_A_GAME),
     entry('tracker/panels.js', TRACKER_PATH_ANALYZER),
     entry('tracker/panels.js', TRACKER_REGION_GRAPH),

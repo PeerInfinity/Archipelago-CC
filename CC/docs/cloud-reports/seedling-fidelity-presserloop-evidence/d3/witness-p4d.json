@@ -1,0 +1,4496 @@
+{
+ "source": "hang-witness.mjs",
+ "build": "seedling_bot_ap_p4d",
+ "capabilities": [
+  "arm",
+  "apitem"
+ ],
+ "rows": [
+  {
+   "shape": "btn-btn",
+   "source": "hang: the first live frame (Button.update publishes every frame)",
+   "set": "seedling-vanilla-record-23510f80-hang-btn-btn",
+   "samples": [
+    {
+     "ms": 2061,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 0,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2219,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 4,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2379,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 9,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2534,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 13,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2690,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 18,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2845,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3001,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3158,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3316,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3475,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3632,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3788,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3945,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4101,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4257,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4413,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4572,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4728,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4887,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5045,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5201,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5357,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5516,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5675,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5831,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5990,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 6146,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 6305,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 6464,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 6623,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 6782,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 6941,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 7097,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 7256,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 7414,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 7573,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 7732,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 7891,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 8050,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 8206,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 8362,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 8520,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 8679,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 8838,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 8997,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 9156,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 9314,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 9470,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 9625,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 9786,
+     "tick": 1,
+     "tick_count": 90,
+     "buffered": 1,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    }
+   ],
+   "log": [
+    {
+     "ms": 1006,
+     "kind": "console.warning",
+     "text": "WebGPU canvas configured with a different format than is preferred by this device (\"rgba8unorm\"). This requires an extra copy, which may impact performance."
+    },
+    {
+     "ms": 1450,
+     "kind": "console.warning",
+     "text": "A valid external Instance reference no longer exists."
+    },
+    {
+     "ms": 1451,
+     "kind": "console.warning",
+     "text": "WebGPU device lost (reason 1): A valid external Instance reference no longer exists. -- rendering stops, the movie keeps running"
+    },
+    {
+     "ms": 1468,
+     "kind": "pageerror",
+     "text": "A valid external Instance reference no longer exists."
+    },
+    {
+     "ms": 1469,
+     "kind": "pageerror",
+     "text": "A valid external Instance reference no longer exists."
+    },
+    {
+     "ms": 2809,
+     "kind": "pageerror",
+     "text": "Maximum call stack size exceeded"
+    }
+   ],
+   "mounted": "seedling-vanilla-record-23510f80-hang-btn-btn",
+   "logBeforeStart": 5,
+   "startMs": 1804,
+   "start": "ok",
+   "drain": {
+    "ticks": [
+     {
+      "level": 38,
+      "x": 152,
+      "y": 200
+     }
+    ]
+   },
+   "summary": {
+    "finished": false,
+    "tick": 1,
+    "buffered": 1,
+    "dead_frames": 20,
+    "level": 38,
+    "x": 152,
+    "y": 200,
+    "cleared": "",
+    "errors": 6,
+    "firstError": {
+     "ms": 2809,
+     "kind": "pageerror",
+     "text": "Maximum call stack size exceeded"
+    },
+    "drained": 1
+   }
+  },
+  {
+   "shape": "rope-rope-pulled",
+   "source": "hang: the build (check() → hit())",
+   "set": "seedling-vanilla-record-23510f80-hang-rope-rope-pulled",
+   "samples": [
+    {
+     "ms": 1960,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 0,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 2116,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 2273,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 2430,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 2588,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 2744,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 2900,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 3056,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 3212,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 3368,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 3524,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 3683,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 3842,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 4001,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 4157,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 4313,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 4469,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 4628,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 4785,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 4940,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 5096,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 5253,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 5410,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 5565,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 5724,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 5880,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 6039,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 6198,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 6354,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 6511,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 6669,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 6828,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 6987,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 7146,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 7304,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 7461,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 7618,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 7776,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 7932,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 8087,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 8246,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 8405,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 8562,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 8720,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 8880,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 9036,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 9193,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 9353,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 9509,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    },
+    {
+     "ms": 9665,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 1,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10"
+    }
+   ],
+   "log": [
+    {
+     "ms": 919,
+     "kind": "console.warning",
+     "text": "WebGPU canvas configured with a different format than is preferred by this device (\"rgba8unorm\"). This requires an extra copy, which may impact performance."
+    },
+    {
+     "ms": 1332,
+     "kind": "console.warning",
+     "text": "A valid external Instance reference no longer exists."
+    },
+    {
+     "ms": 1332,
+     "kind": "console.warning",
+     "text": "WebGPU device lost (reason 1): A valid external Instance reference no longer exists. -- rendering stops, the movie keeps running"
+    },
+    {
+     "ms": 1391,
+     "kind": "pageerror",
+     "text": "A valid external Instance reference no longer exists."
+    },
+    {
+     "ms": 1391,
+     "kind": "pageerror",
+     "text": "A valid external Instance reference no longer exists."
+    },
+    {
+     "ms": 2023,
+     "kind": "pageerror",
+     "text": "Maximum call stack size exceeded"
+    }
+   ],
+   "mounted": "seedling-vanilla-record-23510f80-hang-rope-rope-pulled",
+   "logBeforeStart": 5,
+   "startMs": 1693,
+   "start": "ok",
+   "drain": {
+    "ticks": []
+   },
+   "summary": {
+    "finished": false,
+    "tick": 0,
+    "buffered": 0,
+    "dead_frames": 1,
+    "level": 38,
+    "x": 152,
+    "y": 200,
+    "cleared": "38,10",
+    "errors": 6,
+    "firstError": {
+     "ms": 2023,
+     "kind": "pageerror",
+     "text": "Maximum call stack size exceeded"
+    },
+    "drained": 0
+   }
+  },
+  {
+   "shape": "br0-btn",
+   "source": "hang: the frame the ButtonRoom is pressed",
+   "set": "seedling-vanilla-record-23510f80-hang-br0-btn",
+   "samples": [
+    {
+     "ms": 1968,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 0,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2125,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 4,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2282,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 9,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2441,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 13,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2596,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 18,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2752,
+     "tick": 3,
+     "tick_count": 90,
+     "buffered": 3,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 203.25,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2912,
+     "tick": 7,
+     "tick_count": 90,
+     "buffered": 7,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 207.55,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3068,
+     "tick": 12,
+     "tick_count": 90,
+     "buffered": 12,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 213.89999999999998,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3224,
+     "tick": 17,
+     "tick_count": 90,
+     "buffered": 17,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 219.60000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3382,
+     "tick": 22,
+     "tick_count": 90,
+     "buffered": 22,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 225.45000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3538,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3696,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3852,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4011,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4170,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4329,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4489,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4649,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4807,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4967,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5126,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5283,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5439,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5599,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5758,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5918,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 6077,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 6237,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 6393,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 6549,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 6705,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 6861,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 7016,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 7175,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 7335,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 7493,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 7651,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 7811,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 7968,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 8125,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 8281,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 8437,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 8604,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 8760,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 8916,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 9072,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 9228,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 9384,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 9540,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 9696,
+     "tick": 24,
+     "tick_count": 90,
+     "buffered": 24,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 226.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    }
+   ],
+   "log": [
+    {
+     "ms": 934,
+     "kind": "console.warning",
+     "text": "WebGPU canvas configured with a different format than is preferred by this device (\"rgba8unorm\"). This requires an extra copy, which may impact performance."
+    },
+    {
+     "ms": 1355,
+     "kind": "console.warning",
+     "text": "A valid external Instance reference no longer exists."
+    },
+    {
+     "ms": 1356,
+     "kind": "console.warning",
+     "text": "WebGPU device lost (reason 1): A valid external Instance reference no longer exists. -- rendering stops, the movie keeps running"
+    },
+    {
+     "ms": 1409,
+     "kind": "pageerror",
+     "text": "A valid external Instance reference no longer exists."
+    },
+    {
+     "ms": 1409,
+     "kind": "pageerror",
+     "text": "A valid external Instance reference no longer exists."
+    },
+    {
+     "ms": 3520,
+     "kind": "pageerror",
+     "text": "Maximum call stack size exceeded"
+    }
+   ],
+   "mounted": "seedling-vanilla-record-23510f80-hang-br0-btn",
+   "logBeforeStart": 5,
+   "startMs": 1698,
+   "start": "ok",
+   "drain": {
+    "ticks": [
+     {
+      "level": 38,
+      "x": 152,
+      "y": 200
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 200.8
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 202.15
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 203.25
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 204.1
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 205.5
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 206.65
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 207.55
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 209
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 210.2
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 211.14999999999998
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 212.64999999999998
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 213.89999999999998
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 214.89999999999998
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 216.45
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 217.75
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 218.8
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 219.60000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 220.95000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 222.05
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 222.9
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 224.3
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 225.45000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 226.35000000000002
+     }
+    ]
+   },
+   "summary": {
+    "finished": false,
+    "tick": 24,
+    "buffered": 24,
+    "dead_frames": 20,
+    "level": 38,
+    "x": 152,
+    "y": 226.35000000000002,
+    "cleared": "",
+    "errors": 6,
+    "firstError": {
+     "ms": 3520,
+     "kind": "pageerror",
+     "text": "Maximum call stack size exceeded"
+    },
+    "drained": 24
+   }
+  },
+  {
+   "shape": "br0-br1",
+   "source": "none: the flip 1 answers false",
+   "set": "seedling-vanilla-record-23510f80-hang-br0-br1",
+   "samples": [
+    {
+     "ms": 1919,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 0,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2075,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 4,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2247,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 9,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2403,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 14,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2559,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 18,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2718,
+     "tick": 3,
+     "tick_count": 90,
+     "buffered": 3,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 203.25,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2874,
+     "tick": 8,
+     "tick_count": 90,
+     "buffered": 8,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 209,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3043,
+     "tick": 13,
+     "tick_count": 90,
+     "buffered": 13,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 214.89999999999998,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3199,
+     "tick": 18,
+     "tick_count": 90,
+     "buffered": 18,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 220.95000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3360,
+     "tick": 22,
+     "tick_count": 90,
+     "buffered": 22,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 225.45000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3523,
+     "tick": 27,
+     "tick_count": 90,
+     "buffered": 27,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 231.45,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10 38,11"
+    },
+    {
+     "ms": 3714,
+     "tick": 32,
+     "tick_count": 90,
+     "buffered": 32,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 237.60000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10 38,11"
+    },
+    {
+     "ms": 3870,
+     "tick": 38,
+     "tick_count": 90,
+     "buffered": 38,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 244.25000000000003,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10 38,11"
+    },
+    {
+     "ms": 4026,
+     "tick": 42,
+     "tick_count": 90,
+     "buffered": 42,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 248.75,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10 38,11"
+    },
+    {
+     "ms": 4182,
+     "tick": 47,
+     "tick_count": 90,
+     "buffered": 47,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 255.35000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10 38,11"
+    },
+    {
+     "ms": 4338,
+     "tick": 52,
+     "tick_count": 90,
+     "buffered": 52,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 260.5000000000001,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10 38,11"
+    },
+    {
+     "ms": 4499,
+     "tick": 57,
+     "tick_count": 90,
+     "buffered": 57,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 266.6,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10 38,11"
+    },
+    {
+     "ms": 4658,
+     "tick": 61,
+     "tick_count": 90,
+     "buffered": 61,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 271.3,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10 38,11"
+    },
+    {
+     "ms": 4814,
+     "tick": 66,
+     "tick_count": 90,
+     "buffered": 66,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 277.3500000000001,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10 38,11"
+    },
+    {
+     "ms": 4970,
+     "tick": 71,
+     "tick_count": 90,
+     "buffered": 71,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 282.75000000000006,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10 38,11"
+    },
+    {
+     "ms": 5127,
+     "tick": 75,
+     "tick_count": 90,
+     "buffered": 75,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 287.85,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "38,10 38,11"
+    },
+    {
+     "ms": 5283,
+     "tick": 80,
+     "tick_count": 90,
+     "buffered": 80,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 294.00000000000006,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5 38,10 38,11"
+    },
+    {
+     "ms": 5439,
+     "tick": 85,
+     "tick_count": 90,
+     "buffered": 85,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 299.5000000000001,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5 38,10 38,11"
+    },
+    {
+     "ms": 6128,
+     "tick": 88,
+     "tick_count": 90,
+     "buffered": 88,
+     "dead_frames": 21,
+     "finished": false,
+     "error": "",
+     "level": 37,
+     "x": 296,
+     "y": 24,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5 38,10 38,11"
+    },
+    {
+     "ms": 6288,
+     "tick": 88,
+     "tick_count": 90,
+     "buffered": 88,
+     "dead_frames": 26,
+     "finished": false,
+     "error": "",
+     "level": 37,
+     "x": 296,
+     "y": 24,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5 38,10 38,11"
+    },
+    {
+     "ms": 6444,
+     "tick": 88,
+     "tick_count": 90,
+     "buffered": 88,
+     "dead_frames": 31,
+     "finished": false,
+     "error": "",
+     "level": 37,
+     "x": 296,
+     "y": 24,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5 38,10 38,11"
+    },
+    {
+     "ms": 6604,
+     "tick": 88,
+     "tick_count": 90,
+     "buffered": 88,
+     "dead_frames": 36,
+     "finished": false,
+     "error": "",
+     "level": 37,
+     "x": 296,
+     "y": 24,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5 38,10 38,11"
+    },
+    {
+     "ms": 6760,
+     "tick": 88,
+     "tick_count": 90,
+     "buffered": 88,
+     "dead_frames": 40,
+     "finished": false,
+     "error": "",
+     "level": 37,
+     "x": 296,
+     "y": 24,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5 38,10 38,11"
+    },
+    {
+     "ms": 6916,
+     "tick": 90,
+     "tick_count": 90,
+     "buffered": 91,
+     "dead_frames": 40,
+     "finished": true,
+     "error": "",
+     "level": 37,
+     "x": 296,
+     "y": 28.700000000000006,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5 38,10 38,11"
+    }
+   ],
+   "log": [
+    {
+     "ms": 837,
+     "kind": "console.warning",
+     "text": "WebGPU canvas configured with a different format than is preferred by this device (\"rgba8unorm\"). This requires an extra copy, which may impact performance."
+    },
+    {
+     "ms": 1347,
+     "kind": "console.warning",
+     "text": "A valid external Instance reference no longer exists."
+    },
+    {
+     "ms": 1347,
+     "kind": "console.warning",
+     "text": "WebGPU device lost (reason 1): A valid external Instance reference no longer exists. -- rendering stops, the movie keeps running"
+    },
+    {
+     "ms": 1347,
+     "kind": "pageerror",
+     "text": "A valid external Instance reference no longer exists."
+    },
+    {
+     "ms": 1347,
+     "kind": "pageerror",
+     "text": "A valid external Instance reference no longer exists."
+    }
+   ],
+   "mounted": "seedling-vanilla-record-23510f80-hang-br0-br1",
+   "logBeforeStart": 5,
+   "startMs": 1661,
+   "start": "ok",
+   "drain": {
+    "ticks": [
+     {
+      "level": 38,
+      "x": 152,
+      "y": 200
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 200.8
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 202.15
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 203.25
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 204.1
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 205.5
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 206.65
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 207.55
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 209
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 210.2
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 211.14999999999998
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 212.64999999999998
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 213.89999999999998
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 214.89999999999998
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 216.45
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 217.75
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 218.8
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 219.60000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 220.95000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 222.05
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 222.9
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 224.3
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 225.45000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 226.35000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 227.8
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 229
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 229.95
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 231.45
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 232.7
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 233.7
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 235.25
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 236.55
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 237.60000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 238.40000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 239.75000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 240.85000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 241.70000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 243.10000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 244.25000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 245.15000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 246.60000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 247.8
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 248.75
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 250.25
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 251.5
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 252.5
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 254.05
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 255.35000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 256.40000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 257.20000000000005
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 258.55000000000007
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 259.6500000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 260.5000000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 261.9000000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 263.05000000000007
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 263.95000000000005
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 265.40000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 266.6
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 267.55
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 269.05
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 270.3
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 271.3
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 272.85
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 274.15000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 275.20000000000005
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 276.00000000000006
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 277.3500000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 278.4500000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 279.3000000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 280.7000000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 281.8500000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 282.75000000000006
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 284.20000000000005
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 285.40000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 286.35
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 287.85
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 289.1
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 290.1
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 291.65000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 292.95000000000005
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 294.00000000000006
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 294.80000000000007
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 296.1500000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 297.2500000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 298.10000000000014
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 299.5000000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 300.6500000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 301.55000000000007
+     },
+     {
+      "level": 37,
+      "x": 296,
+      "y": 24
+     },
+     {
+      "level": 37,
+      "x": 296,
+      "y": 24.8
+     },
+     {
+      "level": 37,
+      "x": 296,
+      "y": 26.150000000000002
+     }
+    ]
+   },
+   "summary": {
+    "finished": true,
+    "tick": 90,
+    "buffered": 91,
+    "dead_frames": 40,
+    "level": 37,
+    "x": 296,
+    "y": 28.700000000000006,
+    "cleared": "37,4 38,5 38,10 38,11",
+    "errors": 5,
+    "firstError": null,
+    "drained": 91
+   }
+  },
+  {
+   "shape": "btn-solo",
+   "source": "none: one presser",
+   "set": "seedling-vanilla-record-23510f80-hang-btn-solo",
+   "samples": [
+    {
+     "ms": 1748,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 0,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 88,
+     "y": 136,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 1979,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 0,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2137,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 4,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2293,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 9,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2448,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 13,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2603,
+     "tick": 0,
+     "tick_count": 90,
+     "buffered": 0,
+     "dead_frames": 18,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 200,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2759,
+     "tick": 3,
+     "tick_count": 90,
+     "buffered": 3,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 203.25,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 2919,
+     "tick": 7,
+     "tick_count": 90,
+     "buffered": 7,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 207.55,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3074,
+     "tick": 12,
+     "tick_count": 90,
+     "buffered": 12,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 213.89999999999998,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3229,
+     "tick": 17,
+     "tick_count": 90,
+     "buffered": 17,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 219.60000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3387,
+     "tick": 21,
+     "tick_count": 90,
+     "buffered": 21,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 224.3,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3544,
+     "tick": 26,
+     "tick_count": 90,
+     "buffered": 26,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 229.95,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3700,
+     "tick": 31,
+     "tick_count": 90,
+     "buffered": 31,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 236.55,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 3857,
+     "tick": 36,
+     "tick_count": 90,
+     "buffered": 36,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 241.70000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4013,
+     "tick": 40,
+     "tick_count": 90,
+     "buffered": 40,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 246.60000000000002,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4169,
+     "tick": 45,
+     "tick_count": 90,
+     "buffered": 45,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 252.5,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4333,
+     "tick": 50,
+     "tick_count": 90,
+     "buffered": 50,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 258.55000000000007,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4491,
+     "tick": 55,
+     "tick_count": 90,
+     "buffered": 55,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 263.95000000000005,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4646,
+     "tick": 59,
+     "tick_count": 90,
+     "buffered": 59,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 269.05,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4803,
+     "tick": 64,
+     "tick_count": 90,
+     "buffered": 64,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 275.20000000000005,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 4958,
+     "tick": 69,
+     "tick_count": 90,
+     "buffered": 69,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 280.7000000000001,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5114,
+     "tick": 73,
+     "tick_count": 90,
+     "buffered": 73,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 285.40000000000003,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": ""
+    },
+    {
+     "ms": 5271,
+     "tick": 78,
+     "tick_count": 90,
+     "buffered": 78,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 291.65000000000003,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5"
+    },
+    {
+     "ms": 5427,
+     "tick": 83,
+     "tick_count": 90,
+     "buffered": 83,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 297.2500000000001,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5"
+    },
+    {
+     "ms": 5583,
+     "tick": 87,
+     "tick_count": 90,
+     "buffered": 87,
+     "dead_frames": 20,
+     "finished": false,
+     "error": "",
+     "level": 38,
+     "x": 152,
+     "y": 301.55000000000007,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5"
+    },
+    {
+     "ms": 6227,
+     "tick": 88,
+     "tick_count": 90,
+     "buffered": 88,
+     "dead_frames": 21,
+     "finished": false,
+     "error": "",
+     "level": 37,
+     "x": 296,
+     "y": 24,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5"
+    },
+    {
+     "ms": 6383,
+     "tick": 88,
+     "tick_count": 90,
+     "buffered": 88,
+     "dead_frames": 26,
+     "finished": false,
+     "error": "",
+     "level": 37,
+     "x": 296,
+     "y": 24,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5"
+    },
+    {
+     "ms": 6541,
+     "tick": 88,
+     "tick_count": 90,
+     "buffered": 88,
+     "dead_frames": 31,
+     "finished": false,
+     "error": "",
+     "level": 37,
+     "x": 296,
+     "y": 24,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5"
+    },
+    {
+     "ms": 6702,
+     "tick": 88,
+     "tick_count": 90,
+     "buffered": 88,
+     "dead_frames": 36,
+     "finished": false,
+     "error": "",
+     "level": 37,
+     "x": 296,
+     "y": 24,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5"
+    },
+    {
+     "ms": 6857,
+     "tick": 88,
+     "tick_count": 90,
+     "buffered": 88,
+     "dead_frames": 40,
+     "finished": false,
+     "error": "",
+     "level": 37,
+     "x": 296,
+     "y": 24,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5"
+    },
+    {
+     "ms": 7014,
+     "tick": 90,
+     "tick_count": 90,
+     "buffered": 91,
+     "dead_frames": 40,
+     "finished": true,
+     "error": "",
+     "level": 37,
+     "x": 296,
+     "y": 28.700000000000006,
+     "receive_input": true,
+     "hits": 0,
+     "cleared": "37,4 38,5"
+    }
+   ],
+   "log": [
+    {
+     "ms": 954,
+     "kind": "console.warning",
+     "text": "WebGPU canvas configured with a different format than is preferred by this device (\"rgba8unorm\"). This requires an extra copy, which may impact performance."
+    },
+    {
+     "ms": 1379,
+     "kind": "console.warning",
+     "text": "A valid external Instance reference no longer exists."
+    },
+    {
+     "ms": 1379,
+     "kind": "console.warning",
+     "text": "WebGPU device lost (reason 1): A valid external Instance reference no longer exists. -- rendering stops, the movie keeps running"
+    },
+    {
+     "ms": 1439,
+     "kind": "pageerror",
+     "text": "A valid external Instance reference no longer exists."
+    },
+    {
+     "ms": 1439,
+     "kind": "pageerror",
+     "text": "A valid external Instance reference no longer exists."
+    }
+   ],
+   "mounted": "seedling-vanilla-record-23510f80-hang-btn-solo",
+   "logBeforeStart": 5,
+   "startMs": 1716,
+   "start": "ok",
+   "drain": {
+    "ticks": [
+     {
+      "level": 38,
+      "x": 152,
+      "y": 200
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 200.8
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 202.15
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 203.25
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 204.1
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 205.5
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 206.65
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 207.55
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 209
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 210.2
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 211.14999999999998
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 212.64999999999998
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 213.89999999999998
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 214.89999999999998
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 216.45
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 217.75
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 218.8
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 219.60000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 220.95000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 222.05
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 222.9
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 224.3
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 225.45000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 226.35000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 227.8
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 229
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 229.95
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 231.45
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 232.7
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 233.7
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 235.25
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 236.55
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 237.60000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 238.40000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 239.75000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 240.85000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 241.70000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 243.10000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 244.25000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 245.15000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 246.60000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 247.8
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 248.75
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 250.25
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 251.5
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 252.5
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 254.05
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 255.35000000000002
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 256.40000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 257.20000000000005
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 258.55000000000007
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 259.6500000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 260.5000000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 261.9000000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 263.05000000000007
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 263.95000000000005
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 265.40000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 266.6
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 267.55
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 269.05
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 270.3
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 271.3
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 272.85
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 274.15000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 275.20000000000005
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 276.00000000000006
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 277.3500000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 278.4500000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 279.3000000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 280.7000000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 281.8500000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 282.75000000000006
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 284.20000000000005
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 285.40000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 286.35
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 287.85
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 289.1
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 290.1
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 291.65000000000003
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 292.95000000000005
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 294.00000000000006
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 294.80000000000007
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 296.1500000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 297.2500000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 298.10000000000014
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 299.5000000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 300.6500000000001
+     },
+     {
+      "level": 38,
+      "x": 152,
+      "y": 301.55000000000007
+     },
+     {
+      "level": 37,
+      "x": 296,
+      "y": 24
+     },
+     {
+      "level": 37,
+      "x": 296,
+      "y": 24.8
+     },
+     {
+      "level": 37,
+      "x": 296,
+      "y": 26.150000000000002
+     }
+    ]
+   },
+   "summary": {
+    "finished": true,
+    "tick": 90,
+    "buffered": 91,
+    "dead_frames": 40,
+    "level": 37,
+    "x": 296,
+    "y": 28.700000000000006,
+    "cleared": "37,4 38,5",
+    "errors": 5,
+    "firstError": null,
+    "drained": 91
+   }
+  }
+ ]
+}

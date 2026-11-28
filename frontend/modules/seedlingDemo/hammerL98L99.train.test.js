@@ -16,7 +16,15 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { KILLLOCK_STANCE_AS_FORECAST as __SAF_HOLD } from './solverBot.js';
+
+// ⛓ `KILLLOCK_STANCE_AS_FORECAST` held OFF for this whole file: it ships ON since the ROCKLOCK + FADE flip took it in
+// (⚖ the user, 2026-11-22). ON, step 227's rows move ticks and LOSE hits (LINE_STANCE alone 483 t 2 h → 552 t 0 h; the KSS control 477 t 1 h → 488 t 0 h), step 228's OFF refusal names t586 (was t496), still refused. These rows pin other switches; held OFF they are byte for byte their
+// pre-flip selves. The flip's own effect is measured by its sweeps and survey.
+let __safWas;
+beforeAll(() => { __safWas = __SAF_HOLD.enabled; __SAF_HOLD.enabled = false; });
+afterAll(() => { __SAF_HOLD.enabled = __safWas; });
 
 import { deliveredChestDocument } from './apChestDelivery.js';
 import { levelSourceFromAtlas } from './atlasSource.js';

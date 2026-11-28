@@ -102,3 +102,18 @@
 .storage-quota-notice-text {
     flex: 1 1 300px;
 }
+/* The document library (an idb declaration): its status line, a refusal / auto-clear note, held rows. */
+.storage-panel .sp-library-status {
+    margin: 2px 0;
+}
+.storage-panel .sp-library-note:empty {
+    display: none;
+}
+.storage-panel .sp-library-note {
+    color: #e0a040;
+    margin: 2px 0;
+}
+.storage-panel .sp-held {
+    color: #e0a040;
+    font-size: 12px;
+}

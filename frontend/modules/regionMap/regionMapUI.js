@@ -31,13 +31,15 @@ import { PathFinder } from '../shared/pathfinder.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { GROUPING_RULES } from '../procgenCore/regionLayout.js';
 import { hookCtxFor } from '../procgenCore/atlasCache.js';
-import { COLORS, compositeMapPainterFor, drawGenericRegion } from '../procgenCore/compositeMapRenderer.js';
+import { COLORS } from '../procgenCore/compositeMapRenderer.js';
+import { BAKE_TILE_PX, drawCellArt, drawCellLabel, drawCellSquares, drawPlaceholderCell } from './regionMapCellDraw.js';
 import { buildRegionMapModel } from './regionMapModel.js';
-import { cellFrames, frameAt, framesBounds, tileCentre, visibleFrames } from './regionMapFrames.js';
+import { WORLD_TILE_PX, cellFrames, frameAt, framesBounds, visibleFrames } from './regionMapFrames.js';
+import { atLeast, linkShape } from './regionMapLinkGeometry.js';
 import {
     centreOn, easeCamera, fitCamera, panBy, screenToWorld, viewRect, worldToScreen, zoomAround,
 } from '../procgenCore/mapCamera.js';
-import { SQUARE_COLORS, frameSquares, squareAt, squareColorKey } from './regionMapOverlay.js';
+import { DOOR_RING_WIDTH_PX, doorRingRadius, squareAt } from './regionMapOverlay.js';
 import { REGION_MAP_SETTING_DEFAULTS, SETTINGS_PREFIX, moduleHandles, panelInstances } from './regionMapSettings.js';
 import {
     PANEL_ID, REGION_MAP_CLICK_ACTIONS_KEY, loadRegionMapClickActions, regionOfCell, runRegionMapClick,
@@ -48,11 +50,35 @@ import { mountClickActionsStrip } from '../regionView/clickActionsUI.js';
 import { buildRegionMapPicker, setupRegionMapPicker } from './regionMapPicker.js';
 import { createCanvasGesture } from './pinch.js';
 
-/** The tile size every level is baked at (the art's own); drawn scaled by the camera. */
-export const BAKE_TILE_PX = 16;
+/** The tile size every level is baked at (the art's own); drawn scaled by the camera (`regionMapCellDraw.js`). */
+export { BAKE_TILE_PX };
 const OWNER = 'regionMap';
 const FOLLOW_EASE_MS = 350;
 const LINK_COLORS = Object.freeze({ down: '#7fb3ff', up: '#ffb37f', join: '#e6c84a', warp: '#6fd08c' });
+/**
+ * ⛓ THE GAP MARK (link-ends): the line across the gutter between two adjacent cells. The gutter is `GUTTER_PX` (32)
+ * world px, so ≈ 1–3 screen px at Fit all on Seedling: the mark is at least `GAP_MARK_MIN_PX` long (stretched about the
+ * gap's middle, so it runs a little into both borders), `GAP_HEAD_MIN_PX` when it carries an arrowhead, and one level
+ * tile thick, between `GAP_MARK_MIN_WIDTH_PX` and `GAP_MARK_MAX_WIDTH_PX`. Solid (`GAP_MARK_ALPHA`): it crosses no art.
+ */
+export const GAP_MARK_MIN_PX = 8;
+export const GAP_HEAD_MIN_PX = 12;
+export const GAP_MARK_MIN_WIDTH_PX = 3;
+export const GAP_MARK_MAX_WIDTH_PX = 6;
+export const GAP_MARK_ALPHA = 0.9;
+/**
+ * ⛓ THE DOOR RING (art-ends): a line that ends at a door tile (`linkShape` `ends.* === 'tile'`) runs over its level's
+ * art. So that end gets a hollow ring centred on the tile, a dark halo (`DOOR_RING_WIDTH_PX` + 2) under a
+ * `DOOR_RING_WIDTH_PX` stroke in the link's colour. Hollow, so it does not hide the door (or read as a location square).
+ * A `to` end with an arrowhead gets NO ring: the head marks that door, its tip on the tile's centre, outlined dark.
+ *
+ * The ring's size: `doorRingRadius` (regionMapOverlay) — never larger than its tile, skipped when too small.
+ */
+export {
+    DOOR_RING_HALO_HALF_PX, DOOR_RING_MAX_R_PX, DOOR_RING_SKIP_R_PX, DOOR_RING_WIDTH_PX, doorRingRadius,
+} from './regionMapOverlay.js';
+/** A line's arrowhead length in screen px (a gap mark's is shortened to fit its mark). */
+export const LINE_HEAD_PX = 8;
 /** The toolbar legend, one swatch per `procgenCore/regionLayout.js` LINK_KINDS kind (region-map placement (A)). */
 const LINK_LEGEND = Object.freeze([
     ['join', 'edge transition'], ['down', 'down'], ['up', 'up'], ['warp', 'warp (door / teleporter)'],
@@ -757,7 +783,10 @@ export class RegionMapUI {
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.fillStyle = BG;
         ctx.fillRect(0, 0, vp.w, vp.h);
-        const stats = { cells: 0, art: 0, generic: 0, fogged: 0, hidden: 0, links: 0, neighbourLinks: 0, keys: [] };
+        const stats = {
+            cells: 0, art: 0, generic: 0, fogged: 0, hidden: 0, links: 0, neighbourLinks: 0, gapMarks: 0, edgeLines: 0, arrowheads: 0,
+            tileEnds: 0, artEnds: 0, centreEnds: 0, shortHeads: 0, doorRings: 0, doorRingsSkipped: 0, ringR: null, keys: [],
+        };
         // ⛓ A DOM readout of the zoom painted (zoom-links): a step's `done` reads no instance.
         this.canvas.dataset.zoom = String(cam.zoom);
         this._squares = [];
@@ -775,25 +804,9 @@ export class RegionMapUI {
             if (v === 'hidden') { stats.hidden += 1; continue; }
             stats.cells += 1;
             stats.keys.push(f.key);
-            const s = worldToScreen(cam, vp, f.cell.x, f.cell.y);
-            const cw = f.cell.w * cam.zoom;
-            const ch = f.cell.h * cam.zoom;
             if (v === 'placeholder') {
                 stats.fogged += 1;
-                ctx.fillStyle = '#2b2b33';
-                ctx.fillRect(s.x, s.y, cw, ch);
-                ctx.strokeStyle = '#44444f';
-                ctx.lineWidth = 1;
-                ctx.strokeRect(s.x + 0.5, s.y + 0.5, cw - 1, ch - 1);
-                if (cw > 24) {
-                    ctx.fillStyle = '#777';
-                    ctx.font = `${Math.min(28, Math.max(10, cw / 6))}px sans-serif`;
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText('?', s.x + cw / 2, s.y + ch / 2);
-                    ctx.textAlign = 'start';
-                    ctx.textBaseline = 'alphabetic';
-                }
+                drawPlaceholderCell(ctx, { frame: f, camera: cam, vp });
                 continue;
             }
             shown.push(f);
@@ -813,134 +826,120 @@ export class RegionMapUI {
         if (this._anim) this._requestPaint();
     }
 
+    /* ⛓ The cell drawing is `regionMapCellDraw.js`'s (shared with the Region Graph's map node look). */
+
     _drawArt(ctx, f, stats) {
-        const cell = this.model.cells.get(f.key);
-        const { dpr, camera: cam, vp } = this;
-        const s = worldToScreen(cam, vp, f.x, f.y);
-        if (cell?.region) {
-            const k = (f.tilePx * cam.zoom) / BAKE_TILE_PX;
-            ctx.save();
-            ctx.setTransform(dpr * k, 0, 0, dpr * k, dpr * s.x, dpr * s.y);
-            const geom = {
-                offX: 0, offY: 0, regionSize: { width: f.ext.w, height: f.ext.h }, tilePx: BAKE_TILE_PX, colors: COLORS,
-                source: this.source, requestRedraw: this._onArt,
-            };
-            const painter = compositeMapPainterFor(cell.region, substrateRegistry);
-            try {
-                if (painter) painter(ctx, cell.region, geom);
-                else drawGenericRegion(ctx, cell.region, geom);
-            } catch (e) {
-                console.warn('regionMap: a painter threw', f.key, e);
-            }
-            ctx.restore();
-            stats.art += painter ? 1 : 0;
-            stats.generic += painter ? 0 : 1;
-        } else {
-            const w = f.w * cam.zoom;
-            const h = f.h * cam.zoom;
-            ctx.fillStyle = COLORS.genericBg;
-            ctx.fillRect(s.x, s.y, w, h);
-            stats.generic += 1;
-        }
-        const c = worldToScreen(cam, vp, f.cell.x, f.cell.y);
-        ctx.strokeStyle = COLORS.cellBorder;
-        ctx.lineWidth = 1;
-        ctx.strokeRect(c.x + 0.5, c.y + 0.5, f.cell.w * cam.zoom - 1, f.cell.h * cam.zoom - 1);
+        drawCellArt(ctx, {
+            frame: f, cell: this.model.cells.get(f.key), camera: this.camera, vp: this.vp, dpr: this.dpr,
+            source: this.source, onArt: this._onArt, registry: substrateRegistry, stats,
+        });
     }
 
     _drawLabel(ctx, f) {
-        const cam = this.camera;
-        const cw = f.cell.w * cam.zoom;
-        if (cw < 60) return;
-        const c = worldToScreen(cam, this.vp, f.cell.x, f.cell.y);
-        const cell = this.model.cells.get(f.key);
-        const size = Math.max(9, Math.min(13, cw / 14));
-        ctx.font = `${size}px sans-serif`;
-        const text = f.key.length > 40 ? `${f.key.slice(0, 39)}…` : f.key;
-        const tw = Math.min(ctx.measureText(text).width, cw - 4);
-        ctx.fillStyle = cell?.region ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0)';
-        ctx.fillRect(c.x + 2, c.y + 2, tw + 6, size + 5);
-        ctx.fillStyle = '#e8e8f0';
-        ctx.fillText(text, c.x + 5, c.y + size + 3, cw - 8);
+        drawCellLabel(ctx, { frame: f, cell: this.model.cells.get(f.key), camera: this.camera, vp: this.vp });
     }
 
     _drawSquares(ctx, f, view) {
-        const cell = this.model.cells.get(f.key);
-        if (!cell?.tiles?.length) return;
-        const squares = frameSquares(f, cell.tiles, this.camera, this.vp, this.settings.minSquarePx);
-        for (const q of squares) {
-            const loc = view?.locations?.get(q.location);
-            if (loc?.visibility === 'hidden') continue;
-            const colorKey = loc?.visibility === 'placeholder' ? 'unknown' : squareColorKey(loc, view?.regions?.get(loc?.region));
-            q.color = colorKey;
-            const h = q.side / 2;
-            ctx.fillStyle = SQUARE_COLORS[colorKey];
-            ctx.globalAlpha = colorKey === 'checked' ? 0.6 : 1;
-            if (q.kind === 'event') {
-                // Events: a diamond, so they read apart from items at any size.
-                ctx.beginPath();
-                ctx.moveTo(q.sx, q.sy - h * 1.15);
-                ctx.lineTo(q.sx + h * 1.15, q.sy);
-                ctx.lineTo(q.sx, q.sy + h * 1.15);
-                ctx.lineTo(q.sx - h * 1.15, q.sy);
-                ctx.closePath();
-                ctx.fill();
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-            } else {
-                ctx.fillRect(q.sx - h, q.sy - h, q.side, q.side);
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 1;
-                ctx.strokeRect(q.sx - h + 0.5, q.sy - h + 0.5, q.side - 1, q.side - 1);
-            }
-            ctx.globalAlpha = 1;
-            q.key = f.key;
-            this._squares.push(q);
-        }
+        drawCellSquares(ctx, {
+            frame: f, cell: this.model.cells.get(f.key), camera: this.camera, vp: this.vp,
+            minSquarePx: this.settings.minSquarePx, view, out: this._squares,
+        });
     }
 
     _drawLinks(ctx, view, stats) {
         const rect = viewRect(this.camera, this.vp);
-        const pt = (key, tile) => {
-            const f = this.frames.get(key);
-            if (!f) return null;
-            if (tile) return tileCentre(f, tile[0], tile[1]);
-            return { x: f.x + f.w / 2, y: f.y + f.h / 2 };
-        };
-        ctx.lineWidth = 1.5;
-        // Half-transparent: a link between two far groups crosses other levels' art.
-        ctx.globalAlpha = 0.55;
-        // ⛓ zoom-links (⚖ the user 2026-11-22T20:24:34Z, "Draw lines between neighbours"): the in-group links too,
-        // in the same style; counted apart (`neighbourLinks`) from the links between groups (`links`).
+        // ⛓ link-ends (⚖ the user 2026-11-22T21:55:35Z): `linkShape` says where each line starts and ends — a mark
+        // across the GAP between two adjacent cells, else a line ending at the door tiles or the ART's borders — and whether it has an
+        // arrowhead (every kind but `join`). Counted apart: `links` (between groups) / `neighbourLinks` (in a group),
+        // and `gapMarks`, `edgeLines`, `arrowheads` across both.
+        // ⛓ art-ends (⚖ the user 2026-11-23T01:20:20.902Z): a line ends at its door tile (a ring there) or on the level
+        // ART's border; `tileEnds` / `artEnds` / `centreEnds` count a line's two ends, `shortHeads` the heads longer
+        // than their line.
+        const zoom = this.camera.zoom;
+        // ⛓ zoom-links (⚖ the user 2026-11-22T20:24:34Z, "Draw lines between neighbours"): the in-group links too.
         const all = [...this.model.links, ...(this.model.neighbourLinks ?? [])];
         for (const l of all) {
             if (this._visibilityOf(l.from, view) === 'hidden' || this._visibilityOf(l.to, view) === 'hidden') continue;
-            const a = pt(l.from, l.a);
-            const b = pt(l.to, l.b);
-            if (!a || !b) continue;
-            if (Math.max(a.x, b.x) < rect.x0 || Math.min(a.x, b.x) > rect.x1 || Math.max(a.y, b.y) < rect.y0 || Math.min(a.y, b.y) > rect.y1) continue;
-            const sa = worldToScreen(this.camera, this.vp, a.x, a.y);
-            const sb = worldToScreen(this.camera, this.vp, b.x, b.y);
+            const shape = linkShape(l, this.frames);
+            if (!shape) continue;
+            const { seg } = shape;
+            if (Math.max(seg.x0, seg.x1) < rect.x0 || Math.min(seg.x0, seg.x1) > rect.x1
+                || Math.max(seg.y0, seg.y1) < rect.y0 || Math.min(seg.y0, seg.y1) > rect.y1) continue;
+            let sa = worldToScreen(this.camera, this.vp, seg.x0, seg.y0);
+            let sb = worldToScreen(this.camera, this.vp, seg.x1, seg.y1);
+            const gap = shape.form === 'gap';
+            if (gap) {
+                // A gutter is GUTTER_PX × zoom on screen (≈ 1–3 px at Fit all on Seedling): a floor on its length.
+                const s2 = atLeast({ x0: sa.x, y0: sa.y, x1: sb.x, y1: sb.y }, shape.head ? GAP_HEAD_MIN_PX : GAP_MARK_MIN_PX, shape.axis);
+                sa = { x: s2.x0, y: s2.y0 };
+                sb = { x: s2.x1, y: s2.y1 };
+            }
             ctx.strokeStyle = LINK_COLORS[l.kind] ?? LINK_COLORS.join;
             ctx.fillStyle = ctx.strokeStyle;
-            ctx.setLineDash?.(l.kind === 'warp' ? [4, 4] : []);
+            // A gap mark is short and crosses no art: drawn solid and thicker. A long line is half-transparent: a link
+            // between two far cells crosses other levels' art.
+            ctx.globalAlpha = gap ? GAP_MARK_ALPHA : 0.55;
+            ctx.lineWidth = gap ? Math.max(GAP_MARK_MIN_WIDTH_PX, Math.min(GAP_MARK_MAX_WIDTH_PX, WORLD_TILE_PX * zoom)) : 1.5;
+            ctx.setLineDash?.(l.kind === 'warp' && !gap ? [4, 4] : []);
             ctx.beginPath();
             ctx.moveTo(sa.x, sa.y);
             ctx.lineTo(sb.x, sb.y);
             ctx.stroke();
             ctx.setLineDash?.([]);
-            const ang = Math.atan2(sb.y - sa.y, sb.x - sa.x);
-            ctx.beginPath();
-            ctx.moveTo(sb.x, sb.y);
-            ctx.lineTo(sb.x - 8 * Math.cos(ang - 0.4), sb.y - 8 * Math.sin(ang - 0.4));
-            ctx.lineTo(sb.x - 8 * Math.cos(ang + 0.4), sb.y - 8 * Math.sin(ang + 0.4));
-            ctx.closePath();
-            ctx.fill();
+            if (!gap) {
+                // ⛓ art-ends: a door-tile end gets a ring (the tile itself is a pixel or two at Fit all).
+                for (const [which, pt] of [['from', sa], ['to', sb]]) {
+                    const e = shape.ends?.[which];
+                    const tilePx = this.frames.get(l[which])?.tilePx ?? WORLD_TILE_PX;
+                    const r = doorRingRadius(tilePx * zoom);
+                    if (e === 'tile') stats.tileEnds += 1;
+                    else if (e === 'art') stats.artEnds += 1;
+                    else stats.centreEnds += 1;
+                    // A headed `to` end: the arrowhead marks the door (its tip on the tile's centre), no ring under it.
+                    if (e !== 'tile' || (which === 'to' && shape.head)) continue;
+                    // ⛓ never larger than the tile: too small → no ring at all (`doorRingRadius`).
+                    if (r == null) { stats.doorRingsSkipped += 1; continue; }
+                    stats.doorRings += 1;
+                    stats.ringR = r;
+                    ctx.globalAlpha = 1;
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, r, 0, Math.PI * 2);
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = DOOR_RING_WIDTH_PX + 2;
+                    ctx.stroke();
+                    ctx.strokeStyle = ctx.fillStyle;
+                    ctx.lineWidth = DOOR_RING_WIDTH_PX;
+                    ctx.stroke();
+                }
+                ctx.globalAlpha = 0.55;
+            }
+            if (shape.head) {
+                const ang = Math.atan2(sb.y - sa.y, sb.x - sa.x);
+                const len = Math.hypot(sb.x - sa.x, sb.y - sa.y);
+                const hl = gap ? Math.min(LINE_HEAD_PX, len * 0.6) : LINE_HEAD_PX;
+                // A line shorter than its head: the head covers the whole line (reported, not restyled).
+                if (!gap && len < hl) stats.shortHeads += 1;
+                ctx.beginPath();
+                ctx.moveTo(sb.x, sb.y);
+                ctx.lineTo(sb.x - hl * Math.cos(ang - 0.4), sb.y - hl * Math.sin(ang - 0.4));
+                ctx.lineTo(sb.x - hl * Math.cos(ang + 0.4), sb.y - hl * Math.sin(ang + 0.4));
+                ctx.closePath();
+                ctx.fill();
+                if (!gap && shape.ends?.to === 'tile') {
+                    // Over the art: a dark outline so the head reads on any tile colour.
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+                stats.arrowheads += 1;
+            }
+            if (gap) stats.gapMarks += 1;
+            else stats.edgeLines += 1;
             if (l.neighbour) stats.neighbourLinks += 1;
             else stats.links += 1;
         }
         ctx.globalAlpha = 1;
+        ctx.lineWidth = 1;
     }
 
     _drawMarkers(ctx, view) {

@@ -1,0 +1,6 @@
+LEG 395 goal=exit door=1 idle=0 ok=true ms=22799 ticks=1404
+  verbs=["bait","hold","kill","walk"] FRESH hits=[] deaths=0 open=false dead=false transition={"t":1404,"to":41}
+  KEYLOCK_TURRET_COUNTS={"stances":[],"kills":[]}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS={"asked":[]}
+  TURRET_APPROACH_COUNTS={"approaches":[{"turret":"iceturret@472,400","t":616,"side":"right","via":{"x":467,"y":446},"wait":0,"forks":16,"order":"volley","anchor":null,"rank":0}]}
+  ICETURRET_STATIC_KILL_COUNTS={"handed":[{"id":"iceturret@472,400","t":100,"via":"chooser"}],"kills":[{"id":"iceturret@472,400","t":100,"dead":true,"ticks":516}]}

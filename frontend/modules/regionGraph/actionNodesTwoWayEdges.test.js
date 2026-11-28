@@ -41,7 +41,6 @@ function drawnElements(rules) {
         isDiscoveryModeActive: false,
         discoverySettings: null,
         nodePositions: new Map(),
-        layoutGeneration: 0,
         cy: { elements: () => ({ remove() {} }), add: (els) => { added = els; }, fit() {} },
         runLayout() {},
         updateStatus() {},

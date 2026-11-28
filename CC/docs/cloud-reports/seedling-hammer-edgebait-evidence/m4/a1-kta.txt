@@ -1,0 +1,7 @@
+A1 29:11 env[SEEDLING_KEYLOCK_TURRET_ARRIVAL=1] ok=true work=642 ticks=1404 ms=9492
+  passes=[{"pass":"dashless","ok":true,"kind":null,"ticks":1404,"work":345,"modelHits":{"hits":0,"deaths":0}},{"pass":"full","ok":false,"kind":"refusal","ticks":null,"work":297,"deadline":"crusher-fork","limit":"budget"}]
+  FRESH hits=[] deaths=0 transition={"t":1404,"to":41}
+  ICETURRET_STATIC_KILL_COUNTS={"handed":[],"kills":[]}
+  KEYLOCK_TURRET_COUNTS={"stances":[],"kills":[{"lock":"bosslock@480,352","turret":"iceturret@472,400","t":100,"dead":true,"ticks":516,"side":"right","wait":0,"forks":16},{"lock":"bosslock@480,352","turret":"iceturret@472,400","t":100,"dead":true,"ticks":516,"side":"right","wait":0,"forks":16}]}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS={"asked":[{"lock":"bosslock@480,352","t":100,"turrets":["iceturret@472,400"],"stance":{"x":488,"y":376}},{"lock":"bosslock@480,352","t":100,"turrets":["iceturret@472,400"],"stance":{"x":488,"y":376}}]}
+  TURRET_APPROACH_COUNTS={"approaches":[{"turret":"iceturret@472,400","t":616,"side":"right","via":{"x":467,"y":446},"wait":0,"forks":16,"order":"volley","anchor":null,"rank":0},{"turret":"iceturret@472,400","t":616,"side":"right","via":{"x":467,"y":446},"wait":0,"forks":16,"order":"volley","anchor":null,"rank":0}]}

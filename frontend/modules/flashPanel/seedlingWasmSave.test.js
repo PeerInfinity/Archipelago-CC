@@ -118,7 +118,7 @@ describe('RE3 (i) — the key, the vocabulary, the setting', () => {
 
     it('the panel: the JS setting\'s row shows for js OR wasm, the wasm side only on a `sosave` build', () => {
         const ui = readFileSync(new URL('./flashPanelUI.js', import.meta.url), 'utf8');
-        expect(ui).toMatch(/\{ prop: 'seedlingJsSave', label: 'Use the save', when: 'jsOrWasmSelected' \}/);
+        expect(ui).toMatch(/\{ prop: 'seedlingJsSave', label: 'Use the save', when: 'jsOrWasmSelected', hint: SAVE_SWITCH_HINT \}/);
         expect(ui).toMatch(/const wasmSelected = \(\(transport === 'wasm' && seedling\)[^;]*&& this\._wasmSaveCapable\(\);/s);
         expect(ui).toMatch(/includes\(SO_SAVE_CAPABILITY\) === true/);
         expect(ui).toMatch(/this\._jsSaveClearButton\.dataset\.applies = String\(jsOrWasmSelected\)/);

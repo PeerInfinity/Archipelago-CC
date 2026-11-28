@@ -255,6 +255,99 @@ registerTest({
 });
 
 /**
+ * ⛓ CONTENT SETS GEN-2 — THE "RANDOMLY PLACED TILES" DEMO, PLAYED TO THE END. The committed `tile_kinds_demo` preset
+ * (top-down over Adventure, every region a maze room, the `furniture` pack's rugs and pillars and (GEN-5) the `ledges`
+ * pack's one-way ledges placed in the `scattered` rooms of a scattered 2 : classic 1 mix), loop mode off: the bot
+ * drives the maze controller through every room at instant speed, around the pillars and the shut sides of the ledges,
+ * until every location of the preset's embedded sphere log is checked. The Maze Room panel, watched through the run,
+ * must load every one of the world's recorded "what exists" packs into its art stack (the placed kinds draw from their
+ * packs, not their bases).
+ */
+const TILE_KINDS_DEMO_RULES = './presets/tile_kinds_demo/AP_1/AP_1_rules.json';
+
+async function playbackBotTileKindsDemoTest(testController) {
+  const loopModeOn = () => centralRegistry.getPublicFunction('loops', 'isLoopModeActive')?.() === true;
+  if (loopModeOn()) {
+    testController.eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false }, 'tests');
+    await testController.pollForCondition(() => !loopModeOn(), 'loop mode off', 5000, 100);
+  }
+  testController.reportCondition('loop mode is off', !loopModeOn());
+  // The bot panel BEFORE the rules (it must hear procgenPlayer's synthetic initial user:regionMove).
+  testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+  const panel = await testController.pollForValue(() => getActivePanel(), 'playback bot panel instance', 5000, 100);
+  const bot = panel?.getBot?.();
+  testController.reportCondition('bot reachable', !!bot);
+  if (!bot) return testController.getOverallResult();
+  bot.reset();
+
+  await testController.loadRulesFromFile(TILE_KINDS_DEMO_RULES);
+  const rulesDoc = await (await fetch(TILE_KINDS_DEMO_RULES)).json();
+  const sidecars = rulesDoc.preset_sidecars?.['1'] ?? {};
+  const furnished = Object.entries(sidecars).filter(([, s]) => (s.playable_payload?.tileKinds ?? []).length > 0);
+  const kinds = furnished.flatMap(([, s]) => s.playable_payload.tileKinds);
+  const passCount = (pass) => kinds.filter((k) => (k.pass ?? 'walkable') === pass).length;
+  testController.reportCondition(
+    `the preset places every pass (${furnished.length} furnished rooms; ${passCount('blocked')} blocked, `
+      + `${passCount('walkable')} walkable, ${passCount('one-way')} one-way)`,
+    ['blocked', 'walkable', 'one-way'].every((pass) => passCount(pass) > 0));
+  const existsPacks = rulesDoc.procgen_metadata?.['1']?.exists ?? [];
+  testController.reportCondition(`the preset records its exists packs (${JSON.stringify(existsPacks)})`, existsPacks.length > 0);
+  const sphereState = getSphereStateSingleton();
+  await sphereState.loadSphereLog(`embedded:${TILE_KINDS_DEMO_RULES}`,
+    (rulesDoc.sphere_log ?? []).map((e) => JSON.stringify(e)).join('\n'));
+  const sphereLocations = (sphereState.getSphereData() ?? []).flatMap((e) => e?.locations ?? []);
+  testController.reportCondition(`sphere log has locations (${sphereLocations.length})`, sphereLocations.length > 0);
+  const warehouse = _testOnly_getWarehouse();
+  testController.reportCondition('procgenPlayer built a warehouse', !!warehouse && warehouse.size() > 0);
+
+  // Watch the Maze Room panel: its art stack is the world's (the maze pack, then the recorded exists packs).
+  testController.eventBus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' });
+  const maze = await testController.pollForValue(() => getMazePanel(), 'maze panel instance', 5000, 100);
+  const artReady = await testController.pollForCondition(() => {
+    const st = maze?.getTileArtStatus?.();
+    return st?.status === 'ready' && existsPacks.every((id) => st.stack.includes(id));
+  }, 'maze panel art stack ready with the exists packs', 10000, 100);
+  testController.reportCondition(
+    `the maze panel's art stack takes the recorded exists packs (${JSON.stringify(maze?.getTileArtStatus?.() ?? null)})`, artReady);
+  bot.refresh();
+
+  const restoreSpeed = await startAppBotTestSpeed();
+  try {
+    await bot.instant();
+    const finished = await testController.pollForCondition(
+      () => (bot.getStatus() || '').startsWith('finished') || /^(error|blocked)/.test(bot.getStatus() || ''),
+      // MEASURED 2026-11-22 on the box: 25 legs (9 checks + 16 routing hops) in 71–72 s, ~2.9 s a leg, with the maze
+      // panel focused or not (its visualizer's instant() is instant: the time is per leg, not per step). 2.5× that.
+      'bot reaches a terminal status', 180000, 250);
+    testController.reportCondition(`bot finished (status: "${bot.getStatus()}")`,
+      finished && (bot.getStatus() || '').startsWith('finished'));
+    const checked = new Set(testController.stateManager.getLatestStateSnapshot()?.checkedLocations ?? []);
+    const missing = sphereLocations.filter((n) => !checked.has(n));
+    testController.reportCondition(
+      `every sphere-log location checked (missing: ${missing.slice(0, 5).join(', ') || 'none'})`, missing.length === 0);
+    if (missing.length || !finished) testController.log(`Bot transition log: ${JSON.stringify(bot.getLog?.() ?? [])}`);
+  } finally {
+    bot.stop();
+    await restoreSpeed();
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+  }
+  return testController.getOverallResult();
+}
+
+registerTest({
+  id: 'playback-bot-tile-kinds-demo',
+  name: 'Playback Bot: the "Randomly placed tiles" demo preset (tile_kinds_demo) to the end',
+  description:
+    'Loads the committed tile_kinds_demo preset (top-down over Adventure, rugs and pillars from the furniture pack and '
+    + 'one-way ledges from the ledges pack in the scattered rooms), loop mode off, and drives the bot at instant speed '
+    + 'through the maze rooms until every sphere-log location is checked; the Maze Room panel loads the world\'s exists '
+    + 'packs into its art stack.',
+  testFunction: playbackBotTileKindsDemoTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+/**
  * ⛓ WALK ORDER (bot-route-chooser) — the bot's walk orders on a plain world where the order matters: Adventure's
  * seed 84719271504320872445 (no substrate, loop mode off, direct play), played to the end three times — the listed
  * order, then `reachable-cheapest`, then `sphere-cheapest`. Each must finish with every sphere-log location checked;

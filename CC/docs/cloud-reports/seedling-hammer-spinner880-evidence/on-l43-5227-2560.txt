@@ -1,0 +1,2 @@
+{"ok":true,"work":2563,"ms":801404,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":2160,"work":1303,"modelHits":{"hits":0,"deaths":0}},{"pass":"full","ok":false,"kind":"refusal","ticks":null,"work":1260,"deadline":"kill-chaser","limit":"budget"}],"ticks":2160,"modelHits":{"hits":0,"deaths":0},"meter":{"states":672282,"asked":655,"tripped":0}}
+PLAN

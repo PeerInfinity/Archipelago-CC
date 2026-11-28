@@ -23,6 +23,8 @@
 
 import { registerClickAction, unregisterClickAction, getClickAction } from '../regionView/clickActions.js';
 import { ACT_ACTION } from './actionGraphCompiler.js';
+import { WAIT_ACTION } from '../shared/procgen/loopCustomActions.js';
+import { formatClock } from './actionModel.js';
 import { planPerform, queueEndRegion } from './nodePerformPlan.js';
 
 export const ACT_CLICK_ID = 'actionNodes.act';
@@ -76,6 +78,7 @@ export function performNode(deps, nodeId, { times = 1, panelId = 'unknown' } = {
         isDiscovered: deps.isDiscovered ?? (() => true),
         at,
         startRegions: gs?.startRegions ?? [],
+        unit: runtime.poolUnit?.() ?? '',
     }, nodeId, { times });
     if (!plan.ok) return done(plan);
     const source = planSourceFor(panelId);
@@ -87,14 +90,22 @@ export function performNode(deps, nodeId, { times = 1, panelId = 'unknown' } = {
     const label = runtime.node(nodeId)?.name ?? nodeId;
     if (loopMode) {
         let queued = 0;
+        let waited = 0;
         for (let k = 0; k < plan.acts; k++) {
+            // AN-TIME-2: an early performance is preceded by its `wait` entry (the start gate refuses an early act).
+            const w = plan.waits?.[k] ?? 0;
+            if (w > 0) {
+                const params = waitParamsOf(runtime, nodeId, w);
+                if (gs.addCustomAction(WAIT_ACTION, params) === false) break;
+                waited += w;
+            }
             if (gs.addCustomAction(ACT_ACTION, { nodeId, label, regionName: nodeId }) === false) break;
             queued += 1;
         }
         if (queued < plan.acts) {
             return done({ ...plan, ok: false, code: 'queue-refused', text: `the queue refused the act after ${queued}`, queued });
         }
-        return done({ ...plan, queued });
+        return done({ ...plan, queued, waited });
     }
     let performed = 0;
     let stop = null;
@@ -105,6 +116,17 @@ export function performNode(deps, nodeId, { times = 1, panelId = 'unknown' } = {
     }
     if (stop) return done({ ...plan, ok: false, code: stop.code ?? 'not-performed', text: stop.text ?? 'not performed', performed });
     return done({ ...plan, performed });
+}
+
+/**
+ * A `wait` entry's params before node `nodeId`: its length, the node, and the queue row's text
+ * ("Wait 1 h (opens 12:00)").
+ */
+export function waitParamsOf(runtime, nodeId, units) {
+    const node = runtime.node(nodeId);
+    const opens = node && Number.isFinite(node.from) ? ` (opens ${formatClock(runtime.model, node.from)})` : '';
+    const amount = runtime.formatAmount ? runtime.formatAmount(units) : String(units);
+    return { nodeId, units, regionName: nodeId, label: `Wait ${amount}${opens}` };
 }
 
 /**

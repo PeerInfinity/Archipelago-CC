@@ -123,6 +123,7 @@ import * as proofGraphModule from './modules/proofGraph/index.js';
 import * as jtaQueueEngineModule from './modules/jtaQueueEngine/index.js';
 import * as jtaActionQueueModule from './modules/jtaActionQueue/index.js';
 import * as jtaArchipelagoModule from './modules/jtaArchipelago/index.js';
+import * as mysteryArchipelagoModule from './modules/mysteryArchipelago/index.js';
 import * as vibeCodingSimModule from './modules/vibeCodingSim/index.js';
 import * as apcalcModule from './modules/apcalc/index.js';
 import * as apcalcGeneratorModule from './modules/apcalcGenerator/index.js';
@@ -193,6 +194,7 @@ import './modules/tests/testCases/seedlingAtlasMazeTests.js';
 import './modules/tests/testCases/seedlingJsRuntimeTests.js';
 import './modules/tests/testCases/taswBlockModeTests.js';
 import './modules/tests/testCases/actionNodesTests.js';
+import './modules/tests/testCases/actionNodesMysteryTests.js';
 import './modules/tests/testCases/apworldEditorTests.js';
 import './modules/tests/testCases/substrateRegistryPanelTests.js';
 import './modules/tests/testCases/procgenPipelineTests.js';
@@ -201,6 +203,9 @@ import './modules/tests/testCases/miniPanelsTests.js';
 import './modules/tests/testCases/tutorialTests.js';
 import './modules/tests/testCases/storagePanelTests.js';
 import './modules/tests/testCases/ruleConverterTests.js';
+import './modules/tests/testCases/mysteryBridgeTests.js';
+import './modules/tests/testCases/mysteryPlaybackBotTests.js';
+import './modules/tests/testCases/documentLibraryTests.js';
 import './modules/tests/testCases/labApworldDoorTests.js';
 
 // Signal that test cases have been pre-imported
@@ -269,6 +274,7 @@ const BUNDLED_MODULES = {
   jtaQueueEngine: jtaQueueEngineModule,
   jtaActionQueue: jtaActionQueueModule,
   jtaArchipelago: jtaArchipelagoModule,
+  mysteryArchipelago: mysteryArchipelagoModule,
   vibeCodingSim: vibeCodingSimModule,
   apcalc: apcalcModule,
   apcalcGenerator: apcalcGeneratorModule,

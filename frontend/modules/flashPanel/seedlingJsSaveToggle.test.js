@@ -22,7 +22,7 @@ import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import settingsManager from '../../app/core/settingsManager.js';
-import { FlashPanelUI } from './flashPanelUI.js';
+import { FlashPanelUI, SAVE_SWITCH_HINT } from './flashPanelUI.js';
 import {
     bindJsSave, createJsSaveController, JS_SAVE_DEFAULT, JS_SAVE_KEY_PREFIX, JS_SAVE_SETTING_KEY, JS_SAVE_SETTING_PROP,
     jsSaveKey, jsSaveSchemaProps,
@@ -76,7 +76,7 @@ describe('⛓ USE THE SAVE — the setting', () => {
         const index = readFileSync(new URL('./index.js', import.meta.url), 'utf8');
         expect(index).toMatch(/\.\.\.jsSaveSchemaProps\(\)/);
         const ui = readFileSync(new URL('./flashPanelUI.js', import.meta.url), 'utf8');
-        expect(ui).toMatch(/\{ prop: 'seedlingJsSave', label: 'Use the save', when: 'jsOrWasmSelected' \}/);
+        expect(ui).toMatch(/\{ prop: 'seedlingJsSave', label: 'Use the save', when: 'jsOrWasmSelected', hint: SAVE_SWITCH_HINT \}/);
     });
 });
 
@@ -267,6 +267,34 @@ describe('⛓ USE THE SAVE — the panel (a bare panel, the prototype\'s own met
         rt.change();
         timers.run();
         expect(writes(storage)).toEqual([['set', jsSaveKey('room A')]]);
+        panel._unbindJsSave();
+    });
+
+    // ⛓ SAVE HINT (slice `js-smalls-1`) — the measurement behind the JS row's "takes effect on the next game load":
+    // the switch turned OFF mid-run leaves the run exactly where it is (the progress restored at this load stays in the
+    // game; nothing is restored, re-read or reset), and turned back ON it reads nothing either. Only the next load acts.
+    it('switched OFF mid-run after a restore: nothing rewinds; the run keeps its progress; ON again reads nothing', async () => {
+        expect(SAVE_SWITCH_HINT).toBe('takes effect on the next game load');
+        const on = { value: true };
+        const { panel, storage, timers, rt, adapter } = barePanel({ on });
+        await panel._bindJsSave(adapter, { syncEventsFromGame: () => {} });
+        expect(rt.n).toBe(7);                                // the stored save was restored at this load
+        rt.change();
+        expect(rt.n).toBe(8);
+        const readsBefore = reads(storage).length;
+        on.value = false;
+        await panel._onJsSaveSettingChanged();
+        expect(panel._jsSave).toBe(null);
+        expect(rt.n).toBe(8);                                // OFF: no rewind (not back to 7, not to a fresh 0)
+        expect(rt.restoreSave).toHaveBeenCalledTimes(1);     // the load's restore only
+        rt.change();
+        expect(rt.n).toBe(9);                                // play goes on from where it was
+        on.value = true;
+        await panel._onJsSaveSettingChanged();
+        expect(rt.n).toBe(9);                                // ON again: no restore mid-run either
+        expect(rt.restoreSave).toHaveBeenCalledTimes(1);
+        expect(reads(storage).length).toBe(readsBefore);     // and the stored save is not even read
+        timers.run();
         panel._unbindJsSave();
     });
 

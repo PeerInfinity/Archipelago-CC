@@ -69,3 +69,98 @@ export function readSourceDeclarations(modulesDir = MODULES_DIR) {
     }
     return out;
 }
+
+/* ── IndexedDB census: which databases the sources open ──────────────────── */
+
+/** An open call on `indexedDB`, or on an IDBFactory held in a local named `factory` (documentLibraryIdb.js). */
+const IDB_OPEN_RE = /\b(?:indexedDB|factory)\s*\.\s*open\s*\(\s*([^,)\s]+)/g;
+const LITERAL_RE = /^(['"`])([^'"`$\\]+)\1$/;
+const IDENT_RE = /^[A-Za-z_$][\w$]*$/;
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/**
+ * The database names `text` opens: `[{ arg, name | null, via }]`. The first
+ * argument resolves as a string literal; or an identifier bound in the same
+ * text to a literal (`const IDB_NAME = 'x'`, or a default parameter
+ * `dbName = 'x'`); or bound to another identifier that some source EXPORTS as
+ * a literal (`dbName = DEFAULT_LIBRARY_DB_NAME`, exported by documentLibrary.js)
+ * — `exportedLiteral(name)` answers that lookup. Anything else is `name: null`
+ * (unresolved), which the census reports instead of skipping.
+ */
+export function idbOpensInText(text, exportedLiteral = () => null) {
+    const out = [];
+    for (const m of text.matchAll(IDB_OPEN_RE)) {
+        const arg = m[1];
+        const lit = arg.match(LITERAL_RE);
+        if (lit) { out.push({ arg, name: lit[2], via: 'literal' }); continue; }
+        if (!IDENT_RE.test(arg)) { out.push({ arg, name: null, via: 'unresolved' }); continue; }
+        const bound = text.match(new RegExp(`\\b${escapeRe(arg)}\\s*=(?!=)\\s*(['"\`][^'"\`\\n]*['"\`]|[A-Za-z_$][\\w$]*)`));
+        const rhs = bound?.[1].trim() ?? '';
+        const boundLit = rhs.match(LITERAL_RE);
+        if (boundLit) { out.push({ arg, name: boundLit[2], via: `${arg} = literal` }); continue; }
+        const exported = IDENT_RE.test(rhs) ? exportedLiteral(rhs) : null;
+        out.push(exported ? { arg, name: exported, via: `${arg} = ${rhs} (exported)` } : { arg, name: null, via: 'unresolved' });
+    }
+    return out;
+}
+
+/** `export const NAME = '<literal>'` across `texts`, as a lookup. */
+export function exportedLiterals(texts) {
+    const map = new Map();
+    for (const { text } of texts) {
+        for (const m of text.matchAll(/^export\s+const\s+([A-Za-z_$][\w$]*)\s*=\s*(['"`])([^'"`$\\]+)\2\s*;/gm)) {
+            if (!map.has(m[1])) map.set(m[1], m[3]);
+        }
+    }
+    return (name) => map.get(name) ?? null;
+}
+
+/**
+ * Every app source under `frontendDir` (`.js/.mjs/.ts/.html`, not `*.test.js`),
+ * read NUL-safe (latin1, so a NUL-bearing file is never skipped), with
+ * node_modules, libs, dist, external, .git and the git submodules left out —
+ * the same walk as documentLibrary.test.js's IndexedDB-open pin (B1).
+ */
+export function appSourceTexts(frontendDir = join(MODULES_DIR, '..')) {
+    const repo = join(frontendDir, '..');
+    const gitmodules = join(repo, '.gitmodules');
+    const submodules = existsSync(gitmodules)
+        ? [...readFileSync(gitmodules, 'latin1').matchAll(/^\s*path\s*=\s*(.+)$/gm)].map((m) => join(repo, m[1].trim()))
+        : [];
+    const skip = new Set(['node_modules', 'libs', 'dist', 'external', '.git']);
+    const texts = [];
+    const walk = (dir) => {
+        for (const d of readdirSync(dir, { withFileTypes: true })) {
+            const p = join(dir, d.name);
+            if (skip.has(d.name) || submodules.includes(p)) continue;
+            if (d.isDirectory()) { walk(p); continue; }
+            if (!/\.(m?js|ts|html)$/.test(d.name) || /\.test\.m?js$/.test(d.name)) continue;
+            texts.push({ path: p.slice(frontendDir.length + 1), text: readFileSync(p, 'latin1') });
+        }
+    };
+    walk(frontendDir);
+    return texts;
+}
+
+/** `[{ path, arg, name | null, via }]`: every IndexedDB open in the app's sources, its name resolved. */
+export function readSourceIdbOpens(texts = appSourceTexts()) {
+    const lookup = exportedLiterals(texts);
+    return texts.flatMap(({ path, text }) => idbOpensInText(text, lookup).map((o) => ({ path, ...o })));
+}
+
+/**
+ * The census, both ways (pure). `opened`: readSourceIdbOpens' rows; `declared`:
+ * the idb names the modules declare; `allowed`: `{ name: reason }` for a
+ * database opened outside the app's module boot that the panel does not list.
+ * Every list it returns is RED when non-empty.
+ */
+export function idbCensus({ opened, declared, allowed = {} }) {
+    const openedNames = new Set(opened.filter((o) => o.name).map((o) => o.name));
+    const declaredSet = new Set(declared);
+    return {
+        unresolved: opened.filter((o) => !o.name).map((o) => `${o.path}: open(${o.arg})`),
+        undeclared: [...openedNames].filter((n) => !declaredSet.has(n) && !(n in allowed)).sort(),
+        unopened: [...declaredSet].filter((n) => !openedNames.has(n)).sort(),
+        staleAllowed: Object.keys(allowed).filter((n) => !openedNames.has(n) || declaredSet.has(n)).sort(),
+    };
+}

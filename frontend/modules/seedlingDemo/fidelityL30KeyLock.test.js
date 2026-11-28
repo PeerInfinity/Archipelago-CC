@@ -12,7 +12,17 @@
  * `l30keylock-pit240`, recorded on the game).
  */
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll, afterAll } from 'vitest';
+import { FADE_MOVE as __FADE_MOVE_HOLD } from './solverBot.js';
+
+// ⛓ `FADE_MOVE` held OFF for this whole file: it ships ON since the ROCKLOCK + FADE flip (⚖ the user, 2026-11-22).
+// ON, the BEFORE walks wait the keylock fade out at a refuge and take FEWER hits on the key line, per row (model-only;
+// the AFTER game-witness rows do not move): "both OFF, (224,80)" 2 → 1; "both OFF, (240,80)" 3 → 1; "RESCAN alone"
+// (240,80) 3 → 1; "AFTER control" 2 → 1. These rows pin the BEFORE witness and other switches; held OFF they are byte for byte their
+// pre-flip selves. The flip's own effect is measured by its sweeps and survey.
+let __fadeWas;
+beforeAll(() => { __fadeWas = __FADE_MOVE_HOLD.enabled; __FADE_MOVE_HOLD.enabled = false; });
+afterAll(() => { __FADE_MOVE_HOLD.enabled = __fadeWas; });
 import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set (fidelity-18's request)
 import { withContactFidelity } from './contactFidelity.js';
 import { readFileSync } from 'node:fs';

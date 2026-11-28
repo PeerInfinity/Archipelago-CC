@@ -1,0 +1,35 @@
+PAGE: seedling_bot_ap_p4g · delivered seedling-vanilla-record-23510f80
+# box lock: TAKEN by probe-seedling-wallflyer-nohit.mjs (browser, pid 6863) — head 482be3caa, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+BAND {"level":22,"id":"wallflyer@64,80","rest":{"x":71,"y":88},"launch":{"x":4,"y":0},"stop":{"x":137,"y":88},"tiles":[[4,5],[5,5],[6,5],[7,5],[8,5]]}
+BAND {"level":22,"id":"wallflyer@128,80","rest":{"x":137,"y":88},"launch":{"x":-4,"y":-4.898587196589413e-16},"stop":{"x":71,"y":88},"tiles":[[8,5],[7,5],[6,5],[5,5],[4,5]]}
+BAND {"level":22,"id":"wallflyer@48,112","rest":{"x":55,"y":120},"launch":{"x":4,"y":0},"stop":{"x":153,"y":120},"tiles":[[3,7],[4,7],[5,7],[6,7],[7,7],[8,7],[9,7]]}
+BAND {"level":22,"id":"wallflyer@144,112","rest":{"x":153,"y":120},"launch":{"x":-4,"y":-4.898587196589413e-16},"stop":{"x":55,"y":120},"tiles":[[9,7],[8,7],[7,7],[6,7],[5,7],[4,7],[3,7]]}
+BAND {"level":25,"id":"wallflyer@48,48","rest":{"x":56,"y":55},"launch":{"x":-7.347880794884119e-16,"y":4},"stop":{"x":56,"y":89},"tiles":[[3,3],[3,4],[3,5]]}
+BAND {"level":25,"id":"wallflyer@64,48","rest":{"x":72,"y":55},"launch":{"x":-7.347880794884119e-16,"y":4},"stop":{"x":72,"y":89},"tiles":[[4,3],[4,4],[4,5]]}
+BAND {"level":27,"id":"wallflyer@192,48","rest":{"x":201,"y":56},"launch":{"x":-4,"y":-4.898587196589413e-16},"stop":{"x":55,"y":56},"tiles":[[12,3],[11,3],[10,3],[9,3],[8,3],[7,3],[6,3],[5,3],[4,3],[3,3]]}
+INFO {"notFound":"l22-25-21-none","nodes":60003,"exhausted":false,"macro":4,"weight":2.5}
+INFO {"notFound":"l22-25-29-fire","nodes":60012,"exhausted":false,"macro":4,"weight":2.5}
+INFO {"notFound":"l22-25-29-none","nodes":250002,"exhausted":false,"macro":4,"weight":2.5}
+INFO {"notFound":"l22-30-21-none","nodes":60003,"exhausted":false,"macro":4,"weight":2.5}
+INFO {"notFound":"l22-30-29-none","nodes":60003,"exhausted":false,"macro":4,"weight":2.5}
+INFO {"notFound":"l25-26-22-none","nodes":250002,"exhausted":false,"macro":4,"weight":2.5}
+INFO {"modelRefuses":"wand","why":"levelRun refuses a WandShot in a room holding a wallflyer (the shot's \"Enemy\" solids)"}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"case":"l22-25-21-wand","hand":true,"set_id":"seedling-vanilla-record-23510f80","mounted":"seedling-vanilla-record-23510f80","observations":341,"boot":{"level":22,"x":16,"y":128},"held":["hasWand"],"model":{"skipped":"levelRun refuses a WandShot in a room holding a wallflyer (the shot's \"Enemy\" solids)"},"levels":[22,21],"maxHits":0,"respawns":0,"final":{"t":340,"x":88,"y":112.69999999999999,"level":21}}
+PASS: l22-25-21-wand: the game ran the tape to its end on the delivered set — 341 obs, seedling-vanilla-record-23510f80
+INFO {"case":"l22-25-21-wand","modelLeg":"skipped","why":"levelRun refuses a WandShot in a room holding a wallflyer (the shot's \"Enemy\" solids)"}
+PASS: l22-25-21-wand: the GAME lands in L21 from L25's door holding [hasWand], with no hit taken — {"levels":[22,21],"maxHits":0,"respawns":0,"final":{"t":340,"x":88,"y":112.69999999999999,"level":21}}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"case":"l22-25-21-none","controlOf":"l22-25-21-wand","set_id":"seedling-vanilla-record-23510f80","mounted":"seedling-vanilla-record-23510f80","observations":341,"boot":{"level":22,"x":16,"y":128},"held":[],"model":{"skipped":"control of l22-25-21-wand"},"levels":[22],"maxHits":2,"respawns":2,"final":{"t":340,"x":24,"y":130.14999999999998,"level":22}}
+PASS: l22-25-21-none (control of l22-25-21-wand): the game ran the tape to its end on the delivered set — 341 obs, seedling-vanilla-record-23510f80
+PASS: l22-25-21-none (control of l22-25-21-wand): the same keys holding [no item] do NOT cross cleanly on the GAME (a hit is taken), so the arm is what clears the line — {"levels":[22],"maxHits":2,"respawns":2,"final":{"t":340,"x":24,"y":130.14999999999998,"level":22}}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"case":"l25-26-22-wand","hand":true,"set_id":"seedling-vanilla-record-23510f80","mounted":"seedling-vanilla-record-23510f80","observations":201,"boot":{"level":25,"x":16,"y":96},"held":["hasWand"],"model":{"skipped":"levelRun refuses a WandShot in a room holding a wallflyer (the shot's \"Enemy\" solids)"},"levels":[25,22],"maxHits":0,"respawns":0,"final":{"t":200,"x":25.700000000000003,"y":136,"level":22}}
+PASS: l25-26-22-wand: the game ran the tape to its end on the delivered set — 201 obs, seedling-vanilla-record-23510f80
+INFO {"case":"l25-26-22-wand","modelLeg":"skipped","why":"levelRun refuses a WandShot in a room holding a wallflyer (the shot's \"Enemy\" solids)"}
+PASS: l25-26-22-wand: the GAME lands in L22 from L26's door holding [hasWand], with no hit taken — {"levels":[25,22],"maxHits":0,"respawns":0,"final":{"t":200,"x":25.700000000000003,"y":136,"level":22}}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"case":"l25-26-22-none","controlOf":"l25-26-22-wand","set_id":"seedling-vanilla-record-23510f80","mounted":"seedling-vanilla-record-23510f80","observations":201,"boot":{"level":25,"x":16,"y":96},"held":[],"model":{"skipped":"control of l25-26-22-wand"},"levels":[25],"maxHits":2,"respawns":1,"final":{"t":200,"x":34.14066356795525,"y":74.14665469730525,"level":25}}
+PASS: l25-26-22-none (control of l25-26-22-wand): the game ran the tape to its end on the delivered set — 201 obs, seedling-vanilla-record-23510f80
+PASS: l25-26-22-none (control of l25-26-22-wand): the same keys holding [no item] do NOT cross cleanly on the GAME (a hit is taken), so the arm is what clears the line — {"levels":[25],"maxHits":2,"respawns":1,"final":{"t":200,"x":34.14066356795525,"y":74.14665469730525,"level":25}}
+ALL CHECKS PASSED

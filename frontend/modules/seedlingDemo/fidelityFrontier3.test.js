@@ -29,7 +29,7 @@ import { withContactFidelity } from './contactFidelity.js';
 import { withCrusherBait } from './crusherBait.js';
 import {
     FINE_LATTICE, FINE_LATTICE_ROSTER_WIDE, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, SolverRefusal, exitAimFor, obstacleGateFor,
-    solveSegment,
+    solveSegment, withRockLockKill,
 } from './solverBot.js';
 import { frontier3Staging, FRONTIER3_WITNESSES }
     from '../../../scripts/procgen/plan-seedling-frontier3-witness.mjs';
@@ -150,9 +150,13 @@ describe('fidelity FRONTIER3 D3 — the rows, and the gates whose opener is not 
         expect(STRATEGY_EXECUTORS.bait).toBeUndefined();
         // scenery with no verb in the game stays rowless: a wall, never a work order
         for (const tag of ['planttorch', 'bonetorch', 'bonetorch2', 'dungeonspire', 'ruinedpillar', 'tree', 'rock',
-            'finaldoor', 'rocklock']) {
+            'finaldoor']) {
             expect(OBSTACLE_STRATEGIES[`solid:${tag}`]).toBeUndefined();
         }
+        // ⛓ `rocklock` has `Lock`'s row while `ROCKLOCK_KILL` is on, its default since the ROCKLOCK + FADE flip
+        // (2026-11-22; NEW-LOCKS: a `tset == -1` rocklock is a kill-lock); OFF it stays rowless, as this row pinned.
+        expect(withRockLockKill(false, () => OBSTACLE_STRATEGIES['solid:rocklock'])).toBeUndefined();
+        expect(withRockLockKill(true, () => OBSTACLE_STRATEGIES['solid:rocklock'])).toBe('hold');
     });
 
     // ⛓ fidelity CRUSHER (wave 9): with `CRUSHER_BAIT` ON (the default) this room SOLVES (`fidelityCrusher.test.js`);

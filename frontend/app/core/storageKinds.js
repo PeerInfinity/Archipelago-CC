@@ -11,10 +11,18 @@
  *     { pattern: '/shrumsave$', kind: STORAGE_KINDS.user, label: 'Seedling save (Ruffle)' },
  *   ],
  *
- * Exactly one matcher: `key` (the whole key), `prefix` (a key family) or `pattern`
+ * Exactly one matcher: `key` (the whole key), `prefix` (a key family), `pattern`
  * (a RegExp source, for keys whose start is not ours — e.g. Ruffle's
- * `<host>/<path>/<name>` SharedObjects). A module declares the keys of the game it
- * wraps as well as its own.
+ * `<host>/<path>/<name>` SharedObjects), or `idb` (the NAME of an IndexedDB
+ * database, not a localStorage key):
+ *
+ *     { idb: 'archipelago-cc-document-library', kind: STORAGE_KINDS.user, label: 'Lab sets …' },
+ *
+ * An `idb` declaration matches no localStorage key. The storage census
+ * (storageCensus.test.js) holds it both ways: every database a source opens is
+ * declared (or allow-listed by name with its reason), and every declared one
+ * is opened somewhere. A module declares the keys of the game it wraps as well
+ * as its own.
  *
  * Imports nothing, so any module (and settingsManager) can import it.
  */

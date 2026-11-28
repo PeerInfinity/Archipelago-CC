@@ -108,7 +108,7 @@ All test workflows can be triggered manually from the GitHub Actions tab:
 
 **File:** `test-substrates-nightly.yml`
 
-**Triggers:** `schedule` `37 10 * * *` (10:37 UTC = 02:37 PST; 03:37 Pacific during PDT, still inside the after-hours window, so the cron is not shifted for DST), and `workflow_dispatch` (at the ref dispatched on; only a run at `main` is the nightly).
+**Triggers:** `schedule` `37 10 * * *` (10:37 UTC = 02:37 PST; 03:37 Pacific during PDT; either hour is deep in the night, after the 20:00–21:30 Pacific B1 dispatch window below and before the day's push gates, so the cron is not shifted for DST), and `workflow_dispatch` (at the ref dispatched on; only a run at `main` is the nightly).
 
 **Purpose:** ⚖ Robert 2026-11-11 (option C). One run a night of every manual batch at `main`, as a drift signal. It calls `test-substrates-manual.yml` with `batch=all` (`workflow_call`), so the batch list, setup and per-batch headroom check are that file's. Its own `Nightly summary` job writes the job summary (per batch: PASSED/total, failing rows, NEVER STARTED / CUT OFF, the headroom verdict, the job's conclusion) and uploads `nightly-manual-summary.json` (artifact `nightly-manual-summary`, 30 days: `{runId, sha, ref, red, redBatches, batches: {<batch>: {result, passed, total, failing, neverStarted, cutOff, headroom, job}}}`, written by `scripts/test/nightly-manual-summary.js`). The run is red when any batch is red.
 
@@ -126,7 +126,7 @@ id=$(gh run list -R PeerInfinity/Archipelago-CC -w test-substrates-nightly.yml -
 
 ### After-hours bulk runs (B1, convention; ⚖ Robert 2026-11-11)
 
-Bulk harvests and exploratory sweeps (divergence-sweep harvests, multi-arm A/B sweeps, survey batches, wasm-probe fan-outs) are dispatched **20:00–21:30 Pacific** (⚖ Robert 2026-11-21, moved from 22:00–07:00: the laptop is in standby from about 21:30, so no session dispatched anything in the old window; the runs go on overnight in CI), so they do not hold the runners that push gates wait on during the day. **Exempt, run now:** (1) anything a landing train dispatches; (2) gate runs at a slice tip (`train_only`, `full_matrix`, TT); (3) a re-measure that a queued packet is waiting on. It is a convention, with no enforcement. The nightly above is in the window too, and is a signal, never evidence.
+Bulk harvests and exploratory sweeps (divergence-sweep harvests, multi-arm A/B sweeps, survey batches, wasm-probe fan-outs) are dispatched **20:00–21:30 Pacific** (⚖ Robert 2026-11-21, moved from 22:00–07:00: the laptop is in standby from about 21:30, so no session dispatched anything in the old window; the runs go on overnight in CI), so they do not hold the runners that push gates wait on during the day. **Exempt, run now:** (1) anything a landing train dispatches; (2) gate runs at a slice tip (`train_only`, `full_matrix`, TT); (3) a re-measure that a queued packet is waiting on. It is a convention, with no enforcement. The nightly above is not a B1 dispatch: its cron fires later in the night (02:37 PST / 03:37 PDT), and it is a signal, never evidence.
 
 ---
 

@@ -40,8 +40,8 @@ STAGE_WORLDS = ['bounce_worldgen', 'codingadventure_worldgen']
 STAGE_SEED = 7  # not 1: seed 1 loads each package's canonical options and placements
 
 
-def test_the_recipe_table_is_the_seventeen_packages():
-    assert len(PACKAGES) == 17 and 'seedling_playthrough' in PACKAGES
+def test_the_recipe_table_is_the_eighteen_packages():
+    assert len(PACKAGES) == 18 and 'seedling_playthrough' in PACKAGES
     assert sum(package.endswith('_worldgen') for package in PACKAGES) == 16
 
 

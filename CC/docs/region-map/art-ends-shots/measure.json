@@ -1,0 +1,297 @@
+{
+  "seedling_fit": {
+    "model": {
+      "cross": 55,
+      "neighbour": 83
+    },
+    "drawn": {
+      "cross": 55,
+      "neighbour": 83,
+      "gapMarks": 58,
+      "edgeLines": 80,
+      "arrowheads": 58,
+      "tileEnds": 160,
+      "artEnds": 0,
+      "centreEnds": 0,
+      "shortHeads": 0
+    },
+    "zoom": 0.09965277777777778
+  },
+  "shortAtFit": [
+    {
+      "from": "level_16",
+      "to": "level_17",
+      "kind": "down",
+      "head": true,
+      "ends": {
+        "from": "tile",
+        "to": "tile"
+      },
+      "seg": {
+        "x0": 3432,
+        "y0": 4056,
+        "x1": 3456,
+        "y1": 4312
+      },
+      "screenLen": 25.622975228647913
+    },
+    {
+      "from": "level_99",
+      "to": "level_100",
+      "kind": "up",
+      "head": true,
+      "ends": {
+        "from": "tile",
+        "to": "tile"
+      },
+      "seg": {
+        "x0": 8408,
+        "y0": -2528,
+        "x1": 8328,
+        "y1": -2936
+      },
+      "screenLen": 41.432552378594046
+    },
+    {
+      "from": "level_83",
+      "to": "level_84",
+      "kind": "down",
+      "head": true,
+      "ends": {
+        "from": "tile",
+        "to": "tile"
+      },
+      "seg": {
+        "x0": 6688,
+        "y0": -2952,
+        "x1": 6688,
+        "y1": -2528
+      },
+      "screenLen": 42.252777777777794
+    }
+  ],
+  "shortZoom": {
+    "model": {
+      "cross": 55,
+      "neighbour": 83
+    },
+    "drawn": {
+      "cross": 3,
+      "neighbour": 0,
+      "gapMarks": 0,
+      "edgeLines": 3,
+      "arrowheads": 3,
+      "tileEnds": 6,
+      "artEnds": 0,
+      "centreEnds": 0,
+      "shortHeads": 0
+    },
+    "zoom": 1.8604166666666668,
+    "link": "level_16 -> level_17"
+  },
+  "seedling_group": {
+    "model": {
+      "cross": 55,
+      "neighbour": 83
+    },
+    "drawn": {
+      "cross": 23,
+      "neighbour": 28,
+      "gapMarks": 13,
+      "edgeLines": 38,
+      "arrowheads": 23,
+      "tileEnds": 76,
+      "artEnds": 0,
+      "centreEnds": 0,
+      "shortHeads": 0
+    },
+    "zoom": 0.2790625
+  },
+  "apart": {
+    "from": "level_12",
+    "to": "level_95",
+    "a": [
+      0,
+      22
+    ],
+    "b": [
+      38,
+      4
+    ],
+    "seg": {
+      "x0": 696,
+      "y0": 376,
+      "x1": 632,
+      "y1": 1120
+    },
+    "ends": {
+      "from": "tile",
+      "to": "tile"
+    },
+    "paint": {
+      "model": {
+        "cross": 55,
+        "neighbour": 83
+      },
+      "drawn": {
+        "cross": 17,
+        "neighbour": 9,
+        "gapMarks": 4,
+        "edgeLines": 22,
+        "arrowheads": 17,
+        "tileEnds": 44,
+        "artEnds": 0,
+        "centreEnds": 0,
+        "shortHeads": 0
+      },
+      "zoom": 0.5798701298701299
+    }
+  },
+  "tall": {
+    "from": "level_0",
+    "to": "level_86",
+    "kind": "warp",
+    "tallEnd": "to",
+    "key": "level_86",
+    "art": {
+      "w": 96,
+      "h": 80
+    },
+    "cell": {
+      "w": 96,
+      "h": 960
+    },
+    "ends": {
+      "from": "tile",
+      "to": "tile"
+    },
+    "paint": {
+      "model": {
+        "cross": 55,
+        "neighbour": 83
+      },
+      "drawn": {
+        "cross": 12,
+        "neighbour": 13,
+        "gapMarks": 5,
+        "edgeLines": 20,
+        "arrowheads": 12,
+        "tileEnds": 40,
+        "artEnds": 0,
+        "centreEnds": 0,
+        "shortHeads": 0
+      },
+      "zoom": 0.5083870967741936
+    }
+  },
+  "alttp_fit": {
+    "model": {
+      "cross": 0,
+      "neighbour": 297
+    },
+    "drawn": {
+      "cross": 0,
+      "neighbour": 297,
+      "gapMarks": 46,
+      "edgeLines": 251,
+      "arrowheads": 0,
+      "tileEnds": 0,
+      "artEnds": 502,
+      "centreEnds": 0,
+      "shortHeads": 0
+    },
+    "zoom": 0.1116441908713693
+  },
+  "phone_fit": {
+    "model": {
+      "cross": 55,
+      "neighbour": 83
+    },
+    "drawn": {
+      "cross": 55,
+      "neighbour": 83,
+      "gapMarks": 58,
+      "edgeLines": 80,
+      "arrowheads": 58,
+      "tileEnds": 160,
+      "artEnds": 0,
+      "centreEnds": 0,
+      "shortHeads": 1
+    },
+    "zoom": 0.025128040973111394
+  },
+  "phoneShortAtFit": [
+    {
+      "from": "level_16",
+      "to": "level_17",
+      "kind": "down",
+      "head": true,
+      "ends": {
+        "from": "tile",
+        "to": "tile"
+      },
+      "seg": {
+        "x0": 3432,
+        "y0": 4056,
+        "x1": 3456,
+        "y1": 4312
+      },
+      "screenLen": 6.460985692082264
+    },
+    {
+      "from": "level_99",
+      "to": "level_100",
+      "kind": "up",
+      "head": true,
+      "ends": {
+        "from": "tile",
+        "to": "tile"
+      },
+      "seg": {
+        "x0": 8408,
+        "y0": -2528,
+        "x1": 8328,
+        "y1": -2936
+      },
+      "screenLen": 10.447464656846337
+    },
+    {
+      "from": "level_83",
+      "to": "level_84",
+      "kind": "down",
+      "head": true,
+      "ends": {
+        "from": "tile",
+        "to": "tile"
+      },
+      "seg": {
+        "x0": 6688,
+        "y0": -2952,
+        "x1": 6688,
+        "y1": -2528
+      },
+      "screenLen": 10.654289372599237
+    }
+  ],
+  "phone_pinch": {
+    "model": {
+      "cross": 55,
+      "neighbour": 83
+    },
+    "drawn": {
+      "cross": 34,
+      "neighbour": 20,
+      "gapMarks": 14,
+      "edgeLines": 40,
+      "arrowheads": 35,
+      "tileEnds": 80,
+      "artEnds": 0,
+      "centreEnds": 0,
+      "shortHeads": 0
+    },
+    "zoom": 0.07538412291933418
+  },
+  "phoneErrors": [
+    "SecurityError: Failed to read a named property from 'Window': Blocked a frame with origin \"http://localhost:8143\" from accessing a cross-origin frame."
+  ]
+}

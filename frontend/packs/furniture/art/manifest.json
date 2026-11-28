@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "_comment": "The furniture pack's art (content sets GEN-2): SHAPES ONLY, no image file, in the meta theme's recipe format (a 20x20 box, the maze's TILE_PX). Both are drawn OVER the cell the maze has already painted (the tile-kind overlay), so neither fills the whole box: the rug lets the floor show at its fringe, and the pillar is a round column standing on the wall the generator lowered under it. Art is presentation only.",
+  "provenance": {
+    "sources": {
+      "gen2": {
+        "type": "model",
+        "model": "claude-opus-5-5",
+        "date": "2026-11-22",
+        "note": "the furniture pack, content sets GEN-2 (Co-Authored-By: Claude Opus 5.5). No approval of its names or shapes is recorded"
+      }
+    },
+    "default": "gen2"
+  },
+  "shapes": {
+    "furniture:terrain/rug": {
+      "w": 20, "h": 20,
+      "note": "a rug seen from above: a deep red oblong with a gold inner border and a gold diamond in its middle, cream fringe at both short ends",
+      "draw": [
+        { "rect": [4, 3, 12, 14], "fill": "#9a2e3a" },
+        { "rect": [6, 5, 8, 10], "stroke": "#e2b04a", "width": 1.5 },
+        { "polygon": [[10, 7], [12.5, 10], [10, 13], [7.5, 10]], "fill": "#e2b04a" },
+        { "line": [5, 1, 5, 3], "stroke": "#efe3c2", "width": 1 },
+        { "line": [8, 1, 8, 3], "stroke": "#efe3c2", "width": 1 },
+        { "line": [12, 1, 12, 3], "stroke": "#efe3c2", "width": 1 },
+        { "line": [15, 1, 15, 3], "stroke": "#efe3c2", "width": 1 },
+        { "line": [5, 17, 5, 19], "stroke": "#efe3c2", "width": 1 },
+        { "line": [8, 17, 8, 19], "stroke": "#efe3c2", "width": 1 },
+        { "line": [12, 17, 12, 19], "stroke": "#efe3c2", "width": 1 },
+        { "line": [15, 17, 15, 19], "stroke": "#efe3c2", "width": 1 }
+      ]
+    },
+    "furniture:terrain/pillar": {
+      "w": 20, "h": 20,
+      "note": "a stone pillar seen from above: a pale grey disc ringed in dark ink (its base), a smaller lighter disc on it (its top), and a short highlight arc at the top left",
+      "draw": [
+        { "circle": [10, 10, 8.5], "fill": "#b8b2a6", "stroke": "#2e3440", "width": 2 },
+        { "circle": [10, 10, 5.5], "fill": "#ddd8ce", "stroke": "#7a7468", "width": 1 },
+        { "line": [7, 8, 9, 6], "stroke": "#ffffff", "width": 1.5 }
+      ]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+# box lock: TAKEN by npm test test-substrates batch=seedling-js-solver (browser, pid 14832) — head 089c0ee09, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+[PROGRESS 1/12] seedling-js-runtime-solver-walks-enemy-room PASSED 11.4s
+[PROGRESS 2/12] seedling-js-runtime-solve-progress-view PASSED 11.7s
+[PROGRESS 3/12] seedling-js-runtime-solver-opens-kill-lock PASSED 18.5s
+[PROGRESS 4/12] seedling-js-runtime-solver-steps-off-the-door PASSED 7.5s
+[PROGRESS 5/12] seedling-js-runtime-solver-budget-falls-back PASSED 2.1s
+[PROGRESS 6/12] seedling-js-runtime-solver-stop-button PASSED 17.8s
+[PROGRESS 7/12] seedling-js-runtime-solver-limits-off PASSED 33.0s
+[PROGRESS 8/12] seedling-js-runtime-solver-keeps-the-frame-clock PASSED 17.5s
+[PROGRESS 9/12] seedling-js-runtime-solver-falls-through-pit PASSED 7.5s
+[PROGRESS 10/12] seedling-js-runtime-solver-opens-chest PASSED 4.6s
+[PROGRESS 11/12] seedling-js-runtime-solver-cuts-rope-event PASSED 14.1s
+[PROGRESS 12/12] seedling-js-runtime-solver-fights-bob-encounter PASSED 48.4s
+PW DEBUG: ===== IN-APP RESULTS: 12 row(s) =====
+  totals: 12 run · 12 passed · 0 failed · 12 enabled · 0 not run
+  test files: 0 failed to import
+PW DEBUG: All Playwright assertions passed.
+  1 passed (3.3m)

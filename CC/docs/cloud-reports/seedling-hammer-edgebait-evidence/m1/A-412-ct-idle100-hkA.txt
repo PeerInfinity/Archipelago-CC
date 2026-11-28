@@ -1,0 +1,7 @@
+LEGA 412 goal=cleartag door=1 idle=100 env[HOOK_EB_KT=1] ok=true work=406 ticks=502 ms=19184
+  passes=[{"pass":"dashless","ok":true,"kind":null,"ticks":699,"work":202,"modelHits":{"hits":0,"deaths":0}},{"pass":"full","ok":true,"kind":null,"ticks":502,"work":204,"modelHits":{"hits":0,"deaths":0}}]
+  FRESH hits=[] deaths=0 open=true dead=true transition=null
+  KEYLOCK_TURRET_COUNTS={"stances":[{"lock":"bosslock@480,352","t":100,"turrets":["iceturret@472,400"],"live":["iceturret@472,400"],"stance":{"x":488,"y":376}},{"lock":"bosslock@480,352","t":100,"turrets":["iceturret@472,400"],"live":["iceturret@472,400"],"stance":{"x":488,"y":376}}],"kills":[{"lock":"bosslock@480,352","turret":"iceturret@472,400","t":100,"dead":true,"ticks":544,"side":"right","wait":0,"forks":10},{"lock":"bosslock@480,352","turret":"iceturret@472,400","t":100,"dead":true,"ticks":365,"side":"right","wait":0,"forks":10}]}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS={"asked":[]}
+  TURRET_APPROACH_COUNTS={"approaches":[{"turret":"iceturret@472,400","t":644,"side":"right","via":{"x":467,"y":446},"wait":0,"forks":10,"order":"volley","anchor":null,"rank":0},{"turret":"iceturret@472,400","t":465,"side":"right","via":{"x":467,"y":446},"wait":0,"forks":10,"order":"volley","anchor":null,"rank":0}]}
+  ICETURRET_STATIC_KILL_COUNTS={"handed":[],"kills":[]}

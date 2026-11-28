@@ -302,6 +302,18 @@ export function displayGroupsOf(regionNames, { registry = null, sidecarOf = () =
     return groups;
 }
 
+/**
+ * The rules region a click on display group `key` (with `members`, the rules regions folded into it) acts on: the key
+ * itself when it is one of its members (a level and its folded sub-regions: the level), else the first member.
+ * ⛓ region-graph-groups-b moved it here from `regionMap/regionMapClickActions.js` (which re-exports it, so no Region
+ * Map import changed): the Region Map's cell click and the Region Graph's merged-node click (`subRegionView =
+ * merged`) pick the SAME region for a group.
+ */
+export function regionOfCell(key, members = []) {
+    if (!members || members.length === 0) return key;
+    return members.includes(key) ? key : members[0];
+}
+
 /** `Map<rulesRegion, displayKey>` — the inverse of `displayGroupsOf`. */
 export function displayKeyIndex(groups) {
     const out = new Map();

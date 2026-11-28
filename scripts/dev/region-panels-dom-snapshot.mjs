@@ -32,7 +32,8 @@
  *   node scripts/dev/region-panels-dom-snapshot.mjs --port=8141 --out=<dir> \
  *       [--presets=<name>[=<rules path>],...] [--timing [--runs=5]] [--headed]
  * A bare name loads `?game=<name>&seed=1`; `name=./presets/…_rules.json` loads `?rules=`.
- * Writes <dir>/<preset>/S<n>/<panel>-<variant>.html, <dir>/digests.json and <dir>/oracle.json.
+ * Writes <dir>/<preset>/S<n>/<panel>-<variant>.html, <dir>/digests.json, <dir>/oracle.json and <dir>/findings.json
+ * (the findings census, `FINDINGS_FN` below).
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -159,6 +160,59 @@ const ORACLE_FN = async () => {
     out.sites.regionLinkThreeWay = { rows: rl, equal: rlEq };
     for (const v of Object.values(snap.regionReachability ?? {})) out.values[String(v)] = (out.values[String(v)] ?? 0) + 1;
     return out;
+};
+
+/**
+ * In-page: the FINDINGS census (`CC/docs/region-map/findings-fix.md`). What the inputs the left-alone copies disagree
+ * on actually hold in a live snapshot:
+ *  - `reach`: `snapshot.regionReachability[name]` for every region name the preset uses (regions, exit targets,
+ *    location parents), bucketed `true` / `false` / `'reachable'` / `'unreachable'` / `'checked'` / `missing` / other;
+ *  - `locationRules` / `exitRules`: what `evaluateRule` returns for every location / exit access rule, bucketed
+ *    `true` / `false` / `undefined` / `null` / `throw` / `truthy:<type>` / `falsy:<type>`. A `truthy:*` bucket is the
+ *    input on which a strict `=== true` and a truthiness test disagree.
+ */
+const FINDINGS_FN = async () => {
+    const { stateManagerProxySingleton: sm } = await import('./modules/stateManager/index.js');
+    const { evaluateRule } = await import('./modules/shared/ruleEngine.js');
+    const { createSnapshotInterface } = await import('./modules/shared/snapshotInterface.js');
+    const sd = sm.getStaticData(); const snap = sm.getLatestStateSnapshot();
+    const si = createSnapshotInterface(snap, sd);
+    const names = new Set();
+    for (const [rn, rd] of sd.regions) {
+        names.add(rn);
+        for (const e of rd.exits ?? []) if (e.connected_region != null) names.add(e.connected_region);
+        for (const l of rd.locations ?? []) names.add(l.parent_region ?? l.region ?? rn);
+    }
+    const bump = (o, k) => { o[k] = (o[k] ?? 0) + 1; };
+    const reach = {};
+    const rr = snap?.regionReachability;
+    for (const n of names) {
+        if (!rr || !Object.prototype.hasOwnProperty.call(rr, n)) { bump(reach, 'missing'); continue; }
+        const v = rr[n];
+        const k = (v === true || v === false || ['reachable', 'unreachable', 'checked'].includes(v))
+            ? (typeof v === 'string' ? `'${v}'` : String(v)) : `other:${typeof v}:${String(v)}`;
+        bump(reach, k);
+    }
+    const classify = (rule) => {
+        let r;
+        try { r = evaluateRule(rule, si); } catch { return 'throw'; }
+        if (r === true || r === false || r === undefined || r === null) return String(r);
+        return r ? `truthy:${typeof r}` : `falsy:${typeof r}`;
+    };
+    const locationRules = {}; const exitRules = {}; const truthySamples = [];
+    for (const [rn, rd] of sd.regions) {
+        for (const l of rd.locations ?? []) {
+            if (!l.access_rule) { bump(locationRules, 'no rule'); continue; }
+            const k = classify(l.access_rule); bump(locationRules, k);
+            if (k.startsWith('truthy:') && truthySamples.length < 5) truthySamples.push(['location', l.name]);
+        }
+        for (const e of rd.exits ?? []) {
+            if (!e.access_rule) { bump(exitRules, 'no rule'); continue; }
+            const k = classify(e.access_rule); bump(exitRules, k);
+            if (k.startsWith('truthy:') && truthySamples.length < 5) truthySamples.push(['exit', rn, e.name]);
+        }
+    }
+    return { names: names.size, reach, locationRules, exitRules, truthySamples };
 };
 
 async function openPreset(browser, preset) {
@@ -303,7 +357,7 @@ async function doActions(page) {
 
 async function runPreset(browser, preset) {
     const dir = path.join(OUT, preset.split('=')[0]);
-    const digests = {}; const oracle = {};
+    const digests = {}; const oracle = {}; const findings = {};
     let { context, page, errors } = await openPreset(browser, preset);
     const take = async (state) => {
         const sdir = path.join(dir, state);
@@ -318,6 +372,7 @@ async function runPreset(browser, preset) {
             }
         }
         oracle[state] = await page.evaluate(ORACLE_FN);
+        findings[state] = await page.evaluate(FINDINGS_FN);
     };
     await take('S1');
     const plan = await doActions(page);
@@ -338,7 +393,7 @@ async function runPreset(browser, preset) {
     ({ context, page, errors: errors } = await openPreset(browser, preset).then((r) => ({ ...r, errors: [...errors, ...r.errors] })));
     await take('S7');
     await context.close();
-    return { preset, plan, digests, oracle, errors };
+    return { preset, plan, digests, oracle, findings, errors };
 }
 
 async function runTiming(browser, preset) {
@@ -383,11 +438,11 @@ try {
             console.log(`${PRESETS[0]} ${k}: ${Object.entries(byV).map(([v, r]) => `${v}=${r.median.toFixed(1)}ms`).join(' ')}`);
         }
     } else {
-        const digests = {}; const oracle = {}; const summary = [];
+        const digests = {}; const oracle = {}; const findings = {}; const summary = [];
         for (const preset of PRESETS) {
             const r = await runPreset(browser, preset);
             const name = preset.split('=')[0];
-            digests[name] = r.digests; oracle[name] = r.oracle;
+            digests[name] = r.digests; oracle[name] = r.oracle; findings[name] = r.findings;
             const mism = Object.values(r.oracle).reduce((n, o) => n + o.mismatches.length, 0);
             const rows = Object.values(r.oracle).reduce((n, o) => n + Object.values(o.sites).reduce((m, s) => m + s.rows, 0), 0);
             if (mism) bad = true;
@@ -398,6 +453,7 @@ try {
         }
         fs.writeFileSync(path.join(OUT, 'digests.json'), `${JSON.stringify(digests, null, 1)}\n`);
         fs.writeFileSync(path.join(OUT, 'oracle.json'), `${JSON.stringify(oracle, null, 1)}\n`);
+        fs.writeFileSync(path.join(OUT, 'findings.json'), `${JSON.stringify(findings, null, 1)}\n`);
         fs.writeFileSync(path.join(OUT, 'summary.json'), `${JSON.stringify(summary, null, 1)}\n`);
     }
 } finally {

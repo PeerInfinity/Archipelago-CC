@@ -44,6 +44,7 @@ import { replayTape, settleSolve, solveFromTape } from './jsRuntimeSolver.js';
 import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+import { GOAL_START_WAIT as __GOAL_START_WAIT_HOLD } from './solverBot.js';
 import { PRESS_KILL_CHASERS as __PRESS_KILL_CHASERS_HOLD } from './pressKillCost.js';
 
 // ⛓ `PRESS_KILL_CHASERS` held OFF for this whole file: it ships ON since the PKC + FH flip (⚖ the user, 2026-11-20). ON, leg
@@ -53,6 +54,13 @@ import { PRESS_KILL_CHASERS as __PRESS_KILL_CHASERS_HOLD } from './pressKillCost
 let __heldWas;
 beforeAll(() => { __heldWas = __PRESS_KILL_CHASERS_HOLD.enabled; __PRESS_KILL_CHASERS_HOLD.enabled = false; });
 afterAll(() => { __PRESS_KILL_CHASERS_HOLD.enabled = __heldWas; });
+// ⛓ `GOAL_START_WAIT` held OFF for this whole file too: it ships ON since the BOS/GSW/PM flip (⚖ the user, 2026-11-25:
+// "Flip BOS+GSW+PM (Recommended)"). ON, leg 871's refusal at work 885 (the burn stance's EXHAUSTED ladder) is re-asked after an
+// idle and SOLVES: 1179 t, 0 hits, 0 deaths, flag 12 earned (sha 3b8fc46a6b97; pinned in `hammerBodyGate.train.test.js`).
+// These rows pin other switches against that refusal; held OFF they are their pre-flip selves.
+let __gswWas;
+beforeAll(() => { __gswWas = __GOAL_START_WAIT_HOLD.enabled; __GOAL_START_WAIT_HOLD.enabled = false; });
+afterAll(() => { __GOAL_START_WAIT_HOLD.enabled = __gswWas; });
 const FIX = (name) => JSON.parse(gunzipSync(readFileSync(join(HERE, 'fixtures', 'hammer-cleartag-chain', name)))
     .toString('utf8'));
 const TREE = 'burnabletree@872,784';
@@ -112,7 +120,8 @@ describe('hammer-phase CLEARTAG-CHAIN (train) — flag 12 SOLVED from a tree-unb
         expect(off.message).toMatch(/a clear-tag order does not chain openers$/);
         const on = solveLeg('leg872-l43-l40-request.json.gz', true);
         // ⛓ chaserSpinnerWalls ON: work 3467, 2389 t before the flip (the same chain; the first strike lands 2 ticks later)
-        expect(on).toEqual({ ok: true, work: 3823, ticks: 2385, sha: expect.any(String), hits: [], deaths: 0,
+        // ⛓ BOS/GSW/PM flip: PREVIEW_METER ON meters the previews, work 3823 → 3852 (`SEEDLING_PREVIEW_METER=0` gives 3823); same plan.
+        expect(on).toEqual({ ok: true, work: 3852, ticks: 2385, sha: expect.any(String), hits: [], deaths: 0,
             burned: [TREE], clears: ['40:0', '40:12'] });
     }), 600000);
 

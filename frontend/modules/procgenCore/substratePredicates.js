@@ -34,13 +34,29 @@ export const REALISER_KINDS = Object.freeze({ PROCEDURAL: 'procedural', ZONE: 'z
  * generator) and the pipeline's `_sphereCapableSubstrates` test — the same three
  * slots, so the hub offers exactly the targets the pipeline realises.
  *
+ * ⛓ An entry that declares `ownContentOnly: true` answers `null` although it has a zone
+ * generator: that generator realises only a region that IS the entry's installed content (a
+ * mystery case) and refuses any other spec by name. It is no target for a planned region, so
+ * sphere growth, the editor's Initialise list and a per-region override never offer it; the
+ * top-down driver still dispatches to it for the region a caller names (`realisesOwnContent`).
+ *
  * @returns {'procedural'|'zone'|null}
  */
 export function regionRealiserKind(entry) {
+    if (realisesOwnContent(entry)) return null;
     if (typeof entry?.generateRegionCore === 'function') return REALISER_KINDS.PROCEDURAL;
     if (typeof entry?.generateZoneForSpecs === 'function'
         || typeof entry?.generateZoneForSpecsGen === 'function') return REALISER_KINDS.ZONE;
     return null;
+}
+
+/**
+ * ⛓ **DOES THE ENTRY REALISE ONLY ITS OWN CONTENT?** `ownContentOnly: true` with a zone
+ * generator: the region must be the content the entry has installed, named by the caller.
+ */
+export function realisesOwnContent(entry) {
+    return entry?.ownContentOnly === true
+        && (typeof entry?.generateZoneForSpecs === 'function' || typeof entry?.generateZoneForSpecsGen === 'function');
 }
 
 /** ⛓ The pipeline's layouts, as data (the drivers' families). */
@@ -54,7 +70,8 @@ export const PIPELINE_LAYOUTS = Object.freeze({ SPHERE: 'sphere', SPIRAL: 'spira
  *           (`regionRealiserKind`)
  *   spiral  `arrangeShuffledSpiral` — `zoneCount` or `generateRegionCore`
  *   grid    the grid-growth driver's `buildRegion` — `generateRegionCore` only
- *   topdown the topdown relayout's `generateRegionGen` — a region realiser
+ *   topdown the topdown relayout's `generateRegionGen` — a region realiser, or an
+ *           entry that realises its own content there (`realisesOwnContent`)
  *
  * The CLI drivers refuse a quota naming an entry outside their layout with this
  * before any work runs, and `list-substrates.js` prints it.
@@ -67,7 +84,7 @@ export function pipelineLayoutsOf(entry) {
         out.push(PIPELINE_LAYOUTS.SPIRAL);
     }
     if (typeof entry?.generateRegionCore === 'function') out.push(PIPELINE_LAYOUTS.GRID);
-    if (regionRealiserKind(entry) !== null) out.push(PIPELINE_LAYOUTS.TOPDOWN);
+    if (regionRealiserKind(entry) !== null || realisesOwnContent(entry)) out.push(PIPELINE_LAYOUTS.TOPDOWN);
     return out;
 }
 

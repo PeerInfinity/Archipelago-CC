@@ -98,6 +98,12 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_PICKUP_TICK_FREEZE || !!process.env.SEEDLING_DIALOGUE_FRAME_FREEZE
         || !!process.env.SEEDLING_FROZEN_TICK_UNGATED
         || !!process.env.SEEDLING_FREEZE_EDGE_FRAMES
+        || !!process.env.SEEDLING_FREEZE_RELEASE_TICK
+        || !!process.env.SEEDLING_FREEZE_SPAN_UPDATES
+        || !!process.env.SEEDLING_NESTED_ROCK_CEREMONY
+        || !!process.env.SEEDLING_PLAIN_PICKUP_IN_FREEZE
+        || !!process.env.SEEDLING_CHEST_COVER_FENCEPOST
+        || !!process.env.SEEDLING_PRESSER_RECURSION_HANG
         || !!process.env.SEEDLING_ARROW_LANE_CROSSING
         || !!process.env.SEEDLING_AXE_TIMING_RUNG || !!process.env.SEEDLING_AXE_GATE_TRANSIT
         || !!process.env.SEEDLING_STATUE_TALK_RANGE
@@ -431,7 +437,19 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity FROZENTICK D2 (wave 53): the chasers' and the blocks' ungated update runs on the frozen frames too — OFF.
             frozenTickUngated: false,
             // ⛓ fidelity CEREMONYTOWER D2 (wave 54): a texted ceremony's later frames step the beam tower once, and a rock's release frame steps the families after it — OFF.
-            freezeEdgeFrames: false });
+            freezeEdgeFrames: false,
+            // ⛓ fidelity RELEASETICK D2 (wave 55): a texted ceremony's finishing tick steps the four families once more, unfrozen (the release frame) — OFF.
+            freezeReleaseTick: false,
+            // ⛓ fidelity RELEASEPICKUP D2 (wave 56): the beam tower's graphic through a texted pickup's phase A, and a pickup inside a rock's span refused — OFF.
+            freezeSpanUpdates: false,
+            // ⛓ fidelity NESTEDFREEZE D2 (wave 57): a pickup ceremony that starts on a button's frame A runs as the union with the rock's span — OFF.
+            nestedRockCeremony: false,
+            // ⛓ fidelity PLAINSPAN D2 (wave 59): every plain pickup (APItem) under the box a freeze's frame tests is taken on that frame — OFF.
+            plainPickupInFreeze: false,
+            // ⛓ fidelity CHESTCOVER D2 (wave 61): the vanilla chest reads a responder over it one step older (the game's update order) — OFF.
+            chestCoverFencepost: false,
+            // ⛓ fidelity PRESSERLOOP D2 (wave 62): a group whose re-publishing setters reach each other hangs the game — OFF.
+            presserRecursionHang: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

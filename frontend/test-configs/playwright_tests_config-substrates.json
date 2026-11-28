@@ -76,6 +76,42 @@
             "_comment": "AN-3b limit (a): the Region Graph panel closed and reopened shows a card per node again with no world reload (regionGraph:panelMounted → ActionNodes re-registers)."
         },
         {
+            "id": "an-time-window-and-wait",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-TIME-2: the harbour fixture compiled in the page (pool Time): window lines and the early card's click text, the Resources Time line, too late refused by the card, the click and the start gate, one wait queued by a click and performed (clock pure == live, the pool pays it)."
+        },
+        {
+            "id": "an-time-knowledge-gate",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-TIME-2: the visits fixture: the app does NOT hold a Knows: flag before its node is performed (event_kind substrate_state), the gate refuses by name, then passes after the teaching node; the flag kept into the next loop."
+        },
+        {
+            "id": "an-time-completed-before",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-TIME-2 (Robert's Q6, minimal form): a node performed in loop 1 is marked 'completed before · loop 1' in loop 2 (not in loop 1), the panel lists the set, saved per world."
+        },
+        {
+            "id": "an-omsi-town-load-and-act",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-OMSI-3: the omsi town preset (action_nodes_omsi_town) loads; a card per node; the start's neighbours show price, used/limit and needs as the preset states them; the goal's supplier (Buy Supplies) is blocked with its unmet line; one performance at a free check node pays its price and sends its check."
+        },
+        {
+            "id": "an-same-monday-clock",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-TIME-4: the committed timed preset The Same Monday: the pool is loop.mana (3 h, not 100), the Time line at 09:00 and after one visit, the start gate refuses a visit whose paper is not held."
+        },
+        {
+            "id": "an-mystery-bridge-papers-loop",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-MYST-1: The Same Monday framed in the Mystery Game panel (the real page): the page asks with the world's version, every state carries loop, a visit's paper arrives by slot_data.mystery.items, a loop reset sends loop 2."
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
@@ -1983,6 +2019,12 @@
             "_comment": "CONTENT THEME MAZE LOOK (the user 2026-11-15: 'Can we set up a Feature Check in the Tutorials panel to load the scenario for me to see what this maze example currently looks like?'). The walk row of feature check content-theme-maze-look: meta_trial then the plain control concept_trial, each loaded, its first room's location and exit taken in the Text Adventure panel (read off its links), the Maze Room on the region that exit names (fog unticked), then the APWorld Editor's Map tab holding that document. Manual batch feature-checks."
         },
         {
+            "id": "feature-check-mystery-local-play",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "MYSTERY LOCAL PLAY (the user 2026-11-27: 'a tutorial, or maybe just a feature check, that plays through a mystery game preset locally, without an Archipelago server'). The walk row of feature check mystery-local-play: the committed mystery_custom_house_fire world loaded as a preset, Mystery Game opened (the real page, the submodule modules/mystery-clue-game, which starts on the app's offline state), then the page's own careful reader asked for by mystery:autoSolve and waited for until it says done; every question it solved is a check in the app and Victory is held. No server. Manual batch feature-checks."
+        },
+        {
             "id": "tutorial-walk-guided-tour",
             "enabled": true,
             "category": "Tutorial walks",
@@ -2103,6 +2145,12 @@
             "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft apcalc-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
         },
         {
+            "id": "tutorial-walk-mystery-multiworld",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "The walk row of the terminal tutorial mystery-multiworld (a mystery case on a local server, opened in Mystery Game): like the other multiworld tutorials its walk stops at the first terminal step. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
             "id": "region-map-classic-world",
             "enabled": true,
             "category": "Region Map",
@@ -2112,7 +2160,7 @@
             "id": "region-map-seedling-paints",
             "enabled": true,
             "category": "Region Map: Seedling",
-            "_comment": "REGION MAP step 3b (2026-11-15): seedling_playthrough — N cells = the layout's display regions, the art bakes, squares = the visible levels' tiles (>= minSquarePx at the minimum zoom), the cell-size toggle. Batch playback-bot (on push). Counts derived at run time."
+            "_comment": "REGION MAP step 3b (2026-11-15): seedling_playthrough — N cells = the layout's display regions, the art bakes, squares = the visible levels' tiles (at the minimum zoom: never larger than their tile, a 1 px dot at least; tiled-squares-cap 2026-11-24), the cell-size toggle. Batch playback-bot (on push). Counts derived at run time."
         },
         {
             "id": "region-map-follow-player",
@@ -2166,7 +2214,13 @@
             "id": "region-map-zoom-pinch-links",
             "enabled": true,
             "category": "Region Map",
-            "_comment": "region-map zoom-links (2026-11-22): the toolbar's + / − (ZOOM_BUTTON_FACTOR around the centre, Follow unticks), a two-pointer synthetic pinch (distinct pointerIds: zoom x the distance ratio, no click) and the neighbour lines (lastPaint.neighbourLinks = the model's, apart from the cross-group links; off under Links), on procgen_topdown AP_1. Fast batch. Reloads the world loaded before."
+            "_comment": "region-map zoom-links (2026-11-22): the toolbar's + / − (ZOOM_BUTTON_FACTOR around the centre, Follow unticks), a two-pointer synthetic pinch (distinct pointerIds: zoom x the distance ratio, no click) and the neighbour lines (lastPaint.neighbourLinks = the model's, apart from the cross-group links; off under Links), on procgen_topdown AP_1. Fast batch. Reloads the world loaded before. region-map-maze-hooks (2026-11-27): + every maze cell has its level's extent and frame (sized by level), a substrate square per rules location, and every maze exit a direction off the panel's model."
+        },
+        {
+            "id": "region-map-mobile-tab",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "region-map-link-ends (2026-11-22): the Region Map's mobile tab sits right after the Region Graph's (moduleInfo.mobileAfter, mobileLayoutManager.determinePanelOrder), on every layout preset, from the registry's moduleInfo. On a --layout=mobile boot it also taps the live tab and waits for a paint. Fast batch. Loads nothing."
         },
         {
             "id": "region-map-click-master-off",
@@ -2247,6 +2301,18 @@
             "_comment": "REGION GRAPH CHECKS (2026-11-18): the location-node rebuild bug. force-show written through the settings draws the location nodes, and a later moduleSettings.regionGraph.* write (which rebuilds the graph) leaves them drawn; restores both settings. On push (fast batch)."
         },
         {
+            "id": "test_region_graph_sub_region_nested",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "REGION GRAPH GROUPS A (2026-11-23): on seedling_atlas (11 regions, 2 boxes: moved off seedling_playthrough, whose 307-region load cost fast ~20 s; its 60/251/56 counts are pinned by subRegionView.nested.test.js), subRegionView = nested (set session-only by the row, restored at its end) draws one compound box per display group of 2+ (count DERIVED from the same fold at run time), members inside; a box tap runs no click, a member tap runs its click action (default actions: the path extends to it) once; restored, the graph draws no box. Runs right before test_region_graph_click_default. Reloads the world loaded before. On push (fast batch)."
+        },
+        {
+            "id": "test_region_graph_sub_region_merged",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "REGION GRAPH GROUPS B (2026-11-24): on seedling_atlas (11 regions, 2 groups: the nested row's world), subRegionView = merged (set session-only by the row, restored at its end) draws one node per display group of 2+ in place of its members (counts DERIVED from the same fold at run time), no self-loop; a tap on a group node runs the REGION click on regionOfCell(key, members), the Region Map's rule, published once; restored, every region is its own node. REGION GRAPH MAP LOOK (2026-11-25): in merged it also sets nodeLook = map (session-only; no rebuild), reads that every node with a Region Map cell painted as one, and a pointer click on a location square runs the LOCATION click on it once; in collapsible the stored map takes no effect; restored, nodeLook reads graph and no map canvas is left. REGION GRAPH DIRECTION LAYOUT (2026-11-25): in merged + map it also runs the Direction-aware layout once (placed at once, no animation) and reads 0 overlaps between the drawn boxes; restored, the layout preset select and merged's saved positions are back. Runs right after test_region_graph_sub_region_nested, before test_region_graph_click_default. Reloads the world loaded before. On push (fast batch)."
+        },
+        {
             "id": "test_region_graph_click_default",
             "enabled": true,
             "category": "Region Graph",
@@ -2310,7 +2376,7 @@
             "id": "tutorial-walk-tracker-region-map",
             "enabled": true,
             "category": "Tutorial walks: tracker",
-            "_comment": "region-map-tutorial (2026-11-22): the walk row of the in-progress tracker-region-map (the Region Map on seedling_playthrough seed 1; rules only, no game started). The ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker (⚖ the user 2026-11-22T02:05:41Z, \"Tracker batch\": it boots no wasm, so it needs no WebGPU)."
+            "_comment": "region-map-tutorial (2026-11-22): the walk row of the READY tutorial tracker-region-map (⚖ the user, 2026-11-23, \"Mark READY\"; in progress until then) (the Region Map on seedling_playthrough seed 1; rules only, no game started). The ratchet requires every step to work. Manual batch tutorials-tracker (⚖ the user 2026-11-22T02:05:41Z, \"Tracker batch\": it boots no wasm, so it needs no WebGPU)."
         },
         {
             "id": "tutorial-walk-tracker-dungeons",
@@ -2433,6 +2499,12 @@
             "_comment": "loop-mode-bot S1: the Playback Bot plays a PLAIN rules.json directly (Adventure, loop mode off, no substrate, no controller): its own checks and moves, counted only when they land. Done = every sphere-log location checked. Fast batch."
         },
         {
+            "id": "playback-bot-tile-kinds-demo",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "Content sets GEN-2: the committed tile_kinds_demo preset (the \"Randomly placed tiles\" maze biome: the furniture pack's rugs and pillars and, since GEN-5, the ledges pack's one-way ledges in a scattered 2 : classic 1 mix over Adventure) played to the end by the bot through the maze controller, loop mode off; every sphere-log location checked, and the Maze Room panel's art stack takes the recorded exists packs. Batch playback-bot (on push)."
+        },
+        {
             "id": "playback-bot-walk-order",
             "enabled": true,
             "category": "Playback Bot",
@@ -2474,6 +2546,18 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "AN-3a (design §7): the ActionNodes example in Loop mode; the runner asks the entry's loopBot.planLoop for each loop (free hops + acts) until the goal is checked; each loop's reason is in the log (logReasoning on). AN-3b: the runner replans mid-loop when an item arrives (the replan in the log, the goal in <= the pure planner's loop count, the Q1 attempt named; Instant can complete the attempt a loop early: a known Loops gap)."
+        },
+        {
+            "id": "an-omsi-bot-plays-to-goal",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "AN-OMSI-3: the Playback Bot plays the omsi town to Start Journey in Loop mode in EXACTLY 7 loops (XP scale 1), equal to the pure planner and the headless live path (pinned headless in actionNodesTownScale.slow.test.js)."
+        },
+        {
+            "id": "an-mystery-goal-pending",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "AN-MYST-1, PENDING (superseded by Robert's 2026-11-26 ruling; the world-side goal is AN-MYST-2): on The Same Monday a questionSolved for the goal question checks nothing and brings no mystery:state back; the Playback Bot plays the world, the goal node checks the goal, solved still lacks it."
         },
         {
             "id": "playback-bot-loop-mode-maze",
@@ -2528,6 +2612,54 @@
             "enabled": true,
             "category": "Rule Converter",
             "_comment": "helper-script P4: the Rule Converter's Exact engine — real exporter analyzer + world_generator under Pyodide (CDN, booted on the first Convert). A helper script both ways through the Convert buttons, and the loaded alttp_worldgen preset's 36 helpers round-trip with its options. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
+            "id": "mystery-bridge-round-trip",
+            "enabled": true,
+            "category": "Mystery Bridge",
+            "_comment": "The Mystery Game module (modules/mysteryArchipelago; the row opens its panel as Quick Launch does and closes it again, and points its page address at a stand-in page for the session, modules/mysteryArchipelago/testPage/, not the real game). Enabling opens the panel; loading the committed mystery_custom_house_fire preset makes the panel frame the case: state on request, a solved question as a check that comes back solved, a repeat, and refusals by name. No server, so it is the host's offline path. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
+            "id": "mystery-real-page-handshake",
+            "enabled": true,
+            "category": "Mystery Bridge",
+            "_comment": "The Mystery Game module at its DEFAULT page address: this app's own copy of the game (the git submodule modules/mystery-clue-game), not the stand-in. The row enables the module, loads the committed mystery_custom_house_fire preset and reads the host's side only: the game's page asked with the story and version the world has, a state went back, nothing was refused. With mysteryArchipelago/mysteryPin.test.js it is the live half of the pin between the submodule and the world. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
+            "id": "mystery-region-office-and-street",
+            "enabled": true,
+            "category": "Mystery Bridge",
+            "_comment": "The mystery SUBSTRATE: a case as one region of a generated world. Loads the committed mystery_street_test preset (scripts/test/generate-mystery-street-test-preset.mjs: the long case's office beside a maze street, by the top-down driver) with the stand-in page: the panel frames the region's case, mystery:state carries the world's lock and inOffice, a question solved in the street is not checked, the same question is checked in the office, and leaving says so again. Names are read off the loaded world. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
+            "id": "mystery-real-page-lock",
+            "enabled": true,
+            "category": "Mystery Bridge",
+            "_comment": "The page's side of the lock, in the real page (the submodule modules/mystery-clue-game at the module's default address), with no server (the page starts on the host's offline state): on the committed mystery_street_test world the page says it is locked (body.ap-locked, the line #ap-lock shown) while the player is in the street, not in the office, and again after leaving. Reads the page's own mark; clicks nothing. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
+            "id": "mystery-playback-bot-plays-the-case",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "The mystery substrate's PlaybackController (mysteryArchipelago/mysteryPlaybackController.js): the committed mystery_street_test world played to the end by the Playback Bot from its own sphere log, loop mode off. The street is the maze's; in the office the controller checks each question through the host (under the client's logic gate) and takes the exit. Every sphere-log location ends checked."
+        },
+        {
+            "id": "mystery-playback-bot-loop-mode",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "The mystery substrate's loopSupport: the same mystery_street_test world with the loop_costs block generateLoopCosts writes for it. Loop mode comes on, the office reads as a coarse region whose Bot is the walkTo solver, and the Playback Bot plays the world to the end through the Loops queue."
+        },
+        {
+            "id": "mystery-spiral-office-played",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "The mystery entry as a shuffled-spiral content source (zoneCount / extractZoneRules, mysterySubstrateLibrary.js): a world of three maze rooms and one office is built in the page from the committed mystery_custom_house_fire world, the case's papers standing on its own questions with the source's rules, and the Playback Bot plays it to the end. The installed case is cleared again."
+        },
+        {
+            "id": "document-library-idb",
+            "enabled": true,
+            "category": "Document library",
+            "_comment": "lab-document-library-b1 (lab arc slice B1, declared enrolment): the shared document library's IndexedDB backend, which nothing in the app imports yet. Its own database (absent at the start, deleted at the end); two versions saved, read back by fingerprint through a fresh library. The modules load by a document-relative URL, so the row runs the same on the bundled boot. Category unclaimed by testBatches.js, so batch fast (on push)."
         },
         {
             "id": "seedling-js-runtime-solver-cuts-rope-event",

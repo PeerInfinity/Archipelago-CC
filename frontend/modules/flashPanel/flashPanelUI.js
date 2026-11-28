@@ -141,6 +141,8 @@ export const SECTIONS_STORAGE_KEY = 'flashPanel_sections';
  * ⛓ SOLVER LIMIT OFF: the no-work-limit / backstop controls and Stop live in the SOLVER section instead
  * (`seedlingSolverLimitControls.js`, ⚖ the user 2026-11-10: "I want to add it there").
  */
+/** ⛓ SAVE HINT — the line beside both "Use the save" switches (exported for the structural pin). */
+export const SAVE_SWITCH_HINT = 'takes effect on the next game load';
 const SETTINGS_CONTROLS = Object.freeze([
   { prop: 'runtime', label: 'Runtime', when: 'always' },
   { prop: 'seedlingJsGraphics', label: 'Graphics', when: 'js' },
@@ -155,10 +157,12 @@ const SETTINGS_CONTROLS = Object.freeze([
   // ⛓ USE THE SAVE (slice `js-save-toggle-clear`) — shown when the JS runtime is SELECTED (the setting), so it can be
   // set before the game loads; the "Clear this room's save" button sits on the row under it. ⛓ RE3 (i) (⚖ Robert
   // 2026-11-22 "Same setting and Clear"): the wasm runtime's save rides the same switch and button.
-  { prop: 'seedlingJsSave', label: 'Use the save', when: 'jsOrWasmSelected' },
+  // ⛓ SAVE HINT (slice `js-smalls-1`, ⚖ Robert 2026-11-26 "Leave it, note it in the UI"): neither switch rewinds a game
+  // that already read its save, so each says when it acts. `hint` = a muted line in the row, after the label.
+  { prop: 'seedlingJsSave', label: 'Use the save', when: 'jsOrWasmSelected', hint: SAVE_SWITCH_HINT },
   // ⛓ USE THE SAVE (slice `ruffle-save-toggle-clear`) — the Flash (Ruffle) save, its own setting; shown when the Flash
   // runtime is SELECTED on Seedling, with "Clear the Flash save" on the row under it.
-  { prop: 'seedlingRuffleSave', label: 'Use the save', when: 'flashSelected' },
+  { prop: 'seedlingRuffleSave', label: 'Use the save', when: 'flashSelected', hint: SAVE_SWITCH_HINT },
   { prop: 'seedlingSolverWalk', label: 'Bot uses the solver', when: 'seedling' },
   { prop: 'touchControls', label: 'Touch controls', when: 'touch' },
   { prop: 'seedlingSolveProgressIntervalMs', label: 'Progress refresh (ms)', when: 'seedling' },
@@ -1424,6 +1428,13 @@ export class FlashPanelUI {
         row.append(name, input);
       }
       input.classList.add('flash-panel-setting-input');
+      if (c.hint) {
+        const hint = document.createElement('span');
+        hint.className = 'flash-panel-setting-hint';
+        hint.textContent = c.hint;
+        hint.style.cssText = 'flex:0 1 auto;color:#777;font-size:11px;font-style:italic;';
+        row.append(hint);
+      }
       host.append(row);
       this._settingsControls.push({ ...c, spec, row, input, key: SETTING_KEY_PREFIX + c.prop, ...(speedParts ?? {}) });
       if (c.prop === 'seedlingJsSave') host.append(this._buildJsSaveClearRow());

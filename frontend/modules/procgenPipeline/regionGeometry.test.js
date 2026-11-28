@@ -33,6 +33,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { realisesOwnContent } from '../procgenCore/substratePredicates.js';
 import { mirrorTileAcrossSide } from '../shared/procgen/spatialPrimitives.js';
 import {
     DEFAULT_REGION_SIZE, Grid, REGION_GEOMETRY, SIDES, arrangeShuffledSpiral,
@@ -308,8 +309,11 @@ describe('⛓⛓ the mirror fallback: a neighbour of a sides-only region mirrors
     // sides, by design. The population is still every sides entry; what it
     // expects is split by the LAW the realiser itself dispatches on — an entry
     // with a region hook is realised, one with neither is refused by name.
-    const REALISABLE = (e) => typeof e.generateZoneForSpecs === 'function'
-        || typeof e.generateRegionCore === 'function';
+    // ⛓ Mystery substrate: a third half. An entry that realises only its OWN content
+    // (`realisesOwnContent`) has a zone generator and still refuses this made-up region, by a
+    // name of its own.
+    const REALISABLE = (e) => (typeof e.generateZoneForSpecs === 'function'
+        || typeof e.generateRegionCore === 'function') && !realisesOwnContent(e);
 
     it('the sides entries hold BOTH halves of that law — the row below is not vacuous', () => {
         expect(SIDES_ONLY.some(REALISABLE)).toBe(true);
@@ -326,6 +330,12 @@ describe('⛓⛓ the mirror fallback: a neighbour of a sides-only region mirrors
             substrate: id, region_id: 'r', size: DEFAULT_REGION_SIZE, rng: { next: () => 0 },
             exits: [{ side: 'E' }], locations: [],
         };
+        if (realisesOwnContent(substrateRegistry.get(id))) {
+            let reason = null;
+            try { generateRegion(spec); } catch (error) { reason = error.reason; }
+            expect(typeof reason, `${id} refuses a region that is not its content by a NAME`).toBe('string');
+            return;
+        }
         if (!realisable) {
             expect(() => generateRegion(spec)).toThrow(/neither generateRegionCore nor generateZoneForSpecs/);
             return;

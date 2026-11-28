@@ -1,0 +1,8 @@
+start 2026-11-27T21:35:54Z head 089c0ee0
+vitest rc=0 21:42:10
+replay tip rc=0
+replay base rc=0
+restored tracked changes: 0
+inapp seedling-js rc=0
+inapp seedling-js-solver rc=0
+FINALDONE 21:57:52

@@ -1,0 +1,13 @@
+MUTANT release-frozen
+predicted: the same 6 (R stepped frozen = C again; the slot refuses its bill)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed | 4 passed (5)
+      Tests  5 failed | 49 passed (54)
+restored: 0
+rows (re-run):
+RELEASETICK — the four families through a texted ceremony (staged) > beam tower (L29 + a tower, a feather underfoot): C steps it frozen; ON R unfrozen too, the beam a tick early
+RELEASETICK — the four families through a texted ceremony (staged) > ice turret (L59, its turret swapped out): ON its volley leaves a tick early
+RELEASETICK — the four families through a texted ceremony (staged) > drill (L59, wave 51's T freeze ON so it is idle at the close): ON it hops on R, OFF a tick later
+RELEASETICK — composition (waves 50 to 54 ON underneath) > every family leads by one tick with all five ON, and nothing refuses
+RELEASETICK — composition (waves 50 to 54 ON underneath) > wave 50's slot (`turretSuitRetaliation`): the contact on R is billed once, on the finishing tick, ON
+measured 5, predicted 6: the TURRET row stays green — stepShootersNow is passed { frozen: false } explicitly, so only turretHitPlayerNow (which reads ceremony) sees the mutant; that is the slot row's failure.

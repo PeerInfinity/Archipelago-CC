@@ -1,0 +1,4 @@
+CENSUS PROBE (a temporary throw at stepCeremonyReleaseFamiliesNow whenever the level holds any of the four families, a spit or a blast; copied and restored):
+  294 committed tapes, KEY=freezeReleaseTick ON: 294 ON = OFF, CENSUS-PROBE hits 0
+  batch-seedling-acceptance.mjs ON: CENSUS-PROBE hits 0; md5 391322d681b7aa0229d94b3f6906d024
+  can it fire? the staged L29 feather row ON: thrown 'CENSUS-PROBE: a texted ceremony's release frame meets a family in level 29 at tick 22' (OFF: no throw)

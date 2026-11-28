@@ -1,0 +1,78 @@
+AT t 0 player 488 904 level 40
+  body bob@320,112 328.0 120.0 bob
+  body bob@288,112 296.0 120.0 bob
+  body bob@288,80 296.0 88.0 bob
+  body bob@304,144 312.0 152.0 bob
+  body bob@272,112 280.0 120.0 bob
+  body bobsoldier@880,832 888.0 840.0 bobsoldier
+  body bob@736,752 744.0 760.0 bob
+  body bob@736,800 744.0 808.0 bob
+  body bob@192,480 200.0 488.0 bob
+  body bob@352,448 360.0 456.0 bob
+  body bob@352,416 360.0 424.0 bob
+  body bob@208,448 216.0 456.0 bob
+  body bob@224,496 232.0 504.0 bob
+  body puncher@128,624 136.0 632.0 puncher
+  body puncher@816,128 824.0 136.0 puncher
+  vols bob@320,112[324,116,8x8] bob@288,112[292,116,8x8] bob@288,80[292,84,8x8] bob@304,144[308,148,8x8] bob@272,112[276,116,8x8] bobsoldier@880,832[868,822,40x40] bob@736,752[740,756,8x8] bob@736,800[740,804,8x8] bob@192,480[196,484,8x8] bob@352,448[356,452,8x8] bob@352,416[356,420,8x8] bob@208,448[212,452,8x8] bob@224,496[228,500,8x8] puncher@128,624[122,620,28x28] puncher@816,128[810,124,28x28] iceturret@472,400[471.5,407.5,32.5x32.5] bombpusher@112,128[112,128,48x48]
+ stance (872,776) covered=no
+   plan static: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan all vols: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@320,112: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@288,112: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@288,80: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@304,144: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@272,112: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bobsoldier@880,832: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@736,752: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@736,800: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@192,480: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@352,448: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@352,416: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@208,448: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@224,496: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without puncher@128,624: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without puncher@816,128: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without iceturret@472,400: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bombpusher@112,128: NO: no walkable tile path in level 40 from tile (30,56) to (54,48). The two are in different connected components of the tiles the player box fits in — which at the
+ stance (888,824) covered=bobsoldier@880,832
+   plan static: ok(5wp)
+   plan all vols: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without bob@320,112: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without bob@288,112: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without bob@288,80: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without bob@304,144: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without bob@272,112: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without bobsoldier@880,832: NO: no walkable tile path in level 40 from tile (30,56) to (55,51). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@736,752: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without bob@736,800: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without bob@192,480: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without bob@352,448: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without bob@352,416: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without bob@208,448: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without bob@224,496: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without puncher@128,624: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without puncher@816,128: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without iceturret@472,400: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+   plan without bombpusher@112,128: NO: A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The plan
+ stance (904,776) covered=no
+   plan static: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan all vols: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@320,112: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@288,112: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@288,80: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@304,144: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@272,112: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bobsoldier@880,832: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@736,752: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@736,800: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@192,480: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@352,448: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@352,416: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@208,448: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bob@224,496: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without puncher@128,624: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without puncher@816,128: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without iceturret@472,400: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+   plan without bombpusher@112,128: NO: no walkable tile path in level 40 from tile (30,56) to (56,48). The two are in different connected components of the tiles the player box fits in — which at the
+ANSWER false refusal 331

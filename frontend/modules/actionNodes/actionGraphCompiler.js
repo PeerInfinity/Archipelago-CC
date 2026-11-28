@@ -21,6 +21,9 @@
  *   8. the sphere log, `shared/procgen/forwardSimulator.js` `generateSphereLog`, embedded;
  *   9. `loop_costs[p]`, written directly: the costs are the graph's own (move cost 0, A10; `actions.act` = time);
  *  10. `discovery_mode[p] = {enabled: true, bundle: 'actionNodes'}` (AN-1b: the discovery policy, Loop mode on or off).
+ *  11. knowledge (AN-TIME-1): every node that teaches a flag carries an EVENT location (`<node> (learns <flag>)`, no
+ *      AP id, locked) holding the flag's event item (`Knows: <flag>`), whose rule is the node's own perform rule. A
+ *      node that requires the flag names that item in its rules. The fill never places an event item.
  *
  * ⛓ THE A6 PROOF (design §7). A6: in each loop at least one location check can be earned. The compiler refuses by
  * name when (1) a check or the goal has no item combination that earns it (`check-never-earnable`), or (2) the sphere
@@ -40,9 +43,13 @@ import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
 import { DEFAULT_LOCATION_COST, DEFAULT_MANA_PER_ITEM, START_REGION_MOVE_COST } from '../shared/procgen/loopCostDefaults.js';
 import { GOAL_ITEM } from '../procgenCore/goalItem.js';
 import { allocateIdsBySortedName, namespaceNamed } from '../procgenCore/apIdNamespaces.js';
-import { predecessorsOf, resolvedBoostOf, resolvedSettingsOf, successorsOf } from './actionGraph.js';
+import {
+    knowledgeItemNameOf, knowledgeLocationNameOf, predecessorsOf, resolvedBoostOf, resolvedSettingsOf, successorsOf,
+} from './actionGraph.js';
 import { buildActionModel } from './actionModel.js';
-import { DEFAULT_STATE_BUDGET, deriveActionLogic, describeWitness, combinationByName } from './actionSearch.js';
+import {
+    DEFAULT_STATE_BUDGET, deriveActionLogic, describeWitness, combinationByName, logicItemNamesOf, minimalCombinations,
+} from './actionSearch.js';
 
 /** The substrate id every compiled region names. */
 export const ACTION_NODES_SUBSTRATE_ID = 'action_nodes';
@@ -56,6 +63,8 @@ export const ACTION_NODES_GAME = Object.freeze({
 export const ACTION_NODES_BLOCK_VERSION = 1;
 /** The Loops queue verb that performs a node (⚖ user 2026-11-15, Q4). */
 export const ACT_ACTION = 'act';
+/** The `event_kind` of a knowledge event location (AN-TIME-2): never auto-collected; the runtime collects it on perform. */
+export const KNOWLEDGE_EVENT_KIND = 'substrate_state';
 /** The `discovery_mode[p].bundle` a compiled world names (discovery/worldDiscoveryMode.js `ACTION_NODES_BUNDLE`). */
 export const ACTION_NODES_DISCOVERY_BUNDLE = 'actionNodes';
 /** The `procgen_metadata[p].driver` a compiled world records. */
@@ -97,18 +106,82 @@ export function nodeExitsOf(graph, id) {
 /** A rule over the minimal combinations: Or of And(Has(item, n)…); an empty combination is True. */
 function ruleOf(model, combos) {
     if (combos.some((c) => c.every((n) => n === 0))) return makeTrueRule();
+    const names = logicItemNamesOf(model);
     return makeOrRule(combos.map((c) => makeAndRule(
-        model.boons.flatMap((b, i) => (c[i] > 0 ? [makeHasRule(b.name, c[i])] : [])),
+        names.flatMap((name, i) => (c[i] > 0 ? [makeHasRule(name, c[i])] : [])),
     )));
 }
 
-const satisfies = (combos, held) => combos.some((c) => c.every((n, i) => n <= held[i]));
+const satisfies = (combos, held) => combos.some((c) => c.every((n, i) => n <= (held[i] ?? 0)));
+
+/**
+ * Close a held vector (boons, then knowledge) over the knowledge flags: a flag is held once some node that teaches
+ * it is performable with what is held — its event location is in logic. Repeated to a fixed point, because a flag
+ * may be what makes another flag's teacher performable. Mutates and returns `held`.
+ */
+export function closeKnowledge(model, logic, held) {
+    const B = model.boons.length;
+    for (let grew = true; grew;) {
+        grew = false;
+        (model.knowledge ?? []).forEach((flag, k) => {
+            if (held[B + k]) return;
+            if (flag.learners.some((l) => satisfies(logic.perform[l].map((w) => w.items), held))) { held[B + k] = 1; grew = true; }
+        });
+    }
+    return held;
+}
+
+/**
+ * How many times the assumed fill is tried before the compile is refused (`fill-failed`). The fill is one random
+ * draw over the open checks at each step, so a graph with few checks open at the start can paint itself into a corner
+ * on one draw and not on the next. Measured (AN-OMSI-1) on the omsi first-town test fixture (20 nodes, 18 checks, 5
+ * open with no items): seeds 1–20, attempt 1 fills 6 and every seed fills by attempt 6; seeds 1–200, attempt 1 fills
+ * 120, every seed fills, the worst needs 6 and the mean is 1.61. An attempt costs one fill, not a search (the logic is
+ * derived once), so the default sits far past the worst measured. A graph whose first attempt fills (the example)
+ * never draws another.
+ */
+export const DEFAULT_FILL_ATTEMPTS = 32;
+
+/** The stream retries draw from is not the fill's own: mixed so it never replays attempt 1's draws. */
+const FILL_RETRY_STREAM = 0x5bd1e995;
+
+/**
+ * The seed of each fill attempt. Attempt 1 is `seed` itself, so a world that fills first time is byte-identical to
+ * one compiled before retries existed; attempts 2.. draw their seeds from a separate stream derived from `seed`.
+ * @returns {number[]} `attempts` seeds
+ */
+export function fillAttemptSeeds(seed, attempts) {
+    const stream = createRng((seed ^ FILL_RETRY_STREAM) | 0);
+    const seeds = [seed];
+    while (seeds.length < attempts) seeds.push(Math.floor(stream.next() * 0x100000000) | 0);
+    return seeds;
+}
+
+/**
+ * The assumed fill, tried up to `attempts` times (seeds from `fillAttemptSeeds`). Refused by name, with the number of
+ * attempts made, when every attempt fails.
+ * @returns {{placement: Map<number, number>, attempt: number, seed: number}}
+ */
+export function fillWithRetries(model, logic, pool, progression, seed, attempts = DEFAULT_FILL_ATTEMPTS) {
+    let last = null;
+    const seeds = fillAttemptSeeds(seed, attempts);
+    for (let k = 0; k < seeds.length; k += 1) {
+        try {
+            return { placement: assumedFill(model, logic, pool, progression, seeds[k]), attempt: k + 1, seed: seeds[k] };
+        } catch (e) {
+            if (e?.code !== ACTION_COMPILE_REFUSALS.FILL_FAILED) throw e;
+            last = e;
+        }
+    }
+    throw new ActionCompileError(ACTION_COMPILE_REFUSALS.FILL_FAILED,
+        `${seeds.length} fill attempt${seeds.length === 1 ? '' : 's'} failed; the last: ${last.message.replace(/^\[[^\]]*\] /, '')}`);
+}
 
 /**
  * The item pool, one entry per copy: every boon `count` times, then the filler boon to match the check count.
  * @returns {number[]} boon indices
  */
-function itemPoolOf(model, graph) {
+export function itemPoolOf(model, graph) {
     const pool = model.boons.flatMap((b, i) => Array.from({ length: b.count }, () => i));
     const short = model.checkIndices.length - pool.length;
     if (short > 0) {
@@ -119,25 +192,38 @@ function itemPoolOf(model, graph) {
 }
 
 /**
+ * The boon indices any derived rule names: the progression items. A knowledge dimension (index ≥ the boon count) is
+ * an event item, never in the pool, and is not listed. `model` absent: every index (the old one-argument call).
+ */
+export function progressionOf(logic, model = null) {
+    const progression = new Set();
+    const B = model ? model.boons.length : Infinity;
+    for (const rows of [...logic.perform.map((ws) => ws.map((w) => w.items)), ...logic.reach]) {
+        for (const c of rows) c.forEach((n, i) => { if (n > 0 && i < B) progression.add(i); });
+    }
+    return progression;
+}
+
+/**
  * Assumed fill over the derived rules: each progression copy goes to an empty check that is in logic with every copy
  * not yet placed, plus whatever the placed copies then unlock; the rest go to the remaining checks. Seeded and
  * deterministic.
  * @returns {Map<number, number>} check node index → boon index
  */
-function assumedFill(model, logic, pool, progression, seed) {
+export function assumedFill(model, logic, pool, progression, seed) {
     const rng = createRng(seed);
     const checks = model.checkIndices;
     const placed = new Map();
     const prog = rng.shuffle(pool.filter((b) => progression.has(b)));
     const rest = pool.filter((b) => !progression.has(b));
     const vectorOf = (copies) => {
-        const v = model.boons.map(() => 0);
+        const v = [...model.boons.map(() => 0), ...(model.knowledge ?? []).map(() => 0)];
         for (const b of copies) v[b] += 1;
         return v;
     };
     while (prog.length) {
         const item = prog.pop();
-        const held = vectorOf(prog);
+        const held = closeKnowledge(model, logic, vectorOf(prog));
         let grew = true;
         const collected = new Set();
         while (grew) {
@@ -148,6 +234,7 @@ function assumedFill(model, logic, pool, progression, seed) {
                 held[b] += 1;
                 grew = true;
             }
+            if (grew) closeKnowledge(model, logic, held);
         }
         const open = checks.filter((c) => !placed.has(c) && satisfies(logic.perform[c].map((w) => w.items), held));
         if (!open.length) {
@@ -183,6 +270,15 @@ function payloadOf(graph, model, id, { locationName, exits }) {
         after: (n.after ?? []).map((set) => [...set]),
         exits,
     };
+    // AN-TIME-1: each written only when the node has it, so a graph without windows or knowledge compiles to exactly
+    // the bytes it did before.
+    if (n.window) payload.window = { ...n.window };
+    if (n.requires?.knowledge) {
+        payload.requires.knowledge = Object.fromEntries(n.requires.knowledge.map((k) => [k, { name: graph.knowledge[k].name }]));
+    }
+    if (n.results?.learns) {
+        payload.results.learns = Object.fromEntries(n.results.learns.map((k) => [k, { name: graph.knowledge[k].name }]));
+    }
     if (locationName) payload.location = locationName;
     if (n.position) payload.position = { ...n.position };
     return payload;
@@ -194,6 +290,7 @@ function payloadOf(graph, model, id, { locationName, exits }) {
  * @param {object} [opts]
  * @param {number} [opts.playerId=1]
  * @param {number} [opts.seed=1]
+ * @param {number} [opts.fillAttempts=DEFAULT_FILL_ATTEMPTS] - fill attempts before `fill-failed` (`fillAttemptSeeds`)
  * @param {number} [opts.budget] - the one-loop state budget
  * @param {string} [opts.graphPath] - where the graph lives, recorded in `procgen_metadata[p]`
  * @param {string[]|null} [opts.exists] - the content packs the graph is the resolved structure of (`frontend/packs/`
@@ -203,6 +300,7 @@ function payloadOf(graph, model, id, { locationName, exits }) {
  */
 export function compileActionGraph(graph, {
     playerId = 1, seed = 1, budget = DEFAULT_STATE_BUDGET, graphPath = null, exists = null,
+    fillAttempts = DEFAULT_FILL_ATTEMPTS,
 } = {}) {
     const model = buildActionModel(graph);
     const logic = deriveActionLogic(model, { budget });
@@ -222,13 +320,10 @@ export function compileActionGraph(graph, {
         }
     });
 
-    // Items: progression when any derived rule names them.
-    const progression = new Set();
-    for (const rows of [...logic.perform.map((ws) => ws.map((w) => w.items)), ...logic.reach]) {
-        for (const c of rows) c.forEach((n, i) => { if (n > 0) progression.add(i); });
-    }
+    const progression = progressionOf(logic, model);
     const pool = itemPoolOf(model, graph);
-    const placement = assumedFill(model, logic, pool, progression, seed);
+    const fill = fillWithRetries(model, logic, pool, progression, seed, fillAttempts);
+    const placement = fill.placement;
 
     const ns = namespaceNamed('action-nodes');
     const goalNode = model.nodes[model.goalIndex];
@@ -244,6 +339,8 @@ export function compileActionGraph(graph, {
         rules.player_names = { [p]: 'Player1' };
     }
     rules.world[p].world_directory = ACTION_NODES_GAME.gameDirectory;
+    // The mystery page's bridge (AN-MYST-1): only a graph that declares a mystery link carries it.
+    if (graph.mystery) rules.world[p].slot_data = { mystery: mysterySlotDataOf(graph) };
     rules.game_info[p] = { completion_condition: { type: 'item_check', item: GOAL_ITEM } };
     // ⛓ The world LISTS its back-exits (the reverse exits below), so it states that none may be assumed. `true` would
     // let consumers construct a back-exit for every listed exit — `start -> Menu` included, which does not exist (the
@@ -276,6 +373,18 @@ export function compileActionGraph(graph, {
             }
             locations.push(loc);
         }
+        // Knowledge: one event location per flag this node teaches, in the flag's table order.
+        for (const k of [...node.learns].sort((a, b) => a - b)) {
+            const flag = model.knowledge[k];
+            const ev = makeLocation(knowledgeLocationNameOf(node.name, flag.name), null, ruleOf(model, logic.perform[i].map((w) => w.items)));
+            ev.item = { name: knowledgeItemNameOf(flag.name), player: Number(p), advancement: true, type: 'None' };
+            ev.locked = true;
+            ev.event = true;
+            // AN-TIME-2: learned by PERFORMING the node, so the state manager must not collect it on reach
+            // (stateManager/core/eventKinds.js); the runtime collects it on the action.
+            ev.event_kind = KNOWLEDGE_EVENT_KIND;
+            locations.push(ev);
+        }
         regions[id] = makeRegion(id, exitsOut, locations);
         sidecars[id] = {
             substrate: ACTION_NODES_SUBSTRATE_ID,
@@ -304,8 +413,16 @@ export function compileActionGraph(graph, {
         };
     });
     itemsTable[GOAL_ITEM] = { name: GOAL_ITEM, id: itemIds.get(GOAL_ITEM), groups: [], classification: 'progression', type: null, max_count: 1 };
+    // Knowledge event items (no AP id, the shape every world's events have): one copy per teaching node.
+    const eventCounts = {};
+    for (const flag of model.knowledge) {
+        if (!flag.learners.length) continue;
+        const name = knowledgeItemNameOf(flag.name);
+        itemsTable[name] = { name, id: null, groups: ['Event'], classification: 'progression', event: true, type: 'Event', max_count: flag.learners.length };
+        eventCounts[name] = flag.learners.length;
+    }
     rules.items[p] = itemsTable;
-    rules.itempool_counts[p] = { ...poolCounts, [GOAL_ITEM]: 1 };
+    rules.itempool_counts[p] = { ...poolCounts, [GOAL_ITEM]: 1, ...eventCounts };
     rules.preset_sidecars = { [p]: sidecars };
 
     // The per-world block the runtime reads (design §1, "Per world").
@@ -320,7 +437,7 @@ export function compileActionGraph(graph, {
     }
     rules.sphere_log = sphereLog;
 
-    const report = proofReportOf(graph, model, logic, sphereLog, { p, placement, progression, budget });
+    const report = proofReportOf(graph, model, logic, sphereLog, { p, placement, progression, budget, fill });
     rules.procgen_metadata = {
         [p]: {
             driver: ACTION_GRAPH_DRIVER,
@@ -342,6 +459,36 @@ export function compileActionGraph(graph, {
     // discovery module's `actionNodes` bundle (worldDiscoveryMode.js). Per world: no other world sees it.
     rules.discovery_mode = { [p]: { enabled: true, bundle: ACTION_NODES_DISCOVERY_BUNDLE } };
     return { rules, report };
+}
+
+/**
+ * ⚑ PENDING (superseded by Robert's 2026-11-26 ruling: page questions are the locations, q.who the goal; the
+ * world-side goal is AN-MYST-2). Until then a mystery-linked world names NO location for any page question, so the
+ * page's `mystery:questionSolved` maps to nothing and the host drops it silently (mysteryArchipelagoLogic.js
+ * `handleQuestionSolved`: no check, no state sent back), and the goal is still the goal node's to check. AN-MYST-2
+ * fills this map from the graph's questions (and rules from the case export), which is a compiler change plus a
+ * re-record of every mystery-linked preset.
+ */
+export const MYSTERY_QUESTION_LOCATIONS_PENDING = Object.freeze({});
+
+/**
+ * `slot_data.mystery` for a graph with a mystery link (actionGraph.js `validateMysteryLink`): the case's own story,
+ * version and case directory, its goal question, the question locations (⚑ PENDING, above), and each paper boon's
+ * item name mapped to the case's paper id. The mystery host (mysteryArchipelago) reads it: the page is framed for the
+ * case, the papers held are the received items by `items`, and a page of another version is refused.
+ */
+export function mysterySlotDataOf(graph) {
+    const m = graph.mystery;
+    const items = {};
+    for (const [boonId, paperId] of Object.entries(m.papers)) items[graph.boons[boonId].name] = paperId;
+    return {
+        story: m.story,
+        version: m.version,
+        case: m.case,
+        goal: m.goal.question,
+        locations: { ...MYSTERY_QUESTION_LOCATIONS_PENDING },
+        items,
+    };
 }
 
 /**
@@ -372,6 +519,11 @@ export function actionNodesBlockOf(graph, model = buildActionModel(graph)) {
         goal: model.nodes[model.goalIndex].id,
         action: ACT_ACTION,
         settings: resolvedSettingsOf(graph),
+        // AN-TIME-1: only when the graph has them (byte identity for every older graph).
+        ...(graph.clock ? { clock: { ...graph.clock } } : {}),
+        // AN-TIME-2: the pool's display name, only when the graph names one.
+        ...(graph.pool ? { pool: { ...graph.pool } } : {}),
+        ...(graph.knowledge ? { knowledge: Object.fromEntries(Object.entries(graph.knowledge).map(([k, v]) => [k, { name: v.name, item: knowledgeItemNameOf(v.name) }])) } : {}),
     };
 }
 
@@ -398,7 +550,7 @@ function loopCostsOf(graph, model, settings) {
 }
 
 /** The logic and A6 report recorded in `procgen_metadata[p].action_logic`. */
-function proofReportOf(graph, model, logic, sphereLog, { p, placement, progression, budget }) {
+function proofReportOf(graph, model, logic, sphereLog, { p, placement, progression, budget, fill }) {
     const ruleText = (combos) => (combos.some((c) => c.every((n) => n === 0)) ? 'True'
         : combos.map((c) => Object.entries(combinationByName(model, c)).map(([k, n]) => (n > 1 ? `Has(${k}, ${n})` : `Has(${k})`)).join(' & ')).join(' | '));
     const targets = {};
@@ -420,10 +572,11 @@ function proofReportOf(graph, model, logic, sphereLog, { p, placement, progressi
     // useful item would be missing from it.
     const spheres = [];
     {
-        const held = model.boons.map(() => 0);
+        const held = [...model.boons.map(() => 0), ...model.knowledge.map(() => 0)];
         const done = new Set();
         const targetsOf = [...model.checkIndices, model.goalIndex];
         for (;;) {
+            closeKnowledge(model, logic, held);
             const open = targetsOf.filter((i) => !done.has(i) && satisfies(logic.perform[i].map((w) => w.items), held));
             if (!open.length) break;
             spheres.push({ sphere: spheres.length, open_at_once: open.length, checks: open.map((i) => model.nodes[i].name) });
@@ -444,7 +597,16 @@ function proofReportOf(graph, model, logic, sphereLog, { p, placement, progressi
         targets,
         exits,
         placements: Object.fromEntries([...placement].map(([c, b]) => [model.nodes[c].name, model.boons[b].name])),
+        // Only when a retry was needed: a world that filled first time keeps the bytes it had before retries existed.
+        ...(fill.attempt > 1 ? { fill: { attempt: fill.attempt, seed: fill.seed } } : {}),
         progression_items: [...progression].map((i) => model.boons[i].name).sort(),
+        ...(model.knowledge.length ? {
+            knowledge: Object.fromEntries(model.knowledge.map((flag) => [knowledgeItemNameOf(flag.name), {
+                learners: flag.learners.map((l) => model.nodes[l].id),
+                rule: ruleText(minimalCombinations(flag.learners.flatMap((l) => logic.perform[l].map((w) => w.items))
+                    .sort((a, b) => a.reduce((x, n) => x + n, 0) - b.reduce((x, n) => x + n, 0)))),
+            }])),
+        } : {}),
         a6: {
             every_check_earnable: true,
             sphere_log_reaches_goal: true,

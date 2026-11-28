@@ -1,0 +1,12 @@
+const ROOT = '/home/user/Archipelago-CC';
+import { readFileSync } from 'node:fs';
+const fx = JSON.parse(readFileSync(`${ROOT}/frontend/modules/seedlingDemo/fixtures/kt-arrival/A1-29-11.request.json`, 'utf8'));
+const { restoreRequest } = await import(`${ROOT}/scripts/procgen/seedlingSolveRequestCodec.js`);
+const { atlasLevelSource } = await import(`${ROOT}/frontend/modules/seedlingDemo/levelSource.js`);
+const { solveAnytime, ANYTIME_PASSES } = await import(`${ROOT}/frontend/modules/seedlingDemo/jsRuntimeSolver.js`);
+const { passes = ANYTIME_PASSES, ...tape } = restoreRequest(fx.request);
+const base = atlasLevelSource();
+const own = new Map(fx.levels.map(([k, v]) => [k, restoreRequest(v)]));
+const levelSource = (level) => own.get(level) ?? base(level);
+const a = solveAnytime({ ...tape, levelSource }, { passes });
+console.log(JSON.stringify({ ok: a.ok, work: a.work, ticks: a.ok ? a.plan.solution.length : null, msg: a.ok ? null : String(a.message).slice(0, 200), passes: a.passes?.map(({ ms, ...p }) => p) }));
