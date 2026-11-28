@@ -31,6 +31,7 @@
     "solverEnvChannel.js",
     "spaceTimeReach.js",
     "spearArm.js",
+    "spearPressGateWait.js",
     "stagedHuntScanMemo.js",
     "strategySwitch.js",
     "strikePolicy.js",
@@ -1217,10 +1218,10 @@
         "botDriverV2.js": 27,
         "director.js": 1,
         "lightsVerb.js": 5,
-        "solverBot.js": 186,
+        "solverBot.js": 187,
         "strikePolicy.js": 2
       },
-      "sites": 221,
+      "sites": 222,
       "seen": "both",
       "via": [
         "direct",
@@ -1277,7 +1278,7 @@
         },
         "slashInfo": {
           "lightsVerb.js": 1,
-          "solverBot.js": 12,
+          "solverBot.js": 13,
           "strikePolicy.js": 1
         },
         "takenPickups": {
