@@ -28,6 +28,7 @@ import { squareAt } from '../../regionMap/regionMapOverlay.js';
 import { linkShape } from '../../regionMap/regionMapLinkGeometry.js';
 import { exitTileOf } from '../../regionMap/regionMapModel.js';
 import { exitDirections } from '../../regionGraph/directionLayout.js';
+import { seedlingExitLayoutKind } from '../../flashPanel/seedlingExitKind.js';
 import mobileLayoutManager from '../../../app/core/mobileLayoutManager.js';
 import { completeModuleInfo } from '../../../app/initialization/completeModuleInfo.js';
 import { lookupModuleInfo } from '../../quickLaunch/quickLaunchCatalog.js';
@@ -674,6 +675,43 @@ async function mazeCellsLeg(testController, ctx) {
   const { counts } = exitDirections({ sidecars: sc, model: m, tileOf: exitTileOf });
   testController.reportCondition(`every maze exit has a direction off the panel's model (${counts.withDirection}/${counts.exits})`,
     counts.exits > 0 && counts.withDirection === counts.exits);
+  await mazeArrivalLeg(testController, sc);
+}
+
+/**
+ * ⛓ maze-arrival-spawns: the maze's `layoutGraph` (through the registry, as the panels reach it) on BOTH kinds of maze
+ * world. The loaded generated world (procgen_topdown) carries no `arrivalTile`, and every exit keeps the generated rule
+ * (a `join` along its own `side`, a `warp` when a teleporter). seedling_playthrough_maze — FETCHED as JSON, never loaded
+ * (the row's world stays) — carries an `arrivalTile` on every cross-level exit, and its stairs / pits are `down` / `up`
+ * exactly where Seedling's own `seedlingExitLayoutKind` says so. Counts derived from the two rules files.
+ */
+async function mazeArrivalLeg(testController, sc) {
+  const t0 = performance.now();
+  const layoutGraph = substrateRegistry.get('maze')?.compositeMap?.layoutGraph;
+  const maze = (sidecars) => Object.fromEntries(Object.entries(sidecars).filter(([, v]) => v?.substrate === 'maze'));
+  const gen = maze(sc);
+  const genExits = Object.values(gen).flatMap((v) => (v.playable_payload?.exits ?? []).filter((e) => gen[e.targetRegion]));
+  const genLinks = layoutGraph ? layoutGraph({ sidecars: gen }).links : [];
+  const genOk = genExits.every((e) => !e.arrivalTile && e.side)
+    && genLinks.every((l) => (l.kind === 'join' && ['N', 'E', 'S', 'W'].includes(l.dir)) || (l.kind === 'warp' && l.dir === null));
+  testController.reportCondition(`generated maze exits: no arrivalTile, and the generated rule (${genLinks.length} links)`,
+    typeof layoutGraph === 'function' && genLinks.length > 0 && genOk);
+  let pt = null;
+  try {
+    const res = await fetch('./presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', { cache: 'no-store' });
+    pt = res.ok ? await res.json() : null;
+  } catch { pt = null; }
+  const atl = maze(pt?.preset_sidecars?.['1'] ?? {});
+  const exits = Object.entries(atl).flatMap(([n, v]) => (v.playable_payload?.exits ?? [])
+    .filter((e) => atl[e.targetRegion] && !String(e.atlas_exit_id).startsWith('cross_')).map((e) => ({ n, e })));
+  const withArrival = exits.filter(({ e }) => e.arrivalTile).length;
+  const links = layoutGraph && pt ? layoutGraph({ sidecars: atl }).links : [];
+  const stairsWant = exits.filter(({ e }) => seedlingExitLayoutKind(e.atlas_exit_id) !== 'join').length;
+  const stairsGot = links.filter((l) => l.kind === 'down' || l.kind === 'up').length;
+  const ms = Math.round(performance.now() - t0);
+  testController.log(`MAZE ARRIVALS: generated ${genLinks.length} links; seedling_playthrough_maze ${withArrival}/${exits.length} exits with arrivalTile, ${links.length} links, stairs ${stairsGot}/${stairsWant}, kinds ${JSON.stringify(links.reduce((c, l) => ({ ...c, [l.kind]: (c[l.kind] ?? 0) + 1 }), {}))}, ${ms} ms`);
+  testController.reportCondition(`seedling_playthrough_maze: every cross-level exit has an arrivalTile (${withArrival}/${exits.length}), its stairs/pits are down/up as Seedling's rule says (${stairsGot}/${stairsWant})`,
+    exits.length > 0 && withArrival === exits.length && links.length === exits.length && stairsWant > 0 && stairsGot === stairsWant);
 }
 
 /**
@@ -1412,7 +1450,7 @@ registerTest({
   category: 'Region Map',
   testFunction: testRegionMapZoomPinchLinks,
   enabled: false,
-  description: 'zoom-links: + and − zoom by ZOOM_BUTTON_FACTOR and untick Follow; a two-pointer pinch zooms by the distance ratio and fires no click; the neighbour lines drawn are the model\'s, counted apart from the cross-group links, under the Links box; link-ends: gap marks / border-clipped lines / arrowheads as linkShape says; maze-hooks: every maze cell has its level\'s extent and frame (sized by level), a substrate square per location, and every maze exit a direction',
+  description: 'zoom-links: + and − zoom by ZOOM_BUTTON_FACTOR and untick Follow; a two-pointer pinch zooms by the distance ratio and fires no click; the neighbour lines drawn are the model\'s, counted apart from the cross-group links, under the Links box; link-ends: gap marks / border-clipped lines / arrowheads as linkShape says; maze-hooks: every maze cell has its level\'s extent and frame (sized by level), a substrate square per location, and every maze exit a direction; maze-arrival-spawns: generated maze exits keep the generated rule, and seedling_playthrough_maze (fetched) has an arrivalTile on every cross-level exit and its stairs/pits down/up by Seedling\'s rule',
 });
 registerTest({
   id: 'region-map-mobile-tab',
