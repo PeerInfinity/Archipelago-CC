@@ -1,0 +1,12 @@
+# W72: the test rows the NAMED fix (dropRock's `queueDeadPulserFramesNow(frames, 'a rope\'s rock')` removed) moves.
+# Scratch: patched, run, restored. Base (unpatched): every file below green.
+## the 37 fast files that name pulserDeadFrameUpdate (npx vitest run <files> --maxWorkers=3): 4 rows red, 816 green
+fidelityDeadFrame2.test.js:174  'move only the Pulser's ledger (and r5-shaft-control's spinner write)…' — the mover list loses r5-shaft-control and hammer-d-l39-ghostwall
+fidelityDeadFrame2.test.js:182  'r5-shaft-control: the spinner's pulse kill — … ON 1207' — ON becomes 1397 (the game on the rock set: 1396 sample / 1397 stamp)
+fidelitySpinnerPulse.test.js     'kill write: [rock OFF, rock pulserDeadFrameUpdate ON, …]' — rock ON 1207 → 1397 (by design: this row pins the defect)
+fidelitySpinnerPulse.test.js     'the double step: …' — ON's firstPulse 205 → 198, its rope-rock queue empty (by design)
+## fidelityDeadFrame2.slow.test.js (vitest.slow.config.js, alone): 2 rows red (both are the 7-tape mover list; it becomes 5)
+'only the Pulser's movers move, and only in its ledgers (alone)'
+'only the Pulser's movers move, and only in its ledgers (beside the last OFF keys)'
+## class: all four game-witnessed re-records (the game on the rock set agrees with the fixed ON arm), none OFF-contract,
+## no solver re-plan; acceptance md5 unmoved (acceptance-md5.txt).

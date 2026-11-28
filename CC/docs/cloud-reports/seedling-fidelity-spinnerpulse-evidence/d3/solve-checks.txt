@@ -1,0 +1,8 @@
+solve-seedling-r8-battery --check: exit 0 | all checks green
+solve-seedling-r8-d2-chain --check: exit 0 | all checks green
+solve-seedling-r8-l18 --check: exit 0 | all checks green
+solve-seedling-r8-tail --check: exit 0 | all checks green
+solve-seedling-r9-l3 --check: exit 0 | all checks green
+solve-seedling-r9-campaign --check: exit 0 | all checks green
+census-seedling-constants.mjs --check: exit 0 | PASS
+census-seedling-solver-surface.mjs --check: exit 0 | GREEN: 375 rows match a fresh census
