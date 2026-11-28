@@ -13,10 +13,10 @@ import {
   edgePreferences, directionLayout, overlapCount, angleErrors,
 } from './directionLayout.js';
 import {
-  DUNGEON_GROUPING_KEY, DUNGEON_GROUP_STRENGTH_KEY, DUNGEON_GROUPING_SCHEMA, DUNGEON_GROUPING_LABELS,
-  DUNGEON_GROUP_STRENGTH_SCHEMA, normaliseGroupingSettings, groupedDirectionLayout, dungeonReader, dungeonsOf,
+  FLOOR_GROUPING_KEY, FLOOR_GROUP_STRENGTH_KEY, FLOOR_GROUPING_SCHEMA, FLOOR_GROUPING_LABELS,
+  FLOOR_GROUP_STRENGTH_SCHEMA, normaliseGroupingSettings, groupedDirectionLayout, floorGroupReader, floorGroupsOf,
   mixingCount, blockCheck, blockPad, groupingDrawsBoxes,
-} from './dungeonGroups.js';
+} from './floorGroups.js';
 import {
   FLOOR_GAP_KEY, FLOOR_GAP_SCHEMA, normaliseFloorGap, verticalExits, verticalEdges,
 } from './floors.js';
@@ -28,9 +28,9 @@ const nowMs = () => (typeof performance !== 'undefined' ? performance.now() : Da
 export const DIRECTION_SETTING_KEYS = Object.freeze({
   strength: DIRECTION_STRENGTH_KEY, spacing: DIRECTION_SPACING_KEY, exits: DIRECTION_EXITS_KEY,
 });
-/** ⛓ region-graph-dungeon-groups: the dungeon grouping's two settings' keys, by field. */
+/** ⛓ region-graph-dungeon-groups: the floor grouping's two settings' keys, by field. */
 export const GROUPING_SETTING_KEYS = Object.freeze({
-  grouping: DUNGEON_GROUPING_KEY, groupStrength: DUNGEON_GROUP_STRENGTH_KEY,
+  grouping: FLOOR_GROUPING_KEY, groupStrength: FLOOR_GROUP_STRENGTH_KEY,
   // ⛓ region-graph-floors: the two-step values' floor gap.
   floorGap: FLOOR_GAP_KEY,
 });
@@ -38,7 +38,7 @@ export const GROUPING_SETTING_KEYS = Object.freeze({
 export const groupingUsesFloors = (grouping) => grouping === 'twoStep' || grouping === 'twoStepBoxes';
 const DIRECTION_KEY_SET = new Set([...Object.values(DIRECTION_SETTING_KEYS), ...Object.values(GROUPING_SETTING_KEYS)]);
 /**
- * Is `key` one of the Direction-aware layout's settings, its dungeon grouping's included (a write re-runs that layout
+ * Is `key` one of the Direction-aware layout's settings, its floor grouping's included (a write re-runs that layout
  * if it is the one drawn, never rebuilds the graph)?
  */
 export const isDirectionSettingKey = (key) => DIRECTION_KEY_SET.has(key);
@@ -83,16 +83,16 @@ export class LayoutControlsManager {
               ${Object.entries(DIRECTION_EXITS_LABELS).map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
             </select>
           </label>
-          <label style="display: block; margin: 3px 0;" title="${DUNGEON_GROUPING_SCHEMA.description}">
-            <span style="margin-right: 5px;">Dungeon grouping:</span>
-            <select id="dungeonGrouping" style="padding: 2px;">
-              ${Object.entries(DUNGEON_GROUPING_LABELS).map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
+          <label style="display: block; margin: 3px 0;" title="${FLOOR_GROUPING_SCHEMA.description}">
+            <span style="margin-right: 5px;">Floor grouping:</span>
+            <select id="floorGrouping" style="padding: 2px;">
+              ${Object.entries(FLOOR_GROUPING_LABELS).map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
             </select>
           </label>
-          <label style="display: block; margin: 3px 0;" title="${DUNGEON_GROUP_STRENGTH_SCHEMA.description}">
-            <span style="margin-right: 5px;">Dungeon pull:</span>
-            <input type="range" id="dungeonGroupStrength" min="${DUNGEON_GROUP_STRENGTH_SCHEMA.minimum}" max="${DUNGEON_GROUP_STRENGTH_SCHEMA.maximum}" step="0.05" value="${DUNGEON_GROUP_STRENGTH_SCHEMA.default}" style="width: 90px; vertical-align: middle;">
-            <span id="dungeonGroupStrengthValue" style="font-size: 11px;">${DUNGEON_GROUP_STRENGTH_SCHEMA.default}</span>
+          <label style="display: block; margin: 3px 0;" title="${FLOOR_GROUP_STRENGTH_SCHEMA.description}">
+            <span style="margin-right: 5px;">Floor pull:</span>
+            <input type="range" id="floorGroupStrength" min="${FLOOR_GROUP_STRENGTH_SCHEMA.minimum}" max="${FLOOR_GROUP_STRENGTH_SCHEMA.maximum}" step="0.05" value="${FLOOR_GROUP_STRENGTH_SCHEMA.default}" style="width: 90px; vertical-align: middle;">
+            <span id="floorGroupStrengthValue" style="font-size: 11px;">${FLOOR_GROUP_STRENGTH_SCHEMA.default}</span>
           </label>
           <label style="display: block; margin: 3px 0;" title="${FLOOR_GAP_SCHEMA.description}">
             <span style="margin-right: 5px;">Floor gap (px):</span>
@@ -421,11 +421,11 @@ export class LayoutControlsManager {
     const exits = panel?.querySelector?.('#directionExits');
     if (exits) exits.value = s.exits;
     const g = this.ui.groupingSettings ?? normaliseGroupingSettings();
-    const grouping = panel?.querySelector?.('#dungeonGrouping');
+    const grouping = panel?.querySelector?.('#floorGrouping');
     if (grouping) grouping.value = g.grouping;
-    const gs = panel?.querySelector?.('#dungeonGroupStrength');
+    const gs = panel?.querySelector?.('#floorGroupStrength');
     if (gs) gs.value = String(g.groupStrength);
-    const gsValue = panel?.querySelector?.('#dungeonGroupStrengthValue');
+    const gsValue = panel?.querySelector?.('#floorGroupStrengthValue');
     if (gsValue) gsValue.textContent = String(g.groupStrength);
     const fg = panel?.querySelector?.('#floorGap');
     if (fg) fg.value = String(g.floorGap ?? normaliseFloorGap());
@@ -451,13 +451,13 @@ export class LayoutControlsManager {
     strength?.addEventListener('change', (e) => save(DIRECTION_STRENGTH_KEY, parseFloat(e.target.value)));
     panel.querySelector('#directionSpacing')?.addEventListener('change', (e) => save(DIRECTION_SPACING_KEY, parseFloat(e.target.value)));
     panel.querySelector('#directionExits')?.addEventListener('change', (e) => save(DIRECTION_EXITS_KEY, e.target.value));
-    panel.querySelector('#dungeonGrouping')?.addEventListener('change', (e) => save(DUNGEON_GROUPING_KEY, e.target.value));
-    const gs = panel.querySelector('#dungeonGroupStrength');
+    panel.querySelector('#floorGrouping')?.addEventListener('change', (e) => save(FLOOR_GROUPING_KEY, e.target.value));
+    const gs = panel.querySelector('#floorGroupStrength');
     gs?.addEventListener('input', (e) => {
-      const v = panel.querySelector('#dungeonGroupStrengthValue');
+      const v = panel.querySelector('#floorGroupStrengthValue');
       if (v) v.textContent = String(e.target.value);
     });
-    gs?.addEventListener('change', (e) => save(DUNGEON_GROUP_STRENGTH_KEY, parseFloat(e.target.value)));
+    gs?.addEventListener('change', (e) => save(FLOOR_GROUP_STRENGTH_KEY, parseFloat(e.target.value)));
     panel.querySelector('#floorGap')?.addEventListener('change', (e) => save(FLOOR_GAP_KEY, parseFloat(e.target.value)));
     panel.querySelector('#runDirectionLayout')?.addEventListener('click', () => this.runDirectionLayout());
   }
@@ -480,8 +480,8 @@ export class LayoutControlsManager {
     const cy = this.ui.cy;
     const laid = cy.nodes().filter((n) => !n.hasClass('player') && !n.hasClass('location-node') && !isRegionGroupNode(n, 'box'));
     const got = this.ui.mapLook?.regionMapModel?.() ?? null;
-    // ⛓ region-graph-dungeon-groups: each node's dungeon = its DISPLAY region's Region Map group (`model.groupOf`).
-    const dungeonOf = this.dungeonOfNode(got?.model ?? null);
+    // ⛓ region-graph-dungeon-groups: each node's floor group = its DISPLAY region's Region Map group (`model.groupOf`).
+    const floorGroupOf = this.floorGroupOfNode(got?.model ?? null);
     const ids = new Set();
     const nodes = [];
     laid.forEach((n) => {
@@ -490,7 +490,7 @@ export class LayoutControlsManager {
       const parent = n.data('parent');
       const members = isRegionGroupNode(n, 'merged') ? (n.data('members') ?? []) : [n.data('regionName') ?? n.id()];
       ids.add(n.id());
-      nodes.push({ id: n.id(), w: w > 0 ? w : 64, h: h > 0 ? h : 49, members, group: parent ?? null, dungeon: dungeonOf(n) });
+      nodes.push({ id: n.id(), w: w > 0 ? w : 64, h: h > 0 ? h : 49, members, group: parent ?? null, floorGroup: floorGroupOf(n) });
     });
     const edges = [];
     cy.edges().forEach((e) => {
@@ -524,14 +524,14 @@ export class LayoutControlsManager {
   }
 
   /**
-   * ⛓ region-graph-dungeon-groups: the dungeon reader for drawn nodes over a Region Map `model` → `(node) → group id |
+   * ⛓ region-graph-dungeon-groups: the floor group reader for drawn nodes over a Region Map `model` → `(node) → group id |
    * null`. A merged / collapsed node by its `groupKey` (a display key); a region node (a sub-region in separate, a
    * nested / open box's member) by its rules region's display region. No model, or a node the model does not place
    * (the Menu node): null.
    */
-  dungeonOfNode(model) {
+  floorGroupOfNode(model) {
     if (!model) return () => null;
-    const r = dungeonReader(model);
+    const r = floorGroupReader(model);
     return (n) => {
       if (isRegionGroupNode(n, 'merged')) return r.ofKey(n.data('groupKey'));
       return r.ofRegion(n.data('regionName') ?? n.id());
@@ -562,16 +562,16 @@ export class LayoutControlsManager {
     const { positions, stats, blocks } = groupedDirectionLayout(nodes, withPrefs, { ...settings, ...grouping });
     const t2 = nowMs();
     const errors = angleErrors(edges, prefs, positions);
-    const dungeons = dungeonsOf(nodes);
+    const floorGroups = floorGroupsOf(nodes);
     const check = blocks ? blockCheck(nodes, positions, blockPad(settings.spacing)) : null;
     const report = {
       settings: { ...settings }, grouping: { ...grouping }, view: this.ui.subRegionView ?? null, nodeLook: this.ui.nodeLook ?? null,
       nodes: nodes.length, edges: edges.length, preferredEdges: prefs.size,
       inputsMs: t1 - t0, layoutMs: t2 - t1, totalMs: t2 - t0,
       overlaps: overlapCount(nodes, positions), meanAngleError: errors.mean, p90AngleError: errors.p90,
-      dungeons: dungeons.filter((d) => d.dungeon != null).length,
-      dungeonSizes: dungeons.filter((d) => d.dungeon != null).map((d) => d.members.length).sort((a, b) => b - a),
-      ungrouped: dungeons.filter((d) => d.dungeon == null).length,
+      floorGroups: floorGroups.filter((d) => d.floorGroup != null).length,
+      floorGroupSizes: floorGroups.filter((d) => d.floorGroup != null).map((d) => d.members.length).sort((a, b) => b - a),
+      ungrouped: floorGroups.filter((d) => d.floorGroup == null).length,
       mixing: mixingCount(nodes, positions),
       blockOverlaps: check ? check.blockOverlaps : null, intruders: check ? check.intruders : null,
       counts: counts ? { ...counts, twoOnOneSide: counts.twoOnOneSide.length, twoOnOneSideLevels: counts.twoOnOneSideLevels.length } : null,
@@ -582,13 +582,13 @@ export class LayoutControlsManager {
     return {
       report,
       positions,
-      // ⛓ the boxes to draw (twoStepBoxes): each dungeon of 2+ drawn nodes, its label the group's id.
+      // ⛓ the boxes to draw (twoStepBoxes): each floor group of 2+ drawn nodes, its label the group's id.
       boxes: groupingDrawsBoxes(grouping.grouping) && blocks
-        ? dungeons.filter((d) => d.dungeon != null && d.members.length >= 2).map((d) => ({
-          dungeon: d.dungeon,
+        ? floorGroups.filter((d) => d.floorGroup != null && d.members.length >= 2).map((d) => ({
+          floorGroup: d.floorGroup,
           // ⛓ region-graph-floors: the FLOOR's label; the group's root level id stays in `root` (the box's tooltip).
-          label: floors?.labels.get(d.dungeon) ?? String(d.dungeon),
-          root: String(d.dungeon),
+          label: floors?.labels.get(d.floorGroup) ?? String(d.floorGroup),
+          root: String(d.floorGroup),
           members: d.members,
         }))
         : [],
@@ -631,7 +631,7 @@ export class LayoutControlsManager {
     });
     // ⛓ region-graph-dungeon-groups: the boxes belong to THIS run (set after its `layoutstart`, which clears the old
     // ones); any later layout's start, or a rebuild, clears them. Empty unless grouping = twoStepBoxes.
-    this.ui.dungeonBoxes?.show?.(built.boxes);
+    this.ui.floorBoxes?.show?.(built.boxes);
     report.boxes = built.boxes.length;
     return report;
   }
@@ -1127,13 +1127,13 @@ export class LayoutControlsManager {
 /**
  * ⛓ region-graph-floors: the floors' measures for a report: the counts, the numbering (numbered / ranged / unreached /
  * contradictions, the spans: region-graph-floor-solver), and, at `positions`, the angle error of the FLAT edges (with a preference, no vertical link; split into
- * those inside one dungeon and those between two — a warp) and of the VERTICAL ones (their vertical direction), with
+ * those inside one floor group and those between two — a warp) and of the VERTICAL ones (their vertical direction), with
  * the flat and vertical mean centre-to-centre lengths.
  */
 function floorReport(floors, nodes, edges, prefs, positions, floorLinks) {
   const flat = edges.filter((e) => !floors.vertical.has(e.id));
-  const dungeonOf = new Map(nodes.map((n) => [String(n.id), n.dungeon ?? null]));
-  const inside = (e) => dungeonOf.get(String(e.source)) != null && dungeonOf.get(String(e.source)) === dungeonOf.get(String(e.target));
+  const floorGroupOf = new Map(nodes.map((n) => [String(n.id), n.floorGroup ?? null]));
+  const inside = (e) => floorGroupOf.get(String(e.source)) != null && floorGroupOf.get(String(e.source)) === floorGroupOf.get(String(e.target));
   const fin = angleErrors(flat.filter(inside), prefs, positions);
   const fx = angleErrors(flat.filter((e) => !inside(e)), prefs, positions);
   const vert = edges.filter((e) => floors.vertical.has(e.id));

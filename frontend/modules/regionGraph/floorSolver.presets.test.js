@@ -45,16 +45,16 @@ const { GraphDataManager } = await import('./graphDataManager.js');
 const { LayoutControlsManager, isDirectionSettingKey } = await import('./layoutControlsManager.js');
 const { MapLookLayer } = await import('./mapLookLayer.js');
 const { isRegionGroupNode, SUB_REGION_VIEW_SCHEMA } = await import('./subRegionGroups.js');
-const { DungeonBoxLayer, DUNGEON_BOX_CLASS } = await import('./dungeonBoxLayer.js');
+const { FloorBoxLayer, FLOOR_BOX_CLASS } = await import('./floorBoxLayer.js');
 const D = await import('./directionLayout.js');
-const G = await import('./dungeonGroups.js');
+const G = await import('./floorGroups.js');
 const kit = await import('./regionGraphElements.testkit.js');
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const cytoscape = kit.loadCytoscape();
 const digest = (positions) => createHash('sha256').update(D.positionsKey(positions)).digest('hex').slice(0, 16);
 const NODE_STYLE = [{ selector: 'node', style: { width: 60, height: 45, 'border-width': 2, shape: 'ellipse' } }];
-const VALUES = G.DUNGEON_GROUPING_SCHEMA.enum;
+const VALUES = G.FLOOR_GROUPING_SCHEMA.enum;
 
 /** A minimal DOM for the box layer (vitest runs in node): elements with style, dataset, children. */
 function fakeDoc() {
@@ -208,7 +208,23 @@ describe('⛓ the frozen presets', () => {
         expect([sol.floorOf.get('level_7'), sol.interval.get('level_7')]).toEqual([-1, [-1, -1]]);
         const labels = FS.floorLabels(sol);
         expect([labels.get('level_5'), labels.get('level_7'), labels.get('level_48'), labels.get('level_102')])
-            .toEqual(['Floor −2 · 1', 'Floor −1 · 9', 'Ground floor · 8', 'Floor +1 · 4']);
+            .toEqual(['Floor −2A', 'Floor −1I', 'Floor 0H', 'Floor +1D']);
+    });
+    // ⛓ region-graph-floor-rename-letters: a doorway never joins two groups (`groupsR1`), so the groups of one floor
+    // reached through doorways each get their OWN letter. Pinned: how many floors carry more than one letter.
+    it('the letters per floor on seedling_playthrough (merged): how many floors carry 2+ letters', () => {
+        const labels = FS.floorLabels(FS.solveFloors(get('seedling_playthrough', 'merged')));
+        const perFloor = new Map();
+        for (const l of labels.values()) {
+            const [, floor, letter] = /^(Floor .*?) ?([A-Z]+)$/.exec(l);
+            if (!perFloor.has(floor)) perFloor.set(floor, []);
+            perFloor.get(floor).push(letter);
+        }
+        const table = Object.fromEntries([...perFloor].map(([f, ls]) => [f, ls.length]));
+        expect(table).toEqual({ 'Floor +1': 4, 'Floor 0': 19, 'Floor −1': 10, 'Floor −2': 6, 'Floor −3': 2, 'Floor −4': 1, 'Floor −5': 1 });
+        expect([...perFloor.values()].filter((ls) => ls.length >= 2).length).toBe(5); // of 7 floors, 43 groups
+        // On each floor the letters run A, B, C, … with none skipped or repeated.
+        for (const ls of perFloor.values()) expect([...ls].sort((x, y) => x.length - y.length || (x < y ? -1 : 1))).toEqual(ls.map((_, k) => FS.floorLetter(k)));
     });
     it('writes the report tables when FLOOR_SOLVER_REPORT names a file', () => {
         const out = process.env.FLOOR_SOLVER_REPORT;

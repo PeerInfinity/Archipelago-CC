@@ -65,10 +65,16 @@
  * is the same in every alternative, so the picks shown are one consistent assignment. No drop set of ≤ MAX_DROP: drop
  * the first connection of each cycle met, in turn (greedy), and say so (`dropRule: 'greedy'`).
  *
- * ── 6. LABELS ───────────────────────────────────────────────────────────────────────────────────────────────────
- * "Ground floor", "Floor +1", "Floor −2" (U+2212); a range "Floor −3 to −1", "Floor 0 to +2"; unreached "Floor ?".
- * Groups sharing a label get " · k", k = their place in BFS discovery order from the start over the connections
- * (sorted ids); "Floor ?" never gets one.
+ * ── 6. LABELS (⛓ region-graph-floor-rename-letters) ──────────────────────────────────────────────────────────────
+ * ⚖ The user, session 84c8ab35, 2026-11-28T03:33:37.957Z: "I want to replace the number after the floor with a letter,
+ * to make it easier to read, like Floor 1A." — and (AskUserQuestion, 2026-11-28T03:38:16.825Z) "Floor 0A, Floor −1B":
+ * the ground floor is Floor 0, and EVERY group gets a letter, even the only one on its floor.
+ * The floor: "Floor 0", "Floor +1", "Floor −2" (U+2212; "+" kept so a floor above reads as the mirror of one below);
+ * a range "Floor −3 to −1", "Floor 0 to +2"; unreached "Floor ?". Then the LETTER (`floorLetter`: A … Z, AA, AB, …),
+ * k = the group's place, among the groups sharing that floor text, in BFS discovery order from the start over the
+ * connections (sorted ids; unreached groups, which BFS never meets, by id): "Floor 0A", "Floor −1B". A letter is glued
+ * to a single floor ("Floor −1B") but set off by a space after a range or "?" ("Floor −3 to −1 A", "Floor ? A"), so
+ * it never reads as belonging to the range's last floor alone.
  *
  * ⛔ DETERMINISTIC: sorted ids, fixed arc order; no clock, no `Math.random`. ⛔ PURE: no DOM, no Cytoscape, no substrate.
  */
@@ -502,35 +508,48 @@ export function floorAmbiguities(sol) {
 
 const signed = (n) => (n === 0 ? '0' : n > 0 ? `+${n}` : `−${-n}`);
 
-/** A floor number's name: 0 "Ground floor", +n "Floor +n", −n "Floor −n" (U+2212), none "Floor ?". */
+/** The k-th letter (k ≥ 0), spreadsheet-column style: 0 "A" … 25 "Z", 26 "AA", 27 "AB", … 701 "ZZ", 702 "AAA". */
+export function floorLetter(k) {
+    if (!Number.isInteger(k) || k < 0) throw new RangeError(`floorLetter: ${k} is not an index`);
+    let s = '';
+    for (let n = k + 1; n > 0; n = Math.floor((n - 1) / 26)) s = String.fromCharCode(65 + ((n - 1) % 26)) + s;
+    return s;
+}
+
+/** A floor number's name, without its letter: 0 "Floor 0", +n "Floor +n", −n "Floor −n" (U+2212), none "Floor ?". */
 export function floorName(n) {
     if (!Number.isInteger(n)) return 'Floor ?';
-    if (n === 0) return 'Ground floor';
     return `Floor ${signed(n)}`;
 }
 
-/** A range's name: "Floor −3 to −1", "Floor 0 to +2"; a one-floor range is that floor's name. */
+/** A range's name, without its letter: "Floor −3 to −1", "Floor 0 to +2"; a one-floor range is that floor's name. */
 export function floorRangeName(lo, hi) {
     if (!Number.isInteger(lo) || !Number.isInteger(hi)) return 'Floor ?';
     if (lo === hi) return floorName(lo);
     return `Floor ${signed(lo)} to ${signed(hi)}`;
 }
 
+/** A floor name plus its letter: glued to a single floor ("Floor 0A"), after a space for a range or "?" (§6). */
+export function withFloorLetter(name, k) {
+    const glued = /^Floor [0+−]\d*$/.test(name);
+    return `${name}${glued ? '' : ' '}${floorLetter(k)}`;
+}
+
 /**
  * Every group's label → `Map<group, label>` (§6): a pick's floor name, a ranged group's range, an unreached group
- * "Floor ?"; groups sharing a label (but "Floor ?") get " · k" by BFS discovery order.
+ * "Floor ?"; then each its letter among the groups sharing that name, in BFS discovery order (unreached: by id).
  */
 export function floorLabels(sol) {
     const base = new Map();
     for (const [g, n] of sol.floorOf) base.set(g, floorName(n));
     for (const [g, [lo, hi]] of sol.ranged) base.set(g, floorRangeName(lo, hi));
+    for (const g of sol.unreached) base.set(g, floorName(null));
     const byLabel = new Map();
     for (const [g, l] of base) { if (!byLabel.has(l)) byLabel.set(l, []); byLabel.get(l).push(g); }
     const out = new Map();
     for (const [l, gs] of byLabel) {
         gs.sort((a, b) => (sol.order.get(a) ?? Infinity) - (sol.order.get(b) ?? Infinity) || cmp(a, b));
-        gs.forEach((g, i) => out.set(g, gs.length > 1 && l !== 'Floor ?' ? `${l} · ${i + 1}` : l));
+        gs.forEach((g, i) => out.set(g, withFloorLetter(l, i)));
     }
-    for (const g of sol.unreached) out.set(g, floorName(null));
     return out;
 }

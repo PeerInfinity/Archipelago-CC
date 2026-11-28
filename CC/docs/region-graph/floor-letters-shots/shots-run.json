@@ -1,0 +1,141 @@
+{
+  "boot": "unbundled",
+  "base": "b6863466be",
+  "errors": [
+    "phone: SecurityError: Failed to read a named property from 'Window': Blocked a frame with origin \"http://localhost:8143\" from accessing a cross-origin frame.",
+    "phone: SecurityError: Failed to read a named property from 'Window': Blocked a frame with origin \"http://localhost:8143\" from accessing a cross-origin frame."
+  ],
+  "shots": {
+    "before": [
+      [
+        "Ground floor · 1",
+        "level_0"
+      ],
+      [
+        "Floor +1 · 4",
+        "level_102"
+      ],
+      [
+        "Floor −1 · 7",
+        "level_112"
+      ],
+      [
+        "Floor −3 · 2",
+        "level_19"
+      ],
+      [
+        "Floor −1 · 2",
+        "level_2"
+      ],
+      [
+        "Floor −1 · 3",
+        "level_21"
+      ],
+      [
+        "Ground floor · 8",
+        "level_48"
+      ],
+      [
+        "Floor −2 · 1",
+        "level_5"
+      ],
+      [
+        "Floor −2 · 4",
+        "level_8"
+      ],
+      [
+        "Floor −2 · 6",
+        "level_82"
+      ],
+      [
+        "Floor −1 · 10",
+        "level_85"
+      ]
+    ],
+    "beforeZoom": [
+      "Floor −1 · 7",
+      "Floor −1 · 2",
+      "Floor −1 · 3",
+      "Floor −1 · 10"
+    ],
+    "after": [
+      [
+        "Floor 0A",
+        "level_0"
+      ],
+      [
+        "Floor +1D",
+        "level_102"
+      ],
+      [
+        "Floor −1G",
+        "level_112"
+      ],
+      [
+        "Floor −3B",
+        "level_19"
+      ],
+      [
+        "Floor −1B",
+        "level_2"
+      ],
+      [
+        "Floor −1C",
+        "level_21"
+      ],
+      [
+        "Floor 0H",
+        "level_48"
+      ],
+      [
+        "Floor −2A",
+        "level_5"
+      ],
+      [
+        "Floor −2D",
+        "level_8"
+      ],
+      [
+        "Floor −2F",
+        "level_82"
+      ],
+      [
+        "Floor −1J",
+        "level_85"
+      ]
+    ],
+    "afterZoom": [
+      "Floor −1G",
+      "Floor −1B",
+      "Floor −1C",
+      "Floor −1J"
+    ]
+  },
+  "controls": {
+    "grouping": "Floor grouping: Off (as before) Soft pull together Two-step layout Two-step + boxes",
+    "pull": "Floor pull: 0.5",
+    "groupingTitle": "How the Direction-aware layout keeps each floor group (a Region Map group) together: not at all (none), a pull together and a push apart in one layout (soft), each floor group laid out alone and then placed as a block (twoStep), or that plus a labelled box round each floor group (twoStepBoxes)."
+  },
+  "phone": {
+    "labels": 11,
+    "sample": [
+      [
+        "Floor 0A",
+        "level_0"
+      ],
+      [
+        "Floor +1D",
+        "level_102"
+      ],
+      [
+        "Floor −1G",
+        "level_112"
+      ],
+      [
+        "Floor −3B",
+        "level_19"
+      ]
+    ],
+    "horizontalScroll": false
+  }
+}

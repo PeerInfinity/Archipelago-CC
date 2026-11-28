@@ -1,7 +1,7 @@
 /**
- * ⛓ FLOORS (region-graph-floors; `floors.js`, the floor links in `dungeonGroups.js`'s two-step block step, glue and
- * measures in `layoutControlsManager.js`, labels in `dungeonBoxLayer.js`). Over the FROZEN fixtures (rules AND the
- * Seedling atlases they were cut against, as `directionLayout.test.js` / `dungeonGroups.test.js`) and small synthetic
+ * ⛓ FLOORS (region-graph-floors; `floors.js`, the floor links in `floorGroups.js`'s two-step block step, glue and
+ * measures in `layoutControlsManager.js`, labels in `floorBoxLayer.js`). Over the FROZEN fixtures (rules AND the
+ * Seedling atlases they were cut against, as `directionLayout.test.js` / `floorGroups.test.js`) and small synthetic
  * models:
  *   · 1. the vertical-direction rule: an interior stair east of centre points east; one at the centre gives none;
  *   · 2. the floor labels on the frozen seedling_playthrough (the numbering itself: floorSolver.test.js);
@@ -47,16 +47,16 @@ const { GraphDataManager } = await import('./graphDataManager.js');
 const { LayoutControlsManager, isDirectionSettingKey } = await import('./layoutControlsManager.js');
 const { MapLookLayer } = await import('./mapLookLayer.js');
 const { isRegionGroupNode, SUB_REGION_VIEW_SCHEMA } = await import('./subRegionGroups.js');
-const { DungeonBoxLayer, DUNGEON_BOX_CLASS } = await import('./dungeonBoxLayer.js');
+const { FloorBoxLayer, FLOOR_BOX_CLASS } = await import('./floorBoxLayer.js');
 const D = await import('./directionLayout.js');
-const G = await import('./dungeonGroups.js');
+const G = await import('./floorGroups.js');
 const kit = await import('./regionGraphElements.testkit.js');
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const cytoscape = kit.loadCytoscape();
 const digest = (positions) => createHash('sha256').update(D.positionsKey(positions)).digest('hex').slice(0, 16);
 const NODE_STYLE = [{ selector: 'node', style: { width: 60, height: 45, 'border-width': 2, shape: 'ellipse' } }];
-const VALUES = G.DUNGEON_GROUPING_SCHEMA.enum;
+const VALUES = G.FLOOR_GROUPING_SCHEMA.enum;
 
 /** A minimal DOM for the box layer (vitest runs in node): elements with style, dataset, children. */
 function fakeDoc() {
@@ -187,23 +187,23 @@ describe('⛓ 2. floor numbers and labels (the numbering itself: floorSolver.tes
         expect(report.floors).toMatchObject({ numbered: 43, ranged: 0, unreached: 0, contradictions: 0, floorRange: [-5, 1], exact: true });
         expect(report.floors.spans).toEqual({ pick: 7, min: 7, max: 8 });
         const byRoot = Object.fromEntries(boxes.map((b) => [b.root, b.label]));
-        expect(byRoot.level_0).toBe('Ground floor · 1');
-        expect(byRoot.level_2).toBe('Floor −1 · 2');
-        expect(byRoot.level_48).toBe('Ground floor · 8'); // the BFS numbering's "Floor ?": entered by a doorway
+        expect(byRoot.level_0).toBe('Floor 0A');
+        expect(byRoot.level_2).toBe('Floor −1B');
+        expect(byRoot.level_48).toBe('Floor 0H'); // the BFS numbering's "Floor ?": entered by a doorway
         expect(boxes.length).toBe(11);
         // The DOM box keeps the root id.
-        ui.dungeonBoxes = new DungeonBoxLayer(ui, { doc });
-        ui.dungeonBoxes.show(boxes);
-        const el = ui.dungeonBoxes.boxes.find((b) => b.root === 'level_0').el;
-        expect([el.dataset.root, el.title]).toEqual(['level_0', 'Ground floor · 1 (level_0)']);
-        expect(ui.dungeonBoxes.report().find((b) => b.root === 'level_0').label).toBe('Ground floor · 1');
+        ui.floorBoxes = new FloorBoxLayer(ui, { doc });
+        ui.floorBoxes.show(boxes);
+        const el = ui.floorBoxes.boxes.find((b) => b.root === 'level_0').el;
+        expect([el.dataset.root, el.title]).toEqual(['level_0', 'Floor 0A (level_0)']);
+        expect(ui.floorBoxes.report().find((b) => b.root === 'level_0').label).toBe('Floor 0A');
         ui.mapLook.dispose();
     });
 });
 
 describe('⛓ 3. the floor gap', () => {
     it('synthetic: two floors joined by an east stair — a bigger gap puts the lower floor further away, still east', () => {
-        const nodes = [{ id: 'a1', w: 40, h: 30, dungeon: 'A' }, { id: 'a2', w: 40, h: 30, dungeon: 'A' }, { id: 'b1', w: 40, h: 30, dungeon: 'B' }];
+        const nodes = [{ id: 'a1', w: 40, h: 30, floorGroup: 'A' }, { id: 'a2', w: 40, h: 30, floorGroup: 'A' }, { id: 'b1', w: 40, h: 30, floorGroup: 'B' }];
         const edges = [
             { id: 'f', source: 'a1', target: 'a2', pref: { dx: 0, dy: 1, weight: 1 } },
             { id: 'v', source: 'a2', target: 'b1', vertical: { pref: { dx: 1, dy: 0, weight: 1 }, exits: 1 } },
@@ -241,7 +241,7 @@ describe('⛓ 3. the floor gap', () => {
 });
 
 describe('⛓ 4. what does not change', () => {
-    // Measured with the BASE files (001abda603's directionLayout / dungeonGroups / layoutControlsManager) swapped in.
+    // Measured with the BASE files (001abda603's directionLayout / floorGroups / layoutControlsManager) swapped in.
     const BASE = [
         ['seedling_playthrough', 'merged', 'map', '48510dda5cfe0ac1', '8bcb73cc31da688e', 'e6a0b61ec5dd74a0'],
         ['seedling_playthrough', 'separate', 'graph', 'a910c31693a7a238', 'c3501f925c63c8c3', 'f10c595e676026be'],
@@ -265,7 +265,7 @@ describe('⛓ 4. what does not change', () => {
         for (const floorGap of [0, 160, 600]) expect(digest(layout(lcm, 'twoStep', { floorGap }).positions)).toBe('8761ce1d6ebe287a');
         const { boxes } = layout(lcm, 'twoStepBoxes');
         // ⛓ region-graph-floor-solver: the doorway-entered box is now numbered by the solve (it read "Floor ?" under BFS).
-        expect(boxes.map((b) => [b.root, b.label])).toEqual([['dungeon1_room1', 'Ground floor · 2']]);
+        expect(boxes.map((b) => [b.root, b.label])).toEqual([['dungeon1_room1', 'Floor 0B']]);
         ui.mapLook.dispose();
         for (const [preset, want] of [['alttp', '64fd43393961d213'], ['procgen_maze', 'f6866e94f5279b9e']]) {
             const b = build(preset, 'separate');

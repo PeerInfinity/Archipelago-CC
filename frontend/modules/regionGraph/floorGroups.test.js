@@ -1,15 +1,15 @@
 /**
- * ⛓ DUNGEON GROUPING (region-graph-dungeon-groups; `dungeonGroups.js`, `dungeonBoxLayer.js`, glue in
+ * ⛓ FLOOR GROUPING (region-graph-dungeon-groups; `floorGroups.js`, `floorBoxLayer.js`, glue in
  * `layoutControlsManager.js`). Over the FROZEN fixture presets (`regionGraphElements.testkit.js` `loadFrozenRules` and
  * `loadFrozenAtlas`, never a live preset digest), through the panel's own builder on a headless Cytoscape:
  *   · `none` IS today's layout: the positions digests pinned at the base (102dcbeb16), per view and look;
  *   · the groups are the Region Map's (`buildRegionMapModel().groupOf`), per preset; alttp and the maze are INERT
- *     (no drawn edge joins two dungeons): every value gives `none`'s positions;
+ *     (no drawn edge joins two floor groups): every value gives `none`'s positions;
  *   · `soft` at strength 0 equals `none`;
- *   · `twoStep` / `twoStepBoxes`: blocks never overlap, no node lies inside another dungeon's block, 0 node overlaps,
+ *   · `twoStep` / `twoStepBoxes`: blocks never overlap, no node lies inside another floor group's block, 0 node overlaps,
  *     in every view and both node looks;
  *   · determinism per value: two builds, and the inputs in other insertion orders;
- *   · the boxes: an overlay, never an element (every reader skips it); one per dungeon of 2+; a later layout clears it;
+ *   · the boxes: an overlay, never an element (every reader skips it); one per floor group of 2+; a later layout clears it;
  *     `nested` + `twoStepBoxes` keeps its compound boxes;
  *   · the settings: schema defaults only, registered by the panel.
  */
@@ -35,7 +35,13 @@ vi.mock('../stateManager/index.js', () => ({
     },
     getLastRawJsonData: () => (sm.rules ? { rawJsonData: sm.rules, selectedPlayerInfo: { playerId: '1' } } : null),
 }));
-vi.mock('../../app/core/settingsManager.js', () => ({ default: { getSetting: async (_k, d) => d, updateSetting: async () => {} } }));
+// ⛓ region-graph-floor-rename-letters: a settings STORE, so a write reads back (the round trip); empty = every key
+// answers its call-site default (undefined), as before.
+const store = vi.hoisted(() => new Map());
+vi.mock('../../app/core/settingsManager.js', () => ({ default: {
+    getSetting: async (k, d) => (store.has(k) ? store.get(k) : d),
+    updateSetting: async (k, v) => { store.set(k, v); },
+} }));
 vi.mock('../gameState/singleton.js', () => ({ getGameStateSingleton: () => null }));
 vi.mock('../discovery/singleton.js', () => ({
     default: { isRegionDiscovered: () => true, isExitDiscovered: () => true, isLocationDiscovered: () => true },
@@ -50,16 +56,16 @@ const { GraphDataManager } = await import('./graphDataManager.js');
 const { LayoutControlsManager, isDirectionSettingKey } = await import('./layoutControlsManager.js');
 const { MapLookLayer } = await import('./mapLookLayer.js');
 const { isRegionGroupNode, SUB_REGION_VIEW_SCHEMA } = await import('./subRegionGroups.js');
-const { DungeonBoxLayer, DUNGEON_BOX_CLASS } = await import('./dungeonBoxLayer.js');
+const { FloorBoxLayer, FLOOR_BOX_CLASS } = await import('./floorBoxLayer.js');
 const D = await import('./directionLayout.js');
-const G = await import('./dungeonGroups.js');
+const G = await import('./floorGroups.js');
 const kit = await import('./regionGraphElements.testkit.js');
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const cytoscape = kit.loadCytoscape();
 const digest = (positions) => createHash('sha256').update(D.positionsKey(positions)).digest('hex').slice(0, 16);
 const NODE_STYLE = [{ selector: 'node', style: { width: 60, height: 45, 'border-width': 2, shape: 'ellipse' } }];
-const VALUES = G.DUNGEON_GROUPING_SCHEMA.enum;
+const VALUES = G.FLOOR_GROUPING_SCHEMA.enum;
 
 /** A minimal DOM for the box layer (vitest runs in node): elements with style, dataset, children. */
 function fakeDoc() {
@@ -110,7 +116,7 @@ function build(preset, view, { nodeLook = 'graph', open = [], doc = null } = {})
     return { ui, lcm, dm };
 }
 
-const run = (lcm, grouping, groupStrength = G.DUNGEON_GROUP_STRENGTH_SCHEMA.default) => lcm.buildDirectionLayout(
+const run = (lcm, grouping, groupStrength = G.FLOOR_GROUP_STRENGTH_SCHEMA.default) => lcm.buildDirectionLayout(
     D.normaliseDirectionSettings(), { grouping, groupStrength });
 
 describe('⛓ 1. `none` is today\'s Direction-aware layout (digests at the base 102dcbeb16, frozen fixtures)', () => {
@@ -145,31 +151,31 @@ describe('⛓ 2. the groups are the Region Map\'s', () => {
             procgen_maze: { separate: [11, 1, 1, [10]] },
         };
         for (const [preset, views] of Object.entries(want)) {
-            for (const [view, [nodes, dungeons, ungrouped, sizes]] of Object.entries(views)) {
+            for (const [view, [nodes, floorGroups, ungrouped, sizes]] of Object.entries(views)) {
                 const { lcm, ui } = build(preset, view);
                 const { report } = run(lcm, 'none');
-                expect([report.nodes, report.dungeons, report.ungrouped], `${preset} ${view}`).toEqual([nodes, dungeons, ungrouped]);
-                expect(report.dungeonSizes.slice(0, sizes.length), `${preset} ${view}`).toEqual(sizes);
+                expect([report.nodes, report.floorGroups, report.ungrouped], `${preset} ${view}`).toEqual([nodes, floorGroups, ungrouped]);
+                expect(report.floorGroupSizes.slice(0, sizes.length), `${preset} ${view}`).toEqual(sizes);
                 // The same reader as the Region Map: model.groupOf, display key → group id.
                 const model = ui.mapLook.regionMapModel().model;
                 expect(new Set(model.groupOf.values()).size).toBe(model.layout.groups.length);
             }
         }
     });
-    it('a merged node by its group key; a sub-region by its level (separate): one dungeon per level', () => {
+    it('a merged node by its group key; a sub-region by its level (separate): one floor group per level', () => {
         const { lcm, ui } = build('seedling_playthrough', 'separate');
         const model = ui.mapLook.regionMapModel().model;
-        const of = lcm.dungeonOfNode(model);
-        const r = G.dungeonReader(model);
+        const of = lcm.floorGroupOfNode(model);
+        const r = G.floorGroupReader(model);
         let multi = 0;
         for (const [key, cell] of model.cells) {
             const drawn = cell.members.map((m) => ui.cy.getElementById(m)).filter((n) => n.length === 1);
             if (drawn.length > 1) multi += 1;
             for (const n of drawn) expect(of(n), `${key} ${n.id()}`).toBe(r.ofKey(key));
         }
-        expect(multi).toBeGreaterThan(50); // levels split into 2+ sub-regions, each sub-region in its level's dungeon
+        expect(multi).toBeGreaterThan(50); // levels split into 2+ sub-regions, each sub-region in its level's floor group
     });
-    it('alttp and the maze are INERT: no drawn edge joins two dungeons, so every value gives `none`\'s positions', () => {
+    it('alttp and the maze are INERT: no drawn edge joins two floor groups, so every value gives `none`\'s positions', () => {
         for (const preset of ['alttp', 'procgen_maze']) {
             const { lcm } = build(preset, 'separate');
             const none = digest(run(lcm, 'none').positions);
@@ -196,7 +202,7 @@ describe('⛓ 3. soft at strength 0 equals none', () => {
     }
 });
 
-describe('⛓ 4. twoStep / twoStepBoxes: blocks never overlap, no node in another dungeon\'s block', () => {
+describe('⛓ 4. twoStep / twoStepBoxes: blocks never overlap, no node in another floor group\'s block', () => {
     const cases = [...SUB_REGION_VIEW_SCHEMA.enum.map((v) => ['seedling_playthrough', v, 'graph']),
         ['seedling_playthrough', 'merged', 'map'], ['seedling_atlas', 'merged', 'map'], ['seedling_atlas', 'separate', 'graph']];
     for (const [preset, view, nodeLook] of cases) {
@@ -227,12 +233,12 @@ describe('⛓ 4. twoStep / twoStepBoxes: blocks never overlap, no node in anothe
         for (const v of VALUES) expect(run(lcm, v).report.overlaps, `merged map ${v}`).toBe(0);
         ui.mapLook.dispose();
     });
-    it('a node with no dungeon (the Menu) is a block of one; twoStep separates far better than none', () => {
+    it('a node with no floor group (the Menu) is a block of one; twoStep separates far better than none', () => {
         const { lcm } = build('seedling_playthrough', 'merged');
         const none = run(lcm, 'none').report;
         const two = run(lcm, 'twoStep').report;
         expect(two.ungrouped).toBe(1);
-        expect(two.stats.grouping.blocks).toBe(two.dungeons + two.ungrouped);
+        expect(two.stats.grouping.blocks).toBe(two.floorGroups + two.ungrouped);
         expect(two.mixing.mixed).toBe(0);
         expect(none.mixing.mixed).toBeGreaterThan(20);
     });
@@ -271,7 +277,7 @@ describe('⛓ 5. determinism, per value', () => {
         }
     });
     it('the modules read no clock and no Math.random', () => {
-        for (const f of ['dungeonGroups.js', 'directionLayout.js']) {
+        for (const f of ['floorGroups.js', 'directionLayout.js']) {
             const src = readFileSync(join(HERE, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
             expect(src, f).not.toMatch(/Math\.random|Date\.now|performance\.now|new Date/);
         }
@@ -279,10 +285,10 @@ describe('⛓ 5. determinism, per value', () => {
 });
 
 describe('⛓ 6. the boxes: an overlay every reader skips', () => {
-    it('one box per dungeon of 2+ drawn nodes, round its members, apart; the element set and saved positions unchanged', () => {
+    it('one box per floor group of 2+ drawn nodes, round its members, apart; the element set and saved positions unchanged', () => {
         const doc = fakeDoc();
         const { ui, lcm } = build('seedling_playthrough', 'merged', { doc });
-        ui.dungeonBoxes = new DungeonBoxLayer(ui, { doc });
+        ui.floorBoxes = new FloorBoxLayer(ui, { doc });
         ui.groupingSettings = { grouping: 'twoStepBoxes', groupStrength: 0.5 };
         const built0 = lcm.buildDirectionLayout();
         ui.cy.layout({ ...built0.options, animate: false, fit: false }).run();
@@ -290,13 +296,13 @@ describe('⛓ 6. the boxes: an overlay every reader skips', () => {
         const nodesBefore = ui.cy.nodes().length;
         const built = lcm.buildDirectionLayout();
         ui.cy.layout({ ...built.options, animate: false, fit: false }).run();
-        ui.dungeonBoxes.show(built.boxes);
-        const report = ui.dungeonBoxes.report();
-        expect(report.length).toBe(built.report.dungeonSizes.filter((n) => n >= 2).length);
+        ui.floorBoxes.show(built.boxes);
+        const report = ui.floorBoxes.report();
+        expect(report.length).toBe(built.report.floorGroupSizes.filter((n) => n >= 2).length);
         expect(report.length).toBe(11);
         // Drawn: one element per box in the layer, inside the graph container (not in cy).
-        const layer = ui.graphContainer.children.find((c) => c.classList.contains('rg-dungeon-boxes'));
-        expect(layer.children.filter((c) => c.className === DUNGEON_BOX_CLASS).length).toBe(11);
+        const layer = ui.graphContainer.children.find((c) => c.classList.contains('rg-floor-boxes'));
+        expect(layer.children.filter((c) => c.className === FLOOR_BOX_CLASS).length).toBe(11);
         expect(layer.children.every((c) => c.style.display === 'block')).toBe(true);
         // Each box holds its members' boxes; no two boxes overlap; the label is the FLOOR's (region-graph-floors), and
         // the group id stays as the box's root.
@@ -304,7 +310,7 @@ describe('⛓ 6. the boxes: an overlay every reader skips', () => {
         const ids = new Set(model.layout.groups.map((g) => g.id));
         for (const b of report) {
             expect(ids.has(b.root)).toBe(true);
-            expect(b.label).toMatch(/^(Ground floor|Floor [+\u2212]\d+|Floor \?)( \u00b7 \d+)?$/);
+            expect(b.label).toMatch(/^Floor (0|[+\u2212]\d+)[A-Z]+$|^Floor (\?|[0+\u2212]\d* to [0+\u2212]\d*) [A-Z]+$/);
             for (const id of b.members) {
                 const bb = ui.cy.getElementById(id).boundingBox({ includeLabels: false });
                 expect(bb.x1 >= b.box.x1 && bb.x2 <= b.box.x2 && bb.y1 >= b.box.y1 && bb.y2 <= b.box.y2).toBe(true);
@@ -317,39 +323,39 @@ describe('⛓ 6. the boxes: an overlay every reader skips', () => {
         // Every reader of the element set: unchanged (no element added, no class, no data), and so the picker's
         // `regionName` nodes, the pathfinder's staticData, counts and hub detection; saved positions hold nodes only.
         expect(ui.cy.nodes().length).toBe(nodesBefore);
-        expect(ui.cy.nodes(`.${DUNGEON_BOX_CLASS}`).length).toBe(0);
+        expect(ui.cy.nodes(`.${FLOOR_BOX_CLASS}`).length).toBe(0);
         const after = kit.serialiseElements(ui.cy);
         expect(kit.digestOf(after)).toBe(before);
         lcm.saveNodePositions();
         const store = lcm.positionStore();
         expect([...store.keys()].every((id) => ui.cy.getElementById(id).length === 1)).toBe(true);
         expect(store.size).toBe(nodesBefore);
-        expect([...sm.staticData.regions.keys()].some((k) => k.startsWith('rg-dungeon'))).toBe(false);
+        expect([...sm.staticData.regions.keys()].some((k) => k.startsWith('rg-floor'))).toBe(false);
         ui.mapLook.dispose();
     });
     it('another layout\'s start clears them; a rebuild clears them; a run of another value draws none', () => {
         const doc = fakeDoc();
         const { ui, lcm, dm } = build('seedling_playthrough', 'merged', { doc });
-        ui.dungeonBoxes = new DungeonBoxLayer(ui, { doc });
+        ui.floorBoxes = new FloorBoxLayer(ui, { doc });
         ui.groupingSettings = { grouping: 'twoStepBoxes', groupStrength: 0.5 };
         const first = lcm.runDirectionLayout({ animate: false });
         expect(first.boxes).toBe(11);
-        expect(ui.dungeonBoxes.boxes.length).toBe(11);
+        expect(ui.floorBoxes.boxes.length).toBe(11);
         ui.cy.layout({ name: 'grid', animate: false }).run();
-        expect(ui.dungeonBoxes.boxes.length).toBe(0);
+        expect(ui.floorBoxes.boxes.length).toBe(0);
         lcm.runDirectionLayout({ animate: false });
-        expect(ui.dungeonBoxes.boxes.length).toBe(11);
+        expect(ui.floorBoxes.boxes.length).toBe(11);
         dm.buildGraphFromRegions(sm.staticData.regions, null);
-        expect(ui.dungeonBoxes.boxes.length).toBe(0);
+        expect(ui.floorBoxes.boxes.length).toBe(0);
         ui.groupingSettings = { grouping: 'twoStep', groupStrength: 0.5 };
         expect(lcm.runDirectionLayout({ animate: false }).boxes).toBe(0);
-        expect(ui.dungeonBoxes.boxes.length).toBe(0);
+        expect(ui.floorBoxes.boxes.length).toBe(0);
         ui.mapLook.dispose();
     });
-    it('nested + twoStepBoxes: the compound sub-region boxes stay as they were; the dungeon boxes are not elements', () => {
+    it('nested + twoStepBoxes: the compound sub-region boxes stay as they were; the floor group boxes are not elements', () => {
         const doc = fakeDoc();
         const { ui, lcm } = build('seedling_playthrough', 'nested', { doc });
-        ui.dungeonBoxes = new DungeonBoxLayer(ui, { doc });
+        ui.floorBoxes = new FloorBoxLayer(ui, { doc });
         ui.groupingSettings = { grouping: 'twoStepBoxes', groupStrength: 0.5 };
         const compounds = ui.cy.nodes().filter((n) => isRegionGroupNode(n, 'box')).map((n) => n.id()).sort();
         expect(compounds.length).toBe(60);
@@ -358,8 +364,8 @@ describe('⛓ 6. the boxes: an overlay every reader skips', () => {
         expect(report.blockOverlaps).toBe(0);
         expect(report.boxes).toBeGreaterThan(5);
         expect(ui.cy.nodes().filter((n) => isRegionGroupNode(n, 'box')).map((n) => n.id()).sort()).toEqual(compounds);
-        // A nested box's members are all in ONE dungeon (their level's), so a compound box sits inside one dungeon box.
-        const of = lcm.dungeonOfNode(ui.mapLook.regionMapModel().model);
+        // A nested box's members are all in ONE floor group (their level's), so a compound box sits inside one floor group box.
+        const of = lcm.floorGroupOfNode(ui.mapLook.regionMapModel().model);
         ui.cy.nodes().filter((n) => isRegionGroupNode(n, 'box')).forEach((box) => {
             expect(new Set(box.children().map((c) => of(c))).size, box.id()).toBe(1);
         });
@@ -386,19 +392,19 @@ describe('⛓ 7. the settings', () => {
         expect(G.normaliseGroupingSettings()).toEqual({ grouping: 'none', groupStrength: 0.5 });
         expect(G.normaliseGroupingSettings({ grouping: 'nope', groupStrength: 9 })).toEqual({ grouping: 'none', groupStrength: 1 });
         expect(G.normaliseGroupingSettings({ grouping: 'twoStepBoxes', groupStrength: 'x' })).toEqual({ grouping: 'twoStepBoxes', groupStrength: 0.5 });
-        expect(G.DUNGEON_GROUPING_SCHEMA.enum).toEqual(['none', 'soft', 'twoStep', 'twoStepBoxes']);
-        expect(Object.keys(G.DUNGEON_GROUPING_LABELS)).toEqual([...G.DUNGEON_GROUPING_SCHEMA.enum]);
-        expect(G.DUNGEON_GROUPING_KEY).toBe('moduleSettings.regionGraph.dungeonGrouping');
-        expect(G.DUNGEON_GROUP_STRENGTH_KEY).toBe('moduleSettings.regionGraph.dungeonGroupStrength');
-        expect([G.DUNGEON_GROUP_STRENGTH_SCHEMA.minimum, G.DUNGEON_GROUP_STRENGTH_SCHEMA.maximum]).toEqual([0, 1]);
+        expect(G.FLOOR_GROUPING_SCHEMA.enum).toEqual(['none', 'soft', 'twoStep', 'twoStepBoxes']);
+        expect(Object.keys(G.FLOOR_GROUPING_LABELS)).toEqual([...G.FLOOR_GROUPING_SCHEMA.enum]);
+        expect(G.FLOOR_GROUPING_KEY).toBe('moduleSettings.regionGraph.floorGrouping');
+        expect(G.FLOOR_GROUP_STRENGTH_KEY).toBe('moduleSettings.regionGraph.floorGroupStrength');
+        expect([G.FLOOR_GROUP_STRENGTH_SCHEMA.minimum, G.FLOOR_GROUP_STRENGTH_SCHEMA.maximum]).toEqual([0, 1]);
         // A write re-runs the layout if it is drawn (never a rebuild), as the other Direction-aware settings.
-        expect(isDirectionSettingKey(G.DUNGEON_GROUPING_KEY)).toBe(true);
-        expect(isDirectionSettingKey(G.DUNGEON_GROUP_STRENGTH_KEY)).toBe(true);
+        expect(isDirectionSettingKey(G.FLOOR_GROUPING_KEY)).toBe(true);
+        expect(isDirectionSettingKey(G.FLOOR_GROUP_STRENGTH_KEY)).toBe(true);
     });
     it('the panel registers both in its settings schema', () => {
         const src = readFileSync(join(HERE, 'index.js'), 'utf8');
-        expect(src).toMatch(/dungeonGrouping: \{ \.\.\.DUNGEON_GROUPING_SCHEMA, enum: \[\.\.\.DUNGEON_GROUPING_SCHEMA\.enum\] \}/);
-        expect(src).toMatch(/dungeonGroupStrength: \{ \.\.\.DUNGEON_GROUP_STRENGTH_SCHEMA \}/);
+        expect(src).toMatch(/floorGrouping: \{ \.\.\.FLOOR_GROUPING_SCHEMA, enum: \[\.\.\.FLOOR_GROUPING_SCHEMA\.enum\] \}/);
+        expect(src).toMatch(/floorGroupStrength: \{ \.\.\.FLOOR_GROUP_STRENGTH_SCHEMA \}/);
     });
     it('the panel reads them with no call-site default (the mocked getSetting answers its default: undefined)', async () => {
         const { ui, lcm } = build('alttp', 'separate');
@@ -406,5 +412,26 @@ describe('⛓ 7. the settings', () => {
         expect(await lcm.loadGroupingSettings()).toEqual({ grouping: 'none', groupStrength: 0.5, floorGap: 160 });
         await lcm.loadDirectionSettings();
         expect(ui.groupingSettings).toEqual({ grouping: 'none', groupStrength: 0.5, floorGap: 160 });
+    });
+    // ⛓ region-graph-floor-rename-letters (⚖ 2026-11-28T03:38:16.825Z "There is no need to worry about backwards
+    // compatibility for the saves"): the renamed keys round-trip; the OLD keys are not read (no migration).
+    it('the renamed keys round-trip (floorGrouping, floorGroupStrength); the old dungeon* keys are ignored', async () => {
+        const settingsManager = (await import('../../app/core/settingsManager.js')).default;
+        const { ui, lcm } = build('alttp', 'separate');
+        try {
+            await settingsManager.updateSetting('moduleSettings.regionGraph.dungeonGrouping', 'twoStepBoxes');
+            await settingsManager.updateSetting('moduleSettings.regionGraph.dungeonGroupStrength', 0.9);
+            expect(await lcm.loadGroupingSettings()).toEqual({ grouping: 'none', groupStrength: 0.5, floorGap: 160 });
+            await settingsManager.updateSetting(G.FLOOR_GROUPING_KEY, 'twoStep');
+            await settingsManager.updateSetting(G.FLOOR_GROUP_STRENGTH_KEY, 0.25);
+            expect(await lcm.loadGroupingSettings()).toEqual({ grouping: 'twoStep', groupStrength: 0.25, floorGap: 160 });
+            expect(ui.groupingSettings.grouping).toBe('twoStep');
+            for (const v of G.FLOOR_GROUPING_SCHEMA.enum) {
+                await settingsManager.updateSetting(G.FLOOR_GROUPING_KEY, v);
+                expect((await lcm.loadGroupingSettings()).grouping).toBe(v);
+            }
+        } finally {
+            store.clear();
+        }
     });
 });

@@ -1,10 +1,10 @@
 /**
- * Region Graph Direction-aware layout, Dungeon grouping: screenshots and measurements (region-graph-dungeon-groups).
+ * Region Graph Direction-aware layout, Floor grouping: screenshots and measurements (region-graph-dungeon-groups).
  *
  * Desktop (1600 × 1000, `layout=desktop`), Direction-aware at its defaults (strength 0.7, spacing 40, border doors):
  *   seedling-merged-map-none.png / -soft.png / -twoStep.png / -twoStepBoxes.png   seedling_playthrough, merged + map
- *                                              look, in each Dungeon grouping value (soft at its default pull, 0.5)
- *   seedling-twoStepBoxes-zoom.png            zoomed on two neighbouring (linked) dungeons, twoStepBoxes
+ *                                              look, in each Floor grouping value (soft at its default pull, 0.5)
+ *   seedling-twoStepBoxes-zoom.png            zoomed on two neighbouring (linked) floor groups, twoStepBoxes
  *   seedling-separate-twoStep.png             seedling_playthrough, separate (307 nodes), twoStep
  *   seedling-grouping-controls.png            the Controls' Direction-aware section, open (the new two controls)
  *   alttp-default.png                         alttp, the default layout (unchanged); alttp's Direction-aware in every
@@ -12,8 +12,8 @@
  *   phone-390-twoStepBoxes.png                390 × 844 phone, merged + map, twoStepBoxes
  *
  * Measurements, printed as JSON: seedling_playthrough merged + map and separate, seedling_atlas merged + map, per value
- * (and soft at pull 0.25 / 0.5 / 1): mixing (a node in a dungeon of 2+ whose nearest node is another dungeon's), the
- * mean / p90 direction-angle error, overlaps, block overlaps, nodes in another dungeon's block, boxes drawn, the
+ * (and soft at pull 0.25 / 0.5 / 1): mixing (a node in a floor group of 2+ whose nearest node is another floor group's), the
+ * mean / p90 direction-angle error, overlaps, block overlaps, nodes in another floor group's block, boxes drawn, the
  * computation (`report.totalMs`, ONE main-thread block) and the longest task seen (PerformanceObserver `longtask`).
  * Every wait on a layout is the panel's own settled signal (`rg-layoutsettled`, layoutRun.js).
  *
@@ -104,7 +104,7 @@ const runDirection = (page, settings, grouping = {}) => page.evaluate(async ([ui
     // eslint-disable-next-line no-new-func
     const ui = new Function(`return ${uiSrc}`)();
     const D = await import('/frontend/modules/regionGraph/directionLayout.js');
-    const G = await import('/frontend/modules/regionGraph/dungeonGroups.js');
+    const G = await import('/frontend/modules/regionGraph/floorGroups.js');
     ui.directionSettings = D.normaliseDirectionSettings({ ...ui.directionSettings, ...s });
     ui.groupingSettings = G.normaliseGroupingSettings({ ...ui.groupingSettings, ...g });
     const tasks = [];
@@ -117,8 +117,8 @@ const runDirection = (page, settings, grouping = {}) => page.evaluate(async ([ui
     await new Promise((r) => setTimeout(r, 300));
     obs?.disconnect();
     ui.cy.fit(30);
-    ui.dungeonBoxes?.sync?.();
-    const shown = [...document.querySelectorAll('.region-graph-panel-container .rg-dungeon-box')].filter((b) => b.style.display === 'block').length;
+    ui.floorBoxes?.sync?.();
+    const shown = [...document.querySelectorAll('.region-graph-panel-container .rg-floor-box')].filter((b) => b.style.display === 'block').length;
     return { ...report, wallMs: wall, longestTaskMs: tasks.length ? Math.max(...tasks) : null, boxesShown: shown };
 }, [UI_SRC, settings, grouping]);
 
@@ -164,7 +164,7 @@ const r1 = (x) => (x == null ? null : Math.round(x * 10) / 10);
 const row = (rep) => ({ grouping: rep.grouping?.grouping, pull: rep.grouping?.groupStrength, mixed: rep.mixing?.mixed, eligible: rep.mixing?.eligible,
     mean: r1(rep.meanAngleError), p90: r1(rep.p90AngleError), overlaps: rep.overlaps, blockOverlaps: rep.blockOverlaps, intruders: rep.intruders,
     boxes: rep.boxes, boxesShown: rep.boxesShown, totalMs: r1(rep.totalMs), longestTaskMs: r1(rep.longestTaskMs), nodes: rep.nodes,
-    dungeons: rep.dungeons, ungrouped: rep.ungrouped, sizes: rep.dungeonSizes, inert: rep.stats?.grouping?.inert ?? null,
+    floorGroups: rep.floorGroups, ungrouped: rep.ungrouped, sizes: rep.floorGroupSizes, inert: rep.stats?.grouping?.inert ?? null,
     digest: rep.digest });
 const DIGEST_SRC = `(ui) => { const ids = ui.cy.nodes().filter((n) => !n.hasClass('player') && !n.hasClass('location-node')).map((n) => n.id() + ':' + n.position('x') + ',' + n.position('y')).sort(); return ids.join('|'); }`;
 const posKey = (page) => page.evaluate(([uiSrc, d]) => {
@@ -215,14 +215,14 @@ try {
             await bakesLanded(page);
             await page.screenshot({ path: join(OUT, `seedling-merged-map-${g}.png`), clip: await graphClip(page) });
         }
-        // twoStepBoxes is the last run: zoom on the two largest LINKED dungeons.
+        // twoStepBoxes is the last run: zoom on the two largest LINKED floor groups.
         out.zoom = await page.evaluate(async (src) => {
             // eslint-disable-next-line no-new-func
             const ui = new Function(`return ${src}`)();
-            const boxes = ui.dungeonBoxes.report().filter((b) => b.box);
+            const boxes = ui.floorBoxes.report().filter((b) => b.box);
             const of = new Map();
             for (const b of boxes) for (const id of b.members) of.set(id, b);
-            // The two NEAREST linked dungeons (the gap between their boxes; ties: the larger pair).
+            // The two NEAREST linked floor groups (the gap between their boxes; ties: the larger pair).
             let best = null;
             const gapOf = (p, q) => Math.max(0, Math.max(p.x1, q.x1) - Math.min(p.x2, q.x2)) + Math.max(0, Math.max(p.y1, q.y1) - Math.min(p.y2, q.y2));
             ui.cy.edges().forEach((e) => {
@@ -235,8 +235,8 @@ try {
             if (!best) return null;
             const eles = ui.cy.collection([...best.a.members, ...best.c.members].map((id) => ui.cy.getElementById(id)));
             ui.cy.fit(eles, 70);
-            ui.dungeonBoxes.sync();
-            return { dungeons: [best.a.label, best.c.label], sizes: [best.a.members.length, best.c.members.length], gap: Math.round(best.gap) };
+            ui.floorBoxes.sync();
+            return { floorGroups: [best.a.label, best.c.label], sizes: [best.a.members.length, best.c.members.length], gap: Math.round(best.gap) };
         }, UI_SRC);
         await bakesLanded(page);
         await page.screenshot({ path: join(OUT, 'seedling-twoStepBoxes-zoom.png'), clip: await graphClip(page) });
@@ -245,7 +245,7 @@ try {
             const panel = document.querySelector('.region-graph-panel-container');
             if (panel.querySelector('#controlsContent')?.style.display === 'none') panel.querySelector('#controlsHeader')?.click();
             const d = panel.querySelector('details.rg-direction-layout');
-            if (d) { d.open = true; panel.querySelector('#dungeonGrouping').value = 'twoStepBoxes'; panel.querySelector('#dungeonGrouping').scrollIntoView({ block: 'center' }); }
+            if (d) { d.open = true; panel.querySelector('#floorGrouping').value = 'twoStepBoxes'; panel.querySelector('#floorGrouping').scrollIntoView({ block: 'center' }); }
         });
         await page.screenshot({ path: join(OUT, 'seedling-grouping-controls.png'), clip: await graphClip(page) });
         await page.evaluate(() => document.querySelector('.region-graph-panel-container #controlsHeader')?.click());

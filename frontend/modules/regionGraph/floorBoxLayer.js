@@ -1,7 +1,7 @@
 /**
- * ⛓ THE DUNGEON BOXES (region-graph-dungeon-groups; Direction-aware layout, Dungeon grouping = `twoStepBoxes`).
+ * ⛓ THE FLOOR BOXES (region-graph-dungeon-groups; Direction-aware layout, Floor grouping = `twoStepBoxes`).
  *
- * A faint labelled box round each dungeon (a Region Map group, `dungeonGroups.js`) of 2+ drawn nodes, drawn as a DOM
+ * A faint labelled box round each floor group (a Region Map group, `floorGroups.js`) of 2+ drawn nodes, drawn as a DOM
  * OVERLAY inside the graph container, UNDER Cytoscape's canvas (as the map look's canvas is: z-index −1 in an
  * isolated stacking context, and after the map-look canvas so a box shows over the map art). It is NOT a Cytoscape
  * element: no compound parent (those are `nested`'s sub-region boxes, which it never touches), so every reader of the
@@ -12,16 +12,16 @@
  *     screen pixels, so it follows its nodes when they move (a drag, the layout's animation), pan and zoom; it is
  *     recomputed one frame after `position` / `viewport` / `resize` / `layoutstop`.
  *   · A member that discovery hides (`discovery-hidden`) is left out; a box with no member shown is hidden. The label
- *     is the dungeon's FLOOR (region-graph-floors; the numbers from `floorSolver.js`: "Ground floor", "Floor −1 · 2", "Floor −3 to −1", "Floor ?"), drawn just
+ *     is the floor group's FLOOR (region-graph-floors; the numbers from `floorSolver.js`: "Floor 0A", "Floor −1B", "Floor −3 to −1 A", "Floor ? A"), drawn just
  *     above the box's top edge, or `???` while any member shown is an undiscovered placeholder. The group's root
  *     level id stays on the box (`data-root`, and its `title`).
  *   · The boxes belong to ONE Direction-aware run: `show(boxes)` after its start; any later layout's `layoutstart`, a
  *     graph rebuild (`clear()`), or a run with another grouping value removes them.
  */
-import { blockPad } from './dungeonGroups.js';
+import { blockPad } from './floorGroups.js';
 
-export const DUNGEON_BOX_LAYER_CLASS = 'rg-dungeon-boxes';
-export const DUNGEON_BOX_CLASS = 'rg-dungeon-box';
+export const FLOOR_BOX_LAYER_CLASS = 'rg-floor-boxes';
+export const FLOOR_BOX_CLASS = 'rg-floor-box';
 
 const LAYER_STYLE = 'position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:-1';
 const BOX_STYLE = 'position:absolute;box-sizing:border-box;border:1px dashed rgba(170,190,220,0.45);'
@@ -30,12 +30,12 @@ const BOX_STYLE = 'position:absolute;box-sizing:border-box;border:1px dashed rgb
 const LABEL_STYLE = 'position:absolute;left:2px;bottom:100%;margin-bottom:1px;font:11px sans-serif;line-height:12px;'
     + 'color:rgba(200,215,235,0.8);white-space:nowrap;pointer-events:none';
 
-export class DungeonBoxLayer {
+export class FloorBoxLayer {
     /** @param {object} ui - the RegionGraphUI (cy, graphContainer, directionSettings) */
     constructor(ui, { doc = globalThis.document } = {}) {
         this.ui = ui;
         this.doc = doc;
-        this.boxes = []; // [{dungeon, label, members, el, labelEl}]
+        this.boxes = []; // [{floorGroup, label, members, el, labelEl}]
         this._layer = null;
         this._boundCy = null;
         this._frame = null;
@@ -49,7 +49,7 @@ export class DungeonBoxLayer {
         if (!this.doc || !host) return null;
         if (!this._layer) {
             const div = this.doc.createElement('div');
-            div.className = DUNGEON_BOX_LAYER_CLASS;
+            div.className = FLOOR_BOX_LAYER_CLASS;
             div.setAttribute('style', LAYER_STYLE);
             this._layer = div;
             this._hostIsolation = host.style?.isolation ?? '';
@@ -73,7 +73,7 @@ export class DungeonBoxLayer {
         cy.on('layoutstart', () => this.clear());
     }
 
-    /** Draw `boxes` (`[{dungeon, label, members: [node id]}]`, from `buildDirectionLayout`); [] clears. */
+    /** Draw `boxes` (`[{floorGroup, label, members: [node id]}]`, from `buildDirectionLayout`); [] clears. */
     show(boxes = []) {
         this.clear();
         if (!boxes.length) return;
@@ -83,12 +83,12 @@ export class DungeonBoxLayer {
             const entry = { ...b, el: null, labelEl: null };
             if (layer) {
                 const el = this.doc.createElement('div');
-                el.className = DUNGEON_BOX_CLASS;
+                el.className = FLOOR_BOX_CLASS;
                 el.setAttribute('style', BOX_STYLE);
-                el.dataset.dungeon = String(b.dungeon);
+                el.dataset.floorGroup = String(b.floorGroup);
                 // ⛓ region-graph-floors: the label is the FLOOR's; the group's root level id stays on the box.
-                el.dataset.root = String(b.root ?? b.dungeon);
-                el.title = `${b.label} (${b.root ?? b.dungeon})`;
+                el.dataset.root = String(b.root ?? b.floorGroup);
+                el.title = `${b.label} (${b.root ?? b.floorGroup})`;
                 const label = this.doc.createElement('span');
                 label.setAttribute('style', LABEL_STYLE);
                 el.appendChild(label);
@@ -155,7 +155,7 @@ export class DungeonBoxLayer {
 
     /** The boxes now, in model coordinates (for the tests, the in-app row and the shots). */
     report() {
-        return this.boxes.map((b) => ({ dungeon: b.dungeon, label: b.label, root: b.root ?? String(b.dungeon), members: [...b.members], box: this.modelBoxOf(b) }));
+        return this.boxes.map((b) => ({ floorGroup: b.floorGroup, label: b.label, root: b.root ?? String(b.floorGroup), members: [...b.members], box: this.modelBoxOf(b) }));
     }
 
     destroy() {
