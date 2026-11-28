@@ -39,7 +39,7 @@ async function withMysteryPage(testController, pageUrl, body) {
     const panelWasOpen = panelIsOpen();
     if (panelWasOpen) await panelManager.destroyPanelByComponentType('mysteryPanel');
     // The page keeps a save of its own for each game (`bridgeStore` in the game's ui/world-case.js: a
-    // localStorage key holding `-world-ap-`), on this app's origin. Offline the game is `offline:<seed>:<player>`,
+    // localStorage key holding `-world-ap-`), on this app's origin. Offline the game is `offline:<seed>:<world>:<player>`,
     // the same for every row on the same world, so a row would start on the timeline the row before it solved,
     // and the page sends those questions back as solved (its "start a fresh timeline?" confirm is dismissed
     // under Playwright). Each row starts with none, and the saves that were there are put back after.

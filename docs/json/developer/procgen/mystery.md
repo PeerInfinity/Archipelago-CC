@@ -84,7 +84,7 @@ Under `actions` and `new-reading` the page itself holds the player's actions and
 
 ## With no server
 
-A mystery world loaded as a preset plays with no Archipelago server. The host answers offline as it does connected (`connected: false`, `game: "offline:<seed>:<player>"`), a solved question is a check in the app's own state, and the item on its location is granted locally. The page starts on a state whose `game` begins `offline:` (from the game repository's commit `7d34080`, the submodule's pin) and keeps a save of its own for it. The feature check `mystery-local-play` (Tutorial panel; walk row `feature-check-mystery-local-play`) loads the committed mystery world, opens Mystery Game and asks the page for its careful reader (`mystery:autoSolve`), which plays the whole case.
+A mystery world loaded as a preset plays with no Archipelago server. The host answers offline as it does connected (`connected: false`, `game: "offline:<seed>:<world>:<player>"`, where `<world>` is `worldFingerprintOf`: a 16-hex-digit hash of the world's game name, seed name and every location's placed item; committed and generated worlds share seed names, empty or seed 1's, so the seed alone gave every world one page save), a solved question is a check in the app's own state, and the item on its location is granted locally. The page starts on a state whose `game` begins `offline:` (from the game repository's commit `7d34080`, the submodule's pin) and keeps a save of its own for it. The feature check `mystery-local-play` (Tutorial panel; walk row `feature-check-mystery-local-play`) loads the committed mystery world, opens Mystery Game and asks the page for its careful reader (`mystery:autoSolve`), which plays the whole case.
 
 ## The Playback Bot
 

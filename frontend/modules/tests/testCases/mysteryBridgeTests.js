@@ -18,6 +18,7 @@ import { registerTest } from '../testRegistry.js';
 import stateManagerProxySingleton from '../../stateManager/stateManagerProxySingleton.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import { DEFAULT_PAGE_URL, PAGE_URL_SETTING } from '../../mysteryArchipelago/mysteryPage.js';
+import { worldFingerprintOf } from '../../mysteryArchipelago/mysteryArchipelagoLogic.js';
 import panelManager from '../../../app/core/panelManager.js';
 import loopStateSingleton from '../../loops/loopStateSingleton.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
@@ -82,8 +83,10 @@ export async function mysteryBridgeRoundTrip(testController) {
         testController.assertEqual('the state names the slot\'s story', mystery.story, first.story);
         testController.assertEqual('the state names the slot\'s version', mystery.version, first.version);
         testController.assertEqual('with no server the state is not connected', false, first.connected);
-        testController.reportCondition(`the offline game key names the seed (${first.game})`,
-            first.game === `offline:${staticData.seed_name}:${player}`);
+        // The world's own name as well: committed worlds share seed names, so the seed alone shared one page save.
+        const fingerprint = worldFingerprintOf(staticData);
+        testController.reportCondition(`the offline game key names the seed and this world (${first.game})`,
+            fingerprint.length === 16 && first.game === `offline:${staticData.seed_name}:${fingerprint}:${player}`);
         testController.reportCondition('papers and solved are lists', Array.isArray(first.papers) && Array.isArray(first.solved));
         testController.assertEqual('no question is solved at the start', 0, first.solved.length);
 

@@ -67,6 +67,39 @@ export const LOOP_NUMBER_EVENTS = Object.freeze(['actionNodes:stateChanged']);
 const isObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 
 /**
+ * A short, stable name for the loaded world's placement: a hash of its game name, its seed name and every
+ * location with the item placed there (sorted, so the order the data arrives in does not matter). The offline
+ * game is named by it, so each world has a page save of its own: committed and generated worlds share seed
+ * names (empty, or seed 1's), so the seed name alone put every one of them in one save. '' when the static data
+ * carries no placement. Cached per static-data object.
+ */
+const worldFingerprints = new WeakMap();
+export function worldFingerprintOf(staticData) {
+  if (!isObject(staticData)) return '';
+  if (worldFingerprints.has(staticData)) return worldFingerprints.get(staticData);
+  const items = staticData.locationItems;
+  const entries = items instanceof Map ? [...items.entries()] : isObject(items) ? Object.entries(items) : [];
+  let fingerprint = '';
+  if (entries.length > 0) {
+    const lines = entries.map(([location, item]) => `${location}\u0001${item?.name ?? ''}\u0001${item?.player ?? ''}`).sort();
+    const text = [String(staticData.game_name ?? ''), String(staticData.seed_name ?? ''), ...lines].join('\u0002');
+    fingerprint = fnv1a(text, 0x811c9dc5) + fnv1a(text, 0x01000193);
+  }
+  worldFingerprints.set(staticData, fingerprint);
+  return fingerprint;
+}
+
+/** 32-bit FNV-1a of a string's UTF-16 code units, as 8 hex digits, from the given offset basis. */
+function fnv1a(text, basis) {
+  let h = basis >>> 0;
+  for (let i = 0; i < text.length; i++) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h.toString(16).padStart(8, '0');
+}
+
+/**
  * The mystery block of the loaded world, with its two inverse maps, or null when the loaded world
  * is not a mystery case.
  * @param {Object|null} staticData - the state manager's static data (the rules document)
@@ -86,6 +119,7 @@ export function mysteryBlockOf(staticData) {
     version: block.version ?? null,
     case: typeof block.case === 'string' && block.case ? block.case : null,
     seedName: staticData.seed_name != null ? String(staticData.seed_name) : '',
+    worldKey: worldFingerprintOf(staticData),
     questionOfLocation: block.locations,
     paperOfItem: block.items,
     locationOfQuestion,
@@ -114,6 +148,7 @@ export function mysteryBlockOfRegion(regionId, payload, staticData) {
     version: payload.version ?? null,
     case: typeof payload.case === 'string' && payload.case ? payload.case : null,
     seedName: staticData?.seed_name != null ? String(staticData.seed_name) : '',
+    worldKey: worldFingerprintOf(staticData),
     questionOfLocation,
     paperOfItem: payload.papers,
     locationOfQuestion: new Map(Object.entries(payload.ap_locations)),
@@ -153,10 +188,15 @@ export function currentMysteryBlock({ staticData, caseRegions = [], activeRegion
     ?? blocks[0];
 }
 
-/** The `game` string: one slot of one generated multiworld. */
+/**
+ * The `game` string: one slot of one generated multiworld. Connected, the server's seed name names the room.
+ * Offline, the world's own fingerprint (`worldFingerprintOf`) is added, so two worlds with one seed name keep
+ * two page saves: `offline:<seed name>:<fingerprint>:<player>` (the old `offline:<seed name>:<player>` only
+ * for a world whose static data carries no placement).
+ */
 export function gameKeyOf(block, connection) {
   if (connection?.connected) return `${block.seedName}:${connection.team ?? 0}:${connection.slot ?? block.player}`;
-  return `offline:${block.seedName}:${block.player}`;
+  return block.worldKey ? `offline:${block.seedName}:${block.worldKey}:${block.player}` : `offline:${block.seedName}:${block.player}`;
 }
 
 /**

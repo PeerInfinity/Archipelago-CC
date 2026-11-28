@@ -27,7 +27,7 @@ export const DOCS_INDEX = frz({
         "indexHeadings": 2,
         "lines": 37427,
         "pages": 4,
-        "words": 580683
+        "words": 580723
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -534,7 +534,7 @@ export const DOCS_INDEX = frz({
                 "architecture.md"
             ],
             "path": "docs/json/developer/procgen/mystery.md",
-            "words": 2284
+            "words": 2324
         }
     ],
     "indexIn": "docs/json/developer/procgen/README.md",

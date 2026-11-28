@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   LIVE_PLAY_EVENTS,
-  MYSTERY_EVENTS, MYSTERY_REFUSALS, MysteryArchipelagoLogic, SOURCE_MODULE, caseRegionsOfWarehouse, currentMysteryBlock, gameKeyOf,
+  MYSTERY_EVENTS, MYSTERY_REFUSALS, MysteryArchipelagoLogic, SOURCE_MODULE, caseRegionsOfWarehouse, currentMysteryBlock, gameKeyOf, worldFingerprintOf,
   mysteryBlockOf,
   mysteryBlockOfRegion, mysteryStateOf,
 } from './mysteryArchipelagoLogic.js';
@@ -88,8 +88,34 @@ describe('mysteryStateOf', () => {
   });
 
   it('names an offline game apart from a connected one', () => {
-    expect(gameKeyOf(block, { connected: false })).toBe('offline:777:1');
+    expect(gameKeyOf(block, { connected: false })).toBe(
+      block.worldKey ? `offline:777:${block.worldKey}:1` : 'offline:777:1');
     expect(gameKeyOf(block, { connected: true, slot: 1, team: 0 })).toBe('777:0:1');
+  });
+
+  it('gives each world its own offline game: a fingerprint of its placement, not the seed name alone', () => {
+    const world = (placement, extra = {}) => ({
+      seed_name: '', game_name: 'Procgen Maze', ...extra,
+      locationItems: new Map(Object.entries(placement).map(([loc, name]) => [loc, { name, player: 1 }])),
+    });
+    const a = world({ 'Question 01': 'Nothing new', 'Question 02': 'The tide table' });
+    const sameAgain = world({ 'Question 02': 'The tide table', 'Question 01': 'Nothing new' }); // another order
+    const swapped = world({ 'Question 01': 'The tide table', 'Question 02': 'Nothing new' });
+    expect(worldFingerprintOf(a)).toMatch(/^[0-9a-f]{16}$/);
+    expect(worldFingerprintOf(sameAgain)).toBe(worldFingerprintOf(a));
+    expect(worldFingerprintOf(swapped)).not.toBe(worldFingerprintOf(a));
+    expect(worldFingerprintOf(world({ 'Question 01': 'Nothing new', 'Question 02': 'The tide table' }, { game_name: 'Other' })))
+      .not.toBe(worldFingerprintOf(a));
+    // A plain object as well as a Map; nothing to place: no fingerprint, and the old name.
+    expect(worldFingerprintOf({ ...a, locationItems: Object.fromEntries(a.locationItems) })).toBe(worldFingerprintOf(a));
+    expect(worldFingerprintOf({ seed_name: '' })).toBe('');
+    const keyA = gameKeyOf({ seedName: '', worldKey: worldFingerprintOf(a), player: '1' }, { connected: false });
+    const keyB = gameKeyOf({ seedName: '', worldKey: worldFingerprintOf(swapped), player: '1' }, { connected: false });
+    expect(keyA).toMatch(/^offline::[0-9a-f]{16}:1$/);
+    expect(keyA).not.toBe(keyB);
+    expect(gameKeyOf({ seedName: '', worldKey: '', player: '1' }, { connected: false })).toBe('offline::1');
+    // Connected: the server's room, unchanged.
+    expect(gameKeyOf({ seedName: 'S', worldKey: worldFingerprintOf(a), player: '1' }, { connected: true, slot: 2, team: 0 })).toBe('S:0:2');
   });
 });
 
